@@ -27,6 +27,9 @@ typedef unsigned long long __uint64;
 #ifndef __cdecl
 #define __cdecl
 #endif
+#ifndef _cdecl
+#define _cdecl
+#endif
 #ifndef __stdcall
 #define __stdcall
 #endif
@@ -60,9 +63,28 @@ typedef signed int      sint32;
 
 // __FUNCTION__ is standard in clang, no change needed
 
+// Bit rotation (MSVC intrinsics)
+#include <stdint.h>
+static inline unsigned long _lrotl(unsigned long val, int shift) {
+    shift &= 31;
+    return (val << shift) | (val >> (32 - shift));
+}
+static inline unsigned long _lrotr(unsigned long val, int shift) {
+    shift &= 31;
+    return (val >> shift) | (val << (32 - shift));
+}
+
 // _countof (MSVC macro, define if not present)
 #ifndef _countof
 #define _countof(arr) (sizeof(arr)/sizeof((arr)[0]))
+#endif
+
+// Exception stubs - these are declared in Except.h under #ifdef _MSC_VER only
+// but used in cross-platform code, so stub them here for clang builds
+inline void Set_Exit_On_Exception(bool set) {}
+#ifndef IS_TRYING_TO_EXIT_DEFINED
+#define IS_TRYING_TO_EXIT_DEFINED
+inline bool Is_Trying_To_Exit(void) { return false; }
 #endif
 
 // Disable MSVC-specific warning pragmas that clang doesn't understand

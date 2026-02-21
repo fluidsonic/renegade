@@ -8,6 +8,7 @@
 
 // Calling conventions (no-ops on non-Windows)
 #define WINAPI
+#define APIENTRY
 #define CALLBACK
 #define CDECL
 #define PASCAL
@@ -17,12 +18,46 @@
 #define __stdcall
 #define __fastcall
 #define __forceinline inline
+// Single-underscore aliases (MSVC also accepts these)
+#define _cdecl
+#define _stdcall
+#define _fastcall
+#define _pascal
+// __declspec / _declspec - no-op on non-Windows
+#ifndef __declspec
+#define __declspec(x)
+#endif
+#ifndef _declspec
+#define _declspec(x)
+#endif
+
+// Case-insensitive string comparison (Windows names mapped to POSIX)
+#ifndef stricmp
+#define stricmp  strcasecmp
+#endif
+#ifndef strcmpi
+#define strcmpi  strcasecmp
+#endif
+#ifndef strnicmp
+#define strnicmp strncasecmp
+#endif
+#ifndef _stricmp
+#define _stricmp strcasecmp
+#endif
+#ifndef _strnicmp
+#define _strnicmp strncasecmp
+#endif
+
+// CONST is used in old D3D8/Windows headers as a keyword alias
+#define CONST const
 
 // Primitive types
 typedef unsigned char       BYTE;
 typedef unsigned short      WORD;
 typedef unsigned int        UINT;
 typedef unsigned int        DWORD;
+typedef unsigned int        ULONG;
+typedef int                 INT;
 typedef unsigned long       ULONG_PTR;
 typedef long                LONG;
 typedef int                 BOOL;
@@ -33,11 +68,23 @@ typedef unsigned char       UCHAR;
 typedef float               FLOAT;
 typedef double              DOUBLE;
 typedef void*               LPVOID;
+typedef void*               PVOID;
 typedef const void*         LPCVOID;
+typedef size_t              SIZE_T;
+typedef ptrdiff_t           SSIZE_T;
 typedef char*               LPSTR;
 typedef const char*         LPCSTR;
-typedef unsigned short*     LPWSTR;
-typedef const unsigned short* LPCWSTR;
+typedef char*               LPTSTR;
+typedef const char*         LPCTSTR;
+#include <wchar.h>
+#ifndef WCHAR_DEFINED
+#define WCHAR_DEFINED
+typedef wchar_t             WCHAR;
+typedef WCHAR*              PWSTR;
+typedef WCHAR*              LPWSTR;
+typedef const WCHAR*        PCWSTR;
+typedef const WCHAR*        LPCWSTR;
+#endif
 typedef int*                LPINT;
 typedef DWORD*              LPDWORD;
 typedef BYTE*               LPBYTE;
@@ -72,12 +119,49 @@ typedef void*               HFILE;
 typedef void*               HHOOK;
 typedef void*               HMONITOR;
 typedef void*               HACCEL;
-typedef HINSTANCE           HMODULE;
-#undef HMODULE
-typedef void*               HMODULE;
+typedef void*               HKL;
 
 typedef uintptr_t           UINT_PTR;
 typedef intptr_t            INT_PTR;
+typedef intptr_t            LONG_PTR;
+
+// GUID type
+#ifndef GUID_DEFINED
+#define GUID_DEFINED
+typedef struct _GUID {
+    unsigned long  Data1;
+    unsigned short Data2;
+    unsigned short Data3;
+    unsigned char  Data4[8];
+} GUID, *LPGUID;
+// C++ COM convention: REFGUID/REFIID are const references, not pointers
+typedef const GUID& REFGUID;
+typedef const GUID& REFIID;
+typedef const GUID& REFCLSID;
+typedef const GUID& REFFMTID;
+typedef GUID IID;
+typedef GUID CLSID;
+#endif
+#define DEFINE_GUID(name, l, w1, w2, b1,b2,b3,b4,b5,b6,b7,b8) \
+    extern const GUID name
+
+// strupr/strlwr - not in POSIX, commonly used in Windows code
+#include <ctype.h>
+#ifndef _STRUPR_DEFINED
+#define _STRUPR_DEFINED
+inline char* strupr(char* s) {
+    char* p = s;
+    while (*p) { *p = (char)toupper((unsigned char)*p); p++; }
+    return s;
+}
+inline char* strlwr(char* s) {
+    char* p = s;
+    while (*p) { *p = (char)tolower((unsigned char)*p); p++; }
+    return s;
+}
+#define _strupr strupr
+#define _strlwr strlwr
+#endif
 
 // Common struct types
 typedef struct tagRECT {
@@ -117,9 +201,12 @@ typedef struct tagPOINTS {
 
 #define TRUE  1
 #define FALSE 0
+#ifndef NULL
 #define NULL  0
+#endif
 
-#define MAX_PATH 260
+#define MAX_PATH  260
+#define _MAX_PATH 260
 
 // Common return values
 #define S_OK                0

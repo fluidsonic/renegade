@@ -87,6 +87,8 @@
 #define DIK_LEFT        0xCB
 #define DIK_RIGHT       0xCD
 #define DIK_LALT        0x38
+#define DIK_LMENU       0x38  // Left Alt (alias)
+#define DIK_RMENU       0xB8  // Right Alt (alias)
 #define DIK_RALT        0xB8
 #define DIK_DELETE      0xD3
 #define DIK_INSERT      0xD2
@@ -94,6 +96,37 @@
 #define DIK_END         0xCF
 #define DIK_PRIOR       0xC9  // Page up
 #define DIK_NEXT        0xD1  // Page down
+#define DIK_APOSTROPHE  0x28
+#define DIK_GRAVE       0x29  // backtick `
+#define DIK_BACKSLASH   0x2B
+#define DIK_COMMA       0x33
+#define DIK_PERIOD      0x34
+#define DIK_SLASH       0x35
+#define DIK_CAPITAL     0x3A  // Caps Lock
+#define DIK_NUMLOCK     0x45
+#define DIK_SCROLL      0x46  // Scroll Lock
+#define DIK_NUMPAD7     0x47
+#define DIK_NUMPAD8     0x48
+#define DIK_NUMPAD9     0x49
+#define DIK_SUBTRACT    0x4A  // Numpad -
+#define DIK_NUMPAD4     0x4B
+#define DIK_NUMPAD5     0x4C
+#define DIK_NUMPAD6     0x4D
+#define DIK_ADD         0x4E  // Numpad +
+#define DIK_NUMPAD1     0x4F
+#define DIK_NUMPAD2     0x50
+#define DIK_NUMPAD3     0x51
+#define DIK_NUMPAD0     0x52
+#define DIK_DECIMAL     0x53  // Numpad .
+#define DIK_MULTIPLY    0x37  // Numpad *
+#define DIK_NUMPADENTER 0x9C
+#define DIK_RCONTROL    0x9D
+#define DIK_DIVIDE      0xB5  // Numpad /
+#define DIK_SYSRQ       0xB7  // Print Screen / SysRq
+#define DIK_LWIN        0xDB
+#define DIK_RWIN        0xDC
+#define DIK_APPS        0xDD  // Application / Menu key
+// Note: DIK_SHIFT/CONTROL/ALT/WIN are game-defined virtual keys in Combat/directinput.h (DupeKeys enum)
 
 typedef struct _DIOBJECTDATAFORMAT {
     const GUID* pguid;
@@ -122,6 +155,15 @@ typedef struct _DIJOYSTATE {
 #define DIJOFS_Y            offsetof(DIJOYSTATE,lY)
 #define DIJOFS_Z            offsetof(DIJOYSTATE,lZ)
 
+// Mouse state offsets (into DIMOUSESTATE)
+#define DIMOFS_X        offsetof(DIMOUSESTATE,lX)
+#define DIMOFS_Y        offsetof(DIMOUSESTATE,lY)
+#define DIMOFS_Z        offsetof(DIMOUSESTATE,lZ)
+#define DIMOFS_BUTTON0  (offsetof(DIMOUSESTATE,rgbButtons)+0)
+#define DIMOFS_BUTTON1  (offsetof(DIMOUSESTATE,rgbButtons)+1)
+#define DIMOFS_BUTTON2  (offsetof(DIMOUSESTATE,rgbButtons)+2)
+#define DIMOFS_BUTTON3  (offsetof(DIMOUSESTATE,rgbButtons)+3)
+
 typedef struct {
     DWORD dwSize;
     GUID  guidType;
@@ -133,6 +175,21 @@ typedef struct {
     WORD  wExponent, wReportId;
 } DIDEVICEOBJECTINSTANCEA, *LPDIDEVICEOBJECTINSTANCEA;
 typedef DIDEVICEOBJECTINSTANCEA DIDEVICEOBJECTINSTANCE;
+
+// Buffered input data element
+typedef struct _DIDEVICEOBJECTDATA {
+    DWORD dwOfs;
+    DWORD dwData;
+    DWORD dwTimeStamp;
+    DWORD dwSequence;
+} DIDEVICEOBJECTDATA, *LPDIDEVICEOBJECTDATA;
+
+// Device instance info (forward declared here so callback typedef works)
+struct _DIDEVICEINSTANCEA;
+typedef const _DIDEVICEINSTANCEA* LPCDIDEVICEINSTANCEA_FWD;
+
+// Enum callback types
+typedef int (PASCAL *LPDIENUMDEVICESCALLBACKA)(const _DIDEVICEINSTANCEA*, LPVOID);
 
 struct IDirectInputDevice8A : public IUnknown {
     virtual HRESULT GetCapabilities(void* p) { return E_NOTIMPL; }
@@ -166,7 +223,7 @@ typedef IDirectInputDevice8A* LPDIRECTINPUTDEVICE8A;
 
 struct IDirectInput8A : public IUnknown {
     virtual HRESULT CreateDevice(REFGUID g, IDirectInputDevice8A** ppdev, IUnknown* pUnk) { return E_NOTIMPL; }
-    virtual HRESULT EnumDevices(DWORD type, void* cb, LPVOID ref, DWORD flags) { return E_NOTIMPL; }
+    virtual HRESULT EnumDevices(DWORD type, LPDIENUMDEVICESCALLBACKA cb, LPVOID ref, DWORD flags) { return E_NOTIMPL; }
     virtual HRESULT GetDeviceStatus(REFGUID g) { return E_NOTIMPL; }
     virtual HRESULT RunControlPanel(HWND hwnd, DWORD flags) { return E_NOTIMPL; }
     virtual HRESULT Initialize(HINSTANCE hinst, DWORD ver) { return E_NOTIMPL; }
@@ -176,8 +233,92 @@ typedef IDirectInput8A IDirectInput8;
 typedef IDirectInput8A* LPDIRECTINPUT8;
 typedef IDirectInput8A* LPDIRECTINPUT8A;
 
+// v1/v2 aliases (this code uses DInput8 but refers to older type names)
+typedef IDirectInput8A* LPDIRECTINPUT;
+typedef IDirectInputDevice8A* LPDIRECTINPUTDEVICE;
+typedef IDirectInputDevice8A* LPDIRECTINPUTDEVICE2;
+typedef IUnknown* LPUNKNOWN;
+
 inline HRESULT DirectInput8Create(HINSTANCE hinst, DWORD ver, REFIID riid, LPVOID* ppvOut, IUnknown* pUnk) {
     if (ppvOut) *ppvOut = NULL; return E_NOTIMPL;
 }
+
+// Device instance info (full definition of forward-declared struct)
+typedef struct _DIDEVICEINSTANCEA {
+    DWORD dwSize;
+    GUID  guidInstance;
+    GUID  guidProduct;
+    DWORD dwDevType;
+    CHAR  tszInstanceName[260];
+    CHAR  tszProductName[260];
+    GUID  guidFFDriver;
+    WORD  wUsagePage;
+    WORD  wUsage;
+} DIDEVICEINSTANCEA, *LPDIDEVICEINSTANCEA;
+typedef const DIDEVICEINSTANCEA* LPCDIDEVICEINSTANCEA;
+typedef DIDEVICEINSTANCEA DIDEVICEINSTANCE;
+typedef LPCDIDEVICEINSTANCEA LPCDIDEVICEINSTANCE;
+
+// Property header and DIPROPDWORD
+typedef struct _DIPROPHEADER {
+    DWORD dwSize;
+    DWORD dwHeaderSize;
+    DWORD dwObj;
+    DWORD dwHow;
+} DIPROPHEADER, *LPDIPROPHEADER;
+typedef const DIPROPHEADER* LPCDIPROPHEADER;
+
+typedef struct _DIPROPDWORD {
+    DIPROPHEADER diph;
+    DWORD        dwData;
+} DIPROPDWORD, *LPDIPROPDWORD;
+
+// Property constants
+#define DIPH_DEVICE      0
+#define DIPH_BYOFFSET    1
+#define DIPH_BYID        2
+
+// Property GUIDs — REFGUID is const GUID& in C++
+static const GUID _DIPROP_BUFFERSIZE = {0x1};
+static const GUID _DIPROP_RANGE      = {0x4};
+static const GUID _DIPROP_DEADZONE   = {0x5};
+#define DIPROP_BUFFERSIZE _DIPROP_BUFFERSIZE
+#define DIPROP_RANGE      _DIPROP_RANGE
+#define DIPROP_DEADZONE   _DIPROP_DEADZONE
+
+// Property range struct (for axis min/max)
+typedef struct _DIPROPRANGE {
+    DIPROPHEADER diph;
+    LONG         lMin;
+    LONG         lMax;
+} DIPROPRANGE, *LPDIPROPRANGE;
+
+// DInput GUIDs
+static const GUID GUID_SysKeyboard  = {0x6F1D2B61, 0xD5A0, 0x11CF, {0xBF,0xC7,0x44,0x45,0x53,0x54,0x00,0x00}};
+static const GUID GUID_SysMouse     = {0x6F1D2B60, 0xD5A0, 0x11CF, {0xBF,0xC7,0x44,0x45,0x53,0x54,0x00,0x00}};
+static const GUID IID_IDirectInput8 = {0xBF798031, 0x483A, 0x4DA2, {0xAA,0x99,0x5D,0x64,0xED,0x36,0x97,0x00}};
+static const GUID IID_IDirectInputDevice2 = {0x5944E682, 0xC92E, 0x11CF, {0xBF,0xC7,0x44,0x45,0x53,0x54,0x00,0x00}};
+
+// Data format globals (stub instances — const needed since REFGUID is const&)
+static const DIDATAFORMAT c_dfDIKeyboard  = {sizeof(DIDATAFORMAT), sizeof(DIOBJECTDATAFORMAT), 0x2, 256, 0, NULL};
+static const DIDATAFORMAT c_dfDIMouse     = {sizeof(DIDATAFORMAT), sizeof(DIOBJECTDATAFORMAT), 0x2, sizeof(DIMOUSESTATE), 0, NULL};
+static const DIDATAFORMAT c_dfDIJoystick  = {sizeof(DIDATAFORMAT), sizeof(DIOBJECTDATAFORMAT), 0x1, sizeof(DIJOYSTATE), 0, NULL};
+
+// Enumeration constants
+#define DI8DEVCLASS_GAMECTRL  4
+#define DIEDFL_ATTACHEDONLY   0x00000001
+#define DIENUM_STOP           0
+#define DIENUM_CONTINUE       1
+
+// IDirectInputDevice_Release macro (C interface compat)
+#define IDirectInputDevice_Release(p)  ((p)->Release())
+
+// Error codes
+#define DIERR_INVALIDPARAM      0x80070057L
+#define DIERR_NOTINITIALIZED    0x80040001L
+#define DIERR_OTHERAPPHASPRIO   0x8007000AL
+#define DIERR_ACQUIRED          0x8007001EL
+#define DIERR_NOTACQUIRED       0x8007001FL
+#define DIERR_INPUTLOST         0x8007001FL
 
 #endif // DINPUT_H_COMPAT

@@ -68,6 +68,15 @@ inline D3DXMATRIX* D3DXMatrixTranspose(D3DXMATRIX* pOut, const D3DXMATRIX* pM) {
     return pOut;
 }
 
+inline D3DXVECTOR4* D3DXVec3Transform(D3DXVECTOR4* pOut, const D3DXVECTOR3* pV, const D3DXMATRIX* pM) {
+    if (!pOut || !pV || !pM) return NULL;
+    pOut->x = pV->x*pM->m[0][0] + pV->y*pM->m[1][0] + pV->z*pM->m[2][0] + pM->m[3][0];
+    pOut->y = pV->x*pM->m[0][1] + pV->y*pM->m[1][1] + pV->z*pM->m[2][1] + pM->m[3][1];
+    pOut->z = pV->x*pM->m[0][2] + pV->y*pM->m[1][2] + pV->z*pM->m[2][2] + pM->m[3][2];
+    pOut->w = pV->x*pM->m[0][3] + pV->y*pM->m[1][3] + pV->z*pM->m[2][3] + pM->m[3][3];
+    return pOut;
+}
+
 inline float D3DXVec3Dot(const D3DXVECTOR3* pV1, const D3DXVECTOR3* pV2) {
     return pV1->x*pV2->x + pV1->y*pV2->y + pV1->z*pV2->z;
 }

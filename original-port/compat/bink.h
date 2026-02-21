@@ -5,8 +5,8 @@
 
 #include "windef.h"
 
-typedef void* HBINK;
-typedef void* HBINKTRACK;
+typedef struct _BINK* HBINK;
+typedef struct _BINKTRACK* HBINKTRACK;
 
 typedef struct _BINK {
     UINT Width, Height;
@@ -39,6 +39,14 @@ inline UINT      BinkGetNumTracks(HBINK bink) { return 0; }
 inline UINT      BinkGetTrackID(HBINK bink, UINT track) { return 0; }
 inline void      BinkSetVolume(HBINK bink, UINT track, int vol) {}
 inline void      BinkSetPan(HBINK bink, UINT track, int pan) {}
+inline void      BinkSoundUseDirectSound(UINT device) {}
+
+// Bink copy/surface flags
+#define BINKSURFACE565       0x00000010L
+#define BINKSURFACE555       0x00000020L
+#define BINKSURFACE888       0x00000040L
+#define BINKCOPYNOSCALING    0x00000100L
+#define BINKCOPYNOBLENDING   0x00000200L
 
 // Bink flags
 #define BINKPRELOADALL       0x00000001L

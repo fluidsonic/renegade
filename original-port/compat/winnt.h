@@ -77,15 +77,22 @@ inline BOOL TryEnterCriticalSection(LPCRITICAL_SECTION cs) {
     return pthread_mutex_trylock(&cs->mutex) == 0;
 }
 
-// WCHAR as uint16_t to match Windows 2-byte size
-typedef uint16_t WCHAR;
+// WCHAR as wchar_t so L"..." literals are type-compatible (compile-only goal;
+// runtime binary layout differs from Windows 2-byte wchar_t)
+#include <wchar.h>
+#ifndef WCHAR_DEFINED
+#define WCHAR_DEFINED
+typedef wchar_t  WCHAR;
+typedef WCHAR*   PWSTR;
+typedef WCHAR*   LPWSTR;
+typedef const WCHAR* PCWSTR;
+typedef const WCHAR* LPCWSTR;
+#endif
 typedef WCHAR*   PWCHAR;
 typedef WCHAR*   LPWCH;
 typedef WCHAR*   PWCH;
 typedef const WCHAR* LPCWCH;
 typedef const WCHAR* PCWCH;
-typedef WCHAR*   LPWSTR;
-typedef const WCHAR* LPCWSTR;
 
 // Unicode string macros
 #define UNICODE_NULL ((WCHAR)0)
@@ -96,5 +103,91 @@ typedef const WCHAR* LPCWSTR;
 #define WAIT_TIMEOUT                    ((DWORD)0x00000102L)
 #define WAIT_FAILED                     ((DWORD)0xFFFFFFFF)
 #define WAIT_ABANDONED                  ((DWORD)0x00000080L)
+
+// PE image types (Windows Portable Executable format)
+typedef struct _IMAGE_FILE_HEADER {
+    WORD    Machine;
+    WORD    NumberOfSections;
+    DWORD   TimeDateStamp;
+    DWORD   PointerToSymbolTable;
+    DWORD   NumberOfSymbols;
+    WORD    SizeOfOptionalHeader;
+    WORD    Characteristics;
+} IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
+
+#define IMAGE_SIZEOF_FILE_HEADER    20
+#define IMAGE_FILE_MACHINE_I386     0x014c
+
+typedef struct _IMAGE_DATA_DIRECTORY {
+    DWORD   VirtualAddress;
+    DWORD   Size;
+} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+
+#define IMAGE_NUMBEROF_DIRECTORY_ENTRIES 16
+
+typedef struct _IMAGE_OPTIONAL_HEADER {
+    WORD    Magic;
+    BYTE    MajorLinkerVersion;
+    BYTE    MinorLinkerVersion;
+    DWORD   SizeOfCode;
+    DWORD   SizeOfInitializedData;
+    DWORD   SizeOfUninitializedData;
+    DWORD   AddressOfEntryPoint;
+    DWORD   BaseOfCode;
+    DWORD   BaseOfData;
+    DWORD   ImageBase;
+    DWORD   SectionAlignment;
+    DWORD   FileAlignment;
+    WORD    MajorOperatingSystemVersion;
+    WORD    MinorOperatingSystemVersion;
+    WORD    MajorImageVersion;
+    WORD    MinorImageVersion;
+    WORD    MajorSubsystemVersion;
+    WORD    MinorSubsystemVersion;
+    DWORD   Win32VersionValue;
+    DWORD   SizeOfImage;
+    DWORD   SizeOfHeaders;
+    DWORD   CheckSum;
+    WORD    Subsystem;
+    WORD    DllCharacteristics;
+    DWORD   SizeOfStackReserve;
+    DWORD   SizeOfStackCommit;
+    DWORD   SizeOfHeapReserve;
+    DWORD   SizeOfHeapCommit;
+    DWORD   LoaderFlags;
+    DWORD   NumberOfRvaAndSizes;
+    IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+} IMAGE_OPTIONAL_HEADER, *PIMAGE_OPTIONAL_HEADER;
+
+typedef struct _IMAGE_NT_HEADERS {
+    DWORD Signature;
+    IMAGE_FILE_HEADER FileHeader;
+    IMAGE_OPTIONAL_HEADER OptionalHeader;
+} IMAGE_NT_HEADERS, *PIMAGE_NT_HEADERS;
+
+typedef struct _IMAGE_DOS_HEADER {
+    WORD e_magic;
+    WORD e_cblp;
+    WORD e_cp;
+    WORD e_crnc;
+    WORD e_cparhdr;
+    WORD e_minalloc;
+    WORD e_maxalloc;
+    WORD e_ss;
+    WORD e_sp;
+    WORD e_csum;
+    WORD e_ip;
+    WORD e_cs;
+    WORD e_lfarlc;
+    WORD e_ovno;
+    WORD e_res[4];
+    WORD e_oemid;
+    WORD e_oeminfo;
+    WORD e_res2[10];
+    LONG e_lfanew;
+} IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
+
+#define IMAGE_DOS_SIGNATURE  0x5A4D      // MZ
+#define IMAGE_NT_SIGNATURE   0x00004550  // PE\0\0
 
 #endif // WINNT_H_COMPAT

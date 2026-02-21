@@ -22,6 +22,10 @@ include_directories(
     "${COMPAT_DIR}"
 )
 
+# Force-include windef.h so Windows types and calling-convention macros are
+# available even in headers that don't #include <windows.h>
+add_compile_options(-include "${COMPAT_DIR}/windef.h")
+
 # Clang/Apple Silicon specific flags
 add_compile_options(
     -Wno-pragma-once-outside-header
@@ -31,6 +35,7 @@ add_compile_options(
     -Wno-invalid-offsetof
     -Wno-narrowing
     -Wno-int-to-pointer-cast
+    -Wno-pointer-to-int-cast
     -Wno-comment
     -Wno-microsoft-include
     -Wno-nonportable-include-path
@@ -44,12 +49,28 @@ add_compile_options(
     -Wno-self-assign
     -Wno-c++11-extensions
     -Wno-dangling-else
+    -Wno-macro-redefined
+    -Wno-non-pod-varargs
+    -fdelayed-template-parsing
 )
 
 # Thread support for pthread
 find_package(Threads REQUIRED)
 
 add_subdirectory(wwdebug)
-# add_subdirectory(WWMath)
-# add_subdirectory(wwbitpack)
-# add_subdirectory(wwlib)
+add_subdirectory(wwmath)
+add_subdirectory(wwbitpack)
+add_subdirectory(wwlib)
+add_subdirectory(wwutil)
+add_subdirectory(wwsaveload)
+add_subdirectory(wwtranslatedb)
+add_subdirectory(wwnet)
+add_subdirectory(ww3d2)
+add_subdirectory(wwphys)
+add_subdirectory(WWAudio)
+add_subdirectory(BinkMovie)
+add_subdirectory(wwui)
+add_subdirectory(SControl)
+add_subdirectory(Scripts)
+add_subdirectory(Combat)
+add_subdirectory(Commando)

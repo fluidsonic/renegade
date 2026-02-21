@@ -5,9 +5,11 @@
 
 #include "d3d8types.h"
 #include "d3d8caps.h"
+#include "wingdi.h"  // for PALETTEENTRY
 
 // Forward declarations
 struct IDirect3D8;
+struct IDirect3DSwapChain8;
 struct IDirect3DDevice8;
 struct IDirect3DResource8;
 struct IDirect3DBaseTexture8;
@@ -94,7 +96,7 @@ struct IDirect3DDevice8 : public IUnknown {
     virtual HRESULT SetCursorProperties(UINT x, UINT y, IDirect3DSurface8* pBitmap) { return E_NOTIMPL; }
     virtual void    SetCursorPosition(int x, int y, DWORD flags) {}
     virtual BOOL    ShowCursor(BOOL show) { return FALSE; }
-    virtual HRESULT CreateAdditionalSwapChain(D3DPRESENT_PARAMETERS* pp, void** sc) { return E_NOTIMPL; }
+    virtual HRESULT CreateAdditionalSwapChain(D3DPRESENT_PARAMETERS* pp, IDirect3DSwapChain8** sc) { return E_NOTIMPL; }
     virtual HRESULT Reset(D3DPRESENT_PARAMETERS* pp) { return E_NOTIMPL; }
     virtual HRESULT Present(const RECT* src, const RECT* dst, HWND wnd, const void* region) { return E_NOTIMPL; }
     virtual HRESULT GetBackBuffer(UINT index, DWORD type, IDirect3DSurface8** ppBack) { return E_NOTIMPL; }
@@ -180,6 +182,12 @@ struct IDirect3DDevice8 : public IUnknown {
     virtual HRESULT DeletePatch(UINT handle) { return E_NOTIMPL; }
 };
 
+struct IDirect3DSwapChain8 : public IUnknown {
+    virtual HRESULT Present(const RECT* src, const RECT* dst, HWND wnd, const void* region) { return E_NOTIMPL; }
+    virtual HRESULT GetBackBuffer(UINT index, DWORD type, IDirect3DSurface8** ppBack) { return E_NOTIMPL; }
+    virtual HRESULT GetRasterStatus(void* pStatus) { return E_NOTIMPL; }
+};
+
 struct IDirect3D8 : public IUnknown {
     virtual HRESULT RegisterSoftwareDevice(void* pInitFn) { return E_NOTIMPL; }
     virtual UINT    GetAdapterCount() { return 1; }
@@ -197,6 +205,14 @@ struct IDirect3D8 : public IUnknown {
 };
 
 inline IDirect3D8* Direct3DCreate8(UINT sdk_version) { return NULL; }
+
+// Convenience typedefs
+typedef IDirect3DSurface8*       LPDIRECT3DSURFACE8;
+typedef IDirect3DTexture8*       LPDIRECT3DTEXTURE8;
+typedef IDirect3DDevice8*        LPDIRECT3DDEVICE8;
+typedef IDirect3D8*              LPDIRECT3D8;
+typedef IDirect3DVertexBuffer8*  LPDIRECT3DVERTEXBUFFER8;
+typedef IDirect3DIndexBuffer8*   LPDIRECT3DINDEXBUFFER8;
 
 #define D3DCLEAR_TARGET    0x00000001L
 #define D3DCLEAR_ZBUFFER   0x00000002L
