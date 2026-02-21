@@ -89,10 +89,27 @@
   position(3×float BITPACK_WORLD), humanState(BITPACK_HUMAN_STATE), humanSubState, isSpecialDamage(bool),
   onHostBone(bool), targeting(3×float BITPACK_WORLD), continuousBoolBits(BITPACK_CONTINUOUS), 4×analog(BITPACK_ANALOG)
 
-### SpawnerClass save format (for future spawn point extraction from map .lsd)
-- `CHUNKID_COMBAT_BEGIN = 0x00040000`; SpawnerClass CHUNKID_PARENT=1014991053, CHUNKID_VARIABLES=1014991054
-- In VARIABLES micro-chunks: ID=1 (int), TM=2 (Matrix3D: 12 floats = 48 bytes), DEFINITION_ID=3 (int)
-- Position = TM columns [3]: bytes 12–15 (X), 28–31 (Y), 44–47 (Z) within the 48-byte Matrix3D
+### SpawnerClass save format
+- SpawnerClass CHUNKID_PARENT=1014991053, CHUNKID_VARIABLES=1014991054; micro 1=ID, 2=TM(48b), 3=defId, 6=enabled, 7=spawnPoint(repeats)
+- Position = TM column[3]: bytes 12–15(X), 28–31(Y), 44–47(Z) within 48-byte Matrix3D
+- SpawnerLoader now handles this: `ccr.server.level.ldd.SpawnerLoader.load(chunk)`
+
+### Map loading — LevelLoader
+- Orchestrator: `LevelLoader(alwaysMix, mapMix, baseName).load()` (suspend) — returns `LoadedLevel`
+- Package structure: `ccr.server.level` (root), `lsd/` (static), `ldd/` (dynamic), `pathfind/`, `w3d/`
+- `FullDefinitionLoader.load(ddbData, registry)` — dispatches by classId to 30+ typed parsers
+- `SoldierGameObjDef` has no CLASS_ID constant; use `0x3001u` (CLASSID_GAME_OBJECTS + 1)
+- `MixReader.readFile()` is case-insensitive (crcStringi) — no need for .lsd/.LSD case fallbacks
+
+### LDD format (combatsaveload.cpp)
+- Top-level chunks: CHUNKID_LEVEL_INFO (micro 1=mapFilename, 2=missionDescId, 3=description) + CHUNKID_LEVEL_DATA
+- Inside LEVEL_DATA: CHUNKID_GAMEOBJMANAGER + CHUNKID_SPAWNERS + CHUNKID_SCRIPTS
+- BaseGameObj CHUNKID_VARIABLES = 910991407; definitionId = micro 2, instanceId = micro 3
+
+### LSD chunk IDs — corrections vs original docs
+- WWAudio subsystem in LSD: `CHUNKID_STATIC_SAVELOAD = 0x00030005` (NOT 0x00030000 which is just the range start)
+- BackgroundMgr: `CHUNKID_BACKGROUND_MGR = 0x00040126u`; WeatherMgr: `CHUNKID_WEATHER_MGR = 0x00040800u`
+- Pathfind corrected: HEIGHTDB=0x0106063Du, ACTION_PORTAL=0x0106063Eu, WAYPATH_PORTAL=0x0106063Fu
 
 ### Live proxy (diagnostic tool)
 - `gradlew :server:liveProxy -PlocalPort=4849 -PremoteHost=127.0.0.1 -PremotePort=4848 -PlogFile=.tmp/proxy_log.txt`
