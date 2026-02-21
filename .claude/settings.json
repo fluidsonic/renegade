@@ -1,0 +1,54 @@
+{
+	"$schema": "https://json.schemastore.org/claude-code-settings.json",
+	"env": {
+		"CLAUDE_CODE_MAX_OUTPUT_TOKENS": "64000"
+	},
+	"permissions": {
+		"allow": [
+			"Bash(**/gradlew *)",
+			"Edit(/CLAUDE.md)",
+			"Edit(/docs/**)",
+			"Edit(/plans/**)",
+			"Write(/CLAUDE.md)",
+			"Write(/docs/**)",
+			"Write(/plans/**)"
+		],
+		"ask": [
+			"Bash(*git *--force*)",
+			"Bash(*git *checkout*)",
+			"Bash(*git *merge*)",
+			"Bash(*git *rebase*)",
+			"Bash(*git *remote*)",
+			"Bash(*git *reset*)",
+			"Bash(*git *stash*)",
+			"Bash(*git *worktree*)",
+			"Bash(cxbottle:*)",
+			"Edit(~/Library/Application Support/CrossOver/Bottles/**)",
+			"Write(~/Library/Application Support/CrossOver/Bottles/**)"
+		],
+		"deny": []
+	},
+	"sandbox": {
+		"allowUnsandboxedCommands": false,
+		"autoAllowBashIfSandboxed": true,
+		"enabled": true,
+		"excludedCommands": [
+			"**/gradlew *",
+			"*git*checkout*",
+			"*git*commit*",
+			"*git*rebase*",
+			"*git*remote*",
+			"*git*reset*",
+			"*git*stash*",
+			"*git*worktree*",
+			"*launch-server.sh*",
+			"*RenegadeServer.exe*",
+			"cxbottle:*"
+		],
+		"network": {
+			"allowLocalBinding": true,
+			"allowUnixSockets": [],
+			"allowedDomains": []
+		}
+	}
+}

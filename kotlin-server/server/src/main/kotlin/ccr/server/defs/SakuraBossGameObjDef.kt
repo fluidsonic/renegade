@@ -1,0 +1,80 @@
+package ccr.server.defs
+
+import ccr.server.mix.ChunkReader
+
+/**
+ * Kotlin representation of SakuraBossGameObjDef (Combat/sakurabossgameobj.h).
+ *
+ * C++ hierarchy: SakuraBossGameObjDef : VehicleGameObjDef : SmartGameObjDef :
+ *   ArmedGameObjDef : PhysicalGameObjDef : DamageableGameObjDef :
+ *   ScriptableGameObjDef : BaseGameObjDef : DefinitionClass
+ *
+ * Chunk layout inside OBJDATA:
+ *   [CHUNKID_DEF_PARENT = 0x09070458]              -> VehicleGameObjDef::Save (parent chain)
+ *   [CHUNKID_DEF_VARIABLES = 0x09070459]            -> sakura-specific micro-chunks
+ *   [CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF = 0x0907045A] -> DefenseObjectDefClass for rockets
+ */
+class SakuraBossGameObjDef(
+    name: String,
+    id: UInt,
+    classId: UInt,
+    // SakuraBoss-specific fields — defaults match C++ constructor
+    val gattlingGunDefId: Int = 0,
+    val rocketLauncherDefId: Int = 0,
+    val gattlingGunRevSoundDefId: Int = 0,
+    val rocketDoorOpenSoundId: Int = 0,
+    val rocketDestroyedExplosionId: Int = 0,
+    val rocketsDefense: BuildingGameObjDef.DefenseObjectDef = BuildingGameObjDef.DefenseObjectDef(),
+) : DefinitionClass(name, id, classId) {
+
+    companion object {
+        const val CLASS_ID: UInt = 0x3014u // CLASSID_GAME_OBJECT_DEF_SAKURA_BOSS
+    }
+}
+
+// Chunk IDs from sakurabossgameobj.cpp local enum
+private const val CHUNKID_DEF_VARIABLES = 0x09070459u
+private const val CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF = 0x0907045Au
+
+// Micro-chunk IDs (from sakurabossgameobj.cpp, starting at 1)
+private const val VARID_DEF_GATLING_DEF_ID = 1
+private const val VARID_DEF_ROCKET_DEF_ID = 2
+private const val VARID_DEF_GATLING_REV_SOUND_ID = 3
+private const val VARID_DEF_ROCKET_DOOR_SOUND_ID = 4
+private const val VARID_DEF_ROCKET_DESTROYED_EXPLOSION_ID = 5
+
+fun parseSakuraBossGameObjDef(
+    objDataReader: ChunkReader,
+    name: String,
+    id: UInt,
+    classId: UInt,
+): SakuraBossGameObjDef? {
+    // Parse sakura-specific variables
+    val varsReader = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
+
+    val gattlingGunDefId = varsReader?.readMicroInt(VARID_DEF_GATLING_DEF_ID) ?: 0
+    val rocketLauncherDefId = varsReader?.readMicroInt(VARID_DEF_ROCKET_DEF_ID) ?: 0
+    val gattlingGunRevSoundDefId = varsReader?.readMicroInt(VARID_DEF_GATLING_REV_SOUND_ID) ?: 0
+    val rocketDoorOpenSoundId = varsReader?.readMicroInt(VARID_DEF_ROCKET_DOOR_SOUND_ID) ?: 0
+    val rocketDestroyedExplosionId = varsReader?.readMicroInt(VARID_DEF_ROCKET_DESTROYED_EXPLOSION_ID) ?: 0
+
+    // Parse rockets defense object def (reuses BuildingGameObjDef.DefenseObjectDef)
+    val rocketsDefChunk = objDataReader.findChunk(CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF)
+    val rocketsDefense = if (rocketsDefChunk != null) {
+        BuildingGameObjDef.DefenseObjectDef.load(rocketsDefChunk)
+    } else {
+        BuildingGameObjDef.DefenseObjectDef()
+    }
+
+    return SakuraBossGameObjDef(
+        name = name,
+        id = id,
+        classId = classId,
+        gattlingGunDefId = gattlingGunDefId,
+        rocketLauncherDefId = rocketLauncherDefId,
+        gattlingGunRevSoundDefId = gattlingGunRevSoundDefId,
+        rocketDoorOpenSoundId = rocketDoorOpenSoundId,
+        rocketDestroyedExplosionId = rocketDestroyedExplosionId,
+        rocketsDefense = rocketsDefense,
+    )
+}

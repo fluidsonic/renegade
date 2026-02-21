@@ -34,29 +34,37 @@ UDP datagram
 ## Connection Handshake
 
 ```
-Client                           Server
-  │                                 │
-  │──── CONNECT_CS (id=0) ─────────▶│  payload: nickname, password, exeKey, bbo
-  │◀─── ACK (id=0) ─────────────────│  always sent before processing
-  │◀─── ACCEPT_SC (id=0) ───────────│  payload: assigned rhostId
-  │──── ACK (id=0) ────────────────▶│
-  │                                 │
-  │    (Connection_Handler called)  │
-  │◀─── RELIABLE id=1: TEAM(NOD) ──│  classId=1010, teamNumber=0
-  │◀─── RELIABLE id=2: TEAM(GDI) ──│  classId=1010, teamNumber=1
-  │◀─── RELIABLE id=3: GAMEOPTIONSEVENT ─│  classId=1008, game rules + CRCs
-  │◀─── RELIABLE id=4: PLAYER ─────│  classId=1011, nickname + stats
-  │──── ACK (id=1..4) ─────────────▶│
-  │                                 │
-  │    (client loads map)           │
-  │──── RELIABLE: LOADINGEVENT ────▶│  classId=1027, IsLoading=false
-  │◀─── ACK ────────────────────────│
-  │                                 │
-  │    (team selection dialog)      │
-  │──── RELIABLE: CHANGETEAMEVENT ─▶│  classId=1021
-  │                                 │
-  │◀─── game stream ───────────────▶│  RELIABLE + UNRELIABLE game objects
+Client                               Server
+  │                                     │
+  │──── CONNECT_CS (id=0) ─────────────▶│  nickname + password + exeKey + bbo
+  │◀─── ACK (id=0) ────────────────────│  always sent before processing
+  │◀─── ACCEPT_SC (id=0) ──────────────│  assigned rhostId (MUST be first)
+  │──── ACK (id=0) ───────────────────▶│
+  │                                     │
+  │  ┌─ Connection_Handler ────────┐    │
+  │◀─│─ RELIABLE id=1: TEAM(NOD) ──│───│  classId=1010, teamNumber=0
+  │◀─│─ RELIABLE id=2: TEAM(GDI) ──│───│  classId=1010, teamNumber=1
+  │◀─│─ RELIABLE id=3: GAMEOPTIONSEVENT │  classId=1008, game rules + CRCs
+  │  └─────────────────────────────┘    │
+  │──── ACK (id=1..3) ────────────────▶│
+  │                                     │
+  │    (client loads map)               │
+  │──── RELIABLE: CLIENTCONTROL ──────▶│  classId=1018
+  │──── RELIABLE: CLIENTFPS ──────────▶│  classId=1032
+  │──── RELIABLE: LOADINGEVENT ───────▶│  classId=1027, IsLoading=false
+  │                                     │
+  │    (client finishes loading)        │
+  │──── RELIABLE: BIOEVENT ───────────▶│  classId=1026
+  │◀─── RELIABLE: PLAYER (creation) ───│  classId=1011, name + team + stats
+  │◀─── RELIABLE: GAMEDATAUPDATEEVENT ─│  classId=1012
+  │──── ACK ──────────────────────────▶│
+  │                                     │
+  │◀───────── game stream ────────────▶│  RELIABLE + UNRELIABLE game objects
 ```
+
+**Critical ordering**: ACCEPT_SC must be sent before any game objects. Player creation
+is deferred to the BIOEVENT handler (after client finishes loading), not sent in
+Connection_Handler. See [network.md](network.md) for full protocol reference.
 
 ## CONNECT_CS Payload (C→S)
 
@@ -258,19 +266,24 @@ After receiving the GameOptionsEvent, the client:
 5. When loaded → sends LOADINGEVENT (classId=1027) with `IsLoading=false`
 6. Server sets player as "in game", may show team selection
 
-## What the Kotlin Server Currently Sends on Connection
+## What the Kotlin Server Sends
 
-1. ACCEPT_SC (reliable id=0) — slot assignment
-2. TEAM NOD (reliable id=1) — networkId=100001, teamNumber=0
-3. TEAM GDI (reliable id=2) — networkId=100002, teamNumber=1
-4. GAMEOPTIONSEVENT (reliable id=3) — networkId=100003, game rules + real CRC values
-5. PLAYER (reliable id=4) — networkId=rhostId, player info
+### On connection (Connection_Handler):
+1. ACK for CONNECT_CS
+2. ACCEPT_SC (reliable id=0) — slot assignment
+3. TEAM NOD (reliable id=1) — networkId=100001, teamNumber=0
+4. TEAM GDI (reliable id=2) — networkId=100002, teamNumber=1
+5. GAMEOPTIONSEVENT (reliable id=3) — networkId=100003, game rules + real CRC values
+
+### After BIOEVENT (post-load):
+6. PLAYER (BIT_CREATION) — networkId=rhostId, name + team + isInGame=true
+7. GAMEDATAUPDATEEVENT — timeRemaining + hostedGameNumber
 
 MapNameCRC and ModNameCRC are computed using `crcStringi(mapName)` — C++ `CRC_Stringi` —
 which is standard CRC32 over the uppercase bytes of the filename (e.g., `"C&C_Under.mix"`).
-The LAN broadcast also sends the real CRCs. Known value: `crcStringi("C&C_Under.mix") == 721292856`.
+Known value: `crcStringi("C&C_Under.mix") == 0x2AFE0E38`.
 
-**Known gaps (Phase 2):**
+**Known gaps:**
 - Other connected players' PLAYER objects are not broadcast to new clients
-- GAMEDATAUPDATEEVENT not sent after LOADINGEVENT
 - Server_Think object update loop not implemented (buildings, vehicles, etc. not streamed)
+- SoldierGameObj spawn disabled while debugging encoding issues
