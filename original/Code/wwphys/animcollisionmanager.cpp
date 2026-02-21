@@ -8,8 +8,6 @@
 #include "hanim.h"
 #include "boxrobj.h"
 #include "chunkio.h"
-#include "wwdebug.h"
-#include "wwprofile.h"
 
 
 /*
@@ -18,7 +16,7 @@
 #define VERBOSE_LOGGING 0
 
 #if VERBOSE_LOGGING
-#define VERBOSE_LOG(x) /*if (strstr(Parent.Peek_Model()->Get_Name(),"HND_ELEV03"))*/ WWDEBUG_SAY(x)
+#define VERBOSE_LOG(x) /*if (strstr(Parent.Peek_Model()->Get_Name(),"HND_ELEV03"))*/ 
 #else
 #define VERBOSE_LOG(x)
 #endif
@@ -35,7 +33,7 @@ class PushRecordClass : public AutoPoolClass<PushRecordClass,32>
 {
 public:
 
-	PushRecordClass(PhysClass * obj) : Object(NULL), Next(NULL)	{ REF_PTR_SET(Object,obj); WWASSERT(obj); Transform = obj->Get_Transform(); }
+	PushRecordClass(PhysClass * obj) : Object(NULL), Next(NULL)	{ REF_PTR_SET(Object,obj); assert(obj); Transform = obj->Get_Transform(); }
 	~PushRecordClass(void)													{ REF_PTR_RELEASE(Object); };
 
 	void Revert(void)															{ Object->Set_Transform(Transform); }	
@@ -257,7 +255,6 @@ AnimCollisionManagerClass::CollideableObjClass::Intersect_Scene
 
 #if VERBOSE_LOGGING
 	Vector3 pos = CollisionMesh->Get_Transform().Get_Translation();
-	WWDEBUG_SAY(("Checking obj: %s position: %10.2f, %10.2f, %10.2f\r\n",CollisionMesh->Get_Name(),pos.X,pos.Y,pos.Z));
 #endif
 
 	switch (CollisionMesh->Class_ID()) {
@@ -383,7 +380,6 @@ AnimCollisionManagerClass::AnimCollisionManagerClass(PhysClass & parent) :
  *=============================================================================================*/
 AnimCollisionManagerClass::~AnimCollisionManagerClass(void)
 {
-	WWASSERT(PushList == NULL);
 	REF_PTR_RELEASE(CurAnimation);
 	REF_PTR_RELEASE(PrevAnimation);
 }
@@ -473,7 +469,6 @@ void AnimCollisionManagerClass::Internal_Set_Animation(const char * anim_name)
 {
 	HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim(anim_name);
 	if ( anim == NULL && anim_name != NULL ) {
-		WWDEBUG_SAY(( "FAILED TO FIND ANIM IN AnimCollisionManagerClass::Internal_Set_Animation(\"%s\")\n", anim_name ));
 	}
 	REF_PTR_SET(CurAnimation,anim);
 	REF_PTR_RELEASE(anim);
@@ -671,7 +666,6 @@ void AnimCollisionManagerClass::Set_Current_Frame(float frame)
 	Parent.Enable_Is_State_Dirty(true);
 	
 #if VERBOSE_LOGGING
-	WWASSERT(!Is_Intersecting());
 #endif
 }
 
@@ -922,7 +916,6 @@ void AnimCollisionManagerClass::Recursive_Collect_Collision_Models(RenderObjClas
  *=============================================================================================*/
 bool AnimCollisionManagerClass::Timestep(float dt)
 {
-	WWPROFILE("AnimColMgr::Timestep");
 	VERBOSE_LOG(("\r\nTimestep for %s - begin\r\n",Parent.Peek_Model()->Get_Name()));
 	bool object_animated = false;
 
@@ -951,7 +944,6 @@ bool AnimCollisionManagerClass::Timestep(float dt)
 	bool started_intersecting = false;
 	if (CollisionMode != COLLIDE_NONE) {
 		started_intersecting = Is_Intersecting();
-		WWDEBUG_SAY(("Checking started_intersecting: %d\r\n",started_intersecting));
 	}
 #endif
 
@@ -989,7 +981,6 @@ bool AnimCollisionManagerClass::Timestep(float dt)
 				break;
 
 			default:
-				WWASSERT_PRINT(0,("Invalid Animation Mode!\n"));
 
 		}
 
@@ -1044,10 +1035,8 @@ bool AnimCollisionManagerClass::Timestep(float dt)
 			} 
 
 #if VERBOSE_LOGGING	
-			WWDEBUG_SAY(("checking is_now_intersecting\r\n"));
 			bool is_now_intersecting = Is_Intersecting();
 			if ( (started_intersecting == false) && (is_now_intersecting == true)) {
-				WWDEBUG_SAY(("Reverting did not fix intersections!\r\n"));
 			}
 #endif
 		}
@@ -1371,7 +1360,6 @@ bool AnimCollisionManagerClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		};
 				
@@ -1385,7 +1373,6 @@ bool AnimCollisionManagerClass::Load(ChunkLoadClass &cload)
 	if (!prev_anim_name.Is_Empty()) {
 		HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim(prev_anim_name);
 		if ( anim == NULL ) {
-			WWDEBUG_SAY(( "FAILED TO FIND PREV ANIM IN AnimCollisionManagerClass::Internal_Set_Animation(\"%s\")\n", prev_anim_name ));
 		}
 		REF_PTR_SET(PrevAnimation,anim);
 	}
@@ -1458,7 +1445,6 @@ bool AnimCollisionManagerDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

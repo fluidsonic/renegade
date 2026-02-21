@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __AUDIO_EVENTS_H
 #define __AUDIO_EVENTS_H

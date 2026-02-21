@@ -7,7 +7,6 @@
 #include "colmath.h"
 #include "coltest.h"
 #include "inttest.h"
-#include "wwdebug.h"
 #include "matinfo.h"
 #include "htree.h"
 #include "predlod.h"
@@ -204,7 +203,6 @@ float RenderObjClass::Calculate_Texture_Reduction_Factor(float norm_screensize)
 /*
 void RenderObjClass::Set_Texture_Reduction_Factor(float trf)
 {
-	WWASSERT(0);	// Texture reduction system is broken! Don't call!
 	MaterialInfoClass *minfo = Get_Material_Info();
 	if (minfo) {
 		minfo->Set_Texture_Reduction_Factor(trf);
@@ -298,7 +296,6 @@ void RenderObjClass::Set_Container(RenderObjClass * con)
 { 
 	// Either we arent currently in a container or we are clearing our container, otherwise
 	// Houston, there is a problem!
-	WWASSERT((con == NULL) || (Container == NULL));
 	Container = con; 
 }
 
@@ -678,8 +675,6 @@ void RenderObjClass::Update_Sub_Object_Transforms(void)
  *=============================================================================================*/
 void RenderObjClass::Add(SceneClass * scene)
 {
-	WWASSERT(scene);
-	WWASSERT(Container == NULL);
 	Scene = scene;
 	Scene->Add_Render_Object(this);
 }
@@ -1123,8 +1118,6 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 				if (strlen(name) == 0) {
 					static int count = 0;
 					if ( ++count < 10 ) {
-						WWDEBUG_SAY(("RenderObjPersistFactory attempted to load an un-named render object!\r\n"));
-						WWDEBUG_SAY(("Replacing it with a NULL render object!\r\n"));
 					}
 					strcpy(name,"NULL");
 				}
@@ -1134,15 +1127,11 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 				if (new_obj == NULL) {
 					static int count = 0;
 					if ( ++count < 10 ) {
-						WWDEBUG_SAY(("RenderObjPersistFactory failed to create object: %s!!\r\n",name));
-						WWDEBUG_SAY(("Either the asset for this object is gone or you tried to save a procedural object.\r\n"));
-						WWDEBUG_SAY(("Replacing it with a NULL render object!\r\n"));
 					}
 					strcpy(name,"NULL");
 					new_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
 				}
 
-				WWASSERT(new_obj != NULL);
 				if (new_obj) {
 					new_obj->Set_Transform(tm);
 				}
@@ -1156,7 +1145,6 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",(int)cload.Cur_Chunk_ID(), __FILE__,__LINE__));
 				break;
 		};
 		cload.Close_Chunk();
@@ -1204,13 +1192,11 @@ bool RenderObjClass::Save (ChunkSaveClass &csave)
 	// a "shortcut".  We specifically designed this capability into the persistant
 	// object system so that we could avoid making all render object's save and
 	// load themselves if possible.
-	WWASSERT(0); 
 	return true;
 }
 
 bool RenderObjClass::Load (ChunkLoadClass &cload)
 {
-	WWASSERT(0); // this should never hit with the persist factory we're using.
 	return true;
 }
 
@@ -1295,8 +1281,6 @@ void RenderObjClass::Load_Sub_Object_User_Lighting(ChunkLoadClass & cload)
 	*/
 	cload.Open_Chunk();
 
-	WWASSERT(cload.Cur_Chunk_ID() == CHUNKID_SUBOBJ_NAME);
-	WWASSERT(cload.Cur_Chunk_Length() < BUFFER_SIZE);
 
 	cload.Read(tmp_string,cload.Cur_Chunk_Length());
 	tmp_string[BUFFER_SIZE-1] = 0;
@@ -1306,13 +1290,10 @@ void RenderObjClass::Load_Sub_Object_User_Lighting(ChunkLoadClass & cload)
 	** Load the bone index for the object
 	*/
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == CHUNKD_SUBOBJ_BONE_INDEX);
 	cload.Read(&bone_index,sizeof(int));
 	cload.Close_Chunk();
 
 	if ((bone_index < 0) || (bone_index >= Get_Num_Bones())) {
-		WWDEBUG_SAY(("Invalid Bone Index %d referenced in Object %s.\r\n",bone_index, tmp_string));
-		WWASSERT(0);
 		return;
 	}
 
@@ -1320,7 +1301,6 @@ void RenderObjClass::Load_Sub_Object_User_Lighting(ChunkLoadClass & cload)
 	** Find the object and tell it to load its lighting data
 	*/
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == CHUNKID_SUBOBJ_LIGHTING_DATA);
 	
 	RenderObjClass * obj = NULL;
 	int bone_obj_count = Get_Num_Sub_Objects_On_Bone(bone_index);

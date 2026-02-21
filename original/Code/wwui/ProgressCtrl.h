@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __PROGRESS_CTRL_H
 #define __PROGRESS_CTRL_H

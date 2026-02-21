@@ -10,8 +10,7 @@ class ServerSettingsClass
 
 		enum GameModeTypeEnum {
 			MODE_NONE = 0,
-			MODE_LAN,
-			MODE_GAMESPY
+			MODE_LAN
 		};
 
 		static void Set_Settings_File_Name(char *filename);

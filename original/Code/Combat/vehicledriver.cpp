@@ -385,7 +385,6 @@ VehicleDriverClass::Drive_Wheeled (void)
 
 		/*StringClass message;
 		message.Format ("forward accel = %f\n", forward_accel);
-		WWDEBUG_SAY (((const char *)message));*/
 
 		//
 		//	Invert everything if we are locked in driving backwards mode
@@ -633,7 +632,7 @@ VehicleDriverClass::Drive_Tracked (void)
 
 		//StringClass message;
 //		message.Format ("turn_angle = %f\n", turn_angle * 180 / 3.1415926F);
-		//WWDEBUG_SAY (((const char *)message));
+		//
 
 		//
 		//	Calculate how sharp we need to turn based on the sharpness of the curve
@@ -755,17 +754,9 @@ VehicleDriverClass::Apply_Controls
 )
 {
 	if (!WWMath::Is_Valid_Float(forward_accel)) {
-#ifdef WWDEBUG
-		const char* name = m_GameObj->Peek_Physical_Object()->Peek_Model()->Get_Name();
-		WWDEBUG_SAY(("VehicleDriverClass::Apply_Controls - BAD FLOAT forward_access = %f - Model name = %s\n", forward_accel, name));
-#endif //WWDEBUG
 		forward_accel = 0.0f;
 	}
 	if (!WWMath::Is_Valid_Float(left_accel)) {
-#ifdef WWDEBUG
-		const char* name = m_GameObj->Peek_Physical_Object()->Peek_Model()->Get_Name();
-		WWDEBUG_SAY(("VehicleDriverClass::Apply_Controls - BAD FLOAT left_access = %f - Model name = %s\n", left_accel, name));
-#endif //WWDEBUG
 		left_accel = 0.0f;
 	}
 

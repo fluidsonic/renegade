@@ -1,13 +1,9 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef STATICPHYS_H
 #define STATICPHYS_H
 
 #include "phys.h"
 #include "pscene.h"
-#include "wwdebug.h"
 #include "physcoltest.h"
 #include "physinttest.h"
 #include "vector.h"
@@ -171,7 +167,6 @@ protected:
 
 inline bool StaticPhysClass::Cast_Ray(PhysRayCollisionTestClass & raytest)
 {
-	WWASSERT(Model);
 	if (Model->Cast_Ray(raytest)) {
 		raytest.CollidedPhysObj = this;
 		return true;
@@ -182,7 +177,6 @@ inline bool StaticPhysClass::Cast_Ray(PhysRayCollisionTestClass & raytest)
 
 inline bool StaticPhysClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest)
 {
-	WWASSERT(Model);
 	if (Model->Cast_AABox(boxtest)) {
 		boxtest.CollidedPhysObj = this;
 		return true;
@@ -193,7 +187,6 @@ inline bool StaticPhysClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest)
 
 inline bool StaticPhysClass::Cast_OBBox(PhysOBBoxCollisionTestClass & boxtest)
 {
-	WWASSERT(Model);
 	if (Model->Cast_OBBox(boxtest)) {
 		boxtest.CollidedPhysObj = this;
 		return true;
@@ -222,7 +215,6 @@ inline bool StaticPhysClass::Intersection_Test(PhysOBBoxIntersectionTestClass & 
 
 inline bool StaticPhysClass::Intersection_Test(PhysMeshIntersectionTestClass & test)
 {
-	WWASSERT(0); // TODO: Mesh-Mesh intersection
 	return false;
 }
 

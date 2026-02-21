@@ -34,7 +34,6 @@ CClientControl::~CClientControl(void)
 void
 CClientControl::Init(void)
 {
-	WWASSERT(CombatManager::I_Am_Client());
 
 	ClientId = CombatManager::Get_My_Id();
 
@@ -47,7 +46,6 @@ CClientControl::Init(void)
 void
 CClientControl::Set_Update_Flag(int id)
 {
-	WWASSERT(CombatManager::I_Am_Client());
 
 	SmartObjId = id;
 
@@ -60,7 +58,6 @@ CClientControl::Set_Update_Flag(int id)
 void
 CClientControl::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Client());
 
 	NetworkObjectClass::Export_Creation(packet);
 
@@ -71,7 +68,6 @@ CClientControl::Export_Creation(BitStreamClass & packet)
 void
 CClientControl::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Server());
 
 	NetworkObjectClass::Import_Creation(packet);
 
@@ -82,14 +78,12 @@ CClientControl::Import_Creation(BitStreamClass & packet)
 void
 CClientControl::Export_Frequent(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Client());
 
 	/*
 	packet.Add(SmartObjId);
 
 	if (SmartObjId != -1) {
 		SmartGameObj * p_smart_go = GameObjManager::Find_SmartGameObj(SmartObjId);
-		WWASSERT(p_smart_go != NULL);
 
 		p_smart_go->Export_Control_Cs(packet);
 		p_smart_go->Export_State_Cs(packet);
@@ -107,7 +101,6 @@ CClientControl::Export_Frequent(BitStreamClass & packet)
 	packet.Add(SmartObjId);
 
 	if (SmartObjId != -1) {
-		WWASSERT(p_smart_go != NULL);
 
 		p_smart_go->Export_Control_Cs(packet);
 		p_smart_go->Export_State_Cs(packet);
@@ -120,13 +113,12 @@ CClientControl::Export_Frequent(BitStreamClass & packet)
 void
 CClientControl::Import_Frequent(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Server());
 
 	packet.Get(SmartObjId);
 
 	if (SmartObjId != -1) {
 		SmartGameObj * p_smart_go = GameObjManager::Find_SmartGameObj(SmartObjId);
-		//WWASSERT(p_smart_go != NULL);
+		//assert(p_smart_go != NULL);
 
 		if (p_smart_go == NULL) {
 			packet.Flush();

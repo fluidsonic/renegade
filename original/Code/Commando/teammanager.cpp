@@ -21,7 +21,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "consolemode.h"
-#include "gamespyadmin.h"
 
 //
 // Class statics
@@ -332,8 +331,8 @@ int cTeamManager::Team_Compare(const void * elem1, const void * elem2)
 //-----------------------------------------------------------------------------
 void cTeamManager::List_Print(WideStringClass & text, Vector3 color)
 {
-   //WWASSERT(text != NULL);
-   //WWASSERT(::strlen(text) > 0);
+   //assert(text != NULL);
+   //assert(::strlen(text) > 0);
 	if (PTextRenderer == NULL) {
 		return;
 	}
@@ -380,13 +379,8 @@ void cTeamManager::Construct_Heading(WideStringClass & string)
 	//
 	// "Team" or "Clan"
 	//
-	//GAMESPY
 	//substring.Format(L"%-11s", The_Game()->Get_Team_Word());
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		substring.Format(L"%-36s", The_Game()->Get_Team_Word());
-	} else {
-		substring.Format(L"%-11s", The_Game()->Get_Team_Word());
-	}
+	substring.Format(L"%-11s", The_Game()->Get_Team_Word());
 	string += substring;
 
    //

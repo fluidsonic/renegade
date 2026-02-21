@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef HTREE_H
 #define HTREE_H
@@ -11,7 +8,6 @@
 #include "matrix3d.h"
 #include "vector3.h"
 #include "w3d_file.h"
-#include "wwdebug.h"
 
 class HAnimClass;
 class HAnimComboClass;
@@ -134,8 +130,6 @@ WWINLINE const Matrix3D &	HTreeClass::Get_Root_Transform(void) const
 
 WWINLINE bool HTreeClass::Get_Visibility(int pivot) const
 {
-	WWASSERT(pivot >= 0);
-	WWASSERT(pivot < NumPivots);
 	return Pivot[pivot].IsVisible;
 }
 

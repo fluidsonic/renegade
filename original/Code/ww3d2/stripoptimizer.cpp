@@ -1,6 +1,5 @@
 #include "stripoptimizer.h"
 #include "hashtemplate.h"
-#include "wwdebug.h"
 
 template <class T> inline void swap (T& a, T& b)
 {
@@ -139,7 +138,7 @@ void StripOptimizerClass::Optimize_Strip_Order (int* strips, int strip_count)
 {
 	if (strip_count <= 0)
 		return;
-//	WWASSERT(strips);
+//	assert(strips);
 	
 	int**	ss = new int*[strip_count];							// pointers to beginning of strips
 	int* s = strips;
@@ -182,7 +181,7 @@ void StripOptimizerClass::Optimize_Strip_Order (int* strips, int strip_count)
 		ss[bestIndex] = NULL;								// mark as selected
 	}
 
-//	WWASSERT((out+outSize)==o);							// HUH?
+//	assert((out+outSize)==o);							// HUH?
 
 	for (i = 0; i < outSize; i++)						// copy output
 		strips[i] = out[i];
@@ -225,7 +224,6 @@ void StripOptimizerClass::Optimize_Triangle_Order (int *tris, int triangle_count
 {
 	if (triangle_count<=0)
 		return;
-	WWASSERT(tris);
 
 	Tri** t = new Tri*[triangle_count];
 	int i;
@@ -270,7 +268,6 @@ void StripOptimizerClass::Optimize_Triangle_Order (int *tris, int triangle_count
 	}
 
 
-	WWASSERT(o == (out+triangle_count));
 
 	for (i = 0; i < triangle_count; i++)
 	{
@@ -327,7 +324,7 @@ int* StripOptimizerClass::Combine_Strips (const int* strips, int strip_count)
 	}
 
 	delete[] tmp;
-//	WWASSERT(check == (o-out-1));
+//	assert(check == (o-out-1));
 	*out = (o-out-1);						// set length
 	return out;
 }
@@ -408,7 +405,7 @@ struct Triangle
 	int			m_bin;						// current bin (-1 == not in any bin)
 
 	int			getConnectivity (void) const	{ int cnt = 0; if (m_neighbors[0]) cnt++; if (m_neighbors[1]) cnt++; if (m_neighbors[2]) cnt++; return cnt;}
-	const Edge	getEdge			(int i) const	{ WWASSERT(i>=0 && i<3); return Edge(m_vertices[i],i==2?m_vertices[0]:m_vertices[i+1]); }
+	const Edge	getEdge			(int i) const	{ assert(i>=0 && i<3); return Edge(m_vertices[i],i==2?m_vertices[0]:m_vertices[i+1]); }
 
 };
 
@@ -458,7 +455,7 @@ private:
 
 	static Triangle*	generateTriangleList				(const Vector3i* tris, int N);
 	static Vector3i		getTriangleNodeConnectivityWeights	(const TriangleQueue& queue, const Triangle& tri);
-	static int			getMod3								(int i) { WWASSERT(i>=0 && i<6); return s_mod[i]; }
+	static int			getMod3								(int i) { assert(i>=0 && i<6); return s_mod[i]; }
 	static int			s_mod[6];						// small lookup table for mod3 operation (see getMod3())
 };
 
@@ -506,7 +503,6 @@ inline Triangle* TriangleQueue::getTop	(void) const
 
 inline int	TriangleQueue::getVertexConnectivity (int i)  const  
 { 
-	WWASSERT(i>=0 && i< m_vertexCount); 
 	return m_nodeConnectivity[i]; 
 }
 
@@ -536,7 +532,6 @@ inline TriangleQueue::~TriangleQueue ()
 
 inline void TriangleQueue::reinsert (Triangle* t)
 {
-	WWASSERT (t && t->m_bin!=-1);					// must be in some bin
 	int w = t->getConnectivity();
 
 	// remove from bin
@@ -544,8 +539,6 @@ inline void TriangleQueue::reinsert (Triangle* t)
 		t->m_prev->m_next = t->m_next;
 	else
 	{
-		WWASSERT(t->m_bin != -1);
-		WWASSERT(t == m_bin[t->m_bin]);			// must be head
 		m_bin[t->m_bin] = t->m_next;			// new head
 	}
 
@@ -573,13 +566,10 @@ inline void TriangleQueue::reinsert (Triangle* t)
 
 inline void TriangleQueue::removeTriangle	(Triangle* t)
 {
-	WWASSERT(t);
 	if (t->m_prev)
 		t->m_prev->m_next = t->m_next;
 	else
 	{
-		WWASSERT(t->m_bin != -1);
-		WWASSERT(t == m_bin[t->m_bin]);			// must be head
 		m_bin[t->m_bin] = t->m_next;			// new head
 	}
 
@@ -602,7 +592,6 @@ inline void TriangleQueue::removeTriangle	(Triangle* t)
 			for (k = 0; k < 3; k++)
 			if (n->m_neighbors[k]==t)
 				break;
-			WWASSERT (k!=3);							// WASS??
 			n->m_neighbors[k] = 0;					// reduce connection
 			t->m_neighbors[i] = 0;
 			update[i] = n;
@@ -614,7 +603,6 @@ inline void TriangleQueue::removeTriangle	(Triangle* t)
 	for (i = 0; i < 3; i++)
 	{
 		m_nodeConnectivity[t->m_vertices[i]]--;
-		WWASSERT(m_nodeConnectivity[t->m_vertices[i]] >= 0);		// WASS?
 	}
 
 	for (i = 0; i < 3; i++)							// perform reinsertions now...
@@ -645,7 +633,6 @@ inline TriangleQueue::TriangleQueue	(Triangle* tris, int N)
 	for (i = 0; i < N; i++)
 	for (int j = 0; j < 3; j++)
 	{
-		WWASSERT(tris[i].m_vertices[j]>=0);
 		if (tris[i].m_vertices[j] > largestIndex)
 			largestIndex = tris[i].m_vertices[j];
 	}
@@ -660,8 +647,6 @@ inline TriangleQueue::TriangleQueue	(Triangle* tris, int N)
 	{
 		Triangle* t = tris+i;
 		int w = t->getConnectivity();			
-		WWASSERT(w>=0 && w <=3);
-		WWASSERT(!t->m_prev && !t->m_next && t->m_bin==-1);	// must not be in a bin
 		t->m_prev = 0;
 		t->m_next = m_bin[w];
 		if (t->m_next)
@@ -725,7 +710,6 @@ inline Vector3i Stripify::getTriangleNodeConnectivityWeights (const TriangleQueu
 
 Triangle* Stripify::generateTriangleList (const Vector3i* inTris, int N)
 {
-	WWASSERT (inTris && N>=0);
 
 	Triangle*	tris = new Triangle[N];			// allocate triangles
 	int			i;
@@ -950,7 +934,6 @@ int* Stripify::stripify  (const Vector3i* inTris, int N)
 
 			if (next->m_vertices[1] != o[-1] && next->m_vertices[1] != o[-2]) vIndex = 1; else
 			if (next->m_vertices[2] != o[-1] && next->m_vertices[2] != o[-2]) vIndex = 2; else
-				WWASSERT (next->m_vertices[0] != o[-1] && next->m_vertices[0] != o[-2]);
 
 			//--------------------------------------------------------------------
 			// Output the vertex and move to next triangle
@@ -982,7 +965,6 @@ int* Stripify::stripify  (const Vector3i* inTris, int N)
 	*rOut = strip_count;													// first entry is number of strips
 	for (int i = 0; i < len; i++)
 	{
-		WWASSERT(out[i] >= 0);											// would be nice to test for len as well
 		rOut[i+1] = out[i];
 	}
 

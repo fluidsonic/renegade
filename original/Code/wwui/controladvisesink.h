@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __CONTROL_ADVISE_SINK_H
 #define __CONTROL_ADVISE_SINK_H

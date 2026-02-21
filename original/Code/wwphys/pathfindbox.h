@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __PATHFIND_BOX_H
 #define __PATHFIND_BOX_H

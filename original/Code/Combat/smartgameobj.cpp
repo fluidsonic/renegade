@@ -24,7 +24,6 @@
 #include "logicallistener.h"
 #include "combatsound.h"
 #include "logicalsound.h"
-#include "wwprofile.h"
 #include "playerdata.h"
 #include "persistfactory.h"
 #include "persistfactory.h"
@@ -166,7 +165,6 @@ void	SmartGameObj::Init( const SmartGameObjDef & definition )
 */
 void	SmartGameObj::Copy_Settings( const SmartGameObjDef & definition )
 {
-	WWASSERT( Peek_Physical_Object() );
 	MoveablePhysClass * moveable = Peek_Physical_Object()->As_MoveablePhysClass();
 	if (moveable != NULL) {
 		Peek_Physical_Object()->As_MoveablePhysClass()->Set_Controller( &Controller );
@@ -299,7 +297,6 @@ bool	SmartGameObj::Save( ChunkSaveClass & csave )
 
 bool	SmartGameObj::Load( ChunkLoadClass &cload )
 {
-	WWASSERT( PlayerData == NULL );
 
 	int new_control_owner = 0;
 
@@ -411,7 +408,6 @@ void SmartGameObj::Set_Player_Data( PlayerDataClass * player_data )
 //-----------------------------------------------------------------------------
 void SmartGameObj::Import_Frequent(BitStreamClass & packet)
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 	
 	/*TSS091301
 	//
@@ -437,7 +433,6 @@ void SmartGameObj::Import_Frequent(BitStreamClass & packet)
 		Import_Control_Sc(packet);
    }
 
-   WWASSERT(packet.Is_Flushed());
 	return ;
 }
 
@@ -533,7 +528,7 @@ bool SmartGameObj::Is_Human_Controlled(void)
 
 bool SmartGameObj::Is_Controlled_By_Me(void)
 {
-//	WWASSERT(CombatManager::I_Am_Client());
+//	assert(CombatManager::I_Am_Client());
 	if (!CombatManager::I_Am_Client()) {
 		return false;
 	}
@@ -660,11 +655,9 @@ void SmartGameObj::Apply_Control( void )
 void SmartGameObj::Think()
 {
 	{	
-		WWPROFILE( "Smart Think" );
 
 		// React to the controls
 		{
-			WWPROFILE("Controls");
 			if ( ControlEnabled ) {
 				Apply_Control();
 			} else {
@@ -678,7 +671,6 @@ void SmartGameObj::Think()
 
 		MovingSoundTimer -= TimeManager::Get_Frame_Seconds();
 		if ( MovingSoundTimer < 0 ) {
-			WWPROFILE("See");
 //			MovingSoundTimer += FreeRandom.Get_Float( 1, 2 );	// sound every 1-2 seconds
 			MovingSoundTimer += FreeRandom.Get_Float( 0.5f, 1 );	// sound every 0.5 - 1 seconds
 
@@ -721,10 +713,8 @@ void SmartGameObj::Think()
 		}
 
 		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) && (StealthFiringTimer <= 0.0f)) {
-			WWPROFILE("Stealh");
 			
 			Alloc_Stealth_Effect();
-			WWASSERT(StealthEffect != NULL);
 			Peek_Physical_Object()->Add_Effect_To_Me(StealthEffect);
 
 			StealthEffect->Enable_Stealth(true);
@@ -742,7 +732,6 @@ void SmartGameObj::Think()
 		}
 	}
 	{
-	WWPROFILE("Embedded Armed think in smart think");
 	ArmedGameObj::Think();
 	}
 }
@@ -751,7 +740,6 @@ void	SmartGameObj::Post_Think( void )
 {
 	ArmedGameObj::Post_Think();
 
-	WWPROFILE( "Smart PostThink" );
 
 	if ( Is_Delete_Pending() ) {				// don't update if destroying... (so we don't create a new laser!)
 		return;
@@ -797,7 +785,7 @@ bool	SmartGameObj::Is_Obj_Visible( PhysicalGameObj *obj )
 			CastResultStruct res;
 			LineSegClass ray( me, him );
 			PhysRayCollisionTestClass raytest(ray, &res, BULLET_COLLISION_GROUP);
-{ WWPROFILE( "Cast Ray" );
+{ 
 			PhysicsSceneClass::Get_Instance()->Cast_Ray(raytest);
 }
 

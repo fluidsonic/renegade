@@ -1,6 +1,5 @@
 #include "physcontrol.h"
 #include "chunkio.h"
-#include "wwdebug.h"
 
 enum	
 {
@@ -16,10 +15,6 @@ bool PhysControllerClass::Save(ChunkSaveClass & csave)
 	WRITE_MICRO_CHUNK(csave,PHYSCONTROLLER_VARIABLE_TURNLEFT,TurnLeft);
 	csave.End_Chunk();
 
-	WWASSERT(WWMath::Is_Valid_Float(MoveVector.X));
-	WWASSERT(WWMath::Is_Valid_Float(MoveVector.Y));
-	WWASSERT(WWMath::Is_Valid_Float(MoveVector.Z));
-	WWASSERT(WWMath::Is_Valid_Float(TurnLeft));
 	
 	return true;
 }
@@ -41,16 +36,11 @@ bool PhysControllerClass::Load(ChunkLoadClass & cload)
 				}
 				break;
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
 	}
 
-	WWASSERT(WWMath::Is_Valid_Float(MoveVector.X));
-	WWASSERT(WWMath::Is_Valid_Float(MoveVector.Y));
-	WWASSERT(WWMath::Is_Valid_Float(MoveVector.Z));
-	WWASSERT(WWMath::Is_Valid_Float(TurnLeft));
 
 	return true;
 }

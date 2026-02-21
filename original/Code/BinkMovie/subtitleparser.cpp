@@ -59,10 +59,8 @@ SubTitleParserClass::SubTitleParserClass(Straw& input)
 	// text stream.
 	wchar_t byteOrderMark = 0;
 	mInput.Get(&byteOrderMark, sizeof(wchar_t));
-	WWASSERT(byteOrderMark == 0xFEFF);
 
 	if (byteOrderMark != 0xFEFF) {
-		WWDEBUG_SAY(("Error: Subtitle control file is not unicode!\n"));
 	}
 }
 
@@ -109,7 +107,6 @@ DynamicVectorClass<SubTitleClass*>* SubTitleParserClass::Get_Sub_Titles(const ch
 	if (Find_Movie_Entry(moviename) == true)	{
 		// Allocate container to hold subtitles
 		subTitleCollection = new DynamicVectorClass<SubTitleClass*>;
-		WWASSERT(subTitleCollection != NULL);
 
 		if (subTitleCollection != NULL) {
 			for (;;) {
@@ -131,10 +128,8 @@ DynamicVectorClass<SubTitleClass*>* SubTitleParserClass::Get_Sub_Titles(const ch
 
 						// Create a new SubTitleClass
 						SubTitleClass* subTitle = new SubTitleClass();
-						WWASSERT(subTitle != NULL);
 
 						if (subTitle == NULL) {
-							WWDEBUG_SAY(("***** Failed to create SubTitleClass!\n"));
 							break;
 						}
 
@@ -185,7 +180,6 @@ DynamicVectorClass<SubTitleClass*>* SubTitleParserClass::Get_Sub_Titles(const ch
 bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 {
 	// Convert the moviename into Unicode
-	WWASSERT(moviename != NULL);
 	wchar_t wideName[32];
 	mbstowcs(wideName, moviename, 32);
 
@@ -208,7 +202,6 @@ bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 				wcstrim(ptr);
 
 				if (wcsicmp(ptr, wideName) == 0) {
-					WWDEBUG_SAY(("Found movie entry %s\n", moviename));
 					return true;
 				}
 			}
@@ -238,15 +231,12 @@ bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTitle)
 {
 	// Parameter check
-	WWASSERT(string != NULL);
-	WWASSERT(subTitle != NULL);
 
 	for (;;) {
 		// Find token separator
 		wchar_t* separator = wcschr(string, L'=');
 
 		if (separator == NULL) {
-			WWDEBUG_SAY(("Error on line %d: syntax error\n", Get_Line_Number()));
 			return false;
 		}
 
@@ -270,7 +260,6 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 			separator = wcschr(param, L'"');
 
 			if (separator == NULL) {
-				WWDEBUG_SAY(("Error on line %d: mismatched quotes\n", Get_Line_Number()));
 				return false;
 			}
 
@@ -303,7 +292,6 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 
 		// Error on empty tokens
 		if (wcslen(token) == 0) {
-			WWDEBUG_SAY(("Error on line %d: missing token\n", Get_Line_Number()));
 			return false;
 		}
 
@@ -342,8 +330,6 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 void SubTitleParserClass::Parse_Token(wchar_t* token, wchar_t* param, SubTitleClass* subTitle)
 {
 	// Parameter check
-	WWASSERT(token != NULL);
-	WWASSERT(subTitle != NULL);
 
 	if (token != NULL) {
 		int index = 0;
@@ -352,7 +338,6 @@ void SubTitleParserClass::Parse_Token(wchar_t* token, wchar_t* param, SubTitleCl
 			TokenHook& hook = mTokenHooks[index];
 
 			if (wcsicmp(hook.Token, token) == 0) {
-				WWASSERT(subTitle != NULL);
 				hook.Handler(param, subTitle);
 				return;
 			}
@@ -408,7 +393,6 @@ unsigned long Decode_Time_String(wchar_t* string)
 	#define TICKS_PER_MINUTE (60 * TICKS_PER_SECOND)
 	#define TICKS_PER_HOUR   (60 * TICKS_PER_MINUTE)
 
-	WWASSERT(string != NULL);
 
 	wchar_t buffer[12];
 	wcsncpy(buffer, string, 12);
@@ -418,21 +402,18 @@ unsigned long Decode_Time_String(wchar_t* string)
 
 	// Isolate hours part
 	wchar_t* separator = wcschr(ptr, L':');
-	WWASSERT(separator != NULL);
 	*separator++ = 0;
 	unsigned long hours = wcstoul(ptr, NULL, 10);
 
 	// Isolate minutes part
 	ptr = separator;
 	separator = wcschr(ptr, L':');
-	WWASSERT(separator != NULL);
 	*separator++ = 0;
 	unsigned long minutes = wcstoul(ptr, NULL, 10);
 
 	// Isolate seconds part
 	ptr = separator;
 	separator = wcschr(ptr, L':');
-	WWASSERT(separator != NULL);
 	*separator++ = 0;
 	unsigned long seconds = wcstoul(ptr, NULL, 10);
 
@@ -451,8 +432,6 @@ unsigned long Decode_Time_String(wchar_t* string)
 
 void Parse_Time(wchar_t* param, SubTitleClass* subTitle)
 {
-	WWASSERT(param != NULL);
-	WWASSERT(subTitle != NULL);
 	unsigned long time = Decode_Time_String(param);
 	subTitle->Set_Display_Time(time);
 }
@@ -460,8 +439,6 @@ void Parse_Time(wchar_t* param, SubTitleClass* subTitle)
 
 void Parse_Duration(wchar_t* param, SubTitleClass* subTitle)
 {
-	WWASSERT(param != NULL);
-	WWASSERT(subTitle != NULL);
 	unsigned long time = Decode_Time_String(param);
 
 	if (time > 0) {
@@ -483,8 +460,6 @@ void Parse_Position(wchar_t* param, SubTitleClass* subTitle)
 			{NULL, SubTitleClass::Center}
 	};
 
-	WWASSERT(subTitle != NULL);
-	WWASSERT(param != NULL);
 
 	wchar_t* ptr = param;
 
@@ -517,8 +492,6 @@ void Parse_Position(wchar_t* param, SubTitleClass* subTitle)
 
 void Parse_Color(wchar_t* param, SubTitleClass* subTitle)
 {
-	WWASSERT(param != NULL);
-	WWASSERT(subTitle != NULL);
 
 	wchar_t* ptr = param;
 
@@ -540,8 +513,6 @@ void Parse_Color(wchar_t* param, SubTitleClass* subTitle)
 
 void Parse_Text(wchar_t* param, SubTitleClass* subTitle)
 {
-	WWASSERT(param != NULL);
-	WWASSERT(subTitle != NULL);
 
 	subTitle->Set_Caption(param);
 }

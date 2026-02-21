@@ -1,13 +1,10 @@
 #include "hermitespline.h"
 #include "wwmathids.h"
 #include "persistfactory.h"
-#include "wwhack.h"
-
 
 /*
 ** Force-Link this module because the linker can't detect that we actually need it...
 */
-DECLARE_FORCE_LINK(hermitespline);
 
 /*
 ** Save-Load stuff
@@ -25,7 +22,6 @@ enum
 	HERMITE1D_CHUNK_CURVE1D					= 0x00020729,	
 	HERMITE1D_CHUNK_TANGENTS,			
 };
-
 
 /*
 ** Hermite Spline
@@ -221,18 +217,13 @@ bool HermiteSpline3DClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
 	}
 
-	WWASSERT(Keys.Count() == Tangents.Count());
 	return true;
 }
-
-
-
 
 /*
 ** 1-Dimensional Hermite Spline
@@ -388,13 +379,11 @@ bool HermiteSpline1DClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
 	}
 
-	WWASSERT(Keys.Count() == Tangents.Count());
 	return true;
 }
 

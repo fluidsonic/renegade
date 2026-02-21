@@ -68,8 +68,6 @@
 #include "dazzle.h"
 #include "skinpackagemgr.h"
 #include "modpackagemgr.h"
-#include "GameSpy_QnR.h"
-#include "gamespyadmin.h"
 #include "shutdown.h"
 #include "specialbuilds.h"
 
@@ -964,18 +962,12 @@ bool Game_Init(void)
 	}
 
 	//
-	// If this is a post crash restart (or a FDS starting up) then just go straight into the game.
+	// Start up intro movies.
 	//
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		if (!ConsoleBox.Is_Exclusive()) {
-			RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_SPLASH_IN);
-		}
-	} else {
-		MovieGameModeClass * mode = (MovieGameModeClass *)GameModeManager::Find ("Movie");
-		if ( mode ) {
-			mode->Activate();
-			mode->Startup_Movies( );
-		}
+	MovieGameModeClass * mode = (MovieGameModeClass *)GameModeManager::Find ("Movie");
+	if ( mode ) {
+		mode->Activate();
+		mode->Startup_Movies( );
 	}
 
 #endif
@@ -983,11 +975,6 @@ bool Game_Init(void)
 
 #endif
 
-
-	//
-	// Send our Spy Usage Info off to Gamespy
-	//
-	GameSpyQnR.TrackUsage();
 
 	fprintf(stderr, "[trace] Game_Init() complete - returning true\n");
 	return true;

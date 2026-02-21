@@ -86,7 +86,6 @@ PathfindPortalClass::Load (ChunkLoadClass &cload)
 				break;
 			
 			default:
-				WWDEBUG_SAY (("Unknown chunk ID 0x%X", cload.Cur_Chunk_ID ()));
 				break;
 		}
 
@@ -120,7 +119,6 @@ PathfindPortalClass::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,		old_ptr);
 
 			default:
-				WWDEBUG_SAY (("Unknown micro chunk ID 0x%X", cload.Cur_Micro_Chunk_ID ()));
 				break;
 		}
 
@@ -191,8 +189,6 @@ PathfindActionPortalClass::Load (ChunkLoadClass &cload)
 				break;
 			
 			default:
-				WWASSERT (0);
-				WWDEBUG_SAY (("Unknown chunk ID 0x%X", cload.Cur_Chunk_ID ()));
 				break;
 		}
 
@@ -224,8 +220,6 @@ PathfindActionPortalClass::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK (cload, ACTION_VARID_ENTER_PORTAL,	m_EnterPortal);
 
 			default:
-				WWASSERT (0);
-				WWDEBUG_SAY (("Unknown micro chunk ID 0x%X", cload.Cur_Micro_Chunk_ID ()));
 				break;
 		}
 
@@ -299,8 +293,6 @@ PathfindWaypathPortalClass::Load (ChunkLoadClass &cload)
 				break;
 			
 			default:
-				WWASSERT (0);
-				WWDEBUG_SAY (("Unknown chunk ID 0x%X", cload.Cur_Chunk_ID ()));
 				break;
 		}
 
@@ -328,8 +320,6 @@ PathfindWaypathPortalClass::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK (cload, WPATH_VARID_WAYPATH_POS,	WaypathPos);
 
 			default:
-				WWASSERT (0);
-				WWDEBUG_SAY (("Unknown micro chunk ID 0x%X", cload.Cur_Micro_Chunk_ID ()));
 				break;
 		}
 

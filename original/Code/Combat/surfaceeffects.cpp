@@ -11,7 +11,6 @@
 #include "rndstrng.h"
 #include "sound3d.h"
 #include "phys.h"
-#include "wwprofile.h"
 #include "gameobjref.h"
 #include "physicalgameobj.h"
 #include "combat.h"
@@ -275,7 +274,6 @@ void	SurfaceEffectsManager::Init( void )
 	INIClass	* ini = Get_INI( SURFACE_EFFECTS_INI_FILENAME );
 
 	if ( ini != NULL ) {
-		WWASSERT( ini && ini->Section_Count() > 0 );
 
 		int surface;
 
@@ -389,7 +387,6 @@ void	SurfaceEffectsManager::Init( void )
 		Debug_Say(("SurfaceEffectsManager::Init - Unable to load %s\n", SURFACE_EFFECTS_INI_FILENAME ));
 	}
 
-	WWASSERT(ini == NULL);
    _IsSurfaceEffectsInitted = true;
 }
 
@@ -426,14 +423,12 @@ void	SurfaceEffectsManager::Apply_Effect
 	bool allow_emitters
 )
 {
-	WWPROFILE( "Apply Surface Effect" );
 
 	bool ok = (	(surface_type >= 0) && 
 					(surface_type < SURFACE_TYPE_MAX) &&
 					(hitter_type >=0 ) &&
 					(hitter_type < NUM_HITTER_TYPES) );
 	if (!ok) {
-		WWDEBUG_SAY(("Invalid surface params. surface_type: %d hitter_type: %d\r\n",surface_type,hitter_type));
 		return;
 	}
 
@@ -470,7 +465,6 @@ void	SurfaceEffectsManager::Apply_Effect
 	// Create the sound
 	if ( sound_name ) {
 
-		WWPROFILE( "Sound" );
 
 		// I may need to plug an owner in here
 		RefCountedGameObjReference *owner_ref = new RefCountedGameObjReference;
@@ -495,7 +489,6 @@ void	SurfaceEffectsManager::Apply_Effect
 
 	// Create the emitter
 	if ((allow_emitters) && (emitter_name) && (Mode != MODE_NO_EMITTERS)) {
-		WWPROFILE( "Emitter" );
 
 #if (RECYCLE_EMITTERS)
 		_EmitterRecycler.Spawn_Effect(emitter_name,tm);
@@ -515,7 +508,6 @@ void	SurfaceEffectsManager::Apply_Effect
 	// Create decal, (will only apply to static physics objects)
 	if ((allow_decals) && (decal_name)) {
 
-		WWPROFILE( "Decal" );
 
 		float size = surface_effect->DecalSize;
 		size += FreeRandom.Get_Float( -surface_effect->DecalSizeRandom, surface_effect->DecalSizeRandom );
@@ -549,10 +541,6 @@ void	SurfaceEffectsManager::Destroy_Persistant_Sound( PersistantSurfaceSoundClas
 void	SurfaceEffectsManager::Update_Persistant_Sound( PersistantSurfaceSoundClass * effect,
 																int surface_type, int hitter_type, const Matrix3D & tm )
 {
-	WWASSERT( surface_type >= 0 );
-	WWASSERT( surface_type < SURFACE_TYPE_MAX );
-	WWASSERT( hitter_type >= 0 );
-	WWASSERT( hitter_type < NUM_HITTER_TYPES );
 
 	if ( Mode == MODE_OFF ) {
 		return;
@@ -608,10 +596,6 @@ void	SurfaceEffectsManager::Destroy_Persistant_Emitter( PersistantSurfaceEmitter
 void	SurfaceEffectsManager::Update_Persistant_Emitter( PersistantSurfaceEmitterClass * effect,
 																int surface_type, int hitter_type, const Matrix3D & tm )
 {
-	WWASSERT( surface_type >= 0 );
-	WWASSERT( surface_type < SURFACE_TYPE_MAX );
-	WWASSERT( hitter_type >= 0 );
-	WWASSERT( hitter_type < NUM_HITTER_TYPES );
 
 	if ( Mode != MODE_FULL ) {
 		return;
@@ -654,8 +638,6 @@ void	SurfaceEffectsManager::Update_Persistant_Emitter( PersistantSurfaceEmitterC
 
 bool	SurfaceEffectsManager::Does_Surface_Stop_Bullets( int surface_type )
 {
-	WWASSERT( surface_type >= 0 );
-	WWASSERT( surface_type < SURFACE_TYPE_MAX );
 	return SurfaceStopsBullets[ surface_type ];
 }
 

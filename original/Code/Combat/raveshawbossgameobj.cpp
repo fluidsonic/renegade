@@ -1,5 +1,4 @@
 #include "raveshawbossgameobj.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
@@ -20,7 +19,6 @@
 #include "string_ids.h"
 #include "translateobj.h"
 #include "translatedb.h"
-#include "wwprofile.h"
 #include "conversationmgr.h"
 #include "activeconversation.h"
 #include "conversation.h"
@@ -41,10 +39,6 @@
 #include "stealtheffect.h"
 #include "damageablestaticphys.h"
 #include "boxrobj.h"
-
-
-DECLARE_FORCE_LINK (RaveshawBoss)
-
 
 //////////////////////////////////////////////////////////////////////////
 //	ManualTransitionEffectClass
@@ -119,18 +113,14 @@ static const char *ARC_BONE_NAMES[6] =
 	"BONE07",
 };
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Waypath IDs
 //////////////////////////////////////////////////////////////////////////
 static const int	CATWALK_WAYPATH_ID	= 3000100;
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Weapon and state enumerations
 //////////////////////////////////////////////////////////////////////////
-
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Taunt constants
@@ -145,7 +135,6 @@ static const char *TAUNT_IDS[6] =
 	"IDS_SAKURA_BOSS_TAUNT5",
 	"IDS_SAKURA_BOSS_TAUNT6"
 };
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Save/load constants
@@ -203,15 +192,12 @@ enum
 	VARID_RESTORE_FIRST_PERSON,
 };
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Factories
 //////////////////////////////////////////////////////////////////////////
 SimplePersistFactoryClass<RaveshawBossGameObjDefClass,	CHUNKID_GAME_OBJECT_DEF_RAVESHAW_BOSS>						_RaveshawBossGameObjDefPersistFactory;
 SimplePersistFactoryClass<RaveshawBossGameObjClass,		CHUNKID_GAME_OBJECT_RAVESHAW_BOSS>							_RaveshawBossGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY(RaveshawBossGameObjDefClass,	CLASSID_GAME_OBJECT_DEF_RAVESHAW_BOSS, "Raveshaw Boss")	_RaveshawBossGameObjDefDefFactory;
-
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -227,7 +213,6 @@ RaveshawBossGameObjDefClass::RaveshawBossGameObjDefClass (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //
 //	~RaveshawBossGameObjDefClass
@@ -237,7 +222,6 @@ RaveshawBossGameObjDefClass::~RaveshawBossGameObjDefClass (void)
 {	
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -249,7 +233,6 @@ RaveshawBossGameObjDefClass::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_RAVESHAW_BOSS; 
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -263,7 +246,6 @@ RaveshawBossGameObjDefClass::Create (void) const
 	obj->Init(*this);
 	return obj;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -283,7 +265,6 @@ RaveshawBossGameObjDefClass::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -315,7 +296,6 @@ RaveshawBossGameObjDefClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -326,7 +306,6 @@ RaveshawBossGameObjDefClass::Save_Variables (ChunkSaveClass &csave)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -350,7 +329,6 @@ RaveshawBossGameObjDefClass::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -362,13 +340,11 @@ RaveshawBossGameObjDefClass::Get_Factory (void) const
 	return _RaveshawBossGameObjDefPersistFactory; 
 }
 
-
 /*
 **
 **	Start of RaveshawBossGameObjClass
 **
 */
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -538,7 +514,6 @@ RaveshawBossGameObjClass::RaveshawBossGameObjClass (void)	:
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	~RaveshawBossGameObjClass
@@ -557,7 +532,6 @@ RaveshawBossGameObjClass::~RaveshawBossGameObjClass (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -568,7 +542,6 @@ RaveshawBossGameObjClass::Get_Factory (void) const
 {
 	return _RaveshawBossGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -617,7 +590,6 @@ RaveshawBossGameObjClass::Init (const RaveshawBossGameObjDefClass &definition)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -628,9 +600,6 @@ RaveshawBossGameObjClass::Get_Definition (void) const
 {
 	return (const RaveshawBossGameObjDefClass &)BaseGameObj::Get_Definition ();
 }
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -705,7 +674,6 @@ RaveshawBossGameObjClass::Save (ChunkSaveClass & csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -783,7 +751,6 @@ RaveshawBossGameObjClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_Post_Load
@@ -819,7 +786,6 @@ RaveshawBossGameObjClass::On_Post_Load (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -862,7 +828,6 @@ RaveshawBossGameObjClass::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK (csave, VARID_CURR_JUMP_POS,						CurrentJumpToPos);	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -937,7 +902,6 @@ RaveshawBossGameObjClass::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Apply_Control
@@ -950,7 +914,6 @@ RaveshawBossGameObjClass::Apply_Control (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -959,7 +922,6 @@ RaveshawBossGameObjClass::Apply_Control (void)
 void
 RaveshawBossGameObjClass::Think (void)
 {	
-	WWPROFILE ("Raveshaw Think");	
 
 	bool ok_to_think = true;
 
@@ -1038,7 +1000,6 @@ RaveshawBossGameObjClass::Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Verify_Stealth_Soldier
@@ -1077,7 +1038,6 @@ RaveshawBossGameObjClass::Verify_Stealth_Soldier (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Shuffle_Taunt_List
@@ -1110,7 +1070,6 @@ RaveshawBossGameObjClass::Shuffle_Taunt_List (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1163,7 +1122,6 @@ RaveshawBossGameObjClass::Apply_Damage_Extended
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Attach_Sound
@@ -1193,7 +1151,6 @@ RaveshawBossGameObjClass::Attach_Sound (const char *sound_name, const char *bone
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_HEALING)
@@ -1209,7 +1166,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_HEALING) (void)
 	MoveState.Set_State (MOVE_STATE_GOTO_TIBERIUM);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1234,7 +1190,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_OBJECT) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_SOLDIER)
@@ -1251,7 +1206,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_THROWING_SOLDIER) (void
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_GRAB_STAR)
@@ -1267,7 +1221,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_GRAB_STAR) (void)
 	MoveState.Set_State (MOVE_STATE_STOP);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1289,7 +1242,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_CHASE_STAR) (void)
 	OverallStateTimer = WWMath::Random_Float (6.0F, 20.0F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1316,7 +1268,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_CHASE_STAR) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_JUMP_TO_CATWALK)
@@ -1334,7 +1285,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_JUMP_TO_CATWALK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_ON_CATWALK)
@@ -1350,7 +1300,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_ON_CATWALK) (void)
 	MoveState.Set_State (MOVE_STATE_CIRCLE_CATWALK);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1368,7 +1317,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_BODYSLAM) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_DEATH_SEQUENCE)
@@ -1382,7 +1330,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_DEATH_SEQUENCE) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_STOP)
@@ -1394,7 +1341,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_STOP) (void)
 	Get_Action ()->Reset (100);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1421,7 +1367,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_GOTO_TIBERIUM) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(MOVE_STATE_GOTO_TIBERIUM)
@@ -1440,7 +1385,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_GOTO_TIBERIUM) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1477,7 +1421,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_GOTO_CATWALK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Find_Closest_Catwalk_Pos
@@ -1492,7 +1435,6 @@ RaveshawBossGameObjClass::Find_Closest_Catwalk_Pos (const Vector3 &curr_pos, Vec
 	//	Get the catwalk waypath
 	//
 	WaypathClass *waypath = PathfindClass::Get_Instance ()->Find_Waypath (CATWALK_WAYPATH_ID);
-	WWASSERT (waypath != NULL);
 
 	//
 	//	Now find the closest point which is in-between the waypath points
@@ -1530,7 +1472,6 @@ RaveshawBossGameObjClass::Find_Closest_Catwalk_Pos (const Vector3 &curr_pos, Vec
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(MOVE_STATE_GOTO_CATWALK)
@@ -1559,7 +1500,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_GOTO_CATWALK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_JUMP_TO_CATWALK)
@@ -1574,7 +1514,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_JUMP_TO_CATWALK) (void)
 	Jump_To_Point (CurrentJumpToPos);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1595,7 +1534,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_JUMP_TO_CATWALK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_CIRCLE_CATWALK)
@@ -1608,7 +1546,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_CIRCLE_CATWALK) (void)
 	BodySlamTimer	= WWMath::Random_Float (1.0F, 5.0F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1663,7 +1600,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_CIRCLE_CATWALK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_GOTO_THROW_OBJECT)
@@ -1681,7 +1617,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_GOTO_THROW_OBJECT) (void)
 	Get_Action ()->Goto (params);		
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1707,7 +1642,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_GOTO_THROW_OBJECT) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_JUMP_TO_STAR)
@@ -1724,7 +1658,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_JUMP_TO_STAR) (void)
 	//Peek_Human_Phys ()->Jump_To_Point (StarPos);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1749,7 +1682,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_JUMP_TO_STAR) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_FOLLOW_STAR)
@@ -1761,7 +1693,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_FOLLOW_STAR) (void)
 	MoveStateTimer = 0.0F;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1777,7 +1708,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(MOVE_STATE_FOLLOW_STAR) (void)
 	Get_Action ()->Reset (100);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1816,7 +1746,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_FOLLOW_STAR) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_NOTHING)
@@ -1831,7 +1760,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_NOTHING) (void)
 	RaveshawStateTimer = WWMath::Random_Float (5.0F, 15.0F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1852,7 +1780,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_NOTHING) (void)
 	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1877,7 +1804,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_ROAR) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(RAVESHAW_STATE_ROAR)
@@ -1900,7 +1826,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(RAVESHAW_STATE_ROAR) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(RAVESHAW_STATE_ROAR)
@@ -1918,7 +1843,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_ROAR) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1942,7 +1866,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_TIBERIUM) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(RAVESHAW_STATE_GRAB_TIBERIUM)
@@ -1957,7 +1880,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(RAVESHAW_STATE_GRAB_TIBERIUM) (void)
 	Get_Human_State ()->Stop_Scripted_Animation ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2000,8 +1922,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_GRAB_TIBERIUM) (void)
 	return ;
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_SOLDIER)
@@ -2024,7 +1944,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_SOLDIER) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(RAVESHAW_STATE_GRAB_SOLDIER)
@@ -2035,7 +1954,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(RAVESHAW_STATE_GRAB_SOLDIER) (void)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2063,7 +1981,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_GRAB_SOLDIER) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2096,7 +2013,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_THROW_SOLDIER) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(RAVESHAW_STATE_THROW_SOLDIER)
@@ -2111,7 +2027,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(RAVESHAW_STATE_THROW_SOLDIER) (void)
 	Get_Human_State ()->Stop_Scripted_Animation ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2148,7 +2063,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_THROW_SOLDIER) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_OBJECT)
@@ -2170,7 +2084,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_OBJECT) (void)
 	Get_Anim_Control ()->Set_Target_Frame (22);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2207,8 +2120,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_GRAB_OBJECT) (void)
 	return ;
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_THROW_OBJECT)
@@ -2233,7 +2144,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_THROW_OBJECT) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(RAVESHAW_STATE_THROW_OBJECT)
@@ -2248,7 +2158,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(RAVESHAW_STATE_THROW_OBJECT) (void)
 	Get_Human_State ()->Stop_Scripted_Animation ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2305,8 +2214,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_THROW_OBJECT) (void)
 	return ;
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_STAR)
@@ -2337,7 +2244,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_STAR) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(RAVESHAW_STATE_GRAB_STAR)
@@ -2352,7 +2258,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(RAVESHAW_STATE_GRAB_STAR) (void)
 	Get_Human_State ()->Stop_Scripted_Animation ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2418,7 +2323,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_GRAB_STAR) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_BODYSLAM)
@@ -2463,7 +2367,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_BODYSLAM) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(RAVESHAW_STATE_BODYSLAM)
@@ -2478,7 +2381,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(RAVESHAW_STATE_BODYSLAM) (void)
 	Get_Human_State ()->Stop_Scripted_Animation ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2556,7 +2458,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_BODYSLAM) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_JUMP_DOWN)
@@ -2578,7 +2479,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_JUMP_DOWN) (void)
 	Jump_To_Point (CurrentDestPos);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2605,10 +2505,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_JUMP_DOWN) (void)
 	return ;
 }
 
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_DYING)
@@ -2630,7 +2526,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_DYING) (void)
 	Get_Anim_Control ()->Set_Target_Frame (49);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2670,7 +2565,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_DYING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_FALL)
@@ -2682,7 +2576,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_FALL) (void)
 	RaveshawStateTimer = 0.125F;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2727,7 +2620,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_FALL) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(RAVESHAW_STATE_DEATH_LANDING)
@@ -2749,7 +2641,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_DEATH_LANDING) (void)
 	COMBAT_SCENE->Add_Camera_Shake (RaveshawPos, 40.0, 0.75F, 0.125F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2781,8 +2672,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(RAVESHAW_STATE_DEATH_LANDING) (void)
 	return ;
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(ENGORGED_STATE_ABSORBING_TIBERIUM)
@@ -2802,7 +2691,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(ENGORGED_STATE_ABSORBING_TIBERIUM) (v
 	IsTiberiumEffectApplied = true;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2840,7 +2728,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(ENGORGED_STATE_ABSORBING_TIBERIUM) (v
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(ENGORGED_STATE_FADING)
@@ -2853,7 +2740,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(ENGORGED_STATE_FADING) (void)
 	EngorgedStateTimer = TiberiumEffect->Get_Intensity () * EFFECT_FADE_TIME;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2870,7 +2756,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(ENGORGED_STATE_FADING) (void)
 	IsTiberiumEffectApplied = false;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2897,8 +2782,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(ENGORGED_STATE_FADING) (void)
 
 	return ;
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2927,7 +2810,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(JUMP_STATE_CROUCHING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(JUMP_STATE_CROUCHING)
@@ -2942,7 +2824,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(JUMP_STATE_CROUCHING) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2966,7 +2847,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(JUMP_STATE_JUMPING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(JUMP_STATE_JUMPING)
@@ -2987,7 +2867,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(JUMP_STATE_JUMPING) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3011,7 +2890,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(JUMP_STATE_LANDING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(JUMP_STATE_LANDING)
@@ -3031,7 +2909,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(JUMP_STATE_LANDING) (void)
 	Get_Action ()->Pause (false);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3067,10 +2944,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(JUMP_STATE_LANDING) (void)
 	return ;
 }
 
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(HAVOC_STATE_GRABBED)
@@ -3098,7 +2971,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(HAVOC_STATE_GRABBED) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(HAVOC_STATE_GRABBED)
@@ -3110,7 +2982,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(HAVOC_STATE_GRABBED) (void)
 	Link_Player_To_Hands ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3144,7 +3015,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(HAVOC_STATE_FLYING) (void)
 	COMBAT_STAR->Get_Human_State ()->Stop_Scripted_Animation ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3196,7 +3066,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(HAVOC_STATE_FLYING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(STEALTH_SOLDIER_STATE_DISPLAY)
@@ -3240,7 +3109,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(STEALTH_SOLDIER_STATE_DISPLAY) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(STEALTH_SOLDIER_STATE_DISPLAY)
@@ -3264,7 +3132,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(STEALTH_SOLDIER_STATE_DISPLAY) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3324,7 +3191,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(STEALTH_SOLDIER_STATE_FLYING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(STEALTH_SOLDIER_STATE_FLYING)
@@ -3381,7 +3247,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(STEALTH_SOLDIER_STATE_FLYING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(THROWN_OBJECT_STATE_PICKUP)
@@ -3411,7 +3276,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(THROWN_OBJECT_STATE_PICKUP) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(THROWN_OBJECT_STATE_PICKUP)
@@ -3426,7 +3290,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(THROWN_OBJECT_STATE_PICKUP) (void)
 	Link_Thrown_Object_To_Hands ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3448,7 +3311,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(THROWN_OBJECT_STATE_FLYING) (void)
 	FlyingObjectVector.Normalize ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3493,7 +3355,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(THROWN_OBJECT_STATE_FLYING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(LIGHTNING_ROD_STATE_ACTIVE)
@@ -3505,7 +3366,6 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(LIGHTNING_ROD_STATE_ACTIVE) (void)
 	LightningRodStateTimer = 0;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3526,7 +3386,6 @@ RaveshawBossGameObjClass::STATE_IMPL_END(LIGHTNING_ROD_STATE_ACTIVE) (void)
 	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3596,8 +3455,6 @@ RaveshawBossGameObjClass::STATE_IMPL_THINK(LIGHTNING_ROD_STATE_ACTIVE) (void)
 
 	return ;
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3678,7 +3535,6 @@ RaveshawBossGameObjClass::Apply_Bone_Collision_Damage (float damage_scale, const
 	return retval;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Distance_From_Ground
@@ -3719,7 +3575,6 @@ RaveshawBossGameObjClass::Get_Distance_From_Ground (void)
 	return distance;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Create_Stealth_Soldier
@@ -3732,7 +3587,6 @@ RaveshawBossGameObjClass::Create_Stealth_Soldier (const Matrix3D &tm)
 	//	Create the stealth soldier
 	//
 	PhysicalGameObj *phys_game_obj = ObjectLibraryManager::Create_Object ("Raveshaw Boss Fodder");
-	WWASSERT (phys_game_obj != NULL);
 	StealthSoldier = phys_game_obj;
 
 	//
@@ -3759,7 +3613,6 @@ RaveshawBossGameObjClass::Create_Stealth_Soldier (const Matrix3D &tm)
 	soldier->Start_Observers ();
 	return ;	
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3793,7 +3646,6 @@ RaveshawBossGameObjClass::Link_Thrown_Object_To_Hands (void)
 	ThrownObject->Set_Transform (obj_tm);
 	return ;	
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3899,7 +3751,6 @@ RaveshawBossGameObjClass::Link_Player_To_Hands (void)
 	/*Matrix3D soldier_to_neck_tm;
 	neck_to_soldier_tm.Get_Orthogonal_Inverse (soldier_to_neck_tm);
 
-
 	Matrix3D world_to_neck_tm;
 	neck_tm.Get_Orthogonal_Inverse (world_to_neck_tm);
 
@@ -3911,7 +3762,6 @@ RaveshawBossGameObjClass::Link_Player_To_Hands (void)
 	//COMBAT_STAR->Set_Transform (new_soldier_tm);
 	return ;	
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3970,7 +3820,6 @@ RaveshawBossGameObjClass::Link_Stealth_Soldier_To_Hand (void)
 	/*Matrix3D soldier_to_neck_tm;
 	neck_to_soldier_tm.Get_Orthogonal_Inverse (soldier_to_neck_tm);
 
-
 	Matrix3D world_to_neck_tm;
 	neck_tm.Get_Orthogonal_Inverse (world_to_neck_tm);
 
@@ -3982,7 +3831,6 @@ RaveshawBossGameObjClass::Link_Stealth_Soldier_To_Hand (void)
 	stealth_soldier->Set_Transform (new_soldier_tm);
 	return ;	
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -4047,7 +3895,6 @@ RaveshawBossGameObjClass::Fly_Move (PhysicalGameObj *game_obj, const Vector3 &ve
 	game_obj->Peek_Physical_Object ()->Dec_Ignore_Counter ();
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -4118,7 +3965,6 @@ RaveshawBossGameObjClass::Find_Object_To_Throw (void)
 	return best_object;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Determine_New_Overall_State
@@ -4177,7 +4023,6 @@ RaveshawBossGameObjClass::Determine_New_Overall_State (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Jump_To_Point
@@ -4196,7 +4041,6 @@ RaveshawBossGameObjClass::Jump_To_Point (const Vector3 &pos)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -4249,7 +4093,6 @@ RaveshawBossGameObjClass::Collect_Lightning_Rods (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Create_Arc_Effects
@@ -4267,7 +4110,6 @@ RaveshawBossGameObjClass::Create_Arc_Effects (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -4319,7 +4161,6 @@ RaveshawBossGameObjClass::Prepare_Arc_Effect_Data (void)
 
 	return ;
 }
-
 
 //BBZZZT
 
@@ -4408,7 +4249,6 @@ RaveshawBossGameObjClass::Add_Lightning_Arc (const Vector3 &start_point, const V
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	fnSortLightningRodsCallback
@@ -4421,8 +4261,6 @@ RaveshawBossGameObjClass::fnSortLightningRodsCallback
 	const void *elem2
 )
 {
-   WWASSERT (elem1 != NULL);
-   WWASSERT (elem2 != NULL);
    DamageableStaticPhysClass *rod1 = *((DamageableStaticPhysClass **)elem1);
    DamageableStaticPhysClass *rod2 = *((DamageableStaticPhysClass **)elem2);
 
@@ -4463,9 +4301,6 @@ RaveshawBossGameObjClass::fnSortLightningRodsCallback
    return result;
 }
 
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Find_Death_Facing_Pos
@@ -4480,7 +4315,6 @@ RaveshawBossGameObjClass::Find_Death_Facing_Pos (Vector3 *facing_pos)
 	//	Get the catwalk waypath
 	//
 	WaypathClass *waypath = PathfindClass::Get_Instance ()->Find_Waypath (CATWALK_WAYPATH_ID);
-	WWASSERT (waypath != NULL);
 
 	//
 	//	Now find the closest point which is in-between the waypath points

@@ -1,5 +1,4 @@
 #include "mixfile.h"
-#include "wwdebug.h"
 #include "ffactory.h"
 #include "wwfile.h"
 #include "realcrc.h"
@@ -36,7 +35,7 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 	Factory (NULL),
 	IsModified (false)
 {
-//	WWDEBUG_SAY(( "MixFileFactory( %s )\n", mix_filename ));
+//	
 	MixFilename	= mix_filename;
 	Factory		= factory;
 	FilenameList.Set_Growth_Step (1000);
@@ -44,7 +43,7 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 	// First, open the mix file
 	FileClass * file = factory->Get_File( mix_filename );
 
-//	WWASSERT( file );
+//	assert( file );
 
 	if ( file && file->Is_Available() ) {
 
@@ -89,7 +88,6 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 		if ( IsValid ) {
 			BaseOffset	= 0;
 			NamesOffset	= header.names_offset;
-			WWDEBUG_SAY(( "MixFileFactory( %s ) loaded successfully  %d files\n", MixFilename, FileInfo.Length() ));
 		} else {
 			FileInfo.Resize(0);
 		}	
@@ -97,7 +95,6 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 		factory->Return_File( file );
 
 	} else {
-		WWDEBUG_SAY(( "MixFileFactory( %s ) FAILED\n", mix_filename ));
 	}
 }
 
@@ -175,7 +172,7 @@ FileClass * MixFileFactoryClass::Get_File( char const *filename )
 	if ( FileInfo.Length() == 0 ) {
 		return NULL;
 	}
-//	WWDEBUG_SAY(( "MixFileFactoryClass::Get_File( %s )\n", filename ));
+//	
 
 	RawFileClass *file = NULL;
 
@@ -202,14 +199,14 @@ FileClass * MixFileFactoryClass::Get_File( char const *filename )
 	}		
 
 	if ( info != NULL) {
-//		WWDEBUG_SAY(( "MixFileFactoryClass::Get_File( %s ) FOUND\n", filename ));
+//		
 		file = (RawFileClass *)Factory->Get_File( MixFilename );
 		if ( file ) {
 			file->Bias( BaseOffset + info->Offset, info->Size );
 		}
-//		WWDEBUG_SAY(( "MixFileFactoryClass::Get_File( %s ) FOUND\n", filename ));
+//		
 	} else {
-//		WWDEBUG_SAY(( "MixFileFactoryClass::Get_File( %s ) NOT FOUND\n", filename ));
+//		
 	}
 
 	return file;
@@ -371,7 +368,6 @@ SimpleFileFactoryClass _SimpleFileFactory;
 
 MixFileCreator::MixFileCreator( const char * filename )
 {
-	WWDEBUG_SAY(( "Creating Mix File %s\n", filename ));
 
 	MixFile = _SimpleFileFactory.Get_File(filename);
 	if ( MixFile != NULL ) {
@@ -405,7 +401,6 @@ MixFileCreator::~MixFileCreator( void )
 
 		// Save file count
 		int i,num_files = FileInfo.Count();
-		WWDEBUG_SAY(( "Closing with %d files\n", num_files ));
 		MixFile->Write( &num_files, sizeof( num_files ) );
 
 		if ( num_files > 1 ) {
@@ -417,7 +412,7 @@ MixFileCreator::~MixFileCreator( void )
 			MixFile->Write( &FileInfo[i].CRC, 4 );
 			MixFile->Write( &FileInfo[i].Offset, 4 );
 			MixFile->Write( &FileInfo[i].Size, 4 );
-//			WWDEBUG_SAY(( "Write CRC %08X\n", FileInfo[i].CRC ));
+//			
 		}
 
 		// ---------------------------------------
@@ -432,7 +427,6 @@ MixFileCreator::~MixFileCreator( void )
 		for ( i = 0; i < num_files; i++ ) {
 			const char * filename = FileInfo[i].Filename;
 			int size = FileInfo[i].Filename.Get_Length()+1;
-			WWASSERT( size < 255 );
 			unsigned char csize = size;
 			MixFile->Write( &csize, 1 );
 			MixFile->Write( filename, size );
@@ -443,11 +437,9 @@ MixFileCreator::~MixFileCreator( void )
 		MixFile->Seek( 4, SEEK_SET );
 
 		// Save header offset
-		WWDEBUG_SAY(( "Writing header offset %d (%08X)\n", header_offset, header_offset ));
 		MixFile->Write( &header_offset, sizeof( header_offset ) );
 
 		// Save names offset
-		WWDEBUG_SAY(( "Writing names offset %d (%08X)\n", names_offset, names_offset ));
 		MixFile->Write( &names_offset, sizeof( names_offset ) );
 
 		// ---------------------------------------
@@ -479,8 +471,6 @@ void	MixFileCreator::Add_File( const char * source_filename, const char * saved_
 			FileInfo.Add( info );
 			FileInfo[ FileInfo.Count()-1 ].Filename = saved_filename;
 
-			WWDEBUG_SAY(( "Saving File %s CRC %08X Offset %d (0x%08X) Size %d (0x%08X)\n",
-					saved_filename, info.CRC, info.Offset, info.Offset, info.Size, info.Size ));
 
 			int size = file->Size();
 			while ( size ) {
@@ -489,7 +479,6 @@ void	MixFileCreator::Add_File( const char * source_filename, const char * saved_
 				size -= amount;
 				file->Read( buffer, amount );
 				if ( MixFile->Write( buffer, amount ) != amount ) {
-					WWDEBUG_SAY(( "Failed to write MixFile\n" ));
 				}
 			}
 
@@ -499,7 +488,6 @@ void	MixFileCreator::Add_File( const char * source_filename, const char * saved_
 			if ( offset != 0 ) {
 				char zeros[8] = {0,0,0,0,0,0,0,0};
 				if ( MixFile->Write( zeros, offset ) != offset ) {
-					WWDEBUG_SAY(( "Failed to write padding\n" ));
 				}
 			}
 
@@ -507,7 +495,6 @@ void	MixFileCreator::Add_File( const char * source_filename, const char * saved_
 			_SimpleFileFactory.Return_File( file );
 
 		} else {
-			WWDEBUG_SAY(( "MixFileCreator::Failed to open \"%s\"\n", source_filename ));
 		}
 	}
 }
@@ -524,8 +511,6 @@ void	MixFileCreator::Add_File( const char * filename, FileClass *file )
 		FileInfo.Add( info );
 		FileInfo[ FileInfo.Count()-1 ].Filename = filename;
 
-		WWDEBUG_SAY(( "Saving File %s CRC %08X Offset %d (0x%08X) Size %d (0x%08X)\n",
-				filename, info.CRC, info.Offset, info.Offset, info.Size, info.Size ));
 
 		int size = file->Size();
 		while ( size ) {
@@ -534,7 +519,6 @@ void	MixFileCreator::Add_File( const char * filename, FileClass *file )
 			size -= amount;
 			file->Read( buffer, amount );
 			if ( MixFile->Write( buffer, amount ) != amount ) {
-				WWDEBUG_SAY(( "Failed to write MixFile\n" ));
 			}
 		}
 
@@ -544,7 +528,6 @@ void	MixFileCreator::Add_File( const char * filename, FileClass *file )
 		if ( offset != 0 ) {
 			char zeros[8] = {0,0,0,0,0,0,0,0};
 			if ( MixFile->Write( zeros, offset ) != offset ) {
-				WWDEBUG_SAY(( "Failed to write padding\n" ));
 			}
 		}
 	}
@@ -563,7 +546,6 @@ void	Add_Files( const char * dir, MixFileCreator & mix )
 	WIN32_FIND_DATA find_info = {0};
 	StringClass path;
 	path.Format( "data\\makemix\\%s*.*", dir );
-	WWDEBUG_SAY(( "Adding files from %s\n", path ));
 
 	for (hfile_find = ::FindFirstFile( path, &find_info);
 		 (hfile_find != INVALID_HANDLE_VALUE) && bcontinue;
@@ -580,7 +562,7 @@ void	Add_Files( const char * dir, MixFileCreator & mix )
 			StringClass	source;
 			source.Format( "makemix\\%s", name );
 			mix.Add_File( source, name );
-//			WWDEBUG_SAY(( "Adding file from %s %s\n", source, name ));
+//			
 		}
 	}
 }
@@ -590,7 +572,6 @@ void	Setup_Mix_File( void )
 	_SimpleFileFactory.Set_Sub_Directory( "DATA\\" );
 //	_SimpleFileFactory.Set_Strip_Path( true );
 
-	WWDEBUG_SAY(( "Mix File Create .....\n" ));
 
 	{
 		MixFileCreator mix( "MAKEMIX.MIX" );

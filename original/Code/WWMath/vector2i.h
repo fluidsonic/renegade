@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef VECTOR2I_H
 #define VECTOR2I_H

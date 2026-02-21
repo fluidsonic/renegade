@@ -2,14 +2,9 @@
 #include "physcontrol.h"
 #include "persistfactory.h"
 #include "wwphysids.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "simplevec.h"
 #include "ode.h"
 #include "lookuptable.h"
-
-
-DECLARE_FORCE_LINK(motorvehicle);
 
 const float GEAR_SHIFT_DELAY = 1.0f;
 const float MIN_BRAKING_SPEED = 1.5f;		// below this forward speed, we drive in reverse
@@ -57,7 +52,6 @@ MotorVehicleClass::~MotorVehicleClass(void)
 void MotorVehicleClass::Timestep(float dt)
 {	
 	{
-		WWPROFILE("MotorVehicle::Timestep");
 	
 		const MotorVehicleDefClass * def = Get_MotorVehicleDef();
 
@@ -100,7 +94,6 @@ void MotorVehicleClass::Timestep(float dt)
 	
 	VehiclePhysClass::Timestep(dt);
 }
-
 
 /***********************************************************************************************
 **
@@ -162,7 +155,6 @@ float MotorVehicleClass::Get_Max_Engine_Torque(void)
 	return Get_MotorVehicleDef()->MaxEngineTorque; 
 }
 
-
 float MotorVehicleClass::Compute_Engine_Angular_Acceleration(void)
 {
 	const MotorVehicleDefClass * def = Get_MotorVehicleDef();
@@ -185,7 +177,6 @@ void MotorVehicleClass::Shift_Down(void)
 		ShiftTimer = GEAR_SHIFT_DELAY;
 	}
 }
-
 
 /***********************************************************************************************
 **
@@ -234,7 +225,6 @@ bool MotorVehicleClass::Load (ChunkLoadClass &cload)
 				break;
 	
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -284,7 +274,6 @@ enum
 	MOTORVEHICLEDEF_VARIABLE_SHIFTDOWNRPM,
 	MOTORVEHICLEDEF_VARIABLE_DRIVETRAININERTIA,
 };
-
 
 MotorVehicleDefClass::MotorVehicleDefClass(void) :
 	MaxEngineTorque(5.0f),
@@ -369,7 +358,6 @@ bool MotorVehicleDefClass::Save(ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool MotorVehicleDefClass::Load(ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -409,7 +397,6 @@ bool MotorVehicleDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 
@@ -431,7 +418,6 @@ bool MotorVehicleDefClass::Load(ChunkLoadClass &cload)
 		}
 	}
 	if (EngineTorqueCurve == NULL) {
-		WWDEBUG_SAY(("Missing EngineTorqueCurve Table file: %s\r\n",EngineTorqueCurveFilename));
 		EngineTorqueCurve = LookupTableMgrClass::Get_Table("DefaultTable");
 	}
 
@@ -446,5 +432,4 @@ bool MotorVehicleDefClass::Is_Type(const char * type_name)
 		return VehiclePhysDefClass::Is_Type(type_name);
 	}
 }
-
 

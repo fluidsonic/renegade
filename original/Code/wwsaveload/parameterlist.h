@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 
 
@@ -11,7 +8,6 @@
 #include "always.h"
 #include "vector.h"
 #include "parameter.h"
-#include "wwdebug.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -73,7 +69,6 @@ ParameterListClass::Add (void *data, const char *param_name, ParameterClass::Typ
 	//
 	//	Add the new paramter object to our list
 	//
-	WWASSERT (new_param != NULL);
 	if (new_param != NULL) {
 		DynamicVectorClass<ParameterClass *>::Add (new_param);
 	}

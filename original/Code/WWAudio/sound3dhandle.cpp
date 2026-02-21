@@ -1,6 +1,5 @@
 #include "sound3dhandle.h"
 #include "audiblesound.h"
-#include "wwprofile.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -34,7 +33,6 @@ Sound3DHandleClass::~Sound3DHandleClass (void)
 void
 Sound3DHandleClass::Initialize (SoundBufferClass *buffer)
 {
-	WWPROFILE ("Sound3DHandleClass::Initialize");
 
 	SoundHandleClass::Initialize (buffer);
 
@@ -52,9 +50,7 @@ Sound3DHandleClass::Initialize (SoundBufferClass *buffer)
 		//
 		//	Check for success
 		//
-		WWASSERT (success != 0);
 		if (success == 0) {
-			WWDEBUG_SAY (("WWAudio: Couldn't set 3d sample file.  Reason %s\r\n", ::AIL_last_error ()));
 		}
 
 	}
@@ -227,7 +223,6 @@ Sound3DHandleClass::Set_Sample_MS_Position (U32 ms)
 {
 	if (SampleHandle != (H3DSAMPLE)INVALID_MILES_HANDLE) {
 
-		WWASSERT (Buffer != NULL);
 		U32 bytes_per_sec = (Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3;
 		U32 bytes = (ms * bytes_per_sec) / 1000;
 		bytes += (bytes & 1);
@@ -248,7 +243,6 @@ Sound3DHandleClass::Get_Sample_MS_Position (S32 *len, S32 *pos)
 {
 	if (SampleHandle != (H3DSAMPLE)INVALID_MILES_HANDLE) {
 
-		WWASSERT (Buffer != NULL);
 		if (pos != NULL) {
 			U32 bytes = ::AIL_3D_sample_offset (SampleHandle);
 			U32 bytes_per_sec = (Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3;
@@ -343,7 +337,6 @@ Sound3DHandleClass::Set_Sample_Playback_Rate (S32 rate)
 void
 Sound3DHandleClass::Set_Miles_Handle (uint32 handle)
 {
-	WWASSERT (SampleHandle == (H3DSAMPLE)INVALID_MILES_HANDLE);
 
 	SampleHandle = (H3DSAMPLE)handle;
 	return ;

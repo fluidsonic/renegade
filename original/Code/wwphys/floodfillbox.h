@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __FLOODFILLBOX_H
 #define __FLOODFILLBOX_H

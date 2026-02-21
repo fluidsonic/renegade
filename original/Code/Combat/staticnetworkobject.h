@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__STATICNETWORKOBJECT_H
 #define	__STATICNETWORKOBJECT_H

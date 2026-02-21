@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef STEALTHEFFECT_H
 #define STEALTHEFFECT_H

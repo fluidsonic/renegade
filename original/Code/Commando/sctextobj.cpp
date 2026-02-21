@@ -61,7 +61,7 @@ cScTextObj::Init
 
 		case TEXT_MESSAGE_TEAM:
 		{
-			//WWASSERT(The_Game()->Is_Team_Game());
+			//assert(The_Game()->Is_Team_Game());
 
 			cPlayer * p_sender = cPlayerManager::Find_Player(SenderId);
 

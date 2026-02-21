@@ -13,7 +13,6 @@
 #include "mmsys.h"	 // for timegettime
 #include "miscutil.h"
 #include "wwpacket.h"
-#include "wwdebug.h"
 #include "fromaddress.h"
 
 //-------------------------------------------------------------------------------

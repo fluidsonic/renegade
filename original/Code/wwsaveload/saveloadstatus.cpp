@@ -9,7 +9,6 @@ static StringClass status_text[MAX_STATUS_TEXT_ID];
 void SaveLoadStatus::Set_Status_Text(const char* text,int id)
 {
 	CriticalSectionClass::LockClass m(text_mutex);
-	WWASSERT(id<MAX_STATUS_TEXT_ID);
 	status_text[id]=text;
 	if (id==0) status_text[1]="";
 }
@@ -17,7 +16,6 @@ void SaveLoadStatus::Set_Status_Text(const char* text,int id)
 void SaveLoadStatus::Get_Status_Text(StringClass& text, int id)
 {
 	CriticalSectionClass::LockClass m(text_mutex);
-	WWASSERT(id<MAX_STATUS_TEXT_ID);
 	text=status_text[id];
 }
 

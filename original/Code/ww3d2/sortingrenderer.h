@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef SORTING_RENDERER_H
 #define SORTING_RENDERER_H

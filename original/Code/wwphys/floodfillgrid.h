@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __FLOODFILLGRID_H
 #define __FLOODFILLGRID_H
@@ -9,7 +6,6 @@
 #include "vector2i.h"
 #include "vector3.h"
 #include "floodfillbox.h"
-#include "wwdebug.h"
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -152,8 +148,6 @@ FloodfillGridClass::Get_Cell_Index (const Vector3 &pos)
 	int max_y = 0;
 	Point_To_Cell (pos + (m_BoxExtent-Vector3 (0.075F, 0.075F, 0.075F)), &max_x, &max_y);
 
-	WWASSERT (cell_x == min_x && cell_x == max_x);
-	WWASSERT (cell_y == min_y && cell_y == max_y);*/
 
 	return (cell_y * m_CellsX) + cell_x;
 }
@@ -169,7 +163,6 @@ FloodfillGridClass::Add_Box (FloodfillBoxClass *box)
 	//	Calculate what cell this box should live in
 	//
 	int index = Get_Cell_Index (box->Get_Position ());
-	WWASSERT (index >= 0 && index < m_CellsX * m_CellsY);
 
 	//
 	//	Link the box into the system at the given index
@@ -191,7 +184,6 @@ FloodfillGridClass::Remove_Box (FloodfillBoxClass *box)
 	//	Calculate what cell this box lives in
 	//
 	int index = Get_Cell_Index (box->Get_Position ());
-	WWASSERT (index >= 0 && index < m_CellsX * m_CellsY);
 
 	//
 	//	Attempt to find the box in this grid

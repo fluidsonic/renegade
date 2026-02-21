@@ -4,6 +4,12 @@ project(CnCRenegade CXX C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Debug build: no optimizations, full debug symbols, AddressSanitizer
+set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type" FORCE)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -fno-omit-frame-pointer -fsanitize=address" CACHE STRING "" FORCE)
+set(CMAKE_C_FLAGS_DEBUG   "-O0 -g3 -fno-omit-frame-pointer -fsanitize=address" CACHE STRING "" FORCE)
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address" CACHE STRING "" FORCE)
+
 set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 
 # Global compile definitions
@@ -56,7 +62,29 @@ add_compile_options(
 # Thread support for pthread
 find_package(Threads REQUIRED)
 
-add_subdirectory(Code/wwdebug)
+# SDL2 — prefer system install (Homebrew on macOS), fall back to FetchContent
+find_package(SDL2 QUIET)
+if(NOT SDL2_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(SDL2
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG        release-2.30.11
+        GIT_SHALLOW    TRUE
+    )
+    set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    set(SDL_TEST OFF CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(SDL2)
+    include_directories("${sdl2_SOURCE_DIR}/include")
+else()
+    # System SDL2 (Homebrew)
+    include_directories(${SDL2_INCLUDE_DIRS})
+    # Create SDL2::SDL2-static alias if not present (system SDL2 uses SDL2::SDL2)
+    if(NOT TARGET SDL2::SDL2-static)
+        add_library(SDL2::SDL2-static ALIAS SDL2::SDL2)
+    endif()
+endif()
+
 add_subdirectory(Code/wwmath)
 add_subdirectory(Code/wwbitpack)
 add_subdirectory(Code/wwlib)

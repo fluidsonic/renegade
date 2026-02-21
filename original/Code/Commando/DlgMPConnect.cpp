@@ -6,7 +6,6 @@
 #include "resource.h"
 #include <wwdebug/wwdebug.h>
 #include "dlgmainmenu.h"
-#include "gamespyadmin.h"
 #include "specialbuilds.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
@@ -159,12 +158,7 @@ void DlgMPConnect::On_Command(int ctrlID, int message, DWORD param)
 			{
 			cNetwork::Cleanup_Client();
 			}
-		if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) 
-			{
-			extern void Stop_Main_Loop (int);
-			Stop_Main_Loop(EXIT_SUCCESS);
-			}
-		else if (DialogMgrClass::Get_Dialog_Count () == 1)
+		if (DialogMgrClass::Get_Dialog_Count () == 1)
 			{
 			START_DIALOG (MainMenuDialogClass);
 			}

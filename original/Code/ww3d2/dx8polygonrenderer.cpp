@@ -21,7 +21,6 @@ DX8PolygonRendererClass::DX8PolygonRendererClass(
 	index_count(index_count_),
 	strip(strip_)
 {
-	WWASSERT(index_count);
 	mesh->PolygonRendererList.Add_Tail(this);
 }
 
@@ -67,6 +66,6 @@ void DX8PolygonRendererClass::Log()
 		vertex_index_range,
 		mmc->ident,
 		mmc->Get_Name());
-*/	WWDEBUG_SAY((work));
+*/	
 }
 

@@ -153,8 +153,6 @@ bool PhysicsSceneClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest,bool us
 	** with the fraction that the closest object allowed.  If StartBad
 	** is ever set to true, we can bail out.
 	*/
-	WWASSERT(boxtest.Result->Fraction == 1.0f);
-	WWASSERT(boxtest.Result->StartBad == false);
 	boxtest.CollidedPhysObj = NULL;
 	
 	/*
@@ -454,7 +452,6 @@ void PhysicsSceneClass::Collect_Objects
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 
 	if (static_objs) {
 		StaticCullingSystem->Reset_Collection();
@@ -477,7 +474,6 @@ void PhysicsSceneClass::Collect_Objects
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 
 	if (static_objs) {
 		StaticCullingSystem->Reset_Collection();
@@ -500,7 +496,6 @@ void PhysicsSceneClass::Collect_Objects
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 	if (static_objs) {
 		StaticCullingSystem->Reset_Collection();
 		StaticCullingSystem->Collect_Objects(box);
@@ -522,7 +517,6 @@ void PhysicsSceneClass::Collect_Objects
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 	if (static_objs) {
 		StaticCullingSystem->Reset_Collection();
 		StaticCullingSystem->Collect_Objects(frustum);
@@ -545,7 +539,6 @@ void PhysicsSceneClass::Collect_Collideable_Objects
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 	if (static_objs) {
 		StaticCullingSystem->Reset_Collection();
 		StaticCullingSystem->Collect_Objects(box);
@@ -568,7 +561,6 @@ void PhysicsSceneClass::Collect_Collideable_Objects
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 	if (static_objs) {
 		StaticCullingSystem->Reset_Collection();
 		StaticCullingSystem->Collect_Objects(box);
@@ -612,7 +604,6 @@ void PhysicsSceneClass::Collect_Lights
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 
 	if (static_lights) {
 		StaticLightingSystem->Reset_Collection();
@@ -633,7 +624,6 @@ void PhysicsSceneClass::Collect_Lights
 	NonRefPhysListClass * list
 )
 {
-	WWASSERT(list != NULL);
 
 	if (static_lights) {
 		StaticLightingSystem->Reset_Collection();

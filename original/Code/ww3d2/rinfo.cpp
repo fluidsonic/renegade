@@ -44,7 +44,6 @@ void RenderInfoClass::Pop_Material_Pass(void)
 {
 	if (RejectedMaterialPasses == 0) {
 		// remove from the end of the array
-		WWASSERT(AdditionalMaterialPassCount>0);
 		AdditionalMaterialPassCount--;
 		MaterialPassClass * mpass = AdditionalMaterialPassArray[AdditionalMaterialPassCount];
 		if (mpass != NULL) {
@@ -68,14 +67,12 @@ MaterialPassClass * RenderInfoClass::Peek_Additional_Pass(int i)
 void RenderInfoClass::Push_Override_Flags(RINFO_OVERRIDE_FLAGS flg)
 {
 	// copy to the end of the array
-	WWASSERT(OverrideFlagLevel<MAX_OVERRIDE_FLAG_LEVEL);
 	OverrideFlagLevel++;
 	OverrideFlag[OverrideFlagLevel]=flg;
 }
 
 void RenderInfoClass::Pop_Override_Flags(void)
 {
-	WWASSERT(OverrideFlagLevel>0);
 	OverrideFlagLevel--;
 }
 

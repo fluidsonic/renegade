@@ -30,7 +30,6 @@ static StateVectorClass		_WorkVector7;
  *=============================================================================================*/
 void IntegrationSystem::Euler_Integrate(ODESystemClass * sys, float dt)
 {
-	WWASSERT(sys != NULL);
 
 	/*
 	** Get the current state

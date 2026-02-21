@@ -7,7 +7,6 @@ add_library(wwui STATIC ${WWUI_SOURCES})
 target_include_directories(wwui PRIVATE
     "${ORIG_SRC}/wwui"
     "${ORIG_SRC}/wwlib"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
     "${ORIG_SRC}/ww3d2"
     "${ORIG_SRC}/wwutil"

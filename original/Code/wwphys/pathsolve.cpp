@@ -9,7 +9,6 @@
 #include "accessiblephys.h"
 #include "chunkio.h"
 #include "pathmgr.h"
-#include "wwmemlog.h"
 #include "systimer.h"
 
 
@@ -245,7 +244,6 @@ PathSolveClass::Reset
 	float				sector_fudge
 )
 {
-	WWMEMLOG(MEM_PATHFIND);
 	Reset_Lists ();
 
 	m_StartPos		= start;
@@ -298,7 +296,6 @@ PathSolveClass::Unlink_Pathfind_Hooks (void)
 void
 PathSolveClass::Resolve_Path (unsigned int milliseconds)
 {
-	WWMEMLOG(MEM_PATHFIND);
 
 	__int64 start_time	= Get_Time ();
 	__int64 end_time		= start_time + (((__int64)milliseconds) * _TicksPerMilliSec);

@@ -14,7 +14,6 @@
 #include "gamedataupdateevent.h"
 #include "consolemode.h"
 #include "winevent.h"
-#include "gamespyadmin.h"
 
 DECLARE_NETWORKOBJECT_FACTORY(cBioEvent, NETCLASSID_BIOEVENT);
 
@@ -75,19 +74,6 @@ cBioEvent::Act(void)
 			cPlayer * p_player = player_node->Data();
 
 			cNetwork::Send_Object_Update(p_player, SenderId);
-		}
-
-		//GAMESPY
-		if (cGameSpyAdmin::Is_Gamespy_Game() &&
-			cGameSpyAdmin::Is_Nickname_Collision(Nickname))	{
-
-			WideStringClass new_nickname;
-			int count = 1;
-			do {
-				new_nickname.Format(L"%s(%d)", Nickname, count++);
-			} while (cGameSpyAdmin::Is_Nickname_Collision(new_nickname));
-
-			Nickname = new_nickname;
 		}
 
 		cPlayer * p_player = cGod::Create_Player(SenderId, Nickname, TeamChoice, ClanID);

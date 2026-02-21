@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef AABTREE_H
 #define AABTREE_H
@@ -13,7 +10,6 @@
 #include "aaplane.h"
 #include "bittype.h"
 #include "colmath.h"
-#include "wwdebug.h"
 #include "aabtreebuilder.h"
 #include "obbox.h"
 #include <tri.h>
@@ -186,7 +182,6 @@ inline int AABTreeClass::Compute_Ram_Size(void)
 
 inline bool AABTreeClass::Cast_Ray(RayCollisionTestClass & raytest)
 {
-	WWASSERT(Nodes != NULL);
 	return Cast_Ray_Recursive(&(Nodes[0]),raytest);
 }
 
@@ -203,9 +198,6 @@ inline int AABTreeClass::Cast_Semi_Infinite_Axis_Aligned_Ray(const Vector3 & sta
 	static const int axis_1[6] =		{ 1, 1, 2, 2, 0, 0 };
 	static const int axis_2[6] =		{ 2, 2, 0, 0, 1, 1 };
 	static const int direction[6] =	{ 1, 0, 1, 0, 1, 0 };
-	WWASSERT(Nodes != NULL);
-	WWASSERT(axis_dir >= 0);
-	WWASSERT(axis_dir < 6);
 
 	// The functions called after this point will 'or' bits into this variable, so it needs to
 	// be initialized here to TRI_RAYCAST_FLAG_NONE.
@@ -217,25 +209,21 @@ inline int AABTreeClass::Cast_Semi_Infinite_Axis_Aligned_Ray(const Vector3 & sta
 
 inline bool AABTreeClass::Cast_AABox(AABoxCollisionTestClass & boxtest)
 {
-	WWASSERT(Nodes != NULL);
 	return Cast_AABox_Recursive(&(Nodes[0]),boxtest);
 }
 
 inline bool AABTreeClass::Cast_OBBox(OBBoxCollisionTestClass & boxtest)
 {
-	WWASSERT(Nodes != NULL);
 	return Cast_OBBox_Recursive(&(Nodes[0]),boxtest);
 }
 
 inline bool AABTreeClass::Intersect_OBBox(OBBoxIntersectionTestClass & boxtest)
 {
-	WWASSERT(Nodes != NULL);
 	return Intersect_OBBox_Recursive(&(Nodes[0]),boxtest);
 }
 
 inline void AABTreeClass::Update_Bounding_Boxes(void)
 {
-	WWASSERT(Nodes != NULL);
 	Update_Bounding_Boxes_Recursive(&(Nodes[0]));
 }
 
@@ -261,49 +249,41 @@ inline bool AABTreeClass::CullNodeStruct::Is_Leaf(void)
 
 inline int AABTreeClass::CullNodeStruct::Get_Front_Child(void)
 {
-	WWASSERT(!Is_Leaf());
 	return FrontOrPoly0;		// we shouldn't be calling this on a leaf and the leaf bit should be zero...
 }
 
 inline int AABTreeClass::CullNodeStruct::Get_Back_Child(void)
 {
-	WWASSERT(!Is_Leaf());
 	return BackOrPolyCount;
 }
 
 inline int AABTreeClass::CullNodeStruct::Get_Poly0(void)
 {
-	WWASSERT(Is_Leaf());
 	return (FrontOrPoly0 & ~AABTREE_LEAF_FLAG);
 }
 
 inline int AABTreeClass::CullNodeStruct::Get_Poly_Count(void)
 {
-	WWASSERT(Is_Leaf());
 	return BackOrPolyCount;
 }
 
 inline void AABTreeClass::CullNodeStruct::Set_Front_Child(uint32 index)
 {
-	WWASSERT(index < 0x7FFFFFFF);
 	FrontOrPoly0 = index;
 }
 
 inline void AABTreeClass::CullNodeStruct::Set_Back_Child(uint32 index)
 {
-	WWASSERT(index < 0x7FFFFFFF);
 	BackOrPolyCount = index;
 }
 
 inline void AABTreeClass::CullNodeStruct::Set_Poly0(uint32 index)
 {
-	WWASSERT(index < 0x7FFFFFFF);
 	FrontOrPoly0 = (index | AABTREE_LEAF_FLAG);
 }
 
 inline void AABTreeClass::CullNodeStruct::Set_Poly_Count(uint32 count)
 {
-	WWASSERT(count < 0x7FFFFFFF);
 	BackOrPolyCount = count;
 }
 

@@ -240,7 +240,6 @@ HarvesterClass::Animation_Complete
 void
 HarvesterClass::Attach (GameObject *game_obj)
 {
-	WWASSERT (game_obj != NULL);
 	if (game_obj != NULL) {
 
 		//

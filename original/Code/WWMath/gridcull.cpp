@@ -368,9 +368,6 @@ void GridCullSystemClass::Re_Partition(const Vector3 & input_min,const Vector3 &
 	Vector3 world_dim = max - min;
 	MaxObjExtent = objdim;
 
-	WWASSERT(world_dim.X > 0.0f);
-	WWASSERT(world_dim.Y > 0.0f);
-	WWASSERT(world_dim.Z > 0.0f);
 
 	/*
 	** how many cells should we use on each dimension?
@@ -505,8 +502,6 @@ void GridCullSystemClass::Collect_And_Unlink_All(void)
  *=============================================================================================*/
 void GridCullSystemClass::Update_Culling(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 	
 	int address;
 	GridLinkClass * link = (GridLinkClass *)obj->Get_Cull_Link();
@@ -538,7 +533,6 @@ void GridCullSystemClass::Load(ChunkLoadClass & cload)
 	*/ 
 	uint32 version;
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == GRID_CHUNK_VERSION);
 	cload.Read(&version,sizeof(version));
 	cload.Close_Chunk();
 
@@ -548,7 +542,6 @@ void GridCullSystemClass::Load(ChunkLoadClass & cload)
 	IOGridParametersStruct params;
 	memset(&params,0,sizeof(params));
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == GRID_CHUNK_PARAMETERS);
 	cload.Read(&params,sizeof(params));
 	cload.Close_Chunk();
 
@@ -700,8 +693,6 @@ const GridCullSystemClass::StatsStruct & GridCullSystemClass::Get_Statistics(voi
  *=============================================================================================*/
 void GridCullSystemClass::Add_Object_Internal(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == NULL);
 
 	GridLinkClass * link = new GridLinkClass(this);
 	obj->Set_Cull_Link(link);
@@ -726,8 +717,6 @@ void GridCullSystemClass::Add_Object_Internal(CullableClass * obj)
  *=============================================================================================*/
 void GridCullSystemClass::Remove_Object_Internal(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 	GridLinkClass * link = (GridLinkClass *)obj->Get_Cull_Link();
 
 	unlink_object(obj);
@@ -754,8 +743,6 @@ void GridCullSystemClass::Remove_Object_Internal(CullableClass * obj)
  *=============================================================================================*/
 void GridCullSystemClass::link_object(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 
 	int address;
 	map_point_to_address(obj->Get_Cull_Box().Center,address);
@@ -765,10 +752,7 @@ void GridCullSystemClass::link_object(CullableClass * obj)
 
 void GridCullSystemClass::link_object(CullableClass * obj,int address)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 	GridLinkClass * link = (GridLinkClass *)obj->Get_Cull_Link();
-	WWASSERT(link != NULL);
 
 	/*
 	** if obj cannot be inserted into the grid, add it to the NoGridList
@@ -804,8 +788,6 @@ void GridCullSystemClass::link_object(CullableClass * obj,int address)
  *=============================================================================================*/
 void GridCullSystemClass::unlink_object(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 	GridLinkClass * link = (GridLinkClass *)obj->Get_Cull_Link();
 
 	if (link->GridAddress == UNGRIDDED_ADDRESS) {
@@ -830,8 +812,6 @@ void GridCullSystemClass::unlink_object(CullableClass * obj)
  *=============================================================================================*/
 void GridCullSystemClass::link_object_to_list(CullableClass ** head,CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 	GridLinkClass * link = (GridLinkClass *)obj->Get_Cull_Link();
 
 	/*
@@ -842,7 +822,6 @@ void GridCullSystemClass::link_object_to_list(CullableClass ** head,CullableClas
 
 	if (link->Next != NULL) {
 		GridLinkClass * next_link = (GridLinkClass *)link->Next->Get_Cull_Link();
-		WWASSERT(next_link != NULL);
 		next_link->Prev = obj;
 	}
 
@@ -864,22 +843,11 @@ void GridCullSystemClass::link_object_to_list(CullableClass ** head,CullableClas
  *=============================================================================================*/
 void GridCullSystemClass::unlink_object_from_list(CullableClass ** head,CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 	GridLinkClass * link = (GridLinkClass *)obj->Get_Cull_Link();
 
 	/*
 	** check to see that the object is actually in this list
 	*/
-#ifdef WWDEBUG
-	CullableClass * tmp = *head;
-	bool found = false;
-	while (tmp && !found) {
-		if (tmp == obj) found = true;
-		tmp = ((GridLinkClass *)(tmp->Get_Cull_Link()))->Next;
-	}
-	WWASSERT(found);
-#endif
 
 	/*
 	** If we were the head of the list, make the head point to the next object

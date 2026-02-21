@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __WIDESTRING_H
 #define __WIDESTRING_H
@@ -8,7 +5,6 @@
 #include <string.h>
 #include <stdarg.h>
 #include "always.h"
-#include "wwdebug.h"
 #include "win.h"
 #include "wwstring.h"
 #include "trim.h"
@@ -280,14 +276,12 @@ WideStringClass::Compare_No_Case (const WCHAR *string) const
 inline WCHAR
 WideStringClass::operator[] (int index) const
 {
-	WWASSERT (index >= 0 && index < Get_Length ());
 	return m_Buffer[index];
 }
 
 inline WCHAR&
 WideStringClass::operator[] (int index)
 {
-	WWASSERT (index >= 0 && index < Get_Length ());
 	return m_Buffer[index];
 }
 
@@ -655,7 +649,6 @@ WideStringClass::Set_Buffer_And_Allocated_Length (WCHAR *buffer, int length)
 		Store_Allocated_Length (length);
 		Store_Length (0);		
 	} else {
-		WWASSERT (length == 0);
 	}
 
 	return ;
@@ -705,7 +698,6 @@ WideStringClass::Store_Allocated_Length (int allocated_length)
 		HEADER *header					= Get_Header ();
 		header->allocated_length	= allocated_length;
 	} else {
-		WWASSERT (allocated_length == 0);
 	}
 
 	return ;
@@ -724,7 +716,6 @@ WideStringClass::Store_Length (int length)
 		HEADER *header		= Get_Header ();
 		header->length		= length;
 	} else {
-		WWASSERT (length == 0);
 	}
 
 	return ;

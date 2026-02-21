@@ -132,7 +132,6 @@ void IntersectionClass::Append_Object_Array(
 		CurrentCount++;
 		return;
 	}
-	WWDEBUG_SAY(("IntersectionClass::Append_Object_Array - Too many objects\n"));
 }
 
 // determines if specified plane-intersection point (co-planar with polygon) is within the the passed polygon.

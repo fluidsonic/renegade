@@ -1,9 +1,6 @@
 #include "wwmath.h"
-#include "wwhack.h"
 #include "lookuptable.h"
 #include <stdlib.h>
-#include "wwdebug.h"
-#include "wwprofile.h"
 
 // TODO: convert to use loouptablemanager...
 float _FastAcosTable[ARC_TABLE_SIZE];
@@ -43,16 +40,4 @@ float		WWMath::Random_Float(void)
 	return ((float)(rand() & 0xFFF)) / (float)(0xFFF); 
 }
 
-
-/*
-** Force link some modules from this library.
-*/
-void Do_Force_Links(void)
-{
-	FORCE_LINK(curve);
-	FORCE_LINK(hermitespline);
-	FORCE_LINK(catmullromspline);
-	FORCE_LINK(cardinalspline);
-	FORCE_LINK(tcbspline);
-}
 

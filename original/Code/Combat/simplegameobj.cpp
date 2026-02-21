@@ -6,15 +6,12 @@
 #include "combatchunkid.h"
 #include "debug.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
 #include "phys.h"
 #include "apppackettypes.h"
-
 
 /*
 ** SimpleGameObjDef
 */
-DECLARE_FORCE_LINK( Simple )
 
 SimplePersistFactoryClass<SimpleGameObjDef, CHUNKID_GAME_OBJECT_DEF_SIMPLE>	_SimpleGameObjDefPersistFactory;
 
@@ -123,7 +120,6 @@ const PersistFactoryClass & SimpleGameObjDef::Get_Factory (void) const
 	return _SimpleGameObjDefPersistFactory; 
 }
 
-
 /*
 ** SimpleGameObj
 */
@@ -141,11 +137,10 @@ SimpleGameObj::SimpleGameObj()
 {
 	Set_App_Packet_Type(APPPACKETTYPE_SIMPLE);
 
-	//WWDEBUG_SAY(("SimpleGameObj::SimpleGameObj\n"));
+	//
 
 	/*
 	if (Get_Definition().Get_Name() != NULL) {
-		WWDEBUG_SAY(("  for %s\n", Get_Definition().Get_Name()));
 	}
 	/**/
 }
@@ -163,7 +158,6 @@ void SimpleGameObj::Init( void )
 
 	/*
 	if (Get_Definition().Get_Name() != NULL) {
-		WWDEBUG_SAY(("SimpleGameObj::Init for %s\n", Get_Definition().Get_Name()));
 	}
 	/**/
 }
@@ -177,7 +171,6 @@ const SimpleGameObjDef & SimpleGameObj::Get_Definition( void ) const
 {
 	return (const SimpleGameObjDef &)BaseGameObj::Get_Definition();
 }
-
 
 /*
 ** SimpleGameObj Save and Load
@@ -246,10 +239,7 @@ void	SimpleGameObj::On_Post_Load( void )
 
 	/*
 	if (Get_Definition().Get_Name() != NULL) {
-		WWDEBUG_SAY(("SimpleGameObj::On_Post_Load for %s\n", Get_Definition().Get_Name()));
 	}
 	*/
 }
-
-
 

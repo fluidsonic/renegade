@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 
 #ifndef MATRIX4_H
@@ -434,7 +431,6 @@ WWINLINE Matrix4 Matrix4::Transpose() const
  *=============================================================================================*/
 WWINLINE Matrix4 Matrix4::Inverse() const    // Gauss-Jordan elimination with partial pivoting
 {
-	WWASSERT_PRINT(0,"Matrix4::Inverse does not work, re-implement!");
 
 	Matrix4 a(*this);				// As a evolves from original mat into identity
 	Matrix4 b(true);				// b evolves from identity into inverse(a)

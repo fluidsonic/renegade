@@ -23,8 +23,6 @@
 #include "rawfile.h"
 #include "serversettings.h"
 #include "consolemode.h"
-#include "GameSpy_QnR.h"
-#include "gamespyadmin.h"
 #include "specialbuilds.h"
 #include "useroptions.h"
 
@@ -139,24 +137,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 			continue;
 		}
 
-		if (strstr(cmd, "GAMESPYSERVER=")) {
-			char server_config_file[MAX_PATH];
-			strcpy(server_config_file, strstr(cmd, "GAMESPYSERVER=") + 14);
-			RawFileClass file(server_config_file);
-			if (file.Is_Available()) {
-				ServerSettingsClass::Set_Settings_File_Name(server_config_file);
-
-				RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
-				if (registry.Is_Valid ()) {
-					registry.Set_Int("AutoRestartFlag", 1);
-					registry.Set_Int("AutoRestartType", 0);
-				}
-				cGameSpyAdmin::Set_Is_Server_Gamespy_Listed(true);
-				GameSpyQnR.Enable_Reporting(true);
-			}
-			continue;
-		}
-
 		if (strstr(cmd, "NODX")) {
 			ConsoleBox.Set_Exclusive(true);
 			continue;
@@ -195,10 +175,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 		}
 
 		addr = ::inet_addr(ipaddr);
-
-		cGameSpyAdmin::Set_Game_Host_Ip(addr);
-		cGameSpyAdmin::Set_Game_Host_Port(port);
-		cGameSpyAdmin::Set_Is_Launch_From_Gamespy_Requested(true);
 	}
 
 	char * nickname_param = ::strstr(tmpstr, "+NETPLAYERNAME");
@@ -236,7 +212,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 		nickname2[end - start] = 0;
 
 		cUserOptions::GameSpyNickname.Set(nickname2);
-		cGameSpyAdmin::Set_Is_Launch_From_Gamespy_Requested(true);
 	}
 
 	char * password_param = ::strstr(tmpstr, "+PASS");
@@ -281,7 +256,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 
 		WideStringClass wide_password;
 		wide_password.Convert_From(password);
-		cGameSpyAdmin::Set_Password_Attempt(wide_password);
 	}
 
 	free(tmpstr);
@@ -303,23 +277,13 @@ void cUserOptions::Set_Server_INI_File(char *cmd_line_entry)
 	RawFileClass file(server_config_file);
 	if (file.Is_Available()) {
 		ServerSettingsClass::Set_Settings_File_Name(server_config_file);
-
-		RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
-		if (registry.Is_Valid ()) {
-			registry.Set_Int("AutoRestartFlag", 1);
-			registry.Set_Int("AutoRestartType", 1);
-		}
 	}
 }
 
 //-----------------------------------------------------------------------------
 void cUserOptions::Set_Bandwidth_Type(BANDWIDTH_TYPE_ENUM bandwidth_type)
 {
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		GameSpyBandwidthType.Set(bandwidth_type);
-	} else {
-		BandwidthType.Set(bandwidth_type);
-	}
+	BandwidthType.Set(bandwidth_type);
 
 	if (bandwidth_type != BANDWIDTH_CUSTOM) {
 		if (bandwidth_type == BANDWIDTH_AUTO && BandwidthCheckerClass::Got_Bandwidth()) {
@@ -335,23 +299,13 @@ void cUserOptions::Set_Bandwidth_Type(BANDWIDTH_TYPE_ENUM bandwidth_type)
 //-----------------------------------------------------------------------------
 BANDWIDTH_TYPE_ENUM cUserOptions::Get_Bandwidth_Type(void)
 {
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		return (BANDWIDTH_TYPE_ENUM) GameSpyBandwidthType.Get();
-	} else {
-		return (BANDWIDTH_TYPE_ENUM) BandwidthType.Get();
-	}
+	return (BANDWIDTH_TYPE_ENUM) BandwidthType.Get();
 }
 
 //-----------------------------------------------------------------------------
 void cUserOptions::Set_Bandwidth_Bps(int bandwidth_bps)
 {
-
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		GameSpyBandwidthType.Set(BANDWIDTH_CUSTOM);
-	} else {
-		BandwidthType.Set(BANDWIDTH_CUSTOM);
-	}
-
+	BandwidthType.Set(BANDWIDTH_CUSTOM);
 	BandwidthBps.Set(bandwidth_bps);
 }
 

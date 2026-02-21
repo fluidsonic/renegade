@@ -8,11 +8,10 @@ target_include_directories(ww3d2 BEFORE PRIVATE
     "${COMPAT_DIR}"
     "${ORIG_WW3D2}"
     "${ORIG_SRC}/wwlib"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
     "${ORIG_SRC}/wwsaveload"
     "${ORIG_SRC}/wwutil"
     "${ORIG_SRC}/WWAudio"
 )
 
-target_link_libraries(ww3d2 wwsaveload wwlib wwdebug wwmath)
+target_link_libraries(ww3d2 wwsaveload wwlib wwmath)

@@ -69,10 +69,8 @@
 #include "specialbuilds.h"
 #include <wwlib/realcrc.h>
 #include "demosupport.h"
-#include "gamespyadmin.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
-#include "GameSpy_QnR.h"
 
 /*
 **
@@ -739,8 +737,6 @@ void CombatGameModeClass::Load_Level( void )
 	ConsoleBox.Print("Load %d%% complete\n", 100);
 	ConsoleBox.Print("Level loaded OK\n");
 
-	GameSpyQnR.Init();
-
 	//
 	// Re-enable packet processing.
 	//
@@ -843,7 +839,7 @@ void CombatGameModeClass::Post_Load_Id_Uniqueness_Check(void)
 				if (p_phys_obj_2 != NULL &&
 					p_phys_obj_2->Get_ID() == p_phys_obj->Get_ID()) {
 
-					//WWASSERT(p_phys_obj_2 == p_phys_obj);
+					//assert(p_phys_obj_2 == p_phys_obj);
 					if (p_phys_obj_2 != p_phys_obj) {
 						Debug_Say(("Level file error: Two phys objects found with id %d.\n",
 							p_phys_obj_2->Get_ID()));
@@ -1264,21 +1260,7 @@ void 	CombatGameModeClass::Think()
 		Suspend();
 		GameInitMgrClass::End_Game();
 
-		//GAMESPY
-		if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy())
-		{
-#ifdef MULTIPLAYERDEMO
-			DialogMgrClass::Flush_Dialogs ();
-			START_DIALOG (SplashOutroMenuDialogClass);
-#else
-			extern void Stop_Main_Loop (int);
-			Stop_Main_Loop(EXIT_SUCCESS);
-#endif // MULTIPLAYERDEMO
-		}
-		else
-		{
-			GameInitMgrClass::Display_End_Game_Menu();
-		}
+		GameInitMgrClass::Display_End_Game_Menu();
 	}
 }
 

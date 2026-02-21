@@ -36,7 +36,6 @@ void Load_Bones( void )
 	INIClass	* bonesINI = Get_INI( BONES_INI_FILENAME );
 	if (bonesINI != NULL) {
 
-		WWASSERT( bonesINI && bonesINI->Section_Count() > 0 );
 
 		int count =  bonesINI->Entry_Count( SECTION_LIST );		// Load gang list
 		for ( int entry = 0; entry < count; entry++ )	{

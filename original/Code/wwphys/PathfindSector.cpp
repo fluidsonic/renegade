@@ -109,7 +109,6 @@ PathfindSectorClass::Load (ChunkLoadClass &cload)
 				break;
 			
 			default:
-				WWDEBUG_SAY (("Unknown chunk ID 0x%X\n", cload.Cur_Chunk_ID ()));
 				break;
 		}
 
@@ -150,7 +149,6 @@ PathfindSectorClass::Load_Variables (ChunkLoadClass &cload)
 			break;
 			
 			default:
-				WWDEBUG_SAY (("Unknown micro chunk ID 0x%X\n", cload.Cur_Micro_Chunk_ID ()));
 				break;
 		}
 
@@ -248,7 +246,6 @@ PathfindWaypathSectorClass::Load (ChunkLoadClass &cload)
 				break;
 			
 			default:
-				WWDEBUG_SAY (("Unknown chunk ID 0x%X\n", cload.Cur_Chunk_ID ()));
 				break;
 		}
 
@@ -276,7 +273,6 @@ PathfindWaypathSectorClass::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK (cload, VARID_WAYPATH_ID, WaypathID);
 			
 			default:
-				WWDEBUG_SAY (("Unknown micro chunk ID 0x%X\n", cload.Cur_Micro_Chunk_ID ()));
 				break;
 		}
 

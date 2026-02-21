@@ -1,5 +1,4 @@
 #include "buildingstate.h"
-#include "wwdebug.h"
 
 /*
 ** Static data used by BuildingStateClass
@@ -103,8 +102,6 @@ int BuildingStateClass::Compose_State(int health_state,bool power_onoff)
 
 const char * BuildingStateClass::Get_State_Name(int state)
 {
-	WWASSERT(state >= 0);
-	WWASSERT(state < STATE_COUNT);
 
 	return _StateNames[state];
 }

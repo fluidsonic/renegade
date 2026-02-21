@@ -1,12 +1,8 @@
 #ifndef CRIT_SECTION
 #define CRIT_SECTION
 
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #include "always.h"
-#include "wwdebug.h"
 #include <windows.h>
 
 class CriticalSectionClass

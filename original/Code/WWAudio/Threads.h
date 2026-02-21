@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __WWAUDIO_THREADS_H
 #define __WWAUDIO_THREADS_H

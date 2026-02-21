@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __TRANSLATE_DB_H
 #define __TRANSLATE_DB_H
@@ -219,7 +216,6 @@ TranslateDBClass::Get_String (uint32 id)
 	//
 	//	Check to make sure the database is loaded
 	//
-	WWASSERT (Is_Loaded());
 
 	//
 	//	Calculate which index this ID refers to
@@ -230,14 +226,12 @@ TranslateDBClass::Get_String (uint32 id)
 	//	Check to see if the requested ID is in the range
 	// of loaded string objects.
 	//
-	WWASSERT (index >= 0 && index < m_ObjectList.Count ());
 	if (index >= 0 && index < m_ObjectList.Count ()) {
 		
 		//
 		//	Get the translation object
 		//
 		TDBObjClass *trans_obj = m_ObjectList[index];
-		WWASSERT (trans_obj != NULL);
 		if (trans_obj != NULL) {
 			
 			//
@@ -296,7 +290,6 @@ TranslateDBClass::Get_English_String (uint32 id)
 	//
 	//	Check to make sure the database is loaded
 	//
-	WWASSERT (m_ObjectList.Count () > 0);
 
 	//
 	//	Calculate which index this ID refers to
@@ -307,14 +300,12 @@ TranslateDBClass::Get_English_String (uint32 id)
 	//	Check to see if the requested ID is in the range
 	// of loaded string objects.
 	//
-	WWASSERT (index >= 0 && index < m_ObjectList.Count ());
 	if (index >= 0 && index < m_ObjectList.Count ()) {
 		
 		//
 		//	Get the translation object
 		//
 		TDBObjClass *trans_obj = m_ObjectList[index];
-		WWASSERT (trans_obj != NULL);
 		if (trans_obj != NULL) {
 			
 			//
@@ -363,7 +354,6 @@ TranslateDBClass::Find_Object (uint32 id)
 		//
 		//	Make sure this is the object the caller requested
 		//
-		WWASSERT (object != NULL && object->Get_ID () == id);
 		if (object != NULL && object->Get_ID () != id) {
 			object = NULL;
 		}

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef AABTREECULL_H
 #define AABTREECULL_H
@@ -106,15 +103,9 @@ protected:
 	/*
 	** Internal stat tracking
 	*/
-#ifdef WWDEBUG
-	void	NODE_ACCEPTED(void)					{ Stats.NodesAccepted ++; }
-	void	NODE_TRIVIALLY_ACCEPTED(void)		{ Stats.NodesTriviallyAccepted ++; }
-	void	NODE_REJECTED(void)					{ Stats.NodesRejected ++; }
-#else
 	void	NODE_ACCEPTED(void)					{ }
 	void	NODE_TRIVIALLY_ACCEPTED(void)		{ }
 	void	NODE_REJECTED(void)					{ }
-#endif
 
 	/*
 	** Internal functions

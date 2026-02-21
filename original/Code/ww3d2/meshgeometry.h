@@ -9,7 +9,6 @@
 #include "vector3.h"
 #include "vector3i.h"
 #include "vector4.h"
-#include "wwdebug.h"
 #include "multilist.h"
 #include "coltest.h"
 #include "inttest.h"
@@ -97,13 +96,13 @@ public:
 	int							Get_Vertex_Count(void) const								{ return VertexCount; }
 
 	const TriIndex*			Get_Polygon_Array(void)										{ return get_polys(); }
-	Vector3 *					Get_Vertex_Array(void)										{ WWASSERT(Vertex); return Vertex->Get_Array(); }
+	Vector3 *					Get_Vertex_Array(void)										{ assert(Vertex); return Vertex->Get_Array(); }
 	const Vector3 *			Get_Vertex_Normal_Array(void);
 	const Vector4 *			Get_Plane_Array(bool create = true);
 	void							Compute_Plane(int pidx,PlaneClass * set_plane) const;	
 	const uint32 *				Get_Vertex_Shade_Index_Array(bool create = true)	{ return get_shade_indices(create); }
 	const uint16 *				Get_Vertex_Bone_Links(void)								{ return get_bone_links(); }
-	uint8 *						Get_Poly_Surface_Type_Array(void)						{ WWASSERT(PolySurfaceType); return PolySurfaceType->Get_Array(); }
+	uint8 *						Get_Poly_Surface_Type_Array(void)						{ assert(PolySurfaceType); return PolySurfaceType->Get_Array(); }
 	uint8							Get_Poly_Surface_Type(int poly_index) const;
 
 	void							Get_Bounding_Box(AABoxClass * set_box);
@@ -211,7 +210,6 @@ protected:
 */
 inline TriIndex * MeshGeometryClass::get_polys(void)
 {
-	WWASSERT(Poly);
 	return Poly->Get_Array();
 }
 
@@ -240,8 +238,6 @@ inline uint16 * MeshGeometryClass::get_bone_links(bool create)
 
 inline uint8 MeshGeometryClass::Get_Poly_Surface_Type(int poly_index) const
 {
-	WWASSERT(PolySurfaceType);
-	WWASSERT(poly_index >= 0 && poly_index < PolyCount);
 	uint8 *type = PolySurfaceType->Get_Array();
 	return type[poly_index];
 }

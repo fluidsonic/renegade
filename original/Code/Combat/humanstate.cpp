@@ -17,7 +17,6 @@
 #include "humanrecoil.h"
 #include "globalsettings.h"
 #include "combatchunkid.h"
-#include "wwprofile.h"
 #include "surfaceeffects.h"
 #include "crandom.h"
 #include "gametype.h"
@@ -75,8 +74,6 @@ HumanStateClass::~HumanStateClass( void )
 
 void	HumanStateClass::Init( HumanPhysClass	* human_phys )
 {
-	WWASSERT( HumanPhys == NULL );
-	WWASSERT( human_phys != NULL );
 
 	HumanPhys = human_phys;
 	HumanPhys->Add_Ref();
@@ -94,8 +91,6 @@ void	HumanStateClass::Reset( void )
 
 void	HumanStateClass::Set_Anim_Control( HumanAnimControlClass * anim_control )
 {
-	WWASSERT( AnimControl == NULL || AnimControl == anim_control );
-	WWASSERT( anim_control != NULL );
 	AnimControl = anim_control;
 	AnimControl->Set_Model( HumanPhys->Peek_Model() );
 }
@@ -182,17 +177,14 @@ bool	HumanStateClass::Load( ChunkLoadClass &cload )
 	int human_anim_override_def_id = 0;
 	int human_loiter_collection_def_id = 0;
 
-	WWASSERT( HumanPhys == NULL );
 	
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
 			case CHUNKID_VARIABLES:
 
-				WWASSERT( HumanPhys == NULL );
 
 				while (cload.Open_Micro_Chunk()) {
-					WWASSERT(SubState >= 0 && SubState <= HIGHEST_HUMAN_SUB_STATE);
 
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_STATE, State );         		
@@ -219,7 +211,6 @@ bool	HumanStateClass::Load( ChunkLoadClass &cload )
 					cload.Close_Micro_Chunk();
 				}
 
-				WWASSERT( HumanPhys != NULL );
 
 				if ( HumanPhys != NULL ) {
 					REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&HumanPhys );
@@ -251,7 +242,6 @@ bool	HumanStateClass::Load( ChunkLoadClass &cload )
 */
 void	HumanStateClass::Update_Weapon( WeaponClass * weapon, bool new_weapon )
 {
-	WWPROFILE( "Human Weapon" );
 
 	Update_Recoil(weapon);
 
@@ -454,7 +444,6 @@ const char *  HumanStateClass::Get_State_Name( void )
 		ADD_CASE(LOCKED_ANIMATION);
 
 		default: 
-			WWASSERT(0);
 			return ""; // to avoid compiler warning
 	}
 }
@@ -463,7 +452,6 @@ void	HumanStateClass::Set_Sub_State( int sub_state )
 {
 	if ( Is_Sub_State_Adjustable() ) {
 		if ( SubState != sub_state ) {
-			WWASSERT(sub_state >= 0 && sub_state <= HIGHEST_HUMAN_SUB_STATE);
 			SubState = sub_state;
 			Update_Animation();
 		}
@@ -642,7 +630,6 @@ static const char * _dive_anims[ 4 * 2 ] = {
 // Weapons style, weapon action, recoil, blend, vehicle, mix/math, aiming tilt
 void	HumanStateClass::Update_Animation( void )
 {
-	WWPROFILE( "Human Animation" );
 
 	// no updates for visceroids
 	if ( AnimControl->Get_Skeleton() == 'V' ) {
@@ -885,7 +872,6 @@ void	HumanStateClass::Reset_Loiter_Delay( void )
 // Must deal with LAND, ANIMATIONS, DEATH, WOUNDS, TRANSITIONS, JUMP, DEATH FALLS, LADDER
 void	HumanStateClass::Update_State( void )
 {
-	WWPROFILE( "Human State" );
 
 	StateTimer += TimeManager::Get_Frame_Seconds();
 
@@ -1141,8 +1127,6 @@ void	HumanStateClass::Post_Think( void )
 
 				if ( legs_rotation != 0 ) {
 
-					WWASSERT( root_bone != -1 );
-					WWASSERT( torso_bone != -1 );
 
 					if ( !HumanPhys->Peek_Model()->Is_Bone_Captured( root_bone ) ) {
 						HumanPhys->Peek_Model()->Capture_Bone( root_bone );
@@ -1337,7 +1321,6 @@ const char * _DeathAnims[] =
 
 const char *	HumanStateClass::Get_Death_Anim( int ouch_type )
 {
-	WWASSERT( ouch_type <= OUCH_SUPER_FIRE );
 	return _DeathAnims[ ouch_type ];
 }
 

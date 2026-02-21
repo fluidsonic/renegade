@@ -30,7 +30,6 @@ cScExplosionEvent::cScExplosionEvent(void)
 void
 cScExplosionEvent::Init(int def_id, const Vector3 & position, int owner_id, int victim_id )
 {
-	WWASSERT(CombatManager::I_Am_Server());
 
 	DefID		= def_id;
 	Position	= position;
@@ -52,12 +51,10 @@ cScExplosionEvent::Init(int def_id, const Vector3 & position, int owner_id, int 
 void
 cScExplosionEvent::Act(void)
 {
-//	WWASSERT(CombatManager::I_Am_Client());
+//	assert(CombatManager::I_Am_Client());
 
 	ExplosionManager::Explode( DefID, Position, OwnerID, VictimID );
 
-	WWDEBUG_SAY(("cScExplosionEvent::Act: Def %d, at (%5.2f, %5.2f, %5.2f) Owner %d Victim %d\n", 
-		DefID, Position.X, Position.Y, Position.Z, OwnerID, VictimID ));
 
 	Set_Delete_Pending();
 }
@@ -66,7 +63,6 @@ cScExplosionEvent::Act(void)
 void
 cScExplosionEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Server());
 
 	NetworkObjectClass::Export_Creation(packet);
 
@@ -83,7 +79,6 @@ cScExplosionEvent::Export_Creation(BitStreamClass & packet)
 void
 cScExplosionEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Only_Client());
 
 	NetworkObjectClass::Import_Creation(packet);
 

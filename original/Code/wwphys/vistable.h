@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef VISTABLE_H
 #define VISTABLE_H
@@ -9,7 +6,6 @@
 #include "bittype.h"
 #include "refcount.h"
 #include "multilist.h"
-#include "wwdebug.h"
 
 class ChunkLoadClass;
 class ChunkSaveClass;
@@ -115,16 +111,12 @@ protected:
 
 inline int VisTableClass::Get_Bit(int i) const
 { 
-	WWASSERT(Buffer != NULL);
-	WWASSERT(i < BitCount);
 
 	return (Buffer[i>>5] & (0x80000000u >> (i & 0x1F))); 
 }
 
 inline void VisTableClass::Set_Bit(int i,bool onoff) 
 { 
-	WWASSERT(Buffer != NULL);
-	WWASSERT(i < BitCount);
 
 	if (onoff) {
 		Buffer[i>>5] |= (0x80000000u >> (i & 0x01F)); 

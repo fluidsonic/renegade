@@ -6,12 +6,10 @@
 #include "debug.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "combat.h"
 #include "smartgameobj.h"
 #include "playertype.h"
-#include "wwprofile.h"
 #include "pscene.h"
 #include "phys.h"
 #include "soldier.h"
@@ -19,7 +17,6 @@
 /*
 ** ScriptZoneGameObjDef
 */
-DECLARE_FORCE_LINK( Zone )
 
 /*
 ** Namespaces
@@ -150,12 +147,10 @@ bool	ScriptZoneGameObjDef::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 const PersistFactoryClass & ScriptZoneGameObjDef::Get_Factory (void) const 
 { 
 	return _ScriptZoneGameObjDefPersistFactory; 
 }
-
 
 /*
 ** ScriptZoneGameObj
@@ -240,7 +235,6 @@ bool	ScriptZoneGameObj::Save( ChunkSaveClass & csave )
 	return true;
 }
 
-
 bool	ScriptZoneGameObj::Load( ChunkLoadClass &cload )
 {
 	while (cload.Open_Chunk()) {
@@ -264,9 +258,7 @@ bool	ScriptZoneGameObj::Load( ChunkLoadClass &cload )
 				break;
 	
 			case CHUNKID_INSIDE_LIST:
-				WWASSERT( InsideList.Get_Count()== 0 );
 				while (cload.Open_Chunk()) {
-					WWASSERT(  cload.Cur_Chunk_ID() == CHUNKID_INSIDE_LIST_ENTRY );
 					GameObjReference * ref = new GameObjReference;
 					ref->Load( cload );
 					InsideList.Add_Head( ref );
@@ -304,8 +296,6 @@ void	ScriptZoneGameObj::Think()
 		return;
 	}
 
-	WWPROFILE( "ScriptZone Think" );
-
 	// check current objects for exiting
 	SLNode<GameObjReference> *pobjrefnode;
 	for (	pobjrefnode = InsideList.Head(); pobjrefnode; ) {
@@ -335,11 +325,9 @@ void	ScriptZoneGameObj::Think()
 		pobjrefnode = next;
 	}
 
-
 	// If only gathering stars...
 	if (Get_Definition().CheckStarsOnly ) {
 
-		WWPROFILE( "Star Enter" );
 		// check all stars for entering
 		SLNode<SoldierGameObj> *objnode;
 		for (	objnode = GameObjManager::Get_Star_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
@@ -349,7 +337,6 @@ void	ScriptZoneGameObj::Think()
 			}
 		}
 	} else {
-		WWPROFILE( "All Enter" );
 		// Collect the dynamic physics objects overlapping this zone
 		NonRefPhysListClass objs_in_zone;
 		PhysicsSceneClass::Get_Instance()->Collect_Objects( BoundingBox, false, true, &objs_in_zone );
@@ -390,7 +377,6 @@ void		ScriptZoneGameObj::Entered( SmartGameObj * obj )
 */
 bool	ScriptZoneGameObj::In_List( SmartGameObj * obj ) 
 {
-	WWASSERT( obj != NULL );
 	SLNode<GameObjReference> *pobjrefnode;
 	for (	pobjrefnode = InsideList.Head(); pobjrefnode; pobjrefnode = pobjrefnode->Next() ) {
 		if ( obj == *pobjrefnode->Data() ) {
@@ -473,25 +459,6 @@ int ScriptZoneGameObj::Count_Team_Members_Inside( int player_type )
 	}
 	return count;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 **

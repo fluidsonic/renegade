@@ -3,7 +3,6 @@
 #include "gameobjmanager.h"
 #include "input.h"
 #include "weaponmanager.h"
-#include "wwprofile.h"
 #include "scripts.h"
 #include "pscene.h"
 #include "damage.h"
@@ -52,9 +51,7 @@
 #include "cheatmgr.h"
 #include "systeminfolog.h"
 #include "assetstatus.h"
-#include "wwmemlog.h"
 #include "unitcoordinationzonemgr.h"
-#include "fastallocator.h"
 #include "screenfademanager.h"
 #include "animatedsoundmgr.h"
 #include "render2dsentence.h"
@@ -325,9 +322,7 @@ public:
 
 		CombatManager::Set_Load_Progress( 0 );
 
-		WWMEMLOG(MEM_GAMEDATA);
 
-		WWLOG_PREPARE_TIME_AND_MEMORY("Game loader thread");
 
 		#ifndef PARAM_EDITING_ON
 			// Tell the datasafe to expect calls from this thread now.
@@ -339,11 +334,9 @@ public:
 		//	Reload the definition databases (to support level-specific temp ddb's)
 		INIT_STATUS("Free definition databases");
 		DefinitionMgrClass::Free_Definitions();
-		WWLOG_INTERMEDIATE("Free definitions");
 
 		INIT_STATUS("Load definition databases");
 		SaveGameManager::Load_Definitions();
-		WWLOG_INTERMEDIATE("Load definitions");
 
 		CombatManager::Inc_Load_Progress();
 		//
@@ -361,7 +354,6 @@ public:
 		PlayerInfoLog::Set_Current_Map_Name(_load_map_name);
 		SaveGameManager::Pre_Load_Game(_load_map_name, filename_to_load, lsd_filename);
 		CombatManager::Set_Last_LSD_Name( lsd_filename );
-		WWLOG_INTERMEDIATE("Preload game");
 
 		CombatManager::Inc_Load_Progress();
 
@@ -371,12 +363,10 @@ public:
 		if ( _preload_assets ) {
 			INIT_STATUS("Preload assets");
 			AssetDependencyManager::Load_Always_Assets();
-			WWLOG_INTERMEDIATE("Preload always assets");
 
 			CombatManager::Inc_Load_Progress();
 
 			AssetDependencyManager::Load_Level_Assets( lsd_filename );
-			WWLOG_INTERMEDIATE("Preload level assets");
 		} else {
 			CombatManager::Inc_Load_Progress();
 		}
@@ -386,7 +376,6 @@ public:
 		// Now load the level
 		INIT_STATUS("Load level");
 		SaveGameManager::Load_Game( filename_to_load );
-		WWLOG_INTERMEDIATE("Load game");
 
 		CombatManager::Inc_Load_Progress();
 
@@ -404,7 +393,6 @@ void	CombatManager::Load_Level_Threaded( const char * map_name, bool preload_ass
 	_preload_assets = preload_assets;
 	_load_map_name = map_name;
 
-	WWASSERT(!thread.Is_Running());
 	thread.Execute();
 }
 
@@ -508,53 +496,37 @@ void	CombatManager::Unload_Level( void )
 		WW3D::End_Render();
 	}
 
-	WWLOG_PREPARE_TIME_AND_MEMORY("Unload level");
 
-	WWDEBUG_SAY(("CombatManager::Unload_Level\n"));
 	SystemInfoLog::Set_State_Exiting();
-	WWLOG_INTERMEDIATE("SystemInfoLog::Set_State_Exiting()");
 
 	// Don't log load-on-demands after the game is over
 	AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(false);
-	WWLOG_INTERMEDIATE("AssetStatusClass::Peek_Instance()->Enable_Load_On_Demand_Reporting(false)");
 
 	//
 	//	Free the static anim phys object network wrappers
 	//
 	StaticNetworkObjectClass::Free_Static_Network_Objects ();
-	WWLOG_INTERMEDIATE("StaticNetworkObjectClass::Free_Static_Network_Objects ()");
 
 	WeaponViewClass::Shutdown();
-	WWLOG_INTERMEDIATE("WeaponViewClass::Shutdown()");
 
 	GameObjManager::Shutdown();
-	WWLOG_INTERMEDIATE("GameObjManager::Shutdown()");
 
 	CoverManager::Shutdown();
-	WWLOG_INTERMEDIATE("CoverManager::Shutdown()");
 
 	BulletManager::Shutdown();
-	WWLOG_INTERMEDIATE("BulletManager::Shutdown()");
 
 	ObjectiveManager::Reset();
-	WWLOG_INTERMEDIATE("ObjectiveManager::Reset()");
 
 	WeatherMgrClass::Shutdown();
-	WWLOG_INTERMEDIATE("WeatherMgrClass::Shutdown()");
 
 	BackgroundMgrClass::Shutdown();
-	WWLOG_INTERMEDIATE("BackgroundMgrClass::Shutdown()");
 
 	REF_PTR_RELEASE (SoundEnvironment);
-	WWLOG_INTERMEDIATE("REF_PTR_RELEASE (SoundEnvironment)");
 
 	REF_PTR_RELEASE (BackgroundScene);
-	WWLOG_INTERMEDIATE("REF_PTR_RELEASE (BackgroundScene)");
 
 	WW3DAssetManager::Get_Instance()->Free_Assets();	// Free all assets
-	WWLOG_INTERMEDIATE("WW3DAssetManager::Get_Instance()->Free_Assets()");
 
-	WWLOG_INTERMEDIATE("Delete factories");
 
 	//
 	//	Kill the background music and flush the cache
@@ -563,10 +535,8 @@ void	CombatManager::Unload_Level( void )
 		WWAudioClass::Get_Instance ()->Set_Background_Music (NULL);
 		WWAudioClass::Get_Instance ()->Flush_Cache ();
 	}
-	WWLOG_INTERMEDIATE("Flush audio cache");
 
 	SystemInfoLog::Reset_State();
-	WWLOG_INTERMEDIATE("SystemInfoLog::Reset_State()");
 
 	if (MessageWindow != NULL) {
 		MessageWindow->Clear();
@@ -577,7 +547,6 @@ void	CombatManager::Unload_Level( void )
 	//	Shutdown the animated-sound system
 	//
 	AnimatedSoundMgrClass::Shutdown();
-	WWLOG_INTERMEDIATE("AnimatedSoundMgrClass::Shutdown");
 	return ;
 }
 
@@ -599,7 +568,6 @@ PhysicsSceneClass	*	CombatManager::Get_Scene( void )
 */
 void 	CombatManager::Generate_Control( void )
 {
-	WWPROFILE( "Generate Control" );
 	// First, generate input control for all necessary game objects and
 	// possibly send those control to the server
 	GameObjManager::Generate_Control();
@@ -629,11 +597,10 @@ void 	CombatManager::Think()
 {
 	SyncTime += (int)((TimeManager::Get_Frame_Seconds() * 1000.0f) + 0.5f);
 
-	WWPROFILE( "CombatManager Think" );
 
 	IsGameplayPermitted=NetworkHandler->Is_Gameplay_Permitted();
 
-{	WWPROFILE( "Input" );
+{	
 	Handle_Input();
 }
 //	GroupControllerManager::Update();
@@ -645,7 +612,7 @@ void 	CombatManager::Think()
 		UnitCoordinationZoneMgr::Display_Debug_Boxes();
 	}
 
-{	WWPROFILE( "Bullets" );
+{	
 	BulletManager::Update();
 }
 
@@ -653,25 +620,25 @@ void 	CombatManager::Think()
 
 	// Now, Process all objects logically
 	ConversationMgrClass::Think();
-{	WWPROFILE( "Game Obj Think" );
+{	
 	GameObjManager::Think();
 
 	// Now, Process all objects physically
-}{	WWPROFILE( "Scene" );
+}{	
   	COMBAT_SCENE->Update( TimeManager::Get_Frame_Seconds(), 0 );
 
-}{	WWPROFILE( "Star" );
+}{	
 	Update_Star();
 
 	// In normal mode, the camera must think before Post_Think, since the
 	// camera update calls Set_Targeting on the star, which must feed Update_Animation
-}{	WWPROFILE( "Camera 1" );
+}{	
 	if ( !MainCamera->Is_Using_Host_Model() ) {
 		MainCamera->Update();
 	}
 
 	// Now, Post Process all objects logically
-}{	WWPROFILE( "Post Think" );
+}{	
 	GameObjManager::Post_Think();
 }
 	// In host_model mode, the camera must think after Post_Think, so the host model has
@@ -685,25 +652,25 @@ void 	CombatManager::Think()
 
 	Do_Skeleton_Slider_Demo();
 
-{	WWPROFILE( "Message Window" );
+{	
 	MessageWindow->On_Frame_Update();
 }
 
 	SpawnManager::Update();
 
-{	WWPROFILE( "Sound Environment" );
+{	
 
 	if ( SoundEnvironment != NULL ) {
 		SoundEnvironment->Update (COMBAT_SCENE, MainCamera);
 	}
 }
 
-{	WWPROFILE( "Background" );
+{	
 
 	BackgroundMgrClass::Update (COMBAT_SCENE, MainCamera);
 }
 
-{  WWPROFILE( "Weather" );
+{  
 
 	WeatherMgrClass::Update (COMBAT_SCENE, MainCamera);
 }
@@ -726,25 +693,21 @@ void CombatManager::Render()
 		SystemInfoLog::Record_Frame();
 
 		{
-			WWPROFILE( "Camera Shakes" );
 			COMBAT_SCENE->Apply_Camera_Shakes (*MainCamera);
 		}
 
 		DazzleRenderObjClass::Install_Dazzle_Visibility_Handler(&_TheCombatDazzleHandler);
 
 		{
-			WWPROFILE( "Combat Render BG" );
 
 			WW3D::Render (BackgroundScene, MainCamera);
 		}
 
 		{
-			WWPROFILE( "Combat Render FG" );
 			WW3D::Render(COMBAT_SCENE, MainCamera);
 		}
 
 		{
-			WWPROFILE( "DazzleRenderer" );
 			DazzleLayerClass * dlayer = COMBAT_DAZZLE_LAYER;
 			if (dlayer != NULL) {
 				dlayer->Render(COMBAT_CAMERA);
@@ -898,8 +861,6 @@ float CombatManager::Get_Damage_Factor(ArmedGameObj * p_armed_damager, PhysicalG
 
 void CombatManager::On_Soldier_Kill(SoldierGameObj * p_soldier, SoldierGameObj * p_victim)
 {
-	WWASSERT(p_soldier != NULL);
-	WWASSERT(p_victim != NULL);
 
 	if (NetworkHandler != NULL) {
 		 NetworkHandler->On_Soldier_Kill(p_soldier, p_victim);
@@ -908,7 +869,6 @@ void CombatManager::On_Soldier_Kill(SoldierGameObj * p_soldier, SoldierGameObj *
 
 void CombatManager::On_Soldier_Death(SoldierGameObj * p_soldier)
 {
-	WWASSERT(p_soldier != NULL);
 
 	if (NetworkHandler != NULL) {
 		 NetworkHandler->On_Soldier_Death(p_soldier);
@@ -1021,13 +981,11 @@ void CombatManager::Update_Star( void )
 
 void CombatManager::Update_Star_Targeting( void )
 {
-	WWPROFILE( "Targeting" );
 	SmartGameObj * star = NULL;
 
 	if ( COMBAT_STAR != NULL ) {
 		SoldierGameObj * soldier = COMBAT_STAR;
 
-	   WWASSERT(soldier != NULL);
 		star = soldier;
 		if ( soldier->Get_Vehicle() ) {
 			star = soldier->Get_Vehicle();
@@ -1038,7 +996,6 @@ void CombatManager::Update_Star_Targeting( void )
 		HUDInfo::Set_Weapon_Target_Object( NULL );
 		WeaponClass * weapon = star->Get_Weapon();
 		if ( weapon ) {
-			WWPROFILE( "Display_Targeting" );
 			weapon->Display_Targeting();
 		}
 	}
@@ -1046,7 +1003,6 @@ void CombatManager::Update_Star_Targeting( void )
 
 bool CombatManager::Is_In_Camera_Frustrum(Vector3 & position)
 {
-	WWASSERT(COMBAT_CAMERA != NULL);
    Vector3 projected_mid_point;
 	bool is_visible = (COMBAT_CAMERA->Project(projected_mid_point, position) == CameraClass::INSIDE_FRUSTUM);
 	return is_visible;
@@ -1162,7 +1118,6 @@ void	CombatManager::Set_Combat_Mode( int mode )
 			case COMBAT_MODE_IN_VEHICLE:
 			{
 				VehicleGameObj * vehicle = star->Get_Profile_Vehicle();
-				WWASSERT( vehicle );
 	 			COMBAT_CAMERA->Set_Is_Star_Sniping( false );
 				if ( vehicle->Get_Profile() != NULL ) {
 					COMBAT_CAMERA->Use_Profile( vehicle->Get_Profile() );
@@ -1234,13 +1189,7 @@ void	CombatManager::Update_Combat_Mode( void )
 		case COMBAT_MODE_IN_VEHICLE:
 		{
 			VehicleGameObj * vehicle = star->Get_Profile_Vehicle();
-			WWASSERT( vehicle );
 
-#ifdef WWDEBUG
-			if ( Input::Get_State( INPUT_FUNCTION_PANIC ) ) {
-				Vehicle_Panic( vehicle );
-			}
-#endif
 
 			Vector3	pos;
 			vehicle->Get_Position( &pos );

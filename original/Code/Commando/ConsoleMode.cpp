@@ -290,7 +290,7 @@ void ConsoleModeClass::Print(char const * string, ...)
 		*/
 		cprintf("%s", buffer);
 		Log_To_Disk(buffer);
-		//WWDEBUG_SAY((buffer));
+		//
 		Apply_Attributes();
 	}
 }
@@ -328,7 +328,7 @@ void ConsoleModeClass::Print_Maybe(char const * string, ...)
 			** Have to use '%s' here or we end up doing the formatting twice.
 			*/
 			cprintf("%s", buffer);
-			//WWDEBUG_SAY((buffer));
+			//
 			Apply_Attributes();
 		}
 	}

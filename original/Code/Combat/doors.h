@@ -80,7 +80,7 @@ public:
 
 	// Definitions
 	void	Init( const DoorPhysDefClass & definition );
-	const DoorPhysDefClass * Get_DoorPhysDef( void ) const { WWASSERT( Definition ); return (DoorPhysDefClass *)Definition; }
+	const DoorPhysDefClass * Get_DoorPhysDef( void ) const { assert( Definition ); return (DoorPhysDefClass *)Definition; }
 
 	// State import/export
 	static void		Set_Precision(void);

@@ -1,5 +1,4 @@
 #include "globalsettings.h"
-#include "wwhack.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
@@ -7,8 +6,6 @@
 #include "definitionmgr.h"
 #include "crandom.h"
 #include "damage.h"
-
-DECLARE_FORCE_LINK( GlobalSettings )
 
 /*
 ** GlobalSettingsDef
@@ -22,7 +19,6 @@ DECLARE_DEFINITION_FACTORY(GlobalSettingsDef, CLASSID_GLOBAL_SETTINGS_DEF_GENERA
 ** Static member initialization
 */
 GlobalSettingsDef *GlobalSettingsDef::GlobalSettings = NULL;
-
 
 GlobalSettingsDef::GlobalSettingsDef( void ) :
 	DeathSoundID( 0 ),
@@ -90,13 +86,11 @@ GlobalSettingsDef::GlobalSettingsDef( void ) :
 	GlobalSettings = this;
 }
 
-
 GlobalSettingsDef::~GlobalSettingsDef( void )
 {
 	GlobalSettings = NULL;
 	return ;
 }
-
 
 uint32	GlobalSettingsDef::Get_Class_ID (void) const	
 {	
@@ -110,7 +104,6 @@ const PersistFactoryClass & GlobalSettingsDef::Get_Factory (void) const
 
 PersistClass *	GlobalSettingsDef::Create( void ) const 
 {
-	WWASSERT( 0 );
 	return NULL;
 }
 
@@ -263,7 +256,6 @@ bool	GlobalSettingsDef::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 /*
 ** HumanLoiterGlobalSettingsDef
 */
@@ -310,7 +302,6 @@ const PersistFactoryClass & HumanLoiterGlobalSettingsDef::Get_Factory (void) con
 
 PersistClass *	HumanLoiterGlobalSettingsDef::Create( void ) const 
 {
-	WWASSERT( 0 );
 	return NULL;
 }
 
@@ -423,7 +414,6 @@ const char * HumanLoiterGlobalSettingsDef::Pick_Animation( void )
 	}
 	return LoiterAnimList[ FreeRandom.Get_Int( LoiterAnimList.Count() ) ];
 }
-
 
 /*
 ** HUDGlobalSettingsDef
@@ -612,7 +602,6 @@ HUDGlobalSettingsDef::HUDGlobalSettingsDef( void ) :
 	DamageIndicatorUV(DAMAGE_INDICATOR_UV),
 	DamageDiagIndicatorUV(DAMAGE_DIAG_INDICATOR_UV)
 {
-	WWASSERT( Instance == NULL );	 // Pat, you can remove this if needed 
 	Instance = this;
 
 	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Colors" );
@@ -725,7 +714,6 @@ HUDGlobalSettingsDef::HUDGlobalSettingsDef( void ) :
 
 HUDGlobalSettingsDef::~HUDGlobalSettingsDef( void )
 {
-	WWASSERT( Instance == this );
 	Instance = NULL;
 }
 
@@ -741,7 +729,6 @@ const PersistFactoryClass & HUDGlobalSettingsDef::Get_Factory (void) const
 
 PersistClass *	HUDGlobalSettingsDef::Create( void ) const 
 {
-	WWASSERT( 0 );
 	return NULL;
 }
 
@@ -1062,8 +1049,6 @@ bool	HUDGlobalSettingsDef::Load( ChunkLoadClass &cload )
 						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_HUD_DEF_DAMAGE_INDICATOR_UV,				DamageIndicatorUV );
 						READ_MICRO_CHUNK( cload, 	MICROCHUNKID_HUD_DEF_DAMAGE_DIAG_INDICATOR_UV,		DamageDiagIndicatorUV );
 
-
-
 						default:
 							Debug_Say(("Unhandled Micro Chunk:%d File:%s Line:%d\r\n",cload.Cur_Micro_Chunk_ID(),__FILE__,__LINE__));
 							break;
@@ -1112,7 +1097,6 @@ const PersistFactoryClass & HumanAnimOverrideDef::Get_Factory (void) const
 
 PersistClass *	HumanAnimOverrideDef::Create( void ) const 
 {
-	WWASSERT( 0 );
 	return NULL;
 }
 
@@ -1126,7 +1110,6 @@ enum	{
 	MICROCHUNKID_HAO_DEF_WALK_AT_CHEST,		
 	MICROCHUNKID_HAO_DEF_RUN_AT_HIP,			
 	MICROCHUNKID_HAO_DEF_WALK_AT_HIP,		
-
 
 };
 

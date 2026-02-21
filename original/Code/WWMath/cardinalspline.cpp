@@ -1,14 +1,10 @@
 #include "cardinalspline.h"
-#include "wwdebug.h"
 #include "persistfactory.h"
 #include "wwmathids.h"
-#include "wwhack.h"
 
 /*
 ** Force-Link this module because the linker can't detect that we actually need it...
 */
-DECLARE_FORCE_LINK(cardinalspline);
-
 
 /*
 ** Save-Load stuff
@@ -26,7 +22,6 @@ enum
 	CARDINAL1D_CHUNK_HERMITE1D					= 0x02070959,	
 	CARDINAL1D_CHUNK_TIGHTNESSKEYS
 };
-
 
 /*
 ** CardinalSpline3DClass Implementation
@@ -53,8 +48,6 @@ void CardinalSpline3DClass::Clear_Keys(void)
 
 void CardinalSpline3DClass::Set_Tightness(int i,float tightness)
 {
-	WWASSERT(i >= 0);
-	WWASSERT(i < Tightness.Count());
 	Tightness[i] = tightness;
 	TangentsDirty = true;
 }
@@ -105,7 +98,6 @@ void CardinalSpline3DClass::Update_Tangents(void)
 	float out_factor = 2.0f * (Keys[1].Time - Keys[0].Time) / total_time;
 	Tangents[end].InTangent *= in_factor;
 	Tangents[0].OutTangent *= out_factor;
-
 
 	// inner knots
 	for (int i=1; i<Keys.Count()-1; i++) {
@@ -168,7 +160,6 @@ bool CardinalSpline3DClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -176,7 +167,6 @@ bool CardinalSpline3DClass::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 /*
 ** CardinalSpline1DClass Implementation
@@ -203,8 +193,6 @@ void CardinalSpline1DClass::Clear_Keys(void)
 
 void CardinalSpline1DClass::Set_Tightness(int i,float tightness)
 {
-	WWASSERT(i >= 0);
-	WWASSERT(i < Tightness.Count());
 	Tightness[i] = tightness;
 	TangentsDirty = true;
 }
@@ -246,7 +234,6 @@ void CardinalSpline1DClass::Update_Tangents(void)
 	float out_factor = 2.0f * (Keys[1].Time - Keys[0].Time) / total_time;
 	Tangents[end].InTangent *= in_factor;
 	Tangents[0].OutTangent *= out_factor;
-
 
 	// inner knots
 	for (int i=1; i<Keys.Count()-1; i++) {
@@ -307,7 +294,6 @@ bool CardinalSpline1DClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -315,5 +301,4 @@ bool CardinalSpline1DClass::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-
 

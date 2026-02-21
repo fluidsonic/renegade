@@ -13,7 +13,6 @@
 #include "colmathfrustum.h"
 #include "colmathplane.h"
 #include "colmathaabox.h"
-#include "wwmemlog.h"
 
 
 #define LOG_HIERARCHICAL_CULLING				0
@@ -67,8 +66,6 @@ StaticAABTreeCullClass::~StaticAABTreeCullClass(void)
 
 void StaticAABTreeCullClass::Add_Object(PhysClass * obj, int cull_node_id /*= -1*/)
 {
-	WWASSERT(Scene != NULL);
-	WWASSERT(obj->As_StaticPhysClass() != NULL);
 	PhysAABTreeCullClass::Add_Object(obj, cull_node_id);
 // (gth) not resetting vis when adding a static object
 //	Scene->Reset_Vis();
@@ -76,8 +73,6 @@ void StaticAABTreeCullClass::Add_Object(PhysClass * obj, int cull_node_id /*= -1
 
 void StaticAABTreeCullClass::Remove_Object(PhysClass * obj)
 {
-	WWASSERT(Scene != NULL);
-	WWASSERT(obj->As_StaticPhysClass() != NULL);
 	PhysAABTreeCullClass::Remove_Object(obj);
 // (gth) not resetting vis when removing a static object
 //	Scene->Reset_Vis();
@@ -85,7 +80,6 @@ void StaticAABTreeCullClass::Remove_Object(PhysClass * obj)
 
 void StaticAABTreeCullClass::Update_Culling(CullableClass * obj)
 {
-	WWASSERT(Scene != NULL);
 	PhysAABTreeCullClass::Update_Culling(obj);
 // (gth) not resetting vis when moving a static object
 //	Scene->Reset_Vis();
@@ -99,7 +93,6 @@ void StaticAABTreeCullClass::Collect_Visible_Objects
 	RefPhysListClass &		wsmeshlist
 )
 {
-	WWASSERT(RootNode != NULL);
 
 	if (pvs != NULL) {
 	
@@ -116,7 +109,6 @@ void StaticAABTreeCullClass::Collect_Visible_Objects
 			Collect_Visible_Objects_Recursive(RootNode,context);
 #if LOG_HIERARCHICAL_CULLING
 			if (_HierarchicalCellsRejected > 0) {
-				WWDEBUG_SAY(("HCells Rejected: %d\n",_HierarchicalCellsRejected));
 			}
 #endif
 		}
@@ -331,7 +323,6 @@ void StaticAABTreeCullClass::Evaluate_Non_Occluder_Visibility
 		RefPhysListIterator it(&non_occluders);
 		for (it.First(); !it.Is_Done(); it.Next()) {
 			StaticPhysClass * obj = (StaticPhysClass *)it.Peek_Obj();
-			WWASSERT(obj != NULL);
 			context.VisTable.Set_Bit(obj->Get_Vis_Object_ID(),true);
 		}
 
@@ -340,7 +331,6 @@ void StaticAABTreeCullClass::Evaluate_Non_Occluder_Visibility
 		RefPhysListIterator it(&non_occluders);
 		for (it.First(); !it.Is_Done(); it.Next()) {
 			StaticPhysClass * obj = (StaticPhysClass *)it.Peek_Obj();
-			WWASSERT(obj != NULL);
 
 			/*
 			** If the camera is inside the bounding box of this non-occluder; mark it visible
@@ -475,15 +465,11 @@ StaticPhysClass * StaticAABTreeCullClass::Find_Vis_Tile(const Vector3 & sample_p
 	if ((ray_dist > 3.5f) && (box_dist < ray_dist - 1.0f) && (box_result.Fraction < 1.0f)) {
 	
 		// return pointer to the tile that the box hit
-		WWASSERT(boxtest.CollidedPhysObj);
-		WWASSERT(boxtest.CollidedPhysObj->As_StaticPhysClass() != NULL);
 		return (StaticPhysClass *)boxtest.CollidedPhysObj;
 	
 	} else if (ray_result.Fraction < 1.0f) {
 
 		// return pointer to the tile that the ray hit
-		WWASSERT(raytest.CollidedPhysObj);
-		WWASSERT(raytest.CollidedPhysObj->As_StaticPhysClass() != NULL);
 		return (StaticPhysClass *)raytest.CollidedPhysObj;
 
 	} else {
@@ -630,7 +616,6 @@ void StaticAABTreeCullClass::Merge_Vis_Sector_IDs(uint32 id0,uint32 id1)
 
 void StaticAABTreeCullClass::Load_Static_Data(ChunkLoadClass & cload)
 {
-	WWMEMLOG(MEM_CULLINGDATA);
 	while(cload.Open_Chunk()) 
 	{
 		switch(cload.Cur_Chunk_ID()) 
@@ -643,7 +628,6 @@ void StaticAABTreeCullClass::Load_Static_Data(ChunkLoadClass & cload)
 			break;
 
 		default:
-			WWDEBUG_SAY(("Unhandled chunk type: %d in StaticAABTreeCullClass::Load\r\n",cload.Cur_Chunk_ID()));
 			break;
 		}
 	

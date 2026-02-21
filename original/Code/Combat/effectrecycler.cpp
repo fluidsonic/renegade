@@ -139,9 +139,6 @@ void EffectRecyclerClass::Spawn_Effect(const char * robj_name,const Matrix3D & t
  *=============================================================================================*/
 void EffectRecyclerClass::Object_Removed_From_Scene(PhysClass * observed_obj)
 {
-	WWASSERT(observed_obj != NULL);
-	WWASSERT(observed_obj->As_TimedDecorationPhysClass() != NULL);
-	WWASSERT(observed_obj->Peek_Model() != NULL);
 
 	TimedDecorationPhysClass * tdeco = observed_obj->As_TimedDecorationPhysClass();
 	RenderObjClass * model = tdeco->Peek_Model();
@@ -198,7 +195,6 @@ RenderObjClass * EffectRecyclerClass::internal_get_model(const char * robj_name,
 		anim_name.Format( "%s.%s", 
 			model->Get_HTree()->Get_Name(), 
 			model->Get_HTree()->Get_Name() );
-		WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
 		HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim( anim_name );
 		if ( anim != NULL ) {
 			model->Set_Animation( anim, 0, RenderObjClass::ANIM_MODE_ONCE );

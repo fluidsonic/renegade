@@ -91,8 +91,6 @@ void MaterialPassClass::Install_Materials(void) const
  *=============================================================================================*/
 void MaterialPassClass::Set_Texture(TextureClass * tex,int stage)
 {
-	WWASSERT(stage >= 0);
-	WWASSERT(stage < MAX_TEX_STAGES);
 
 	REF_PTR_SET(Texture[stage],tex);
 }
@@ -152,8 +150,6 @@ void MaterialPassClass::Set_Material(VertexMaterialClass * mat)
  *=============================================================================================*/
 TextureClass * MaterialPassClass::Get_Texture(int stage) const
 {
-	WWASSERT(stage >= 0);
-	WWASSERT(stage < MAX_TEX_STAGES);
 	
 	if (Texture[stage]) {
 		Texture[stage]->Add_Ref();

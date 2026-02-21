@@ -11,7 +11,6 @@
 
 #include "encodertypeentry.h"
 #include "miscutil.h"
-#include "wwdebug.h"
 
 
 const int MAX_ENCODERTYPES = 100;
@@ -31,17 +30,12 @@ class cEncoderList
 		template<class T> static T Set_Precision(int type, T min, T max, 
 			T resolution = 1)
 		{
-			WWASSERT(type >= 0 && type < MAX_ENCODERTYPES);
-			WWASSERT(max - min > -MISCUTIL_EPSILON);
-			WWASSERT(resolution > MISCUTIL_EPSILON);
 
 			EncoderTypes[type].Init(
 				static_cast<double>(min), 
 				static_cast<double>(max), 
 				static_cast<double>(resolution));
 
-			WWDEBUG_SAY(("cEncoderList::Set_Precision for type %d: %d -> %d bits\n",
-				type, sizeof(T) * 8, EncoderTypes[type].Get_Bit_Precision()));
 
 			//
 			// Return maximum representation error
@@ -60,13 +54,9 @@ class cEncoderList
 		//------------------------------------------------------------------------------------
 		static void Set_Precision(int type, int num_bits)
 		{
-			WWASSERT(type >= 0 && type < MAX_ENCODERTYPES);
-			WWASSERT(num_bits > 0 && num_bits <= 32);
 
 			EncoderTypes[type].Init(num_bits);
 
-			WWDEBUG_SAY(("cEncoderList::Set_Precision for type %d: %d bits\n",
-				type, num_bits));
 		}
 		//------------------------------------------------------------------------------------
 #pragma auto_inline(on)

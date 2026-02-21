@@ -41,7 +41,6 @@ bool	CoverManager::Save( ChunkSaveClass & csave )
 
 bool	CoverManager::Load( ChunkLoadClass & cload )
 {
-	WWASSERT( CoverPositions.Count() == 0 );
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -141,13 +140,11 @@ CoverEntryClass * CoverManager::Request_Cover( const Vector3 & cur_pos, const Ve
 
 void	CoverManager::Release_Cover( CoverEntryClass * entry )
 {
-	WWASSERT( entry->Get_In_Use() );
 	entry->Set_In_Use( false );
 }
 
 bool	CoverManager::Is_Cover_Safe( CoverEntryClass * cover, const Vector3 & danger )
 {
-	WWASSERT( cover );
 
 	Vector3 danger_local;
 	Matrix3D::Inverse_Transform_Vector( cover->Get_Transform(), danger, &danger_local );
@@ -190,7 +187,6 @@ bool	CoverEntryClass::Save( ChunkSaveClass & csave )
 
 bool	CoverEntryClass::Load( ChunkLoadClass & cload )
 {
-	WWASSERT( AttackPositionList.Count() == 0 );
 
 	CoverEntryClass * old_me = NULL;
 
@@ -233,7 +229,6 @@ bool	CoverEntryClass::Load( ChunkLoadClass & cload )
 	}
 
 	// publish my remap pair
-	WWASSERT(old_me != NULL);
 	if (old_me != NULL) {
 		SaveLoadSystemClass::Register_Pointer( old_me, this );
 	}

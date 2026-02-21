@@ -5,18 +5,13 @@
 #include "bitstream.h"
 #include "debug.h"
 #include "hanim.h"
-#include "wwhack.h"
 #include "combat.h"
 #include "smartgameobj.h"
 #include "gameobjmanager.h"
 #include "soldier.h"
-#include "wwprofile.h"
 #include "audiblesound.h"
 #include "wwaudio.h"
 #include "bitpackids.h"
-
-
-DECLARE_FORCE_LINK( elevatorphys );
 
 /*
 ** Local constants
@@ -30,7 +25,6 @@ enum
 	EFFECT_ELEVATOR_MOVING,
 	EFFECT_ELEVATOR_STOPPED_MOVING,
 };
-
 
 /*
 ** ElevatorPhysDefClass
@@ -407,7 +401,6 @@ void	ElevatorPhysClass::Timestep( float dt )
 	
 
 	{
-		WWPROFILE("ElevatorPhys::Timestep");
 		// Delayed Open/close
 		if ( AnimManager.Peek_Animation() != NULL ) {
 			
@@ -667,7 +660,6 @@ bool	ElevatorPhysClass::Triggered( int zone_id )
 	return false;
 }
 
-
 inline bool Has_Frame_Occured (float prev_frame, float current_frame, float target_frame)
 {
 	bool retval = false;
@@ -682,7 +674,6 @@ inline bool Has_Frame_Occured (float prev_frame, float current_frame, float targ
 
 	return retval;
 }
-
 
 void	ElevatorPhysClass::Update_Sound_Effects( void )
 {
@@ -735,7 +726,6 @@ void	ElevatorPhysClass::Update_Sound_Effects( void )
 	PrevFrame = curr_frame;
 	return ;
 }
-
 
 void	ElevatorPhysClass::Play_Effect( int effect_id, bool is_top )
 {
@@ -821,7 +811,6 @@ void	ElevatorPhysClass::Play_Effect( int effect_id, bool is_top )
 	return ;
 }
 
-
 void	ElevatorPhysClass::Get_Door_Transform( bool is_top, Matrix3D &tm )
 {
 	const ElevatorPhysDefClass *def = Get_ElevatorPhysDef();
@@ -857,7 +846,6 @@ bool ElevatorPhysClass::Can_Object_Enter (SmartGameObj *game_obj)
 {
 	bool retval = false;
 
-	WWASSERT( game_obj != NULL && game_obj->Peek_Physical_Object () != NULL );
 	if( game_obj == NULL || game_obj->Peek_Physical_Object () == NULL ) {
 		return false;
 	}
@@ -913,7 +901,6 @@ bool ElevatorPhysClass::Can_Object_Exit (SmartGameObj * /*game_obj*/)
 
 void ElevatorPhysClass::Request_Elevator (SmartGameObj *game_obj)
 {
-	WWASSERT( game_obj != NULL && game_obj->Peek_Physical_Object () != NULL );
 	if( game_obj == NULL || game_obj->Peek_Physical_Object () == NULL ) {
 		return ;
 	}
@@ -950,7 +937,6 @@ void ElevatorPhysClass::Request_Elevator (SmartGameObj *game_obj)
 	
 	return ;
 }
-
 
 int ElevatorPhysClass::Get_Floor (void)
 {

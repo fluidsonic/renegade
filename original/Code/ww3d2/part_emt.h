@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef PART_EMT_H
 #define PART_EMT_H
@@ -235,10 +232,6 @@ class ParticleEmitterClass : public RenderObjClass
 		Vector2					Get_UV_Offset_Rate(void) const				{ return Buffer->Get_UV_Offset_Rate(); }
 
 		// Global debugging option for disabling all particle emission
-#ifdef WWDEBUG
-		static void				Disable_All_Emitters(bool onoff)	{ DebugDisable = onoff; }
-		static bool				Are_Emitters_Disabled(void)		{ return DebugDisable; }
-#endif
 
 	protected:
 

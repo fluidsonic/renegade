@@ -1,7 +1,6 @@
 #include "dynamicphys.h"
 #include "chunkio.h"
 #include "pscene.h"
-#include "wwprofile.h"
 #include "physcoltest.h"
 
 #if (UMBRASUPPORT)
@@ -67,7 +66,6 @@ void DynamicPhysClass::Set_Model(RenderObjClass * model)
 		/*
 		** Insert it into our Umbra object
 		*/
-		WWASSERT(UmbraObject);
 		UmbraObject->setTestModel(UmbraSupport::Create_Box_Model(obj_box));
 		UmbraObject->setCost(100000,100000,5);
 	}
@@ -115,7 +113,6 @@ void DynamicPhysClass::Internal_Update_Visibility_Status(void)
 		int size = PhysicsSceneClass::Get_Instance()->Get_Vis_Table_Size();
 //		int id = PhysicsSceneClass::Get_Instance()->Get_Dynamic_Object_Vis_ID(Model->Get_Bounding_Box(),&VisNodeID);
 
-		WWDEBUG_SAY(("Invalid VisObjectID: %d for object: %s (max vis id = %d)\n",VisObjectID,Model->Get_Name(),size));
 		VisObjectID = 0;
 	}
 
@@ -153,7 +150,6 @@ bool DynamicPhysClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		

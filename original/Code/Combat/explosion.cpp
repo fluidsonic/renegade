@@ -172,11 +172,6 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 	// Make a camera convention transform pointing in the blast direction
 	Vector3 pos = up_tm.Get_Translation();
 
-#ifdef WWDEBUG
-	if (blast_direction.Length2() < WWMATH_EPSILON) {
-		WWDEBUG_SAY(("ExplosionManager::Create_Explosion_At - Invalid Blast Direction! %f %f %f\r\n",blast_direction.X,blast_direction.Y,blast_direction.Z));
-	}
-#endif
 
 	Matrix3D blast_tm;
 	blast_tm.Look_At( pos, pos + blast_direction, FreeRandom.Get_Float( 0, DEG_TO_RADF( 360 ) ) );
@@ -188,19 +183,15 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 		return;
 	}
 
-	WWASSERT( explosion_def );
 
 	// Make the Phys Object
 	if ( explosion_def->PhysDefID != 0 ) {
 	//if ( explosion_def->PhysDefID != 0 ) {
 		PhysDefClass * phys_def = (PhysDefClass *)DefinitionMgrClass::Find_Definition( explosion_def->PhysDefID );
 		if ( phys_def != NULL ) {
-			WWASSERT( phys_def );
-			WWASSERT( phys_def->Is_Type( "TimedDecorationPhysDef" ) );
 			TimedDecorationPhysClass * explosion = (TimedDecorationPhysClass *)phys_def->Create();
 			if ( explosion ) {
 				RenderObjClass * model = explosion->Peek_Model();
-				WWASSERT(model != NULL);
 				if (model != NULL) {
 
 					explosion->Set_Transform( up_tm );
@@ -212,7 +203,6 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 						exp_anim_name.Format( "%s.%s",
 							model->Get_HTree()->Get_Name(),
 							model->Get_HTree()->Get_Name() );
-						WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
 						HAnimClass * anim = WW3DAssetManager::Get_Instance()->Get_HAnim( exp_anim_name );
 						if ( anim != NULL ) {
 							model->Set_Animation( anim, 0, RenderObjClass::ANIM_MODE_ONCE );
@@ -220,7 +210,6 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 						}
 					}
 
-					WWASSERT(COMBAT_SCENE != NULL);
 					COMBAT_SCENE->Add_Dynamic_Object( explosion );
 				}
 				explosion->Release_Ref();
@@ -242,10 +231,8 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 //	if ( CombatManager::I_Am_Server() )		 Clients can create damage now...
 	{
 		float radius = explosion_def->DamageRadius;
-		WWASSERT(WWMath::Is_Valid_Float(radius));
 		if (radius > 0.0f) {
 
-			WWASSERT(pos.Is_Valid());
 
 			// Create an offense object to carry the damage information
 			OffenseObjectClass offense( explosion_def->DamageStrength, explosion_def->DamageWarhead, damager );
@@ -276,27 +263,13 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 
 						Vector3 obj_pos,v;
 						obj_pos = obj->Get_Bullseye_Position();
-						WWASSERT(obj_pos.Is_Valid());
 						v = obj_pos - pos;
 						float dist = v.Length();
 
-#ifdef WWDEBUG
-if (!WWMath::Is_Valid_Float(dist)) {
-	WWDEBUG_SAY(("Explosion Distance Bug!\r\n"));
-	Vector3 obj_pos;
-	obj->Get_Position(&obj_pos);
-	WWDEBUG_SAY(("  explosion pos: %f, %f, %f  object pos: %f, %f, %f\r\n",pos.X,pos.Y,pos.Z,obj_pos.X,obj_pos.Y,obj_pos.Z));
-	WWDEBUG_SAY(("  object definition name: %s\r\n", obj->Get_Definition().Get_Name()));
-	WWDEBUG_SAY(("  explosion definition name; %s\r\n", explosion_def->Get_Name()));
-}
-#endif
-						WWASSERT(WWMath::Is_Valid_Float(dist));
 						if ( dist <= radius ) {
 							float scale = 1.0f;
 							if ( explosion_def->DamageIsScaled ) {
-								WWASSERT(radius > WWMATH_EPSILON);
 								scale = 1.0 - (dist / radius);
-								WWASSERT(WWMath::Is_Valid_Float(scale));
 							}
 
 							// Check for collisions in the path of the object
@@ -346,7 +319,6 @@ void	ExplosionManager::Explosion_Damage_Building( int explosion_def_id, Building
 	{
 		// Find Explosion Def
 		ExplosionDefinitionClass * explosion_def = (ExplosionDefinitionClass *)DefinitionMgrClass::Find_Definition( explosion_def_id );
-		WWASSERT( explosion_def );
 
 		OffenseObjectClass offense( explosion_def->DamageStrength, explosion_def->DamageWarhead, damager );
 		building->Apply_Damage_Building( offense, mct_damage );
@@ -359,7 +331,6 @@ void	ExplosionManager::Explosion_Damage_Building( int explosion_def_id, Building
 */
 void	ExplosionManager::Server_Explode( int explosion_def_id, const Vector3 & pos, int owner_id, DamageableGameObj * force_victim )
 {
-	WWASSERT( CombatManager::I_Am_Server() );
 
 	cScExplosionEvent * event = new cScExplosionEvent();
 	if ( event ) {
@@ -390,13 +361,4 @@ void	ExplosionManager::Explode( int explosion_def_id, const Vector3 & pos, int o
 
 
 /* 04/23/01 - reenabling - in the hopes that sr was to blame
-#ifdef WWDEBUG
-	char computer_name[200];
-	DWORD size = sizeof(computer_name);
-	GetComputerName(computer_name, &size);
-	if (cMiscUtil::Is_String_Same(computer_name, "TOMSS2")) {
-		//return;
-		is_enabled = false;
-	}
-#endif // WWDEBUG
 /**/

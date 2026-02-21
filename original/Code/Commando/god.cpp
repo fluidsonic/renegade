@@ -428,7 +428,7 @@ void cGod::Respawn( void )
 void cGod::Restart( void )
 {
 	if ( State == GOD_STATE_SINGLE_DEAD ) {
-//		WWASSERT( State == GOD_STATE_SINGLE_DEAD );
+//		assert( State == GOD_STATE_SINGLE_DEAD );
 
 		State = GOD_STATE_SINGLE_RUNNING;	// Incase we get a second call!
 		((CombatGameModeClass *)GameModeManager::Find("Combat"))->Core_Restart();

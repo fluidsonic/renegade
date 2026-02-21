@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #include "movephys.h"
 #include "colmathaabox.h"
@@ -8,17 +5,12 @@
 #include "dyntexproject.h"
 #include "chunkio.h"
 #include "saveload.h"
-#include "wwhack.h"
 #include "assetmgr.h"
 #include "physcoltest.h"
 #include "light.h"
 
-DECLARE_FORCE_LINK(movephys);
-
-
 #define SINGLE_SHADOW_CODE				1
 #define TRUE_PERSPECTIVE_SHADOWS		0
-
 
 /***********************************************************************************************
 **
@@ -41,7 +33,6 @@ enum
 	MOVEABLE_VARIABLE_CONTROLLER,
 	MOVEABLE_VARIABLE_CARRIER,
 };
-
 
 /***********************************************************************************************
  * MoveablePhysClass::MoveablePhysClass -- Constructor                                         *
@@ -126,7 +117,6 @@ void MoveablePhysClass::Definition_Changed(void)
 	Elasticity = def->Elasticity;
 }
 
-
 /***********************************************************************************************
  * MoveablePhysClass::Post_Timestep_Process -- perform post-timestep processing                *
  *                                                                                             *
@@ -146,7 +136,6 @@ void MoveablePhysClass::Post_Timestep_Process(void)
 	ShadowManager.Update_Shadow();
 }
 
-
 /***********************************************************************************************
  * MoveablePhysClass::Get_Shadow_Blob_Box -- Return the object space AABox for the shadow      *
  *                                                                                             *
@@ -165,11 +154,9 @@ void MoveablePhysClass::Post_Timestep_Process(void)
 void MoveablePhysClass::Get_Shadow_Blob_Box(AABoxClass * set_obj_space_box)
 {
 	// NOTE: derived classes should really override this!!!
-	WWASSERT(set_obj_space_box != NULL);
 	set_obj_space_box->Center.Set(0,0,0);
 	set_obj_space_box->Extent.Set(1,1,1);
 }
-
 
 /***********************************************************************************************
  * MoveablePhysClass::Link_To_Carrier -- Link this object to a carrier object                  *
@@ -211,7 +198,6 @@ void MoveablePhysClass::Link_To_Carrier(PhysClass * carrier,RenderObjClass * car
 	}
 }
 
-
 /***********************************************************************************************
  * MoveablePhysClass::Peek_Carrier_Object -- returns the carrier object pointer                *
  *                                                                                             *
@@ -229,7 +215,6 @@ PhysClass * MoveablePhysClass::Peek_Carrier_Object(void)
 	return Carrier;
 }
 
-
 /***********************************************************************************************
  * MoveablePhysClass::Peek_Carrier_Sub_Object -- returns the carrier sub object pointer        *
  *                                                                                             *
@@ -246,7 +231,6 @@ RenderObjClass * MoveablePhysClass::Peek_Carrier_Sub_Object(void)
 {
 	return CarrierSubObject;
 }
-
 
 /***********************************************************************************************
  * MoveablePhysClass::Cinematic_Move_To -- attempts to teleport to the desired transform       *
@@ -342,8 +326,6 @@ bool MoveablePhysClass::Cinematic_Move_To(const Matrix3D &new_tm)
 	return ok;
 }
 
-
-
 /***********************************************************************************************
  * MoveablePhysClass::Save -- persistant object save support                                   *
  *                                                                                             *
@@ -376,7 +358,6 @@ bool MoveablePhysClass::Save(ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 /***********************************************************************************************
  * MoveablePhysClass::Load -- persistant object load support                                   *
@@ -421,7 +402,6 @@ bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -444,7 +424,6 @@ bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 	MassInv = 1.0f / Mass;
 	return true;
 }
-
 
 /***********************************************************************************************
  * MoveablePhysClass::On_Post_Load -- Post-Load callback for MoveablePhysClass                 *
@@ -469,13 +448,11 @@ void MoveablePhysClass::On_Post_Load(void)
 	Link_To_Carrier(tmp_carrier);
 }
 
-
 /***********************************************************************************************
 **
 ** MoveablePhysDefClass Implementation
 **
 ***********************************************************************************************/
-
 
 /*
 ** Chunk ID's used by MoveablePhysDefClass
@@ -491,7 +468,6 @@ enum
 	MOVEABLEPHYSDEF_VARIABLE_ELASTICITY,
 	MOVEABLEPHYSDEF_VARIABLE_CINEMATICCOLLISIONMODE,
 };
-
 
 MoveablePhysDefClass::MoveablePhysDefClass(void) :
 	Mass(1.0f),
@@ -530,7 +506,6 @@ bool MoveablePhysDefClass::Save(ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool MoveablePhysDefClass::Load(ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -558,7 +533,6 @@ bool MoveablePhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

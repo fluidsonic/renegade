@@ -14,7 +14,7 @@
 #define NETSTATS_H
 
 #include "bittype.h"
-#include "wwdebug.h"
+#include <cassert>
 
 //
 // Statistics.
@@ -103,19 +103,19 @@ class cNetStats
 
 		void Increment_Unreliable_Count() {UnreliableCount++;}
 
-      UINT Get_Stat_Sample(int stat)	const			{WWASSERT(stat >= 0 && stat < STAT_COUNT); return StatSample[stat];}
-      UINT Get_Stat_Macro_Sample(int stat) const	{WWASSERT(stat >= 0 && stat < STAT_COUNT); return StatMacroSample[stat];}
-      UINT Get_Stat_Snapshot(int stat)	const			{WWASSERT(stat >= 0 && stat < STAT_COUNT); return StatSnapshot[stat];}
-      UINT Get_Stat_Macro_Snapshot(int stat)	const	{WWASSERT(stat >= 0 && stat < STAT_COUNT); return StatMacroSnapshot[stat];}
-      UINT Get_Stat_Total(int stat)		const			{WWASSERT(stat >= 0 && stat < STAT_COUNT); return StatTotal[stat];}
-      UINT Get_Stat_Average(int stat)	const			{WWASSERT(stat >= 0 && stat < STAT_COUNT); return StatAverage[stat];}
+      UINT Get_Stat_Sample(int stat)	const			{assert(stat >= 0 && stat < STAT_COUNT); return StatSample[stat];}
+      UINT Get_Stat_Macro_Sample(int stat) const	{assert(stat >= 0 && stat < STAT_COUNT); return StatMacroSample[stat];}
+      UINT Get_Stat_Snapshot(int stat)	const			{assert(stat >= 0 && stat < STAT_COUNT); return StatSnapshot[stat];}
+      UINT Get_Stat_Macro_Snapshot(int stat)	const	{assert(stat >= 0 && stat < STAT_COUNT); return StatMacroSnapshot[stat];}
+      UINT Get_Stat_Total(int stat)		const			{assert(stat >= 0 && stat < STAT_COUNT); return StatTotal[stat];}
+      UINT Get_Stat_Average(int stat)	const			{assert(stat >= 0 && stat < STAT_COUNT); return StatAverage[stat];}
 
-      void Increment_Stat_Sample(int stat, UINT increment)			{WWASSERT(stat >= 0 && stat < STAT_COUNT); StatSample[stat] += increment;}
-      void Increment_Stat_Macro_Sample(int stat, UINT increment)	{WWASSERT(stat >= 0 && stat < STAT_COUNT); StatMacroSample[stat] += increment;}
-      void Increment_Stat_Snapshot(int stat, UINT increment)		{WWASSERT(stat >= 0 && stat < STAT_COUNT); StatSnapshot[stat] += increment;}
-      void Increment_Stat_Macro_Snapshot(int stat, UINT increment){WWASSERT(stat >= 0 && stat < STAT_COUNT); StatMacroSnapshot[stat] += increment;}
-      void Increment_Stat_Total(int stat, UINT increment)			{WWASSERT(stat >= 0 && stat < STAT_COUNT); StatTotal[stat] += increment;}
-      void Increment_Stat_Average(int stat, UINT increment)			{WWASSERT(stat >= 0 && stat < STAT_COUNT); StatAverage[stat] += increment;}
+      void Increment_Stat_Sample(int stat, UINT increment)			{assert(stat >= 0 && stat < STAT_COUNT); StatSample[stat] += increment;}
+      void Increment_Stat_Macro_Sample(int stat, UINT increment)	{assert(stat >= 0 && stat < STAT_COUNT); StatMacroSample[stat] += increment;}
+      void Increment_Stat_Snapshot(int stat, UINT increment)		{assert(stat >= 0 && stat < STAT_COUNT); StatSnapshot[stat] += increment;}
+      void Increment_Stat_Macro_Snapshot(int stat, UINT increment){assert(stat >= 0 && stat < STAT_COUNT); StatMacroSnapshot[stat] += increment;}
+      void Increment_Stat_Total(int stat, UINT increment)			{assert(stat >= 0 && stat < STAT_COUNT); StatTotal[stat] += increment;}
+      void Increment_Stat_Average(int stat, UINT increment)			{assert(stat >= 0 && stat < STAT_COUNT); StatAverage[stat] += increment;}
 
       //
 		// TSS - shift these down, and use above access operators

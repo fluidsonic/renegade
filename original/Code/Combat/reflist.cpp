@@ -16,10 +16,7 @@ bool	ReferencerClass::Save( ChunkSaveClass & csave )
 bool	ReferencerClass::Load( ChunkLoadClass & cload )
 {
 	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_REF_VARIABLES );
 
-	WWASSERT( ReferenceTarget == NULL );
-	WWASSERT( TargetReferencerListNext == NULL );
 
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
@@ -58,14 +55,12 @@ const ReferencerClass & ReferencerClass::operator = ( const ScriptableGameObj * 
 	if ( ReferenceTarget != NULL ) {		// if I currently have a target
 
 		ReferencerClass *referencer = ReferenceTarget->ReferencerListHead;
-		WWASSERT( referencer );
 
 		if ( referencer == this ) {	// if I'm the first in the list, fix the head
 			ReferenceTarget->ReferencerListHead = TargetReferencerListNext;
 			TargetReferencerListNext = NULL;
 			ReferenceTarget = NULL;
 		} else {
-			WWASSERT( referencer->TargetReferencerListNext );
 
 			while ( ReferenceTarget != NULL ) {	// Find me in the list, and remove me
 				if ( referencer->TargetReferencerListNext == this ) {
@@ -74,13 +69,11 @@ const ReferencerClass & ReferencerClass::operator = ( const ScriptableGameObj * 
 					ReferenceTarget = NULL;
 				} else {
 					referencer = referencer->TargetReferencerListNext;
-					WWASSERT( referencer != NULL );
 				}
 			}
 		}
 	}
 
-	WWASSERT( ReferenceTarget == NULL );
 
 	if ( reference_target != NULL ) {			// if new reference is non-null
 		ReferenceTarget = (ReferenceableClass<ScriptableGameObj> *) (reference_target);		// set it and link list

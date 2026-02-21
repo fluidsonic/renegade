@@ -1,6 +1,5 @@
 #include "ww3dformat.h"
 #include "vector4.h"
-#include "wwdebug.h"
 #include "targa.h"
 #include "dx8wrapper.h"
 #include "dx8caps.h"
@@ -131,13 +130,11 @@ void Vector4_to_Color(unsigned int *outc,const Vector4 &inc,const WW3DFormat for
 		*outc=(a<<4) | lum;
 		break;
 	default:
-		WWASSERT(0);
 	}
 }
 
 void Color_to_Vector4(Vector4* outc,const unsigned int inc,const WW3DFormat format)
 {
-	WWASSERT(outc);
 
 	unsigned char *argb=(unsigned char*) &inc;
 	unsigned char a,r,g,b;
@@ -191,7 +188,6 @@ void Color_to_Vector4(Vector4* outc,const unsigned int inc,const WW3DFormat form
 		b=argb[3]<<4;
 		break;
 	default:
-		WWASSERT(0);
 	}
 	outc->X=r/255.0f;
 	outc->Y=g/255.0f;
@@ -232,8 +228,7 @@ void Get_WW3D_Format(WW3DFormat& src_format,unsigned& src_bpp,const Targa& targa
 			else src_format = WW3D_FORMAT_A8;
 			break;
 		default:
-			WWDEBUG_SAY(("TextureClass: Targa has unsupported bitdepth(%i)\n",targa.Header.PixelDepth));
-//			WWASSERT(0);
+//			assert(0);
 			break;
 	}
 }
@@ -316,7 +311,6 @@ WW3DFormat Get_Valid_Texture_Format(WW3DFormat format, bool is_compression_allow
 				if (!DX8Wrapper::Get_Current_Caps()->Support_Texture_Format(format)) {
 					format=WW3D_FORMAT_R5G6B5;
 					if (!DX8Wrapper::Get_Current_Caps()->Support_Texture_Format(format)) {
-						WWASSERT_PRINT(0,("No valid texture format found"));
 					}
 				}
 			}
@@ -343,7 +337,7 @@ unsigned Get_Bytes_Per_Pixel(WW3DFormat format)
 	case WW3D_FORMAT_A8:
 	case WW3D_FORMAT_P8: return 1;
 
-	default:	WWASSERT(0); break;
+	default:	assert(0); break;
 	}
 	return 0;
 }

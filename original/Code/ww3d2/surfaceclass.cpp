@@ -101,7 +101,6 @@ void SurfaceClass::Convert_Pixel(Vector3 &rgb, const SurfaceClass::SurfaceDescri
 
 	default:
 		// TODO: Implement other pixel formats
-		WWASSERT(0);
 	}
 	rgb*=scale;
 }
@@ -155,7 +154,6 @@ void SurfaceClass::Convert_Pixel(unsigned char * pixel,const SurfaceClass::Surfa
 		break;
 	default:
 		// TODO: Implement other pixel formats
-		WWASSERT(0);
 	}
 }
 
@@ -166,8 +164,6 @@ SurfaceClass::SurfaceClass(unsigned width, unsigned height, WW3DFormat format):
 	D3DSurface(NULL),
 	SurfaceFormat(format)
 {
-	WWASSERT(width);
-	WWASSERT(height);
 	D3DSurface = DX8Wrapper::_Create_DX8_Surface(width, height, format);
 }
 
@@ -418,9 +414,6 @@ void SurfaceClass::Copy(
 	unsigned int width, unsigned int height,
 	const SurfaceClass *other)
 {
-	WWASSERT(other);
-	WWASSERT(width);
-	WWASSERT(height);
 
 	SurfaceDescription sd,osd;
 	Get_Description(sd);
@@ -477,7 +470,6 @@ void SurfaceClass::Stretch_Copy(
 	unsigned int srcx, unsigned int srcy, unsigned int srcwidth, unsigned int srcheight,
 	const SurfaceClass *other)
 {
-	WWASSERT(other);
 
 	SurfaceDescription sd,osd;
 	Get_Description(sd);
@@ -518,7 +510,6 @@ void SurfaceClass::FindBB(Vector2i *min,Vector2i*max)
 	SurfaceDescription sd;
 	Get_Description(sd);
 
-	WWASSERT(Has_Alpha(sd.Format));
 
 	int alphabits=Alpha_Bits(sd.Format);
 	int mask=0;
@@ -593,8 +584,6 @@ bool SurfaceClass::Is_Transparent_Column(unsigned int column)
 	SurfaceDescription sd;
 	Get_Description(sd);
 
-	WWASSERT(column<sd.Width);
-	WWASSERT(Has_Alpha(sd.Format));
 
 	int alphabits=Alpha_Bits(sd.Format);
 	int mask=0;

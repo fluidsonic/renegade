@@ -1,6 +1,5 @@
 #include "shader.h"
 #include "w3d_file.h"
-#include "wwdebug.h"
 #include "Dx8Wrapper.h"
 #include "dx8caps.h"
 
@@ -299,24 +298,6 @@ void ShaderClass::Enable_Fog (const char *source)
  *=============================================================================================*/
 void ShaderClass::Report_Unable_To_Fog (const char *source)
 {
-	#ifdef WWDEBUG
-	static unsigned _reportcount = 0;
-
-	const char		*unabletofogtext		= "WARNING: Unable to fog shader in %s with given blending mode.\r\n";
-	const char		*unabletofogmoretext = "WARNING: Unable to fog additional shaders (further warnings will be suppressed).\r\n";
-	const unsigned  maxreportcount		= 10;
-
-	// Limit the no. of warning messages to some practical maximum. Suppress all subsequent warnings.
-	if (_reportcount < maxreportcount) {
-		WWDEBUG_SAY ((unabletofogtext, source));
-		_reportcount++;
-	} else {
-		if (_reportcount == maxreportcount) {
-			WWDEBUG_SAY ((unabletofogmoretext));
-			_reportcount++;
-		}
-	}
-	#endif
 }
 
 class Blend

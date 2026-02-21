@@ -4,7 +4,6 @@
 #include "vistablemgr.h"
 #include "vistable.h"
 #include "dynamicaabtreecull.h"
-#include "wwdebug.h"
 
 
 const float MIN_OBJECT_MATCH_FRACTION = 0.99f;
@@ -54,7 +53,6 @@ VisOptimizationContextClass::VisOptimizationContextClass
 	Scene(scene),
 	Stats(stats)
 {
-	WWASSERT(Scene != NULL);
 }
 
 VisOptimizationContextClass::~VisOptimizationContextClass(void)
@@ -302,7 +300,6 @@ void VisOptimizationContextClass::Combine_Object_Tables(int object_id_0,int obje
 void VisOptimizationContextClass::Install_Results(VisTableMgrClass * vismgr)
 {
 	if (vismgr == NULL) {
-		WWDEBUG_SAY(("Error! NULL VisTableMgrClass passed into Install_Results\n"));
 		return;
 	}
 

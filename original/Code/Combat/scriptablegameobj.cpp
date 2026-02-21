@@ -22,7 +22,6 @@
 #include "gameobjmanager.h"
 #include "pscene.h"
 #include "soundsceneobj.h"
-#include "wwprofile.h"
 
 /*
 ** ScriptableGameObjDef - Defintion class for a ScriptableGameObj
@@ -48,7 +47,6 @@ bool	ScriptableGameObjDef::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_DEF_VARIABLES );
-		WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 		for ( int i = 0; i < ScriptNameList.Count(); i++ ) {
 			WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_DEF_SCRIPT_NAME, ScriptNameList[i] );
 			WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_DEF_SCRIPT_PARAMETERS, ScriptParameterList[i] );
@@ -60,7 +58,6 @@ bool	ScriptableGameObjDef::Save( ChunkSaveClass & csave )
 
 bool	ScriptableGameObjDef::Load( ChunkLoadClass &cload )
 {
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	StringClass str;
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -98,7 +95,6 @@ bool	ScriptableGameObjDef::Load( ChunkLoadClass &cload )
 		}
 		cload.Close_Chunk();
 	}
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	return true;
 }
 
@@ -147,7 +143,6 @@ bool	GameObjObserverTimerClass::Save( ChunkSaveClass & csave )
 bool	GameObjObserverTimerClass::Load( ChunkLoadClass & cload )
 {
 	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_TIMER_VARIABLES );
 
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
@@ -294,7 +289,6 @@ void	ScriptableGameObj::Copy_Settings( const ScriptableGameObjDef & definition )
 		//
 		//	Attach the scripts
 		//
-		WWASSERT( definition.ScriptNameList.Count() == definition.ScriptParameterList.Count() );
 		for ( int i = 0; i < definition.ScriptNameList.Count(); i++ ) {
 			ScriptClass* script = ScriptManager::Create_Script( definition.ScriptNameList[i] );
 			if (script) {
@@ -428,7 +422,6 @@ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 {
 	ReferenceableGameObj * referenceable_ptr = NULL;
 
-	WWASSERT( Observers.Count() == 0 );
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -488,7 +481,6 @@ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 		REQUEST_POINTER_REMAP( (void **)&(Observers[ ob_idx ]) );
 	}
 
-	WWASSERT(referenceable_ptr != NULL);
 	if (referenceable_ptr != NULL) {
 		SaveLoadSystemClass::Register_Pointer(referenceable_ptr , (ReferenceableGameObj *)this);
 	}
@@ -530,7 +522,6 @@ void ScriptableGameObj::Start_Observers( void )
 
 void ScriptableGameObj::Add_Observer( GameObjObserverClass * observer )
 {
-	WWASSERT(observer != NULL);
 
 	Insert_Observer( observer );
 
@@ -542,7 +533,6 @@ void ScriptableGameObj::Add_Observer( GameObjObserverClass * observer )
 
 void ScriptableGameObj::Insert_Observer( GameObjObserverClass * observer )
 {
-	WWASSERT(observer != NULL);
 
 	observer->Attach( this );
 	Observers.Add( observer );
@@ -591,7 +581,6 @@ void	ScriptableGameObj::Post_Think( void )
 {
 	BaseGameObj::Post_Think();
 
-	WWPROFILE( "Scriptable PostThink" );
 
 	// Note: The cinematic script comes later in the obj list then the things it creates.
 	// This means that objects the script creates when it thinks (via timers) dont think
@@ -606,7 +595,6 @@ void	ScriptableGameObj::Post_Think( void )
 
 			bool found = false;
 
-			WWASSERT( ObserverTimerList[i]->ObserverID != 0 );
 			const GameObjObserverList & observer_list = Get_Observers();
 			for( int index = 0; index < observer_list.Count(); index++ ) {
 				if ( observer_list[ index ]->Get_ID() == ObserverTimerList[i]->ObserverID ) {

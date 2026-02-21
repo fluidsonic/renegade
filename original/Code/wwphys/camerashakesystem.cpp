@@ -1,6 +1,5 @@
 #include "camerashakesystem.h"
 #include "camera.h"
-#include "wwmemlog.h"
 
 /*
 ** (gth) According to my "research" the artists say that there are several factors that
@@ -55,7 +54,6 @@ CameraShakeSystemClass::CameraShakerClass::~CameraShakerClass(void)
 
 void CameraShakeSystemClass::CameraShakerClass::Compute_Rotations(const Vector3 & camera_position, Vector3 * set_angles)
 {
-	WWASSERT(set_angles != NULL);
 
 	/*
 	** We want several different sinusiods, each with a different phase shift and 
@@ -113,7 +111,6 @@ void CameraShakeSystemClass::Add_Camera_Shake
 	float power
 )
 {
-	WWMEMLOG(MEM_PHYSICSDATA);
 	/*
 	** Allocate a new camera shaker object.  Note that these are mem-pooled so the allocation
 	** is very cheap.

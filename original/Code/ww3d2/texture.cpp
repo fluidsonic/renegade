@@ -100,7 +100,6 @@ TextureClass::TextureClass(unsigned width, unsigned height, WW3DFormat format, M
 		d3dpool=D3DPOOL_SYSTEMMEM;
 		break;
 	default:
-		WWASSERT(0);
 	}
 	D3DTexture = DX8Wrapper::_Create_DX8_Texture(width, height, format, mip_level_count,d3dpool,rendertarget);
 	if (pool==POOL_DEFAULT)
@@ -176,7 +175,6 @@ TextureClass::TextureClass(
 		break;
 	}
 
-	WWASSERT_PRINT(name && name[0], "TextureClass CTor: NULL or empty texture name\n");
 	int len=strlen(name);
 	for (int i=0;i<len;++i) {
 		if (name[i]=='+') {
@@ -192,7 +190,6 @@ TextureClass::TextureClass(
 	}
 	Set_Texture_Name(name);
 	Set_Full_Path(full_path);
-	WWASSERT(name[0]!='\0');
 	if (!WW3D::Is_Texturing_Enabled()) {
 		Initialized=true;
 		D3DTexture=0;
@@ -468,7 +465,6 @@ void TextureClass::Set_Texture_Name(const char * name)
 unsigned int TextureClass::Get_Mip_Level_Count(void)
 {
 	if (!D3DTexture) {
-		WWASSERT_PRINT(0, "Get_Mip_Level_Count: D3DTexture is NULL!\n");
 		return 0;
 	}
 
@@ -480,7 +476,6 @@ unsigned int TextureClass::Get_Mip_Level_Count(void)
 SurfaceClass *TextureClass::Get_Surface_Level(unsigned int level)
 {
 	if (!D3DTexture) {
-		WWASSERT_PRINT(0, "Get_Surface_Level: D3DTexture is NULL!\n");
 		return 0;
 	}
 
@@ -496,7 +491,6 @@ SurfaceClass *TextureClass::Get_Surface_Level(unsigned int level)
 IDirect3DSurface8 *TextureClass::Get_D3D_Surface_Level(unsigned int level)
 {
 	if (!D3DTexture) {
-		WWASSERT_PRINT(0, "Get_D3D_Surface_Level: D3DTexture is NULL!\n");
 		return 0;
 	}
 
@@ -510,7 +504,6 @@ IDirect3DSurface8 *TextureClass::Get_D3D_Surface_Level(unsigned int level)
 unsigned int TextureClass::Get_Priority(void)
 {
 	if (!D3DTexture) {
-		WWASSERT_PRINT(0, "Get_Priority: D3DTexture is NULL!\n");
 		return 0;
 	}
 
@@ -522,7 +515,6 @@ unsigned int TextureClass::Get_Priority(void)
 unsigned int TextureClass::Set_Priority(unsigned int priority)
 {
 	if (!D3DTexture) {
-		WWASSERT_PRINT(0, "Set_Priority: D3DTexture is NULL!\n");
 		return 0;
 	}
 
@@ -534,7 +526,6 @@ unsigned int TextureClass::Set_Priority(unsigned int priority)
 void TextureClass::Set_Mip_Mapping(FilterType mipmap)
 {
 	if (mipmap != FILTER_TYPE_NONE && Get_Mip_Level_Count() <= 1) {
-		WWASSERT_PRINT(0, "Trying to enable MipMapping on texture w/o Mip levels!\n");
 		return;
 	}
 	MipMapFilter=mipmap;
@@ -615,7 +606,6 @@ void TextureClass::Apply_New_Surface(IDirect3DTexture8* d3d_texture,bool initial
 	D3DTexture->AddRef();
 	if (initialized) Initialized=true;
 
-	WWASSERT(D3DTexture);
 	IDirect3DSurface8* surface;
 	DX8_ErrorCode(D3DTexture->GetSurfaceLevel(0,&surface));
 	D3DSURFACE_DESC d3d_desc;
@@ -940,7 +930,6 @@ TextureClass *Load_Texture(ChunkLoadClass & cload)
 						break;
 
 					default:
-						WWASSERT (false);
 						mipcount = TextureClass::MIP_LEVELS_ALL;
 						break;
 				}
@@ -968,7 +957,6 @@ TextureClass *Load_Texture(ChunkLoadClass & cload)
 				}
 
 				default:
-					WWASSERT (false);
 					break;
 			}
 
@@ -986,7 +974,6 @@ TextureClass *Load_Texture(ChunkLoadClass & cload)
 			newtex = WW3DAssetManager::Get_Instance()->Get_Texture(name);
 		}
 
-		WWASSERT(newtex);
 	}
 
 	// Return a pointer to the new texture

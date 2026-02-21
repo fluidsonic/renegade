@@ -27,7 +27,6 @@
 #include "vehicle.h"
 #include "c4.h"
 #include "objlibrary.h"
-#include "wwprofile.h"
 #include "hudinfo.h"
 #include "projectile.h"
 #include "combatphysobserver.h"
@@ -131,15 +130,11 @@ WeaponClass::~WeaponClass( void )
 
 void	WeaponClass::Init( const WeaponDefinitionClass *weapon_def )
 {
-	WWASSERT( Definition == NULL );
 	Definition = weapon_def;
-	WWASSERT( Definition != NULL );
 
 	// Setup the ammo defs
-	WWASSERT( Definition->PrimaryAmmoDefID != 0 );
 	PrimaryAmmoDefinition = WeaponManager::Find_Ammo_Definition( Definition->PrimaryAmmoDefID );
 
-	WWASSERT( Definition->SecondaryAmmoDefID != 0 );
 	SecondaryAmmoDefinition = WeaponManager::Find_Ammo_Definition( Definition->SecondaryAmmoDefID );
 }
 
@@ -277,7 +272,6 @@ bool	WeaponClass::Load( ChunkLoadClass &cload )
 #if 0
 						case XXX_MICROCHUNKID_MODEL_NAME:
 						{
-							WWASSERT( Model == NULL );
 							char	model_name[80];
 							cload.Read( model_name, cload.Cur_Micro_Chunk_Length() );
 							RenderObjClass * robj = WW3DAssetManager::Get_Instance()->Create_Render_Obj( model_name );
@@ -286,7 +280,6 @@ bool	WeaponClass::Load( ChunkLoadClass &cload )
 
 							cload.Close_Micro_Chunk();
 							cload.Open_Micro_Chunk();
-							WWASSERT( cload.Cur_Micro_Chunk_ID() == MICROCHUNKID_MODEL_PTR );
 							void * old_ptr = NULL;
 							cload.Read( &old_ptr, sizeof( old_ptr ) );
 							SaveLoadSystemClass::Register_Pointer( old_ptr, robj );
@@ -604,7 +597,6 @@ bool	WeaponClass::Fire_Beacon( const AmmoDefinitionClass *ammo_def )
 */
 void	WeaponClass::Do_Fire( bool primary )
 {
-	WWPROFILE( "Do Fire" );
 
 	// Stats
 	if (	Get_Owner() && 
@@ -643,9 +635,9 @@ void	WeaponClass::Do_Fire( bool primary )
 			//
 			//	Decrement the rounds
 			//
-//			WWASSERT( BurstCount != 0 );
+//			assert( BurstCount != 0 );
 			BurstCount--;
-//			WWASSERT( ClipRounds != 0 );
+//			assert( ClipRounds != 0 );
 			Decrement_Rounds( ammo_def->SprayBulletCost );
 		}
 
@@ -654,9 +646,9 @@ void	WeaponClass::Do_Fire( bool primary )
 		//
 		//	Decrement the rounds
 		//
-//		WWASSERT( BurstCount != 0 );
+//		assert( BurstCount != 0 );
 		BurstCount--;
-//		WWASSERT( ClipRounds != 0 );
+//		assert( ClipRounds != 0 );
 		Decrement_Rounds( ammo_def->SprayBulletCost );
 
 		if ( Get_Style() == WEAPON_HOLD_STYLE_C4 ) {
@@ -676,7 +668,6 @@ void	WeaponClass::Do_Fire( bool primary )
 */
 void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary )
 {
-	WWPROFILE( "Fire Bullet" );
 
 	if ( Get_Owner() == COMBAT_STAR ) {
 		Vector3 pos;
@@ -713,7 +704,7 @@ void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary
 
 		Ignore_Owner();
 
-{		WWPROFILE( "Cast_Ray" );
+{		
 		COMBAT_SCENE->Cast_Ray( raytest );
 }
 		Unignore_Owner();
@@ -740,7 +731,7 @@ void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary
 
 		Ignore_Owner();
 
-{ WWPROFILE( "Cast Ray" );
+{ 
 		COMBAT_SCENE->Cast_Ray( raytest );
 }
 
@@ -843,7 +834,7 @@ void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary
 
 			Ignore_Owner();
 
-{ WWPROFILE( "Cast Ray" );
+{ 
 			COMBAT_SCENE->Cast_Ray( raytest );
 }
 
@@ -914,7 +905,6 @@ bool	WeaponClass::Is_Muzzle_Clear()
 	raytest.CheckDynamicObjs = false;
 
 	{ 
-		WWPROFILE( "Cast Ray" );
 		COMBAT_SCENE->Cast_Ray( raytest );
 	}
 
@@ -958,7 +948,6 @@ void WeaponClass::Compute_Bullet_Start_Point(const Matrix3D & muzzle,Vector3 * s
 		{ 
 			Ignore_Owner();
 
-			WWPROFILE( "Cast Ray" );
 			COMBAT_SCENE->Cast_Ray( raytest );
 
 			Unignore_Owner();
@@ -976,7 +965,6 @@ void	WeaponClass::Do_Firing_Effects( void )
 		return;	// No sounds when time stops
 	}
 
-	WWPROFILE( "Firing Effects" );
 
 	Matrix3D	muzzle = Get_Muzzle();
 
@@ -989,7 +977,6 @@ void	WeaponClass::Do_Firing_Effects( void )
 
 			DefinitionClass * def = DefinitionMgrClass::Find_Definition( Definition->MuzzleFlashPhysDefID );
 			if ( def != NULL ) {
-				WWASSERT( ((PhysDefClass *)def)->Is_Type( "TimedDecorationPhysDef" ) );
 				TimedDecorationPhysClass * muzzle_flash = (TimedDecorationPhysClass *)def->Create();
 				if ( muzzle_flash ) {
 					RenderObjClass * model = muzzle_flash->Peek_Model();
@@ -1017,7 +1004,6 @@ void	WeaponClass::Do_Firing_Effects( void )
 
 		// if this gun is fired by the STAR and they have an eject bone, eject a shell.
 		if ((Get_Owner() == COMBAT_STAR) && (Model != NULL)) {
-			WWPROFILE( "Eject" );
 			int eject_index = Model->Get_Bone_Index( "eject" );
 			if ( eject_index > 0 ) {
 				Make_Shell_Eject( Model->Get_Bone_Transform( eject_index ) );
@@ -1257,7 +1243,6 @@ void	WeaponClass::Do_Continuous_Effects( bool enable )
 			if ( ContinuousEmitters[i] == NULL && !ammo_def->ContinuousEmitterName.Is_Empty() ) {
 				RenderObjClass * renderobj = Create_Render_Obj_From_Filename( ammo_def->ContinuousEmitterName );
 				if ( renderobj ) {
-					WWASSERT( renderobj->Class_ID() == RenderObjClass::CLASSID_PARTICLEEMITTER );
 					ContinuousEmitters[i] = (ParticleEmitterClass *)renderobj;
 					ContinuousEmitters[i]->Set_Velocity_Inheritance_Factor( 1 );
 				}
@@ -1341,7 +1326,6 @@ void	WeaponClass::Update_State( float pending_time )
 {
 	LockTriggers = false;		// Unlock triggers
 
-	WWPROFILE( "Update weapon state" );
 	while ( pending_time > 0.0f ) {
 
 		bool trigger_ok = true;
@@ -1504,7 +1488,6 @@ void	WeaponClass::Update( void )
 		IsSecondaryTriggered = false;
 	}
 
-	WWASSERT( PrimaryAmmoDefinition != NULL );
 
 	// Update Burst logic
 	if ( (int)PrimaryAmmoDefinition->BurstMax == 0 ) {	// if not using bursts
@@ -1589,7 +1572,7 @@ bool	WeaponClass::Cast_Weapon_Down_Muzzle( Vector3 & hit_pos )
 	PhysRayCollisionTestClass raytest(ray,&res,BULLET_COLLISION_GROUP,COLLISION_TYPE_PROJECTILE);
 
 	Ignore_Owner();
-{ WWPROFILE( "Cast Ray" );
+{ 
 	COMBAT_SCENE->Cast_Ray( raytest );
 }
 	Unignore_Owner();
@@ -1624,7 +1607,7 @@ PhysicalGameObj * WeaponClass::Cast_Weapon( const Vector3 & target )
 	PhysRayCollisionTestClass raytest(ray,&res,BULLET_COLLISION_GROUP,COLLISION_TYPE_PROJECTILE);
 
 	Ignore_Owner();
-{ WWPROFILE( "Cast Ray" );
+{ 
 	COMBAT_SCENE->Cast_Ray( raytest );
 }
 	Unignore_Owner();
@@ -1687,7 +1670,6 @@ void	WeaponClass::Stop_Firing_Sound( void )
 
 void	WeaponClass::Display_Targeting( void )
 {
-	WWPROFILE( "Cast_Star_Weapon" );
 	int muzzle_index = Get_Total_Rounds_Fired() & 1;
 
 	// vehicles that don't have a turret bone and do have homing weapons target from the camera
@@ -1713,7 +1695,6 @@ void	WeaponClass::Display_Targeting( void )
 	Ignore_Owner();
 
 	{
-		WWPROFILE( "Cast_Ray" );
 		COMBAT_SCENE->Cast_Ray( raytest );
 	}
 
@@ -1778,7 +1759,6 @@ void	WeaponClass::Display_Targeting( void )
 
 const Matrix3D & WeaponClass::Get_Muzzle( int index )
 {
-	WWASSERT( Get_Owner() != NULL );
 
 	// Star's weapon in first person fires from the camera
 	if ( Get_Owner() == COMBAT_STAR && CombatManager::Is_First_Person() ) {

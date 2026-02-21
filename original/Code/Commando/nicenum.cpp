@@ -12,15 +12,12 @@
 
 #include "netutil.h"
 #include "useroptions.h"
-#include "GameSpy_QnR.h"
 
 //
 // Class statics
 //
 ULONG		cNicEnum::NicList[];
 USHORT	cNicEnum::NumNics			= 0;
-ULONG		cNicEnum::GSNicList[];	
-USHORT	cNicEnum::NumGSNics		= 0;
 
 //----------------------------------------------------------------------------------
 void 
@@ -136,13 +133,7 @@ cNicEnum::Init
 		}
 	}
 
-	//
-	// Now build the LAN and GameSpy NIC lists. They contain the same entries.
-	// The only difference is that the LAN list puts the non-internet addressable 
-	// NIC's first, the GameSpy list puts them last.
-	//
 	NumNics			= 0;
-	NumGSNics 		= 0;
 
 	for (index = 0; index < num_lan_addresses; index++)
 	{
@@ -152,16 +143,6 @@ cNicEnum::Init
 	for (index = 0; index < num_internet_addresses; index++)
 	{
 		NicList[NumNics++] = internet_addresses[index];
-	}
-
-	for (index = 0; index < num_internet_addresses; index++)
-	{
-		GSNicList[NumGSNics++] = internet_addresses[index];
-	}
-
-	for (index = 0; index < num_lan_addresses; index++)
-	{
-		GSNicList[NumGSNics++] = lan_addresses[index];
 	}
 
 
@@ -189,33 +170,6 @@ cNicEnum::Init
 			cUserOptions::PreferredLanNic.Set(0);
 		}
 	}
-
-	//
-	// Initialize or update PreferredGameSpyNic if required.
-	//
-	is_nic_valid = false;
-	for (index = 0; index < NumGSNics; index++) 
-	{
-		if ((ULONG) cUserOptions::PreferredGameSpyNic.Get() == GSNicList[index])
-		{
-			is_nic_valid = true;
-			break;
-		}
-	}
-
-	if (!is_nic_valid)
-	{
-		if (NumGSNics > 0) 
-		{
-			cUserOptions::PreferredGameSpyNic.Set(GSNicList[0]);
-		}
-		else
-		{
-			cUserOptions::PreferredGameSpyNic.Set(0);
-		}
-	}
-
-
 
 	int cleanup_rc = ::WSACleanup();
 }
@@ -286,153 +240,4 @@ cNicEnum::Enumerate_Nics
 
 
 
-/*
-void 
-cNicEnum::Init
-(
-	void
-)
-{
-
-	WSADATA wsa_data;
-	int startup_rc = ::WSAStartup(MAKEWORD(1, 1), &wsa_data);
-	if (startup_rc != 0) 
-	{
-		return;
-	}
-
-	//
-	// Retrieve list of nic's
-	//
-	ULONG local_addresses[MAX_NICS];
-	ULONG num_addresses = Enumerate_Nics(local_addresses, MAX_NICS);
-
-
-	//
-	// We are going to discard anything that is internet addressable.
-	// The non-internet-addressable NIC's are:
-	//   10.*.*.*
-	//   192.168.*.*
-	//   172.16-31.*.*
-	// We will order these as above to promote the more common choice.
-	//
-
-	USHORT index	= 0;
-	USHORT class_1	= 0;
-	USHORT class_2	= 0;
-	NumNics			= 0;
-	NumGSNics 		= 0;
-
-	//
-	// Create a seperate list of GameSpy compatible NIC's that includes
-	// local and internet addressable
-	//
-	// Don't add the following interfaces to the list.
-	//   127.* (localhost)
-	//   224.* (multicast)
-	//
-	for (index = 0; index < num_addresses; index++)
-	{
-		class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
-		
-		if (class_1 != 127 && class_1 != 224)
-		{
-			GSNicList[NumGSNics++] = local_addresses[index];
-		}
-	}
-
-	//
-	// First, scan for 10.*.*.* addresses
-	//
-	for (index = 0; index < num_addresses; index++)
-	{
-		class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
-
-		if (class_1 == 10)
-		{
-			NicList[NumNics++] = local_addresses[index];
-		}
-	}
-
-	//
-	// Next, scan for 192.168.*.* addresses
-	//
-	for (index = 0; index < num_addresses; index++) 
-	{
-		class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
-		class_2 = (::ntohl(local_addresses[index]) & 0x00ff0000) >> 16;
-		
-		if (class_1 == 192 && class_2 == 168)
-		{
-			NicList[NumNics++] = local_addresses[index];
-		}
-	}
-
-	//
-	// Finally, scan for 172.16-31.*.* addresses
-	//
-	for (index = 0; index < num_addresses; index++) 
-	{
-		class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
-		class_2 = (::ntohl(local_addresses[index]) & 0x00ff0000) >> 16;
-		
-		if (class_1 == 172 && class_2 >= 16 && class_2 <= 31)
-		{
-			NicList[NumNics++] = local_addresses[index];
-		}
-	}
-
-
-	//
-	// Initialize or update PreferredLanNic if required.
-	//
-	bool is_nic_valid = false;
-	for (index = 0; index < NumNics; index++) 
-	{
-		if ((ULONG) cUserOptions::PreferredLanNic.Get() == NicList[index])
-		{
-			is_nic_valid = true;
-			break;
-		}
-	}
-
-	if (!is_nic_valid)
-	{
-		if (NumNics > 0) 
-		{
-			cUserOptions::PreferredLanNic.Set(NicList[0]);
-		}
-		else
-		{
-			cUserOptions::PreferredLanNic.Set(0);
-		}
-	}
-
-	is_nic_valid = false;
-	for (index = 0; index < NumGSNics; index++) 
-	{
-		if ((ULONG) cUserOptions::PreferredGameSpyNic.Get() == GSNicList[index])
-		{
-			is_nic_valid = true;
-			break;
-		}
-	}
-
-	if (!is_nic_valid)
-	{
-		if (NumGSNics > 0) 
-		{
-			cUserOptions::PreferredGameSpyNic.Set(GSNicList[0]);
-		}
-		else
-		{
-			cUserOptions::PreferredGameSpyNic.Set(0);
-		}
-	}
-
-
-
-	int cleanup_rc = ::WSACleanup();
-}
-*/
 

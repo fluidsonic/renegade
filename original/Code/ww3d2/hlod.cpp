@@ -256,7 +256,6 @@ void HLodDefClass::Initialize(HLodClass &src_lod)
 
 	// Determine the number of LODs in the src object
 	LodCount = src_lod.Get_LOD_Count ();
-	WWASSERT (LodCount > 0);
 	if (LodCount > 0) {
 		
 		// Allocate an array large enough to hold all the LODs and
@@ -862,23 +861,16 @@ HLodClass::HLodClass(const char * name,RenderObjClass ** lods,int count) :
 	LODBias(1.0f)
 {
 	// enforce parameters
-	WWASSERT(name != NULL);
-	WWASSERT(lods != NULL);
-	WWASSERT((count > 0) && (count < 256));
 	
 	// Set the name
 	Set_Name(name);
 	
 	LodCount = count;
-	WWASSERT(LodCount >= 1);
 	Lod = new ModelArrayClass[LodCount];
-	WWASSERT(Lod);
 	Cost = new float[LodCount];
-	WWASSERT(Cost);
 	// Value has LodCount + 1 entries so PostIncrementValue can always use
 	// Value[CurLod + 1] (the last entry wil be AT_MAX_LOD).
 	Value = new float[LodCount + 1];
-	WWASSERT(Value);
 
 	// Create our HTree from the highest LOD if it is an HModel
 	// Otherwise, create a single node tree
@@ -893,7 +885,6 @@ HLodClass::HLodClass(const char * name,RenderObjClass ** lods,int count) :
 	// Ok, now suck the sub-objects out of each LOD model and place them into this HLOD.
 	for (int lod_index=0; lod_index < LodCount; lod_index++) {
 		RenderObjClass * lod_obj = lods[lod_index];
-		WWASSERT(lod_obj);
 
 		if (	(lod_obj->Class_ID() == RenderObjClass::CLASSID_HMODEL) || 
 				(lod_obj->Class_ID() == RenderObjClass::CLASSID_HLOD) ||
@@ -968,15 +959,11 @@ HLodClass::HLodClass(const HLodDefClass & def) :
 	
 	// Number of LODs comes from the distlod
 	LodCount = def.LodCount;
-	WWASSERT(LodCount >= 1);
 	Lod = new ModelArrayClass[LodCount];
-	WWASSERT(Lod);
 	Cost = new float[LodCount];
-	WWASSERT(Cost);
 	// Value has LodCount + 1 entries so PostIncrementValue can always use
 	// Value[CurLod + 1] (the last entry wil be AT_MAX_LOD).
 	Value = new float[LodCount + 1];
-	WWASSERT(Value);
 
 	// Add Models to the ModelArrays
 	for (int ilod=0; ilod < def.LodCount; ilod++) {
@@ -1057,13 +1044,10 @@ HLodClass::HLodClass(const HModelDefClass & def) :
 	// This is a "simple" HLod, only one LOD
 	LodCount = 1;
 	Lod = new ModelArrayClass[1];
-	WWASSERT(Lod);
 	Cost = new float[1];
-	WWASSERT(Cost);
 	// Value has LodCount + 1 entries so PostIncrementValue can always use
 	// Value[CurLod + 1] (the last entry wil be AT_MAX_LOD).
 	Value = new float[2];
-	WWASSERT(Value);
 
 	// no lod size clamping
 	Lod[0].MaxScreenSize = NO_MAX_SCREEN_SIZE;
@@ -1120,16 +1104,12 @@ HLodClass & HLodClass::operator = (const HLodClass & that)
 		BoundingBoxIndex = that.BoundingBoxIndex;
 
 		LodCount = that.LodCount;
-		WWASSERT(LodCount >= 1);
 
 		Lod = new ModelArrayClass[LodCount];
-		WWASSERT(Lod != NULL);
 		Cost = new float[LodCount];
-		WWASSERT(Cost);
 		// Value has LodCount + 1 entries so PostIncrementValue can always use
 		// Value[CurLod + 1] (the last entry wil be AT_MAX_LOD).
 		Value = new float[LodCount + 1];
-		WWASSERT(Value);		
 		
 		for (lod=0; lod<LodCount;lod++) {
 			Lod[lod].Resize(that.Lod[lod].Count());
@@ -1226,7 +1206,6 @@ void HLodClass::Free(void)
 			RenderObjClass * robj = Lod[lod][model].Model;
 			Lod[lod][model].Model = NULL;
 			
-			WWASSERT(robj);
 			robj->Set_Container(NULL);
 			robj->Release_Ref();
 		
@@ -1253,7 +1232,6 @@ void HLodClass::Free(void)
 		RenderObjClass * robj = AdditionalModels[model].Model;
 		AdditionalModels[model].Model = NULL;
 
-		WWASSERT(robj);
 		robj->Set_Container(NULL);
 		robj->Release_Ref();
 	}
@@ -1443,8 +1421,6 @@ const AABoxClass &HLodClass::Get_Bounding_Box(void) const
 void HLodClass::Set_Max_Screen_Size(int lod_index, float size)
 {
 	// Params valid?
-	WWASSERT(lod_index >= 0);
-	WWASSERT(lod_index < LodCount);
 	if ((lod_index >= 0) && (lod_index < LodCount)) {
 
 		// Set the new screen size for this LOD
@@ -1482,8 +1458,6 @@ float HLodClass::Get_Max_Screen_Size(int lod_index) const
 	float size = NO_MAX_SCREEN_SIZE;
 
 	// Params valid?
-	WWASSERT(lod_index >= 0);
-	WWASSERT(lod_index < LodCount);
 	if ((lod_index >= 0) && (lod_index < LodCount)) {
 
 		// Get the screen size for this LOD
@@ -1555,8 +1529,6 @@ int HLodClass::Get_Lod_Model_Count(int lod_index) const
 	int count = 0;
 
 	// Params valid?
-	WWASSERT(lod_index >= 0);
-	WWASSERT(lod_index < LodCount);
 	if ((lod_index >= 0) && (lod_index < LodCount)) {
 
 		// Get the number of models in this Lod
@@ -1585,8 +1557,6 @@ RenderObjClass *HLodClass::Peek_Lod_Model(int lod_index, int model_index) const
 	RenderObjClass *pmodel = NULL;
 
 	// Params valid?
-	WWASSERT(lod_index >= 0);
-	WWASSERT(lod_index < LodCount);
 	if ((lod_index >= 0) &&
 		 (lod_index < LodCount) &&
 		 (model_index < Lod[lod_index].Count ())) {
@@ -1617,8 +1587,6 @@ RenderObjClass *HLodClass::Get_Lod_Model(int lod_index, int model_index) const
 	RenderObjClass *pmodel = NULL;
 
 	// Params valid?
-	WWASSERT(lod_index >= 0);
-	WWASSERT(lod_index < LodCount);
 	if ((lod_index >= 0) &&
 		 (lod_index < LodCount) &&
 		 (model_index < Lod[lod_index].Count ())) {
@@ -1652,8 +1620,6 @@ int HLodClass::Get_Lod_Model_Bone(int lod_index, int model_index) const
 	int bone_index = 0;
 
 	// Params valid?
-	WWASSERT(lod_index >= 0);
-	WWASSERT(lod_index < LodCount);
 	if ((lod_index >= 0) &&
 		 (lod_index < LodCount) &&
 		 (model_index < Lod[lod_index].Count ())) {
@@ -1702,8 +1668,6 @@ RenderObjClass * HLodClass::Peek_Additional_Model (int model_index) const
 	RenderObjClass *pmodel = NULL;
 
 	// Param valid?
-	WWASSERT(model_index >= 0);
-	WWASSERT(model_index < AdditionalModels.Count());
 	if ((model_index >= 0) &&
 		 (model_index < AdditionalModels.Count())) {
 
@@ -1733,8 +1697,6 @@ RenderObjClass * HLodClass::Get_Additional_Model (int model_index) const
 	RenderObjClass *pmodel = NULL;
 
 	// Param valid?
-	WWASSERT(model_index >= 0);
-	WWASSERT(model_index < AdditionalModels.Count());
 	if ((model_index >= 0) &&
 		 (model_index < AdditionalModels.Count())) {
 
@@ -1767,8 +1729,6 @@ int HLodClass::Get_Additional_Model_Bone (int model_index) const
 	int bone_index = 0;
 
 	// Params valid?
-	WWASSERT(model_index >= 0);
-	WWASSERT(model_index < AdditionalModels.Count());
 	if ((model_index >= 0) &&
 		 (model_index < AdditionalModels.Count())) {
 
@@ -1830,7 +1790,6 @@ void HLodClass::Include_NULL_Lod(bool include)
 			RenderObjClass * robj = Lod[index][model].Model;
 			Lod[index][model].Model = NULL;
 			
-			WWASSERT(robj);
 			robj->Set_Container (NULL);
 			robj->Release_Ref ();
 		}
@@ -1861,7 +1820,6 @@ void HLodClass::Include_NULL_Lod(bool include)
 
 		// Tag the NULL render object onto the end
 		RenderObjClass *null_object = WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("NULL");
-		WWASSERT (null_object != NULL);
 		if (null_object != NULL) {
 
 			// Resize the lod array
@@ -2203,7 +2161,6 @@ int HLodClass::Get_Num_Sub_Objects(void) const
  *=============================================================================================*/
 RenderObjClass * HLodClass::Get_Sub_Object(int index) const
 {
-	WWASSERT(index >= 0);
 	for (int lod=0; lod<LodCount; lod++) {
 		if (index < Lod[lod].Count()) {
 			Lod[lod][index].Model->Add_Ref();
@@ -2211,7 +2168,6 @@ RenderObjClass * HLodClass::Get_Sub_Object(int index) const
 		}
 		index -= Lod[lod].Count();
 	}
-	WWASSERT(index < AdditionalModels.Count());
 	AdditionalModels[index].Model->Add_Ref();
 	return AdditionalModels[index].Model;
 }
@@ -2421,7 +2377,6 @@ int HLodClass::Get_Sub_Object_Bone_Index(RenderObjClass * subobj) const
  *=============================================================================================*/
 int HLodClass::Add_Sub_Object_To_Bone(RenderObjClass * subobj,int boneindex)
 {
-	WWASSERT(subobj);
 	if ((boneindex < 0) || (boneindex >= HTree->Num_Pivots())) return 0;
 
 	subobj->Set_LOD_Bias(LODBias);
@@ -3096,7 +3051,6 @@ RenderObjClass * HLodClass::Get_Current_LOD(void)
 /*
 void HLodClass::Set_Texture_Reduction_Factor(float trf)
 {
-	WWASSERT(0);	// don't call to tex reduction system, it's broken!
 	// We don't touch the additional subobjects: they will get Prepare_LOD
 	// called on them individually which is where texture reduction will be
 	// set also.
@@ -3187,7 +3141,6 @@ int HLodClass::Get_Num_Snap_Points(void)
  *=============================================================================================*/
 void HLodClass::Get_Snap_Point(int index,Vector3 * set)
 {
-	WWASSERT(set != NULL);
 	if (SnapPoints) {
 		*set = (*SnapPoints)[index];
 	} else {
@@ -3321,7 +3274,6 @@ void HLodClass::Update_Obj_Space_Bounding_Volumes(void)
 	HTree->Base_Update(Matrix3D(1));
 	
 	robj = Get_Sub_Object(0);
-	WWASSERT(robj);
 	
 	const Matrix3D & bonetm = HTree->Get_Transform(Get_Sub_Object_Bone_Index(robj));
 	robj->Get_Obj_Space_Bounding_Sphere(sphere);
@@ -3335,7 +3287,6 @@ void HLodClass::Update_Obj_Space_Bounding_Volumes(void)
 
 	for (i=1; i<Get_Num_Sub_Objects(); i++) {
 		robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		
 		const Matrix3D & bonetm = HTree->Get_Transform(Get_Sub_Object_Bone_Index(robj));
 		
@@ -3378,7 +3329,6 @@ void HLodClass::Update_Obj_Space_Bounding_Volumes(void)
  *=============================================================================================*/
 void HLodClass::add_lod_model(int lod,RenderObjClass * robj,int boneindex)
 {		
-	WWASSERT(robj != NULL);
 
 	ModelNodeClass newnode;
 	newnode.Model = robj;

@@ -9,7 +9,6 @@ target_include_directories(wwnet BEFORE PRIVATE
     "${ORIG_WWNET}"
     "${ORIG_SRC}"
     "${ORIG_SRC}/wwlib"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
     "${ORIG_SRC}/wwutil"
     "${ORIG_SRC}/wwsaveload"
@@ -18,4 +17,4 @@ target_include_directories(wwnet BEFORE PRIVATE
     "${ORIG_SRC}/WWOnline"
 )
 
-target_link_libraries(wwnet wwsaveload wwutil wwlib wwdebug wwmath)
+target_link_libraries(wwnet wwsaveload wwutil wwlib wwmath)

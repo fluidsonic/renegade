@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__POWERPLANTGAMEOBJ_H
 #define	__POWERPLANTGAMEOBJ_H

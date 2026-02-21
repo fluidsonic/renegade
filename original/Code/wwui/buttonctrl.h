@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __BUTTON_CTRL_H
 #define __BUTTON_CTRL_H

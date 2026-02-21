@@ -1,7 +1,6 @@
 #include "always.h"
 #include <Windows.H>
 #include "WWAudio.H"
-#include "WWDebug.H"
 #include "Utils.H"
 #include "RealCRC.H"
 #include "SoundBuffer.H"
@@ -17,8 +16,6 @@
 #include "LogicalSound.h"
 #include "LogicalListener.h"
 #include "definitionclassids.h"
-#include "wwmemlog.h"
-#include "wwprofile.h"
 #include "Ini.h"
 
 
@@ -279,7 +276,6 @@ WWAudioClass::Open_2D_Device (LPWAVEFORMAT format)
 		 (m_Driver2D->emulated_ds == TRUE)) {
 		::AIL_waveOutClose (m_Driver2D);
 		success = 2;
-		WWDEBUG_SAY (("WWAudio: Detected 2D DirectSound emulation, switching to WaveOut.\r\n"));
    }
 
 	// If we couldn't open the direct sound device, then use the
@@ -301,7 +297,6 @@ WWAudioClass::Open_2D_Device (LPWAVEFORMAT format)
 		ReAssign_2D_Handles ();
 	} else {
 		Close_2D_Device ();
-		WWDEBUG_SAY (("WWAudio: Error initializing 2D device.\r\n"));
 	}
 
 	// Return the opened device type
@@ -426,7 +421,6 @@ WWAudioClass::Close_3D_Device (void)
 SoundBufferClass *
 WWAudioClass::Get_Sound_Buffer (const char *filename, bool is_3d)
 {
-	WWPROFILE ("Get_Sound_Buffer");
 
 	//
 	// Try to find the buffer in our cache, otherwise create a new buffer.
@@ -439,7 +433,6 @@ WWAudioClass::Get_Sound_Buffer (const char *filename, bool is_3d)
 		} else {
 			static int count = 0;
 			if ( ++count < 10 ) {
-				WWDEBUG_SAY(( "Sound \"%s\" not found\r\n", filename ));
 			}
 		}
 		Return_File (file);
@@ -457,7 +450,6 @@ WWAudioClass::Get_Sound_Buffer (const char *filename, bool is_3d)
 SoundBufferClass *
 WWAudioClass::Get_Sound_Buffer (FileClass &file, const char *string_id, bool is_3d)
 {
-	WWMEMLOG(MEM_SOUND);
 
 	//
 	// Try to find the buffer in our cache, otherwise create a new buffer.
@@ -479,12 +471,10 @@ WWAudioClass::Get_Sound_Buffer (FileClass &file, const char *string_id, bool is_
 SoundBufferClass *
 WWAudioClass::Find_Cached_Buffer (const char *string_id)
 {
-	WWPROFILE ("Find_Cached_Buffer");
 
 	SoundBufferClass *sound_buffer = NULL;
 
 	// Param OK?
-	WWASSERT (string_id != NULL);
 	if (string_id != NULL) {
 
 		//
@@ -557,7 +547,6 @@ WWAudioClass::Free_Cache_Space (int bytes)
 
 	// Make sure to recompute out current cache size
 	m_CurrentCacheSize -= bytes_freed;
-	WWASSERT (m_CurrentCacheSize >= 0);
 
 	// Return true if we freed enough bytes in the cache
 	return (bytes_freed >= bytes);
@@ -576,14 +565,11 @@ WWAudioClass::Cache_Buffer
 	const char *string_id
 )
 {
-	WWPROFILE ("Cache_Buffer");
 
 	// Assume failure
 	bool retval = false;
 
 	// Params OK?
-	WWASSERT (buffer != NULL);
-	WWASSERT (string_id != NULL);
 	if ((buffer != NULL) && (string_id != NULL)) {
 
 		//
@@ -620,7 +606,6 @@ WWAudioClass::Cache_Buffer
 	}
 
 	if (retval == false) {
-		WWDEBUG_SAY (("Unable to cache sound: %s.\r\n", string_id));
 	}
 
 	// Return the true/false result code
@@ -641,7 +626,6 @@ WWAudioClass::Create_Sound_Buffer
 	bool			is_3d
 )
 {
-	WWPROFILE ("Create_Sound_Buffer");
 
 	SoundBufferClass *sound_buffer = NULL;
 
@@ -666,7 +650,6 @@ WWAudioClass::Create_Sound_Buffer
 	//
 	bool success = sound_buffer->Load_From_File (file);
 	sound_buffer->Set_Filename (string_id);
-	WWASSERT (success);
 
 	// If we were successful in creating the sound buffer, then
 	// try to cache it as well, otherwise free the buffer and return NULL.
@@ -695,7 +678,6 @@ WWAudioClass::Create_Sound_Buffer
 	bool					is_3d
 )
 {
-	WWPROFILE ("Create_Sound_Buffer");
 
 	// Create a new sound buffer from the provided file
 	SoundBufferClass *sound_buffer = new SoundBufferClass;
@@ -706,7 +688,6 @@ WWAudioClass::Create_Sound_Buffer
 	//
 	bool success = sound_buffer->Load_From_Memory (file_image, bytes);
 	sound_buffer->Set_Filename (string_id);
-	WWASSERT (success);
 
 	// If we were successful in creating the sound buffer, then
 	// try to cache it as well, otherwise free the buffer and return NULL.
@@ -729,7 +710,6 @@ WWAudioClass::Create_Sound_Buffer
 AudibleSoundClass *
 WWAudioClass::Create_Sound_Effect (FileClass &file, const char *string_id)
 {
-	WWPROFILE ("Create_Sound_Effect");
 
 	// Create a new sound object
 	AudibleSoundClass *sound_obj = NEW_REF( AudibleSoundClass, () );
@@ -756,14 +736,12 @@ WWAudioClass::Create_Sound_Effect (FileClass &file, const char *string_id)
 AudibleSoundClass *
 WWAudioClass::Create_Sound_Effect (const char *filename)
 {
-	WWPROFILE ("Create_Sound_Effect");
 
 	// Assume failure
 	AudibleSoundClass *sound_obj = NULL;
 	if (Is_Disabled () == false) {
 
 		// Param OK?
-		WWASSERT (filename != NULL);
 		if (filename != NULL) {
 
 			// Create a file object and pass it onto the appropriate function
@@ -771,7 +749,6 @@ WWAudioClass::Create_Sound_Effect (const char *filename)
 			if (file && file->Is_Available()) {
 				sound_obj = Create_Sound_Effect (*file, filename);
 			} else {
-				WWDEBUG_SAY(( "Sound %s not found\r\n", filename ));
 			}
 			Return_File (file);
 
@@ -796,7 +773,6 @@ WWAudioClass::Create_Sound_Effect
 	unsigned long	bytes
 )
 {
-	WWPROFILE ("Create_Sound_Effect");
 
 	// Create a new sound object
 	AudibleSoundClass *sound_obj = NEW_REF( AudibleSoundClass, () );
@@ -826,7 +802,6 @@ WWAudioClass::Create_Sound_Effect
 Sound3DClass *
 WWAudioClass::Create_3D_Sound (FileClass &file, const char *string_id, int classid_hint)
 {
-	WWPROFILE ("Create_3D_Sound (FileClass)");
 
 	Sound3DClass *sound_obj = NULL;
 	if (Is_Disabled () == false) {
@@ -868,15 +843,12 @@ WWAudioClass::Create_3D_Sound
 	int				classid_hint
 )
 {
-	WWPROFILE ("Create_3D_Sound (filename)");
-	WWMEMLOG(MEM_SOUND);
 
 	// Assume failure
 	Sound3DClass *sound_obj = NULL;
 	if (Is_Disabled () == false) {
 
 		// Param OK?
-		WWASSERT (filename != NULL);
 		if (filename != NULL) {
 
 			// Try to find the buffer in our cache, otherwise create a new buffer.
@@ -897,7 +869,6 @@ WWAudioClass::Create_3D_Sound
 			} else {
 				static int count = 0;
 				if ( ++count < 10 ) {
-					WWDEBUG_SAY(( "Sound File not Found \"%s\"\r\n", filename ));
 				}
 			}
 
@@ -924,7 +895,6 @@ WWAudioClass::Create_3D_Sound
 	int					classid_hint
 )
 {
-	WWPROFILE ("Create_3D_Sound (Raw)");
 
 	Sound3DClass *sound_obj = NULL;
 	if (Is_Disabled () == false) {
@@ -973,7 +943,6 @@ WWAudioClass::Create_Sound
 	int				classid_hint
 )
 {
-	WWPROFILE ("Create_Sound");
 	AudibleSoundClass *sound = NULL;
 
 	//
@@ -985,7 +954,6 @@ WWAudioClass::Create_Sound
 		//
 		//	Make sure this is really a sound definition
 		//
-		WWASSERT (definition->Get_Class_ID () == CLASSID_SOUND);
 		if (definition->Get_Class_ID () == CLASSID_SOUND) {
 			AudibleSoundDefinitionClass *sound_def = reinterpret_cast<AudibleSoundDefinitionClass *> (definition);
 
@@ -1017,7 +985,6 @@ WWAudioClass::Create_Sound
 	int				classid_hint
 )
 {
-	WWPROFILE ("Create_Sound");
 	AudibleSoundClass *sound = NULL;
 
 	//
@@ -1029,7 +996,6 @@ WWAudioClass::Create_Sound
 		//
 		//	Make sure this is really a sound definition
 		//
-		WWASSERT (definition->Get_Class_ID () == CLASSID_SOUND);
 		if (definition->Get_Class_ID () == CLASSID_SOUND) {
 			AudibleSoundDefinitionClass *sound_def = reinterpret_cast<AudibleSoundDefinitionClass *> (definition);
 
@@ -1061,7 +1027,6 @@ WWAudioClass::Create_Continuous_Sound
 	int				classid_hint
 )
 {
-	WWPROFILE ("Create_Continuous_Sound");
 
 	//
 	//	Create an instance of the sound and play it
@@ -1070,7 +1035,6 @@ WWAudioClass::Create_Continuous_Sound
 	if (sound != NULL) {
 
 		if (sound->Get_Loop_Count () != INFINITE_LOOPS) {
-			WWDEBUG_SAY (("Audio Error:  Creating a continuous sound with a finite loop count!\r\n"));
 		}
 	}
 
@@ -1093,7 +1057,6 @@ WWAudioClass::Create_Instant_Sound
 	int					classid_hint
 )
 {
-	WWPROFILE ("Create_Instant_Sound");
 
 	int sound_id = 0;
 
@@ -1104,7 +1067,6 @@ WWAudioClass::Create_Instant_Sound
 	if (sound != NULL) {
 
 		if (sound->Get_Loop_Count () == INFINITE_LOOPS) {
-			WWDEBUG_SAY (("Audio Error:  Creating an instant sound %s with an infinite loop count!\r\n",sound->Get_Definition()->Get_Name()));
 		}
 
 		sound_id = sound->Get_ID ();
@@ -1131,7 +1093,6 @@ WWAudioClass::Create_Continuous_Sound
 	int				classid_hint
 )
 {
-	WWPROFILE ("Create_Continuous_Sound");
 
 	//
 	//	Create an instance of the sound and play it
@@ -1140,7 +1101,6 @@ WWAudioClass::Create_Continuous_Sound
 	if (sound != NULL) {
 
 		if (sound->Get_Loop_Count () != INFINITE_LOOPS) {
-			WWDEBUG_SAY (("Audio Error:  Creating a continuous sound with a finite loop count!\r\n"));
 		}
 
 	}
@@ -1164,7 +1124,6 @@ WWAudioClass::Create_Instant_Sound
 	int					classid_hint
 )
 {
-	WWPROFILE ("Create_Instant_Sound");
 	int sound_id = 0;
 
 	//
@@ -1174,7 +1133,6 @@ WWAudioClass::Create_Instant_Sound
 	if (sound != NULL) {
 
 		if (sound->Get_Loop_Count () == INFINITE_LOOPS) {
-			WWDEBUG_SAY (("Audio Error:  Creating an instant sound %s with an infinite loop count!\r\n",sound->Get_Definition()->Get_Name()));
 		}
 
 		sound_id = sound->Get_ID ();
@@ -1249,7 +1207,6 @@ WWAudioClass::Free_Completed_Sounds (void)
 		//
 		for (int index = 0; index < m_CompletedSounds.Count (); index ++) {
 			AudibleSoundClass *sound_obj = m_CompletedSounds[index];
-         WWASSERT(sound_obj != NULL); //TSS 05/24/99
 
 			//
 			//	Be careful not to remove the sound from the playlist unless
@@ -1303,7 +1260,6 @@ WWAudioClass::Get_Playlist_Entry (int index) const
 	AudibleSoundClass *sound_obj = NULL;
 
 	// Params OK?
-	WWASSERT (index >= 0 && index < m_Playlist[m_CurrPage].Count ());
 	if ((index >= 0) && (index < m_Playlist[m_CurrPage].Count ())) {
 		m_Playlist[m_CurrPage][index]->Add_Ref ();
 		m_Playlist[m_CurrPage][index];
@@ -1324,7 +1280,6 @@ WWAudioClass::Add_To_Playlist (AudibleSoundClass *sound)
 {
 	bool retval = false;
 
-	WWASSERT (sound != NULL);
 	if (sound != NULL) {
 
 		//
@@ -1358,7 +1313,6 @@ WWAudioClass::Remove_From_Playlist (AudibleSoundClass *sound_obj)
 {
 	bool retval = false;
 
-	WWASSERT (sound_obj != NULL);
 	if (sound_obj != NULL) {
 
 		//
@@ -1765,8 +1719,6 @@ WWAudioClass::Build_3D_Driver_List (void)
 			::AIL_close_3D_provider (provider);
 		} else {
 			char *error_info = ::AIL_last_error ();
-			WWDEBUG_SAY (("WWAudio: Unable to open %s.\r\n", name));
-			WWDEBUG_SAY (("WWAudio: Reason %s.\r\n", error_info));
 		}
 	}
 
@@ -1927,7 +1879,6 @@ WWAudioClass::Select_3D_Device (int index)
 	//
 	if ((index >= 0) && (index < m_Driver3DList.Count ())) {
 		Select_3D_Device (m_Driver3DList[index]->name, m_Driver3DList[index]->driver);
-		WWDEBUG_SAY (("WWAudio: Selecting 3D sound device: %s.\r\n", m_Driver3DList[index]->name));
 		retval = true;
 	}
 
@@ -2358,7 +2309,6 @@ WWAudioClass::Is_Disabled (void) const
 		if (registry.Is_Valid ()) {
 			if (registry.Get_Int ("Disabled", 0) == 1) {
 				_disabled = true;
-				WWDEBUG_SAY (("WWAudio: Audio system disabled in registry.\r\n"));
 			}
 		}
 	}
@@ -2375,7 +2325,6 @@ WWAudioClass::Is_Disabled (void) const
 void
 WWAudioClass::Initialize (const char *registry_subkey_name)
 {
-	WWMEMLOG(MEM_SOUND);
 
 	if (Is_Disabled () == false) {
 
@@ -2933,7 +2882,6 @@ WWAudioClass::Get_Logical_Type (int index, StringClass &name)
 {
 	int type_id = 0;
 
-	WWASSERT (index >= 0 && index < m_LogicalTypes.Count ());
 	if (index >= 0 && index < m_LogicalTypes.Count ()) {
 		type_id	= m_LogicalTypes[index].id;
 		name		= m_LogicalTypes[index].display_name;

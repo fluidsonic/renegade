@@ -2,7 +2,6 @@
 #include "pathsolve.h"
 #include "chunkio.h"
 #include "win.h"
-#include "wwmemlog.h"
 #include "systimer.h"
 
 
@@ -133,7 +132,6 @@ PathMgrClass::Allocate_Objects (void)
 PathSolveClass *
 PathMgrClass::Request_Path_Object (void)
 {
-	WWMEMLOG(MEM_PATHFIND);
 	PathSolveClass *path_object = NULL;
 
 	int avail_count = AvailablePathList.Count ();
@@ -176,21 +174,18 @@ PathMgrClass::Request_Path_Object (void)
 void
 PathMgrClass::Return_Path_Object (PathSolveClass *path)
 {
-	WWASSERT (path != NULL);
 	if (path != NULL) {
 
 		//
 		//	Make sure the object doesn't already exist in our list
 		//
 		int index = AvailablePathList.ID (path);
-		WWASSERT (index == -1);
 		if (index == -1) {
 
 			//
 			//	Find out where the object exists in the used list
 			//
 			int used_index = UsedPathList.ID (path);
-			WWASSERT (used_index != -1);
 			if (used_index != -1) {
 
 				//
@@ -300,7 +295,6 @@ PathMgrClass::Resolve_Paths (const Vector3 &camera_pos, uint32 milliseconds)
 	__int64 start_time	= Get_Time ();
 	__int64 end_time		= start_time + (((__int64)milliseconds) * TicksPerMilliSec);
 
-	WWMEMLOG(MEM_PATHFIND);
 
 	//
 	//	Keep processing path's until we've used up our timeslice

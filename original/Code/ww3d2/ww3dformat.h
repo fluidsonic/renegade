@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef WW3DFORMAT_H
 #define WW3DFORMAT_H

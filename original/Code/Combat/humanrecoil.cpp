@@ -1,6 +1,5 @@
 #include "humanrecoil.h"
 #include "vector3.h"
-#include "wwdebug.h"
 #include "rendobj.h"
 #include "htree.h"
 #include <string.h>
@@ -55,7 +54,6 @@ HumanRecoilClass::HumanRecoilClass(void)
 
 void HumanRecoilClass::Capture_Bones(RenderObjClass * model)
 {
-	WWASSERT(model != NULL);
 	if (IsInitted == false) {
 		Initialize(model);
 	}
@@ -66,7 +64,6 @@ void HumanRecoilClass::Capture_Bones(RenderObjClass * model)
 
 void HumanRecoilClass::Apply_Recoil(const Matrix3D & recoil_tm,RenderObjClass * model,float scale)
 {
-	WWASSERT(model != NULL);
 	if (IsInitted == false) {
 		Initialize(model);
 	}
@@ -83,7 +80,6 @@ void HumanRecoilClass::Apply_Recoil(const Matrix3D & recoil_tm,RenderObjClass * 
 
 void HumanRecoilClass::Release_Bones(RenderObjClass * model)
 {
-	WWASSERT(model != NULL);
 	if (IsInitted == false) {
 		Initialize(model);
 	}

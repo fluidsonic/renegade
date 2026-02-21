@@ -6,18 +6,12 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 #include "lightexclude.h"
-#include "wwhack.h"
 #include "vistable.h"
-
-
-DECLARE_FORCE_LINK(lightphys);
-
 
 /*
 ** Declare a PersistFactory for LightPhysClasses
 */
 SimplePersistFactoryClass<LightPhysClass,PHYSICS_CHUNKID_LIGHTPHYS>	_LightPhysFactory;
-
 
 /*
 ** Chunk ID's used by LightPhysClass
@@ -30,7 +24,6 @@ enum
 	LIGHTPHYS_VARIABLE_VISSECTORID	= 0x00,
 	LIGHTPHYS_VARIABLE_GROUPID,
 };
-
 
 LightPhysClass::LightPhysClass(bool auto_allocate_light) :
 	VisSectorID(0xFFFFFFFF),
@@ -62,7 +55,6 @@ int LightPhysClass::Is_Vis_Object_Visible(int vis_object_id)
 	
 	return 1;
 }
-
 
 const PersistFactoryClass & LightPhysClass::Get_Factory (void) const
 {
@@ -103,7 +95,6 @@ bool LightPhysClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();

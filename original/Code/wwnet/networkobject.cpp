@@ -2,7 +2,6 @@
 #include "networkobjectmgr.h"
 #include "wwmath.h"
 #include "vector3.h"
-#include "wwprofile.h"
 #include "systimer.h"
 
 #define CLIENT_SIDE_UPDATE_FREQUENCY_SAMPLE_PERIOD (1000 * 10)
@@ -30,9 +29,6 @@ NetworkObjectClass::NetworkObjectClass (void)	:
 	ClientsideUpdateFrequencySampleStartTime(TIMEGETTIME()),
 	ClientsideUpdateFrequencySampleCount(0),
 	ClientsideUpdateRate(0),
-#ifdef WWDEBUG
-	CreatedByPacketID(0),
-#endif //WWDEBUG
 	LastObjectIdIDamaged(-1),
 	LastObjectIdIGotDamagedBy(-1)
 
@@ -44,7 +40,7 @@ NetworkObjectClass::NetworkObjectClass (void)	:
 		// imports, but will be corrected immediately with an explicit Set_Network_ID call.
 		//
 		int new_id = NetworkObjectMgrClass::Get_New_Dynamic_ID();
-		//WWDEBUG_SAY(("New network id = %d\n", new_id));//TSS2001
+		////TSS2001
 		Set_Network_ID(new_id);
 	}
 
@@ -85,7 +81,6 @@ extern bool SensibleUpdates;
 void
 NetworkObjectClass::Set_Network_ID (int id)
 {
-	WWASSERT(id > 0);
 
 	//
 	//	Remove the object from the manager, change it's ID,
@@ -238,7 +233,6 @@ NetworkObjectClass::Set_Delete_Pending (void)
 void
 NetworkObjectClass::Reset_Client_Hint_Count(int client_id)
 {
-	WWASSERT(client_id >= 0 && client_id < MAX_CLIENT_COUNT);
 
 	UpdateInfo[client_id].ClientHintCount = 0;
 }
@@ -252,7 +246,6 @@ NetworkObjectClass::Reset_Client_Hint_Count(int client_id)
 void
 NetworkObjectClass::Increment_Client_Hint_Count(int client_id)
 {
-	WWASSERT(client_id >= 0 && client_id < MAX_CLIENT_COUNT);
 
 	if (UpdateInfo[client_id].ClientHintCount < 255) {
 		UpdateInfo[client_id].ClientHintCount++;
@@ -285,7 +278,6 @@ NetworkObjectClass::Hint_To_All_Clients(void)
 BYTE
 NetworkObjectClass::Get_Client_Hint_Count(int client_id)
 {
-	WWASSERT(client_id >= 0 && client_id < MAX_CLIENT_COUNT);
 
 	return UpdateInfo[client_id].ClientHintCount;
 }
@@ -299,7 +291,6 @@ NetworkObjectClass::Get_Client_Hint_Count(int client_id)
 bool
 NetworkObjectClass::Belongs_To_Client (int client_id)
 {
-	WWASSERT(client_id > 0);
 
 	int id_min = NETID_CLIENT_OBJECT_MIN + (client_id - 1) * 100000;
 	int id_max = id_min + 100000 - 1;
@@ -322,7 +313,6 @@ unsigned long
 NetworkObjectClass::Get_Last_Update_Time(int client_id)
 {
 	// Is this assert right? ST - 10/16/2001 2:44PM
-	WWASSERT(client_id > 0 && client_id <= MAX_CLIENT_COUNT);
 	return(UpdateInfo[client_id].LastUpdateTime);
 }
 
@@ -340,7 +330,6 @@ unsigned short
 NetworkObjectClass::Get_Update_Rate(int client_id)
 {
 	// Is this assert right? ST - 10/16/2001 2:44PM
-	WWASSERT(client_id > 0 && client_id <= MAX_CLIENT_COUNT);
 	return(UpdateInfo[client_id].UpdateRate);
 }
 
@@ -358,7 +347,6 @@ void
 NetworkObjectClass::Set_Last_Update_Time(int client_id, unsigned long time)
 {
 	// Is this assert right? ST - 10/16/2001 2:44PM
-	WWASSERT(client_id > 0 && client_id <= MAX_CLIENT_COUNT);
 	UpdateInfo[client_id].LastUpdateTime = time;
 }
 
@@ -376,7 +364,6 @@ void
 NetworkObjectClass::Set_Update_Rate(int client_id, unsigned short rate)
 {
 	// Is this assert right? ST - 10/16/2001 2:44PM
-	WWASSERT(client_id > 0 && client_id <= MAX_CLIENT_COUNT);
 	UpdateInfo[client_id].UpdateRate = rate;
 }
 
@@ -427,7 +414,6 @@ NetworkObjectClass::Clear_Object_Dirty_Bits (int client_id)
 void
 NetworkObjectClass::Set_Random_Float (float random_float)
 {
-	WWASSERT(random_float >= 0 && random_float <= 1);
 
 	RandomFloat = random_float;
 }
@@ -512,7 +498,6 @@ NetworkObjectClass::Compute_Object_Priority (int client_id, const Vector3 &clien
 void
 NetworkObjectClass::Set_Cached_Priority (float priority)
 {
-	WWASSERT(priority >= 0 && priority <= 1);
 
 	CachedPriority = priority;
 }
@@ -617,9 +602,3 @@ int NetworkObjectClass::Get_Clientside_Update_Frequency(void)
 }
 
 
-#ifdef WWDEBUG
-void NetworkObjectClass::Set_Created_By_Packet_ID (int id)
-{
-	CreatedByPacketID = id;
-}
-#endif //WWDEBUG

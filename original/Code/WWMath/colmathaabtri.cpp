@@ -1,7 +1,6 @@
 #include "colmath.h"
 #include "aabox.h"
 #include "tri.h" 
-#include "wwdebug.h"
 
 
 /*
@@ -508,7 +507,6 @@ static inline void aabtri_compute_contact_normal
 			break;
 	}
 
-	WWASSERT(set_norm.Length2() > 0.0f);
 
 #else
 	set_norm = *CollisionContext.N;
@@ -521,12 +519,6 @@ static inline void aabtri_compute_contact_normal
 
 inline void VERIFY_CROSS(const Vector3 & a, const Vector3 & b,const Vector3 & cross)
 {
-#ifdef WWDEBUG
-	Vector3 tmp_cross;
-	Vector3::Cross_Product(a,b,&tmp_cross);
-	Vector3 diff = cross - tmp_cross;
-	WWASSERT(WWMath::Fabs(diff.Length()) < 0.0001f);
-#endif
 }
 
 /***********************************************************************************************
@@ -785,7 +777,6 @@ exit:
 				(Vector3::Dot_Product(tmp_norm,move) < Vector3::Dot_Product(result->Normal,move)))
 		{
 			result->Normal = tmp_norm;
-			WWASSERT(WWMath::Fabs(result->Normal.Length() - 1.0f) < WWMATH_EPSILON);
 		}
 				
 		result->Fraction = CollisionContext.MaxFrac;

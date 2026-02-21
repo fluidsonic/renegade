@@ -7,9 +7,7 @@
 #include <malloc.h>
 
 #include "netutil.h"
-#include "wwmemlog.h"
 #include "crc.h"
-#include "wwprofile.h"
 #include "connect.h"
 
 /*
@@ -173,7 +171,6 @@ PacketManagerClass::~PacketManagerClass(void)
 void PacketManagerClass::Set_Is_Server(bool is_server)
 {
 	CriticalSectionClass::LockClass lock(CriticalSection);
-	WWMEMLOG(MEM_NETWORK);
 	bool reset = false;
 
 	if (is_server && NumSendBuffers != PACKET_MANAGER_BUFFERS_WHEN_SERVER) {
@@ -392,22 +389,18 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
 int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsigned char *reconstructed_packet, unsigned char *delta_packet, int base_packet_size, int &delta_size)
 {
 	if (base_packet == NULL) {
-		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad base packet\n"));
 		return(0);
 	}
 
 	if (reconstructed_packet == NULL) {
-		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad reconstructed packet\n"));
 		return(0);
 	}
 
 	if (delta_packet == NULL) {
-		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad delta packet\n"));
 		return(0);
 	}
 
 	if (base_packet_size > 500) {
-		WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad base packet size\n"));
 		return(0);
 	}
 
@@ -446,7 +439,6 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 //#endif //WWDEBUG
 			Get_Bit(read_delta_ptr, read_bit_pos);
 			if (bitty != 0) {
-				WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Reconstruct_From_Delta -- Bad bitty\n"));
 				return(0);
 			}
 			pm_assert(bitty == 0);
@@ -571,11 +563,9 @@ bool PacketManagerClass::Take_Packet(unsigned char *packet, int packet_len, unsi
 				memcpy(&SendBuffers[index].IPAddress[0], dest_ip, 4);
 				SendBuffers[index].PacketSendSocket = source_socket;
 				NumPackets++;
-				//WWDEBUG_SAY(("NumPackets = %d (added packet at index %d)\n", NumPackets, index));
+				//
 				if (NumPackets > NumSendBuffers - 4) {
-					WWDEBUG_SAY(("***WARNING*** Outgoing packet buffer full - NumPackets = %d\n", NumPackets, index));
 					Flush(true);
-					WWDEBUG_SAY(("NumPackets = %d after flush\n", NumPackets, index));
 				}
 				Register_Packet_Out(dest_ip, dest_port, 0, packet_len + UDP_HEADER_SIZE);
 				return(true);
@@ -607,7 +597,6 @@ bool PacketManagerClass::Take_Packet(unsigned char *packet, int packet_len, unsi
 void PacketManagerClass::Flush(bool forced)
 {
 {
-WWPROFILE("PMgr Flush");
 
 	CriticalSectionClass::LockClass lock(CriticalSection);
 
@@ -632,7 +621,7 @@ WWPROFILE("PMgr Flush");
 	}
 	LastSendTime = time;
 
-	//WWDEBUG_SAY(("NumPackets = %d\n", NumPackets));
+	//
 
 	/*
 	** Clear the array that indicates whether a packet is ready to be sent.
@@ -659,7 +648,7 @@ WWPROFILE("PMgr Flush");
 				base_index = index;
 				length = SendBuffers[index].PacketLength;
 				base_packet = (unsigned char *) SendBuffers[index].PacketBuffer;
-				//WWDEBUG_SAY(("Found base packet %d\n", base_index));
+				//
 
 				socket = SendBuffers[index].PacketSendSocket;
 				header->NumPackets = 1;
@@ -670,7 +659,7 @@ WWPROFILE("PMgr Flush");
 				memcpy(next_packet_pos, base_packet, length);
 				next_packet_pos += length;
 				new_length = length + sizeof(*header);
-				//WWDEBUG_SAY(("Added base packet %d to metapacket - %d (+2) bytes\n", index, length));
+				//
 				index++;
 				if (index >= NumSendBuffers) {
 					index = 0;
@@ -710,7 +699,7 @@ WWPROFILE("PMgr Flush");
 						*/
 						if (SendBuffers[base_index].Port == SendBuffers[index].Port && (*(unsigned long*)(&SendBuffers[index].IPAddress[0])) == (*(unsigned long*)(&SendBuffers[base_index].IPAddress[0]))) {
 
-							//WWDEBUG_SAY(("Found secondary packet %d\n", index));
+							//
 
 							/*
 							** See if using a delta of the two packets would be smaller than including the whole packet.
@@ -723,7 +712,7 @@ WWPROFILE("PMgr Flush");
 								memcpy(next_packet_pos, DeltaPacket, bytes);
 								next_packet_pos += bytes;
 								new_length += bytes;
-								//WWDEBUG_SAY(("Added delta packet %d to metapacket - %d bytes\n", index, bytes));
+								//
 								header->NumPackets++;
 								pm_assert(header->NumPackets > 0 && header->NumPackets <= PACKET_MANAGER_MAX_PACKETS);
 							} else {
@@ -740,7 +729,7 @@ WWPROFILE("PMgr Flush");
 								memcpy(next_packet_pos, SendBuffers[index].PacketBuffer, length);
 								next_packet_pos += length;
 								new_length += length;
-								//WWDEBUG_SAY(("Added secondary packet %d to metapacket - %d (+1) bytes\n", index, length));
+								//
 								header->NumPackets++;
 								pm_assert(header->NumPackets > 0 && header->NumPackets <= PACKET_MANAGER_MAX_PACKETS);
 							}
@@ -750,7 +739,7 @@ WWPROFILE("PMgr Flush");
 							*/
 							SendBuffers[index].PacketLength = 0;
 							NumPackets--;
-							//WWDEBUG_SAY(("NumPackets = %d (discarding secondary packet index %d)\n", NumPackets, index));
+							//
 
 							pm_assert(header->NumPackets > 0 && header->NumPackets <= PACKET_MANAGER_MAX_PACKETS);
 
@@ -785,7 +774,7 @@ WWPROFILE("PMgr Flush");
 			SendBuffers[base_index].PacketSendLength = new_length;
 			SendBuffers[base_index].PacketLength = 0;
 			NumPackets--;
-			//WWDEBUG_SAY(("NumPackets = %d (discarding base packet %d)\n", NumPackets, base_index));
+			//
 			pm_assert(NumPackets >= 0);
 		}
 		pm_assert(header->NumPackets > 0 && header->NumPackets <= PACKET_MANAGER_MAX_PACKETS);
@@ -807,9 +796,6 @@ WWPROFILE("PMgr Flush");
 				/*
 				** See if we can find another packet for the same destination that will fit into the same buffer.
 				*/
-#ifdef WWDEBUG
-				int num_sub_packets = 1;
-#endif //WWDEBUG
 				for (int j=i+1 ; j<NumSendBuffers ; j++) {
 					if (SendBuffers[j].PacketReady && SendBuffers[j].PacketSendSocket == socket) {
 						if (SendBuffers[i].PacketSendLength + SendBuffers[j].PacketSendLength < PACKET_MANAGER_MTU) {
@@ -821,11 +807,8 @@ WWPROFILE("PMgr Flush");
 								current_len += SendBuffers[j].PacketSendLength;
 								SendBuffers[i].PacketSendLength = current_len;
 								SendBuffers[j].PacketReady = false;
-#ifdef WWDEBUG
-								num_sub_packets++;
-#endif //WWDEBUG
-								//WWDEBUG_SAY(("Added packet %d with %d sub packets to packet %d\n", j, ((PacketPackHeaderStruct*)&PacketBuffers[j][0])->NumPackets, i));
-								//WWDEBUG_SAY(("Packet %d has %d packets total\n", i, num_sub_packets));
+								//
+								//
 							}
 						}
 					}
@@ -845,14 +828,6 @@ WWPROFILE("PMgr Flush");
 			addr.sin_port = SendBuffers[i].Port;
 			memcpy (&addr.sin_addr.s_addr, &SendBuffers[i].IPAddress[0], 4);
 			socket = SendBuffers[i].PacketSendSocket;
-#ifdef WWDEBUG
-			int debug_num_packets = (int)(((PacketPackHeaderStruct*)SendBuffers[i].PacketBuffer)->NumPackets);
-			int debug_packet_size = (int)(((PacketPackHeaderStruct*)SendBuffers[i].PacketBuffer)->PacketSize);
-			pm_assert(debug_num_packets > 0);
-			pm_assert(debug_packet_size < PACKET_MANAGER_MTU);
-			pm_assert(SendBuffers[i].PacketSendLength < PACKET_MANAGER_MTU);
-			//WWDEBUG_SAY(("Sending packet %d (%d bytes) to %s. Packet has %d packets of %d bytes each\n", i, PacketSendLength[i], Addr_As_String(&addr), debug_num_packets, debug_packet_size));
-#endif //WWDEBUG
 
 
 #ifdef WRAPPER_CRC
@@ -862,17 +837,7 @@ WWPROFILE("PMgr Flush");
 			/*
 			** Reverse byte order to prevent the demo from having the same CRC as the game.
 			*/
-#ifdef _MSC_VER
-			_asm {
-				push	eax;
-				mov	eax,crc;
-				bswap	eax;
-				mov	crc,eax;
-				pop	eax;
-			};
-#else
 			crc = __builtin_bswap32((unsigned int)crc);
-#endif
 #endif //(0)
 			char *crc_and_buffer = (char*)_alloca(SendBuffers[i].PacketSendLength + sizeof(crc));
 			*((unsigned long*) crc_and_buffer) = crc;
@@ -893,14 +858,12 @@ WWPROFILE("PMgr Flush");
 				if (WSAGetLastError() != WSAEWOULDBLOCK) {
 					int error_code = 0;
 					error_code = WSAGetLastError();// avoid release build compiler warning
-					WWDEBUG_SAY(("PacketManagerClass - sendto returned error code %d - %s\n", error_code, cNetUtil::Winsock_Error_Text(error_code)));
 					Clear_Socket_Error(socket);
 				} else {
 
 					/*
 					** No more room for outgoing packets. Unfortunately, this means we lose the lot.
 					*/
-					WWDEBUG_SAY(("PacketManagerClass - sendto returned WSAEWOULDBLOCK\n"));
 					Sleep(0);
 					ErrorState = STATE_WS_BUFFERS_FULL;
 				}
@@ -975,7 +938,6 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	bool more_packets = header->MorePackets;
 
 	if (num_packets < 1 || packet_size > PACKET_MANAGER_MTU) {
-		WWDEBUG_SAY(("PacketManager - Packet decode error. num_packets = %d\n, packet_size = %d\n", num_packets, packet_size));
 		return(false);
 	}
 	pm_assert(num_packets >= 1);
@@ -992,7 +954,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	memcpy(ReceiveIPAddress, ip_address, 4);
 	ReceivePort = port;
 	NumReceivePackets++;
-	//WWDEBUG_SAY(("Extracted base packet from metapacket - %d bytes\n", packet_size));
+	//
 
 	packet_ptr += packet_size;
 
@@ -1012,11 +974,9 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 //#endif //WWDEBUG
 				Reconstruct_From_Delta(&ReceiveBuffers[delta_base_index].ReceiveHoldingBuffer[0], &ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], (unsigned char *)delta_header, packet_size, delta_size);
 			if (bytes != packet_size) {
-				WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Break_Packet -- bytes !=  packet_size\n"));
 				return(false);
 			}
 			if (delta_size <= 0) {
-				WWDEBUG_SAY(("*** WARNING: MALFORMED PACKET - PacketManagerClass::Break_Packet -- delta_size <= 0\n"));
 				return(false);
 			}
 			pm_assert(bytes == packet_size);
@@ -1025,7 +985,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 			NumReceivePackets++;
 			packet_ptr += delta_size;
 			Register_Packet_In(ip_address, port, 0, packet_size + UDP_HEADER_SIZE);
-			//WWDEBUG_SAY(("Extracted delta packet from metapacket - %d bytes (delta size = %d)\n", bytes, delta_size));
+			//
 		} else {
 			/*
 			** Not a delta, just copy the whole thing.
@@ -1036,7 +996,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 			packet_ptr += packet_size;
 			NumReceivePackets++;
 			Register_Packet_In(ip_address, port, 0, packet_size + UDP_HEADER_SIZE);
-			//WWDEBUG_SAY(("Extracted secondary packet from metapacket - %d (+1) bytes\n", PacketLength));
+			//
 		}
 		if (NumReceivePackets >= PACKET_MANAGER_RECEIVE_BUFFERS) {
 			break;
@@ -1055,7 +1015,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	}
 
 	//if (NumReceivePackets > 20) {
-	//	WWDEBUG_SAY(("Sub packet broken into %d packets\n", NumReceivePackets));
+	//	
 	//}
 
 	return(true);
@@ -1084,7 +1044,6 @@ void PacketManagerClass::Clear_Socket_Error(SOCKET socket)
 
 	if (socket != INVALID_SOCKET) {
 		getsockopt (socket, SOL_SOCKET, SO_ERROR, (char*)&error_code, &length);
-		WWDEBUG_SAY(("Per socket error is %d - %s\n", error_code, cNetUtil::Winsock_Error_Text(error_code)));
 	}
 }
 
@@ -1111,7 +1070,6 @@ void PacketManagerClass::Clear_Socket_Error(SOCKET socket)
 int PacketManagerClass::Get_Packet(SOCKET socket, unsigned char *packet_buffer, int packet_buffer_size, unsigned char *ip_address, unsigned short &port)
 {
 {
-WWPROFILE("Pmgr Get");
 	CriticalSectionClass::LockClass lock(CriticalSection);
 
 	if (NumReceivePackets == 0) {
@@ -1135,21 +1093,9 @@ WWPROFILE("Pmgr Get");
 				/*
 				** Reverse byte order to prevent the demo from having the same CRC as the game.
 				*/
-#ifdef _MSC_VER
-				_asm {
-					push	eax;
-					mov	eax,crc;
-					bswap	eax;
-					mov	crc,eax;
-					pop	eax;
-				};
-#else
 				crc = __builtin_bswap32((unsigned int)crc);
-#endif
 #endif //(0)
 				if (crc != *((unsigned long*)packet_buffer)) {
-					WWDEBUG_SAY(("PMC::Get_Packet: Socket %d, received packet %d bytes long from %s\n", socket, bytes, Addr_As_String(&addr)));
-					WWDEBUG_SAY(("PMC::Get_Packet: *** PACKET WRAPPER CRC ERROR ***"));
 					NumReceivePackets = 0;
 				} else {
 					Register_Packet_In((unsigned char*) &addr.sin_addr.s_addr, addr.sin_port, bytes + UDP_HEADER_SIZE, 0);
@@ -1157,16 +1103,14 @@ WWPROFILE("Pmgr Get");
 					memmove(packet_buffer, packet_buffer + sizeof(crc), bytes);
 #endif //WRAPPER_CRC
 
-					//WWDEBUG_SAY(("PMC::Get_Packet: Socket %d, received packet %d bytes long from %s\n", socket, bytes, Addr_As_String(&addr)));
+					//
 					ReceiveSocket = socket;
-					//WWDEBUG_SAY(("Breaking packet %d bytes long from %s\n", bytes, Addr_As_String(&addr)));
+					//
 					bool broken = Break_Packet(packet_buffer, bytes, (unsigned char*) &addr.sin_addr.s_addr, addr.sin_port);
 					if (!broken) {
-						WWDEBUG_SAY(("Failed to break packet %d bytes long from %s\n", bytes, Addr_As_String(&addr)));
-						WWDEBUG_SAY(("Discarding %d suspect packets due to decode failure\n", NumReceivePackets));
 						NumReceivePackets = 0;
 					} else {
-						//WWDEBUG_SAY(("PMC::Get_Packet: Packet broken into %d packets\n", NumReceivePackets));
+						//
 					}
 					CurrentPacket = 0;
 #ifdef WRAPPER_CRC
@@ -1176,16 +1120,13 @@ WWPROFILE("Pmgr Get");
 				if (bytes == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK) {
 					int error_code = 0;
 					error_code = WSAGetLastError();// avoid release build compiler warning
-					WWDEBUG_SAY(("PacketManagerClass - recvfrom failed with error %d - %s\n", error_code, cNetUtil::Winsock_Error_Text(error_code)));
 					Clear_Socket_Error(socket);
 					if (error_code == WSAECONNRESET) {
-						WWDEBUG_SAY(("PacketManagerClass - WSAECONNRESET from address %s\n", Addr_As_String(&addr)));
 						memcpy(ip_address, &addr.sin_addr.s_addr, 4);
 						port = addr.sin_port;
 						return(-1);
 					}
 				} else {
-					WWDEBUG_SAY(("PacketManagerClass - recvfrom failed with error WSAEWOULDBLOCK\n", WSAGetLastError()));
 				}
 			}
 		}
@@ -1237,7 +1178,6 @@ WWPROFILE("Pmgr Get");
 void PacketManagerClass::Reset_Stats(void)
 {
 	CriticalSectionClass::LockClass lock(CriticalSection);
-	WWDEBUG_SAY(("PacketManagerClass Resetting stats\n"));
 	BandwidthList.Delete_All();
 	LastStatsUpdate = TIMEGETTIME();
 	ResetStatsIn = true;
@@ -1477,14 +1417,14 @@ void PacketManagerClass::Update_Stats(bool forced)
 		/*
 		** Just debug output.
 		*/
-		//WWDEBUG_SAY(("TotalUncompressedBandwidthOut = %d bits per second\n", TotalUncompressedBandwidthOut));
-		//WWDEBUG_SAY(("TotalCompressedBandwidthOut = %d bits per second\n", TotalCompressedBandwidthOut));
-		//WWDEBUG_SAY(("TotalUncompressedBandwidthIn = %d bits per second\n", TotalUncompressedBandwidthIn));
-		//WWDEBUG_SAY(("TotalCompressedBandwidthIn = %d bits per second\n", TotalCompressedBandwidthIn));
+		//
+		//
+		//
+		//
 		//unsigned long comp_out = 100 - ((100 * TotalCompressedBandwidthOut) / TotalUncompressedBandwidthOut);
 		//unsigned long comp_in = 100 - ((100 * TotalCompressedBandwidthIn) / TotalUncompressedBandwidthIn);
-		//WWDEBUG_SAY(("Compression out = %d percent\n", comp_out));
-		//WWDEBUG_SAY(("Compression in = %d percent\n", comp_in));
+		//
+		//
 	}
 }
 

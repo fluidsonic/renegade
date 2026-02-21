@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef DX8_WRAPPER_H
 #define DX8_WRAPPER_H
@@ -14,7 +11,6 @@
 #include "lightenvironment.h"
 #include "shader.h"
 #include "vector4.h"
-#include "cpudetect.h"
 #include "dx8caps.h"
 
 #include "texture.h"
@@ -76,17 +72,10 @@ WWINLINE void DX8_ErrorCode(unsigned res)
 	Log_DX8_ErrorCode(res);
 }
 
-#ifdef WWDEBUG
-#define DX8CALL_HRES(x,res) DX8_Assert(); res = DX8Wrapper::_Get_D3D_Device8()->x; DX8_ErrorCode(res); number_of_DX8_calls++;
-#define DX8CALL(x) DX8_Assert(); DX8_ErrorCode(DX8Wrapper::_Get_D3D_Device8()->x); number_of_DX8_calls++;
-#define DX8CALL_D3D(x) DX8_Assert(); DX8_ErrorCode(DX8Wrapper::_Get_D3D8()->x); number_of_DX8_calls++;
-#define DX8_THREAD_ASSERT() if (_DX8SingleThreaded) { WWASSERT_PRINT(DX8Wrapper::_Get_Main_Thread_ID()==ThreadClass::_Get_Current_Thread_ID(),"DX8Wrapper::DX8 calls must be called from the main thread!"); }
-#else
 #define DX8CALL_HRES(x,res) res = DX8Wrapper::_Get_D3D_Device8()->x; number_of_DX8_calls++;
 #define DX8CALL(x) DX8Wrapper::_Get_D3D_Device8()->x; number_of_DX8_calls++;
 #define DX8CALL_D3D(x) DX8Wrapper::_Get_D3D8()->x; number_of_DX8_calls++;
 #define DX8_THREAD_ASSERT() ;
-#endif
 
 struct RenderStateStruct
 {
@@ -359,7 +348,7 @@ public:
 	static IDirect3DDevice8* _Get_D3D_Device8() { return D3DDevice; }
 	static IDirect3D8* _Get_D3D8() { return D3DInterface; }
 
-	static const DX8Caps*	Get_Current_Caps() { WWASSERT(CurrentCaps); return CurrentCaps; }
+	static const DX8Caps*	Get_Current_Caps() { assert(CurrentCaps); return CurrentCaps; }
 
 	static bool Registry_Save_Render_Device( const char * sub_key );
 	static bool Registry_Load_Render_Device( const char * sub_key, bool resize_window );
@@ -426,7 +415,7 @@ protected:
 	static bool Registry_Load_Render_Device( const char * sub_key, char *device, int device_len, int &width, int &height, int &depth, int &windowed, int &texture_depth);
 	static bool Is_Windowed(void) { return IsWindowed; }
 
-	static void	Set_Texture_Bitdepth(int depth)	{ WWASSERT(depth==16 || depth==32); TextureBitDepth = depth; }
+	static void	Set_Texture_Bitdepth(int depth)	{ assert(depth==16 || depth==32); TextureBitDepth = depth; }
 	static int	Get_Texture_Bitdepth(void)			{ return TextureBitDepth; }
 
 	static void	Set_Swap_Interval(int swap);
@@ -581,7 +570,6 @@ WWINLINE void DX8Wrapper::Set_Fog(bool enable, const Vector3 &color, float start
 WWINLINE void DX8Wrapper::Set_DX8_Material(const D3DMATERIAL8* mat)
 {
 	DX8_RECORD_MATERIAL_CHANGE();
-	WWASSERT(mat);
 	SNAPSHOT_SAY(("DX8 - SetMaterial\n"));
 	DX8CALL(SetMaterial(mat));
 }
@@ -686,27 +674,11 @@ WWINLINE Vector4 DX8Wrapper::Convert_Color(unsigned color)
 #if 0
 WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector3& color, const float alpha)
 {
-	WWASSERT(color.X<=1.0f);
-	WWASSERT(color.Y<=1.0f);
-	WWASSERT(color.Z<=1.0f);
-	WWASSERT(alpha<=1.0f);
-	WWASSERT(color.X>=0.0f);
-	WWASSERT(color.Y>=0.0f);
-	WWASSERT(color.Z>=0.0f);
-	WWASSERT(alpha>=0.0f);
 
 	return D3DCOLOR_COLORVALUE(color.X,color.Y,color.Z,alpha);
 }
 WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector4& color)
 {
-	WWASSERT(color.X<=1.0f);
-	WWASSERT(color.Y<=1.0f);
-	WWASSERT(color.Z<=1.0f);
-	WWASSERT(color.W<=1.0f);
-	WWASSERT(color.X>=0.0f);
-	WWASSERT(color.Y>=0.0f);
-	WWASSERT(color.Z>=0.0f);
-	WWASSERT(color.W>=0.0f);
 
 	return D3DCOLOR_COLORVALUE(color.X,color.Y,color.Z,color.W);
 }
@@ -726,65 +698,11 @@ WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector3& color,float alpha
 
 	// Multiply r, g, b and a components (0.0,...,1.0) by 255 and convert to integer.
 	// such that 32 bit integer has AAAAAAAARRRRRRRRGGGGGGGGBBBBBBBB.
-#ifdef _MSC_VER
-	__asm
-	{
-		push	ebp
-		sub	esp,20
-
-		fwait
-		fstcw		[esp+16]
-		mov		eax,[esp+16]
-		mov		edi,eax
-		and		eax,~(1024|2048)
-		or			eax,(1024|2048)
-		sub		edi,eax
-		jz			skip
-		mov		[esp],eax
-		fldcw		[esp]
-skip:
-		mov	esi,dword ptr color
-		fld	dword ptr[scale]
-		fld	dword ptr[esi]
-		fld	dword ptr[esi+4]
-		fld	dword ptr[esi+8]
-		fld	dword ptr[alpha]
-		fld	st(4)
-		fmul	st(4),st
-		fmul	st(3),st
-		fmul	st(2),st
-		fmulp	st(1),st
-		fistp	dword ptr[esp+0]
-		fistp	dword ptr[esp+4]
-		fistp	dword ptr[esp+8]
-		fistp	dword ptr[esp+12]
-		mov	ebp,[esp]
-		mov	eax,[esp+4]
-		mov	edx,[esp+8]
-		mov	ebx,[esp+12]
-		shl	ebp,24
-		shl	ebx,16
-		shl	edx,8
-		or		eax,ebp
-		or		eax,ebx
-		or		eax,edx
-		fstp	st(0)
-		cmp	edi,0
-		je		not_changed
-		fwait
-		fldcw	[esp+16];
-not_changed:
-		add	esp,20
-		pop	ebp
-		mov	col,eax
-	}
-#else
 	// C++ fallback for non-MSVC (clang/GCC)
 	col = (((unsigned int)(alpha * scale + 0.5f)) << 24) |
 	      (((unsigned int)(color[0] * scale + 0.5f)) << 16) |
 	      (((unsigned int)(color[1] * scale + 0.5f)) << 8) |
 	       ((unsigned int)(color[2] * scale + 0.5f));
-#endif
 	return col;
 }
 
@@ -796,59 +714,10 @@ not_changed:
 
 WWINLINE void DX8Wrapper::Clamp_Color(Vector4& color)
 {
-	if (!CPUDetectClass::Has_CMOV_Instruction()) {
-		for (int i=0;i<4;++i) {
-			float f=(color[i]<0.0f) ? 0.0f : color[i];
-			color[i]=(f>1.0f) ? 1.0f : f;
-		}
-		return;
-	}
-
-#ifdef _MSC_VER
-	__asm
-	{
-		mov	esi,dword ptr color
-		mov edx,0x3f800000
-		mov edi,dword ptr[esi]
-		mov ebx,edi
-		sar edi,31
-		not edi
-		and edi,ebx
-		cmp edi,edx
-		cmovnb edi,edx
-		mov dword ptr[esi],edi
-		mov edi,dword ptr[esi+4]
-		mov ebx,edi
-		sar edi,31
-		not edi
-		and edi,ebx
-		cmp edi,edx
-		cmovnb edi,edx
-		mov dword ptr[esi+4],edi
-		mov edi,dword ptr[esi+8]
-		mov ebx,edi
-		sar edi,31
-		not edi
-		and edi,ebx
-		cmp edi,edx
-		cmovnb edi,edx
-		mov dword ptr[esi+8],edi
-		mov edi,dword ptr[esi+12]
-		mov ebx,edi
-		sar edi,31
-		not edi
-		and edi,ebx
-		cmp edi,edx
-		cmovnb edi,edx
-		mov dword ptr[esi+12],edi
-	}
-#else
-	// C++ fallback - clamp all 4 components
 	for (int i = 0; i < 4; ++i) {
 		float f = color[i] < 0.0f ? 0.0f : color[i];
 		color[i] = f > 1.0f ? 1.0f : f;
 	}
-#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -891,7 +760,6 @@ WWINLINE void DX8Wrapper::Get_Shader(ShaderClass& shader)
 
 WWINLINE void DX8Wrapper::Set_Texture(unsigned stage,TextureClass* texture)
 {
-	WWASSERT(stage<MAX_TEXTURE_STAGES);
 	if (texture==render_state.Textures[stage]) return;
 	REF_PTR_SET(render_state.Textures[stage],texture);
 	render_state_changed|=(TEXTURE0_CHANGED<<stage);

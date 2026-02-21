@@ -7,7 +7,6 @@
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
 #include "weapons.h"
 #include "gameobjmanager.h"
 #include "assets.h"
@@ -15,14 +14,11 @@
 #include "explosion.h"
 #include "damage.h"
 #include "dynamicanimphys.h"
-#include "wwprofile.h"
 #include "apppackettypes.h"
-
 
 /*
 ** CinematicGameObjDef
 */
-DECLARE_FORCE_LINK( Cinematic )
 
 SimplePersistFactoryClass<CinematicGameObjDef, CHUNKID_GAME_OBJECT_DEF_CINEMATIC>	_CinematicGameObjDefPersistFactory;
 
@@ -136,7 +132,6 @@ const PersistFactoryClass & CinematicGameObj::Get_Factory (void) const
 	return _CinematicGameObjPersistFactory;
 }
 
-
 CinematicGameObj::CinematicGameObj()	:
 	Sound( NULL )
 {
@@ -184,7 +179,6 @@ const CinematicGameObjDef & CinematicGameObj::Get_Definition( void ) const
 {
 	return (const CinematicGameObjDef &)BaseGameObj::Get_Definition();
 }
-
 
 /*
 ** CinematicGameObj Save and Load
@@ -236,7 +230,6 @@ void	CinematicGameObj::On_Post_Load( void )
 	Cinematic_Init();
 }
 
-
 /*
 **
 */
@@ -256,7 +249,6 @@ void CinematicGameObj::Set_Sound( int sound_def_id, const char * bone_name )
 		Sound = WWAudioClass::Get_Instance()->Create_Continuous_Sound( sound_def_id );
 		if ( Sound != NULL ) {
 			RenderObjClass * model = Peek_Model();
-			WWASSERT( model );
 			int bone_index = model->Get_Bone_Index( bone_name );
 			Sound->Attach_To_Object( Peek_Model(),	bone_index );
 			Sound->Add_To_Scene( true );
@@ -266,7 +258,7 @@ void CinematicGameObj::Set_Sound( int sound_def_id, const char * bone_name )
 
 void	CinematicGameObj::Think( void )
 {
-{	WWPROFILE( "Cinematic Think" );
+{	
 
 	// If auto fire weapon
 	if ( Get_Definition().AutoFireWeapon ) {
@@ -327,10 +319,7 @@ void	CinematicGameObj::Post_Think( void )
 {
 	ArmedGameObj::Post_Think();
 
-	WWPROFILE( "Cinematic PostThink" );
-
 	// Animation is handled by the DynamicAnimPhysClass for this class
-	WWASSERT(Get_Anim_Control() == NULL);
 
 	if (Get_Definition().DestroyAfterAnimation) {
 		PhysClass * pobj = Peek_Physical_Object();
@@ -346,13 +335,11 @@ void	CinematicGameObj::Post_Think( void )
 	}
 }
 
-
 void CinematicGameObj::Completely_Damaged( const OffenseObjectClass & damager ) 
 {
 	if ( Get_Definition().KilledExplosion != 0 ) {
 		Vector3 pos;
 		Get_Position(&pos);
-		WWASSERT(pos.Is_Valid());// most likely candidate for explosion damage bug....?
 
 		// If the object has a moving bounding box, use its center point for the explosion
 		RenderObjClass * model = Peek_Model();
@@ -369,7 +356,6 @@ void CinematicGameObj::Completely_Damaged( const OffenseObjectClass & damager )
 	}
 	Set_Delete_Pending();
 }
-
 
 float	CinematicGameObj::Get_Animation_Length( void )
 {
@@ -401,8 +387,6 @@ float	CinematicGameObj::Get_Animation_Length( void )
 	return length;
 }
 
-
-
 /*
 void
 CinematicGameObj::Import_Creation( BitStreamClass &packet )
@@ -411,7 +395,6 @@ CinematicGameObj::Import_Creation( BitStreamClass &packet )
 	return ;
 }
 */
-
 
 void	CinematicGameObj::Export_Rare( BitStreamClass &packet )
 {
@@ -448,7 +431,6 @@ void	CinematicGameObj::Export_Rare( BitStreamClass &packet )
 	packet.Add( anim_mode );
 	return ;
 }
-
 
 void	CinematicGameObj::Import_Rare( BitStreamClass &packet )
 {

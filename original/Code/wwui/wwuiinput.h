@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __WWUIINPUT_H
 #define __WWUIINPUT_H

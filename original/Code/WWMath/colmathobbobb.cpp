@@ -1,7 +1,6 @@
 #include "colmath.h"
 #include "obbox.h"
 #include "aabox.h"
-#include "wwdebug.h"
 
 
 /*
@@ -703,7 +702,7 @@ static inline void compute_contact_normal(ObbCollisionStruct & context,CastResul
 	{
 	case INTERSECTION:
 #pragma message("Fatal assert disabled for demo, obb-obb collision")
-//		WWASSERT(0);
+//		assert(0);
 //		break;
 
 	case AXIS_A0:

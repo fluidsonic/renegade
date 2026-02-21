@@ -11,7 +11,6 @@
 #include "dialogcontrol.h"
 #include "menudialog.h"
 #include "wwuiinput.h"
-#include "wwmemlog.h"
 #include "dialogtransition.h"
 #include "systimer.h"
 #include "tooltip.h"
@@ -334,7 +333,6 @@ DialogMgrClass::Update_Transition (void)
 void
 DialogMgrClass::On_Frame_Update (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	//
 	//	Update the timing
@@ -368,7 +366,6 @@ DialogMgrClass::On_Frame_Update (void)
 		}
 
 		DialogBaseClass* dialog = DialogList[index];
-		WWASSERT(dialog != NULL);
 
 		dialog->Add_Ref();
 
@@ -403,7 +400,6 @@ DialogMgrClass::On_Frame_Update (void)
 void
 DialogMgrClass::Render (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	if (!GameInFocus) {
 		GameWasInFocus=false;
@@ -760,7 +756,6 @@ DialogMgrClass::Release_Capture (void)
 void
 DialogMgrClass::Flush_Dialogs (void)
 {
-	WWDEBUG_SAY(("DialogMgrClass: Flushing dialogs\n"));
 
 	IsFlushing = true;
 
@@ -795,7 +790,6 @@ DialogMgrClass::Flush_Dialogs (void)
 
 	IsFlushing = false;
 
-	WWDEBUG_SAY(("DialogMgrClass: Flush complete\n"));
 	return ;
 }
 

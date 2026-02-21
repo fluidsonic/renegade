@@ -9,22 +9,15 @@
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "wwphysids.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "hlod.h"
 #include "physcontrol.h"
 #include "phys3.h"
 #include <stdio.h>
 
-
-DECLARE_FORCE_LINK(rbody);
-
-
 #define RBODY_DEBUGGING					0
 #define RBODY_DEBUG_FILTER				(stricmp(Model->Get_Name(),"V_GDI_ORCA_M") == 0) && (PhysicsSceneClass::Get_Instance()->Is_Debug_Display_Enabled())
 
 #define JITTER_ELIMINATION_CODE		0
-
 
 float RigidBodyClass::_CorrectionTime = 1.0f;
 
@@ -48,7 +41,6 @@ const float		RBODY_SNAPSHOT_INTERVAL = RBODY_HISTORY_MIN_TIME / RBODY_SNAPSHOT_C
 #define RBODYHISTORY_NO_CORRECTION			0
 #define RBODYHISTORY_ABSOLUTE_CORRECTION	0
 #define RBODYHISTORY_LERP_CORRECTION		1
-
 
 /**
 ** RBodyHistoryClass
@@ -146,7 +138,6 @@ void RBodyHistoryClass::Update_History(const RigidBodyStateStruct & state, float
 
 void RBodyHistoryClass::Compute_Old_State(float t,RigidBodyStateStruct * set_state)
 {
-	WWASSERT(set_state != NULL);
 	int index = HeadIndex;
 	bool done = false;
 	
@@ -240,12 +231,8 @@ void RBodyHistoryClass::Find_Nearest_State(const RigidBodyStateStruct & input,Ri
 		}
 	}
 	
-	WWASSERT((result_index0 >= 0) && (result_index0 < RBODY_SNAPSHOT_COUNT));
-	WWASSERT((result_index1 >= 0) && (result_index1 < RBODY_SNAPSHOT_COUNT));
-	WWASSERT(output != NULL);
 	RigidBodyStateStruct::Lerp(SnapshotArray[result_index0],SnapshotArray[result_index1],result_fraction,output);
 }
-
 
 void RBodyHistoryClass::StateSnapshotStruct::Lerp(const StateSnapshotStruct & a, const StateSnapshotStruct & b, float fraction)
 {
@@ -273,7 +260,6 @@ float DEFAULT_CONTACT_THICKNESS	= 0.2f;
 ** Declare a PersistFactory for RigidBodyClasses
 */
 SimplePersistFactoryClass<RigidBodyClass,PHYSICS_CHUNKID_RIGIDBODY>	_RigidBodyFactory;
-
 
 /*
 ** Chunk ID's used by RigidBodyClass
@@ -430,7 +416,6 @@ enum
 ** nearest point in their history; then in the timestep function we try to correct that error.
 */
 
-
 /***********************************************************************************************
  * RigidBodyClass::RigidBodyClass -- Constructor for RigidBodyClass                            *
  *                                                                                             *
@@ -512,20 +497,17 @@ RigidBodyClass::~RigidBodyClass(void)
 const AABoxClass & RigidBodyClass::Get_Bounding_Box(void) const
 {
 	// TODO: propogate this into Phys?
-	WWASSERT(Model);
 	return Model->Get_Bounding_Box();
 }
 
 const Matrix3D & RigidBodyClass::Get_Transform(void) const
 {
 	// TODO: propogate this into Phys?
-	WWASSERT(Model);
 	return Model->Get_Transform();
 }
 
 void RigidBodyClass::Set_Transform(const Matrix3D & m)
 {
-	WWASSERT(Model);
 
 	//TODO: rename this to Teleport!
 	//TODO: warp model to desired position and verify that it is non-intersecting
@@ -571,7 +553,6 @@ bool RigidBodyClass::Cast_OBBox(PhysOBBoxCollisionTestClass & boxtest)
 	return false;
 }
 
-
 bool RigidBodyClass::Intersection_Test(PhysAABoxIntersectionTestClass & test)
 {
 	if (CollisionMath::Intersection_Test(ContactBox->Get_World_Inner_Box(),test.Box)) {
@@ -581,7 +562,6 @@ bool RigidBodyClass::Intersection_Test(PhysAABoxIntersectionTestClass & test)
 	return false;
 }
 
-
 bool RigidBodyClass::Intersection_Test(PhysOBBoxIntersectionTestClass & test)
 {
 	if (CollisionMath::Intersection_Test(ContactBox->Get_World_Inner_Box(),test.Box)) {
@@ -590,7 +570,6 @@ bool RigidBodyClass::Intersection_Test(PhysOBBoxIntersectionTestClass & test)
 	}
 	return false;
 }
-
 
 bool RigidBodyClass::Intersection_Test(PhysMeshIntersectionTestClass & test)
 {
@@ -665,7 +644,6 @@ void RigidBodyClass::Update_Cached_Model_Parameters(void)
 	
 	// Otherwise just create one
 	if (Box == NULL) {
-		WWDEBUG_SAY(("Missing WorldBox in model: %s\r\n",Model->Get_Name()));
 		Box = new OBBoxRenderObjClass(OBBoxClass(Vector3(0,0,0),Vector3(1,1,1)));
 		Box->Set_Collision_Type(COLLISION_TYPE_PHYSICAL);
 	}
@@ -710,12 +688,6 @@ void RigidBodyClass::Set_Velocity(const Vector3 & newvel)
 {
 	Assert_State_Valid();
 
-#ifdef WWDEBUG 
-	if (newvel.Is_Valid() != true) {
-		WWDEBUG_SAY(("someone set an invalid velocity (%8.3f, %8.3f, %8.3f)\r\n",newvel.X,newvel.Y,newvel.Z));
-	}
-#endif
-
 	Velocity = newvel;
 	State.LMomentum = Velocity * Mass;
 
@@ -724,15 +696,6 @@ void RigidBodyClass::Set_Velocity(const Vector3 & newvel)
 
 void RigidBodyClass::Set_Angular_Velocity(const Vector3 & newavel)
 {
-	WWASSERT(WWMath::Is_Valid_Float(newavel.X));
-	WWASSERT(WWMath::Is_Valid_Float(newavel.Y));
-	WWASSERT(WWMath::Is_Valid_Float(newavel.Z));
-
-#ifdef WWDEBUG 
-	if (newavel.Is_Valid() != true) {
-		WWDEBUG_SAY(("someone set an invalid angular velocity (%8.3f, %8.3f, %8.3f)\r\n",newavel.X,newavel.Y,newavel.Z));
-	}
-#endif
 
 	AngularVelocity = newavel;
 	Matrix3 I = IInv.Inverse();
@@ -778,7 +741,6 @@ void RigidBodyClass::Network_Interpolate_State_Update
 	Update_Visibility_Status();
 }
 
-
 void RigidBodyClass::Network_Latency_State_Update
 (			
 	const Vector3 & new_pos,
@@ -808,7 +770,6 @@ void RigidBodyClass::Network_Latency_State_Update
 		History = new RBodyHistoryClass;
 		History->Init(LastKnownState);
 	}
-	WWASSERT(History != NULL);
 
 	/*
 	** Search our history to find the point nearest this server update
@@ -825,20 +786,10 @@ void RigidBodyClass::Network_Latency_State_Update
 	LatencyError.AMomentum= LastKnownState.AMomentum - nearest_state.AMomentum;
 }
 
-
 void RigidBodyClass::Network_Latency_Error_Correction(float dt)
 {
 	if (LatencyError.Position.Length2() > 0.01f) {
 
-#ifdef WWDEBUG
-		if (!LatencyError.Is_Valid()) {
-			WWDEBUG_SAY(("RigidBodyClass - Invalid Latency Error!\r\n"));
-			WWDEBUG_SAY((" position error: %f, %f, %f\r\n",LatencyError.Position.X,LatencyError.Position.Y,LatencyError.Position.Z));
-			WWDEBUG_SAY((" orientation error: %f, %f, %f, %f\r\n",LatencyError.Orientation.X, LatencyError.Orientation.Y,LatencyError.Orientation.Z,LatencyError.Orientation.W));
-			WWDEBUG_SAY((" L momentum error: %f, %f, %f\r\n",LatencyError.LMomentum.X,LatencyError.LMomentum.Y,LatencyError.LMomentum.Z));
-			WWDEBUG_SAY((" A momentum error: %f, %f, %f\r\n",LatencyError.AMomentum.X,LatencyError.AMomentum.Y,LatencyError.AMomentum.Z));
-		}
-#endif
 		if (!LatencyError.Is_Valid()) {
 			LatencyError.Reset();
 		}
@@ -853,9 +804,6 @@ void RigidBodyClass::Network_Latency_Error_Correction(float dt)
 		ideal_state.AMomentum += LatencyError.AMomentum;
 
 #if 0
-	WWDEBUG_SAY(("Rigid Body %s network correction\r\n",Model->Get_Name()));
-	WWDEBUG_SAY(("                               position error: %f\r\n",LatencyError.Position.Length()));
-	WWDEBUG_SAY(("                               orientation error: %f\r\n",WWMath::Acos(LatencyError.Orientation.W) * 2.0f));
 #endif
 
 		/*
@@ -928,7 +876,6 @@ void RigidBodyClass::Network_Latency_Error_Correction(float dt)
 	}
 }
 
-
 void RigidBodyClass::Apply_Impulse(const Vector3 & imp)
 {
 	// Impluse applied to center of mass simply adds to the linear momentum
@@ -963,7 +910,6 @@ void RigidBodyClass::Apply_Impulse(const Vector3 & imp, const Vector3 & wpos)
 	Assert_State_Valid();
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("Impulse applied: %10.10f %10.10f %10.10f\r\n",imp.X,imp.Y,imp.Z));
 		DEBUG_RENDER_VECTOR(wpos,imp,IMPULSE_COLOR);
 	}
 #endif
@@ -1010,7 +956,6 @@ void RigidBodyClass::Set_Inertia(const Matrix3 & I)
 
 void RigidBodyClass::Get_Inertia(Matrix3 * I)
 {
-	WWASSERT(I);
 	*I = IBody;
 }
 
@@ -1041,8 +986,6 @@ void RigidBodyClass::Get_Contact_Parameters(float * stiffness,float * damping,fl
 	}
 }
 
-
-
 int RigidBodyClass::Compute_Derivatives
 (
 	float						t,
@@ -1057,7 +1000,6 @@ int RigidBodyClass::Compute_Derivatives
 
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("  compute_derivatives: t = %f\r\n",t));
 		Dump_State();
 	}
 #endif
@@ -1080,12 +1022,8 @@ int RigidBodyClass::Compute_Derivatives
 	Vector3 torque(0,0,0);
 	Compute_Force_And_Torque(&force,&torque);
 
-	WWASSERT(force.Is_Valid());
-	WWASSERT(torque.Is_Valid());
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("Force:		%10.10f , %10.10f , %10.10f\r\n",force[0],force[1],force[2]));
-		WWDEBUG_SAY(("Torque:	%10.10f , %10.10f , %10.10f\r\n",torque[0],torque[1],torque[2]));
 	}
 #endif
 	
@@ -1099,7 +1037,6 @@ int RigidBodyClass::Compute_Derivatives
 	
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("  done. \r\n\r\n"));
 	}
 #endif
 	return index;
@@ -1112,7 +1049,6 @@ void RigidBodyClass::Get_State(StateVectorClass & set_state)
 
 int RigidBodyClass::Set_State(const StateVectorClass & new_state,int index)
 {
-	WWPROFILE("RBody::Set_State");
 	index = State.From_Vector(new_state,index);
 	Update_Auxiliary_State();
 	return index;
@@ -1162,7 +1098,6 @@ void RigidBodyClass::Compute_Inertia(void)
 
 void RigidBodyClass::Update_Auxiliary_State(void)
 {
-	WWPROFILE("Rbody::Assert_State_Valid");
 	Assert_State_Valid();
 
 	State.Orientation.Normalize();
@@ -1181,7 +1116,6 @@ void RigidBodyClass::Update_Auxiliary_State(void)
 
 void RigidBodyClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 {
-	WWPROFILE("RigidBodyClass::Compute_Force_And_Torque");
 
 	// NOTE: derived classes should perform their force calculations first and
 	// then call us so because contact forces are computed at the end of
@@ -1191,7 +1125,6 @@ void RigidBodyClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 
 	// add in gravity
 	*force += GravScale * Mass * PhysicsConstants::GravityAcceleration;
-
 
 	// Add damping
 	Vector3 vel_dir = Velocity;
@@ -1207,7 +1140,6 @@ if (	(Velocity.Is_Valid() == false) ||
 		(Velocity.Length2() > MAX_VEL * MAX_VEL) ||
 		(force->Length() * MassInv > MAX_ACCEL) )
 {
-	WWDEBUG_SAY(("clearing velocity, model=%s vel=(%f,%f,%f)\r\n",Model->Get_Name(),Velocity.X,Velocity.Y,Velocity.Z));
 	Velocity.Set(0,0,0);
 	AngularVelocity.Set(0,0,0);
 	State.LMomentum.Set(0,0,0);
@@ -1220,7 +1152,6 @@ if (	(Velocity.Is_Valid() == false) ||
 		RigidBodyDefClass * def = Get_RigidBodyDef();
 		*force -= def->AerodynamicDragCoefficient * Vector3::Dot_Product(Velocity,Velocity) * vel_dir;
 
-		WWASSERT(force->Is_Valid());
 	}
 
 	Vector3 a_dir = AngularVelocity;
@@ -1229,7 +1160,6 @@ if (	(Velocity.Is_Valid() == false) ||
 #pragma message ("(gth) HACK! zeroing bad angular velocities.")
 const float MAX_AVEL = 5.0f * 2.0f * WWMATH_PI;
 if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
-	WWDEBUG_SAY(("clearing angluar velocity, model=%s avel=(%f,%f,%f)\r\n",Model->Get_Name(),AngularVelocity.X,AngularVelocity.Y,AngularVelocity.Z));
 	Velocity.Set(0,0,0);
 	AngularVelocity.Set(0,0,0);
 	State.LMomentum.Set(0,0,0);
@@ -1241,9 +1171,7 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 
 	if (a_dir.Length2() > WWMATH_EPSILON) {
 		a_dir.Normalize();
-		WWASSERT((a_dir.Length() - 1.0f) < WWMATH_EPSILON);
 		*torque -= PhysicsConstants::AngularDamping * Vector3::Dot_Product(AngularVelocity,AngularVelocity) * a_dir;
-		WWASSERT(torque->Is_Valid());
 	}
 
 	// TODO: boyancy forces, force fields
@@ -1268,20 +1196,11 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 			float dv = Vector3::Dot_Product(pdot,contact.Normal);			
 			
 			float force_magnitude = ContactBox->Get_Stiffness()*dx - ContactBox->Get_Damping()*dv;
-			WWASSERT(WWMath::Is_Valid_Float(force_magnitude));
 			Vector3 contact_force = force_magnitude * contact.Normal;
 			
 			Vector3 contact_torque;
 			Vector3::Cross_Product(r,contact_force,&contact_torque);
 
-#ifdef WWDEBUG
-			if ((contact_force.Is_Valid() == false) || (contact_torque.Is_Valid() == false)) {
-				WWDEBUG_SAY(("bad contact: normal=(%8.3f,%8.3f,%8.3f) r=(%8.3f,%8.3f,%8.3f) dx=%8.3f dv=%8.3f\n",
-					contact.Normal.X,contact.Normal.Y,contact.Normal.Z,r.X,r.Y,r.Z,dx,dv));
-				contact_force.Set(0,0,0);
-				contact_torque.Set(0,0,0);
-			}
-#endif
 	
 			/*
 			** If we are contacting a phys3 object, push it away from us.  If we
@@ -1389,13 +1308,7 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 	if ((max_delta_amomentum.Z < 0) && (torque->Z < max_delta_amomentum.Z)) torque->Z = max_delta_amomentum.Z;
 	if ((max_delta_amomentum.Z > 0) && (torque->Z > max_delta_amomentum.Z)) torque->Z = max_delta_amomentum.Z;
 
-	WWASSERT(1.00001f * old_force.Length2() >= force->Length2());
-	WWASSERT(1.00001f * old_torque.Length2() >= torque->Length2());
 #endif
-
-	WWASSERT(WWMath::Is_Valid_Float(force->X));
-	WWASSERT(WWMath::Is_Valid_Float(force->Y));
-	WWASSERT(WWMath::Is_Valid_Float(force->Z));
 
 }
 
@@ -1442,7 +1355,6 @@ void RigidBodyClass::Set_Stationary_Collision_Region(void)
 	ContactBox->Get_Outer_Bounds(&region);		// start with bounds of collision box
 	PhysicsSceneClass::Get_Instance()->Set_Collision_Region(region,Get_Collision_Group());
 }
-
 
 bool RigidBodyClass::Can_Go_To_Sleep(float dt)
 {
@@ -1517,40 +1429,22 @@ void RigidBodyClass::Compute_Impact(const Vector3 & point,const Vector3 & normal
 			float mag = num / den;
 			*impulse = mag * normal;
 		} else {
-			WWASSERT(0);
 			impulse->Set(0,0,0);	
 		}
 	}
-
-	WWASSERT(WWMath::Is_Valid_Float(impulse->X));
-	WWASSERT(WWMath::Is_Valid_Float(impulse->Y));
-	WWASSERT(WWMath::Is_Valid_Float(impulse->Z));
 
 }
 
 void RigidBodyClass::Assert_State_Valid(void) const
 {
-	WWASSERT(State.Position.Is_Valid());
-	WWASSERT(State.Orientation.Is_Valid());
-	WWASSERT(State.LMomentum.Is_Valid());
-	WWASSERT(State.LMomentum.Is_Valid());
-	WWASSERT(Velocity.Is_Valid());
-	WWASSERT(AngularVelocity.Is_Valid());
 }
 
 inline void RigidBodyClass::Dump_State(void) const
 {
-	WWDEBUG_SAY(("Position:		%10.10f , %10.10f , %10.10f \r\n",State.Position.X,State.Position.Y,State.Position.Z));
-	WWDEBUG_SAY(("Orientation:	%10.10f , %10.10f , %10.10f , %10.10f\r\n",State.Orientation.X,State.Orientation.Y,State.Orientation.Z,State.Orientation.W));
-	WWDEBUG_SAY(("LMomentum:	%10.10f , %10.10f , %10.10f \r\n",State.LMomentum.X,State.LMomentum.Y,State.LMomentum.Z));
-	WWDEBUG_SAY(("AMomentum:	%10.10f , %10.10f , %10.10f \r\n",State.AMomentum.X,State.AMomentum.Y,State.AMomentum.Z));
-	WWDEBUG_SAY(("ContactBox intersecting: %d\r\n",(ContactBox->Is_Intersecting() ? 1 : 0)));
-	WWDEBUG_SAY(("\r\n"));
 }
 
 void RigidBodyClass::Timestep(float dt)
 {	
-	WWPROFILE("RigidBody::Timestep");
 	LastTimestep = dt;
 
 // DEBUG DEBUG
@@ -1584,7 +1478,6 @@ Vector3 avel0 = AngularVelocity;
 	}
 	Assert_State_Valid();
 
-
 	/*
 	** If we're currently asleep, see if we need to wake up.
 	*/
@@ -1600,16 +1493,10 @@ Vector3 avel0 = AngularVelocity;
 		return;
 	}
 
-	WWASSERT(Model);
-	WWASSERT(ContactBox);
-
 	Inc_Ignore_Counter();
 
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("------------------------------\r\n"));
-		WWDEBUG_SAY(("RigidBody Timestep Begin (dt=%f).\r\n",dt));
-		WWDEBUG_SAY((" Beginning State:\r\n"));
 		Dump_State();
 	}
 #endif
@@ -1630,7 +1517,6 @@ Vector3 avel0 = AngularVelocity;
 	while ((remaining_time > 0.0f) && (collisions < MAX_COLLISIONS)) {
 
 		Assert_State_Valid();
-		WWPROFILE("RigidBodyClass integration loop");
 		timestep = remaining_time;
 
 		/*
@@ -1651,8 +1537,6 @@ Vector3 avel0 = AngularVelocity;
 			StickCount = 0;
 
 		} else {
-
-			WWPROFILE("Impulsive Collision Handling");
 
 			StickCount++;
 
@@ -1736,7 +1620,6 @@ Vector3 avel0 = AngularVelocity;
 
 					State.AMomentum += a_impulse;
 
-
 					/*
 					** Done, update the rest of the rigid body state
 					*/
@@ -1744,8 +1627,6 @@ Vector3 avel0 = AngularVelocity;
 
 #if RBODY_DEBUGGING
 				if (RBODY_DEBUG_FILTER) {
-					WWDEBUG_SAY((" Intersection occured, found state in contact zone.\r\n"));
-					WWDEBUG_SAY((" Resulting new state:\r\n"));
 					Dump_State();
 				}
 #endif
@@ -1760,8 +1641,6 @@ Vector3 avel0 = AngularVelocity;
 				*/
 #if RBODY_DEBUGGING
 				if (RBODY_DEBUG_FILTER) {
-					WWDEBUG_SAY(("Rigid Body Object: %s is intersecting (%f,%f,%f).\n",Model->Get_Name(),State.Position.X,State.Position.Y,State.Position.Z));
-					WWDEBUG_SAY(("Reverting to previous position: (%f,%f,%f)\r\n",oldstate.Position.X,oldstate.Position.Y,oldstate.Position.Z));
 				}
 #endif
 
@@ -1772,19 +1651,9 @@ Vector3 avel0 = AngularVelocity;
 				Update_Auxiliary_State();
 
 				// We've reverted the state, now display the total force and torque that is causing us to "stick"
-				#ifdef WWDEBUG
-				Vector3 force(0,0,0);
-				Vector3 torque(0,0,0);
-				Compute_Force_And_Torque(&force,&torque);
-			
-				DEBUG_RENDER_VECTOR(State.Position,force,Vector3(0,1,0));
-				DEBUG_RENDER_VECTOR(State.Position,force,Vector3(0,0,1));
-				#endif	
 
 #if RBODY_DEBUGGING
 				if (RBODY_DEBUG_FILTER) {
-					WWDEBUG_SAY((" Un-handled intersection!  StickCount = %d\r\n",StickCount));
-					WWDEBUG_SAY((" Reverted State:\r\n"));
 					Dump_State();
 				}
 #endif
@@ -1803,14 +1672,6 @@ Vector3 avel0 = AngularVelocity;
 
 	DEBUG_RENDER_VECTOR(State.Position,Velocity,LMOMENTUM_COLOR);
 	DEBUG_RENDER_VECTOR(State.Position,AngularVelocity,AMOMENTUM_COLOR);	
-
-#ifdef WWDEBUG
-	if (ContactBox->Is_Intersecting()) {
-		OBBoxClass box;
-		ContactBox->Get_Inner_Box(&box);
-		DEBUG_RENDER_OBBOX(box,Vector3(1,0,0),0.3f);
-	}
-#endif
 
 	Dec_Ignore_Counter();
 	Model->Set_Transform(Matrix3D(Rotation,State.Position));
@@ -1838,12 +1699,8 @@ Vector3 avel0 = AngularVelocity;
 	if (	(vel_change.Length() > VEL_CHANGE_SPIKE) ||
 			(avel_change.Length() > AVEL_CHANGE_SPIKE))
 	{
-		WWDEBUG_SAY(("***** Velocity spike detected during RBody::Timestep!  "));
-		WWDEBUG_SAY(("initial vel: %f    final vel: %f\r\n",vel0.Length(),Velocity.Length()));
-		WWDEBUG_SAY(("initial avel: %f   final avel: %f\r\n",avel0.Length(),AngularVelocity.Length()));
 	}
 }
-
 
 bool RigidBodyClass::Push_Phys3_Object_Away(Phys3Class * p3obj,const CastResultStruct & contact)
 {
@@ -1879,7 +1736,6 @@ bool RigidBodyClass::Push_Phys3_Object_Away(Phys3Class * p3obj,const CastResultS
 
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("  Pushing Phys3 Object %x away (%f, %f, %f)\r\n",p3obj,move.X,move.Y,move.Z));
 	}
 #endif
 	
@@ -1896,7 +1752,6 @@ bool RigidBodyClass::Push_Phys3_Object_Away(Phys3Class * p3obj,const CastResultS
 
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("  completely clear of our outer collision box\r\n"));
 	}
 #endif
 		return (CollisionMath::Overlap_Test(rbox,p3box) == CollisionMath::OUTSIDE);
@@ -1905,13 +1760,11 @@ bool RigidBodyClass::Push_Phys3_Object_Away(Phys3Class * p3obj,const CastResultS
 
 #if RBODY_DEBUGGING
 	if (RBODY_DEBUG_FILTER) {
-		WWDEBUG_SAY(("  still intersecting our outer collision box\r\n"));
 	}
 #endif
 		return true;
 	}
 }
-
 
 void RigidBodyClass::Assert_Not_Intersecting(void)
 {
@@ -1925,11 +1778,9 @@ void RigidBodyClass::Assert_Not_Intersecting(void)
 													Get_Collision_Group(),
 													COLLISION_TYPE_PHYSICAL);
 	PhysicsSceneClass::Get_Instance()->Cast_OBBox(test);
-//	WWASSERT(result.StartBad != true);			
+//	assert(result.StartBad != true);			
 	if (result.StartBad) {
-		WWDEBUG_SAY(("   !!!!!!!!!!!!!!!!!!!!!!!!!   Rigid Body %s intersecting!\r\n",Model->Get_Name()));
 	} else {
-		WWDEBUG_SAY(("   not intersecting\r\n"));
 	}
 
 	Dec_Ignore_Counter();
@@ -1937,14 +1788,12 @@ void RigidBodyClass::Assert_Not_Intersecting(void)
 
 void RigidBodyClass::Get_Shadow_Blob_Box(AABoxClass * set_obj_space_box)
 {
-	WWASSERT(set_obj_space_box != NULL);
 	if (Box) {
 		Box->Get_Obj_Space_Bounding_Box(*set_obj_space_box);
 	} else {
 		MoveablePhysClass::Get_Shadow_Blob_Box(set_obj_space_box);
 	}
 }
-
 
 bool RigidBodyClass::Find_State_In_Contact_Zone
 (
@@ -1987,7 +1836,6 @@ bool RigidBodyClass::Find_State_In_Contact_Zone
 	
 	return success;
 }
-
 
 bool RigidBodyClass::Push(const Vector3 & move)
 {
@@ -2041,7 +1889,6 @@ bool RigidBodyClass::Push(const Vector3 & move)
 
 	}
 }
-
 
 /***********************************************************************************
 **
@@ -2104,7 +1951,6 @@ bool RigidBodyClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -2122,12 +1968,10 @@ bool RigidBodyClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 void RigidBodyClass::On_Post_Load(void)
 {
 	Update_Cached_Model_Parameters();
 }
-
 
 /***********************************************************************************************
 **
@@ -2156,7 +2000,6 @@ enum
 	RIGIDBODYDEF_VARIABLE_AERODYNAMICDRAGCOEFFICIENT	= 0x00,
 	RIGIDBODYDEF_VARIABLE_COLLISIONDISABLED,
 };
-
 
 RigidBodyDefClass::RigidBodyDefClass(void) :
 	AerodynamicDragCoefficient(0.0f),
@@ -2216,9 +2059,7 @@ bool RigidBodyDefClass::Load(ChunkLoadClass &cload)
 				}
 				break;
 
-
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 
@@ -2235,14 +2076,4 @@ bool RigidBodyDefClass::Is_Type(const char * type_name)
 		return MoveablePhysDefClass::Is_Type(type_name);
 	}
 }
-
-
-
-
-
-
-
-
-
-
 

@@ -10,7 +10,6 @@
 #include "colmathfrustum.h"
 #include "colmathplane.h"
 #include "colmathaabox.h"
-#include "wwmemlog.h"
 
 const float DEFUALT_MAXOBJRADIUS = 7.5f;
 const float MIN_CELL_HEIGHT = 3.5f;
@@ -55,7 +54,6 @@ DynamicAABTreeCullClass::DynamicAABTreeCullClass(PhysicsSceneClass * pscene) :
 	/*
 	** Modify the root node so that any object can be added into the tree
 	*/
-	WWASSERT(RootNode != NULL);
 	RootNode->Box.Extent.Set(FLT_MAX/4.0f,FLT_MAX/4.0f,FLT_MAX/4.0f);
 }
 
@@ -80,23 +78,18 @@ void DynamicAABTreeCullClass::Add_Object(PhysClass * obj)
 
 void DynamicAABTreeCullClass::Update_Culling(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 
 	/*
 	** unlink it from the node it is currently in
 	*/
 	AABTreeLinkClass * link = (AABTreeLinkClass *)obj->Get_Cull_Link();
-	WWASSERT(link);
 	AABTreeNodeClass * node = link->Node;
-	WWASSERT(node);
 	node->Remove_Object(obj);
 
 	/*
 	** link it back into the tree
 	*/
 	int node_index = find_insertion_node(obj);
-	WWASSERT(node_index < NodeCount);
 	IndexedNodes[node_index]->Add_Object(obj,false);
 }
 
@@ -305,7 +298,6 @@ void DynamicAABTreeCullClass::Collect_Visible_Objects
 	RefPhysListClass & visobjlist	
 )
 {
-	WWASSERT(RootNode != NULL);
 
 	if (pvs != NULL) {
 	
@@ -362,7 +354,6 @@ void DynamicAABTreeCullClass::Assign_Vis_IDs(void)
 
 void DynamicAABTreeCullClass::Evaluate_Non_Occluder_Visibility(VisRenderContextClass & context)
 {
-	WWASSERT(context.VisRasterizer != NULL);
 
 	context.VisRasterizer->Set_Render_Mode(IDBufferClass::NON_OCCLUDER_MODE);
 	evaluate_non_occluder_visibility_recursive(RootNode,context);
@@ -382,7 +373,6 @@ void DynamicAABTreeCullClass::Save_Static_Data(ChunkSaveClass & csave)
 
 void DynamicAABTreeCullClass::Load_Static_Data(ChunkLoadClass & cload)
 {
-	WWMEMLOG(MEM_CULLINGDATA);
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
@@ -401,7 +391,6 @@ void DynamicAABTreeCullClass::Load_Static_Data(ChunkLoadClass & cload)
 				break;
 			
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -509,7 +498,6 @@ AABoxRenderObjClass * DynamicAABTreeCullClass::get_render_box(void)
 		RenderBox = NEW_REF(AABoxRenderObjClass,());
 	}
 	
-	WWASSERT(RenderBox != NULL);
 	RenderBox->Add_Ref();
 	return RenderBox;
 }
@@ -852,7 +840,6 @@ void DynamicAABTreeCullClass::prune_child
 		int child_object_id = child->UserData;
 
 		float match_fraction = context.Compute_Object_Table_Match_Fraction(parent_object_id,child_object_id);
-		WWDEBUG_SAY(("parent: %d, child: %d, match fraction: %f\n",parent_object_id,child_object_id,match_fraction));
 		if (match_fraction >= context.Get_Dyn_Cell_Prune_Match_Fraction()) {
 
 			/*

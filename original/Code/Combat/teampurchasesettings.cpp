@@ -1,25 +1,20 @@
 #include "teampurchasesettings.h"
 #include "combatchunkid.h"
-#include "wwhack.h"
 #include "persistfactory.h"
 #include "definitionfactory.h"
 #include "simpledefinitionfactory.h"
 #include "debug.h"
 #include "translatedb.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //	Force links
 //////////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (TeamPurchaseSettings)
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Factories
 ///////////////////////////////////////////////////////////////////////////////////////////
 SimplePersistFactoryClass<TeamPurchaseSettingsDefClass, CHUNKID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE>	_TeamPurchaseDefPersistFactory;
 DECLARE_DEFINITION_FACTORY(TeamPurchaseSettingsDefClass, CLASSID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE, "Team Purchase Settings") _TeamPurchaseDefDefFactory;
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Save/load constants
@@ -41,7 +36,6 @@ enum
 	VARID_SUPPLY_NAME,
 	VARID_SUPPLY_TEXTURE_NAME
 };
-
 
 //////////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -127,7 +121,6 @@ TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	~TeamPurchaseSettingsDefClass
@@ -145,7 +138,6 @@ TeamPurchaseSettingsDefClass::~TeamPurchaseSettingsDefClass (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Class_ID
@@ -156,7 +148,6 @@ TeamPurchaseSettingsDefClass::Get_Class_ID (void) const
 { 
 	return CLASSID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE; 
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -169,7 +160,6 @@ TeamPurchaseSettingsDefClass::Get_Factory (void) const
 	return _TeamPurchaseDefPersistFactory; 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Create
@@ -178,10 +168,8 @@ TeamPurchaseSettingsDefClass::Get_Factory (void) const
 PersistClass *
 TeamPurchaseSettingsDefClass::Create (void) const 
 {
-	WWASSERT (0);
 	return NULL;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -223,7 +211,6 @@ TeamPurchaseSettingsDefClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -254,7 +241,6 @@ TeamPurchaseSettingsDefClass::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -320,7 +306,6 @@ TeamPurchaseSettingsDefClass::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Enlisted_Name
@@ -340,7 +325,6 @@ TeamPurchaseSettingsDefClass::Get_Enlisted_Name (int index)
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //

@@ -8,9 +8,8 @@ target_include_directories(wwbitpack BEFORE PRIVATE
     "${COMPAT_DIR}"
     "${ORIG_WWBITPACK}"
     "${ORIG_SRC}/wwlib"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
     "${ORIG_SRC}/wwutil"
 )
 
-target_link_libraries(wwbitpack wwdebug wwmath)
+target_link_libraries(wwbitpack wwmath)

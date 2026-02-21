@@ -10,7 +10,6 @@
 #include "slist.h"
 #include "vehicle.h"
 #include "phys3.h"
-#include "wwprofile.h"
 #include "diaglog.h"
 #include <string.h>
 #include <stdlib.h>
@@ -74,7 +73,6 @@ TransitionDataClass::TransitionDataClass( )
 */
 const char * TransitionDataClass::Get_Type_Name( StyleType type )
 {
-	WWASSERT( ((int)type) < Get_Num_Types() );
 	return TransitionTypeNames[((int)type)];
 }
 
@@ -338,7 +336,6 @@ bool	TransitionInstanceClass::Check( SoldierGameObj *obj, bool action_trigger )
 
 			VehicleGameObj * p_vehicle;
 			p_vehicle = (VehicleGameObj *) Vehicle.Get_Ptr();
-			WWASSERT(p_vehicle != NULL);
 
 			if (!obj->Is_Permitted_To_Enter_Vehicle() ||
 				 !p_vehicle->Is_Entry_Permitted(obj)) {
@@ -483,12 +480,6 @@ void	TransitionInstanceClass::Start( SoldierGameObj *obj )
 	}
 
 	// set the object ending position & orientation
-#ifdef WWDEBUG
-	Vector3 pos = EndingTM.Get_Translation();
-	if (!pos.Is_Valid()) {
-		WWDEBUG_SAY(("Transition EndingTM has invalid position: %f, %f, %f\r\n",pos.X,pos.Y,pos.Z));
-	}
-#endif
 
 	obj->Set_Transform( EndingTM );
 
@@ -550,7 +541,6 @@ void	TransitionInstanceClass::Start( SoldierGameObj *obj )
 
 		case TransitionDataClass::VEHICLE_EXIT:
 		{
-			WWASSERT( vehicle );
 //			obj->Set_Vehicle_State( SoldierGameObj::EXITING_VEHICLE, vehicle );
 			vehicle->Passenger_Exiting();
 			break;
@@ -664,7 +654,6 @@ void	TransitionManager::Destroy_Pending( void )
 
 bool	TransitionManager::Check( SoldierGameObj *obj, bool action_trigger )
 {
-	WWPROFILE( "Transition Check" );
 	SLNode<TransitionInstanceClass> *ti_node;
 	for (	ti_node = Transitions.Head(); ti_node; ti_node = ti_node->Next()) {
 		if ( ti_node->Data()->Check( obj, action_trigger ) ) {

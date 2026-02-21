@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef PHYSGRIDCULL_H
 #define PHYSGRIDCULL_H
@@ -8,7 +5,6 @@
 #include "gridcull.h"
 #include "phys.h"
 #include "physlist.h"
-#include "wwdebug.h"
 
 class PhysicsSceneClass;
 class VisRenderContextClass;

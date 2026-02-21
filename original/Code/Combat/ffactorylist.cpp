@@ -11,13 +11,11 @@ FileFactoryListClass::FileFactoryListClass( void ) :
 	SearchStartIndex( 0 ),
 	TempFactory( NULL )
 {
-	WWASSERT( Instance == NULL );
 	Instance = this;
 }
 
 FileFactoryListClass::~FileFactoryListClass( void )
 {
-	WWASSERT( Instance == this );
 	Instance = NULL;
 }
 
@@ -85,7 +83,6 @@ FileFactoryClass *FileFactoryListClass::Remove_FileFactory(void)
 
 void	FileFactoryListClass::Add_Temp_FileFactory( FileFactoryClass * factory )
 {
-	WWASSERT( TempFactory == NULL );
 	TempFactory = factory;
 }
 

@@ -10,7 +10,6 @@
 #endif
 
 #ifndef WWDEBUG_H
-#include "wwdebug.h"
 #endif
 
 /*
@@ -117,13 +116,11 @@ private:
 
 inline void	ControlClass::Set_Analog( AnalogControl control, float value )	
 {
-	WWASSERT(WWMath::Is_Valid_Float(value)); 
 	AnalogValues[ control ] = value; 
 }
 
 inline float ControlClass::Get_Analog( AnalogControl control )
 { 
-	WWASSERT(WWMath::Is_Valid_Float(AnalogValues[ control ])); 
 	return AnalogValues[ control ]; 
 }
 

@@ -9,7 +9,6 @@
 #include "debug.h"
 #include "animobj.h"
 #include "soldier.h"
-#include "wwprofile.h"
 #include "weapons.h"
 #include "decophys.h"
 #include "stealtheffect.h"
@@ -191,7 +190,6 @@ void 	WeaponViewClass::Enable( bool enable )
 */
 void 	WeaponViewClass::Think()
 {
-	WWPROFILE( "WeaponView Think" );
 
 	bool bail = false;
 
@@ -497,7 +495,7 @@ void 	WeaponViewClass::Think()
 		Vector3	fp_offset = HandsOffset + COMBAT_CAMERA->Get_First_Person_Offset_Tweak();
 		tm.Translate( fp_offset );
 
-		//WWASSERT(COMBAT_STAR != NULL);//TSS
+		//assert(COMBAT_STAR != NULL);//TSS
 		if (COMBAT_STAR != NULL) {
 			//
 			// COMBAT_STAR may be NULL during MP game intermission
@@ -541,8 +539,6 @@ void 	WeaponViewClass::Think()
 				if (COMBAT_STAR != NULL && COMBAT_STAR->Peek_Physical_Object()!=NULL) {
 					COMBAT_STAR->Peek_Physical_Object()->Inc_Ignore_Counter();
 				}
-				WWPROFILE( "Cast Ray" );
-				WWASSERT(COMBAT_SCENE != NULL);
 				COMBAT_SCENE->Cast_Ray( raytest );
 				if (COMBAT_STAR != NULL && COMBAT_STAR->Peek_Physical_Object()!=NULL) {
 					COMBAT_STAR->Peek_Physical_Object()->Dec_Ignore_Counter();
@@ -698,9 +694,7 @@ static void	Release_Weapon_Assets( void )
 
 	if ( WeaponModel != NULL ) {
 		// Remove
-		WWASSERT( HandsPhysObj != NULL );
 		RenderObjClass * hands_model = HandsPhysObj->Peek_Model();
-		WWASSERT( hands_model != NULL );
 		hands_model->Remove_Sub_Objects_From_Bone( "GUNBONE" );
 
 		WeaponModel->Release_Ref();
@@ -709,9 +703,7 @@ static void	Release_Weapon_Assets( void )
 
 	if ( ClipModel != NULL ) {
 		// Remove
-		WWASSERT( HandsPhysObj != NULL );
 		RenderObjClass * hands_model = HandsPhysObj->Peek_Model();
-		WWASSERT( hands_model != NULL );
 		hands_model->Remove_Sub_Objects_From_Bone( "CLIPBONE" );
 
 		ClipModel->Release_Ref();

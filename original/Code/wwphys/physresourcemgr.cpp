@@ -48,7 +48,6 @@ TextureClass *	PhysResourceMgrClass::Get_Shadow_Blob_Texture(void)
 		_ShadowBlobTexture->Set_U_Addr_Mode(TextureClass::TEXTURE_ADDRESS_CLAMP);
 		_ShadowBlobTexture->Set_V_Addr_Mode(TextureClass::TEXTURE_ADDRESS_CLAMP);
 	}
-	WWASSERT(_ShadowBlobTexture != NULL);
 	_ShadowBlobTexture->Add_Ref();
 	return _ShadowBlobTexture;
 }

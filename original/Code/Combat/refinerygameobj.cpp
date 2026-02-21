@@ -2,14 +2,12 @@
 #include "harvester.h"
 #include "basecontroller.h"
 #include "vehicle.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
 #include "scriptzone.h"
-#include "wwprofile.h"
 #include "combat.h"
 #include "wwaudio.h"
 #include "audiblesound.h"
@@ -17,11 +15,9 @@
 #include "playertype.h"
 //#include "building.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (Refinery)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -29,7 +25,6 @@ DECLARE_FORCE_LINK (Refinery)
 SimplePersistFactoryClass	<RefineryGameObjDef,	CHUNKID_GAME_OBJECT_DEF_REFINERY>					_RefineryGameObjDefPersistFactory;
 SimplePersistFactoryClass	<RefineryGameObj,		CHUNKID_GAME_OBJECT_REFINERY>							_RefineryGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (RefineryGameObjDef,	CLASSID_GAME_OBJECT_DEF_REFINERY, "Refinery")	_RefineryGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -57,7 +52,6 @@ enum
 	XXXMICROCHUNKID_UNLOAD_DOOR_ID,
 	MICROCHUNKID_DOCK_TM
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -87,7 +81,6 @@ RefineryGameObjDef::RefineryGameObjDef (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~RefineryGameObjDef
@@ -97,7 +90,6 @@ RefineryGameObjDef::~RefineryGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -109,7 +101,6 @@ RefineryGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_REFINERY;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -124,7 +115,6 @@ RefineryGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -149,7 +139,6 @@ RefineryGameObjDef::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -182,7 +171,6 @@ RefineryGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -210,7 +198,6 @@ RefineryGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -221,7 +208,6 @@ RefineryGameObjDef::Get_Factory (void) const
 { 
 	return _RefineryGameObjDefPersistFactory; 
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -239,11 +225,9 @@ RefineryGameObj::RefineryGameObj (void)	:
 	DockTM (1),
 	TiberiumField (Vector3 (0, 0, 0), Vector3 (0, 0, 0))
 {
-	WWASSERT(WWAudioClass::Get_Instance() != NULL);
 	MoneyTrickleSound = WWAudioClass::Get_Instance()->Create_Sound("Money_Trickle");
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -259,7 +243,6 @@ RefineryGameObj::~RefineryGameObj (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -270,7 +253,6 @@ RefineryGameObj::Get_Factory (void) const
 {
 	return _RefineryGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -296,7 +278,6 @@ RefineryGameObj::Init (const RefineryGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -307,7 +288,6 @@ RefineryGameObj::Get_Definition (void) const
 {
 	return (const RefineryGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -329,7 +309,6 @@ RefineryGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -361,7 +340,6 @@ RefineryGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -389,7 +367,6 @@ RefineryGameObj::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -435,7 +412,6 @@ RefineryGameObj::CnC_Initialize (BaseControllerClass *base)
 		}
 	}
 
-
 	//
 	//	Find the closest unloading static anim phys
 	//
@@ -470,7 +446,6 @@ RefineryGameObj::CnC_Initialize (BaseControllerClass *base)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -479,7 +454,6 @@ RefineryGameObj::CnC_Initialize (BaseControllerClass *base)
 void
 RefineryGameObj::Think (void)
 {
-	WWPROFILE ("Refinery Think");
 
 	Manage_Money_Trickle_Sound();
 
@@ -583,7 +557,6 @@ RefineryGameObj::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Manage_Money_Trickle_Sound
@@ -626,7 +599,6 @@ RefineryGameObj::Manage_Money_Trickle_Sound (void)
 	/**/
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Play_Unloading_Animation
@@ -663,7 +635,6 @@ RefineryGameObj::Play_Unloading_Animation (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroyed
@@ -695,7 +666,6 @@ RefineryGameObj::On_Destroyed (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Harvester_Vehicle
@@ -724,7 +694,6 @@ RefineryGameObj::Set_Harvester_Vehicle (VehicleGameObj *harvester)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Harvester_Vehicle
@@ -745,7 +714,6 @@ RefineryGameObj::Get_Harvester_Vehicle (void)
 	return vehicle;
 }
 
-
 void RefineryGameObj::On_Harvester_Damaged(VehicleGameObj* harvester)
 {
 	if (BaseController) {
@@ -753,14 +721,12 @@ void RefineryGameObj::On_Harvester_Damaged(VehicleGameObj* harvester)
 	}
 }
 
-
 void RefineryGameObj::On_Harvester_Destroyed(VehicleGameObj* harvester)
 {
 	if (BaseController) {
 		BaseController->On_Vehicle_Destroyed(harvester);
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -782,7 +748,6 @@ RefineryGameObj::On_Harvester_Docked (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Is_Harvester_Docked
@@ -801,7 +766,6 @@ RefineryGameObj::Set_Is_Harvester_Docked (bool flag)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Export_Rare
@@ -818,7 +782,6 @@ RefineryGameObj::Export_Rare (BitStreamClass &packet)
 	packet.Add (IsHarvesterDocked);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Import_Rare
@@ -831,5 +794,4 @@ RefineryGameObj::Import_Rare (BitStreamClass &packet)
 
 	packet.Get (IsHarvesterDocked);
 }
-
 

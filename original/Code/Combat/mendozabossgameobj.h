@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __MENDOZABOSSGAMEOBJ_H
 #define __MENDOZABOSSGAMEOBJ_H

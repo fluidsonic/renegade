@@ -1,9 +1,6 @@
 #if !defined(AFX_SKELETON_H__E48DBEDA_2947_4E55_9064_895B85FBE5B2__INCLUDED_)
 #define AFX_SKELETON_H__E48DBEDA_2947_4E55_9064_895B85FBE5B2__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
 
 #include "resource.h"
 

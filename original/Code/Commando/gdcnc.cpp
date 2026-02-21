@@ -17,7 +17,7 @@ cGameDataCnc::cGameDataCnc(void)	:
 	IsPlaying (false),
 	cGameData()
 {
-   //WWDEBUG_SAY(("cGameDataCnc::cGameDataCnc\n"));
+   //
 
 	Set_Time_Limit_Minutes(25);
 	Set_Ini_Filename("svrcfg_cnc.ini");
@@ -33,7 +33,7 @@ cGameDataCnc::cGameDataCnc(void)	:
 //-----------------------------------------------------------------------------
 cGameDataCnc::~cGameDataCnc(void)
 {
-   //WWDEBUG_SAY(("cGameDataCnc::~cGameDataCnc\n"));
+   //
 }
 
 //-----------------------------------------------------------------------------

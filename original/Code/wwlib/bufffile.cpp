@@ -1,6 +1,5 @@
 #include	"always.h"
 #include	"bufffile.h"
-#include	"wwdebug.h"
 #include	<string.h>
 
 int		BufferedFileClass::_DesiredBufferSize	=	1024*16;	
@@ -153,7 +152,6 @@ int BufferedFileClass::Read(void * buffer, int size)
 int BufferedFileClass::Write(void const * buffer, int size)
 {
 	if ( BufferSize != 0 ) {
-		WWASSERT( 0 );
 	}
 
 	return BASECLASS::Write( buffer, size );

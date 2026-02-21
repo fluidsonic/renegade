@@ -1,6 +1,3 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #ifndef VECTOR_H
 #define VECTOR_H
@@ -11,9 +8,6 @@
 #include <string.h>
 #include <new.h>
 
-#ifdef _MSC_VER
-#pragma warning (disable : 4702) // unreachable code, happens with some uses of these templates
-#endif
 
 class	NoInitClass;
 
@@ -1035,8 +1029,5 @@ bool Pointer_Vector_Remove(T const * ptr, VectorClass<T *> & vec)
 	return(false);
 }
 
-#ifdef _MSC_VER
-#pragma warning (default : 4702) // unreachable code, happens with some uses of these templates
-#endif
 
 #endif

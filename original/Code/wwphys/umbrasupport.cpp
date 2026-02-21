@@ -175,7 +175,6 @@ public:
 	
 	virtual void command(Command cmd)
 	{
-		WWASSERT(VisObjList != NULL);
 		if (cmd == Umbra::Commander::INSTANCE_VISIBLE)
 		{
 			const Umbra::Object * obj = getInstance()->getObject();

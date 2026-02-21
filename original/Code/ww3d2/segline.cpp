@@ -63,7 +63,6 @@ void SegmentedLineClass::Reset_Line(void)
 void SegmentedLineClass::Set_Points(unsigned int num_points, Vector3 *locs)
 {
 	if (num_points < 2 || !locs) {
-		WWASSERT(0);
 		return;
 	}
 

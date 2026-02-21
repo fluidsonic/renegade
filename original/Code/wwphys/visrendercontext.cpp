@@ -64,7 +64,6 @@ VisRenderContextClass::~VisRenderContextClass(void)
  *=============================================================================================*/
 void VisRenderContextClass::Set_Vis_ID(uint32 id)
 {
-	WWASSERT(id < BACKFACE_VIS_ID);
 	_VisRasterizer.Set_Frontface_ID(id);
 	_VisRasterizer.Set_Backface_ID((uint32)BACKFACE_VIS_ID);
 }
@@ -205,16 +204,13 @@ void VisRenderContextClass::Scan_Frame_Buffer
 		
 		if (backface_fraction > BACKFACE_OVERFLOW_FRACTION) {
 
-			WWDEBUG_SAY(("%s Backface Overflow ",sample->Get_Cur_Direction_Name()));
 			sample->Set_Results(VIS_STATUS_BACKFACE_OVERFLOW,backface_fraction);
 		
 		} else {
 
 			if (backface_count > 0) {
-				WWDEBUG_SAY(("%s Backface Leak ",sample->Get_Cur_Direction_Name()));
 				sample->Set_Results(VIS_STATUS_BACKFACE_LEAK,backface_fraction);
 			} else {
-				WWDEBUG_SAY(("%s ",sample->Get_Cur_Direction_Name()));
 				sample->Set_Results(VIS_STATUS_OK,0.0f);
 			}
 		}

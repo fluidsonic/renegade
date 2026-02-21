@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DEFINITION_CLASS_ID_H
 #define __DEFINITION_CLASS_ID_H

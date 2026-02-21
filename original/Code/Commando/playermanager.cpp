@@ -24,7 +24,6 @@
 #include "string_ids.h"
 #include "systeminfolog.h"
 #include "consolemode.h"
-#include "gamespyadmin.h"
 #include "demosupport.h"
 
 //
@@ -144,7 +143,7 @@ cPlayer * cPlayerManager::Find_Inactive_Player(const WideStringClass & name)
 //------------------------------------------------------------------------------------
 cPlayer * cPlayerManager::Find_Team_Player(int team_number)
 {
-	//WWASSERT(The_Game()->Is_Team_Game());
+	//assert(The_Game()->Is_Team_Game());
 
    SLNode<cPlayer> * objnode;
 	for (objnode = PlayerList.Head(); objnode; objnode = objnode->Next()) {
@@ -162,7 +161,7 @@ cPlayer * cPlayerManager::Find_Team_Player(int team_number)
 //------------------------------------------------------------------------------------
 cPlayer * cPlayerManager::Find_Random_Team_Player(int team_number)
 {
-	//WWASSERT(The_Game()->Is_Team_Game());
+	//assert(The_Game()->Is_Team_Game());
 
    int chosen_player = rand() % Tally_Team_Size(team_number);
 
@@ -183,7 +182,7 @@ cPlayer * cPlayerManager::Find_Random_Team_Player(int team_number)
 //------------------------------------------------------------------------------------
 cPlayer * cPlayerManager::Find_Team_Mate(cPlayer * p_player1)
 {
-	//WWASSERT(The_Game()->Is_Team_Game());
+	//assert(The_Game()->Is_Team_Game());
 
 	int team_number = p_player1->Get_Player_Type();
 
@@ -482,7 +481,7 @@ void cPlayerManager::Compute_Ladder_Points(int winning_team)
 	// gametime that each player was present.
 	//
 	float game_duration_s = The_Game()->Get_Game_Duration_S();
-	//WWASSERT(game_duration_s > 0);
+	//assert(game_duration_s > 0);
 	if (game_duration_s == 0)
 	{
 		game_duration_s = 1;
@@ -649,8 +648,8 @@ void cPlayerManager::Reset_Players(void)
 //-----------------------------------------------------------------------------
 int cPlayerManager::Tally_Team_Size(int type)
 {
-   //WWASSERT(team >= 0 && team < MAX_TEAMS);
-   //WWASSERT(The_Game()->Is_Team_Game());
+   //assert(team >= 0 && team < MAX_TEAMS);
+   //assert(The_Game()->Is_Team_Game());
 
    int tally = 0;
    SLNode<cPlayer> * objnode;
@@ -886,13 +885,8 @@ void cPlayerManager::Construct_Heading(WideStringClass & string, bool force_verb
 	//
 	// Name
 	// 
-	//GAMESPY
 	//substring.Format(L"%-11s", TRANSLATION(IDS_MP_PLAYER));
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		substring.Format(L"%-36s", TRANSLATION(IDS_MP_PLAYER));
-	} else {
-		substring.Format(L"%-11s", TRANSLATION(IDS_MP_PLAYER));
-	}
+	substring.Format(L"%-11s", TRANSLATION(IDS_MP_PLAYER));
    string += substring;
 
 	//
@@ -954,8 +948,8 @@ void cPlayerManager::Construct_Heading(WideStringClass & string, bool force_verb
 //-----------------------------------------------------------------------------
 void cPlayerManager::List_Print(WideStringClass & text, Vector3 color)
 {
-   //WWASSERT(text != NULL);
-   //WWASSERT(::strlen(text) > 0);
+   //assert(text != NULL);
+   //assert(::strlen(text) > 0);
 
 	if (PTextRenderer == NULL) {
 		return;
@@ -1303,7 +1297,7 @@ bool cPlayerManager::Load(ChunkLoadClass &cload)
 
 				//Remove_All(); // TSS091401
 
-				//TSS110101. WWASSERT(PlayerList.Get_Count() == 0);
+				//TSS110101. assert(PlayerList.Get_Count() == 0);
 				while (cload.Open_Chunk()) {
 					switch(cload.Cur_Chunk_ID()) {
 

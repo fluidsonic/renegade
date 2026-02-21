@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __STRING_TWIDDLER_H
 #define __STRING_TWIDDLER_H

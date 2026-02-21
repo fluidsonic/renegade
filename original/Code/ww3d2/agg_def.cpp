@@ -2,7 +2,6 @@
 #include "htree.h"
 #include "w3derr.h"
 #include "chunkio.h"
-#include "wwdebug.h"
 #include "assetmgr.h"
 #include "matinfo.h"
 #include "texture.h"
@@ -178,7 +177,6 @@ AggregateDefClass::Create (void)
 		pmodel->Set_Sub_Objects_Match_LOD ((m_MiscInfo.Flags & W3D_AGGREGATE_FORCE_SUB_OBJ_LOD) == W3D_AGGREGATE_FORCE_SUB_OBJ_LOD);
 
 	} else {
-		WWDEBUG_SAY (("Unable to load aggregate %s.\r\n", m_Info.BaseModelName));
 	}
 
 	// Return a pointer to the new aggregate
@@ -258,13 +256,11 @@ AggregateDefClass::Attach_Subobjects (RenderObjClass &base_model)
 
 				// Attach this object to the requested bone
 				if (base_model.Add_Sub_Object_To_Bone (prender_obj, psubobj_info->BoneName) == false) {
-					WWDEBUG_SAY (("Unable to attach %s to %s.\r\n", psubobj_info->SubobjectName, psubobj_info->BoneName));
 				}
 
 				// Release our hold on this pointer
 				prender_obj->Release_Ref ();
 			} else {
-				WWDEBUG_SAY (("Unable to load aggregate subobject %s.\r\n", psubobj_info->SubobjectName));
 			}
 		}
 	}
@@ -424,7 +420,6 @@ AggregateDefClass::Build_Subobject_List
 			W3dAggregateSubobjectStruct subobj_info = { 0 };
 			for (int node_index = 0; node_index < node_count; node_index ++) {
 				RenderObjClass *psubobject = node_list[node_index];
-				WWASSERT (psubobject != NULL);
 				
 				// Is this subobject new?  (i.e. not in a 'vanilla' instance?)
 				const char *prototype_name = psubobject->Get_Name ();
@@ -521,7 +516,6 @@ AggregateDefClass::Load_W3D (ChunkLoadClass &chunk_load)
 			case W3D_CHUNK_TEXTURE_REPLACER_INFO:
 				if (chunk_load.Read (&header, sizeof (header)) == sizeof (header)) {
 					if (header.ReplacedTexturesCount > 0) {
-						WWDEBUG_SAY(("Obsolete texture replacement chunk encountered in aggregate: %s\r\n",m_pName));
 					}
 				} 
 				break;

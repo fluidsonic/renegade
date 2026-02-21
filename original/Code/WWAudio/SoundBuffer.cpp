@@ -1,10 +1,8 @@
 #include "soundbuffer.h"
 #include "rawfile.h"
-#include "wwdebug.h"
 #include "utils.h"
 #include "ffactory.h"
 #include "win.h"
-#include "wwprofile.h"
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +79,6 @@ SoundBufferClass::Free_Buffer (void)
 void
 SoundBufferClass::Determine_Stats (unsigned char *buffer)
 {
-	WWPROFILE ("Determine_Stats");
 
 	MMSLockClass lock;
 
@@ -133,14 +130,11 @@ SoundBufferClass::Set_Filename (const char *name)
 bool
 SoundBufferClass::Load_From_File (const char *filename)
 {
-	WWPROFILE ("SoundBufferClass::Load_From_File");
-	WWDEBUG_SAY(( "Loading sound file %s.\r\n", filename));
 
 	// Assume failure
 	bool retval = false;
 
 	// Param OK?
-	WWASSERT (filename != NULL);
 	if (filename != NULL) {
 
 		// Create a file object and pass it onto the appropriate function
@@ -164,7 +158,6 @@ SoundBufferClass::Load_From_File (const char *filename)
 bool
 SoundBufferClass::Load_From_File (FileClass &file)
 {
-	WWPROFILE ("SoundBufferClass::Load_From_File");
 
 	MMSLockClass lock;
 
@@ -183,7 +176,6 @@ SoundBufferClass::Load_From_File (FileClass &file)
 
 	// Determine the size of the buffer
 	m_Length = file.Size ();
-	WWASSERT	(m_Length > 0L);
 	if (m_Length > 0L) {
 
 		// Allocate a new buffer of the correct length and read the contents
@@ -229,8 +221,6 @@ SoundBufferClass::Load_From_Memory
 	Set_Filename ("unknown.wav");
 
 	// Params OK?
-	WWASSERT (mem_buffer != NULL);
-	WWASSERT (size > 0L);
 	if ((mem_buffer != NULL) && (size > 0L)) {
 
 		// Allocate a new buffer of the correct length and copy the contents
@@ -297,7 +287,6 @@ StreamSoundBufferClass::Load_From_File
 	unsigned long	/*offset*/
 )
 {
-	WWPROFILE ("StreamSoundBufferClass::Load_From_File");
 	return true;
 }
 
@@ -310,7 +299,6 @@ StreamSoundBufferClass::Load_From_File
 bool
 StreamSoundBufferClass::Load_From_File (const char *filename)
 {
-	WWPROFILE ("StreamSoundBufferClass::Load_From_File");
 	return true;
 }
 
@@ -323,7 +311,6 @@ StreamSoundBufferClass::Load_From_File (const char *filename)
 bool
 StreamSoundBufferClass::Load_From_File (FileClass &file)
 {
-	WWPROFILE ("StreamSoundBufferClass::Load_From_File");
 
 	MMSLockClass lock;
 

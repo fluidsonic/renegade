@@ -13,7 +13,6 @@
 #include "chunkio.h"
 #include "persistfactory.h"
 #include "assetmgr.h"
-#include "wwmemlog.h"
 
 
 ////////////////////////////////////////////////////////////////
@@ -172,7 +171,6 @@ PathClass::Initialize (const Vector3 &start, const Vector3 &end)
 void
 PathClass::Initialize (PathSolveClass &path_solve)
 {
-	WWMEMLOG(MEM_PATHFIND);
 	
 	m_State					= STATE_TRAVERSING_PATH;
 	m_SplineTime			= 0;
@@ -502,7 +500,6 @@ PathClass::Add_Waypath_Data
 void
 PathClass::Initialize (WaypathClass *waypath, int start_pt_id, int end_pt_id)
 {
-	WWMEMLOG(MEM_PATHFIND);
 
 	m_State					= ERROR_NOT_INITIALIZED;	
 	m_SplineTime			= 0;

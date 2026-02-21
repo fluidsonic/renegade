@@ -26,7 +26,6 @@
 #include "fromaddress.h"
 #include "crc.h"
 #include "msgstatlist.h"
-#include "commando/nat.h"
 #include "packetmgr.h"
 #include "bwbalance.h"
 
@@ -253,7 +252,7 @@ void cConnection::Init_As_Server(USHORT server_port, int max_players,
 	bool is_dedicated_server, ULONG addr)
 {
 
-	//WWASSERT(max_players < MAX_RHOSTS); // because MAX_RHOSTS is an array bound
+	//assert(max_players < MAX_RHOSTS); // because MAX_RHOSTS is an array bound
 
    MinRHost = 1;
    MaxRHost = max_players;
@@ -300,7 +299,7 @@ void cConnection::Init_As_Server(USHORT server_port, int max_players,
 bool cConnection::Bind(USHORT port, ULONG addr)
 {
 
-	//WWASSERT((!IsServer && port == 0) ||
+	//assert((!IsServer && port == 0) ||
 
    SOCKADDR_IN address;
    cNetUtil::Create_Local_Address(&address, port);
@@ -471,7 +470,7 @@ void cConnection::Set_Packet_Latency_Range(int minimum_latency_ms, int maximum_l
 //------------------------------------------------------------------------------------
 int cConnection::Single_Player_recvfrom(char * data)
 {
-	//WWDEBUG_SAY(("cConnection::Single_Player_recvfrom\n"));
+	//
 
    //
    // TSS - this relies on doing all recvs in one shot
@@ -512,7 +511,7 @@ int cConnection::Single_Player_recvfrom(char * data)
 //
 bool cConnection::Receive_Packet()
 {
-	//WWDEBUG_SAY(("cConnection::Receive_Packet start\n"));
+	//
 
 
    cPacket packet;
@@ -577,7 +576,7 @@ bool cConnection::Receive_Packet()
 	if (sender_id != cPacket::UNDEFINED_ID) {
 		p_sender_rhost = PRHost[sender_id];
 
-		//WWASSERT(p_sender_rhost != NULL);
+		//assert(p_sender_rhost != NULL);
       if (p_sender_rhost == NULL) {
 			packet.Flush();
 			return true;
@@ -587,7 +586,7 @@ bool cConnection::Receive_Packet()
    switch (packet.Get_Type()) {
 
       case PACKETTYPE_KEEPALIVE: {
-				//WWDEBUG_SAY(("CONNECT: PACKETTYPE_KEEPALIVE received\n"));
+				//
 
             if (!Sender_Id_Tests(packet)) {
 					packet.Flush();
@@ -639,7 +638,7 @@ bool cConnection::Receive_Packet()
          }
 
       case PACKETTYPE_ACCEPT_SC: {
-				//WWDEBUG_SAY(("cConnection::Receive_Packet : PACKETTYPE_ACCEPT_SC received\n"));
+				//
 
 
             if (LocalId != ID_UNKNOWN) {
@@ -705,7 +704,7 @@ bool cConnection::Receive_Packet()
          }
 
       case PACKETTYPE_UNRELIABLE: {
-				//WWDEBUG_SAY(("CONNECT: PACKETTYPE_UNRELIABLE received\n"));
+				//
 
 				//
             // Discard all unreliable packets until we have an id.
@@ -728,7 +727,7 @@ bool cConnection::Receive_Packet()
             //
 				if (packet_id < p_sender_rhost->Get_Unreliable_Packet_Rcv_Id()) {
                packet.Flush();
-					//WWDEBUG_SAY(("Unreliable packet flushed due to being out-of-date.\n"));
+					//
                return true;
 				}
 
@@ -757,7 +756,7 @@ bool cConnection::Receive_Packet()
 
       case PACKETTYPE_RELIABLE: {
 
-				//WWDEBUG_SAY(("CONNECT: PACKETTYPE_RELIABLE received\n"));
+				//
 				//
             // Discard all reliable packets until we have an id.
 				// We still don't have LocalId, therefore we can't Ack this.
@@ -792,8 +791,8 @@ bool cConnection::Receive_Packet()
          }
 
       case PACKETTYPE_ACK: {
-				//WWDEBUG_SAY(("CONNECT: PACKETTYPE_ACK received\n"));
-            //WWDEBUG_SAY(("(Received Ack for packet %d)\n", packet_id));
+				//
+            //
 
             if (!Sender_Id_Tests(packet)) {
                return true;
@@ -882,7 +881,7 @@ void cConnection::Process_Connection_Request(cPacket & packet)
 //------------------------------------------------------------------------------------
 int cConnection::Single_Player_sendto(cPacket & packet)
 {
-	//WWDEBUG_SAY(("cConnection::Single_Player_sendto\n"));
+	//
 
 
 	SList<cPacket> * p_packet_list;
@@ -952,7 +951,7 @@ memcpy(last_packet, packet.Get_Data(), last_packet_len);
    if (cSinglePlayerData::Is_Single_Player()) {
 	   ret_code = Single_Player_sendto(packet);
    } else {
-		//WWDEBUG_SAY(("cConnection: sendto %s\n", Addr_As_String(p_address)));
+		//
 
 		//
 		// Just pass the packet to the packet manager for deltaing and coagulation.
@@ -975,7 +974,7 @@ memcpy(last_packet, packet.Get_Data(), last_packet_len);
 			//unsigned long bytes;
 			//int result = ioctlsocket(Sock, FIONREAD, &bytes);
 			//if (result == 0 && bytes != 0) {
-			//	WWDEBUG_SAY(("ioctlsocket - bytes left to read = %d\n", bytes));
+			//	
 			//}
 
 	}
@@ -1099,7 +1098,7 @@ int cConnection::Low_Level_Receive_Wrapper(cPacket & packet)
 	   	(LPSOCKADDR) &packet.Get_From_Address_Wrapper()->FromAddress, &address_size);
 
 		if (ret_code > 0) {
-			//WWDEBUG_SAY(("cConnection: recvfrom %s\n", Addr_As_String((LPSOCKADDR_IN) &packet.Get_From_Address_Wrapper()->FromAddress)));
+			//
 		}
 #endif //(0)
 
@@ -1376,12 +1375,12 @@ bool cConnection::Is_Established() const
 void cConnection::Connect_Cs(cPacket & packet)
 {
 
-   //WWDEBUG_SAY(("Connect_Cs at time %s\n", cMiscUtil::Get_Text_Time()));
+   //
 
    int packet_id = PRHost[SERVER_RHOST_ID]->Get_Reliable_Packet_Send_Id();
 	PRHost[SERVER_RHOST_ID]->Increment_Reliable_Packet_Send_Id();
 
-   //WWDEBUG_SAY(("cConnection::Connect_Cs : Sending PACKETTYPE_CONNECT_CS\n"));
+   //
 
 	packet.Set_Type(PACKETTYPE_CONNECT_CS);
 	packet.Set_Id(packet_id);
@@ -1395,7 +1394,7 @@ void cConnection::Connect_Cs(cPacket & packet)
 void cConnection::Send_Accept_Sc(int new_rhost_id)
 {
 
-   //WWDEBUG_SAY(("cConnection::Send_Accept_Sc(%d)\n", new_rhost_id));
+   //
 
    int packet_id = PRHost[new_rhost_id]->Get_Reliable_Packet_Send_Id();
 	PRHost[new_rhost_id]->Increment_Reliable_Packet_Send_Id();
@@ -1444,8 +1443,8 @@ void cConnection::Send_Refusal_Sc(LPSOCKADDR_IN p_address, REFUSAL_CODE refusal_
 void cConnection::Send_Ack(LPSOCKADDR_IN p_address, int packet_id)
 {
 
-	//WWDEBUG_SAY(("Ack reply for packet is %d\n", packet_id));
-	//WWDEBUG_SAY(("Sending ack for packet %d to %s\n", packet_id, Addr_As_String(p_address)));
+	//
+	//
 
 	cPacket packet;
 
@@ -1465,7 +1464,7 @@ void cConnection::Send_Ack(LPSOCKADDR_IN p_address, int packet_id)
    }
 
 	//unsigned long time = TIMEGETTIME() / 1000;
-	//WWDEBUG_SAY(("Sending ack at %d\n", time));
+	//
 
    Send_Packet_To_Address(packet, p_address);
 }
@@ -1502,7 +1501,7 @@ void cConnection::Send_Keepalives()
             PRHost[rhost_id]->Set_Last_Keepalive_Time_Ms(ThisFrameTimeMs);
 
 
-            //WWDEBUG_SAY(("Sending keepalive to rhost %d at time %d\n", rhost_id, TIMEGETTIME()));
+            //
 
             //
             // Keepalive is a reliable message
@@ -1534,8 +1533,7 @@ double cConnection::Get_Threshold_Priority(int rhost_id)
 void cConnection::Set_Max_Acceptable_Packetloss_Pc(double max_packetloss_pc)
 {
 
-	//WWDEBUG_SAY(("cConnection::Set_Max_Acceptable_Packetloss_Pc: %5.2f\n",
-	//	MaxAcceptablePacketlossPc));
+	//
 
    MaxAcceptablePacketlossPc = max_packetloss_pc;
 }
@@ -1548,11 +1546,11 @@ bool cConnection::Demultiplex_R_Or_U_Packet(cPacket * p_packet, int rhost_id)
 
 
    if (IsServer) {
-		//WWPROFILE("cConnection::Server_Packet_Handler");
+		//
 		//Server_Packet_Handler(*p_packet, rhost_id);
 		ServerPacketHandler(*p_packet, rhost_id);
 	} else {
-		//WWPROFILE("cConnection::Client_Packet_Handler");
+		//
 		//Client_Packet_Handler(*p_packet);
 		ClientPacketHandler(*p_packet);
 	}
@@ -1560,7 +1558,7 @@ bool cConnection::Demultiplex_R_Or_U_Packet(cPacket * p_packet, int rhost_id)
    if (PRHost[rhost_id] == NULL) {
       is_aborted = true;
    } else {
-      //WWASSERT(p_packet->Is_Flushed());
+      //assert(p_packet->Is_Flushed());
       is_aborted = false;
    }
 
@@ -1573,7 +1571,7 @@ bool cConnection::Demultiplex_R_Or_U_Packet(cPacket * p_packet, int rhost_id)
 //
 void cConnection::Service_Read()
 {
-	//WWDEBUG_SAY(("cConnection::Service_Read\n"));
+	//
 
 
    CombinedStats.StatSample[STAT_ServiceCount]++;
@@ -1742,10 +1740,10 @@ void cConnection::Service_Read()
 
             } else {
 
-               //WWASSERT(p_packet->Get_Type() == (BYTE) PACKETTYPE_UNRELIABLE);
+               //assert(p_packet->Get_Type() == (BYTE) PACKETTYPE_UNRELIABLE);
 
 					{
-					//WWPROFILE("Demultiplex_R_Or_U_Packet");
+					//
                bool abort = Demultiplex_R_Or_U_Packet(p_packet, rhost_id);
                if (abort) {
                   break;
@@ -1803,7 +1801,7 @@ void cConnection::Service_Read()
 //-----------------------------------------------------------------------------
 void cConnection::Set_Bandwidth_Budget_Out(ULONG bw_budget)
 {
-	//WWASSERT(bw_budget >= 0);
+	//assert(bw_budget >= 0);
 	BandwidthBudgetOut = bw_budget;
 
 	//
@@ -1823,7 +1821,7 @@ void cConnection::Set_Bandwidth_Budget_Out(ULONG bw_budget)
 //-----------------------------------------------------------------------------
 void cConnection::Clear_Resend_Counts()
 {
-	//WWDEBUG_SAY(("cConnection::Clear_Resend_Counts()\n"));
+	//
 
    SLNode<cPacket> * objnode;
 	cPacket * p_packet;
@@ -1894,7 +1892,7 @@ void cConnection::Service_Send(bool is_urgent)
 
 					PRHost[rhost_id]->Set_Target_Bps(bps);
 
-					//WWDEBUG_SAY(("Compressed bandwidth out to client = %d bps\n", PacketManager.Get_Compressed_Bandwidth_Out(&(PRHost[rhost_id]->Get_Address()))));
+					//
 				}
 			}
 		}
@@ -1961,7 +1959,7 @@ void cConnection::Service_Send(bool is_urgent)
 					//
 					//if (p_packet->Get_Resend_Count() > 0) {
 					//if (p_packet->Get_Resend_Count() > 0 && p_packet->Get_Resend_Count() % 10 == 0) {
-						//WWDEBUG_SAY(("Resending packet %d to %s after %dms. Resent %d times\n", p_packet->Get_Id(), Addr_As_String(&(p_rhost->Get_Address())), ThisFrameTimeMs - p_packet->Get_First_Send_Time(), p_packet->Get_Resend_Count()));
+						//
 					//}
 					Send_Packet_To_Address(*p_packet, &(p_rhost->Get_Address()));
 
@@ -2000,8 +1998,7 @@ void cConnection::Service_Send(bool is_urgent)
 
 
                   Destroy_Connection(rhost_id);
-                  //WWDEBUG_SAY(("*** WWNET: Exceeded maximum resends (%d)) - assuming connection to rhost %d is broken.\n",
-						//	cNetUtil::MAX_RESENDS, rhost_id));
+                  //
 
                   if (IsServer) {
                      //Server_Broken_Connection_Handler(rhost_id); // Inform app level of this disaster
@@ -2254,7 +2251,7 @@ bool cConnection::Is_Time_To_Resend_Packet_To_Remote_Host(const cPacket *packet,
 	total_timeout = min(total_timeout, 3000.0f);
 
 	if (ThisFrameTimeMs - packet->Get_Send_Time() >= (unsigned long)total_timeout) {
-		//WWDEBUG_SAY(("Time to resend packet %d, age = %d, timeout = %d, resend count = %d\n", packet->Get_Id(), (int)(ThisFrameTimeMs - packet->Get_Send_Time()), (int)total_timeout, packet->Get_Resend_Count()));
+		//
 		return(true);
 	}
 	return(false);

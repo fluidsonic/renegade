@@ -1,5 +1,4 @@
 #include "gameobjmanager.h"
-#include "wwdebug.h"
 #include "smartgameobj.h"
 #include "combatchunkid.h"
 #include "saveloadsubsystem.h"
@@ -11,7 +10,6 @@
 #include "building.h"
 #include "wwphysids.h"
 #include "scriptzone.h"
-#include "wwprofile.h"
 #include "networkobjectmgr.h"
 #include "networkobjectmgr.h"
 #include "vehicle.h"
@@ -146,7 +144,6 @@ void	GameObjManager::Add( BaseGameObj *obj )
 	// Make sure we have no duplicate IDs
 	PhysicalGameObj *pobj = obj->As_PhysicalGameObj();
 	if ( pobj ) {
-		WWASSERT( Find_PhysicalGameObj(pobj->Get_ID()) == NULL ); 
 	}
 
 	// Cinematic scripts wanted objects not to progress on the frame they were created, 
@@ -199,10 +196,6 @@ void GameObjManager::Destroy_All()		// Destroy each object in the list
 
 	NetworkObjectMgrClass::Delete_Pending ();	
 
-	WWASSERT( GameObjList.Head() == NULL );
-	WWASSERT( SmartGameObjList.Head() == NULL );
-	WWASSERT( StarGameObjList.Head() == NULL );
-	WWASSERT( BuildingGameObjList.Head() == NULL );
 
 	ScriptManager::Enable_Script_Creation( true );	// turn it back on
 }
@@ -312,7 +305,6 @@ int	GameObjManager::Post_Think()
 SoldierGameObj * GameObjManager::Find_Soldier_Of_Client_ID(int client_id)
 {
 	{
-		WWPROFILE( "FSOC id" );
 		for (
 			SLNode<SmartGameObj> * objnode = Get_Smart_Game_Obj_List()->Head(); 
 			objnode; 
@@ -416,7 +408,6 @@ ScriptableGameObj * GameObjManager::Find_ScriptableGameObj( int id )
 */
 VehicleGameObj * GameObjManager::Find_Vehicle_Occupied_By( SoldierGameObj * p_soldier )
 {
-	WWASSERT(p_soldier != NULL);
 
 	SLNode<BaseGameObj> * objnode;
 
@@ -547,7 +538,6 @@ void	GameObjManager::Debug_Set_All_Building_States(float health_percentage,bool 
 */
 bool	GameObjManager::Is_In_Environment_Zone( Vector3 & pos )
 {
-	WWPROFILE( "Is_In_Environment_Zone" );
 
 	// Allow each object in the master list to think
 	SLNode<BaseGameObj> *objnode;
@@ -600,10 +590,8 @@ bool	GameObjManager::Is_In_Environment_Zone( Vector3 & pos )
 	// Remove the wishing to be dead ones
 	SLNode<BaseGameObj> *objnode;
 	for (	objnode = GameObjList.Head(); objnode; ) {
-      WWASSERT(objnode != NULL);
 		BaseGameObj *obj = objnode->Data();
 		objnode = objnode->Next();
-      WWASSERT(obj != NULL);
 
 		if ( obj->Is_Destroy() ) {
 			// If I'm a server, notify all others to destroy this object if this is a physical game obj!

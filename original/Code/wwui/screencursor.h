@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SCREENCURSOR_H
 #define __SCREENCURSOR_H

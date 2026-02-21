@@ -1,11 +1,7 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef CULLSYS_H
 #define CULLSYS_H
 
-#include "wwdebug.h"
 #include "stdlib.h"
 #include "refcount.h"
 #include "aabox.h"
@@ -24,8 +20,8 @@ class FrustumClass;
 class CullLinkClass
 {
 public:
-	WWINLINE CullLinkClass(CullSystemClass * system)								{ System = system; WWASSERT(System); }
-	virtual ~CullLinkClass(void)												{ WWASSERT(System == NULL); }
+	WWINLINE CullLinkClass(CullSystemClass * system)								{ System = system; assert(System); }
+	virtual ~CullLinkClass(void)												{ assert(System == NULL); }
 	
 	WWINLINE void					Set_Culling_System(CullSystemClass * sys)		{ System = sys; }	
 	WWINLINE CullSystemClass * Get_Culling_System(void)							{ return System; }

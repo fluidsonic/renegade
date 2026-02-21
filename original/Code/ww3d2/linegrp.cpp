@@ -62,16 +62,8 @@ void LineGroupClass::Set_Arrays(
 	)
 {
 	// The Line locations arrays are NOT optional!
-	WWASSERT(startlocs);
-	WWASSERT(endlocs);
 
 	// Ensure lengths of all arrays are the same:
-	WWASSERT(startlocs->Get_Count() == endlocs->Get_Count());
-	WWASSERT(!diffuse || startlocs->Get_Count() == diffuse->Get_Count());
-	WWASSERT(!alt || startlocs->Get_Count() == alt->Get_Count());
-	WWASSERT(!sizes || startlocs->Get_Count() == sizes->Get_Count());	
-	WWASSERT(!ucoords || startlocs->Get_Count() == ucoords->Get_Count());
-	WWASSERT(!taildiffuse || startlocs->Get_Count() == taildiffuse->Get_Count());
 
 	REF_PTR_SET(StartLineLoc,startlocs);
 	REF_PTR_SET(EndLineLoc,endlocs);
@@ -223,8 +215,6 @@ void	LineGroupClass::Render(RenderInfoClass &rinfo)
 	DX8Wrapper::Set_Texture(0, Texture);
 	REF_PTR_RELEASE(linemat);
 
-	WWASSERT(StartLineLoc && StartLineLoc->Get_Array());
-	WWASSERT(EndLineLoc && EndLineLoc->Get_Array());
 
 	// Enable sorting if the primitives are translucent and alpha testing is not enabled.
 	const bool sort = (Shader.Get_Dst_Blend_Func() != ShaderClass::DSTBLEND_ZERO) && (Shader.Get_Alpha_Test() == ShaderClass::ALPHATEST_DISABLE) && (WW3D::Is_Sorting_Enabled());
@@ -450,6 +440,5 @@ int LineGroupClass::Get_Polygon_Count(void)
 			return LineCount * 8;
 			break;
 	}
-	WWASSERT(0);
 	return 0;
 }

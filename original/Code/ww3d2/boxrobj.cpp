@@ -1,6 +1,5 @@
 #include "boxrobj.h"
 #include "w3d_util.h"
-#include "wwdebug.h"
 #include "vertmaterial.h"
 #include "ww3d.h"
 #include "chunkio.h"
@@ -216,8 +215,6 @@ const char * BoxRenderObjClass::Get_Name(void) const
  *=============================================================================================*/
 void BoxRenderObjClass::Set_Name(const char * name)
 {
-	WWASSERT(name != NULL);
-	WWASSERT(strlen(name) < 2*W3D_NAME_LEN);
 	strcpy(Name,name);
 }
 
@@ -256,12 +253,10 @@ void BoxRenderObjClass::Set_Color(const Vector3 & color)
  *=============================================================================================*/
 void BoxRenderObjClass::Init(void)
 {
-	WWASSERT(IsInitted == false);
 
 	/*
 	** Set up the materials
 	*/
-	WWASSERT(_BoxMaterial == NULL);
 	_BoxMaterial = NEW_REF(VertexMaterialClass,());
 	_BoxMaterial->Set_Ambient(0,0,0);
 	_BoxMaterial->Set_Diffuse(0,0,0);
@@ -293,7 +288,6 @@ void BoxRenderObjClass::Init(void)
  *=============================================================================================*/
 void BoxRenderObjClass::Shutdown(void)
 {
-	WWASSERT(IsInitted == true);
 	REF_PTR_RELEASE(_BoxMaterial);
 	
 	IsInitted = false;
@@ -634,7 +628,6 @@ void AABoxRenderObjClass::Render(RenderInfoClass & rinfo)
 void AABoxRenderObjClass::Special_Render(SpecialRenderInfoClass & rinfo)
 {
 	if (rinfo.RenderType == SpecialRenderInfoClass::RENDER_VIS) {
-		WWASSERT(rinfo.VisRasterizer != NULL);
 		Matrix3D temp(1);
 		temp.Translate(Transform.Get_Translation());
 		rinfo.VisRasterizer->Set_Model_Transform(temp);
@@ -1018,7 +1011,6 @@ void OBBoxRenderObjClass::Render(RenderInfoClass & rinfo)
 void OBBoxRenderObjClass::Special_Render(SpecialRenderInfoClass & rinfo)
 {
 	if (rinfo.RenderType == SpecialRenderInfoClass::RENDER_VIS) {
-		WWASSERT(rinfo.VisRasterizer != NULL);
 		rinfo.VisRasterizer->Set_Model_Transform(Transform);
 		vis_render_box(rinfo,ObjSpaceCenter,ObjSpaceExtent);
 	}

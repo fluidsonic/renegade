@@ -37,7 +37,6 @@ SubTitleManagerClass* SubTitleManagerClass::Create(const char* filename, const c
 
 	// Create subtitle manager for the vqa
 	SubTitleManagerClass* instance = new SubTitleManagerClass();
-	WWASSERT(instance != NULL);
 
 	if (instance != NULL) {
 		instance->Set_Font(font);
@@ -194,7 +193,6 @@ bool SubTitleManagerClass::Process(unsigned long movieTime)
 
 		// Get the next subtitle
 		SubTitleClass* subtitle = (*mSubTitles)[mSubTitleIndex];
-		WWASSERT(subtitle != NULL);
 
 		// Check the display time against the current movie time. If it is time
 		// to display the subtitle then send a subtitle event to the client.
@@ -213,7 +211,7 @@ bool SubTitleManagerClass::Process(unsigned long movieTime)
 			Draw_Sub_Title(subtitle);
 			update = true;
 
-//			WWDEBUG_SAY(("SubTitle: %04d @ %u\n", mSubTitleIndex, movieTime));
+//			
 		}
 	}
 
@@ -274,7 +272,6 @@ void SubTitleManagerClass::Reset(void)
 
 void SubTitleManagerClass::Draw_Sub_Title(const SubTitleClass* subtitle)
 {
-	WWASSERT(subtitle != NULL);
 
 	Renderer.Reset();
 

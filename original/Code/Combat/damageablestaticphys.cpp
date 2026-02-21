@@ -3,13 +3,8 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 #include "hanim.h"
-#include "wwdebug.h"
-#include "wwhack.h"
 #include "combat.h"
 #include "explosion.h"
-
-
-DECLARE_FORCE_LINK( damageablestaticphys );
 
 /*
 ** Chunk Id's used by DamageableStaticPhysDefClass
@@ -47,7 +42,6 @@ enum
 	DAMAGEABLESTATICPHYS_VARIABLE_CURSTATE					= 0x00,
 };
 
-
 /************************************************************************************************
 **
 ** DamageableStaticPhysDefClass Implementation
@@ -56,7 +50,6 @@ enum
 SimplePersistFactoryClass<DamageableStaticPhysDefClass, PHYSICS_CHUNKID_DAMAGEABLESTATICPHYSDEF>	_DamageableStaticPhysDefPersistFactory;
 
 DECLARE_DEFINITION_FACTORY(DamageableStaticPhysDefClass, CLASSID_DAMAGEABLESTATICPHYSDEF, "DamageableStaticPhys") _DamageableStaticPhysDefDefFactory;
-
 
 DamageableStaticPhysDefClass::DamageableStaticPhysDefClass(void) : 
 	StaticAnimPhysDefClass(),
@@ -113,7 +106,6 @@ PersistClass *	DamageableStaticPhysDefClass::Create(void) const
 	return obj;
 }
 
-
 bool	DamageableStaticPhysDefClass::Save(ChunkSaveClass & csave)
 {
 	csave.Begin_Chunk(DAMAGEABLESTATICPHYSDEF_CHUNK_STATICANIMPHYSDEF);
@@ -167,7 +159,6 @@ bool	DamageableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 						READ_MICRO_CHUNK(cload, DAMAGEABLESTATICPHYSDEF_VARIABLE_DEADTWITCHEND,DeadTwitchEnd);
 						READ_MICRO_CHUNK(cload, DAMAGEABLESTATICPHYSDEF_VARIABLE_PLAYTWITCHESTOCOMPLETION,PlayTwitchesToCompletion);
 						default:
-							WWDEBUG_SAY(( "Unrecognized DamageableStaticPhysDef Variable chunkID\n" ));
 							break;
 					}
 					cload.Close_Micro_Chunk();
@@ -179,7 +170,6 @@ bool	DamageableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 				break;
 
 			default:
-				WWDEBUG_SAY(( "Unrecognized DamageableStaticPhysDef chunkID\n" ));
 				break;
 
 		}
@@ -193,8 +183,6 @@ const PersistFactoryClass & DamageableStaticPhysDefClass::Get_Factory (void) con
 { 
 	return _DamageableStaticPhysDefPersistFactory; 
 }
-
-
 
 /************************************************************************************************
 **
@@ -239,7 +227,6 @@ void DamageableStaticPhysClass::Timestep(float dt)
 	}
 
 }
-
 
 void DamageableStaticPhysClass::Apply_Damage_Static( const OffenseObjectClass & offense )
 {
@@ -291,7 +278,6 @@ void DamageableStaticPhysClass::Reset_Health(void)
 	Start_Loop();
 }
 
-
 void DamageableStaticPhysClass::Start_Loop(void) 
 {
 	const DamageableStaticPhysDefClass * def = Get_DamageableStaticPhysDef();
@@ -319,7 +305,6 @@ void DamageableStaticPhysClass::Start_Loop(void)
 			Get_Animation_Manager().Set_Current_Frame(frame0);
 		}
 	} else {
-		WWDEBUG_SAY(("ERROR: Missing definition for damageable object: %s\n",Model->Get_Name()));
 	}
 }
 
@@ -364,7 +349,6 @@ void DamageableStaticPhysClass::Play_Twitch(void)
 		}
 
 	} else {
-		WWDEBUG_SAY(("ERROR: Missing definition for damageable object: %s\n",Model->Get_Name()));
 	}
 
 }
@@ -384,7 +368,6 @@ void DamageableStaticPhysClass::Play_Death_Transition(void)
 		}
 	
 	} else {
-		WWDEBUG_SAY(("ERROR: Missing definition for damageable object: %s\n",Model->Get_Name()));
 	}
 }
 
@@ -414,7 +397,6 @@ bool DamageableStaticPhysClass::Save( ChunkSaveClass & csave )
 	return true;
 }
 
-
 bool DamageableStaticPhysClass::Load(ChunkLoadClass & cload)
 {
 	while (cload.Open_Chunk()) {
@@ -433,7 +415,6 @@ bool DamageableStaticPhysClass::Load(ChunkLoadClass & cload)
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK(cload, DAMAGEABLESTATICPHYS_VARIABLE_CURSTATE, CurState);
 						default:
-							WWDEBUG_SAY(( "Unrecognized DamageableStaticPhys Variable chunkID\n" ));
 							break;
 					}
 					cload.Close_Micro_Chunk();
@@ -441,7 +422,6 @@ bool DamageableStaticPhysClass::Load(ChunkLoadClass & cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(( "Unrecognized DamageableStaticPhys chunkID\n" ));
 				break;
 
 		}
@@ -451,6 +431,4 @@ bool DamageableStaticPhysClass::Load(ChunkLoadClass & cload)
 	Start_Loop();
 	return true;
 }
-
-
 

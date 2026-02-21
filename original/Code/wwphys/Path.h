@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __COMMANDO_PATH_H
 #define __COMMANDO_PATH_H
@@ -157,10 +154,6 @@ public:
 	static bool			Are_Move_Vectors_Displayed (void)	{ return m_DisplayMoveVectors; }
 	static void			Display_Move_Vectors (bool onoff)	{ m_DisplayMoveVectors = onoff; }
 
-#ifdef WWDEBUG
-	int					Get_Path_Vector_Length(void) {return(m_PathActions.Length());};
-	int					Get_Path_Vector_Count(void) {return(m_PathActions.Count());};
-#endif //WWDEBUG
 
 protected:
 

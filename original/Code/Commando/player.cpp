@@ -28,7 +28,6 @@
 #include "messagewindow.h"
 #include "playerkill.h"
 #include "consolemode.h"
-#include "gamespyadmin.h"
 
 
 DECLARE_NETWORKOBJECT_FACTORY(cPlayer, NETCLASSID_PLAYER);
@@ -43,7 +42,7 @@ cPlayer::cPlayer(void) :
 	ClanID(0),
 	WOLPoints(0)
 {
-	//WWDEBUG_SAY(("cPlayer::cPlayer\n"));
+	//
 
    Id						= INVALID_ID;
    LadderPoints		= 0;
@@ -65,17 +64,14 @@ cPlayer::cPlayer(void) :
 	Set_Is_Waiting_For_Intermission(false);
 	Set_App_Packet_Type(APPPACKETTYPE_PLAYER);
 
-	Set_GameSpy_Auth_State(GAMESPY_AUTH_STATE_INITIAL);
-	Set_GameSpy_Kick_State(GAMESPY_KICK_STATE_INITIAL);
-
    cPlayerManager::Add(this);
 }
 
 //------------------------------------------------------------------------------------
 cPlayer::~cPlayer(void)
 {
-   //WWDEBUG_SAY(("* Destroying player object for client %d (%s)\n", Id, Name));
-	//WWDEBUG_SAY(("cPlayer::~cPlayer\n"));
+   //
+	//
 
 	cPlayerManager::Remove(this);
 }
@@ -424,19 +420,7 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
 	//
    // Name
    //
-	//	GAMESPY
-	/*
-	if (IsActive.Is_True()) {
-	   substring.Format(L"%-11s", Name);
-	} else {
-	   substring.Format(L"%-9s##", Name);
-	}
-	*/
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		substring.Format(L"%-34s", Name);
-	} else {
-		substring.Format(L"%-9s", Name);
-	}
+	substring.Format(L"%-9s", Name);
 	if (IsActive.Is_True()) {
 		substring += L"  ";
 	} else {
@@ -815,7 +799,7 @@ void cPlayer::Export_Rare(BitStreamClass &packet)
 
 	packet.Add((int)WolRank);
 	packet.Add(NumWolGames);
-	//WWDEBUG_SAY(("cPlayer::Export_Rare NumWolGames = %d\n", NumWolGames));
+	//
 
 }
 
@@ -895,14 +879,6 @@ void cPlayer::Set_Is_Active(bool flag)
 			}
 		}
 
-		if (IsActive.Is_False()) {
-			//
-			// Anyone who leaves will need to be reauthenticated next tim ethey attempt
-			// to join.
-			//
-			Set_GameSpy_Auth_State(GAMESPY_AUTH_STATE_INITIAL);
-			Set_GameSpy_Kick_State(GAMESPY_KICK_STATE_INITIAL);
-		}
 
 		IsActive.Set(flag);
 
@@ -924,52 +900,7 @@ bool cPlayer::Is_Alive_And_Kicking(void) const
 void cPlayer::Set_Num_Wol_Games(int num_games)
 {
 	NumWolGames = num_games;
-	//WWDEBUG_SAY(("Set_Num_Wol_Games NumWolGames = %d\n", NumWolGames));
+	//
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
 }
 
-//------------------------------------------------------------------------------------
-void cPlayer::Set_GameSpy_Auth_State(GAMESPY_AUTH_STATE_ENUM state)
-{
-	if (state != GameSpyAuthState)
-	{
-		GameSpyAuthState = state;
-		GameSpyAuthStateEntryTimeMs = TIMEGETTIME();
-	}
-}
-
-//------------------------------------------------------------------------------------
-void cPlayer::Set_GameSpy_Auth_State_Entry_Time_Ms(DWORD time_ms)
-{
-	GameSpyAuthStateEntryTimeMs = time_ms;
-}
-
-//------------------------------------------------------------------------------------
-void cPlayer::Set_GameSpy_Challenge_String(StringClass & challenge_string)
-{
-
-	GameSpyChallengeString = challenge_string;
-}
-
-//------------------------------------------------------------------------------------
-void cPlayer::Set_GameSpy_Hash_Id(StringClass & hash_id)
-{
-
-	GameSpyHashId = hash_id;
-}
-
-//------------------------------------------------------------------------------------
-void cPlayer::Set_GameSpy_Kick_State(GAMESPY_KICK_STATE_ENUM state)
-{
-	if (state != GameSpyKickState)
-	{
-		GameSpyKickState = state;
-		GameSpyKickStateEntryTimeMs = TIMEGETTIME();
-	}
-}
-
-//------------------------------------------------------------------------------------
-void cPlayer::Set_GameSpy_Kick_State_Entry_Time_Ms(DWORD time_ms)
-{
-	GameSpyKickStateEntryTimeMs = time_ms;
-}

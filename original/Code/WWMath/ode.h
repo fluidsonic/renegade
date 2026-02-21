@@ -1,13 +1,9 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef ODE_H
 #define ODE_H
 
 #include "always.h"
 #include "vector.h"
-#include "wwdebug.h"
 
 
 /*

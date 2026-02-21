@@ -1,5 +1,4 @@
 #include "hash.h"
-#include "wwdebug.h"
 #include "realcrc.h"
 #ifdef _UNIX
 #include "osdep.h"
@@ -14,7 +13,6 @@ HashTableClass::HashTableClass( int size ) :
 	HashTableSize( size )
 {
 	// Assert HashTableSize is a power of 2
-	WWASSERT( (HashTableSize & (HashTableSize-1)) == 0 );
 
 	// Allocate and clear the table
 	HashTable = new HashableClass * [ HashTableSize ];
@@ -39,17 +37,14 @@ void	HashTableClass::Reset( void )
 
 void	HashTableClass::Add( HashableClass * entry )
 {
-	WWASSERT( entry != NULL);
 
 	int index = Hash( entry->Get_Key() );
-	WWASSERT( entry->NextHash == NULL );
 	entry->NextHash = HashTable[ index ];
 	HashTable[ index ] = entry;
 }
 
 bool	HashTableClass::Remove( HashableClass * entry )
 {
-	WWASSERT(entry != NULL);
 
 	// Find in the hash table.
 	const char *key = entry->Get_Key();

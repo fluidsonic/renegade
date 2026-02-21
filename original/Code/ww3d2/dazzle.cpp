@@ -4,7 +4,6 @@
 #include "camera.h"
 #include "ww3d.h"
 #include "wwstring.h"
-#include "wwdebug.h"
 #include "assetmgr.h"
 #include "vector3i.h"
 #include "quat.h"
@@ -23,11 +22,9 @@
 #include "sortingrenderer.h"
 #include "texture.h"
 #include "scene.h"
-#include "wwprofile.h"
 #include "visrasterizer.h"
 #include <cstdio>
 #include <limits.h>
-#include <wwprofile.h>
 
 
 // All dazzle types appear under Dazzles_List in the dazzle.ini file.
@@ -818,7 +815,6 @@ void DazzleRenderObjClass::Set_Layer(DazzleLayerClass *layer)
 
 	// This function sets the dazzle to be visible in the given layer.
 	if (!layer) {
-		WWASSERT(0);
 		return;
 	}
 
@@ -856,7 +852,6 @@ RenderObjClass* DazzleRenderObjClass::Clone(void) const
 // ----------------------------------------------------------------------------
 void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
 {
-	WWPROFILE("Dazzle::Render");
 
 	if (	Is_Not_Hidden_At_All() &&
 			_dazzle_rendering_enabled &&
@@ -947,7 +942,6 @@ void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
 
 		// If this dazzle is visible or it is currently fading, submit it for rendering
 		if (/*visibility > 0.0f ||*/ current_dazzle_intensity>0.0f || current_halo_intensity>0.0f) {
-			WWASSERT(types[type]);
 			Set_Layer(current_dazzle_layer);
 		}
 	}
@@ -958,7 +952,6 @@ void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
 
 void DazzleRenderObjClass::Render_Dazzle(CameraClass* camera)
 {
-	WWPROFILE("Dazzle::Render");
 	Matrix4 old_view_transform;
 	Matrix4 old_world_transform;
 	Matrix4 old_projection_transform;
@@ -1286,7 +1279,6 @@ LensflareTypeClass* DazzleRenderObjClass::Get_Lensflare_Class(unsigned id) // Re
 void DazzleRenderObjClass::vis_render_dazzle(SpecialRenderInfoClass & rinfo)
 {
 
-	WWASSERT(rinfo.VisRasterizer != NULL);
 	rinfo.VisRasterizer->Enable_Two_Sided_Rendering(true);
 
 	/*
@@ -1412,7 +1404,6 @@ PersistClass *	DazzlePersistFactoryClass::Load(ChunkLoadClass & cload) const
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		};
 		cload.Close_Chunk();
@@ -1433,13 +1424,10 @@ PersistClass *	DazzlePersistFactoryClass::Load(ChunkLoadClass & cload) const
 	if (new_obj == NULL) {
 		static int count = 0;
 		if ( ++count < 10 ) {
-			WWDEBUG_SAY(("DazzlePersistFactory failed to create dazzle of type: %s!!\r\n",dazzle_type));
-			WWDEBUG_SAY(("Replacing it with a NULL render object!\r\n"));
 		}
 		new_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj("NULL");
 	}
 
-	WWASSERT(new_obj != NULL);
 	if (new_obj) {
 		new_obj->Set_Transform(tm);
 	}
@@ -1490,7 +1478,6 @@ DazzleLayerClass::DazzleLayerClass(void) :
 		// Generate an array with one visible list for each type.
 		// NOTE - this means that this constructor must be called AFTER all types
 		// are initialized
-		WWASSERT(type_count);
 
 		visible_lists = new DazzleRenderObjClass *[type_count];
 		for (unsigned int i = 0; i < type_count; i++) {
@@ -1502,7 +1489,6 @@ DazzleLayerClass::DazzleLayerClass(void) :
 DazzleLayerClass::~DazzleLayerClass(void)
 {
 	// NOTE - this destructor must be called BEFORE DeInit().
-	WWASSERT(type_count);
 
 	for (unsigned int i = 0; i < type_count; i++) {
 		Clear_Visible_List(i);
@@ -1544,7 +1530,6 @@ void DazzleLayerClass::Render(CameraClass* camera)
 int DazzleLayerClass::Get_Visible_Item_Count(unsigned int type) const
 {
 	if (type >= type_count) {
-		WWASSERT(0);
 		return 0;
 	}
 
@@ -1563,7 +1548,6 @@ int DazzleLayerClass::Get_Visible_Item_Count(unsigned int type) const
 void DazzleLayerClass::Clear_Visible_List(unsigned int type)
 {
 	if (type >= type_count) {
-		WWASSERT(0);
 		return;
 	}
 

@@ -18,7 +18,7 @@ cGameDataUpdateEvent::cGameDataUpdateEvent(void)
 void
 cGameDataUpdateEvent::Init(int client_id)
 {
-	//WWASSERT(client_id >= 0);
+	//assert(client_id >= 0);
 
 	// WAS: cGameDataUpdateEvent::cGameDataUpdateEvent(); (illegal qualified constructor call)
 

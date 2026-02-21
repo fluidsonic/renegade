@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __MOUSE_MGR_H
 #define __MOUSE_MGR_H

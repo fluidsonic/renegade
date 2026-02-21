@@ -6,7 +6,6 @@
 #include "mesh.h"
 #include "decalmsh.h"
 #include "assetmgr.h"
-#include "wwdebug.h"
 #include "robjlist.h"
 #include "texture.h"
 
@@ -62,7 +61,6 @@ int PhysDecalSysClass::Create_Decal
 	*/
 	CreatePermanentDecals = is_permanent;
 	DecalGeneratorClass * gen = Lock_Decal_Generator();
-	WWASSERT(gen != NULL);
 
 	/*
 	** Set up the transform, projection, and bounding volume parameters
@@ -158,7 +156,6 @@ void PhysDecalSysClass::Unlock_Decal_Generator(DecalGeneratorClass * generator)
 			/*
 			** the id should match the "next temp decal index"
 			*/
-			WWASSERT(generator->Get_Decal_ID() == NextTempDecalIndex);
 			TempDecals[NextTempDecalIndex].Init(generator);
 
 			/*
@@ -182,7 +179,6 @@ void PhysDecalSysClass::Decal_Mesh_Destroyed(uint32 decal_id,DecalMeshClass * me
 
 void PhysDecalSysClass::Set_Temporary_Decal_Pool_Size(int count)
 {
-	WWASSERT(count > 0);
 
 	/*
 	** If we are shrinking, remove all decals in the slots that are going away
@@ -238,7 +234,6 @@ bool PhysDecalSysClass::is_decal_id_permanent(uint32 id)
 
 void PhysDecalSysClass::allocate_resources(void)
 {
-	WWASSERT(DecalMaterial == NULL);
 	DecalMaterial = NEW_REF(VertexMaterialClass,());
 	DecalMaterial->Set_Ambient(0,0,0);
 	DecalMaterial->Set_Diffuse(0,0,0);
@@ -294,8 +289,6 @@ bool PhysDecalSysClass::internal_remove_decal(uint32 id,MeshClass * deleted_mesh
 		/*
 		** Temporary decals use their index as the id
 		*/
-		WWASSERT(id >= 0);
-		WWASSERT(id < (uint32)TempDecals.Length());
 
 		if (deleted_mesh != NULL) {
 			TempDecals[id].Meshes.Delete(deleted_mesh);
@@ -337,7 +330,6 @@ void PhysDecalSysClass::LogicalDecalClass::Init(DecalGeneratorClass * gen)
 	NonRefRenderObjListIterator it(&(gen->Get_Mesh_List()));
 	for (it.First(); !it.Is_Done(); it.Next()) {
 		MeshClass * mesh = (MeshClass *)it.Get_Obj();
-		WWASSERT(mesh->Class_ID()==RenderObjClass::CLASSID_MESH);
 		Meshes.Add(mesh);
 	}
 }

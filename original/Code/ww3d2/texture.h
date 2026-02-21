@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef TEXTURE_H
 #define TEXTURE_H
@@ -188,7 +185,7 @@ class TextureClass : public RefCountClass
 		bool Is_Missing_Texture();
 
 		// Support for self managed textures
-		bool Is_Dirty() { WWASSERT(Pool==POOL_DEFAULT); return Dirty; };
+		bool Is_Dirty() { assert(Pool==POOL_DEFAULT); return Dirty; };
 		void Clean() { Dirty=false; };
 
 		unsigned Get_Reduction() const;

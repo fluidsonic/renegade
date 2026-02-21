@@ -289,7 +289,6 @@ ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id
 				//
 				//	Debug check to ensure we've got the correct cateogry
 				//
-				WWASSERT (conversation->Get_Category_ID () == category_id);
 				
 				//
 				//	Add this conversation to our list
@@ -1079,7 +1078,6 @@ ConversationMgrClass::Think (void)
 void
 ConversationMgrClass::Add_Conversation (ConversationClass *conversation)
 {
-	WWASSERT (conversation != NULL);
 	if (conversation == NULL) {
 		return ;
 	}

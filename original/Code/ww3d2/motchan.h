@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef MOTCHAN_H
 #define MOTCHAN_H

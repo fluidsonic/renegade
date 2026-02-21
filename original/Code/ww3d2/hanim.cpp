@@ -4,7 +4,6 @@
 #include "motchan.h"
 #include "chunkio.h"
 #include "w3d_file.h"
-#include "wwdebug.h"
 #include <string.h>
 #include <nstrdup.h>
 
@@ -318,7 +317,6 @@ bool	HAnimComboClass::Normalize_Weights(void)
 void	HAnimComboClass::Set_Motion( int index, HAnimClass *motion )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	data->Set_HAnim(motion);
 }
@@ -326,7 +324,6 @@ void	HAnimComboClass::Set_Motion( int index, HAnimClass *motion )
 HAnimClass *HAnimComboClass::Get_Motion( int index )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	HAnimClass *anim = data->Peek_HAnim();
 
@@ -339,7 +336,6 @@ HAnimClass *HAnimComboClass::Get_Motion( int index )
 HAnimClass *HAnimComboClass::Peek_Motion( int index )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	HAnimClass *anim = data->Peek_HAnim();
 	return anim;
@@ -348,7 +344,6 @@ HAnimClass *HAnimComboClass::Peek_Motion( int index )
 void	HAnimComboClass::Set_Frame( int index, float frame )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	data->Set_Frame(frame);
 }
@@ -356,7 +351,6 @@ void	HAnimComboClass::Set_Frame( int index, float frame )
 float	HAnimComboClass::Get_Frame( int index )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	return data->Get_Frame();
 }
@@ -364,7 +358,6 @@ float	HAnimComboClass::Get_Frame( int index )
 void	HAnimComboClass::Set_Prev_Frame( int index, float frame )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	data->Set_Prev_Frame(frame);
 }
@@ -372,7 +365,6 @@ void	HAnimComboClass::Set_Prev_Frame( int index, float frame )
 float	HAnimComboClass::Get_Prev_Frame( int index )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	return data->Get_Prev_Frame();
 }
@@ -380,7 +372,6 @@ float	HAnimComboClass::Get_Prev_Frame( int index )
 void	HAnimComboClass::Set_Weight( int index, float weight )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	data->Set_Weight(weight);
 }
@@ -388,7 +379,6 @@ void	HAnimComboClass::Set_Weight( int index, float weight )
 float	HAnimComboClass::Get_Weight( int index )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	return data->Get_Weight();
 }
@@ -396,7 +386,6 @@ float	HAnimComboClass::Get_Weight( int index )
 void	HAnimComboClass::Set_Pivot_Weight_Map( int index, PivotMapClass *map )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	data->Set_Pivot_Map(map);
 }
@@ -404,7 +393,6 @@ void	HAnimComboClass::Set_Pivot_Weight_Map( int index, PivotMapClass *map )
 PivotMapClass	*HAnimComboClass::Get_Pivot_Weight_Map( int index )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	return data->Get_Pivot_Map();
 }
@@ -412,7 +400,6 @@ PivotMapClass	*HAnimComboClass::Get_Pivot_Weight_Map( int index )
 PivotMapClass	*HAnimComboClass::Peek_Pivot_Weight_Map( int index )
 {
 	HAnimComboDataClass *data = HAnimComboData[index];
-	WWASSERT(data);
 
 	return data->Peek_Pivot_Map();
 }

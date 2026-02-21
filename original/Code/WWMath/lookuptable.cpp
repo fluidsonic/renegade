@@ -180,7 +180,6 @@ void LookupTableMgrClass::Load_Table_Desc
 			case LOOKUPTABLE_CHUNK_CURVE:
 				cload.Open_Chunk();
 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
-				WWASSERT(factory != NULL);
 				if (factory != NULL) {
 					*curve_ptr = (Curve1DClass *)factory->Load(cload);
 				}
@@ -194,7 +193,6 @@ void LookupTableMgrClass::Load_Table_Desc
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();

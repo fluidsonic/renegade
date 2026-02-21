@@ -8,7 +8,6 @@
 #include "aabox.h"
 #include "obbox.h"
 #include "frustum.h"
-#include "wwdebug.h"
 
 
 // TODO: Most of these overlap functions actually do not catch all cases of when

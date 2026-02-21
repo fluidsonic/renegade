@@ -1,7 +1,4 @@
 #include "phys3.h"
-#include "wwdebug.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "wwphystrig.h"
 #include "physcoltest.h"
 #include "physinttest.h"
@@ -15,19 +12,15 @@
 #include "wwphysids.h"
 #include "w3d_file.h"
 
-
-DECLARE_FORCE_LINK(phys3);
 const float STEP_HEIGHT = 0.25f;
-
 
 #define VERBOSE_LOGGING 0
 
 #if VERBOSE_LOGGING
-#define VERBOSE_LOG(x) if (/*WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0) &&*/ (strstr(Model->Get_Name(),"lt"))) { WWDEBUG_SAY(x); }
+#define VERBOSE_LOG(x) if (/*WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0) &&*/ (strstr(Model->Get_Name(),"lt"))) {  }
 #else
 #define VERBOSE_LOG(x)
 #endif
-
 
 /*
 ** Phys3 Networking constants:
@@ -35,7 +28,6 @@ const float STEP_HEIGHT = 0.25f;
 float Phys3Class::_CorrectionTime = 0.5f;
 float Phys3Class::_AllowableError = 0.5f;
 float Phys3Class::_PopError = 2.5f;
-
 
 /*
 ** Phys3HistoryClass Parameters
@@ -51,7 +43,6 @@ const float		PHYS3_SNAPSHOT_INTERVAL = PHYS3_HISTORY_MIN_TIME / PHYS3_SNAPSHOT_C
 #define PHYS3HISTORY_NO_CORRECTION			0
 #define PHYS3HISTORY_ABSOLUTE_CORRECTION	0
 #define PHYS3HISTORY_LERP_CORRECTION		1
-
 
 /**
 ** Phys3HistoryClass
@@ -289,14 +280,12 @@ void Phys3HistoryClass::Find_Nearest_Point(const Vector3 & pos,const Vector3 & v
 	}
 }
 
-
 void Phys3HistoryClass::StateSnapshotClass::Lerp(const StateSnapshotClass & a, const StateSnapshotClass & b, float fraction)
 {
 	Vector3::Lerp(a.Position,b.Position,fraction,&Position);
 	Vector3::Lerp(a.Velocity,b.Velocity,fraction,&Velocity);
 	Age = WWMath::Lerp(a.Age,b.Age,fraction);
 }
-
 
 /***********************************************************************************************
 **
@@ -336,7 +325,6 @@ enum
 	PHYS3_VARIABLE_VELOCITY
 };
 
-
 static const float DEFAULT_STEP_HEIGHT = 0.25f;						// the distance an object will "step up" over an obstacle
 static const float DEFAULT_SLIDE_ANGLE = DEG_TO_RADF(45.0f);	// steepest angle the character can walk up
 static const float DEFAULT_NORMALIZED_SPEED = 10.0f;	 
@@ -355,14 +343,11 @@ static const Vector3 GROUND_COLOR(0.0f,1.0f,1.0f);
 
 static inline void Clip_Move(const Vector3 * contacts,int contact_count,Vector3 * move);
 
-
-
 /*************************************************************************************
 **
 ** Phys3Class Implementation
 **
 *************************************************************************************/
-
 
 /***********************************************************************************************
  * Phys3Class::Phys3Class -- Constructor                                                       *
@@ -399,7 +384,6 @@ Phys3Class::Phys3Class(void)
 	LastKnownVelocity.Set(0,0,0);
 	Invalidate_Ground_State();
 }	
-
 
 /***********************************************************************************************
  * Phys3Class::Init -- initialize from a Definition                                            *
@@ -439,7 +423,6 @@ void Phys3Class::Init(const Phys3DefClass & def)
 	Invalidate_Ground_State();
 }
 
-
 /***********************************************************************************************
  * Phys3Class::~Phys3Class -- Destructor                                                       *
  *                                                                                             *
@@ -457,7 +440,6 @@ Phys3Class::~Phys3Class(void)
 		delete History;
 	}
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Get_Bounding_Box -- Returns bounding box of the model                           *
@@ -477,7 +459,6 @@ const AABoxClass & Phys3Class::Get_Bounding_Box(void) const
 	return Model->Get_Bounding_Box();
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Get_Transform -- Returns the current transform                                  *
  *                                                                                             *
@@ -495,7 +476,6 @@ const Matrix3D & Phys3Class::Get_Transform(void) const
 	assert(Model);
 	return Model->Get_Transform();
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Set_Transform -- Sets the current transform                                     *
@@ -517,12 +497,6 @@ void Phys3Class::Set_Transform(const Matrix3D & m)
 	// copy the translation portion of the transform into our state
 	m.Get_Translation( &State.Position );
 
-#ifdef WWDEBUG
-	if (!State.Position.Is_Valid()) {
-		WWDEBUG_SAY(("Phys3Class::Set_Transform got an invalid position: %f, %f, %f\r\n",State.Position.X,State.Position.Y,State.Position.Z));
-	}
-#endif
-
 	// copy the Z rotation portion of the transform into our heading variable (ugh...)
 	Heading = m.Get_Z_Rotation();
 	Update_Transform();
@@ -534,7 +508,6 @@ void Phys3Class::Set_Transform(const Matrix3D & m)
 
 	Assert_State_Valid();
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Set_Position -- Sets the position                                               *
@@ -561,7 +534,6 @@ void Phys3Class::Set_Position(const Vector3 & position)
 	Invalidate_Ground_State();
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Get_Position -- Returns the current position                                    *
  *                                                                                             *
@@ -579,7 +551,6 @@ const Vector3 & Phys3Class::Get_Position(void) const
 	return State.Position;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Set_Heading -- Set the heading of this object                                   *
  *                                                                                             *
@@ -594,14 +565,12 @@ const Vector3 & Phys3Class::Get_Position(void) const
  *=============================================================================================*/
 void Phys3Class::Set_Heading(float heading)
 {
-	WWASSERT(WWMath::Is_Valid_Float(heading));
 	if (heading != Heading) {
 		Heading = heading;
 		HeadingChanged = true;
 	}
 	Update_Transform();
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Get_Heading -- returns the heading of this object                               *
@@ -619,7 +588,6 @@ float Phys3Class::Get_Heading(void) const
 {
 	return Heading;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Set_Slide_Angle -- Sets the maximum angle this object can climb                 *
@@ -643,7 +611,6 @@ void Phys3Class::Set_Slide_Angle(float angle)
 	SlideAngleTan = tan(angle);
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Get_Slide_Angle -- returns the slide angle                                      *
  *                                                                                             *
@@ -660,7 +627,6 @@ float Phys3Class::Get_Slide_Angle(void) const
 {
 	return SlideAngle;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Update_Transform -- Recalculate the transform                                   *
@@ -695,19 +661,8 @@ void Phys3Class::Update_Transform(bool position_only)
 		Update_Visibility_Status();
 	}
 
-	#ifdef WWDEBUG
-	for (int j=0;j<3;j++) {
-
-		WWASSERT(WWMath::Is_Valid_Float(State.Position.X));
-		WWASSERT(WWMath::Is_Valid_Float(State.Position.Y));
-		WWASSERT(WWMath::Is_Valid_Float(State.Position.Z));
-		WWASSERT(WWMath::Is_Valid_Float(Heading));
-	}
-	#endif
-
 	HeadingChanged = false;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Set_Model -- Set the model being used                                           *
@@ -732,7 +687,6 @@ void Phys3Class::Set_Model(RenderObjClass * model)
 	// Update our culling box
 	Update_Cull_Box();
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Update_Cached_Model_Parameters -- Caches some data related to the model         *
@@ -779,7 +733,6 @@ void Phys3Class::Update_Cached_Model_Parameters(void)
 	}
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Apply_Impulse -- Apply an impulse to this object                                *
  *                                                                                             *
@@ -803,7 +756,6 @@ void Phys3Class::Apply_Impulse(const Vector3 & impulse)
 	State.Velocity += impulse * MassInv;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Apply_Impulse -- Apply an impulse to this object                                *
  *                                                                                             *
@@ -821,7 +773,6 @@ void Phys3Class::Apply_Impulse(const Vector3 & impulse, const Vector3 & wpos)
 	// Phys3 has only linear momentum so just apply the impulse to the CM...
 	Apply_Impulse(impulse);
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Cast_Ray -- Check a ray for intersection with this object                       *
@@ -843,7 +794,6 @@ bool Phys3Class::Cast_Ray(PhysRayCollisionTestClass & raytest)
 	}
 	return false;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Cast_AABox -- Check a swept AABox for intersection with this obj                *
@@ -870,7 +820,6 @@ bool Phys3Class::Cast_AABox(PhysAABoxCollisionTestClass & boxtest)
 	return false;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Cast_OBBox -- Check a swept OBBox for intersection with this obj                *
  *                                                                                             *
@@ -895,7 +844,6 @@ bool Phys3Class::Cast_OBBox(PhysOBBoxCollisionTestClass & boxtest)
 	}
 	return false;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Intersection_Test -- Check an AABox for intersection with this object           *
@@ -922,7 +870,6 @@ bool Phys3Class::Intersection_Test(PhysAABoxIntersectionTestClass & test)
 	return false;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Intersection_Test -- Check an OBBox for intersection with this object           *
  *                                                                                             *
@@ -947,7 +894,6 @@ bool Phys3Class::Intersection_Test(PhysOBBoxIntersectionTestClass & test)
 	}
 	return false;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Intersection_Test -- Check a mesh for intersection with this object             *
@@ -975,7 +921,6 @@ bool Phys3Class::Intersection_Test(PhysMeshIntersectionTestClass & test)
 	return false;
 }
 
-
 /***********************************************************************************
 **
 **
@@ -983,7 +928,6 @@ bool Phys3Class::Intersection_Test(PhysMeshIntersectionTestClass & test)
 **
 **
 ***********************************************************************************/
-
 
 /***********************************************************************************************
  * Phys3Class::Timestep -- Simulate for time dt                                                *
@@ -999,7 +943,6 @@ bool Phys3Class::Intersection_Test(PhysMeshIntersectionTestClass & test)
  *=============================================================================================*/
 void Phys3Class::Timestep(float dt)
 {	
-	WWPROFILE("Phys3::Timestep");
 	VERBOSE_LOG(("\r\n***** Phys3::Timestep. %s position: %f %f %f\r\n",Model->Get_Name(),State.Position.X,State.Position.Y,State.Position.Z));
 
 	/*
@@ -1100,8 +1043,6 @@ void Phys3Class::Timestep(float dt)
 
 	OnGround = gs.OnGround;
 	GroundSurface = gs.SurfaceType;
-	WWASSERT(GroundSurface >= 0);
-	WWASSERT(GroundSurface < SURFACE_TYPE_MAX);
 
 	bool moved = false;
 
@@ -1135,7 +1076,6 @@ void Phys3Class::Timestep(float dt)
 
 	
 	if ((moved) || (HeadingChanged)) {
-		WWPROFILE("Phys3Class::Timestep cleanup");
 		Update_Transform(true);
 		Update_Cull_Box();
 		Add_Animation_Move(State.Position - start_pos);
@@ -1150,20 +1090,10 @@ void Phys3Class::Timestep(float dt)
 		Set_Flag(ASLEEP,false);
 	}
 
-
 //	DEBUG_RENDER_VECTOR(State.Position,State.Velocity,VELOCITY_COLOR);
-
-	WWASSERT(WWMath::Is_Valid_Float(State.Position.X));
-	WWASSERT(WWMath::Is_Valid_Float(State.Position.Y));
-	WWASSERT(WWMath::Is_Valid_Float(State.Position.Z));
-
-	WWASSERT(WWMath::Is_Valid_Float(State.Velocity.X));
-	WWASSERT(WWMath::Is_Valid_Float(State.Velocity.Y));
-	WWASSERT(WWMath::Is_Valid_Float(State.Velocity.Z));
 
 	VERBOSE_LOG((" ***** Phys3::Timestep ended. Position: %f %f %f\r\n\r\n",State.Position.X,State.Position.Y,State.Position.Z));
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Get_Ground_State -- validates and returns the gound state structure             *
@@ -1179,7 +1109,6 @@ void Phys3Class::Timestep(float dt)
  *=============================================================================================*/
 Phys3Class::GroundStateStruct & Phys3Class::Get_Ground_State(void)
 {
-	WWPROFILE("Phys3::Get_Ground_State");
 	if (GroundState.IsDirty == true) {
 		GroundState.IsDirty = false;
 		AABoxClass box;
@@ -1191,7 +1120,6 @@ Phys3Class::GroundStateStruct & Phys3Class::Get_Ground_State(void)
 
 	return GroundState;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Invalidate_Ground_State -- Marks the ground state as dirty                      *
@@ -1210,7 +1138,6 @@ void Phys3Class::Invalidate_Ground_State(void)
 	GroundState.IsDirty = true;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Check_Ground -- Update the ground state                                         *
  *                                                                                             *
@@ -1225,7 +1152,6 @@ void Phys3Class::Invalidate_Ground_State(void)
  *=============================================================================================*/
 void Phys3Class::Check_Ground(const AABoxClass & box,GroundStateStruct * gs,float check_dist)
 {
-	WWPROFILE("Check_Ground");
 	VERBOSE_LOG(("Phys3::Check_Ground\r\n"));
 	CastResultStruct result;
 	PhysAABoxCollisionTestClass test(	box,
@@ -1262,7 +1188,6 @@ void Phys3Class::Check_Ground(const AABoxClass & box,GroundStateStruct * gs,floa
 
 }
 
-
 /***********************************************************************************************
  * Phys3Class::User_Move -- User Move mode.                                                    *
  *                                                                                             *
@@ -1291,7 +1216,6 @@ bool Phys3Class::User_Move(float dt)
 	return false;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Ballistic_Move -- Ballistic motion                                              *
  *                                                                                             *
@@ -1307,7 +1231,6 @@ bool Phys3Class::User_Move(float dt)
 bool Phys3Class::Ballistic_Move(float dt)
 {		
 	// Compute a move vector for the object flying through the air...
-	WWPROFILE("Phys3::Ballistic_Move");
 	VERBOSE_LOG(("Phys3::Ballistic_Move\r\n"));
 
 	Vector3 move;
@@ -1337,7 +1260,6 @@ bool Phys3Class::Ballistic_Move(float dt)
 	return moved;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Slide_Move -- Sliding motion, down a slope                                      *
  *                                                                                             *
@@ -1353,7 +1275,6 @@ bool Phys3Class::Ballistic_Move(float dt)
 bool Phys3Class::Slide_Move(const GroundStateStruct & gs,float dt)
 {
 	// Compute a move vector which causes the object to slide down the slope...
-	WWPROFILE("Phys3::Slide_Move");
 	VERBOSE_LOG(("Phys3::Slide_Move\r\n"));
 
 	Vector3 start_pos = State.Position;
@@ -1363,7 +1284,6 @@ bool Phys3Class::Slide_Move(const GroundStateStruct & gs,float dt)
 	State.Velocity = (State.Position - start_pos) / dt;
 	return moved;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Normal_Move -- Normal motion, phys3 does nothing (infinite grip)                *
@@ -1379,14 +1299,12 @@ bool Phys3Class::Slide_Move(const GroundStateStruct & gs,float dt)
  *=============================================================================================*/
 bool Phys3Class::Normal_Move(const GroundStateStruct & gs,float dt)
 {
-	WWPROFILE("Phys3::Normal_Move");
 	VERBOSE_LOG(("Phys3::Normal_Move\r\n"));
 	
 	// phys3 doesn't move unless on a slope or falling.
 	State.Velocity.Set(0,0,0);
 	return false;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Collide_Move -- Move in response to someone colliding with me                   *
@@ -1402,7 +1320,6 @@ bool Phys3Class::Normal_Move(const GroundStateStruct & gs,float dt)
  *=============================================================================================*/
 bool Phys3Class::Collide_Move(const Vector3 & requested_move,float dt)
 {
-	WWPROFILE("Phys3::Collide_Move");
 	VERBOSE_LOG(("Phys3::Collide_Move\r\n"));
 
 	// if we're already being considered in a collision (collisions looped back to us) then return
@@ -1432,7 +1349,6 @@ bool Phys3Class::Collide_Move(const Vector3 & requested_move,float dt)
 	return moved;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Apply_Move -- Apply a movement vector, constrained by world geometry            *
  *                                                                                             *
@@ -1454,16 +1370,8 @@ bool Phys3Class::Apply_Move
 	bool stop_on_walkable
 )
 {
-	WWPROFILE("Phys3::Apply_Move");
 	VERBOSE_LOG(("Phys3::Apply_Move: %f %f %f\r\n",input_move.X,input_move.Y,input_move.Z));
 	
-#ifdef WWDEBUG
-	if (!input_move.Is_Valid()) {
-		WWDEBUG_SAY(("Phys3::Apply_Move called with invalid move vector: %f, %f, %f\r\n",input_move.X,input_move.Y,input_move.Z));
-//		WWASSERT(input_move.Is_Valid());
-		return false;
-	}
-#endif
 
 	/*
 	** Early exit if we're not really moving!
@@ -1592,7 +1500,7 @@ bool Phys3Class::Apply_Move
 		
 		VERBOSE_LOG(("  Checking collision results:  "));
 		if (result.StartBad) {
-			//WWDEBUG_WARNING(("result.StartBad\n"));
+			//
 			//PhysicsSceneClass::Get_Instance()->Add_Debug_AABox(box,Vector3(1,0,0));
 			VERBOSE_LOG(("StartBad!\r\n"));
 			done = true;
@@ -1659,7 +1567,6 @@ bool Phys3Class::Apply_Move
 					/*
 					** We hit something, call the collision callbacks.
 					*/
-					WWASSERT(test.CollidedPhysObj != NULL);
 					CollisionReactionType reaction = COLLISION_REACTION_DEFAULT;
 
 					CollisionEventClass event;
@@ -1736,7 +1643,6 @@ bool Phys3Class::Apply_Move
 							clip_move = false;
 						}
 
-
 						/*
 						** CLIP: If the obstacle didn't move out of our way and we didn't step over it, 
 						** add the new contact and adjust our move to not hit it again
@@ -1778,7 +1684,6 @@ bool Phys3Class::Apply_Move
 	return moved;
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Debug_Verify_Position -- Verify that I am in a valid position                   *
  *                                                                                             *
@@ -1817,7 +1722,6 @@ inline bool Phys3Class::Debug_Verify_Position(void)
 	return true;
 #endif	
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Snap_To_Ground -- Following a move, snap back down to the ground                *
@@ -1928,7 +1832,6 @@ void Phys3Class::Snap_To_Ground(const Vector3 & actual_move,bool was_stepping)
 	}
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Clip_Move -- Clip a move vector by all of the active contact normals            *
  *                                                                                             *
@@ -1943,12 +1846,8 @@ void Phys3Class::Snap_To_Ground(const Vector3 & actual_move,bool was_stepping)
  *=============================================================================================*/
 void Phys3Class::Clip_Move(const Vector3 * contacts,int contact_count,Vector3 * move)
 {
-	WWASSERT(contacts != NULL);
 	VERBOSE_LOG(("Phys3::Clip_Move\r\n"));
 
-#ifdef WWDEBUG
-	float move_len2 = move->Length2();
-#endif
 	
 	// Loop over all of the contacts.
 	//	On each one we modify our move vector to parallel that plane.  
@@ -1956,11 +1855,6 @@ void Phys3Class::Clip_Move(const Vector3 * contacts,int contact_count,Vector3 * 
 	// At the first time all planes are satisfied, we're done
 	for (int i=0; i<contact_count; i++) {
 		
-#ifdef WWDEBUG
-		if (fabs(contacts[i].Length() - 1.0f) > WWMATH_EPSILON) {
-			WWDEBUG_SAY(("Bad Contact Normal: %f %f %f  Length = %f\r\n",contacts[i].X,contacts[i].Y,contacts[i].Z,contacts[i].Length()));
-		}
-#endif
 		if (!( fabs(contacts[i].Length() - 1.0f) < WWMATH_EPSILON )) {
 			*move = Vector3(0,0,0);
 			return;
@@ -1973,7 +1867,7 @@ void Phys3Class::Clip_Move(const Vector3 * contacts,int contact_count,Vector3 * 
 		if (dot < 0.0f) {
 			Vector3 adjustment = 1.01f * dot * contacts[i];
 			*move -= adjustment;
-			//WWASSERT(Vector3::Dot_Product(*move,contacts[i]) >= 0.0f);
+			//assert(Vector3::Dot_Product(*move,contacts[i]) >= 0.0f);
 		}
 		
 		int j;
@@ -1988,12 +1882,7 @@ void Phys3Class::Clip_Move(const Vector3 * contacts,int contact_count,Vector3 * 
 		}
 	}
 
-#ifdef WWDEBUG
-	float new_move_len2 = move->Length2();
-	WWASSERT(new_move_len2 <= move_len2 + WWMATH_EPSILON);
-#endif
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Get_Shadow_Blob_Box -- Returns the bounding box to use for blob shadows         *
@@ -2009,10 +1898,8 @@ void Phys3Class::Clip_Move(const Vector3 * contacts,int contact_count,Vector3 * 
  *=============================================================================================*/
 void Phys3Class::Get_Shadow_Blob_Box(AABoxClass * set_obj_space_box)
 {
-	WWASSERT(set_obj_space_box != NULL);
 	*set_obj_space_box = CollisionBox;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Get_Collision_Box -- returns the current world space collision box              *
@@ -2028,7 +1915,6 @@ void Phys3Class::Get_Shadow_Blob_Box(AABoxClass * set_obj_space_box)
  *=============================================================================================*/
 void Phys3Class::Get_Collision_Box(AABoxClass * set_box)
 {
-	WWASSERT(set_box != NULL);
 	Compute_WS_Collision_Box(State,set_box);
 }
 
@@ -2066,7 +1952,6 @@ bool Phys3Class::Push(const Vector3 & move)
  	return (error.Length2() < WWMATH_EPSILON * WWMATH_EPSILON);
 }
 
-
 /***********************************************************************************************
  * Phys3Class::Collide -- Move in response to a collision                                      *
  *                                                                                             *
@@ -2088,7 +1973,6 @@ bool Phys3Class::Collide(const Vector3 & move)
 	Collide_Move(move,1.0f);
 	return ((State.Position - old_pos) == move);
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Can_Teleport -- Checks if this object can occupy the specified position         *
@@ -2133,7 +2017,6 @@ bool Phys3Class::Can_Teleport(const Matrix3D &test_tm, bool check_dyn_only, NonR
 
 	return (intersect == false);
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Can_Teleport_And_Stand -- Checks if this object can occupy the specified pos    *
@@ -2199,7 +2082,6 @@ bool Phys3Class::Can_Teleport_And_Stand(const Matrix3D &test_tm, Matrix3D *new_t
 	
 	return retval;
 }
-
 
 /***********************************************************************************************
  * Phys3Class::Find_Teleport_Location -- Searches for a valid position near the given one      *
@@ -2293,8 +2175,6 @@ bool Phys3Class::Can_Move_To(const Matrix3D &new_tm)
 	return (result.Fraction == 1.0f);
 }
 
-
-
 void Phys3Class::Assert_State_Valid(void)
 {
 	AABoxClass box;
@@ -2317,10 +2197,6 @@ void Phys3Class::Assert_State_Valid(void)
 	}
 #endif
 
-	WWASSERT(State.Position.Is_Valid());
-	WWASSERT(State.Velocity.Is_Valid());
-
-
 }
 
 void Phys3Class::Network_State_Update(const Vector3 & pos,const Vector3 & vel)
@@ -2331,7 +2207,6 @@ void Phys3Class::Network_State_Update(const Vector3 & pos,const Vector3 & vel)
 	Snap_To_Ground(delta,false);
 	Update_Transform( true );
 }
-
 
 void Phys3Class::Network_Latency_State_Update(const Vector3 & net_pos,const Vector3 & net_vel)
 {
@@ -2344,7 +2219,6 @@ void Phys3Class::Network_Latency_State_Update(const Vector3 & net_pos,const Vect
 		History = new Phys3HistoryClass;
 		History->Init(net_pos,net_vel);
 	}
-	WWASSERT(History != NULL);
 
 	/*
 	** Search our history to find the point nearest this server update
@@ -2370,7 +2244,6 @@ void Phys3Class::Network_Teleport_Correction(void)
 #endif
 	LatencyError.Set(0,0,0);
 }
-
 
 /*************************************************************************************
 **
@@ -2437,7 +2310,6 @@ bool Phys3Class::Load (ChunkLoadClass &cload)
 				}
 				break;
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -2454,8 +2326,6 @@ void Phys3Class::On_Post_Load (void)
 	MoveablePhysClass::On_Post_Load();
 	Update_Cached_Model_Parameters();
 }
-
-
 
 /*************************************************************************************
 **
@@ -2519,7 +2389,6 @@ void Phys3Class::GroundStateStruct::Init_From_Collision_Result(PhysAABoxCollisio
 		} else {
 
 			if (Normal.Length2() <= 0.0f) {
-				WWDEBUG_SAY(("ERROR - detected non-unit normal!\r\n"));
 			}
 			
 			// compute the down vector for this plane
@@ -2541,7 +2410,6 @@ void Phys3Class::GroundStateStruct::Init_From_Collision_Result(PhysAABoxCollisio
 	}
 }
 
-
 /***********************************************************************************************
 **
 ** Phys3DefClass Implementation
@@ -2552,7 +2420,6 @@ void Phys3Class::GroundStateStruct::Init_From_Collision_Result(PhysAABoxCollisio
 ** Declare a PersistFactory for Phys3DefClasses 
 */
 SimplePersistFactoryClass<Phys3DefClass,PHYSICS_CHUNKID_PHYS3DEF>	_Phys3DefFactory;
-
 
 /*
 ** Chunk ID's used by MoveablePhysDefClass
@@ -2567,7 +2434,6 @@ enum
 	PHYS3DEF_VARIABLE_STEPHEIGHT,
 };
 
-
 Phys3DefClass::Phys3DefClass(void) :
 	NormSpeed(DEFAULT_NORMALIZED_SPEED),
 	SlideAngle(DEFAULT_SLIDE_ANGLE),
@@ -2578,7 +2444,6 @@ Phys3DefClass::Phys3DefClass(void) :
 	ANGLE_EDITABLE_PARAM(Phys3DefClass, SlideAngle, DEG_TO_RADF(0.0f), DEG_TO_RADF(90.0f));
 	FLOAT_EDITABLE_PARAM(Phys3DefClass, StepHeight, 0.0f, 10.0f);	
 }
-
 
 const PersistFactoryClass & Phys3DefClass::Get_Factory (void) const
 {
@@ -2611,7 +2476,6 @@ bool Phys3DefClass::Save(ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool Phys3DefClass::Load(ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -2634,7 +2498,6 @@ bool Phys3DefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

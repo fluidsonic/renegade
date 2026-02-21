@@ -25,7 +25,7 @@ cClientBboEvent::cClientBboEvent(void)
 void
 cClientBboEvent::Init(int bbo)
 {
-	//WWASSERT(bbo > 0);
+	//assert(bbo > 0);
 
 	SenderId = cNetwork::Get_My_Id();
 	Bbo		= bbo;

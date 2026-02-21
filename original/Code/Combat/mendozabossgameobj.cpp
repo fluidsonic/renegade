@@ -1,5 +1,4 @@
 #include "mendozabossgameobj.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
@@ -20,7 +19,6 @@
 #include "string_ids.h"
 #include "translateobj.h"
 #include "translatedb.h"
-#include "wwprofile.h"
 #include "conversationmgr.h"
 #include "activeconversation.h"
 #include "conversation.h"
@@ -38,10 +36,6 @@
 #include "physcoltest.h"
 #include "objlibrary.h"
 #include "hudinfo.h"
-
-
-DECLARE_FORCE_LINK (MendozaBoss)
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Constants
@@ -65,8 +59,6 @@ static const float	FALLDOWN_TIMER			= 6.0F;
 //	Weapon and state enumerations
 //////////////////////////////////////////////////////////////////////////
 
-
-
 //////////////////////////////////////////////////////////////////////////
 //	Taunt constants
 //////////////////////////////////////////////////////////////////////////
@@ -80,7 +72,6 @@ static const char *TAUNT_IDS[6] =
 	"IDS_SAKURA_BOSS_TAUNT5",
 	"IDS_SAKURA_BOSS_TAUNT6"
 };
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Save/load constants
@@ -132,15 +123,12 @@ enum
 	VARID_CAMERA_BONE_TM
 };
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Factories
 //////////////////////////////////////////////////////////////////////////
 SimplePersistFactoryClass<MendozaBossGameObjDefClass,		CHUNKID_GAME_OBJECT_DEF_MENDOZA_BOSS>						_MendozaBossGameObjDefPersistFactory;
 SimplePersistFactoryClass<MendozaBossGameObjClass,			CHUNKID_GAME_OBJECT_MENDOZA_BOSS>							_MendozaBossGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY(MendozaBossGameObjDefClass,	CLASSID_GAME_OBJECT_DEF_MENDOZA_BOSS, "Mendoza Boss")	_MendozaBossGameObjDefDefFactory;
-
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -156,7 +144,6 @@ MendozaBossGameObjDefClass::MendozaBossGameObjDefClass (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //
 //	~MendozaBossGameObjDefClass
@@ -166,7 +153,6 @@ MendozaBossGameObjDefClass::~MendozaBossGameObjDefClass (void)
 {	
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -178,7 +164,6 @@ MendozaBossGameObjDefClass::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_MENDOZA_BOSS; 
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -192,7 +177,6 @@ MendozaBossGameObjDefClass::Create (void) const
 	obj->Init(*this);
 	return obj;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -212,7 +196,6 @@ MendozaBossGameObjDefClass::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -244,7 +227,6 @@ MendozaBossGameObjDefClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -255,7 +237,6 @@ MendozaBossGameObjDefClass::Save_Variables (ChunkSaveClass &csave)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -279,7 +260,6 @@ MendozaBossGameObjDefClass::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -291,13 +271,11 @@ MendozaBossGameObjDefClass::Get_Factory (void) const
 	return _MendozaBossGameObjDefPersistFactory; 
 }
 
-
 /*
 **
 **	Start of MendozaBossGameObjClass
 **
 */
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -428,7 +406,6 @@ MendozaBossGameObjClass::MendozaBossGameObjClass (void)	:
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	~MendozaBossGameObjClass
@@ -440,7 +417,6 @@ MendozaBossGameObjClass::~MendozaBossGameObjClass (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -451,7 +427,6 @@ MendozaBossGameObjClass::Get_Factory (void) const
 {
 	return _MendozaBossGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -477,7 +452,6 @@ MendozaBossGameObjClass::Init (const MendozaBossGameObjDefClass &definition)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -488,7 +462,6 @@ MendozaBossGameObjClass::Get_Definition (void) const
 {
 	return (const MendozaBossGameObjDefClass &)BaseGameObj::Get_Definition ();
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -545,7 +518,6 @@ MendozaBossGameObjClass::Save (ChunkSaveClass & csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -627,7 +599,6 @@ MendozaBossGameObjClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_Post_Load
@@ -640,7 +611,6 @@ MendozaBossGameObjClass::On_Post_Load (void)
 	Initialize_Boss ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -665,7 +635,6 @@ MendozaBossGameObjClass::Initialize_Boss (void)
 
 	return ;	
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -698,7 +667,6 @@ MendozaBossGameObjClass::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK_WWSTRING (csave, VARID_ATTACKING_BONE_NAME,	AttackingBoneName);	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -754,7 +722,6 @@ MendozaBossGameObjClass::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Apply_Control
@@ -767,7 +734,6 @@ MendozaBossGameObjClass::Apply_Control (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -776,7 +742,6 @@ MendozaBossGameObjClass::Apply_Control (void)
 void
 MendozaBossGameObjClass::Think (void)
 {	
-	WWPROFILE ("Mendoza Think");	
 
 	bool ok_to_think = true;
 
@@ -858,7 +823,6 @@ MendozaBossGameObjClass::Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Shuffle_Taunt_List
@@ -891,7 +855,6 @@ MendozaBossGameObjClass::Shuffle_Taunt_List (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -986,7 +949,6 @@ MendozaBossGameObjClass::Apply_Damage_Extended
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_STANDING_Begin
@@ -998,7 +960,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_STANDING_Begin (void)
 	MendozaStateTimer = 0;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1015,7 +976,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_STANDING_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_FALLING_Begin
@@ -1029,7 +989,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_FALLING_Begin (void)
 	MoveState.Halt_State ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1046,7 +1005,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_FALLING_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_FALLING_Request_End
@@ -1057,7 +1015,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_FALLING_Request_End (int /*new_state*/
 {
 	return false;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1072,7 +1029,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_KIPPING_Begin (void)
 	((HumanAnimControlClass *)Get_Anim_Control ())->Set_Anim_Speed_Scale (2.0F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1091,7 +1047,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(MENDOZA_STATE_KIPPING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_KIPPING_Think
@@ -1109,7 +1064,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_KIPPING_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_KIPPING_Request_End
@@ -1120,7 +1074,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_KIPPING_Request_End (int /*new_state*/
 {
 	return false;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1165,7 +1118,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_PACK_EXPLODING_Begin (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_REQUEST_END(MENDOZA_STATE_PACK_EXPLODING)
@@ -1176,7 +1128,6 @@ MendozaBossGameObjClass::STATE_IMPL_REQUEST_END(MENDOZA_STATE_PACK_EXPLODING) (i
 {
 	return false;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1221,7 +1172,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_PACK_EXPLODING_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_DYING_Begin
@@ -1243,7 +1193,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_DYING_Begin (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_DYING_Think
@@ -1264,7 +1213,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_DYING_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_MENDOZA_STATE_DEAD_Begin
@@ -1279,7 +1227,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_DEAD_Begin (void)
 	MendozaStateTimer = 10.0F;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1303,7 +1250,6 @@ MendozaBossGameObjClass::On_MENDOZA_STATE_DEAD_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_CAMERA_STATE_NORMAL_Begin
@@ -1314,7 +1260,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_NORMAL_Begin (void)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1337,7 +1282,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Begin (void)
 	GameObjManager::Activate_Cinematic_Freeze (false);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1397,7 +1341,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_FACE_ZOOM_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_CAMERA_STATE_WAYPATH_FOLLOW_Begin
@@ -1420,7 +1363,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin (void)
 	//	Get the waypath we're going to follow
 	//
 	WaypathClass *waypath = PathfindClass::Get_Instance ()->Find_Waypath (3000100);
-	WWASSERT (waypath != NULL);
 
 	//
 	//	Add the points from the waypath to the spline
@@ -1433,7 +1375,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin (void)
 		//	Add this point to the spline
 		//
 		WaypointClass *waypoint = waypath->Get_Point (index);
-		WWASSERT (waypoint != NULL);
 		CameraSpline.Add_Key (waypoint->Get_Position (), percent);
 		
 		//
@@ -1448,7 +1389,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Begin (void)
 	CameraStateTimer = 8.0F;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1497,7 +1437,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_WAYPATH_FOLLOW_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin
@@ -1513,7 +1452,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Begin (void)
 	TimeManager::Set_Time_Scale (0.5F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1546,7 +1484,6 @@ MendozaBossGameObjClass::On_CAMERA_STATE_LOOK_AT_DEAD_BOSS_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Attach_Sound
@@ -1575,7 +1512,6 @@ MendozaBossGameObjClass::Attach_Sound (const char *sound_name, const char *bone_
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1606,7 +1542,6 @@ MendozaBossGameObjClass::Attach_Fire_Sound (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_ATTACK_STATE_NONE_Begin
@@ -1617,7 +1552,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_NONE_Begin (void)
 {	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1630,7 +1564,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_NONE_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_ATTACK_STATE_MELEE_Begin
@@ -1642,7 +1575,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_Begin (void)
 	NextMeleeAttackTime = WWMath::Random_Float (0.125F, 0.7F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1678,10 +1610,8 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_Think (void)
 		}
 	}
 
-
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1720,7 +1650,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(ATTACK_STATE_MELEE_FLYING_SIDEKICK_RUN
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(ATTACK_STATE_MELEE_FLYING_SIDEKICK_RUN)
@@ -1754,7 +1683,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(ATTACK_STATE_MELEE_FLYING_SIDEKICK_RUN
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(ATTACK_STATE_MELEE_FLYING_SIDEKICK)
@@ -1773,7 +1701,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(ATTACK_STATE_MELEE_FLYING_SIDEKICK) (v
 	HumanState.Set_State (HumanStateClass::LOCKED_ANIMATION);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1797,7 +1724,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_MELEE_FLYING_SIDEKICK) (voi
 	HumanState.Set_State (HumanStateClass::ANIMATION);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1855,11 +1781,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(ATTACK_STATE_MELEE_FLYING_SIDEKICK) (v
 	return ;
 }
 
-
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_ATTACK_STATE_MELEE_CRESENT_KICK_Begin
@@ -1895,7 +1816,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_CRESENT_KICK_Begin (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_MELEE_CRESENT_KICK)
@@ -1911,7 +1831,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_MELEE_CRESENT_KICK) (void)
 	MoveState.Resume_State ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1944,7 +1863,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_CRESENT_KICK_Think (void)
 	LastMeleeAnimFrame = Get_Anim_Control ()->Get_Current_Frame ();	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1979,7 +1897,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_SIDE_KICK_Begin (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_MELEE_SIDE_KICK)
@@ -1995,7 +1912,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_MELEE_SIDE_KICK) (void)
 	MoveState.Resume_State ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2029,7 +1945,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_SIDE_KICK_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	On_ATTACK_STATE_MELEE_SIDE_KICK_RETRACT_Begin
@@ -2046,7 +1961,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_SIDE_KICK_RETRACT_Begin (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_MELEE_SIDE_KICK_RETRACT)
@@ -2062,7 +1976,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_MELEE_SIDE_KICK_RETRACT) (v
 	MoveState.Resume_State ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2083,7 +1996,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_SIDE_KICK_RETRACT_Think (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2120,7 +2032,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_PUNCH_Begin (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_MELEE_PUNCH)
@@ -2136,7 +2047,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_MELEE_PUNCH) (void)
 	MoveState.Resume_State ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2206,7 +2116,6 @@ MendozaBossGameObjClass::On_ATTACK_STATE_MELEE_PUNCH_Think (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(ATTACK_STATE_FLAMETHROWER)
@@ -2223,7 +2132,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(ATTACK_STATE_FLAMETHROWER) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_FLAMETHROWER)
@@ -2238,7 +2146,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_FLAMETHROWER) (void)
 	Set_Boolean_Control (ControlClass::BOOLEAN_WEAPON_FIRE_SECONDARY, false);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2276,10 +2183,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(ATTACK_STATE_FLAMETHROWER) (void)
 	return ;
 }
 
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(ATTACK_STATE_FIREBALL)
@@ -2298,7 +2201,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(ATTACK_STATE_FIREBALL) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_FIREBALL)
@@ -2314,7 +2216,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_FIREBALL) (void)
 	Set_Boolean_Control (ControlClass::BOOLEAN_WEAPON_FIRE_SECONDARY, false);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2380,10 +2281,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(ATTACK_STATE_FIREBALL) (void)
 	return ;
 }
 
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(ATTACK_STATE_HANDGUN)
@@ -2400,7 +2297,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(ATTACK_STATE_HANDGUN) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_HANDGUN)
@@ -2416,7 +2312,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_HANDGUN) (void)
 	WeaponBag->Deselect ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2467,7 +2362,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(ATTACK_STATE_HANDGUN) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(ATTACK_STATE_SYDNEY)
@@ -2488,7 +2382,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(ATTACK_STATE_SYDNEY) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(ATTACK_STATE_SYDNEY)
@@ -2503,7 +2396,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(ATTACK_STATE_SYDNEY) (void)
 	Set_Boolean_Control (ControlClass::BOOLEAN_WEAPON_FIRE_SECONDARY, false);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2544,7 +2436,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(ATTACK_STATE_SYDNEY) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Fly_Move
@@ -2584,7 +2475,6 @@ MendozaBossGameObjClass::Fly_Move (const Vector3 &vector)
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2659,7 +2549,6 @@ MendozaBossGameObjClass::Apply_Bone_Collision_Damage (const char *bone_name)
 	return retval;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_FLYING_SIDEKICK)
@@ -2685,7 +2574,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_FLYING_SIDEKICK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_MELEE_ATTACK)
@@ -2710,7 +2598,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_MELEE_ATTACK) (void)
 	WeaponBag->Deselect ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2742,7 +2629,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_RANGED_ATTACK) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2788,7 +2674,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_RANGED_ATTACK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_FIREBALL_ATTACK)
@@ -2808,7 +2693,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_FIREBALL_ATTACK) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(OVERALL_STATE_FIREBALL_ATTACK)
@@ -2819,7 +2703,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_FIREBALL_ATTACK) (void)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2840,7 +2723,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_FIND_HEALTH) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(OVERALL_STATE_FIND_HEALTH)
@@ -2858,7 +2740,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_FIND_HEALTH) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2882,7 +2763,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_SYDNEY_BOLTS) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(OVERALL_STATE_SYDNEY_BOLTS)
@@ -2902,7 +2782,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_SYDNEY_BOLTS) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2928,7 +2807,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_RUN_AFTER_SYDNEY) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_THINK(OVERALL_STATE_RUN_AFTER_SYDNEY)
@@ -2948,7 +2826,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_RUN_AFTER_SYDNEY) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(OVERALL_STATE_TOY_WITH_SYDNEY)
@@ -2967,7 +2844,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_TOY_WITH_SYDNEY) (void)
 	HeadState.Set_State (HEAD_STATE_LOOKING_AT_SYDNEY);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2990,7 +2866,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(OVERALL_STATE_TOY_WITH_SYDNEY) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3017,7 +2892,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(OVERALL_STATE_DEATH_SEQUENCE) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(SYDNEY_STATE_WAITING)
@@ -3028,7 +2902,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(SYDNEY_STATE_WAITING) (void)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3047,7 +2920,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(SYDNEY_STATE_BOLTING) (void)
 	Sydney.Get_Ptr ()->As_PhysicalGameObj ()->As_SoldierGameObj ()->Get_Action ()->Goto (params);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3075,7 +2947,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(SYDNEY_STATE_BOLTING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(SYDNEY_STATE_TRIPPING)
@@ -3094,7 +2965,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(SYDNEY_STATE_TRIPPING) (void)
 	((HumanAnimControlClass *)sydney->Get_Anim_Control ())->Set_Anim_Speed_Scale (2.0F);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3121,7 +2991,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(SYDNEY_STATE_TRIPPING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(SYDNEY_STATE_GETTING_UP)
@@ -3139,7 +3008,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(SYDNEY_STATE_GETTING_UP) (void)
 	sydney->Get_Human_State ()->Set_State (HumanStateClass::LOCKED_ANIMATION);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3161,7 +3029,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(SYDNEY_STATE_GETTING_UP) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3190,7 +3057,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(SYDNEY_STATE_COWERING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(SYDNEY_STATE_COWERING)
@@ -3207,7 +3073,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(SYDNEY_STATE_COWERING) (void)
 	sydney->Get_Human_State ()->Set_State (HumanStateClass::ANIMATION);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3250,7 +3115,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(SYDNEY_STATE_COWERING) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(SYDNEY_STATE_STRIKE_A_POSE)
@@ -3275,7 +3139,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(SYDNEY_STATE_STRIKE_A_POSE) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_CHASE_SYDNEY)
@@ -3295,7 +3158,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_CHASE_SYDNEY) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_STOP)
@@ -3311,7 +3173,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_STOP) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_GET_CLOSE_TO_PLAYER)
@@ -3323,7 +3184,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_GET_CLOSE_TO_PLAYER) (void)
 	MoveStateTimer = 0.0F;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3339,7 +3199,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(MOVE_STATE_GET_CLOSE_TO_PLAYER) (void)
 	Get_Action ()->Reset (100);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3377,7 +3236,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_GET_CLOSE_TO_PLAYER) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_ATTACK_PATTERN1)
@@ -3389,7 +3247,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_ATTACK_PATTERN1) (void)
 	MoveStateTimer = 0.0F;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3405,7 +3262,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(MOVE_STATE_ATTACK_PATTERN1) (void)
 	Get_Action ()->Reset (100);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3460,7 +3316,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_ATTACK_PATTERN1) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_ATTACK_PATTERN2)
@@ -3472,7 +3327,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_ATTACK_PATTERN2) (void)
 	MoveStateTimer = 0.0F;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3488,7 +3342,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(MOVE_STATE_ATTACK_PATTERN2) (void)
 	Get_Action ()->Reset (100);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3537,9 +3390,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_ATTACK_PATTERN2) (void)
 	return ;
 }
 
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(MOVE_STATE_GOTO_HELIPAD)
@@ -3558,7 +3408,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_GOTO_HELIPAD) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(MOVE_STATE_GOTO_HELIPAD)
@@ -3573,7 +3422,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(MOVE_STATE_GOTO_HELIPAD) (void)
 	Get_Action ()->Reset (100);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3595,8 +3443,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(MOVE_STATE_GOTO_HELIPAD) (void)
 
 	return ;
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3630,7 +3476,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(MOVE_STATE_RUN_TO_HEALTH) (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_END(MOVE_STATE_RUN_TO_HEALTH)
@@ -3645,7 +3490,6 @@ MendozaBossGameObjClass::STATE_IMPL_END(MOVE_STATE_RUN_TO_HEALTH) (void)
 	Get_Action ()->Reset (100);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3714,7 +3558,6 @@ MendozaBossGameObjClass::Find_Best_Powerup (void)
 	return best_powerup;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	STATE_IMPL_BEGIN(HEAD_STATE_NONE)
@@ -3726,7 +3569,6 @@ MendozaBossGameObjClass::STATE_IMPL_BEGIN(HEAD_STATE_NONE) (void)
 	Cancel_Look_At ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3750,7 +3592,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(HEAD_STATE_LOOKING_AT_STAR) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -3776,7 +3617,6 @@ MendozaBossGameObjClass::STATE_IMPL_THINK(HEAD_STATE_LOOKING_AT_SYDNEY) (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //

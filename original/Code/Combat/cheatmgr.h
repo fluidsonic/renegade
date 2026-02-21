@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __CHEATMGR_H
 #define __CHEATMGR_H

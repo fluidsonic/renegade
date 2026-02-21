@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__VEHICLEFACTORYGAMEOBJ_H
 #define	__VEHICLEFACTORYGAMEOBJ_H
@@ -146,7 +143,7 @@ public:
 	//
 	// Vehicle limits
 	// 
-	static void			Set_Max_Vehicles_Per_Team(int max)		{ WWASSERT(max > 0); MaxVehiclesPerTeam = max; }
+	static void			Set_Max_Vehicles_Per_Team(int max)		{ assert(max > 0); MaxVehiclesPerTeam = max; }
 	static int			Get_Max_Vehicles_Per_Team(void)			{ return MaxVehiclesPerTeam; }
 
 protected:

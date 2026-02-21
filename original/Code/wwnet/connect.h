@@ -139,11 +139,6 @@ class cConnection
       void Send_Packet_To_Address(cPacket & packet, LPSOCKADDR_IN p_address);
 
 
-#ifdef WWDEBUG
-		// Debug support for latency testing.
-		static void Set_Latency(int low, int high);
-		static void Get_Latency(int &low, int &high, int &current);
-#endif //WWDEBUG
 
 
    private:
@@ -218,17 +213,6 @@ class cConnection
 		Server_Packet_Handler					ServerPacketHandler;
 		Client_Packet_Handler					ClientPacketHandler;
 
-#ifdef WWDEBUG
-		// Testing support for high latency connections.
-		// Dynamic vector is ineffecient here but it doesn't matter since this is a debug testing only kinda thing.
-		static int LatencyAddLow;
-		static int LatencyAddHigh;
-		static int CurrentLatencyAdd;
-		static unsigned long LastLatencyChange;
-		DynamicVectorClass<cPacket*>			LaggedPackets;
-		DynamicVectorClass<unsigned long>	LaggedPacketTimes;
-		DynamicVectorClass<int>					LaggedPacketRetCodes;
-#endif //WWDEBUG
 
 };
 

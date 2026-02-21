@@ -1,13 +1,9 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef Matrix3_H
 #define Matrix3_H
 
 #include "always.h"
 #include "vector3.h"
-#include "wwdebug.h"
 #ifdef _UNIX
 #include "osdep.h"
 #endif
@@ -313,7 +309,6 @@ WWINLINE void Matrix3::Set(const Vector3 & axis,float angle)
 
 WWINLINE void Matrix3::Set(const Vector3 & axis,float s,float c)
 {
-	WWASSERT(WWMath::Fabs(axis.Length2() - 1.0f) < 0.001f);
 
 	Row[0].Set(
 		(float)(axis[0]*axis[0] + c*(1.0f - axis[0]*axis[0])),
@@ -640,7 +635,6 @@ WWINLINE Matrix3 operator + (const Matrix3 & a, const Matrix3 & b)
 
 WWINLINE void Matrix3::Add(const Matrix3 & a, const Matrix3 & b,Matrix3 * c)
 { 
-	WWASSERT(c);
 	Vector3::Add(a.Row[0],b.Row[0],&(c->Row[0]));
 	Vector3::Add(a.Row[1],b.Row[1],&(c->Row[1]));
 	Vector3::Add(a.Row[2],b.Row[2],&(c->Row[2]));
@@ -660,7 +654,6 @@ WWINLINE Matrix3 operator - (const Matrix3 & a, const Matrix3 & b)
 
 WWINLINE void Matrix3::Subtract(const Matrix3 & a, const Matrix3 & b,Matrix3 * c)
 {
-	WWASSERT(c);
 	Vector3::Subtract(a.Row[0],b.Row[0],&(c->Row[0]));
 	Vector3::Subtract(a.Row[1],b.Row[1],&(c->Row[1]));
 	Vector3::Subtract(a.Row[2],b.Row[2],&(c->Row[2]));

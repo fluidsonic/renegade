@@ -272,8 +272,6 @@ ObjectivesViewerClass::fnCompareObjectivesCallback
 	const void *elem2
 )
 {
-   WWASSERT (elem1 != NULL);
-   WWASSERT (elem2 != NULL);
    Objective *objective1 = *((Objective **)elem1);
    Objective *objective2 = *((Objective **)elem2);	
 

@@ -132,7 +132,7 @@ StaticNetworkObjectClass::Initialize (StaticAnimPhysClass *phys_obj)
 		LoopEnd			= anim_mgr.Get_Loop_End ();
 	}
 
-	//WWASSERT(network_id >= NETID_STATIC_OBJECT_MIN && network_id <= NETID_STATIC_OBJECT_MAX);
+	//assert(network_id >= NETID_STATIC_OBJECT_MIN && network_id <= NETID_STATIC_OBJECT_MAX);
 	Set_Network_ID (network_id);
 	return ;
 }
@@ -262,7 +262,6 @@ StaticNetworkObjectClass::Free_Static_Network_Objects (void)
 	//
 	//	Make sure the list has been completely cleared
 	//
-	WWASSERT (StaticNetworkObjectList.Count () == 0);
 	return ;
 }
 
@@ -430,7 +429,6 @@ DoorNetworkObjectClass::Import_Rare (BitStreamClass &packet)
 			//
 			bool success = door->Set_State (DoorState);
 			if (!success) {
-				WWDEBUG_SAY(("DoorNetworkObjectClass::Import_Rare -- Door state changed failed to apply\n"));
 			}
 		}
 	}
@@ -479,7 +477,7 @@ DoorNetworkObjectClass::Get_Description (StringClass & description)
 		case STATE_OPENING_DOOR:		state_string = "STATE_OPENING_DOOR";	break;
 		case STATE_CLOSING_DOOR:		state_string = "STATE_CLOSING_DOOR";	break;
 		case STATE_ACCESS_DENIED:		state_string = "STATE_ACCESS_DENIED";	break;
-		default:								DIE;
+		default:								assert(false);
 	}
 
    line.Format("DoorState:  %d (%s)\n", DoorState, state_string);
@@ -678,7 +676,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 		case ElevatorPhysClass::STATE_MOVING_UP:		state_string = "STATE_MOVING_UP";	break;
 		case ElevatorPhysClass::STATE_UP:				state_string = "STATE_UP";				break;
 		case ElevatorPhysClass::STATE_MOVING_DOWN:	state_string = "STATE_MOVING_DOWN";	break;
-		default:													DIE;
+		default:													assert(false);
 	}
 
 	line.Format("State:            %d (%s)\n", State, state_string);
@@ -691,7 +689,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 		case ElevatorPhysClass::DOOR_STATE_NORMAL:			state_string = "DOOR_STATE_NORMAL";				break;
 		case ElevatorPhysClass::DOOR_STATE_UNLOCKED:			state_string = "DOOR_STATE_UNLOCKED";			break;
 		case ElevatorPhysClass::DOOR_STATE_ACCESS_DENIED:	state_string = "DOOR_STATE_ACCESS_DENIED";	break;
-		default:															DIE;
+		default:															assert(false);
 	}
 
 	line.Format("DoorStateTop:     %d (%s)\n", DoorStateTop, state_string);
@@ -704,7 +702,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 		case ElevatorPhysClass::DOOR_STATE_NORMAL:			state_string = "DOOR_STATE_NORMAL";				break;
 		case ElevatorPhysClass::DOOR_STATE_UNLOCKED:			state_string = "DOOR_STATE_UNLOCKED";			break;
 		case ElevatorPhysClass::DOOR_STATE_ACCESS_DENIED:	state_string = "DOOR_STATE_ACCESS_DENIED";	break;
-		default:															DIE;
+		default:															assert(false);
 	}
 
 	line.Format("DoorStateBottom:  %d (%s)\n", DoorStateBottom, state_string);

@@ -5,7 +5,6 @@
 #include "physcoltest.h"
 #include "physcon.h"
 #include "pscene.h"
-#include "wwprofile.h"
 
 
 // Wheel friction is a proportional controller, this is the constant.
@@ -165,9 +164,6 @@ SuspensionElementClass::~SuspensionElementClass(void)
  *=============================================================================================*/
 void SuspensionElementClass::Init(VehiclePhysClass * obj,int pbone,int rbone,int fbone,int abone)
 {
-	WWASSERT(obj != NULL);							// have to have a valid object
-	WWASSERT(pbone != -1);							// have to have a position bone at least
-	WWASSERT(obj->Peek_Model() != NULL);		// have to have a valid model
 
 	// Store a pointer to the vehicle.  Not referenced because this class meant to be a private
 	// member of wheeled vehicle.  A reference here would be circular.
@@ -181,7 +177,6 @@ void SuspensionElementClass::Init(VehiclePhysClass * obj,int pbone,int rbone,int
 	ForkBone = fbone;
 	AxisBone = abone;
 
-	WWASSERT(PositionBone != -1);
 	model->Capture_Bone(PositionBone);
 
 	if (ForkBone != -1) {
@@ -215,7 +210,6 @@ void SuspensionElementClass::Init(VehiclePhysClass * obj,int pbone,int rbone,int
 		ObjWheelTM.Get_Translation(&pos);
 		Matrix3D::Inverse_Transform_Vector(ObjForkTM,pos,&pos);
 
-		WWASSERT(WWMath::Fabs(ForkLength - pos.Length()) < 0.1f);
 
 		ForkZ = pos.Z;
 		ForkSin0 = pos.Z / ForkLength;
@@ -252,7 +246,6 @@ void SuspensionElementClass::Init(VehiclePhysClass * obj,int pbone,int rbone,int
  *=============================================================================================*/
 void SuspensionElementClass::Intersect_Spring(void)
 {
-	WWASSERT(Parent != NULL);
 
 	// transform the wheel coordinate system into world space.
 	Matrix3D::Multiply(Parent->Get_Transform(),ObjWheelTM,&WheelTM);
@@ -306,7 +299,6 @@ void SuspensionElementClass::Intersect_Spring(void)
  *=============================================================================================*/
 void SuspensionElementClass::Non_Physical_Intersect_Spring(float suspension_fraction)
 {
-	WWASSERT(Parent != NULL);
 
 	// transform the wheel coordinate system into world space.
 	Matrix3D::Multiply(Parent->Get_Transform(),ObjWheelTM,&WheelTM);
@@ -474,7 +466,6 @@ void SuspensionElementClass::Translate_Wheel(RenderObjClass * model)
  *=============================================================================================*/
 void SuspensionElementClass::Rotate_Fork(RenderObjClass * model)
 {
-	WWASSERT(ForkBone != -1);
 	
 	float fork_sin = 0.0f;
 	float fork_cos = 1.0f;
@@ -599,7 +590,6 @@ void WheelClass::Init
 	
 	// Grab a pointer to the render model
 	RenderObjClass * model = obj->Peek_Model();
-	WWASSERT(model != NULL);
 
 	// Store the bone indices and capture the bones
 	RotationBone = rotation_bone;
@@ -632,7 +622,6 @@ void WheelClass::Init
  *=============================================================================================*/
 void WheelClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 {
-	WWPROFILE("WheelClass::Compute_Force_And_Torque");
 
 	if (Get_Flag(FAKE)) return;
 
@@ -646,7 +635,6 @@ void WheelClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 	// Intersect the spring with the world to find our contact point
 	// If it doesn't hit anything, we are done!
 	{
-		WWPROFILE("Intersect_Spring");
 		Intersect_Spring();	
 	}
 	if (!Get_Flag(INCONTACT)) {
@@ -728,7 +716,6 @@ if (sum.Length2() < 0.001f) {
  *=============================================================================================*/
 void WheelClass::Compute_Suspension_Force(const Vector3 & pdot,const Vector3 & local_pdot,Vector3 * suspension_force)
 {
-	WWPROFILE("WheelClass::Compute_Suspension_Force");
 
 	// -----------------------------------------------------------------------------
 	// Suspension Force:
@@ -767,7 +754,6 @@ void WheelClass::Compute_Suspension_Force(const Vector3 & pdot,const Vector3 & l
  *=============================================================================================*/
 void WheelClass::Apply_Forces(Vector3 * force,Vector3 * torque)
 {	
-	WWPROFILE("WheelClass::Apply_Forces");
 
 	// Grab the 'Definition' for our parent for quick access to the constants
 	const VehiclePhysDefClass * vehicle_def = Parent->Get_VehiclePhysDef();
@@ -801,13 +787,6 @@ void WheelClass::Apply_Forces(Vector3 * force,Vector3 * torque)
 	*torque += Vector3::Cross_Product(r_tractive,TractiveFrictionForce);
 
 	// Debugging
-#ifdef WWDEBUG
-	Vector3 position;
-	Parent->Get_Position(&position);
-	Parent->Add_Debug_Vector(position + r_lateral,SuspensionForce / Parent->Get_Mass(),SUSPENSION_FORCE_COLOR);
-	Parent->Add_Debug_Vector(position + r_lateral,LateralFrictionForce / Parent->Get_Mass(),LATERAL_FORCE_COLOR);
-	Parent->Add_Debug_Vector(position + r_tractive,TractiveFrictionForce / Parent->Get_Mass(),TRACTIVE_FORCE_COLOR);
-#endif
 }
 
 
@@ -846,7 +825,6 @@ void WVWheelClass::Compute_Traction_Forces
 	float * set_tractive_force
 )
 {
-	WWPROFILE("WVWheelClass::Compute_Traction_Forces");
 
 	if (wheel_normal_force > 0.0f) {
 
@@ -973,8 +951,6 @@ void WVWheelClass::Roll_Wheel(void)
 			
 			Rotation += RotationDelta;
 
-			WWASSERT(WWMath::Is_Valid_Float(RotationDelta));
-			WWASSERT(WWMath::Is_Valid_Float(Rotation));
 
 		} else {
 			
@@ -982,8 +958,6 @@ void WVWheelClass::Roll_Wheel(void)
 			Rotation += RotationDelta;
 			RotationDelta *= 0.97f;
 
-			WWASSERT(WWMath::Is_Valid_Float(RotationDelta));
-			WWASSERT(WWMath::Is_Valid_Float(Rotation));
 		}
 	}
 	
@@ -1014,7 +988,6 @@ void TrackWheelClass::Compute_Traction_Forces
 	float * set_tractive_force
 )
 {
-	WWPROFILE("TrackWheelClass::Compute_Traction_Forces");
 
 	// Look up the friction coefficient for this surface
 	float friction_coefficient =	PhysicsConstants::Get_Contact_Friction_Coefficient(
@@ -1161,7 +1134,6 @@ void VTOLWheelClass::Compute_Traction_Forces
 	float * set_tractive_force
 )
 {
-	WWPROFILE("VTOLWheelClass::Compute_Traction_Forces");
 
 	// Friction "penalty" force, proportional to the velocity, tuned so that the force
 	// will be small when the velocity is small.  The lateral and tractive friction forces

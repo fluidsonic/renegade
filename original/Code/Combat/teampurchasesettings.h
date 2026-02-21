@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __TEAMPURCHASESETTINGS_H
 #define __TEAMPURCHASESETTINGS_H

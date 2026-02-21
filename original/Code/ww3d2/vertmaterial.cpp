@@ -1,6 +1,5 @@
 #include "vertmaterial.h"
 #include "realcrc.h"
-#include "wwdebug.h"
 #include "w3d_util.h"
 #include "chunkio.h"
 #include "w3derr.h"
@@ -341,18 +340,12 @@ VertexMaterialClass::Get_Diffuse_Color_Source(void)
 
 void VertexMaterialClass::Set_UV_Source(int stage,int array_index)
 {
-	WWASSERT(stage >= 0);
-	WWASSERT(stage < MeshBuilderClass::MAX_STAGES);
-	WWASSERT(array_index >= 0);
-	WWASSERT(array_index < 8);
 	CRCDirty=true;
 	UVSource[stage] = array_index;
 }
 
 int VertexMaterialClass::Get_UV_Source(int stage)
 {
-	WWASSERT(stage >= 0);
-	WWASSERT(stage < MeshBuilderClass::MAX_STAGES);
 	return UVSource[stage];
 }
 
@@ -635,7 +628,6 @@ WW3DErrorType VertexMaterialClass::Load_W3D(ChunkLoadClass & cload)
 		break;
 
 		default:
-				WWDEBUG_SAY(("Unsupported mapper in %s\n",name));
 			break;
 	}
 
@@ -795,7 +787,6 @@ WW3DErrorType VertexMaterialClass::Load_W3D(ChunkLoadClass & cload)
 			break;
 
 		default:
-			WWDEBUG_SAY(("Unsupported mapper in %s\n",name));
 			break;
 	}
 
@@ -821,7 +812,6 @@ WW3DErrorType VertexMaterialClass::Load_W3D(ChunkLoadClass & cload)
 
 WW3DErrorType VertexMaterialClass::Save_W3D(ChunkSaveClass & csave)
 {
-	WWASSERT(0);
 	return WW3D_ERROR_OK;
 }
 
@@ -942,7 +932,6 @@ void VertexMaterialClass::Shutdown()
  *=============================================================================================*/
 VertexMaterialClass * VertexMaterialClass::Get_Preset(PresetType type)
 {
-	WWASSERT(type<PRESET_COUNT);
 	Presets[type]->Add_Ref();
 	return Presets[type];
 }

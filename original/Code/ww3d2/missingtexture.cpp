@@ -15,7 +15,6 @@ static IDirect3DTexture8 * _MissingTexture = NULL;
 
 IDirect3DTexture8* MissingTexture::_Get_Missing_Texture()
 {
-	WWASSERT(_MissingTexture);
 	_MissingTexture->AddRef();
 	return _MissingTexture;
 }
@@ -41,7 +40,6 @@ IDirect3DSurface8* MissingTexture::_Create_Missing_Surface()
 
 void MissingTexture::_Init()
 {
-	WWASSERT(!_MissingTexture);
 
 	IDirect3DTexture8* tex=DX8Wrapper::_Create_DX8_Texture(
 		missing_image_width,

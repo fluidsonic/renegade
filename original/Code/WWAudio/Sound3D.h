@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SOUND3DOBJ_H
 #define __SOUND3DOBJ_H

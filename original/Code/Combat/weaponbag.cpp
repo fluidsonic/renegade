@@ -76,9 +76,7 @@ bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_WEAPON_LIST:
-				WWASSERT( WeaponList.Count() == 1 );
 				while (cload.Open_Chunk()) {
-					WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_WEAPON_ENTRY );
 					WeaponClass *weapon = new WeaponClass;
 					weapon->Load( cload );
 					WeaponList.Add( weapon );

@@ -1,13 +1,9 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef STATICAABTREECULL_H
 #define STATICAABTREECULL_H
 
 #include "always.h"
 #include "physaabtreecull.h"
-#include "wwdebug.h"
 #include "physlist.h"
 
 

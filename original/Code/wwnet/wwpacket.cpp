@@ -86,7 +86,6 @@ cPacket& cPacket::operator=(const cPacket& source)
 //------------------------------------------------------------------------------------
 void cPacket::Add_Vector3(Vector3 & v)
 {
-	WWASSERT(v.Is_Valid());
 
 	Add(v.X);
 	Add(v.Y);
@@ -100,13 +99,11 @@ void cPacket::Get_Vector3(Vector3 & v)
 	Get(v.Y);
 	Get(v.Z);
 
-	WWASSERT(v.Is_Valid());
 }
 
 //------------------------------------------------------------------------------------
 void cPacket::Add_Quaternion(Quaternion & q)
 {
-	WWASSERT(q.Is_Valid());
 
 	Add(q.X);
 	Add(q.Y);
@@ -122,22 +119,18 @@ void cPacket::Get_Quaternion(Quaternion & q)
 	Get(q.Z);
 	Get(q.W);
 
-	WWASSERT(q.Is_Valid());
 }
 
 //------------------------------------------------------------------------------------
 void cPacket::Set_Type(BYTE type)
 {
-   WWASSERT(Type == UNDEFINED_TYPE || Type == type);
 
-   WWASSERT(type != UNDEFINED_TYPE);
    Type = type;
 }
 
 //------------------------------------------------------------------------------------
 void cPacket::Set_Id(int id)
 {
-   WWASSERT(id != UNDEFINED_ID);
    Id = id;
 }
 
@@ -160,7 +153,6 @@ void cPacket::Set_Send_Time()
 //------------------------------------------------------------------------------------
 void cPacket::Set_Num_Sends(int num_sends)
 {
-	WWASSERT(num_sends > 0);
 	NumSends = num_sends;
 }
 
@@ -194,10 +186,6 @@ void cPacket::Init_Encoder(void)
 //------------------------------------------------------------------------------------
 void cPacket::Construct_Full_Packet(cPacket & full_packet, cPacket & src_packet)
 {
-   WWASSERT(
-		src_packet.Get_Type() >= PACKETTYPE_FIRST &&
-		src_packet.Get_Type() <= PACKETTYPE_LAST);
-   WWASSERT(src_packet.Get_Id() != UNDEFINED_ID);
 
 #ifndef WRAPPER_CRC
 	full_packet.Add(CRC_PLACEHOLDER);
@@ -208,7 +196,6 @@ void cPacket::Construct_Full_Packet(cPacket & full_packet, cPacket & src_packet)
 	full_packet.Add((USHORT)src_packet.Get_Bit_Length());
 
 	int header_bit_length = full_packet.Get_Bit_Length();
-	WWASSERT(header_bit_length == PACKET_HEADER_SIZE * 8);
 
 	memcpy(
 		full_packet.Get_Data() + PACKET_HEADER_SIZE,
@@ -317,7 +304,6 @@ void cPacket::Construct_App_Packet(cPacket & packet, cPacket & full_packet)
 /*
 void cPacket::Set_Execute_Time(int execute_time)
 {
-   WWASSERT(execute_time > 0);
    ExecuteTime = execute_time;
 }
 */
@@ -325,7 +311,5 @@ void cPacket::Set_Execute_Time(int execute_time)
 
    /*
    if (!Is_Flushed()) {
-		WWDEBUG_SAY(("*** cPacket::~cPacket: !Is_Flushed()\n"));
-      DIE;
    }
 	*/

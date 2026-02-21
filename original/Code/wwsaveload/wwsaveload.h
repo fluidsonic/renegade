@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef WWSAVELOAD_H
 #define WWSAVELOAD_H

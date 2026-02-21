@@ -1251,7 +1251,6 @@ return;
 	if (ValueScale>2000.0f) return;
 	if (Type==ANIM_CHANNEL_Q/* && ValueScale>3.0f*/) return;
 
-	WWASSERT(!CompressedData);
 	CompressedData=new unsigned short[count];
 	float inv_scale=0.0f;
 	if (ValueScale!=0.0f) {
@@ -1291,7 +1290,6 @@ Get_Vector(int frame,float * setvec) const{
 			}
 		}
 		else {
-			WWASSERT(CompressedData);
 			float scale=ValueScale/65535.0f;
 			for (int i=0; i<VectorLen; i++) {
 				float value=int(CompressedData[vframe * VectorLen + i]);

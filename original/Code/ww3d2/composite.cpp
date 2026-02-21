@@ -1,5 +1,4 @@
 #include "composite.h"
-#include "wwdebug.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -92,7 +91,6 @@ void CompositeRenderObjClass::Restart(void)
 {
 	for (int ni = 0; ni < Get_Num_Sub_Objects(); ni++) {
 		RenderObjClass * robj = Get_Sub_Object(ni);
-		WWASSERT(robj);
 		robj->Restart();
 		robj->Release_Ref();
 	}
@@ -171,7 +169,6 @@ int CompositeRenderObjClass::Get_Num_Polys(void) const
 	int count = 0;
 	for (int ni = 0; ni < Get_Num_Sub_Objects(); ni++) {
 		RenderObjClass * robj = Get_Sub_Object(ni);
-		WWASSERT(robj);
 		count += robj->Get_Num_Polys();
 		robj->Release_Ref();
 	}	
@@ -196,7 +193,6 @@ void CompositeRenderObjClass::Notify_Added(SceneClass * scene)
 	RenderObjClass::Notify_Added(scene);
 	for (int ni = 0; ni < Get_Num_Sub_Objects(); ni++) {
 		RenderObjClass * robj = Get_Sub_Object(ni);
-		WWASSERT(robj);
 		robj->Notify_Added(scene);
 		robj->Release_Ref();
 	}
@@ -219,7 +215,6 @@ void CompositeRenderObjClass::Notify_Removed(SceneClass * scene)
 {
 	for (int ni = 0; ni < Get_Num_Sub_Objects(); ni++) {
 		RenderObjClass * robj = Get_Sub_Object(ni);
-		WWASSERT(robj);
 		robj->Notify_Removed(scene);
 		robj->Release_Ref();
 	}
@@ -244,7 +239,6 @@ bool CompositeRenderObjClass::Cast_Ray(RayCollisionTestClass & raytest)
 	bool res = false;
 	for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		res |= robj->Cast_Ray(raytest);
 		robj->Release_Ref();
 	}
@@ -269,7 +263,6 @@ bool CompositeRenderObjClass::Cast_AABox(AABoxCollisionTestClass & boxtest)
 	bool res = false;
 	for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		res |= robj->Cast_AABox(boxtest);
 		robj->Release_Ref();
 	}
@@ -294,7 +287,6 @@ bool CompositeRenderObjClass::Cast_OBBox(OBBoxCollisionTestClass & boxtest)
 	bool res = false;
 	for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		res |= robj->Cast_OBBox(boxtest);
 		robj->Release_Ref();
 	}
@@ -319,7 +311,6 @@ bool CompositeRenderObjClass::Intersect_AABox(AABoxIntersectionTestClass & boxte
 	bool res = false;
 	for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		res |= robj->Intersect_AABox(boxtest);
 		robj->Release_Ref();
 	}
@@ -344,7 +335,6 @@ bool CompositeRenderObjClass::Intersect_OBBox(OBBoxIntersectionTestClass & boxte
 	bool res = false;
 	for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		res |= robj->Intersect_OBBox(boxtest);
 		robj->Release_Ref();
 	}
@@ -368,7 +358,6 @@ void CompositeRenderObjClass::Create_Decal(DecalGeneratorClass * generator)
 {
 	for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		robj->Create_Decal(generator);
 		robj->Release_Ref();
 	}
@@ -394,7 +383,6 @@ void CompositeRenderObjClass::Delete_Decal(uint32 decal_id)
 {
 	for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		robj->Delete_Decal(decal_id);
 		robj->Release_Ref();
 	}
@@ -433,7 +421,6 @@ void CompositeRenderObjClass::Update_Obj_Space_Bounding_Volumes(void)
 
 	// loop through all sub-objects, combining their object-space bounding spheres and boxes.
 	robj = Get_Sub_Object(0);
-	WWASSERT(robj);
 	robj->Get_Obj_Space_Bounding_Sphere(ObjSphere);
 	robj->Get_Obj_Space_Bounding_Box(obj_aabox);
 	robj->Release_Ref();
@@ -442,7 +429,6 @@ void CompositeRenderObjClass::Update_Obj_Space_Bounding_Volumes(void)
 	for (i=1; i<Get_Num_Sub_Objects(); i++) {
 		
 		robj = Get_Sub_Object(i);
-		WWASSERT(robj);
 		
 		robj->Get_Obj_Space_Bounding_Sphere(sphere);
 		robj->Get_Obj_Space_Bounding_Box(obj_aabox);
@@ -480,7 +466,6 @@ void CompositeRenderObjClass::Set_User_Data(void *value, bool recursive)
 	if (recursive) {
 		for (int i=0; i<Get_Num_Sub_Objects(); i++) {
 			RenderObjClass * robj = Get_Sub_Object(i);
-			WWASSERT(robj);
 			robj->Set_User_Data(value,recursive);
 			robj->Release_Ref();
 		}

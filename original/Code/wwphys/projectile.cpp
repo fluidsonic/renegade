@@ -7,13 +7,6 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 #include "simpledefinitionfactory.h"
-#include "wwdebug.h"
-#include "wwhack.h"
-#include "wwprofile.h"
-
-
-
-DECLARE_FORCE_LINK(projectile);
 
 /***********************************************************************************************
 **
@@ -43,7 +36,6 @@ enum
 	PROJECTILE_VARIABLE_LIFETIME,
 	PROJECTILE_VARIABLE_BOUNCECOUNT,
 };
-
 
 ProjectileClass::ProjectileClass(void) :
 	CollidesOnMove(true),
@@ -124,7 +116,6 @@ void ProjectileClass::Set_Orientation_Mode_Tumbling(void)
 	TumbleRate = WWMath::Random_Float((float)DEG_TO_RAD(2.0f),(float)DEG_TO_RAD(10.0f));
 }
 
-
 void ProjectileClass::Set_Orientation_Mode_Tumbling(const Vector3 & axis,float rate)
 {
 	OrientationMode = ORIENTATION_TUMBLING;
@@ -142,8 +133,6 @@ void ProjectileClass::Set_Orientation_Mode_Aligned_Fixed(void)
 		Model->Set_Transform(tm);
 	}
 }
-
-
 
 void	ProjectileClass::Set_Lifetime( float time )
 {
@@ -177,7 +166,6 @@ void ProjectileClass::Integrate(float dt)
 
 void ProjectileClass::Timestep(float dt)
 {
-	WWPROFILE("Projectile::Timestep");
 	const int MAX_BUMPS = 5;
 
 	if (Is_User_Control_Enabled()) {
@@ -188,12 +176,7 @@ void ProjectileClass::Timestep(float dt)
 		return;
 	}
 
-	WWASSERT(State.Position.Is_Valid());
-	WWASSERT(State.Velocity.Is_Valid());
-
 	if ( CollidesOnMove ) {
-
-		WWPROFILE("Move and Collide");
 
 		/*
 		** Repeat until we eat all of the time
@@ -227,7 +210,6 @@ void ProjectileClass::Timestep(float dt)
 			PhysRayCollisionTestClass raytest(ray,&res,Get_Collision_Group(),COLLISION_TYPE_PROJECTILE);
 
 			{ 
-				WWPROFILE("Raycast");
 				Inc_Ignore_Counter();
 				PhysicsSceneClass::Get_Instance()->Cast_Ray(raytest);
 				Dec_Ignore_Counter();
@@ -265,7 +247,6 @@ void ProjectileClass::Timestep(float dt)
 					/*
 					** Notify the parties involved
 					*/
-					WWASSERT(raytest.CollidedPhysObj != NULL);
 
 					CollisionReactionType reaction = COLLISION_REACTION_DEFAULT;
 
@@ -274,7 +255,6 @@ void ProjectileClass::Timestep(float dt)
 					event.CollidedRenderObj = raytest.CollidedRenderObj;
 
 					{
-						WWPROFILE("Callbacks");
 						event.OtherObj = raytest.CollidedPhysObj;
 						reaction |= Collision_Occurred(event);
 
@@ -375,7 +355,6 @@ bool ProjectileClass::Cast_Ray(PhysRayCollisionTestClass & raytest)
 
 void ProjectileClass::Update_Transform(float dt)
 {
-	WWASSERT(Model);
 
 	// Update the cached transformation matrix
 	Matrix3D tm;
@@ -459,7 +438,6 @@ bool ProjectileClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -467,7 +445,6 @@ bool ProjectileClass::Load (ChunkLoadClass &cload)
 	}
 	return true;
 }
-
 
 /***********************************************************************************************
 **
@@ -501,7 +478,6 @@ enum
 	PROJECTILEDEF_VARIABLE_BOUNCECOUNT,
 	
 };
-
 
 ProjectileDefClass::ProjectileDefClass(void) :
 	CollidesOnMove(true),
@@ -565,7 +541,6 @@ bool ProjectileDefClass::Save(ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool ProjectileDefClass::Load(ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -591,7 +566,6 @@ bool ProjectileDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

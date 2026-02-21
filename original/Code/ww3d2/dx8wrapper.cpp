@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <D3dx8core.h>
 #include "pot.h"
-#include "wwprofile.h"
 #include "ffactory.h"
 #include "dx8caps.h"
 #include "formconv.h"
@@ -145,10 +144,8 @@ void Log_DX8_ErrorCode(unsigned res)
 		sizeof(tmp));
 
 	if (new_res==D3D_OK) {
-		WWDEBUG_SAY((tmp));
 	}
 
-	WWASSERT(0);
 }
 
 void Non_Fatal_Log_DX8_ErrorCode(unsigned res,const char * file,int line)
@@ -161,7 +158,6 @@ void Non_Fatal_Log_DX8_ErrorCode(unsigned res,const char * file,int line)
 		sizeof(tmp));
 
 	if (new_res==D3D_OK) {
-		WWDEBUG_SAY(("DX8 Error: %s, File: %s, Line: %d\r\n",tmp,file,line));
 	}
 }
 
@@ -169,14 +165,12 @@ void Non_Fatal_Log_DX8_ErrorCode(unsigned res,const char * file,int line)
 
 bool DX8Wrapper::Init(void * hwnd, bool lite)
 {
-	WWASSERT(!IsInitted);
 
 	/*
 	** Initialize all variables!
 	*/
 	_Hwnd = (HWND)hwnd;
 	_MainThreadID=ThreadClass::_Get_Current_Thread_ID();
-	WWDEBUG_SAY(("DX8Wrapper main thread: 0x%x\n",_MainThreadID));
 	CurRenderDevice = -1;
 	ResolutionWidth = DEFAULT_RESOLUTION_WIDTH;
 	ResolutionHeight = DEFAULT_RESOLUTION_HEIGHT;
@@ -201,7 +195,6 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 	D3DInterface = NULL;
 	D3DDevice = NULL;
 
-	WWDEBUG_SAY(("Reset DX8Wrapper statistics\n"));
 	Reset_Statistics();
 
 	Invalidate_Cached_Render_States();
@@ -217,7 +210,6 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 			/*
 			** Create the D3D interface object
 			*/
-			WWDEBUG_SAY(("Create Direct3D8\n"));
 			D3DInterface = Direct3DCreate8Ptr(D3D_SDK_VERSION);		// TODO: handle failure cases...
 			if (D3DInterface == NULL) {
 				return(false);
@@ -227,9 +219,7 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 			/*
 			** Enumerate the available devices
 			*/
-			WWDEBUG_SAY(("Enumerate devices\n"));
 			Enumerate_Devices();
-			WWDEBUG_SAY(("DX8Wrapper Init completed\n"));
 		}
 	}
 	return(true);
@@ -378,7 +368,6 @@ void DX8Wrapper::Do_Onetime_Device_Dependent_Shutdowns(void)
 
 bool DX8Wrapper::Create_Device(void)
 {
-	WWASSERT(D3DDevice == NULL);	// for now, once you've created a device, you're stuck with it!
 
 	D3DCAPS8 caps;
 	if (FAILED( D3DInterface->GetDeviceCaps(
@@ -462,7 +451,6 @@ bool DX8Wrapper::Create_Device(void)
 
 bool DX8Wrapper::Reset_Device(void)
 {
-	WWDEBUG_SAY(("Resetting device.\n"));
 	DX8_THREAD_ASSERT();
 	if ((IsInitted) && (D3DDevice != NULL)) {
 		// Release all non-MANAGED stuff
@@ -481,10 +469,8 @@ bool DX8Wrapper::Reset_Device(void)
 		DX8TextureManagerClass::Recreate_Textures();
 		Invalidate_Cached_Render_States();
 		Set_Default_Global_Render_States();
-		WWDEBUG_SAY(("Device reset completed\n"));
 		return true;
 	}
-	WWDEBUG_SAY(("Device reset failed\n"));
 	return false;
 }
 
@@ -648,9 +634,6 @@ bool DX8Wrapper::Set_Render_Device
 
 bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int windowed, bool resize_window)
 {
-	WWASSERT(IsInitted);
-	WWASSERT(dev >= -1);
-	WWASSERT(dev < _RenderDeviceNameTable.Count());
 
 	/*
 	** If user has never selected a render device, start out with device 0
@@ -674,10 +657,7 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 	if (bits != -1)		BitDepth = bits;
 	if (windowed != -1)	IsWindowed = (windowed != 0);
 
-	WWDEBUG_SAY(("Attempting Set_Render_Device: name: %s, width: %d, height: %d, windowed: %d\r\n",
-		_RenderDeviceNameTable[CurRenderDevice],ResolutionWidth,ResolutionHeight,(IsWindowed ? 1 : 0)));
 
-	WWASSERT(D3DDevice == NULL);
 
 	/*
 	** Initialize values for D3DPRESENT_PARAMETERS members.
@@ -710,7 +690,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 	_PresentParameters.BackBufferFormat = DesktopMode.Format;
 
 	if (IsWindowed) {
-		WWDEBUG_SAY(("Initializing windowed mode\r\n"));
 
 // 10/23/01 - Denzil - DX window initialization
 		/*
@@ -741,7 +720,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 			return false;
 		}
 
-		WWDEBUG_SAY(("Using buffer format: %d\r\n",_PresentParameters.BackBufferFormat));
 
 		/*
 		** Find an appropriate Z buffer
@@ -750,7 +728,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 		{
 			// If opening 32 bit mode failed, try 16 bit, even if the desktop happens to be 32 bit
 			if (BitDepth==32) {
-				WWDEBUG_SAY(("Failed to find a 32 bit mode, trying 16 bit\r\n"));
 				BitDepth=16;
 				_PresentParameters.BackBufferFormat=D3DFMT_R5G6B5;
 				if (!Find_Z_Mode(_PresentParameters.BackBufferFormat,_PresentParameters.BackBufferFormat,&_PresentParameters.AutoDepthStencilFormat)) {
@@ -780,7 +757,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 		resize_window = false;
 // End Denzil - DX window initialization
 
-		WWDEBUG_SAY(("Initializing full-screen mode\r\n"));
 
 		/*
 		** Try to find a mode that matches the user's desired bit-depth.
@@ -941,7 +917,6 @@ int DX8Wrapper::Get_Render_Device(void)
 
 const RenderDeviceDescClass & DX8Wrapper::Get_Render_Device_Desc(int deviceidx)
 {
-	WWASSERT(IsInitted);
 
 	if ((deviceidx == -1) && (CurRenderDevice == -1)) {
 		CurRenderDevice = 0;
@@ -949,15 +924,11 @@ const RenderDeviceDescClass & DX8Wrapper::Get_Render_Device_Desc(int deviceidx)
 
 	// if the device index is -1 then we want the current device
 	if (deviceidx == -1) {
-		WWASSERT(CurRenderDevice >= 0);
-		WWASSERT(CurRenderDevice < _RenderDeviceNameTable.Count());
 		return _RenderDeviceDescriptionTable[CurRenderDevice];
 	}
 
 	// We can only ask for multiple device information if the devices
 	// have been detected.
-	WWASSERT(deviceidx >= 0);
-	WWASSERT(deviceidx < _RenderDeviceNameTable.Count());
 	return _RenderDeviceDescriptionTable[deviceidx];
 }
 
@@ -986,7 +957,6 @@ bool DX8Wrapper::Set_Device_Resolution(int width,int height,int bits,int windowe
 
 void DX8Wrapper::Get_Device_Resolution(int & set_w,int & set_h,int & set_bits,bool & set_windowed)
 {
-	WWASSERT(IsInitted);
 
 	set_w = ResolutionWidth;
 	set_h = ResolutionHeight;
@@ -998,7 +968,6 @@ void DX8Wrapper::Get_Device_Resolution(int & set_w,int & set_h,int & set_bits,bo
 
 void DX8Wrapper::Get_Render_Target_Resolution(int & set_w,int & set_h,int & set_bits,bool & set_windowed)
 {
-	WWASSERT(IsInitted);
 
 	if (CurrentRenderTarget != NULL) {
 		D3DSURFACE_DESC info;
@@ -1027,11 +996,9 @@ bool DX8Wrapper::Registry_Save_Render_Device( const char * sub_key )
 bool DX8Wrapper::Registry_Save_Render_Device( const char *sub_key, int device, int width, int height, int depth, bool windowed, int texture_depth)
 {
 	RegistryClass * registry = new RegistryClass( sub_key );
-	WWASSERT( registry );
 
 	if ( !registry->Is_Valid() ) {
 		delete registry;
-		WWDEBUG_SAY(( "Error getting Registry\n" ));
 		return false;
 	}
 
@@ -1062,12 +1029,10 @@ bool DX8Wrapper::Registry_Load_Render_Device( const char * sub_key, bool resize_
 													TextureBitDepth) &&
 			(*name != 0))
 	{
-		WWDEBUG_SAY(( "Device %s (%d X %d) %d bit windowed:%d\n", name,width,height,depth,windowed));
 
 		if (TextureBitDepth==16 || TextureBitDepth==32) {
-//			WWDEBUG_SAY(( "Texture depth %d\n", TextureBitDepth));
+//			
 		} else {
-			WWDEBUG_SAY(( "Invalid texture depth %d, switching to 16 bits\n", TextureBitDepth));
 			TextureBitDepth=16;
 		}
 
@@ -1133,7 +1098,6 @@ bool DX8Wrapper::Registry_Load_Render_Device( const char * sub_key, bool resize_
 		return true;
 	}
 
-	WWDEBUG_SAY(( "Error getting Registry\n" ));
 
 	return Set_Any_Render_Device();
 }
@@ -1240,7 +1204,6 @@ bool DX8Wrapper::Find_Color_Mode(D3DFORMAT colorbuffer, int resx, int resy, UINT
 	{
 		D3DInterface->EnumAdapterModes(D3DADAPTER_DEFAULT, i, &dmode);
 		if (dmode.Width==rx && dmode.Height==ry && dmode.Format==colorbuffer) {
-			WWDEBUG_SAY(("Found valid color mode.  Width = %d Height = %d Format = %d\r\n",dmode.Width,dmode.Height,dmode.Format));
 			found=true;
 		}
 		i++;
@@ -1250,7 +1213,6 @@ bool DX8Wrapper::Find_Color_Mode(D3DFORMAT colorbuffer, int resx, int resy, UINT
 
 	// no match
 	if (!found) {
-		WWDEBUG_SAY(("Failed to find a valid color mode\r\n"));
 		return false;
 	}
 
@@ -1279,47 +1241,40 @@ bool DX8Wrapper::Find_Z_Mode(D3DFORMAT colorbuffer,D3DFORMAT backbuffer, D3DFORM
 	if (Test_Z_Mode(colorbuffer,backbuffer,D3DFMT_D32))
 	{
 		*zmode=D3DFMT_D32;
-		WWDEBUG_SAY(("Found zbuffer mode D3DFMT_D32\r\n"));
 		return true;
 	}
 
 	if (Test_Z_Mode(colorbuffer,backbuffer,D3DFMT_D24S8))
 	{
 		*zmode=D3DFMT_D24S8;
-		WWDEBUG_SAY(("Found zbuffer mode D3DFMT_D24S8\r\n"));
 		return true;
 	}
 
 	if (Test_Z_Mode(colorbuffer,backbuffer,D3DFMT_D24X8))
 	{
 		*zmode=D3DFMT_D24X8;
-		WWDEBUG_SAY(("Found zbuffer mode D3DFMT_D24X8\r\n"));
 		return true;
 	}
 
 	if (Test_Z_Mode(colorbuffer,backbuffer,D3DFMT_D24X4S4))
 	{
 		*zmode=D3DFMT_D24X4S4;
-		WWDEBUG_SAY(("Found zbuffer mode D3DFMT_D24X4S4\r\n"));
 		return true;
 	}
 
 	if (Test_Z_Mode(colorbuffer,backbuffer,D3DFMT_D16))
 	{
 		*zmode=D3DFMT_D16;
-		WWDEBUG_SAY(("Found zbuffer mode D3DFMT_D16\r\n"));
 		return true;
 	}
 
 	if (Test_Z_Mode(colorbuffer,backbuffer,D3DFMT_D15S1))
 	{
 		*zmode=D3DFMT_D15S1;
-		WWDEBUG_SAY(("Found zbuffer mode D3DFMT_D15S1\r\n"));
 		return true;
 	}
 
 	// can't find a match
-	WWDEBUG_SAY(("Failed to find a valid zbuffer mode\r\n"));
 	return false;
 }
 
@@ -1329,7 +1284,6 @@ bool DX8Wrapper::Test_Z_Mode(D3DFORMAT colorbuffer,D3DFORMAT backbuffer, D3DFORM
 	if (FAILED(D3DInterface->CheckDeviceFormat(D3DADAPTER_DEFAULT,WW3D_DEVTYPE,
 		colorbuffer,D3DUSAGE_DEPTHSTENCIL,D3DRTYPE_SURFACE,zmode)))
 	{
-		WWDEBUG_SAY(("CheckDeviceFormat failed.  Colorbuffer format = %d  Zbufferformat = %d\r\n",colorbuffer,zmode));
 		return false;
 	}
 
@@ -1337,7 +1291,6 @@ bool DX8Wrapper::Test_Z_Mode(D3DFORMAT colorbuffer,D3DFORMAT backbuffer, D3DFORM
 	if(FAILED(D3DInterface->CheckDepthStencilMatch(D3DADAPTER_DEFAULT, WW3D_DEVTYPE,
 		colorbuffer,backbuffer,zmode)))
 	{
-		WWDEBUG_SAY(("CheckDepthStencilMatch failed.  Colorbuffer format = %d  Backbuffer format = %d Zbufferformat = %d\r\n",colorbuffer,backbuffer,zmode));
 		return false;
 	}
 	return true;
@@ -1406,7 +1359,6 @@ unsigned long DX8Wrapper::Get_FrameCount(void) {return FrameCount;}
 
 void DX8_Assert()
 {
-	WWASSERT(DX8Wrapper::_Get_D3D8());
 	DX8_THREAD_ASSERT();
 }
 
@@ -1441,7 +1393,6 @@ void DX8Wrapper::End_Scene(bool flip_frames)
 		DX8_Assert();
 		HRESULT hr;
 		{
-			WWPROFILE("DX8Device::Present()");
 			hr=_Get_D3D_Device8()->Present(NULL, NULL, NULL, NULL);
 		}
 
@@ -1496,28 +1447,23 @@ void DX8Wrapper::Flip_To_Primary(void)
 			HRESULT hr = _Get_D3D_Device8()->TestCooperativeLevel();
 
 			if (FAILED(hr)) {
-				WWDEBUG_SAY(("TestCooperativeLevel Failed!\n"));
 
 				if (D3DERR_DEVICELOST == hr) {
 					IsDeviceLost=true;
-					WWDEBUG_SAY(("DEVICELOST: Cannot flip to primary.\n"));
 					return;
 				}
 				IsDeviceLost=false;
 
 				if (D3DERR_DEVICENOTRESET == hr) {
-					WWDEBUG_SAY(("DEVICENOTRESET\n"));
 					Reset_Device();
 					resetAttempts++;
 				}
 			} else {
-				WWDEBUG_SAY(("Flipping: %ld\n", FrameCount));
 				hr = _Get_D3D_Device8()->Present(NULL, NULL, NULL, NULL);
 
 				if (SUCCEEDED(hr)) {
 					IsDeviceLost=false;
 					FrameCount++;
-					WWDEBUG_SAY(("Flip to primary succeeded %ld\n", FrameCount));
 				}
 				else {
 					IsDeviceLost=true;
@@ -1659,8 +1605,6 @@ void DX8Wrapper::Draw_Sorting_IB_VB(
 	unsigned short min_vertex_index,
 	unsigned short vertex_count)
 {
-	WWASSERT(render_state.vertex_buffer_type==BUFFER_TYPE_SORTING || render_state.vertex_buffer_type==BUFFER_TYPE_DYNAMIC_SORTING);
-	WWASSERT(render_state.index_buffer_type==BUFFER_TYPE_SORTING || render_state.index_buffer_type==BUFFER_TYPE_DYNAMIC_SORTING);
 
 	// Fill dynamic vertex buffer with sorting vertex buffer vertices
 	DynamicVBAccessClass dyn_vb_access(BUFFER_TYPE_DYNAMIC_DX8,dynamic_fvf_type,vertex_count);
@@ -1690,7 +1634,7 @@ void DX8Wrapper::Draw_Sorting_IB_VB(
 	case D3DPT_TRIANGLELIST: index_count=polygon_count*3; break;
 	case D3DPT_TRIANGLESTRIP: index_count=polygon_count+2; break;
 	case D3DPT_TRIANGLEFAN: index_count=polygon_count+2; break;
-	default: WWASSERT(0); break; // Unsupported primitive type
+	default: assert(0); break; // Unsupported primitive type
 	}
 
 	// Fill dynamic index buffer with sorting index buffer vertices
@@ -1705,7 +1649,6 @@ void DX8Wrapper::Draw_Sorting_IB_VB(
 		for (unsigned short i=0;i<index_count;++i) {
 			unsigned short index=*src++;
 			index-=min_vertex_index;
-			WWASSERT(index<vertex_count);
 			*dest++=index;
 		}
 	}
@@ -1831,10 +1774,8 @@ void DX8Wrapper::Draw(
 			break;
 		case BUFFER_TYPE_SORTING:
 		case BUFFER_TYPE_DYNAMIC_SORTING:
-			WWASSERT_PRINT(0,"VB and IB must of same type (sorting or dx8)");
 			break;
 		case BUFFER_TYPE_INVALID:
-			WWASSERT(0);
 			break;
 		}
 		break;
@@ -1843,19 +1784,16 @@ void DX8Wrapper::Draw(
 		switch (render_state.index_buffer_type) {
 		case BUFFER_TYPE_DX8:
 		case BUFFER_TYPE_DYNAMIC_DX8:
-			WWASSERT_PRINT(0,"VB and IB must of same type (sorting or dx8)");
 			break;
 		case BUFFER_TYPE_SORTING:
 		case BUFFER_TYPE_DYNAMIC_SORTING:
 			Draw_Sorting_IB_VB(primitive_type,start_index,polygon_count,min_vertex_index,vertex_count);
 			break;
 		case BUFFER_TYPE_INVALID:
-			WWASSERT(0);
 			break;
 		}
 		break;
 	case BUFFER_TYPE_INVALID:
-		WWASSERT(0);
 		break;
 	}
 }
@@ -1987,7 +1925,6 @@ void DX8Wrapper::Apply_Render_State_Changes()
 			case BUFFER_TYPE_DYNAMIC_SORTING:
 				break;
 			default:
-				WWASSERT(0);
 			}
 		} else {
 			DX8CALL(SetStreamSource(0,NULL,0));
@@ -2009,7 +1946,6 @@ void DX8Wrapper::Apply_Render_State_Changes()
 			case BUFFER_TYPE_DYNAMIC_SORTING:
 				break;
 			default:
-				WWASSERT(0);
 			}
 		}
 		else {
@@ -2036,7 +1972,6 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 	IDirect3DTexture8 *texture = NULL;
 
 	// Paletted textures not supported!
-	WWASSERT(format!=D3DFMT_P8);
 
 	// NOTE: If 'format' is not supported as a texture format, this function will find the closest
 	// format that is supported and use that instead.
@@ -2061,7 +1996,6 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 
 		// If ran out of texture ram, try invalidating some textures and mesh cache.
 		if (ret==D3DERR_OUTOFVIDEOMEMORY) {
-			WWDEBUG_SAY(("Error: Out of memory while creating render target. Trying to release assets...\n"));
 			// Free all textures that haven't been used in the last 5 seconds
 			TextureClass::Invalidate_Old_Unused_Textures(5000);
 
@@ -2079,10 +2013,8 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 				&texture);
 
 			if (SUCCEEDED(ret)) {
-				WWDEBUG_SAY(("...Render target creation succesful.\n"));
 			}
 			else {
-				WWDEBUG_SAY(("...Render target creation failed.\n"));
 			}
 			if (ret==D3DERR_OUTOFVIDEOMEMORY) {
 				Non_Fatal_Log_DX8_ErrorCode(ret,__FILE__,__LINE__);
@@ -2111,7 +2043,6 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 
 	// If ran out of texture ram, try invalidating some textures and mesh cache.
 	if (ret==D3DERR_OUTOFVIDEOMEMORY) {
-		WWDEBUG_SAY(("Error: Out of memory while creating texture. Trying to release assets...\n"));
 		// Free all textures that haven't been used in the last 5 seconds
 		TextureClass::Invalidate_Old_Unused_Textures(5000);
 
@@ -2128,1180 +2059,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 			pool,
 			&texture);
 		if (SUCCEEDED(ret)) {
-			WWDEBUG_SAY(("...Texture creation succesful.\n"));
 		}
 		else {
 			StringClass format_name(0,true);
 			Get_WW3D_Format_Name(format, format_name);
-			WWDEBUG_SAY(("...Texture creation failed. (%d x %d, format: %s, mips: %d\n",width,height,format_name,mip_level_count));
-		}
-
-	}
-	DX8_ErrorCode(ret);
-
-	return texture;
-}
-
-IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
-	const char *filename,
-	TextureClass::MipCountType mip_level_count)
-{
-	DX8_THREAD_ASSERT();
-	DX8_Assert();
-	IDirect3DTexture8 *texture = NULL;
-
-	// NOTE: If the original image format is not supported as a texture format, it will
-	// automatically be converted to an appropriate format.
-	// NOTE: It is possible to get the size and format of the original image file from this
-	// function as well, so if we later want to second-guess D3DX's format conversion decisions
-	// we can do so after this function is called..
-	unsigned result = D3DXCreateTextureFromFileExA(
-		_Get_D3D_Device8(),
-		filename,
-		D3DX_DEFAULT,
-		D3DX_DEFAULT,
-		mip_level_count,//create_mipmaps ? 0 : 1,
-		0,
-		D3DFMT_UNKNOWN,
-		D3DPOOL_MANAGED,
-		D3DX_FILTER_BOX,
-		D3DX_FILTER_BOX,
-		0,
-		NULL,
-		NULL,
-		&texture);
-
-	if (result != D3D_OK) {
-		return MissingTexture::_Get_Missing_Texture();
-	}
-
-	// Make sure texture wasn't paletted!
-	D3DSURFACE_DESC desc;
-	texture->GetLevelDesc(0,&desc);
-	if (desc.Format==D3DFMT_P8) {
-		texture->Release();
-		return MissingTexture::_Get_Missing_Texture();
-	}
-	return texture;
-}
-
-IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
-	IDirect3DSurface8 *surface,
-	TextureClass::MipCountType mip_level_count)
-{
-	DX8_THREAD_ASSERT();
-	DX8_Assert();
-	IDirect3DTexture8 *texture = NULL;
-
-	D3DSURFACE_DESC surface_desc;
-	::ZeroMemory(&surface_desc, sizeof(D3DSURFACE_DESC));
-	surface->GetDesc(&surface_desc);
-
-	// This function will create a texture with a different (but similar) format if the surface is
-	// not in a supported texture format.
-	WW3DFormat format=D3DFormat_To_WW3DFormat(surface_desc.Format);
-	texture = _Create_DX8_Texture(surface_desc.Width, surface_desc.Height, format, mip_level_count);
-
-	// Copy the surface to the texture
-	IDirect3DSurface8 *tex_surface = NULL;
-	texture->GetSurfaceLevel(0, &tex_surface);
-	DX8_ErrorCode(D3DXLoadSurfaceFromSurface(tex_surface, NULL, NULL, surface, NULL, NULL, D3DX_FILTER_BOX, 0));
-	tex_surface->Release();
-
-	// Create mipmaps if needed
-	if (mip_level_count!=TextureClass::MIP_LEVELS_1) {
-		DX8_ErrorCode(D3DXFilterTexture(texture, NULL, 0, D3DX_FILTER_BOX));
-	}
-
-	return texture;
-
-}
-
-IDirect3DSurface8 * DX8Wrapper::_Create_DX8_Surface(unsigned int width, unsigned int height, WW3DFormat format)
-{
-	DX8_THREAD_ASSERT();
-	DX8_Assert();
-
-	IDirect3DSurface8 *surface = NULL;
-
-	// Paletted surfaces not supported!
-	WWASSERT(format!=D3DFMT_P8);
-
-	DX8CALL(CreateImageSurface(width, height, WW3DFormat_To_D3DFormat(format), &surface));
-
-	return surface;
-}
-
-IDirect3DSurface8 * DX8Wrapper::_Create_DX8_Surface(const char *filename_)
-{
-	DX8_THREAD_ASSERT();
-	DX8_Assert();
-
-	// Note: Since there is no "D3DXCreateSurfaceFromFile" and no "GetSurfaceInfoFromFile" (the
-	// latter is supposed to be added to D3DX in a future version), we create a texture from the
-	// file (w/o mipmaps), check that its surface is equal to the original file data (which it
-	// will not be if the file is not in a texture-supported format or size). If so, copy its
-	// surface (we might be able to just get its surface and add a ref to it but I'm not sure so
-	// I'm not going to risk it) and release the texture. If not, create a surface according to
-	// the file data and use D3DXLoadSurfaceFromFile. This is a horrible hack, but it saves us
-	// having to write file loaders. Will fix this when D3DX provides us with the right functions.
-	// Create a surface the size of the file image data
-	IDirect3DSurface8 *surface = NULL;
-
-	{
-		file_auto_ptr myfile(_TheFileFactory,filename_);
-		// If file not found, create a surface with missing texture in it
-		if (!myfile->Is_Available()) {
-			return MissingTexture::_Create_Missing_Surface();
-		}
-	}
-
-	StringClass filename_string(filename_,true);
-	surface=TextureLoader::Load_Surface_Immediate(
-		filename_string,
-		WW3D_FORMAT_UNKNOWN,
-		true);
-	return surface;
-}
-
-
-/***********************************************************************************************
- * DX8Wrapper::_Update_Texture -- Copies a texture from system memory to video memory          *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:                                                                                      *
- *                                                                                             *
- * OUTPUT:                                                                                     *
- *                                                                                             *
- * WARNINGS:                                                                                   *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   4/26/2001  hy : Created.                                                                  *
- *=============================================================================================*/
-void DX8Wrapper::_Update_Texture(TextureClass *system, TextureClass *video)
-{
-	WWASSERT(system);
-	WWASSERT(video);
-	WWASSERT(system->Pool==TextureClass::POOL_SYSTEMMEM);
-	WWASSERT(video->Pool==TextureClass::POOL_DEFAULT);
-	DX8CALL(UpdateTexture(system->D3DTexture,video->D3DTexture));
-}
-
-void DX8Wrapper::Compute_Caps(WW3DFormat display_format)
-{
-	DX8_THREAD_ASSERT();
-	DX8_Assert();
-	delete CurrentCaps;
-	CurrentCaps=new DX8Caps(_Get_D3D8(),D3DDevice,display_format,Get_Current_Adapter_Identifier());
-}
-
-void DX8Wrapper::Set_Light(unsigned index,const LightClass &light)
-{
-	D3DLIGHT8 dlight;
-	Vector3 temp;
-	memset(&dlight,0,sizeof(D3DLIGHT8));
-
-	switch (light.Get_Type())
-	{
-	case LightClass::POINT:
-		{
-			dlight.Type=D3DLIGHT_POINT;
-		}
-		break;
-	case LightClass::DIRECTIONAL:
-		{
-			dlight.Type=D3DLIGHT_DIRECTIONAL;
-		}
-		break;
-	case LightClass::SPOT:
-		{
-			dlight.Type=D3DLIGHT_SPOT;
-		}
-		break;
-	}
-
-	light.Get_Diffuse(&temp);
-	temp*=light.Get_Intensity();
-	dlight.Diffuse.r=temp.X;
-	dlight.Diffuse.g=temp.Y;
-	dlight.Diffuse.b=temp.Z;
-	dlight.Diffuse.a=1.0f;
-
-	light.Get_Specular(&temp);
-	temp*=light.Get_Intensity();
-	dlight.Specular.r=temp.X;
-	dlight.Specular.g=temp.Y;
-	dlight.Specular.b=temp.Z;
-	dlight.Specular.a=1.0f;
-
-	light.Get_Ambient(&temp);
-	temp*=light.Get_Intensity();
-	dlight.Ambient.r=temp.X;
-	dlight.Ambient.g=temp.Y;
-	dlight.Ambient.b=temp.Z;
-	dlight.Ambient.a=1.0f;
-
-	temp=light.Get_Position();
-	dlight.Position=*(D3DVECTOR*) &temp;
-
-	light.Get_Spot_Direction(temp);
-	dlight.Direction=*(D3DVECTOR*) &temp;
-
-	dlight.Range=light.Get_Attenuation_Range();
-	dlight.Falloff=light.Get_Spot_Exponent();
-	dlight.Theta=light.Get_Spot_Angle();
-	dlight.Phi=light.Get_Spot_Angle();
-
-	// Inverse linear light 1/(1+D)
-	double a,b;
-	light.Get_Far_Attenuation_Range(a,b);
-	dlight.Attenuation0=1.0f;
-	if (fabs(a-b)<1e-5)
-		// if the attenuation range is too small assume uniform with cutoff
-		dlight.Attenuation1=0.0f;
-	else
-		// this will cause the light to drop to half intensity at the first far attenuation
-		dlight.Attenuation1=(float) 1.0/a;
-	dlight.Attenuation2=0.0f;
-
-	Set_Light(index,&dlight);
-}
-
-// ----------------------------------------------------------------------------
-//
-// Set the light environment. This is a lighting model which used up to four
-// directional lights to produce the lighting.
-//
-// ----------------------------------------------------------------------------
-
-void DX8Wrapper::Set_Light_Environment(LightEnvironmentClass* light_env)
-{
-	if (light_env) {
-
-		int light_count = light_env->Get_Light_Count();
-		Set_DX8_Render_State(D3DRS_AMBIENT,Convert_Color(light_env->Get_Equivalent_Ambient(),0.0f));
-
-		D3DLIGHT8 light;
-		::ZeroMemory(&light, sizeof(D3DLIGHT8));
-		light.Type=D3DLIGHT_DIRECTIONAL;
-
-		int l;
-		for (l=0;l<light_count;++l) {
-			(Vector3&)light.Diffuse=light_env->Get_Light_Diffuse(l);
-			Vector3 dir=-light_env->Get_Light_Direction(l);
-			light.Direction=(const D3DVECTOR&)(dir);
-			Set_Light(l,&light);
-		}
-
-		for (;l<4;++l) {
-			Set_Light(l,NULL);
-		}
-	}
-/*	else {
-		for (int l=0;l<4;++l) {
-			Set_Light(l,NULL);
-		}
-	}
-*/
-}
-
-IDirect3DSurface8 * DX8Wrapper::_Get_DX8_Front_Buffer()
-{
-	DX8_THREAD_ASSERT();
-	D3DDISPLAYMODE mode;
-
-	DX8CALL(GetDisplayMode(&mode));
-
-	IDirect3DSurface8 * fb=NULL;
-
-	DX8CALL(CreateImageSurface(mode.Width,mode.Height,D3DFMT_A8R8G8B8,&fb));
-
-	DX8CALL(GetFrontBuffer(fb));
-	return fb;
-}
-
-SurfaceClass * DX8Wrapper::_Get_DX8_Back_Buffer(unsigned int num)
-{
-	DX8_THREAD_ASSERT();
-
-	IDirect3DSurface8 * bb;
-	SurfaceClass *surf=NULL;
-	DX8CALL(GetBackBuffer(num,D3DBACKBUFFER_TYPE_MONO,&bb));
-	if (bb)
-	{
-		surf=NEW_REF(SurfaceClass,(bb));
-		bb->Release();
-	}
-
-	return surf;
-}
-
-
-TextureClass *
-DX8Wrapper::Create_Render_Target (int width, int height, WW3DFormat format)
-{
-	DX8_THREAD_ASSERT();
-	DX8_Assert();
-	number_of_DX8_calls++;
-
-	// Use the current display format if format isn't specified
-	if (format==WW3D_FORMAT_UNKNOWN) {
-		D3DDISPLAYMODE mode;
-		DX8CALL(GetDisplayMode(&mode));
-		format=D3DFormat_To_WW3DFormat(mode.Format);
-	}
-
-	// If render target format isn't supported return NULL
-	if (!Get_Current_Caps()->Support_Render_To_Texture_Format(format)) {
-		WWDEBUG_SAY(("DX8Wrapper - Render target format is not supported\r\n"));
-		return NULL;
-	}
-
-	//
-	//	Note: We're going to force the width and height to be powers of two and equal
-	//
-	const D3DCAPS8& dx8caps=Get_Current_Caps()->Get_DX8_Caps();
-	float poweroftwosize = width;
-	if (height > 0 && height < width) {
-		poweroftwosize = height;
-	}
-	poweroftwosize = ::Find_POT (poweroftwosize);
-
-	if (poweroftwosize>dx8caps.MaxTextureWidth) {
-		poweroftwosize=dx8caps.MaxTextureWidth;
-	}
-	if (poweroftwosize>dx8caps.MaxTextureHeight) {
-		poweroftwosize=dx8caps.MaxTextureHeight;
-	}
-
-	width = height = poweroftwosize;
-
-	//
-	//	Attempt to create the render target
-	//
-	TextureClass * tex = NEW_REF(TextureClass,(width,height,format,TextureClass::MIP_LEVELS_1,TextureClass::POOL_DEFAULT,true));
-
-	// 3dfx drivers are lying in the CheckDeviceFormat call and claiming
-	// that they support render targets!
-	if (tex->Peek_DX8_Texture() == NULL) {
-		WWDEBUG_SAY(("DX8Wrapper - Render target creation failed!\r\n"));
-		REF_PTR_RELEASE(tex);
-	}
-
-	return tex;
-}
-
-
-void
-DX8Wrapper::Set_Render_Target (TextureClass * texture)
-{
-	WWASSERT(texture != NULL);
-	IDirect3DSurface8 * d3d_surf = texture->Get_D3D_Surface_Level();
-	WWASSERT(d3d_surf != NULL);
-	Set_Render_Target(d3d_surf);
-	d3d_surf->Release();
-
-	IsRenderToTexture = true;
-}
-
-void
-DX8Wrapper::Set_Render_Target(IDirect3DSwapChain8 *swap_chain)
-{
-	DX8_THREAD_ASSERT();
-	WWASSERT (swap_chain != NULL);
-
-	//
-	//	Get the back buffer for the swap chain
-	//
-	LPDIRECT3DSURFACE8 render_target = NULL;
-	swap_chain->GetBackBuffer (0, D3DBACKBUFFER_TYPE_MONO, &render_target);
-
-	//
-	//	Set this back buffer as the render targer
-	//
-	Set_Render_Target (render_target, true);
-
-	//
-	//	Release our hold on the back buffer
-	//
-	if (render_target != NULL) {
-		render_target->Release ();
-		render_target = NULL;
-	}
-
-	IsRenderToTexture = false;
-
-	return ;
-}
-
-void
-DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *render_target, bool use_default_depth_buffer)
-{
-	DX8_THREAD_ASSERT();
-	DX8_Assert();
-
-	//
-	//	Should we restore the default render target set a new one?
-	//
-	if (render_target == NULL || render_target == DefaultRenderTarget) {
-		// If there is currently a custom render target, default must NOT be NULL.
-		if (CurrentRenderTarget) {
-			WWASSERT(DefaultRenderTarget!=NULL);
-		}
-
-		//
-		//	Restore the default render target
-		//
-		if (DefaultRenderTarget != NULL) {
-			DX8CALL(SetRenderTarget (DefaultRenderTarget, DefaultDepthBuffer));
-			DefaultRenderTarget->Release ();
-			DefaultRenderTarget = NULL;
-			if (DefaultDepthBuffer) {
-				DefaultDepthBuffer->Release ();
-				DefaultDepthBuffer = NULL;
-			}
-		}
-
-		//
-		//	Release our hold on the "current" render target
-		//
-		if (CurrentRenderTarget != NULL) {
-			CurrentRenderTarget->Release ();
-			CurrentRenderTarget = NULL;
-		}
-
-	} else if (render_target != CurrentRenderTarget) {
-		WWASSERT(DefaultRenderTarget==NULL);
-
-		//
-		//	We'll need the depth buffer later...
-		//
-		if (DefaultDepthBuffer == NULL) {
-//		IDirect3DSurface8 *depth_buffer = NULL;
-			DX8CALL(GetDepthStencilSurface (&DefaultDepthBuffer));
-		}
-
-		//
-		//	Get a pointer to the default render target (if necessary)
-		//
-		if (DefaultRenderTarget == NULL) {
-			DX8CALL(GetRenderTarget (&DefaultRenderTarget));
-		}
-
-		//
-		//	Release our hold on the old "current" render target
-		//
-		if (CurrentRenderTarget != NULL) {
-			CurrentRenderTarget->Release ();
-			CurrentRenderTarget = NULL;
-		}
-
-		//
-		//	Keep a copy of the current render target (for housekeeping)
-		//
-		CurrentRenderTarget = render_target;
-		WWASSERT (CurrentRenderTarget != NULL);
-		if (CurrentRenderTarget != NULL) {
-			CurrentRenderTarget->AddRef ();
-
-			//
-			//	Switch render targets
-			//
-			if (use_default_depth_buffer) {
-				DX8CALL(SetRenderTarget (CurrentRenderTarget, DefaultDepthBuffer));
-			} else {
-				DX8CALL(SetRenderTarget (CurrentRenderTarget, NULL));
-			}
-		}
-	}
-
-	//
-	//	Free our hold on the depth buffer
-	//
-//	if (depth_buffer != NULL) {
-//		depth_buffer->Release ();
-//		depth_buffer = NULL;
-//	}
-
-	IsRenderToTexture = false;
-	return ;
-}
-
-
-IDirect3DSwapChain8 *
-DX8Wrapper::Create_Additional_Swap_Chain (HWND render_window)
-{
-	DX8_Assert();
-
-	//
-	//	Configure the presentation parameters for a windowed render target
-	//
-	D3DPRESENT_PARAMETERS params				= { 0 };
-	params.BackBufferFormat						= _PresentParameters.BackBufferFormat;
-	params.BackBufferCount						= 1;
-	params.MultiSampleType						= D3DMULTISAMPLE_NONE;
-	params.SwapEffect								= D3DSWAPEFFECT_COPY_VSYNC;
-	params.hDeviceWindow							= render_window;
-	params.Windowed								= TRUE;
-	params.EnableAutoDepthStencil				= TRUE;
-	params.AutoDepthStencilFormat				= _PresentParameters.AutoDepthStencilFormat;
-	params.Flags									= 0;
-	params.FullScreen_RefreshRateInHz		= D3DPRESENT_RATE_DEFAULT;
-	params.FullScreen_PresentationInterval	= D3DPRESENT_INTERVAL_DEFAULT;
-
-	//
-	//	Create the swap chain
-	//
-	IDirect3DSwapChain8 *swap_chain = NULL;
-	DX8CALL(CreateAdditionalSwapChain(&params, &swap_chain));
-	return swap_chain;
-}
-
-void DX8Wrapper::Flush_DX8_Resource_Manager(unsigned int bytes)
-{
-	DX8_Assert();
-	DX8CALL(ResourceManagerDiscardBytes(bytes));
-}
-
-unsigned int DX8Wrapper::Get_Free_Texture_RAM()
-{
-	DX8_Assert();
-	number_of_DX8_calls++;
-	return DX8Wrapper::_Get_D3D_Device8()->GetAvailableTextureMem();
-}
-
-// Converts a linear gamma ramp to one that is controlled by:
-// Gamma - controls the curvature of the middle of the curve
-// Bright - controls the minimum value of the curve
-// Contrast - controls the difference between the maximum and the minimum of the curve
-void DX8Wrapper::Set_Gamma(float gamma,float bright,float contrast,bool calibrate,bool uselimit)
-{
-	gamma=Bound(gamma,0.6f,6.0f);
-	bright=Bound(bright,-0.5f,0.5f);
-	contrast=Bound(contrast,0.5f,2.0f);
-	float oo_gamma=1.0f/gamma;
-
-	DX8_Assert();
-	number_of_DX8_calls++;
-
-	DWORD flag=(calibrate?D3DSGR_CALIBRATE:D3DSGR_NO_CALIBRATION);
-
-	D3DGAMMARAMP ramp;
-	float			 limit;	
-
-	// IML: I'm not really sure what the intent of the 'limit' variable is. It does not produce useful results for my purposes.
-	if (uselimit) {
-		limit=(contrast-1)/2*contrast;
-	} else {
-		limit = 0.0f;
-	}
-
-	// HY - arrived at this equation after much trial and error.
-	for (int i=0; i<256; i++) {
-		float in,out;
-		in=i/256.0f;
-		float x=in-limit;
-		x=Bound(x,0.0f,1.0f);
-		x=powf(x,oo_gamma);
-		out=contrast*x+bright;
-		out=Bound(out,0.0f,1.0f);
-		ramp.red[i]=(WORD) (out*65535);
-		ramp.green[i]=(WORD) (out*65535);
-		ramp.blue[i]=(WORD) (out*65535);
-	}
-
-	if (Get_Current_Caps()->Support_Gamma())	{
-		DX8Wrapper::_Get_D3D_Device8()->SetGammaRamp(flag,&ramp);
-	} else {
-		HWND hwnd = GetDesktopWindow();
-		HDC hdc = GetDC(hwnd);
-		if (hdc)
-		{
-			SetDeviceGammaRamp (hdc, &ramp);
-			ReleaseDC (hwnd, hdc);
-		}
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Render_State_Name(D3DRENDERSTATETYPE state)
-{
-	switch (state) {
-	case D3DRS_ZENABLE                       : return "D3DRS_ZENABLE";
-	case D3DRS_FILLMODE                      : return "D3DRS_FILLMODE";
-	case D3DRS_SHADEMODE                     : return "D3DRS_SHADEMODE";
-	case D3DRS_LINEPATTERN                   : return "D3DRS_LINEPATTERN";
-	case D3DRS_ZWRITEENABLE                  : return "D3DRS_ZWRITEENABLE";
-	case D3DRS_ALPHATESTENABLE               : return "D3DRS_ALPHATESTENABLE";
-	case D3DRS_LASTPIXEL                     : return "D3DRS_LASTPIXEL";
-	case D3DRS_SRCBLEND                      : return "D3DRS_SRCBLEND";
-	case D3DRS_DESTBLEND                     : return "D3DRS_DESTBLEND";
-	case D3DRS_CULLMODE                      : return "D3DRS_CULLMODE";
-	case D3DRS_ZFUNC                         : return "D3DRS_ZFUNC";
-	case D3DRS_ALPHAREF                      : return "D3DRS_ALPHAREF";
-	case D3DRS_ALPHAFUNC                     : return "D3DRS_ALPHAFUNC";
-	case D3DRS_DITHERENABLE                  : return "D3DRS_DITHERENABLE";
-	case D3DRS_ALPHABLENDENABLE              : return "D3DRS_ALPHABLENDENABLE";
-	case D3DRS_FOGENABLE                     : return "D3DRS_FOGENABLE";
-	case D3DRS_SPECULARENABLE                : return "D3DRS_SPECULARENABLE";
-	case D3DRS_ZVISIBLE                      : return "D3DRS_ZVISIBLE";
-	case D3DRS_FOGCOLOR                      : return "D3DRS_FOGCOLOR";
-	case D3DRS_FOGTABLEMODE                  : return "D3DRS_FOGTABLEMODE";
-	case D3DRS_FOGSTART                      : return "D3DRS_FOGSTART";
-	case D3DRS_FOGEND                        : return "D3DRS_FOGEND";
-	case D3DRS_FOGDENSITY                    : return "D3DRS_FOGDENSITY";
-	case D3DRS_EDGEANTIALIAS                 : return "D3DRS_EDGEANTIALIAS";
-	case D3DRS_ZBIAS                         : return "D3DRS_ZBIAS";
-	case D3DRS_RANGEFOGENABLE                : return "D3DRS_RANGEFOGENABLE";
-	case D3DRS_STENCILENABLE                 : return "D3DRS_STENCILENABLE";
-	case D3DRS_STENCILFAIL                   : return "D3DRS_STENCILFAIL";
-	case D3DRS_STENCILZFAIL                  : return "D3DRS_STENCILZFAIL";
-	case D3DRS_STENCILPASS                   : return "D3DRS_STENCILPASS";
-	case D3DRS_STENCILFUNC                   : return "D3DRS_STENCILFUNC";
-	case D3DRS_STENCILREF                    : return "D3DRS_STENCILREF";
-	case D3DRS_STENCILMASK                   : return "D3DRS_STENCILMASK";
-	case D3DRS_STENCILWRITEMASK              : return "D3DRS_STENCILWRITEMASK";
-	case D3DRS_TEXTUREFACTOR                 : return "D3DRS_TEXTUREFACTOR";
-	case D3DRS_WRAP0                         : return "D3DRS_WRAP0";
-	case D3DRS_WRAP1                         : return "D3DRS_WRAP1";
-	case D3DRS_WRAP2                         : return "D3DRS_WRAP2";
-	case D3DRS_WRAP3                         : return "D3DRS_WRAP3";
-	case D3DRS_WRAP4                         : return "D3DRS_WRAP4";
-	case D3DRS_WRAP5                         : return "D3DRS_WRAP5";
-	case D3DRS_WRAP6                         : return "D3DRS_WRAP6";
-	case D3DRS_WRAP7                         : return "D3DRS_WRAP7";
-	case D3DRS_CLIPPING                      : return "D3DRS_CLIPPING";
-	case D3DRS_LIGHTING                      : return "D3DRS_LIGHTING";
-	case D3DRS_AMBIENT                       : return "D3DRS_AMBIENT";
-	case D3DRS_FOGVERTEXMODE                 : return "D3DRS_FOGVERTEXMODE";
-	case D3DRS_COLORVERTEX                   : return "D3DRS_COLORVERTEX";
-	case D3DRS_LOCALVIEWER                   : return "D3DRS_LOCALVIEWER";
-	case D3DRS_NORMALIZENORMALS              : return "D3DRS_NORMALIZENORMALS";
-	case D3DRS_DIFFUSEMATERIALSOURCE         : return "D3DRS_DIFFUSEMATERIALSOURCE";
-	case D3DRS_SPECULARMATERIALSOURCE        : return "D3DRS_SPECULARMATERIALSOURCE";
-	case D3DRS_AMBIENTMATERIALSOURCE         : return "D3DRS_AMBIENTMATERIALSOURCE";
-	case D3DRS_EMISSIVEMATERIALSOURCE        : return "D3DRS_EMISSIVEMATERIALSOURCE";
-	case D3DRS_VERTEXBLEND                   : return "D3DRS_VERTEXBLEND";
-	case D3DRS_CLIPPLANEENABLE               : return "D3DRS_CLIPPLANEENABLE";
-	case D3DRS_SOFTWAREVERTEXPROCESSING      : return "D3DRS_SOFTWAREVERTEXPROCESSING";
-	case D3DRS_POINTSIZE                     : return "D3DRS_POINTSIZE";
-	case D3DRS_POINTSIZE_MIN                 : return "D3DRS_POINTSIZE_MIN";
-	case D3DRS_POINTSPRITEENABLE             : return "D3DRS_POINTSPRITEENABLE";
-	case D3DRS_POINTSCALEENABLE              : return "D3DRS_POINTSCALEENABLE";
-	case D3DRS_POINTSCALE_A                  : return "D3DRS_POINTSCALE_A";
-	case D3DRS_POINTSCALE_B                  : return "D3DRS_POINTSCALE_B";
-	case D3DRS_POINTSCALE_C                  : return "D3DRS_POINTSCALE_C";
-	case D3DRS_MULTISAMPLEANTIALIAS          : return "D3DRS_MULTISAMPLEANTIALIAS";
-	case D3DRS_MULTISAMPLEMASK               : return "D3DRS_MULTISAMPLEMASK";
-	case D3DRS_PATCHEDGESTYLE                : return "D3DRS_PATCHEDGESTYLE";
-	case D3DRS_PATCHSEGMENTS                 : return "D3DRS_PATCHSEGMENTS";
-	case D3DRS_DEBUGMONITORTOKEN             : return "D3DRS_DEBUGMONITORTOKEN";
-	case D3DRS_POINTSIZE_MAX                 : return "D3DRS_POINTSIZE_MAX";
-	case D3DRS_INDEXEDVERTEXBLENDENABLE      : return "D3DRS_INDEXEDVERTEXBLENDENABLE";
-	case D3DRS_COLORWRITEENABLE              : return "D3DRS_COLORWRITEENABLE";
-	case D3DRS_TWEENFACTOR                   : return "D3DRS_TWEENFACTOR";
-	case D3DRS_BLENDOP                       : return "D3DRS_BLENDOP";
-//	case D3DRS_POSITIONORDER                 : return "D3DRS_POSITIONORDER";
-//	case D3DRS_NORMALORDER                   : return "D3DRS_NORMALORDER";
-	default											  : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Texture_Stage_State_Name(D3DTEXTURESTAGESTATETYPE state)
-{
-	switch (state) {
-	case D3DTSS_COLOROP                   : return "D3DTSS_COLOROP";
-	case D3DTSS_COLORARG1                 : return "D3DTSS_COLORARG1";
-	case D3DTSS_COLORARG2                 : return "D3DTSS_COLORARG2";
-	case D3DTSS_ALPHAOP                   : return "D3DTSS_ALPHAOP";
-	case D3DTSS_ALPHAARG1                 : return "D3DTSS_ALPHAARG1";
-	case D3DTSS_ALPHAARG2                 : return "D3DTSS_ALPHAARG2";
-	case D3DTSS_BUMPENVMAT00              : return "D3DTSS_BUMPENVMAT00";
-	case D3DTSS_BUMPENVMAT01              : return "D3DTSS_BUMPENVMAT01";
-	case D3DTSS_BUMPENVMAT10              : return "D3DTSS_BUMPENVMAT10";
-	case D3DTSS_BUMPENVMAT11              : return "D3DTSS_BUMPENVMAT11";
-	case D3DTSS_TEXCOORDINDEX             : return "D3DTSS_TEXCOORDINDEX";
-	case D3DTSS_ADDRESSU                  : return "D3DTSS_ADDRESSU";
-	case D3DTSS_ADDRESSV                  : return "D3DTSS_ADDRESSV";
-	case D3DTSS_BORDERCOLOR               : return "D3DTSS_BORDERCOLOR";
-	case D3DTSS_MAGFILTER                 : return "D3DTSS_MAGFILTER";
-	case D3DTSS_MINFILTER                 : return "D3DTSS_MINFILTER";
-	case D3DTSS_MIPFILTER                 : return "D3DTSS_MIPFILTER";
-	case D3DTSS_MIPMAPLODBIAS             : return "D3DTSS_MIPMAPLODBIAS";
-	case D3DTSS_MAXMIPLEVEL               : return "D3DTSS_MAXMIPLEVEL";
-	case D3DTSS_MAXANISOTROPY             : return "D3DTSS_MAXANISOTROPY";
-	case D3DTSS_BUMPENVLSCALE             : return "D3DTSS_BUMPENVLSCALE";
-	case D3DTSS_BUMPENVLOFFSET            : return "D3DTSS_BUMPENVLOFFSET";
-	case D3DTSS_TEXTURETRANSFORMFLAGS     : return "D3DTSS_TEXTURETRANSFORMFLAGS";
-	case D3DTSS_ADDRESSW                  : return "D3DTSS_ADDRESSW";
-	case D3DTSS_COLORARG0                 : return "D3DTSS_COLORARG0";
-	case D3DTSS_ALPHAARG0                 : return "D3DTSS_ALPHAARG0";
-	case D3DTSS_RESULTARG                 : return "D3DTSS_RESULTARG";
-	default										  : return "UNKNOWN";
-	}
-}
-
-void DX8Wrapper::Get_DX8_Render_State_Value_Name(StringClass& name, D3DRENDERSTATETYPE state, unsigned value)
-{
-	switch (state) {
-	case D3DRS_ZENABLE:
-		name=Get_DX8_ZBuffer_Type_Name(value);
-		break;
-
-	case D3DRS_FILLMODE:
-		name=Get_DX8_Fill_Mode_Name(value);
-		break;
-
-	case D3DRS_SHADEMODE:
-		name=Get_DX8_Shade_Mode_Name(value);
-		break;
-
-	case D3DRS_LINEPATTERN:
-	case D3DRS_FOGCOLOR:
-	case D3DRS_ALPHAREF:
-	case D3DRS_STENCILMASK:
-	case D3DRS_STENCILWRITEMASK:
-	case D3DRS_TEXTUREFACTOR:
-	case D3DRS_AMBIENT:
-	case D3DRS_CLIPPLANEENABLE:
-	case D3DRS_MULTISAMPLEMASK:
-		name.Format("0x%x",value);
-		break;
-
-	case D3DRS_ZWRITEENABLE:
-	case D3DRS_ALPHATESTENABLE:
-	case D3DRS_LASTPIXEL:
-	case D3DRS_DITHERENABLE:
-	case D3DRS_ALPHABLENDENABLE:
-	case D3DRS_FOGENABLE:
-	case D3DRS_SPECULARENABLE:
-	case D3DRS_STENCILENABLE:
-	case D3DRS_RANGEFOGENABLE:
-	case D3DRS_EDGEANTIALIAS:
-	case D3DRS_CLIPPING:
-	case D3DRS_LIGHTING:
-	case D3DRS_COLORVERTEX:
-	case D3DRS_LOCALVIEWER:
-	case D3DRS_NORMALIZENORMALS:
-	case D3DRS_SOFTWAREVERTEXPROCESSING:
-	case D3DRS_POINTSPRITEENABLE:
-	case D3DRS_POINTSCALEENABLE:
-	case D3DRS_MULTISAMPLEANTIALIAS:
-	case D3DRS_INDEXEDVERTEXBLENDENABLE:
-		name=value ? "TRUE" : "FALSE";
-		break;
-
-	case D3DRS_SRCBLEND:
-	case D3DRS_DESTBLEND:
-		name=Get_DX8_Blend_Name(value);
-		break;
-
-	case D3DRS_CULLMODE:
-		name=Get_DX8_Cull_Mode_Name(value);
-		break;
-
-	case D3DRS_ZFUNC:
-	case D3DRS_ALPHAFUNC:
-	case D3DRS_STENCILFUNC:
-		name=Get_DX8_Cmp_Func_Name(value);
-		break;
-
-	case D3DRS_ZVISIBLE:
-		name="NOTSUPPORTED";
-		break;
-
-	case D3DRS_FOGTABLEMODE:
-	case D3DRS_FOGVERTEXMODE:
-		name=Get_DX8_Fog_Mode_Name(value);
-		break;
-
-	case D3DRS_FOGSTART:
-	case D3DRS_FOGEND:
-	case D3DRS_FOGDENSITY:
-	case D3DRS_POINTSIZE:
-	case D3DRS_POINTSIZE_MIN:
-	case D3DRS_POINTSCALE_A:
-	case D3DRS_POINTSCALE_B:
-	case D3DRS_POINTSCALE_C:
-	case D3DRS_PATCHSEGMENTS:
-	case D3DRS_POINTSIZE_MAX:
-	case D3DRS_TWEENFACTOR:
-		name.Format("%f",*(float*)&value);
-		break;
-
-	case D3DRS_ZBIAS:
-	case D3DRS_STENCILREF:
-		name.Format("%d",value);
-		break;
-
-	case D3DRS_STENCILFAIL:
-	case D3DRS_STENCILZFAIL:
-	case D3DRS_STENCILPASS:
-		name=Get_DX8_Stencil_Op_Name(value);
-		break;
-
-	case D3DRS_WRAP0:
-	case D3DRS_WRAP1:
-	case D3DRS_WRAP2:
-	case D3DRS_WRAP3:
-	case D3DRS_WRAP4:
-	case D3DRS_WRAP5:
-	case D3DRS_WRAP6:
-	case D3DRS_WRAP7:
-		name="0";
-		if (value&D3DWRAP_U) name+="|D3DWRAP_U";
-		if (value&D3DWRAP_V) name+="|D3DWRAP_V";
-		if (value&D3DWRAP_W) name+="|D3DWRAP_W";
-		break;
-
-	case D3DRS_DIFFUSEMATERIALSOURCE:
-	case D3DRS_SPECULARMATERIALSOURCE:
-	case D3DRS_AMBIENTMATERIALSOURCE:
-	case D3DRS_EMISSIVEMATERIALSOURCE:
-		name=Get_DX8_Material_Source_Name(value);
-		break;
-
-	case D3DRS_VERTEXBLEND:
-		name=Get_DX8_Vertex_Blend_Flag_Name(value);
-		break;
-
-	case D3DRS_PATCHEDGESTYLE:
-		name=Get_DX8_Patch_Edge_Style_Name(value);
-		break;
-
-	case D3DRS_DEBUGMONITORTOKEN:
-		name=Get_DX8_Debug_Monitor_Token_Name(value);
-		break;
-
-	case D3DRS_COLORWRITEENABLE:
-		name="0";
-		if (value&D3DCOLORWRITEENABLE_RED) name+="|D3DCOLORWRITEENABLE_RED";
-		if (value&D3DCOLORWRITEENABLE_GREEN) name+="|D3DCOLORWRITEENABLE_GREEN";
-		if (value&D3DCOLORWRITEENABLE_BLUE) name+="|D3DCOLORWRITEENABLE_BLUE";
-		if (value&D3DCOLORWRITEENABLE_ALPHA) name+="|D3DCOLORWRITEENABLE_ALPHA";
-		break;
-	case D3DRS_BLENDOP:
-		name=Get_DX8_Blend_Op_Name(value);
-		break;
-	default:
-		name.Format("UNKNOWN (%d)",value);
-		break;
-	}
-}
-
-void DX8Wrapper::Get_DX8_Texture_Stage_State_Value_Name(StringClass& name, D3DTEXTURESTAGESTATETYPE state, unsigned value)
-{
-	switch (state) {
-	case D3DTSS_COLOROP:
-	case D3DTSS_ALPHAOP:
-		name=Get_DX8_Texture_Op_Name(value);
-		break;
-
-	case D3DTSS_COLORARG0:
-	case D3DTSS_COLORARG1:
-	case D3DTSS_COLORARG2:
-	case D3DTSS_ALPHAARG0:
-	case D3DTSS_ALPHAARG1:
-	case D3DTSS_ALPHAARG2:
-	case D3DTSS_RESULTARG:
-		name=Get_DX8_Texture_Arg_Name(value);
-		break;
-
-	case D3DTSS_ADDRESSU:
-	case D3DTSS_ADDRESSV:
-	case D3DTSS_ADDRESSW:
-		name=Get_DX8_Texture_Address_Name(value);
-		break;
-
-	case D3DTSS_MAGFILTER:
-	case D3DTSS_MINFILTER:
-	case D3DTSS_MIPFILTER:
-		name=Get_DX8_Texture_Filter_Name(value);
-		break;
-
-	case D3DTSS_TEXTURETRANSFORMFLAGS:
-		name=Get_DX8_Texture_Transform_Flag_Name(value);
-
-	// Floating point values
-	case D3DTSS_MIPMAPLODBIAS:
-	case D3DTSS_BUMPENVMAT00:
-	case D3DTSS_BUMPENVMAT01:
-	case D3DTSS_BUMPENVMAT10:
-	case D3DTSS_BUMPENVMAT11:
-	case D3DTSS_BUMPENVLSCALE:
-	case D3DTSS_BUMPENVLOFFSET:
-		name.Format("%f",*(float*)&value);
-		break;
-
-	case D3DTSS_TEXCOORDINDEX:
-		if ((value&0xffff0000)==D3DTSS_TCI_CAMERASPACENORMAL) {
-			name.Format("D3DTSS_TCI_CAMERASPACENORMAL|%d",value&0xffff);
-		}
-		else if ((value&0xffff0000)==D3DTSS_TCI_CAMERASPACEPOSITION) {
-			name.Format("D3DTSS_TCI_CAMERASPACEPOSITION|%d",value&0xffff);
-		}
-		else if ((value&0xffff0000)==D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR) {
-			name.Format("D3DTSS_TCI_CAMERASPACEREFLECTIONVECTOR|%d",value&0xffff);
-		}
-		else {
-			name.Format("%d",value);
-		}
-		break;
-
-	// Integer value
-	case D3DTSS_MAXMIPLEVEL:
-	case D3DTSS_MAXANISOTROPY:
-		name.Format("%d",value);
-		break;
-	// Hex values
-	case D3DTSS_BORDERCOLOR:
-		name.Format("0x%x",value);
-		break;
-
-	default:
-		name.Format("UNKNOWN (%d)",value);
-		break;
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Texture_Op_Name(unsigned value)
-{
-	switch (value) {
-	case D3DTOP_DISABLE                      : return "D3DTOP_DISABLE";
-	case D3DTOP_SELECTARG1                   : return "D3DTOP_SELECTARG1";
-	case D3DTOP_SELECTARG2                   : return "D3DTOP_SELECTARG2";
-	case D3DTOP_MODULATE                     : return "D3DTOP_MODULATE";
-	case D3DTOP_MODULATE2X                   : return "D3DTOP_MODULATE2X";
-	case D3DTOP_MODULATE4X                   : return "D3DTOP_MODULATE4X";
-	case D3DTOP_ADD                          : return "D3DTOP_ADD";
-	case D3DTOP_ADDSIGNED                    : return "D3DTOP_ADDSIGNED";
-	case D3DTOP_ADDSIGNED2X                  : return "D3DTOP_ADDSIGNED2X";
-	case D3DTOP_SUBTRACT                     : return "D3DTOP_SUBTRACT";
-	case D3DTOP_ADDSMOOTH                    : return "D3DTOP_ADDSMOOTH";
-	case D3DTOP_BLENDDIFFUSEALPHA            : return "D3DTOP_BLENDDIFFUSEALPHA";
-	case D3DTOP_BLENDTEXTUREALPHA            : return "D3DTOP_BLENDTEXTUREALPHA";
-	case D3DTOP_BLENDFACTORALPHA             : return "D3DTOP_BLENDFACTORALPHA";
-	case D3DTOP_BLENDTEXTUREALPHAPM          : return "D3DTOP_BLENDTEXTUREALPHAPM";
-	case D3DTOP_BLENDCURRENTALPHA            : return "D3DTOP_BLENDCURRENTALPHA";
-	case D3DTOP_PREMODULATE                  : return "D3DTOP_PREMODULATE";
-	case D3DTOP_MODULATEALPHA_ADDCOLOR       : return "D3DTOP_MODULATEALPHA_ADDCOLOR";
-	case D3DTOP_MODULATECOLOR_ADDALPHA       : return "D3DTOP_MODULATECOLOR_ADDALPHA";
-	case D3DTOP_MODULATEINVALPHA_ADDCOLOR    : return "D3DTOP_MODULATEINVALPHA_ADDCOLOR";
-	case D3DTOP_MODULATEINVCOLOR_ADDALPHA    : return "D3DTOP_MODULATEINVCOLOR_ADDALPHA";
-	case D3DTOP_BUMPENVMAP                   : return "D3DTOP_BUMPENVMAP";
-	case D3DTOP_BUMPENVMAPLUMINANCE          : return "D3DTOP_BUMPENVMAPLUMINANCE";
-	case D3DTOP_DOTPRODUCT3                  : return "D3DTOP_DOTPRODUCT3";
-	case D3DTOP_MULTIPLYADD                  : return "D3DTOP_MULTIPLYADD";
-	case D3DTOP_LERP                         : return "D3DTOP_LERP";
-	default										     : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Texture_Arg_Name(unsigned value)
-{
-	switch (value) {
-	case D3DTA_CURRENT			: return "D3DTA_CURRENT";
-	case D3DTA_DIFFUSE			: return "D3DTA_DIFFUSE";
-	case D3DTA_SELECTMASK		: return "D3DTA_SELECTMASK";
-	case D3DTA_SPECULAR			: return "D3DTA_SPECULAR";
-	case D3DTA_TEMP				: return "D3DTA_TEMP";
-	case D3DTA_TEXTURE			: return "D3DTA_TEXTURE";
-	case D3DTA_TFACTOR			: return "D3DTA_TFACTOR";
-	case D3DTA_ALPHAREPLICATE	: return "D3DTA_ALPHAREPLICATE";
-	case D3DTA_COMPLEMENT		: return "D3DTA_COMPLEMENT";
-	default					      : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Texture_Filter_Name(unsigned value)
-{
-	switch (value) {
-	case D3DTEXF_NONE				: return "D3DTEXF_NONE";
-	case D3DTEXF_POINT			: return "D3DTEXF_POINT";
-	case D3DTEXF_LINEAR			: return "D3DTEXF_LINEAR";
-	case D3DTEXF_ANISOTROPIC	: return "D3DTEXF_ANISOTROPIC";
-	case D3DTEXF_FLATCUBIC		: return "D3DTEXF_FLATCUBIC";
-	case D3DTEXF_GAUSSIANCUBIC	: return "D3DTEXF_GAUSSIANCUBIC";
-	default					      : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Texture_Address_Name(unsigned value)
-{
-	switch (value) {
-	case D3DTADDRESS_WRAP		: return "D3DTADDRESS_WRAP";
-	case D3DTADDRESS_MIRROR		: return "D3DTADDRESS_MIRROR";
-	case D3DTADDRESS_CLAMP		: return "D3DTADDRESS_CLAMP";
-	case D3DTADDRESS_BORDER		: return "D3DTADDRESS_BORDER";
-	case D3DTADDRESS_MIRRORONCE: return "D3DTADDRESS_MIRRORONCE";
-	default					      : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Texture_Transform_Flag_Name(unsigned value)
-{
-	switch (value) {
-	case D3DTTFF_DISABLE			: return "D3DTTFF_DISABLE";
-	case D3DTTFF_COUNT1			: return "D3DTTFF_COUNT1";
-	case D3DTTFF_COUNT2			: return "D3DTTFF_COUNT2";
-	case D3DTTFF_COUNT3			: return "D3DTTFF_COUNT3";
-	case D3DTTFF_COUNT4			: return "D3DTTFF_COUNT4";
-	case D3DTTFF_PROJECTED		: return "D3DTTFF_PROJECTED";
-	default					      : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_ZBuffer_Type_Name(unsigned value)
-{
-	switch (value) {
-	case D3DZB_FALSE				: return "D3DZB_FALSE";
-	case D3DZB_TRUE				: return "D3DZB_TRUE";
-	case D3DZB_USEW				: return "D3DZB_USEW";
-	default					      : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Fill_Mode_Name(unsigned value)
-{
-	switch (value) {
-	case D3DFILL_POINT			: return "D3DFILL_POINT";
-	case D3DFILL_WIREFRAME		: return "D3DFILL_WIREFRAME";
-	case D3DFILL_SOLID			: return "D3DFILL_SOLID";
-	default					      : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Shade_Mode_Name(unsigned value)
-{
-	switch (value) {
-	case D3DSHADE_FLAT			: return "D3DSHADE_FLAT";
-	case D3DSHADE_GOURAUD		: return "D3DSHADE_GOURAUD";
-	case D3DSHADE_PHONG			: return "D3DSHADE_PHONG";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Blend_Name(unsigned value)
-{
-	switch (value) {
-	case D3DBLEND_ZERO                : return "D3DBLEND_ZERO";
-	case D3DBLEND_ONE                 : return "D3DBLEND_ONE";
-	case D3DBLEND_SRCCOLOR            : return "D3DBLEND_SRCCOLOR";
-	case D3DBLEND_INVSRCCOLOR         : return "D3DBLEND_INVSRCCOLOR";
-	case D3DBLEND_SRCALPHA            : return "D3DBLEND_SRCALPHA";
-	case D3DBLEND_INVSRCALPHA         : return "D3DBLEND_INVSRCALPHA";
-	case D3DBLEND_DESTALPHA           : return "D3DBLEND_DESTALPHA";
-	case D3DBLEND_INVDESTALPHA        : return "D3DBLEND_INVDESTALPHA";
-	case D3DBLEND_DESTCOLOR           : return "D3DBLEND_DESTCOLOR";
-	case D3DBLEND_INVDESTCOLOR        : return "D3DBLEND_INVDESTCOLOR";
-	case D3DBLEND_SRCALPHASAT         : return "D3DBLEND_SRCALPHASAT";
-	case D3DBLEND_BOTHSRCALPHA        : return "D3DBLEND_BOTHSRCALPHA";
-	case D3DBLEND_BOTHINVSRCALPHA     : return "D3DBLEND_BOTHINVSRCALPHA";
-	default									 : return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Cull_Mode_Name(unsigned value)
-{
-	switch (value) {
-	case D3DCULL_NONE				: return "D3DCULL_NONE";
-	case D3DCULL_CW				: return "D3DCULL_CW";
-	case D3DCULL_CCW				: return "D3DCULL_CCW";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Cmp_Func_Name(unsigned value)
-{
-	switch (value) {
-	case D3DCMP_NEVER          : return "D3DCMP_NEVER";
-	case D3DCMP_LESS           : return "D3DCMP_LESS";
-	case D3DCMP_EQUAL          : return "D3DCMP_EQUAL";
-	case D3DCMP_LESSEQUAL      : return "D3DCMP_LESSEQUAL";
-	case D3DCMP_GREATER        : return "D3DCMP_GREATER";
-	case D3DCMP_NOTEQUAL       : return "D3DCMP_NOTEQUAL";
-	case D3DCMP_GREATEREQUAL   : return "D3DCMP_GREATEREQUAL";
-	case D3DCMP_ALWAYS         : return "D3DCMP_ALWAYS";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Fog_Mode_Name(unsigned value)
-{
-	switch (value) {
-	case D3DFOG_NONE				: return "D3DFOG_NONE";
-	case D3DFOG_EXP				: return "D3DFOG_EXP";
-	case D3DFOG_EXP2				: return "D3DFOG_EXP2";
-	case D3DFOG_LINEAR			: return "D3DFOG_LINEAR";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Stencil_Op_Name(unsigned value)
-{
-	switch (value) {
-	case D3DSTENCILOP_KEEP		: return "D3DSTENCILOP_KEEP";
-	case D3DSTENCILOP_ZERO		: return "D3DSTENCILOP_ZERO";
-	case D3DSTENCILOP_REPLACE	: return "D3DSTENCILOP_REPLACE";
-	case D3DSTENCILOP_INCRSAT	: return "D3DSTENCILOP_INCRSAT";
-	case D3DSTENCILOP_DECRSAT	: return "D3DSTENCILOP_DECRSAT";
-	case D3DSTENCILOP_INVERT	: return "D3DSTENCILOP_INVERT";
-	case D3DSTENCILOP_INCR		: return "D3DSTENCILOP_INCR";
-	case D3DSTENCILOP_DECR		: return "D3DSTENCILOP_DECR";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Material_Source_Name(unsigned value)
-{
-	switch (value) {
-	case D3DMCS_MATERIAL			: return "D3DMCS_MATERIAL";
-	case D3DMCS_COLOR1			: return "D3DMCS_COLOR1";
-	case D3DMCS_COLOR2			: return "D3DMCS_COLOR2";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Vertex_Blend_Flag_Name(unsigned value)
-{
-	switch (value) {
-	case D3DVBF_DISABLE			: return "D3DVBF_DISABLE";
-	case D3DVBF_1WEIGHTS			: return "D3DVBF_1WEIGHTS";
-	case D3DVBF_2WEIGHTS			: return "D3DVBF_2WEIGHTS";
-	case D3DVBF_3WEIGHTS			: return "D3DVBF_3WEIGHTS";
-	case D3DVBF_TWEENING			: return "D3DVBF_TWEENING";
-	case D3DVBF_0WEIGHTS			: return "D3DVBF_0WEIGHTS";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Patch_Edge_Style_Name(unsigned value)
-{
-	switch (value) {
-	case D3DPATCHEDGE_DISCRETE	: return "D3DPATCHEDGE_DISCRETE";
-   case D3DPATCHEDGE_CONTINUOUS:return "D3DPATCHEDGE_CONTINUOUS";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Debug_Monitor_Token_Name(unsigned value)
-{
-	switch (value) {
-	case D3DDMT_ENABLE			: return "D3DDMT_ENABLE";
-	case D3DDMT_DISABLE			: return "D3DDMT_DISABLE";
-	default							: return "UNKNOWN";
-	}
-}
-
-const char* DX8Wrapper::Get_DX8_Blend_Op_Name(unsigned value)
-{
-	switch (value) {
-	case D3DBLENDOP_ADD			: return "D3DBLENDOP_ADD";
-	case D3DBLENDOP_SUBTRACT	: return "D3DBLENDOP_SUBTRACT";
-	case D3DBLENDOP_REVSUBTRACT: return "D3DBLENDOP_REVSUBTRACT";
-	case D3DBLENDOP_MIN			: return "D3DBLENDOP_MIN";
-	case D3DBLENDOP_MAX			: return "D3DBLENDOP_MAX";
-	default							: return "UNKNOWN";
-	}
-}

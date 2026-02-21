@@ -151,7 +151,6 @@ Assert_State_Valid();
 	}
 
 	Dec_Ignore_Counter();
-	WWASSERT(Model);
 	Model->Set_Transform(Matrix3D(Rotation,State.Position));
 	Update_Cull_Box();
 
@@ -162,12 +161,6 @@ Assert_State_Valid();
 		ContactBox->Compute_Forces();
 	}
 
-#ifdef WWDEBUG
-	if(Is_Debug_Display_Enabled()) {
-		Add_Debug_Vector(State.Position,Velocity,LMOMENTUM_COLOR);
-		Add_Debug_Vector(State.Position,AngularVelocity,AMOMENTUM_COLOR);	
-	}
-#endif
 
 }
 #endif
@@ -185,15 +178,10 @@ void RigidBodyClass::Timestep(float dt)
 		return;
 	}
 
-	WWASSERT(Model);
-	WWASSERT(ContactBox);
 
 	Inc_Ignore_Counter();
 
 #ifdef RBODY_DEBUGGING
-	WWDEBUG_SAY(("------------------------------\r\n"));
-	WWDEBUG_SAY(("RigidBody Timestep Begin.\r\n"));
-	WWASSERT(!ContactBox->Is_Intersecting());
 #endif
 
 	/*
@@ -205,7 +193,6 @@ void RigidBodyClass::Timestep(float dt)
 	float timestep;
 	
 #ifdef RBODY_DEBUGGING
-	WWDEBUG_SAY(("clock counter begin:\r\n"));
 #endif
 	while ((remaining_time > 0.0f) && (collisions < MAX_COLLISIONS)) {
 
@@ -215,13 +202,11 @@ void RigidBodyClass::Timestep(float dt)
 		** Integrate the state of the object
 		*/
 #ifdef RBODY_DEBUGGING
-		WWDEBUG_SAY(("Computing new state, delta_t = %f:\r\n",timestep));
 #endif
 		RigidBodyStateStruct oldstate = State;
 		Integrate(timestep);
 
 #ifdef RBODY_DEBUGGING
-		WWDEBUG_SAY(("Done.\r\n\r\n"));
 #endif
 		/*
 		** Check the final state of the object for collision.
@@ -234,12 +219,10 @@ void RigidBodyClass::Timestep(float dt)
 			remaining_time -= timestep;
 			StickCount = 0;
 #ifdef RBODY_DEBUGGING
-			WWDEBUG_SAY(("No Collision\r\n"));
 #endif
 
 		} else {
 #ifdef RBODY_DEBUGGING
-			WWDEBUG_SAY(("Collision!  Searching for TOC.\r\n"));
 #endif			
 			/*
 			** Sample the start and end positions and orientations.
@@ -252,17 +235,6 @@ void RigidBodyClass::Timestep(float dt)
 			/*
 			** Assert that our start point was not intersecting.
 			*/
-#ifdef WWDEBUG			
-#ifdef RBODY_DEBUGGING
-			WWDEBUG_SAY(("Prev Position: %f %f %f\r\n",oldstate.Position.X,oldstate.Position.Y,oldstate.Position.Z));
-			WWDEBUG_SAY(("New Position: %f %f %f\r\n",State.Position.X,State.Position.Y,State.Position.Z));
-			WWDEBUG_SAY(("Prev Orientation: %f %f %f %f\r\n",oldstate.Orientation.X,oldstate.Orientation.Y,oldstate.Orientation.Z,oldstate.Orientation.W));
-			WWDEBUG_SAY(("New Orientation: %f %f %f %f\r\n",State.Orientation.X,State.Orientation.Y,State.Orientation.Z,State.Orientation.W));
-
-			ContactBox->Set_Transform(q0,p0);
-			WWASSERT(!ContactBox->Is_Intersecting());
-#endif
-#endif
 
 			/*
 			** Binary search to find the time of collision
@@ -293,7 +265,6 @@ void RigidBodyClass::Timestep(float dt)
 				*/
 #ifdef RBODY_DEBUGGING
 				bool intersecting = ContactBox->Is_Intersecting();
-				WWDEBUG_SAY(("   t0 = %f  t1 = %f  t=%f   %s\r\n",t0,t1,t,(intersecting ? "colliding" : "not-colliding")));
 #endif
 				/*
 				** Zero in on the TOC
@@ -314,7 +285,6 @@ void RigidBodyClass::Timestep(float dt)
 				remaining_time -= 0.001f;
 			}
 #ifdef RBODY_DEBUGGING
-			WWDEBUG_SAY(("Found collision at fraction: %f\r\n",t));
 #endif
 			/*
 			** Compute the state right before the collision
@@ -328,9 +298,8 @@ void RigidBodyClass::Timestep(float dt)
 			//ContactBox->Set_Transform(Matrix3D(State.Orientation,State.Position));
 
 #ifdef RBODY_DEBUGGING
-//			WWDEBUG_SAY(("Position: %f %f %f\r\n",State.Position.X,State.Position.Y,State.Position.Z));
-//			WWDEBUG_SAY(("Orientation: %f %f %f %f\r\n",State.Orientation.X,State.Orientation.Y,State.Orientation.Z,State.Orientation.W));
-			WWASSERT(!ContactBox->Is_Intersecting());	
+//			
+//			
 #endif
 
 			/*
@@ -359,7 +328,6 @@ void RigidBodyClass::Timestep(float dt)
 			Apply_Impulse(impulse,point);
 #ifdef RBODY_DEBUGGING
 			DEBUG_RENDER_POINT(point,Vector3(1,0,0));
-			WWDEBUG_SAY(("Applied Impulse: %f %f %f\r\n",impulse.X,impulse.Y,impulse.Z));
 #endif
 #endif
 #if 1		// Simultaneously compute impulses for all contacts
@@ -415,30 +383,17 @@ void RigidBodyClass::Timestep(float dt)
 				impact_count++;
 			}
 #ifdef RBODY_DEBUGGING
-			WWDEBUG_SAY(("Number of impacts to resolve collision: %d\r\n",impact_count));
 #endif
 #endif
 #ifdef RBODY_DEBUGGING
-			WWDEBUG_SAY(("\r\n"));
-			WWDEBUG_SAY(("Position: %f %f %f\r\n",State.Position.X,State.Position.Y,State.Position.Z));
-			WWDEBUG_SAY(("Orientation: %f %f %f %f\r\n",State.Orientation.X,State.Orientation.Y,State.Orientation.Z,State.Orientation.W));
 #endif
 		}
 		collisions++;
 	}
 
 #ifdef RBODY_DEBUGGING
-	WWASSERT(!ContactBox->Is_Intersecting());
-	WWDEBUG_SAY(("RigidBody Timestep End.\r\n"));
-	WWDEBUG_SAY(("\r\n"));
 #endif
 
-#ifdef WWDEBUG
-	if(Is_Debug_Display_Enabled()) {
-		Add_Debug_Vector(State.Position,Velocity,LMOMENTUM_COLOR);
-		Add_Debug_Vector(State.Position,AngularVelocity,AMOMENTUM_COLOR);	
-	}
-#endif
 
 	Dec_Ignore_Counter();
 	Model->Set_Transform(Matrix3D(Rotation,State.Position));

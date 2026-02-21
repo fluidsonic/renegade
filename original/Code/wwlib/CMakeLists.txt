@@ -7,10 +7,9 @@ add_library(wwlib STATIC ${WWLIB_SOURCES})
 target_include_directories(wwlib BEFORE PRIVATE
     "${COMPAT_DIR}"
     "${ORIG_WWLIB}"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
     "${ORIG_SRC}/wwsaveload"
     "${ORIG_SRC}/wwutil"
 )
 
-target_link_libraries(wwlib wwdebug wwmath)
+target_link_libraries(wwlib wwmath)

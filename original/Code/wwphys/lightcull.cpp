@@ -55,7 +55,6 @@ StaticLightCullClass::~StaticLightCullClass(void)
 
 void StaticLightCullClass::Add_Object(LightPhysClass * obj)
 {
-	WWASSERT(PhysicsSceneClass::Get_Instance() != NULL);
 	TypedAABTreeCullSystemClass<LightPhysClass>::Add_Object(obj);
 // (gth) not resetting vis when adding a new static light
 //	PhysicsSceneClass::Get_Instance()->Reset_Vis();
@@ -63,7 +62,6 @@ void StaticLightCullClass::Add_Object(LightPhysClass * obj)
 
 void StaticLightCullClass::Remove_Object(LightPhysClass * obj)
 {
-	WWASSERT(PhysicsSceneClass::Get_Instance() != NULL);
 	TypedAABTreeCullSystemClass<LightPhysClass>::Remove_Object(obj);
 // (gth) not resetting vis when removing a static light
 //	PhysicsSceneClass::Get_Instance()->Reset_Vis();
@@ -71,7 +69,6 @@ void StaticLightCullClass::Remove_Object(LightPhysClass * obj)
 
 void StaticLightCullClass::Update_Culling(CullableClass * obj)
 {
-	WWASSERT(PhysicsSceneClass::Get_Instance() != NULL);
 	TypedAABTreeCullSystemClass<LightPhysClass>::Update_Culling(obj);
 // (gth) not resetting vis when moving a static light
 //	PhysicsSceneClass::Get_Instance()->Reset_Vis();
@@ -98,7 +95,6 @@ void StaticLightCullClass::Load_Static_Data(ChunkLoadClass & cload)
 			break;
 
 		default:
-			WWDEBUG_SAY(("Unhandled chunk type: %d in LightCullClass::Load\r\n",cload.Cur_Chunk_ID()));
 			break;
 		}
 	

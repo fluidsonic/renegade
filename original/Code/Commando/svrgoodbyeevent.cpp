@@ -16,10 +16,8 @@
 #include "apppackettypes.h"
 #include "string_ids.h"
 #include "dlgcncwinscreen.h"
-#include "gamespyadmin.h"
 #include "dlgmpconnectionrefused.h"
 #include "specialbuilds.h"
-#include "gamespyadmin.h"
 
 // 
 // TSS2001 Problem - we have lost the unreliable multiblast effect for this message
@@ -60,11 +58,7 @@ cSvrGoodbyeEvent::Act(void)
 
 		cNetwork::PClientConnection->Destroy_Connection(0);	// destroy connection to server 
 		
-		if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) {
-			DlgMPConnectionRefused::DoDialog(TRANSLATION(IDS_MP_SERVER_SHUT_DOWN), true);
-		} else {
-			DlgMsgBox::DoDialog(TRANSLATION(IDS_MENU_SERVER_MESSAGE_TITLE), TRANSLATION(IDS_MP_SERVER_SHUT_DOWN)); 
-		}
+		DlgMsgBox::DoDialog(TRANSLATION(IDS_MENU_SERVER_MESSAGE_TITLE), TRANSLATION(IDS_MP_SERVER_SHUT_DOWN));
 
 		//
 		//	Close out the win screen dialog (if its up)
@@ -83,10 +77,8 @@ cSvrGoodbyeEvent::Act(void)
 			//
 			// The client needs to quit back to the game list
 			//
-			if (!cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) {
-				extern bool g_client_quit;
-				g_client_quit = true;
-			}
+			extern bool g_client_quit;
+			g_client_quit = true;
 		}
 	}
 
@@ -136,10 +128,3 @@ cSvrGoodbyeEvent::Import_Creation(BitStreamClass & packet)
 
 
 
-		/*
-		else if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) 
-		{
-			extern void Stop_Main_Loop (int);
-			Stop_Main_Loop(EXIT_SUCCESS);
-		} 
-		*/

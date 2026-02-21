@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef FRAMEGRAB_H
 #define FRAMEGRAB_H
@@ -9,9 +6,6 @@
 #include "always.h"
 #endif
 
-#if defined (_MSC_VER)
-#pragma warning (push, 3)	// (gth) system headers complain at warning level 4...
-#endif
 
 #ifndef _WINDOWS_
 #include "windows.h"
@@ -25,9 +19,6 @@
 #include "vfw.h"
 #endif
 
-#if defined (_MSC_VER)
-#pragma warning (pop)
-#endif
 
 // FramGrab.h: interface for the FrameGrabClass class.
 //

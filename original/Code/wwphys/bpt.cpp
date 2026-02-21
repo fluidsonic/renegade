@@ -9,7 +9,6 @@
 #include "chunkio.h"
 #include "vector3.h"
 #include "tri.h"
-#include "wwdebug.h"
 #include "meshbuild.h"
 #include "camera.h"
 #include "sr.hpp"
@@ -984,7 +983,6 @@ void BptPolyClass::Split(const PlaneClass & plane,BptPolyClass & front,BptPolyCl
 				back.Verts[(back.NumVerts)++] = Verts[i];
 			}
 		} else {
-			WWASSERT_PRINT(0,"BptPolyClass::Split : invalid side\n");
 		}
 
 		sideprev = side;
@@ -1013,7 +1011,6 @@ bool BptPolyClass::Is_Degenerate(void)
 	int i,j;
 
 	if (NumVerts == 2) {
-		WWDEBUG_SAY(("Degenerate Poly - fewer than 3 vertices\r\n"));
 		return true;
 	}
 
@@ -1022,7 +1019,6 @@ bool BptPolyClass::Is_Degenerate(void)
 			
 			float delta = (Verts[i].Position - Verts[j].Position).Length();
 			if (delta < BPT_COINCIDENCE_EPSILON) {
-				WWDEBUG_SAY(("Degenerate Poly - coincident vertices!\r\n"));
 				return true;
 			}
 		}
@@ -1036,7 +1032,6 @@ bool BptPolyClass::Is_Degenerate(void)
 			Compute_Plane();
 
 			if (Verts[i].Which_Side(Plane) != BPT_ON) {
-				WWDEBUG_SAY(("Degenerate Poly - invalid plane!\r\n"));
 				return true;
 			}
 		}
@@ -1135,7 +1130,6 @@ BptImpClass * BptBuilderClass::Build(int numpolys,BptPolyClass * polys,MaterialI
 		InputTriCount += polys[i].NumVerts-2;
 	}
 
-	WWDEBUG_SAY(("Building Binary Tree\r\n"));
 
 	/*
 	** Build the fat tree
@@ -1152,16 +1146,6 @@ BptImpClass * BptBuilderClass::Build(int numpolys,BptPolyClass * polys,MaterialI
 	NodeCount = Root->Num_Nodes();
 	MaxDepth = Root->Max_Depth();
 
-	WWDEBUG_SAY(("Binary Tree Generated!\r\n"));
-	WWDEBUG_SAY(("Node Count:            %d\r\n",NodeCount));
-	WWDEBUG_SAY(("Max Depth:             %d\r\n",MaxDepth));
-	WWDEBUG_SAY(("Input Poly Count:      %d\r\n",InputPolyCount));
-	WWDEBUG_SAY(("Output Poly Count:     %d\r\n",OutputPolyCount));
-	WWDEBUG_SAY(("Input Tri Count:       %d\r\n",InputTriCount));
-	WWDEBUG_SAY(("Output Tri Count:      %d\r\n",OutputTriCount));
-	WWDEBUG_SAY(("Out/In Poly Ratio:     %f\r\n",(float)OutputPolyCount / (float)InputPolyCount));
-	WWDEBUG_SAY(("Out/In Tri Ratio:      %f\r\n",(float)OutputTriCount / (float)InputTriCount));
-	WWDEBUG_SAY(("\r\n"));
 
 	/*
 	** Build the optimized BptImp and return it.
@@ -1241,10 +1225,6 @@ void BptBuilderClass::unwind_mesh(MeshClass * mesh,int & set_numpolys,BptPolyCla
 	set_numpolys = dst_idx;
 	assert(set_numpolys <= srmesh->getPolygonCount());
 
-	WWDEBUG_SAY(("Unwinding Input Mesh\r\n"));
-	WWDEBUG_SAY(("Input poly count:                   %d\r\n",srmesh->getPolygonCount()));
-	WWDEBUG_SAY(("Count after removing degenerates:   %d\r\n",set_numpolys));
-	WWDEBUG_SAY(("\r\n"));
 }
 
 BptImpClass * BptBuilderClass::build_imp(void)
@@ -1867,11 +1847,9 @@ void BptImpClass::Set_Poly_Index_Array(int numremaps,int * polyremaps)
 
 void BptImpClass::Build_Apt(const CameraClass & camera)
 {
-	WWDEBUG_PROFILE_START("BPT::Build_Apt");
 	Begin_Apt();	
 	Build_Apt_Recursive(&(Nodes[0]),camera);
 	End_Apt();
-	WWDEBUG_PROFILE_STOP("BPT::Build_Apt");
 }
 
 void BptImpClass::Begin_Apt(void)
@@ -1897,7 +1875,7 @@ void BptImpClass::Add_Polys_To_Apt(BptImpNodeClass * node)
 void BptImpClass::End_Apt(void)
 {
 	Mesh->Get_Surrender_Mesh()->setActivePolygonCount(ActivePolyCount);
-//	WWDEBUG_SAY(("Active Polys: %d\r\n",ActivePolyCount));
+//	
 }
 
 void BptImpClass::Build_Apt_Recursive(BptImpNodeClass * node,const CameraClass & cam)
@@ -1955,9 +1933,7 @@ bool BptImpClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest) const
 	/*
 	** Test the sweeping AABox against the BPT recursively!
 	*/
-	WWDEBUG_PROFILE_START("BPT::Cast_AABox");
 	bool res = Cast_AABox_Recursive(&(Nodes[0]),boxtest);
-	WWDEBUG_PROFILE_STOP("BPT::Cast_AABox");
 	return res;
 }
 
@@ -2159,7 +2135,6 @@ void BptImpBuilderClass::Free(void)
 BptImpClass * BptImpBuilderClass::Build_Bpt_Imp(BptNodeClass * root,MaterialInfoClass * matinfo)
 {
 	Free();
-	WWDEBUG_SAY(("Building the Run-Time Bpt\r\n"));
 
 	TriCount = root->Num_Tris();
 	
@@ -2198,9 +2173,7 @@ BptImpClass * BptImpBuilderClass::Build_Bpt_Imp(BptNodeClass * root,MaterialInfo
 	/*
 	** Compute the hierarchical bounding boxes
 	*/
-	WWDEBUG_SAY(("Computing Hierarchical Bounding Volumes.\r\n"));
 	root->Compute_Bounding_Box();
-	WWDEBUG_SAY(("Hierarchical Bounding Volumes Done.\r\n"));
 
 	/*
 	** Have the tree "unwind" itself into our arrays
@@ -2241,8 +2214,6 @@ BptImpClass * BptImpBuilderClass::Build_Bpt_Imp(BptNodeClass * root,MaterialInfo
 
 	Free();
 
-	WWDEBUG_SAY(("Run-Time Bpt Done\r\n"));
-	WWDEBUG_SAY(("\r\n"));
 
 	return bptimp;
 }

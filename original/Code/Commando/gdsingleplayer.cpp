@@ -8,7 +8,7 @@
 //-----------------------------------------------------------------------------
 cGameDataSinglePlayer::cGameDataSinglePlayer(void) : cGameData()
 {
-   //WWDEBUG_SAY(("cGameDataSinglePlayer::cGameDataSinglePlayer\n"));
+   //
 
 	IsFriendlyFirePermitted.Set(true);
 	IsTeamChangingAllowed.Set(false);
@@ -20,7 +20,7 @@ cGameDataSinglePlayer::cGameDataSinglePlayer(void) : cGameData()
 //-----------------------------------------------------------------------------
 cGameDataSinglePlayer::~cGameDataSinglePlayer(void)
 {
-   //WWDEBUG_SAY(("cGameDataSinglePlayer::~cGameDataSinglePlayer\n"));
+   //
 }
 
 //-----------------------------------------------------------------------------

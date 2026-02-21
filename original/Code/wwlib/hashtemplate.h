@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef HASH_TEMPLATE_H
 #define HASH_TEMPLATE_H

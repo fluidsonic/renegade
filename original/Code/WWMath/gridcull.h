@@ -149,19 +149,11 @@ protected:
 ** Macros for gathering statistics.  Placed here in the header file so that
 ** derived classes can use them as well.
 */
-#ifdef WWDEBUG
-
-#define GRIDCULL_NODE_ACCEPTED						Stats.NodesAccepted ++;
-#define GRIDCULL_NODE_TRIVIALLY_ACCEPTED			Stats.NodesTriviallyAccepted ++;
-#define GRIDCULL_NODE_REJECTED						Stats.NodesRejected ++;
-
-#else
 
 #define GRIDCULL_NODE_ACCEPTED						
 #define GRIDCULL_NODE_TRIVIALLY_ACCEPTED		
 #define GRIDCULL_NODE_REJECTED						
 
-#endif
 
 
 /*
@@ -360,9 +352,6 @@ WWINLINE int GridCullSystemClass::total_cell_count(void)
  *=============================================================================================*/
 WWINLINE void	GridCullSystemClass::compute_box(int i,int j,int k,AABoxClass * set_box)
 {
-	WWASSERT(set_box != NULL);
-	WWASSERT((i >= 0) && (j >= 0) && (k >= 0));
-	WWASSERT((i < CellCount[0]) && (j < CellCount[1]) && (k < CellCount[2]));
 
 	Vector3 min,max;
 
@@ -392,9 +381,6 @@ WWINLINE void	GridCullSystemClass::compute_box(int i,int j,int k,AABoxClass * se
  *=============================================================================================*/
 WWINLINE void	GridCullSystemClass::compute_box(const GridCullSystemClass::VolumeStruct & vol, AABoxClass * set_box)
 {
-	WWASSERT(set_box != NULL);
-	WWASSERT((vol.Min[0] >= 0) && (vol.Min[1] >= 0) && (vol.Min[2] >= 0));
-	WWASSERT((vol.Max[0] <= CellCount[0]) && (vol.Max[1] <= CellCount[1]) && (vol.Max[2] <= CellCount[2]));
 
 	Vector3 min,max;
 
@@ -574,9 +560,6 @@ WWINLINE GridCullSystemClass::VolumeStruct::VolumeStruct(int i0,int j0,int k0,in
 	Max[0] = i1;
 	Max[1] = j1;
 	Max[2] = k1;
-	WWASSERT(Max[0] > Min[0]);
-	WWASSERT(Max[1] > Min[1]);
-	WWASSERT(Max[2] > Min[2]);
 }
 
 
@@ -641,7 +624,6 @@ WWINLINE void GridCullSystemClass::VolumeStruct::Split(VolumeStruct & v0,VolumeS
 	if (delta[1] > delta[split_axis]) split_axis = 1;
 	if (delta[2] > delta[split_axis]) split_axis = 2;
 
-	WWASSERT(delta[split_axis] > 0);
 
 	// split the volume perpendicularly to that dimension
 	memcpy(&v0,this,sizeof(VolumeStruct));

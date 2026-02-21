@@ -105,11 +105,7 @@ AABTreeCullSystemClass::~AABTreeCullSystemClass(void)
 
 void AABTreeCullSystemClass::Add_Object_Internal(CullableClass * obj,int node_index)
 {
-	WWASSERT_PRINT
-	(
-		(obj->Get_Culling_System() == NULL),
-		"AABTreeCullSystemClass::Add -- Object is already in another culling system!\n"
-	);
+	assert((obj->Get_Culling_System() == NULL));
 
 	AABTreeLinkClass * new_link = new AABTreeLinkClass(this);
 	obj->Set_Cull_Link(new_link);
@@ -117,7 +113,6 @@ void AABTreeCullSystemClass::Add_Object_Internal(CullableClass * obj,int node_in
 	if (node_index == -1) {
 		Add_Object_Recursive(RootNode,obj);
 	} else {
-		WWASSERT(node_index < NodeCount);
 		IndexedNodes[node_index]->Add_Object(obj,false);
 		ObjectCount++;
 	}
@@ -128,14 +123,10 @@ void AABTreeCullSystemClass::Add_Object_Internal(CullableClass * obj,int node_in
 
 void AABTreeCullSystemClass::Remove_Object_Internal(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 
 	AABTreeLinkClass * link = (AABTreeLinkClass *)obj->Get_Cull_Link();
-	WWASSERT(link);
 
 	AABTreeNodeClass * node = link->Node;
-	WWASSERT(node);
 
 	node->Remove_Object(obj);
 	link->Set_Culling_System(NULL);
@@ -143,20 +134,15 @@ void AABTreeCullSystemClass::Remove_Object_Internal(CullableClass * obj)
 	obj->Set_Cull_Link(NULL);
 	
 	ObjectCount--;
-	WWASSERT(ObjectCount >= 0);
 	obj->Release_Ref();
 }
 
 void AABTreeCullSystemClass::Update_Culling(CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 
 	// unlink it from the node it is currently in
 	AABTreeLinkClass * link = (AABTreeLinkClass *)obj->Get_Cull_Link();
-	WWASSERT(link);
 	AABTreeNodeClass * node = link->Node;
-	WWASSERT(node);
 	node->Remove_Object(obj);
 	// decrement the object counter, the node can't
 	// decrement it for us...
@@ -265,14 +251,8 @@ void AABTreeCullSystemClass::Add_Object_Recursive(AABTreeNodeClass * node,Cullab
 
 void AABTreeCullSystemClass::Add_Loaded_Object(AABTreeNodeClass * node,CullableClass * obj)
 {
-	WWASSERT(node);
-	WWASSERT(obj);
 
-	WWASSERT_PRINT
-	(
-		(obj->Get_Culling_System() == NULL),
-		"AABTreeCullSystemClass::Add_Loaded_Object -- Object is already in another culling system!\n"
-	);
+	assert((obj->Get_Culling_System() == NULL));
 
 	AABTreeLinkClass * new_link = new AABTreeLinkClass(this);
 	obj->Set_Cull_Link(new_link);
@@ -367,7 +347,6 @@ void AABTreeCullSystemClass::Update_Bounding_Boxes(void)
 
 const AABoxClass & AABTreeCullSystemClass::Get_Bounding_Box(void)
 {
-	WWASSERT(RootNode);
 	return RootNode->Box;
 }
 
@@ -661,7 +640,6 @@ void AABTreeCullSystemClass::Update_Bounding_Boxes_Recursive(AABTreeNodeClass * 
 
 void AABTreeCullSystemClass::Load(ChunkLoadClass & cload)
 {
-	WWASSERT_PRINT(Object_Count() == 0, "Remove all objects from AAB-Culling system before loading!\n"); 
 	
 	delete RootNode;
 	RootNode = new AABTreeNodeClass;
@@ -669,7 +647,6 @@ void AABTreeCullSystemClass::Load(ChunkLoadClass & cload)
 	// The first chunk should be a version chunk
 	cload.Open_Chunk();
 	if (cload.Cur_Chunk_ID() != AABTREE_CHUNK_VERSION) {
-		WWDEBUG_ERROR(("Attempting to read an obsolete AAB-Tree!"));
 		cload.Close_Chunk();
 		return;
 	}
@@ -678,7 +655,6 @@ void AABTreeCullSystemClass::Load(ChunkLoadClass & cload)
 	uint32 version;
 	cload.Read(&version,sizeof(version));
 	if (version != AABTREE_CURRENT_VERSION) {
-		WWDEBUG_ERROR(("Attempting to read an obsolete AAB-Tree!"));
 		cload.Close_Chunk();
 		return;
 	}
@@ -698,7 +674,6 @@ void AABTreeCullSystemClass::Load_Nodes(AABTreeNodeClass * node,ChunkLoadClass &
 {
 	// Open the node description
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == AABTREE_CHUNK_AABNODE);
 	
 	// Load the node description.  
 	// Older files will contain a chunk named AABTREE_CHUNK_AABNODE_INFO while newer
@@ -711,7 +686,6 @@ void AABTreeCullSystemClass::Load_Nodes(AABTreeNodeClass * node,ChunkLoadClass &
 	if (cload.Cur_Chunk_ID() == AABTREE_CHUNK_AABNODE_INFO) {
 
 		// Loading the legacy format...
-		WWASSERT(cload.Cur_Chunk_ID() == AABTREE_CHUNK_AABNODE_INFO);
 		cload.Read(&node_desc,sizeof(node_desc));
 
 	} else if (cload.Cur_Chunk_ID() == AABTREE_CHUNK_AABNODE_VARIABLES) {
@@ -738,7 +712,6 @@ void AABTreeCullSystemClass::Load_Nodes(AABTreeNodeClass * node,ChunkLoadClass &
 
 	// Load the contents of the node.
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == AABTREE_CHUNK_AABNODE_CONTENTS);
 	Load_Node_Contents(node,cload);
 	cload.Close_Chunk();
 
@@ -747,7 +720,6 @@ void AABTreeCullSystemClass::Load_Nodes(AABTreeNodeClass * node,ChunkLoadClass &
 
 	// if we are supposed to have a front child, load it
 	if (node_desc.Attributes & AABNODE_ATTRIBUTE_FRONT_CHILD) {
-		WWASSERT(node->Front == NULL);
 		node->Front = new AABTreeNodeClass();
 		node->Front->Parent = node;
 		Load_Nodes(node->Front,cload);
@@ -755,7 +727,6 @@ void AABTreeCullSystemClass::Load_Nodes(AABTreeNodeClass * node,ChunkLoadClass &
 	
 	// if we have a back child, load it
 	if (node_desc.Attributes & AABNODE_ATTRIBUTE_BACK_CHILD) {
-		WWASSERT(node->Back == NULL);
 		node->Back = new AABTreeNodeClass();
 		node->Back->Parent = node;
 		Load_Nodes(node->Back,cload);
@@ -774,7 +745,6 @@ void AABTreeCullSystemClass::Save(ChunkSaveClass & csave)
 
 void AABTreeCullSystemClass::Save_Nodes(AABTreeNodeClass * node,ChunkSaveClass & csave)
 {
-	WWASSERT(node);
 	csave.Begin_Chunk(AABTREE_CHUNK_AABNODE);
 
 	csave.Begin_Chunk(AABTREE_CHUNK_AABNODE_VARIABLES);
@@ -820,7 +790,6 @@ void AABTreeCullSystemClass::Load_Object_Linkage(ChunkLoadClass & cload,Cullable
 {
 	uint32 index;
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == AABTREE_CHUNK_NODE_INDEX);
 	cload.Read(&index,sizeof(index));
 	cload.Close_Chunk();
 
@@ -829,14 +798,10 @@ void AABTreeCullSystemClass::Load_Object_Linkage(ChunkLoadClass & cload,Cullable
 
 void AABTreeCullSystemClass::Save_Object_Linkage(ChunkSaveClass & csave,CullableClass * obj)
 {
-	WWASSERT(obj);
-	WWASSERT(obj->Get_Culling_System() == this);
 
 	AABTreeLinkClass * link = (AABTreeLinkClass *)obj->Get_Cull_Link();
-	WWASSERT(link);
 
 	AABTreeNodeClass * node = link->Node;
-	WWASSERT(node);
 
 	uint32 index = node->Index;
 	csave.Begin_Chunk(AABTREE_CHUNK_NODE_INDEX);
@@ -852,12 +817,10 @@ void AABTreeCullSystemClass::Re_Index_Nodes(void)
 		IndexedNodes = NULL;
 	}
 	NodeCount = Partition_Node_Count();
-	WWASSERT(NodeCount > 0);
 	IndexedNodes = new AABTreeNodeClass *[NodeCount];
 	
 	int counter = 0;
 	Re_Index_Nodes_Recursive(RootNode,counter);
-	WWASSERT(counter == NodeCount);
 }
 
 
@@ -896,7 +859,6 @@ AABTreeNodeClass::AABTreeNodeClass(void) :
 AABTreeNodeClass::~AABTreeNodeClass(void)
 {
 	// objects should be removed before deleting the partition tree
-	WWASSERT(Object == NULL);
 	
 	// delete our children
 	if (Front) {
@@ -961,7 +923,6 @@ float AABTreeNodeClass::Compute_Volume(void)
 void AABTreeNodeClass::Add_Object(CullableClass * obj,bool update_bounds)
 {
 	AABTreeLinkClass * link = (AABTreeLinkClass *)obj->Get_Cull_Link();
-	WWASSERT(link);
 	
 	link->Node = this;
 	link->NextObject = Object;
@@ -980,7 +941,6 @@ void AABTreeNodeClass::Add_Object(CullableClass * obj,bool update_bounds)
 
 void AABTreeNodeClass::Remove_Object(CullableClass * obj)
 {
-	WWASSERT(obj);
 
 	// find the given object in our linked list
 	CullableClass * prevobj = NULL;
@@ -1046,13 +1006,11 @@ CullableClass * AABTreeNodeClass::Peek_Object(int index)
 {
 	int count = 0;
 	CullableClass * obj = Object;
-	WWASSERT(obj != NULL);
 
 	while (obj && (count != index)) {
 		count++;				
 		obj = ((AABTreeLinkClass *)obj->Get_Cull_Link())->NextObject;
 	}
-	WWASSERT(count == index);
 	return obj;
 }
 
@@ -1135,9 +1093,6 @@ void AABTreeNodeClass::Partition(void)
 void AABTreeNodeClass::Split_Objects(const AABTreeNodeClass::SplitChoiceStruct & sc,AABTreeNodeClass * front,AABTreeNodeClass * back)
 {
 	// This function assumes that this node is a leaf
-	WWASSERT(Front == NULL);
-	WWASSERT(Back == NULL);
-	WWASSERT(Object_Count() == sc.FrontCount + sc.BackCount);
 
 	int fcount = 0;
 	int bcount = 0;
@@ -1173,8 +1128,6 @@ void AABTreeNodeClass::Split_Objects(const AABTreeNodeClass::SplitChoiceStruct &
 	back->Box.Extent += Vector3(WWMATH_EPSILON,WWMATH_EPSILON,WWMATH_EPSILON);
 
 	// when we are all done, the counts should match. 
-	WWASSERT(fcount == sc.FrontCount);
-	WWASSERT(bcount == sc.BackCount);
 }
 
 
@@ -1248,7 +1201,6 @@ void AABTreeNodeClass::Split_Boxes
 	SimpleDynVecClass<AABoxClass> & backboxes
 )
 {
-	WWASSERT(boxes.Count() == sc.FrontCount + sc.BackCount);
 
 	// copy each box in the input array into the appropriate output array
 	for (int i=0; i<boxes.Count(); i++) {
@@ -1267,8 +1219,6 @@ void AABTreeNodeClass::Split_Boxes
 	}
 
 	// when we are all done, the counts should match. 
-	WWASSERT(frontboxes.Count() == sc.FrontCount);
-	WWASSERT(backboxes.Count() == sc.BackCount);
 }
 
 
@@ -1382,11 +1332,6 @@ void AABTreeNodeClass::Select_Splitting_Plane_Brute_Force
 	/*
 	** Notify user that we couldn't split this node
 	*/
-#ifdef WWDEBUG
-	if (sc->Cost == FLT_MAX) {		
-		WWDEBUG_SAY(("Unable to split node!  objcount = %d. (%.2f,%.2f,%.2f)\r\n",objcount,Box.Center.X, Box.Center.Y, Box.Center.Z));
-	}
-#endif
 }
 
 
@@ -1443,7 +1388,6 @@ AABTreeIterator::AABTreeIterator(AABTreeCullSystemClass * tree) :
 	Tree(tree),
 	CurNodeIndex(0)
 {
-	WWASSERT(Tree != NULL);
 }
 	
 void AABTreeIterator::Reset(void)

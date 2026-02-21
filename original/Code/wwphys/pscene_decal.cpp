@@ -15,7 +15,6 @@
 
 void PhysicsSceneClass::Allocate_Decal_Resources(void)
 {
-	WWASSERT(DecalSystem == NULL);
 	DecalSystem = new PhysDecalSysClass(this);
 }	
 
@@ -36,13 +35,11 @@ int PhysicsSceneClass::Create_Decal
 	PhysClass *			only_this_obj
 )
 {
-	WWASSERT(DecalSystem != NULL);
 	return DecalSystem->Create_Decal(tm,texture_name,radius,is_permanent,apply_to_translucent_meshes,only_this_obj);
 }
 
 bool PhysicsSceneClass::Remove_Decal(uint32 id)
 {
-	WWASSERT(DecalSystem != NULL);
 	return DecalSystem->Remove_Decal(id);
 }
 

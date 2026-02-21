@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 
-#include "wwprofile.h"
 #include "assets.h"
 #include "font3d.h"
 #include "combat.h"
@@ -285,8 +284,6 @@ static	void	Powerup_Init( void )
 	PowerupTextRenderer = new Render2DSentenceClass();
 	PowerupTextRenderer->Set_Font( font );
 
-	WWASSERT( LeftPowerupIconList.Count() == 0 );
-	WWASSERT( RightPowerupIconList.Count() == 0 );
 }
 
 static	void	Powerup_Shutdown( void )
@@ -560,7 +557,6 @@ static void HUD_Help_Text_Init( void )
 	//	Load the font...
 	//
 	FontCharsClass *font = StyleMgrClass::Peek_Font( StyleMgrClass::FONT_INGAME_BIG_TXT );
-	WWASSERT (font != NULL);
 
 	//
 	//	Configure the renderer
@@ -849,7 +845,6 @@ static	void	Weapon_Update( void )
 		}
 
 	} else if ( _LastHUDWeapon != weapon ) {		// Update the weapon icon
-		WWPROFILE( "Weapon Change" );
 		_LastHUDWeapon = weapon;
 		_LastVehicleSeat = -1;	// force vehicle seat to re-draw next
 
@@ -1694,7 +1689,6 @@ static	void	Target_Render( void )
 static RectClass Get_Target_Box( PhysicalGameObj * obj )
 {
 	// Lets draw a box around the target
-	WWASSERT( obj );
 	PhysClass * po = obj->Peek_Physical_Object();
 
 	Vector2	top(0,0);
@@ -2803,7 +2797,6 @@ void 	HUDClass::Reset( void )
 
 void 	HUDClass::Render()
 {
-	WWPROFILE( "HUD Render" );
 
 #ifdef ATI_DEMO_HACK
 	RenderImages[DEMO_HUD_IMAGE]->Render();
@@ -2850,7 +2843,6 @@ static bool	Is_HUD_Displayed( void )
 */
 void 	HUDClass::Think()
 {
-	WWPROFILE( "HUD Think" );
 
 #ifndef ATI_DEMO_HACK
 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Draw_Sniper() ) {
@@ -2962,7 +2954,6 @@ void 	HUDClass::Think()
 
 	//TSS092401 if ( weapon ) {
 	if ( CombatManager::Is_Gameplay_Permitted() && (weapon != NULL) && CombatManager::Is_Hit_Reticle_Enabled() ) {
-		WWPROFILE( "Reticle" );
 		Vector3 pos3d = HUDInfo::Get_Weapon_Target_Position();
 		Vector3 reticle_hit_offset;
 		COMBAT_CAMERA->Project( reticle_hit_offset, pos3d );
@@ -2978,7 +2969,6 @@ void 	HUDClass::Think()
 #if 0
 	// Display points
 	if ( _HUDTimer > 0 ) {
-		WWPROFILE( "Points" );
 		_HUDTimer -= TimeManager::Get_Frame_Seconds();
 
 		StringClass	pointstring;

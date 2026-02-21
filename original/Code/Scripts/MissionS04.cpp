@@ -5,7 +5,6 @@
 #include "Mission3.h"
 
 #ifdef _XBOX
-#include "wwhack.h"
 
 #endif
 

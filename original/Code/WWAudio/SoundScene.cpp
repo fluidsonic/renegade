@@ -4,9 +4,7 @@
 #include "logicallistener.h"
 #include "chunkio.h"
 #include "persistfactory.h"
-#include "wwprofile.h"
 #include "threads.h"
-#include "wwmemlog.h"
 #include "systimer.h"
 
 
@@ -48,7 +46,6 @@ SoundSceneClass::SoundSceneClass (void)
 		m_MaxExtents (500, 500, 500),
 		m_IsBatchMode (false)
 {
-	WWMEMLOG(MEM_SOUND);
 	m_Listener = new Listener3DClass;
 	m_DynamicCullingSystem.Re_Partition (m_MinExtents, m_MaxExtents, 100.00F);
 	m_LogicalCullingSystem.Re_Partition (m_MinExtents, m_MaxExtents, 100.00F);
@@ -102,7 +99,6 @@ SoundSceneClass::Re_Partition
 void
 SoundSceneClass::Collect_Logical_Sounds (int listener_count)
 {
-	WWPROFILE ("Collect_Logical_Sounds");
 
 	uint32 timestamp = TIMEGETTIME ();
 
@@ -206,7 +202,6 @@ SoundSceneClass::Collect_Audible_Sounds
 	COLLECTED_SOUNDS &list
 )
 {
-	WWPROFILE ("Collect_Audible_Sounds");
 
 	//
 	// Collect a list of the audible dynamic sounds
@@ -303,7 +298,6 @@ SoundSceneClass::Collect_Audible_Sounds
 void
 SoundSceneClass::On_Frame_Update (unsigned int milliseconds)
 {
-	WWPROFILE ("On_Frame_Update");
 
 	COLLECTED_SOUNDS auxiliary_sounds;
 	COLLECTED_SOUNDS primary_sounds;
@@ -444,7 +438,6 @@ SoundSceneClass::On_Frame_Update (unsigned int milliseconds)
 			//
 			//	Make sure we cull the sound
 			//
-			WWASSERT(sound_obj != NULL);
 			sound_obj->Cull_Sound (true);
 			sound_obj->Set_Runtime_Priority (0);
 		}
@@ -488,10 +481,7 @@ SoundSceneClass::Add_Sound
 	bool						start_playing
 )
 {
-	WWPROFILE ("Add_Sound");
-	WWMEMLOG(MEM_SOUND);
 
-	WWASSERT (sound_obj != NULL);
 	if (sound_obj != NULL && sound_obj->Is_In_Scene () == false) {
 		bool cull_sound = true;
 
@@ -560,7 +550,6 @@ SoundSceneClass::Remove_Sound
 	bool stop_playing
 )
 {
-	WWPROFILE ("Remove_Sound");
 
 	if (sound_obj == NULL) {
 		return ;
@@ -619,9 +608,7 @@ SoundSceneClass::Add_Static_Sound
 	bool						start_playing
 )
 {
-	WWPROFILE ("Add_Static_Sound");
 
-	WWASSERT (sound_obj != NULL);
 	if (sound_obj != NULL) {
 
 		//
@@ -700,7 +687,6 @@ SoundSceneClass::Remove_Static_Sound
 	bool						stop_playing
 )
 {
-	WWPROFILE ("Remove_Static_Sound");
 
 	if (sound_obj == NULL) {
 		return ;
@@ -759,9 +745,7 @@ SoundSceneClass::Add_Logical_Sound
 	bool						single_shot
 )
 {
-	WWPROFILE ("Add_Logical_Sound");
 
-	WWASSERT (sound_obj != NULL);
 	if (sound_obj != NULL) {
 
 		//
@@ -822,7 +806,6 @@ SoundSceneClass::Remove_Logical_Sound
 	bool						remove_from_list
 )
 {
-	WWPROFILE ("Remove_Logical_Sound");
 
 	if (sound_obj == NULL) {
 		return ;
@@ -905,9 +888,7 @@ SoundSceneClass::Remove_Logical_Sound
 void
 SoundSceneClass::Add_Logical_Listener (LogicalListenerClass *listener_obj)
 {
-	WWPROFILE ("Add_Logical_Listener");
 
-	WWASSERT (listener_obj != NULL);
 	if (listener_obj != NULL) {
 
 		//
@@ -932,9 +913,7 @@ SoundSceneClass::Add_Logical_Listener (LogicalListenerClass *listener_obj)
 void
 SoundSceneClass::Remove_Logical_Listener (LogicalListenerClass *listener_obj)
 {
-	WWPROFILE ("Remove_Logical_Listener");
 
-	WWASSERT (listener_obj != NULL);
 	if (listener_obj != NULL) {
 
 		//

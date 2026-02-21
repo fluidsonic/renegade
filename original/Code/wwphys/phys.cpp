@@ -4,7 +4,6 @@
 #include "rinfo.h"
 #include "assetmgr.h"
 #include "ww3d.h"
-#include "wwdebug.h"
 #include "pscene.h"
 #include "cullsys.h"
 #include "chunkio.h"
@@ -39,7 +38,6 @@ RenderObjClass * create_render_obj_from_filename( const char * filename )
 
 	RenderObjClass *model = WW3DAssetManager::Get_Instance()->Create_Render_Obj( render_obj_name );
 	if ( model == NULL ) {
-		WWDEBUG_SAY(("Failed to create %s from %s\n", (const char *)render_obj_name, filename));
 	}
 	return model;
 }
@@ -126,7 +124,6 @@ void PhysClass::Init(const PhysDefClass & def)
 		}
 
 		if ( model == NULL ) {
-			WWDEBUG_SAY(( "***  FATAL ERROR : Failed to create model %s\n", def.ModelName ));
 		}
 
 		Set_Model(model);
@@ -163,9 +160,7 @@ void PhysClass::Set_Model_By_Name(const char * model_type_name)
 {
 	RenderObjClass * model = WW3DAssetManager::Get_Instance()->Create_Render_Obj(model_type_name);
 	if ( model == NULL ) {
-		WWDEBUG_SAY(( "%s failed to load\n", model_type_name ));
 	}
-	WWASSERT(model);		// As above, PhysClasses cannot survive without a model...
 
 	Set_Model(model);
 	if (model) {
@@ -191,7 +186,6 @@ const char * PhysClass::Get_Name(void)
 
 void PhysClass::Get_Shadow_Blob_Box(AABoxClass * set_obj_space_box)
 {
-	WWASSERT(set_obj_space_box != NULL);
 	if (set_obj_space_box != NULL) {
 		Model->Get_Obj_Space_Bounding_Box(*set_obj_space_box);
 		set_obj_space_box->Extent *= 0.75f;
@@ -229,7 +223,6 @@ LightEnvironmentClass * PhysClass::Get_Static_Lighting_Environment(void)
 		** This object doesn't need a lighting cache, make sure it doesn't have one
 		*/
 		if (StaticLightingCache != NULL) {
-			WWDEBUG_SAY(("Pre-Lit object %s has a lighting cache!\r\n",Model->Get_Name()));
 			delete StaticLightingCache;
 			StaticLightingCache = NULL;
 		}
@@ -437,7 +430,6 @@ bool PhysClass::Save (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK(csave,PHYS_VARIABLE_INSTANCEID,InstanceID);	
 	if (Name.Get_Length() > 0) {
 		csave.Begin_Micro_Chunk(PHYS_VARIABLE_NAME);
-		WWASSERT(Name.Get_Length()+1 < 255);
 		csave.Write(Name,Name.Get_Length() + 1);
 		csave.End_Micro_Chunk();
 	}
@@ -493,7 +485,6 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 			case PHYS_CHUNK_MODEL:
 				cload.Open_Chunk();
 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
-				WWASSERT(factory != NULL);
 				if (factory != NULL) {
 					render_model = (RenderObjClass *)factory->Load(cload);
 					SET_REF_OWNER(render_model);
@@ -502,7 +493,6 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -570,50 +560,10 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 }
 
 
-#ifdef WWDEBUG
-void PhysClass::Add_Debug_Point(const Vector3 & p,const Vector3 & color)
-{
-	if (Is_Debug_Display_Enabled()) {
-		PhysicsSceneClass::Get_Instance()->Add_Debug_Point(p,color);
-	}
-}
-#endif
 
-#ifdef WWDEBUG
-void PhysClass::Add_Debug_Vector(const Vector3 & p,const Vector3 & v,const Vector3 & color)
-{
-	if (Is_Debug_Display_Enabled() && (v.Length2() > 0.0f)) {
-		PhysicsSceneClass::Get_Instance()->Add_Debug_Vector(p,v,color);
-	}
-}
-#endif
 
-#ifdef WWDEBUG
-void PhysClass::Add_Debug_AABox(const AABoxClass & box,const Vector3 & color,float opacity)
-{
-	if (Is_Debug_Display_Enabled()) {
-		PhysicsSceneClass::Get_Instance()->Add_Debug_AABox(box,color,opacity);
-	}
-}
-#endif
 
-#ifdef WWDEBUG
-void PhysClass::Add_Debug_OBBox(const OBBoxClass & box,const Vector3 & color,float opacity)
-{
-	if (Is_Debug_Display_Enabled()) {
-		PhysicsSceneClass::Get_Instance()->Add_Debug_OBBox(box,color,opacity);
-	}
-}
-#endif
 
-#ifdef WWDEBUG
-void PhysClass::Add_Debug_Axes(const Matrix3D & transform,const Vector3 & color)
-{
-	if (Is_Debug_Display_Enabled()) {
-		PhysicsSceneClass::Get_Instance()->Add_Debug_Axes(transform,color);
-	}
-}
-#endif
 
 bool PhysClass::Is_Debug_Display_Enabled(void) const					
 { 
@@ -739,7 +689,6 @@ bool PhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			case PHYSDEF_CHUNK_VARIABLES:
-				WWASSERT(cload.Cur_Chunk_ID() == PHYSDEF_CHUNK_VARIABLES);
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						OBSOLETE_MICRO_CHUNK(PHYSDEF_VARIABLE_FLAGS);

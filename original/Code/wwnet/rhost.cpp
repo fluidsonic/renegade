@@ -15,7 +15,6 @@
 #include "miscutil.h"
 #include "mathutil.h"
 #include "connect.h"
-#include "wwdebug.h"
 #include "packetmgr.h"
 
 bool cRemoteHost::AllowExtraModemBandwidthThrottling = true;
@@ -59,7 +58,7 @@ cRemoteHost::cRemoteHost() :
 	NextOutgoingFloodActionTime(0),
 	NumOutgoingFloods(0)
 {
-   //WWDEBUG_SAY(("cRemoteHost::cRemoteHost\n"));
+   //
 
 	ZeroMemory(&Address, sizeof(SOCKADDR_IN));
 
@@ -91,14 +90,13 @@ void cRemoteHost::Init_Stats()
 	//	int candidate_resend_timeout_ms = min(3 * AverageInternalPingtimeMs,
 	//		(int) (1.1 * MaxInternalPingtimeMs));
 	//	if (candidate_resend_timeout_ms < ResendTimeoutMs) {
-	//		WWASSERT(candidate_resend_timeout_ms < 0xffff);
+	//		assert(candidate_resend_timeout_ms < 0xffff);
 	//		ResendTimeoutMs = candidate_resend_timeout_ms;
-	//		//WWDEBUG_SAY((">> ResendTimeoutMs for rhost %d = %d\n", Id, ResendTimeoutMs));
+	//		//
 	//	}
 	//}
 
-	//WWDEBUG_SAY(("ResendTimeoutMs for rhost %d = %d\n", Id, (unsigned long)ResendTimeoutMs));
-	WWDEBUG_SAY(("ResendTimeoutMs for rhost = %d\n", (unsigned long)ResendTimeoutMs));
+	//
 
 	TotalInternalPingtimeMs = 0;
 	NumInternalPings = 0;
@@ -110,35 +108,30 @@ void cRemoteHost::Init_Stats()
 //-----------------------------------------------------------------------------
 void cRemoteHost::Set_Last_Service_Count(int service_count)
 {
-	WWASSERT(service_count >= 0);
 	LastServiceCount = service_count;
 }
 
 //-----------------------------------------------------------------------------
 void cRemoteHost::Compute_List_Max(int list_type)
 {
-	WWASSERT(list_type >= 0 && list_type < 4);
 	ListMax[list_type] = PacketList[list_type].Get_Count();
 }
 
 //-----------------------------------------------------------------------------
 int cRemoteHost::Get_List_Max(int list_type)
 {
-	WWASSERT(list_type >= 0 && list_type < 4);
 	return ListMax[list_type];
 }
 
 //-----------------------------------------------------------------------------
 void cRemoteHost::Set_List_Processing_Time(int list_type, int processing_time_ms)
 {
-	WWASSERT(list_type >= 0 && list_type < 4);
 	ListProcessingTime[list_type] = processing_time_ms;
 }
 
 //-----------------------------------------------------------------------------
 int cRemoteHost::Get_List_Processing_Time(int list_type)
 {
-	WWASSERT(list_type >= 0 && list_type < 4);
 	return ListProcessingTime[list_type];
 }
 
@@ -156,7 +149,6 @@ cRemoteHost::~cRemoteHost()
    for (int list_type = 0; list_type < 4; list_type++) {
       for (objnode = PacketList[list_type].Head(); objnode != NULL;) {
          p_packet = objnode->Data();
-         WWASSERT(p_packet != NULL);
          objnode = objnode->Next();
          PacketList[list_type].Remove(p_packet);
 		   p_packet->Flush();
@@ -168,31 +160,22 @@ cRemoteHost::~cRemoteHost()
 //------------------------------------------------------------------------------------
 void cRemoteHost::Add_Packet(cPacket & packet, BYTE list_type)
 {
-	WWASSERT(
-      list_type == RELIABLE_SEND_LIST   ||
-      list_type == RELIABLE_RCV_LIST    ||
-      list_type == UNRELIABLE_SEND_LIST ||
-      list_type == UNRELIABLE_RCV_LIST);
-	WWASSERT(packet.Get_Id() >= 0);
 
    if (list_type == RELIABLE_SEND_LIST) {
 		//
 		// Test to make sure that additions to send list are in sequence.
 		//
 		if (LastReliableSendId != -2) {
-			WWASSERT(packet.Get_Id() == LastReliableSendId + 1);
 		}
 		LastReliableSendId = packet.Get_Id();
    } else if (list_type == UNRELIABLE_SEND_LIST) {
 
 		if (LastUnreliableSendId != -2) {
-			WWASSERT(packet.Get_Id() == LastUnreliableSendId + 1);
 		}
 		LastUnreliableSendId = packet.Get_Id();
    }
 
    cPacket * p_packet = new cPacket;
-   WWASSERT(p_packet != NULL);
    *p_packet = packet; // copy data
 
 	if (list_type == RELIABLE_SEND_LIST || list_type == UNRELIABLE_SEND_LIST) {
@@ -206,7 +189,6 @@ void cRemoteHost::Add_Packet(cPacket & packet, BYTE list_type)
 		cPacket * obj = NULL;
 		for (objnode = PacketList[list_type].Head(); objnode; objnode = objnode->Next()) {
 			obj = objnode->Data();
-			WWASSERT(obj != NULL);
 
 			if (obj->Get_Id() > packet.Get_Id()) {
 				break;
@@ -229,18 +211,11 @@ void cRemoteHost::Add_Packet(cPacket & packet, BYTE list_type)
 //------------------------------------------------------------------------------------
 void cRemoteHost::Remove_Packet(int packet_id, BYTE list_type)
 {
-   WWASSERT(packet_id >= 0);
-	WWASSERT(
-      list_type == RELIABLE_SEND_LIST   ||
-      list_type == RELIABLE_RCV_LIST    ||
-      list_type == UNRELIABLE_SEND_LIST ||
-      list_type == UNRELIABLE_RCV_LIST);
 
    SLNode<cPacket> * objnode;
 	for (objnode = PacketList[list_type].Head(); objnode != NULL;) {
 
       cPacket * p_packet = objnode->Data();
-      WWASSERT(p_packet != NULL);
       objnode = objnode->Next();
 
 		if (packet_id == p_packet->Get_Id()) {
@@ -255,7 +230,6 @@ void cRemoteHost::Remove_Packet(int packet_id, BYTE list_type)
 					int ping_time = time - p_packet->Get_Send_Time();
 
 					if (p_packet->Get_Resend_Count() != 0) {
-						WWASSERT(NumInternalPings == 0);
 
 						// If we are not getting any timing info at all then we need to do something. Use the first send time. It's going
 						// to make it big but that should cut down on the resends and let us get better timing info.
@@ -280,7 +254,7 @@ void cRemoteHost::Remove_Packet(int packet_id, BYTE list_type)
 							* 1.1);
 						if (candidate_resend_timeout_ms > ResendTimeoutMs) {
 							ResendTimeoutMs = candidate_resend_timeout_ms;
-							//WWDEBUG_SAY((">> ResendTimeoutMs for rhost %d = %d\n", Id, ResendTimeoutMs));
+							//
 						}
 #endif //(0)
 					}
@@ -288,7 +262,7 @@ void cRemoteHost::Remove_Packet(int packet_id, BYTE list_type)
 			}
 
          //if (list_type == RELIABLE_SEND_LIST) {
-				//WWDEBUG_SAY(("Removing packet %d from RELIABLE_SEND_LIST\n", packet_id));
+				//
 			//}
 
          PacketList[list_type].Remove(p_packet);
@@ -322,9 +296,7 @@ void cRemoteHost::Adjust_Flow_If_Necessary(float sample_time_ms)
    }
 
 #ifdef OBSOLETE
-	WWASSERT(TargetBps > 0);
 	float sample_target_bits = sample_time_ms / 1000.0f * TargetBps;
-	WWASSERT(sample_target_bits > 0);
 
 	//TSS101401
 	//float ratio = Stats.StatSnapshot[STAT_BitsSent] / sample_target_bits;
@@ -368,8 +340,6 @@ void cRemoteHost::Adjust_Flow_If_Necessary(float sample_time_ms)
 
 		/*
 		if (Id == 1) {
-			WWDEBUG_SAY(("ratio = %-7d / %-7d = %5.2f, TPIncrement = %9.7f, ThresholdPriority = %9.7f\n",
-				Stats.StatSnapshot[STAT_BitsSent], (int) sample_target_bits, ratio, TPIncrement, ThresholdPriority));
 		}
 		/**/
 	}
@@ -381,7 +351,7 @@ void cRemoteHost::Adjust_Flow_If_Necessary(float sample_time_ms)
 	float actual = (float) PacketManager.Get_Compressed_Bandwidth_Out(&Get_Address());
 	float desired = (float) TargetBps;	//sample_time_ms / 1000.0f * TargetBps;
 	//if (Id > 1) {
-		//WWDEBUG_SAY(("actual = %f, desired = %f\n", actual, desired));
+		//
 	//}
 
 
@@ -500,8 +470,6 @@ bool cRemoteHost::Is_Outgoing_Flooded(void)
 			//
 			if (TIMEGETTIME() - LastContactTime < 1000) {
 				if (!IsOutgoingFlooded) {
-					WWDEBUG_SAY(("Detected abnormal ping times - assuming outbound connection to rhost %d is flooded\n", Id));
-					WWDEBUG_SAY(("Normal average ping time = %d, last average ping time = %d\n", average, LastAveragePingTime));
 				}
 				return(true);
 			}
@@ -521,8 +489,6 @@ bool cRemoteHost::Is_Outgoing_Flooded(void)
 		// flooding him.
 		//
 		if (TIMEGETTIME() - LastContactTime < 1000) {
-			WWDEBUG_SAY(("Detected abnormally high number of resends - assuming outbound connection to rhost %d is flooded\n", Id));
-			WWDEBUG_SAY(("Total packets in queue = %d, queue packets resent = %d\n", total_in_queue, TotalResentPacketsInQueue));
 			return(true);
 		}
 	}
@@ -533,7 +499,6 @@ bool cRemoteHost::Is_Outgoing_Flooded(void)
 //------------------------------------------------------------------------------------
 void cRemoteHost::Dam_The_Flood(void)
 {
-	WWASSERT(IsOutgoingFlooded);
 
 	//
 	// How long since we last took action?
@@ -571,9 +536,6 @@ void cRemoteHost::Dam_The_Flood(void)
 			// a 33600 modem.
 			//
 			if (MaximumBps > 30000) {
-#ifdef WWDEBUG
-				int old_bps = MaximumBps;
-#endif //WWDEBUG
 				if (MaximumBps > 100000) {
 					MaximumBps = 100000;
 				} else {
@@ -591,7 +553,6 @@ void cRemoteHost::Dam_The_Flood(void)
 						//}
 					}
 				}
-				WWDEBUG_SAY(("Reduced MaximumBps for rhost %d from %d to %d\n", Id, old_bps, MaximumBps));
 
 				/*
 				** Give this a few seconds to take effect before stepping down again.
@@ -662,12 +623,11 @@ void cRemoteHost::Adjust_Resend_Timeout(void)
 
 			ResendTimeoutMs = (ResendTimeoutMs + candidate_resend_timeout_ms) / 2;
 			if (candidate_resend_timeout_ms < ResendTimeoutMs) {
-				WWASSERT(candidate_resend_timeout_ms < 0xffff);
 				ResendTimeoutMs = candidate_resend_timeout_ms;
-				//WWDEBUG_SAY((">> ResendTimeoutMs for rhost %d = %d\n", Id, ResendTimeoutMs));
+				//
 			}
 
-			//WWDEBUG_SAY(("ResendTimeoutMs for rhost = %d\n", (unsigned long)ResendTimeoutMs));
+			//
 
 			//
 			// Keep track of the last average we calculated plus the average ping over the life of the connection.

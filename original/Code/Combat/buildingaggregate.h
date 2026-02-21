@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef BUILDINGAGGREGATE_H
 #define BUILDINGAGGREGATE_H
@@ -28,7 +25,7 @@ public:
 
 	// Definitions
 	void	Init( const BuildingAggregateDefClass & definition );
-	const BuildingAggregateDefClass * Get_BuildingAggregateDef( void ) const { WWASSERT( Definition ); return (BuildingAggregateDefClass *)Definition; }
+	const BuildingAggregateDefClass * Get_BuildingAggregateDef( void ) const { assert( Definition ); return (BuildingAggregateDefClass *)Definition; }
 
 	// State changing
 	int				Get_Current_State(void);

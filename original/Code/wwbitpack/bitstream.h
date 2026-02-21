@@ -3,7 +3,6 @@
 
 
 #include "bitpacker.h"
-#include "wwdebug.h"
 #include "encoderlist.h"
 #include "mathutil.h"
 #include "math.h"
@@ -111,7 +110,6 @@ class BitStreamClass : public cBitPacker
       //------------------------------------------------------------------------------------
 		template<class T> void Internal_Add(T value, int type = NO_ENCODER) {
 			if (cEncoderList::Is_Compression_Enabled() && type != NO_ENCODER) {
-				WWASSERT(type >= 0 && type < MAX_ENCODERTYPES);
 
 				cEncoderTypeEntry & entry = cEncoderList::Get_Encoder_Type_Entry(type);
 
@@ -119,13 +117,11 @@ class BitStreamClass : public cBitPacker
 				// If the following assert hits then the value of the type 
 				// parameter is unknown.
 				//
-				WWASSERT(entry.Is_Valid());
 
 				ULONG scaled_value;
 				bool is_in_range = entry.Scale(value, scaled_value);
 				if (!is_in_range) {
-					//WWDEBUG_SAY(("BitStreamClass::Add : Warning: out-of-range value clamped (type %d).\n",
-					//	type));
+					//
 					//DIE;
 				}
 
@@ -142,7 +138,6 @@ class BitStreamClass : public cBitPacker
       template<class T> T Internal_Get(T & value, int type = NO_ENCODER) {
 
 			if (cEncoderList::Is_Compression_Enabled() && type != NO_ENCODER) {
-				WWASSERT(type >= 0 && type < MAX_ENCODERTYPES);
 
 				cEncoderTypeEntry & entry = cEncoderList::Get_Encoder_Type_Entry(type);
 
@@ -150,7 +145,6 @@ class BitStreamClass : public cBitPacker
 				// If the following assert hits then the value of the type 
 				// parameter is unknown.
 				//
-				WWASSERT(entry.Is_Valid());
 
 				ULONG u_value;
 				Get_Bits(u_value, entry.Get_Bit_Precision());
@@ -166,7 +160,6 @@ class BitStreamClass : public cBitPacker
 					value = static_cast<T>(cMathUtil::Round(f_value));
 				}
 
-				WWASSERT(entry.Is_Value_In_Range(value));
 
 			} else {
 				ULONG u_value;

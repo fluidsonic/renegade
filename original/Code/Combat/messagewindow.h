@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __MESSAGE_WINDOW_H
 #define __MESSAGE_WINDOW_H

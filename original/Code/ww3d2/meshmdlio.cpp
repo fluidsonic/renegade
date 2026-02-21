@@ -166,7 +166,6 @@ WW3DErrorType MeshModelClass::Load_W3D(ChunkLoadClass & cload)
 	cload.Open_Chunk();
 	
 	if (cload.Cur_Chunk_ID() != W3D_CHUNK_MESH_HEADER3) {
-		WWDEBUG_SAY(("Old format mesh mesh, no longer supported.\n"));
 		goto Error;
 	}
 	
@@ -285,7 +284,6 @@ WW3DErrorType MeshModelClass::Load_W3D(ChunkLoadClass & cload)
 			default:
 
 				// This prelighting option MUST be available if none of the others are available.
-				WWASSERT (context->Header.Attributes & W3D_MESH_FLAG_PRELIT_UNLIT);
 				context->PrelitChunkID = W3D_CHUNK_PRELIT_UNLIT;
 				break;
 		}
@@ -309,7 +307,6 @@ WW3DErrorType MeshModelClass::Load_W3D(ChunkLoadClass & cload)
 	if ((context->Header.Version < W3D_MAKE_VERSION(3,0)) && (Get_Flag(SKIN))) {
 
 		uint16 * links = get_bone_links();
-		WWASSERT(links);
 		
 		for (int bi = 0; bi < Get_Vertex_Count(); bi++) {
 			links[bi] += 1;
@@ -393,17 +390,13 @@ WW3DErrorType MeshModelClass::read_chunks(ChunkLoadClass & cload,MeshLoadContext
 
 			case O_W3D_CHUNK_MATERIALS:
 			case O_W3D_CHUNK_MATERIALS2:		
-					WWDEBUG_SAY(( "Obsolete material chunk encountered in mesh: %s.%s\r\n", context->Header.ContainerName,context->Header.MeshName));
-					WWASSERT(0);
 					break;
 
 			case W3D_CHUNK_MATERIALS3:
-					WWDEBUG_SAY(( "Obsolete material chunk encountered in mesh: %s.%s\r\n", context->Header.ContainerName,context->Header.MeshName));
 					error = read_v3_materials(cload,context);
 					break;
 				
 			case O_W3D_CHUNK_SURRENDER_TRIANGLES:
-					WWASSERT_PRINT( 0, "Obsolete Triangle Chunk Encountered!\r\n" );
 					break;
 			
 			case W3D_CHUNK_TRIANGLES:
@@ -455,11 +448,9 @@ WW3DErrorType MeshModelClass::read_chunks(ChunkLoadClass & cload,MeshLoadContext
 					break;
 
 			case W3D_CHUNK_DEFORM:
-					WWDEBUG_SAY(("Obsolete deform chunk encountered in mesh: %s.%s\r\n", context->Header.ContainerName,context->Header.MeshName));
 					break;
 			
 			case W3D_CHUNK_DAMAGE:
-					WWDEBUG_SAY(("Obsolete damage chunk encountered in mesh: %s.%s\r\n", context->Header.ContainerName,context->Header.MeshName));
 					break;
 
 			case W3D_CHUNK_PRELIT_UNLIT:
@@ -626,7 +617,6 @@ WW3DErrorType MeshModelClass::read_v3_materials(ChunkLoadClass & cload,MeshLoadC
 				if (!cload.Close_Chunk()) goto Error;
 
 				if ( mapinfo.FrameCount > 1 ) {
-					WWDEBUG_SAY(("ERROR: Obsolete Animated Texture detected in model: %s\r\n",context->Header.MeshName));
 				}
 
 				tex = WW3DAssetManager::Get_Instance()->Get_Texture(filename);
@@ -660,7 +650,6 @@ WW3DErrorType MeshModelClass::read_v3_materials(ChunkLoadClass & cload,MeshLoadC
 					if (!cload.Close_Chunk()) goto Error;
 			
 					if ( mapinfo.FrameCount > 1 ) {
-						WWDEBUG_SAY(("ERROR: Obsolete Animated Texture detected in model: %s\r\n",context->Header.MeshName));
 					}
 
 					tex = WW3DAssetManager::Get_Instance()->Get_Texture(filename);
@@ -874,7 +863,6 @@ WW3DErrorType MeshModelClass::read_shaders(ChunkLoadClass & cload,MeshLoadContex
 		W3dUtilityClass::Convert_Shader(shader,&newshader);
 
 		int index = context->Add_Shader(newshader);
-		WWASSERT(index == (int)i);
 	}
 	return WW3D_ERROR_OK;
 }
@@ -895,7 +883,6 @@ WW3DErrorType MeshModelClass::read_shaders(ChunkLoadClass & cload,MeshLoadContex
 WW3DErrorType MeshModelClass::read_vertex_materials(ChunkLoadClass & cload,MeshLoadContextClass * context)
 {
 	while (cload.Open_Chunk()) {
-		WWASSERT(cload.Cur_Chunk_ID() == W3D_CHUNK_VERTEX_MATERIAL);
 		VertexMaterialClass * vmat = NEW_REF(VertexMaterialClass,());
 		WW3DErrorType error = vmat->Load_W3D(cload);
 		if (error != WW3D_ERROR_OK) {
@@ -1521,7 +1508,6 @@ void MeshModelClass::post_process()
 	// we want to allow this now due to usage of the static sort 
 	// Ensure no sorting, multipass meshes (for they are abomination...)
 	if (DefMatDesc->Get_Pass_Count() > 1 && Get_Flag(SORT)) {
-		WWDEBUG_SAY(( "Turning SORT off for multipass mesh %s\n",Get_Name() ));
 		Set_Flag(SORT, false);
 	}
 #endif
@@ -1754,7 +1740,6 @@ void MeshModelClass::clone_materials(const MeshModelClass & srcmesh)
 void MeshModelClass::install_alternate_material_desc(MeshLoadContextClass * context)
 {
 	if (context->AlternateMatDesc.Is_Empty() == false) {
-		WWASSERT(AlternateMatDesc == NULL);
 		AlternateMatDesc = new MeshMatDescClass;
 		AlternateMatDesc->Init_Alternate(*DefMatDesc,context->AlternateMatDesc);
 	}
@@ -1873,7 +1858,6 @@ int MeshLoadContextClass::Add_Shader(ShaderClass shader)
  *=============================================================================================*/
 int MeshLoadContextClass::Add_Vertex_Material(VertexMaterialClass * vmat)			
 { 
-	WWASSERT(vmat != NULL);
 	vmat->Add_Ref();
 	int index = VertexMaterials.Count();
 	VertexMaterials.Add(vmat); 
@@ -1895,7 +1879,6 @@ int MeshLoadContextClass::Add_Vertex_Material(VertexMaterialClass * vmat)
  *=============================================================================================*/
 int MeshLoadContextClass::Add_Texture(TextureClass * tex)							
 { 
-	WWASSERT(tex != NULL);
 	tex->Add_Ref();
 	int index = Textures.Count();
 	Textures.Add(tex); 
@@ -1946,7 +1929,6 @@ void MeshLoadContextClass::Add_Legacy_Material(ShaderClass shader,VertexMaterial
 		if (vi == VertexMaterials.Count()) {
 			mat->VertexMaterialIdx = Add_Vertex_Material(vmat);
 			VertexMaterialCrcs.Add(crc);
-			WWASSERT(VertexMaterialCrcs.Count() == VertexMaterials.Count());
 		} else {
 			mat->VertexMaterialIdx = vi;
 		}
@@ -1989,8 +1971,6 @@ void MeshLoadContextClass::Add_Legacy_Material(ShaderClass shader,VertexMaterial
  *=============================================================================================*/
 ShaderClass MeshLoadContextClass::Peek_Legacy_Shader(int legacy_material_index)
 {
-	WWASSERT(legacy_material_index >= 0);
-	WWASSERT(legacy_material_index < LegacyMaterials.Count());
 	int si = LegacyMaterials[legacy_material_index]->ShaderIdx;
 	return Peek_Shader(si);
 }
@@ -2010,8 +1990,6 @@ ShaderClass MeshLoadContextClass::Peek_Legacy_Shader(int legacy_material_index)
  *=============================================================================================*/
 VertexMaterialClass * MeshLoadContextClass::Peek_Legacy_Vertex_Material(int legacy_material_index)
 {
-	WWASSERT(legacy_material_index >= 0);
-	WWASSERT(legacy_material_index < LegacyMaterials.Count());
 	int vi = LegacyMaterials[legacy_material_index]->VertexMaterialIdx;
 	if (vi != -1) {
 		return Peek_Vertex_Material(vi);
@@ -2035,8 +2013,6 @@ VertexMaterialClass * MeshLoadContextClass::Peek_Legacy_Vertex_Material(int lega
  *=============================================================================================*/
 TextureClass * MeshLoadContextClass::Peek_Legacy_Texture(int legacy_material_index)
 {
-	WWASSERT(legacy_material_index >= 0);
-	WWASSERT(legacy_material_index < LegacyMaterials.Count());
 	int ti = LegacyMaterials[legacy_material_index]->TextureIdx;
 	if (ti != -1) {
 		return Peek_Texture(ti);
@@ -2272,7 +2248,6 @@ WW3DErrorType MeshModelClass::write_vertices(ChunkSaveClass & csave,MeshSaveCont
 		return WW3D_ERROR_SAVE_FAILED;
 	}
 	
-	WWASSERT(Get_Vertex_Count() > 0);
 	Vector3 * verts = Vertex->Get_Array();
 
 	for (int i=0; i<Get_Vertex_Count(); i++) {
@@ -2295,7 +2270,6 @@ WW3DErrorType MeshModelClass::write_vertices(ChunkSaveClass & csave,MeshSaveCont
 
 WW3DErrorType MeshModelClass::write_vertex_normals(ChunkSaveClass & csave,MeshSaveContextClass * /*context*/)
 {
-	WWASSERT( Get_Vertex_Count() > 0);
 	if (!csave.Begin_Chunk(W3D_CHUNK_VERTEX_NORMALS)) {
 		return WW3D_ERROR_SAVE_FAILED;
 	}
@@ -2323,7 +2297,6 @@ WW3DErrorType MeshModelClass::write_vertex_normals(ChunkSaveClass & csave,MeshSa
 
 WW3DErrorType MeshModelClass::write_vertex_shade_indices(ChunkSaveClass & csave,MeshSaveContextClass * /*context*/)
 {
-	WWASSERT(Get_Vertex_Count() > 0);
 	if (VertexShadeIdx == NULL) return WW3D_ERROR_OK;
 
 	if (!csave.Begin_Chunk(W3D_CHUNK_VERTEX_SHADE_INDICES)) {
@@ -2345,7 +2318,6 @@ WW3DErrorType MeshModelClass::write_vertex_shade_indices(ChunkSaveClass & csave,
 
 WW3DErrorType MeshModelClass::write_vertex_influences(ChunkSaveClass & csave,MeshSaveContextClass * /*context*/)
 {
-	WWASSERT(Get_Vertex_Count() > 0);
 	if (VertexBoneLink == NULL) return WW3D_ERROR_OK;
 
 	if (!csave.Begin_Chunk(W3D_CHUNK_VERTEX_INFLUENCES)) {

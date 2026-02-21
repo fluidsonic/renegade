@@ -217,9 +217,6 @@ public:
 	float			Get_Damage_Points(void) const			{ return DamagePoints; }
 	float			Get_Death_Points(void) const			{ return DeathPoints; }
 
-#ifdef WWDEBUG
-	static bool Toggle_One_Shot_Kills(void)			{ OneShotKills = !OneShotKills; return OneShotKills; }
-#endif // _WWDEBUG
 
 private:
 	safe_float		Health;
@@ -236,9 +233,6 @@ private:
 
 	void				Mark_Owner_Dirty( void );
 
-#ifdef WWDEBUG
-	static bool		OneShotKills;
-#endif // _WWDEBUG
 };
 
 

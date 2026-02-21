@@ -18,7 +18,6 @@
 #include "vector.h"
 #include "vector2.h"
 #include "vector3.h"
-#include "wwdebug.h"
 
 
 // Class declarations.
@@ -97,7 +96,6 @@ class WeatherSystemClass : public RenderObjClass
 		~WeatherSystemClass();
 		RenderObjClass *Clone() const
 		{
-			WWASSERT (false);
 			return (0);
 		}
 

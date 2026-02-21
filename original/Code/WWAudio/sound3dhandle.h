@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SOUND3DHANDLE_H
 #define __SOUND3DHANDLE_H

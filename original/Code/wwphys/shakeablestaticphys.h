@@ -22,7 +22,7 @@ public:
 
 	// Definitions
 	void	Init(const ShakeableStaticPhysDefClass & definition);
-	const ShakeableStaticPhysDefClass * Get_ShakeableStaticPhysDef(void) const { WWASSERT( Definition ); return (ShakeableStaticPhysDefClass *)Definition; }
+	const ShakeableStaticPhysDefClass * Get_ShakeableStaticPhysDef(void) const { assert( Definition ); return (ShakeableStaticPhysDefClass *)Definition; }
 
 	// Play the animation once from start to end, typically going to be called from collision handling code
 	void	Play_Animation(void);

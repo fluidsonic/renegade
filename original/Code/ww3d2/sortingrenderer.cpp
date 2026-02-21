@@ -7,7 +7,6 @@
 #include "d3d8.h"
 #include "D3dx8math.h"
 #include "statistics.h"
-#include <wwprofile.h>
 
 bool SortingRendererClass::_EnableTriangleDraw=true;
 
@@ -99,8 +98,6 @@ void QuickSort (
 		do { i++; } while (i<r && keys[i]<v);
 		do { j--; } while (j>0 && keys[j]>v);
 		
-		WWASSERT(j>=0);
-		WWASSERT(i<=r);
 
 		ttemp=array[i]; array[i]=array[j]; array[j]=ttemp;
 		t=keys[i]; keys[i]=keys[j]; keys[j]=t;
@@ -295,9 +292,6 @@ void SortingRendererClass::Insert_Triangles(
 
 	DX8Wrapper::Get_Render_State(state->sorting_state);
 
- 	WWASSERT(
-		((state->sorting_state.index_buffer_type==BUFFER_TYPE_SORTING || state->sorting_state.index_buffer_type==BUFFER_TYPE_DYNAMIC_SORTING) &&
-		(state->sorting_state.vertex_buffer_type==BUFFER_TYPE_SORTING || state->sorting_state.vertex_buffer_type==BUFFER_TYPE_DYNAMIC_SORTING)));
 
 	state->bounding_sphere=bounding_sphere;
 	state->start_index=start_index;
@@ -306,8 +300,6 @@ void SortingRendererClass::Insert_Triangles(
 	state->vertex_count=vertex_count;
 
 	SortingVertexBufferClass* vertex_buffer=static_cast<SortingVertexBufferClass*>(state->sorting_state.vertex_buffer);
-	WWASSERT(vertex_buffer);
-	WWASSERT(state->vertex_count<=vertex_buffer->Get_Vertex_Count());
 
 	// Transform the center point to view space for sorting
 
@@ -334,24 +326,6 @@ void SortingRendererClass::Insert_Triangles(
 	}
 	if (!node) sorted_list.Add_Tail(state);
 
-#ifdef WWDEBUG
-	unsigned short* indices=NULL;
-	SortingIndexBufferClass* index_buffer=static_cast<SortingIndexBufferClass*>(state->sorting_state.index_buffer);
-	WWASSERT(index_buffer);
-	indices=index_buffer->index_buffer;
-	WWASSERT(indices);
-	indices+=state->start_index;
-	indices+=state->sorting_state.iba_offset;
-
-	for (int i=0;i<state->polygon_count;++i) {
-		unsigned short idx1=indices[i*3]-state->min_vertex_index;
-		unsigned short idx2=indices[i*3+1]-state->min_vertex_index;
-		unsigned short idx3=indices[i*3+2]-state->min_vertex_index;
-		WWASSERT(idx1<state->vertex_count);
-		WWASSERT(idx2<state->vertex_count);
-		WWASSERT(idx3<state->vertex_count);
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -398,7 +372,6 @@ void SortingRendererClass::Insert_To_Sorting_Pool(SortingNodeStruct* state)
 {
 	if (overlapping_node_count>=MAX_OVERLAPPING_NODES) {
 		Release_Refs(state);
-		WWASSERT(0);
 		return;
 	}
 
@@ -493,9 +466,7 @@ void SortingRendererClass::Flush_Sorting_Pool()
 
 			VertexFormatXYZNDUV2* src_verts=NULL;
 			SortingVertexBufferClass* vertex_buffer=static_cast<SortingVertexBufferClass*>(state->sorting_state.vertex_buffer);
-			WWASSERT(vertex_buffer);
 			src_verts=vertex_buffer->VertexBuffer;
-			WWASSERT(src_verts);
 			src_verts+=state->sorting_state.vba_offset;
 			src_verts+=state->sorting_state.index_base_offset;
 			src_verts+=state->min_vertex_index;
@@ -518,9 +489,7 @@ void SortingRendererClass::Flush_Sorting_Pool()
 
 			unsigned short* indices=NULL;
 			SortingIndexBufferClass* index_buffer=static_cast<SortingIndexBufferClass*>(state->sorting_state.index_buffer);
-			WWASSERT(index_buffer);
 			indices=index_buffer->index_buffer;
-			WWASSERT(indices);
 			indices+=state->start_index;
 			indices+=state->sorting_state.iba_offset;
 
@@ -528,15 +497,11 @@ void SortingRendererClass::Flush_Sorting_Pool()
 				unsigned short idx1=indices[i*3]-state->min_vertex_index;
 				unsigned short idx2=indices[i*3+1]-state->min_vertex_index;
 				unsigned short idx3=indices[i*3+2]-state->min_vertex_index;
-				WWASSERT(idx1<state->vertex_count);
-				WWASSERT(idx2<state->vertex_count);
-				WWASSERT(idx3<state->vertex_count);
 				float z1=vertex_z_array[idx1];
 				float z2=vertex_z_array[idx2];
 				float z3=vertex_z_array[idx3];
 				float z=(z1+z2+z3)/3.0f;
 				unsigned array_index=i+polygon_array_offset;
-				WWASSERT(array_index<overlapping_polygon_count);
 				polygon_z_array[array_index]=z;
 				node_id_array[array_index]=node_id;
 				polygon_idx_array[array_index]=ShortVectorIStruct(
@@ -632,7 +597,6 @@ void SortingRendererClass::Flush_Sorting_Pool()
 
 void SortingRendererClass::Flush()
 {
-	WWPROFILE("SortingRenderer::Flush");
 	Matrix4 old_view;
 	Matrix4 old_world;
 	DX8Wrapper::Get_Transform(D3DTS_VIEW,old_view);

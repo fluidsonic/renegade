@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef VISRENDERCONTEXT_H
 #define VISRENDERCONTEXT_H

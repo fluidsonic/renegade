@@ -24,9 +24,7 @@
 #include "gameinitmgr.h"
 #include "servercontrol.h"
 #include "consolemode.h"
-#include "gamespyadmin.h"
 #include "demosupport.h"
-#include "GameSpy_QnR.h"
 
 
 /*
@@ -52,34 +50,26 @@ void _Game_Main_Loop_Loop(void)
    Input::Update();
 
 
-{	WWPROFILE( "Pathfind Evaluate" );
+{	
    if (COMBAT_CAMERA != NULL) {
 		Vector3 camera_pos = COMBAT_CAMERA->Get_Position();
 		PathMgrClass::Resolve_Paths( camera_pos );
 	}
 }
 
-{	WWPROFILE( "Think" );
+{	
    GameModeManager::Think();
 	GameInitMgrClass::Think();
 }
 
-{	WWPROFILE( "Dialog Mgr Update" );
+{	
    DialogMgrClass::On_Frame_Update ();
 }
 
-{	WWPROFILE( "Network Object Mgr Think" );
+{	
    NetworkObjectMgrClass::Think ();
 	ServerControl.Service();
 }
-
-{	WWPROFILE("GameSpy_QnR");
-	GameSpyQnR.Think();
-}
-
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		cGameSpyAdmin::Think();
-	}
 
 	//
 	// If the following assert hits it may indicate that your
@@ -93,13 +83,13 @@ void _Game_Main_Loop_Loop(void)
 	GameModeManager::Render();
 
 
-{	WWPROFILE("ConsoleBox");
+{	
 	ConsoleBox.Think();
 }
 
 	DEMO_SECURITY_CHECK;
 
-{	WWPROFILE( "Audio" );
+{	
 	if (!ConsoleBox.Is_Exclusive()) {
 		WWAudioClass::Get_Instance ()->On_Frame_Update (0);
 	}
@@ -110,7 +100,7 @@ void _Game_Main_Loop_Loop(void)
    Windows_Message_Handler();
 
 #if 0
-{	WWPROFILE( "Random" );
+{	
 	// spin the Random Generator, a little
 	int count = FreeRandom.Get_Int( 5 );
 	while ( count-- > 0 ) {

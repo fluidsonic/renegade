@@ -1,13 +1,11 @@
 #include "repairbaygameobj.h"
 #include "basecontroller.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
 #include "scriptzone.h"
-#include "wwprofile.h"
 #include "basecontroller.h"
 #include "vehicle.h"
 #include "soldier.h"
@@ -23,11 +21,9 @@
 #include "combat.h"
 #include "bitpackids.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (RepairBay)
 
 ////////////////////////////////////////////////////////////////
 //	Namespaces
@@ -47,14 +43,12 @@ const char *RepairBayGameObj::BoneNames[RepairBayGameObj::BONE_COUNT] =
 	"BONE07",
 };
 
-
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
 ////////////////////////////////////////////////////////////////
 SimplePersistFactoryClass	<RepairBayGameObjDef,	CHUNKID_GAME_OBJECT_DEF_REPAIR_BAY>						_RepairBayGameObjDefPersistFactory;
 SimplePersistFactoryClass	<RepairBayGameObj,		CHUNKID_GAME_OBJECT_REPAIR_BAY>							_RepairBayGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (RepairBayGameObjDef,	CLASSID_GAME_OBJECT_DEF_REPAIR_BAY, "Repair Bay")	_RepairBayGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -76,7 +70,6 @@ enum
 
 	MICROCHUNKID_UNUSED						= 1,
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -102,7 +95,6 @@ RepairBayGameObjDef::RepairBayGameObjDef (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~RepairBayGameObjDef
@@ -112,7 +104,6 @@ RepairBayGameObjDef::~RepairBayGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -124,7 +115,6 @@ RepairBayGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_REPAIR_BAY;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -139,7 +129,6 @@ RepairBayGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -160,7 +149,6 @@ RepairBayGameObjDef::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -193,7 +181,6 @@ RepairBayGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -219,7 +206,6 @@ RepairBayGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -230,7 +216,6 @@ RepairBayGameObjDef::Get_Factory (void) const
 { 
 	return _RepairBayGameObjDefPersistFactory; 
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -252,7 +237,6 @@ RepairBayGameObj::RepairBayGameObj (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~RepairBayGameObj
@@ -267,7 +251,6 @@ RepairBayGameObj::~RepairBayGameObj (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -278,7 +261,6 @@ RepairBayGameObj::Get_Factory (void) const
 {
 	return _RepairBayGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -302,7 +284,6 @@ RepairBayGameObj::Init (const RepairBayGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -313,7 +294,6 @@ RepairBayGameObj::Get_Definition (void) const
 {
 	return (const RepairBayGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -331,7 +311,6 @@ RepairBayGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -363,7 +342,6 @@ RepairBayGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -386,7 +364,6 @@ RepairBayGameObj::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -433,7 +410,6 @@ RepairBayGameObj::CnC_Initialize (BaseControllerClass *base)
 			}
 		}
 	}
-
 
 	//
 	//	Find the closest reparing static anim phys
@@ -500,7 +476,6 @@ RepairBayGameObj::CnC_Initialize (BaseControllerClass *base)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Play_Repairing_Animation
@@ -537,7 +512,6 @@ RepairBayGameObj::Play_Repairing_Animation (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -546,7 +520,6 @@ RepairBayGameObj::Play_Repairing_Animation (bool onoff)
 void
 RepairBayGameObj::Think (void)
 {
-	WWPROFILE ("Repair Bay Think");
 
 	//
 	//	Check to see if we should repair the vehicle a little more...
@@ -590,7 +563,6 @@ RepairBayGameObj::Think (void)
 	BuildingGameObj::Think ();	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -713,7 +685,6 @@ RepairBayGameObj::Repair_Vehicle (void)
 	return is_repairing;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Random_Mesh
@@ -760,7 +731,6 @@ Find_Random_Mesh (RenderObjClass *model)
 	return mesh;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Repairing_Animations
@@ -791,7 +761,6 @@ RepairBayGameObj::Update_Repairing_Animations (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -926,8 +895,6 @@ RepairBayGameObj::Emit_Welding_Arc (RenderObjClass *vehicle_model)
 	return ;
 }
 
-
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Export_Creation
@@ -956,7 +923,6 @@ RepairBayGameObj::Export_Creation (BitStreamClass &packet)
 	packet.Add (facing);	
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -1,11 +1,7 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #ifndef MPMATH_H
 #define MPMATH_H
 
-#include	"bool.h"
 
 //lint -e740 -e534 -e537 -e760
 //lint -d_LINT=1
@@ -25,9 +21,6 @@ typedef unsigned long digit;
 
 #define MPEXPORT
 
-#ifdef _MSC_VER
-#pragma warning( disable : 4236)
-#endif
 
 extern "C" {
 extern int MPEXPORT XMP_Fetch_Prime_Size(void);

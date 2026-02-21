@@ -1,7 +1,6 @@
 #include "colmath.h"
 #include "obbox.h"
 #include "tri.h"
-#include "wwdebug.h"
 
 
 /*
@@ -480,7 +479,7 @@ static inline void obbtri_compute_contact_normal
 	switch(context.AxisId) 
 	{
 		case INTERSECTION:
-//			WWASSERT(0);
+//			assert(0);
 			break;
 		case AXIS_N:
 			*set_normal = -context.Side * *context.Tri.N;
@@ -531,7 +530,6 @@ static inline void obbtri_compute_contact_normal
 			set_normal->Normalize();
 			break;
 	}
-	WWASSERT(set_normal->Length2() > 0.0f);
 }
 
 
@@ -694,7 +692,6 @@ static inline void obbtri_compute_contact_point
 	{
 	
 	case INTERSECTION:
-		WWASSERT(0);
 		return;
 
 	case AXIS_N:		// part of the box is touching the face of the triangle
@@ -1012,7 +1009,6 @@ exit:
 
 #pragma message ("(gth) disabling an assert in obb->tri collision, investigate later\n")
 #if 0
-	WWASSERT((context.AxisId != INTERSECTION) || (context.StartBad));
 #else
 	if (context.AxisId == INTERSECTION) {
 		context.StartBad = true;

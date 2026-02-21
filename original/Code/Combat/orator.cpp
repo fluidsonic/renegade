@@ -249,7 +249,6 @@ OratorClass::Load_Variables (ChunkLoadClass &cload)
 	//
 	//	Register our old pointer so other objects can safely remap to it
 	//
-	WWASSERT (old_ptr != NULL);
 	SaveLoadSystemClass::Register_Pointer (old_ptr, this);
 	return ;
 }

@@ -9,7 +9,6 @@
 #include "msgstatlistgroup.h" // I WANNA BE FIRST!
 
 #include "mathutil.h"
-#include "wwdebug.h"
 
 //
 // Class statics
@@ -33,11 +32,9 @@ cMsgStatListGroup::~cMsgStatListGroup(void)
 //-----------------------------------------------------------------------------
 void cMsgStatListGroup::Init(int num_lists, int num_stats)
 {
-	WWASSERT(num_lists > 0);
 
 	NumLists = num_lists;
 	PStatList = new cMsgStatList[NumLists + 1];
-	WWASSERT(PStatList != NULL);
 
 	for (int i = 0; i < NumLists + 1; i++) {
 		PStatList[i].Init(num_stats);
@@ -47,8 +44,6 @@ void cMsgStatListGroup::Init(int num_lists, int num_stats)
 //-----------------------------------------------------------------------------
 void cMsgStatListGroup::Increment_Num_Msg_Sent(int list_num, int message_type, int increment)
 {
-	WWASSERT(list_num >= 0 && list_num < NumLists);
-	WWASSERT(increment > 0); 
 
 	PStatList[list_num].Increment_Num_Msg_Sent(message_type, increment);
 	PStatList[NumLists].Increment_Num_Msg_Sent(message_type, increment);
@@ -57,8 +52,6 @@ void cMsgStatListGroup::Increment_Num_Msg_Sent(int list_num, int message_type, i
 //-----------------------------------------------------------------------------
 void cMsgStatListGroup::Increment_Num_Byte_Sent(int list_num, int message_type, int increment)
 {
-	WWASSERT(list_num >= 0 && list_num < NumLists);
-	WWASSERT(increment > 0); 
 
 	PStatList[list_num].Increment_Num_Byte_Sent(message_type, increment);
 	PStatList[NumLists].Increment_Num_Byte_Sent(message_type, increment);
@@ -67,8 +60,6 @@ void cMsgStatListGroup::Increment_Num_Byte_Sent(int list_num, int message_type, 
 //-----------------------------------------------------------------------------
 void cMsgStatListGroup::Increment_Num_Msg_Recd(int list_num, int message_type, int increment)
 {
-	WWASSERT(list_num >= 0 && list_num < NumLists);
-	WWASSERT(increment > 0); 
 
 	PStatList[list_num].Increment_Num_Msg_Recd(message_type, increment);
 	PStatList[NumLists].Increment_Num_Msg_Recd(message_type, increment);
@@ -77,8 +68,6 @@ void cMsgStatListGroup::Increment_Num_Msg_Recd(int list_num, int message_type, i
 //-----------------------------------------------------------------------------
 void cMsgStatListGroup::Increment_Num_Byte_Recd(int list_num, int message_type, int increment)
 {
-	WWASSERT(list_num >= 0 && list_num < NumLists);
-	WWASSERT(increment > 0); 
 
 	PStatList[list_num].Increment_Num_Byte_Recd(message_type, increment);
 	PStatList[NumLists].Increment_Num_Byte_Recd(message_type, increment);
@@ -91,8 +80,6 @@ DWORD cMsgStatListGroup::Get_Num_Msg_Sent(int list_num, int message_type) const
 		list_num = NumLists;
 	}
 
-	WWASSERT(list_num >= 0 && list_num <= NumLists);
-	WWASSERT(message_type >= 0 && message_type <= ALL_MESSAGES);
 
 	return PStatList[list_num].Get_Num_Msg_Sent(message_type);
 }
@@ -104,8 +91,6 @@ DWORD cMsgStatListGroup::Get_Num_Byte_Sent(int list_num, int message_type) const
 		list_num = NumLists;
 	}
 
-	WWASSERT(list_num >= 0 && list_num <= NumLists);
-	WWASSERT(message_type >= 0 && message_type <= ALL_MESSAGES);
 
 	return PStatList[list_num].Get_Num_Byte_Sent(message_type);
 }
@@ -117,8 +102,6 @@ DWORD cMsgStatListGroup::Get_Num_Msg_Recd(int list_num, int message_type) const
 		list_num = NumLists;
 	}
 
-	WWASSERT(list_num >= 0 && list_num <= NumLists);
-	WWASSERT(message_type >= 0 && message_type <= ALL_MESSAGES);
 
 	return PStatList[list_num].Get_Num_Msg_Recd(message_type);
 }
@@ -130,8 +113,6 @@ DWORD cMsgStatListGroup::Get_Num_Byte_Recd(int list_num, int message_type) const
 		list_num = NumLists;
 	}
 
-	WWASSERT(list_num >= 0 && list_num <= NumLists);
-	WWASSERT(message_type >= 0 && message_type <= ALL_MESSAGES);
 
 	return PStatList[list_num].Get_Num_Byte_Recd(message_type);
 }
@@ -143,8 +124,6 @@ DWORD cMsgStatListGroup::Compute_Avg_Num_Byte_Sent(int list_num, int message_typ
 		list_num = NumLists;
 	}
 
-	WWASSERT(list_num >= 0 && list_num <= NumLists);
-	WWASSERT(message_type >= 0 && message_type <= ALL_MESSAGES);
 
 	return PStatList[list_num].Compute_Avg_Num_Byte_Sent(message_type);
 }
@@ -156,8 +135,6 @@ DWORD cMsgStatListGroup::Compute_Avg_Num_Byte_Recd(int list_num, int message_typ
 		list_num = NumLists;
 	}
 
-	WWASSERT(list_num >= 0 && list_num <= NumLists);
-	WWASSERT(message_type >= 0 && message_type <= ALL_MESSAGES);
 
 	return PStatList[list_num].Compute_Avg_Num_Byte_Recd(message_type);
 }
@@ -169,7 +146,6 @@ cMsgStatList * cMsgStatListGroup::Get_Stat_List(int list_num)
 		list_num = NumLists;
 	}
 
-	WWASSERT(list_num >= 0 && list_num <= NumLists);
 
 	return &PStatList[list_num];
 }

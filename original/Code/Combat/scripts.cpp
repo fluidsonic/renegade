@@ -4,7 +4,6 @@
 #include "physicalgameobj.h"
 #include "wwstring.h"
 #include "combat.h"
-#include "wwprofile.h"
 #include "ffactorylist.h"
 #include "rawfile.h"
 #include "gametype.h"
@@ -44,19 +43,7 @@ void ScriptManager::Init(void)
 #ifdef	PARAM_EDITING_ON	// Editor build
 	Load_Scripts("SCRIPTS.DLL");
 #else
-	#ifdef	WWDEBUG		// DEBUG and PROFILE
-		if ( DebugManager::Load_Debug_Scripts() ) {
-			Load_Scripts("SCRIPTSD.DLL");		// DEBUG
-		} else {
-	#ifdef	NDEBUG		// PROFILE
-			Load_Scripts("SCRIPTSP.DLL");		// PROFILE
-	#else
-			Load_Scripts("SCRIPTSD.DLL");		// DEBUG
-	#endif
-		}
-	#else
 		Load_Scripts("SCRIPTS.DLL");		// RELEASE
-	#endif
 #endif
 }
 
@@ -330,20 +317,17 @@ bool ScriptManager::Save(ChunkSaveClass& csave)
 
 bool	ScriptManager::Load( ChunkLoadClass & cload )
 {
-	WWASSERT( ActiveScriptList.Count() == 0 );
 
 	while (cload.Open_Chunk()) {
 
 		GameObjObserverClass * game_obj_observer_ptr = NULL;
 		PhysicalGameObj * owner_ptr = NULL;
 
-		WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_ENTRY );
 
 		ScriptClass *script = NULL;
 
 		// Load header
 		cload.Open_Chunk();
-		WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_HEADER );
 
 		int obs_id = -1;
 
@@ -355,14 +339,13 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 				{
 					StringClass	name;
 					LOAD_MICRO_CHUNK_WWSTRING( cload, name );
-					WWASSERT( script == NULL );
 					script = Create_Script( name );
 					if ( script == NULL ) {
 						Debug_Say(( "Script %s not found \n", name ));
 					}
 
 					// A Missing script is not fatal
-//					WWASSERT( script != NULL );
+//					assert( script != NULL );
 					break;
 				}
 
@@ -398,13 +381,11 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 
 			// If there is data, load
 			if ( cload.Open_Chunk() ) {
-				WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_SCRIPT_DATA );
 				ScriptLoader loader( cload );
 				script->Load( loader );
 				cload.Close_Chunk();
 			}
 
-			WWASSERT( game_obj_observer_ptr != NULL );
 			if ( game_obj_observer_ptr != NULL ) {
 				SaveLoadSystemClass::Register_Pointer(game_obj_observer_ptr, (GameObjObserverClass *)script);
 			}

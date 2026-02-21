@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __UNITCOORDINATIONZONEMGR_H
 #define __UNITCOORDINATIONZONEMGR_H

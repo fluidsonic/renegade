@@ -26,10 +26,6 @@
 #include "widestring.h"
 #include "nstrdup.h"
 
-#if defined(__WATCOMC__)
-// Disable the "temporary object used to initialize a non-constant reference" warning.
-#pragma warning 665 9
-#endif
 
 
 // Instance of the static variable.
@@ -971,7 +967,6 @@ bool INIClass::Put_Wide_String(char const * section, char const * entry, const W
 			new_length += added;
 		} while (added);
 		buffer[new_length] = 0;
-		WWASSERT(new_length != 0);
 		Put_String(section, entry, buffer);
 	}
 	return(true);

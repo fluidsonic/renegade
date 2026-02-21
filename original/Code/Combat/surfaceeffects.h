@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	SURFACEEFFECTS_H
 #define	SURFACEEFFECTS_H

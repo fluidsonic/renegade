@@ -1,19 +1,16 @@
 #include "soldierfactorygameobj.h"
 #include "basecontroller.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
-#include "wwprofile.h"
 #include "basecontroller.h"
 #include "combat.h"
 
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (SoldierFactory)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -21,7 +18,6 @@ DECLARE_FORCE_LINK (SoldierFactory)
 SimplePersistFactoryClass	<SoldierFactoryGameObjDef,	CHUNKID_GAME_OBJECT_DEF_SOLDIER_FACTORY>							_SoldierFactoryGameObjDefPersistFactory;
 SimplePersistFactoryClass	<SoldierFactoryGameObj,		CHUNKID_GAME_OBJECT_SOLDIER_FACTORY>								_SoldierFactoryGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (SoldierFactoryGameObjDef,	CLASSID_GAME_OBJECT_DEF_SOLDIER_FACTORY, "Soldier Factory")	_SoldierFactoryGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -42,7 +38,6 @@ enum
 	MICROCHUNKID_UNUSED						= 1,
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	SoldierFactoryGameObjDef
@@ -52,7 +47,6 @@ SoldierFactoryGameObjDef::SoldierFactoryGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -64,7 +58,6 @@ SoldierFactoryGameObjDef::~SoldierFactoryGameObjDef (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Class_ID
@@ -75,7 +68,6 @@ SoldierFactoryGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_SOLDIER_FACTORY;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -90,7 +82,6 @@ SoldierFactoryGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -108,7 +99,6 @@ SoldierFactoryGameObjDef::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -141,7 +131,6 @@ SoldierFactoryGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -165,7 +154,6 @@ SoldierFactoryGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -177,7 +165,6 @@ SoldierFactoryGameObjDef::Get_Factory (void) const
 	return _SoldierFactoryGameObjDefPersistFactory; 
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	SoldierFactoryGameObj
@@ -188,7 +175,6 @@ SoldierFactoryGameObj::SoldierFactoryGameObj (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~SoldierFactoryGameObj
@@ -198,7 +184,6 @@ SoldierFactoryGameObj::~SoldierFactoryGameObj (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -211,7 +196,6 @@ SoldierFactoryGameObj::Get_Factory (void) const
 	return _SoldierFactoryGameObjPersistFactory;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Init
@@ -222,7 +206,6 @@ void SoldierFactoryGameObj::Init (void)
 	Init (Get_Definition ());
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -236,7 +219,6 @@ SoldierFactoryGameObj::Init (const SoldierFactoryGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -247,7 +229,6 @@ SoldierFactoryGameObj::Get_Definition (void) const
 {
 	return (const SoldierFactoryGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -265,7 +246,6 @@ SoldierFactoryGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -297,7 +277,6 @@ SoldierFactoryGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -321,7 +300,6 @@ SoldierFactoryGameObj::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroyed
@@ -341,7 +319,6 @@ SoldierFactoryGameObj::On_Destroyed (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

@@ -629,7 +629,7 @@ void Enable_Alternate_Materials(RenderObjClass * model,bool onoff)
 
 // ----------------------------------------------------------------------------
 //
-// WWDebug message callback defines the behavior of WWDEBUG_SAY().
+// WWDebug message callback defines the behavior of .
 //
 // ----------------------------------------------------------------------------
 
@@ -640,7 +640,7 @@ void WWDebug_Message_Callback(DebugType type, const char * message)
 
 // ----------------------------------------------------------------------------
 //
-// WWAssert callback defines the behavior of WWASSERT().
+// WWAssert callback defines the behavior of assert().
 //
 // ----------------------------------------------------------------------------
 
@@ -740,7 +740,6 @@ void Create_Decal(RenderObjClass * robj,Matrix3D & tm,float radius,char * textur
 	** Allocate the decal generator
 	*/
 	DecalGeneratorClass * gen = TheDecalSystem.Lock_Decal_Generator();
-	WWASSERT(gen != NULL);
 
 	/*
 	** Set up the transform, projection, and bounding volume parameters
@@ -916,7 +915,6 @@ TexProjectClass *	Create_Texture_Projector(void)
 void Debug_Refs(void)
 {
 #ifdef _DEBUG
-	WWDEBUG_SAY(("Dumping Un-Released Ref-Counted objects...\r\n"));
 	RefCountNodeClass * first = RefCountClass::ActiveRefList.First();
 	RefCountNodeClass * node = first;
 	while (node->Is_Valid())
@@ -951,18 +949,15 @@ void Debug_Refs(void)
 		}
 
 		if ( display ) {
-			WWDEBUG_SAY(( "%d Active Ref: %s %d %p\n", count, ref->File,ref->Line,obj));
 
 			static int num_printed = 0;
 			if (++num_printed > 20) {
-				WWDEBUG_SAY(( "And Many More......\n"));
 				break;
 			}
 		}
 
 		node = node->Next();
 	}
-	WWDEBUG_SAY(("Done.\r\n"));
 #endif
 }
 

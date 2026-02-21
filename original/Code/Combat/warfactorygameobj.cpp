@@ -1,24 +1,20 @@
 #include "warfactorygameobj.h"
 #include "basecontroller.h"
 #include "vehicle.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
 #include "scriptzone.h"
-#include "wwprofile.h"
 #include "basecontroller.h"
 #include "combatchunkid.h"
 #include "hanim.h"
 #include "vehiclephys.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (WarFactory)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -26,7 +22,6 @@ DECLARE_FORCE_LINK (WarFactory)
 SimplePersistFactoryClass	<WarFactoryGameObjDef,	CHUNKID_GAME_OBJECT_DEF_WARFACTORY>						_WarFactoryGameObjDefPersistFactory;
 SimplePersistFactoryClass	<WarFactoryGameObj,		CHUNKID_GAME_OBJECT_WARFACTORY>							_WarFactoryGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (WarFactoryGameObjDef,	CLASSID_GAME_OBJECT_DEF_WARFACTORY, "WarFactory")	_WarFactoryGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -53,7 +48,6 @@ enum
 	MICROCHUNKID_UNUSED						= 1,
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	WarFactoryGameObjDef
@@ -63,7 +57,6 @@ WarFactoryGameObjDef::WarFactoryGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -75,7 +68,6 @@ WarFactoryGameObjDef::~WarFactoryGameObjDef (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Class_ID
@@ -86,7 +78,6 @@ WarFactoryGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_WARFACTORY;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -101,7 +92,6 @@ WarFactoryGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -120,7 +110,6 @@ WarFactoryGameObjDef::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -153,7 +142,6 @@ WarFactoryGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -177,7 +165,6 @@ WarFactoryGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -188,7 +175,6 @@ WarFactoryGameObjDef::Get_Factory (void) const
 { 
 	return _WarFactoryGameObjDefPersistFactory; 
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -202,7 +188,6 @@ WarFactoryGameObj::WarFactoryGameObj (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~WarFactoryGameObj
@@ -212,7 +197,6 @@ WarFactoryGameObj::~WarFactoryGameObj (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -224,7 +208,6 @@ WarFactoryGameObj::Get_Factory (void) const
 {
 	return _WarFactoryGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -248,7 +231,6 @@ WarFactoryGameObj::Init (const WarFactoryGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -259,7 +241,6 @@ WarFactoryGameObj::Get_Definition (void) const
 {
 	return (const WarFactoryGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -277,7 +258,6 @@ WarFactoryGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -309,7 +289,6 @@ WarFactoryGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -332,7 +311,6 @@ WarFactoryGameObj::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -384,7 +362,6 @@ WarFactoryGameObj::CnC_Initialize (BaseControllerClass *base)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -393,7 +370,6 @@ WarFactoryGameObj::CnC_Initialize (BaseControllerClass *base)
 void
 WarFactoryGameObj::Think (void)
 {
-	WWPROFILE ("WarFactory Think");
 
 	//
 	//	Are we currently building a vehicle?
@@ -454,7 +430,6 @@ WarFactoryGameObj::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Play_Creation_Animation
@@ -493,7 +468,6 @@ WarFactoryGameObj::Play_Creation_Animation (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Begin_Generation
@@ -523,5 +497,4 @@ WarFactoryGameObj::Begin_Generation (void)
 	}
 	return ;
 }
-
 

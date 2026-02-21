@@ -7,7 +7,6 @@
 #include "sphere.h"
 #include "aabox.h"
 #include "obbox.h"
-#include "wwdebug.h"
 
 
 /***********************************************************************************************
@@ -542,8 +541,7 @@ exit:
 		result->Normal[context.AxisId] = -context.Side;
 
 		if (result->ComputeContactPoint) {
-			//WWASSERT(0); // TODO
-			WWDEBUG_SAY(("AABox-AABox collision does not currently support contact point computation\r\n"));
+			//assert(0); // TODO
 		}
 
 		return true;

@@ -15,7 +15,6 @@
 #include "mathutil.h"
 #include "singlepl.h"
 #include "wwpacket.h"
-#include "wwdebug.h"
 #include "ffactory.h"
 #include "ini.h"
 #include "systimer.h"
@@ -69,8 +68,6 @@ char cNetUtil::WorkingAddressBuffer[]					= "";
 
 void cNetUtil::Wsa_Error(LPCSTR sFile, unsigned uLine)
 {
-   WWDEBUG_SAY(("* %s:%d: WSA function returned error code: %s\n", sFile, uLine, Winsock_Error_Text(::WSAGetLastError())));
-   DIE;
 }
 
 
@@ -210,14 +207,12 @@ bool cNetUtil::Would_Block(LPCSTR sFile, unsigned uLine, int ret_code)
 //
 int cNetUtil::Get_Local_Tcpip_Addresses(SOCKADDR_IN ip_address[], USHORT max_addresses)
 {
-	WWDEBUG_SAY(("cNetUtil::Get_Local_Tcpip_Addresses:\n"));
 
 	//
 	// Get the local hostname
 	//
 	char local_host_name[200];
 	WSA_CHECK(::gethostname(local_host_name, sizeof(local_host_name)));
-   WWDEBUG_SAY(("  Host name is %s\n", local_host_name));
 
 	//
 	// Resolve hostname for local adapter addresses. This does
@@ -236,7 +231,6 @@ int cNetUtil::Get_Local_Tcpip_Addresses(SOCKADDR_IN ip_address[], USHORT max_add
 			ip_address[num_adapters].sin_family = AF_INET;
 	      ip_address[num_adapters].sin_addr.s_addr =
 				*((u_long *) (p_hostent->h_addr_list[num_adapters]));
-		   WWDEBUG_SAY(("  Address: %s\n", Address_To_String(ip_address[num_adapters].sin_addr.s_addr)));
 			num_adapters++;
 		}
 	}
@@ -251,9 +245,6 @@ bool cNetUtil::Is_Same_Address(LPSOCKADDR_IN p_address1, const SOCKADDR_IN* p_ad
 	// C disallows comparison of structs...
 	//
 
-   WWASSERT(!cSinglePlayerData::Is_Single_Player());
-   WWASSERT(p_address1 != NULL);
-	WWASSERT(p_address2 != NULL);
 
    return
       p_address1->sin_addr.s_addr	== p_address2->sin_addr.s_addr &&
@@ -264,15 +255,12 @@ bool cNetUtil::Is_Same_Address(LPSOCKADDR_IN p_address1, const SOCKADDR_IN* p_ad
 void cNetUtil::Address_To_String(LPSOCKADDR_IN p_address, char * str, UINT len,
    USHORT & port)
 {
-	WWASSERT(p_address != NULL);
-   WWASSERT(str != NULL);
 
 	char temp_str[1000];
 
 	::strcpy(temp_str, ::inet_ntoa(p_address->sin_addr));
    port = ::ntohs(p_address->sin_port);
 
-	WWASSERT(::strlen(temp_str) <= len);
 	::strcpy(str, temp_str);
 }
 
@@ -294,14 +282,12 @@ LPCSTR cNetUtil::Address_To_String(ULONG ip)
 //-------------------------------------------------------------------------------
 void cNetUtil::String_To_Address(LPSOCKADDR_IN p_address, LPCSTR str, USHORT port)
 {
-	WWASSERT(p_address != NULL);
    ZeroMemory(p_address, sizeof(SOCKADDR_IN));
 
    p_address->sin_family			= AF_INET;
    p_address->sin_addr.s_addr		= ::inet_addr(str);
    p_address->sin_port				= ::htons(port);
 
-   WWASSERT(p_address->sin_addr.s_addr != INADDR_NONE);
 }
 
 //-------------------------------------------------------------------------------
@@ -336,7 +322,6 @@ void cNetUtil::Wsa_Init()
 
    WSADATA wsa_data;
    if (::WSAStartup(MAKEWORD(1, 1), &wsa_data) != 0) {
-      DIE;
    }
 }
 
@@ -382,7 +367,6 @@ float cNetUtil::Compute_Priority_Noise()
 //-------------------------------------------------------------------------------
 void cNetUtil::Set_Socket_Buffer_Sizes(SOCKET sock, int new_size)
 {
-   WWDEBUG_SAY(("cNetUtil::Set_Socket_Buffer_Sizes:\n"));
 
    int buffersize		= 0;
    int len				= 0;
@@ -390,32 +374,32 @@ void cNetUtil::Set_Socket_Buffer_Sizes(SOCKET sock, int new_size)
 	buffersize = 0;
 	len = sizeof(int);
    WSA_CHECK(::getsockopt(sock, SOL_SOCKET, SO_SNDBUF, (char *)&buffersize, &len));
-   //WWDEBUG_SAY(("  SO_SNDBUF = %d\n", buffersize));
+   //
 
    buffersize = 0;
    len = sizeof(int);
    WSA_CHECK(::getsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char *)&buffersize, &len));
-   //WWDEBUG_SAY(("  SO_RCVBUF = %d\n", buffersize));
+   //
 
    buffersize = new_size;
    len = sizeof(int);
    WSA_CHECK(setsockopt(sock, SOL_SOCKET, SO_SNDBUF, (char *)&buffersize, len));
-   //WWDEBUG_SAY(("  Attempting to set SO_SNDBUF = %d\n", buffersize));
+   //
 
    buffersize = new_size;
    len = sizeof(int);
    WSA_CHECK(setsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char *)&buffersize, len));
-   //WWDEBUG_SAY(("  Attempting to set SO_RCVBUF = %d\n", buffersize));
+   //
 
 	buffersize = 0;
 	len = sizeof(int);
    WSA_CHECK(::getsockopt(sock, SOL_SOCKET, SO_SNDBUF, (char *)&buffersize, &len));
-   //WWDEBUG_SAY(("  SO_SNDBUF = %d\n", buffersize));
+   //
 
 	buffersize = 0;
 	len = sizeof(int);
    WSA_CHECK(::getsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char *)&buffersize, &len));
-   //WWDEBUG_SAY(("  SO_RCVBUF = %d\n", buffersize));
+   //
 }
 
 
@@ -444,63 +428,62 @@ void cNetUtil::Onetime_Init()
 
 		INIClass netparams_ini(*p_ini_file);
 
-		WWASSERT(netparams_ini.Section_Count() == 1);
 
 		const LPCSTR SECTION_NAME = "Settings";
 
 		//NETSTATS_SAMPLE_TIME_MS					= netparams_ini.Get_Int(SECTION_NAME, "NETSTATS_SAMPLE_TIME_MS",				INVALID_VALUE);
-		//WWASSERT(NETSTATS_SAMPLE_TIME_MS > 0);
+		//assert(NETSTATS_SAMPLE_TIME_MS > 0);
 
 		//RESEND_TIMEOUT_LAN_MS			= netparams_ini.Get_Int(SECTION_NAME, "RESEND_TIMEOUT_LAN_MS",		INVALID_VALUE);
-		//WWASSERT(RESEND_TIMEOUT_LAN_MS > 0);
+		//assert(RESEND_TIMEOUT_LAN_MS > 0);
 
 		//RESEND_TIMEOUT_INTERNET_MS	= netparams_ini.Get_Int(SECTION_NAME, "RESEND_TIMEOUT_INTERNET_MS", INVALID_VALUE);
-		//WWASSERT(RESEND_TIMEOUT_INTERNET_MS > 0);
+		//assert(RESEND_TIMEOUT_INTERNET_MS > 0);
 
 		//DefaultMultiSends						= netparams_ini.Get_Int(SECTION_NAME, "DefaultMultiSends",					INVALID_VALUE);
-		//WWASSERT(DefaultMultiSends > 0);
+		//assert(DefaultMultiSends > 0);
 
 		//DefaultMaxResends						= netparams_ini.Get_Int(SECTION_NAME, "DefaultMaxResends",					INVALID_VALUE);
-		//WWASSERT(DefaultMaxResends > 0);
+		//assert(DefaultMaxResends > 0);
 
 		//DefaultKeepaliveTimeoutMs			= netparams_ini.Get_Int(SECTION_NAME, "DefaultKeepaliveTimeoutMs",		INVALID_VALUE);
-		//WWASSERT(DefaultKeepaliveTimeoutMs > 0);
+		//assert(DefaultKeepaliveTimeoutMs > 0);
 
 		//DesiredSendBufferSizeBytes			= netparams_ini.Get_Int(SECTION_NAME, "DesiredSendBufferSizeBytes",		INVALID_VALUE);
-		//WWASSERT(DesiredSendBufferSizeBytes > 0);
+		//assert(DesiredSendBufferSizeBytes > 0);
 
 		//DESIRED_RECEIVE_BUFFER_SIZE_BYTES		= netparams_ini.Get_Int(SECTION_NAME, "DesiredReceiveBufferSizeBytes",	INVALID_VALUE);
-		//WWASSERT(DesiredReceiveBufferSizeBytes > 0);
+		//assert(DesiredReceiveBufferSizeBytes > 0);
 
 		//DefaultServerPort						= netparams_ini.Get_Int(SECTION_NAME, "DefaultServerPort",					INVALID_VALUE);
-		//WWASSERT(DefaultServerPort >= MIN_SERVER_PORT && DefaultServerPort <= MAX_SERVER_PORT);
+		//assert(DefaultServerPort >= MIN_SERVER_PORT && DefaultServerPort <= MAX_SERVER_PORT);
 
 		//MaxReceiveTimeMs						= netparams_ini.Get_Int(SECTION_NAME, "MaxReceiveTimeMs",					INVALID_VALUE);
-		//WWASSERT(MaxReceiveTimeMs > 0);
+		//assert(MaxReceiveTimeMs > 0);
 
 		//PriorityToleranceDownwards			= netparams_ini.Get_Float(SECTION_NAME, "PriorityToleranceDownwards",			INVALID_VALUE);
-		//WWASSERT(PriorityToleranceDownwards > -1 - MISCUTIL_EPSILON && PriorityToleranceDownwards < 1 + MISCUTIL_EPSILON);
+		//assert(PriorityToleranceDownwards > -1 - MISCUTIL_EPSILON && PriorityToleranceDownwards < 1 + MISCUTIL_EPSILON);
 
 		//PriorityToleranceUpwards			= netparams_ini.Get_Float(SECTION_NAME, "PriorityToleranceUpwards",			INVALID_VALUE);
-		//WWASSERT(PriorityToleranceUpwards > -1 - MISCUTIL_EPSILON && PriorityToleranceUpwards < 1 + MISCUTIL_EPSILON);
+		//assert(PriorityToleranceUpwards > -1 - MISCUTIL_EPSILON && PriorityToleranceUpwards < 1 + MISCUTIL_EPSILON);
 
 		//MaxTPCorrectionDownwards			= netparams_ini.Get_Float(SECTION_NAME, "MaxTPCorrectionDownwards",	INVALID_VALUE);
-		//WWASSERT(MaxTPCorrectionDownwards > -1 - MISCUTIL_EPSILON && MaxTPCorrectionDownwards < 1 + MISCUTIL_EPSILON);
+		//assert(MaxTPCorrectionDownwards > -1 - MISCUTIL_EPSILON && MaxTPCorrectionDownwards < 1 + MISCUTIL_EPSILON);
 
 		//MaxTPCorrectionUpwards				= netparams_ini.Get_Float(SECTION_NAME, "MaxTPCorrectionUpwards",	INVALID_VALUE);
-		//WWASSERT(MaxTPCorrectionUpwards > -1 - MISCUTIL_EPSILON && MaxTPCorrectionUpwards < 1 + MISCUTIL_EPSILON);
+		//assert(MaxTPCorrectionUpwards > -1 - MISCUTIL_EPSILON && MaxTPCorrectionUpwards < 1 + MISCUTIL_EPSILON);
 
 		//PriorityNoiseFactor					= netparams_ini.Get_Float(SECTION_NAME, "PriorityNoiseFactor",				INVALID_VALUE);
-		//WWASSERT(PriorityNoiseFactor >= -MISCUTIL_EPSILON);
+		//assert(PriorityNoiseFactor >= -MISCUTIL_EPSILON);
 
 		//InitialThresholdPriority			= netparams_ini.Get_Float(SECTION_NAME, "InitialThresholdPriority",		INVALID_VALUE);
-		//WWASSERT(InitialThresholdPriority >= -MISCUTIL_EPSILON);
+		//assert(InitialThresholdPriority >= -MISCUTIL_EPSILON);
 
 		//PriorityNoiseFactor					= netparams_ini.Get_Float(SECTION_NAME, "PriorityNoiseFactor",				INVALID_VALUE);
-		//WWASSERT(PriorityNoiseFactor >= -MISCUTIL_EPSILON);
+		//assert(PriorityNoiseFactor >= -MISCUTIL_EPSILON);
 
 		//PriorityGrowthPerSecond				= netparams_ini.Get_Float(SECTION_NAME, "PriorityGrowthPerSecond",		INVALID_VALUE);
-		//WWASSERT(PriorityGrowthPerSecond >= -MISCUTIL_EPSILON);
+		//assert(PriorityGrowthPerSecond >= -MISCUTIL_EPSILON);
 
 		_TheFileFactory->Return_File(p_ini_file);
 	}
@@ -541,7 +524,6 @@ bool cNetUtil::Create_Bound_Socket(SOCKET & sock, USHORT port, SOCKADDR_IN & loc
 	if (result == 0) {
 		return true;
    } else {
-      WWASSERT(result == SOCKET_ERROR);
       //if (::WSAGetLastError() != WSAEADDRINUSE) {
          WSA_ERROR;
       //}
@@ -566,14 +548,13 @@ void cNetUtil::Broadcast(SOCKET & sock, USHORT port, cPacket & packet)
 	bytes_sent = sendto(sock, packet.Get_Data(), packet.Get_Compressed_Size_Bytes(),
       0, (LPSOCKADDR) &broadcast_address, sizeof(SOCKADDR_IN));
 #pragma message("(TSS) WSAENOBUFS")
-   //WWDEBUG_SAY(("Sent broadcast, length = %d bytes\n", bytes_sent));
+   //
 }
 
 //-------------------------------------------------------------------------------
 void cNetUtil::Create_Broadcast_Address(LPSOCKADDR_IN p_broadcast_address,
    USHORT port)
 {
-   WWASSERT(p_broadcast_address != NULL);
    ZeroMemory(p_broadcast_address, sizeof(SOCKADDR_IN));
 
 	p_broadcast_address->sin_family			= AF_INET;
@@ -584,7 +565,6 @@ void cNetUtil::Create_Broadcast_Address(LPSOCKADDR_IN p_broadcast_address,
 //-------------------------------------------------------------------------------
 void cNetUtil::Create_Local_Address(LPSOCKADDR_IN p_local_address, USHORT port)
 {
-   WWASSERT(p_local_address != NULL);
    ZeroMemory(p_local_address, sizeof(SOCKADDR_IN));
 
 	p_local_address->sin_family			= AF_INET;
@@ -595,7 +575,6 @@ void cNetUtil::Create_Local_Address(LPSOCKADDR_IN p_local_address, USHORT port)
 //-------------------------------------------------------------------------------
 bool cNetUtil::Get_Local_Address(LPSOCKADDR_IN p_local_address)
 {
-	WWASSERT(p_local_address != NULL);
 
 	/*
 	const USHORT MAX_ADDRESSES = 1;
@@ -643,7 +622,6 @@ void cNetUtil::Lan_Servicing(SOCKET & sock, LanPacketHandlerCallback p_callback)
 			// diagnostic
 			//
 			ULONG ip = packet.Get_From_Address_Wrapper()->FromAddress.sin_addr.s_addr;
-			WWDEBUG_SAY(("cNetUtil::Lan_Servicing: %s\n", cNetUtil::Address_To_String(ip)));
 			*/
 
 			//packet.Set_Received_Length(retcode);
@@ -654,7 +632,5 @@ void cNetUtil::Lan_Servicing(SOCKET & sock, LanPacketHandlerCallback p_callback)
 
    unsigned long time_spent = TIMEGETTIME() - start_time;
    if (time_spent > 100) {
-      WWDEBUG_SAY(("*** cNetUtil::Lan_Servicing: Too much time (%d ms)) spent receiving lan packets.\n",
-         time_spent));
    }
 }

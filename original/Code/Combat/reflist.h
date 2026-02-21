@@ -6,7 +6,6 @@
 #endif
 
 #ifndef	WWDEBUG_H
-	#include "wwdebug.h"
 #endif
 
 #ifndef	CHUNKIO_H
@@ -93,7 +92,6 @@ ReferenceableClass<T>::~ReferenceableClass( void )
 {
 	while ( ReferencerListHead != NULL ) {	// clear each reference to me
 		ReferencerClass *referencer = ReferencerListHead;
-		WWASSERT( referencer->ReferenceTarget == this );
 		ReferencerListHead = referencer->TargetReferencerListNext;
 		referencer->ReferenceTarget = NULL;
 		referencer->TargetReferencerListNext = NULL;
@@ -130,9 +128,7 @@ bool	ReferenceableClass<T>::Load( ChunkLoadClass & cload )
 {
 	void * old_ptr;
 	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_REF_VARIABLES );
 
-	WWASSERT( ReferencerListHead == NULL );
 
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {

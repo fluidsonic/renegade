@@ -1,5 +1,4 @@
 #include "mutex.h"
-#include "wwdebug.h"
 #include <windows.h>
 
 
@@ -11,7 +10,6 @@ MutexClass::MutexClass(const char* name) : handle(NULL), locked(false)
 		//assert(0);
 	#else
 		handle=CreateMutex(NULL,false,name);
-		WWASSERT(handle);
 	#endif
 }
 
@@ -20,7 +18,6 @@ MutexClass::~MutexClass()
 	#ifdef _UNIX
 		//assert(0);
 	#else
-		WWASSERT(!locked); // Can't delete locked mutex!
 		CloseHandle(handle);
 	#endif
 }
@@ -43,10 +40,8 @@ void MutexClass::Unlock()
 	#ifdef _UNIX
 		//assert(0);
 	#else
-		WWASSERT(locked);
 		locked--;
 		int res=ReleaseMutex(handle);
-		WWASSERT(res);
 	#endif
 }
 
@@ -85,7 +80,6 @@ CriticalSectionClass::~CriticalSectionClass()
 	#ifdef _UNIX
 		//assert(0);
 	#else
-		WWASSERT(!locked); // Can't delete locked mutex!
 		DeleteCriticalSection((CRITICAL_SECTION*)handle);
 		delete[] handle;
 	#endif
@@ -106,7 +100,6 @@ void CriticalSectionClass::Unlock()
 	#ifdef _UNIX
 		//assert(0);
 	#else
-		WWASSERT(locked);
 		locked--;
 		LeaveCriticalSection((CRITICAL_SECTION*)handle);
 	#endif

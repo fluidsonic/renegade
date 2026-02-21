@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef LIGHTENVIRONMENT_H
 #define LIGHTENVIRONMENT_H

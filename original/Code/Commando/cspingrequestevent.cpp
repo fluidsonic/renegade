@@ -26,7 +26,7 @@ cCsPingRequestEvent::cCsPingRequestEvent(void)
 void
 cCsPingRequestEvent::Init(int ping_number)
 {
-	//WWDEBUG_SAY(("cCsPingRequestEvent::Init at frame %d\n", WWProfileManager::Get_Frame_Count_Since_Reset()));
+	//
 
 
 
@@ -53,7 +53,7 @@ cCsPingRequestEvent::Act(void)
 void
 cCsPingRequestEvent::Export_Creation(BitStreamClass & packet)
 {
-	//WWDEBUG_SAY(("cCsPingRequestEvent::Export at frame %d\n", WWProfileManager::Get_Frame_Count_Since_Reset()));
+	//
 
 
 	cNetEvent::Export_Creation(packet);

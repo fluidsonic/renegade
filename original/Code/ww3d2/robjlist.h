@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef ROBJLIST_H
 #define ROBJLIST_H
@@ -14,7 +11,6 @@
 #endif
 
 #ifndef WWDEBUG_H
-#include "wwdebug.h"
 #endif
 
 class RenderObjClass;

@@ -1,6 +1,3 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #ifndef _MONO_H
 #define _MONO_H

@@ -12,16 +12,12 @@
 #include "renegadeterrainmaterialpass.h"
 #include "persistfactory.h"
 #include "ww3dids.h"
-#include "wwhack.h"
 #include "inttest.h"
 #include "matpass.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	WWHacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK(RenegadeTerrainPatch);
-
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -50,12 +46,10 @@ enum
 	VARID_IS_PRELIT,
 };
 
-
 //////////////////////////////////////////////////////////////////////
 // PersistFactory for RenegadeTerrainPatchClass
 //////////////////////////////////////////////////////////////////////
 SimplePersistFactoryClass<RenegadeTerrainPatchClass, WW3D_PERSIST_CHUNKID_RENEGADE_TERRAIN>	_TerrainPatchFactory;
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -83,7 +77,6 @@ RenegadeTerrainPatchClass::RenegadeTerrainPatchClass (void)	:
 	Initialize ();
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -114,7 +107,6 @@ RenegadeTerrainPatchClass::RenegadeTerrainPatchClass (const RenegadeTerrainPatch
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	~RenegadeTerrainPatchClass
@@ -131,7 +123,6 @@ RenegadeTerrainPatchClass::~RenegadeTerrainPatchClass (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	operator=
@@ -142,8 +133,6 @@ RenegadeTerrainPatchClass::operator= (const RenegadeTerrainPatchClass &src)
 {
 	return *this;
 }
-
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -161,7 +150,6 @@ RenegadeTerrainPatchClass::Initialize (void)
 	Initialize_Material ();
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -194,7 +182,6 @@ RenegadeTerrainPatchClass::Allocate (int points_x, int points_y, float meters_pe
 
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -229,7 +216,6 @@ RenegadeTerrainPatchClass::Allocate_Grid (void)
 	AreBuffersDirty	= true;
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -269,7 +255,6 @@ RenegadeTerrainPatchClass::Free_Grid (void)
 	GridPointCount		= 0;
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -473,7 +458,6 @@ RenegadeTerrainPatchClass::Render_Procedural_Material_Pass(MaterialPassClass * m
 //	}
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Submit_Rendering_Buffers
@@ -498,7 +482,6 @@ RenegadeTerrainPatchClass::Submit_Rendering_Buffers (int texture_index, int pass
 	DX8Wrapper::Set_Index_Buffer (MaterialPassList[texture_index]->IndexBuffers[pass_type], 0);	
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -559,7 +542,6 @@ RenegadeTerrainPatchClass::Render_By_Texture (int texture_index, int pass_type)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Free_Rendering_Buffers
@@ -582,7 +564,6 @@ RenegadeTerrainPatchClass::Free_Rendering_Buffers (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Update_Rendering_Buffers
@@ -604,7 +585,6 @@ RenegadeTerrainPatchClass::Update_Rendering_Buffers (void)
 
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -754,7 +734,6 @@ RenegadeTerrainPatchClass::Build_Rendering_Buffers (int texture_index, int pass_
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Initialize_Material
@@ -766,7 +745,6 @@ RenegadeTerrainPatchClass::Initialize_Material (void)
 	//
 	//	Allocate the vertex material
 	//
-	WWASSERT (BaseMaterial == NULL);
 	BaseMaterial = NEW_REF(VertexMaterialClass, ());
 	BaseMaterial->Set_Ambient (1.0F, 1.0F, 1.0F);
 	BaseMaterial->Set_Diffuse (1.0F, 1.0F, 1.0F);
@@ -799,7 +777,6 @@ RenegadeTerrainPatchClass::Initialize_Material (void)
 	return ;	
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Free_Materials
@@ -819,7 +796,6 @@ RenegadeTerrainPatchClass::Free_Materials (void)
 	MaterialPassList.Delete_All ();
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -849,7 +825,6 @@ RenegadeTerrainPatchClass::Get_Obj_Space_Bounding_Sphere (SphereClass &sphere) c
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Get_Obj_Space_Bounding_Box
@@ -876,7 +851,6 @@ RenegadeTerrainPatchClass::Get_Obj_Space_Bounding_Box (AABoxClass &box) const
 //	box.Extent.Set (500.0F, 500.0F, 500.0F);	
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1016,7 +990,6 @@ RenegadeTerrainPatchClass::Cast_OBBox (OBBoxCollisionTestClass &boxtest)
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Intersect_AABox
@@ -1108,7 +1081,6 @@ RenegadeTerrainPatchClass::Intersect_AABox (AABoxIntersectionTestClass &boxtest)
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Intersect_OBBox
@@ -1194,7 +1166,6 @@ RenegadeTerrainPatchClass::Intersect_OBBox (OBBoxIntersectionTestClass &boxtest)
 
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1322,7 +1293,6 @@ RenegadeTerrainPatchClass::Cast_AABox (AABoxCollisionTestClass &boxtest)
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Cast_Ray
@@ -1367,7 +1337,6 @@ do_it_start:
 
 #endif
 
-
 	//
 	//	Test for completely vertical ray
 	//
@@ -1381,7 +1350,6 @@ do_it_start:
 	
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1438,7 +1406,6 @@ RenegadeTerrainPatchClass::Cast_Vertical_Ray (RayCollisionTestClass &raytest)
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Brute_Force_Cast_Ray
@@ -1494,7 +1461,6 @@ RenegadeTerrainPatchClass::Brute_Force_Cast_Ray (RayCollisionTestClass &raytest)
 
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1566,7 +1532,6 @@ RenegadeTerrainPatchClass::Cast_Non_Vertical_Ray (RayCollisionTestClass &raytest
 	if (y_inc > 0) {
 		cell_y_offset = -1;
 	}
-
 
 	CastResultStruct vertical_result		= *(raytest.Result);
 	CastResultStruct horizontal_result	= *(raytest.Result);
@@ -1726,7 +1691,6 @@ RenegadeTerrainPatchClass::Cast_Non_Vertical_Ray (RayCollisionTestClass &raytest
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -1737,7 +1701,6 @@ RenegadeTerrainPatchClass::Get_Factory (void) const
 {
 	return _TerrainPatchFactory;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1830,7 +1793,6 @@ RenegadeTerrainPatchClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -1913,7 +1875,6 @@ RenegadeTerrainPatchClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -1949,7 +1910,6 @@ RenegadeTerrainPatchClass::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Materials
@@ -1983,8 +1943,6 @@ RenegadeTerrainPatchClass::Load_Materials (ChunkLoadClass &cload)
 	return ;
 }
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Material
@@ -2016,7 +1974,6 @@ RenegadeTerrainPatchClass::Add_Material (TerrainMaterialClass *material)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Material_Passes
@@ -2035,7 +1992,6 @@ RenegadeTerrainPatchClass::Reset_Material_Passes (void)
 	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2089,7 +2045,6 @@ RenegadeTerrainPatchClass::Update_UVs (void)
 	AreBuffersDirty = true;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2163,7 +2118,6 @@ RenegadeTerrainPatchClass::Update_Vertex_Render_Lists (void)
 	AreBuffersDirty = true;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

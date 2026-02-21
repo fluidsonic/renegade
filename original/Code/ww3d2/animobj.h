@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef ANIMOBJ_H
 #define ANIMOBJ_H

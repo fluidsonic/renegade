@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef SCENE_H
 #define SCENE_H
@@ -9,7 +6,6 @@
 #include "refcount.h"
 #include "vector3.h"
 #include "robjlist.h"
-#include "wwdebug.h"
 
 class	RenderObjClass;
 class	RenderInfoClass;

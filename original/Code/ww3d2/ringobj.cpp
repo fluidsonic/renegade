@@ -1,6 +1,5 @@
 #include "ringobj.h"
 #include "w3d_util.h"
-#include "wwdebug.h"
 #include "vertmaterial.h"
 #include "ww3d.h"
 #include "chunkio.h"
@@ -413,8 +412,6 @@ const char * RingRenderObjClass::Get_Name(void) const
  *=============================================================================================*/
 void RingRenderObjClass::Set_Name(const char * name)
 {
-	WWASSERT(name != NULL);
-	WWASSERT(strlen(name) < 2*W3D_NAME_LEN);
 	strcpy(Name,name);
 }
 
@@ -523,7 +520,6 @@ void RingRenderObjClass::render_ring(RenderInfoClass & rinfo,const Vector3 & cen
  *=============================================================================================*/
 void RingRenderObjClass::vis_render_ring(SpecialRenderInfoClass & rinfo,const Vector3 & center,const Vector3 & extent)
 {
-	WWASSERT(0);
 }	// vis_render_ring
 
 
@@ -794,7 +790,6 @@ void RingRenderObjClass::Special_Render(SpecialRenderInfoClass & rinfo)
 	temp.Translate(Transform.Get_Translation());
 	
 	if (rinfo.RenderType == SpecialRenderInfoClass::RENDER_VIS) {
-		WWASSERT(rinfo.VisRasterizer != NULL);
 		rinfo.VisRasterizer->Set_Model_Transform(temp);
 		vis_render_ring(rinfo,ObjSpaceCenter,ObjSpaceExtent);
 	}
@@ -952,7 +947,6 @@ void RingRenderObjClass::animate()
 			} else {
 				anim_time = 1.0F;
 			}
-			WWASSERT (anim_time >= 0.0F);
 
 			if ((Flags & USE_ANIMATION_LOOP) && anim_time > 1.0F) {
 				anim_time -= 1.0F;

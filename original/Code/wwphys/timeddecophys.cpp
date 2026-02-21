@@ -3,11 +3,7 @@
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "wwphysids.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 //#include "part_emt.h"
-
-DECLARE_FORCE_LINK(timeddecophys);
 
 /****************************************************************************************************
 **
@@ -19,7 +15,6 @@ DECLARE_FORCE_LINK(timeddecophys);
 ** Persist factory for TimedDecorationPhysClass
 */
 SimplePersistFactoryClass<TimedDecorationPhysClass,PHYSICS_CHUNKID_TIMEDDECORATIONPHYS>	_TimedDecoPhysFactory;
-
 
 /*
 ** Chunk-ID's used by TimedDecoPhys
@@ -54,14 +49,12 @@ float	TimedDecorationPhysClass::Get_Lifetime( void )
 	return Lifetime;
 }
 
-
 void TimedDecorationPhysClass::Timestep(float dt)
 {
 	
 	DecorationPhysClass::Timestep( dt );
 
 	{
-		WWPROFILE("TimedDecoPhys::Timestep");
 		/*
 		** Decrement our life
 		*/
@@ -77,7 +70,6 @@ void TimedDecorationPhysClass::Timestep(float dt)
 		}
 	}
 }
-
 
 const PersistFactoryClass & TimedDecorationPhysClass::Get_Factory (void) const
 {
@@ -117,7 +109,6 @@ bool TimedDecorationPhysClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -152,7 +143,6 @@ enum
 
 	TIMEDDECORATIONPHYSDEF_VARIABLE_LIFETIME						= 0x00,
 };
-
 
 TimedDecorationPhysDefClass::TimedDecorationPhysDefClass(void) :
 	DecorationPhysDefClass(),
@@ -228,7 +218,6 @@ bool TimedDecorationPhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

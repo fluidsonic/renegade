@@ -38,7 +38,7 @@ protected:
 
 public:
 	GameModeClass() { State = GAME_MODE_INACTIVE; }	// starts off inactive
-	virtual	~GameModeClass() { WWASSERT( State == GAME_MODE_INACTIVE ); }	// assert inactive
+	virtual	~GameModeClass() { assert( State == GAME_MODE_INACTIVE ); }	// assert inactive
 
 	// gets the current state
 	GameModeState	Get_State() { 	return State; }

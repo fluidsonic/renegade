@@ -3,7 +3,6 @@
 #include <string.h>	// for strlen
 #include <math.h>		// for ceil
 
-#include "wwdebug.h"
 #include "mathutil.h"
 #include "widestring.h"
 
@@ -57,8 +56,6 @@ bool BitStreamClass::Get(bool & value)
 //-----------------------------------------------------------------------------
 void BitStreamClass::Add_Raw_Data(LPCSTR data, USHORT data_size)
 {
-	WWASSERT(data != NULL);
-	WWASSERT(data_size >= 0);
 
 	for (int i = 0; i < data_size; i++) {
 		Add(data[i]);
@@ -68,9 +65,6 @@ void BitStreamClass::Add_Raw_Data(LPCSTR data, USHORT data_size)
 //-----------------------------------------------------------------------------
 void BitStreamClass::Get_Raw_Data(char * buffer, USHORT buffer_size, USHORT data_size)
 {
-	WWASSERT(buffer != NULL);
-	WWASSERT(data_size >= 0);
-   WWASSERT(buffer_size >= data_size);
 
 	for (int i = 0; i < data_size; i++) {
 		Get(buffer[i]);
@@ -80,14 +74,12 @@ void BitStreamClass::Get_Raw_Data(char * buffer, USHORT buffer_size, USHORT data
 //-----------------------------------------------------------------------------
 void BitStreamClass::Add_Terminated_String(LPCSTR string, bool permit_empty)
 {
-	WWASSERT(string != NULL);
 
 	//
 	// The terminating null is not transmitted.
 	//
 	USHORT len = (USHORT) strlen(string);
 	if (!permit_empty) {
-		WWASSERT(len > 0);
 	}
 
 	Add(len);
@@ -99,14 +91,10 @@ void BitStreamClass::Add_Terminated_String(LPCSTR string, bool permit_empty)
 //-----------------------------------------------------------------------------
 void BitStreamClass::Get_Terminated_String(char * buffer, USHORT buffer_size, bool permit_empty)
 {
-	WWASSERT(buffer != NULL);
-	WWASSERT(buffer_size > 0);
 
 	USHORT len;
 	Get(len);
-	WWASSERT(len < buffer_size);
 	if (!permit_empty) {
-		WWASSERT(len > 0);
 	}
 
 	char temp = '?';
@@ -130,14 +118,12 @@ void BitStreamClass::Get_Terminated_String(char * buffer, USHORT buffer_size, bo
 //-----------------------------------------------------------------------------
 void BitStreamClass::Add_Wide_Terminated_String(const WCHAR *string, bool permit_empty)
 {
-	WWASSERT(string != NULL);
 
 	//
 	// The terminating null is not transmitted.
 	//
 	USHORT len = (USHORT)wcslen (string);
 	if (!permit_empty) {
-		WWASSERT(len > 0 && "Empty string not permitted");
 	}
 
 	Add(len);
@@ -149,14 +135,10 @@ void BitStreamClass::Add_Wide_Terminated_String(const WCHAR *string, bool permit
 //-----------------------------------------------------------------------------
 void BitStreamClass::Get_Wide_Terminated_String(WCHAR *buffer, USHORT buffer_len, bool permit_empty)
 {
-	WWASSERT(buffer != NULL);
-	WWASSERT(buffer_len > 0);
 
 	USHORT len;
 	Get(len);
-	WWASSERT(len < buffer_len && "String length exceeds provided buffer");
 	if (!permit_empty) {
-		WWASSERT(len > 0 && "Empty string not permitted");
 	}
 
 	USHORT temp_u = 0;
@@ -189,15 +171,11 @@ UINT BitStreamClass::Get_Compression_Pc() const
 	UINT u_size = Get_Uncompressed_Size_Bytes();
 
 	if (cEncoderList::Is_Compression_Enabled()) {
-		WWASSERT(c_size <= u_size);
 	} else {
-		WWASSERT(c_size == u_size);
 	}
 
-	WWASSERT(u_size > 0);
 
 	UINT compression_pc = (UINT) cMathUtil::Round(100 * c_size / (float) u_size);
-	WWASSERT(compression_pc >= 0 && compression_pc <= 100);
 
 	return compression_pc;
 }

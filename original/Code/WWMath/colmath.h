@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef COLMATH_H
 #define COLMATH_H
@@ -31,9 +28,6 @@ const float COLLISION_EPSILON = 0.001f;
 /*
 ** #define COLMATH_STAT_TRACKING to enable stat tracking for the collision math functions
 */
-#ifdef WWDEBUG
-#define COLMATH_STAT_TRACKING
-#endif
 
 
 /**

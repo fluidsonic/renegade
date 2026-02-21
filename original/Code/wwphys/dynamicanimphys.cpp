@@ -2,14 +2,7 @@
 #include "wwphysids.h"
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "matinfo.h"
-
-
-
-DECLARE_FORCE_LINK(dynamicanimphys);
-
 
 /***********************************************************************************************
 
@@ -31,7 +24,6 @@ enum
 	DYNAMICANIMPHYS_CHUNK_VARIABLES,
 	DYNAMICANIMPHYS_CHUNK_ANIMMANAGER,
 };										
-
 
 DynamicAnimPhysClass::DynamicAnimPhysClass(void) :
 	AnimManager(*this),
@@ -98,7 +90,6 @@ void DynamicAnimPhysClass::Reset_Mappers(RenderObjClass * model)
 
 void DynamicAnimPhysClass::Timestep(float dt)
 {
-	WWPROFILE("DynAnimPhys::Timestep");
 
 	/*
 	** Let the animation manager handle progressing the animation, checking
@@ -152,7 +143,6 @@ bool DynamicAnimPhysClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -173,7 +163,6 @@ void DynamicAnimPhysClass::On_Post_Load(void)
 	Update_Cached_Model_Parameters();
 
 }
-
 
 /***********************************************************************************************
 
@@ -204,8 +193,6 @@ enum
 	DYNAMICANIMPHYSDEF_VARIABLE_SHADOWNEARZ,
 	DYNAMICANIMPHYSDEF_VARIABLE_SHADOWFARZ,
 };
-
-
 
 DynamicAnimPhysDefClass::DynamicAnimPhysDefClass(void) :
 	CastsShadows(false),
@@ -250,7 +237,6 @@ bool DynamicAnimPhysDefClass::Is_Type(const char * type_name)
 		return DecorationPhysDefClass::Is_Type(type_name);
 	}
 }
-
 
 bool DynamicAnimPhysDefClass::Save(ChunkSaveClass &csave)
 {
@@ -297,7 +283,6 @@ bool DynamicAnimPhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

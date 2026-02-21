@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __POPUP_DIALOG_H
 #define __POPUP_DIALOG_H

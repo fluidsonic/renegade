@@ -60,9 +60,6 @@ Build_List_From_String
 {
 	int count = 0;
 
-	WWASSERT (buffer != NULL);
-	WWASSERT (delimiter != NULL);
-	WWASSERT (string_list != NULL);
 	if ((buffer != NULL) &&
 		 (delimiter != NULL) &&
 		 (string_list != NULL))
@@ -252,7 +249,6 @@ AnimatedSoundMgrClass::Initialize (const char *ini_filename)
 				AnimSoundLists.Add (sound_list);
 
 			} else {
-				WWDEBUG_SAY (("AnimatedSoundMgrClass::Initialize -- No sounds added for %d!\n", animation_name.Peek_Buffer ()));
 				delete sound_list;
 			}
 		}
@@ -372,7 +368,6 @@ AnimatedSoundMgrClass::Trigger_Sound
 					//
 					int def_id = (*sound_list)[index].SoundDefinitionID;
 					WWAudioClass::Get_Instance ()->Create_Instant_Sound (def_id, tm);
-					WWDEBUG_SAY (("Triggering Sound %d\n", GetTickCount ()));
 					retval = frame;
 				}
 			}

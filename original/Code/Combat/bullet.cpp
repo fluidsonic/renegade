@@ -15,7 +15,6 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 #include "damageablestaticphys.h"
-#include "wwprofile.h"
 #include "part_emt.h"
 #include "realcrc.h"
 #include "soldier.h"
@@ -206,11 +205,8 @@ public:
 */
 CollisionReactionType BulletDataClass::Bullet_Collision_Occurred( const CollisionEventClass & event )
 {
-	WWPROFILE( "Bullet Collision Occurred" );
 
-	WWASSERT(event.OtherObj);
-	WWASSERT(event.CollisionResult != NULL);
-//	WWDEBUG_SAY(( "Bullet Collision\n" ));
+//	
 
 	//
 	// Pre-calculate some useful variables
@@ -461,7 +457,6 @@ BulletClass::BulletClass( void ) :
 	TrackingError( 0,0,0 ),
 	ModelNameCRC( 0 )
 {
-	WWASSERT( Projectile == NULL );
 	Projectile = NEW_REF( ProjectileClass, () );
    Projectile->Set_Collision_Group( BULLET_COLLISION_GROUP );
 }
@@ -477,7 +472,6 @@ BulletClass::~BulletClass( void )
 
 void BulletClass::Init( const BulletDataClass & data, float progress_time, const Vector3 & target, DamageableGameObj * target_object )
 {
-	WWPROFILE( "Bullet Init" );
 
 	BulletData.AmmoDefinition = data.AmmoDefinition;
 	BulletData.Owner = data.Get_Owner();
@@ -549,7 +543,6 @@ void BulletClass::Init( const BulletDataClass & data, float progress_time, const
 	}
 	Projectile->Set_Lifetime( duration * 1.2f );
 	Projectile->Set_Position( data.Position );
-	WWASSERT(data.Velocity.Is_Valid());
 	Projectile->Set_Velocity( data.Velocity );
 
 	// If there are any emitters in this model, reset them for our new position
@@ -599,7 +592,6 @@ enum	{
 bool	BulletClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
-		WWASSERT( BulletData.AmmoDefinition != NULL );
 		int def_id = BulletData.AmmoDefinition->Get_ID();
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_AMMO_DEFINITION_ID, def_id );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PROJECTILE, Projectile );
@@ -652,11 +644,8 @@ bool	BulletClass::Load( ChunkLoadClass & cload )
 					cload.Close_Micro_Chunk();
 				}
 
-				WWASSERT( BulletData.AmmoDefinition == NULL );
 				BulletData.AmmoDefinition = WeaponManager::Find_Ammo_Definition( def_id );
-				WWASSERT( BulletData.AmmoDefinition != NULL );
 
-				WWASSERT( Projectile != NULL );
 				if ( Projectile != NULL ) {
 					REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&Projectile );
 				}
@@ -688,7 +677,6 @@ bool	BulletClass::Load( ChunkLoadClass & cload )
 void BulletClass::On_Post_Load (void)
 {
 	// Plug ourselves back into the physics object as an observer
-	WWASSERT(Projectile != NULL);
 	Projectile->Set_Observer(this);
 	return ;
 }
@@ -725,7 +713,6 @@ ExpirationReactionType	BulletClass::Object_Expired(PhysClass * observed_obj)
 
 void	BulletClass::Think( void )
 {
-	WWPROFILE( "Bullet Think" );
 
 	// Count down safety timer
 	BulletData.GrenadeSafetyTimer -= TimeManager::Get_Frame_Seconds();
@@ -790,9 +777,7 @@ void	BulletClass::Think( void )
 				Matrix3D tm(cross,angle);
 				Vector3	current_vector;
 				Projectile->Get_Velocity( &current_vector );
-				WWASSERT(current_vector.Is_Valid());
 				current_vector = tm.Rotate_Vector( current_vector );
-				WWASSERT(current_vector.Is_Valid());
 				Projectile->Set_Velocity( current_vector );
 			}
 		}
@@ -804,9 +789,8 @@ void	BulletClass::Think( void )
 */
 void	Simulate_Instant_Bullet( BulletDataClass & data, float progress_time )
 {
-	WWPROFILE("Simulate_Instant_Bullet");
-//	WWASSERT(data.Position.Is_Valid());
-//	WWASSERT(data.Velocity.Is_Valid());
+//	assert(data.Position.Is_Valid());
+//	assert(data.Velocity.Is_Valid());
 
 	Vector3	start = data.Position;
 	Vector3	end = data.Velocity;
@@ -835,7 +819,7 @@ void	Simulate_Instant_Bullet( BulletDataClass & data, float progress_time )
 		CastResultStruct res;
 		LineSegClass ray( data.Position, end );
 		PhysRayCollisionTestClass raytest(ray,&res,BULLET_COLLISION_GROUP,COLLISION_TYPE_PROJECTILE);
-{WWPROFILE("Cast_Ray");
+{
 		PhysicsSceneClass::Get_Instance()->Cast_Ray(raytest);
 }
 
@@ -852,7 +836,6 @@ void	Simulate_Instant_Bullet( BulletDataClass & data, float progress_time )
 				data.Position = raytest.Result->ContactPoint;
 
 				// Notify the parties involved
-				WWASSERT(raytest.CollidedPhysObj != NULL);
 
 				CollisionReactionType reaction = COLLISION_REACTION_DEFAULT;
 
@@ -950,7 +933,6 @@ void	BulletManager::Create_Bullet( const AmmoDefinitionClass * def, const Vector
 	const Vector3 & velocity, const ArmedGameObj * owner, float progress_time, const Vector3 & target,
 	DamageableGameObj * target_obj )
 {
-	WWASSERT(velocity.Is_Valid());
 
 	BulletDataClass data( def, owner, position, velocity );
 
@@ -963,7 +945,6 @@ void	BulletManager::Create_Bullet( const AmmoDefinitionClass * def, const Vector
 		return;
 	}
 
-	WWPROFILE( "Create Bullet" );
 	BulletClass * bullet = NULL;
 
 	// Find a bullet

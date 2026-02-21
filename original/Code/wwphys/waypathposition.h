@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __WAYPATHPOSITION_H
 #define __WAYPATHPOSITION_H

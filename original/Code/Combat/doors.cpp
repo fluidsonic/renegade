@@ -4,19 +4,14 @@
 #include "wwphysids.h"
 #include "debug.h"
 #include "hanim.h"
-#include "wwhack.h"
 #include "combat.h"
 #include "smartgameobj.h"
 #include "gameobjmanager.h"
 #include "soldier.h"
 #include "wwaudio.h"
-#include "wwprofile.h"
 #include "bitpackids.h"
 #include "diaglog.h"
 #include "vehicle.h"
-
-
-DECLARE_FORCE_LINK( doorphys );
 
 /*
 ** DoorPhysDefClass
@@ -165,7 +160,6 @@ const PersistFactoryClass & DoorPhysClass::Get_Factory (void) const
 {
 	return _DoorPhysPersistFactory;
 }
-
 
 /*
 **
@@ -325,7 +319,6 @@ void	DoorPhysClass::Timestep( float dt )
 	AccessiblePhysClass::Timestep( dt );
 
 	{
-		WWPROFILE("DoorPhys::Timestep");
 
 		//
 		//	If we are configured correctly with an animation,
@@ -435,14 +428,12 @@ bool DoorPhysClass::Set_State( int new_state )
 	return retval;
 }
 
-
 enum
 {
 	DOOR_OPEN_OK			= 0,
 	DOOR_OPEN_LOCKED,
 	DOOR_OPEN_NOONE
 };
-
 
 void	DoorPhysClass::Update_State( float dt )
 {
@@ -538,7 +529,6 @@ void	DoorPhysClass::Update_State( float dt )
 	return ;
 }
 
-
 void DoorPhysClass::Lock_Door_Open( bool onoff )
 {
 	if ( CombatManager::I_Am_Server() ) {
@@ -558,7 +548,6 @@ void DoorPhysClass::Lock_Door_Open( bool onoff )
 
 	return ;
 }
-
 
 int DoorPhysClass::Can_Open_Door( void )
 {
@@ -595,7 +584,6 @@ int DoorPhysClass::Can_Open_Door( void )
 int DoorPhysClass::Check_Door_Trigger( const OBBoxClass &trigger_zone )
 {
 	int result = DOOR_OPEN_NOONE;
-
 
 #if 0
 	//
@@ -650,14 +638,13 @@ int DoorPhysClass::Check_Door_Trigger( const OBBoxClass &trigger_zone )
 #else
 
 	NonRefPhysListClass obj_list;
-	WWASSERT(PhysicsSceneClass::Get_Instance() != NULL);
 	PhysicsSceneClass::Get_Instance()->Collect_Objects(trigger_zone,false,true,&obj_list);
 	NonRefPhysListIterator it(&obj_list);
 
 	while (!it.Is_Done() && result == DOOR_OPEN_NOONE) {
 
 		CombatPhysObserverClass * observer = (CombatPhysObserverClass *)it.Peek_Obj()->Get_Observer();
-		//WWASSERT(observer != NULL);
+		//assert(observer != NULL);
 		//if (observer->As_PhysicalGameObj()) {
 		if (observer != NULL && observer->As_PhysicalGameObj()) {
 			SoldierGameObj * soldier = observer->As_PhysicalGameObj()->As_SoldierGameObj();
@@ -668,7 +655,6 @@ int DoorPhysClass::Check_Door_Trigger( const OBBoxClass &trigger_zone )
 			//
 			if ((soldier != NULL) && soldier->Is_Human_Controlled()) {
 
-				WWASSERT(Get_DoorPhysDef() != NULL);
 				if ( Get_DoorPhysDef()->LockCode == 0 ) {
 
 					result = DOOR_OPEN_OK;
@@ -688,7 +674,6 @@ int DoorPhysClass::Check_Door_Trigger( const OBBoxClass &trigger_zone )
 			//
 			// Check if this is a vehicle that is allowed to open the door
 			//
-			WWASSERT(Get_DoorPhysDef() != NULL);
 			if ((vehicle != NULL) && (Get_DoorPhysDef()->DoorOpensForVehicles)) {
 
 				if ( Get_DoorPhysDef()->LockCode == 0 ) {
@@ -732,13 +717,11 @@ bool DoorPhysClass::Can_Unlock_Me(SoldierGameObj * soldier) const
 	return (Get_DoorPhysDef()->LockCode == 0) || (soldier->Has_Key( Get_DoorPhysDef()->LockCode ));
 }
 
-
 void DoorPhysClass::Set_Precision(void)
 {
 	cEncoderList::Set_Precision( BITPACK_DOOR_STATE, 0, (int)STATE_MAX );
 	return ;
 }
-
 
 bool DoorPhysClass::Is_Door_Open( void ) const
 {

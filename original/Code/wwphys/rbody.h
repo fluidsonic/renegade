@@ -7,7 +7,6 @@
 #include "aabox.h"
 #include "quat.h"
 #include "physcon.h"
-#include "wwdebug.h"
 
 class RigidBodyDefClass;
 class OBBoxRenderObjClass;

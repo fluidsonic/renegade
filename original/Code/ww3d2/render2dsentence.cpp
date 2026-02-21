@@ -1,8 +1,6 @@
 #include "render2dsentence.h"
 #include "surfaceclass.h"
 #include "texture.h"
-#include "wwprofile.h"
-#include "wwmemlog.h"
 #include "dx8wrapper.h"
 
 
@@ -476,7 +474,6 @@ Render2DSentenceClass::Release_Pending_Surfaces (void)
 void
 Render2DSentenceClass::Build_Textures (void)
 {
-	WWMEMLOG(MEM_TEXTURE);
 
 	//
 	//	Make sure we unlock the current surface
@@ -810,7 +807,6 @@ Render2DSentenceClass::Allocate_New_Surface (const WCHAR *text)
 	//	Create the new surface
 	//
 	CurSurface = NEW_REF (SurfaceClass, (CurrTextureSize, CurrTextureSize, WW3D_FORMAT_A4R4G4B4));
-	WWASSERT (CurSurface != NULL);
 	CurSurface->Add_Ref ();
 
 	//
@@ -953,13 +949,11 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 			//
 			if (LockedPtr == NULL) {
 				LockedPtr = (uint16 *)CurSurface->Lock (&LockedStride);
-				WWASSERT (LockedPtr != NULL);
 			}
 
 			//
 			//	Check to ensure the text will fit on this texture
 			//
-			WWASSERT (((TextureOffset.I + char_spacing) < CurrTextureSize) && ((TextureOffset.J + char_height) < CurrTextureSize));
 
 			//
 			//	Blit the character to the surface
@@ -1053,7 +1047,6 @@ FontCharsClass::Get_Char_Data (WCHAR ch)
 		retval = Store_GDI_Char( ch );
 	}
 
-	WWASSERT( retval->Value == ch );
 	return retval;
 }
 

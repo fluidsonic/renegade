@@ -110,8 +110,6 @@ bool	PlayerDataClass::Load( ChunkLoadClass &cload )
 {
 	StatTimeInSession=0.0f;
 	StatLastWeaponIndex = -1;
-	WWASSERT( StatWeaponIDFired.Count() == 0 );
-	WWASSERT( StatWeaponFireCount.Count() == 0 );
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -168,7 +166,6 @@ bool	PlayerDataClass::Load( ChunkLoadClass &cload )
 					cload.Close_Micro_Chunk();
 				}
 
-				WWASSERT( id != 0 );
 				StatWeaponIDFired.Add(id);
 				StatWeaponFireCount.Add(count);
 				break;
@@ -203,7 +200,6 @@ void	PlayerDataClass::Increment_Score( float add )
 	//
 	static int warning_num = 0;
 	if (add >= 10000 && ++warning_num < 10) {
-		WWDEBUG_SAY(("* PlayerDataClass::Increment_Score(%10.2f) - is this ok?\n", add));
 		LOG_CALL_STACK;
 	}
 
@@ -230,7 +226,6 @@ void	PlayerDataClass::Increment_Money( float add )
 #if 0 
 	static int warning_num = 0;
 	if (add >= 10000 && ++warning_num < 10) {
-		WWDEBUG_SAY(("* PlayerDataClass::Increment_Money(%f) - is this ok?\n", add));
 		LOG_CALL_STACK;
 	}
 #endif

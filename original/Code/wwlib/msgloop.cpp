@@ -1,6 +1,7 @@
 #include	"always.h"
 #include	"vector.h"
 #include	"win.h"
+#include	"sdl2_platform.h"
 
 
 /*
@@ -55,62 +56,10 @@ bool (*Message_Intercept_Handler)(MSG &msg) = NULL;
  *=============================================================================================*/
 void Windows_Message_Handler(void)
 {
-	MSG msg;
-
-	/*
-	**	Process windows messages until the message queue is exhuasted.
-	*/
-	while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
-		if (!GetMessage( &msg, NULL, 0, 0 )) {
-			return;
-		}
-
-		/*
-		**	Pass the message through any loaded accelerators. If the message
-		**	was processed by an accelerator, then it doesn't need to be
-		**	processed by the normal message handling procedure.
-		*/
-		bool processed = false;
-		for (int aindex = 0; aindex < _Accelerators.Count(); aindex++) {
-			if (_Accelerators[aindex].Window) {
-				if (TranslateAccelerator(_Accelerators[aindex].Window, _Accelerators[aindex].Accelerator, &msg)) {
-					processed = true;
-				}
-			}
-			break;
-		}
-		if (processed) continue;
-
-		/*
-		**	Pass the windows message through any modeless dialogs that may
-		**	be active. If one of the dialogs processes the message, then
-		**	it must not be processed by the normal window message handler.
-		*/
-		for (int index = 0; index < _ModelessDialogs.Count(); index++) {
-			if (IsDialogMessage(_ModelessDialogs[index], &msg)) {
-				processed = true;
-				break;
-			}
-		}
-		if (processed) continue;
-
-		/*
-		**	If the message was not handled by any normal intercept handlers, then
-		**	submit the message to a custom message handler if one has been provided.
-		*/
-		if (Message_Intercept_Handler != NULL) {
-			processed = Message_Intercept_Handler(msg);
-		}
-		if (processed) continue;
-
-		/*
-		**	If the message makes it to this point, then it must be a normal message. Process
-		**	it in the normal fashion. The message will appear in the window message handler
-		**	for the window that it was directed to.
-		*/
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+    // Drain the SDL2 event queue.  SDL2_Platform_PollEvents() handles
+    // SDL_QUIT, focus events, mouse wheel, and calls On_Focus_Loss /
+    // On_Focus_Restore as needed.
+    SDL2_Platform_PollEvents();
 }
 
 

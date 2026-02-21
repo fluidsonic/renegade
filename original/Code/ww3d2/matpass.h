@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef MATPASS_H
 #define MATPASS_H
@@ -14,7 +11,6 @@
 #endif
 
 #ifndef WWDEBUG_H
-#include "wwdebug.h"
 #endif
 
 
@@ -82,8 +78,6 @@ protected:
 
 inline TextureClass * MaterialPassClass::Peek_Texture(int stage) const
 {	
-	WWASSERT(stage >= 0);
-	WWASSERT(stage < MAX_TEX_STAGES);
 	return Texture[stage];
 }
 

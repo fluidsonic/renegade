@@ -1,7 +1,6 @@
 #include "vistablemgr.h"
 #include "vistable.h"
 #include "chunkio.h"
-#include "wwmemlog.h"
 
 
 const int VIS_LRU_FRAMES = 5;
@@ -44,7 +43,6 @@ void VisDecompressionCacheClass::Reset(int vis_sector_count)
 	*/
 	VisTableClass * pvs = LRUQueue.Peek_Head();
 	while (pvs != NULL) {
-		WWASSERT(Cache[pvs->Get_Vis_Sector_ID()] != NULL);
 		
 		LRUQueue.Remove_Head();
 		
@@ -57,11 +55,6 @@ void VisDecompressionCacheClass::Reset(int vis_sector_count)
 	/*
 	** Sanity check, every pointer in the cache array should now be NULL!
 	*/
-#ifdef WWDEBUG
-	for (int i=0; i<Cache.Length(); i++) {
-		WWASSERT(Cache[i] == NULL);
-	}
-#endif
 
 	/*
 	** Resize the pointer array to match the vis sector count if needed
@@ -98,8 +91,6 @@ VisDecompressionCacheClass::Get_Table(int vis_sector_id)
 void
 VisDecompressionCacheClass::Add_Table(VisTableClass * pvs)
 {
-	WWASSERT(Cache[pvs->Get_Vis_Sector_ID()] == NULL);
-	WWASSERT(pvs != NULL);
 
 	/*
 	** Set the timestamp, add to the cache, and add to
@@ -162,7 +153,6 @@ VisTableMgrClass::VisTableMgrClass(void) :
 	VisObjectCount(0),
 	FrameCounter(0)
 {
-	WWMEMLOG(MEM_VIS);
 	Cache = new VisDecompressionCacheClass;
 	Reset();
 }
@@ -222,7 +212,6 @@ int VisTableMgrClass::Allocate_Vis_Sector_ID(int count /*= 1*/)
 	}
 	
 	VisSectorCount += count;
-	WWASSERT(VisSectorCount == VisTables.Count());
 	
 	Cache->Reset(VisSectorCount);
 	return id;
@@ -240,15 +229,11 @@ int VisTableMgrClass::Get_Vis_Table_Count(void) const
 
 VisTableClass * VisTableMgrClass::Get_Vis_Table(int id,bool allocate/*= false*/)
 {
-	WWMEMLOG(MEM_VIS);
 
 	/*
 	** if id is invalid, return NULL
 	*/
 	if ((id == -1) || (id >= VisTables.Count())) {
-#ifdef WWDEBUG
-		if (id > 0) WWDEBUG_SAY(("Vis Table ID out of range: %d\r\n",id));
-#endif
 		return NULL;
 	}
 	
@@ -300,8 +285,6 @@ VisTableClass * VisTableMgrClass::Get_Vis_Table(int id,bool allocate/*= false*/)
 
 void VisTableMgrClass::Update_Vis_Table(int id,VisTableClass * pvs) 
 {
-	WWMEMLOG(MEM_VIS);
-	WWASSERT(pvs->Get_Bit_Count() == VisObjectCount);
 
 	/*
 	** release any existing vis table
@@ -348,7 +331,6 @@ void VisTableMgrClass::Delete_All_Vis_Tables(void)
 
 void VisTableMgrClass::Save(ChunkSaveClass & csave)
 {
-	WWMEMLOG(MEM_VIS);
 
 	uint32 version = VISMGR_CURRENT_VERSION;
 
@@ -377,12 +359,10 @@ void VisTableMgrClass::Save(ChunkSaveClass & csave)
 
 void VisTableMgrClass::Load(ChunkLoadClass & cload)
 {
-	WWMEMLOG(MEM_VIS);
 	
 	// read in the variables
 	uint32 version = 0;
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == VISMGR_CHUNK_VARIABLES);
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
 			READ_MICRO_CHUNK(cload,VISMGR_VARIABLE_VERSION,version);
@@ -394,7 +374,6 @@ void VisTableMgrClass::Load(ChunkLoadClass & cload)
 	cload.Close_Chunk();
 
 	if (version < 0x00010001) {
-		WWDEBUG_SAY(("Obsolete Vis-Data detected, Reseting Visiblity System!\r\n"));
 		Reset();
 		return;
 	}
@@ -418,7 +397,6 @@ void VisTableMgrClass::Load(ChunkLoadClass & cload)
 				break;
 
 			case VISMGR_CHUNK_VISTABLEDATA:
-				WWASSERT(id != 0xFFFFFFFF);
 				if (VisTables[id] == NULL) {
 					VisTables[id] = new CompressedVisTableClass;
 				}

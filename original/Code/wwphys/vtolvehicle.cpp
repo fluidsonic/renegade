@@ -1,16 +1,9 @@
 #include "vtolvehicle.h"
-#include "wwdebug.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "wwphysids.h"
 #include "wheel.h"
 #include "physcontrol.h"
-
-
-
-DECLARE_FORCE_LINK(vtolvehicle);
 
 /*
 ** Constants for this module
@@ -32,9 +25,6 @@ enum
 	VTOLVEHICLE_CHUNK_VEHICLEPHYS			= 407001941,
 	VTOLVEHICLE_CHUNK_VARIABLES,
 };
-
-
-
 
 VTOLVehicleClass::VTOLVehicleClass(void) :
 	EngineAngleBones(MAX_CAPTURED_BONE_COUNT),
@@ -67,10 +57,8 @@ VTOLVehicleClass::~VTOLVehicleClass(void)
 void VTOLVehicleClass::Render(RenderInfoClass & rinfo)
 {
 	const VTOLVehicleDefClass * def = Get_VTOLVehicleDef();
-	WWASSERT(def != NULL);
 
 	// update the engine angles, flames, spin rotors!
-	WWASSERT(Model != NULL);
 	Matrix3D engine_rotation(1);
 	Matrix3D rotor_rotation(1);
 	engine_rotation.Rotate_Z(def->MaxEngineRotation * NormalizedEngineRotation);
@@ -97,7 +85,6 @@ void VTOLVehicleClass::Set_Model(RenderObjClass * model)
 void VTOLVehicleClass::Timestep(float dt)
 {	
 	{
-		WWPROFILE("VTOLVehicle::Timestep");
 
 		const VTOLVehicleDefClass * def = Get_VTOLVehicleDef();
 		
@@ -136,14 +123,11 @@ void VTOLVehicleClass::Timestep(float dt)
 	VehiclePhysClass::Timestep(dt);
 }
 
-
 void VTOLVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 {
 	{
-		WWPROFILE("VTOLVehicleClass::Compute_Force_And_Torque");
 
 		const VTOLVehicleDefClass * def = Get_VTOLVehicleDef();
-		WWASSERT(def != NULL);
 
 		/*
 		** Yaw:
@@ -208,7 +192,6 @@ void VTOLVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque
 			Vector3 yaw_torque = def->YawControllerGain*(desired_yaw_velocity - yaw_velocity) * IBody[2][2] * zvec;
 			DEBUG_RENDER_VECTOR(State.Position,yaw_torque,Vector3(0,0,1));
 			*torque += yaw_torque;
-			WWASSERT(torque->Is_Valid());
 
 			// PITCH and ROLL CONTROLLERS:
 			// Compute our current roll and pitch and their velocities.
@@ -231,7 +214,6 @@ void VTOLVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque
 			
 			*torque += pitch_torque;
 			*torque += roll_torque;
-			WWASSERT(torque->Is_Valid());
 			
 			// TRANSLATIONAL FORCES:
 			float forward_force = 0.0f;
@@ -272,7 +254,6 @@ void VTOLVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque
 			}
 			up_force -= VERTICAL_DAMPING * State.LMomentum.Z;
 			force->Z += up_force;
-			WWASSERT(force->Is_Valid());
 
 			// update the graphical state variables
 			NormalizedEngineRotation = -pitch/def->MaxFuselagePitch;
@@ -347,8 +328,6 @@ void VTOLVehicleClass::Update_Cached_Model_Parameters(void)
 	}
 }
 
-
-
 /*
 ** Save-Load System
 */
@@ -377,7 +356,6 @@ bool VTOLVehicleClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -426,7 +404,6 @@ enum
 	VTOLVEHICLEDEF_VARIABLE_ROTORDECELERATION,
 
 };
-
 
 VTOLVehicleDefClass::VTOLVehicleDefClass(void) :
 	MaxVerticalAcceleration(0.0f),
@@ -503,7 +480,6 @@ bool VTOLVehicleDefClass::Save(ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool VTOLVehicleDefClass::Load(ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -537,7 +513,6 @@ bool VTOLVehicleDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 
@@ -546,7 +521,6 @@ bool VTOLVehicleDefClass::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 bool VTOLVehicleDefClass::Is_Type(const char * type_name)
 {

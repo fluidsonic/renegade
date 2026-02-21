@@ -1,13 +1,6 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 
-/*
-**	The "bool" integral type was defined by the C++ comittee in
-**	November of '94. Until the compiler supports this, use the following
-**	definition.
-*/
-#include	"bool.h"
-
 
 #if !defined(__BORLANDC__) || !defined(_USERENTRY)
 #define	_USERENTRY
@@ -367,9 +360,6 @@ bool IndexClass<T>::Is_Present(int id) const
  * HISTORY:                                                                                    *
  *   11/02/1996 JLB : Created.                                                                 *
  *=============================================================================================*/
-#ifdef __BORLANDC__
-#pragma warn -def
-#endif
 template<class T>
 T IndexClass<T>::Fetch_Index(int id) const
 {
@@ -384,9 +374,6 @@ T IndexClass<T>::Fetch_Index(int id) const
 	static T x;
 	return(x);
 }
-#ifdef __BORLANDC__
-#pragma warn .def
-#endif
 
 
 /***********************************************************************************************
@@ -611,11 +598,7 @@ int _USERENTRY IndexClass<T>::search_compfunc(void const * ptr1, void const * pt
  *   11/02/1996 JLB : Created.                                                                 *
  *=============================================================================================*/
 template<class T>
-#ifdef __BORLANDC__
-NodeElement const * IndexClass<T>::Search_For_Node(int id) const
-#else
 IndexClass<T>::NodeElement const * IndexClass<T>::Search_For_Node(int id) const
-#endif
 {
 	/*
 	**	If there are no elements in the list, then it certainly can't find any matches.

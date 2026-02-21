@@ -1,5 +1,4 @@
 #include "vissample.h"
-#include "wwdebug.h"
 #include "chunkio.h"
 #include <memory.h>
 
@@ -83,16 +82,12 @@ bool VisSampleClass::Sample_Useless(void) const
 
 bool VisSampleClass::Direction_Enabled(VisDirType direction_index) const
 {
-	WWASSERT(direction_index >= 0);
-	WWASSERT(direction_index < VIS_DIRECTIONS);
 	int mask = (1 << direction_index);
 	return ((DirectionBits & mask) == mask);
 }
 
 Matrix3D VisSampleClass::Get_Camera_Transform(VisDirType direction_index) const
 {
-	WWASSERT(direction_index >= 0);
-	WWASSERT(direction_index < VIS_DIRECTIONS);
 	Matrix3D view = ViewTransform;							// vis forward
 
 	switch(direction_index) {
@@ -124,30 +119,22 @@ Matrix3D VisSampleClass::Get_Camera_Transform(VisDirType direction_index) const
 
 int VisSampleClass::Sample_Status(VisDirType direction_index) const
 {
-	WWASSERT(direction_index >= 0);
-	WWASSERT(direction_index < VIS_DIRECTIONS);
 	return Status[direction_index];
 }
 
 float VisSampleClass::Backface_Fraction(VisDirType direction_index) const
 {
-	WWASSERT(direction_index >= 0);
-	WWASSERT(direction_index < VIS_DIRECTIONS);
 	return BackfaceFraction[direction_index];
 }
 
 	
 void VisSampleClass::Set_Cur_Direction(VisDirType direction_index)
 {
-	WWASSERT(direction_index >= 0);
-	WWASSERT(direction_index < VIS_DIRECTIONS);
 	CurDirection = direction_index;
 }
 
 void VisSampleClass::Set_Results(VisStatusType status,float fraction)
 {
-	WWASSERT(CurDirection >= 0);
-	WWASSERT(CurDirection < VIS_DIRECTIONS);
 
 	Status[CurDirection] = status;
 	BackfaceFraction[CurDirection] = fraction;
@@ -155,8 +142,6 @@ void VisSampleClass::Set_Results(VisStatusType status,float fraction)
 
 const char * VisSampleClass::Get_Cur_Direction_Name(void) const
 {
-	WWASSERT(CurDirection >= 0);
-	WWASSERT(CurDirection < VIS_DIRECTIONS);
 
 	static char * _direction_names[] = 
 	{

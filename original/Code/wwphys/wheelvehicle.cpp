@@ -7,13 +7,8 @@
 #include "wwphysids.h"
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "wheel.h"
 #include <string.h>
-
-
-DECLARE_FORCE_LINK(wheelvehicle);
 
 												
 /*
@@ -34,7 +29,6 @@ enum
 	OBSOLETE_WV_VARIABLE_DAMPINGCONSTANT,
 	OBSOLETE_WV_VARIABLE_SPRINGLENGTH,
 };
-
 
 // Steering constant defaults
 const float		DEFAULT_MAX_STEER_ANGLE					= (float)WWMATH_PI/4.0f;
@@ -65,10 +59,8 @@ SuspensionElementClass * WheeledVehicleClass::Alloc_Suspension_Element(void)
 void WheeledVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 {
 	{
-		WWPROFILE("WheeledVehicleClass::Compute_Force_And_Torque");
 
 		const WheeledVehicleDefClass * def = Get_WheeledVehicleDef();
-		WWASSERT(def != NULL);
 
 		/*
 		** Compute the steering angle for normal vehicles
@@ -78,7 +70,6 @@ void WheeledVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * tor
 		} else {
 			SteeringAngle = 0.0f;
 		}
-
 
 		/*
 		** Compute the steering angle for "leaning" vehicles (motorcycles)
@@ -152,7 +143,6 @@ bool WheeledVehicleClass::Drive_Wheels_In_Contact(void)
 	return false;
 }
 
-
 /*
 ** Save-Load System
 */
@@ -198,7 +188,6 @@ bool WheeledVehicleClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -206,7 +195,6 @@ bool WheeledVehicleClass::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 /***********************************************************************************************
 **
@@ -235,7 +223,6 @@ enum
 	OBSOLETE_WHEELEDVEHICLEDEF_VARIABLE_LATERALMOMENTARM,
 	OBSOLETE_WHEELEDVEHICLEDEF_VARIABLE_TRACTIVEMOMENTARM
 };
-
 
 WheeledVehicleDefClass::WheeledVehicleDefClass(void) :
 	MaxSteeringAngle(DEFAULT_MAX_STEER_ANGLE)
@@ -274,7 +261,6 @@ bool WheeledVehicleDefClass::Save(ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool WheeledVehicleDefClass::Load(ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -307,7 +293,6 @@ bool WheeledVehicleDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 
@@ -316,7 +301,6 @@ bool WheeledVehicleDefClass::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 bool WheeledVehicleDefClass::Is_Type(const char * type_name)
 {

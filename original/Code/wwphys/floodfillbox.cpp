@@ -89,7 +89,6 @@ FloodfillBoxClass::Make_Portal
 	PATHFIND_DIR slide_dir1 = PATHFIND_DIR((dir + 1) & 1);
 	PATHFIND_DIR slide_dir2 = PATHFIND_DIR(slide_dir1 + 2);
 
-	WWASSERT (m_Neighbors[dir] != NULL);
 	PathfindSectorClass *dest_sector = m_Neighbors[dir]->m_Sector;
 
 	FloodfillBoxClass *curr_box	= this;

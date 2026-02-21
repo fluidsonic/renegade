@@ -9,7 +9,6 @@ target_include_directories(BinkMovie PRIVATE
     "${ORIG_SRC}"
     "${ORIG_SRC}/wwlib"
     "${ORIG_SRC}/WWMath"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/wwutil"
     "${ORIG_SRC}/wwsaveload"
     "${ORIG_SRC}/ww3d2"

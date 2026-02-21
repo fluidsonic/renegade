@@ -23,36 +23,6 @@ AssetStatusClass::AssetStatusClass()
 
 AssetStatusClass::~AssetStatusClass()
 {
-#ifdef WWDEBUG
-	if (Reporting) {
-		StringClass report("Load-on-demand and missing assets report\r\n\r\n");
-		for (int i=0;i<REPORT_COUNT;++i) {
-			report+="Category: ";
-			report+=ReportCategoryNames[i];
-			report+="\r\n\r\n";
-
-			HashTemplateIterator<StringClass,int> ite(ReportHashTables[i]);
-			for (ite.First();!ite.Is_Done();ite.Next()) {
-				report+=ite.Peek_Key();
-				int count=ite.Peek_Value();
-				if (count>1) {
-					StringClass tmp(0,true);
-					tmp.Format("\t(reported %d times)",count);
-					report+=tmp;
-				}
-				report+="\r\n";
-			}
-			report+="\r\n";
-		}
-		if (report.Get_Length()) {
-			RawFileClass raw_log_file("asset_report.txt");
-			raw_log_file.Create();
-			raw_log_file.Open(RawFileClass::WRITE);
-			raw_log_file.Write(report,report.Get_Length());
-			raw_log_file.Close();
-		}
-	}
-#endif
 }
 
 void AssetStatusClass::Add_To_Report(int index, const char* name)

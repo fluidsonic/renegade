@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef PHYSSTATICSAVESYSTEM_H
 #define PHYSSTATICSAVESYSTEM_H

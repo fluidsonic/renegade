@@ -93,10 +93,6 @@ void AABTreeBuilderClass::Reset(void)
  *=============================================================================================*/
 void AABTreeBuilderClass::Build_AABTree(int polycount,TriIndex * polys,int vertcount,Vector3 * verts)
 {
-	WWASSERT(polycount > 0);
-	WWASSERT(vertcount > 0);
-	WWASSERT(polys != NULL);
-	WWASSERT(verts != NULL);
 
 	/*
 	** If we already have allocated data, release it
@@ -213,7 +209,6 @@ void AABTreeBuilderClass::Build_Tree(CullNodeStruct * node,int polycount,int * p
 	** deletes the poly array.
 	*/
 	if (arrays.FrontCount) {
-		WWASSERT(arrays.FrontPolys != NULL);
 		node->Front = new CullNodeStruct;
 		Build_Tree(node->Front,arrays.FrontCount,arrays.FrontPolys);
 		arrays.FrontPolys = NULL;
@@ -224,7 +219,6 @@ void AABTreeBuilderClass::Build_Tree(CullNodeStruct * node,int polycount,int * p
 	** deletes the tile array.
 	*/
 	if (arrays.BackCount) {
-		WWASSERT(arrays.BackPolys != NULL);
 
 		node->Back = new CullNodeStruct;
 		Build_Tree(node->Back,arrays.BackCount,arrays.BackPolys);
@@ -249,7 +243,6 @@ void AABTreeBuilderClass::Build_Tree(CullNodeStruct * node,int polycount,int * p
 AABTreeBuilderClass::SplitChoiceStruct 
 AABTreeBuilderClass::Select_Splitting_Plane(int polycount,int * polyindices)
 {
-	WWASSERT(polyindices != NULL);
 
 	const int NUM_TRYS = 50;
 
@@ -481,8 +474,6 @@ void AABTreeBuilderClass::Split_Polys
 	/*
 	** when we are all done, the counts should match. 
 	*/
-	WWASSERT(arrays->FrontCount == sc.FrontCount);
-	WWASSERT(arrays->BackCount == sc.BackCount);
 }
 
 
@@ -549,12 +540,6 @@ void AABTreeBuilderClass::Compute_Bounding_Box(CullNodeStruct * node)
 		if (node->Back->Max.Z > node->Max.Z) node->Max.Z = node->Back->Max.Z;
 	}
 
-	WWASSERT(node->Min.X != 100000.0f);
-	WWASSERT(node->Min.Y != 100000.0f);
-	WWASSERT(node->Min.Z != 100000.0f);
-	WWASSERT(node->Max.X != -100000.0f);
-	WWASSERT(node->Max.Y != -100000.0f);
-	WWASSERT(node->Max.Z != -100000.0f);
 }
 
 
@@ -578,7 +563,6 @@ int AABTreeBuilderClass::Assign_Index(CullNodeStruct * node,int index)
 	** an array so this index is used to determine which slot
 	** in the array to put each node into.
 	*/
-	WWASSERT(node);
 	node->Index = index;
 	index++;
 
@@ -838,7 +822,6 @@ void AABTreeBuilderClass::Build_W3D_AABTree_Recursive
 	*/
 	if (node->Front != NULL) {
 
-		WWASSERT(node->Back != NULL);		// if we have one child, we better have both!
 		newnode->FrontOrPoly0 = node->Front->Index;
 		newnode->BackOrPolyCount = node->Back->Index;
 	

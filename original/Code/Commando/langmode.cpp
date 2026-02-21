@@ -39,7 +39,7 @@ void LanGameModeClass::Think(void)
 //-----------------------------------------------------------------------------
 cLanChat * LanGameModeClass::Get_Lan_Interface(void)
 {
-	//WWASSERT(PLanChat != NULL);
+	//assert(PLanChat != NULL);
 
 	return PLanChat;
 }

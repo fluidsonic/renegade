@@ -97,7 +97,6 @@ NetworkObjectMgrClass::Find_Object (int object_id)
 void
 NetworkObjectMgrClass::Set_New_Dynamic_ID (int id)
 {
-	WWASSERT(id >= NETID_DYNAMIC_OBJECT_MIN && id <= NETID_DYNAMIC_OBJECT_MAX);
 
 	_NewDynamicID = id;
 }
@@ -110,12 +109,11 @@ NetworkObjectMgrClass::Set_New_Dynamic_ID (int id)
 int
 NetworkObjectMgrClass::Get_New_Dynamic_ID (void)
 {
-	WWASSERT(_NewDynamicID >= NETID_DYNAMIC_OBJECT_MIN && _NewDynamicID < NETID_DYNAMIC_OBJECT_MAX);
 
 	/*
 	//TSS091001
 	NetworkObjectClass * p_object = Find_Object(_NewDynamicID);
-	//WWASSERT(p_object == NULL);
+	//assert(p_object == NULL);
 	if (p_object != NULL) {
 		int iii;
 		iii = 111;
@@ -126,8 +124,6 @@ NetworkObjectMgrClass::Get_New_Dynamic_ID (void)
 	NetworkObjectClass * p_object = Find_Object(_NewDynamicID);
 	while (p_object != NULL) {
 		/*
-		WWDEBUG_SAY(("NetworkObjectMgrClass::Get_New_Dynamic_ID :skipping id %d (already in use)\n", 
-			_NewDynamicID));
 		*/
 		_NewDynamicID++;
 		p_object = Find_Object(_NewDynamicID);
@@ -144,7 +140,6 @@ NetworkObjectMgrClass::Get_New_Dynamic_ID (void)
 int
 NetworkObjectMgrClass::Get_Current_Dynamic_ID (void)
 {
-	WWASSERT(_NewDynamicID >= NETID_DYNAMIC_OBJECT_MIN && _NewDynamicID <= NETID_DYNAMIC_OBJECT_MAX);
 
 	return _NewDynamicID;
 }
@@ -157,7 +152,6 @@ NetworkObjectMgrClass::Get_Current_Dynamic_ID (void)
 void
 NetworkObjectMgrClass::Init_New_Client_ID (int client_id)
 {
-	WWASSERT(client_id > 0);
 
 	_NewClientID = NETID_CLIENT_OBJECT_MIN + (client_id - 1) * 100000;
 }
@@ -170,7 +164,6 @@ NetworkObjectMgrClass::Init_New_Client_ID (int client_id)
 int
 NetworkObjectMgrClass::Get_New_Client_ID (void)
 {
-	WWASSERT(_NewClientID >= NETID_CLIENT_OBJECT_MIN && _NewClientID < NETID_CLIENT_OBJECT_MAX);
 
 	return _NewClientID++;
 }
@@ -183,7 +176,6 @@ NetworkObjectMgrClass::Get_New_Client_ID (void)
 bool
 NetworkObjectMgrClass::Find_Object (int id_to_find, int *index)
 {
-	WWASSERT(index != NULL);
 
 	bool found		= false;	
 	(*index)			= 0;
@@ -246,7 +238,6 @@ NetworkObjectMgrClass::Think (void)
 	//	Simply let each object think
 	//
 	for (int index = 0; index < _ObjectList.Count (); index ++) {
-		WWASSERT(_ObjectList[index] != NULL);
 		_ObjectList[index]->Network_Think ();
 	}
 
@@ -264,7 +255,6 @@ NetworkObjectMgrClass::Think (void)
 void
 NetworkObjectMgrClass::Set_All_Delete_Pending (void)
 {
-	WWDEBUG_SAY(("NetworkObjectMgrClass::Set_All_Delete_Pending\n"));
 
 	//
 	//	Mark all netobjects as delete pending
@@ -289,13 +279,12 @@ NetworkObjectMgrClass::Delete_Pending (void)
 		return ;
 	}
 
-	//WWDEBUG_SAY(("NetworkObjectMgrClass::Delete_Pending\n"));
+	//
 
 	//
 	//	Delete each object that is pending...
 	//
 	for (int index = 0; index < _DeletePendingList.Count (); index ++) {
-		WWASSERT(_DeletePendingList[index] != NULL);
 		if (_DeletePendingList[index]->Is_Delete_Pending ()) {
 			_DeletePendingList[index]->Delete ();
 		}
@@ -317,14 +306,12 @@ NetworkObjectMgrClass::Delete_Pending (void)
 void
 NetworkObjectMgrClass::Delete_Client_Objects (int client_id)
 {
-	WWASSERT(client_id > 0);
 
 	//
 	//	Delete each object that belongs to the given client
 	//
 
 	for (int index = 0; index < _ObjectList.Count (); index ++) {
-		WWASSERT(_ObjectList[index] != NULL);
 		if (_ObjectList[index]->Belongs_To_Client (client_id)) {
 			//TSS092301 _ObjectList[index]->Delete ();
 			_ObjectList[index]->Set_Delete_Pending();
@@ -343,7 +330,6 @@ NetworkObjectMgrClass::Delete_Client_Objects (int client_id)
 void
 NetworkObjectMgrClass::Restore_Dirty_Bits (int client_id)
 {
-	WWASSERT(client_id > 0);
 
 	//
 	// If a guy quits, we need to restore the dirty bits on each object so that 
@@ -353,7 +339,6 @@ NetworkObjectMgrClass::Restore_Dirty_Bits (int client_id)
 
 	for (int index = 0; index < _ObjectList.Count (); index ++) {
 		NetworkObjectClass * p_object = _ObjectList[index];
-		WWASSERT(p_object != NULL);
 		BYTE generic_bits = p_object->Get_Object_Dirty_Bits(NetworkObjectClass::MAX_CLIENT_COUNT - 1);//TSS2001e
 		p_object->Set_Object_Dirty_Bits(client_id, generic_bits);
 	}
@@ -389,7 +374,6 @@ NetworkObjectMgrClass::Reset_Import_State_Counts(void)
 	for (int index = 0; index < _ObjectList.Count (); index ++) {
 
 		NetworkObjectClass * p_object = _ObjectList[index];
-		WWASSERT(p_object != NULL);
 			
 		//
 		//	Reset its import state count

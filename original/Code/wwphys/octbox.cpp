@@ -63,7 +63,6 @@ void OctBoxClass::Update_Contact_Parameters(void)
 
 void OctBoxClass::Get_Outer_Bounds(AABoxClass * set_bounds)
 {
-	WWASSERT(set_bounds != NULL);
 	OBBoxClass wrld_outer_box;
 	wrld_outer_box = WrldInnerBox;
 	wrld_outer_box.Extent += Vector3(Thickness,Thickness,Thickness);
@@ -75,7 +74,6 @@ void OctBoxClass::Get_Outer_Bounds(AABoxClass * set_bounds)
 bool OctBoxClass::Is_Intersecting(NonRefPhysListClass * result_list,bool check_static_objs,bool check_dyn_objs)
 {
 	PhysicsSceneClass * the_scene = PhysicsSceneClass::Get_Instance();
-	WWASSERT(the_scene != NULL);
 
 	/*
 	** Test inner box for intersection
@@ -97,7 +95,6 @@ bool OctBoxClass::Is_Intersecting(NonRefPhysListClass * result_list,bool check_s
 bool OctBoxClass::Is_In_Contact_Zone(void)
 {
 	PhysicsSceneClass * the_scene = PhysicsSceneClass::Get_Instance();
-	WWASSERT(the_scene != NULL);
 
 	/*
 	** Test outer box for intersection
@@ -134,7 +131,6 @@ OctBoxClass::Internal_Compute_Contacts(bool lock_to_centroids)
 	**   - Sweep the octant along the diagonal and record the contact point (if any)
 	*/
 	PhysicsSceneClass * the_scene = PhysicsSceneClass::Get_Instance();
-	WWASSERT(the_scene != NULL);
 	Reset_Contacts();
 
 	/*
@@ -206,8 +202,6 @@ void OctBoxClass::Compute_Octant_Contact(int oi,bool lock_to_centroids)
 	** Collision detect for the corner line-segment 
 	*/
 	LineSegClass ray(corner,corner + corner_move);
-	WWASSERT(corner_move.Length2() <= ((3*Thickness*Thickness) + 0.01f));
-	WWASSERT(ray.Get_DP().Length2() <= ((3*Thickness*Thickness) + 0.01f));
 
 	PhysRayCollisionTestClass raytest(	ray,
 													&corner_result,
@@ -215,11 +209,6 @@ void OctBoxClass::Compute_Octant_Contact(int oi,bool lock_to_centroids)
 													COLLISION_TYPE_PHYSICAL | COLLISION_TYPE_VEHICLE);
 	PhysicsSceneClass::Get_Instance()->Cast_Ray(raytest,true);
 
-#ifdef WWDEBUG
-#if SHOW_CONTACT_DETECTORS
-	Parent.Add_Debug_Vector(corner,corner_move,Vector3(0,1,0));
-#endif
-#endif
 
 	/*
 	** Compute the contact for this octant-box. 
@@ -256,18 +245,6 @@ void OctBoxClass::Compute_Octant_Contact(int oi,bool lock_to_centroids)
 	/*
 	** Display the octant box
 	*/
-#ifdef WWDEBUG
-#if SHOW_CONTACT_DETECTORS
-	static Vector3 _oct_colors[8] = { 
-		Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1),Vector3(1,1,1),
-		Vector3(1,1,1),Vector3(0,0,1),Vector3(0,1,0),Vector3(1,0,0)
-	};
-		
-	octbox.Center += octant_result.Fraction * corner_move;
-	//Parent.Add_Debug_OBBox(octbox,_oct_colors[oi]);
-	//Parent.Add_Debug_Vector(result.Point,result.Normal,Vector3(0,1,0));
-#endif
-#endif
 
 	/*
 	** Now, decide which (if any) contact to use.  We prefer the

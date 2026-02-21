@@ -26,8 +26,6 @@
 #include "dlgmessagebox.h"
 #include "translatedb.h"
 #include "string_ids.h"
-#include "gamespyadmin.h"
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -350,12 +348,6 @@ MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 		}
 
 		case IDC_MENU_MP_LAN_GAME_BUTTON:
-			
-			//
-			// Clear any gamespyadmin flags
-			//
-			cGameSpyAdmin::Reset();
-
 			if (cNicEnum::Get_Num_Nics() > 0) {
 				GameInitMgrClass::Initialize_LAN ();
 			} else {

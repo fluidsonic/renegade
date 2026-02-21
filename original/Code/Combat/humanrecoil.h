@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef HUMANRECOIL_H
 #define HUMANRECOIL_H

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __PLAYERTERMINAL_H
 #define __PLAYERTERMINAL_H

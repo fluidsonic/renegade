@@ -6,7 +6,6 @@
 #include "sphere.h"
 #include "aabox.h"
 #include "obbox.h"
-#include "wwdebug.h"
 
 
 // Sphere Intersection fucntions.  Does the sphere intersect the passed in object
@@ -107,7 +106,6 @@ CollisionMath::Overlap_Test(const SphereClass & sphere,const Vector3 & point)
 CollisionMath::OverlapType
 CollisionMath::Overlap_Test(const SphereClass & /*sphere*/,const LineSegClass & /*line*/)
 {
-	WWASSERT(0); //TODO
 	return POS;
 }
 
@@ -127,7 +125,6 @@ CollisionMath::Overlap_Test(const SphereClass & /*sphere*/,const LineSegClass & 
 CollisionMath::OverlapType
 CollisionMath::Overlap_Test(const SphereClass & /*sphere*/,const TriClass & /*tri*/)
 {
-	WWASSERT(0); //TODO
 	return POS;
 }
 

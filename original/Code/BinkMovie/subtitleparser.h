@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef _SUBTITLEPARSER_H_
 #define _SUBTITLEPARSER_H_

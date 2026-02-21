@@ -89,7 +89,7 @@ public:
 
 	// Definitions
 	void	Init( const SpawnerDefClass & definition );
-	const SpawnerDefClass & Get_Definition( void ) const { WWASSERT( Definition ); return *Definition; }
+	const SpawnerDefClass & Get_Definition( void ) const { assert( Definition ); return *Definition; }
 
 	// Save / Load
 	virtual	bool	Save( ChunkSaveClass & csave );

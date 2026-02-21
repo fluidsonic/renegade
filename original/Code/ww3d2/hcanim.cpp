@@ -4,7 +4,6 @@
 #include "motchan.h"
 #include "chunkio.h"
 #include "w3d_file.h"
-#include "wwdebug.h"
 #include <string.h>
 #include <nstrdup.h>
 
@@ -98,7 +97,6 @@ NodeCompressedMotionStruct::~NodeCompressedMotionStruct()
 			if (ad.Q) delete ad.Q;
 			break;
 		default:
-			WWASSERT(0);	// unknown flavor
 			break;
 	}
 
@@ -211,9 +209,6 @@ int HCompressedAnimClass::Load_W3D(ChunkLoadClass & cload)
 	strcat(Name,aheader.Name);
 
 	// TSS chasing crash bug 05/26/99
-   WWASSERT(HierarchyName != NULL);
-   WWASSERT(aheader.HierarchyName != NULL);
-   WWASSERT(sizeof(HierarchyName) >= W3D_NAME_LEN);
    strncpy(HierarchyName,aheader.HierarchyName,W3D_NAME_LEN);
 
 	HTreeClass * base_pose = WW3DAssetManager::Get_Instance()->Get_HTree(HierarchyName);
@@ -227,7 +222,6 @@ int HCompressedAnimClass::Load_W3D(ChunkLoadClass & cload)
 	Flavor    = aheader.Flavor;
   																					
 	// Just for now                                          
-	WWASSERT((Flavor == ANIM_FLAVOR_TIMECODED)||(Flavor == ANIM_FLAVOR_ADAPTIVE_DELTA));
 
 	NodeMotion = new NodeCompressedMotionStruct[ NumNodes ];
 	if (NodeMotion == NULL) {
@@ -267,7 +261,6 @@ int HCompressedAnimClass::Load_W3D(ChunkLoadClass & cload)
 							// gonna trash memory.  Boy will we trash memory.
 							// GTH 09-25-2000: print a warning and survive this error
 							delete tc_chan;
-							WWDEBUG_SAY(("ERROR! animation %s indexes a bone not present in the model. Please re-export!\r\n",Name));
 						}
 
 						break;
@@ -284,7 +277,6 @@ int HCompressedAnimClass::Load_W3D(ChunkLoadClass & cload)
 							// gonna trash memory.  Boy will we trash memory.
 							// GTH 09-25-2000: print a warning and survive this error
 							delete ad_chan;
-							WWDEBUG_SAY(("ERROR! animation %s indexes a bone not present in the model. Please re-export!\r\n",Name));
 						}
 						break;
 				}
@@ -302,7 +294,6 @@ int HCompressedAnimClass::Load_W3D(ChunkLoadClass & cload)
 					// gonna trash memory.  Boy will we trash memory.
 					// GTH 09-25-2000: print a warning and survive this error
 					delete newbitchan;
-					WWDEBUG_SAY(("ERROR! animation %s indexes a bone not present in the model. Please re-export!\r\n",Name));
 				}
 
 				break;
@@ -494,7 +485,6 @@ void HCompressedAnimClass::Get_Translation( Vector3& trans, int pividx, float fr
 			if (motion->ad.Z) motion->ad.Z->Get_Vector(frame, &(trans[2]));
 			break;
 		default:
-			WWASSERT(0);	// unknown flavor
 			break;
 	}
 }
@@ -523,7 +513,6 @@ void HCompressedAnimClass::Get_Orientation(Quaternion& q, int pividx,float frame
 			else q.Make_Identity();
 			break;
 		default:
-			WWASSERT(0); // unknown flavor
 			break;
 	}
 } // Get_Orientation
@@ -569,7 +558,6 @@ void HCompressedAnimClass::Get_Transform( Matrix3D& mtx, int pividx, float frame
 			if (motion->ad.Z) motion->ad.Z->Get_Vector(frame, &(mtx[2][3]));
 			break;
 		default:
-			WWASSERT(0);	// unknown flavor
 			break;
 	}
 }
@@ -614,7 +602,6 @@ bool HCompressedAnimClass::Get_Visibility(int pividx,float frame)
  *=============================================================================================*/
 bool HCompressedAnimClass::Is_Node_Motion_Present(int pividx) 
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 
 	if (NodeMotion[pividx].vd.X != NULL)	return true;
 	if (NodeMotion[pividx].vd.Y != NULL)	return true;
@@ -627,31 +614,26 @@ bool HCompressedAnimClass::Is_Node_Motion_Present(int pividx)
 
 bool HCompressedAnimClass::Has_X_Translation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].vd.X != NULL;
 }
 
 bool HCompressedAnimClass::Has_Y_Translation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].vd.Y != NULL;
 }
 
 bool HCompressedAnimClass::Has_Z_Translation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].vd.Z != NULL;
 }
 
 bool HCompressedAnimClass::Has_Rotation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].vd.Q != NULL;
 }
 
 bool HCompressedAnimClass::Has_Visibility (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].Vis != NULL;
 }
 

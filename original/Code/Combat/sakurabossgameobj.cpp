@@ -1,5 +1,4 @@
 #include "sakurabossgameobj.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
@@ -22,14 +21,10 @@
 #include "string_ids.h"
 #include "translateobj.h"
 #include "translatedb.h"
-#include "wwprofile.h"
 #include "conversationmgr.h"
 #include "activeconversation.h"
 #include "conversation.h"
 #include "combat.h"
-
-
-DECLARE_FORCE_LINK (SakuraBoss)
 
 //////////////////////////////////////////////////////////////////////////
 //	General constants
@@ -44,7 +39,6 @@ static const char *	LEFT_ROCKET_MESH			= "V_COM_MISSILEL";
 static const char *	RIGHT_ROCKET_MESH			= "V_COM_MISSILER";
 static float			ROCKETS_IN_FRAME_NUM		= 0.0F;
 static float			ROCKETS_OUT_FRAME_NUM	= 10.0F;
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Waypath IDs
@@ -74,7 +68,6 @@ const int WID_VSTRAFE_TO_LSTRAFE2	= 1700005;
 
 const int WID_REFINERY_TO_LSTRAFE	= 1700011;
 const int WID_VSTRAFE_TO_LSTRAFE		= 1700013;
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Weapon and state enumerations
@@ -136,7 +129,6 @@ enum
 	ROCKET_LEFT		= 1
 };
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Taunt constants
 //////////////////////////////////////////////////////////////////////////
@@ -150,7 +142,6 @@ const char *TAUNT_IDS[6] =
 	"IDS_SAKURA_BOSS_TAUNT5",
 	"IDS_SAKURA_BOSS_TAUNT6"
 };
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Save/load constants
@@ -210,8 +201,6 @@ SimplePersistFactoryClass<SakuraBossGameObjDef,		CHUNKID_GAME_OBJECT_DEF_SAKURA_
 SimplePersistFactoryClass<SakuraBossGameObj,			CHUNKID_GAME_OBJECT_SAKURA_BOSS>								_SakuraBossGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY(SakuraBossGameObjDef,	CLASSID_GAME_OBJECT_DEF_SAKURA_BOSS, "Sakura Boss")	_SakuraBossGameObjDefDefFactory;
 
-
-
 //////////////////////////////////////////////////////////////////////////
 //
 //	SakuraBossGameObjDef
@@ -238,7 +227,6 @@ SakuraBossGameObjDef::SakuraBossGameObjDef (void)	:
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //
 //	~SakuraBossGameObjDef
@@ -248,7 +236,6 @@ SakuraBossGameObjDef::~SakuraBossGameObjDef (void)
 {	
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -260,7 +247,6 @@ SakuraBossGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_SAKURA_BOSS; 
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -274,7 +260,6 @@ SakuraBossGameObjDef::Create (void) const
 	obj->Init(*this);
 	return obj;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -298,7 +283,6 @@ SakuraBossGameObjDef::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -334,7 +318,6 @@ SakuraBossGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -350,7 +333,6 @@ SakuraBossGameObjDef::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK (csave, VARID_DEF_ROCKET_DESTROYED_EXPLOSION_ID,	RocketDestroyedExplosionID);	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -380,7 +362,6 @@ SakuraBossGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -392,13 +373,11 @@ SakuraBossGameObjDef::Get_Factory (void) const
 	return _SakuraBossGameObjDefPersistFactory; 
 }
 
-
 /*
 **
 **	Start of SakuraBossGameObj
 **
 */
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -443,7 +422,6 @@ SakuraBossGameObj::SakuraBossGameObj (void)	:
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	~SakuraBossGameObj
@@ -455,7 +433,6 @@ SakuraBossGameObj::~SakuraBossGameObj (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -466,7 +443,6 @@ SakuraBossGameObj::Get_Factory (void) const
 {
 	return _SakuraBossGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -547,7 +523,6 @@ SakuraBossGameObj::Init (const SakuraBossGameObjDef &definition)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -558,7 +533,6 @@ SakuraBossGameObj::Get_Definition (void) const
 {
 	return (const SakuraBossGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -604,7 +578,6 @@ SakuraBossGameObj::Save (ChunkSaveClass & csave)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -664,7 +637,6 @@ SakuraBossGameObj::Load (ChunkLoadClass &cload)
 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -726,7 +698,6 @@ SakuraBossGameObj::On_Post_Load (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -759,7 +730,6 @@ SakuraBossGameObj::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK (csave, VARID_CHOPPER_TILT_BONE_INDEX,				ChopperTiltBoneIndex);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -806,7 +776,6 @@ SakuraBossGameObj::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Apply_Control
@@ -818,7 +787,6 @@ SakuraBossGameObj::Apply_Control (void)
 	VehicleGameObj::Apply_Control ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -874,7 +842,6 @@ SakuraBossGameObj::Update_Decision_Data (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -885,8 +852,6 @@ SakuraBossGameObj::Think (void)
 {
 	Pilot.Think ();
 	VehicleGameObj::Think ();
-
-	WWPROFILE( "Sakura Think" );
 
 	//
 	//	Find a target if necessary
@@ -936,7 +901,6 @@ SakuraBossGameObj::Think (void)
 	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1119,7 +1083,6 @@ SakuraBossGameObj::Request_Overall_State (int new_state)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Set_Overall_State
@@ -1202,7 +1165,6 @@ SakuraBossGameObj::Set_Overall_State (int new_state)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1290,7 +1252,6 @@ SakuraBossGameObj::Should_Change_Overall_State (void)
 	return retval;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Decide_New_Overall_State
@@ -1370,7 +1331,6 @@ SakuraBossGameObj::Decide_New_Overall_State (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1621,7 +1581,6 @@ SakuraBossGameObj::Update_Overall_State (void)
 				Pilot.Set_Target (NULL);
 			}
 
-
 			//
 			//	Start attacking the player if we are within 4 meters of
 			// our expected destination
@@ -1662,7 +1621,6 @@ SakuraBossGameObj::Update_Overall_State (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Update_Tilt
@@ -1677,7 +1635,6 @@ SakuraBossGameObj::Update_Tilt (void)
 	//	Lookup the model we are going to tilt
 	//
 	RenderObjClass *model = Peek_Model ();
-	WWASSERT (model != NULL);
 
 	if (ChopperTiltBoneIndex > 0) {
 		
@@ -1773,7 +1730,6 @@ SakuraBossGameObj::Update_Tilt (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Attack_Target
@@ -1834,7 +1790,6 @@ SakuraBossGameObj::Attack_Target
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Stop_Attacking
@@ -1860,7 +1815,6 @@ SakuraBossGameObj::Stop_Attacking (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Set_Vehicle_State
@@ -1883,7 +1837,6 @@ SakuraBossGameObj::Set_Vehicle_State (int new_state)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -1942,7 +1895,6 @@ SakuraBossGameObj::Update_Vehicle_State (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2024,7 +1976,6 @@ SakuraBossGameObj::Set_Sakura_State (int new_state)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Shuffle_Taunt_List
@@ -2058,7 +2009,6 @@ SakuraBossGameObj::Shuffle_Taunt_List (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Update_Sakura_State
@@ -2082,7 +2032,6 @@ SakuraBossGameObj::Update_Sakura_State (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2144,7 +2093,6 @@ SakuraBossGameObj::Set_Gattling_Gun_State (int new_state)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Update_Gattling_Gun_State
@@ -2193,7 +2141,6 @@ SakuraBossGameObj::Update_Gattling_Gun_State (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2288,7 +2235,6 @@ SakuraBossGameObj::Set_Rocket_State (int new_state)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Update_Rocket_State
@@ -2365,7 +2311,6 @@ SakuraBossGameObj::Update_Rocket_State (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Apply_Damage
@@ -2429,7 +2374,6 @@ SakuraBossGameObj::Apply_Damage_Extended
 	CurrentTarget	= LastDamager;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2523,7 +2467,6 @@ SakuraBossGameObj::Blow_Off_Weapon (int weapon_id)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Open_Rocket_Launchers
@@ -2546,7 +2489,6 @@ SakuraBossGameObj::Open_Rocket_Launchers (bool onoff)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Are_Rocker_Launchers_Ready
@@ -2568,7 +2510,6 @@ SakuraBossGameObj::Are_Rocker_Launchers_Ready (void)
 	return retval;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Move_To_Location
@@ -2588,7 +2529,6 @@ SakuraBossGameObj::Move_To_Location (const Vector3 &pos, float speed)
 	Pilot.Set_Destination (pos);	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2644,7 +2584,6 @@ SakuraBossGameObj::Get_Muzzle (int /*index*/)
 	return CurrentMuzzleTM;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Update_Target
@@ -2678,7 +2617,6 @@ SakuraBossGameObj::Update_Target (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -2745,7 +2683,6 @@ SakuraBossGameObj::Find_Closest_Human_Player (void)
 
 	return closest_human_player;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //

@@ -1,18 +1,9 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
-#ifdef _MSC_VER
-#pragma warning (push,3)
-#endif
 
 #ifdef _WINDOWS
 #include	<winioctl.h>
 #endif
 
-#ifdef _MSC_VER
-#pragma warning (pop)
-#endif
 
 
 /*

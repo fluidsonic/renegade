@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __PATH_OBJECT_H
 #define __PATH_OBJECT_H

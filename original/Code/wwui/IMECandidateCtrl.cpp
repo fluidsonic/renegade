@@ -78,7 +78,6 @@ IMECandidateCtrl::~IMECandidateCtrl()
 
 void IMECandidateCtrl::Init(IME::IMECandidate* candidate)
 	{
-	WWDEBUG_SAY(("IMECandidateCtrl: Init\n"));
 
 	Reset();
 	mCandidate = candidate;
@@ -102,8 +101,6 @@ void IMECandidateCtrl::Init(IME::IMECandidate* candidate)
 
 void IMECandidateCtrl::Changed(IME::IMECandidate* candidate)
 	{
-	WWDEBUG_SAY(("IMECandidateCtrl: Changed\n"));
-	WWASSERT(mCandidate == candidate);
 
 	if (candidate)
 		{
@@ -424,7 +421,6 @@ void IMECandidateCtrl::UpdateScrollPos(void)
 
 void IMECandidateCtrl::Update_Client_Rect(void)
 	{
-	WWDEBUG_SAY(("IMECandidateCtrl: Update_Client_Rect()\n"));
 
 	Vector2 pageSize;
 	CalculateCandidatePageExtent(pageSize, mCellSize);
@@ -441,7 +437,6 @@ void IMECandidateCtrl::Update_Client_Rect(void)
 
 	if (mCandidate)
 		{
-		WWASSERT(mCandidate->GetPageSize() <= mCellsPerPage);
 
 		//	Do we need to show a scroll bar?
 		const unsigned long candidateCount = mCandidate->GetCount();
@@ -591,7 +586,6 @@ void IMECandidateCtrl::On_LButton_Up(const Vector2& mousePos)
 	if (mCandidate && (sel >= 0))
 		{
 		const wchar_t* string = mCandidate->GetCandidate(sel);
-		WWDEBUG_SAY(("*** Selected Candidate: %d %04x\n", sel, *string));
 		mCandidate->SelectCandidate((unsigned long)sel);
 		}
 	}

@@ -3,17 +3,13 @@
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
 #include "debug.h"
-#include "wwhack.h"
 #include "gameobjmanager.h"
 #include "smartgameobj.h"
 #include "colmath.h"
 #include "weapons.h"
 #include "damage.h"
-#include "wwprofile.h"
 #include "combat.h"
 #include "crandom.h"
-
-DECLARE_FORCE_LINK( DamageZone )
 
 SimplePersistFactoryClass<DamageZoneGameObjDef, CHUNKID_GAME_OBJECT_DEF_DAMAGE_ZONE>	_DamageZoneGameObjDefPersistFactory;
 DECLARE_DEFINITION_FACTORY(DamageZoneGameObjDef, CLASSID_GAME_OBJECT_DEF_DAMAGE_ZONE, "Damage Zone") _DamageZoneGameObjDefDefFactory;
@@ -203,7 +199,6 @@ const PersistFactoryClass & DamageZoneGameObj::Get_Factory( void ) const
 
 void	DamageZoneGameObj::Think( void )
 {
-	WWPROFILE( "DamageZone Think" );
 
 	if ( !CombatManager::I_Am_Server() ) {
 		return;
@@ -222,7 +217,6 @@ void	DamageZoneGameObj::Think( void )
 		SLNode<SmartGameObj> * smart_objnode;
 		for (smart_objnode = GameObjManager::Get_Smart_Game_Obj_List()->Head(); smart_objnode; smart_objnode = smart_objnode->Next()) {
 			SmartGameObj * obj = smart_objnode->Data();
-			WWASSERT( obj != NULL );
 
 			Vector3 pos;
 			obj->Get_Position(&pos);

@@ -3,7 +3,6 @@
 #include "pscene.h"
 #include "physcon.h"
 #include "chunkio.h"
-#include "wwmemlog.h"
 #include "pathmgr.h"
 #include "saveload.h"
 #include "rendobj.h"
@@ -28,7 +27,6 @@ bool PhysDynamicSaveSystemClass::Contains_Data(void) const
 
 bool PhysDynamicSaveSystemClass::Save(ChunkSaveClass &csave)
 {	
-	WWMEMLOG(MEM_GAMEDATA);
 
 	csave.Begin_Chunk(PDSSC_CHUNKID_SCENE);
 	PhysicsSceneClass::Get_Instance()->Save_Level_Dynamic_Data(csave);
@@ -47,7 +45,6 @@ bool PhysDynamicSaveSystemClass::Save(ChunkSaveClass &csave)
 
 bool PhysDynamicSaveSystemClass::Load(ChunkLoadClass &cload)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	while (cload.Open_Chunk()) {
 		switch (cload.Cur_Chunk_ID()) {

@@ -666,7 +666,6 @@ void	Input::Free_Mappings( void )
 void	Input::Load_Registry( const char * key )
 {
 	/*RegistryClass * registry = new RegistryClass( key );
-	WWASSERT( registry );
 	if ( registry->Is_Valid() ) {
 		MouseSensitivity	= registry->Get_Float( "MouseSensitivity",	MouseSensitivity );
 		MouseScale			= registry->Get_Float( "MouseScale",	MouseScale );
@@ -682,7 +681,6 @@ void	Input::Load_Registry( const char * key )
 void	Input::Save_Registry( const char * key )
 {
 	/*RegistryClass * registry = new RegistryClass( key );
-	WWASSERT( registry );
 	if ( registry->Is_Valid() ) {
 		registry->Set_Float( "MouseSensitivity",	MouseSensitivity );
 		registry->Set_Float( "MouseScale",	MouseScale );
@@ -766,8 +764,6 @@ void	Input::Update_Sliders( void )
 		mouse_z = 0.0f;
 	}
 
-	WWASSERT(WWMath::Is_Valid_Float(mouse_x));
-	WWASSERT(WWMath::Is_Valid_Float(mouse_y));
 
 	// it comes in as inverted
 	if ( !MouseInvert ) {

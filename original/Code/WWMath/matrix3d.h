@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef MATRIX3D_H
 #define MATRIX3D_H

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __WWSTRING_H
 #define __WWSTRING_H
@@ -12,7 +9,6 @@
 #include <stdarg.h>
 #include <tchar.h>
 #include "trim.h"
-#include "wwdebug.h"
 #ifdef _UNIX
 #include "osdep.h"
 #endif
@@ -350,7 +346,6 @@ StringClass::Compare_No_Case (const TCHAR *string) const
 inline const TCHAR &
 StringClass::operator[] (int index) const
 {
-	WWASSERT (index >= 0 && index < Get_Length ());
 	return m_Buffer[index];
 }
 
@@ -360,7 +355,6 @@ StringClass::operator[] (int index) const
 inline TCHAR &
 StringClass::operator[] (int index)
 {
-	WWASSERT (index >= 0 && index < Get_Length ());
 	return m_Buffer[index];
 }
 
@@ -468,7 +462,6 @@ inline void StringClass::Trim(void)
 inline const StringClass &
 StringClass::operator+= (const TCHAR *string)
 {
-	WWASSERT (string != NULL);
 
 	int cur_len = Get_Length ();
 	int src_len = _tcslen (string);
@@ -669,7 +662,6 @@ StringClass::Set_Buffer_And_Allocated_Length (TCHAR *buffer, int length)
 		Store_Allocated_Length (length);
 		Store_Length (0);		
 	} else {
-		WWASSERT (length == 0);
 	}
 
 	return ;
@@ -719,7 +711,6 @@ StringClass::Store_Allocated_Length (int allocated_length)
 		HEADER *header					= Get_Header ();
 		header->allocated_length	= allocated_length;
 	} else {
-		WWASSERT (allocated_length == 0);
 	}
 
 	return ;
@@ -738,7 +729,6 @@ StringClass::Store_Length (int length)
 		HEADER *header		= Get_Header ();
 		header->length		= length;
 	} else {
-		WWASSERT (length == 0);
 	}
 
 	return ;

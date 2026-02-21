@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef DYNAMESH_H
 #define DYNAMESH_H
@@ -70,7 +67,6 @@ public:
 	{ 
 		if (MatInfo) 
 			MatInfo->Release_Ref(); 
-		WWASSERT(MatInfo != 0);
 		MatInfo = mat_info; 
 		MatInfo->Add_Ref(); 
 	}

@@ -255,38 +255,6 @@ void PlayerInfoLog::Set_Current_Map_Name(const char* map_name)
 void PlayerInfoLog::Append_To_Log(PlayerDataClass* data)
 {
 	if (data->Get_Game_Time()==0.0f) return;
-#ifdef WWDEBUG
-	StringClass tmp;
-	StringClass work(0,true);
-	ADD_HISTORY(("Map name: %s\r\n",CurrentMapName));
-	ADD_HISTORY(("Game time: %2.2f\r\n",data->Get_Game_Time()));
-	ADD_HISTORY(("Session time: %2.2f\r\n",data->Get_Session_Time()));
-	ADD_HISTORY(("Enemies killed: %d\r\n",data->Get_Enemies_Killed()));
-	ADD_HISTORY(("Allies killed: %d\r\n",data->Get_Allies_Killed()));
-	ADD_HISTORY(("Shots fired: %d\r\n",data->Get_Shots_Fired()));
-	ADD_HISTORY(("Powerups collected: %d\r\n",data->Get_Powerups_Collected()));
-	ADD_HISTORY(("Vehicles destroyed: %d\r\n",data->Get_Vehiclies_Destroyed()));
-	ADD_HISTORY(("Buildings destroyed: %d\r\n",data->Get_Building_Destroyed()));
-	ADD_HISTORY(("Time in vehicles: %d\r\n",data->Get_Vehicle_Time()));
-	ADD_HISTORY(("Kills from vehicles: %d\r\n",data->Get_Kills_From_Vehicle()));
-	ADD_HISTORY(("Squishes: %d\r\n",data->Get_Squishes()));
-	ADD_HISTORY(("Credits granted: %d\r\n",data->Get_Credit_Grant()));
-	ADD_HISTORY(("Times reloaded: %d\r\n",CombatManager::Get_Reload_Count()));
-	ADD_HISTORY(("Cheats used: %s\r\n",CheatMgrClass::Get_Instance()->Was_Cheat_Used( CheatMgrClass::ALL_CHEATS ) ? "Yes" : "No"));
-	ADD_HISTORY(("Secondary objectives completed: %d\r\n",ObjectiveManager::Get_Num_Completed_Objectives( ObjectiveManager::TYPE_SECONDARY )));
-	ADD_HISTORY(("Tertiary objectives completed: %d\r\n",ObjectiveManager::Get_Num_Completed_Objectives( ObjectiveManager::TYPE_TERTIARY )));
-
-	tmp+="\r\n";
-
-	DWORD written;
-	HANDLE file = CreateFile("history.txt", GENERIC_WRITE, 0, NULL, OPEN_ALWAYS,
-			FILE_ATTRIBUTE_NORMAL, NULL);
-	if (INVALID_HANDLE_VALUE != file) {
-		SetFilePointer(file, 0, NULL, FILE_END);
-		WriteFile(file, tmp, strlen(tmp), &written, NULL);
-		CloseHandle(file);
-	}
-#endif // WWDEBUG
 }
 
 void PlayerInfoLog::Get_Compact_Log(StringClass& string)

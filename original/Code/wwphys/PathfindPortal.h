@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 
 #ifndef __PATHFIND_PORTAL_H
@@ -8,7 +5,6 @@
 
 #include "refcount.h"
 #include "aabox.h"
-#include "wwdebug.h"
 #include "pathfind.h"
 #include "path.h"
 #include "waypathposition.h"
@@ -133,8 +129,6 @@ PathfindPortalClass::Set_Bounding_Box (const AABoxClass &box)
 inline void
 PathfindPortalClass::Add_Dest_Sector (int sector_index)
 {
-	WWASSERT (m_DestSector1 == (uint16)-1 || m_DestSector2 == (uint16)-1);
-	WWASSERT (sector_index != -1);
 	
 	if (m_DestSector1 == (uint16)-1) {
 		m_DestSector1 = sector_index;

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __NETWORK_OBJECT_FACTORY_H
 #define __NETWORK_OBJECT_FACTORY_H

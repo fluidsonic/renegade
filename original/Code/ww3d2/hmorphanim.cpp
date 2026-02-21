@@ -125,8 +125,6 @@ uint32 TimeCodedMorphKeysClass::binary_search_index(float req_frame)
 		// if we've zeroed in on the interval, return the left index
 		dx = rightIdx - leftIdx;
 		if (dx == 1) {
-			WWASSERT(req_frame >= Keys[leftIdx].MorphFrame);
-			WWASSERT(req_frame < Keys[rightIdx].MorphFrame);
 			return leftIdx;
 		}
 
@@ -202,9 +200,6 @@ static int Build_List_From_String
 {
 	int count = 0;
 
-	WWASSERT (buffer != NULL);
-	WWASSERT (delimiter != NULL);
-	WWASSERT (string_list != NULL);
 	if ((buffer != NULL) &&
 		 (delimiter != NULL) &&
 		 (string_list != NULL))
@@ -316,7 +311,6 @@ bool HMorphAnimClass::Import(const char *hierarchy_name, TextFileClass &text_des
 	// Attempt to load the new base pose
 	//
 	HTreeClass * base_pose = WW3DAssetManager::Get_Instance()->Get_HTree(HierarchyName);
-	WWASSERT (base_pose != NULL);
 	NumNodes = base_pose->Num_Pivots();
 
 	//
@@ -338,7 +332,6 @@ bool HMorphAnimClass::Import(const char *hierarchy_name, TextFileClass &text_des
 		//
 		ChannelCount = column_count - 1;
 
-		WWASSERT (ChannelCount > 0);
 		if (ChannelCount > 0) {
 			
 			//
@@ -364,7 +357,6 @@ bool HMorphAnimClass::Import(const char *hierarchy_name, TextFileClass &text_des
 				StringClass *channel_list = NULL;
 				int list_count = Build_List_From_String (frame_desc, ",", &channel_list);
 
-				WWASSERT (list_count > 0);
 				if (list_count > 0) {
 
 					//
@@ -420,7 +412,6 @@ bool HMorphAnimClass::Import(const char *hierarchy_name, TextFileClass &text_des
 
 void HMorphAnimClass::Resolve_Pivot_Channels(void)
 {
-	WWASSERT (PivotChannel != NULL);
 
 	//
 	//	Loop over all the pivots in the HTree
@@ -516,7 +507,6 @@ int HMorphAnimClass::Load_W3D(ChunkLoadClass & cload)
 	// read in the animation header
 	W3dMorphAnimHeaderStruct header;
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == W3D_CHUNK_MORPHANIM_HEADER);
 	cload.Read(&header,sizeof(header));
 	cload.Close_Chunk();
 
@@ -562,23 +552,18 @@ int HMorphAnimClass::Load_W3D(ChunkLoadClass & cload)
 
 void HMorphAnimClass::read_channel(ChunkLoadClass & cload,int channel)
 {
-	WWASSERT(channel >= 0);
-	WWASSERT(channel < ChannelCount);
 
 	StringClass anim_name;
 
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == W3D_CHUNK_MORPHANIM_POSENAME);
 	cload.Read(anim_name.Get_Buffer(cload.Cur_Chunk_Length()),cload.Cur_Chunk_Length());
 	cload.Close_Chunk();
 	
 	//StringClass channel_anim_name;
 	//channel_anim_name.Format ("%s.%s", HierarchyName, anim_name);
 	PoseData[channel] = WW3DAssetManager::Get_Instance()->Get_HAnim(anim_name);
-	WWASSERT(PoseData[channel] != NULL);
 
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == W3D_CHUNK_MORPHANIM_KEYDATA);
 	MorphKeyData[channel].Load_W3D(cload);
 	cload.Close_Chunk();
 }
@@ -622,7 +607,6 @@ int HMorphAnimClass::Save_W3D(ChunkSaveClass & csave)
 
 void HMorphAnimClass::write_channel(ChunkSaveClass & csave,int channel)
 {
-	WWASSERT(PoseData[channel] != NULL);
 
 	const char * pose_name = PoseData[channel]->Get_Name();
 	csave.Begin_Chunk(W3D_CHUNK_MORPHANIM_POSENAME);

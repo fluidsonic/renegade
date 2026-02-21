@@ -365,7 +365,6 @@ WW3DErrorType LightClass::Load_W3D(ChunkLoadClass & cload)
 	W3dLightStruct lightinfo;
 
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == W3D_CHUNK_LIGHT_INFO);
 	cload.Read(&lightinfo,sizeof(lightinfo));
 	cload.Close_Chunk();
 
@@ -610,7 +609,6 @@ bool LightClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();

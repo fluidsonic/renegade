@@ -1399,8 +1399,8 @@ public:
 	ProfileLogNodeClass(unsigned count);
 	~ProfileLogNodeClass();
 
-	void Set(unsigned index,float value) { WWASSERT(index<count); percentages[index]=value; }
-	float Get(unsigned index) const { WWASSERT(index<count); return percentages[index]; }
+	void Set(unsigned index,float value) { assert(index<count); percentages[index]=value; }
+	float Get(unsigned index) const { assert(index<count); return percentages[index]; }
 	void Set_String(const StringClass& string_) { string=string_; }
 	const StringClass& Get_String() const { return string; }
 	unsigned Get_Count() const { return count; }

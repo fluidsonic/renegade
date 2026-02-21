@@ -4,13 +4,7 @@
 #include	<string.h>
 
 
-#if defined(__BORLANDC__)
-extern BigInt Generate_Prime<BigInt>(Straw &, int, BigInt const *);
-#endif
 
-#ifdef _MSC_VER
-//BigInt Generate_Prime(Straw &, int, BigInt const *);
-#endif
 
 
 /***********************************************************************************************

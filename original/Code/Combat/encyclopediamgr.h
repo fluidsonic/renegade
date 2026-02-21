@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __ENCYCLOPEDIAMGR_H
 #define __ENCYCLOPEDIAMGR_H

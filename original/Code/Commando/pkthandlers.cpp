@@ -87,15 +87,14 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 
 //#pragma message("(TSS) APPPACKETTYPE_CSDAMAGEEVENT workaround for unknown crash bug.\n")
 
-			//WWDEBUG_SAY(("\n"));
-			//WWDEBUG_SAY(("cNetwork::Server_Packet_Handler: received BIT_CREATION (id %d, is_delete_pending = %d, net_classid = %d, from rhost %d - %s) for existing object:\n",
-			//	network_obj_id, is_delete_pending, net_classid, rhost_id, Addr_As_String(&rhost_addr)));
-			//WWDEBUG_SAY(("  id                 = %d\n", object->Get_Network_ID()));
-			//WWDEBUG_SAY(("  AppPacketType      = %s\n", cAppPacketStats::Interpret_Type(object->Get_App_Packet_Type())));
-			//WWDEBUG_SAY(("  IsDeletePending    = %d\n", object->Is_Delete_Pending()));
-			//WWDEBUG_SAY(("  CreatedByPacketID  = %d\n", object->Get_Created_By_Packet_ID()));
-			//WWDEBUG_SAY(("Packet actually from address %s\n", Addr_As_String(actual_from_addr_ptr)));
-			//WWDEBUG_SAY(("\n"));
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
 
 			//DIE;
 
@@ -183,7 +182,7 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 	//
 	//	Did we read all the data contained in the packet?
 	//
-	//WWASSERT(packet.Is_Flushed());
+	//assert(packet.Is_Flushed());
 	if (!packet.Is_Flushed())
 	{
 	}
@@ -315,7 +314,7 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 	//
 	//	Did we read all the data contained in the packet?
 	//
-	//WWASSERT(packet.Is_Flushed());
+	//assert(packet.Is_Flushed());
 	if (!packet.Is_Flushed())
 	{
 		//DIE;

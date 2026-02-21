@@ -186,10 +186,6 @@ bool VisRasterizerClass::Render_Triangles
 	AABoxClass & bounds
 )
 {
-	WWASSERT(verts != NULL);
-	WWASSERT(tris != NULL);
-	WWASSERT(vcount > 0);
-	WWASSERT(tcount > 0);
 	
 	/*
 	** if the user supplied bounds, check if we need to clip
@@ -391,8 +387,6 @@ void IDBufferClass::Clear(void)
 	if ((ResWidth > 0) && (ResHeight > 0)) {
 		int byte_count = ResWidth * ResWidth * sizeof(uint32);
 
-		WWASSERT(IDBuffer != NULL);
-		WWASSERT(ZBuffer != NULL);
 		memset(IDBuffer,0,byte_count);
 		memset(ZBuffer,0,byte_count);
 	}

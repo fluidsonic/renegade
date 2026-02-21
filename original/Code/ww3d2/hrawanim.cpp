@@ -198,9 +198,6 @@ int HRawAnimClass::Load_W3D(ChunkLoadClass & cload)
 	strcat(Name,aheader.Name);
 
 	// TSS chasing crash bug 05/26/99
-   WWASSERT(HierarchyName != NULL);
-   WWASSERT(aheader.HierarchyName != NULL);
-   WWASSERT(sizeof(HierarchyName) >= W3D_NAME_LEN);
    strncpy(HierarchyName,aheader.HierarchyName,W3D_NAME_LEN);
 
 	HTreeClass * base_pose = WW3DAssetManager::Get_Instance()->Get_HTree(HierarchyName);
@@ -238,7 +235,6 @@ int HRawAnimClass::Load_W3D(ChunkLoadClass & cload)
 				if (newchan->Get_Pivot() < NumNodes) {
 					add_channel(newchan);
 				} else {
-					WWDEBUG_SAY(("Animation %s referring to missing Bone! Please re-export.\n",Name));
 					delete newchan;
 				}
 				break;
@@ -254,7 +250,6 @@ int HRawAnimClass::Load_W3D(ChunkLoadClass & cload)
 				if (newbitchan->Get_Pivot() < NumNodes) {
 					add_bit_channel(newbitchan);
 				} else {
-					WWDEBUG_SAY(("Animation %s referring to missing Bone! Please re-export.\n",Name));
 					delete newbitchan;
 				}
 				break;
@@ -425,7 +420,6 @@ void HRawAnimClass::Get_Translation(Vector3& trans, int pividx, float frame ) co
 	int frame1 = frame0 + 1;
 
 	float ratio = frame - (float)frame0;
-	WWASSERT( (ratio >= -WWMATH_EPSILON) && (ratio < 1.0f + WWMATH_EPSILON) );
 
 	if ( frame1 >= NumFrames ) {
 		frame1 = 0;
@@ -482,7 +476,6 @@ void HRawAnimClass::Get_Orientation(Quaternion& q, int pividx,float frame) const
 	int frame1 = frame0 + 1;
 
 	float ratio = frame - (float)frame0;
-	WWASSERT( (ratio >= -WWMATH_EPSILON) && (ratio < 1.0f + WWMATH_EPSILON) );
 
 	if ( frame1 >= NumFrames ) {
 		frame1 = 0;
@@ -536,7 +529,6 @@ void HRawAnimClass::Get_Transform(Matrix3D& mtx, int pividx, float frame ) const
 	int frame1 = frame0 + 1;
 
 	float ratio = frame - (float)frame0;
-	WWASSERT( (ratio >= -WWMATH_EPSILON) && (ratio < 1.0f + WWMATH_EPSILON) );
 
 	if ( frame1 >= NumFrames ) {
 		frame1 = 0;
@@ -619,7 +611,6 @@ bool HRawAnimClass::Get_Visibility(int pividx,float frame)
  *=============================================================================================*/
 bool HRawAnimClass::Is_Node_Motion_Present(int pividx) 
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 
 	if (NodeMotion[pividx].X != NULL) return true;
 	if (NodeMotion[pividx].Y != NULL) return true;
@@ -635,31 +626,26 @@ bool HRawAnimClass::Is_Node_Motion_Present(int pividx)
 
 bool HRawAnimClass::Has_X_Translation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].X != NULL;
 }
 
 bool HRawAnimClass::Has_Y_Translation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].Y != NULL;
 }
 
 bool HRawAnimClass::Has_Z_Translation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].Z != NULL;
 }
 
 bool HRawAnimClass::Has_Rotation (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].Q != NULL;
 }
 
 bool HRawAnimClass::Has_Visibility (int pividx)
 {
-	WWASSERT((pividx >= 0) && (pividx < NumNodes));
 	return NodeMotion[pividx].Vis != NULL;
 }
 

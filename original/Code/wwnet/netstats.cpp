@@ -12,7 +12,6 @@
 #include "systimer.h"
 #include "miscutil.h"
 #include "netutil.h"
-#include "wwdebug.h"
 
 //
 // class defines
@@ -53,7 +52,6 @@ double cNetStats::Get_Pc_Packetloss_Received() const
    double packetloss_pc = 0;
 
    int packet_count = LastUnreliablePacketId - FreezePacketId;
-   WWASSERT(packet_count >= 0);
 
    if (packet_count > 0) {
       //
@@ -69,7 +67,6 @@ double cNetStats::Get_Pc_Packetloss_Received() const
 void cNetStats::Set_Pc_Packetloss_Sent(double packetloss_pc)
 {
    /*TSS102901
-	WWASSERT(packetloss_pc > -MISCUTIL_EPSILON && packetloss_pc < 100 + MISCUTIL_EPSILON);
    RemotePacketloss = packetloss_pc;
 	*/
 }
@@ -77,7 +74,7 @@ void cNetStats::Set_Pc_Packetloss_Sent(double packetloss_pc)
 //------------------------------------------------------------------------------------
 void cNetStats::Set_Remote_Service_Count(int remote_service_count)
 {
-	//WWASSERT(remote_service_count >= 0);
+	//assert(remote_service_count >= 0);
    RemoteServiceCount = remote_service_count;
 }
 
@@ -140,7 +137,7 @@ bool cNetStats::Update_If_Sample_Done(int this_frame_time, bool force_update)
 //const USHORT cNetStats::SAMPLE_TIME = 500;
 
    // crash here when exit server thread before client
-   //WWASSERT(packetloss_pc >= 0 && packetloss_pc <= 100);
+   //assert(packetloss_pc >= 0 && packetloss_pc <= 100);
 
 		/*
 		//

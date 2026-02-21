@@ -1,6 +1,3 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #if !defined(TRUE_FALSE_DEFINED) && !defined(__BORLANDC__) && (_MSC_VER < 1100) && !defined(__WATCOMC__)
 #define TRUE_FALSE_DEFINED
@@ -10,11 +7,6 @@
 **      November of '94. Until the compiler supports this, use the following
 **      definition.
 */
-#ifdef _MSC_VER
-
-#include        "yvals.h"
-#define bool    unsigned
-
 #elif defined(_UNIX)
 
 /////#define bool    unsigned

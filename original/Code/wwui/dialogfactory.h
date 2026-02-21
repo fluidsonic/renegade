@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DIALOG_FACTORY_H
 #define __DIALOG_FACTORY_H

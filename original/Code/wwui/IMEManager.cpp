@@ -1,19 +1,12 @@
 #include "IMEManager.h"
 #include "WWString.h"
-#include "WWDebug.h"
 #include <locale.h>
 #include <mbctype.h>
 
-#if defined(_MSC_VER)
-#pragma warning(push, 3)
-#endif
 
 #include <algorithm>
 #include <memory>
 
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
 
 #pragma comment(lib, "imm32.lib")
 
@@ -85,7 +78,6 @@ IMEManager::IMEManager() :
 		mUseUnicode(false),
 		mInComposition(false)
 	{
-	WWDEBUG_SAY(("IMEManager: Instantiated\n"));
 
 	mLangID = MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT);
 
@@ -112,7 +104,6 @@ IMEManager::IMEManager() :
 
 IMEManager::~IMEManager()
 	{
-	WWDEBUG_SAY(("IMEManager: destroyed\n"));
 
 	if (mHIMC)
 		{
@@ -195,7 +186,6 @@ bool IMEManager::FinalizeCreate(HWND hwnd)
 
 void IMEManager::Activate(void)
 	{
-	WWDEBUG_SAY(("IMEManager: Activate\n"));
 
 	HIMC imc = ImmGetContext(mHWND);
 
@@ -233,7 +223,6 @@ void IMEManager::Activate(void)
 
 void IMEManager::Deactivate(void)
 	{
-	WWDEBUG_SAY(("IMEManager: Deactivate\n"));
 
 	HIMC imc = ImmGetContext(mHWND);
 
@@ -311,7 +300,6 @@ void IMEManager::Disable(void)
 	// If this is the first disable lock the perform the actuall disabling.
 	if (1 == mDisableCount)
 		{
-		WWDEBUG_SAY(("IMEManager: Disabled\n"));
 		mDisabledHIMC = ImmAssociateContext(mHWND, NULL);
 
 		IMEEvent action(IME_DISABLED, this);
@@ -344,7 +332,6 @@ void IMEManager::Enable(void)
 		// Re-enable when there is no disable locks.
 		if (0 == mDisableCount)
 			{
-			WWDEBUG_SAY(("IMEManager: Enabled\n"));
 			ImmAssociateContext(mHWND, mDisabledHIMC);
 			mDisabledHIMC = NULL;
 
@@ -426,7 +413,6 @@ bool IMEManager::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 		// Sent when the system is about to change the current IME.
 		case WM_IME_SELECT:
-			WWDEBUG_SAY(("IMEManager: WM_IME_SELECT\n"));
 			break;
 
 		// We will handle all of the UI so clear all of the flags.
@@ -454,7 +440,6 @@ bool IMEManager::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		// Sent when unable to extend the composition to accomodate any more characters.
 		case WM_IME_COMPOSITIONFULL:
 			{
-			WWDEBUG_SAY(("IMEManager: WM_IME_COMPOSITIONFULL\n"));
 			CompositionEvent event(COMPOSITION_FULL, this);
 			NotifyObservers(event);
 			}
@@ -570,7 +555,6 @@ LRESULT IMEManager::IMENotify(WPARAM wParam, LPARAM lParam)
 		{
 		// The open status of the input context has changed.
 		case IMN_SETOPENSTATUS:
-			WWDEBUG_SAY(("IMEManager: IMN_SETOPENSTATUS\n"));
 			{
 			HIMC imc = ImmGetContext(mHWND);
 
@@ -601,142 +585,32 @@ LRESULT IMEManager::IMENotify(WPARAM wParam, LPARAM lParam)
 
 		// Open the status window
 		case IMN_OPENSTATUSWINDOW:
-			WWDEBUG_SAY(("IMEManager: IMN_OPENSTATUSWINDOW\n"));
 			break;
 
 		// Close the status window
 		case IMN_CLOSESTATUSWINDOW:
-			WWDEBUG_SAY(("IMEManager: IMN_CLOSESTATUSWINDOW\n"));
 			break;
 
 		// Update the position of the status window.
 		case IMN_SETSTATUSWINDOWPOS:
-			WWDEBUG_SAY(("IMEManager: IMN_SETSTATUSWINDOWPOS\n"));
 			break;
 
 		// The font of the input context has changed.
 		case IMN_SETCOMPOSITIONFONT:
-			WWDEBUG_SAY(("IMEManager: IMN_SETCOMPOSITIONFONT\n"));
 			break;
 
 		// The style or position of the composition window has changed.
 		case IMN_SETCOMPOSITIONWINDOW:
-			WWDEBUG_SAY(("IMEManager: IMN_SETCOMPOSITIONWINDOW\n"));
 			break;
 
 		// The conversion mode of the input context has changed.
 		case IMN_SETCONVERSIONMODE:
-			WWDEBUG_SAY(("IMEManager: IMN_SETCONVERSIONMODE\n"));
 
-#ifdef WWDEBUG
-			{
-			HIMC imc = ImmGetContext(mHWND);
-
-			if (imc)
-				{
-				DWORD conversionMode = 0;
-				DWORD sentenceMode = 0;
-
-				BOOL okay = ImmGetConversionStatus(imc, &conversionMode, &sentenceMode);
-
-				if (okay)
-					{
-					WWDEBUG_SAY(("IMEManager: ConversionMode - "));
-
-					static struct convmodestruct {long flag; const char* ondesc; const char* offdesc;} _convModes[] = 
-						{
-						{IME_CMODE_CHARCODE, "CharCode:On", "CharCode:Off"},
-						{IME_CMODE_EUDC, " EUDC:On", " EUDC:Off"},
-						{IME_CMODE_FIXED, " Fixed:On", " Fixed:Off"},
-						{IME_CMODE_FULLSHAPE, " FullShape", " HalfShape"},
-						{IME_CMODE_HANJACONVERT, " Hanja:On", " Hanja:Off"},
-						{IME_CMODE_KATAKANA, " Katakana", " Hiragana"},
-						{IME_CMODE_NATIVE, " Native", " Alphanumberic"},
-						{IME_CMODE_NOCONVERSION, " Conversion:Off", " Conversion:On"},
-						{IME_CMODE_ROMAN, " Roman:On", " Roman:Off"},
-						{IME_CMODE_SOFTKBD, " SoftKbd:On", " SoftKbd:Off"},
-						{IME_CMODE_SYMBOL, " Symbol:On", " Symbol:Off"},
-						{0, ""}
-						};
-
-					int flgidx = 0;
-
-					while (_convModes[flgidx].flag)
-						{
-						if (conversionMode & _convModes[flgidx].flag)
-							{
-							WWDEBUG_SAY((_convModes[flgidx].ondesc));
-							}
-						else
-							{
-							WWDEBUG_SAY((_convModes[flgidx].offdesc));
-							}
-
-						flgidx++;
-						}
-
-					WWDEBUG_SAY(("\n"));
-					}
-
-				ImmReleaseContext(mHWND, imc);
-				}
-			}
-#endif
 			break;
 
 		// The sentence mode has changed.
 		case IMN_SETSENTENCEMODE:
-			WWDEBUG_SAY(("IMEManager: IMN_SETSENTENCEMODE\n"));
 
-#ifdef WWDEBUG
-			{
-			HIMC imc = ImmGetContext(mHWND);
-
-			if (imc)
-				{
-				DWORD conversionMode = 0;
-				DWORD sentenceMode = 0;
-
-				BOOL okay = ImmGetConversionStatus(imc, &conversionMode, &sentenceMode);
-
-				if (okay)
-					{
-					WWDEBUG_SAY(("IMEManager: SentenceMode - "));
-
-					static struct smodestruct {long flag; const char* ondesc; const char* offdesc;} _sModes[] = 
-						{
-						{IME_SMODE_AUTOMATIC, "Automatic:On", "Automatic:Off"},
-						{IME_SMODE_NONE, " SentenceInfo:Off", " SentenceInfo:On"},
-						{IME_SMODE_PHRASEPREDICT, " PhrasePredict:On", " PhrasePredict:Off"},
-						{IME_SMODE_PLAURALCLAUSE, " PluralClause:On", " PluralClause:Off"},
-						{IME_SMODE_SINGLECONVERT, " SingleConvert:On", " SingleConvert:Off"},
-						{IME_SMODE_CONVERSATION, " Conversation:On", " Conversation:Off"},
-						{0, ""}
-						};
-
-					int flgidx = 0;
-
-					while (_sModes[flgidx].flag)
-						{
-						if (sentenceMode & _sModes[flgidx].flag)
-							{
-							WWDEBUG_SAY((_sModes[flgidx].ondesc));
-							}
-						else
-							{
-							WWDEBUG_SAY((_sModes[flgidx].offdesc));
-							}
-
-						flgidx++;
-						}
-
-					WWDEBUG_SAY(("\n"));
-					}
-
-				ImmReleaseContext(mHWND, imc);
-				}
-			}
-#endif
 			break;
 
 		// Open the candidate window (lParam = candidate flags)
@@ -756,12 +630,10 @@ LRESULT IMEManager::IMENotify(WPARAM wParam, LPARAM lParam)
 
 		// Candidate processing is finished; moving the candidate window
 		case IMN_SETCANDIDATEPOS:
-			WWDEBUG_SAY(("IMEManager: IMN_SETCANDIDATEPOS\n"));
 			break;
 
 		// Show error message or other information
 		case IMN_GUIDELINE:
-			WWDEBUG_SAY(("IMEManager: IMN_GUIDELINE\n"));
 			{
 			IMEEvent event(IME_GUIDELINE, this);
 			NotifyObservers(event);
@@ -791,7 +663,6 @@ LRESULT IMEManager::IMENotify(WPARAM wParam, LPARAM lParam)
 
 HKL IMEManager::InputLanguageChangeRequest(HKL hkl)
 	{
-	WWDEBUG_SAY(("IMEManager: Input language change request\n"));
 
 	// Get the number of Keyboard layouts available to the system
 	UINT numLayouts = GetKeyboardLayoutList(0, NULL);
@@ -898,15 +769,7 @@ void IMEManager::InputLanguageChanged(HKL hkl)
 		}
 	#endif
 
-	WWDEBUG_SAY(("IMEManager: Language Changed - LangID = %04X, CodePage = %d, Description: '%S'\n",
-			mLangID, mCodePage, mIMEDescription));
 
-	WWDEBUG_SAY(("IMEManager: Properties - %s%s%s%s%s\n",
-			mIMEProperties & IME_PROP_AT_CARET ? "At Caret" : "",
-			mIMEProperties & IME_PROP_SPECIAL_UI ? ", SpecialUI" : "",
-			mIMEProperties & IME_PROP_CANDLIST_START_FROM_1 ? ", CandlistFrom1" : "",
-			mIMEProperties & IME_PROP_UNICODE ? ", Unicode" : "",
-			mIMEProperties & IME_PROP_COMPLETE_ON_UNSELECT ? ", Complete on Unselect" : ""));
 
 	IMEEvent action(IME_LANGUAGECHANGED, this);
 	NotifyObservers(action);
@@ -959,7 +822,6 @@ void IMEManager::ResetComposition(void)
 
 void IMEManager::StartComposition(void)
 	{
-	WWDEBUG_SAY(("IMEManager: StartComposition\n"));
 
 	mInComposition = true;
 	mResultString[0] = 0;
@@ -985,7 +847,6 @@ void IMEManager::StartComposition(void)
 
 void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 	{
-	WWDEBUG_SAY(("IMEManager: DoComposition\n"));
 
 #if(0)
 	#ifdef _DEBUG
@@ -1004,7 +865,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 		{0, ""}
 		};
 
-	WWDEBUG_SAY(("Flags: "));
 
 	int flgidx = 0;
 
@@ -1012,13 +872,11 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 		{
 		if (compFlags & _gcsFlags[flgidx].flag)
 			{
-			WWDEBUG_SAY((_gcsFlags[flgidx].desc));
 			}
 
 		flgidx++;
 		}
 
-	WWDEBUG_SAY(("\n"));
 	#endif
 #endif
 
@@ -1045,7 +903,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 			// Retrieve the result string
 			if (ReadCompositionString(imc, GCS_RESULTSTR, mResultString, sizeof(mResultString)))
 				{
-				WWDEBUG_SAY(("Result string '%S'\n", mResultString));
 
 				CompositionEvent event(COMPOSITION_RESULT, this);
 				NotifyObservers(event);
@@ -1060,34 +917,16 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 				{
 				if (ReadCompositionString(imc, GCS_COMPREADSTR, mReadingString, sizeof(mReadingString)))
 					{
-					WWDEBUG_SAY(("Reading string '%S'\n", (const wchar_t*)mReadingString));
 					action = COMPOSITION_CHANGE;
 					}
 				}
 
-#ifdef WWDEBUG
-			if (compFlags & GCS_COMPREADATTR)
-				{
-				unsigned char attr[IME_MAX_STRING_LEN * 2];
-				long size = ReadReadingAttr(imc, attr, sizeof(attr));
-
-				WWDEBUG_SAY(("ReadAttr: "));
-				
-				for (long index = 0; index < size; ++index)
-					{
-					WWDEBUG_SAY(("%01x", (int)attr[index]));
-					}
-				
-				WWDEBUG_SAY(("\n"));
-				}
-#endif
 
 			// Update composition string.
 			if (compFlags & GCS_COMPSTR)
 				{
 				if (ReadCompositionString(imc, GCS_COMPSTR, mCompositionString, sizeof(mCompositionString)))
 					{
-					WWDEBUG_SAY(("Composition string '%S'\n", (const wchar_t*)mCompositionString));
 					action = COMPOSITION_CHANGE;
 					}
 				}
@@ -1096,16 +935,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 				{
 				long size = ReadCompositionAttr(imc, mCompositionAttr, sizeof(mCompositionAttr));
 
-#ifdef WWDEBUG
-				WWDEBUG_SAY(("CompAttr: "));
-
-				for (long index = 0; index < size; ++index)
-					{
-					WWDEBUG_SAY(("%01x", (int)mCompositionAttr[index]));
-					}
-				
-				WWDEBUG_SAY(("\n"));
-#endif
 				}
 
 			if (compFlags & GCS_COMPCLAUSE)
@@ -1113,17 +942,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 				mCompositionClause[0] = 0;
 				long size = ReadCompositionClause(imc, mCompositionClause, sizeof(mCompositionClause));
 
-#ifdef WWDEBUG
-				WWDEBUG_SAY(("CompClause: "));
-				const int count = (size / sizeof(unsigned long));
-
-				for (int index = 0; index < count; ++index)
-					{
-					WWDEBUG_SAY(("%u ", mCompositionClause[index]));
-					}
-
-				WWDEBUG_SAY(("\n"));
-#endif
 				}
 
 			if (compFlags & GCS_CURSORPOS)
@@ -1159,7 +977,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 
 void IMEManager::EndComposition(void)
 	{
-	WWDEBUG_SAY(("IMEManager: EndComposition\n"));
 
 	HIMC imc = ImmGetContext(mHWND);
 
@@ -1260,7 +1077,6 @@ long IMEManager::ReadReadingAttr(HIMC imc, unsigned char* attr, int length)
 	string[size] = 0;
 		
 	LONG attrSize = ImmGetCompositionString(imc, GCS_COMPREADATTR, attr, length);
-	WWASSERT(size == attrSize);
 
 	if (attrSize <= size)
 		{
@@ -1348,7 +1164,6 @@ long IMEManager::ReadCompositionAttr(HIMC imc, unsigned char* attr, int length)
 	string[size] = 0;
 		
 	LONG attrSize = ImmGetCompositionString(imc, GCS_COMPATTR, attr, length);
-	WWASSERT(size == attrSize);
 
 	if (attrSize <= size)
 		{
@@ -1525,7 +1340,6 @@ bool IMEManager::GetCompositionFont(LPLOGFONT lpFont)
 
 void IMEManager::OpenCandidate(unsigned long candList)
 	{
-	WWDEBUG_SAY(("IMEManager: OpenCandidate\n"));
 
 	for (int index = 0; index < 32; index++)
 		{
@@ -1560,7 +1374,6 @@ void IMEManager::OpenCandidate(unsigned long candList)
 
 void IMEManager::ChangeCandidate(unsigned long candList)
 	{
-	WWDEBUG_SAY(("IMEManager: ChangeCandidate\n"));
 
 	for (int index = 0; index < 32; index++)
 		{
@@ -1590,7 +1403,6 @@ void IMEManager::ChangeCandidate(unsigned long candList)
 
 void IMEManager::CloseCandidate(unsigned long candList)
 	{
-	WWDEBUG_SAY(("IMEManager: CloseCandidate\n"));
 
 	for (int index = 0; index < 32; index++)
 		{
@@ -1633,7 +1445,6 @@ unsigned long IMEManager::GetGuideline(wchar_t* outString, int length)
 			if (mUseUnicode)
 				{
 				DWORD size = ImmGetGuideLineW(imc, GGL_STRING, outString, (length * sizeof(wchar_t)));
-				WWASSERT(size <= (DWORD)length);
 				outString[size / sizeof(wchar_t)] = 0;
 				}
 			else

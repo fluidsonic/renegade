@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef DX8TEXTUREMANAGER_H
 #define DX8TEXTUREMANAGER_H

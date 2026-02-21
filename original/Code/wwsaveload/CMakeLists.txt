@@ -8,8 +8,7 @@ target_include_directories(wwsaveload BEFORE PRIVATE
     "${COMPAT_DIR}"
     "${ORIG_WWSAVELOAD}"
     "${ORIG_SRC}/wwlib"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
 )
 
-target_link_libraries(wwsaveload wwlib wwdebug wwmath)
+target_link_libraries(wwsaveload wwlib wwmath)

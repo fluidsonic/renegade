@@ -1,13 +1,10 @@
 #include "curve.h"
-#include "wwdebug.h"
 #include "persistfactory.h"
 #include "wwmathids.h"
-#include "wwhack.h"
 
 /*
 ** Force-Link this module because the linker can't detect that we actually need it...
 */
-DECLARE_FORCE_LINK(curve);
 
 /*
 ** Persist factories and chunk-id's used to save and load.
@@ -38,7 +35,6 @@ enum
 	LINEARCURVE1D_CHUNK_CURVE1D			= 0x00020657,
 
 };
-
 
 /***********************************************************************************************
 **
@@ -118,7 +114,6 @@ void Curve3DClass::Set_Key(int i,const Vector3 & point)
 	Keys[i].Point = point;
 }	
 
-
 int Curve3DClass::Add_Key(const Vector3 & point,float t)
 {
 	int idx = 0;
@@ -148,8 +143,6 @@ void Curve3DClass::Clear_Keys(void)
 
 void Curve3DClass::Find_Interval(float time,int * i0,int * i1,float * t)
 {
-	WWASSERT(time >= Keys[0].Time);
-	WWASSERT(time <= Keys[Keys.Count()-1].Time);
 
 	int i=0;
 	while (time > Keys[i+1].Time) {
@@ -213,7 +206,6 @@ bool Curve3DClass::Load(ChunkLoadClass & cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -221,8 +213,6 @@ bool Curve3DClass::Load(ChunkLoadClass & cload)
 
 	return true;
 }
-
-
 
 /***********************************************************************************************
 **
@@ -273,7 +263,6 @@ bool LinearCurve3DClass::Load(ChunkLoadClass & cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -281,7 +270,6 @@ bool LinearCurve3DClass::Load(ChunkLoadClass & cload)
 
 	return true;
 }
-
 
 /***********************************************************************************************
 **
@@ -365,7 +353,6 @@ void Curve1DClass::Set_Key(int i,float point,unsigned int extra)
 	Keys[i].Extra = extra;
 }	
 
-
 int Curve1DClass::Add_Key(float point,float t,unsigned int extra)
 {
 	int idx = 0;
@@ -413,8 +400,6 @@ void Curve1DClass::Find_Interval(float time,int * i0,int * i1,float * t)
 		}
 	}
 	else {
-		WWASSERT(time >= Keys[0].Time);
-		WWASSERT(time <= Keys[Keys.Count()-1].Time);
 	}
 
 	int i=0;
@@ -481,7 +466,6 @@ bool Curve1DClass::Load(ChunkLoadClass & cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -540,7 +524,6 @@ bool LinearCurve1DClass::Load(ChunkLoadClass & cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -548,5 +531,4 @@ bool LinearCurve1DClass::Load(ChunkLoadClass & cload)
 
 	return true;
 }
-
 

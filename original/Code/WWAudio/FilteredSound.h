@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __FILTERED_SOUND_H
 #define __FILTERED_SOUND_H

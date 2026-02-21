@@ -144,7 +144,6 @@ void SegLineRendererClass::Set_Texture_Tile_Factor(float factor)
 {
 	if (factor > 8.0f) {
 		factor = 8.0f;
-		WWDEBUG_SAY(("Texture Tile Factor too large in SegLineRendererClass!\r\n"));
 	} else {
 		factor = MAX(factor, 0.0f);
 	}

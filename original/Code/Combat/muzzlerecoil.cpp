@@ -1,7 +1,6 @@
 #include "muzzlerecoil.h"
 #include "timemgr.h"
 #include "rendobj.h"
-#include "wwdebug.h"
 
 
 MuzzleRecoilClass::MuzzleRecoilClass(void)
@@ -28,7 +27,6 @@ void MuzzleRecoilClass::Start_Recoil(float recoil_scale,float recoil_time)
 
 void MuzzleRecoilClass::Update(RenderObjClass * model)
 {
-	WWASSERT(model != NULL);
 	if ((RecoilTimer <= 0.0f) || (BoneIndex <= 0)) {
 		return;
 	}

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __PRIORITY_VECTOR_H
 #define __PRIORITY_VECTOR_H

@@ -393,7 +393,6 @@ TranslateDBClass::Export_Table (const char *filename)
 										  0L,
 										  NULL);
 
-	WWASSERT (file != INVALID_HANDLE_VALUE);
 	if (file != INVALID_HANDLE_VALUE) {
 
 		TextFileClass file_obj;
@@ -479,7 +478,6 @@ TranslateDBClass::Export_C_Header (const char *filename)
 										  0L,
 										  NULL);
 
-	WWASSERT (file != INVALID_HANDLE_VALUE);
 	if (file != INVALID_HANDLE_VALUE) {
 
 		TextFileClass file_obj;
@@ -555,7 +553,6 @@ TranslateDBClass::Import_C_Header (const char *filename)
 										  0L,
 										  NULL);
 
-	WWASSERT (file != INVALID_HANDLE_VALUE);
 	if (file != INVALID_HANDLE_VALUE) {
 
 		TextFileClass file_obj;
@@ -680,7 +677,6 @@ TranslateDBClass::Get_Object (int index)
 {
 	TDBObjClass *object = NULL;
 	
-	WWASSERT (index >= 0 && index < m_ObjectList.Count ());
 	if (index >= 0 && index < m_ObjectList.Count ()) {
 		object = m_ObjectList[index];
 	}
@@ -745,7 +741,6 @@ TranslateDBClass::Add_Category (TDBCategoryClass *new_category, bool assign_id)
 {
 	bool retval = false;
 
-	WWASSERT (new_category != NULL);
 	if (new_category != NULL) {
 
 		//
@@ -784,7 +779,6 @@ TranslateDBClass::Remove_Category (int index)
 	//
 	//	Make sure this index is in our range
 	//
-	WWASSERT (index >= 0 && index < m_CategoryList.Count ());
 	if (index >= 0 && index < m_CategoryList.Count ()) {
 		
 		//
@@ -828,7 +822,6 @@ TranslateDBClass::Add_Object (TDBObjClass *new_obj)
 {
 	bool retval = false;
 
-	WWASSERT (new_obj != NULL);
 	if (new_obj != NULL) {
 
 		//
@@ -882,7 +875,6 @@ TranslateDBClass::Remove_Object (int index)
 	//
 	//	Make sure this index is in our range
 	//
-	WWASSERT (index >= 0 && index < m_ObjectList.Count ());
 	if (index >= 0 && index < m_ObjectList.Count ()) {
 		
 		//
@@ -968,7 +960,6 @@ TranslateDBClass::Get_Category (int index)
 {
 	TDBCategoryClass *category = NULL;
 	
-	WWASSERT (index >= 0 && index < m_CategoryList.Count ());
 	if (index >= 0 && index < m_CategoryList.Count ()) {
 		category = m_CategoryList[index];
 	}
@@ -1150,7 +1141,6 @@ TranslateDBClass::Import_Strings (const char *filename)
 											0L,
 											NULL);
 
-	WWASSERT (file != INVALID_HANDLE_VALUE);
 	if (file != INVALID_HANDLE_VALUE) {
 
 		//
@@ -1242,9 +1232,6 @@ int Build_List_From_String
 {
 	int count = 0;
 
-	WWASSERT (buffer != NULL);
-	WWASSERT (delimiter != NULL);
-	WWASSERT (string_list != NULL);
 	if ((buffer != NULL) &&
 		 (delimiter != NULL) &&
 		 (string_list != NULL))

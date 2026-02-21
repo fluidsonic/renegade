@@ -1,12 +1,8 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef _SUBTITLE_H_
 #define _SUBTITLE_H_
 
 #include "always.h"
-#include "wwdebug.h"
 #include <wchar.h>
 
 class SubTitleClass
@@ -36,7 +32,6 @@ public:
 	// Set the line position the subtitle should be displayed at.
 	void Set_Line_Position(int linePos)
 	{
-		WWASSERT((linePos >= 1) && (linePos <= 15));
 		mLinePosition = linePos;
 	}
 	

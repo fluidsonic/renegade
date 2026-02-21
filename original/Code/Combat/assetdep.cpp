@@ -4,7 +4,6 @@
 #include "assetmgr.h"
 #include "ffactory.h"
 #include "saveloadstatus.h"
-#include "wwprofile.h"
 
 ///////////////////////////////////////////////////////////////////////
 //	Local prototypes
@@ -196,7 +195,6 @@ AssetDependencyManager::Load_Assets (const char *filename)
 			//
 			file->Close ();
 		} else {
-			WWDEBUG_SAY(( "Failed to find %s\n", filename ));
 		}
 
 		_TheFileFactory->Return_File (file);
@@ -214,9 +212,7 @@ AssetDependencyManager::Load_Assets (const char *filename)
 void
 AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 {
-	WWLOG_PREPARE_TIME_AND_MEMORY("AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)");
 	cload.Open_Chunk ();
-	WWASSERT (cload.Cur_Chunk_ID () == CHUNKID_FILE_LIST);
 	if (cload.Cur_Chunk_ID () == CHUNKID_FILE_LIST) {
 
 		//
@@ -254,7 +250,6 @@ AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 				break;
 
 				default:
-					WWDEBUG_SAY (("Unexpected chunk id %d found while preloading assets.\r\n", cload.Cur_Micro_Chunk_ID));
 					break;
 			}
 

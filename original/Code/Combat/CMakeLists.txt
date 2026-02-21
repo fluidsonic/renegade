@@ -9,7 +9,6 @@ target_include_directories(Combat PRIVATE
     "${ORIG_SRC}/Commando"
     "${ORIG_SRC}/wwui"
     "${ORIG_SRC}/wwlib"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
     "${ORIG_SRC}/ww3d2"
     "${ORIG_SRC}/wwphys"

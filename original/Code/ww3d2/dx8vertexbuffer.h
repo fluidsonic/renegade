@@ -1,12 +1,8 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef DX8VERTEXBUFFER_H
 #define DX8VERTEXBUFFER_H
 
 #include "always.h"
-#include "wwdebug.h"
 #include "refcount.h"
 #include "dx8fvf.h"
 
@@ -151,7 +147,6 @@ public:
 inline VertexFormatXYZNDUV2 * DynamicVBAccessClass::WriteLockClass::Get_Formatted_Vertex_Array()
 {
 	// assert that the format of the dynamic vertex buffer is still what we think it is.
-	WWASSERT(DynamicVBAccess->VertexBuffer->FVF_Info().Get_FVF() == (D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX2|D3DFVF_DIFFUSE));
 	return Vertices;
 }
 

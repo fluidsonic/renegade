@@ -4,7 +4,6 @@
 #include "w3d_file.h"
 #include "assetmgr.h"
 #include "w3derr.h"
-#include "wwdebug.h"
 #include "vertmaterial.h"
 #include "shader.h"
 #include "matinfo.h"
@@ -29,10 +28,8 @@
 #include "dx8indexbuffer.h"
 #include "dx8renderer.h"
 #include "visrasterizer.h"
-#include "wwmemlog.h"
 #include "dx8rendererdebugger.h"
 #include <stdio.h>
-#include <wwprofile.h>
 
 static unsigned MeshDebugIdCount;
 
@@ -427,7 +424,6 @@ void MeshClass::Scale(float scalex, float scaley, float scalez)
  *=============================================================================================*/
 void	MeshClass::Get_Deformed_Vertices(Vector3 *dst_vert, Vector3 *dst_norm)
 {
-	WWASSERT(Model->Get_Flag(MeshGeometryClass::SKIN));
 	Model->get_deformed_vertices(dst_vert,dst_norm,Container->Get_HTree());
 }
 
@@ -446,9 +442,6 @@ void	MeshClass::Get_Deformed_Vertices(Vector3 *dst_vert, Vector3 *dst_norm)
  *=============================================================================================*/
 void MeshClass::Get_Deformed_Vertices(Vector3 *dst_vert)
 {
-	WWASSERT(Model->Get_Flag(MeshGeometryClass::SKIN));
-	WWASSERT(Container != NULL);
-	WWASSERT(Container->Get_HTree() != NULL);
 
 	Model->get_deformed_vertices(dst_vert,Container->Get_HTree());
 }
@@ -459,7 +452,6 @@ void MeshClass::Compose_Deformed_Vertex_Buffer(
 	const Vector2* uv1,
 	const unsigned* diffuse)
 {
-	WWASSERT(Model->Get_Flag(MeshGeometryClass::SKIN));
 	Model->compose_deformed_vertex_buffer(verts,uv0,uv1,diffuse,Container->Get_HTree());
 }
 
@@ -477,7 +469,6 @@ void MeshClass::Compose_Deformed_Vertex_Buffer(
  *=============================================================================================*/
 void MeshClass::Create_Decal(DecalGeneratorClass * generator)
 {
-	WWMEMLOG(MEM_GEOMETRY);
 
 	if (WW3D::Are_Decals_Enabled() == false) {
 		return;
@@ -509,7 +500,6 @@ void MeshClass::Create_Decal(DecalGeneratorClass * generator)
 
 	} else {
 		
-		WWDEBUG_SAY(("PERFORMANCE WARNING: Decal being applied to a SKIN mesh!\r\n"));
 
 		// Skin
 		// The deformed worldspace vertices are used both for the APT and in Create_Decal() to
@@ -574,7 +564,6 @@ int MeshClass::Get_Num_Polys(void) const
 {
 	if (Model) {
 		int num_passes=Model->Get_Pass_Count();
-		WWASSERT(num_passes>0);
 		int poly_count=Model->Get_Polygon_Count();
 		return num_passes*poly_count;
 	} else {
@@ -597,7 +586,6 @@ int MeshClass::Get_Num_Polys(void) const
  *=============================================================================================*/
 void MeshClass::Render(RenderInfoClass & rinfo)
 {
-	WWPROFILE("Mesh::Render");
 	if (Is_Not_Hidden_At_All() == false) {
 		return;
 	}
@@ -710,7 +698,7 @@ void MeshClass::Render(RenderInfoClass & rinfo)
 			** to tell the mesh rendering system to process this skin
 			*/
 			if (rendered_something && Model->Get_Flag(MeshGeometryClass::SKIN)) {
-				//WWASSERT(dynamic_cast<DX8SkinFVFCategoryContainer *>(fvf_container) != NULL);
+				//assert(dynamic_cast<DX8SkinFVFCategoryContainer *>(fvf_container) != NULL);
 				static_cast<DX8SkinFVFCategoryContainer*>(fvf_container)->Add_Visible_Skin(this);
 			}
 
@@ -886,7 +874,6 @@ void MeshClass::Special_Render(SpecialRenderInfoClass & rinfo)
 	
 	if (rinfo.RenderType == SpecialRenderInfoClass::RENDER_VIS) {
 	
-		WWASSERT(rinfo.VisRasterizer != NULL);
 		rinfo.VisRasterizer->Enable_Two_Sided_Rendering(!!Model->Get_Flag(MeshGeometryClass::TWO_SIDED));
 
 		if (Model->Get_Flag(MeshModelClass::SKIN) == 0) {
@@ -1000,7 +987,6 @@ WW3DErrorType MeshClass::Load_W3D(ChunkLoadClass & cload)
 	*/
 	Model = NEW_REF(MeshModelClass,());
 	if (Model == NULL) {
-		WWDEBUG_SAY(("MeshClass::Load - Failed to allocate model\r\n"));
 		return WW3D_ERROR_LOAD_FAILED;
 	}
 
@@ -1079,7 +1065,6 @@ bool MeshClass::Cast_Ray(RayCollisionTestClass & raytest)
 	world.Get_Orthogonal_Inverse(world_to_obj);
 	RayCollisionTestClass objray(raytest,world_to_obj);
 
-	WWASSERT(Model);
 	
 	bool hit = Model->Cast_Ray(objray);
 	
@@ -1113,7 +1098,6 @@ bool MeshClass::Cast_AABox(AABoxCollisionTestClass & boxtest)
 	if ((Get_Collision_Type() & boxtest.CollisionType) == 0) return false;
 	if (boxtest.Result->StartBad) return false;
 
-	WWASSERT(Model);
 
 	// This function analyses the tranform to call optimized functions in certain cases
 	bool hit = Model->Cast_World_Space_AABox(boxtest, Get_Transform());
@@ -1151,7 +1135,6 @@ bool MeshClass::Cast_OBBox(OBBoxCollisionTestClass & boxtest)
 	tm.Get_Orthogonal_Inverse(world_to_obj);
 	OBBoxCollisionTestClass localtest(boxtest,world_to_obj);
 
-	WWASSERT(Model);
 
 	bool hit = Model->Cast_OBBox(localtest);
 
@@ -1193,7 +1176,6 @@ bool MeshClass::Intersect_AABox(AABoxIntersectionTestClass & boxtest)
 	Matrix3D inv_tm;
 	Get_Transform().Get_Orthogonal_Inverse(inv_tm);
 	OBBoxIntersectionTestClass local_test(boxtest,inv_tm);
-	WWASSERT(Model);
 	return Model->Intersect_OBBox(local_test);
 }
 
@@ -1220,7 +1202,6 @@ bool MeshClass::Intersect_OBBox(OBBoxIntersectionTestClass & boxtest)
 	Matrix3D inv_tm;
 	Get_Transform().Get_Orthogonal_Inverse(inv_tm);
 	OBBoxIntersectionTestClass local_test(boxtest,inv_tm);
-	WWASSERT(Model);
 	return Model->Intersect_OBBox(local_test);
 }
 
@@ -1421,11 +1402,8 @@ DX8FVFCategoryContainer* MeshClass::Peek_FVF_Category_Container()
 {
 	if (PolygonRendererList.Is_Empty()) return NULL;
 	DX8PolygonRendererClass* polygon_renderer=PolygonRendererList.Get_Head();
-	WWASSERT(polygon_renderer);
 	DX8TextureCategoryClass* texture_category=polygon_renderer->Get_Texture_Category();
-	WWASSERT(texture_category);
 	DX8FVFCategoryContainer* fvf_category=texture_category->Get_Container();
-	WWASSERT(fvf_category);
 	return fvf_category;
 }
 

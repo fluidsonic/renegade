@@ -1,7 +1,6 @@
 #include "line3d.h"
 #include "vertmaterial.h"
 #include "shader.h"
-#include "wwdebug.h"
 #include "ww3d.h"
 #include "rinfo.h"
 #include "dx8wrapper.h"
@@ -135,7 +134,6 @@ Line3DClass::Line3DClass(const Line3DClass & src) :
 Line3DClass & Line3DClass::operator = (const Line3DClass & that)
 {
 	// Naty: need to add MatInfo and remapper to do this 	Byon
-	WWASSERT(0);
 
 	RenderObjClass::operator = (that);
 

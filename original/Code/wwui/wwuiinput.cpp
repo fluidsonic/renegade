@@ -1,6 +1,5 @@
 #include "wwuiinput.h"
 #include "dialogmgr.h"
-#include "wwmemlog.h"
 
 
 WWUIInputClass::WWUIInputClass(void) :
@@ -42,7 +41,6 @@ IME::IMEManager* WWUIInputClass::GetIME(void) const
 
 bool WWUIInputClass::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT& result)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	if (mIMEManager) {
 		if (mIMEManager->ProcessMessage(hwnd, msg, wParam, lParam, result)) {

@@ -10,7 +10,6 @@
 
 #include <string.h>	// for memset
 
-#include "wwdebug.h"
 
 //-----------------------------------------------------------------------------
 //cBitPacker::cBitPacker(UINT buffer_size) :
@@ -19,10 +18,10 @@ cBitPacker::cBitPacker() :
 	BitWritePosition(0),
 	BitReadPosition(0)
 {
-	//WWASSERT(BufferSize > 0);
+	//assert(BufferSize > 0);
 
 	//Buffer = new BYTE[BufferSize];
-	//WWASSERT(Buffer != NULL);
+	//assert(Buffer != NULL);
 	//memset(Buffer, 0, BufferSize);
 	memset(Buffer, 0, MAX_BUFFER_SIZE);
 }
@@ -36,7 +35,7 @@ cBitPacker::~cBitPacker()
 //-----------------------------------------------------------------------------
 cBitPacker& cBitPacker::operator=(const cBitPacker& rhs)
 {
-	//WWASSERT(BufferSize == rhs.BufferSize);
+	//assert(BufferSize == rhs.BufferSize);
 
 	//memcpy(Buffer, rhs.Buffer, rhs.BufferSize);
 	memcpy(Buffer, rhs.Buffer, MAX_BUFFER_SIZE);
@@ -63,13 +62,11 @@ void cBitPacker::Add_Bits(ULONG value, UINT num_bits)
 	// instead anyway.
 	//
 #if 0	// Old version
-	WWASSERT(num_bits > 0 && num_bits <= MAX_BITS);
 
 	ULONG mask = 1 << (num_bits - 1);
 	while (mask > 0) {
 
-		//WWASSERT(BitWritePosition < BufferSize * 8);
-		WWASSERT(BitWritePosition < MAX_BUFFER_SIZE * 8);
+		//assert(BitWritePosition < BufferSize * 8);
 
 		UINT byte_num = BitWritePosition / 8;
 		UINT bit_offset = BitWritePosition % 8;
@@ -84,8 +81,6 @@ void cBitPacker::Add_Bits(ULONG value, UINT num_bits)
 #else	// New faster version
 
 	// Verify that we're not writing over buffer
-	WWASSERT(num_bits > 0 && num_bits <= MAX_BITS);
-	WWASSERT(BitWritePosition+num_bits <= MAX_BUFFER_SIZE * 8);
 
 	// Fill the remaining bits of the write byte first
 	UINT byte_num = BitWritePosition >> 3;
@@ -126,14 +121,11 @@ void cBitPacker::Add_Bits(ULONG value, UINT num_bits)
 void cBitPacker::Get_Bits(ULONG & value, UINT num_bits)
 {
 #if 0	// Old version
-	WWASSERT(num_bits > 0 && num_bits <= MAX_BITS);
 
 	value = 0;
 	for (int bit = num_bits - 1; bit >= 0; bit--) {
 
-		//WWASSERT(BitReadPosition < BufferSize * 8);
-		WWASSERT(BitReadPosition < MAX_BUFFER_SIZE * 8);
-		WWASSERT(BitReadPosition < BitWritePosition);
+		//assert(BitReadPosition < BufferSize * 8);
 		UINT byte_num = BitReadPosition / 8;
 		UINT bit_offset = BitReadPosition % 8;
 		bool b = (Buffer[byte_num] & (1 << bit_offset)) != 0;
@@ -145,9 +137,6 @@ void cBitPacker::Get_Bits(ULONG & value, UINT num_bits)
 #else // New faster version
 
 	// Verify that we're not reading over buffer or write pointer
-	WWASSERT(num_bits > 0 && num_bits <= MAX_BITS);
-	WWASSERT(BitReadPosition+num_bits <= MAX_BUFFER_SIZE * 8);
-	WWASSERT(BitReadPosition+num_bits <= BitWritePosition);
 
 	UINT read_len=num_bits;
 	UINT byte_num = BitReadPosition / 8;
@@ -174,8 +163,7 @@ void cBitPacker::Get_Bits(ULONG & value, UINT num_bits)
 
 void cBitPacker::Set_Bit_Write_Position(UINT position)
 {
-	//WWASSERT(position <= BufferSize * 8);
-	WWASSERT(position <= MAX_BUFFER_SIZE * 8);
+	//assert(position <= BufferSize * 8);
 	BitWritePosition = position;
 }
 
@@ -192,7 +180,6 @@ void cBitPacker::Set_Bit_Write_Position(UINT position)
 //-----------------------------------------------------------------------------
 void cBitPacker::Increment_Bit_Position(int num_bits)
 {
-	WWASSERT(num_bits >= 0);
 
 	for (int i = 0; i < num_bits; i++) {
 		Advance_Bit_Position();
@@ -216,8 +203,7 @@ inline void cBitPacker::Advance_Bit_Position()
 	// We can advance BitWritePosition one bit past the end of the buffer, but
 	// we cannot write there.
 	//
-	//WWASSERT(BitWritePosition < BufferSize * 8);
-	WWASSERT(BitWritePosition <= BufferSize * 8);
+	//assert(BitWritePosition < BufferSize * 8);
 }
 
 */

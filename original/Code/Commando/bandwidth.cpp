@@ -13,7 +13,7 @@ ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type
 	/*
 	*/
 
-//	WWASSERT(bandwidth_type != BANDWIDTH_CUSTOM);
+//	assert(bandwidth_type != BANDWIDTH_CUSTOM);
 
 	switch (bandwidth_type) {
 		case BANDWIDTH_CUSTOM:
@@ -33,7 +33,7 @@ ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type
 		case BANDWIDTH_AUTO:
 		{
 			ULONG bps = BandwidthCheckerClass::Get_Upstream_Bandwidth();
-//			WWASSERT(bps > 0);
+//			assert(bps > 0);
 			return bps;
 		}
 		default:

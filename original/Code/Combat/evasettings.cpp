@@ -1,6 +1,5 @@
 #include "evasettings.h"
 #include "combatchunkid.h"
-#include "wwhack.h"
 #include "persistfactory.h"
 #include "definitionfactory.h"
 #include "simpledefinitionfactory.h"
@@ -9,14 +8,10 @@
 #include "combat.h"
 #include "messagewindow.h"
 
-
-DECLARE_FORCE_LINK (EvaSettings)
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Static member initialization
 ///////////////////////////////////////////////////////////////////////////////////////////
 EvaSettingsDefClass *		EvaSettingsDefClass::EvaSettings = NULL;
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Factories
@@ -48,7 +43,6 @@ enum
 	VARID_MESSAGESICONPOS
 };
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Default values
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +60,6 @@ const RectClass		DEF_MESSAGESFADEOUTUVRECT (41, 34, 127, 65);
 const RectClass		DEF_MESSAGESBACKGROUNDUVRECT (2, 1, 126, 32);
 const Vector2			DEF_MESSAGESTEXTURESIZE (128, 128);
 const Vector2			DEF_MESSAGESICONPOS (0.016F, 0.021F);
-
 
 EvaSettingsDefClass	_DefaultSettings;
 
@@ -111,7 +104,6 @@ EvaSettingsDefClass::EvaSettingsDefClass (void)	:
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	~EvaSettingsDefClass
@@ -122,7 +114,6 @@ EvaSettingsDefClass::~EvaSettingsDefClass (void)
 	EvaSettings = &_DefaultSettings;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -135,7 +126,6 @@ EvaSettingsDefClass::Get_Class_ID (void) const
 	return CLASSID_GLOBAL_SETTINGS_DEF_EVA; 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -147,7 +137,6 @@ EvaSettingsDefClass::Get_Factory (void) const
 	return _EvaSettingsDefPersistFactory; 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Create
@@ -156,10 +145,8 @@ EvaSettingsDefClass::Get_Factory (void) const
 PersistClass *
 EvaSettingsDefClass::Create (void) const 
 {
-	WWASSERT (0);
 	return NULL;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -195,7 +182,6 @@ EvaSettingsDefClass::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //

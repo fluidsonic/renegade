@@ -338,7 +338,6 @@ bool	ObjectiveManager::Save( ChunkSaveClass &csave )
 
 bool	ObjectiveManager::Load( ChunkLoadClass &cload )
 {
-	WWASSERT( ObjectiveList.Count() == 0 );
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -547,8 +546,6 @@ void	ObjectiveManager::Set_Objective_Radar_Blip( int id, PhysicalGameObj * objec
 ////////////////////////////////////////////////////////////////
 int __cdecl ObjectiveManager::ObjectiveSortCallback( const void *elem1, const void *elem2 )
 {
-   WWASSERT (elem1 != NULL);
-   WWASSERT (elem2 != NULL);
    Objective *objective1 = *((Objective **)elem1);
    Objective *objective2 = *((Objective **)elem2);	
 

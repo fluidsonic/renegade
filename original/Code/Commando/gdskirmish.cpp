@@ -16,7 +16,7 @@ cGameDataSkirmish::cGameDataSkirmish(void)	:
 	IsPlaying (false),
 	cGameData()
 {
-   //WWDEBUG_SAY(("cGameDataSkirmish::cGameDataSkirmish\n"));
+   //
 
 	Set_Time_Limit_Minutes(25);
 	Set_Ini_Filename("svrcfg_skirmish.ini");
@@ -40,7 +40,7 @@ cGameDataSkirmish::cGameDataSkirmish(void)	:
 //-----------------------------------------------------------------------------
 cGameDataSkirmish::~cGameDataSkirmish(void)
 {
-   //WWDEBUG_SAY(("cGameDataSkirmish::~cGameDataSkirmish\n"));
+   //
 }
 
 //-----------------------------------------------------------------------------

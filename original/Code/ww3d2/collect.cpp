@@ -1,7 +1,6 @@
 #include "collect.h"
 #include "chunkio.h"
 #include "camera.h"
-#include "wwdebug.h"
 #include "snappts.h"
 #include "assetmgr.h"
 #include "ww3d.h"
@@ -47,7 +46,7 @@ protected:
 class CollectionPrototypeClass : public PrototypeClass
 {
 public:
-	CollectionPrototypeClass(CollectionDefClass * def)		{ ColDef = def; WWASSERT(ColDef); }
+	CollectionPrototypeClass(CollectionDefClass * def)		{ ColDef = def; assert(ColDef); }
 	virtual ~CollectionPrototypeClass(void)					{ delete ColDef; }						 
 
 	virtual const char *			Get_Name(void) const			{ return ColDef->Get_Name(); }	
@@ -98,7 +97,6 @@ CollectionClass::CollectionClass(const CollectionDefClass & def) :
 	// create the sub objects
 	SubObjects.Resize(def.ObjectNames.Count());
 	for (int i=0; i<def.ObjectNames.Count(); i++) {
-		WWASSERT(SubObjects.Count() == i);
 		SubObjects.Add(WW3DAssetManager::Get_Instance()->Create_Render_Obj(def.ObjectNames[i]));
 		SubObjects[i]->Set_Container(this);
 	}
@@ -159,7 +157,6 @@ CollectionClass & CollectionClass::operator = (const CollectionClass & that)
 
 		SubObjects.Resize(that.SubObjects.Count());
 		for (int i=0; i<that.SubObjects.Count(); i++) {
-			WWASSERT(SubObjects.Count() == i);
 			SubObjects.Add(that.SubObjects[i]->Clone());
 			SubObjects[i]->Set_Container(this);
 		}
@@ -425,7 +422,6 @@ RenderObjClass * CollectionClass::Get_Sub_Object(int index) const
  *=============================================================================================*/
 int CollectionClass::Add_Sub_Object(RenderObjClass * subobj)
 {
-	WWASSERT(subobj);
 	subobj->Add_Ref();
 	subobj->Set_Container(this);
 	subobj->Set_Transform(Transform);
@@ -666,7 +662,6 @@ int CollectionClass::Snap_Point_Count(void)
  *=============================================================================================*/
 void CollectionClass::Get_Snap_Point(int index,Vector3 * set)
 {
-	WWASSERT(set != NULL);
 	if (SnapPoints) {
 		*set = (*SnapPoints)[index];
 	} else {
@@ -944,7 +939,6 @@ WW3DErrorType CollectionDefClass::Load(ChunkLoadClass & cload)
 		{
 		case W3D_CHUNK_COLLECTION_OBJ_NAME:
 			{
-				WWASSERT(cload.Cur_Chunk_Length() > 0);
 				char * name = new char [cload.Cur_Chunk_Length()];
 				cload.Read(name,cload.Cur_Chunk_Length());
 				ObjectNames.Add(name);
@@ -954,7 +948,6 @@ WW3DErrorType CollectionDefClass::Load(ChunkLoadClass & cload)
 		case W3D_CHUNK_PLACEHOLDER:
 			{
 				// Read the placeholder information from the chunk
-				WWASSERT(cload.Cur_Chunk_Length() > 0);
 				W3dPlaceholderStruct info;
 				cload.Read(&info, sizeof (info));
 

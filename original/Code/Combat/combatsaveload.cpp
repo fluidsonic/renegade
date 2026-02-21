@@ -7,7 +7,6 @@
 #include "timemgr.h"
 #include "scripts.h"
 #include "persistentgameobjobserver.h"
-#include "wwmemlog.h"
 #include "cover.h"
 #include "objectives.h"
 #include "radar.h"
@@ -50,7 +49,6 @@ enum	{
 */
 bool	CombatSaveLoadClass::Save( ChunkSaveClass &csave )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	csave.Begin_Chunk( CHUNKID_GAMEOBJMANAGER );
 	GameObjManager::Save( csave );
@@ -118,7 +116,6 @@ bool	CombatSaveLoadClass::Save( ChunkSaveClass &csave )
 
 bool	CombatSaveLoadClass::Load( ChunkLoadClass &cload )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {

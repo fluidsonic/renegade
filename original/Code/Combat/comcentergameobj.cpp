@@ -1,20 +1,16 @@
 #include "comcentergameobj.h"
 #include "basecontroller.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
-#include "wwprofile.h"
 #include "basecontroller.h"
 #include "combat.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (ComCenter)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -22,7 +18,6 @@ DECLARE_FORCE_LINK (ComCenter)
 SimplePersistFactoryClass	<ComCenterGameObjDef,	CHUNKID_GAME_OBJECT_DEF_COMCENTER>						_ComCenterGameObjDefPersistFactory;
 SimplePersistFactoryClass	<ComCenterGameObj,		CHUNKID_GAME_OBJECT_COMCENTER>							_ComCenterGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (ComCenterGameObjDef,	CLASSID_GAME_OBJECT_DEF_COMCENTER, "Com Center")	_ComCenterGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -43,7 +38,6 @@ enum
 	MICROCHUNKID_UNUSED						= 1,
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ComCenterGameObjDef
@@ -53,7 +47,6 @@ ComCenterGameObjDef::ComCenterGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -65,7 +58,6 @@ ComCenterGameObjDef::~ComCenterGameObjDef (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Class_ID
@@ -76,7 +68,6 @@ ComCenterGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_COMCENTER;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -91,7 +82,6 @@ ComCenterGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -109,7 +99,6 @@ ComCenterGameObjDef::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -142,7 +131,6 @@ ComCenterGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -166,7 +154,6 @@ ComCenterGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -178,7 +165,6 @@ ComCenterGameObjDef::Get_Factory (void) const
 	return _ComCenterGameObjDefPersistFactory; 
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ComCenterGameObj
@@ -188,7 +174,6 @@ ComCenterGameObj::ComCenterGameObj (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -200,7 +185,6 @@ ComCenterGameObj::~ComCenterGameObj (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -211,7 +195,6 @@ ComCenterGameObj::Get_Factory (void) const
 {
 	return _ComCenterGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -235,7 +218,6 @@ ComCenterGameObj::Init (const ComCenterGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -246,7 +228,6 @@ ComCenterGameObj::Get_Definition (void) const
 {
 	return (const ComCenterGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -264,7 +245,6 @@ ComCenterGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -296,7 +276,6 @@ ComCenterGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -319,7 +298,6 @@ ComCenterGameObj::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

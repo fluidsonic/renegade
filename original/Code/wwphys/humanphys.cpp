@@ -1,5 +1,4 @@
 #include "humanphys.h"
-#include "wwdebug.h"
 #include "physcoltest.h"
 #include "pscene.h"
 #include "physcon.h"
@@ -7,23 +6,17 @@
 #include "wwphysids.h"
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
-#include "wwprofile.h"
-
-DECLARE_FORCE_LINK(humanphys);
 
 #define VERBOSE_LOGGING 0
 
 #if VERBOSE_LOGGING
-#define VERBOSE_LOG(x) if (WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0)) { WWDEBUG_SAY(x); }
+#define VERBOSE_LOG(x) if (WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0)) {  }
 #else
 #define VERBOSE_LOG(x)
 #endif
 
-
 bool HumanPhysClass::_DisableHumanSimulation = false;
 bool HumanPhysClass::_DisableHumanRendering = false;
-
 
 /*
 ** Declare a PersistFactory for HumanPhysClass
@@ -50,7 +43,6 @@ enum
 const float SLOPE_SPEED_REDUCTION = 0.1f;
 const float AIR_MOVE_SCALE = 0.1f;
 
-
 /***********************************************************************************************
  * HumanPhysClass::HumanPhysClass -- Constructor                                               *
  *                                                                                             *
@@ -73,7 +65,6 @@ HumanPhysClass::HumanPhysClass(void)	:
 	Enable_Shadow_Generation(true);
 }
 
-
 /***********************************************************************************************
  * HumanPhysClass::Init -- initializes from a Definition                                       *
  *                                                                                             *
@@ -94,7 +85,6 @@ void HumanPhysClass::Init(const HumanPhysDefClass & def)
 	Enable_Shadow_Generation(true);
 }
 
-
 /***********************************************************************************************
  * HumanPhysClass::~HumanPhysClass -- Destructor                                               *
  *                                                                                             *
@@ -109,7 +99,6 @@ void HumanPhysClass::Init(const HumanPhysDefClass & def)
 HumanPhysClass::~HumanPhysClass(void)
 {
 }
-
 
 /***********************************************************************************************
  * HumanPhysClass::Timestep -- Simulate this object for time dt                                *
@@ -134,16 +123,13 @@ void HumanPhysClass::Timestep(float dt)
 		}
 	}
 
-
 	Phys3Class::Timestep(dt);
 
 	if (Is_Asleep()) {
 		return;
 	}
 
-
 	{
-		WWPROFILE("HumanPhys::Timestep");
 	
 		// if we didn't jump, we're not on the ground, we were on the ground, and our Z velocity is >0, set it to 0
 		if (was_on_ground && !OnGround && !JustJumped && (State.Velocity.Z > 0.0f)) {
@@ -156,7 +142,6 @@ void HumanPhysClass::Timestep(float dt)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * HumanPhysClass::Render -- Render this object                                                *
@@ -171,12 +156,8 @@ void HumanPhysClass::Timestep(float dt)
  *=============================================================================================*/
 void HumanPhysClass::Render(RenderInfoClass & rinfo)
 {
-#ifdef WWDEBUG
-	PhysicsSceneClass::Get_Instance()->Debug_Display_Dynamic_Vis_Node(VisNodeID);
-#endif
 	Phys3Class::Render(rinfo);
 }
-
 
 /***********************************************************************************************
  * HumanPhysClass::Check_Ground -- check the ground state                                      *
@@ -202,7 +183,6 @@ void HumanPhysClass::Check_Ground(const AABoxClass & box,GroundStateStruct * gs,
 	}
 }
 
-
 /***********************************************************************************************
  * HumanPhysClass::Ballistic_Move -- ballistic motion                                          *
  *                                                                                             *
@@ -217,7 +197,6 @@ void HumanPhysClass::Check_Ground(const AABoxClass & box,GroundStateStruct * gs,
  *=============================================================================================*/
 bool HumanPhysClass::Ballistic_Move(float dt)
 {		
-	WWPROFILE("HumanPhys::Ballistic_Move");
 	VERBOSE_LOG(("HumanPhys::Ballistic_Move\r\n"));
 
 	// Compute a move vector for the object flying through the air...
@@ -265,7 +244,6 @@ bool HumanPhysClass::Ballistic_Move(float dt)
 	return moved;
 }
 
-
 /***********************************************************************************************
  * HumanPhysClass::Slide_Move -- Sliding down a slope                                          *
  *                                                                                             *
@@ -282,7 +260,6 @@ bool HumanPhysClass::Ballistic_Move(float dt)
  *=============================================================================================*/
 bool HumanPhysClass::Slide_Move(const GroundStateStruct & gs,float dt)
 {
-	WWPROFILE("HumanPhys::Slide_Move");
 	VERBOSE_LOG(("HumanPhys::Slide_Move\r\n"));
 
 	// Compute a move vector which causes the object to slide down the slope...
@@ -301,7 +278,6 @@ bool HumanPhysClass::Slide_Move(const GroundStateStruct & gs,float dt)
 	return moved;
 }
 
-
 /***********************************************************************************************
  * HumanPhysClass::Normal_Move -- Moving under user control                                    *
  *                                                                                             *
@@ -316,7 +292,6 @@ bool HumanPhysClass::Slide_Move(const GroundStateStruct & gs,float dt)
  *=============================================================================================*/
 bool HumanPhysClass::Normal_Move(const GroundStateStruct & gs,float dt)
 {
-	WWPROFILE("HumanPhys::Normal_Move");
 	VERBOSE_LOG(("HumanPhys::Normal_Move\r\n"));
 
 	if (Controller == NULL) {
@@ -375,10 +350,8 @@ bool HumanPhysClass::Normal_Move(const GroundStateStruct & gs,float dt)
 		State.Velocity.Z = WWMath::Min(State.Velocity.Z,0.0f);	// don't ever let humans launch off slopes
 	}
 
-
 	return moved;
 }
-
 
 /***********************************************************************************************
  * HumanPhysClass::Compute_Desired_Move_Vector -- compute the move vector                      *
@@ -429,11 +402,6 @@ void HumanPhysClass::Compute_Desired_Move_Vector(const GroundStateStruct & gs,fl
 	/*
 	** check the result to ensure it is 90deg from the plane normal (moving on plane)
 	*/
-#ifdef WWDEBUG
-	Vector3 movedir = move;
-	movedir.Normalize();
-	WWASSERT(fabs(Vector3::Dot_Product(movedir,gs.Normal)) < WWMATH_EPSILON);
-#endif
 
 	/*
 	** adjust the vector to make uphill slower and downhill faster
@@ -457,8 +425,6 @@ void HumanPhysClass::Compute_Desired_Move_Vector(const GroundStateStruct & gs,fl
 	*set_move = move;
 }
 
-
-
 /***********************************************************************************************
  * HumanPhysClass::Get_Factory -- returns the PersistFactory for save-load support             *
  *                                                                                             *
@@ -475,7 +441,6 @@ const PersistFactoryClass & HumanPhysClass::Get_Factory(void) const
 {
 	return _HumanPhysFactory;
 }
-
 
 /***********************************************************************************************
  * HumanPhysClass::Save -- Save this object                                                    *
@@ -501,7 +466,6 @@ bool HumanPhysClass::Save(ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 /***********************************************************************************************
  * HumanPhysClass::Load -- Load this object                                                    *
@@ -535,7 +499,6 @@ bool HumanPhysClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -544,7 +507,6 @@ bool HumanPhysClass::Load(ChunkLoadClass &cload)
 		
 	return true;
 }
-
 
 /***********************************************************************************************
  * HumanPhysClass::Jump_To_Point -- Jump to the given X, Y, Z location.								  *
@@ -654,7 +616,6 @@ void HumanPhysClass::Jump_To_Point (const Vector3 &dest_pos)
 	return ;
 }
 
-
 /****************************************************************************************************
 **
 ** HumanPhysDefClass Implementation
@@ -720,14 +681,12 @@ bool HumanPhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
 	}
 	return true;
 }
-
 
 bool HumanPhysDefClass::Is_Type(const char * type_name)
 {
@@ -737,6 +696,4 @@ bool HumanPhysDefClass::Is_Type(const char * type_name)
 		return Phys3DefClass::Is_Type(type_name);
 	}
 }
-
-
 

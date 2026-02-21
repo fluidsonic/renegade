@@ -15,7 +15,6 @@
 #include "miscutil.h"
 #include "win.h"
 #include "mmsys.h"
-#include "gamespyadmin.h"
 #include "useroptions.h"
 
 //
@@ -37,43 +36,24 @@ cNetInterface::~cNetInterface(void)
 //-----------------------------------------------------------------------------
 WideStringClass cNetInterface::Get_Nickname(void)
 {
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		
-		//
-		// If the gamespy nickname is blank, set it to "Unnamed"
-		//
-		if (!::strcmp(cUserOptions::GameSpyNickname.Get(), "")) {
-			cUserOptions::GameSpyNickname.Set("Unnamed");
-		}
-
+	if (strcmp(cUserOptions::GameSpyNickname.Get(), "") != 0) {
 		WideStringClass wide_name;
 		wide_name.Convert_From(cUserOptions::GameSpyNickname.Get());
 		return wide_name;
-	} else {
-		return Nickname;
 	}
+	return Nickname;
 }
 
 //-----------------------------------------------------------------------------
 void cNetInterface::Set_Nickname(WideStringClass & name)
 {
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		WideStringClass wide_name = name;
-		if (wide_name.Get_Length() > 30) {
-			wide_name[30] = 0;
-		}
-		StringClass name;
-		wide_name.Convert_To(name);
-		cUserOptions::GameSpyNickname.Set(name.Peek_Buffer());
-	} else {
-		Nickname = name;
+	Nickname = name;
 
-		//
-		// Abbreviate to 9 chars
-		//
-		if (Nickname.Get_Length() > 9) {
-			Nickname[9] = 0;
-		}
+	//
+	// Abbreviate to 9 chars
+	//
+	if (Nickname.Get_Length() > 9) {
+		Nickname[9] = 0;
 	}
 }
 
@@ -142,20 +122,6 @@ int cNetInterface::Get_Side_Preference(void)
 	}
 	*/
 
-	/*
-	Nickname = name;
-	
-	int max_len = 0;
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		max_len = 34;
-	} else {
-		max_len = 9;
-	}
-
-	if (Nickname.Get_Length() > max_len) {
-		Nickname[max_len] = 0;
-	}
-	*/
 
    //return Nickname;
 

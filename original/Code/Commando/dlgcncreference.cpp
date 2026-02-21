@@ -18,7 +18,6 @@
 #include "string_ids.h"
 #include "translatedb.h"
 #include "useroptions.h"
-#include "gamespyadmin.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
 #include "specialbuilds.h"
@@ -411,17 +410,7 @@ CnCReferenceMenuClass::Exit_Game (void)
 	GameInitMgrClass::End_Game ();
 	//GameInitMgrClass::Display_End_Game_Menu ();
 
-	if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) {
-#ifdef MULTIPLAYERDEMO
-			DialogMgrClass::Flush_Dialogs ();
-			START_DIALOG (SplashOutroMenuDialogClass);
-#else
-			extern void Stop_Main_Loop (int);
-			Stop_Main_Loop(EXIT_SUCCESS);
-#endif // MULTIPLAYERDEMO
-	} else {
-		GameInitMgrClass::Display_End_Game_Menu ();
-	}
+	GameInitMgrClass::Display_End_Game_Menu ();
 	return ;
 }
 
@@ -469,10 +458,4 @@ CnCReferenceMenuClass::Exit_Game (void)
 	Get_Dlg_Item (IDC_OPTIONS_MULTIPLAY_CHANGE_TEAMS)->Show (is_team_change_enabled);
 	*/
 
-			/*
-			if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) {
-				extern void Stop_Main_Loop (int);
-				Stop_Main_Loop(EXIT_SUCCESS);
-			}
-			/**/
-
+	

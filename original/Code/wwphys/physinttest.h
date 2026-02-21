@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef PHYSINTTEST_H
 #define PHYSINTTEST_H
@@ -101,7 +98,6 @@ public:
 		CheckStaticObjs(true),
 		CheckDynamicObjs(true)
 	{
-		WWASSERT(mesh != NULL);
 		REF_PTR_SET(Mesh,mesh);
 		BoundingBox = Mesh->Get_Bounding_Box();
 	}

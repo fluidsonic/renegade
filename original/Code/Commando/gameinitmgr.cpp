@@ -32,9 +32,7 @@
 #include "gamesideservercontrol.h"
 #include "slavemaster.h"
 #include "hud.h"
-#include "gamespyadmin.h"
 #include "serversettings.h"
-#include "gamespy_qnr.h"
 #include "specialbuilds.h"
 #include "modpackagemgr.h"
 
@@ -246,11 +244,6 @@ GameInitMgrClass::End_Game (void)
 	}
 #endif // !MULTIPLAYERDEMO
 
-	// Stop reporting to Gamespy.
-	if (Mode == MODE_LAN && GameSpyQnR.IsEnabled()) {
-		GameSpyQnR.Shutdown();
-	}
-
 	//
 	// A dedicated server will disable sfx & music. Restore them here.
 	//
@@ -398,12 +391,7 @@ GameInitMgrClass::Display_End_Game_Menu (void)
 		//	Display the LAN main menu
 		//
 		case MODE_LAN:
-			//GAMESPY
-			if (cGameSpyAdmin::Is_Gamespy_Game()) {
-				RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_GAMESPY_MAIN);
-			} else {
-				RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_LAN_MAIN);
-			}
+			RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_LAN_MAIN);
 			break;
 
 	}
@@ -450,11 +438,6 @@ GameInitMgrClass::Transmit_Player_Data (int teamChoice, unsigned long clanID)
 void
 GameInitMgrClass::Start_Client_Server (void)
 {
-
-	if (GameModeManager::Find("LAN")->Is_Active() && cGameSpyAdmin::Is_Gamespy_Game()) {
-		The_Game()->Set_Port(cUserOptions::GameSpyGamePort.Get());
-	}
-
 
 	//
 	//	Start the server (if necessary)

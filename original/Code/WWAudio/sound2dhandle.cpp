@@ -1,6 +1,5 @@
 #include "sound2dhandle.h"
 #include "audiblesound.h"
-#include "wwprofile.h"
 
 
 //////////////////////////////////////////////////////////////////////
@@ -34,7 +33,6 @@ Sound2DHandleClass::~Sound2DHandleClass (void)
 void
 Sound2DHandleClass::Initialize (SoundBufferClass *buffer)
 {
-	WWPROFILE ("Sound2DHandleClass::Initialize");
 
 	SoundHandleClass::Initialize (buffer);
 

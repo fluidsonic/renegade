@@ -1,17 +1,8 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #if !defined(WATCOM_H) && defined(__WATCOMC__)
 #define WATCOM_H
 
 
-/**********************************************************************
-**	The "bool" integral type was defined by the C++ comittee in
-**	November of '94. Until the compiler supports this, use the following
-**	definition.
-*/
-#include	"bool.h"
 
 // Turn all warnings into errors.
 #pragma warning * 0
@@ -55,14 +46,7 @@
 // Turns off unreferenced function parameter warning.
 //#pragma off(unreferenced)
 
-/*
-**	The "bool" integral type was defined by the C++ comittee in
-**	November of '94. Until the compiler supports this, use the following
-**	definition.
-*/
-#include	"bool.h"
 
-#if !defined(__BORLANDC__)
 #define M_E         2.71828182845904523536
 #define M_LOG2E     1.44269504088896340736
 #define M_LOG10E    0.434294481903251827651
@@ -77,7 +61,6 @@
 #define M_2_SQRTPI  1.12837916709551257390
 #define M_SQRT2     1.41421356237309504880
 #define M_SQRT_2    0.707106781186547524401
-#endif
 
 
 #endif

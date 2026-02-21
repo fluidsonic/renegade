@@ -43,9 +43,7 @@ cCsDamageEvent::Init
 	int	warhead 
 )
 {
-	WWASSERT(CombatManager::I_Am_Only_Client());
 
-	WWASSERT(AreClientsTrusted);
 
 	SenderId			= CombatManager::Get_My_Id();
 	DamagerGOID		= damager_go_id;
@@ -65,7 +63,6 @@ cCsDamageEvent::Act
 	void
 )
 {
-   WWASSERT(CombatManager::I_Am_Server());
 
 	if (AreClientsTrusted)
 	{
@@ -117,11 +114,9 @@ cCsDamageEvent::Export_Creation
 	BitStreamClass & packet
 )
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
 	NetworkObjectClass::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 	packet.Add(DamagerGOID);
@@ -139,7 +134,6 @@ cCsDamageEvent::Import_Creation
 	BitStreamClass & packet
 )
 {
-	WWASSERT(CombatManager::I_Am_Server());
 
 	NetworkObjectClass::Import_Creation(packet);
 
@@ -149,7 +143,6 @@ cCsDamageEvent::Import_Creation
 	packet.Get(Damage);
 	packet.Get(Warhead);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

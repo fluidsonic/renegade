@@ -1,9 +1,7 @@
 #include "bitmaphandler.h"
-#include "wwdebug.h"
 
 void Bitmap_Assert(bool condition)
 {
-	WWASSERT(condition);
 }
 
 void BitmapHandlerClass::Create_Mipmap_B8G8R8A8(
@@ -75,7 +73,6 @@ void BitmapHandlerClass::Copy_Image_Generate_Mipmap(
 		return;
 	}
 
-	WWASSERT(src_format!=WW3D_FORMAT_P8);		// This function doesn't support paletted formats
 	unsigned src_bpp=Get_Bytes_Per_Pixel(src_format);
 	unsigned dest_bpp=Get_Bytes_Per_Pixel(dest_format);
 
@@ -131,8 +128,6 @@ void BitmapHandlerClass::Copy_Image(
 	unsigned src_palette_bpp,
 	bool generate_mip_level)
 {
-	WWASSERT(dest_surface_width);
-	WWASSERT(dest_surface_height);
 
 	// Bumpmap?
 	if (dest_surface_format==WW3D_FORMAT_U8V8 ||
@@ -213,7 +208,6 @@ void BitmapHandlerClass::Copy_Image(
 					break;
 
 				default:
-					WWASSERT(0);	// Unknown bumpmap format
 					break;
 				}
 
@@ -301,7 +295,6 @@ void BitmapHandlerClass::Copy_Image(
 	if (dest_surface_width==src_surface_width && dest_surface_height==src_surface_height) {
 		// Generate the next mip level while copying the current surface?
 		if (generate_mip_level) {
-			WWASSERT(src_surface_format!=WW3D_FORMAT_P8);	// Paletted textures can't be mipmapped
 			if (dest_surface_width==1) {
 				unsigned char* dest_ptr=dest_surface;
 				unsigned char* src_ptr=src_surface;

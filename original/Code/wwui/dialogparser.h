@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DIALOG_PARSER_H
 #define __DIALOG_PARSER_H

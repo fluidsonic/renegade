@@ -241,10 +241,6 @@ RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 			HelpScreenDialogClass::Display ();
 			break;
 
-		//GAMESPY
-		case LOC_GAMESPY_MAIN:
-			START_DIALOG (GameSpyMainDialogClass);
-			break;
 	}
 
 	//

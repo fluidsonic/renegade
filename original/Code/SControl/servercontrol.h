@@ -8,7 +8,6 @@
 #include "servercontrolsocket.h"
 
 #ifndef DebugString
-#include	"wwdebug.h"
 #ifdef WWDEBUG_SAY
 #define DebugString WWDEBUG_SAY
 #endif

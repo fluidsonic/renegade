@@ -2,7 +2,6 @@
 
 #include "thread.h"
 #include "except.h"
-#include "wwdebug.h"
 #include <process.h>
 #include <windows.h>
 #pragma warning ( push )
@@ -58,14 +57,12 @@ void __cdecl ThreadClass::Internal_Thread_Function(void* params)
 
 void ThreadClass::Execute()
 {
-	WWASSERT(!handle);	// Only one thread at a time!
 	#ifdef _UNIX
 		// assert(0);
 		return;
 	#else
 		handle=_beginthread(&Internal_Thread_Function,0,this);
 		SetThreadPriority((HANDLE)handle,THREAD_PRIORITY_NORMAL+thread_priority);
-		WWDEBUG_SAY(("ThreadClass::Execute: Started thread %s, thread ID is %X\n", ThreadName, handle));
 	#endif
 }
 
@@ -91,7 +88,6 @@ void ThreadClass::Stop(unsigned ms)
 		while (handle) {
 			if ((TIMEGETTIME()-time)>ms) {
 				int res=TerminateThread((HANDLE)handle,0);
-				WWASSERT(res);	// Thread still not killed!
 				handle=0;
 			}
 			Sleep(0);

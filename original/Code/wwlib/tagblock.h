@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef TAGBLOCK_H
 #define TAGBLOCK_H

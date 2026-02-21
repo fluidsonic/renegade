@@ -9,8 +9,7 @@ target_include_directories(wwtranslatedb BEFORE PRIVATE
     "${ORIG_WWTRANSLATEDB}"
     "${ORIG_SRC}/wwsaveload"
     "${ORIG_SRC}/wwlib"
-    "${ORIG_SRC}/wwdebug"
     "${ORIG_SRC}/WWMath"
 )
 
-target_link_libraries(wwtranslatedb wwsaveload wwlib wwdebug wwmath)
+target_link_libraries(wwtranslatedb wwsaveload wwlib wwmath)

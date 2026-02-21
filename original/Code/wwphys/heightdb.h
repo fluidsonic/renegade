@@ -1,13 +1,9 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __HEIGHT_DB_H
 #define __HEIGHT_DB_H
 
 #include "vector.h"
 #include "vector3.h"
-#include "wwdebug.h"
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -97,7 +93,6 @@ HeightDBClass::Get_Height_Entry (int row, int col)
 	//	If the row and column are valid, then return the address of the
 	// entry at this location.
 	//
-	WWASSERT (row < m_NumPointsY && col < m_NumPointsX);
 	if (row < m_NumPointsY && col < m_NumPointsX) {
 		retval = &m_HeightArray[(row * m_NumPointsX) + col];
 	}

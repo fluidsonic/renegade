@@ -18,7 +18,6 @@
 #include "multihud.h"
 #include "apppackettypes.h"
 #include "devoptions.h"
-#include "gamespyadmin.h"
 
 DECLARE_NETWORKOBJECT_FACTORY(cTeam, NETCLASSID_TEAM);
 
@@ -35,14 +34,14 @@ cTeam::cTeam(void)
 //------------------------------------------------------------------------------------
 cTeam::~cTeam(void)
 {
-   //WWDEBUG_SAY(("* Destroying team object %d (%s)\n", TeamNumber, Name));
+   //
 }
 
 //------------------------------------------------------------------------------------
 void cTeam::Init(int team_number)//, WideStringClass & name)
 {
 
-   //WWDEBUG_SAY(("* Adding team object %d (%s)\n", team_number, name));
+   //
 
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_CREATION, true);
 
@@ -114,7 +113,7 @@ void cTeam::Set_Deaths(int new_deaths)
 //------------------------------------------------------------------------------------
 void cTeam::Set_Score(float new_score)
 {
-   //WWASSERT(cNetwork::I_Am_Only_Client());
+   //assert(cNetwork::I_Am_Only_Client());
 
    Score = new_score;
 
@@ -222,13 +221,8 @@ void cTeam::Get_Team_String(int rank, WideStringClass & string) const
 	//
 	// Name
 	//
-	//GAMESPY
 	//substring.Format(L"%-11s", Name);
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		substring.Format(L"%-36s", Name);
-	} else {
-		substring.Format(L"%-11s", Name);
-	}
+	substring.Format(L"%-11s", Name);
    string += substring;
 
 

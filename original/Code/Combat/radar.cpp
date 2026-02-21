@@ -10,7 +10,6 @@
 #include "globalsettings.h"
 #include "objectives.h"
 #include "globalsettings.h"
-#include "wwprofile.h"
 #include "wwaudio.h"
 #include "render2dsentence.h"
 #include "stylemgr.h"
@@ -227,7 +226,6 @@ bool	RadarManager::Save( ChunkSaveClass &csave )
 
 bool	RadarManager::Load( ChunkLoadClass &cload )
 {
-	WWASSERT( Markers.Count() == 0 );
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -352,7 +350,6 @@ float	RadarManager::Add_Blip( const Vector3 & pos, int shape_type, int color_typ
 
 void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 {
-	WWPROFILE( "Radar Update" );
 
 	OldRadarCenter=RadarCenter;
 	RadarCenter = center;
@@ -394,7 +391,7 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 	Renderer->Add_Quad_Backfaced( draw.Lower_Right(), draw.Lower_Left(), draw.Upper_Right(), draw.Upper_Left(), uv, RadarColor );
 
 #if 0
-{WWPROFILE( "Sweep" );
+{
 	// Draw sweep Line
 	Vector2 edge = Vector2( -WWMath::Cos( RadarSweep ), WWMath::Sin( RadarSweep ) ) * RADAR_FADE_STOP + center;
 	float width = 20;
@@ -411,7 +408,7 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 #endif
 
 #if 0
-{WWPROFILE( "Compass" );
+{
 	// Draw the compass
 	const HUDGlobalSettingsDef * settings = HUDGlobalSettingsDef::Get_Instance();
 	float radar_texture_size = settings->RadarTextureSize;
@@ -474,7 +471,7 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 		star_z = p.Z;
 	}
 
-{WWPROFILE( "Blips" );
+{
 	// for all physicalgameobjs
 	SLNode<BaseGameObj> *objnode;
 	for (	objnode = GameObjManager::Get_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
@@ -497,7 +494,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 				if (RadarMode == RADAR_NOBODY) {
 					continue;
 				} else {
-					WWASSERT(RadarMode == RADAR_TEAMMATES);
 					int other_pt = obj->Get_Player_Type();
 					int my_pt = COMBAT_STAR->Get_Player_Type();
 					if (my_pt != other_pt || 
@@ -545,7 +541,7 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 
 	int i;
 
-{WWPROFILE( "Objectives" );
+{
 	// for all objectives with a position
 	int count = ObjectiveManager::Get_Objective_Count();
 	for ( int i = 0; i < count; i++ ) {
@@ -561,7 +557,7 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 	}
 }
 
-{WWPROFILE( "Markers" );
+{
 	// for all markers
 	for ( i = 0; i < Markers.Count(); i++ ) {
 		float intensity = Markers[i].Intensity;

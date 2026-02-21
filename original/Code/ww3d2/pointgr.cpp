@@ -147,7 +147,6 @@ PointGroupClass::~PointGroupClass(void)
 PointGroupClass & PointGroupClass::operator = (const PointGroupClass & that)
 {
 	if (this != &that) {
-		WWASSERT(0);	// If you hit this assert implement the function!
 	}
 	return *this;
 }
@@ -190,14 +189,8 @@ void PointGroupClass::Set_Arrays(
 	float vpymax)
 {
 	// The point locations array is NOT optional!
-	WWASSERT(locs);
 
 	// Ensure lengths of all arrays are the same:
-	WWASSERT(!diffuse || locs->Get_Count() == diffuse->Get_Count());
-	WWASSERT(!apt || locs->Get_Count() == apt->Get_Count());
-	WWASSERT(!sizes || locs->Get_Count() == sizes->Get_Count());
-	WWASSERT(!orientations || locs->Get_Count() == orientations->Get_Count());
-	WWASSERT(!frames || locs->Get_Count() == frames->Get_Count());
 
 	REF_PTR_SET(PointLoc,locs);
 	REF_PTR_SET(PointDiffuse,diffuse);
@@ -636,7 +629,6 @@ int PointGroupClass::Get_Polygon_Count(void)
 			return PointCount * 2;
 			break;
 	}
-	WWASSERT(0);
 	return 0;
 }
 
@@ -663,7 +655,6 @@ void PointGroupClass::Render(RenderInfoClass &rinfo)
 	// If no points, do nothing:
 	if (PointCount == 0) return;
 
-	WWASSERT(PointLoc && PointLoc->Get_Array());
 
 	// Process texture reductions:
 //	if (Texture) Texture->Process_Reduction();
@@ -1145,7 +1136,6 @@ void PointGroupClass::Update_Arrays(
 			break;
 
 		default:
-			WWASSERT(0);
 			break;
 
 	}

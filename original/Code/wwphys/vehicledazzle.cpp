@@ -106,7 +106,6 @@ void VehicleDazzleClass::Set_Time_Of_Day(float time)
  *=============================================================================================*/
 void VehicleDazzleClass::Pre_Render_Update(VehiclePhysClass * parent)
 {
-	WWASSERT(parent != NULL);
 	if (Model != NULL) {
 		
 		switch (Type) 

@@ -1,12 +1,8 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef MATINFO_H
 #define MATINFO_H
 
 #include "always.h"
-#include "wwdebug.h"
 #include "vector.h"
 #include "vertmaterial.h"
 #include "texture.h"
@@ -207,8 +203,6 @@ inline int MaterialInfoClass::Get_Vertex_Material_Index(const char * name)
 
 inline VertexMaterialClass * MaterialInfoClass::Get_Vertex_Material(int index)
 {
-	WWASSERT(index >= 0);
-	WWASSERT(index < VertexMaterials.Count());
 	if (VertexMaterials[index]) {
 		VertexMaterials[index]->Add_Ref();
 	}
@@ -227,8 +221,6 @@ inline VertexMaterialClass * MaterialInfoClass::Get_Vertex_Material(const char *
 
 inline VertexMaterialClass * MaterialInfoClass::Peek_Vertex_Material(int index)
 {
-	WWASSERT(index >= 0);
-	WWASSERT(index < VertexMaterials.Count());
 	return VertexMaterials[index];
 }
 
@@ -284,8 +276,6 @@ inline TextureClass * MaterialInfoClass::Get_Texture(const char * name)
 
 inline TextureClass *	MaterialInfoClass::Peek_Texture(int index)
 {
-	WWASSERT(index >= 0);
-	WWASSERT(index < Textures.Count());
 	return Textures[index];
 }
 

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef MOTORVEHICLE_H
 #define MOTORVEHICLE_H
@@ -113,7 +110,6 @@ inline const MotorVehicleDefClass * MotorVehicleClass::Get_MotorVehicleDef(void)
 { 
 	// All motor vehicles have to have definitions... Most of their parameters are only
 	// stored in the definition now...
-	WWASSERT(Definition != NULL);
 	return (MotorVehicleDefClass *)Definition; 
 }
 

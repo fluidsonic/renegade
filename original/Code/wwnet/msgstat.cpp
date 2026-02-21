@@ -11,7 +11,6 @@
 #include <string.h>
 
 #include "mathutil.h"
-#include "wwdebug.h"
 
 
 //
@@ -36,7 +35,6 @@ cMsgStat::~cMsgStat(void)
 //---------------- --------------------------------------------------------------------
 void cMsgStat::Increment_Num_Msg_Sent(int increment)	
 {
-	WWASSERT(increment > 0); 
 
 	NumMsgSent += increment;
 }
@@ -44,7 +42,6 @@ void cMsgStat::Increment_Num_Msg_Sent(int increment)
 //---------------- --------------------------------------------------------------------
 void cMsgStat::Increment_Num_Byte_Sent(int increment)
 {
-	WWASSERT(increment > 0); 
 	
 	NumByteSent += increment;
 }
@@ -52,7 +49,6 @@ void cMsgStat::Increment_Num_Byte_Sent(int increment)
 //---------------- --------------------------------------------------------------------
 void cMsgStat::Increment_Num_Msg_Recd(int increment)
 {
-	WWASSERT(increment > 0); 
 	
 	NumMsgRecd += increment;
 }
@@ -60,7 +56,6 @@ void cMsgStat::Increment_Num_Msg_Recd(int increment)
 //---------------- --------------------------------------------------------------------
 void cMsgStat::Increment_Num_Byte_Recd(int increment)
 {
-	WWASSERT(increment > 0); 
 	
 	NumByteRecd += increment;
 }
@@ -90,8 +85,6 @@ DWORD cMsgStat::Compute_Avg_Num_Byte_Recd(void) const
 //---------------- --------------------------------------------------------------------
 void cMsgStat::Set_Name(LPCSTR name)
 {
-	WWASSERT(name != NULL);
-	WWASSERT(::strlen(name) < sizeof(Name));
 
 	::strcpy(Name, name);
 }

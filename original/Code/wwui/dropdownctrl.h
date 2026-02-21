@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DROPDOWN_CTRL_H
 #define __DROPDOWN_CTRL_H

@@ -807,7 +807,7 @@ void cNetwork::Tell_Server_About_Dynamic_Objects
 		}
 	}
 	//unsigned long time = TIMEGETTIME() / 1000;
-	//WWDEBUG_SAY(("Updated %d objects at %d\n", debug_count, time));
+	//
 
 #endif // !FREEDEDICATEDSERVER
 }
@@ -985,7 +985,7 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 		//	Send the packet to the client or server
 		//
 		if (client_id > 0) {
-			//WWDEBUG_SAY(("Sending update for object %d\n", object->Get_Network_ID()));
+			//
 			Server_Send_Packet(packet, mode, client_id);
 		} else {
 			Client_Send_Packet(packet, mode);

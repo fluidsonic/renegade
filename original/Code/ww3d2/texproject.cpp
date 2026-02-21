@@ -128,7 +128,6 @@ TexProjectClass::TexProjectClass(void) :
 
 	// create a vertex material
 	VertexMaterialClass * vmtl = NEW_REF(VertexMaterialClass,());
-	WWASSERT(vmtl != NULL);
 	
 	// Plug our parent's mapper into our vertex material
 	// the mapper for stage1 will be allocated as needed
@@ -181,8 +180,6 @@ TexProjectClass::~TexProjectClass(void)
  *=============================================================================================*/
 void TexProjectClass::Set_Texture_Size(int size)
 {
-	WWASSERT(size > 0);
-	WWASSERT(size <= 512);
 	Flags &= ~SIZE_MASK;
 	Flags |= (size << SIZE_SHIFT);
 }
@@ -274,8 +271,6 @@ bool TexProjectClass::Get_Flag(uint32 flag) const
  *=============================================================================================*/
 void TexProjectClass::Set_Intensity(float intensity,bool immediate)
 {
-	WWASSERT(intensity <= 1.0f);
-	WWASSERT(intensity >= 0.0f);
 	
 	DesiredIntensity = intensity;
 	if (immediate) {
@@ -343,8 +338,6 @@ bool TexProjectClass::Is_Intensity_Zero(void)
  *=============================================================================================*/
 void TexProjectClass::Set_Attenuation(float attenuation)
 {
-	WWASSERT(attenuation >= 0.0f);
-	WWASSERT(attenuation <= 1.0f);
 	Attenuation = attenuation;
 }
 
@@ -503,7 +496,6 @@ void TexProjectClass::Init_Multiplicative(void)
 			MaterialPass->Set_Texture(grad_tex,1);
 			grad_tex->Release_Ref();
 		} else {
-			WWDEBUG_SAY(("Could not find texture: MultProjectorGradient.tga!\n"));
 		}
 
 	} else {
@@ -605,7 +597,6 @@ void TexProjectClass::Init_Additive(void)
 		MaterialPass->Set_Texture(grad_tex,1);
 		grad_tex->Release_Ref();
 	} else {
-		WWDEBUG_SAY(("Could not find texture: AddProjectorGradient.tga!\n"));
 	}
 
 #if (DEBUG_SHADOW_RENDERING)
@@ -793,7 +784,6 @@ bool TexProjectClass::Compute_Perspective_Projection
 )
 {
 	if (model == NULL) {
-		WWDEBUG_SAY(("Attempting to generate projection for a NULL model\r\n"));
 		return false;
 	}
 
@@ -920,7 +910,6 @@ bool TexProjectClass::Compute_Ortho_Projection
 )
 {
 	if (model == NULL) {
-		WWDEBUG_SAY(("Attempting to generate projection for a NULL model\r\n"));
 		return false;
 	}
 
@@ -1238,7 +1227,6 @@ void TexProjectClass::Pre_Render_Update(const Matrix3D & camera)
 //		SurfaceClass::SurfaceDescription surface_desc;
 //		MaterialPass->Peek_Texture()->Get_Level_Description(surface_desc);
 		Set_Texture_Size(MaterialPass->Peek_Texture()->Get_Width());
-		WWASSERT(Get_Texture_Size() != 0);
 	}
 	
 	Mapper->Set_Texture_Transform(view_to_texture,Get_Texture_Size());

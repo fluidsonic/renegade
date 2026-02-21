@@ -1,5 +1,4 @@
 #include "matinfo.h"
-#include "wwdebug.h"
 #include "meshmdl.h"
 #include "texture.h"
 
@@ -36,7 +35,6 @@ MaterialInfoClass * MaterialInfoClass::Clone(void) const
 
 int MaterialInfoClass::Add_Texture(TextureClass * tex)
 {
-	WWASSERT(tex != NULL);
 	tex->Add_Ref();
 	int index = Textures.Count();
 	Textures.Add(tex);
@@ -55,8 +53,6 @@ int MaterialInfoClass::Get_Texture_Index(const char * name)
 
 TextureClass * MaterialInfoClass::Get_Texture(int index)
 {
-	WWASSERT(index >= 0);
-	WWASSERT(index < Textures.Count());
 	Textures[index]->Add_Ref();
 	return Textures[index];
 }
@@ -104,10 +100,6 @@ MaterialRemapperClass::MaterialRemapperClass(MaterialInfoClass * src,MaterialInf
 	LastSrcTex(NULL),
 	LastDestTex(NULL)
 {
-	WWASSERT(src);
-	WWASSERT(dest);
-	WWASSERT(src->Texture_Count() == dest->Texture_Count());
-	WWASSERT(src->Vertex_Material_Count() == dest->Vertex_Material_Count());
 
 	SrcMatInfo = src;
 	SrcMatInfo->Add_Ref();
@@ -157,7 +149,6 @@ TextureClass * MaterialRemapperClass::Remap_Texture(TextureClass * src)
 			return TextureRemaps[i].Dest;
 		}
 	}
-	WWASSERT(0); // uh-oh didn't find the texture, what happend???
 	return NULL;
 }
 
@@ -172,7 +163,6 @@ VertexMaterialClass * MaterialRemapperClass::Remap_Vertex_Material(VertexMateria
 			return VertexMaterialRemaps[i].Dest;
 		}
 	}
-	WWASSERT(0); // uh-oh didn't find the material, what happend???
 	return NULL;
 }
 

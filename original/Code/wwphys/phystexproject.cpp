@@ -61,7 +61,6 @@ bool PhysTexProjectClass::Compute_Perspective_Projection
 {
 	RenderObjClass * model = obj->Peek_Model();
 	if (model == NULL) {
-		WWDEBUG_SAY(("Attempting to generate projection for a NULL model\r\n"));
 		return false;
 	}
 
@@ -95,7 +94,6 @@ bool PhysTexProjectClass::Compute_Ortho_Projection
 {
 	RenderObjClass * model = obj->Peek_Model();
 	if (model == NULL) {
-		WWDEBUG_SAY(("Attempting to generate projection for a NULL model\r\n"));
 		return false;
 	}
 

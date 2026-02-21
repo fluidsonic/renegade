@@ -1,12 +1,10 @@
 #include "part_emt.h"
-#include "wwdebug.h"
 #include "ww3d.h"
 #include "assetmgr.h"
 #include "part_ldr.h"
 #include "w3derr.h"
 #include "scene.h"
 #include "texture.h"
-#include "wwprofile.h"
 #include <limits.h>
 #include <gcd_lcm.h>
 #include "texture.h"
@@ -467,12 +465,6 @@ void ParticleEmitterClass::Set_Velocity_Inheritance_Factor(float inh_factor)
 // buffer On_Frame_Update() function to avoid order dependence.
 void ParticleEmitterClass::Emit(void)
 {
-	WWPROFILE("PartlicleEmitter::Emit");
-#ifdef WWDEBUG
-	if (DebugDisable == true) {
-		return;
-	}
-#endif
 
 	if (Active && !IsComplete) {
 		Quaternion curr_quat;   // Quaternion form of orientation.
@@ -661,7 +653,6 @@ ParticleEmitterClass::Build_Definition (void) const
 {	
 	// Allocate a new emitter definition object
 	ParticleEmitterDefClass *pdefinition = new ParticleEmitterDefClass;
-	WWASSERT (pdefinition != NULL);
 	if (pdefinition != NULL) {
 		
 		// Set the texture's filename

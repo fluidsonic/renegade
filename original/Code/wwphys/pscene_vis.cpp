@@ -155,7 +155,6 @@ int PhysicsSceneClass::Get_Vis_Table_Count(void)
 
 void PhysicsSceneClass::Compute_Vis_Sample_Point(const CameraClass & camera,Vector3 * set_point)
 {
-	WWASSERT(set_point != NULL);
 	if (!VisSamplePointLocked) {
 		float nearz,farz;
 		camera.Get_Clip_Planes(nearz,farz);
@@ -207,7 +206,6 @@ VisTableClass * PhysicsSceneClass::Get_Vis_Table_For_Rendering(const CameraClass
 
 			if ((LastValidVisId != vis_id) && VisSectorDisplayEnabled)  {
 				StaticPhysClass * tile = StaticCullingSystem->Find_Vis_Tile(vis_sample_point);
-				WWDEBUG_SAY (("Vis Sector: %s\n", tile->Peek_Model ()->Get_Name ()));
 			}
 
 			LastValidVisId = vis_id;
@@ -350,7 +348,6 @@ void PhysicsSceneClass::Internal_Vis_Reset(void)
 	if (VisResetNeeded) {
 
 		VisResetNeeded = false;
-		WWDEBUG_SAY(("Resetting the visibility system.\r\n"));
 		
 		/*
 		** Throw away all visibility data.
@@ -488,7 +485,6 @@ PhysicsSceneClass::Update_Vis
 	if (original_pvs == NULL) {
 		VisSampleClass vis_sample(camera_tm,direction_bits);
 		vis_sample.Init_Error();
-		WWDEBUG_SAY(("Vis Sample Rejected - No Vis Sector or Vis Sector ID not assigned!\r\n"));
 		return vis_sample;
 	}
 
@@ -504,7 +500,6 @@ PhysicsSceneClass::Update_Vis
 	} else {									// otherwise use the vis camera
 		camera = Get_Vis_Camera();
 	}
-	WWASSERT (camera != NULL);
 
 	/*
 	** Create the render context, initialize the GERD, install the Vis shader and vertex material
@@ -518,7 +513,6 @@ PhysicsSceneClass::Update_Vis
 	*/
 	VisSampleClass vis_sample(camera_tm,direction_bits);
 
-	WWDEBUG_SAY(("Generating Vis for sector %d...  ",vis_id));
 
 	for (int i=0; i<VIS_DIRECTIONS; i++) {
 		if (vis_sample.Direction_Enabled((VisDirType)i)) {
@@ -547,9 +541,7 @@ PhysicsSceneClass::Update_Vis
 	bool accept_sample = (!vis_sample.Sample_Rejected()) || (direction_bits & VIS_FORCE_ACCEPT);
 	if (accept_sample) {
 		VisTableManager.Update_Vis_Table(vis_id,pvs);
-		WWDEBUG_SAY(("Done! (%d bits changed) \r\n",vis_sample.Get_Bits_Changed()));
 	} else {
-		WWDEBUG_SAY(("Rejected!\r\n"));
 	}
 
 	/*
@@ -671,7 +663,6 @@ void PhysicsSceneClass::Vis_Render_And_Scan(VisRenderContextClass & context,VisS
 	** Have the static culling system evaluate visibility for the occluders
 	** and build the z-buffer in the process.
 	*/
-	WWASSERT(context.VisRasterizer != NULL);
 	context.VisRasterizer->Set_Render_Mode(IDBufferClass::OCCLUDER_MODE);
 	StaticCullingSystem->Evaluate_Occluder_Visibility(context,vis_sample);
 	

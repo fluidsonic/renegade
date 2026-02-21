@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef CULLTYPE_H
 #define CULLTYPE_H

@@ -2,7 +2,6 @@
 #include "refcount.h"
 #include "Utils.h"
 #include <Process.h>
-#include "wwdebug.h"
 #include "systimer.h"
 
 
@@ -251,7 +250,6 @@ WWAudioThreadsClass::Begin_Modify_List (void)
 	//
 	if (m_ListMutex != NULL) {
 		retval = (::WaitForSingleObject (m_ListMutex, 1000) == WAIT_OBJECT_0);
-		WWASSERT (retval);
 	}
 
 	return retval;

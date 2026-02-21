@@ -1,6 +1,3 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #ifndef INDEX_H
 #define INDEX_H
@@ -373,9 +370,6 @@ bool IndexClass<INDEX, T>::Is_Present(INDEX const & id) const
  * HISTORY:                                                                                    *
  *   11/02/1996 JLB : Created.                                                                 *
  *=============================================================================================*/
-#ifdef __BORLANDC__
-#pragma warn -def
-#endif
 template<class INDEX, class T>
 T const & IndexClass<INDEX, T>::operator [] (INDEX const & id) const
 {
@@ -390,9 +384,6 @@ T const & IndexClass<INDEX, T>::operator [] (INDEX const & id) const
 	static T x;
 	return(x);
 }
-#ifdef __BORLANDC__
-#pragma warn .def
-#endif
 
 
 
@@ -642,11 +633,7 @@ int _USERENTRY IndexClass<INDEX, T>::search_compfunc(void const * ptr1, void con
  *   11/02/1996 JLB : Created.                                                                 *
  *=============================================================================================*/
 template<class INDEX, class T>
-#ifdef __BORLANDC__
-NodeElement const * IndexClass<INDEX, T>::Search_For_Node(INDEX const & id) const
-#else
 IndexClass<INDEX, T>::NodeElement const * IndexClass<INDEX, T>::Search_For_Node(INDEX const & id) const
-#endif
 {
 	/*
 	**	If there are no elements in the list, then it certainly can't find any matches.

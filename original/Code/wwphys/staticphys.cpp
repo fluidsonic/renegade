@@ -8,7 +8,6 @@
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "wwphysids.h"
-#include "wwhack.h"
 #include "mesh.h"
 #include "meshmdl.h"
 #include "lightexclude.h"
@@ -21,8 +20,6 @@
 #include "umbrasupport.h"
 #endif
 
-DECLARE_FORCE_LINK(staticphys);
-
  
 /***********************************************************************************************
 **
@@ -33,12 +30,10 @@ DECLARE_FORCE_LINK(staticphys);
 bool StaticPhysClass::_DisableStaticPhysSimulation			= false;
 bool StaticPhysClass::_DisableStaticPhysRendering			= false;
 
-
 /*
 ** Declare a PersistFactory for StaticPhysClasses
 */
 SimplePersistFactoryClass<StaticPhysClass,PHYSICS_CHUNKID_STATICPHYS>	_StaticPhysFactory;
-
 
 /*
 ** Chunk-ID's used by StaticPhysClass
@@ -51,7 +46,6 @@ enum
 	STATICPHYS_VARIABLE_VISOBJECTID	= 0x00,
 	STATICPHYS_VARIABLE_VISSECTORID,
 };
-
 
 /***********************************************************************************************
  * StaticPhysClass::StaticPhysClass -- Constructor                                             *
@@ -73,7 +67,6 @@ StaticPhysClass::StaticPhysClass(void) :
 	Set_Collision_Group( 15 );	// HACK?  All terrain should be group 15?	
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::~StaticPhysClass -- Destructor                                             *
  *                                                                                             *
@@ -89,7 +82,6 @@ StaticPhysClass::StaticPhysClass(void) :
 StaticPhysClass::~StaticPhysClass(void)
 {
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::Init -- Initialize this object from a definition                           *
@@ -110,7 +102,6 @@ void StaticPhysClass::Init(const StaticPhysDefClass & def)
 		((ParticleEmitterClass *)Model)->Start ();
 	}
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::Set_Vis_Sector_ID -- Sets the vis sector ID for this object                *
@@ -152,7 +143,6 @@ void StaticPhysClass::Set_Model(RenderObjClass * model)
 	
 	Update_Cached_Model_Parameters();
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::Update_Cached_Model_Parameters -- update our state                         *
@@ -206,7 +196,6 @@ void StaticPhysClass::Update_Cached_Model_Parameters(void)
 
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::Render_Vis_Meshes -- renders any vis meshes in this model                  *
  *                                                                                             *
@@ -240,7 +229,6 @@ void StaticPhysClass::Render_Vis_Meshes(RenderInfoClass & rinfo)
 	}
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::Get_Bounding_Box -- Returns the bounding box of this object                *
  *                                                                                             *
@@ -259,7 +247,6 @@ const AABoxClass & StaticPhysClass::Get_Bounding_Box(void) const
 	return Model->Get_Bounding_Box();
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::Get_Transform -- Returns the transform of this object                      *
  *                                                                                             *
@@ -277,7 +264,6 @@ const Matrix3D & StaticPhysClass::Get_Transform(void) const
 	assert(Model);
 	return Model->Get_Transform();
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::Set_Transform -- Set the transform for this object                         *
@@ -317,7 +303,6 @@ void StaticPhysClass::Set_Transform(const Matrix3D & m)
 	}
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::Is_Occluder -- Returns whether this static object is an occluder           *
  *                                                                                             *
@@ -347,7 +332,6 @@ int StaticPhysClass::Is_Occluder(void)
 	return true;
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::Is_Model_Pre_Lit -- determines if the render object is pre-lit             *
  *                                                                                             *
@@ -365,7 +349,6 @@ bool StaticPhysClass::Is_Model_Pre_Lit(void)
 	// if the model is a light-mapped mesh, we want to exclude it from the static lights
 	if (Model->Class_ID() == RenderObjClass::CLASSID_MESH) {
 		MeshModelClass * mesh_model = ((MeshClass *)Model)->Get_Model();
-		WWASSERT(mesh_model != NULL);
 		if (mesh_model) {
 			bool isprelit = (mesh_model->Get_Flag(MeshModelClass::PRELIT_MASK) != 0);
 			mesh_model->Release_Ref();
@@ -385,7 +368,6 @@ bool StaticPhysClass::Is_Model_User_Lit(void)
 	}
 	return false;
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::Is_Vis_Sector -- Is_Vis_Sector                                             *
@@ -414,7 +396,6 @@ bool StaticPhysClass::Is_Vis_Sector(RenderObjClass * model) const
 	if (model == NULL) {
 		model = Model;
 	}
-
 
 	/*
 	** If we have a valid model to check; either recurse into its sub objects or 
@@ -448,7 +429,6 @@ bool StaticPhysClass::Is_Vis_Sector(RenderObjClass * model) const
 	return retval;	
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::Update_Sun_Status -- determine if this object is in the sun                *
  *                                                                                             *
@@ -472,7 +452,6 @@ void StaticPhysClass::Update_Sun_Status(void)
 	Set_Flag(IS_IN_THE_SUN,true);
 }
 
-
 /***********************************************************************************************
  * StaticPhysClass::Get_Factory -- Returns the persist factory for StaticPhysClass             *
  *                                                                                             *
@@ -492,7 +471,6 @@ const PersistFactoryClass & StaticPhysClass::Get_Factory(void) const
 {
 	return _StaticPhysFactory;
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::Save -- Save method, persistant object support                             *
@@ -519,7 +497,6 @@ bool StaticPhysClass::Save(ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::Load -- Load method, persistant object support                             *
@@ -554,7 +531,6 @@ bool StaticPhysClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -564,7 +540,6 @@ bool StaticPhysClass::Load(ChunkLoadClass &cload)
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 	return true;
 }
-
 
 /***********************************************************************************************
  * StaticPhysClass::On_Post_Load -- Post-Load callback                                         *
@@ -581,7 +556,6 @@ bool StaticPhysClass::Load(ChunkLoadClass &cload)
 void StaticPhysClass::On_Post_Load(void)
 {
 	PhysClass::On_Post_Load();
-	WWASSERT(Model);
 	if (Model) {
 
 		// Set our cull box but don't let the culling system re-insert us.
@@ -596,7 +570,6 @@ void StaticPhysClass::On_Post_Load(void)
 		}
 	}
 }
-
 
 float	StaticPhysClass::Compute_Vis_Mesh_Ram(RenderObjClass * model)
 {
@@ -634,7 +607,6 @@ float	StaticPhysClass::Compute_Vis_Mesh_Ram(RenderObjClass * model)
 	return total;
 }
 
-
 /**************************************************************************************
 **
 ** StaticPhysDefClass Implementation
@@ -661,7 +633,6 @@ enum
 
 	STATICPHYSDEF_VARIABLE_ISNONOCCLUDER			= 0,
 };
-
 
 StaticPhysDefClass::StaticPhysDefClass(void) :
 	IsNonOccluder(true)
@@ -732,7 +703,6 @@ bool StaticPhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

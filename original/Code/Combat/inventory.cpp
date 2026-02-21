@@ -42,7 +42,6 @@ void	InventoryClass::Store_Inventory( SoldierGameObj * soldier )
 {
 	Reset();
 
-	WWASSERT( soldier );
 	ShieldType = soldier->Get_Defense_Object()->Get_Shield_Type();
 	ShieldStrength = soldier->Get_Defense_Object()->Get_Shield_Strength();
 	ShieldStrengthMax = soldier->Get_Defense_Object()->Get_Shield_Strength_Max();

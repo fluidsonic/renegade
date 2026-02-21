@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef MESHMDL_H
 #define MESHMDL_H
@@ -11,7 +8,6 @@
 #include "vector3i.h"
 #include "sharebuf.h"
 #include "shader.h"
-#include "wwdebug.h"
 #include "vertmaterial.h"
 #include "bittype.h"
 #include "colmath.h"

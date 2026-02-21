@@ -16,7 +16,6 @@
 #include "camera.h"
 #include "scene.h"
 #include "ww3d.h"
-#include "wwmemlog.h"
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -89,7 +88,6 @@ MessageWindowClass::Shutdown (void)
 void
 MessageWindowClass::Initialize (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	//
 	//	Allocate the new text window
 	//
@@ -181,7 +179,6 @@ MessageWindowClass::Initialize (void)
 void
 MessageWindowClass::Render (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	//
 	//	Update the window rectangle as necessary
@@ -209,7 +206,6 @@ MessageWindowClass::Render (void)
 void
 MessageWindowClass::On_Frame_Update (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	if (TextWindow == NULL || TextWindow->Is_Displayed () == false) {
 		return ;
 	}
@@ -272,7 +268,6 @@ MessageWindowClass::Add_Message
 	float							decay_time
 )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	if (TextWindow == NULL) {
 		return ;
 	}
@@ -380,7 +375,6 @@ MessageWindowClass::Update_Window_Rectangle (void)
 		return;
 	}
 
-	WWASSERT(settings != NULL);
 	RectClass screen_rect				= settings->Get_Messages_Screen_Rect ();
 	RectClass text_rect					= settings->Get_Messages_Text_Rect ();
 	float top_border						= text_rect.Top - screen_rect.Top;
@@ -390,7 +384,6 @@ MessageWindowClass::Update_Window_Rectangle (void)
 	//
 	//	Resize the area (if needs be)
 	//
-	WWASSERT(TextWindow != NULL);
 	float total_height = TextWindow->Get_Total_Display_Height ();
 	if (IsRectangleDirty || (total_height > (CurrentRect.Height () - vert_border))) {
 

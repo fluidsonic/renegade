@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef SCREENFADEMANAGER_H
 #define SCREENFADEMANAGER_H

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef OCTBOX_H
 #define OCTBOX_H
@@ -148,7 +145,6 @@ inline void OctBoxClass::Reset_Contacts(void)
 
 inline void	OctBoxClass::Add_Contact(const CastResultStruct & res,PhysClass * other_obj)
 {
-	WWASSERT(ContactCount < MAX_CONTACTS);
 	Contacts[ContactCount] = res;
 	ContactedObject[ContactCount] = other_obj;
 	ContactCount++;

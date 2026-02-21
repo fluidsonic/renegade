@@ -33,7 +33,7 @@ cCsHint::Init(int subject_id)
 
 	Set_Object_Dirty_Bit(0, BIT_CREATION, true);
 
-	//WWDEBUG_SAY(("cCsHint::Init requesting hint for object id %d\n", SubjectId));
+	//
 }
 
 //-----------------------------------------------------------------------------

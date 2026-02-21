@@ -21,7 +21,6 @@
 #include "listener.h"
 #include "wwaudio.h"
 #include "soundscene.h"
-#include "wwprofile.h"
 #include "diaglog.h"
 #include "gametype.h"
 #include "wwphysids.h"
@@ -153,7 +152,6 @@ void CCameraProfileClass::Init( void )
 
 	INIClass	* camerasINI = Get_INI( CAMERAS_INI_FILENAME );
 	if (camerasINI != NULL) {
-		WWASSERT( camerasINI && camerasINI->Section_Count() > 0 );
 
 		int count, entry;
 		count =  camerasINI->Entry_Count( SECTION_PROFILE_LIST );
@@ -163,7 +161,6 @@ void CCameraProfileClass::Init( void )
 													camerasINI->Get_Entry( SECTION_PROFILE_LIST, entry) );
 
 			CCameraProfileClass * profile = new CCameraProfileClass();
-			WWASSERT( profile );
 			StringClass name(true);
 			camerasINI->Get_String( name, section_name, ENTRY_NAME, name );
 //			Get_Camera_Profile_String(		name,					ENTRY_NAME					);
@@ -562,7 +559,6 @@ void	Convert_World_To_Camera( Matrix3D * tm )
 
 void	CCameraClass::Use_Host_Model( void ) 
 {
-	WWASSERT( HostModel );
 	Matrix3D tm = HostModel->Get_Bone_Transform( "CAMERA" );
 	Set_Transform( tm );
 
@@ -679,7 +675,6 @@ void CCameraClass::Update()
 {
 	Handle_Input();
 
-	WWASSERT( CurrentProfile );
 
 	if ( SnapShotMode != SNAPSHOT_OFF ) {
 		Handle_Snap_Shot_Mode();
@@ -815,7 +810,6 @@ void CCameraClass::Update()
 
 	// Sweep the view plane back until it hits something
 	if ( profile.Distance != 0 ) {
-		WWPROFILE( "Sweep" );
 
 		// (gth) FIXME!
 		// Sort of a hack here, trying to make the camera not collide with the star
@@ -860,18 +854,11 @@ void CCameraClass::Update()
 		}
 
 		// When Physics_Debug is on, draw the camera collision box in its start point
-#ifdef WWDEBUG	
-		PhysicsSceneClass * scene = PhysicsSceneClass::Get_Instance();
-		if (scene && scene->Is_Debug_Display_Enabled()) {
-			scene->Add_Debug_OBBox(box,Vector3(1,0,0));
-		}
-#endif
 
 		// Now put the star back to his original 'ignore' state
 		Unignore_Star_And_Vehicle();
 
 	} else {
-		WWPROFILE( "No Sweep" );
 
 		// This is a camera which doesn't translate back.  Just check its near clip plane for intersection
 		// with the world and if it does intersect, pull the near clip plane in to its minimum.
@@ -909,7 +896,6 @@ void CCameraClass::Update()
 
 	// First, set the aiming point to where the camera is looking
 	if ( Determine_Targeting_Position() == false ) {
-		WWPROFILE( "Help" );
 		// Then, modify the aiming point for weapon help, if not on a target
 		Apply_Weapon_Help();
 	}
@@ -942,7 +928,6 @@ void CCameraClass::Update()
 */
 bool	CCameraClass::Determine_Targeting_Position( void )
 {
-	WWPROFILE( "Determining Targeting" );
 	bool	looking_at_object = false;
 
 	Matrix3D tm = Get_Transform();
@@ -997,10 +982,9 @@ bool	CCameraClass::Determine_Targeting_Position( void )
 		CastResultStruct result;
 		PhysRayCollisionTestClass raytest(ray, &result, 
 			BULLET_COLLISION_GROUP, COLLISION_TYPE_PROJECTILE);
-		WWASSERT(COMBAT_SCENE != NULL);
 
 		Ignore_Star_And_Vehicle();
-{ WWPROFILE( "Cast Ray" );
+{ 
 		COMBAT_SCENE->Cast_Ray( raytest );
 }
 		Unignore_Star_And_Vehicle();
@@ -1090,7 +1074,6 @@ bool	CCameraClass::Determine_Targeting_Position( void )
 
 void	CCameraClass::Apply_Weapon_Help( void )
 {
-	WWPROFILE( "Weapon Help" );
 	WeaponHelpTimer -= TimeManager::Get_Frame_Seconds();
 	if ( WeaponHelpTimer <= 0 ) {
 
@@ -1186,10 +1169,9 @@ void	CCameraClass::Apply_Weapon_Help( void )
 						CastResultStruct result;
 						PhysRayCollisionTestClass raytest(ray, &result, 
 							BULLET_COLLISION_GROUP, COLLISION_TYPE_PROJECTILE);
-						WWASSERT(COMBAT_SCENE != NULL);
 
 						Ignore_Star_And_Vehicle();
-	{ WWPROFILE( "Cast Ray" );
+	{ 
 						COMBAT_SCENE->Cast_Ray( raytest );
 	}
 						Unignore_Star_And_Vehicle();
@@ -1257,7 +1239,6 @@ void	CCameraClass::Use_Profile( const char * name )
 
 void	CCameraClass::Use_Default_Profile()
 {
-	WWASSERT( DefaultProfile );
 	CurrentProfile = DefaultProfile;
 	CurrentProfileName=DefaultProfileName;
 }
@@ -1303,90 +1284,6 @@ void	CCameraClass::Handle_Input( void )
 	// Hold F9 to control the camera
 	assert( CurrentProfile != NULL );
 
-#ifdef WWDEBUG
-	if ( CombatManager::Is_First_Person() ) {
-
-		Vector3	tweak(0,0,0);
-
-		tweak.X	 =	( Input::Get_State( INPUT_FUNCTION_CAMERA_TRANSTILT_INC ) ? 1 : 0 ) + 
-						( Input::Get_State( INPUT_FUNCTION_CAMERA_TRANSTILT_DEC ) ? -1 : 0 );
-
-		tweak.Y	 =	( Input::Get_State( INPUT_FUNCTION_DEBUG_FAR_CLIP_IN ) ? -1 : 0 ) + 
-						( Input::Get_State( INPUT_FUNCTION_DEBUG_FAR_CLIP_OUT ) ? 1 : 0 );
-
-		tweak.Z	 =	( Input::Get_State( INPUT_FUNCTION_CAMERA_DIST_INC ) ? -1 : 0 ) + 
-						( Input::Get_State( INPUT_FUNCTION_CAMERA_DIST_DEC ) ? 1 : 0 );
-
-		tweak *= dt * FP_TWEAK_RATE;
-		if ( tweak.Length() ) {
-			FirstPersonOffsetTweak += tweak;
-			Vector3 offset( 0,0,0 );
-			if ( COMBAT_STAR != NULL && COMBAT_STAR->Get_Weapon() != NULL ) {
-				offset = COMBAT_STAR->Get_Weapon()->Get_First_Person_Model_Offset();
-			}
-			offset += FirstPersonOffsetTweak;
-			Debug_Say(( "First Person Offset ( %1.3f, %1.3f, %1.3f )\n", offset.X, offset.Y, offset.Z ));
-//			Debug_Say(( "First Person Tweak ( %1.3f, %1.3f, %1.3f )\n", FirstPersonOffsetTweak.X, FirstPersonOffsetTweak.Y, FirstPersonOffsetTweak.Z ));
-		}
-
-	} else {
-
-		float	tilt_amount =	( Input::Get_State( INPUT_FUNCTION_CAMERA_TRANSTILT_INC ) ? 1 : 0 ) + 
-									( Input::Get_State( INPUT_FUNCTION_CAMERA_TRANSTILT_DEC ) ? -1 : 0 );
-		CurrentProfile->TranslationTilt += TILT_ADJUST * tilt_amount * dt;
-		CurrentProfile->TranslationTilt = WWMath::Clamp( CurrentProfile->TranslationTilt, MIN_TILT, MAX_TILT );
-
-		float	view_tilt_amount =	( Input::Get_State( INPUT_FUNCTION_CAMERA_VIEWTILT_INC ) ? 1 : 0 ) + 
-									( Input::Get_State( INPUT_FUNCTION_CAMERA_VIEWTILT_DEC ) ? -1 : 0 );
-		CurrentProfile->ViewTilt += TILT_ADJUST * view_tilt_amount * dt;
-		CurrentProfile->ViewTilt = WWMath::Clamp( CurrentProfile->ViewTilt, MIN_TILT, MAX_TILT );
-
-		float	distance_amount =	( Input::Get_State( INPUT_FUNCTION_CAMERA_DIST_INC ) ? 1 : 0 ) + 
-										( Input::Get_State( INPUT_FUNCTION_CAMERA_DIST_DEC ) ? -1 : 0 );
-		CurrentProfile->Distance += DISTANCE_ADJUST * distance_amount * dt;
-		CurrentProfile->Distance = WWMath::Clamp( CurrentProfile->Distance, MIN_DISTANCE, MAX_DISTANCE );
-
-		float	fov_amount =	( Input::Get_State( INPUT_FUNCTION_CAMERA_FOV_INC ) ? 1 : 0 ) + 
-									( Input::Get_State( INPUT_FUNCTION_CAMERA_FOV_DEC ) ? -1 : 0 );
-		CurrentProfile->FOV += FOV_ADJUST * fov_amount * dt;
-		CurrentProfile->FOV = WWMath::Clamp( CurrentProfile->FOV, MIN_FOV, MAX_FOV );
-
-		float	height_amount =	( Input::Get_State( INPUT_FUNCTION_CAMERA_HEIGHT_INC ) ? 1 : 0 ) + 
-										( Input::Get_State( INPUT_FUNCTION_CAMERA_HEIGHT_DEC ) ? -1 : 0 );
-		CurrentProfile->Height += HEIGHT_ADJUST * height_amount * dt;
-		CurrentProfile->Height = WWMath::Clamp( CurrentProfile->Height, MIN_HEIGHT, MAX_HEIGHT );
-
-		if ( ( tilt_amount != 0 ) || (view_tilt_amount != 0) || ( distance_amount != 0 ) ||
-			  ( fov_amount != 0 ) || ( height_amount != 0 ) ) 
-		{
-		
-			Debug_Say(( " Dist: %3.1f Height: %3.1f FOV %3.1f TransTilt: %3.1f ViewTilt: %3.1f\n",
-				CurrentProfile->Distance,
-				CurrentProfile->Height,
-				RAD_TO_DEG( CurrentProfile->FOV ), 
-				RAD_TO_DEG( CurrentProfile->TranslationTilt ),
-				RAD_TO_DEG( CurrentProfile->ViewTilt )
-				));
-		}
-
-		if ( Input::Get_State( INPUT_FUNCTION_DEBUG_FAR_CLIP_IN ) || 
-			 Input::Get_State( INPUT_FUNCTION_DEBUG_FAR_CLIP_OUT ) ) {
-			float fog_start, fog_stop;
-			COMBAT_SCENE->Get_Fog_Range( &fog_start, &fog_stop );
-			if ( Input::Get_State( INPUT_FUNCTION_DEBUG_FAR_CLIP_OUT ) ) {
-				FarClipPlane *= 1.1f;
-				fog_start *= 1.1f;
-			} else {
-				FarClipPlane /= 1.1f;
-				fog_start /= 1.1f;
-			}
-			COMBAT_SCENE->Set_Fog_Range( fog_start, FarClipPlane );
-			Debug_Say(( "FarClipPlane %f\n", FarClipPlane ));
-			Set_Clip_Planes( NearClipPlane, FarClipPlane );
-		} 
-
-	}
-#endif
 
 	if ( CinematicSnipingEnabled ) {
 
@@ -1397,12 +1294,6 @@ void	CCameraClass::Handle_Input( void )
 		CurrentProfile->Set_Zoom( SniperZoom );
 	}
 
-#ifdef WWDEBUG
-	if ( Input::Get_State( INPUT_FUNCTION_TOGGLE_SNAP_SHOT_MODE ) ) {
-		Set_Snap_Shot_Mode( Is_Snap_Shot_Mode() == SNAPSHOT_OFF );
-		Debug_Say(( "Snap Shot Mode %s\n", Is_Snap_Shot_Mode() ? "ON" : "OFF" ));
-	}
-#endif
 
 	if ( COMBAT_STAR != NULL && COMBAT_STAR->Is_Control_Enabled() == false ) {
 		// Don't move camera if control is disabled

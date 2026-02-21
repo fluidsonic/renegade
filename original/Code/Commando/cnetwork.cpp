@@ -42,7 +42,6 @@
 #include "consolemode.h"
 #include "slavemaster.h"
 #include "gamedataupdateevent.h"
-#include "gamespyadmin.h"
 #include "demosupport.h"
 #include "serversettings.h"
 #include "dlgmpconnectionrefused.h"
@@ -119,14 +118,9 @@ void cNetwork::Init_Client(unsigned short my_port)
 	PClientConnection->Install_Client_Broken_Connection_Handler(Client_Broken_Connection_Handler);
 	PClientConnection->Install_Client_Packet_Handler(Client_Packet_Handler);
 
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		The_Game()->Set_Password(cGameSpyAdmin::Get_Password_Attempt());
-	}
-
 	ULONG bbo = 0;
 	//if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
-	if (IS_SOLOPLAY ||
-		 (GameModeManager::Find("LAN")->Is_Active() && !cGameSpyAdmin::Is_Gamespy_Game())) {
+	if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 
 		bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
 
@@ -134,7 +128,7 @@ void cNetwork::Init_Client(unsigned short my_port)
 
 		HaveDoneTeamChangeDialog = false;
 	} else {
-		//WWASSERT(GameModeManager::Find("WOL")->Is_Active());
+		//assert(GameModeManager::Find("WOL")->Is_Active());
 		bbo = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 		//bbo = cUserOptions::BandwidthBps.Get();
 
@@ -290,18 +284,7 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 
 	const unsigned long refusalMsg = _refusalStrings[refusal_code - 1];
 
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		if (refusal_code == REFUSAL_VERSION_MISMATCH) {
-			WideStringClass tval;
-			tval.Format(L"%s...%s", TRANSLATE(IDS_MP_CONNECTION_REFUSED_BY_APPLICATION),
-				TRANSLATE(IDS_MENU_VERSION_MISMATCH));
-			DlgMPConnectionRefused::DoDialog(tval, false);
-		} else {
-			DlgMPConnectionRefused::DoDialog(TRANSLATE(refusalMsg), false);
-		}
-	} else {
-		DlgMsgBox::DoDialog(TRANSLATE (IDS_MENU_SERVER_MESSAGE_TITLE), TRANSLATE(refusalMsg));
-	}
+	DlgMsgBox::DoDialog(TRANSLATE (IDS_MENU_SERVER_MESSAGE_TITLE), TRANSLATE(refusalMsg));
 
 
 	//
@@ -505,7 +488,7 @@ void cNetwork::Onetime_Shutdown(void)
 #endif // 0
 
 #pragma message("(TSS) This packet ref count assert very occasionally fails.")
-   //WWASSERT(cPacket::Get_Ref_Count() == 0);
+   //assert(cPacket::Get_Ref_Count() == 0);
 
 	REF_PTR_RELEASE(VisTable);
 
@@ -550,14 +533,13 @@ void cNetwork::Init_Server(void)
 
 
 	//if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
-	if (IS_SOLOPLAY ||
-		 (GameModeManager::Find("LAN")->Is_Active() && !cGameSpyAdmin::Is_Gamespy_Game())) {
+	if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 
 		ULONG bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
 		PServerConnection->Set_Bandwidth_Budget_Out(bbo);
 		cBandwidthGraph::Set_Scale(200000);
 	} else {
-		//WWASSERT(GameModeManager::Find("WOL")->Is_Active());
+		//assert(GameModeManager::Find("WOL")->Is_Active());
 		unsigned long bw = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 
 		/*
@@ -776,10 +758,6 @@ void cNetwork::Update(void)
 			}
 			Connection_Status_Change_Feedback();
 		}
-
-//		{	WWPROFILE("GameSpy_QnR");
-//			GameSpyQnR.Think();
-//		}
 
 		PServerConnection->Service_Read();
 
@@ -1004,7 +982,7 @@ int cNetwork::Get_My_Id(void)
 //-----------------------------------------------------------------------------
 LPCSTR cNetwork::Get_Client_String(int recipient)
 {
-   //WWASSERT(I_Am_Server());
+   //assert(I_Am_Server());
    if (recipient > 0) {
 
 		if (recipient == ALL) {
@@ -1202,7 +1180,7 @@ float cNetwork::Get_Distance_Priority(Vector3 & pos1, Vector3 & pos2)
    } else if (d < range3) {
       priority = (float) ((range3 - d) / (range3 - range2) * 0.10 + 0.00);
    } else {
-		//WWASSERT(0);
+		//assert(0);
 		static bool already_warned = false;
 		if (!already_warned) {
 			Debug_Say(("Someone went outside the world box! (possibly numerous times)\n"));
@@ -1269,10 +1247,7 @@ REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 	// TSS100501
 	//
 	// Make sure the player is not already in the game
-   //GAMESPY
-	//if (cPlayerManager::Find_Player(player_name)) {
-	if (!cGameSpyAdmin::Is_Gamespy_Game() &&
-	    cPlayerManager::Find_Player(player_name)) {
+	if (cPlayerManager::Find_Player(player_name)) {
 		return REFUSAL_PLAYER_EXISTS;
 	}
 

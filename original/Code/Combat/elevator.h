@@ -82,7 +82,7 @@ public:
 
 	// Definitions
 	void	Init( const ElevatorPhysDefClass & definition );
-	const ElevatorPhysDefClass * Get_ElevatorPhysDef( void ) const { WWASSERT( Definition ); return (ElevatorPhysDefClass *)Definition; }
+	const ElevatorPhysDefClass * Get_ElevatorPhysDef( void ) const { assert( Definition ); return (ElevatorPhysDefClass *)Definition; }
 
 	// Save / Load
 	virtual	bool	Save( ChunkSaveClass & csave );

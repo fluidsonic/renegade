@@ -50,7 +50,6 @@ void DynTexProjectClass::Set_Light_Vector(const Vector3 & vector)
 
 void DynTexProjectClass::Get_Light_Vector(Vector3 * set_vector)
 {
-	WWASSERT(set_vector != NULL);
 	*set_vector = LightVector;
 }
 

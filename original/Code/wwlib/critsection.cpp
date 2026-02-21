@@ -17,7 +17,6 @@ CriticalSectionClass::~CriticalSectionClass()
 
 void CriticalSectionClass::Enter()
 {
-	WWASSERT(inside==false);
 #ifndef _UNIX	
 	EnterCriticalSection(&Bar);
 	inside=true;
@@ -26,7 +25,6 @@ void CriticalSectionClass::Enter()
 
 void CriticalSectionClass::Exit()
 {
-	WWASSERT(inside==true);
 #ifndef _UNIX	
 	inside=false;
 	LeaveCriticalSection(&Bar);	

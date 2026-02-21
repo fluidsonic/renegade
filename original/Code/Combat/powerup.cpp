@@ -5,7 +5,6 @@
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
 #include "weaponbag.h"
 #include "damage.h"
 #include "gameobjmanager.h"
@@ -18,7 +17,6 @@
 #include "assetmgr.h"
 #include "animcontrol.h"
 #include "soldier.h"
-#include "wwprofile.h"
 #include "objlibrary.h"
 #include "gameobjobserver.h"
 #include "diaglog.h"
@@ -39,7 +37,6 @@
 /*
 ** PowerUpGameObjDef
 */
-DECLARE_FORCE_LINK( PowerUp )
 
 SimplePersistFactoryClass<PowerUpGameObjDef, CHUNKID_GAME_OBJECT_DEF_POWERUP>	_PowerUpGameObjDefPersistFactory;
 
@@ -225,8 +222,6 @@ bool	PowerUpGameObjDef::Grant( SmartGameObj * obj, PowerUpGameObj * p_powerup, b
 
 	bool granted = false;
 
-	WWASSERT(CombatManager::I_Am_Server());
-
 	DefenseObjectClass * defense = obj->Get_Defense_Object();
 	// Grant the shield
 	if ( GrantShieldType != 0 ) {
@@ -380,7 +375,6 @@ bool	PowerUpGameObjDef::Grant( SmartGameObj * obj, PowerUpGameObj * p_powerup, b
 		}
 	}
 
-
 	// Grant the key
 	if ( GrantKey != 0 ) {
 		SoldierGameObj * soldier = obj->As_SoldierGameObj();
@@ -436,7 +430,6 @@ bool	PowerUpGameObjDef::Grant( SmartGameObj * obj, PowerUpGameObj * p_powerup, b
 
 	return granted;
 }
-
 
 /*
 ** PowerUpGameObj
@@ -499,7 +492,6 @@ const PowerUpGameObjDef & PowerUpGameObj::Get_Definition( void ) const
 	return (const PowerUpGameObjDef &)BaseGameObj::Get_Definition();
 }
 
-
 /*
 ** PowerUpGameObj Save and Load
 */
@@ -560,7 +552,6 @@ bool	PowerUpGameObj::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_WEAPONBAG:
-				WWASSERT( WeaponBag == NULL );
 				WeaponBag = new WeaponBagClass( NULL );
 			 	WeaponBag->Load( cload );
 				break;
@@ -699,16 +690,12 @@ void	PowerUpGameObj::Update_State( void )
 
 void	PowerUpGameObj::Grant( SmartGameObj * obj )
 {
-	WWASSERT ( State != STATE_GRANTING );
-
-	WWASSERT( obj );
 
 	// Grant Def
 	Get_Definition().Grant( obj, this );
 
 	// If we have a weapon bag, move it
 	if ( WeaponBag != NULL ) {
-		WWASSERT( obj->Get_Weapon_Bag() );
 		if ( obj->Get_Weapon_Bag()->Move_Contents( WeaponBag ) ) {
 			Set_State( PowerUpGameObj::STATE_GRANTING );
 		}
@@ -722,12 +709,9 @@ void	PowerUpGameObj::Grant( SmartGameObj * obj )
 	}
 }
 
-
 void	PowerUpGameObj::Think( void )
 {
 	SimpleGameObj::Think();
-
-	WWPROFILE( "PowerUp Think" );
 
 	//
 	//	Make sure the powerup is playing its correct animation and sound
@@ -750,7 +734,6 @@ void	PowerUpGameObj::Think( void )
 		SLNode<SmartGameObj> * smart_objnode;
 		for (smart_objnode = GameObjManager::Get_Smart_Game_Obj_List()->Head(); smart_objnode; smart_objnode = smart_objnode->Next()) {
 			SmartGameObj * obj = smart_objnode->Data();
-			WWASSERT( obj != NULL );
 
 			SoldierGameObj * soldier = obj->As_SoldierGameObj();
 
@@ -775,7 +758,6 @@ void	PowerUpGameObj::Think( void )
 
 PowerUpGameObj *	PowerUpGameObj::Create_Backpack( ArmedGameObj * provider )
 {
-	WWASSERT( provider );
 
 //	Debug_Say(( "Creating a Backpack\n" ));
 
@@ -792,7 +774,6 @@ PowerUpGameObj *	PowerUpGameObj::Create_Backpack( ArmedGameObj * provider )
 
 	return backpack;
 }
-
 
 //void	PowerUpGameObj::Get_Extended_Information( StringClass & description ) 
 void	PowerUpGameObj::Get_Description( StringClass & description ) 

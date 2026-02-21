@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef RINFO_H
 #define RINFO_H
@@ -9,7 +6,6 @@
 #include "always.h"
 #include "bittype.h"
 #include "ww3d.h"
-#include "wwdebug.h"
 #include "shader.h"
 #include "vector.h"
 #include "matrix3d.h"

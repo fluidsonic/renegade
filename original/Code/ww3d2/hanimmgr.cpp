@@ -5,7 +5,6 @@
 #include "hcanim.h"
 #include "hmorphanim.h"
 #include "chunkio.h"
-#include "wwmemlog.h"
 #include "animatedsoundmgr.h"
 
 
@@ -68,7 +67,6 @@ HAnimManagerClass::~HAnimManagerClass(void)
  *=============================================================================================*/
 int HAnimManagerClass::Load_Anim(ChunkLoadClass & cload)
 {
-	WWMEMLOG(MEM_ANIMATION);
 
 	switch (cload.Cur_Chunk_ID()) 
 	{
@@ -297,7 +295,6 @@ void HAnimManagerClass::Free_All_Anims(void)
  *=============================================================================================*/
 bool HAnimManagerClass::Add_Anim(HAnimClass *new_anim)
 {
-	WWASSERT (new_anim != NULL);
 
 	// Increment the refcount on the new animation and add it to our table.
 	new_anim->Add_Ref ();

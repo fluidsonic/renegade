@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SPECIALEFFECTSGAMEOBJ_H
 #define __SPECIALEFFECTSGAMEOBJ_H

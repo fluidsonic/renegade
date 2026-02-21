@@ -391,7 +391,6 @@ void MeshMatDescClass::Init_Alternate(MeshMatDescClass & default_materials,MeshM
 				Material[pass] = NEW_REF(VertexMaterialClass,(*(default_materials.Material[pass])));
 			} else {
 				if (default_materials.MaterialArray[pass]) {
-					WWDEBUG_SAY(("Unimplemented case: mesh has more than one default vertex material but no alternate vertex materials have been defined.\r\n"));
 				}
 				Material[pass] = NULL;
 			}
@@ -593,7 +592,6 @@ void MeshMatDescClass::Install_UV_Array(int pass,int stage,Vector2 * uvs,int cou
 
 		if (new_index < MAX_UV_ARRAYS) {
 
-			WWASSERT(UV[new_index] == NULL);
 			UV[new_index] = NEW_REF(UVBufferClass,(count));
 			memcpy(UV[new_index]->Get_Array(),uvs,count * sizeof(Vector2));
 			UV[new_index]->Update_CRC();  // update the crc for future comparision

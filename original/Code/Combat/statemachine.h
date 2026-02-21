@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __STATEMACHINE_H
 #define __STATEMACHINE_H
@@ -8,22 +5,12 @@
 
 #include "simplevec.h"
 #include "chunkio.h"
-#ifndef _MSC_VER
 #include <type_traits>
-#endif
 
 
 //////////////////////////////////////////////////////////////////////
 //	Macros
 //////////////////////////////////////////////////////////////////////
-#ifdef _MSC_VER
-#define ADD_STATE_TO_MACHINE(machine, state)		\
-		machine.Add_State (								\
-			On_##state##_Think,							\
-			On_##state##_Request_End,					\
-			On_##state##_Begin,							\
-			On_##state##_End);
-#else
 // clang: member fn names without & aren't implicitly convertible; use decltype(this)
 #define ADD_STATE_TO_MACHINE(machine, state)		\
 		do { \
@@ -34,7 +21,6 @@
 				&_this_t::On_##state##_Begin, \
 				&_this_t::On_##state##_End); \
 		} while(0)
-#endif
 
 
 		//machine.Add_State (On_##state_Think, On_##state_Request_End, On_##state_Begin, On_##state_End);
@@ -366,7 +352,6 @@ public:
 					break;
 		  
 				default:
-					WWDEBUG_SAY (("Unrecognized StateMachineClass chunkID\n"));
 					break;
 
 			}
@@ -388,7 +373,6 @@ public:
 				READ_MICRO_CHUNK (cload, VARID_IS_HALTED,		IsHalted);
 				
 				default:
-					WWDEBUG_SAY (("Unrecognized StateMachineClass variable chunkID\n"));
 					break;
 			}
 			cload.Close_Micro_Chunk ();

@@ -1,6 +1,5 @@
 #include "sphereobj.h"
 #include "w3d_util.h"
-#include "wwdebug.h"
 #include "vertmaterial.h"
 #include "ww3d.h"
 #include "chunkio.h"
@@ -344,8 +343,6 @@ const char * SphereRenderObjClass::Get_Name(void) const
  *=============================================================================================*/
 void SphereRenderObjClass::Set_Name(const char * name)
 {
-	WWASSERT(name != NULL);
-	WWASSERT(strlen(name) < 2*W3D_NAME_LEN);
 	strcpy(Name,name);
 }
 
@@ -625,7 +622,6 @@ void SphereRenderObjClass::Special_Render(SpecialRenderInfoClass & rinfo)
 	temp.Translate(Transform.Get_Translation());
 	
 	if (rinfo.RenderType == SpecialRenderInfoClass::RENDER_VIS) {
-		WWASSERT(rinfo.VisRasterizer != NULL);
 		rinfo.VisRasterizer->Set_Model_Transform(temp);
 		vis_render_sphere(rinfo,ObjSpaceCenter,ObjSpaceExtent);
 	}
@@ -912,7 +908,6 @@ void SphereRenderObjClass::animate (void)
 			} else {
 				anim_time = 1.0F;
 			}
-			WWASSERT (anim_time >= 0.0F);
 
 			if ((Flags & USE_ANIMATION_LOOP) && anim_time > 1.0F) {
 				anim_time -= 1.0F;
@@ -1488,7 +1483,6 @@ void SphereMeshClass::Generate(float radius, int slices, int stacks)
 	}
 
 	// Make Sure ptr is where I expect it to be
-	WWASSERT(((int)out) == ((int)(tri_poly + face_ct)));
 
 	//
 	//	Fill in the DCG array

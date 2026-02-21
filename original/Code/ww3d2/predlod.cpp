@@ -207,8 +207,6 @@ void PredictiveLODOptimizerClass::Add_Object(RenderObjClass *robj)
 
 	float cost = robj->Get_Cost();
 	// Some sanity checking so one object doesn't mess up the entire scene
-	WWASSERT (cost >= 0.0f);
-	WWASSERT (cost < 1.0e6);
 	TotalCost += cost;
 }
 

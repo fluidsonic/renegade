@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __IMAGECTRL_H
 #define __IMAGECTRL_H

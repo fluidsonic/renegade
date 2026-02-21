@@ -1,6 +1,5 @@
 #include "transitiongameobj.h"
 #include "debug.h"
-#include "wwhack.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
@@ -9,7 +8,6 @@
 /*
 ** TransitionGameObjDef
 */
-DECLARE_FORCE_LINK( Transition )
 
 SimplePersistFactoryClass<TransitionGameObjDef, CHUNKID_GAME_OBJECT_DEF_TRANSITION>	_TransitionGameObjDefPersistFactory;
 
@@ -115,7 +113,6 @@ const PersistFactoryClass & TransitionGameObjDef::Get_Factory (void) const
 { 
 	return _TransitionGameObjDefPersistFactory; 
 }
-
 
 /*
 ** TransitionGameObj
@@ -241,7 +238,6 @@ void	TransitionGameObj::Create_Transitions( void )
 	Destroy_Transitions();
 
 	// Only create the transitions if they haven't already been created
-	WWASSERT( TransitionInstances.Count() == 0 );
 	if( TransitionInstances.Count() == 0 ) {
 
 		const TRANSITION_DATA_LIST & trans_data_list = Get_Definition().Get_Transition_List();

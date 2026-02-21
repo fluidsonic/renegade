@@ -19,9 +19,6 @@
 #include "gametype.h"
 #include "csdamageevent.h"
 
-#ifdef WWDEBUG
-bool	DefenseObjectClass::OneShotKills	= false;
-#endif // _WWDEBUG
 
 ArmorWarheadManager	ArmorManagerObject;
 
@@ -79,7 +76,6 @@ void	ArmorWarheadManager::Init( void )
 	INIClass	* armorINI = Get_INI( ARMOR_INI_FILENAME );
 	if (armorINI != NULL) {
 
-		WWASSERT( armorINI && armorINI->Section_Count() > 0 );
 
 		int count, entry;
 
@@ -311,7 +307,7 @@ ArmorType		ArmorWarheadManager::Get_Armor_Type( const char *name )
 		}
 	}
 	Debug_Say(( "Armor %s Not Found\n", name ));
-//	WWASSERT( 0 );	//Armor type not found!
+//	assert( 0 );	//Armor type not found!
 	return 0;
 }
 
@@ -323,37 +319,28 @@ WarheadType		ArmorWarheadManager::Get_Warhead_Type( const char *name )
 		}
 	}
 	Debug_Say(( "Warhead %s Not Found\n", name ));
-//	WWASSERT( 0 );	//Warhead type not found!
+//	assert( 0 );	//Warhead type not found!
 	return 0;
 }
 
 const char * ArmorWarheadManager::Get_Armor_Name( ArmorType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < Get_Num_Armor_Types() );
 	return ArmorNames[type];
 }
 
 const char *	ArmorWarheadManager::Get_Warhead_Name( WarheadType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < Get_Num_Warhead_Types() );
 	return WarheadNames[type];
 }
 
 
 float	ArmorWarheadManager::Get_Damage_Multiplier( ArmorType armor, WarheadType warhead )
 {
-	WWASSERT( (int)armor >= 0 );
-	WWASSERT( (int)armor < Get_Num_Armor_Types() );
-	WWASSERT( (int)warhead >= 0 );
-	WWASSERT( (int)warhead < Get_Num_Warhead_Types() );
 	return( Multipliers[ (unsigned int)armor * Get_Num_Warhead_Types() + (unsigned int)warhead ] );
 
 	/*
 	int index = armor * Get_Num_Warhead_Types() + warhead;
 	float multiplier = Multipliers[index];
-	WWASSERT(WWMath::Is_Valid_Float(multiplier));
 
 	Debug_Say(("index = %d, armor = %d, warhead = %d, multiplier = %5.2f\n",
 		index, armor, warhead, multiplier));
@@ -364,10 +351,6 @@ float	ArmorWarheadManager::Get_Damage_Multiplier( ArmorType armor, WarheadType w
 
 float	ArmorWarheadManager::Get_Shield_Absorbsion( ArmorType armor, WarheadType warhead )
 {
-	WWASSERT( (int)armor >= 0 );
-	WWASSERT( (int)armor < Get_Num_Armor_Types() );
-	WWASSERT( (int)warhead >= 0 );
-	WWASSERT( (int)warhead < Get_Num_Warhead_Types() );
 	return( Absorbsion[ (unsigned int)armor * Get_Num_Warhead_Types() + (unsigned int)warhead ] );
 }
 
@@ -411,57 +394,41 @@ ArmorType	 	ArmorWarheadManager::Find_Warhead_Save_ID( int id )
 
 ArmorWarheadManager::SpecialDamageType	ArmorWarheadManager::Get_Special_Damage_Type( WarheadType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < Get_Num_Warhead_Types() );
 	return (SpecialDamageType)SpecialDamageTypes[type];
 }
 
 float	ArmorWarheadManager::Get_Special_Damage_Probability( WarheadType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < Get_Num_Warhead_Types() );
 	return SpecialDamageProbability[type];
 }
 
 WarheadType ArmorWarheadManager::Get_Special_Damage_Warhead( SpecialDamageType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < NUM_SPECIAL_DAMAGE_TYPES );
 	return SpecialDamageWarhead[type];
 }
 
 float	ArmorWarheadManager::Get_Special_Damage_Duration( SpecialDamageType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < NUM_SPECIAL_DAMAGE_TYPES );
 	return SpecialDamageDuration[type];
 }
 
 float	ArmorWarheadManager::Get_Special_Damage_Scale( SpecialDamageType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < NUM_SPECIAL_DAMAGE_TYPES );
 	return SpecialDamageScale[type];
 }
 
 const char *	ArmorWarheadManager::Get_Special_Damage_Explosion( SpecialDamageType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < NUM_SPECIAL_DAMAGE_TYPES );
 	return SpecialDamageExplosion[type];
 }
 
 float	ArmorWarheadManager::Get_Visceroid_Probability( WarheadType type )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < Get_Num_Warhead_Types() );
 	return VisceroidProbability[type];
 }
 
 bool	ArmorWarheadManager::Is_Skin_Impervious( SpecialDamageType type, ArmorType skin )
 {
-	WWASSERT( (int)type >= 0 );
-	WWASSERT( (int)type < NUM_SPECIAL_DAMAGE_TYPES );
 	for ( int i = 0; i < ImperviousSkins[type].Count(); i++ ) {
 		if ( ImperviousSkins[type][i] == skin ) {
 			return true;
@@ -718,8 +685,6 @@ float	DefenseObjectClass::Apply_Damage( const OffenseObjectClass & offense, floa
 */
 void	DefenseObjectClass::Request_Damage( const OffenseObjectClass & offense, float scale )
 {
-	WWASSERT(CombatManager::I_Am_Only_Client());
-	WWASSERT(cCsDamageEvent::Get_Are_Clients_Trusted() == true);
 
 	cCsDamageEvent * event = new cCsDamageEvent();
 	if ( event ) {
@@ -886,14 +851,6 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 			damage = Health;
 		}
 
-	#ifdef WWDEBUG
-		//
-		// TSS090601
-		//
-		if (OneShotKills)	{
-			damage = Health;
-		}
-	#endif // _WWDEBUG
 
 		Health = (float)Health - damage;
 		
@@ -1076,8 +1033,8 @@ void DefenseObjectClass::Import(BitStreamClass & packet)
 		Health = WWMath::Max(Health, 0.01f);
 	}
 
-	//WWASSERT(WWMath::Is_Valid_Float(ShieldStrength));
-   //WWASSERT(packet.Is_Flushed());
+	//assert(WWMath::Is_Valid_Float(ShieldStrength));
+   //assert(packet.Is_Flushed());
 }
 
 void DefenseObjectClass::Export(BitStreamClass & packet)
@@ -1197,7 +1154,6 @@ bool DefenseObjectDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		};
 
@@ -1362,7 +1318,6 @@ void	DefenseObjectClass::Set_Shield_Type( ArmorType type )
 				  Get_Owner()->As_SoldierGameObj != NULL && 
 				  Get_Owner()->As_SmartGameObj() != smart) {
 
-				WWASSERT(Get_Owner()->As_SmartGameObj() != NULL);
 				int victim_id = Get_Owner()->As_SmartGameObj()->Get_Control_Owner();
 				int victim_team = Get_Owner()->As_SmartGameObj()->Get_Player_Type();
 

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef VISRASTERIZER_H
 #define VISRASTERIZER_H
@@ -83,10 +80,6 @@ protected:
 
 inline const uint32 * IDBufferClass::Get_Pixel_Row(int y,int min_x,int max_x)
 {
-	WWASSERT(y>=0);
-	WWASSERT(y<ResHeight);
-	WWASSERT(min_x>=0);
-	WWASSERT(max_x<=ResWidth);
 
 	int addr = Pixel_Coords_To_Address(min_x,y);
 	return &(IDBuffer[addr]);

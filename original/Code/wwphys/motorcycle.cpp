@@ -3,16 +3,11 @@
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "wwphysids.h"
-#include "wwhack.h"
-#include "wwprofile.h"
-
-DECLARE_FORCE_LINK(motorcycle);
 
 /*
 ** Declare a PersistFactory for MotorcycleClasses
 */
 SimplePersistFactoryClass<MotorcycleClass,PHYSICS_CHUNKID_MOTORCYCLE>	_MotorcycleFactory;
-
 
 /*
 ** Chunk-ID's used by MotorcycleClass
@@ -51,7 +46,6 @@ void MotorcycleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 	static float MAX_LVEL		= 10.0f;
 
 	{
-		WWPROFILE("MotorcycleClass::Compute_Force_And_Torque");
 
 		// Read the controller inputs
 		// Accept either strafe or turn as a turn command
@@ -95,14 +89,6 @@ void MotorcycleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 
 		// What is our angular velocity about the x axis we want it to be zero as well
 		float droll = Vector3::Dot_Product(AngularVelocity,Get_Transform().Get_X_Vector());
-
-		WWASSERT(WWMath::Is_Valid_Float(roll));
-		WWASSERT(WWMath::Is_Valid_Float(target_roll));
-		WWASSERT(WWMath::Is_Valid_Float(droll));
-
-		WWASSERT(WWMath::Is_Valid_Float(torque->X));
-		WWASSERT(WWMath::Is_Valid_Float(torque->Y));
-		WWASSERT(WWMath::Is_Valid_Float(torque->Z));
 
 		// Apply a balancing torque
 		*torque += (LeanK0 * (target_roll - roll) + LeanK1 * (0.0f - droll)) * Get_Transform().Get_X_Vector();
@@ -159,7 +145,6 @@ bool MotorcycleClass::Load (ChunkLoadClass &cload)
 				break;
 			
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -167,7 +152,6 @@ bool MotorcycleClass::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 /***********************************************************************************************
 **

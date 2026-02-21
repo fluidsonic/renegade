@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 
 #ifndef __DEFINITION_MGR_H
@@ -10,7 +7,6 @@
 #include "saveload.h"
 #include "saveloadsubsystem.h"
 #include "saveloadids.h"
-#include "wwdebug.h"
 #include "wwstring.h"
 #include "hashtemplate.h"
 #include "vector.h"

@@ -21,7 +21,6 @@ TextureClass * create_projector_texture_from_filename( const char * filename )
 
 	TextureClass * texture = WW3DAssetManager::Get_Instance()->Get_Texture(tex_name,TextureClass::MIP_LEVELS_1);
 	if (texture == NULL) {
-		WWDEBUG_SAY(("Failed to create %s from %s\n", (const char *)tex_name, filename));
 	}
 	return texture;
 }
@@ -57,7 +56,6 @@ void ProjectorManagerClass::Free(void)
 void ProjectorManagerClass::Init(const ProjectorManagerDefClass & def,RenderObjClass * model)
 {
 	Free();
-	WWASSERT(Projector == NULL);
 
 	if (model == NULL) {
 		return;
@@ -257,7 +255,6 @@ bool ProjectorManagerDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include "wwmath.h"
 #include "miscutil.h"
-#include "wwdebug.h"
 
 const double cMathUtil::PI   = 3.1415927;
 const double cMathUtil::PI_2 = 1.5707963;
@@ -23,7 +22,6 @@ const double cMathUtil::PI_2 = 1.5707963;
 //
 void cMathUtil::Angle_To_Vector(double angle, double & dx, double & dy)
 {
-	WWASSERT(angle > -WWMATH_EPSILON && angle < 360.0 + WWMATH_EPSILON);
 
 	double angleRadians;
 
@@ -47,7 +45,6 @@ void cMathUtil::Angle_To_Vector(double angle, double & dx, double & dy)
 
    double len;
 	len = ::sqrt(dx * dx + dy * dy); 
-   WWASSERT(::fabs(len - 1) < 0.0005);
 
 	//
    // Correction for Irish nature of windows y coords
@@ -127,11 +124,9 @@ void cMathUtil::Rotate_Vector(double & vx, double & vy, double angle)
 //-----------------------------------------------------------------------------
 double cMathUtil::Get_Uniform_Pdf_Double(double lower, double upper)
 {
-   WWASSERT(upper - lower > -MISCUTIL_EPSILON);
 
    double x = lower + ::rand() / (double) RAND_MAX * (upper - lower);
 
-   WWASSERT(x - lower > -MISCUTIL_EPSILON && upper - x > -MISCUTIL_EPSILON);
    
    return x;
 }
@@ -145,10 +140,8 @@ double cMathUtil::Get_Normalized_Uniform_Pdf_Double()
 //-----------------------------------------------------------------------------
 int cMathUtil::Get_Uniform_Pdf_Int(int lower, int upper)
 {
-   WWASSERT(lower <= upper);
    int x = lower + ::rand() % (upper - lower + 1);
 
-   WWASSERT(x >= lower && upper >= x);
    
    return x;
 }
@@ -156,7 +149,6 @@ int cMathUtil::Get_Uniform_Pdf_Int(int lower, int upper)
 //-----------------------------------------------------------------------------
 double cMathUtil::Get_Hat_Pdf_Double(double lower, double upper)
 {
-   WWASSERT(upper - lower > -MISCUTIL_EPSILON);
 
    double x;
    
@@ -177,7 +169,6 @@ double cMathUtil::Get_Hat_Pdf_Double(double lower, double upper)
       }
    }
 
-   WWASSERT(x - lower > -MISCUTIL_EPSILON && upper - x > -MISCUTIL_EPSILON);
 
    return x;
 }

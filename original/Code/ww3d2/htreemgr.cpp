@@ -2,7 +2,6 @@
 #include <string.h>
 #include "htree.h"
 #include "chunkio.h"
-#include "wwmemlog.h"
 
 
 /*********************************************************************************************** 
@@ -99,7 +98,6 @@ void HTreeManagerClass::Free_All_Trees(void)
  *=============================================================================================*/
 int HTreeManagerClass::Load_Tree(ChunkLoadClass & cload)
 {
-	WWMEMLOG(MEM_ANIMATION);
 	HTreeClass * newtree = new HTreeClass;
 
 	if (newtree == NULL) {

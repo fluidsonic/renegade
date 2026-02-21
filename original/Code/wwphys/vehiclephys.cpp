@@ -6,7 +6,6 @@
 #include "physcontrol.h"
 #include "octbox.h"
 #include "pscene.h"
-#include "wwprofile.h"
 #include "vehicledazzle.h"
 
 // Vehicles will sit rolled over for this long before exploding!
@@ -199,7 +198,6 @@ float VehiclePhysClass::Compute_Approximate_Ride_Height(void)
 
 void VehiclePhysClass::Timestep(float dt)
 {
-	WWPROFILE("VehiclePhysClass::Timestep");
 	int i;
 
 	/*
@@ -266,7 +264,6 @@ SuspensionElementClass * VehiclePhysClass::Peek_Wheel(int wheel_index)
 void VehiclePhysClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 {
 	{
-		WWPROFILE("VehiclePhysClass::Compute_Force_And_Torque");
 		
 		/*
 		** Compute forces and torques for each wheel.
@@ -404,7 +401,6 @@ void VehiclePhysClass::Create_Wheels(void)
 	if (model == NULL) return;
 
 	const VehiclePhysDefClass * def = Get_VehiclePhysDef();
-	WWASSERT(def != NULL);
 	
 	int ibone;
 	int wheelcount = 0;
@@ -585,7 +581,6 @@ void VehiclePhysClass::Capture_Dazzles(void)
 	if (model == NULL) return;
 
 	const VehiclePhysDefClass * def = Get_VehiclePhysDef();
-	WWASSERT(def != NULL);
 	
 	int imodel;
 	int dazzlecount = 0;
@@ -630,7 +625,6 @@ void VehiclePhysClass::Capture_Dazzles(void)
 
 VehicleDazzleClass * VehiclePhysClass::Create_Dazzle_Controller(RenderObjClass * obj)
 {
-	WWASSERT(VehicleDazzleClass::Is_Vehicle_Dazzle(obj));
 	VehicleDazzleClass * controller = new VehicleDazzleClass();
 	controller->Set_Model((DazzleRenderObjClass *)obj);
 	return controller;
@@ -697,7 +691,6 @@ bool VehiclePhysClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -819,7 +812,6 @@ bool VehiclePhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

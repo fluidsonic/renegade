@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef DX8_RENDERER_H
 #define DX8_RENDERER_H
@@ -169,9 +166,6 @@ public:
 	
 	inline void Add_Visible_Texture_Category(DX8TextureCategoryClass * tex_category,int pass) 
 	{
-		WWASSERT(pass<MAX_PASSES);
-		WWASSERT(tex_category != NULL);
-		WWASSERT(texture_category_list[pass].Contains(tex_category));
 		visible_texture_category_list[pass].Add(tex_category);
 		AnythingToRender=true;
 	}

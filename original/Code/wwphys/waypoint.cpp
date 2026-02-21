@@ -1,17 +1,12 @@
 #include "waypoint.h"
 #include "persistfactory.h"
 #include "wwphysids.h"
-#include "wwhack.h"
 #include "pathfindportal.h"
-
-
-DECLARE_FORCE_LINK(waypoint);
 
 //////////////////////////////////////////////////////////////////////////////
 //	Persist factory
 //////////////////////////////////////////////////////////////////////////////
 SimplePersistFactoryClass<WaypointClass, PHYSICS_CHUNKID_WAYPOINT> _WaypointPersistFactory;
-
 
 enum
 {
@@ -27,7 +22,6 @@ enum
 	VARID_ID,
 	VARID_ACTION_ID
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -58,7 +52,6 @@ WaypointClass::WaypointClass (const WaypointClass &src)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	WaypointClass
@@ -73,7 +66,6 @@ WaypointClass::WaypointClass (const Vector3 &position)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~WaypointClass
@@ -85,7 +77,6 @@ WaypointClass::~WaypointClass (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -96,7 +87,6 @@ WaypointClass::Get_Factory (void) const
 {
 	return _WaypointPersistFactory;
 }
-
 
 /////////////////////////////////////////////////////////////////
 //
@@ -119,7 +109,6 @@ WaypointClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -141,7 +130,6 @@ WaypointClass::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -181,7 +169,6 @@ WaypointClass::Load_Variables (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	operator=
@@ -203,7 +190,6 @@ WaypointClass::operator= (const WaypointClass &src)
 
 	return (*this);
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -228,7 +214,6 @@ WaypointClass::Get_Action_Portal (void)
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //

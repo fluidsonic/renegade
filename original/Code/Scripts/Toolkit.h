@@ -6,25 +6,13 @@
 #define SCRIPT_DEBUG_MESSAGE( X )
 
 /*
-#ifdef WWDEBUG
-#define SCRIPT_DEBUG_MESSAGE( X )	if (debug_mode)	{ Commands->Debug_Message X ; }
-#else
 #define SCRIPT_DEBUG_MESSAGE( X )
-#endif
 */
 
 
-#ifdef WWDEBUG
-#define NULL_POINTER_CHECK( X )		(if (X == NULL) { Commands->Debug_Message("***NULL pointer found in script: Line %d of file %s.\n", __LINE__, __FILE__); })
-#else
 #define NULL_POINTER_CHECK( X )
-#endif
 
-#ifdef WWDEBUG
-#define DISPLAY_VECTOR3( V )	Commands->Debug_Message("Value of '%s' is (%3.2f, %3.2f, %3.2f) at line %d of file %s.\n", #V, V.X, V.Y, V.Z, __LINE__, __FILE__)
-#else
 #define DISPLAY_VECTOR3( V )
-#endif
 
 #define STAR (Commands->Get_A_Star(Commands->Get_Position(Owner())))
 

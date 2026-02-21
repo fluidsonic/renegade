@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SHORTCUT_BAR_CTRL_H
 #define __SHORTCUT_BAR_CTRL_H

@@ -276,7 +276,6 @@ void	AnimChannelClass::Get_Animation_Data( AnimationDataList & list, float weigh
 {
 	if ( Animation != NULL && weight > 0 ) {
 		AnimationDataRecord * record = list.Uninitialized_Add();
-		WWASSERT( record != NULL );
 		record->Animation = Animation;
 		record->Frame = Frame;
 		record->Weight = weight;
@@ -526,7 +525,6 @@ bool	AnimControlClass::Load( ChunkLoadClass &cload )
 
 			case CHUNKID_VARIABLES:
 
-				WWASSERT( Model == NULL );
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_MODEL_PTR, Model );

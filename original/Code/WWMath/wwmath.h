@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef WWMATH_H
 #define WWMATH_H
@@ -27,9 +24,7 @@
 // (DRM 05/07/01) Temporarily eliminated _fastcall
 // on non-Microsoft compatible compilers. Jani
 // should be replacing this soon.
-#ifndef _MSC_VER
 #define __fastcall
-#endif // _MSC_VER
 
 /* 
 **	Macros to convert between degrees and radians

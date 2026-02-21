@@ -30,7 +30,6 @@ cScObeliskEvent::cScObeliskEvent(void)
 void
 cScObeliskEvent::Init(int def_id, const Vector3 & position, int owner_id )
 {
-	WWASSERT(CombatManager::I_Am_Server());
 
 	DefID		= def_id;
 	Position	= position;
@@ -51,12 +50,9 @@ cScObeliskEvent::Init(int def_id, const Vector3 & position, int owner_id )
 void
 cScObeliskEvent::Act(void)
 {
-	WWASSERT(CombatManager::I_Am_Client());
 
 	ExplosionManager::Explode( DefID, Position, OwnerID );
 
-	WWDEBUG_SAY(("cScObeliskEvent::Act: Def %d, at (%5.2f, %5.2f, %5.2f) Owner %d\n", 
-		DefID, Position.X, Position.Y, Position.Z, OwnerID ));
 
 	Set_Delete_Pending();
 }
@@ -65,7 +61,6 @@ cScObeliskEvent::Act(void)
 void
 cScObeliskEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Server());
 
 	NetworkObjectClass::Export_Creation(packet);
 
@@ -82,7 +77,6 @@ cScObeliskEvent::Export_Creation(BitStreamClass & packet)
 void
 cScObeliskEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(CombatManager::I_Am_Only_Client());
 
 	NetworkObjectClass::Import_Creation(packet);
 

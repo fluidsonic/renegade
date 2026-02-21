@@ -401,7 +401,6 @@ void DynamicMeshClass::Render(RenderInfoClass & rinfo)
 bool DynamicMeshClass::End_Vertex()
 {
 	// check that we have room for a new vertex
-	WWASSERT(VertCount < Model->Get_Vertex_Count());
 
 	// if we are a multi-material object record the material
 	int pass = Get_Pass_Count();
@@ -435,7 +434,6 @@ bool DynamicMeshClass::End_Vertex()
 	if (TriVertexCount >= 3) {
 	
 		// check that we have room for a new poly
-		WWASSERT(PolyCount < Model->Get_Polygon_Count());
 
 		// set vertex indices
 		TriIndex *poly = &(Model->Get_Non_Const_Polygon_Array())[PolyCount];
@@ -644,7 +642,7 @@ int DynamicMeshClass::Set_Vertex_Material(int idx, int pass)
 	assert(idx < Peek_Material_Info()->Vertex_Material_Count());
 	VertexMaterialIdx[pass] = idx;
 	if (!MultiVertexMaterial[pass]) {
-		// WWASSERT( VertexMaterialIdx[pass] == 0);
+		// assert( VertexMaterialIdx[pass] == 0);
 		VertexMaterialClass *mat = Peek_Material_Info()->Get_Vertex_Material(VertexMaterialIdx[pass]);
 		Model->Set_Single_Material(mat, pass);
 		mat->Release_Ref();
@@ -704,7 +702,6 @@ int DynamicMeshClass::Set_Vertex_Material(VertexMaterialClass *material, bool do
 
 int DynamicMeshClass::Set_Texture(int idx, int pass)
 {
-	WWASSERT(idx < Peek_Material_Info()->Texture_Count());
 	TextureIdx[pass] = idx;
 	if (!MultiTexture[pass]) {
 		TextureClass *tex = Peek_Material_Info()->Get_Texture(TextureIdx[pass]);

@@ -1,20 +1,15 @@
 #include "characterclasssettings.h"
 #include "combatchunkid.h"
-#include "wwhack.h"
 #include "persistfactory.h"
 #include "definitionfactory.h"
 #include "simpledefinitionfactory.h"
 #include "debug.h"
 #include "objectives.h"
 
-
-DECLARE_FORCE_LINK (CharClassSettings)
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Static member initialization
 ///////////////////////////////////////////////////////////////////////////////////////////
 CharacterClassSettingsDefClass *		CharacterClassSettingsDefClass::GlobalInstance = NULL;
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Factories
@@ -49,7 +44,6 @@ static const char *	CHAR_TEAM_NAMES[CharacterClassSettingsDefClass::TEAM_COUNT] 
 	"GDI",
 	"NOD",
 };
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //	Save/load constants
@@ -160,7 +154,6 @@ enum
 	VARID_DEFID_NOD_MUTANT_BOSS,
 };
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	CharacterClassSettingsDefClass
@@ -211,7 +204,6 @@ CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	~CharacterClassSettingsDefClass
@@ -222,7 +214,6 @@ CharacterClassSettingsDefClass::~CharacterClassSettingsDefClass (void)
 	GlobalInstance = NULL;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -235,7 +226,6 @@ CharacterClassSettingsDefClass::Get_Class_ID (void) const
 	return CLASSID_GLOBAL_SETTINGS_DEF_CHAR_CLASS; 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -247,7 +237,6 @@ CharacterClassSettingsDefClass::Get_Factory (void) const
 	return _CharClassDefPersistFactory; 
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Create
@@ -256,10 +245,8 @@ CharacterClassSettingsDefClass::Get_Factory (void) const
 PersistClass *
 CharacterClassSettingsDefClass::Create (void) const 
 {
-	WWASSERT (0);
 	return NULL;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -400,12 +387,10 @@ CharacterClassSettingsDefClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, 	VARID_DEFID_NOD_MUTANT_SPECIAL_FORCES, DefinitionTable[CLASS_MUTANT][RANK_SPECIAL_FORCES][TEAM_NOD]);
 		WRITE_MICRO_CHUNK (csave, 	VARID_DEFID_NOD_MUTANT_BOSS, DefinitionTable[CLASS_MUTANT][RANK_BOSS][TEAM_NOD]);
 
-
 	csave.End_Chunk();
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -566,7 +551,6 @@ CharacterClassSettingsDefClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Cost
@@ -594,7 +578,6 @@ CharacterClassSettingsDefClass::Get_Cost
 
 	return cost;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //

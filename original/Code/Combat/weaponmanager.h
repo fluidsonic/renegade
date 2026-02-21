@@ -29,7 +29,7 @@ public:
 	WeaponDefinitionClass( void );
 
 	virtual uint32								Get_Class_ID( void ) const;
-	virtual PersistClass *					Create( void ) const					{ WWASSERT( 0 ); return NULL; }
+	virtual PersistClass *					Create( void ) const					{ assert( 0 ); return NULL; }
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
@@ -92,7 +92,7 @@ public:
 	AmmoDefinitionClass( void );
 
 	virtual uint32								Get_Class_ID( void ) const;
-	virtual PersistClass *					Create( void ) const					{ WWASSERT( 0 ); return NULL; }
+	virtual PersistClass *					Create( void ) const					{ assert( 0 ); return NULL; }
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;

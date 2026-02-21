@@ -3,12 +3,8 @@
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "wwphysids.h"
-#include "wwhack.h"
 #include "part_emt.h"
 #include "physinttest.h"
-
-
-DECLARE_FORCE_LINK(decophys);
 
 /****************************************************************************************************
 **
@@ -20,7 +16,6 @@ DECLARE_FORCE_LINK(decophys);
 ** Persist factory for DecorationPhysClass
 */
 SimplePersistFactoryClass<DecorationPhysClass,PHYSICS_CHUNKID_DECORATIONPHYS>	_DecoPhysFactory;
-
 
 /*
 ** Chunk-ID's used by DecoPhys
@@ -84,7 +79,6 @@ void DecorationPhysClass::Set_Transform(const Matrix3D & m)
 	// can just warp it to the users desired position.  However,
 	// we do need to tell the scene that we moved so that
 	// it can update us in the culling system
-	WWASSERT(Model);
 	Model->Set_Transform(m);
 	Update_Cull_Box();
 	Update_Visibility_Status();
@@ -99,7 +93,6 @@ void DecorationPhysClass::Get_Shadow_Blob_Box(AABoxClass * set_obj_space_box)
 
 bool DecorationPhysClass::Intersection_Test(PhysAABoxIntersectionTestClass & test)		
 { 
-	WWASSERT(Model);
 	if (Model->Intersect_AABox(test)) {
 		test.Add_Intersected_Object(this);
 		return true;
@@ -109,7 +102,6 @@ bool DecorationPhysClass::Intersection_Test(PhysAABoxIntersectionTestClass & tes
 
 bool DecorationPhysClass::Intersection_Test(PhysOBBoxIntersectionTestClass & test)		
 { 
-	WWASSERT(Model);
 	if (Model->Intersect_OBBox(test)) {
 		test.Add_Intersected_Object(this);
 		return true;
@@ -119,7 +111,6 @@ bool DecorationPhysClass::Intersection_Test(PhysOBBoxIntersectionTestClass & tes
 
 bool DecorationPhysClass::Cast_Ray(PhysRayCollisionTestClass & raytest)
 {
-	WWASSERT(Model);
 	if (Model->Cast_Ray(raytest)) {
 		raytest.CollidedPhysObj = this;
 		return true;
@@ -129,7 +120,6 @@ bool DecorationPhysClass::Cast_Ray(PhysRayCollisionTestClass & raytest)
 
 bool DecorationPhysClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest)
 {
-	WWASSERT(Model);
 	if (Model->Cast_AABox(boxtest)) {
 		boxtest.CollidedPhysObj = this;
 		return true;
@@ -139,14 +129,12 @@ bool DecorationPhysClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest)
 
 bool DecorationPhysClass::Cast_OBBox(PhysOBBoxCollisionTestClass & boxtest)
 {
-	WWASSERT(Model);
 	if (Model->Cast_OBBox(boxtest)) {
 		boxtest.CollidedPhysObj = this;
 		return true;
 	}
 	return false;
 }
-
 
 const PersistFactoryClass & DecorationPhysClass::Get_Factory (void) const
 {
@@ -177,7 +165,6 @@ bool DecorationPhysClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -190,7 +177,6 @@ bool DecorationPhysClass::Load (ChunkLoadClass &cload)
 void DecorationPhysClass::On_Post_Load(void)
 {
 	DynamicPhysClass::On_Post_Load();
-	WWASSERT(Model);
 
 	if (Model) {
 		Set_Cull_Box(Model->Get_Bounding_Box());
@@ -226,7 +212,6 @@ enum
 	DECORATIONPHYSDEF_CHUNK_PHYSDEF						= 0x01070003,			// old parent class
 	DECORATIONPHYSDEF_CHUNK_DYNAMICPHYSDEF,										// current parent class
 };
-
 
 DecorationPhysDefClass::DecorationPhysDefClass(void)
 {
@@ -287,7 +272,6 @@ bool DecorationPhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

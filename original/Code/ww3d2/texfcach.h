@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef TEXTFCACH_H
 #define TEXTFCACH_H

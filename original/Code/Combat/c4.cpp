@@ -8,12 +8,10 @@
 #include "combatchunkid.h"
 #include "weaponmanager.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
 #include "decophys.h"
 #include "assets.h"
 #include "gameobjmanager.h"
 #include "wwaudio.h"
-#include "wwprofile.h"
 #include "projectile.h"
 #include "wwphysids.h"
 #include "buildingaggregate.h"
@@ -27,7 +25,6 @@
 /*
 ** C4GameObjDef
 */
-DECLARE_FORCE_LINK( C4 )
 
 SimplePersistFactoryClass<C4GameObjDef, CHUNKID_GAME_OBJECT_DEF_C4>	_C4GameObjDefPersistFactory;
 
@@ -109,7 +106,6 @@ const PersistFactoryClass & C4GameObjDef::Get_Factory (void) const
 	return _C4GameObjDefPersistFactory; 
 }
 
-
 /*
 **
 */
@@ -119,7 +115,6 @@ const PersistFactoryClass & C4GameObj::Get_Factory (void) const
 {
 	return _C4GameObjPersistFactory;
 }
-
 
 /*
 **
@@ -168,7 +163,6 @@ const C4GameObjDef & C4GameObj::Get_Definition( void ) const
 
 void	C4GameObj::Init_C4( const AmmoDefinitionClass * def, SoldierGameObj *owner, int detonation_mode, const Matrix3D & tm )
 {
-	WWASSERT( AmmoDefinition == NULL );
 	AmmoDefinition = def;
 
 	if ( !def->ModelName.Is_Empty() ) {
@@ -338,7 +332,6 @@ CollisionReactionType	C4GameObj::Collision_Occurred( const CollisionEventClass &
 	return COLLISION_REACTION_NO_BOUNCE;
 }
 
-
 /*
 ** C4GameObj Save and Load
 */
@@ -437,9 +430,7 @@ bool	C4GameObj::Load( ChunkLoadClass &cload )
 					cload.Close_Micro_Chunk();
 				}
 
-				WWASSERT( AmmoDefinition == NULL );
 				AmmoDefinition = WeaponManager::Find_Ammo_Definition( ammo_def_id );
-				WWASSERT( AmmoDefinition != NULL );
 				break;
 			}	
 
@@ -474,8 +465,6 @@ void C4GameObj::Think( void )
 {
 	SimpleGameObj::Think();
 
-	WWPROFILE( "C4 Think" );
-
 	if ( !CombatManager::I_Am_Server() ) {
 		return;
 	}
@@ -483,9 +472,6 @@ void C4GameObj::Think( void )
 	Age += TimeManager::Get_Frame_Seconds();
 
 	int type = AmmoDefinition->AmmoType;
-
-	WWASSERT( type >= AmmoDefinitionClass::AMMO_TYPE_C4_REMOTE );
-	WWASSERT( type <= AmmoDefinitionClass::AMMO_TYPE_C4_PROXIMITY );
 
 	Restore_Owner();
 
@@ -546,8 +532,6 @@ void C4GameObj::Think( void )
 void C4GameObj::Post_Think( void )
 {
 	SimpleGameObj::Post_Think();
-
-	WWPROFILE( "C4 Post_Think" );
 
 	// Follow your stuck object
 	if ( Stuck ) {
@@ -703,7 +687,6 @@ void	C4GameObj::Export_Rare( BitStreamClass &packet )
 	}
 }
 
-
 void	C4GameObj::Import_Rare( BitStreamClass &packet )
 {
 	SimpleGameObj::Import_Rare( packet );
@@ -754,7 +737,6 @@ void	C4GameObj::Import_Rare( BitStreamClass &packet )
 				po->Set_Position(pos);
 			}
 		}
-		WWDEBUG_SAY(("C4 %d is now STUCK, pos= %f, %f, %f",(int)this, pos.X,pos.Y,pos.Z));
 
 		packet.Get(StuckMCT);
 		packet.Get(StuckToObject);
@@ -788,7 +770,6 @@ void	C4GameObj::Import_Rare( BitStreamClass &packet )
 	}
 
 }
-
 
 void	C4GameObj::Defuse( void )
 {

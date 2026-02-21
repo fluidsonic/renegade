@@ -1,5 +1,4 @@
 #include "IMECandidate.h"
-#include "WWDebug.h"
 
 namespace IME {
 
@@ -140,8 +139,6 @@ void IMECandidate::Read(void)
 				ImmGetCandidateList(imc, mIndex, mCandidates, mCandidateSize);
 				}
 
-			WWDEBUG_SAY(("IMECandidate: Index %d, Style %08lX, Selection %d, PageStart %d, PageSize %d, Count %d\n",
-				mIndex, GetStyle(), GetSelection(), GetPageStart(), GetPageSize(), GetCount()));
 			}
 
 		ImmReleaseContext(mHWND, imc);
@@ -240,7 +237,6 @@ int IMECandidate::GetIndex(void) const
 
 unsigned long IMECandidate::GetStyle(void) const
 	{
-	WWASSERT(mCandidates != NULL);
 	return mCandidates->dwStyle;
 	}
 
@@ -260,7 +256,6 @@ unsigned long IMECandidate::GetStyle(void) const
 
 unsigned long IMECandidate::GetPageStart(void) const
 	{
-	WWASSERT(mCandidates != NULL);
 	return mCandidates->dwPageStart;
 	}
 
@@ -281,7 +276,6 @@ unsigned long IMECandidate::GetPageStart(void) const
 
 void IMECandidate::SetPageStart(unsigned long start)
 	{
-	WWASSERT((start >=0) && (start < GetCount()));
 
 	if ((start >=0) && (start < GetCount()))
 		{
@@ -291,7 +285,6 @@ void IMECandidate::SetPageStart(unsigned long start)
 			{
 			// The IMM documentation says that the candidate list index must
 			// be in the range of 0 - 3 for NI_SETCANDIDATE_PAGESTART
-			WWASSERT((mIndex >= 0 && mIndex <= 3) && "IMM parameter error");
 
 			ImmNotifyIME(imc, NI_SETCANDIDATE_PAGESTART, mIndex, start);
 			ImmReleaseContext(mHWND, imc);
@@ -317,7 +310,6 @@ void IMECandidate::SetPageStart(unsigned long start)
 
 unsigned long IMECandidate::GetPageSize(void) const
 	{
-	WWASSERT(mCandidates != NULL);
 	return mCandidates->dwPageSize;
 	}
 
@@ -366,7 +358,6 @@ unsigned long IMECandidate::GetCount(void) const
 
 unsigned long IMECandidate::GetSelection(void) const
 	{
-	WWASSERT(mCandidates != NULL);
 	return mCandidates->dwSelection;
 	}
 

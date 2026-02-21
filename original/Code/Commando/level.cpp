@@ -33,11 +33,11 @@ void		LevelManager::Release_Level( void )
 
 	TransitionManager::Reset();
 
-{WWPROFILE( "Scene remove" );
+{
 	COMBAT_SCENE->Remove_All();
 }
 
-{WWPROFILE( "Free assets" );
+{
 	WW3DAssetManager::Get_Instance()->Free_Assets();	
 }
 }

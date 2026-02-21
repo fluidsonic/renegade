@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef PHYSAABTREECULL_H
 #define PHYSAABTREECULL_H
@@ -8,7 +5,6 @@
 #include "always.h"
 #include "aabtreecull.h"
 #include "phys.h"
-#include "wwdebug.h"
 
 class PhysicsSceneClass;
 class StringClass;
@@ -69,19 +65,16 @@ protected:
 
 inline bool PhysAABTreeCullClass::Cast_Ray(PhysRayCollisionTestClass & raytest)
 {
-	WWASSERT(RootNode != NULL);
 	return Cast_Ray_Recursive(RootNode,raytest);
 }
 
 inline bool PhysAABTreeCullClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest)
 {
-	WWASSERT(RootNode != NULL);
 	return Cast_AABox_Recursive(RootNode,boxtest);
 }
 
 inline bool PhysAABTreeCullClass::Cast_OBBox(PhysOBBoxCollisionTestClass & boxtest)
 {
-	WWASSERT(RootNode != NULL);
 	return Cast_OBBox_Recursive(RootNode,boxtest);
 }
 

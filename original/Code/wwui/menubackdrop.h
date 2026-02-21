@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __MENU_BACKDROP_H
 #define __MENU_BACKDROP_H

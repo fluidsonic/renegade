@@ -7,12 +7,10 @@
 #include "combatchunkid.h"
 #include "weaponmanager.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
 #include "decophys.h"
 #include "assets.h"
 #include "gameobjmanager.h"
 #include "wwaudio.h"
-#include "wwprofile.h"
 #include "cinematicgameobj.h"
 #include "basecontroller.h"
 #include "playertype.h"
@@ -32,11 +30,9 @@
 #include "apppackettypes.h"
 #include "weapons.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (Beacon)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -44,7 +40,6 @@ DECLARE_FORCE_LINK (Beacon)
 SimplePersistFactoryClass	<BeaconGameObjDef,	CHUNKID_GAME_OBJECT_DEF_BEACON>				_BeaconGameObjDefPersistFactory;
 SimplePersistFactoryClass	<BeaconGameObj,		CHUNKID_GAME_OBJECT_BEACON>					_BeaconGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (BeaconGameObjDef,	CLASSID_GAME_OBJECT_DEF_BEACON, "Beacon")	_BeaconGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -91,7 +86,6 @@ enum
 	MICROCHUNKID_PRE_DETONATE_TIMER,
 	MICROCHUNKID_IS_ARMED,
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -155,7 +149,6 @@ BeaconGameObjDef::BeaconGameObjDef (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~BeaconGameObjDef
@@ -165,7 +158,6 @@ BeaconGameObjDef::~BeaconGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -177,7 +169,6 @@ BeaconGameObjDef::Get_Class_ID (void) const
 {
 	return CLASSID_GAME_OBJECT_DEF_BEACON;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -192,7 +183,6 @@ BeaconGameObjDef::Create (void) const
 
 	return beacon;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -231,7 +221,6 @@ BeaconGameObjDef::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -262,7 +251,6 @@ BeaconGameObjDef::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -304,7 +292,6 @@ BeaconGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -315,7 +302,6 @@ BeaconGameObjDef::Get_Factory (void) const
 {
 	return _BeaconGameObjDefPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -338,7 +324,6 @@ BeaconGameObj::BeaconGameObj (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~BeaconGameObj
@@ -354,7 +339,6 @@ BeaconGameObj::~BeaconGameObj (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -365,7 +349,6 @@ BeaconGameObj::Get_Factory (void) const
 {
 	return _BeaconGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -394,7 +377,6 @@ BeaconGameObj::Init (const BeaconGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -405,7 +387,6 @@ BeaconGameObj::Get_Definition (void) const
 {
 	return (const BeaconGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -438,7 +419,6 @@ BeaconGameObj::Init_Beacon
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -478,7 +458,6 @@ BeaconGameObj::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -517,7 +496,6 @@ BeaconGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -547,7 +525,6 @@ BeaconGameObj::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -556,10 +533,8 @@ BeaconGameObj::Load_Variables (ChunkLoadClass &cload)
 void
 BeaconGameObj::Think (void)
 {
-	WWPROFILE ("Beacon Think");
 
 	Restore_Owner();
-
 
 	//
 	//	Let the state think a little
@@ -612,7 +587,6 @@ BeaconGameObj::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Information
@@ -624,7 +598,6 @@ BeaconGameObj::Get_Information (StringClass &string)
 	SimpleGameObj::Get_Information( string );
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -657,7 +630,6 @@ BeaconGameObj::Start_Cinematic ( int id )
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Stop_Armed_Sound
@@ -673,7 +645,6 @@ BeaconGameObj::Stop_Armed_Sound (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -843,7 +814,6 @@ BeaconGameObj::Set_State (int state)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_State
@@ -969,7 +939,6 @@ BeaconGameObj::Update_State (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Enemy_Base
@@ -989,7 +958,6 @@ BeaconGameObj::Get_Enemy_Base (void)
 	return BaseControllerClass::Find_Base (player_type);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Can_Place_Here
@@ -1001,7 +969,6 @@ BeaconGameObj::Can_Place_Here (const Vector3 &position)
 	// always return true;
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1033,7 +1000,6 @@ BeaconGameObj::Is_In_Enemy_Base( void )
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Stop_Current_Message_Sound
@@ -1049,7 +1015,6 @@ BeaconGameObj::Stop_Current_Message_Sound (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1106,7 +1071,6 @@ BeaconGameObj::Display_Message (int text_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Begin_Arming
@@ -1121,7 +1085,6 @@ BeaconGameObj::Begin_Arming (void)
 	Set_State (STATE_ARMING);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1153,7 +1116,6 @@ BeaconGameObj::Start_Owner_Animation (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Stop_Owner_Animation
@@ -1182,7 +1144,6 @@ BeaconGameObj::Stop_Owner_Animation (void)
 	}
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1246,7 +1207,6 @@ BeaconGameObj::Was_Owner_Interrupted (void)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Owner
@@ -1270,7 +1230,6 @@ BeaconGameObj::Get_Owner (void)
 	return soldier;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Completely_Damaged
@@ -1284,7 +1243,6 @@ BeaconGameObj::Completely_Damaged (const OffenseObjectClass &damager)
 		Set_Delete_Pending ();
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1332,7 +1290,6 @@ BeaconGameObj::Create_Explosion (void)
 						obj_node != NULL;
 						obj_node = obj_node->Next ())
 				{
-					WWASSERT (obj_node->Data () != NULL);
 					BuildingGameObj *building = obj_node->Data ();
 					if (building != NULL) {
 
@@ -1383,7 +1340,6 @@ void	BeaconGameObj::Export_Rare( BitStreamClass &packet )
 	packet.Add( owner_id );
 
 }
-
 
 /*
 **

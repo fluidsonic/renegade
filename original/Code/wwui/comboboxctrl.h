@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __COMBOBOX_CTRL_H
 #define __COMBOBOX_CTRL_H

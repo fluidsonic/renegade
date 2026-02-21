@@ -52,7 +52,7 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
       void				Set_Type(BYTE type);
       BYTE				Get_Type() const						{return Type;}
 		void				Set_Id(int id);
-      int				Get_Id() const							{WWASSERT(Id != UNDEFINED_ID); return Id;}//NEW
+      int				Get_Id() const							{assert(Id != UNDEFINED_ID); return Id;}//NEW
 		void				Set_Sender_Id(int sender_id);
       int				Get_Sender_Id() const				{return SenderId;}
 		void				Set_Send_Time(void);
@@ -127,7 +127,7 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
 		//void Set_Return_Code(int return_code) {ReturnCode = return_code;}
       //int Get_Return_Code() const			{return ReturnCode;}
 
-      //BYTE Get_Type() const					{WWASSERT(Type != UNDEFINED_TYPE); return Type;}//NEW
+      //BYTE Get_Type() const					{assert(Type != UNDEFINED_TYPE); return Type;}//NEW
 
 
 

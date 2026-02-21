@@ -11,7 +11,6 @@
 #include <math.h>
 #include <limits.h>
 
-#include "wwdebug.h"
 #include "miscutil.h"
 #include "mathutil.h"
 
@@ -50,25 +49,19 @@ bool cEncoderTypeEntry::Is_Value_In_Range(double value) const
 //-----------------------------------------------------------------------------
 void cEncoderTypeEntry::Init(double min, double max, double resolution)
 {
-	WWASSERT(!Is_Valid());
 
-	WWASSERT(max - min > -MISCUTIL_EPSILON);
-	WWASSERT(resolution > MISCUTIL_EPSILON);
 
 	Min = min;
 	Max = max;
 
 	Calc_Bit_Precision(resolution);
 
-	WWASSERT(Is_Valid());
 }
 
 //-----------------------------------------------------------------------------
 void cEncoderTypeEntry::Init(int num_bits)
 {
-	WWASSERT(!Is_Valid());
 
-	WWASSERT(num_bits > 0 && num_bits <= 32);
 
 	Min = 0;
 	BitPrecision = num_bits;
@@ -81,13 +74,11 @@ void cEncoderTypeEntry::Init(int num_bits)
 
 	Max = max;
 
-	WWASSERT(Is_Valid());	
 }
 
 //-----------------------------------------------------------------------------
 bool cEncoderTypeEntry::Scale(double value, ULONG & scaled_value)
 {
-	WWASSERT(Is_Valid());
 
 	bool is_in_range = Is_Value_In_Range(value);
 
@@ -104,11 +95,9 @@ bool cEncoderTypeEntry::Scale(double value, ULONG & scaled_value)
 //-----------------------------------------------------------------------------
 double cEncoderTypeEntry::Unscale(ULONG u_value)
 {
-	WWASSERT(Is_Valid());
 
 	double value = Min + u_value * Resolution;
 
-	WWASSERT(Is_Value_In_Range(value));
 
 	return value;
 }
@@ -116,7 +105,6 @@ double cEncoderTypeEntry::Unscale(ULONG u_value)
 //-----------------------------------------------------------------------------
 double cEncoderTypeEntry::Clamp(double value)
 {
-	WWASSERT(Is_Valid());
 
 	double retval = value;
 	
@@ -137,11 +125,8 @@ void cEncoderTypeEntry::Calc_Bit_Precision(double resolution)
 	// the specified resolution.
 	//
 
-	WWASSERT(Max - Min > -MISCUTIL_EPSILON);
-	WWASSERT(resolution > MISCUTIL_EPSILON);
 
 	double f_units = (double) ceil((Max - Min) / resolution - MISCUTIL_EPSILON) + 1;
-	WWASSERT(f_units <= UINT_MAX + MISCUTIL_EPSILON);
 	UINT units = (UINT) f_units;
 
 	BitPrecision = 0;
@@ -154,15 +139,11 @@ void cEncoderTypeEntry::Calc_Bit_Precision(double resolution)
 		}
 	}	
 
-	WWASSERT(BitPrecision > 0 && BitPrecision <= MAX_BITS);
-	WWASSERT(max_units > 0);
 
 	Resolution = (Max - Min) / (double) (max_units - 1);
 
 	/*TSS2001
 	if (Resolution > 0) {
-		WWASSERT(max_units == 
-			(UINT) ceil((Max - Min) / Resolution - MISCUTIL_EPSILON) + 1);
 	}
 	*/
 }

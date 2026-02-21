@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 
 
@@ -11,7 +8,6 @@
 #include "always.h"
 #include "bittype.h"
 #include "chunkio.h"
-#include "wwdebug.h"
 #include "saveload.h"
 
 class PersistClass;
@@ -76,12 +72,10 @@ SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const
 	T * old_obj = NULL;
 
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == SIMPLEFACTORY_CHUNKID_OBJPOINTER);
 	cload.Read(&old_obj,sizeof(T *));
 	cload.Close_Chunk();
 
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == SIMPLEFACTORY_CHUNKID_OBJDATA);
 	new_obj->Load(cload);
 	cload.Close_Chunk();
 

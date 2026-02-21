@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __EDIT_CTRL_H
 #define __EDIT_CTRL_H

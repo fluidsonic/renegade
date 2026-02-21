@@ -32,7 +32,6 @@
 #include "DlgMPConnect.h"
 #include "slavemaster.h"
 #include "dlgmpchangelannickname.h"
-#include "gamespyadmin.h"
 #include "demosupport.h"
 
 //
@@ -84,15 +83,13 @@ void cLanChat::Load_Lan_Registry_Keys(void)
 	WideStringClass widename;
 	widename.Convert_From(name);
 
-	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
-		if (widename.Is_Empty())
-		{
-			cNetInterface::Set_Random_Nickname();
-		}
-		else
-		{
-			cNetInterface::Set_Nickname(widename);
-		}
+	if (widename.Is_Empty())
+	{
+		cNetInterface::Set_Random_Nickname();
+	}
+	else
+	{
+		cNetInterface::Set_Nickname(widename);
 	}
 
 	int sidePref = registry->Get_Int("SidePref", -1);
@@ -107,11 +104,9 @@ void cLanChat::Save_Lan_Registry_Keys(void)
 
 	RegistryClass * registry = new RegistryClass(APPLICATION_SUB_KEY_NAME_NETOPTIONS);
 
-	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
-		StringClass string;
-		cNetInterface::Get_Nickname().Convert_To(string);
-		registry->Set_String("MyLanName", string);
-	}
+	StringClass string;
+	cNetInterface::Get_Nickname().Convert_To(string);
+	registry->Set_String("MyLanName", string);
 
 	registry->Set_Int("SidePref", cNetInterface::Get_Side_Preference());
 
@@ -121,10 +116,6 @@ void cLanChat::Save_Lan_Registry_Keys(void)
 //-----------------------------------------------------------------------------
 void cLanChat::Init_Lan_Protocol_And_Socket(void)
 {
-   if (cGameSpyAdmin::Is_Gamespy_Game()) {
-	   return;
-   }
-
    bool is_internet = false;
    if (!cNetUtil::Protocol_Init(is_internet)) {
    }
@@ -156,11 +147,6 @@ void cLanChat::Refusal_Actions(void)
 //-----------------------------------------------------------------------------
 void cLanChat::Send_Position_Broadcast(void)
 {
-	//GAMESPY
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		return;
-	}
-
    //Debug_Say(("Send_Position_Broadcast\n"));
 	if (TIMEGETTIME() - LastPositionBroadcastTimeMs > LAN_BROADCAST_INTERVAL_MS) {
 
@@ -250,12 +236,6 @@ void cLanChat::Process_Position_Broadcast(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cLanChat::Lan_Packet_Handler(cPacket & packet)
 {
-	//GAMESPY
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		packet.Flush();
-		return;
-	}
-
 	if (CurrentLocation == LANLOC_EXIT) {
 		//
 		// Ignore our own broadcasts
@@ -283,7 +263,7 @@ void cLanChat::Lan_Packet_Handler(cPacket & packet)
 //-----------------------------------------------------------------------------
 static void External_Lan_Packet_Handler(cPacket & packet)
 {
-   //WWASSERT(LanGameModeClass::PLanChat != NULL);
+   //assert(LanGameModeClass::PLanChat != NULL);
    PLC->Lan_Packet_Handler(packet);
 }
 
@@ -296,10 +276,6 @@ void cLanChat::Go_To_Location(ChatLocationEnum location)
 //-----------------------------------------------------------------------------
 void cLanChat::Think(void)
 {
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		return;
-	}
-
    if (CurrentLocation != LANLOC_EXIT) {
 		Send_Position_Broadcast();
 		cNetUtil::Lan_Servicing(Socket, External_Lan_Packet_Handler);
@@ -341,7 +317,7 @@ void cLanChat::Think(void)
 //#include "dlgmplangamelist.h"
 		//cHelpText::Set(TRANSLATION(IDS_MP_NICKNAME_IN_USE));
 
-		//WWDEBUG_SAY(("*** LAN NICKNAME COLLISION (%s) ***\n", sender));
+		//
 	/*
 	if (!cNetInterface::Is_Valid_Name(name)) {
 		cNetInterface::Set_Random_Nickname();

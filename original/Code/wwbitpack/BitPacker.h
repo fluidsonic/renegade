@@ -68,7 +68,7 @@ class cBitPacker
 		void Flush() {NumBits = 0;}
 		bool Is_Flushed() const {return (NumBits < 8);}
 
-		void Set_Num_Bits(int num) {WWASSERT(num >= 0); NumBits = num;}
+		void Set_Num_Bits(int num) {assert(num >= 0); NumBits = num;}
 		int Get_Num_Bits(void) {return NumBits;}
 
 		void Increment_Bit_Position(int num_bits);

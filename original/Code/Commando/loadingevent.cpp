@@ -74,7 +74,7 @@ void
 cLoadingEvent::Export_Creation(BitStreamClass & packet)
 {
 
-	//WWDEBUG_SAY(("cLoadingEvent::Export_Creation (%d)\n", IsLoading));
+	//
 
 	cNetEvent::Export_Creation(packet);
 
@@ -89,7 +89,7 @@ cLoadingEvent::Export_Creation(BitStreamClass & packet)
 void
 cLoadingEvent::Import_Creation(BitStreamClass & packet)
 {
-	//WWDEBUG_SAY(("cLoadingEvent::Import_Creation\n"));
+	//
 
 	cNetEvent::Import_Creation(packet);
 

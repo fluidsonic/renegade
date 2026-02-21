@@ -146,8 +146,6 @@ DecalMeshClass::DecalMeshClass(MeshClass * parent,DecalSystemClass * system) :
 	Parent(parent),
 	DecalSystem(system)
 {
-	WWASSERT(Parent != NULL);
-	WWASSERT(DecalSystem != NULL);
 }
 
 
@@ -381,10 +379,8 @@ bool RigidDecalMeshClass::Create_Decal
 	}
 
 	// NOTE: world_vertex_locs/norms should not be set for this class
-	WWASSERT(world_vertex_locs == 0);
 
 	int i,j;
-	WWASSERT(generator->Peek_Decal_System() == DecalSystem);
 	
 	/*
 	** If any polys were collected, add a new MeshDecalStruct
@@ -529,21 +525,6 @@ bool RigidDecalMeshClass::Create_Decal
 
 	material->Release_Ref();
 	
-#ifdef WWDEBUG	
-	/*
-	** Some paranoid debug code: ensure all tris have valid vertex indices
-	*/
-	int poly_count = Polys.Count();
-	int vert_count = Verts.Count();
-	for (int poly_idx = 0; poly_idx < poly_count; poly_idx++) {
-		WWASSERT (Polys[poly_idx].I < vert_count);
-		WWASSERT (Polys[poly_idx].I >= 0);
-		WWASSERT (Polys[poly_idx].J < vert_count);
-		WWASSERT (Polys[poly_idx].J >= 0);
-		WWASSERT (Polys[poly_idx].K < vert_count);
-		WWASSERT (Polys[poly_idx].K >= 0);
-	}
-#endif
 
 	/*
 	** Only return true if we actually added a decal
@@ -622,21 +603,6 @@ bool RigidDecalMeshClass::Delete_Decal(uint32 id)
 	}
 	Decals.Delete(decal_index);
 
-#ifdef WWDEBUG	
-	/*
-	** Some paranoid debug code: ensure all tris have valid vertex indices
-	*/
-	int poly_count = Polys.Count();
-	int vert_count = Verts.Count();
-	for (int poly_idx = 0; poly_idx < poly_count; poly_idx++) {
-		WWASSERT (Polys[poly_idx].I < vert_count);
-		WWASSERT (Polys[poly_idx].I >= 0);
-		WWASSERT (Polys[poly_idx].J < vert_count);
-		WWASSERT (Polys[poly_idx].J >= 0);
-		WWASSERT (Polys[poly_idx].K < vert_count);
-		WWASSERT (Polys[poly_idx].K >= 0);
-	}
-#endif
 
 	return true;
 }
@@ -728,7 +694,6 @@ void SkinDecalMeshClass::Render(void)
 	*/
 	MeshModelClass * model = Parent->Peek_Model();
 	if (model->Get_Flag(MeshModelClass::SORT)) {
-		WWDEBUG_SAY(("ERROR: decals applied to a sorted mesh!\n"));
 		return;
 	}
 
@@ -862,10 +827,8 @@ bool SkinDecalMeshClass::Create_Decal(DecalGeneratorClass * generator,
 	const DynamicVectorClass<Vector3> * world_vertex_locs)
 {
 	int i;
-	WWASSERT(generator->Peek_Decal_System() == DecalSystem);
 
 	// The dynamically updated vertex locations are needed - we have no static geometry
-	WWASSERT(world_vertex_locs);
 	
 	/*
 	** If any polys were collected, add a new MeshDecalStruct
@@ -948,23 +911,8 @@ bool SkinDecalMeshClass::Create_Decal(DecalGeneratorClass * generator,
 	*/
 	generator->Add_Mesh(Parent);
 
-#ifdef WWDEBUG	
-	/*
-	** Some paranoid debug code: ensure all tris have valid vertex indices
-	*/
-	int poly_count = Polys.Count();
-	int vert_count = ParentVertexIndices.Count();
-	for (int poly_idx = 0; poly_idx < poly_count; poly_idx++) {
-		WWASSERT (Polys[poly_idx].I < vert_count);
-		WWASSERT (Polys[poly_idx].I >= 0);
-		WWASSERT (Polys[poly_idx].J < vert_count);
-		WWASSERT (Polys[poly_idx].J >= 0);
-		WWASSERT (Polys[poly_idx].K < vert_count);
-		WWASSERT (Polys[poly_idx].K >= 0);
-	}
-#endif
 	
-	// WWDEBUG_SAY(("Decal mesh now has: %d polys\r\n",Polys.Count()));
+	// 
 	return true;
 }
 
@@ -1038,21 +986,6 @@ bool SkinDecalMeshClass::Delete_Decal(uint32 id)
 	}
 	Decals.Delete(decal_index);
 
-#ifdef WWDEBUG	
-	/*
-	** Some paranoid debug code: ensure all tris have valid vertex indices
-	*/
-	int poly_count = Polys.Count();
-	int vert_count = ParentVertexIndices.Count();
-	for (int poly_idx = 0; poly_idx < poly_count; poly_idx++) {
-		WWASSERT (Polys[poly_idx].I < vert_count);
-		WWASSERT (Polys[poly_idx].I >= 0);
-		WWASSERT (Polys[poly_idx].J < vert_count);
-		WWASSERT (Polys[poly_idx].J >= 0);
-		WWASSERT (Polys[poly_idx].K < vert_count);
-		WWASSERT (Polys[poly_idx].K >= 0);
-	}
-#endif
 
 	return true;
 }

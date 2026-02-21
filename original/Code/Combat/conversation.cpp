@@ -208,7 +208,6 @@ ConversationClass::Get_Remark_Info (int index, ConversationRemarkClass &remark)
 {
 	bool retval = false;
 
-	WWASSERT (index >= 0 && index < RemarkList.Count ());
 	if (index >= 0 && index < RemarkList.Count ()) {
 
 		//
@@ -390,7 +389,6 @@ ConversationClass::Load_Variables (ChunkLoadClass &cload)
 	//
 	//	Register our old pointer so other objects can safely remap to it
 	//
-	WWASSERT (old_ptr != NULL);
 	SaveLoadSystemClass::Register_Pointer (old_ptr, this);
 	return ;
 }

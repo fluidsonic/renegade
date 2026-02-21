@@ -149,7 +149,6 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 			if (num_remote_hosts > NumClientStructs) {
 				Allocate_Client_Structs(num_remote_hosts);
 			}
-			WWASSERT(NumClientStructs >= num_remote_hosts);
 			NumClients = 0;
 
 			/*
@@ -177,7 +176,6 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 				}
 			}
 
-			WWASSERT(NumClients == num_remote_hosts);
 
 			if (NumClients) {
 				/*
@@ -205,7 +203,7 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 					*/
 					int tries = 5;
 					while ((diff < 0 || percent_diff > 10) && tries >= 0) {
-						//WWDEBUG_SAY(("Allocated too much or too little bandwidth. total_bbo = %d, total_bbo_allocated = %d, bw_adjust = %d\n", total_bbo, total_bbo_allocated, bw_adjust));
+						//
 						total_bbo_allocated = Allocate_Bandwidth(average_priority, bw_adjust, connection->Get_Bandwidth_Budget_Out());
 						diff = total_bbo - total_bbo_allocated;
 						percent_diff = (100 * abs(diff)) / total_bbo;
@@ -220,8 +218,6 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 					** If we get to this point, there should still be bandwidth left.
 					*/
 					if (diff < 0 && percent_diff > 3) {
-						WWDEBUG_SAY(("***** WARNING - BandwidthBalancer: Insufficient bandwidth for the number of clients in the game *********\n"));
-						WWDEBUG_SAY(("Allocated too much bandwidth. total_bbo = %d, total_bbo_allocated = %d, bw_adjust = %d\n", total_bbo, total_bbo_allocated, bw_adjust));
 					}
 
 					/*
@@ -259,9 +255,6 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
  *=============================================================================================*/
 unsigned long BandwidthBalancerClass::Allocate_Bandwidth(float average_priority, int bw_adjust, unsigned long total_server_bbo)
 {
-	WWASSERT(bw_adjust != 0);
-	WWASSERT(average_priority >= 0.0f);
-	WWASSERT(average_priority <= 1.0f);
 
 	/*
 	** Get our total bandwidth budget out. This has to be split between all clients.
@@ -288,7 +281,6 @@ unsigned long BandwidthBalancerClass::Allocate_Bandwidth(float average_priority,
 			client_bbo_adjust = max(client_bbo_adjust, -((int)bbo_per_client / 2));
 		}
 		int new_client_bbo = bbo_per_client + client_bbo_adjust;
-		WWASSERT(new_client_bbo > 0);
 
 		/*
 		** Boost the bandwidth if the client is loading. He doesn't need it now but there will be a huge demand for
@@ -354,7 +346,6 @@ void BandwidthBalancerClass::Adjust_Connection_Budget(cConnection *connection)
 			ULONG bbo = connection->Get_Bandwidth_Budget_Out();
 			ULONG new_bbo = (bbo * 9) / 10;
 			connection->Set_Bandwidth_Budget_Out(new_bbo);
-			WWDEBUG_SAY(("*** WARNING BandwidthBalancerClass - Adjusting Server connection BBO from %d to %d due to send overflow ***\n", bbo, new_bbo));
 		}
 	}
 }

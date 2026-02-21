@@ -15,7 +15,6 @@
 #include "pathfind.h"
 #include "timemgr.h"
 #include "weaponbag.h"
-#include "wwprofile.h"
 #include "playertype.h"
 
 
@@ -283,7 +282,6 @@ void SoldierObserverClass::Created( GameObject* obj )
 {
 	SmartGameObj* smart = obj->As_SmartGameObj();
 
-	WWASSERT( smart != NULL );
 
 //	Debug_Say(("Innate soldier [%d] created\n", obj->Get_ID()));
 
@@ -331,9 +329,7 @@ void SoldierObserverClass::Destroyed(GameObject* obj)
 void SoldierObserverClass::Timer_Expired(GameObject* obj, int timer_id)
 {
 	SmartGameObj* smart = obj->As_SmartGameObj();
-	WWASSERT( smart != NULL );
 	SoldierGameObj* soldier = smart->As_SoldierGameObj();
-	WWASSERT(soldier != NULL);
 
 	if (timer_id == THINK_ID) {
 		obj->Start_Observer_Timer( Get_ID(), THINK_RATE, THINK_ID );
@@ -356,9 +352,7 @@ void SoldierObserverClass::Damaged(GameObject* obj, GameObject* damager, float a
 	}
 
 	SmartGameObj* smart = obj->As_SmartGameObj();
-	WWASSERT( smart != NULL );
 	SoldierGameObj* soldier = smart->As_SoldierGameObj();
-	WWASSERT(soldier != NULL);
 
 	if (soldier->Is_Innate_Enabled(SOLDIER_INNATE_EVENT_BULLET_HEARD)) {
 //Debug_Say(( "Damaged\n" ));
@@ -411,9 +405,7 @@ void SoldierObserverClass::Sound_Heard(GameObject* obj, const CombatSound& sound
 	}
 
 	SmartGameObj* smart = obj->As_SmartGameObj();
-	WWASSERT( smart != NULL );
 	SoldierGameObj* soldier = smart->As_SoldierGameObj();
-	WWASSERT(soldier != NULL);
 
 	PhysicalGameObj * creator = NULL;
 	if ( sound.Creator != NULL ) {
@@ -474,10 +466,9 @@ void SoldierObserverClass::Enemy_Seen(GameObject* obj, GameObject* enemy)
 		return;
 	}
 
-//	WWASSERT( obj != enemy );
+//	assert( obj != enemy );
 
 	// only see the enemy if it has health
-	WWASSERT( enemy );
 	PhysicalGameObj * p_enemy = enemy->As_PhysicalGameObj();
 	if ( p_enemy == NULL || p_enemy->Get_Defense_Object()->Get_Health() <= 0 ) {
 //		Debug_Say(( "I see dead people\n" ));
@@ -504,9 +495,7 @@ void SoldierObserverClass::Enemy_Seen(GameObject* obj, GameObject* enemy)
 	}
 
 	SmartGameObj* smart = obj->As_SmartGameObj();
-	WWASSERT( smart != NULL );
 	SoldierGameObj* soldier = smart->As_SoldierGameObj();
-	WWASSERT(soldier != NULL);
 
 //	Debug_Say(("Innate soldier [%d] seen enemy [%d]\n", obj->Get_ID(), enemy->Get_ID()));
 
@@ -609,7 +598,7 @@ void SoldierObserverClass::State_Changed( SoldierGameObj * soldier )
 */
 bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const Vector3& location, GameObject* enemy) 
 {
-//	WWASSERT( soldier != enemy );
+//	assert( soldier != enemy );
 
 	LastEvent = state;
 
@@ -853,8 +842,6 @@ void SoldierObserverClass::Poked( GameObject * obj, GameObject * poker )
 
 void SoldierObserverClass::Think( SoldierGameObj * soldier, bool is_new_state )
 {
-	WWPROFILE( "SoldierObserver Think" );
-	WWASSERT( soldier != NULL );
 
 	//
 	//	We can't switch states if the soldier is "busy".  Busy usually
@@ -957,7 +944,6 @@ void	SoldierObserverClass::Reset_Conversation_Timer( void )
 ***********************************************************************************************/
 void SoldierObserverClass::State_Act( SoldierGameObj * soldier, bool is_new_state )
 {
-	WWASSERT( soldier != NULL );
 
 	switch (State) {
 
@@ -1157,7 +1143,6 @@ void SoldierObserverClass::State_Act_Gunshot_Heard( SoldierGameObj * soldier )
 */
 void	SoldierObserverClass::State_Act_Attack( SoldierGameObj * soldier ) 
 {
-	WWASSERT( soldier != NULL );
 
 	soldier->Get_Human_State()->Raise_Weapon();		// Keep the gun up
 
@@ -1178,7 +1163,7 @@ void	SoldierObserverClass::State_Act_Attack( SoldierGameObj * soldier )
 	// Pick a random point and goto it
 
 	PhysicalGameObj* enemy = (PhysicalGameObj*)EnemyObject.Get_Ptr();
-//	WWASSERT( soldier != enemy );
+//	assert( soldier != enemy );
 
 	if ( enemy == NULL ) {
 		StateTimer = 100000;	// Leave this state
@@ -1292,13 +1277,11 @@ void	SoldierObserverClass::State_Act_Attack( SoldierGameObj * soldier )
 ***********************************************************************************************/
 void SoldierObserverClass::Action_Reset( SoldierGameObj * soldier )
 {
-	WWASSERT( soldier != NULL );
 	soldier->Get_Action()->Reset( StatePriorities[ State ] );
 }
 
 void SoldierObserverClass::Action_Face_Location( SoldierGameObj * soldier, const Vector3 & location, SoldierAIState ai_state, bool crouched )
 {
-	WWASSERT( soldier != NULL );
 	ActionParamsStruct parameters;
 	parameters.Set_Basic( Get_ID(), StatePriorities[ State ], INNATE_ACTION_ID, ai_state );
 	parameters.Set_Face_Location( location, 2 );
@@ -1308,7 +1291,6 @@ void SoldierObserverClass::Action_Face_Location( SoldierGameObj * soldier, const
 
 void SoldierObserverClass::Action_Goto_Location( SoldierGameObj * soldier, const Vector3 & location, SoldierAIState ai_state, float speed, float distance, bool crouched )
 {
-	WWASSERT( soldier != NULL );
 	Vector3	move_position = location;
 	Stay_Within_Home( soldier, &move_position, &distance );
 	ActionParamsStruct parameters;
@@ -1319,7 +1301,6 @@ void SoldierObserverClass::Action_Goto_Location( SoldierGameObj * soldier, const
 
 void SoldierObserverClass::Action_Goto_Location_Facing( SoldierGameObj * soldier, const Vector3 & location, SoldierAIState ai_state, const Vector3 & facing_pos, float speed, float distance, bool crouched )
 {
-	WWASSERT( soldier != NULL );
 	Vector3	move_position = location;
 	Stay_Within_Home( soldier, &move_position, &distance );
 	ActionParamsStruct parameters;
@@ -1333,7 +1314,6 @@ void SoldierObserverClass::Action_Goto_Location_Facing( SoldierGameObj * soldier
 void SoldierObserverClass::Action_Attack_Object( SoldierGameObj * soldier, PhysicalGameObj * enemy, float range, 
 																	bool kneel, const Vector3 & move_location, float arrived_distance )
 {
-	WWASSERT( soldier != NULL );
 	Vector3	move_position = move_location;
 	Stay_Within_Home( soldier, &move_position, &arrived_distance );
 
@@ -1361,7 +1341,6 @@ void SoldierObserverClass::Action_Attack_Object( SoldierGameObj * soldier, Physi
 
 void SoldierObserverClass::Action_Dive( SoldierGameObj * soldier, const Vector3 & location )
 {
-	WWASSERT( soldier != NULL );
 	ActionParamsStruct parameters;
 	parameters.Set_Basic( Get_ID(), StatePriorities[ State ], INNATE_ACTION_ID, AI_STATE_SEARCH );
 	parameters.MoveLocation = location;

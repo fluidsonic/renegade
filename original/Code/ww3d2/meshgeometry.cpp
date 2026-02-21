@@ -5,8 +5,6 @@
 #include "obbox.h"
 #include "sphere.h"
 #include "plane.h"
-#include "wwdebug.h"
-#include "wwmemlog.h"
 #include "w3d_file.h"
 #include "vp.h"
 
@@ -311,7 +309,6 @@ void MeshGeometryClass::Set_User_Text(char * usertext)
  *=============================================================================================*/
 void MeshGeometryClass::Get_Bounding_Box(AABoxClass * set_box)
 {
-	WWASSERT(set_box != NULL);
 	set_box->Center = (BoundBoxMax + BoundBoxMin) * 0.5f;
 	set_box->Extent = (BoundBoxMax - BoundBoxMin) * 0.5f;
 }	
@@ -331,7 +328,6 @@ void MeshGeometryClass::Get_Bounding_Box(AABoxClass * set_box)
  *=============================================================================================*/
 void MeshGeometryClass::Get_Bounding_Sphere(SphereClass * set_sphere)
 {
-	WWASSERT(set_sphere != NULL);
 	set_sphere->Center = BoundSphereCenter;
 	set_sphere->Radius = BoundSphereRadius;
 }
@@ -467,7 +463,6 @@ void MeshGeometryClass::Generate_Rigid_APT(const OBBoxClass & local_box,const Ve
  *=============================================================================================*/
 void MeshGeometryClass::Generate_Skin_APT(const OBBoxClass & world_box, SimpleDynVecClass<uint32> & apt, const Vector3 *world_vertex_locs)
 {
-	WWASSERT(world_vertex_locs);
 
 	// Beware, this is gonna be expensive!
 	const TriIndex * polys = Get_Polygon_Array();
@@ -753,8 +748,6 @@ int MeshGeometryClass::cast_semi_infinite_axis_aligned_ray(const Vector3 & start
 		static const int axis_1[6] =		{ 1, 1, 2, 2, 0, 0 };
 		static const int axis_2[6] =		{ 2, 2, 0, 0, 1, 1 };
 		static const int direction[6] =	{ 1, 0, 1, 0, 1, 0 };
-		WWASSERT(axis_dir >= 0);
-		WWASSERT(axis_dir < 6);
 
 		// The functions called after this point will 'or' bits into this variable, so it needs to
 		// be initialized here to TRI_RAYCAST_FLAG_NONE.
@@ -1160,7 +1153,6 @@ bool MeshGeometryClass::cast_obbox_brute_force(OBBoxCollisionTestClass & boxtest
  *=============================================================================================*/
 void MeshGeometryClass::Compute_Plane_Equations(Vector4 * peq)
 {
-	WWASSERT(peq!=NULL);
 
 	TriIndex * poly	= Poly->Get_Array();
 	Vector3 * vert		= Vertex->Get_Array();
@@ -1197,7 +1189,6 @@ void MeshGeometryClass::Compute_Plane_Equations(Vector4 * peq)
  *=============================================================================================*/
 void MeshGeometryClass::Compute_Vertex_Normals(Vector3 * vnorm)
 {
-	WWASSERT(vnorm != NULL);
 	if ((PolyCount == 0)|| (VertexCount == 0)) {
 		return;
 	}
@@ -1321,7 +1312,6 @@ Vector3 * MeshGeometryClass::get_vert_normals(void)
 	_VNormArray.Uninitialised_Grow(VertexCount);
 	return &(_VNormArray[0]);
 #else
-	WWASSERT(VertexNorm);
 	return VertexNorm->Get_Array();
 #endif
 }
@@ -1424,8 +1414,6 @@ const Vector4 * MeshGeometryClass::Get_Plane_Array(bool create)
  *=============================================================================================*/
 void MeshGeometryClass::Compute_Plane(int pidx,PlaneClass * set_plane) const
 {
-	WWASSERT(pidx >= 0);
-	WWASSERT(pidx < PolyCount);
 	TriIndex & poly = Poly->Get_Array()[pidx];
 	Vector3 * verts = Vertex->Get_Array();
 
@@ -1448,7 +1436,6 @@ void MeshGeometryClass::Compute_Plane(int pidx,PlaneClass * set_plane) const
  *=============================================================================================*/
 void MeshGeometryClass::Generate_Culling_Tree(void)
 {
-	WWMEMLOG(MEM_CULLINGDATA);
 	{
 		AABTreeBuilderClass builder;
 		builder.Build_AABTree(PolyCount,Poly->Get_Array(),VertexCount,Vertex->Get_Array());
@@ -1488,7 +1475,6 @@ WW3DErrorType MeshGeometryClass::Load_W3D(ChunkLoadClass & cload)
 	cload.Open_Chunk();
 	
 	if (cload.Cur_Chunk_ID() != W3D_CHUNK_MESH_HEADER3) {
-		WWDEBUG_SAY(("Old format mesh mesh, no longer supported.\n"));
 		goto Error;
 	}
 	
@@ -1572,7 +1558,6 @@ WW3DErrorType MeshGeometryClass::Load_W3D(ChunkLoadClass & cload)
 	if ((header.Version < W3D_MAKE_VERSION(3,0)) && (Get_Flag(SKIN))) {
 
 		uint16 * links = get_bone_links();
-		WWASSERT(links);
 		
 		for (int bi = 0; bi < Get_Vertex_Count(); bi++) {
 			links[bi] += 1;
@@ -1721,7 +1706,6 @@ WW3DErrorType MeshGeometryClass::read_vertex_normals(ChunkLoadClass & cload)
 {
 	W3dVectorStruct norm;
 	Vector3 * mdlnorms = get_vert_normals();
-	WWASSERT(mdlnorms);
 
 	for (int i=0; i<VertexCount; i++) {
 		if (cload.Read(&norm,sizeof(W3dVectorStruct)) != sizeof(W3dVectorStruct)) {
@@ -1776,7 +1760,6 @@ WW3DErrorType MeshGeometryClass::read_triangles(ChunkLoadClass & cload)
 		peq[i].W = -tri.Dist;
 
 		// set the surface type
-		WWASSERT(tri.Attributes < 256);
 		surface_types[i] = (uint8)(tri.Attributes);
 	}
 
@@ -1839,7 +1822,6 @@ WW3DErrorType MeshGeometryClass::read_vertex_influences(ChunkLoadClass & cload)
 {
 	W3dVertInfStruct vinf;
 	uint16 * links = get_bone_links(true);
-	WWASSERT(links);
 
 	for (int i=0; i<Get_Vertex_Count(); i++) {
 
@@ -1904,7 +1886,6 @@ WW3DErrorType MeshGeometryClass::read_aabtree(ChunkLoadClass &cload)
 
 void MeshGeometryClass::Scale(const Vector3 &sc)
 {
-	WWASSERT(Vertex);
 	Vector3 * vert = Vertex->Get_Array();
 	
 	for (int i=0;i<VertexCount; i++) {

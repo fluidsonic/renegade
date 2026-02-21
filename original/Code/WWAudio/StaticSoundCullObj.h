@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __STATICSOUNDCULLOBJ_H
 #define __STATICSOUNDCULLOBJ_H

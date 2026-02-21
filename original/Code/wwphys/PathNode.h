@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __PATHNODE_H
 #define __PATHNODE_H
@@ -212,7 +209,6 @@ PathNodeClass::Is_In_Closed_List (void) const
 inline void
 PathNodeClass::Disconnect_From_Portal (void)
 {
-	WWASSERT (m_Portal != NULL);
 
 	m_Portal->m_ClosedListPtr = NULL;
 	m_Portal->Set_Heap_Location (0);

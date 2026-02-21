@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef OBBOX_H
 #define OBBOX_H
@@ -121,8 +118,6 @@ inline void OBBoxClass::Transform
 	OBBoxClass *			out
 )
 {
-	WWASSERT(out);
-	WWASSERT(out!=&in);
 
 	out->Extent = in.Extent;
 	Matrix3D::Transform_Vector(tm,in.Center,&(out->Center));
@@ -173,7 +168,6 @@ inline void OBBoxClass::Compute_Point(float params[3],Vector3 * set_point) const
  *=============================================================================================*/
 inline void OBBoxClass::Compute_Axis_Aligned_Extent(Vector3 * set_extent) const
 {
-	WWASSERT(set_extent != NULL);
 
 	// x extent is the box projected onto the x axis
 	set_extent->X =	WWMath::Fabs(Extent[0] * Basis[0][0]) +

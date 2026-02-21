@@ -20,7 +20,6 @@ static void Create_Hash_Name(StringClass& name, const StringClass& thumb_name)
 {
 	name=thumb_name;
 	int len=name.Get_Length();
-	WWASSERT(!stricmp(&name[len-4],".tga") || !stricmp(&name[len-4],".dds"));
 	name[len-4]='\0';
 }
 
@@ -103,7 +102,6 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 		DateTime=dds_file.Get_Date_Time();
 
 		int len=Name.Get_Length();
-		WWASSERT(len>4);
 		Name[len-3]='d';
 		Name[len-2]='d';
 		Name[len-1]='s';
@@ -143,7 +141,6 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 		unsigned src_bpp=0;
 		Get_WW3D_Format(src_format,src_bpp,targa);
 		if (src_format==WW3D_FORMAT_UNKNOWN) {
-			WWDEBUG_SAY(("Unknown texture format for %s\n",filename));
 			return;
 		}
 
@@ -192,7 +189,6 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 		// Get time stamp from the tga file
 		{
 			file_auto_ptr my_tga_file(_TheFileFactory,filename);
-			WWASSERT(my_tga_file->Is_Available());
 			my_tga_file->Open();
 			DateTime=my_tga_file->Get_Date_Time();
 			my_tga_file->Close();
@@ -201,7 +197,6 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 		unsigned char* src_surface=(unsigned char*)targa.GetImage();
 
 		int len=Name.Get_Length();
-		WWASSERT(len>4);
 		Name[len-3]='t';
 		Name[len-2]='g';
 		Name[len-1]='a';
@@ -261,7 +256,6 @@ void ThumbnailManagerClass::Create_Thumbnails()
 
 void ThumbnailManagerClass::Load()
 {
-	WWASSERT(!ThumbnailMemory);
 
 	// If the thumbnail hash table file is available, init hash table
 	DateTime=0;
@@ -286,7 +280,6 @@ void ThumbnailManagerClass::Load()
 			thumb_file->Read(&total_header_length,sizeof(int));
 			thumb_file->Read(&total_data_length,sizeof(int));
 			if (total_thumb_count) {
-				WWASSERT(total_data_length && total_header_length);
 				ThumbnailMemory=new unsigned char[total_data_length];
 				// Load thumbs
 				for (int i=0;i<total_thumb_count;++i) {
@@ -309,7 +302,6 @@ void ThumbnailManagerClass::Load()
 					thumb_file->Read(&original_mip_level_count,sizeof(int));
 					thumb_file->Read(&original_format,sizeof(int));
 					thumb_file->Read(&name_len,sizeof(int));
-					WWASSERT(name_len<255);
 					thumb_file->Read(name,name_len);
 					name[name_len]='\0';
 
@@ -545,14 +537,12 @@ void ThumbnailManagerClass::Update_Thumbnail_File(const char* mix_file_name,bool
 
 	StringClass thumb_file_name(mix_file_name,true);
 	int len=thumb_file_name.Get_Length();
-	WWASSERT(len>4);
 	thumb_file_name[len-3]='t';
 	thumb_file_name[len-2]='h';
 	thumb_file_name[len-1]='u';
 	FileClass* mix_file=ff.Get_File(mix_file_name);
 	FileClass* thumb_file=ff.Get_File(thumb_file_name);
 
-	WWASSERT(mix_file && thumb_file);
 
 	// If mix file isn't found but thumb file is, delete the obsolete thumb file
 	mix_file->Open(FileClass::READ);
@@ -623,7 +613,6 @@ void ThumbnailManagerClass::Update_Thumbnail_File(const char* mix_file_name,bool
 // Verify that up-to-date thumbnails exist for all textures
 void ThumbnailManagerClass::Pre_Init(bool display_message_box)
 {
-	WWASSERT(!ThumbnailManagerList.Head());
 
 	// Collect all mix file names
 	DynamicVectorClass<StringClass> mix_names;

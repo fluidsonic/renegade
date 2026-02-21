@@ -1,12 +1,10 @@
 #include "catmullromspline.h"
 #include "persistfactory.h"
 #include "wwmathids.h"
-#include "wwhack.h" 
 
 /*
 ** Force-Link this module because the linker can't detect that we actually need it...
 */
-DECLARE_FORCE_LINK(catmullromspline);
  
 /*
 ** Save-Load stuff
@@ -22,7 +20,6 @@ enum
 	// ID's used by CatmullRomSpline1D
 	CATMULLROM1D_CHUNK_HERMITE1D					= 0x00020729,	
 };
-
 
 /*
 ** Catmull-Rom 3D spline implementation
@@ -97,7 +94,6 @@ void CatmullRomSpline3DClass::Update_Tangents(void)
 	TangentsDirty = false;
 }
 
-
 /***********************************************************************************************
  * CatmullRomSpline3DClass::Get_Factory -- returns the factory for CatmullRomSpline3D          *
  *                                                                                             *
@@ -114,7 +110,6 @@ const PersistFactoryClass & CatmullRomSpline3DClass::Get_Factory(void) const
 {
 	return _CatmullRomSpline3DFactory;
 }
-
 
 /***********************************************************************************************
  * CatmullRomSpline3DClass::Save -- save this curve                                            *
@@ -135,7 +130,6 @@ bool CatmullRomSpline3DClass::Save(ChunkSaveClass &csave)
 	csave.End_Chunk();
 	return true;
 }
-
 
 /***********************************************************************************************
  * CatmullRomSpline3DClass::Load -- load this curve                                            *
@@ -160,7 +154,6 @@ bool CatmullRomSpline3DClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -169,11 +162,9 @@ bool CatmullRomSpline3DClass::Load(ChunkLoadClass &cload)
 	return true;
 }
 
-
 /*
 ** The 1D Catmull-Rom implementation.
 */
-
 
 /***********************************************************************************************
  * CatmullRomSpline1DClass::Update_Tangents -- Computes the tangents at each key               *
@@ -236,7 +227,6 @@ void CatmullRomSpline1DClass::Update_Tangents(void)
 	TangentsDirty = false;
 }
 
-
 /***********************************************************************************************
  * CatmullRomSpline1DClass::Get_Factory -- returns the factory for CatmullRomSpline1D          *
  *                                                                                             *
@@ -253,7 +243,6 @@ const PersistFactoryClass & CatmullRomSpline1DClass::Get_Factory(void) const
 {
 	return _CatmullRomSpline1DFactory;
 }
-
 
 /***********************************************************************************************
  * CatmullRomSpline1DClass::Save -- Save this curve                                            *
@@ -274,7 +263,6 @@ bool CatmullRomSpline1DClass::Save(ChunkSaveClass &csave)
 	csave.End_Chunk();
 	return true;
 }
-
 
 /***********************************************************************************************
  * CatmullRomSpline1DClass::Load -- Load this curve                                            *
@@ -299,7 +287,6 @@ bool CatmullRomSpline1DClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();

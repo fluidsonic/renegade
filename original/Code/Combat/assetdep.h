@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __ASSET_DEP_H
 #define __ASSET_DEP_H

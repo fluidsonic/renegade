@@ -19,7 +19,6 @@
 #include "sortingrenderer.h"
 #include "soundenvironment.h"
 #include "wwaudio.h"
-#include "wwmemlog.h"
 
 
 // Singletons.
@@ -117,7 +116,6 @@ WindClass::~WindClass()
  *=============================================================================================*/
 void WindClass::Set (float heading, float speed, float variability)
 {
-	WWASSERT (speed >= 0.0f);
 
 	Heading		= DEG_TO_RADF (heading);
 	Speed			= speed;
@@ -238,7 +236,6 @@ WeatherSystemClass::WeatherSystemClass	(PhysicsSceneClass *scene,
 	const TextureClass::MipCountType  mipcount	 = TextureClass::MIP_LEVELS_5;
 	const float								 oopagecount = 1.0f / pagecount;
 
-	WWASSERT (particlespeed >= 0.0f);
 
 	// How old is the weather system?
 	Age = prime ? MAX_AGE : 0.0f;
@@ -286,9 +283,7 @@ WeatherSystemClass::WeatherSystemClass	(PhysicsSceneClass *scene,
 
 	// Configure texture coordinates according to given page count.
 	// NOTE: Split the texture into vertical pages.
-	WWASSERT (pagecount > 0);
 	TextureArray = new Vector2 [pagecount * VERTICES_PER_TRIANGLE];
-	WWASSERT (TextureArray != NULL);
 	for (unsigned page = 0; page < pagecount; page++) {
 		TextureArray [page * VERTICES_PER_TRIANGLE + 0].Set (pageoffset.U + (((page + 0.5f) * oopagecount) * pagesize.U), pageoffset.V + 0.0f);
 		TextureArray [page * VERTICES_PER_TRIANGLE + 1].Set (pageoffset.U + (((page + 1.0f) * oopagecount) * pagesize.U), pageoffset.V + pagesize.V);
@@ -326,7 +321,6 @@ WeatherSystemClass::~WeatherSystemClass()
 		RayCount--;
 	}
 
-	WWASSERT (RayCount == 0);
 
 	// Clean-up particles.
 	particleptr = ParticleHead;
@@ -338,7 +332,6 @@ WeatherSystemClass::~WeatherSystemClass()
 		particleptr = nextparticleptr;
 	}
 
-	WWASSERT (ParticleCount == 0);
 
 	REF_PTR_RELEASE (Material);
 	delete [] TextureArray;
@@ -377,7 +370,6 @@ void WeatherSystemClass::Set_Density (float density)
 		for (r = signedcount; r < 0; r++) {
 
 			rayptr = new RayStruct;
-			WWASSERT (rayptr != NULL);
 
 			rayptr->Next = RayHead;
 			rayptr->Initialized = false;
@@ -843,7 +835,6 @@ bool WeatherSystemClass::Spawn (RayStruct *suppliedrayptr)
 			ParticleStruct *particleptr;
 
 			particleptr = new ParticleStruct;
-			WWASSERT (particleptr != NULL);
 
 			// Add this particle to the head of the list.
 			if (ParticleHead != NULL) {
@@ -929,7 +920,6 @@ bool WeatherSystemClass::Spawn (RayStruct *suppliedrayptr)
  *=============================================================================================*/
 void WeatherSystemClass::Kill (ParticleStruct *particleptr)
 {
-	WWASSERT (ParticleCount > 0);
 
 	// Remove this particle from the list.
 	if (particleptr->Prev != NULL) {
@@ -1044,7 +1034,6 @@ void WeatherSystemClass::Render (RenderInfoClass &rinfo)
 
 					Vector3	position;
 
-					WWASSERT (particleptr != NULL);
 					position = particleptr->CurrentPosition;
 
 					// Optimization: only submit this particle for rendering if it is in the view frustum.
@@ -1109,7 +1098,6 @@ void WeatherSystemClass::Render (RenderInfoClass &rinfo)
 								}
 
  							default:
-								WWASSERT (false);
 								w = h = 0.0f;
 								break;
 						}
@@ -1177,7 +1165,6 @@ void WeatherSystemClass::Render (RenderInfoClass &rinfo)
 			processedparticlecount += particlecount;
 		}
 
-		WWASSERT (particleptr == NULL);
 
 		#if WEATHER_PARTICLE_SORT
 		#else
@@ -1536,7 +1523,6 @@ WeatherMgrClass::WeatherMgrClass()
  *=============================================================================================*/
 void WeatherMgrClass::Init (SoundEnvironmentClass *soundenvironment)
 {
-	WWASSERT (soundenvironment != NULL);
 
 	REF_PTR_SET (_SoundEnvironment, soundenvironment);
 
@@ -1830,7 +1816,6 @@ bool WeatherMgrClass::Set_Precipitation (PrecipitationEnum precipitation, float 
 				break;
 
 			default:
-				WWASSERT (false);
 				break;
 		}
 		return (true);
@@ -1868,7 +1853,6 @@ void WeatherMgrClass::Get_Precipitation (PrecipitationEnum precipitation, float 
 			break;
 
 		default:
-			WWASSERT (false);
 			break;
 	}
 }
@@ -2002,7 +1986,6 @@ void WeatherMgrClass::Update (PhysicsSceneClass *scene, CameraClass *camera)
 				break;
 
 			default:
-				WWASSERT (false);
 				break;
 		}
 
@@ -2041,7 +2024,6 @@ void WeatherMgrClass::Update (PhysicsSceneClass *scene, CameraClass *camera)
 	  						break;
 
 						default:
-							WWASSERT (false);
 							break;
 					}
 					scene->Add_Render_Object (_Precipitation [p]);
@@ -2148,7 +2130,6 @@ bool WeatherMgrClass::Save_Dynamic (ChunkSaveClass &csave)
  *=============================================================================================*/
 bool WeatherMgrClass::Load (ChunkLoadClass &cload)
 {
-	WWMEMLOG (MEM_GAMEDATA);
 
 	bool retval = true;
 
@@ -2214,7 +2195,6 @@ bool WeatherMgrClass::Load_Micro_Chunks (ChunkLoadClass &cload)
  *=============================================================================================*/
 bool WeatherMgrClass::Load_Dynamic (ChunkLoadClass &cload)
 {
-	WWMEMLOG (MEM_GAMEDATA);
 
 	bool retval = true;
 
@@ -2287,7 +2267,6 @@ object.Add (_Parameters [PARAMETER_ ## varname].OverrideDuration)
 
 void WeatherMgrClass::Export_Rare (BitStreamClass &packet)
 {
-	WWASSERT (CombatManager::I_Am_Server());
 
 	EXPORT_PARAMETER (packet, WIND_HEADING);
 	EXPORT_PARAMETER (packet, WIND_SPEED);
@@ -2320,7 +2299,6 @@ object.Get (_Parameters [PARAMETER_ ## varname].OverrideDuration)
 
 void WeatherMgrClass::Import_Rare (BitStreamClass &packet)
 {
-	WWASSERT (CombatManager::I_Am_Client());
 
 	IMPORT_PARAMETER (packet, WIND_HEADING);
 	IMPORT_PARAMETER (packet, WIND_SPEED);

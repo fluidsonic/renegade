@@ -1,25 +1,21 @@
 #include "airstripgameobj.h"
 #include "basecontroller.h"
 #include "vehicle.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
 #include "scriptzone.h"
-#include "wwprofile.h"
 #include "basecontroller.h"
 #include "combatchunkid.h"
 #include "objlibrary.h"
 #include "cinematicgameobj.h"
 #include "combat.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (AirStrip)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -27,7 +23,6 @@ DECLARE_FORCE_LINK (AirStrip)
 SimplePersistFactoryClass	<AirStripGameObjDef,	CHUNKID_GAME_OBJECT_DEF_AIRSTRIP>					_AirStripGameObjDefPersistFactory;
 SimplePersistFactoryClass	<AirStripGameObj,		CHUNKID_GAME_OBJECT_AIRSTRIP>							_AirStripGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (AirStripGameObjDef,	CLASSID_GAME_OBJECT_DEF_AIRSTRIP, "Airstrip")	_AirStripGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -57,7 +52,6 @@ enum
 	MICROCHUNKID_UNUSED						= 1,
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	AirStripGameObjDef
@@ -86,7 +80,6 @@ AirStripGameObjDef::AirStripGameObjDef (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~AirStripGameObjDef
@@ -96,7 +89,6 @@ AirStripGameObjDef::~AirStripGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -108,7 +100,6 @@ AirStripGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_AIRSTRIP;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -123,7 +114,6 @@ AirStripGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -148,7 +138,6 @@ AirStripGameObjDef::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -181,7 +170,6 @@ AirStripGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -210,7 +198,6 @@ AirStripGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -221,7 +208,6 @@ AirStripGameObjDef::Get_Factory (void) const
 { 
 	return _AirStripGameObjDefPersistFactory; 
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -238,7 +224,6 @@ AirStripGameObj::AirStripGameObj (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~AirStripGameObj
@@ -248,7 +233,6 @@ AirStripGameObj::~AirStripGameObj (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -260,7 +244,6 @@ AirStripGameObj::Get_Factory (void) const
 {
 	return _AirStripGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -284,7 +267,6 @@ AirStripGameObj::Init (const AirStripGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -295,7 +277,6 @@ AirStripGameObj::Get_Definition (void) const
 {
 	return (const AirStripGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -313,7 +294,6 @@ AirStripGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -345,7 +325,6 @@ AirStripGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -369,7 +348,6 @@ AirStripGameObj::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CnC_Initialize
@@ -382,7 +360,6 @@ AirStripGameObj::CnC_Initialize (BaseControllerClass *base)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -391,7 +368,6 @@ AirStripGameObj::CnC_Initialize (BaseControllerClass *base)
 void
 AirStripGameObj::Think (void)
 {
-	WWPROFILE ("AirStrip Think");
 
 	//
 	//	Begin the cinematic if necessary
@@ -451,7 +427,6 @@ AirStripGameObj::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Begin_Generation
@@ -464,7 +439,6 @@ AirStripGameObj::Begin_Generation (void)
 	IsCinematicStarted	= false;	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

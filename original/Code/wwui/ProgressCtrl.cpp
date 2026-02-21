@@ -213,7 +213,6 @@ void ProgressCtrlClass::Render(void)
 
 void ProgressCtrlClass::Set_Range(unsigned int min, unsigned int max)
 	{
-	WWASSERT(min < max);
 
 	// Scale current position to new range
 	if (mPosition > mMinLimit)

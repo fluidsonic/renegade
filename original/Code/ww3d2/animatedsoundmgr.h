@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __ANIMATEDSOUNDMGR_H
 #define __ANIMATEDSOUNDMGR_H

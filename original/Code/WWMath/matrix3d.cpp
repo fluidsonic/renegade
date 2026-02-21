@@ -833,38 +833,18 @@ not_equal2:
 
 	}
 /*
-	WWDEBUG_SAY(("{%2.2f, %2.2f, %2.2f, %2.2f}, {%2.2f, %2.2f, %2.2f, %2.2f}, {%2.2f, %2.2f, %2.2f, %2.2f}\n"
-		,res[0][0],res[0][1],res[0][2],res[0][3]
-		,res[1][0],res[1][1],res[1][2],res[1][3]
-		,res[2][0],res[2][1],res[2][2],res[2][3]));
-	WWDEBUG_SAY(("{%2.2f, %2.2f, %2.2f, %2.2f}, {%2.2f, %2.2f, %2.2f, %2.2f}, {%2.2f, %2.2f, %2.2f, %2.2f}\n"
-		,res2[0][0],res2[0][1],res2[0][2],res2[0][3]
-		,res2[1][0],res2[1][1],res2[1][2],res2[1][3]
-		,res2[2][0],res2[2][1],res2[2][2],res2[2][3]));
 //	res[2][3]=res2[2][3];
 //	res=res2;
 */
 /*	for (int y=0;y<3;++y) {
 		for (int x=0;x<4;++x) {
 			if (fabs(res2[y][x]-res[y][x])>0.001f) {
-				WWDEBUG_SAY(("x: %d, y: %d, %f != %f\n",x,y,res2[y][x],res[y][x]));
 				__asm nop
 			}
 		}
 	}
 */
-/*	WWASSERT(res2[0][0]==res[0][0]);
-	WWASSERT(res2[0][1]==res[0][1]);
-	WWASSERT(res2[0][2]==res[0][2]);
-	WWASSERT(res2[0][3]==res[0][3]);
-	WWASSERT(res2[1][0]==res[1][0]);
-	WWASSERT(res2[1][1]==res[1][1]);
-	WWASSERT(res2[1][2]==res[1][2]);
-	WWASSERT(res2[1][3]==res[1][3]);
-	WWASSERT(res2[2][0]==res[2][0]);
-	WWASSERT(res2[2][1]==res[2][1]);
-	WWASSERT(res2[2][2]==res[2][2]);
-	WWASSERT(res2[2][3]==res[2][3]);
+/*	assert(res2[0][0]==res[0][0]);
 */
 }
 #endif
@@ -889,8 +869,6 @@ void Matrix3D::Transform_Min_Max_AABox
 	Vector3 *				set_max
 ) const
 {
-	WWASSERT(set_min != &min);
-	WWASSERT(set_max != &max);
 
 	float tmp0,tmp1;
 	
@@ -943,8 +921,6 @@ void Matrix3D::Transform_Center_Extent_AABox
 	Vector3 *				set_extent
 ) const
 {
-	WWASSERT(set_center != &center);
-	WWASSERT(set_extent != &extent);
 
 	// push each extent out to the projections of the original extents
 	for (int i=0; i<3; i++) {

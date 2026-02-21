@@ -272,19 +272,11 @@ inline Vector2 * MeshMatDescClass::Get_UV_Array(int pass,int stage)
 
 inline void MeshMatDescClass::Set_UV_Source(int pass,int stage,int sourceindex)
 {
-	WWASSERT(pass >= 0);
-	WWASSERT(pass < MAX_PASSES);
-	WWASSERT(stage >= 0);
-	WWASSERT(stage < MAX_TEX_STAGES);
 	UVSource[pass][stage] = sourceindex;	
 }
 
 inline int MeshMatDescClass::Get_UV_Source(int pass,int stage)
 {
-	WWASSERT(pass >= 0);
-	WWASSERT(pass < MAX_PASSES);
-	WWASSERT(stage >= 0);
-	WWASSERT(stage < MAX_TEX_STAGES);
 	return UVSource[pass][stage];
 }
 
@@ -299,7 +291,6 @@ inline int MeshMatDescClass::Get_UV_Array_Count(void)
 
 inline Vector2 * MeshMatDescClass::Get_UV_Array_By_Index(int index, bool create)
 {
-	WWASSERT((index >= 0)&&(index < MAX_UV_ARRAYS));
 
 	if (create && !UV[index]) {
 		UV[index] = NEW_REF(UVBufferClass,(VertexCount));
@@ -312,8 +303,6 @@ inline Vector2 * MeshMatDescClass::Get_UV_Array_By_Index(int index, bool create)
 
 inline unsigned* MeshMatDescClass::Get_DCG_Array(int pass)
 {
-	WWASSERT(pass >= 0);
-	WWASSERT(pass < MAX_PASSES);
 	switch (DCGSource[pass]) {
 		case VertexMaterialClass::MATERIAL:
 			return NULL;
@@ -333,7 +322,6 @@ inline unsigned* MeshMatDescClass::Get_DCG_Array(int pass)
 			}
 			break;
 		default:
-			WWASSERT(0);
 			return(NULL);
 			break;
 	};
@@ -341,8 +329,6 @@ inline unsigned* MeshMatDescClass::Get_DCG_Array(int pass)
 
 inline unsigned * MeshMatDescClass::Get_DIG_Array(int pass)
 {
-	WWASSERT(pass >= 0);
-	WWASSERT(pass < MAX_PASSES);
 	switch (DIGSource[pass]) {
 		case VertexMaterialClass::MATERIAL:
 			return NULL;
@@ -362,7 +348,6 @@ inline unsigned * MeshMatDescClass::Get_DIG_Array(int pass)
 			}
 			break;
 		default:
-			WWASSERT(0);
 			return(NULL);
 			break;
 	};

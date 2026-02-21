@@ -406,7 +406,6 @@ void DamageableGameObj::Set_Player_Type(int id)
 //-----------------------------------------------------------------------------
 bool DamageableGameObj::Is_Teammate(DamageableGameObj * p_obj)
 {
-	WWASSERT(p_obj != NULL);
 
    return ((p_obj == this) || 
 			  (Is_Team_Player() && Get_Player_Type() == p_obj->Get_Player_Type()));
@@ -414,7 +413,6 @@ bool DamageableGameObj::Is_Teammate(DamageableGameObj * p_obj)
 
 bool DamageableGameObj::Is_Enemy(DamageableGameObj * p_obj)
 {
-	WWASSERT(p_obj != NULL);
    return ( (p_obj != this) && Player_Types_Are_Enemies( Get_Player_Type(), p_obj->Get_Player_Type() ) );
 }
 

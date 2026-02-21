@@ -5,7 +5,6 @@
 #include "mutex.h"
 #include "thread.h"
 #include <assert.h>
-#include "wwdebug.h"
 #include "simplevec.h"
 #include "wwstring.h"
 #include "textureloader.h"
@@ -46,7 +45,6 @@ static char* Get_Compression_Buffer(int size)
 
 static void Verify_Compression_Buffer()
 {
-	WWASSERT(compression_buffer[compression_buffer.Length()-1]==BUFFER_OVERRUN_TEST_VALUE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +73,6 @@ TextureFileCache::TextureFileCache(const char *fileprefix):
 	Offsets(NULL),
 	NumCachedTextures(0)
 {
-	WWASSERT(!Instances);
 	Instances++;
 
 	// This was allocated by _Create_File_Name() and need to go away now.
@@ -159,7 +156,6 @@ TextureFileCache::~TextureFileCache()
 	Close_Texture_Handle();
 
 	Instances--;
-	WWASSERT(!Instances);
 }	
 
 
@@ -227,7 +223,6 @@ bool TextureFileCache::Save_Texture(const char *texturename, srTextureIFace::Mul
 
 	// Setup the Header.
 	FileClass *asset=_TheFileFactory->Get_File(texturename);
-	WWASSERT( asset );
 	asset->Open();
 	Header.FileTime = asset->Get_Date_Time();
 	Header.NumMipMaps = (mreq.smallLOD - mreq.largeLOD) + 1;
@@ -254,7 +249,6 @@ bool TextureFileCache::Save_Texture(const char *texturename, srTextureIFace::Mul
 	// Now write out the textures.
 	for (idx = 0, lod = mreq.largeLOD; lod <= mreq.smallLOD; idx++, lod++) {
 		srColorSurface *surface = mreq.levels[lod];
-		WWASSERT(surface->getDataPtr());
 
 		Offsets[idx].Offset = TextureHandle->Tell();
 		Offsets[idx].Size = surface->getDataSize();

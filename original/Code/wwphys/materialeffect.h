@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef MATERIALEFFECT_H
 #define MATERIALEFFECT_H

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SLIDER_CTRL_H
 #define __SLIDER_CTRL_H

@@ -1,9 +1,6 @@
 #ifndef MUTEX_H
 #define MUTEX_H
 
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #include "always.h"
 #include "thread.h"
@@ -103,31 +100,11 @@ class FastCriticalSectionClass
 
 	void Thread_Safe_Set_Flag()
 	{
-#if defined(_MSC_VER)
-		volatile unsigned& nFlag=Flag;
-
-		#define ts_lock _emit 0xF0
-		assert(((unsigned)&nFlag % 4) == 0);
-
-		__asm mov ebx, [nFlag]
-		__asm ts_lock
-		__asm bts dword ptr [ebx], 0
-		__asm jc The_Bit_Was_Previously_Set_So_Try_Again
-		return;
-
-		The_Bit_Was_Previously_Set_So_Try_Again:
-		ThreadClass::Switch_Thread();
-		__asm mov ebx, [nFlag]
-		__asm ts_lock
-		__asm bts dword ptr [ebx], 0
-		__asm jc  The_Bit_Was_Previously_Set_So_Try_Again
-#else
 		// Portable atomic test-and-set using GCC/Clang builtins
 		// Spin until we successfully acquire (bit 0 was 0, now set to 1)
 		while (__atomic_test_and_set(&Flag, __ATOMIC_ACQUIRE)) {
 			ThreadClass::Switch_Thread();
 		}
-#endif
 	}
 
 	WWINLINE void Thread_Safe_Clear_Flag()

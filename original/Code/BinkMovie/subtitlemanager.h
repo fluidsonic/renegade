@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef _SUBTITLEMANAGER_H_
 #define _SUBTITLEMANAGER_H_

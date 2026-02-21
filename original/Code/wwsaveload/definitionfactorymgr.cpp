@@ -1,6 +1,5 @@
 #include "definitionfactorymgr.h"
 #include "definitionfactory.h"
-#include "wwdebug.h"
 #include <string.h>
 #ifdef _UNIX
 #include "osdep.h"
@@ -175,8 +174,6 @@ DefinitionFactoryMgrClass::Get_Next (DefinitionFactoryClass *curr_factory)
 void
 DefinitionFactoryMgrClass::Register_Factory (DefinitionFactoryClass *factory)
 {
-	WWASSERT (factory->m_NextFactory == 0);
-	WWASSERT (factory->m_PrevFactory == 0);
 	Link_Factory (factory);
 	return ;
 }
@@ -190,7 +187,6 @@ DefinitionFactoryMgrClass::Register_Factory (DefinitionFactoryClass *factory)
 void
 DefinitionFactoryMgrClass::Unregister_Factory (DefinitionFactoryClass *factory)
 {
-	WWASSERT (factory != 0);
 	Unlink_Factory (factory);
 	return ;
 }
@@ -204,8 +200,6 @@ DefinitionFactoryMgrClass::Unregister_Factory (DefinitionFactoryClass *factory)
 void
 DefinitionFactoryMgrClass::Link_Factory (DefinitionFactoryClass *factory)
 {
-	WWASSERT (factory->m_NextFactory == 0);
-	WWASSERT (factory->m_PrevFactory == 0);
 
 	// Adding this factory in front of the current head of the list
 	factory->m_NextFactory = _FactoryListHead;
@@ -229,13 +223,11 @@ DefinitionFactoryMgrClass::Link_Factory (DefinitionFactoryClass *factory)
 void
 DefinitionFactoryMgrClass::Unlink_Factory (DefinitionFactoryClass *factory)
 {
-	WWASSERT(factory != 0);
 
 	// Handle the factory's prev pointer:
 	if (factory->m_PrevFactory == 0) {
 
 		// this factory is the head
-		WWASSERT (_FactoryListHead == factory);
 		_FactoryListHead = factory->m_NextFactory;
 	
 	} else {

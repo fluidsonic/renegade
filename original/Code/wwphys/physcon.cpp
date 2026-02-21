@@ -1,6 +1,5 @@
 #include "physcon.h"
 #include "chunkio.h"
-#include "wwdebug.h"
 #include "w3d_file.h"
 
 
@@ -65,11 +64,9 @@ void PhysicsConstants::Init(void)
 void PhysicsConstants::Set_Contact_Friction_Coefficient(int obj_type,int surface_type,float friction)
 {
 	if ((obj_type < 0) || (obj_type > DYNAMIC_OBJ_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range dynamic object type!\n"));
 		return;
 	}
 	if ((surface_type < 0) || (surface_type > SURFACE_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range surface type!\n"));
 		return;
 	}
 	ContactFrictionCoefficient[obj_type][surface_type] = friction;
@@ -81,11 +78,9 @@ float PhysicsConstants::Get_Contact_Friction_Coefficient(int obj_type,int surfac
 	if (OverrideFriction != 0.0f) return OverrideFriction;
 
 	if ((obj_type < 0) || (obj_type > DYNAMIC_OBJ_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range dynamic object type!\n"));
 		return ContactFrictionCoefficient[0][0];
 	}
 	if ((surface_type < 0) || (surface_type > SURFACE_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range surface type!\n"));
 		return ContactFrictionCoefficient[0][0];
 	}
 	return ContactFrictionCoefficient[obj_type][surface_type];
@@ -94,11 +89,9 @@ float PhysicsConstants::Get_Contact_Friction_Coefficient(int obj_type,int surfac
 void	PhysicsConstants::Set_Contact_Drag_Coefficient(int obj_type,int surface_type,float drag)
 {
 	if ((obj_type < 0) || (obj_type > DYNAMIC_OBJ_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range dynamic object type!\n"));
 		return;
 	}
 	if ((surface_type < 0) || (surface_type > SURFACE_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range surface type!\n"));
 		return;
 	}
 	ContactDragCoefficient[obj_type][surface_type] = drag;
@@ -110,11 +103,9 @@ float	PhysicsConstants::Get_Contact_Drag_Coefficient(int obj_type,int surface_ty
 	if (OverrideDrag != 0.0f) return OverrideDrag;
 
 	if ((obj_type < 0) || (obj_type > DYNAMIC_OBJ_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range dynamic object type!\n"));
 		return ContactDragCoefficient[0][0];
 	}
 	if ((surface_type < 0) || (surface_type > SURFACE_TYPE_MAX)) {
-		WWDEBUG_SAY(("PhysicsConstants -> Out of range surface type!\n"));
 		return ContactDragCoefficient[0][0];
 	}
 	return ContactDragCoefficient[obj_type][surface_type];
@@ -193,7 +184,6 @@ void PhysicsConstants::Load(ChunkLoadClass & cload)
 		
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		

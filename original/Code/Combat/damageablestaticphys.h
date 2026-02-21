@@ -27,7 +27,7 @@ public:
 
 	// Definitions
 	void	Init(const DamageableStaticPhysDefClass & definition);
-	const DamageableStaticPhysDefClass * Get_DamageableStaticPhysDef(void) const { WWASSERT( Definition ); return (DamageableStaticPhysDefClass *)Definition; }
+	const DamageableStaticPhysDefClass * Get_DamageableStaticPhysDef(void) const { assert( Definition ); return (DamageableStaticPhysDefClass *)Definition; }
 
 	// Damage Management
    void	Apply_Damage_Static(	const OffenseObjectClass & offense );

@@ -4,7 +4,6 @@
 #include "weapons.h"
 #include "rendobj.h"
 #include "bitpackids.h"
-#include "wwprofile.h"
 #include "smartgameobj.h"
 
 /*
@@ -381,7 +380,6 @@ void	ArmedGameObj::Post_Think( void )
 {
 	PhysicalGameObj::Post_Think();
 
-	WWPROFILE( "Armed PostThink" );
 
 	if ( Is_Delete_Pending() ) {				// don't update if destroying... (so we don't create a new laser!)
 		return;
@@ -484,7 +482,5 @@ bool	ArmedGameObj::Muzzle_Exists( int index )
 
 void ArmedGameObj::Start_Recoil( int muzzle_index,float recoil_scale,float recoil_time )
 {
-	WWASSERT(muzzle_index >= 0);
-	WWASSERT(muzzle_index < MAX_MUZZLES);
 	MuzzleRecoilController[muzzle_index].Start_Recoil(recoil_scale,recoil_time);
 }

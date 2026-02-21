@@ -111,7 +111,6 @@ void SubTitleClass::Set_Caption(wchar_t* string)
 	if (string != NULL) {
 		unsigned int length = wcslen(string);
 		mCaption = new wchar_t[length + 1];
-		WWASSERT(mCaption != NULL);
 
 		if (mCaption != NULL) {
 			wcscpy(mCaption, string);

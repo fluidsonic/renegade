@@ -17,7 +17,6 @@
 #include "wwpacket.h"
 #include "bittype.h"
 #include "slist.h"
-#include "wwdebug.h"
 
 #include "win.h"
 #include <winsock.h>
@@ -68,11 +67,11 @@ class cRemoteHost
 		void Set_Address(SOCKADDR_IN & address)			{Address = address;}
 
 		int	Get_Target_Bps(void) const					{return TargetBps;}
-		//void	Set_Target_Bps(int bps)						{WWASSERT(bps > 0); TargetBps = bps;}
+		//void	Set_Target_Bps(int bps)						{assert(bps > 0); TargetBps = bps;}
 		void	Set_Target_Bps(int bps)						{TargetBps = bps;}
 
 		int	Get_Maximum_Bps(void) const				{return MaximumBps;}
-		//void	Set_Maximum_Bps(int bps)					{WWASSERT(bps > 0); MaximumBps = bps;}
+		//void	Set_Maximum_Bps(int bps)					{assert(bps > 0); MaximumBps = bps;}
 		void	Set_Maximum_Bps(int bps)					{MaximumBps = bps;}
 
 		cNetStats & Get_Stats()								{return Stats;}
@@ -112,7 +111,7 @@ class cRemoteHost
 		unsigned long Get_Last_Keepalive_Time_Ms() const	{return LastKeepaliveTimeMs;}
 		void Set_Last_Keepalive_Time_Ms(unsigned long time_ms)	{LastKeepaliveTimeMs = time_ms;}
 
-      SList<cPacket> & Get_Packet_List(int index)	{WWASSERT(index >= 0 && index < 4); return PacketList[index];}
+      SList<cPacket> & Get_Packet_List(int index)	{assert(index >= 0 && index < 4); return PacketList[index];}
 
 		bool Must_Evict() const								{return MustEvict;}
 		void Set_Must_Evict(bool flag)					{MustEvict = flag;}
@@ -120,8 +119,8 @@ class cRemoteHost
       void Adjust_Flow_If_Necessary(float sample_time_ms);
 		void Adjust_Resend_Timeout(void);
 
-		void	Set_Id(int id)									{WWASSERT(id >= 0); Id = id;}
-		int	Get_Id(void)									{WWASSERT(Id >= 0); return Id;}
+		void	Set_Id(int id)									{assert(id >= 0); Id = id;}
+		int	Get_Id(void)									{assert(Id >= 0); return Id;}
 
 		void Set_Is_Loading(bool state);
 		bool Get_Is_Loading(void)							{return(IsLoading);}

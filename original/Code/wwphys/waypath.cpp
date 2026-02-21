@@ -2,12 +2,8 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 #include "waypoint.h"
-#include "wwhack.h"
 #include "waypathposition.h"
 #include "pathfind.h"
-
-
-DECLARE_FORCE_LINK(waypath);
 
 //////////////////////////////////////////////////////////////////////////////
 //	Persist factory
@@ -28,7 +24,6 @@ enum
 	VARID_WAYPOINT_PTR
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	WaypathClass
@@ -40,7 +35,6 @@ WaypathClass::WaypathClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -134,7 +128,6 @@ WaypathClass::WaypathClass (const WaypathPositionClass &start, const WaypathPosi
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	WaypathClass
@@ -146,7 +139,6 @@ WaypathClass::~WaypathClass (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -157,7 +149,6 @@ WaypathClass::Get_Factory (void) const
 {
 	return _WaypathPersistFactory;
 }
-
 
 /////////////////////////////////////////////////////////////////
 //
@@ -187,7 +178,6 @@ WaypathClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -210,7 +200,6 @@ WaypathClass::Load (ChunkLoadClass &cload)
 	SaveLoadSystemClass::Register_Post_Load_Callback (this);
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -267,7 +256,6 @@ WaypathClass::Load_Variables (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	On_Post_Load
@@ -286,7 +274,6 @@ WaypathClass::On_Post_Load (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -307,7 +294,6 @@ WaypathClass::Free (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Add_Point
@@ -324,7 +310,6 @@ WaypathClass::Add_Point (const WaypointClass &point)
 	m_Waypoints.Add (new_waypoint);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -343,7 +328,6 @@ WaypathClass::Add_Point (const Vector3 &point)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Flag
@@ -359,7 +343,6 @@ WaypathClass::Set_Flag (int flag, bool onoff)
 
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 //

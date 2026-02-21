@@ -12,12 +12,10 @@
 #include "quat.h"
 #include "win.h"
 #include "vertmaterial.h"
-#include "wwprofile.h"
 #include "texture.h"
 #include "dx8wrapper.h"
 #include "pot.h"
 #include "materialeffect.h"
-#include "wwmemlog.h"
 #include "targa.h"
 #include "bitmaphandler.h"
 #include "dx8caps.h"
@@ -234,7 +232,6 @@ void StaticShadowTexMgrClass::Add_Shadow_Texture
 	TextureClass *			tex
 )
 {
-	WWASSERT(Peek_Shadow_Texture(obj_type_id,orientation) == NULL);
 	ShadowTexClass record(obj_type_id,orientation,tex);
 	ShadowTextures.Add(record);
 }
@@ -262,7 +259,6 @@ DynamicShadowTexMgrClass::DynamicShadowTexMgrClass(void) :
 	CurShadow(0),
 	TextureResolution(DEFAULT_DYNAMIC_SHADOW_RESOLUTION)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	ShadowTextures.Resize(DEFAULT_MAX_DYNAMIC_SHADOWS);
 	for (int i=0; i<ShadowTextures.Length(); i++) {
@@ -557,8 +553,6 @@ float PhysicsSceneClass::Get_Shadow_Normal_Intensity(void)
 
 void PhysicsSceneClass::Add_Static_Texture_Projector(TexProjectClass * newprojector)
 {
-	WWASSERT(newprojector);
-	WWASSERT(!StaticProjectorList.Is_In_List(newprojector));
 
 	StaticProjectorList.Add(newprojector);
 	StaticProjectorCullingSystem->Add_Object(newprojector);
@@ -566,10 +560,8 @@ void PhysicsSceneClass::Add_Static_Texture_Projector(TexProjectClass * newprojec
 
 void PhysicsSceneClass::Remove_Static_Texture_Projector(TexProjectClass * projector)
 {
-	WWASSERT(projector);
 
 	if (projector->Get_Culling_System() == StaticProjectorCullingSystem) {
-		WWASSERT(StaticProjectorList.Is_In_List(projector));
 		StaticProjectorList.Remove(projector);
 		StaticProjectorCullingSystem->Remove_Object(projector);
 	}
@@ -577,8 +569,6 @@ void PhysicsSceneClass::Remove_Static_Texture_Projector(TexProjectClass * projec
 
 void PhysicsSceneClass::Add_Dynamic_Texture_Projector(TexProjectClass * newprojector)
 {
-	WWASSERT(newprojector);
-	WWASSERT(!DynamicProjectorList.Is_In_List(newprojector));
 
 	DynamicProjectorList.Add(newprojector);
 	DynamicProjectorCullingSystem->Add_Object(newprojector);
@@ -586,10 +576,8 @@ void PhysicsSceneClass::Add_Dynamic_Texture_Projector(TexProjectClass * newproje
 
 void PhysicsSceneClass::Remove_Dynamic_Texture_Projector(TexProjectClass * projector)
 {
-	WWASSERT(projector);
 
 	if (projector->Get_Culling_System() == DynamicProjectorCullingSystem) {
-		WWASSERT(DynamicProjectorList.Is_In_List(projector));
 		DynamicProjectorList.Remove(projector);
 		DynamicProjectorCullingSystem->Remove_Object(projector);
 	}
@@ -597,7 +585,6 @@ void PhysicsSceneClass::Remove_Dynamic_Texture_Projector(TexProjectClass * proje
 
 void PhysicsSceneClass::Remove_Texture_Projector(TexProjectClass * projector)
 {
-	WWASSERT(projector);
 
 	if (DynamicProjectorList.Is_In_List(projector)) {
 		DynamicProjectorCullingSystem->Remove_Object(projector);
@@ -633,7 +620,6 @@ void PhysicsSceneClass::Apply_Projectors
 	const CameraClass &	camera
 )
 {
-	WWPROFILE("pscene::Apply_Projectors");
 
 	Vector3 view_pos;
 	Vector3 view_dir;
@@ -1013,11 +999,6 @@ static bool Test_Render_Target_Surface(TextureClass* render_target)
 	new_surf->Unlock();
 	REF_PTR_RELEASE(new_surf);
 
-	WWDEBUG_SAY(("Render target test: 0x%8.8x, 0x%8.8x, 0x%8.8x, 0x%8.8x\n",
-		color1&0x00ffffff,
-		color2&0x00ffffff,
-		color3&0x00ffffff,
-		color4&0x00ffffff));
 	// color1 is 0x00000000
 	if (color1&0x00ffffff) return false;
 	// color2 is 0x000000ff
@@ -1102,7 +1083,6 @@ void PhysicsSceneClass::Generate_Static_Shadow_Projectors(void)
 	if (render_target) {
 		Create_Render_Target_Test(render_target);
 		if (!Test_Render_Target_Surface(render_target)) {
-			WWDEBUG_SAY(("Render target locking doesn't work correctly. Disabling static projectors\n"));
 			REF_PTR_RELEASE(render_target);
 		}
 

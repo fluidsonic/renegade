@@ -202,8 +202,7 @@ cClientHintManager::Think
 
 		last_hint_time_ms = time_now_ms;
 
-		//WWDEBUG_SAY(("cClientHintManager::Think, requesting hint for object id %d, avg = %5.2f, max = %d\n",
-		//	p_object->Get_Network_ID(), average_delay_ms, maximum_delay_ms));
+		//
 	}
 }
 

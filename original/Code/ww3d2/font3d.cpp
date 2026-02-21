@@ -2,7 +2,6 @@
 #include "assetmgr.h"
 #include "texture.h"
 #include <assert.h>
-#include <wwdebug.h>
 #include "surfaceclass.h"
 #include "texture.h"
 #include "vector2i.h"
@@ -103,7 +102,6 @@ SurfaceClass *Font3DDataClass::Minimize_Font_Image( SurfaceClass *surface )
 				// we assert because we have already modified tables for some of the chars
 				if (new_y + height > new_height) {
 					new_y -= height;
-					WWDEBUG_SAY(( "Font doesn't fit texture 2 on char %c\n", char_index ));
 				}
 			}
 
@@ -211,7 +209,6 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 {
 	// get the font surface
 	SurfaceClass	*surface = NEW_REF(SurfaceClass,(filename));
-	WWASSERT(surface);
 
 	SurfaceClass::SurfaceDescription sd;
 	surface->Get_Description(sd);
@@ -249,10 +246,9 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 				int end = column;
 				
 				if ( end <= start ) {
-					WWDEBUG_SAY(( "Error Char %d start %d end %d width %d\n", char_index, start, end, width ));
 				}
 
-//				WWASSERT( end > start );
+//				assert( end > start );
 
 				UOffsetTable[ char_index ] = (float)start / width;
 				VOffsetTable[ char_index ] = 0;

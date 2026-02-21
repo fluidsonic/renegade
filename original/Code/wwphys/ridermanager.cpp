@@ -18,7 +18,6 @@ RiderManagerClass::~RiderManagerClass(void)
 
 void RiderManagerClass::Link_Rider(PhysClass * obj)
 {
-	WWASSERT(!RiderList.Contains(obj));
 	RiderList.Add(obj);
 }
 

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 
 #ifndef POINTERREMAP_H
@@ -28,13 +25,8 @@ class PointerRemapClass
 
 		void		Register_Pointer (void *old_pointer, void *new_pointer);
 
-#ifdef WWDEBUG
-		void		Request_Pointer_Remap (void **pointer_to_convert,const char * file,int line);
-		void		Request_Ref_Counted_Pointer_Remap (RefCountClass **pointer_to_convert,const char * file, int line);
-#else
 		void		Request_Pointer_Remap (void **pointer_to_convert);
 		void		Request_Ref_Counted_Pointer_Remap (RefCountClass **pointer_to_convert);
-#endif
 
 	private:
 
@@ -56,10 +48,6 @@ class PointerRemapClass
 			bool operator != (const PtrRemapStruct & that) { return !(*this == that); } 
 			
 			void **			PointerToRemap;
-#ifdef WWDEBUG
-			const char *	File;
-			int				Line;
-#endif
 		};
 
 		void		Process_Request_Table(DynamicVectorClass<PtrRemapStruct> & request_table,bool refcount);

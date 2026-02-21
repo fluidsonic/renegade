@@ -11,10 +11,8 @@
 #include "bandwidth.h"
 #include "mpsettingsmgr.h"
 #include "useroptions.h"
-#include "gamespyadmin.h"
 #include "servercontrol.h"
 #include "gamesideservercontrol.h"
-#include "GameSpy_QnR.h"
 #include "bandwidthcheck.h"
 
 
@@ -136,30 +134,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		/*
 		** Game Type.
 		*/
-		ini.Get_String(MasterServerSection, "GameType", "LAN", game_type, sizeof(game_type));
-		if (cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
-			strcpy(game_type, "GameSpy");
-		}
-		if (stricmp(game_type, "LAN") == 0) {
-			GameMode = MODE_LAN;
-		} else if (stricmp(game_type, "GameSpy") == 0) {
-			cGameSpyAdmin::Set_Is_Server_Gamespy_Listed(true);
-			GameSpyQnR.Enable_Reporting(true);
-			GameMode = MODE_GAMESPY;
-		} else {
-			ConsoleBox.Print("Error - Unknown game type in server settings. Use 'LAN' or 'GameSpy' - aborting\n");
-			ConsoleBox.Wait_For_Keypress();;
-			return(false);
-		}
-
-		/*
-		** Parse the list of GameSpy Style Master servers from the HeartBeat List
-		*/
-		heartbeat_list[sizeof(heartbeat_list)-1] = 0;
-		ini.Get_String(MasterServerSection, "HeartBeatServers", GameSpyQnR.Get_Default_HeartBeat_List(), heartbeat_list, sizeof(heartbeat_list)-1);
-		if (!GameSpyQnR.Parse_HeartBeat_List(heartbeat_list)) {
-			GameSpyQnR.Parse_HeartBeat_List(GameSpyQnR.Get_Default_HeartBeat_List());
-		}
+		GameMode = MODE_LAN;
 
 		/*
 		** Make sure the master server settings file is there.
@@ -380,12 +355,7 @@ bool ServerSettingsClass::Parse(bool apply)
 			if (master_bw != 0xffffffff) {
 				RegistryClass reg_netopt(APPLICATION_SUB_KEY_NAME_NETOPTIONS);
 				if (reg_netopt.Is_Valid()) {
-					if (cGameSpyAdmin::Is_Gamespy_Game()) {
-						if (master_bw == 0) master_bw = 1000000;
-						cUserOptions::Set_Bandwidth_Bps(master_bw);
-					} else {
-						cUserOptions::Set_Bandwidth_Type(BANDWIDTH_LANT1);
-					}
+					cUserOptions::Set_Bandwidth_Type(BANDWIDTH_LANT1);
 				}
 			}
 		//}

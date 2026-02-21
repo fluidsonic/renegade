@@ -1,15 +1,9 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef DX8_FVF_H
 #define DX8_FVF_H
 
 #include "always.h"
 #include <d3d8.h>
-#ifdef WWDEBUG
-#include "wwdebug.h"
-#endif
 
 class StringClass;
 
@@ -165,11 +159,7 @@ public:
 
 	inline unsigned Get_Location_Offset() const { return location_offset; }
 	inline unsigned Get_Normal_Offset() const { return normal_offset; }
-#ifdef WWDEBUG
-	inline unsigned Get_Tex_Offset(unsigned int n) const { WWASSERT(n<D3DDP_MAXTEXCOORD); return texcoord_offset[n]; }	
-#else
 	inline unsigned Get_Tex_Offset(unsigned int n) const { return texcoord_offset[n]; }	
-#endif
 
 	inline unsigned Get_Diffuse_Offset() const { return diffuse_offset; }
 	inline unsigned Get_Specular_Offset() const { return specular_offset; }

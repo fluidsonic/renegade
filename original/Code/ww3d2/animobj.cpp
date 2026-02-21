@@ -4,7 +4,6 @@
 #include "hanim.h"
 #include "hcanim.h"
 #include "ww3d.h"
-#include "wwmemlog.h"
 #include "animatedsoundmgr.h"
 
 
@@ -52,7 +51,6 @@ Animatable3DObjClass::Animatable3DObjClass(const char * htree_name) :
 		if (source != NULL) {
 			HTree = new HTreeClass(*source);
 		} else {
-			WWDEBUG_SAY(("Unable to find HTree: %s\r\n",htree_name));
 			HTree = new HTreeClass;
 			HTree->Init_Default();
 		}
@@ -530,8 +528,6 @@ HAnimClass *	Animatable3DObjClass::Peek_Animation( void )
 const Matrix3D &	Animatable3DObjClass::Get_Bone_Transform(const char * bonename)
 {
 	if (HTree) {
-		WWASSERT(HTree);
-		WWASSERT(bonename);
 		
 		int idx = HTree->Get_Bone_Index(bonename);
 		return Get_Bone_Transform(idx);
@@ -649,13 +645,6 @@ bool Animatable3DObjClass::Is_Bone_Captured(int boneindex) const
  *=============================================================================================*/
 void Animatable3DObjClass::Control_Bone(int bindex,const Matrix3D & objtm,bool world_space_translation)
 { 
-#ifdef WWDEBUG	
-	for (int j=0; j<3; j++) {
-		for (int i=0; i<4; i++) {
-			WWASSERT(WWMath::Is_Valid_Float(objtm[j][i]));
-		}
-	}
-#endif
 
 	if (HTree) {
 		HTree->Control_Bone(bindex,objtm,world_space_translation); 
@@ -951,9 +940,7 @@ bool	Animatable3DObjClass::Is_Animation_Complete( void ) const
 
 void Animatable3DObjClass::Set_HTree(HTreeClass * new_htree) 
 { 
-	WWMEMLOG(MEM_ANIMATION);
 	// try to ensure that the htree we're using has the same structure...
-	WWASSERT(new_htree->Num_Pivots() == HTree->Num_Pivots()); 
 	
 	// just assign it...
 	if (HTree != NULL) {

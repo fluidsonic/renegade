@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __CHILD_DIALOG_H
 #define __CHILD_DIALOG_H

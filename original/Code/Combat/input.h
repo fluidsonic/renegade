@@ -10,7 +10,6 @@
 #endif
 
 #ifndef	WWDEBUG_H
-	#include "wwdebug.h"
 #endif
 
 #include "widestring.h"
@@ -350,7 +349,6 @@ private:
 
 inline float Input::Get_Amount( InputFunction function )
 {
-	WWASSERT(WWMath::Is_Valid_Float(FunctionValue[ function ]));
 	return ((MenuMode || ConsoleMode) ? 0 : FunctionValue[ function ]);
 }
 

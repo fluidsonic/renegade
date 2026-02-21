@@ -1,6 +1,3 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #ifndef INT_H
 #define INT_H
@@ -11,9 +8,6 @@
 #include	<limits.h>
 #include	<memory.h>
 
-#ifdef __BORLANDC__
-#pragma warn -inl
-#endif
 
 template<class T> struct RemainderTable;
 template<class T> T Gcd(const T & a, const T & n);
@@ -224,10 +218,6 @@ T Gcd(const T & a, const T & n)
 
 
 
-#if defined(__WATCOMC__)
-#pragma warning 604 9
-#pragma warning 595 9
-#endif
 
 
 template<class T>

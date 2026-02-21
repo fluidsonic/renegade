@@ -29,7 +29,6 @@
 #include "pathaction.h"
 #include "crandom.h"
 #include "playertype.h"
-#include "wwprofile.h"
 
 #include "combat.h"
 #include "waypath.h"
@@ -97,8 +96,6 @@ public:
 
 	virtual	void	Init( ActionClass * action )
 	{
-		WWASSERT( action );
-		WWASSERT( Action == NULL );
 		Action = action;
 
 		//
@@ -121,7 +118,7 @@ public:
 
 	virtual	void	Modify_Parameters( const SafeActionParamsStruct & parameters, bool modify_move, bool modify_attack ) {}
 
-	virtual	void	Set_Action( ActionClass * action )	{ WWASSERT( action ); WWASSERT( Action == NULL ); Action = action; }
+	virtual	void	Set_Action( ActionClass * action )	{ assert( action ); assert( Action == NULL ); Action = action; }
 	virtual	void	Shutdown( void )						{ Action = NULL; }
 	virtual	ActResult	Act( void )			  			{ return ACTION_IN_PROGRESS; }
 	virtual	bool	Is_Animating( void )					{ return false; }
@@ -375,15 +372,13 @@ public:
 
 		SmartGameObj *	obj = Action->Get_Action_Obj();
 
-		WWASSERT( obj->Get_Anim_Control() != NULL );
 		obj->Set_Animation( action->Get_Parameters().SafeAnimationName, action->Get_Parameters().AnimationLooping );
 	}
 
 	virtual	void	Shutdown( void )
 	{
 		SmartGameObj *	obj = Action->Get_Action_Obj();
-		WWASSERT( obj->Get_Anim_Control() != NULL );
-//		WWASSERT( obj->Get_Anim_Control()->Get_Animation_Name()[0] != 0 );
+//		assert( obj->Get_Anim_Control()->Get_Animation_Name()[0] != 0 );
 		obj->Set_Animation( NULL, false );
 		ActionCodeClass::Shutdown();
 	}
@@ -391,7 +386,6 @@ public:
 	virtual	ActResult	Act( void )
 	{
 		SmartGameObj *	obj = Action->Get_Action_Obj();
-		WWASSERT( obj->Get_Anim_Control() != NULL );
 
 		if ( obj->Get_Anim_Control()->Get_Animation_Name()[0] == 0 ) {
 			Debug_Say(( "Not playing an anim when we should be playing %s\n", Action->Get_Parameters().SafeAnimationName ));
@@ -399,7 +393,7 @@ public:
 			return ACTION_DONE;
 		}
 
-//		WWASSERT( obj->Get_Anim_Control()->Get_Animation_Name()[0] != 0 );
+//		assert( obj->Get_Anim_Control()->Get_Animation_Name()[0] != 0 );
 
 		if ( obj->Get_Anim_Control()->Is_Complete() ) {
 			Action->Done( ACTION_COMPLETE_NORMAL );
@@ -997,7 +991,6 @@ public:
 		if ( waypath == NULL ) {
 			Debug_Say (("Warning!  Waypath %d does not exist.\n", Action->Get_Parameters().WaypathID));
 		}
-		WWASSERT( waypath != NULL );
 
 		//
 		//	Initialize the path
@@ -1013,7 +1006,6 @@ public:
 		//	Determine which game object will actually be doing the moving along the path
 		//
 		SmartGameObj *transport_obj = Peek_Transport_Object( Action->Get_Action_Obj() );
-		WWASSERT( transport_obj != NULL );
 
 		//
 		//	Determine the turn radius
@@ -1491,7 +1483,6 @@ Clip_Point (Vector3 *point, const AABoxClass &box)
 
 	virtual	ActResult	Act()
 	{
-		WWPROFILE( "Goto Act" );
 		SoldierGameObj * soldier = Action->Get_Action_Obj()->As_SoldierGameObj();
 		ScriptableGameObj * look_obj = Action->Get_Parameters().LookObjectRef.Get_Ptr();
 		if ( soldier != NULL && look_obj != NULL ) {
@@ -1593,7 +1584,6 @@ public:
 	virtual	ActResult	Act( void )
 	{
 		SoldierGameObj	* obj = Action->Get_Action_Obj()->As_SoldierGameObj();
-		WWASSERT( obj );
 		obj->Set_Boolean_Control( ControlClass::BOOLEAN_ACTION );
 		Action->Done( ACTION_COMPLETE_NORMAL );
 		return ACTION_DONE;
@@ -1647,7 +1637,6 @@ public:
 	virtual	ActResult	Act( void )
 	{
 		SoldierGameObj	* obj = Action->Get_Action_Obj()->As_SoldierGameObj();
-		WWASSERT( obj );
 
 		Vector3 rel_pos;
 		Matrix3D::Inverse_Transform_Vector( obj->Get_Transform(), Action->Get_Parameters().MoveLocation, &rel_pos );
@@ -1786,7 +1775,6 @@ public:
 	// Attack the given absolute position, return nothing
 	void	Attack_Absolute( Vector3 & abs_pos )
 	{
-		WWPROFILE( "Attack Absolute" );
 		IsAttacking = true;
 
 		float range = Action->Get_Parameters().AttackRange;
@@ -1841,10 +1829,8 @@ public:
 		}
 
 		WeaponClass * weapon = obj->Get_Weapon();
-		WWASSERT( weapon );
 
 		if ( Action->Get_Parameters().AttackCheckBlocked ) {
-			WWPROFILE( "Check Blocked" );
 			CheckBlockedTimer -= TimeManager::Get_Frame_Seconds();
 			if ( CheckBlockedTimer <= 0 ) {
 				CheckBlockedTimer = FreeRandom.Get_Float( 2, 3 );		// Re check every 2 - 3 sec
@@ -1942,7 +1928,6 @@ public:
 
 	virtual	ActResult	Act( void )
 	{
-		WWPROFILE( "Attack Act" );
 		//
 		//	Do the movement (if necessary)
 		//
@@ -1988,7 +1973,6 @@ public:
 		}
 
 		if ( UseAttackObject ) {
-			WWPROFILE( "Attack Object" );
 
 			// See if our target still exists
 			PhysicalGameObj * target = (PhysicalGameObj *)Action->Get_Parameters().AttackObjectRef.Get_Ptr();
@@ -2044,7 +2028,6 @@ public:
 		SoldierGameObj	* soldier = Action->Get_Action_Obj()->As_SoldierGameObj();
 
 		if ( !IsMoving && WanderTimer <= 0 && soldier != NULL && Action->Get_Parameters().AttackWanderAllowed ) {
-			WWPROFILE( "Wander" );
 
 			Vector3 rel_pos;
 			Matrix3D::Inverse_Transform_Vector( obj->Get_Transform(), WanderPos, &rel_pos );
@@ -3065,7 +3048,6 @@ ActionClass::ActionClass( SmartGameObj *obj ) :
 	ActCount( 0 ),
 	IsPaused( false )
 {
-	WWASSERT( obj != NULL );
 	ActionObj = obj;
 }
 
@@ -3192,7 +3174,6 @@ bool	ActionClass::Play_Animation( const ActionParamsStruct & parameters )
 	// Try to confirm we are not playing a non-action anim
 	if ( !Is_Animating() && ActionObj->Get_Anim_Control()->Get_Animation_Name()[0] != 0 ) {
 		Debug_Say(( "Can't Action_Play_Animation when playing a non-action anim\n" ));
-		WWASSERT( 0 );
 	}
 #endif
 
@@ -3242,7 +3223,6 @@ void	ActionClass::Act( void )
 		ActionObj->Clear_Control();
 
 		if ( ActionCode != NULL ) {
-			WWPROFILE( "Action Code" );
 			_ActionActCalls++;
 			ActionCode->Act();
 		}
@@ -3305,7 +3285,6 @@ bool	ActionClass::Load( ChunkLoadClass &cload )
 					PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( cload.Cur_Chunk_ID() );
 					if ( factory ) {
 						ActionCode = (ActionCodeClass *)factory->Load( cload );
-						WWASSERT( ActionCode != NULL );
 						ActionCode->Set_Action( this );
 					}
 					cload.Close_Chunk();

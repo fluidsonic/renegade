@@ -1,19 +1,15 @@
 #include "powerplantgameobj.h"
 #include "basecontroller.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
-#include "wwprofile.h"
 #include "basecontroller.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (PowerPlant)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -21,7 +17,6 @@ DECLARE_FORCE_LINK (PowerPlant)
 SimplePersistFactoryClass	<PowerPlantGameObjDef,	CHUNKID_GAME_OBJECT_DEF_POWERPLANT>						_PowerPlantGameObjDefPersistFactory;
 SimplePersistFactoryClass	<PowerPlantGameObj,		CHUNKID_GAME_OBJECT_POWERPLANT>							_PowerPlantGameObjPersistFactory;
 DECLARE_DEFINITION_FACTORY (PowerPlantGameObjDef,	CLASSID_GAME_OBJECT_DEF_POWERPLANT, "Powerplant")	_PowerPlantGameObjDefDefFactory;
-
 
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -42,7 +37,6 @@ enum
 	MICROCHUNKID_UNUSED						= 1,
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	PowerPlantGameObjDef
@@ -52,7 +46,6 @@ PowerPlantGameObjDef::PowerPlantGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -64,7 +57,6 @@ PowerPlantGameObjDef::~PowerPlantGameObjDef (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Class_ID
@@ -75,7 +67,6 @@ PowerPlantGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_POWERPLANT;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -90,7 +81,6 @@ PowerPlantGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -108,7 +98,6 @@ PowerPlantGameObjDef::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -141,7 +130,6 @@ PowerPlantGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -165,7 +153,6 @@ PowerPlantGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -177,7 +164,6 @@ PowerPlantGameObjDef::Get_Factory (void) const
 	return _PowerPlantGameObjDefPersistFactory; 
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	PowerPlantGameObj
@@ -187,7 +173,6 @@ PowerPlantGameObj::PowerPlantGameObj (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -199,7 +184,6 @@ PowerPlantGameObj::~PowerPlantGameObj (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -210,7 +194,6 @@ PowerPlantGameObj::Get_Factory (void) const
 {
 	return _PowerPlantGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -234,7 +217,6 @@ PowerPlantGameObj::Init (const PowerPlantGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -245,7 +227,6 @@ PowerPlantGameObj::Get_Definition (void) const
 {
 	return (const PowerPlantGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -263,7 +244,6 @@ PowerPlantGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -295,7 +275,6 @@ PowerPlantGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -318,7 +297,6 @@ PowerPlantGameObj::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

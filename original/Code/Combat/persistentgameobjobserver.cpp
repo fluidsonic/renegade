@@ -73,7 +73,6 @@ bool	PersistentGameObjObserverClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	WWASSERT( old_observer_ptr != NULL );
 	if ( old_observer_ptr != NULL ) {
 		SaveLoadSystemClass::Register_Pointer( old_observer_ptr, (GameObjObserverClass*)this );
 	}
@@ -122,7 +121,6 @@ bool	PersistentGameObjObserverManager::Save( ChunkSaveClass & csave )
 bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
 {
 	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_OBSERVERS );
 	while (cload.Open_Chunk()) {
 		PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( cload.Cur_Chunk_ID() );
 		if ( factory ) {

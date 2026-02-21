@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef EFFECTRECYCLER_H
 #define EFFECTRECYCLER_H

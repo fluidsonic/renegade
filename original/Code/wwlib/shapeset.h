@@ -1,7 +1,6 @@
 #ifndef SHAPESET_H
 #define SHAPESET_H
 
-#include	"bool.h"
 #include	"trect.h"
 
 /*

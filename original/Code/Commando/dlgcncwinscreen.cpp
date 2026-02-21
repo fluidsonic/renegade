@@ -14,7 +14,6 @@
 #include "string_ids.h"
 #include "cnetwork.h"
 #include "gameinitmgr.h"
-#include "gamespyadmin.h"
 #include "specialbuilds.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
@@ -392,17 +391,7 @@ CNCWinScreenMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			//
 			GameInitMgrClass::End_Game ();
 
-			if (cGameSpyAdmin::Get_Is_Launched_From_Gamespy()) {
-#ifdef MULTIPLAYERDEMO
-				DialogMgrClass::Flush_Dialogs ();
-				START_DIALOG (SplashOutroMenuDialogClass);
-#else
-				extern void Stop_Main_Loop (int);
-				Stop_Main_Loop(EXIT_SUCCESS);
-#endif // MULTIPLAYERDEMO
-			} else {
-				GameInitMgrClass::Display_End_Game_Menu ();
-			}
+			GameInitMgrClass::Display_End_Game_Menu ();
 			break;
 
 		default:

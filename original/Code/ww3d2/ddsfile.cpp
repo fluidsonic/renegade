@@ -44,17 +44,10 @@ DDSFileClass::DDSFileClass(const char* name,unsigned reduction_factor)
 	if (read_bytes!=SurfaceDesc.Size) {
 		StringClass tmp(0,true);
 		tmp.Format("File %s loading failed.\nTried to read %d bytes, got %d. (SurfDesc.size=%d)\n",name,sizeof(LegacyDDSURFACEDESC2),read_bytes,SurfaceDesc.Size);
-		WWASSERT_PRINT(0,tmp);
 		return;
 	}
 
 	Format=D3DFormat_To_WW3DFormat((D3DFORMAT)SurfaceDesc.PixelFormat.FourCC);
-	WWASSERT(
-		Format==WW3D_FORMAT_DXT1 ||
-		Format==WW3D_FORMAT_DXT2 ||
-		Format==WW3D_FORMAT_DXT3 ||
-		Format==WW3D_FORMAT_DXT4 ||
-		Format==WW3D_FORMAT_DXT5);
 
 	MipLevels=SurfaceDesc.MipMapCount;
 	if (MipLevels==0) MipLevels=1;
@@ -105,7 +98,6 @@ DDSFileClass::~DDSFileClass()
 
 unsigned DDSFileClass::Get_Width(unsigned level) const
 {
-	WWASSERT(level<MipLevels); 
 	unsigned width=Width>>level;
 	if (width<4) width=4;
 	return width;
@@ -113,7 +105,6 @@ unsigned DDSFileClass::Get_Width(unsigned level) const
 
 unsigned DDSFileClass::Get_Height(unsigned level) const
 {
-	WWASSERT(level<MipLevels); 
 	unsigned height=Height>>level;
 	if (height<4) height=4;
 	return height;
@@ -121,13 +112,11 @@ unsigned DDSFileClass::Get_Height(unsigned level) const
 
 const unsigned char* DDSFileClass::Get_Memory_Pointer(unsigned level) const
 {
-	WWASSERT(level<MipLevels); 
 	return DDSMemory+LevelOffsets[level];
 }
 
 unsigned DDSFileClass::Get_Level_Size(unsigned level) const
 {
-	WWASSERT(level<MipLevels); 
 	return LevelSizes[level];
 }
 
@@ -177,7 +166,6 @@ bool DDSFileClass::Load()
 
 	// Skip the header and info block and possible unused mip levels
 	unsigned seek_size=file->Seek(SurfaceDesc.Size+4+skipped_offset);
-	WWASSERT(seek_size==(SurfaceDesc.Size+4+skipped_offset));
 
 	if (size) {
 		// Allocate memory for the data excluding the headers
@@ -185,7 +173,6 @@ bool DDSFileClass::Load()
 		// Read data
 		unsigned read_size=file->Read(DDSMemory,size);
 		// Verify we got all the data
-		WWASSERT(read_size==size);
 	}
 	file->Close();
 	return true;
@@ -200,7 +187,6 @@ bool DDSFileClass::Load()
 
 void DDSFileClass::Copy_Level_To_Surface(unsigned level,IDirect3DSurface8* d3d_surface)
 {
-	WWASSERT(d3d_surface);
 	// Verify that the destination surface size matches the source surface size
 	D3DSURFACE_DESC surface_desc;
 	DX8_ErrorCode(d3d_surface->GetDesc(&surface_desc));
@@ -239,8 +225,6 @@ void DDSFileClass::Copy_Level_To_Surface(
 	unsigned char* dest_surface, 
 	unsigned dest_pitch)
 {
-	WWASSERT(DDSMemory);
-	WWASSERT(dest_surface);
 
 	// If the format and size is a match just copy the contents
 	if (dest_format==Format && dest_width==Get_Width(level) && dest_height==Get_Height(level)) {
@@ -278,7 +262,6 @@ void DDSFileClass::Copy_Level_To_Surface(
 					}
 				}
 				if (Format==WW3D_FORMAT_DXT1 && contains_alpha) {
-					WWDEBUG_SAY(("Warning: DXT1 format should not contain alpha information - file %s\n",Name));
 				}
 			}
 		}
@@ -343,9 +326,6 @@ WWINLINE static unsigned Combine_Colors(unsigned col1, unsigned col2, unsigned r
 
 unsigned DDSFileClass::Get_Pixel(unsigned level,unsigned x,unsigned y) const
 {
-	WWASSERT(level<MipLevels);
-	WWASSERT(x<Get_Width(level));
-	WWASSERT(y<Get_Height(level));
 
 	switch (Format) {
 	// Note that we don't currently really support alpha on DXT1 - all alpha textures should use DXT5.
@@ -398,7 +378,6 @@ unsigned DDSFileClass::Get_Pixel(unsigned level,unsigned x,unsigned y) const
 			bit_idx%=8;
 			unsigned alpha_index=0;
 			for (int i=0;i<3;++i) {
-				WWASSERT(byte_idx<6);
 				unsigned alpha_bit=(alpha_block[2+byte_idx]>>(bit_idx))&1;
 				alpha_index|=alpha_bit<<(i);
 				bit_idx++;
@@ -407,7 +386,6 @@ unsigned DDSFileClass::Get_Pixel(unsigned level,unsigned x,unsigned y) const
 					byte_idx++;
 				}
 			}
-			WWASSERT(alpha_index<8);
 
 			// 8-alpha or 6-alpha block?    
 			unsigned alpha_value=0;
@@ -480,13 +458,8 @@ bool DDSFileClass::Get_4x4_Block(
 	unsigned source_y) const			// DDS y offset to copy from, must be aligned by 4!
 {
 	// Verify the block alignment
-	WWASSERT((source_x&3)==0);
-	WWASSERT((source_y&3)==0);
 	// Verify level
-	WWASSERT(level<MipLevels);
 	// Verify coordinate bounds
-	WWASSERT(source_x<Get_Width(level));
-	WWASSERT(source_y<Get_Height(level));
 
 	unsigned dest_bpp=Get_Bytes_Per_Pixel(dest_format);
 
@@ -642,7 +615,6 @@ bool DDSFileClass::Get_4x4_Block(
 					unsigned tmp_bit_idx=bit_idx&7;
 					unsigned alpha_index=0;
 					for (int i=0;i<3;++i) {
-						WWASSERT(byte_idx<6);
 						unsigned alpha_bit=(alpha_block[2+byte_idx]>>(tmp_bit_idx))&1;
 						alpha_index|=alpha_bit<<(i);
 						tmp_bit_idx++;
@@ -651,7 +623,6 @@ bool DDSFileClass::Get_4x4_Block(
 							byte_idx++;
 						}
 					}
-					WWASSERT(alpha_index<8);
 					unsigned alpha_value=alphas[alpha_index];
 					contains_alpha&=alpha_value;
 					alpha_value<<=24;

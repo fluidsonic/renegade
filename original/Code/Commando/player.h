@@ -13,9 +13,6 @@
 #include "networkobject.h"
 #include "netclassids.h"
 #include "wwstring.h"
-#include "gamespyauthmgr.h"
-#include "gamespybanlist.h"
-
 class Vector3;
 class ChunkSaveClass;
 class ChunkLoadClass;
@@ -152,22 +149,6 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 		int					Get_Num_Wol_Games(void)						{ return NumWolGames; }
 
 		//
-		// GameSpy support
-		//
-		void								Set_GameSpy_Auth_State(GAMESPY_AUTH_STATE_ENUM state);
-		GAMESPY_AUTH_STATE_ENUM		Get_GameSpy_Auth_State(void)	const	{return GameSpyAuthState;}
-		void								Set_GameSpy_Auth_State_Entry_Time_Ms(DWORD time_ms);
-		DWORD								Get_GameSpy_Auth_State_Entry_Time_Ms(void) const {return GameSpyAuthStateEntryTimeMs;}
-		void								Set_GameSpy_Challenge_String(StringClass & challenge_string);
-		void								Set_GameSpy_Hash_Id(StringClass & hash_id);
-		StringClass &					Get_GameSpy_Challenge_String(void) {return GameSpyChallengeString;}
-		StringClass &					Get_GameSpy_Hash_Id(void) {return GameSpyHashId;}
-		void								Set_GameSpy_Kick_State(GAMESPY_KICK_STATE_ENUM state);
-		GAMESPY_KICK_STATE_ENUM				Get_GameSpy_Kick_State(void)	const	{return GameSpyKickState;}
-		void								Set_GameSpy_Kick_State_Entry_Time_Ms(DWORD time_ms);
-		DWORD								Get_GameSpy_Kick_State_Entry_Time_Ms(void) const {return GameSpyKickStateEntryTimeMs;}
-
-		//
 		// N.B. If you change the state of any of these on the server then you
 		//      need to call Mark_As_Modified.
 		//
@@ -201,16 +182,6 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 		int					FastSortKey;
 		int					NumWolGames;
 		cBoolean				IsWaitingForIntermission;
-
-		//
-		// GameSpy support
-		//
-		GAMESPY_AUTH_STATE_ENUM		GameSpyAuthState;
-		DWORD								GameSpyAuthStateEntryTimeMs;
-		StringClass						GameSpyChallengeString;
-		StringClass						GameSpyHashId;
-		GAMESPY_KICK_STATE_ENUM		GameSpyKickState;
-		DWORD						GameSpyKickStateEntryTimeMs;
 
 		//
 		// N.B. If you change the state of any of these on the server then you

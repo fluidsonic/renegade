@@ -2,16 +2,10 @@
 #define __NOTIFY_H__
 
 // Reduce warning level for STL
-#if defined(_MSC_VER)
-#pragma warning(push, 3)
-#endif
 
 #include <vector>
 #include <algorithm>
 
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
 
 #include <assert.h>
 

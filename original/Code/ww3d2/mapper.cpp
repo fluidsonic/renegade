@@ -5,7 +5,6 @@
 #include "w3derr.h"
 #include "meshmatdesc.h"
 #include "dx8wrapper.h"
-#include "wwdebug.h"
 #include "matinfo.h"
 #include "rendobj.h"
 #include "mesh.h"

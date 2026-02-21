@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef WIDGETS_H
 #define WIDGETS_H
@@ -39,9 +36,6 @@ protected:
 	** in Release_Debug_Widgets.  Users can get at them through the Get_Debug_Widget
 	** call.  They are meant to be rendered immediately and released.
 	*/
-#ifdef WWDEBUG
-	static RenderObjClass *	DebugWidgets[NUM_WIDGETS];
-#endif
 };
 
 #endif

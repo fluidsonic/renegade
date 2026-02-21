@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__REPAIRBAYGAMEOBJ_H
 #define	__REPAIRBAYGAMEOBJ_H

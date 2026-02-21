@@ -10,9 +10,6 @@
 #include "segline.h"
 #include "shader.h"
 #include "vertmaterial.h"
-#include "wwdebug.h"
-#include "wwprofile.h"
-#include "wwmemlog.h"
 #include "shattersystem.h"
 #include "textureloader.h"
 #include "statistics.h"
@@ -31,7 +28,6 @@
 #include "targa.h"
 #include "sortingrenderer.h"
 #include "thread.h"
-#include "cpudetect.h"
 #include "dx8texman.h"
 #include "formconv.h"
 #include "animatedsoundmgr.h"
@@ -180,7 +176,6 @@ void WW3D::Set_NPatches_Level(unsigned level)
 WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 {
 	assert(IsInitted == false);
-	WWDEBUG_SAY(("WW3D::Init hwnd = %p\n",hwnd));
 	_Hwnd = (HWND)hwnd;
 	Lite = lite;
 
@@ -188,21 +183,17 @@ WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 	** Initialize d3d, this also enumerates the available devices and resolutions.
 	*/
 	Init_D3D_To_WW3_Conversion();
-	WWDEBUG_SAY(("Init DX8Wrapper\n"));
 	if (!DX8Wrapper::Init(_Hwnd, lite)) {
 		return(WW3D_ERROR_DIRECTX8_INITIALIZATION_FAILED);
 	}
-	WWDEBUG_SAY(("Allocate Debug Resources\n"));
 	Allocate_Debug_Resources();
 
  	MMRESULT r=timeBeginPeriod(1);
-	WWASSERT(r==TIMERR_NOERROR);
 
 	/*
 	** Initialize the dazzle system
 	*/
 	if (!lite) {
-		WWDEBUG_SAY(("Init Dazzles\n"));
 		FileClass * dazzle_ini_file = _TheFileFactory->Get_File(DAZZLE_INI_FILENAME);
 		if (dazzle_ini_file) {
 			INIClass dazzle_ini(*dazzle_ini_file);
@@ -224,7 +215,6 @@ WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 		AnimatedSoundMgrClass::Initialize ();
 		IsInitted = true;
 	}
-	WWDEBUG_SAY(("WW3D Init completed\n"));
 	return WW3D_ERROR_OK;
 }
 
@@ -244,7 +234,7 @@ WW3DErrorType WW3D::Init(void *hwnd, char *defaultpal, bool lite)
 WW3DErrorType WW3D::Shutdown(void)
 {
 	assert(Lite || IsInitted == true);
-//	WWDEBUG_SAY(("WW3D::Shutdown\n"));
+//	
 
 #ifdef WW3D_DX8
 	if (IsCapturing) {
@@ -703,8 +693,6 @@ WW3DErrorType WW3D::Begin_Render(bool clear,bool clearz,const Vector3 & color, v
 		return(WW3D_ERROR_OK);
 	}
 
-	WWPROFILE("WW3D::Begin_Render");
-	WWASSERT(IsInitted);
 
 	// Memory allocation statistics
 	LastFrameMemoryAllocations=WWMemoryLogClass::Get_Allocate_Count();
@@ -725,7 +713,6 @@ WW3DErrorType WW3D::Begin_Render(bool clear,bool clearz,const Vector3 & color, v
 		RecordNextFrame = false;
 	}
 
-	WWASSERT(!IsRendering);
 	IsRendering = true;
 
 	// If we want to clear the screen, we need to set the viewport to include the entire screen:
@@ -768,7 +755,6 @@ WW3DErrorType WW3D::Render(const LayerListClass &LayerList)
 		return(WW3D_ERROR_OK);
 	}
 
-	WWASSERT(IsRendering);
 
 	LayerClass *layer = LayerList.Last();
 
@@ -803,7 +789,6 @@ WW3DErrorType WW3D::Render(const LayerClass &Layer)
 		return(WW3D_ERROR_OK);
 	}
 
-	WWASSERT(IsRendering);
 	return Render(Layer.Scene, Layer.Camera, Layer.Clear, Layer.ClearZ, Layer.ClearColor);
 
 }
@@ -827,12 +812,6 @@ WW3DErrorType WW3D::Render(SceneClass * scene,CameraClass * cam,bool clear,bool 
 		return(WW3D_ERROR_OK);
 	}
 
-	WWPROFILE("WW3D::Render");
-	WWMEMLOG(MEM_GAMEDATA);
-	WWASSERT(IsInitted);
-	WWASSERT(IsRendering);
-	WWASSERT(scene);
-	WWASSERT(cam);
 
 	cam->On_Frame_Update();
 	RenderInfoClass rinfo(*cam);
@@ -896,12 +875,8 @@ WW3DErrorType WW3D::Render(
 		return(WW3D_ERROR_OK);
 	}
 
-	WWPROFILE("WW3D::Render");
-	WWASSERT(IsInitted);
-	WWASSERT(IsRendering);
 
 	{
-		WWPROFILE("On_Frame_Update");
 		rinfo.Camera.On_Frame_Update();
 	}
 
@@ -972,7 +947,6 @@ WW3DErrorType WW3D::End_Render(bool flip_frame)
 		return(WW3D_ERROR_OK);
 	}
 
-	WWPROFILE("WW3D::End_Render");
 
 	assert(IsRendering);
 	assert(IsInitted);
@@ -985,14 +959,12 @@ WW3DErrorType WW3D::End_Render(bool flip_frame)
 	IsRendering = false;
 
 	{
-		WWPROFILE("DX8Wrapper::End_Scene");
 		DX8Wrapper::End_Scene(flip_frame);
 	}
 
 	FrameCount++;
 
 	{
-		WWPROFILE("End_Statistics");
 		Debug_Statistics::End_Statistics();
 	}
 	Activate_Snapshot(false);
@@ -1175,7 +1147,6 @@ void WW3D::Normalize_Coordinates(int x, int y, float &fx, float &fy)
 void WW3D::Make_Screen_Shot( const char * filename_base )
 {
 
-	WWASSERT(!IsRendering);
 
 	char filename[80];
 
@@ -1194,7 +1165,6 @@ void WW3D::Make_Screen_Shot( const char * filename_base )
 		}
 	}
 
-	WWDEBUG_SAY(( "Creating Screen Shot %s\n", filename ));
 
 	// Lock front buffer and copy
 
@@ -1276,7 +1246,6 @@ void WW3D::Start_Movie_Capture( const char * filename_base, float frame_rate )
 	if (IsCapturing) {
 		Stop_Movie_Capture();
 	}
-	WWASSERT( !IsCapturing);
 	IsCapturing = true;
 
 	RECT bounds;
@@ -1285,7 +1254,6 @@ void WW3D::Start_Movie_Capture( const char * filename_base, float frame_rate )
 	int width=bounds.right-bounds.left;
 	int depth=24;
 
-	WWASSERT( Movie == NULL);
 
 	if (frame_rate == 0.0f) {
 		frame_rate = 1.0f;
@@ -1296,7 +1264,6 @@ void WW3D::Start_Movie_Capture( const char * filename_base, float frame_rate )
 
 	Movie = new FrameGrabClass( filename_base, FrameGrabClass::AVI, width, height, depth, frame_rate);
 
-	WWDEBUG_SAY(( "Starting Movie %s\n", filename_base ));
 #endif
 }
 
@@ -1318,9 +1285,7 @@ void WW3D::Stop_Movie_Capture( void )
 #ifdef _WINDOWS
 	if (IsCapturing) {
 		IsCapturing = false;
-		WWDEBUG_SAY(( "Stoping Movie\n" ));
 
-		WWASSERT( Movie != NULL);
 		delete Movie;
 		Movie = NULL;
 	}
@@ -1474,9 +1439,6 @@ bool WW3D::Is_Movie_Ready()
 void WW3D::Update_Movie_Capture( void )
 {
 #ifdef _WINDOWS
-	WWASSERT( IsCapturing);
-	WWPROFILE("WW3D::Update_Movie_Capture");
-	WWDEBUG_SAY(( "Updating\n"));
 
 		// Lock front buffer and copy
 
@@ -1604,12 +1566,7 @@ int	WW3D::Get_Texture_Reduction( void )
  *=============================================================================================*/
 VertexMaterialClass * WW3D::Peek_Default_Debug_Material(void)
 {
-#ifdef WWDEBUG
-	WWASSERT(DefaultDebugMaterial);
-	return DefaultDebugMaterial;
-#else
 	return NULL;
-#endif
 }
 
 /***********************************************************************************************
@@ -1660,16 +1617,6 @@ ShaderClass	WW3D::Peek_Lightmap_Debug_Shader(void)
  *=============================================================================================*/
 void WW3D::Allocate_Debug_Resources(void)
 {
-#ifdef WWDEBUG
-	WWASSERT(DefaultDebugMaterial == NULL);
-	DefaultDebugMaterial = new VertexMaterialClass;
-	DefaultDebugMaterial->Set_Shininess(0.0f);
-	DefaultDebugMaterial->Set_Opacity(1.0f);
-	DefaultDebugMaterial->Set_Ambient(0,0,0);
-	DefaultDebugMaterial->Set_Diffuse(0,0,0);
-	DefaultDebugMaterial->Set_Specular(0,0,0);
-	DefaultDebugMaterial->Set_Emissive(0,0,0);
-#endif
 }
 
 /***********************************************************************************************
@@ -1686,10 +1633,6 @@ void WW3D::Allocate_Debug_Resources(void)
  *=============================================================================================*/
 void WW3D::Release_Debug_Resources(void)
 {
-#ifdef WWDEBUG
-	WWASSERT(DefaultDebugMaterial);
-	REF_PTR_RELEASE(DefaultDebugMaterial);
-#endif
 }
 
 
@@ -1775,7 +1718,6 @@ int WW3D::Get_Texture_Bitdepth()
 void WW3D::Add_To_Static_Sort_List(RenderObjClass *robj, unsigned int sort_level)
 {
 	if(sort_level < 1 || sort_level > MAX_SORT_LEVEL) {
-		WWASSERT(0);
 		return;
 	}
 
@@ -1821,7 +1763,6 @@ void WW3D::Override_Current_Static_Sort_Lists(RefRenderObjListClass *sort_list, 
 		MinStaticSortLevel = min_sort;
 		MaxStaticSortLevel = max_sort;
 	} else {
-		WWASSERT(0);
 		MinStaticSortLevel = max_sort;
 		MaxStaticSortLevel = min_sort;
 	}

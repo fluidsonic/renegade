@@ -12,7 +12,6 @@
 #include "persistfactory.h"
 #include "waypath.h"
 #include "waypoint.h"
-#include "wwmemlog.h"
 #include "heightdb.h"
 #include "colmathaabox.h"
 
@@ -78,7 +77,6 @@ PathfindClass::PathfindClass (void)
 		m_SectorDisplayList(1000),	// 1000's of these (debug only)
 		m_WaypathList(30)		// 5-30 of these?
 {
-	WWASSERT (_Pathfinder == NULL);
 	_Pathfinder = this;
 
 	// Set good estimates of growth steps
@@ -127,7 +125,6 @@ PathfindClass::~PathfindClass (void)
 void
 PathfindClass::Add_Sector (PathfindSectorClass *sector, bool add_to_tree)
 {
-	WWASSERT (sector != NULL);
 	if (sector != NULL) {
 		sector->Add_Ref ();
 		
@@ -315,7 +312,6 @@ PathfindClass::Add_Temporary_Portal
 bool
 PathfindClass::Save (ChunkSaveClass &csave)
 {
-	WWMEMLOG(MEM_PATHFIND);
 
 	csave.Begin_Chunk (CHUNKID_DATABASE);
 	
@@ -397,7 +393,6 @@ PathfindClass::Save_Portals (ChunkSaveClass &csave)
 bool
 PathfindClass::Load (ChunkLoadClass &cload)
 {
-	WWMEMLOG(MEM_PATHFIND);
 
 	Reset_Sectors ();
 	Reset_Portals ();
@@ -472,7 +467,6 @@ PathfindClass::Load (ChunkLoadClass &cload)
 						}
 
 					} else {
-						WWDEBUG_SAY (("Unknown chunk ID 0x%X\r\n", cload.Cur_Chunk_ID ()));
 						retval = false;
 					}
 				}
@@ -566,7 +560,6 @@ PathfindClass::Load_Sector (ChunkLoadClass &cload)
 				break;
 
 			case CHUNKID_SECTOR_LINKAGE:
-				WWASSERT (sector != NULL);
 				if (sector != NULL) {
 					
 					//
@@ -583,7 +576,6 @@ PathfindClass::Load_Sector (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY (("Unknown chunk ID 0x%X\r\n", cload.Cur_Chunk_ID ()));
 				retval = false;
 				break;
 		}
@@ -1212,7 +1204,6 @@ PathfindClass::Load_Culling_System (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY (("Unknown chunk ID 0x%X\r\n", cload.Cur_Chunk_ID ()));
 				retval = false;
 				break;
 		}
@@ -1828,8 +1819,6 @@ fnCompareWaypathPortalsCallback
 	const void *elem2
 )
 {
-   WWASSERT (elem1 != NULL);
-   WWASSERT (elem2 != NULL);
    PathfindWaypathPortalClass *portal1 = *((PathfindWaypathPortalClass **)elem1);
    PathfindWaypathPortalClass *portal2 = *((PathfindWaypathPortalClass **)elem2);	
 

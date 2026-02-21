@@ -8,8 +8,6 @@
 #include "wwphysids.h"
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "wheel.h"
 #include "octbox.h"
 #include "mesh.h"
@@ -18,11 +16,6 @@
 #include "vertmaterial.h"
 #include "mapper.h"
 #include <string.h>
-
-
-DECLARE_FORCE_LINK(trackedvehicle);
-
-
 
 static bool _is_left_track_name(const char * name) 
 {
@@ -74,7 +67,6 @@ static bool _is_right_track_name(const char * name)
 	return false;
 }
 
-
 /**************************************************************************************
 **
 ** TrackedVehicleClass Implementation
@@ -94,7 +86,6 @@ enum
 	TRACKEDVEHICLE_CHUNK_VEHICLEPHYS			= 0x00119801,
 	TRACKEDVEHICLE_CHUNK_VARIABLES,
 };
-
 
 // Debugging colors
 const Vector3	SPRING_COLOR(1.0f,0.5f,0.0f);
@@ -245,14 +236,6 @@ void TrackedVehicleClass::Add_Track_Mappers(MeshClass * mesh,int track_type)
 						TrackMappers.Add(ts);
 
 #if 0 //Paranoid debug logging
-						WWDEBUG_SAY(("Grabbing Track Mesh! \r\n"));
-						WWDEBUG_SAY(("  container: 0x%X mesh: 0x%X vmtl: 0x%X mapper 0x%X\r\n",
-							(unsigned int)mesh->Get_Container(),
-							(unsigned int)mesh,
-							(unsigned int)vmtl,
-							(unsigned int)mapper));
-						WWDEBUG_SAY(("  tracked vehicle: 0x%X\r\n",(unsigned int)this));
-						WWDEBUG_SAY(("  Name = %s\r\n",mesh->Get_Name()));
 #endif
 					}
 					REF_PTR_RELEASE(mapper);
@@ -266,10 +249,8 @@ void TrackedVehicleClass::Add_Track_Mappers(MeshClass * mesh,int track_type)
 void TrackedVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 {
 	{
-		WWPROFILE("TrackedVehicleClass::Compute_Force_And_Torque");
 
 		const TrackedVehicleDefClass * def = Get_TrackedVehicleDef();
-		WWASSERT(def != NULL);
 
 		/*
 		** Compute the left and right track torque
@@ -356,7 +337,6 @@ bool TrackedVehicleClass::Load (ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -370,7 +350,6 @@ void TrackedVehicleClass::On_Post_Load (void)
 {
 	VehiclePhysClass::On_Post_Load();
 }
-
 
 /***********************************************************************************************
 **
@@ -395,7 +374,6 @@ enum
 	TRACKEDVEHICLEDEF_VARIABLE_TURNTORQUESCALEFACTOR,
 	
 };
-
 
 TrackedVehicleDefClass::TrackedVehicleDefClass(void) :
 	MaxEngineTorque(0.0f),
@@ -442,7 +420,6 @@ bool TrackedVehicleDefClass::Save(ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool TrackedVehicleDefClass::Load(ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -466,7 +443,6 @@ bool TrackedVehicleDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 
@@ -476,7 +452,6 @@ bool TrackedVehicleDefClass::Load(ChunkLoadClass &cload)
 	return true;
 }
 
-
 bool TrackedVehicleDefClass::Is_Type(const char * type_name)
 {
 	if (stricmp(type_name,TrackedVehicleDefClass::Get_Type_Name()) == 0) {
@@ -485,5 +460,4 @@ bool TrackedVehicleDefClass::Is_Type(const char * type_name)
 		return VehiclePhysDefClass::Is_Type(type_name);
 	}
 }
-
 

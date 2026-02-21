@@ -100,7 +100,6 @@ void PhysicsSceneClass::Enable_Sun_Light(bool onoff)
  *=============================================================================================*/
 LightClass * PhysicsSceneClass::Get_Sun_Light(void)
 {
-	WWASSERT(SunLight);
 	SunLight->Add_Ref();
 	return SunLight;
 }
@@ -165,7 +164,6 @@ void PhysicsSceneClass::Get_Sun_Light_Orientation(float * set_yaw,float * set_pi
  *=============================================================================================*/
 void PhysicsSceneClass::Get_Sun_Light_Vector(Vector3 * set_vector)
 {
-	WWASSERT(set_vector != NULL);
 	const Matrix3D & tm = SunLight->Get_Transform();
 	*set_vector = tm * Vector3(0,0,1);
 }
@@ -216,7 +214,6 @@ void PhysicsSceneClass::Compute_Static_Lighting
 	int vis_object_id
 )
 {
-	WWASSERT(light_env != NULL);
 	light_env->Reset(obj_center,Get_Ambient_Light());
 
 	/*

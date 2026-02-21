@@ -13,7 +13,6 @@
 #include "string_ids.h"
 #include "consolemode.h"
 #include "specialbuilds.h"
-#include "gamespyadmin.h"
 
 /*
 ** Class statics.
@@ -253,13 +252,7 @@ void BandwidthCheckerClass::Check(void)
 
 	ConsoleBox.Print("Detecting bandwidth...\n");
 
-	const char *host_name = NULL;
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		// US West Ping server
-		host_name = "159.153.192.10";
-	} else {
-		host_name = Get_Ping_Server_Name();
-	}
+	const char *host_name = Get_Ping_Server_Name();
 
 	host = gethostbyname(host_name);
 	if (host == NULL) {
@@ -312,9 +305,7 @@ void BandwidthCheckerClass::Check(void)
 		** If we failed due to a missing final ping then try again with fewer packets and no retries.
 		*/
 		if (UpstreamBandwidth == 0) {
-			if (failure_code == BANDTEST_NO_FINAL_PING_TIME || 
-					(cGameSpyAdmin::Is_Gamespy_Game() && 
-					failure_code == BANDTEST_NO_EXTERNAL_ROUTER)) {
+			if (failure_code == BANDTEST_NO_FINAL_PING_TIME) {
 				BandtestSettingsStruct settings = {
 					0,		//AlwaysICMP
 					0,		//TTLScatter
@@ -324,10 +315,6 @@ void BandwidthCheckerClass::Check(void)
 					0		//PingProfile
 				};
 
-				if (cGameSpyAdmin::Is_Gamespy_Game()) {
-					// US East Ping server
-					address.sin_addr.s_addr = inet_addr("159.153.224.10");
-				}
 				UpstreamBandwidth = Detect_Bandwidth(ntohl(address.sin_addr.s_addr), 0, 0, failure_code, DownstreamBandwidth, BANDTEST_API_VERSION, &settings);
 			}
 		}
@@ -344,13 +331,8 @@ void BandwidthCheckerClass::Check(void)
 			UpstreamBandwidth = 1000000;
 			DownstreamBandwidth = 1000000;
 #else  //FREEDEDICATEDSERVER
-			if (cGameSpyAdmin::Is_Gamespy_Game()) {
-				UpstreamBandwidth = 128000;
-				DownstreamBandwidth = 128000;
-			} else {
-				UpstreamBandwidth = 55000;
-				DownstreamBandwidth = 55000;
-			}
+			UpstreamBandwidth = 55000;
+			DownstreamBandwidth = 55000;
 #endif //FREEDEDICATEDSERVER
 			FailureCode = failure_code;
 			GotBandwidth = true;	//false;
@@ -373,7 +355,7 @@ void BandwidthCheckerClass::Check(void)
 			bool got_bw_str = false;
 			for (int i=0 ; i<NUM_BANDS ; i++) {
 				if (UpstreamBandwidth < Bandwidths[(i*2) + 1]) {
-					//WWDEBUG_SAY(("\nReported upstream connection bandwidth is %s bits per second\n", BandwidthNames[i]));
+					//
 					UpstreamBandwidthString = BandwidthNames[i];
 					ReportedUpstreamBandwidth = Bandwidths[(i*2)+1];
 					got_bw_str = true;
@@ -405,7 +387,7 @@ void BandwidthCheckerClass::Check(void)
 			bool got_bw_str = false;
 			for (int i=0 ; i<NUM_BANDS ; i++) {
 				if (DownstreamBandwidth < Bandwidths[(i*2) + 1]) {
-					//WWDEBUG_SAY(("\nReported downstream connection bandwidth is %s bits per second\n", BandwidthNames[i]));
+					//
 					DownstreamBandwidthString = BandwidthNames[i];
 					ReportedDownstreamBandwidth = Bandwidths[(i*2)+1];
 					got_bw_str = true;

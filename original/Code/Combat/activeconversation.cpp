@@ -220,7 +220,6 @@ ActiveConversationClass::Add_Orator (PhysicalGameObj *game_obj)
 void
 ActiveConversationClass::Start_Conversation (void)
 {
-	WWASSERT (OratorList.Count () > 0);
 	OratorSpokenBitmask = 0;
 
 	//
@@ -461,7 +460,6 @@ ActiveConversationClass::Say_Next_Remark (void)
 		//	Make sure the data is valid
 		//
 
-		WWASSERT_PRINT (orator_id >= 0 && orator_id < OratorList.Count (), Conversation->Get_Name ());
 		if (orator_id >= 0 && orator_id < OratorList.Count ()) {			
 			PhysicalGameObj *orator = OratorList[orator_id]->Get_Game_Obj ();
 
@@ -752,7 +750,6 @@ ActiveConversationClass::Load_Variables (ChunkLoadClass &cload)
 	//
 	//	Register our old pointer so other objects can safely remap to it
 	//
-	WWASSERT (old_ptr != NULL);
 	SaveLoadSystemClass::Register_Pointer (old_ptr, this);
 	return ;
 }
@@ -766,7 +763,6 @@ ActiveConversationClass::Load_Variables (ChunkLoadClass &cload)
 void
 ActiveConversationClass::Set_Orator_Arrived (PhysicalGameObj *orator, bool has_arrived)
 {
-	WWASSERT (orator != NULL);
 	
 	for (int index = 0; index < OratorList.Count (); index ++) {
 		PhysicalGameObj *curr_orator = OratorList[index]->Get_Game_Obj ();
@@ -793,8 +789,6 @@ ActiveConversationClass::Set_Orator_Arrived (PhysicalGameObj *orator, bool has_a
 bool
 ActiveConversationClass::Get_Orator_Location (PhysicalGameObj *orator, Vector3 *position)
 {
-	WWASSERT (orator != NULL);
-	WWASSERT (position != NULL);
 	bool retval = false;			
 	
 	for (int index = 0; index < OratorList.Count (); index ++) {
@@ -822,8 +816,6 @@ ActiveConversationClass::Get_Orator_Location (PhysicalGameObj *orator, Vector3 *
 bool
 ActiveConversationClass::Get_Current_Orator_Location (Vector3 *position)
 {
-	WWASSERT (position != NULL);
-	WWASSERT (Conversation != NULL);
 	bool retval = false;
 
 	//
@@ -839,7 +831,6 @@ ActiveConversationClass::Get_Current_Orator_Location (Vector3 *position)
 	//
 	//	Make sure the data is valid
 	//
-	WWASSERT (orator_id >= 0 && orator_id < OratorList.Count ());
 	if (orator_id >= 0 && orator_id < OratorList.Count ()) {			
 		
 		//
@@ -892,7 +883,6 @@ ActiveConversationClass::Get_Current_Orator (void)
 void
 ActiveConversationClass::Get_Conversation_Center (Vector3 *position)
 {
-	WWASSERT (position != NULL);
 	(*position) = CentralPos;
 	return ;
 }
@@ -906,7 +896,6 @@ ActiveConversationClass::Get_Conversation_Center (Vector3 *position)
 OratorClass *
 ActiveConversationClass::Get_Orator_Information (PhysicalGameObj *soldier)
 {
-	WWASSERT (soldier != NULL);
 	OratorClass *orator = NULL;
 	
 	for (int index = 0; index < OratorList.Count (); index ++) {

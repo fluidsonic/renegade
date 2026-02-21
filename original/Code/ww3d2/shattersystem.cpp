@@ -16,7 +16,7 @@
 */
 #define SHATTER_DEBUG_LOG_ENABLED	0
 #if (SHATTER_DEBUG_LOG_ENABLED)
-#define SHATTER_DEBUG_SAY(x)			WWDEBUG_SAY(x)
+#define SHATTER_DEBUG_SAY(x)			
 #else
 #define SHATTER_DEBUG_SAY(x)
 #endif
@@ -554,7 +554,6 @@ void PolygonClass::Split(const PlaneClass & plane,PolygonClass & front,PolygonCl
 				back.Verts[(back.NumVerts)++] = Verts[i];
 			}
 		} else {
-			WWASSERT_PRINT(0,"PolygonClass::Split : invalid side\n");
 		}
 
 		sideprev = side;
@@ -582,7 +581,6 @@ bool PolygonClass::Is_Degenerate(void)
 	int i,j;
 
 	if (NumVerts <= 2) {
-		WWDEBUG_SAY(("Degenerate Poly - fewer than 3 vertices\r\n"));
 		return true;
 	}
 
@@ -591,7 +589,6 @@ bool PolygonClass::Is_Degenerate(void)
 			
 			float delta = (Verts[i].Position - Verts[j].Position).Length();
 			if (delta < BPT_COINCIDENCE_EPSILON) {
-				WWDEBUG_SAY(("Degenerate Poly - coincident vertices!\r\n"));
 				return true;
 			}
 		}
@@ -605,7 +602,6 @@ bool PolygonClass::Is_Degenerate(void)
 			Compute_Plane();
 
 			if (Verts[i].Which_Side(Plane) != BPT_ON) {
-				WWDEBUG_SAY(("Degenerate Poly - invalid plane!\r\n"));
 				return true;
 			}
 		}
@@ -834,20 +830,17 @@ void ShatterSystem::Shatter_Mesh(MeshClass * mesh,const Vector3 & point,const Ve
 	*/
 	MeshModelClass * model = mesh->Get_Model();
 	if (model->Get_Pass_Count() > MeshMatDescClass::MAX_PASSES) {
-		WWDEBUG_SAY(("Failed to shatter model: %s.  Too many passes (%d)\n",model->Get_Name(),model->Get_Pass_Count()));
 		REF_PTR_RELEASE(model);
 		return;
 	}
 	for (ipass=0; ipass<model->Get_Pass_Count(); ipass++) {
 		if (model->Has_Material_Array(ipass) || model->Has_Shader_Array(ipass)) {
-			WWDEBUG_SAY(("Failed to shatter model: %s.  It has shader or material arrays\n",model->Get_Name()));
 			REF_PTR_RELEASE(model);
 			return;
 		}
 		
 		for (istage=0; istage<MeshMatDescClass::MAX_TEX_STAGES; istage++) {
 			if (model->Has_Texture_Array(ipass,istage)) {
-				WWDEBUG_SAY(("Failed to shatter model: %s.  Texture array in pass: %d stage: %d\n",model->Get_Name(),ipass,istage));
 				REF_PTR_RELEASE(model);
 				return;
 			}
@@ -1053,7 +1046,6 @@ void ShatterSystem::Process_Clip_Pools
 	** Grab the model
 	*/
 	MeshModelClass * model = mesh->Get_Model();
-	WWASSERT(model != NULL);
 
 	/*
 	** Loop over all ClipPools and build a mesh for any that contain polygons

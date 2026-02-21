@@ -29,7 +29,6 @@ public:
 void
 NetworkGameObjectFactoryClass::Prep_Packet (NetworkObjectClass *object, cPacket &packet) const
 {
-	WWASSERT (object != NULL);
 	BaseGameObj *game_obj = (BaseGameObj *)(object);
 
 	//
@@ -51,7 +50,6 @@ NetworkGameObjectFactoryClass::Create (cPacket &packet) const
 	//	Lookup the definition for this object
 	//
 	DefinitionClass *definition = DefinitionMgrClass::Find_Definition (definition_id);
-	WWASSERT (definition != NULL);
 
 	//
 	//	Create the new object
@@ -89,7 +87,6 @@ bool	BaseGameObjDef::Save( ChunkSaveClass & csave )
 bool	BaseGameObjDef::Load( ChunkLoadClass &cload )
 {
 	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_DEF_PARENT );
 	DefinitionClass::Load( cload );
 	cload.Close_Chunk();
 	return true;
@@ -150,8 +147,6 @@ bool	BaseGameObj::Save( ChunkSaveClass & csave )
 		bool is_delete_pending = Is_Delete_Pending ();
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_IS_PENDING_DELETE, is_delete_pending );
 		int	definition_id = Definition->Get_ID();
-		WWASSERT(	SuperClassID_From_ClassID( Definition->Get_Class_ID () ) == CLASSID_GAME_OBJECTS ||
-						SuperClassID_From_ClassID( Definition->Get_Class_ID () ) == CLASSID_BUILDINGS );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEFINITION_ID, definition_id );
 		int id = Get_Network_ID ();
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_INSTANCE_ID, id );
@@ -166,7 +161,6 @@ bool	BaseGameObj::Load( ChunkLoadClass &cload )
 	int id = 0;
 
 	cload.Open_Chunk();
-	WWASSERT( cload.Cur_Chunk_ID() == CHUNKID_VARIABLES );
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
 			
@@ -191,7 +185,6 @@ bool	BaseGameObj::Load( ChunkLoadClass &cload )
 			case	MICROCHUNKID_DEFINITION_ID:
 				int definition_id;
 				LOAD_MICRO_CHUNK( cload, definition_id );
-				WWASSERT( Definition == NULL );
 				Definition = (const BaseGameObjDef*)DefinitionMgrClass::Find_Definition( definition_id );
 				if ( Definition == NULL ) {
 					Debug_Say(( "Definition %d not found\n.  Re-Export needed\n", definition_id ));
@@ -200,7 +193,6 @@ bool	BaseGameObj::Load( ChunkLoadClass &cload )
 				//
 				// 07/30/01 attempting to load a level with temps will presently assert here.
 				//
-				WWASSERT( Definition != NULL );
 				break;
 
 			READ_MICRO_CHUNK( cload, MICROCHUNKID_ENABLE_CINEMATIC_FREEZE, EnableCinematicFreeze );
@@ -223,7 +215,6 @@ bool	BaseGameObj::Load( ChunkLoadClass &cload )
 		if (id == 0) {
 			Set_Network_ID (NetworkObjectMgrClass::Get_New_Dynamic_ID ());
 		} else {
-			WWASSERT(id >= NETID_DYNAMIC_OBJECT_MIN && id <= NETID_DYNAMIC_OBJECT_MAX);
 		}
 
 	} else {

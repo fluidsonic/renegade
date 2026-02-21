@@ -1,5 +1,4 @@
 #include "spawn.h"
-#include "wwhack.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
@@ -16,12 +15,10 @@
 #include "objlibrary.h"
 #include "movephys.h"
 #include "scripts.h"
-#include "wwmemlog.h"
 #include "gametype.h"
 #include "combatmaterialeffectmanager.h"
 #include "transitioneffect.h"
 #include "humanphys.h"
-
 
 //
 // Class statics
@@ -30,16 +27,13 @@ bool	_Allow_Killing_Hibernating_Spawn = true;
 
 #define	AUTO_SPAWN_CHECK_DELAY	2.0f
 
-
 /*
 ** SpawnDefClass
 */
-DECLARE_FORCE_LINK( Spawner )
 
 SimplePersistFactoryClass<SpawnerDefClass, CHUNKID_SPAWNER_DEF>	_SpawnerDefPersistFactory;
 
 DECLARE_DEFINITION_FACTORY(SpawnerDefClass, CLASSID_SPAWNER_DEF, "Spawner") _SpawnerDefDefFactory;
-
 
 SpawnerDefClass::SpawnerDefClass( void ) :
 	PlayerType( PLAYERTYPE_NEUTRAL ),
@@ -94,7 +88,6 @@ uint32	SpawnerDefClass::Get_Class_ID( void ) const
 {
 	return CLASSID_SPAWNER_DEF;
 }
-
 
 PersistClass *	SpawnerDefClass::Create( void ) const
 {
@@ -162,7 +155,6 @@ bool	SpawnerDefClass::Save( ChunkSaveClass &csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_APPLY_SPAWN_MATERIAL_EFFECT,	ApplySpawnMaterialEffect );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_IS_MULTIPLAY_WEAPON_SPAWNER,	IsMultiplayWeaponSpawner );
 
-		WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 		for ( i = 0; i < ScriptNameList.Count(); i++ ) {
 			WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_DEF_SCRIPT_NAME, ScriptNameList[i] );
 			WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_DEF_SCRIPT_PARAMETERS, ScriptParameterList[i] );
@@ -175,8 +167,6 @@ bool	SpawnerDefClass::Save( ChunkSaveClass &csave )
 
 bool	SpawnerDefClass::Load( ChunkLoadClass &cload )
 {
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
-	WWASSERT( SpawnDefinitionIDList.Count() == 0 );
 	StringClass str;
 
 	while (cload.Open_Chunk()) {
@@ -239,7 +229,6 @@ bool	SpawnerDefClass::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	return true;
 }
 
@@ -247,7 +236,6 @@ const PersistFactoryClass &	SpawnerDefClass::Get_Factory( void ) const
 {
 	return _SpawnerDefPersistFactory;
 }
-
 
 /*
 ** SpawnClass
@@ -321,7 +309,6 @@ bool	SpawnerClass::Save( ChunkSaveClass & csave )
 		}
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_SPAWN_TM, SpawnTM );
 
-		WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 		for ( i = 0; i < ScriptNameList.Count(); i++ ) {
 			WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_SCRIPT_NAME, ScriptNameList[i] );
 			WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_SCRIPT_PARAMETERS, ScriptParameterList[i] );
@@ -335,17 +322,14 @@ bool	SpawnerClass::Save( ChunkSaveClass & csave )
 		csave.End_Chunk();
 	}
 
-
 	return true;
 }
 
 bool	SpawnerClass::Load( ChunkLoadClass & cload )
 {
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	StringClass str;
 
 	Matrix3D tm;
-	WWASSERT( SpawnPointList.Length() == 0 );
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -367,9 +351,7 @@ bool	SpawnerClass::Load( ChunkLoadClass & cload )
 						case	MICROCHUNKID_DEFINITION_ID:
 							int definition_id;
 							LOAD_MICRO_CHUNK( cload, definition_id );
-							WWASSERT( Definition == NULL );
 							Definition = (const SpawnerDefClass *)DefinitionMgrClass::Find_Definition( definition_id );
-							WWASSERT( Definition != NULL );
 							break;
 
 						case	MICROCHUNKID_SPAWN_POINT_ENTRY:
@@ -408,10 +390,8 @@ bool	SpawnerClass::Load( ChunkLoadClass & cload )
 		cload.Close_Chunk();
 	}
 
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	return true;
 }
-
 
 bool SpawnerClass::Determine_Spawn_TM( PhysicalGameObj * obj )
 {
@@ -492,7 +472,6 @@ bool SpawnerClass::Determine_Spawn_TM( PhysicalGameObj * obj )
 
 PhysicalGameObj * SpawnerClass::Create_Spawned_Object( int obj_id )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	
 	int spawn_id = obj_id;
 	if ( obj_id == -1 ) {
@@ -516,7 +495,6 @@ PhysicalGameObj * SpawnerClass::Create_Spawned_Object( int obj_id )
 		if ( def == NULL ) {
 			Debug_Say(( "Spawner %s failed to create a spawn id %d\n", Get_Definition().Get_Name(), spawn_id ));
 		}
-		WWASSERT( def );
 		if ( def != NULL ) {
 			obj = (PhysicalGameObj *)def->Create();
 
@@ -606,14 +584,11 @@ bool	SpawnerClass::Can_Spawn_Object( int obj_def_id )
 	return retval;
 }
 
-
 PhysicalGameObj * SpawnerClass::Spawn( int obj_id )
 {
-	WWASSERT( CombatManager::I_Am_Server() );
 
 	// Pick what will be spawned
 	PhysicalGameObj * obj = Create_Spawned_Object( obj_id );
-	WWASSERT( obj );
 
 	//	Choose a spawn location
 	bool spawnable = Determine_Spawn_TM( obj );
@@ -669,7 +644,6 @@ PhysicalGameObj * SpawnerClass::Spawn( int obj_id )
 	int i;
 
 	// Start Def Scripts
-	WWASSERT( Get_Definition().ScriptNameList.Count() == Get_Definition().ScriptParameterList.Count() );
 	for ( i = 0; i < Get_Definition().ScriptNameList.Count(); i++ ) {
 		ScriptClass* script = ScriptManager::Create_Script( Get_Definition().ScriptNameList[i] );
 		if (script) {
@@ -679,7 +653,6 @@ PhysicalGameObj * SpawnerClass::Spawn( int obj_id )
 	}
 
 	// Start Instance Scripts
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	for ( i = 0; i < ScriptNameList.Count(); i++ ) {
 		ScriptClass* script = ScriptManager::Create_Script( ScriptNameList[i] );
 		if (script) {
@@ -693,7 +666,6 @@ PhysicalGameObj * SpawnerClass::Spawn( int obj_id )
 
 void	SpawnerClass::Add_Script( const char * script_name, const char * script_parameter )
 {
-	WWASSERT( ScriptNameList.Count() == ScriptParameterList.Count() );
 	ScriptNameList.Add( script_name );
 	ScriptParameterList.Add( script_parameter );
 }
@@ -709,10 +681,8 @@ float											SpawnManager::AutoSpawnTimer = AUTO_SPAWN_CHECK_DELAY;
 */
 static SpawnManager JustForLeaks;
 
-
 void	SpawnManager::Add_Spawner( SpawnerClass * spawner )
 {
-	WWASSERT(spawner != NULL);
 	SpawnerList.Add( spawner );
 }
 
@@ -727,7 +697,6 @@ void	SpawnManager::Remove_All_Spawners( void )
 		delete SpawnerList[0];
 	}
 }
-
 
 /*
 **
@@ -904,7 +873,6 @@ Matrix3D SpawnManager::Get_Multiplayer_Spawn_Location( int player_type, SoldierG
 				}
 			}
 			// If we fall through to here, no clear spawn points were found, need more spawners!
-			WWDEBUG_SAY(("Failed to find clear multiplayer spawn point for object: %s\r\n",phys_obj->Peek_Model()->Get_Name()));
 		}
 	}
 
@@ -912,11 +880,8 @@ Matrix3D SpawnManager::Get_Multiplayer_Spawn_Location( int player_type, SoldierG
 	return tm;
 }
 
-
-
 Matrix3D SpawnManager::Get_Ctf_Spawn_Location(int team)
 {
-	WWASSERT(team == PLAYERTYPE_NOD || team == PLAYERTYPE_GDI);
 
 	StringClass spawner_name;
 	if (team == PLAYERTYPE_NOD) {
@@ -934,11 +899,10 @@ Matrix3D SpawnManager::Get_Ctf_Spawn_Location(int team)
 		}
 	}
 
-	//WWASSERT(index != -1);
+	//assert(index != -1);
 	if (index == -1)
 	{
 		Debug_Say(("*** Fatal Media Error: CTF spawner(s) missing from level.\n"));
-		DIE;
 	}
 
 	return SpawnerList[index]->Get_TM();
@@ -1027,9 +991,6 @@ bool	SpawnManager::Toggle_Allow_Killing_Hibernating_Spawn( void )
 	return _Allow_Killing_Hibernating_Spawn;
 }
 
-
-
-
 /***********************************************************************************************
  * SpawnManager::~SpawnManager -- Class destructor                                             *
  *                                                                                             *
@@ -1048,8 +1009,4 @@ SpawnManager::~SpawnManager(void)
 {
 	Remove_All_Spawners();
 }
-
-
-
-
 

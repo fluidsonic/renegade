@@ -101,7 +101,6 @@ void RenderObjectRecyclerClass::Return_Render_Object(RenderObjClass * obj)
  *=============================================================================================*/
 void RenderObjectRecyclerClass::Insert_Inactive_Model(RenderObjClass * obj)
 {
-	WWASSERT(obj != NULL);
 	InactiveModels.Add(obj);
 }
 

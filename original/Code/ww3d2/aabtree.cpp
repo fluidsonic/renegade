@@ -1,6 +1,5 @@
 #include "aabtree.h"
 #include "aabtreebuilder.h"
-#include "wwdebug.h"
 #include "tri.h"
 #include "meshgeometry.h"
 #include "camera.h"
@@ -190,7 +189,6 @@ void AABTreeClass::Build_Tree_Recursive(AABTreeBuilderClass::CullNodeStruct * no
 	*/
 	if (node->Front != NULL) {
 
-		WWASSERT(node->Back != NULL);		// if we have one child, we better have both!
 		newnode->Set_Front_Child(node->Front->Index);
 		newnode->Set_Back_Child(node->Back->Index);
 	
@@ -1011,12 +1009,6 @@ void AABTreeClass::Update_Bounding_Boxes_Recursive(CullNodeStruct * node)
 
 	}
 
-	WWASSERT(node->Min.X != 100000.0f);
-	WWASSERT(node->Min.Y != 100000.0f);
-	WWASSERT(node->Min.Z != 100000.0f);
-	WWASSERT(node->Max.X != -100000.0f);
-	WWASSERT(node->Max.Y != -100000.0f);
-	WWASSERT(node->Max.Z != -100000.0f);
 }
 
 
@@ -1068,7 +1060,6 @@ void AABTreeClass::Load_W3D(ChunkLoadClass & cload)
 	
 	W3dMeshAABTreeHeader header;
 	cload.Open_Chunk();
-	WWASSERT(cload.Cur_Chunk_ID() == W3D_CHUNK_AABTREE_HEADER);
 	cload.Read(&header,sizeof(header));
 	cload.Close_Chunk();
 

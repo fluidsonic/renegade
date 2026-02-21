@@ -1369,14 +1369,12 @@ void EditCtrlClass::PositionCandidateList(void)
 		// the edit control.
 		if (ctrlRect.Bottom > screen.Bottom) {
 			pos.Y = ((Rect.Top - 2.0f) - ctrlRect.Height());
-			WWASSERT((pos.Y >= 0.0f) && "CandidateCtrl off the top of the screen");
 			reposition = true;
 		}
 
 		// Do not allow the control to go off the right of the screen.
 		if (ctrlRect.Right > screen.Right) {
 			pos.X -= ((ctrlRect.Right - screen.Right) - 1);
-			WWASSERT((pos.X >= 0.0f) && "CandidateCtrl of the left of the screen");
 			reposition = true;
 		}
 

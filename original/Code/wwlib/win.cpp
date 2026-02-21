@@ -1,6 +1,5 @@
 #include "always.h"
 #include "win.h"
-#include "wwdebug.h"
 
 HINSTANCE	ProgramInstance;
 HWND			MainWindow;
@@ -26,7 +25,6 @@ void __cdecl Print_Win32Error(unsigned long win32Error)
 			FORMAT_MESSAGE_IGNORE_INSERTS, NULL, win32Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 			(LPTSTR)&lpMsgBuf, 0, NULL);
 
-	WWDEBUG_SAY(("Win32 Error: %s\n", (const char*)lpMsgBuf));
 	LocalFree(lpMsgBuf);
 }
 #endif

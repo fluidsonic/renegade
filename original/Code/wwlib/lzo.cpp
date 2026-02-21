@@ -1,6 +1,5 @@
 #include "lzo.h"
 #include "mutex.h"
-#include "wwdebug.h"
 #include <stdlib.h>
 
 /*
@@ -36,16 +35,9 @@ int LZOCompressor::Compress
 {
 	CriticalSectionClass::LockClass m(mutex);
 
-#ifdef WWDEBUG
-	// Debugging code to verify that the work buffer is not overrun...
-	*EOWorkBuffer = BUFFER_OVERRUN_TEST_VALUE;
-#endif
 
 	int result = lzo1x_1_compress(in,in_len,out,out_len,WorkBuffer);
 
-#ifdef WWDEBUG
-	WWASSERT(*EOWorkBuffer == BUFFER_OVERRUN_TEST_VALUE);
-#endif
 
 	return result;
 }

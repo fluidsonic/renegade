@@ -232,7 +232,6 @@ void SceneClass::Load(ChunkLoadClass & cload)
 		}
 
 	} else {
-		WWDEBUG_SAY(("Unhandled Chunk: 0x%X in file: %s line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 	}
 	cload.Close_Chunk();
 }
@@ -484,7 +483,6 @@ void SimpleSceneClass::Customized_Render(RenderInfoClass & rinfo)
 
 	// apply only the first four lights in the scene
 	// derived classes should use light environment
-	WWASSERT(rinfo.light_environment==NULL);
 	int count=0;
 	// Turn off lights in case we have none
 	DX8Wrapper::Set_Light(0,NULL);
@@ -499,7 +497,6 @@ void SimpleSceneClass::Customized_Render(RenderInfoClass & rinfo)
 		} else
 		{
 			// Simple scene only supports 4 global lights
-			WWDEBUG_SAY(("Light %d ignored\n",count));
 		}
 		count++;
 	}

@@ -116,8 +116,6 @@
 #include "consolemode.h"
 #include "dlgcncpurchasemainmenu.h"
 #include "realcrc.h"
-#include "gamespyadmin.h"
-#include "gamespybanlist.h"
 #include "specialbuilds.h"
 #include "lightsolve.h"
 #include "lightsolvecontext.h"
@@ -248,7 +246,7 @@ public:
 #if 0
 		//int crc = CRC_String("quantifigon");//not any more, pw changed...
 
-		//WWDEBUG_SAY(("*E* %d\n", CRC_String(input)));
+		//
 
 		//bool onoff = (CRC_String(input) == 0xa8452331);
 
@@ -720,11 +718,7 @@ public:
 				if (game && game->Is_Active()) {
 					game = GameModeManager::Find("LAN");
 					if (game && game->Is_Active()) {
-						if (cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
-							ConsoleBox.Print("GameSpy mode active since %s\n", upstring);
-						} else {
-							ConsoleBox.Print("LAN mode active since %s\n", upstring);
-						}
+						ConsoleBox.Print("LAN mode active since %s\n", upstring);
 						active = true;
 					}
 				}
@@ -862,115 +856,19 @@ class KickConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "kick"; }
 	virtual	const char * Get_Help( void )	{ return "KICK [<Nickname>|<Id>] - Kick a user from the game."; }
-	bool KickGameSpyUser(int id) {
-		if (cGameSpyAdmin::Is_Gamespy_Game()) {
-			return GameSpyBanList.Kick_Player(id);
-		}
-		return false;
-	}
-	bool KickGameSpyUser(const WideStringClass & user_name) {
-		if (cGameSpyAdmin::Is_Gamespy_Game()) {
-			cPlayer *player = NULL;
-
-			for (SLNode<cPlayer> *player_node = cPlayerManager::Get_Player_Object_List ()->Head ()
-				; player_node != NULL; player_node = player_node->Next ()) {
-
-				player = player_node->Data ();
-
-				if (player->Get_Is_Active().Is_False() || !player->Is_Human()) {
-					continue;
-				}
-				if (stricmp(StringClass(user_name), StringClass(player->Get_Name())) == 0) {
-					KickGameSpyUser(player->Get_Id());
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 	virtual	void Activate( const char * input ) {
-
-		if (cNetwork::I_Am_Server()) {
-			if (!input || !(*input)) return;
-			bool kicked = false;
-			WideStringClass user_name(input, true);
-
-			kicked = KickGameSpyUser(user_name);
-
-			if (!kicked) {
-				// try to kick by Id number
-				// make sure this is a decimal number since atoi returns 0 on error
-				// and we don't want to kick player 0 unless they really mean to
-				const char *t = input;
-				if (!(*t)) t = NULL;
-				while (t && *t) {
-					if (!isdigit(*t)) t = NULL;
-					else t++;
-				}
-				if (t) {
-					kicked = KickGameSpyUser(atoi(input));
-				}
-			}
-
-			if (!kicked) {
-				ConsoleBox.Print("%s not found\n", input);
-			}
-		}
+		// GameSpy kick removed; LAN kick not implemented.
+		(void)input;
 	}
 };
 
 class BanConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "ban"; }
-	virtual	const char * Get_Help( void )	{ return "BAN [<Nickname>|<Id>] - Permanently ban a user from this server(GameSpy & WOL mode only)."; }
+	virtual	const char * Get_Help( void )	{ return "BAN [<Nickname>|<Id>] - Permanently ban a user from this server (LAN mode only, not implemented)."; }
 	virtual	void Activate( const char * input ) {
-
-		if (cGameSpyAdmin::Is_Gamespy_Game() && cNetwork::I_Am_Server()) {
-
-			if (!input || !(*input)) return;
-			cPlayer *player = NULL;
-
-			SLNode<cPlayer> *player_node = NULL;
-			for (SLNode<cPlayer> *player_node = cPlayerManager::Get_Player_Object_List ()->Head ()
-				; player_node != NULL; player_node = player_node->Next ()) {
-
-				player = player_node->Data ();
-
-				if (player->Get_Is_Active().Is_False() || !player->Is_Human()) {
-					continue;
-				}
-				if (stricmp(StringClass(input), StringClass(player->Get_Name())) == 0) {
-					if (player->Get_GameSpy_Hash_Id().Is_Empty()) {
-						GameSpyBanList.Ban_User(input);
-					} else {
-						GameSpyBanList.Ban_User(input, player->Get_GameSpy_Hash_Id());
-					}
-					break;
-				}
-			}
-			if (player_node == NULL) {
-				// make sure this is a decimal number since atoi returns 0 on error
-				// and we don't want to kick player 0 unless they really mean to
-				const char *t = input;
-				if (!(*t)) t = NULL;
-				while (t && *t) {
-					if (!isdigit(*t)) t = NULL;
-					else t++;
-				}
-				if (t) {
-					player = cPlayerManager::Find_Player(atoi(input));
-					if (player) {
-						if (player->Get_GameSpy_Hash_Id().Is_Empty() && !player->Get_Name().Is_Empty()) {
-							GameSpyBanList.Ban_User(StringClass(player->Get_Name()));
-						} else if (!player->Get_GameSpy_Hash_Id().Is_Empty()) {
-							GameSpyBanList.Ban_User(StringClass(player->Get_Name()), player->Get_GameSpy_Hash_Id());
-						}
-					}
-				} else {
-					ConsoleBox.Print("%s not found\n", input);
-				}
-			}
-		}
+		// GameSpy ban removed; LAN ban not implemented.
+		(void)input;
 	}
 };
 

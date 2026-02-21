@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __RENEGADETERRAINMATERIALPASS_H
 #define __RENEGADETERRAINMATERIALPASS_H

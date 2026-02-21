@@ -421,7 +421,7 @@ LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 // ----------------------------------------------------------------------------
 //
-// WWDebug message callback defines the behavior of WWDEBUG_SAY().
+// WWDebug message callback defines the behavior of .
 //
 // ----------------------------------------------------------------------------
 
@@ -432,7 +432,7 @@ void WWDebug_Message_Callback(DebugType type, const char * message)
 
 // ----------------------------------------------------------------------------
 //
-// WWAssert callback defines the behavior of WWASSERT().
+// WWAssert callback defines the behavior of assert().
 //
 // ----------------------------------------------------------------------------
 
@@ -447,7 +447,6 @@ void WWAssert_Callback(const char * message)
 void Debug_Refs(void)
 {
 #ifdef _DEBUG
-	WWDEBUG_SAY(("Dumping Un-Released Ref-Counted objects...\r\n"));
 	RefBaseNodeClass * first = RefBaseClass::ActiveRefList.First();
 	RefBaseNodeClass * node = first;
 	while (node->Is_Valid())
@@ -482,18 +481,15 @@ void Debug_Refs(void)
 		}
 
 		if ( display ) {
-			WWDEBUG_SAY(( "%d Active Ref: %s %d %p\n", count, ref->File,ref->Line,obj));
 
 			static int num_printed = 0;
 			if (++num_printed > 20) {
-				WWDEBUG_SAY(( "And Many More......\n"));
 				break;
 			}
 		}
 
 		node = node->Next();
 	}
-	WWDEBUG_SAY(("Done.\r\n"));
 #endif
 }
 

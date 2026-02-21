@@ -4,10 +4,7 @@
 #include "DefinitionFactory.h"
 #include "SimpleDefinitionFactory.h"
 #include "PlayerType.h"
-#include "WWHack.h"
 #include "Debug.h"
-
-DECLARE_FORCE_LINK(CNCModeSettings)
 
 CNCModeSettingsDef* CNCModeSettingsDef::_mInstance = NULL;
 
@@ -15,11 +12,10 @@ CNCModeSettingsDef* CNCModeSettingsDef::_mInstance = NULL;
 SimplePersistFactoryClass<CNCModeSettingsDef, CHUNKID_GLOBAL_SETTINGS_DEF_CNCMODE> _CNCModeSettingsDefPersistFactory;
 DECLARE_DEFINITION_FACTORY(CNCModeSettingsDef, CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE, "C&C Mode Settings") _CNCModeSettingsDefDefFactory;
 
-
 CNCModeSettingsDef::CNCModeSettingsDef(void) :
 		AnnouncementInterval(30)
 	{
-	//WWASSERT(_mInstance == NULL);
+	//assert(_mInstance == NULL);
 	_mInstance = this;
 
 	for (int team = 0; team < NUM_TEAMS; ++team)
@@ -135,31 +131,25 @@ CNCModeSettingsDef::CNCModeSettingsDef(void) :
 
 	}
 
-
 CNCModeSettingsDef::~CNCModeSettingsDef(void)
 	{
 	_mInstance = NULL;
 	}
-
 
 uint32 CNCModeSettingsDef::Get_Class_ID(void) const
 	{ 
 	return CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE; 
 	}
 
-
 const PersistFactoryClass& CNCModeSettingsDef::Get_Factory(void) const
 	{ 
 	return _CNCModeSettingsDefPersistFactory; 
 	}
 
-
 PersistClass* CNCModeSettingsDef::Create(void) const
 	{
-	WWASSERT (0);
 	return NULL;
 	}
-
 
 // Save/load constants
 enum
@@ -255,7 +245,6 @@ enum
 
 	};
 
-
 bool CNCModeSettingsDef::Save(ChunkSaveClass& csave)
 	{
 	csave.Begin_Chunk(CHUNKID_PARENT);
@@ -301,7 +290,6 @@ bool CNCModeSettingsDef::Save(ChunkSaveClass& csave)
 
 	return true;
 	}
-
 
 bool CNCModeSettingsDef::Load(ChunkLoadClass& cload)
 	{
@@ -425,7 +413,6 @@ bool CNCModeSettingsDef::Load(ChunkLoadClass& cload)
 	return true;
 	}
 
-
 int CNCModeSettingsDef::Get_Power_Offline_Report(int team) const
 	{
 	if (team >= 0 && team < NUM_TEAMS)
@@ -435,7 +422,6 @@ int CNCModeSettingsDef::Get_Power_Offline_Report(int team) const
 
 	return 0;
 	}
-
 
 int CNCModeSettingsDef::Get_Purchase_Canceled_Report(int team) const
 	{
@@ -447,7 +433,6 @@ int CNCModeSettingsDef::Get_Purchase_Canceled_Report(int team) const
 	return 0;
 	}
 
-
 int CNCModeSettingsDef::Get_Insufficient_Funds_Report(int team) const
 	{
 	if (team >= 0 && team < NUM_TEAMS)
@@ -457,7 +442,6 @@ int CNCModeSettingsDef::Get_Insufficient_Funds_Report(int team) const
 
 	return 0;
 	}
-
 
 int CNCModeSettingsDef::Get_Constructing_Report(int team) const
 	{
@@ -469,7 +453,6 @@ int CNCModeSettingsDef::Get_Constructing_Report(int team) const
 	return 0;
 	}
 
-
 int CNCModeSettingsDef::Get_Unit_Ready_Report(int team) const
 	{
 	if (team >= 0 && team < NUM_TEAMS)
@@ -479,7 +462,6 @@ int CNCModeSettingsDef::Get_Unit_Ready_Report(int team) const
 
 	return 0;
 	}
-
 
 int CNCModeSettingsDef::Get_Ion_Beacon_Deployed_Report(int team) const
 	{
@@ -491,7 +473,6 @@ int CNCModeSettingsDef::Get_Ion_Beacon_Deployed_Report(int team) const
 	return 0;
 	}
 
-
 int CNCModeSettingsDef::Get_Ion_Beacon_Disarmed_Report(int team) const
 	{
 	if (team >= 0 && team < NUM_TEAMS)
@@ -501,7 +482,6 @@ int CNCModeSettingsDef::Get_Ion_Beacon_Disarmed_Report(int team) const
 
 	return 0;
 	}
-
 
 int CNCModeSettingsDef::Get_Ion_Beacon_Warning_Report(int team) const
 	{
@@ -513,7 +493,6 @@ int CNCModeSettingsDef::Get_Ion_Beacon_Warning_Report(int team) const
 	return 0;
 	}
 
-
 int CNCModeSettingsDef::Get_Nuke_Beacon_Deployed_Report(int team) const
 	{
 	if (team >= 0 && team < NUM_TEAMS)
@@ -523,7 +502,6 @@ int CNCModeSettingsDef::Get_Nuke_Beacon_Deployed_Report(int team) const
 
 	return 0;
 	}
-
 
 int CNCModeSettingsDef::Get_Nuke_Beacon_Disarmed_Report(int team) const
 	{
@@ -535,7 +513,6 @@ int CNCModeSettingsDef::Get_Nuke_Beacon_Disarmed_Report(int team) const
 	return 0;
 	}
 
-
 int CNCModeSettingsDef::Get_Nuke_Beacon_Warning_Report(int team) const
 	{
 	if (team >= 0 && team < NUM_TEAMS)
@@ -546,12 +523,10 @@ int CNCModeSettingsDef::Get_Nuke_Beacon_Warning_Report(int team) const
 	return 0;
 	}
 
-
 int CNCModeSettingsDef::Get_Radio_Command(int num) const
 	{
 	return mRadioCmds[num];
 	}
-
 
 const char *CNCModeSettingsDef::Get_Radio_Command_Emot_Icon(int num) const
 	{

@@ -1,14 +1,10 @@
 #include "tcbspline.h"
-#include "wwdebug.h"
 #include "persistfactory.h"
 #include "wwmathids.h"
-#include "wwhack.h"
-
 
 /*
 ** Force-Link this module because the linker can't detect that we actually need it...
 */
-DECLARE_FORCE_LINK(tcbspline);
 
 /*
 ** Save-Load stuff
@@ -21,7 +17,6 @@ enum
 	TCB3D_CHUNK_HERMITE3D					= 0x02071009,	
 	TCB3D_CHUNK_PARAMS,			
 };
-
 
 /*
 ** TCBSpline3DClass Implemenation
@@ -54,8 +49,6 @@ void TCBSpline3DClass::Clear_Keys(void)
 
 void TCBSpline3DClass::Set_TCB_Params(int i,float tension,float continuity,float bias)
 {
-	WWASSERT(i >= 0);
-	WWASSERT(i < Params.Count());
 	Params[i].Tension = tension;
 	Params[i].Continuity = continuity;
 	Params[i].Bias = bias;
@@ -124,7 +117,6 @@ void TCBSpline3DClass::Update_Tangents(void)
 	float out_factor = 2.0f * (Keys[1].Time - Keys[0].Time) / total_time;
 	Tangents[end].InTangent *= in_factor;
 	Tangents[0].OutTangent *= out_factor;
-
 
 	// Now compute the tangents of all of the normal keys...
 	for (int pi=1;pi<Keys.Count() - 1; pi++) {
@@ -201,7 +193,6 @@ bool TCBSpline3DClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();

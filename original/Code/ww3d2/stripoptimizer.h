@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef WW3D2_STRIP_OPTIMIZER_H__
 #define WW3D2_STRIP_OPTIMIZER_H__

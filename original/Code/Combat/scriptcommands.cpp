@@ -68,15 +68,6 @@ bool	DamageModelDirection;		// HACK
 */
 void	Debug_Message( char *format, ... )
 {
-#ifdef WWDEBUG
-	SCRIPT_PTR_CHECK( format );
-	va_list arg_list;
-	va_start (arg_list, format);
-	StringClass string(true);
-	string.Format_Args( format, arg_list );
-	va_end (arg_list);
-	Debug_Script(( (const char *)string ));
-#endif
 }
 
 void Modify_Action( GameObject * obj, int action_id, const ActionParamsStruct & params, bool modify_move, bool modify_attack )
@@ -434,7 +425,6 @@ GameObject* Create_Object(const char* name, const Matrix3D& tm)
 	GameObject* object = ObjectLibraryManager::Create_Object(name);
 
 	if (object != NULL) {
-		WWASSERT( object->As_PhysicalGameObj() );
 		object->As_PhysicalGameObj()->Set_Transform(tm);
 		object->Start_Observers();
 	}
@@ -518,7 +508,6 @@ void Attach_Script(GameObject* object, const char* scriptName, const char* scrip
 
 	} else {
 
-		WWDEBUG_SAY(("Unable to create script: %s\r\n",scriptName));
 	}
 }
 
@@ -609,7 +598,6 @@ void	Send_Custom_Event( GameObject * from, GameObject * to, int type, int param,
 		((from != NULL) ? from->Get_ID() : 0), to->Get_ID(), type, param));
 #endif
 
-	WWASSERT( type < CUSTOM_EVENT_SYSTEM_FIRST );
 
 	if ( to ) {
 		if ( delay <= 0 ) {
@@ -668,7 +656,6 @@ GameObject *Find_Random_Simple_Object ( const char *preset_name )
 	//
 	SLNode<BaseGameObj> *node = NULL;
 	for (node = GameObjManager::Get_Game_Obj_List()->Head(); node; node = node->Next()) {
-		WWASSERT(node->Data() != NULL);
 
 		//
 		//	Is this a simple game obj?
@@ -717,7 +704,7 @@ void	Set_Model( GameObject * obj, const char * model_name )
 	if ( obj->As_PhysicalGameObj() && obj->As_PhysicalGameObj()->As_SimpleGameObj() ) {
 		if ( obj->As_PhysicalGameObj()->As_SimpleGameObj()->Get_Definition().Get_Is_Editor_Object() ) {
 			Debug_Say(( "Can't Set_Model on a IsEditorObject %s %s\n", obj->As_PhysicalGameObj()->As_SimpleGameObj()->Get_Definition().Get_Name(), model_name ));
-//			WWASSERT(0);
+//			assert(0);
 		}
 	}
 
@@ -754,7 +741,6 @@ void	Set_Animation( GameObject * obj, const char * anim_name, bool looping, cons
 	if ( pgobj->As_SmartGameObj() != NULL ) {
 		if ( pgobj->As_SmartGameObj()->Get_Action()->Is_Animating() ) {
 			Debug_Say(( "Can't Set_Animation when Action_Play_Animationing\n" ));
-			WWASSERT( 0 );
 		}
 	}
 
@@ -807,7 +793,6 @@ void	Set_Animation( GameObject * obj, const char * anim_name, bool looping, cons
 				cinobj->Set_Object_Dirty_Bit( NetworkObjectClass::BIT_RARE, true );
 
 			} else {
-				WWDEBUG_SAY(("Error! cinematic game obj %s not using DynamicAnimPhys.\r\n"));
 			}
 
 		} else {
@@ -859,7 +844,6 @@ void	Set_Animation_Frame( GameObject * obj, const char * anim_name, int frame )
 	if ( pgobj->As_SmartGameObj() != NULL ) {
 		if ( pgobj->As_SmartGameObj()->Get_Action()->Is_Animating() ) {
 			Debug_Say(( "Can't Set_Animation when Action_Play_Animationing\n" ));
-			WWASSERT( 0 );
 		}
 	}
 
@@ -917,7 +901,6 @@ int Create_2D_WAV_Sound( const char * wav_filename )
 
 	int sound_id = 0;
 	if ( sound != NULL ) {
-		WWASSERT( sound->Get_Loop_Count() != 0 );
 		sound_id = sound->Get_ID ();
 		sound->Play();
 		sound->Release_Ref();
@@ -1554,7 +1537,6 @@ void	Save_Data( ScriptSaver & saver, int id, int size, void * data )
 	saver.CSave.Begin_Micro_Chunk(id);
 	saver.CSave.Write(data,size);
 	saver.CSave.End_Micro_Chunk();
-	WWASSERT((unsigned)size <= 250);		// Make sure we don't save too much
 }
 
 
@@ -1579,9 +1561,7 @@ void	Load_Data( ScriptLoader & loader, int size, void * data )
 {
 	SCRIPT_PTR_CHECK( data );
 	unsigned int chunkSize = loader.CLoad.Cur_Micro_Chunk_Length();
-	WWASSERT((unsigned)size >= chunkSize);
 	loader.CLoad.Read(data, chunkSize);
-	WWASSERT((unsigned)size <= 250);		// Make sure we don't save too much
 }
 
 
@@ -2377,7 +2357,6 @@ void	Attach_To_Object_Bone( GameObject * object, GameObject * host_object, const
 		if ( host_object == NULL ) {
 			object->As_PhysicalGameObj()->Attach_To_Object_Bone( NULL, NULL );
 		} else {
-			WWASSERT( host_object->As_PhysicalGameObj() ) ;
 			object->As_PhysicalGameObj()->Attach_To_Object_Bone( host_object->As_PhysicalGameObj(), bone_name );
 		}
 	} else {

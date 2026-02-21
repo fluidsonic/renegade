@@ -20,7 +20,6 @@
 #include "playerdata.h"
 #include "encyclopediamgr.h"
 #include "apppackettypes.h"
-#include "wwprofile.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -530,7 +529,7 @@ void BuildingGameObj::Apply_Damage( const OffenseObjectClass & damager, float sc
 		Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
 	}
 
-//	WWDEBUG_SAY(("Applied damage to a building (prefix=%s) new health = %f\r\n",Get_Definition().MeshPrefix,DefenseObject.Get_Health()));
+//	
 
 	// Stats
 	if ( DefenseObject.Get_Health() <= 0 ) {
@@ -670,12 +669,6 @@ BuildingGameObj::Set_Normalized_Health (float health)
 	Update_State ();
 
 
-	WWDEBUG_SAY(("Building State Set:\r\n"));
-	WWDEBUG_SAY(("  prefix = %s mesh count = %d aggregate count = %d light count = %d\r\n",
-		Get_Definition().MeshPrefix,
-		InteriorMeshes.Count() + ExteriorMeshes.Count(),
-		Aggregates.Count(),
-		PowerOnLights.Count() + PowerOffLights.Count()));
 }
 
 
@@ -894,17 +887,14 @@ BuildingGameObj::Reset_Components (void)
 	RefMultiListIterator<StaticPhysClass> mesh_iterator(&InteriorMeshes);
 	
 	for (mesh_iterator.First(); !mesh_iterator.Is_Done(); mesh_iterator.Next()) {
-		WWASSERT(mesh_iterator.Peek_Obj()->Get_Observer() == this);
 		mesh_iterator.Peek_Obj()->Set_Observer(NULL);
 	}
 	for (mesh_iterator.First(&ExteriorMeshes); !mesh_iterator.Is_Done(); mesh_iterator.Next()) {
-		WWASSERT(mesh_iterator.Peek_Obj()->Get_Observer() == this);
 		mesh_iterator.Peek_Obj()->Set_Observer(NULL);
 	}
 
 	RefMultiListIterator<BuildingAggregateClass> agg_iterator(&Aggregates);
 	for (agg_iterator.First(); !agg_iterator.Is_Done(); agg_iterator.Next()) {
-		WWASSERT(agg_iterator.Peek_Obj()->Get_Observer() == this);
 		agg_iterator.Peek_Obj()->Set_Observer(NULL);
 	}
 						  
@@ -924,13 +914,10 @@ BuildingGameObj::Reset_Components (void)
 void
 BuildingGameObj::Add_Mesh (StaticPhysClass * terrain)
 {
-	WWASSERT(terrain != NULL);
 	if (Is_Interior_Mesh_Name(terrain->Peek_Model()->Get_Name())) {
-		WWASSERT(terrain->Get_Observer() == NULL);
 		InteriorMeshes.Add(terrain);
 		terrain->Set_Observer(this);
 	} else if (Is_Exterior_Mesh_Name(terrain->Peek_Model()->Get_Name())) {
-		WWASSERT(terrain->Get_Observer() == NULL);
 		ExteriorMeshes.Add(terrain);
 		terrain->Set_Observer(this);
 	}
@@ -945,13 +932,10 @@ BuildingGameObj::Add_Mesh (StaticPhysClass * terrain)
 void
 BuildingGameObj::Remove_Mesh (StaticPhysClass * terrain)
 {
-	WWASSERT(terrain != NULL);
 	if (Is_Interior_Mesh_Name(terrain->Peek_Model()->Get_Name())) {
-		WWASSERT(terrain->Get_Observer() == this);
 		terrain->Set_Observer(NULL);
 		InteriorMeshes.Remove(terrain);
 	} else if (Is_Exterior_Mesh_Name(terrain->Peek_Model()->Get_Name())) {
-		WWASSERT(terrain->Get_Observer() == this);
 		terrain->Set_Observer(NULL);
 		ExteriorMeshes.Remove(terrain);
 	}
@@ -966,9 +950,7 @@ BuildingGameObj::Remove_Mesh (StaticPhysClass * terrain)
 void
 BuildingGameObj::Add_Aggregate (BuildingAggregateClass * aggregate)
 {
-	WWASSERT(aggregate != NULL);
 	Aggregates.Add(aggregate);
-	WWASSERT(aggregate->Get_Observer() == NULL);
 	aggregate->Set_Observer(this);
 }
 
@@ -981,8 +963,6 @@ BuildingGameObj::Add_Aggregate (BuildingAggregateClass * aggregate)
 void
 BuildingGameObj::Remove_Aggregate (BuildingAggregateClass * aggregate)
 {
-	WWASSERT(aggregate != NULL);
-	WWASSERT(aggregate->Get_Observer() == this);
 	aggregate->Set_Observer(NULL);
 	Aggregates.Remove(aggregate);
 }
@@ -996,7 +976,6 @@ BuildingGameObj::Remove_Aggregate (BuildingAggregateClass * aggregate)
 void
 BuildingGameObj::Add_Light (LightPhysClass * light)
 {
-	WWASSERT(light != NULL);
 	if (light->Get_Group_ID() == 0) {
 		PowerOnLights.Add(light);
 	} else {
@@ -1218,8 +1197,6 @@ BuildingGameObj::Collect_Building_Components (void)
 	for (staticobj_iterator.First(); !staticobj_iterator.Is_Done(); staticobj_iterator.Next()) {
 		
 		StaticPhysClass * obj = staticobj_iterator.Peek_Obj()->As_StaticPhysClass ();
-		WWASSERT (obj != NULL);
-		WWASSERT (obj->Peek_Model() != NULL);
 
 		const char *obj_name = obj->Peek_Model()->Get_Name();
 
@@ -1321,8 +1298,6 @@ BuildingGameObj::Collect_Building_Components (void)
 	for (staticlight_iterator.First (); !staticlight_iterator.Is_Done (); staticlight_iterator.Next ()) {
 		
 		LightPhysClass * light = staticlight_iterator.Peek_Obj()->As_LightPhysClass();
-		WWASSERT(light != NULL);
-		WWASSERT(light->Peek_Model() != NULL);
 
 		//
 		//	Does this light match the prefix that this building is expecting?

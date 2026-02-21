@@ -13,7 +13,6 @@
 #include "backgroundmgr.h"
 #include "conversationmgr.h"
 #include "weathermgr.h"
-#include "wwmemlog.h"
 #include "translatedb.h"
 #include "mapmgr.h"
 #include "encyclopediamgr.h"
@@ -21,7 +20,6 @@
 #include "mixfile.h"
 #include "texturethumbnail.h"
 #include "systeminfolog.h"
-#include "wwprofile.h"
 #include <stdlib.h>
 #include "specialbuilds.h"
 
@@ -66,7 +64,6 @@ void _cdecl SaveGameManager::Save_Game( const char * filename, ... )
 	CurrentGameFilename = filename;
 
 	FileClass * file = _TheWritingFileFactory->Get_File( filename );
-	WWASSERT(file);
 	file->Open(FileClass::WRITE);
 
 	ChunkSaveClass csave(file);
@@ -201,18 +198,14 @@ void	SaveGameManager::Pre_Load_Game
 
 void	SaveGameManager::Load_Game( const char * filename )
 {
-	WWLOG_PREPARE_TIME_AND_MEMORY("Load_Game");
 
-	WWMEMLOG(MEM_GAMEDATA);
 	Debug_Say(( "Load Game %s\n", filename ));
 	CurrentGameFilename = filename;
 
 	FileClass * file = _TheFileFactory->Get_File( filename );
-	WWASSERT( file );
 	file->Open( FileClass::READ );
 	ChunkLoadClass cload(file);
 
-	WWLOG_INTERMEDIATE("Open file");
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
@@ -235,16 +228,13 @@ void	SaveGameManager::Load_Game( const char * filename )
 				{
 				// Load level specific Defs
 				StringClass temp_ddb(MapFilename,true);
-				WWASSERT( temp_ddb.Get_Length() > 4 );
 				temp_ddb.Erase( MapFilename.Get_Length()-4, 4 );
 				temp_ddb	+= ".ddb";
 				Load_Definitions(temp_ddb);
 				}
-				WWLOG_INTERMEDIATE("Load_Definitions");
 
 				// Load the static data
 				Load_Level();	
-				WWLOG_INTERMEDIATE("Load_Level");
 				
 				break;
 								
@@ -252,7 +242,6 @@ void	SaveGameManager::Load_Game( const char * filename )
 				if (CombatManager::I_Am_Server()) {
 					SaveLoadSystemClass::Load( cload, false );
 				}
-				WWLOG_INTERMEDIATE("Load");
 				break;
 
 			default:
@@ -265,7 +254,6 @@ void	SaveGameManager::Load_Game( const char * filename )
 
 	file->Close();
 	_TheFileFactory->Return_File(file);
-	WWLOG_INTERMEDIATE("Rest of the stuff");
 }
 
 
@@ -335,7 +323,6 @@ bool SaveGameManager::Peek_Description
 	//	Open the file as a chunk
 	//
 	FileClass * file = _TheFileFactory->Get_File(filename);
-	WWASSERT(file != NULL);
 	file->Open(FileClass::READ);
 	ChunkLoadClass cload(file);
 
@@ -398,7 +385,6 @@ bool SaveGameManager::Peek_Map_Name( const char * filename, StringClass &map_nam
 	//	Open the file as a chunk
 	//
 	FileClass * file = _TheFileFactory->Get_File(filename);
-	WWASSERT(file != NULL);
 	file->Open(FileClass::READ);
 	ChunkLoadClass cload(file);
 
@@ -471,7 +457,6 @@ void	SaveGameManager::Save_Definitions( const char * filename )
 
 void	SaveGameManager::Load_Definitions( const char * filename )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	Debug_Say(( "Load Definitions %s\n", filename ));
 	Load_Save_Load_System( filename, true );	// true = automatic post load processing
 }
@@ -482,7 +467,6 @@ void	SaveGameManager::Load_Definitions( const char * filename )
 void _cdecl SaveGameManager::Save_Save_Load_System( const char * filename, ... )
 {
 	FileClass * file = _TheWritingFileFactory->Get_File( filename );
-	WWASSERT(file);
 	file->Open(FileClass::WRITE);
 	ChunkSaveClass csave(file);
 
@@ -514,7 +498,7 @@ void	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_po
 		_TheFileFactory->Return_File(file);
 	} else {
 		Debug_Say(( "Failed to load file %s\n", filename ));
-//		WWASSERT( file );
+//		assert( file );
 	}
 }
 

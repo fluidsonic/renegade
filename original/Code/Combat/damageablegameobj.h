@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	DAMAGEABLEGAMEOBJ_H
 #define	DAMAGEABLEGAMEOBJ_H

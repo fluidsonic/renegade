@@ -53,7 +53,6 @@
 #include "bandwidthcheck.h"
 #include "serversettings.h"
 
-#include "gamespyadmin.h"
 #include "specialbuilds.h"
 #include "demosupport.h"
 #include "specialbuilds.h"
@@ -114,7 +113,7 @@ cGameData::cGameData(void)	:
 	IsMapCycleOver (false),
 	MapCycleIndex(0)
 {
-   //WWDEBUG_SAY(("cGameData::cGameData\n"));
+   //
 
 	IsIntermission.Set(				false);
 	IsDedicated.Set(					false);
@@ -171,7 +170,7 @@ cGameData::cGameData(void)	:
 //-----------------------------------------------------------------------------
 cGameData::~cGameData(void)
 {
-   //WWDEBUG_SAY(("cGameData::~cGameData\n"));
+   //
 }
 
 //-----------------------------------------------------------------------------
@@ -283,7 +282,7 @@ void cGameData::Reset_Game(bool is_reloaded)
 //-----------------------------------------------------------------------------
 void cGameData::Swap_Team_Sides(void)
 {
-	//WWASSERT(Is_Team_Game());
+	//assert(Is_Team_Game());
 
 	for (
 		SLNode<cPlayer> * player_node = cPlayerManager::Get_Player_Object_List()->Head();
@@ -321,7 +320,7 @@ void cGameData::Swap_Team_Sides(void)
 //-----------------------------------------------------------------------------
 void cGameData::Remix_Team_Sides(void)
 {
-	//WWASSERT(Is_Team_Game());
+	//assert(Is_Team_Game());
 
 
 	if (IsClanGame.Is_True()) {
@@ -364,7 +363,7 @@ void cGameData::Remix_Team_Sides(void)
 //-----------------------------------------------------------------------------
 void cGameData::Rebalance_Team_Sides(void)
 {
-	//WWASSERT(Is_Team_Game());
+	//assert(Is_Team_Game());
 
 
 	if (IsClanGame.Is_True()) {
@@ -432,18 +431,13 @@ void cGameData::Set_Ip_And_Port(void)
 	Set_Ip_Address(local_address.sin_addr.s_addr);
 	*/
 
-	ULONG ip = 0;
-	if (cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
-		ip = cUserOptions::PreferredGameSpyNic.Get();
-	} else {
-		ip = cUserOptions::PreferredLanNic.Get();
-	}
+	ULONG ip = cUserOptions::PreferredLanNic.Get();
 
 	if (g_ip_override != INADDR_NONE) {
 		ip = g_ip_override;
 	}
 
-	//WWASSERT(ip != 0);
+	//assert(ip != 0);
 	Set_Ip_Address(ip);
 }
 
@@ -1259,7 +1253,7 @@ int cGameData::Choose_Available_Team(int preference)
 //-----------------------------------------------------------------------------
 int cGameData::Choose_Smallest_Team(void)
 {
-	//WWASSERT(Is_Team_Game());
+	//assert(Is_Team_Game());
 
 	cTeam * p_team_0 = cTeamManager::Find_Team(0);
 	cTeam * p_team_1 = cTeamManager::Find_Team(1);
@@ -1567,7 +1561,7 @@ cGameData * cGameData::Create_Game_Of_Type(GameTypeEnum game_type)
 		//case GAME_TYPE_DEATHMATCH:			p_game_data = new cGameDataDeathMatch;			break;
 		//case GAME_TYPE_TEAM_DEATHMATCH:	p_game_data = new cGameDataTeamDeathMatch;	break;
 		case GAME_TYPE_CNC:					p_game_data = new cGameDataCnc;					break;
-		default:									DIE;														break;
+		default:									assert(false);														break;
 	}
 
 	return p_game_data;
@@ -1600,9 +1594,9 @@ const char * cGameData::Get_Game_Type_Name(void) const
 //-----------------------------------------------------------------------------
 void cGameData::Add_Bottom_Text(WideStringClass & text)
 {
-	//WWASSERT(text != NULL);
+	//assert(text != NULL);
 
-/* 	WWASSERT(PFont != NULL);
+/* 	assert(PFont != NULL);
 	float x = Render2DClass::Get_Screen_Resolution().Center().X -
 		PFont->String_Width(text) / 2.0f;
 
@@ -2261,12 +2255,12 @@ void cGameData::Get_Description(WideStringClass & description)
 
 //-----------------------------------------------------------------------------
 
-//cGameData *						The_Game(void)							{WWASSERT(PTheGameData != NULL); return PTheGameData;}
+//cGameData *						The_Game(void)							{assert(PTheGameData != NULL); return PTheGameData;}
 cGameData *						The_Game(void)							{return PTheGameData;}
 
-cGameDataSinglePlayer *		The_Single_Player_Game(void)		{WWASSERT(The_Game()->As_Single_Player() != NULL);		return The_Game()->As_Single_Player();}
-cGameDataSkirmish *			The_Skirmish_Game(void)				{WWASSERT(The_Game()->As_Skirmish() != NULL);			return The_Game()->As_Skirmish();}
-cGameDataCnc *					The_Cnc_Game(void)					{WWASSERT(The_Game()->As_Cnc() != NULL);					return The_Game()->As_Cnc();}
+cGameDataSinglePlayer *		The_Single_Player_Game(void)		{assert(The_Game()->As_Single_Player() != NULL);		return The_Game()->As_Single_Player();}
+cGameDataSkirmish *			The_Skirmish_Game(void)				{assert(The_Game()->As_Skirmish() != NULL);			return The_Game()->As_Skirmish();}
+cGameDataCnc *					The_Cnc_Game(void)					{assert(The_Game()->As_Cnc() != NULL);					return The_Game()->As_Cnc();}
 
 
 
@@ -2311,8 +2305,8 @@ void cGameData::Set_Full_Score_Time_Threshold_Mins(int mins)
    //packet.Add(FullScoreTimeThresholdMins);
    //Set_Min_Game_Time_Required_Mins(			packet.Get(i_placeholder));
    //Set_Full_Score_Time_Threshold_Mins(		packet.Get(i_placeholder));
-//cGameDataDeathMatch *		The_Deathmatch_Game(void)			{WWASSERT(The_Game()->As_Deathmatch() != NULL);			return The_Game()->As_Deathmatch();}
-//cGameDataTeamDeathMatch *	The_Team_Deathmatch_Game(void)	{WWASSERT(The_Game()->As_Team_Deathmatch() != NULL);	return The_Game()->As_Team_Deathmatch();}
+//cGameDataDeathMatch *		The_Deathmatch_Game(void)			{assert(The_Game()->As_Deathmatch() != NULL);			return The_Game()->As_Deathmatch();}
+//cGameDataTeamDeathMatch *	The_Team_Deathmatch_Game(void)	{assert(The_Game()->As_Team_Deathmatch() != NULL);	return The_Game()->As_Team_Deathmatch();}
 
 	//if (Is_Team_Game()) {
 	/*

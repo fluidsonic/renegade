@@ -5,11 +5,8 @@
 #include "definitionclassids.h"
 #include "chunkio.h"
 #include "persistfactory.h"
-#include "wwdebug.h"
-#include "wwmemlog.h"
 #include "twiddler.h"
 #include <string.h>
-#include "wwprofile.h"
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +83,6 @@ DefinitionMgrClass::Find_Definition (uint32 id, bool twiddle)
 	while (keep_going) {
 		
 		DefinitionClass *curr_def = _SortedDefinitionArray[index];
-		WWASSERT (curr_def != NULL);
 
 		//
 		//	Is this the definition we are looking for?
@@ -191,7 +187,6 @@ DefinitionMgrClass::Find_Typed_Definition (const char *name, uint32 class_id, bo
 	//	Sanity check
 	//
 	if (DefinitionHash == NULL) {
-		WWDEBUG_SAY (("DefinitionMgrClass::Find_Typed_Definition () failed due to a NULL DefinitionHash. %s\n", name));
 		return NULL;
 	}
 
@@ -203,7 +198,6 @@ DefinitionMgrClass::Find_Typed_Definition (const char *name, uint32 class_id, bo
 	//
 	// TSS null deref on this sucker 08/03/01
 	//
-	WWASSERT(DefinitionHash != NULL);
 
 	StringClass lower_case_name(name,true);
 	_strlwr(lower_case_name.Peek_Buffer());
@@ -212,7 +206,6 @@ DefinitionMgrClass::Find_Typed_Definition (const char *name, uint32 class_id, bo
 	if (defs) {
 		for (int i=0;i<defs->Length();++i) {
 			DefinitionClass* curr_def=(*defs)[i];
-			WWASSERT(curr_def);
 			uint32 curr_class_id = curr_def->Get_Class_ID ();
 			if (	(curr_class_id == class_id) ||
 					(::SuperClassID_From_ClassID (curr_class_id) == class_id) ||
@@ -285,11 +278,9 @@ DefinitionMgrClass::List_Available_Definitions (void)
 	//
 	//	Loop through all the definitions and print the definition name
 	//
-	WWDEBUG_SAY(("Available definitions:\n"));
 	for (int index = 0; index < _DefinitionCount; index ++) {
 		DefinitionClass *curr_def = _SortedDefinitionArray[index];		
 		if (curr_def != NULL) {
-			WWDEBUG_SAY(("  >%s<\n", curr_def->Get_Name ()));
 		}
 	}
 
@@ -308,13 +299,11 @@ DefinitionMgrClass::List_Available_Definitions (int superclass_id)
 	//
 	//	Loop through all the definitions and print the definition name
 	//
-	WWDEBUG_SAY(("Available superclass definitions for 0x%8X:\n", superclass_id));
 	DefinitionClass *definition = NULL;
 	for (	definition = Get_First (superclass_id, DefinitionMgrClass::ID_SUPERCLASS);
 			definition != NULL;
 			definition = Get_Next (definition, superclass_id, DefinitionMgrClass::ID_SUPERCLASS))
 	{
-		WWDEBUG_SAY(("  >%s<\n", definition->Get_Name ()));
 	}
 
 	return ;
@@ -410,7 +399,6 @@ DefinitionMgrClass::Get_Next
 DefinitionClass *
 DefinitionMgrClass::Get_Next (DefinitionClass *curr_def)
 {
-	WWASSERT (curr_def != NULL);
 	DefinitionClass *definition = NULL;
 
 	int index = curr_def->m_DefinitionMgrLink + 1;
@@ -511,7 +499,6 @@ DefinitionMgrClass::Prepare_Definition_Array (void)
 void
 DefinitionMgrClass::Register_Definition (DefinitionClass *definition)
 {
-	WWASSERT (definition != NULL);
 	if (definition != NULL && definition->m_DefinitionMgrLink == -1 && definition->Get_ID () != 0) {
 		//
 		//	Make sure the definition array is large enough
@@ -532,7 +519,6 @@ DefinitionMgrClass::Register_Definition (DefinitionClass *definition)
 		while (keep_going) {
 			
 			DefinitionClass *curr_def = _SortedDefinitionArray[index];
-			WWASSERT (curr_def != NULL);
 
 			//
 			//	Check to make sure we aren't trying to register a definition
@@ -604,7 +590,6 @@ DefinitionMgrClass::Register_Definition (DefinitionClass *definition)
 void
 DefinitionMgrClass::Unregister_Definition (DefinitionClass *definition)
 {
-	WWASSERT (definition != 0);
 	//WWASSERT (definition->m_DefinitionMgrLink >= 0 && definition->m_DefinitionMgrLink < _DefinitionCount);
 
 	if (definition != NULL && definition->m_DefinitionMgrLink != -1) {
@@ -637,7 +622,6 @@ DefinitionMgrClass::Save
 	ChunkSaveClass &	csave
 )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	
 	bool retval = true;
 
@@ -667,7 +651,6 @@ DefinitionMgrClass::Save
 bool
 DefinitionMgrClass::Load (ChunkLoadClass &cload)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	bool retval = true;
 
 	while (cload.Open_Chunk ()) {
@@ -896,8 +879,6 @@ DefinitionMgrClass::fnCompareDefinitionsCallback
 	const void *elem2
 )
 {
-   WWASSERT (elem1 != NULL);
-   WWASSERT (elem2 != NULL);
    DefinitionClass *definition1 = *((DefinitionClass **)elem1);
    DefinitionClass *definition2 = *((DefinitionClass **)elem2);
 

@@ -1,5 +1,4 @@
 #include "control.h"
-#include "wwdebug.h"
 #include "input.h"
 #include "wwmath.h"
 #include "wwpacket.h"
@@ -94,8 +93,6 @@ bool	ControlClass::Load( ChunkLoadClass &cload )
 //JITTER
 void	ControlClass::Clear_Boolean( void )	
 { 
-	WWASSERT( (8 * sizeof(ControlClass::OneTimeBooleanBits)) >= ControlClass::NUM_BOOLEAN_ONE_TIME  );
-	WWASSERT( (8 * sizeof(ControlClass::ContinuousBooleanBits)) >= ControlClass::NUM_BOOLEAN_CONTINUOUS );
 
 	OneTimeBooleanBits	= 0;
 	ContinuousBooleanBits	= 0;
@@ -104,8 +101,6 @@ void	ControlClass::Clear_Boolean( void )
 
 void	ControlClass::Clear_Control( void )	
 { 
-	WWASSERT( (8 * sizeof(ControlClass::OneTimeBooleanBits)) >= ControlClass::NUM_BOOLEAN_ONE_TIME );
-	WWASSERT( (8 * sizeof(ControlClass::ContinuousBooleanBits)) >= ControlClass::NUM_BOOLEAN_CONTINUOUS );
 
 	OneTimeBooleanBits	= 0;
 	ContinuousBooleanBits	= 0;
@@ -355,10 +350,8 @@ float	ControlClass::Get_Clamp(AnalogControl control)
          clamp = Input::Get_Clamp(INPUT_FUNCTION_WEAPON_LEFT);
          break;
       default:
-		   WWASSERT(0);
    }
 
-   WWASSERT(clamp > 0);
    return clamp;
 }
 */
@@ -366,8 +359,6 @@ float	ControlClass::Get_Clamp(AnalogControl control)
 /*
 BYTE ControlClass::Scale_Analog(float clamp, float unscaled) 
 {
-   WWASSERT(unscaled > -clamp - WWMATH_EPSILON);
-   WWASSERT(unscaled < +clamp + WWMATH_EPSILON);
    return (BYTE) (255 * WWMath::Clamp((unscaled + clamp) / (2 * clamp)));
 }
 
@@ -379,8 +370,6 @@ float ControlClass::Unscale_Analog(float clamp, BYTE scaled)
    } else {
       unscaled = scaled / 255.0f * 2 * clamp - clamp;
    }
-   WWASSERT(unscaled > -clamp - WWMATH_EPSILON);
-   WWASSERT(unscaled < +clamp + WWMATH_EPSILON);
    return unscaled;
 }
 */

@@ -6,7 +6,6 @@
 #include "wwmath.h"
 #include "chunkio.h"
 #include "w3d_file.h"
-#include "wwmemlog.h"
 
 
 /*********************************************************************************************** 
@@ -688,7 +687,7 @@ void HTreeClass::Combo_Update
 			if (weight_total != 0.0f ) {
 				// SKB: Removed assert because I have a case where I don't want normalization.
 				// 	  One anim moves X, the other moves Y.  Assert was just in to warn programmers.	
-//				WWASSERT(WWMath::Fabs( weight_total - 1.0 ) < WWMATH_EPSILON);
+//				assert(WWMath::Fabs( weight_total - 1.0 ) < WWMATH_EPSILON);
 
 				pivot->Transform.Translate(trans);
 				pivot->Transform = pivot->Transform * Build_Matrix3D(q0);
@@ -939,7 +938,6 @@ HTreeClass * HTreeClass::Create_Interpolated(const HTreeClass * tree_base,
 														   const HTreeClass * tree_b, 
 														   float a_scale, float b_scale )
 {
-	WWMEMLOG(MEM_ANIMATION);
 	assert( tree_base->NumPivots == tree_a->NumPivots );
 	assert( tree_base->NumPivots == tree_b->NumPivots );
 

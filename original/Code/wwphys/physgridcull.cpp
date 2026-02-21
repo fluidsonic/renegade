@@ -1,6 +1,4 @@
 #include "physgridcull.h"
-#include "wwdebug.h"
-#include "wwprofile.h"
 #include "pscene.h"
 #include "physcoltest.h"
 #include "physinttest.h"
@@ -63,7 +61,6 @@ void PhysGridCullClass::Re_Partition(const Vector3 & min,const Vector3 & max,flo
 	** Tell the parent class to repartition
 	*/
 	TypedGridCullSystemClass<PhysClass>::Re_Partition(min,max,objdim);
-	WWASSERT(Scene != NULL);
 }
 
 void PhysGridCullClass::Collect_Visible_Objects(const FrustumClass & frustum,VisTableClass * pvs,RefPhysListClass & visobjlist)

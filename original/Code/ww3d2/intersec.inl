@@ -16,9 +16,6 @@
 **	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef INTERSEC_INL
 #define INTERSEC_INL

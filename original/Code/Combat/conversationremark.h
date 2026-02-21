@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __CONVERSATIONREMARK_H
 #define __CONVERSATIONREMARK_H

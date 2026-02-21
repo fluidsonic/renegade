@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef BOXROBJ_H
 #define BOXROBJ_H

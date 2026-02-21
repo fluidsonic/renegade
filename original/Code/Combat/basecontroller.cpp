@@ -71,7 +71,6 @@ BaseControllerClass::BaseControllerClass (void)	:
 ////////////////////////////////////////////////////////////////
 BaseControllerClass::~BaseControllerClass (void)
 {
-	WWASSERT ( PlayerType == PLAYERTYPE_GDI || PlayerType == PLAYERTYPE_NOD );
 	if (CurrentBases[PlayerType] == this) {
 		CurrentBases[PlayerType] = NULL;
 	}
@@ -102,7 +101,6 @@ BaseControllerClass::Shutdown (void)
 void
 BaseControllerClass::Initialize (int player_type)
 {
-	WWASSERT ( player_type == PLAYERTYPE_GDI || player_type == PLAYERTYPE_NOD );
 
 	//
 	//	Remember which team this base belongs to
@@ -126,7 +124,6 @@ BaseControllerClass::Initialize (int player_type)
 	if (PlayerType == PLAYERTYPE_GDI) {
 		Set_Network_ID (NETID_GDI_BASE_CONTROLLER);
 	} else {
-		WWASSERT(PlayerType == PLAYERTYPE_NOD);
 		Set_Network_ID (NETID_NOD_BASE_CONTROLLER);
 	}
 

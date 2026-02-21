@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__AIRSTRIPGAMEOBJ_H
 #define	__AIRSTRIPGAMEOBJ_H

@@ -143,144 +143,22 @@ void WidgetRenderOpClass::Render(RenderInfoClass & rinfo)
 
 void WidgetRenderOpClass::render_point(RenderInfoClass & rinfo)
 {
-#ifdef WWDEBUG
-	// Get the point model
-	RenderObjClass * model = WidgetSystem::Get_Debug_Widget(WidgetSystem::WIDGET_POINT);
-	if (model == NULL) return;
-	if (model->Class_ID() != RenderObjClass::CLASSID_MESH) {
-		model->Release_Ref();
-		return;
-	}
-
-	// Set its color
-	MaterialInfoClass * matinfo = model->Get_Material_Info();
-	if (matinfo) {
-		VertexMaterialClass * vmat = matinfo->Peek_Vertex_Material(0);
-		if (vmat) {
-			vmat->Set_Emissive(Color);
-		}
-		matinfo->Release_Ref();
-	}
-
-	// Render it
-	model->Set_Transform(Matrix3D(V0));
-	model->Render(rinfo);
-	model->Release_Ref();
-#endif
 }
 
 void WidgetRenderOpClass::render_vector(RenderInfoClass & rinfo)
 {
-#ifdef WWDEBUG
-	if (V1.Length2() < WWMATH_EPSILON) return;
-	
-	RenderObjClass * vecmodel = WidgetSystem::Get_Debug_Widget(WidgetSystem::WIDGET_VECTOR);
-	if (vecmodel) {
-
-		// set the color, the vector model is a skin so we have to get the
-		// first sub-object, get its material info, then get the first vertex material
-		RenderObjClass * subobj = vecmodel->Get_Sub_Object(0);
-		if (subobj) {
-			MaterialInfoClass * matinfo = subobj->Get_Material_Info();
-			if (matinfo) {
-				VertexMaterialClass * vmat = matinfo->Peek_Vertex_Material(0);
-				if (vmat) {
-					vmat->Set_Emissive(Color);
-				}
-				matinfo->Release_Ref();
-			}
-			subobj->Release_Ref();
-		}
-
-		// set the transform to be at p0, pointing -z at p1
-		Matrix3D tm0;
-		Matrix3D tm1(1);
-		tm0.Look_At(V0,V0+V1,0.0f);	// point -z from pt along vec
-		tm1.Translate(Vector3(0,0,1.0f - V1.Length()));	// p1 is along -z (Point1 starts at -1)
-		vecmodel->Set_Transform(tm0);
-	
-		// set bone "Point1" to be at p1
-		int p1index = vecmodel->Get_Bone_Index("Point1");
-		vecmodel->Capture_Bone(p1index);
-		vecmodel->Control_Bone(p1index,tm1);
-
-		vecmodel->Render(rinfo);
-		vecmodel->Release_Ref();
-	}
-#endif
 }
 
 void WidgetRenderOpClass::render_aabox(RenderInfoClass & rinfo)
 {
-#ifdef WWDEBUG
-	RenderObjClass * model = WidgetSystem::Get_Debug_Widget(WidgetSystem::WIDGET_AABOX);
-	if (model == NULL) return;
-	if (model->Class_ID() != RenderObjClass::CLASSID_AABOX) {
-		model->Release_Ref();
-		return;
-	}
-
-	// force this box to get rendered (bypass the built in collision bit masking)
-	int oldmask = WW3D::Get_Collision_Box_Display_Mask();
-	int newmask = oldmask | 0x01;
-	WW3D::Set_Collision_Box_Display_Mask(newmask);
-
-	AABoxRenderObjClass * boxmodel = (AABoxRenderObjClass *)model;
-	boxmodel->Set_Local_Center_Extent(V0,V1);
-	boxmodel->Set_Transform(Matrix3D(1));
-	boxmodel->Set_Color(Color);	
-	boxmodel->Set_Opacity(Opacity);
-	boxmodel->Render(rinfo);
-	boxmodel->Release_Ref();
-
-	// restore the old mask
-	WW3D::Set_Collision_Box_Display_Mask(oldmask);
-#endif
 }
 
 void WidgetRenderOpClass::render_obbox(RenderInfoClass & rinfo)
 {
-#ifdef WWDEBUG
-	RenderObjClass * model = WidgetSystem::Get_Debug_Widget(WidgetSystem::WIDGET_OBBOX);
-	if (model == NULL) return;
-	if (model->Class_ID() != RenderObjClass::CLASSID_OBBOX) {
-		model->Release_Ref();
-		return;
-	}
-
-	// force this box to get rendered (bypass the built in collision bit masking)
-	int oldmask = WW3D::Get_Collision_Box_Display_Mask();
-	int newmask = oldmask | 0x01;
-	WW3D::Set_Collision_Box_Display_Mask(newmask);
-
-	OBBoxRenderObjClass * boxmodel = (OBBoxRenderObjClass *)model;
-	boxmodel->Set_Collision_Type(0xFF);
-	boxmodel->Set_Transform(Transform);
-	boxmodel->Set_Local_Center_Extent(V0,V1);
-	boxmodel->Set_Color(Color);	
-	boxmodel->Set_Opacity(Opacity);
-	boxmodel->Render(rinfo);
-	boxmodel->Release_Ref();
-
-	// restore the old mask
-	WW3D::Set_Collision_Box_Display_Mask(oldmask);
-#endif
 }
 
 void WidgetRenderOpClass::render_axes(RenderInfoClass & rinfo)
 {
-#ifdef WWDEBUG
-	RenderObjClass * model = WidgetSystem::Get_Debug_Widget(WidgetSystem::WIDGET_AXES);
-	if (model == NULL) return;
-	if (model->Class_ID() != RenderObjClass::CLASSID_MESH) {
-		model->Release_Ref();
-		return;
-	}
-
-	model->Set_Transform(Transform);
-	model->Render(rinfo);
-	model->Release_Ref();
-#endif
 }
 
 
@@ -291,9 +169,6 @@ void WidgetRenderOpClass::render_axes(RenderInfoClass & rinfo)
 *******************************************/
 WidgetUserClass::WidgetUserClass(void)
 {
-#ifdef WWDEBUG
-	WidgetRenderOpList = NULL;
-#endif
 }
 
 WidgetUserClass::~WidgetUserClass(void)
@@ -301,95 +176,13 @@ WidgetUserClass::~WidgetUserClass(void)
 	Reset_Debug_Widget_List();
 }
 
-#ifdef WWDEBUG
-void WidgetUserClass::Reset_Debug_Widget_List(void)
-{
-	WidgetRenderOpClass * op = WidgetRenderOpList;
-	while (op) {
-		WidgetRenderOpClass * nextop = op->Get_Next();
-		delete op;
-		op = nextop;
-	}
-	WidgetRenderOpList = NULL;
-}
-#endif
 
-#ifdef WWDEBUG
-void WidgetUserClass::Add_Debug_Widget(WidgetRenderOpClass * op)
-{
-	WWASSERT(op->Get_Next() == NULL);
-	op->Set_Next(WidgetRenderOpList);
-	WidgetRenderOpList = op;
-}
-#endif
 
-#ifdef WWDEBUG
-void WidgetUserClass::Add_Debug_Point(const Vector3 & p,const Vector3 & color)
-{
-	WidgetRenderOpClass * op = new WidgetRenderOpClass;
-	op->Set_Color(color);
-	op->Init_Point(p);
-	Add_Debug_Widget(op);
-}
-#endif
 
-#ifdef WWDEBUG
-void WidgetUserClass::Add_Debug_Vector(const Vector3 & p,const Vector3 & v,const Vector3 & color)
-{
-	if (v.Length2() > 0.0f) {
-		WidgetRenderOpClass * op = new WidgetRenderOpClass;
-		op->Set_Color(color);
-		op->Init_Vector(p,v);
-		Add_Debug_Widget(op);
-	}
-}
-#endif
 
-#ifdef WWDEBUG
-void WidgetUserClass::Add_Debug_AABox(const AABoxClass & box,const Vector3 & color,float opacity)
-{
-	WidgetRenderOpClass * op = new WidgetRenderOpClass;
-	op->Set_Color(color);
-	op->Set_Opacity(opacity);
-	op->Init_AABox(box);
-	Add_Debug_Widget(op);
-}
-#endif
 
-#ifdef WWDEBUG
-void WidgetUserClass::Add_Debug_OBBox(const OBBoxClass & box,const Vector3 & color,float opacity)
-{
-	WidgetRenderOpClass * op = new WidgetRenderOpClass;
-	op->Set_Color(color);
-	op->Set_Opacity(opacity);
-	op->Init_OBBox(box);
-	Add_Debug_Widget(op);
-}
-#endif
 
-#ifdef WWDEBUG
-void WidgetUserClass::Add_Debug_Axes(const Matrix3D & transform,const Vector3 & color)
-{
-	WidgetRenderOpClass * op = new WidgetRenderOpClass;
-	op->Set_Color(color);
-	op->Init_Coord_Axes(transform);
-	Add_Debug_Widget(op);
-}
-#endif
 
-#ifdef WWDEBUG
-void WidgetUserClass::Render_Debug_Widgets(RenderInfoClass & rinfo)
-{
-	WW3D::Flush(rinfo);
-
-	WidgetRenderOpClass * op = WidgetRenderOpList;
-	while (op) {
-		op->Render(rinfo);
-		op = op->Get_Next();
-		WW3D::Flush(rinfo);
-	}
-}
-#endif
 
 
 

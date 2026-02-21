@@ -9,14 +9,10 @@
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
-#include "wwprofile.h"
-
 
 /*
 ** SAMSiteGameObjDef
 */
-DECLARE_FORCE_LINK( SAMSite )
 
 SimplePersistFactoryClass<SAMSiteGameObjDef, CHUNKID_GAME_OBJECT_DEF_SAMSITE>	_SAMSiteGameObjDefPersistFactory;
 
@@ -77,7 +73,6 @@ const PersistFactoryClass & SAMSiteGameObjDef::Get_Factory (void) const
 	return _SAMSiteGameObjDefPersistFactory; 
 }
 
-
 /*
 **
 */
@@ -87,7 +82,6 @@ const PersistFactoryClass & SAMSiteGameObj::Get_Factory (void) const
 {
 	return _SAMSiteGameObjPersistFactory;
 }
-
 
 typedef enum {
 	SAMSITE_STATE_DOWN,
@@ -142,7 +136,6 @@ const SAMSiteGameObjDef & SAMSiteGameObj::Get_Definition( void ) const
 {
 	return (const SAMSiteGameObjDef &)BaseGameObj::Get_Definition();
 }
-
 
 /*
 ** SAMSiteGameObj Save and Load
@@ -213,10 +206,8 @@ bool	SAMSiteGameObj::Load( ChunkLoadClass &cload )
 */
 void	SAMSiteGameObj::Import_Frequent( BitStreamClass & packet )
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
    SmartGameObj::Import_Frequent( packet );
-   WWASSERT(packet.Is_Flushed());
 }
 
 void	SAMSiteGameObj::Export_Frequent( BitStreamClass & packet )
@@ -295,7 +286,6 @@ bool	SAMSiteGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 	return true;
 }
 
-
 void SAMSiteGameObj::Generate_Control( void )
 {
 	if ( State == SAMSITE_STATE_UP ) {
@@ -307,7 +297,7 @@ static char * _profile_name = "SAMSite Think";
 void	SAMSiteGameObj::Think( void ) 
 {
 	SmartGameObj *target = NULL;
-{	WWPROFILE( _profile_name );
+{	
 
 	// Find Nearest Emeny
 	Vector3	my_pos;
@@ -335,7 +325,7 @@ void	SAMSiteGameObj::Think( void )
 	}
 }
 	SmartGameObj::Think(); 									  
-{	WWPROFILE( _profile_name );
+{	
 
 	if ( State == SAMSITE_STATE_DOWN ) {
 		if ( target ) {

@@ -1,14 +1,12 @@
 #include "vehiclefactorygameobj.h"
 #include "basecontroller.h"
 #include "vehicle.h"
-#include "wwhack.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
 #include "debug.h"
 #include "scriptzone.h"
-#include "wwprofile.h"
 #include "basecontroller.h"
 #include "doors.h"
 #include "objlibrary.h"
@@ -19,14 +17,12 @@
 #include "gameobjmanager.h"
 #include "mapmgr.h"
 
-
 const float UNITIALIZED_TIMER		= -100.0F;
 const int	DEFAULT_MAX_VEHICLES_PER_TEAM = 8;
 
 ////////////////////////////////////////////////////////////////
 //	Hacks
 ////////////////////////////////////////////////////////////////
-DECLARE_FORCE_LINK (VehicleFactory)
 
 ////////////////////////////////////////////////////////////////
 //	Editable and persist factories
@@ -64,7 +60,6 @@ enum
 	MICROCHUNKID_GENERATING_VEHICLE_ID,
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	VehicleFactoryGameObjDef
@@ -86,7 +81,6 @@ VehicleFactoryGameObjDef::VehicleFactoryGameObjDef (void) :
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~VehicleFactoryGameObjDef
@@ -96,7 +90,6 @@ VehicleFactoryGameObjDef::~VehicleFactoryGameObjDef (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -108,7 +101,6 @@ VehicleFactoryGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_VEHICLE_FACTORY;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -123,7 +115,6 @@ VehicleFactoryGameObjDef::Create (void) const
 
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -143,7 +134,6 @@ VehicleFactoryGameObjDef::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -176,7 +166,6 @@ VehicleFactoryGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -202,7 +191,6 @@ VehicleFactoryGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -213,7 +201,6 @@ VehicleFactoryGameObjDef::Get_Factory (void) const
 { 
 	return _VehicleFactoryGameObjDefPersistFactory; 
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -232,7 +219,6 @@ VehicleFactoryGameObj::VehicleFactoryGameObj (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~VehicleFactoryGameObj
@@ -242,7 +228,6 @@ VehicleFactoryGameObj::~VehicleFactoryGameObj (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -255,7 +240,6 @@ VehicleFactoryGameObj::Get_Factory (void) const
 	return _VehicleFactoryGameObjPersistFactory;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Init
@@ -266,7 +250,6 @@ void VehicleFactoryGameObj::Init (void)
 	Init (Get_Definition ());
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -280,7 +263,6 @@ VehicleFactoryGameObj::Init (const VehicleFactoryGameObjDef &definition)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -291,7 +273,6 @@ VehicleFactoryGameObj::Get_Definition (void) const
 {
 	return (const VehicleFactoryGameObjDef &)BaseGameObj::Get_Definition ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -315,7 +296,6 @@ VehicleFactoryGameObj::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -347,7 +327,6 @@ VehicleFactoryGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -375,7 +354,6 @@ VehicleFactoryGameObj::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -419,7 +397,6 @@ VehicleFactoryGameObj::CnC_Initialize (BaseControllerClass *base)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -428,7 +405,6 @@ VehicleFactoryGameObj::CnC_Initialize (BaseControllerClass *base)
 void
 VehicleFactoryGameObj::Think (void)
 {
-	WWPROFILE ("Vehicle Factory Think");
 
 	if (EndTimer > UNITIALIZED_TIMER) {
 		EndTimer -= TimeManager::Get_Frame_Seconds ();
@@ -445,7 +421,6 @@ VehicleFactoryGameObj::Think (void)
 	BuildingGameObj::Think ();	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -539,7 +514,6 @@ VehicleFactoryGameObj::On_Generation_Complete (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroyed
@@ -559,7 +533,6 @@ VehicleFactoryGameObj::On_Destroyed (void)
 	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -587,7 +560,6 @@ VehicleFactoryGameObj::Request_Vehicle (int definition_id, float generation_time
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -686,7 +658,6 @@ VehicleFactoryGameObj::Deliver_Vehicle(void)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Vehicle
@@ -737,8 +708,6 @@ VehicleFactoryGameObj::Create_Vehicle (void)
 	return vehicle;
 }
 
-
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Import_Rare
@@ -755,7 +724,6 @@ VehicleFactoryGameObj::Import_Rare (BitStreamClass &packet)
 	packet.Get (IsBusy);
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

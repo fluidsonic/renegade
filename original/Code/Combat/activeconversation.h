@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __ACTIVE_CONVERSATION_H
 #define __ACTIVE_CONVERSATION_H

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef TIMEDDECOPHYS_H
 #define TIMEDDECOPHYS_H

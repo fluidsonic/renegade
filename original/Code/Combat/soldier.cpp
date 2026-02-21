@@ -18,7 +18,6 @@
 #include "combatchunkid.h"
 #include "definition.h"
 #include "simpledefinitionfactory.h"
-#include "wwhack.h"
 #include "surfaceeffects.h"
 #include "weaponmanager.h"
 #include "weaponbag.h"
@@ -35,7 +34,6 @@
 #include "translateobj.h"
 #include "hlod.h"
 #include "audiblesound.h"
-#include "wwprofile.h"
 #include "globalsettings.h"
 #include "colors.h"
 #include "input.h"
@@ -78,7 +76,6 @@ const float EMOT_ICON_HEIGHT = 2.0F;
 /*
 ** SoldierGameObjDef
 */
-DECLARE_FORCE_LINK( Soldier )
 
 SimplePersistFactoryClass<SoldierGameObjDef, CHUNKID_GAME_OBJECT_DEF_SOLDIER>	_SoldierGameObjDefPersistFactory;
 
@@ -249,7 +246,6 @@ const PersistFactoryClass & SoldierGameObjDef::Get_Factory (void) const
 { 
 	return _SoldierGameObjDefPersistFactory; 
 }
-
 
 /*
 ** SolderGameObj
@@ -428,7 +424,6 @@ void	SoldierGameObj::Copy_Settings( const SoldierGameObjDef & definition )
 	return ;
 }
 
-
 void	SoldierGameObj::Prepare_Speech_Framework( void )
 {
 	//
@@ -456,7 +451,6 @@ void	SoldierGameObj::Prepare_Speech_Framework( void )
 
 	return ;
 }
-
 
 void	SoldierGameObj::Re_Init( const SoldierGameObjDef & definition )
 {
@@ -524,7 +518,6 @@ void	SoldierGameObj::Re_Init( const SoldierGameObjDef & definition )
 	return ;
 }
 
-
 //------------------------------------------------------------------------------------
 const SoldierGameObjDef & SoldierGameObj::Get_Definition( void ) const
 {
@@ -541,8 +534,6 @@ void SoldierGameObj::Set_Control_Owner(int control_owner)
 		GameObjManager::Add_Star( this );
 	}
 }
-
-
 
 /*
 ** Soldier Save and Load
@@ -672,8 +663,6 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 	char anim_string[80];
 	int dialog_index = 0;
 
-	WWASSERT( Vehicle == NULL );
-
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
 
@@ -748,7 +737,6 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 				cload.Open_Chunk();
 				PersistFactoryClass * factory;
 				factory = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
-				WWASSERT(factory != NULL);
 				if (factory != NULL) {
 					RenderObjClass * robj = (RenderObjClass *)factory->Load(cload);
 					Add_RenderObj( robj );
@@ -758,7 +746,6 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 				break;
 
 			case CHUNKID_TRANSITION_COMPLETION_DATA:
-				WWASSERT( TransitionCompletionData == NULL );
 				TransitionCompletionData = new TransitionCompletionDataStruct();
 				TransitionCompletionData->Load( cload );
 				break;
@@ -778,7 +765,6 @@ bool	SoldierGameObj::Load( ChunkLoadClass &cload )
 	if ( WeaponRenderModel != NULL ) {
 		REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&WeaponRenderModel );
 	}
-
 
 	SaveLoadSystemClass::Register_Post_Load_Callback(this);
 
@@ -868,12 +854,11 @@ CollisionReactionType SoldierGameObj::Collision_Occurred(const CollisionEventCla
 void	SoldierGameObj::Export_Creation( BitStreamClass &packet )
 {
 	//TSS091001
-	//WWDEBUG_SAY((">>>>> SoldierGameObj::Export_Creation id %d\n", Get_ID()));
+	//
 
 	SmartGameObj::Export_Creation( packet );
 	return ;
 }
-
 
 /*
 **
@@ -883,7 +868,7 @@ void	SoldierGameObj::Import_Creation( BitStreamClass &packet )
 	SmartGameObj::Import_Creation( packet );
 
 	//TSS091001
-	//WWDEBUG_SAY((">>>>> SoldierGameObj::Import_Creation id %d\n", Get_ID()));
+	//
 
 	/*
 	//
@@ -894,7 +879,6 @@ void	SoldierGameObj::Import_Creation( BitStreamClass &packet )
 	*/
 	return ;
 }
-
 
 /*
 **
@@ -909,7 +893,6 @@ void	SoldierGameObj::Export_Rare( BitStreamClass &packet )
 	uint32 definition_id = Get_Definition ().Get_ID ();
 	packet.Add( definition_id );
 }
-
 
 /*
 **
@@ -971,19 +954,16 @@ void	SoldierGameObj::Export_Occasional( BitStreamClass &packet )
    }
 #endif
 
-	WWASSERT(WeaponBag != NULL);
 	WeaponBag->Export_Weapon_List(packet);
 
 	//packet.Add(CtfTeamFlag, BITPACK_CTF_TEAM_FLAG);
 }
-
 
 /*
 **
 */
 void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
 	SmartGameObj::Import_Occasional( packet );
 
@@ -993,7 +973,6 @@ void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 #if 0 // (gth) moving back to "Frequent" to fix the game, re-optimize later?
 	bool has_weapon = packet.Get(has_weapon);
    if (has_weapon) {
-      WWASSERT(!packet.Is_Flushed());
 	
 		int weapon_id = packet.Get(weapon_id);
 		int rounds = packet.Get(rounds);
@@ -1019,9 +998,7 @@ void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 	//
 	// Weapon list
 	//
-	WWASSERT(WeaponBag != NULL);
 	WeaponBag->Import_Weapon_List(packet);
-
 
 	/*
 	//
@@ -1033,7 +1010,6 @@ void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 	}
 	*/
 }
-
 
 /*
 **
@@ -1070,7 +1046,6 @@ void SoldierGameObj::Export_Frequent(BitStreamClass & packet)
 	Vector3 position;
 	Get_Position(&position);
 
-
 #ifdef MULTIPLAYERDEMO
 	//
 	// Mix up the packet order to make demo/non-demo code more incompatible.
@@ -1087,7 +1062,6 @@ void SoldierGameObj::Export_Frequent(BitStreamClass & packet)
 	
 	packet.Add((int) HumanState.Get_State(), BITPACK_HUMAN_STATE);
 	packet.Add(HumanState.Get_Sub_State(), BITPACK_HUMAN_SUB_STATE);
-
 
 	if (HumanState.Get_State() == HumanStateClass::AIRBORNE) {
 		// velocity is only needed for jumping
@@ -1119,7 +1093,6 @@ void SoldierGameObj::Export_Frequent(BitStreamClass & packet)
 */
 void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
 	/**/
 	//TSS101601
@@ -1138,7 +1111,6 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	//
 	bool has_weapon = packet.Get(has_weapon);
    if (has_weapon) {
-      WWASSERT(!packet.Is_Flushed());
 	
 		int weapon_id = packet.Get(weapon_id);
 		int rounds = packet.Get(rounds);
@@ -1165,7 +1137,6 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	//
 	Vector3 sc_position;
 
-
 #ifdef MULTIPLAYERDEMO
 	//
 	// Mix up the packet order to make demo/non-demo code more incompatible.
@@ -1178,7 +1149,6 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	packet.Get(sc_position.Y, BITPACK_WORLD_POSITION_Y);
 	packet.Get(sc_position.Z, BITPACK_WORLD_POSITION_Z);
 #endif
-
 
 	// Bump Z up to the top of the possible values due to packing
 	// we assume the max error is half of the resolution
@@ -1243,7 +1213,6 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 		SmartGameObj::Import_Frequent(packet);
 	}
 
-   WWASSERT(packet.Is_Flushed());
 }
 
 //-----------------------------------------------------------------------------
@@ -1403,7 +1372,6 @@ tm.Rotate_X( 1.4f );
 }
 //-----------------------------------------------------------------------------
 
-
 /*
 **
 */
@@ -1419,8 +1387,6 @@ void SoldierGameObj::Interpret_Sc_Position_Data( const Vector3 & sc_position)
 		Peek_Human_Phys()->Network_Latency_State_Update(sc_position,Vector3(0,0,0));
 		return;
 	}
-
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
 	if (Get_State() == HumanStateClass::TRANSITION) {
 		//
@@ -1448,7 +1414,6 @@ void SoldierGameObj::Interpret_Sc_State_Data(
 	HumanStateClass::HumanStateType state, int sub_state, 
 	LPCSTR trans_name, const Vector3 & velocity, const Vector3 & sc_position)
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
 	if ( ( Get_State() != state ) || (	Get_Sub_State() != sub_state ) ){
 		if ( ( Get_State() == HumanStateClass::TRANSITION ) &&		// If in TRANSITION, don't switch to TRANSITION_COMPLETE
@@ -1500,7 +1465,6 @@ int SoldierGameObj::Tally_Vis_Visible_Soldiers( void )
 	Get_Position(&position);
 	position.Z += 1.5f;
 
-	WWASSERT(COMBAT_SCENE != NULL);
 	VisTableClass * pvs = COMBAT_SCENE->Get_Vis_Table(position);
 	
 	if (pvs != NULL) {
@@ -1580,20 +1544,6 @@ void SoldierGameObj::Apply_Control( void )
 		Controller.Reset();
 		return;
 	}
-
-#ifdef WWDEBUG
-	// Change the control before applying
-	if ( IS_SOLOPLAY && Is_Human_Controlled() && Input::Get_State( INPUT_FUNCTION_DEBUG_RAPID_MOVE ) ) {
-		if ( InFlyMode ) {
-			Control.Set_Analog( ControlClass::ANALOG_MOVE_UP,
-				Control.Get_Analog( ControlClass::ANALOG_MOVE_FORWARD ) );
-			Control.Set_Analog( ControlClass::ANALOG_MOVE_FORWARD, 0 );
-		} else {
-			Control.Set_Analog( ControlClass::ANALOG_MOVE_FORWARD,
-				Control.Get_Analog( ControlClass::ANALOG_MOVE_FORWARD ) * 10 );
-		}
-	}
-#endif
 
 	if ( Get_State() == HumanStateClass::IN_VEHICLE ) {
 
@@ -1679,7 +1629,6 @@ void SoldierGameObj::Apply_Control( void )
 
 		// when on ladder, clear all velocity
 		Control.Set_Analog( ControlClass::ANALOG_MOVE_UP, up_down );
-
 
 		// Can't clear this, or we wont be able to climb next net frame!!!
 //		Control.Set_Analog( ControlClass::ANALOG_MOVE_FORWARD, 0 );
@@ -1935,7 +1884,6 @@ void SoldierGameObj::Apply_Control( void )
 		DIAG_LOG(( "ACPR", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
 	}
 
-
 	if (	CombatManager::I_Am_Server() ||
 			(Is_Controlled_By_Me() && TransitionCompletionData == NULL) )
 	{
@@ -2103,9 +2051,6 @@ SyncLegs = true;
 	float	legs_rotation = Get_Facing() - LegFacing;
 	if ( legs_rotation ) {
 
-		WWASSERT( root_bone != -1 );
-		WWASSERT( torso_bone != -1 );
-
 		if ( !Peek_Model()->Is_Bone_Captured( root_bone ) ) {
 			Peek_Model()->Capture_Bone( root_bone );
 		}
@@ -2148,7 +2093,6 @@ SyncLegs = true;
 		Debug_Say(( "Move (%1.1f)  %1.1f %1.1f %1.1f   %1.1f\n", RAD_TO_DEG(diff), move.X, move.Y, move.Z, RAD_TO_DEG( move_direction ) ));
 	}
 
-
 	// I'm making this staic for now, because all human
 	// skeletons have the bone at the same index
 	static int  root_bone = -1;
@@ -2162,9 +2106,6 @@ SyncLegs = true;
 	}
 
 	if ( legs_rotation ) {
-
-		WWASSERT( root_bone != -1 );
-		WWASSERT( torso_bone != -1 );
 
 		if ( !Peek_Model()->Is_Bone_Captured( root_bone ) ) {
 			Peek_Model()->Capture_Bone( root_bone );
@@ -2250,7 +2191,7 @@ static char * _profile_name = "Soldier Think";
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Think( void )
 {
-	{	WWPROFILE( _profile_name );
+	{	
 
 		if ( this == COMBAT_STAR ) {
 			_shake_delay -= TimeManager::Get_Frame_Seconds();
@@ -2258,7 +2199,6 @@ void	SoldierGameObj::Think( void )
 		}
 		/*
 		ActionClass * p_action = Get_Action();
-		WWASSERT(p_action != NULL);
 		*/
 		
 		//
@@ -2268,7 +2208,6 @@ void	SoldierGameObj::Think( void )
 		//
 		Vector3 position;
 		{
-			WWPROFILE("Coordination Zone");
 			Get_Position( &position );
 			if ( UnitCoordinationZoneMgr::Is_Unit_In_Zone( position ) ) {
 				Enable_Ghost_Collision( true );
@@ -2283,7 +2222,6 @@ void	SoldierGameObj::Think( void )
 		if (	DisplayDebugBoxForGhostCollision &&
 				(Peek_Physical_Object ()->Get_Collision_Group() == SOLDIER_GHOST_COLLISION_GROUP))
 		{
-			WWPROFILE("Add_Debug_AABox");
 			AABoxClass soldier_box;
 			soldier_box.Center = position + Vector3( 0, 0, 1.0F );
 			soldier_box.Extent.Set( 0.3F, 0.3F, 1.0F );
@@ -2292,7 +2230,6 @@ void	SoldierGameObj::Think( void )
 
 		// Stats
 		if ( Get_Player_Data() != NULL ) {
-			WWPROFILE("Stats");
 			Get_Player_Data()->Stats_Add_Game_Time( TimeManager::Get_Frame_Seconds() );
 			Get_Player_Data()->Stats_Set_Final_Health( Get_Defense_Object()->Get_Health() );
 			if ( Get_Vehicle() != NULL ) {
@@ -2304,7 +2241,6 @@ void	SoldierGameObj::Think( void )
 		//	Update the soldier's facing
 		//
 		{
-			WWPROFILE("Update_Locked_Facing");
 			Update_Locked_Facing();
 		}
 
@@ -2321,7 +2257,6 @@ void	SoldierGameObj::Think( void )
 
 		// Handle_Legs moved form Apply_Control because clients don't run it for server objects
 		{
-			WWPROFILE("Handle_Legs");
 			Handle_Legs();
 		}
 
@@ -2332,15 +2267,12 @@ void	SoldierGameObj::Think( void )
 	}
 
 	{
-		WWPROFILE( "Embedded smart think in soldier" );
 		SmartGameObj::Think(); 	// Perform smart object thinking	( apply controls )
 	}
 
 {
-	WWPROFILE( _profile_name );
 
 	if ( CombatManager::I_Am_Server() ) {
-		WWPROFILE("Handle C4");
 		// Handle C4 in a special way.  When C4 is fired, the human plays
 		// a crouching animation, and starts a c4 placement timer.
 		if (  Get_Weapon() && 
@@ -2354,7 +2286,6 @@ void	SoldierGameObj::Think( void )
 	}
 
 	if ( Get_State() != HumanStateClass::IN_VEHICLE ) {
-		WWPROFILE("Vehicle");
 		// This may try to change controls, so can't be in Post_Think
 		HumanState.Update_Weapon( Get_Weapon(), WeaponBag->Is_Changed() );
 
@@ -2386,7 +2317,6 @@ void	SoldierGameObj::Think( void )
 //	float						SpecialDamageTimer;
 	if ( SpecialDamageMode != ArmorWarheadManager::SPECIAL_DAMAGE_TYPE_NONE && 
 			SpecialDamageTimer > 0 ) {
-		WWPROFILE("Special Damage");
 
 		float previous_timer = SpecialDamageTimer;
 
@@ -2462,7 +2392,6 @@ void	SoldierGameObj::Think( void )
 	//	Remove the emot icon (if necessary)
 	//
 	{
-		WWPROFILE("EmotIcon");
 		EmotIconTimer -= TimeManager::Get_Frame_Seconds();
 		if ( EmotIconTimer <= 0 ) {
 
@@ -2490,7 +2419,6 @@ void	SoldierGameObj::Think( void )
 	//
 	GenerateIdleFacialAnimTimer -= TimeManager::Get_Frame_Seconds();
 	if ( GenerateIdleFacialAnimTimer <= 0 ) {
-		WWPROFILE("FacialAnims");
 		
 		//
 		//	Change the facial animation
@@ -2518,7 +2446,6 @@ void	SoldierGameObj::Think( void )
 
 	// Apply Surface damage
 	{
-		WWPROFILE("Apply_Damage");
 		if ( Peek_Human_Phys() ) {
 			SurfaceEffectsManager::Apply_Damage( Peek_Human_Phys()->Get_Contact_Surface_Type(), this );
 		}
@@ -2528,7 +2455,6 @@ void	SoldierGameObj::Think( void )
 	// - If our feet are not on "underwater dirt" we don't even check for water
 	// - Otherwise, do a ray cast to find the water surface, if it hits
 	{
-		WWPROFILE("Water");
 		bool in_water = false;
 		Vector3 p0 = Get_Transform().Get_Translation();
 		Vector3 p1 = Get_Bullseye_Position();
@@ -2578,7 +2504,6 @@ void	SoldierGameObj::Think( void )
 		}
 	}
 
-
 	// Punish update
 	if ( Get_Player_Data() && Get_Player_Data()->Get_Punish_Timer() > 0 ) {
 		Get_Player_Data()->Inc_Punish_Timer( TimeManager::Get_Frame_Seconds() )	;
@@ -2595,7 +2520,7 @@ void	SoldierGameObj::Post_Think( void )
 		return;
 	}
 
-{	WWPROFILE( "Soldier PostThink" );
+{	
 
 	HumanState.Post_Think(); 
 
@@ -2611,7 +2536,6 @@ void	SoldierGameObj::Post_Think( void )
 		update_weapon = true;
 		Get_Weapon()->Reset_Model_Update();			// reset model update needed
 	}
-
 
 	if ( update_weapon ) {
 		if ( Get_Weapon() != NULL ) {
@@ -2629,7 +2553,6 @@ void	SoldierGameObj::Post_Think( void )
 	if (WeaponAnimControl) {
 		WeaponAnimControl->Update( TimeManager::Get_Frame_Seconds() );			// update the animation control
 	}
-
 
 	Handle_Head_look();
 
@@ -2748,7 +2671,6 @@ Clamp_Angle (float angle, float min_angle, float max_angle)
 	return result;
 }
 
-
 void	SoldierGameObj::Handle_Head_look( void )
 {
 	if ( Peek_Model ()->Get_HTree () == NULL ) {
@@ -2761,8 +2683,6 @@ void	SoldierGameObj::Handle_Head_look( void )
 	if ( head_bone == -1 || neck_bone == -1) {
 		head_bone = Peek_Model()->Get_Bone_Index( "C HEAD" );
 		neck_bone = Peek_Model()->Get_Bone_Index( "C NECK" );
-		WWASSERT( head_bone != -1 );
-		WWASSERT( neck_bone != -1 );
 	}
 
 	if ( HeadLookDuration > 0 ) {
@@ -2802,7 +2722,6 @@ void	SoldierGameObj::Handle_Head_look( void )
 				//	Get the transform that has been used to modify the head bone...
 				//
 				const HTreeClass *htree = Peek_Model()->Get_HTree();
-				WWASSERT( htree != NULL );
 
 				Matrix3D bone_control_tm( 1 );
 				htree->Get_Bone_Control( head_bone, bone_control_tm );
@@ -2888,7 +2807,6 @@ void	SoldierGameObj::Handle_Head_look( void )
 		if ( !Peek_Model()->Is_Bone_Captured( head_bone ) ) {
 			Peek_Model()->Capture_Bone( head_bone );
 		}
-		WWASSERT( Peek_Model()->Is_Bone_Captured( head_bone ) );
 		if ( Peek_Model()->Is_Bone_Captured( head_bone ) ) {
 			Peek_Model()->Control_Bone( head_bone, head );
 		}
@@ -2926,7 +2844,6 @@ void	SoldierGameObj::Set_Blended_Animation( const char *animation_name, bool loo
 	return ;
 }
 
-
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Set_Animation( const char *animation_name, bool looping, float start_frame )
 {
@@ -2948,7 +2865,7 @@ void	SoldierGameObj::Set_Animation( const char *animation_name, bool looping, fl
 void	SoldierGameObj::Start_Transition_Animation( const char * anim_name, TransitionCompletionDataStruct *data )
 {
 //	Debug_Say(( "Starting Human Transition Animation %s\n", anim_name ));
-	//WWASSERT( TransitionCompletionData == NULL );
+	//assert( TransitionCompletionData == NULL );
 	TransitionCompletionData = data;
 	AnimationName = anim_name;
 	HumanState.Start_Transition_Animation( anim_name, false );
@@ -2973,7 +2890,6 @@ void SoldierGameObj::Set_Weapon_Model( const char *model_name )
 		WeaponRenderModel = SoldierGameObj::Find_RenderObj( stripped_name );
 		if ( WeaponRenderModel == NULL ) {
 			WeaponRenderModel = Create_Render_Obj_From_Filename( model_name );
-			WWASSERT( WeaponRenderModel );
 			SET_REF_OWNER( WeaponRenderModel );
 			Add_RenderObj( WeaponRenderModel );
 			WeaponRenderModel->Release_Ref();
@@ -3029,7 +2945,7 @@ void SoldierGameObj::Set_Back_Weapon_Model( const char *model_name )
 		BackWeaponRenderModel = SoldierGameObj::Find_RenderObj( stripped_name );
 		if ( BackWeaponRenderModel == NULL ) {
 			BackWeaponRenderModel = Create_Render_Obj_From_Filename( model_name );
-//			WWASSERT( BackWeaponRenderModel );
+//			assert( BackWeaponRenderModel );
 			if ( BackWeaponRenderModel != NULL ) {
 				SET_REF_OWNER( BackWeaponRenderModel );
 				Add_RenderObj( BackWeaponRenderModel );
@@ -3109,11 +3025,9 @@ float		SoldierGameObj::Get_Weapon_Length( void )
 	return 0.8f;		// forward offset, move to weapon
 }
 
-
 //------------------------------------------------------------------------------------
 bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 {
-	WWPROFILE( "Soldier Set Targeting" );
 
 	if ( CombatManager::Is_Skeleton_Slider_Demo_Enabled() ) {
 		return false;
@@ -3168,7 +3082,6 @@ bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do
 	float facing = WWMath::Atan2( rel_target_pos.Y, rel_target_pos.X );
 	float facing_dif = facing - cur_facing;
 	if ( WWMath::Fabs(facing_dif) > 0.001f ) {
-		WWPROFILE( "Facing" );
 		facing_dif = WWMath::Wrap( facing_dif, DEG_TO_RADF( -180.0f ), DEG_TO_RADF( 180.0f ) );
 //		Debug_Say(( "Must change %1.3f, from facing %1.3f to facing %1.3f\n", RAD_TO_DEG( facing_dif ), RAD_TO_DEG( cur_facing ), RAD_TO_DEG( facing ) ));
 
@@ -3219,7 +3132,6 @@ bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do
 
 	return is_complete;
 }
-
 
 //------------------------------------------------------------------------------------
 bool	SoldierGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
@@ -3281,7 +3193,6 @@ RenderObjClass *	SoldierGameObj::Find_Head_Model( void )
 	return head_model;
 }
 
-
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Set_Emot_Icon ( const char *model_name, float duration )
 {
@@ -3338,11 +3249,9 @@ void	SoldierGameObj::Set_Emot_Icon ( const char *model_name, float duration )
 	return ;
 }
 
-
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Say_Dialogue( int dialog_id )
 {
-	WWASSERT( dialog_id >= 0 && dialog_id < DIALOG_MAX );
 
 	//
 	//	Lookup the conversation we are starting
@@ -3518,7 +3427,6 @@ float SoldierGameObj::Say_Dynamic_Dialogue
 	return duration;
 }
 
-
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Stop_Current_Speech( void )
 {
@@ -3535,7 +3443,6 @@ void	SoldierGameObj::Stop_Current_Speech( void )
 	
 	return ;
 }
-
 
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Apply_Damage( const OffenseObjectClass & damager, float scale, int alternate_skin )
@@ -3703,7 +3610,6 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 		}
 	}
 
-
 	SmartGameObj::Apply_Damage_Extended( damager, scale, direction, collision_box_name );
 	float health = Get_Defense_Object()->Get_Health();
 
@@ -3750,7 +3656,6 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 		float armor = Get_Defense_Object()->Get_Shield_Strength();
 		DIAG_LOG(( "AMGE", "%1.2f; %1.2f; %1.2f; %d; %1.2f; %1.2f; %1.2f; %1.2f; %1.2f", victim_pos.X, victim_pos.Y, victim_pos.Z, victim_id, shooter_pos.X, shooter_pos.Y, shooter_pos.Z, armor, health ));
 	}
-
 
 	if (health == health_before && Get_Defense_Object()->Get_Shield_Strength() == armor_before) {
 		//
@@ -3811,7 +3716,6 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 		}
 
 	}
-
 
 	if ( health <= 0 ) {
 
@@ -3903,12 +3807,10 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 				REF_PTR_RELEASE(owner_ref);
 			}
 
-
 			// Play death explosion, since we don't call Completely_Damaged
 			if ( Get_Definition().KilledExplosion != 0 ) {
 				Vector3 pos;
 				Get_Position(&pos);
-				WWASSERT(pos.Is_Valid());// most likely candidate for explosion damage bug....?
 				ExplosionManager::Create_Explosion_At( Get_Definition().KilledExplosion, pos, damager.Get_Owner() );	 // no one gets credit for this
 			}
 
@@ -3946,7 +3848,6 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 	}
 }
 
-
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Exit_Ladder( void ) 
 {
@@ -3970,8 +3871,6 @@ void	SoldierGameObj::Enter_Ladder( bool top )
 //------------------------------------------------------------------------------------
 HumanPhysClass	*SoldierGameObj::Peek_Human_Phys( void ) const 
 { 
-	WWASSERT( Peek_Physical_Object() ); 
-	WWASSERT( Peek_Physical_Object()->As_HumanPhysClass() ); 
 	return Peek_Physical_Object()->As_HumanPhysClass(); 
 }
 
@@ -3981,7 +3880,7 @@ HumanPhysClass	*SoldierGameObj::Peek_Human_Phys( void ) const
 */
 void	SoldierGameObj::Enter_Vehicle( VehicleGameObj * vehicle, const char * anim_name )
 {
-//	WWASSERT( Get_State() != HumanStateClass::IN_VEHICLE );
+//	assert( Get_State() != HumanStateClass::IN_VEHICLE );
 
 	Vehicle = vehicle;
 	HumanState.Set_State( HumanStateClass::IN_VEHICLE );
@@ -4090,8 +3989,8 @@ void SoldierGameObj::Set_Velocity(Vector3 & vel)
 //------------------------------------------------------------------------------------
 void SoldierGameObj::Give_All_Weapons(void)
 {
-   //WWASSERT(CombatManager::I_Am_Server());
-//	WWASSERT(PlayerType != PLAYERTYPE_NEUTRAL);
+   //assert(CombatManager::I_Am_Server());
+//	assert(PlayerType != PLAYERTYPE_NEUTRAL);
 
 	// For all weapon defs with the AGiveWeaponsWeapon checked, Give It!
 	for ( WeaponDefinitionClass *weapon_def = (WeaponDefinitionClass *)DefinitionMgrClass::Get_First( CLASSID_DEF_WEAPON );
@@ -4167,7 +4066,6 @@ Vector3	SoldierGameObj::Get_Bullseye_Position( void )
 
 bool SoldierGameObj::Can_See(SoldierGameObj * p_soldier)
 {
-	WWASSERT(p_soldier != NULL);
 
 	Vector3 ray_start = Get_Bullseye_Position();
 	Vector3 ray_end = p_soldier->Get_Bullseye_Position();	// This may a big high
@@ -4183,8 +4081,7 @@ bool SoldierGameObj::Can_See(SoldierGameObj * p_soldier)
 	CastResultStruct result;
 	PhysRayCollisionTestClass raytest(ray, &result, 
 		BULLET_COLLISION_GROUP, COLLISION_TYPE_PHYSICAL);
-	WWASSERT(COMBAT_SCENE != NULL);
-{ WWPROFILE( "Cast Ray" );
+{ 
 	COMBAT_SCENE->Cast_Ray(raytest);
 }
 
@@ -4199,7 +4096,6 @@ bool SoldierGameObj::Can_See(SoldierGameObj * p_soldier)
 				p_blocker = p_obj->As_SmartGameObj();
 			}
 		}
-
 
 		if (p_blocker != NULL && p_blocker->Get_Control_Owner() == 
 			p_soldier->Get_Control_Owner()) {
@@ -4246,10 +4142,6 @@ void	SoldierGameObj::Adjust_Skeleton( float height, float width )
 //------------------------------------------------------------------------------------
 void SoldierGameObj::Set_Ctf_Team_Flag(int team) 
 {
-	WWASSERT(
-		team == NO_FLAG			|| 
-		team == PLAYERTYPE_NOD	||
-		team == PLAYERTYPE_GDI);
 
 	CtfTeamFlag = team;
 
@@ -4527,7 +4419,6 @@ void	SoldierGameObj::Set_Special_Damage_Mode( ArmorWarheadManager::SpecialDamage
 
 			// Add electric effect
 			if ( mode == ArmorWarheadManager::SPECIAL_DAMAGE_TYPE_ELECTRIC ) {
-				WWASSERT( SpecialDamageEffect == NULL );
 				SpecialDamageEffect = CombatMaterialEffectManager::Get_Electrocution_Effect();
 				if ( SpecialDamageEffect != NULL ) {
 					SpecialDamageEffect->Set_Target_Parameter(0.49f);	// go almost halfway
@@ -4555,7 +4446,6 @@ void SoldierGameObj::Perturb_Position(float max_perturb)
 	Vector3 initial_position;
 	Get_Position(&initial_position);
 	Vector3 new_position;
-	WWASSERT(Peek_Human_Phys() != NULL);
 	bool succeeded = Peek_Human_Phys()->Find_Teleport_Location(
 		initial_position, max_perturb, &new_position);
 	if (succeeded) {
@@ -4578,7 +4468,6 @@ void	SoldierGameObj::Toggle_Fly_Mode( void )
 		Peek_Physical_Object()->Set_Collision_Group( SOLDIER_COLLISION_GROUP );
 	}
 }
-
 
 /*
 **
@@ -4605,7 +4494,6 @@ void	SoldierGameObj::Set_AI_State( SoldierAIState state )
 
 	return ;
 }
-
 
 /*
 ** Soldiers maintain all RenderObjs they have created for later use and saving
@@ -4635,78 +4523,15 @@ void	SoldierGameObj::Reset_RenderObjs( void )
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 //-----------------------------------------------------------------------------
 void SoldierGameObj::Change_Flag_Status(int ctf_team_flag)
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
 	if (ctf_team_flag == NO_FLAG) {
 		//
 		// We dropped a flag
 		//
-		WWASSERT(WWAudioClass::Get_Instance() != NULL);
 		WWAudioClass::Get_Instance()->Create_Instant_Sound("Drop_Flag", Get_Transform());
 
 		float speed_factor = 100 / (float) CombatManager::Get_Max_Speed_Pc(this);
@@ -4718,7 +4543,6 @@ void SoldierGameObj::Change_Flag_Status(int ctf_team_flag)
 		//
 		// We picked up a flag
 		//
-		WWASSERT(WWAudioClass::Get_Instance() != NULL);
 		WWAudioClass::Get_Instance()->Create_Instant_Sound("Pick_Up_Flag", Get_Transform());
 
 		Set_Ctf_Team_Flag(ctf_team_flag);
@@ -4729,11 +4553,9 @@ void SoldierGameObj::Change_Flag_Status(int ctf_team_flag)
 }
 */
 
-
 /*
 void SoldierGameObj::Interpret_Sc_Position_Data(Vector3 & sc_position)
 {
-   WWASSERT(CombatManager::I_Am_Only_Client());
 
 	switch (CombatManager::Get_Client_Interpolation_Model()) {
 
@@ -4815,7 +4637,6 @@ void SoldierGameObj::Interpret_Sc_Position_Data(Vector3 & sc_position)
 						parameters.Priority = 1;
 						parameters.MoveLocation = sc_position;
 						parameters.MoveArrivedDistance = 0.1f;
-						WWASSERT(Get_Action() != NULL);
 						Get_Action()->Goto(parameters);
 					//}
 				}
@@ -4824,7 +4645,6 @@ void SoldierGameObj::Interpret_Sc_Position_Data(Vector3 & sc_position)
 		}
 
 		default:
-			WWASSERT(0);
 	}
 }
 */
@@ -4845,7 +4665,6 @@ void	SoldierGameObj::Think_Pathfind( void )
 		Get_Position(&current_position);
 
 		ActionClass * p_action = Get_Action();
-		WWASSERT(p_action != NULL);
 
 		const Vector3 height_offset(0, 0, 0.9f);
 
@@ -4924,7 +4743,6 @@ void SoldierGameObj::Think_Pathfind(void)
 		Get_Position(&current_position);
 
 		ActionClass * p_action = Get_Action();
-		WWASSERT(p_action != NULL);
 
 		ActionParamsStruct parameters = p_action->Get_Parameters();
 
@@ -4988,7 +4806,6 @@ void	SoldierGameObj::Update_Healing_Effect( void )
 	}
 }
 
-
 void	SoldierGameObj::Enable_Ghost_Collision( bool onoff )
 {
 	bool is_using_ghost_collision = (Peek_Physical_Object ()->Get_Collision_Group() == SOLDIER_GHOST_COLLISION_GROUP);
@@ -5007,7 +4824,6 @@ void	SoldierGameObj::Enable_Ghost_Collision( bool onoff )
 
 	return ;
 }
-
 
 bool	SoldierGameObj::Is_Safe_To_Disable_Ghost_Collision( const Vector3 &curr_pos )
 {
@@ -5067,7 +4883,6 @@ bool	SoldierGameObj::Is_Safe_To_Disable_Ghost_Collision( const Vector3 &curr_pos
 
 	return retval;
 }
-
 
 bool	SoldierGameObj::Is_Soldier_Blocked( const Vector3 &curr_pos )
 {
@@ -5164,14 +4979,11 @@ bool	SoldierGameObj::Is_Soldier_Blocked( const Vector3 &curr_pos )
 	return (smallest_id != my_id);
 }
 
-
-
 bool		SoldierGameObj::Is_Targetable( void ) const					
 { 
 	return (!(((SoldierGameObj*)this)->Is_In_Vehicle())) && 
 		SmartGameObj::Is_Targetable(); 
 }
-
 
 float		SoldierGameObj::Get_Stealth_Fade_Distance(void) const
 {
@@ -5181,9 +4993,7 @@ float		SoldierGameObj::Get_Stealth_Fade_Distance(void) const
 		return GlobalSettingsDef::Get_Global_Settings()->Get_MP_Stealth_Distance_Human();
 	}
 
-
 }
-
 
 void	SoldierGameObj::Lock_Facing( PhysicalGameObj * game_obj, bool turn_body )
 {
@@ -5199,7 +5009,6 @@ void	SoldierGameObj::Lock_Facing( PhysicalGameObj * game_obj, bool turn_body )
 
 	return ;
 }
-
 
 void	SoldierGameObj::Update_Locked_Facing( void )
 {
@@ -5234,35 +5043,6 @@ void	SoldierGameObj::Update_Locked_Facing( void )
 
 	return ;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/*
 	if (CombatManager::I_Am_Server()) {

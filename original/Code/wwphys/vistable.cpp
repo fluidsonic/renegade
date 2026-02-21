@@ -2,11 +2,9 @@
 #include "wwphysids.h"
 #include "pscene.h"
 #include "chunkio.h"
-#include "wwdebug.h"
 #include "lzo.h"
 #include "lzo1x.h"
 #include "phys.h"
-#include "wwmemlog.h"
 #include <windows.h>
 
 /*
@@ -76,7 +74,6 @@ VisTableClass::VisTableClass(CompressedVisTableClass * ctable,int bitcount,int i
 	VisSectorID(id),
 	Timestamp(0)
 {
-	WWASSERT(ctable != NULL);
 	Alloc_Buffer(bitcount);
 	ctable->Decompress(Get_Bytes(),Get_Byte_Count());
 }
@@ -112,7 +109,6 @@ VisTableClass::~VisTableClass(void)
 
 void VisTableClass::Alloc_Buffer(int bitcount)
 {
-	WWMEMLOG(MEM_VIS);
 	if (Buffer != NULL) {
 		delete[] Buffer;
 		Buffer = NULL;
@@ -316,8 +312,6 @@ CompressedVisTableClass::CompressedVisTableClass(VisTableClass * bits) :
 	BufferSize(0),
 	Buffer(NULL)
 {
-	WWMEMLOG(MEM_VIS);
-	WWASSERT(bits != NULL);
 	Compress(bits->Get_Bytes(),bits->Get_Byte_Count());
 }
 
@@ -337,7 +331,6 @@ CompressedVisTableClass::~CompressedVisTableClass(void)
 
 const CompressedVisTableClass &CompressedVisTableClass::operator= (const CompressedVisTableClass &that)
 {
-	WWMEMLOG(MEM_VIS);
 	if (Buffer != NULL) {
 		delete [] Buffer;
 		Buffer = NULL;
@@ -361,7 +354,6 @@ int CompressedVisTableClass::Get_Byte_Count(void) const
 
 void CompressedVisTableClass::Load(ChunkLoadClass & cload)
 {
-	WWMEMLOG(MEM_VIS);
 	VisTableClass * old_table = NULL;
 	if (Buffer != NULL) {
 		old_table = NEW_REF(VisTableClass,(this,PhysicsSceneClass::Get_Instance()->Get_Vis_Table_Size(),0));
@@ -393,11 +385,9 @@ void CompressedVisTableClass::Load(ChunkLoadClass & cload)
 			load_error = true;
 			break;
 		case VISTABLE_CHUNK_LZOBYTES:
-			WWASSERT(cload.Cur_Chunk_Length() == (uint32)BufferSize);
 			cload.Read(Buffer,BufferSize);
 			break;
 		default:
-			WWDEBUG_SAY(("Unhandled chunk ID: %d in vistable.cpp\r\n",cload.Cur_Chunk_ID()));
 			load_error = true;
 			break;
 		}
@@ -431,7 +421,6 @@ void CompressedVisTableClass::Save(ChunkSaveClass & csave)
 
 void CompressedVisTableClass::Load (void* hfile)
 {
-	WWMEMLOG(MEM_VIS);
 	/*
 	** Free the buffer
 	*/
@@ -480,7 +469,6 @@ void CompressedVisTableClass::Save (void* hfile)
 
 void CompressedVisTableClass::Compress(uint8 * src_buffer,int src_size)
 {
-	WWMEMLOG(MEM_VIS);
 	if (Buffer != NULL) {
 		delete[] Buffer;
 		Buffer = NULL;
@@ -489,78 +477,24 @@ void CompressedVisTableClass::Compress(uint8 * src_buffer,int src_size)
 	uint8 * comp_buffer = new uint8[LZO_BUFFER_SIZE(src_size)];
 	lzo_uint comp_size;
 	int lzocode = LZOCompressor::Compress(src_buffer,src_size,comp_buffer,&comp_size);
-	WWASSERT(lzocode == LZO_E_OK);
 
 	BufferSize = comp_size;
 	Buffer = new uint8[BufferSize];
 	memcpy(Buffer,comp_buffer,BufferSize);
 
-#ifdef WWDEBUG
-	lzo_uint decomp_size;
-	LZOCompressor::Decompress(Buffer,BufferSize,comp_buffer,&decomp_size);
-	WWASSERT(decomp_size == (lzo_uint)src_size);
-	WWASSERT(src_size % 4 == 0);
-#endif
 
 	delete[] comp_buffer;
 }
 
 void CompressedVisTableClass::Decompress(uint8 * decomp_buffer,int decomp_size)
 {
-	WWMEMLOG(MEM_VIS);
 	lzo_uint size;
 	LZOCompressor::Decompress(Buffer,BufferSize,decomp_buffer, &size);
-	WWASSERT((int)size == decomp_size);
 }
 
 #if 0
 void CompressedVisTableClass::Compare_Compression(void)
 {
-#ifdef WWDEBUG
-	static int num_compressions = 0;
-	static int total_size = 0;
-	static int lcw_size = 0;
-	static int lzo_size = 0;
-	static int lcw_failures = 0;
-	static int lzo_failures = 0;
-
-	int test_size = tmp_size;
-	uint8 * test_buf = tmp_buffer;
-
-	num_compressions++;
-	total_size += test_size;
-	
-	// Testing LCW
-	uint8 * lcw_comp_buf = new uint8[test_size * 2];
-	int lcw_comp_size = LCW_Comp(test_buf, lcw_comp_buf, test_size);
-
-	uint8 * lcw_decomp_buf = new uint8[test_size * 2];
-	int lcw_decomp_size = LCW_Uncomp(lcw_comp_buf, lcw_decomp_buf);
-
-	lcw_size+=lcw_comp_size;
-	if ((memcmp(test_buf,lcw_decomp_buf,test_size) != 0) || (lcw_decomp_size != test_size)) {
-		lcw_failures++;
-	}
-	
-	// Testing LZO
-	uint8 * lzo_comp_buf = new uint8[test_size * 2]; //LZO_BUFFER_SIZE(test_size)];
-	lzo_uint lzo_comp_size;
-	LZOCompressor::Compress(test_buf,test_size,lzo_comp_buf,&lzo_comp_size);
-
-	uint8 * lzo_decomp_buf = new uint8[test_size];
-	lzo_uint lzo_decomp_size;
-	LZOCompressor::Decompress(lzo_comp_buf,lzo_comp_size,lzo_decomp_buf,&lzo_decomp_size);
-
-	lzo_size+=lzo_comp_size;
-	if ((memcmp(test_buf,lzo_decomp_buf,test_size) != 0) || ((int)lzo_decomp_size != test_size)) {
-		lzo_failures++;
-	}
-
-	delete[] lcw_comp_buf;
-	delete[]	lcw_decomp_buf;
-	delete[]	lzo_comp_buf;
-	delete[]	lzo_decomp_buf;
-#endif
 	delete[] tmp_buffer;
 }
 

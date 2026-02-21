@@ -67,7 +67,7 @@ MeshModelClass::MeshModelClass(const MeshModelClass & that) :
 
 MeshModelClass::~MeshModelClass(void)
 {
-//	WWDEBUG_SAY(("Note: Mesh %s was never used\n",Get_Name()));
+//	
 
 	Reset(0,0,0);
 	REF_PTR_RELEASE(MatInfo);
@@ -157,8 +157,6 @@ void MeshModelClass::Replace_Texture(TextureClass* texture,TextureClass* new_tex
 {
 #pragma message("gth - TEMPORARILY REMOVING Replace_Texture")
 #if 0
-	WWASSERT(texture);
-	WWASSERT(new_texture);
 	for (int stage=0;stage<MeshMatDescClass::MAX_TEX_STAGES;++stage) {
 		for (int pass=0;pass<Get_Pass_Count();++pass) {
 			if (Has_Texture_Array(pass,stage)) {
@@ -188,8 +186,6 @@ void MeshModelClass::Replace_VertexMaterial(VertexMaterialClass* vmat,VertexMate
 {
 #pragma message("gth - TEMPORARILY REMOVING Replace_Texture")
 #if 0
-	WWASSERT(vmat);
-	WWASSERT(new_vmat);
 	
 	for (int pass=0;pass<Get_Pass_Count();++pass) {
 		if (Has_Material_Array(pass)) {
@@ -372,7 +368,6 @@ void MeshModelClass::get_deformed_screenspace_vertices(Vector4 *dst_vert,const R
 
 void MeshModelClass::Make_Geometry_Unique()
 {
-	WWASSERT(Vertex);
 
 	ShareBufferClass<Vector3> * unique_verts = NEW_REF(ShareBufferClass<Vector3>,(*Vertex));
 	REF_PTR_SET(Vertex,unique_verts);
@@ -507,7 +502,7 @@ struct SideIndexInfo
 	unsigned short vidx2;
 	unsigned polygon_index;
 	SideIndexInfo() {}
-	SideIndexInfo(int i) { WWASSERT(0); }
+	SideIndexInfo(int i) { assert(0); }
 };
 
 
@@ -629,12 +624,9 @@ GapFillerClass::~GapFillerClass()
 
 void GapFillerClass::Add_Polygon(unsigned polygon_index,unsigned vidx1,unsigned vidx2, unsigned vidx3)
 {
-	WWASSERT(PolygonCount<ArraySize);
-	WWASSERT(vidx1!=vidx2 && vidx1!=vidx3 && vidx2!=vidx3);
 Vector3 loc1=mmc->Get_Vertex_Array()[vidx1];
 Vector3 loc2=mmc->Get_Vertex_Array()[vidx2];
 Vector3 loc3=mmc->Get_Vertex_Array()[vidx3];
-WWASSERT(loc1==loc2 || loc1==loc3 || loc2==loc3);
 //sdflksdjflsdkf
 //vidx1=mmc->Get_Polygon_Array()[polygon_index][0];
 //vidx2=mmc->Get_Polygon_Array()[polygon_index][1];

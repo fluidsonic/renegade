@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__NETWORKOBJECTMGR_H
 #define	__NETWORKOBJECTMGR_H

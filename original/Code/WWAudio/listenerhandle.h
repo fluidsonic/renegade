@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __LISTENERHANDLE_H
 #define __LISTENERHANDLE_H

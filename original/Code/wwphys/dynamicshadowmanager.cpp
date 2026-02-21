@@ -191,7 +191,6 @@ void DynamicShadowManagerClass::Update_Shadow(void)
 
 		if (use_blob) {
 			TextureClass * shadow_texture = PhysResourceMgrClass::Get_Shadow_Blob_Texture();
-			WWASSERT(shadow_texture != NULL);
 			Shadow->Set_Texture(shadow_texture);
 			shadow_texture->Release_Ref();
 			Shadow->Set_Texture_Dirty(false);

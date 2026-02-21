@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef WW3D_ASSET_STATUS_H
 #define WW3D_ASSET_STATUS_H

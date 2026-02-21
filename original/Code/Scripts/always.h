@@ -1,6 +1,3 @@
-#if _MSC_VER >= 1000
-#pragma once
-#endif // _MSC_VER >= 1000
 
 #ifndef ALWAYS_H
 #define ALWAYS_H
@@ -14,44 +11,14 @@
 */
 //#define STEVES_NEW_CATCHER
 #ifdef _DEBUG
-#ifdef _MSC_VER
-#ifdef STEVES_NEW_CATCHER
-
-#include	<crtdbg.h>
-#include <stdlib.h>
-#include <malloc.h>
-
-#define   malloc(s)         _malloc_dbg(s, _NORMAL_BLOCK, __FILE__, __LINE__)
-#define   calloc(c, s)      _calloc_dbg(c, s, _NORMAL_BLOCK, __FILE__, __LINE__)
-#define   realloc(p, s)     _realloc_dbg(p, s, _NORMAL_BLOCK, __FILE__, __LINE__)
-#define   _expand(p, s)     _expand_dbg(p, s, _NORMAL_BLOCK, __FILE__, __LINE__)
-#define   free(p)           _free_dbg(p, _NORMAL_BLOCK)
-#define   _msize(p)         _msize_dbg(p, _NORMAL_BLOCK)
-
-void* __cdecl operator new(unsigned int s);
-
-#endif	//STEVES_NEW_CATCHER
-#endif	//_MSC_VER
 #endif	//_DEBUG
 
 
 // Jani: Intel's C++ compiler issues too many warnings in WW libraries when using warning level 4
-#if defined (__ICL)    // Detect Intel compiler
-#pragma warning (3)
-#pragma warning ( disable: 981 ) // parameters defined in unspecified order
-#pragma warning ( disable: 279 ) // controlling expressaion is constant
-#pragma warning ( disable: 271 ) // trailing comma is nonstandard
-#pragma warning ( disable: 171 ) // invalid type conversion
-#pragma warning ( disable: 1 ) // last line of file ends without a newline
-#endif
 
 // Jani: MSVC doesn't necessarily inline code with inline keyword. Using __forceinline results better inlining
 // and also prints out a warning if inlining wasn't possible. __forceinline is MSVC specific.
-#if defined(_MSC_VER)
-#define WWINLINE __forceinline
-#else
 #define WWINLINE inline
-#endif
 
 /*
 ** Define the MIN and MAX macros.
@@ -102,17 +69,8 @@ template <class T> T max(T a,T b)
 **	various compilers to a common behavior such that the C&C engine will compile without
 **	error or warning.
 */
-#if defined(__BORLANDC__)
-#include	"borlandc.h"
-#endif
 
-#if defined(_MSC_VER)
-#include	"visualc.h"
-#endif
 
-#if defined(__WATCOMC__)
-#include	"watcom.h"
-#endif
 
 
 #ifndef	NULL

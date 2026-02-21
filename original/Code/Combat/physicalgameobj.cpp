@@ -21,7 +21,6 @@
 #include "matinfo.h"
 #include "gameobjmanager.h"
 #include "pscene.h"
-#include "wwprofile.h"
 #include "rbody.h"
 #include "bitpackids.h"
 #include "activeconversation.h"
@@ -302,11 +301,8 @@ void	PhysicalGameObj::Copy_Settings( const PhysicalGameObjDef & definition )
 	}
 
 	// Set the Physical Object
-	WWASSERT( PhysObj == NULL );
 	DefinitionClass * podef = DefinitionMgrClass::Find_Definition( definition.PhysDefID );
-	WWASSERT( SuperClassID_From_ClassID( podef->Get_Class_ID() ) == CLASSID_PHYSICS );
 	PhysObj = (PhysClass *)podef->Create();
-	WWASSERT( PhysObj != NULL );
 
 	PhysObj->Set_Collision_Group( DEFAULT_COLLISION_GROUP );
 	PhysObj->Set_Observer( this );
@@ -446,7 +442,6 @@ bool	PhysicalGameObj::Save( ChunkSaveClass & csave )
 
 bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 {
-	WWASSERT( PhysObj == NULL );		// May need to change to release???
 	CombatPhysObserverClass * phys_observer_ptr = NULL;
 
 	while (cload.Open_Chunk()) {
@@ -508,7 +503,6 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 		cload.Close_Chunk();
 	}
 
-	WWASSERT( PhysObj != NULL );		
 	REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&PhysObj );
 
 	if ( ActiveConversation != NULL ) {
@@ -516,7 +510,6 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 	}
 
 	// Register the multiple-inheritance versions of our this pointer.
-	WWASSERT(phys_observer_ptr != NULL);
 	if (phys_observer_ptr != NULL) {
 		SaveLoadSystemClass::Register_Pointer(phys_observer_ptr, (CombatPhysObserverClass *)this);
 	}
@@ -529,7 +522,6 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 void PhysicalGameObj::On_Post_Load (void)					
 { 
 	// Plug ourselves back into the physics object as an observer
-	WWASSERT(PhysObj != NULL);
 	PhysObj->Set_Observer(this);
 
 	Hide_Muzzle_Flashes();
@@ -544,9 +536,7 @@ AnimControlClass *	PhysicalGameObj::Get_Anim_Control( void )
 
 void	PhysicalGameObj::Set_Anim_Control( AnimControlClass * anim_control )
 {
-	WWASSERT( AnimControl == NULL );
 	AnimControl = anim_control;
-	WWASSERT( AnimControl != NULL );
 }
 
 bool	PhysicalGameObj::Is_Soft( void )
@@ -569,12 +559,6 @@ void	PhysicalGameObj::Apply_Damage( const OffenseObjectClass & damager, float sc
 		return;
 	}
 
-#ifdef WWDEBUG
-	//
-	// Tone it down for VIP's
-	//
-	scale *= CombatManager::Get_Damage_Factor(damager.Get_Owner(), this);
-#endif // WWDEBUG
 
 	DamageableGameObj::Apply_Damage( damager, scale );
 }
@@ -596,7 +580,6 @@ void PhysicalGameObj::Completely_Damaged( const OffenseObjectClass & damager )
 		
 		Vector3 pos;
 		Get_Position(&pos);
-		WWASSERT(pos.Is_Valid());// most likely candidate for explosion damage bug....?
 
 		// Build a transform with the same heading as the object
 		float z_rot = Get_Transform().Get_Z_Rotation();
@@ -688,7 +671,7 @@ void PhysicalGameObj::Post_Think( void )
 				Get_Anim_Control()->Set_Model( Peek_Model() );
 			}
 		}
-//		WWASSERT( AnimControl->Peek_Model() == Peek_Model() );
+//		assert( AnimControl->Peek_Model() == Peek_Model() );
 	}
 
 	// Handle Pending Host
@@ -709,7 +692,6 @@ void PhysicalGameObj::Post_Think( void )
 
 	DamageableGameObj::Post_Think();		
 
-	WWPROFILE( "Physical PostThink" );
 
 	if ( HibernationEnable && HibernationTimer > 0 ) {
 		HibernationTimer -= TimeManager::Get_Frame_Seconds();
@@ -791,7 +773,6 @@ void	PhysicalGameObj::Attach_To_Object_Bone( PhysicalGameObj * host, const char 
 
 	HostGameObj = host;
 	if ( host != NULL ) {
-		WWASSERT( host->Peek_Model() );
 		HostGameObjBone = host->Peek_Model()->Get_Bone_Index( bone_name );
 
 		// Make sure we get teleported immeadiately!
@@ -898,31 +879,26 @@ void	PhysicalGameObj::Set_Animation_Frame ( const char *animation_name, int fram
 */
 void	PhysicalGameObj::Set_Transform(const Matrix3D & tm) 
 { 
-	WWASSERT(Peek_Physical_Object() != NULL);
 	Peek_Physical_Object()->Set_Transform(tm); 
 }
 
 const Matrix3D &	PhysicalGameObj::Get_Transform(void) const 
 { 
-	WWASSERT(Peek_Physical_Object() != NULL);
 	return Peek_Physical_Object()->Get_Transform(); 
 }
 
 void	PhysicalGameObj::Get_Position(Vector3 * set_pos) const 
 { 
-	WWASSERT(Peek_Physical_Object() != NULL);
 	Peek_Physical_Object()->Get_Position(set_pos); 
 }
 
 void	PhysicalGameObj::Set_Position(const Vector3 & pos) 
 { 
-	WWASSERT(Peek_Physical_Object() != NULL);
 	Peek_Physical_Object()->Set_Position(pos); 
 }
 
 float	PhysicalGameObj::Get_Facing(void) const
 { 
-	WWASSERT(Peek_Physical_Object() != NULL);
 	return Peek_Physical_Object()->Get_Facing(); 
 }
 
@@ -1056,13 +1032,9 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 	//	Pass the model name across
 	//
 
-	WWASSERT(Peek_Physical_Object() != NULL);
-	WWASSERT(Peek_Physical_Object()->Peek_Model() != NULL);
-	//WWASSERT(Peek_Physical_Object()->Peek_Model()->Get_Name());
+	//assert(Peek_Physical_Object()->Peek_Model()->Get_Name());
 	
 	const char *model_name = Peek_Physical_Object()->Peek_Model()->Get_Name();
-	WWASSERT(model_name != NULL);
-	WWASSERT(::strlen(model_name) < 256);
 	packet.Add_Terminated_String( model_name, true );
 
 	//

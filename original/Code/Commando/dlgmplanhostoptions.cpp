@@ -22,7 +22,6 @@
 #include "modpackagemgr.h"
 #include "modpackage.h"
 
-#include "gamespyadmin.h"
 #include "specialbuilds.h"
 
 ////////////////////////////////////////////////////////////////
@@ -280,21 +279,7 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 	//
 	//	Fill in the max-players control on the dialog
 	//
-	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		BandTestMaxPlayers = (cUserOptions::BandwidthBps.Get() / 250000) * 4;
-		if (BandTestMaxPlayers < 2) {
-			if (cUserOptions::BandwidthBps.Get() > 100000) {
-				BandTestMaxPlayers = 4;
-			} else {
-				BandTestMaxPlayers = 2;
-			}
-		}
-//		Enable_Dlg_Item(IDC_NUM_PLAYERS_EDIT, false);
-		int max_players = min(The_Game ()->Get_Max_Players (), BandTestMaxPlayers);
-		Set_Dlg_Item_Int (IDC_NUM_PLAYERS_EDIT, min(max_players, NetworkObjectClass::MAX_CLIENT_COUNT-1));
-	} else {
-		Set_Dlg_Item_Int (IDC_NUM_PLAYERS_EDIT, min(The_Game ()->Get_Max_Players (), NetworkObjectClass::MAX_CLIENT_COUNT-1));
-	}
+	Set_Dlg_Item_Int (IDC_NUM_PLAYERS_EDIT, min(The_Game ()->Get_Max_Players (), NetworkObjectClass::MAX_CLIENT_COUNT-1));
 
 	//
 	//	Configure the IP NIC Enumeration combobox
@@ -303,18 +288,9 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 
 	if (nic_combobox != NULL) {
 
-		ULONG * nics = NULL;
-		int nic_count = 0;
-		ULONG preferred_nick;
-		if (!cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
-			 nics = cNicEnum::Get_Nics();
-			 nic_count = cNicEnum::Get_Num_Nics();
-			 preferred_nick = cUserOptions::PreferredLanNic.Get();
-		} else {
-			 nics = cNicEnum::Get_GameSpy_Nics();
-			 nic_count = cNicEnum::Get_Num_GameSpy_Nics();
-			 preferred_nick = cUserOptions::PreferredGameSpyNic.Get();
-		}
+		ULONG * nics = cNicEnum::Get_Nics();
+		int nic_count = cNicEnum::Get_Num_Nics();
+		ULONG preferred_nick = cUserOptions::PreferredLanNic.Get();
 
 		int current_index = -1;
 
@@ -423,23 +399,13 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 	//
 	//	Read the IP NIC Enumeration combobox
 	//
-	if (!cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
+	{
 		ComboBoxCtrlClass *nic_combobox = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_HOSTING_IP_COMBO);
 		if (nic_combobox != NULL) {
 			int curr_sel = nic_combobox->Get_Curr_Sel ();
 			if (curr_sel >= 0) {
 				ULONG * nics = cNicEnum::Get_Nics();
 				cUserOptions::PreferredLanNic.Set(nics[curr_sel]);
-				The_Game()->Set_Ip_Address(nics[curr_sel]);
-			}
-		}
-	} else if (cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
-		ComboBoxCtrlClass *nic_combobox = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_HOSTING_IP_COMBO);
-		if (nic_combobox != NULL) {
-			int curr_sel = nic_combobox->Get_Curr_Sel ();
-			if (curr_sel >= 0) {
-				ULONG * nics = cNicEnum::Get_GameSpy_Nics();
-				cUserOptions::PreferredGameSpyNic.Set(nics[curr_sel]);
 				The_Game()->Set_Ip_Address(nics[curr_sel]);
 			}
 		}
@@ -476,8 +442,6 @@ MPLanHostBasicOptionsTabClass::On_EditCtrl_Change (EditCtrlClass *edit, int ctrl
 
 	} else if (ctrlID == IDC_NUM_PLAYERS_EDIT) {
 
-		int max_players = min(BandTestMaxPlayers, NetworkObjectClass::MAX_CLIENT_COUNT-1);
-
 		//
 		//	Check to ensure the player count is within bounds...
 		//
@@ -486,11 +450,6 @@ MPLanHostBasicOptionsTabClass::On_EditCtrl_Change (EditCtrlClass *edit, int ctrl
 			player_count = min (player_count, NetworkObjectClass::MAX_CLIENT_COUNT-1);
 			player_count = max (player_count, 0);
 			Set_Dlg_Item_Int (IDC_NUM_PLAYERS_EDIT, player_count);
-		}
-		if (cGameSpyAdmin::Is_Gamespy_Game() && player_count > max_players) {
-			player_count = max_players;
-			Set_Dlg_Item_Int (IDC_NUM_PLAYERS_EDIT, player_count);
-			DlgMsgBox::DoDialog(IDS_MENU_TEXT329, IDS_MP_MAXPLAYER_WARNING, DlgMsgBox::Okay);
 		}
 	}
 
@@ -531,7 +490,7 @@ MPLanHostAdvancedOptionsTabClass::On_Init_Dialog (void)
 #endif // FREEDEDICATEDSERVER
 
 //	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-//		WWASSERT(PTheGameData != NULL);
+//		assert(PTheGameData != NULL);
 //		The_Game ()->IsDedicated.Set(true);
 //		Enable_Dlg_Item (IDC_DEDICATED_SERVER_CHECK,		false);
 //	}

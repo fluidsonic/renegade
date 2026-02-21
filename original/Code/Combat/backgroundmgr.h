@@ -14,7 +14,6 @@
 #include "vector3.h"
 #include	"vector3i.h"
 #include "vertmaterial.h"
-#include "wwdebug.h"
 
 
 // Forward declarations.
@@ -316,7 +315,6 @@ class	SkyClass : public RenderObjClass
 
 		RenderObjClass *Clone() const
 		{
-			WWASSERT (false);
 			return (0);
 		}
 

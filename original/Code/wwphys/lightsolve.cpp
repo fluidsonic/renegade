@@ -476,7 +476,6 @@ void LightSolveClass::Compute_Solve(LightSolveContextClass & context,RefPhysList
 
 void LightSolveClass::Compute_Solve(LightSolveContextClass & context,StaticPhysClass * obj)
 {
-	WWASSERT(obj != NULL);
 	if (context.Get_Progress().Get_Object_Count() == 0) {
 		context.Get_Progress().Set_Object_Count(1);
 	}
@@ -501,7 +500,6 @@ void LightSolveClass::Compute_Solve(LightSolveContextClass & context,RenderObjCl
 	/*
 	** Recurse through all sub-objects
 	*/
-	WWASSERT(obj != NULL);
 	for (int i=0; i<obj->Get_Num_Sub_Objects(); i++) {
 		RenderObjClass * sub_obj = obj->Get_Sub_Object(i);
 		if (sub_obj != NULL) {
@@ -515,7 +513,6 @@ void LightSolveClass::Compute_Solve(LightSolveContextClass & context,RenderObjCl
 	*/
 	if (obj->Class_ID() == RenderObjClass::CLASSID_MESH) {
 		MeshClass * mesh = (MeshClass*)obj;
-		WWDEBUG_SAY(("Generating Solve for Mesh: %s\r\n",mesh->Get_Name()));
 		TheVertexSolver.Light_Mesh(context,mesh,light_list);		
 	} else if (obj->Class_ID() == RenderObjClass::CLASSID_RENEGADE_TERRAIN) {
 		TheVertexSolver.Light_Terrain(context,(RenegadeTerrainPatchClass *)obj,light_list);

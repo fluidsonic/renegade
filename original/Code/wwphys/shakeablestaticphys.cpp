@@ -3,11 +3,6 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 #include "hanim.h"
-#include "wwdebug.h"
-#include "wwhack.h"
-
-
-DECLARE_FORCE_LINK( shakeablestaticphys );
 
 /*
 ** Chunk Id's used by ShakeableStaticPhysClass
@@ -25,7 +20,6 @@ enum
 	SHAKEABLESTATICPHYSDEF_CHUNK_STATICANIMPHYSDEF		= 7311734,
 };
 
-
 /************************************************************************************************
 **
 ** ShakeableStaticPhysDefClass Implementation
@@ -41,7 +35,6 @@ SimplePersistFactoryClass<ShakeableStaticPhysDefClass, PHYSICS_CHUNKID_SHAKEABLE
 #if 0
 DECLARE_DEFINITION_FACTORY(ShakeableStaticPhysDefClass, CLASSID_SHAKEABLESTATICPHYSDEF, "ShakeableStaticPhys") _ShakeableStaticPhysDefDefFactory;
 #endif
-
 
 ShakeableStaticPhysDefClass::ShakeableStaticPhysDefClass(void)
 {
@@ -68,7 +61,6 @@ PersistClass *	ShakeableStaticPhysDefClass::Create(void) const
 	return obj;
 }
 
-
 bool	ShakeableStaticPhysDefClass::Save(ChunkSaveClass & csave)
 {
 	csave.Begin_Chunk(SHAKEABLESTATICPHYSDEF_CHUNK_STATICANIMPHYSDEF);
@@ -88,7 +80,6 @@ bool	ShakeableStaticPhysDefClass::Load( ChunkLoadClass &cload )
 				break;
   
 			default:
-				WWDEBUG_SAY(( "Unrecognized ShakeableStaticPhysDef chunkID\n" ));
 				break;
 
 		}
@@ -102,8 +93,6 @@ const PersistFactoryClass & ShakeableStaticPhysDefClass::Get_Factory (void) cons
 { 
 	return _ShakeableStaticPhysDefPersistFactory; 
 }
-
-
 
 /************************************************************************************************
 **
@@ -170,7 +159,6 @@ bool ShakeableStaticPhysClass::Load(ChunkLoadClass & cload)
 				break;
 		
 			default:
-				WWDEBUG_SAY(( "Unrecognized ShakeableStaticPhys chunkID\n" ));
 				break;
 
 		}
@@ -179,8 +167,4 @@ bool ShakeableStaticPhysClass::Load(ChunkLoadClass & cload)
 
 	return true;
 }
-
-
-
-
 

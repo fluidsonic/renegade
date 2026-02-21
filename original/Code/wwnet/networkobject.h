@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__NETWORKOBJECT_H
 #define	__NETWORKOBJECT_H
@@ -67,10 +64,6 @@ public:
 	int					Get_Network_ID (void) const								{ return NetworkID; }
 	void					Set_Network_ID (int id);
 
-#ifdef WWDEBUG
-	int					Get_Created_By_Packet_ID (void) const					{ return CreatedByPacketID; }
-	void					Set_Created_By_Packet_ID (int id);
-#endif //WWDEBUG
 
 	//
 	//	Class ID support
@@ -199,9 +192,6 @@ private:
 	////////////////////////////////////////////////////////////////
 	int					NetworkID;
 
-#ifdef WWDEBUG
-	int					CreatedByPacketID;
-#endif //WWDEBUG
 
 	//
 	// Per client update information. Bandwidth will be allocated per object, per client.

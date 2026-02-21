@@ -25,7 +25,6 @@ SoundEnvironmentClass::SoundEnvironmentClass()
 {
 	// Initialize the amplitude mixing buffer.
 	AmplitudeBuffer = new float [AMPLITUDE_BUFFER_SIZE];
-	WWASSERT (AmplitudeBuffer != NULL);
 	Reset();
 }
 

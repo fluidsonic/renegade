@@ -152,7 +152,6 @@ PilotClass::Get_Object_Space_Velocity (Vector3 &vel_vector) const
 	//	Get a pointer to the physics object for this vehicle
 	//
 	MoveablePhysClass *phys_obj = m_GameObj->Peek_Physical_Object()->As_MoveablePhysClass ();
-	WWASSERT (phys_obj != NULL);
 
 	//
 	//	Get the world-space velocity vector for this vehicle and transform
@@ -748,7 +747,6 @@ PilotClass::Determine_Preferred_Height (void)
 	//	Get a pointer to the physics object for this vehicle
 	//
 	MoveablePhysClass *phys_obj = m_GameObj->Peek_Physical_Object()->As_MoveablePhysClass ();
-	WWASSERT (phys_obj != NULL);
 
 	//
 	//	Get the world-space velocity vector for this vehicle and transform

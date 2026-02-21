@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef PHYS_H
 #define PHYS_H
@@ -85,19 +82,11 @@ namespace Umbra { class Object; }
 ** be removed.  These macros can be used inside a member function of any physics object
 ** or by calling them through a pointer to a physics object e.g.  my_phys_obj->DEBUG_RENDER_POINT(...)
 */
-#ifdef WWDEBUG
-#define DEBUG_RENDER_POINT(v,c)		Add_Debug_Point(v,c)
-#define DEBUG_RENDER_VECTOR(p,v,c)	Add_Debug_Vector(p,v,c)
-#define DEBUG_RENDER_AABOX(box,c,o)	Add_Debug_AABox(box,c,o)
-#define DEBUG_RENDER_OBBOX(box,c,o)	Add_Debug_OBBox(box,c,o)
-#define DEBUG_RENDER_AXES(tm,c)		Add_Debug_Axes(tm,c)
-#else
 #define DEBUG_RENDER_POINT(v,c)		
 #define DEBUG_RENDER_VECTOR(p,v,c)	
 #define DEBUG_RENDER_AABOX(box,c,o)
 #define DEBUG_RENDER_OBBOX(box,c,o)
 #define DEBUG_RENDER_AXES(tm,c)		
-#endif
 
 
 
@@ -559,13 +548,6 @@ public:
 	** widgets to the physics scene.  Use the macros defined at the top of this file in order to
 	** have these debug calls removed from the release build.
 	*/
-#ifdef WWDEBUG
-	void									Add_Debug_Point(const Vector3 & p,const Vector3 & color);
-	void									Add_Debug_Vector(const Vector3 & p,const Vector3 & v,const Vector3 & color);
-	void									Add_Debug_AABox(const AABoxClass & box,const Vector3 & color,float opacity = 0.25f);
-	void									Add_Debug_OBBox(const OBBoxClass & box,const Vector3 & color,float opacity = 0.25f);
-	void									Add_Debug_Axes(const Matrix3D & transform,const Vector3 & color);
-#endif
 
 	/*
 	** Simulation and Rendering toggles by type.  Derived classes implement these functions to test
@@ -695,7 +677,6 @@ inline void PhysClass::Inc_Ignore_Counter(void)
 { 
 	int count = (Flags & IGNORE_MASK) >> IGNORE_SHIFT;
 	count++;
-	WWASSERT(count < 12);
 	Flags &= ~IGNORE_MASK;
 	Flags |= (count << IGNORE_SHIFT);
 }
@@ -703,7 +684,6 @@ inline void PhysClass::Inc_Ignore_Counter(void)
 inline void PhysClass::Dec_Ignore_Counter(void)
 {
 	int count = (Flags & IGNORE_MASK) >> IGNORE_SHIFT;
-	WWASSERT(count > 0);
 	count--;
 	Flags &= ~IGNORE_MASK;
 	Flags |= (count << IGNORE_SHIFT);
@@ -728,13 +708,11 @@ inline void PhysClass::Update_Cull_Box(void)
 
 inline void PhysClass::Add_Effect_To_Me(MaterialEffectClass * effect)
 {
-	WWASSERT(effect != NULL);
 	MaterialEffectsOnMe.Add(effect);
 }
 
 inline void PhysClass::Remove_Effect_From_Me(MaterialEffectClass * effect)
 {
-	WWASSERT(effect != NULL);
 	MaterialEffectsOnMe.Remove(effect);
 }
 

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __LOGICAL_LISTENER_H
 #define __LOGICAL_LISTENER_H

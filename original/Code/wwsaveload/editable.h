@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 
 #ifndef __EDITABLE_H
@@ -12,7 +9,6 @@
 #include "parameter.h"
 #include "simpleparameter.h"
 #include "parameterlist.h"
-#include "wwdebug.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -50,7 +46,6 @@ EditableClass::Get_Parameter_Count (void) const
 inline ParameterClass *
 EditableClass::Lock_Parameter (int i)
 {
-	WWASSERT (0);
 	return NULL;
 }
 

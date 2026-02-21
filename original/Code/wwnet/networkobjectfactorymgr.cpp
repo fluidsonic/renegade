@@ -1,6 +1,5 @@
 #include "networkobjectfactorymgr.h"
 #include "networkobjectfactory.h"
-#include "wwdebug.h"
 #include <string.h>
 
 
@@ -81,8 +80,6 @@ NetworkObjectFactoryMgrClass::Get_Next (NetworkObjectFactoryClass *curr_factory)
 void
 NetworkObjectFactoryMgrClass::Register_Factory (NetworkObjectFactoryClass *factory)
 {
-	WWASSERT (factory->NextFactory == 0);
-	WWASSERT (factory->PrevFactory == 0);
 	Link_Factory (factory);
 	return ;
 }
@@ -96,7 +93,6 @@ NetworkObjectFactoryMgrClass::Register_Factory (NetworkObjectFactoryClass *facto
 void
 NetworkObjectFactoryMgrClass::Unregister_Factory (NetworkObjectFactoryClass *factory)
 {
-	WWASSERT (factory != 0);
 	Unlink_Factory (factory);
 	return ;
 }
@@ -110,8 +106,6 @@ NetworkObjectFactoryMgrClass::Unregister_Factory (NetworkObjectFactoryClass *fac
 void
 NetworkObjectFactoryMgrClass::Link_Factory (NetworkObjectFactoryClass *factory)
 {
-	WWASSERT (factory->NextFactory == 0);
-	WWASSERT (factory->PrevFactory == 0);
 
 	// Adding this factory in front of the current head of the list
 	factory->NextFactory = _FactoryListHead;
@@ -135,13 +129,11 @@ NetworkObjectFactoryMgrClass::Link_Factory (NetworkObjectFactoryClass *factory)
 void
 NetworkObjectFactoryMgrClass::Unlink_Factory (NetworkObjectFactoryClass *factory)
 {
-	WWASSERT(factory != 0);
 
 	// Handle the factory's prev pointer:
 	if (factory->PrevFactory == 0) {
 
 		// this factory is the head
-		WWASSERT (_FactoryListHead == factory);
 		_FactoryListHead = factory->NextFactory;
 	
 	} else {

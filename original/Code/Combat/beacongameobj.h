@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	__BEACONGAMEOBJ_H
 #define	__BEACONGAMEOBJ_H

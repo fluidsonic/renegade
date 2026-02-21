@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef WW3D_H
 #define WW3D_H
@@ -27,7 +24,7 @@ class		LightEnvironmentClass;
 class		MaterialPassClass;
 
 #define MESH_RENDER_SNAPSHOT_ENABLED
-#define SNAPSHOT_SAY(x) if (WW3D::Is_Snapshot_Activated()) { WWDEBUG_SAY(x); }
+#define SNAPSHOT_SAY(x) if (WW3D::Is_Snapshot_Activated()) {  }
 //#define SNAPSHOT_SAY(x)
 
 /**

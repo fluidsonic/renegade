@@ -7,7 +7,6 @@
 #include "sphere.h"
 #include "aabox.h"
 #include "obbox.h"
-#include "wwdebug.h"
 
 
 
@@ -90,7 +89,6 @@ CollisionMath::OverlapType
 CollisionMath::Overlap_Test(const AAPlaneClass & /*plane*/,const OBBoxClass & /*box*/)
 {
 // TODO
-	WWASSERT(0);
 	return POS;
 }
 

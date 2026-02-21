@@ -3,7 +3,6 @@
 #include "wwaudio.h"
 #include "hanim.h"
 #include "assetmgr.h"
-#include "wwhack.h"
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "chunkio.h"
@@ -12,11 +11,6 @@
 #include "debug.h"
 #include "phys.h"
 #include "combat.h"
-#include "wwprofile.h"
-
-
-DECLARE_FORCE_LINK (SpecialEffects)
-
 
 ///////////////////////////////////////////////////////////////////////////
 //	Persist and Editable framework support
@@ -24,7 +18,6 @@ DECLARE_FORCE_LINK (SpecialEffects)
 SimplePersistFactoryClass	<SpecialEffectsGameObj,		CHUNKID_GAME_OBJECT_SPECIAL_EFFECTS>		_SpecialEffectsGameObjPersistFactory;
 SimplePersistFactoryClass	<SpecialEffectsGameObjDef, CHUNKID_GAME_OBJECT_DEF_SPECIAL_EFFECTS>	_SpecialEffectsGameObjDefPersistFactory;
 DECLARE_DEFINITION_FACTORY	(SpecialEffectsGameObjDef, CLASSID_GAME_OBJECT_DEF_SPECIAL_EFFECTS, "Special Effects") _SpecialEffectsGameObjDefDefFactory;
-
 
 ///////////////////////////////////////////////////////////////////////////
 //	Constants
@@ -38,7 +31,6 @@ enum
 	VARID_DEF_SOUNDID,
 };
 
-
 enum
 {
 	CHUNKID_PARENT						=	0x09010236,
@@ -47,7 +39,6 @@ enum
 	VARID_LIFE_REMAINING				= 1,
 	VARID_IS_INITIALIZED
 };
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -63,7 +54,6 @@ SpecialEffectsGameObjDef::SpecialEffectsGameObjDef (void)	:
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	~SpecialEffectsGameObjDef
@@ -73,7 +63,6 @@ SpecialEffectsGameObjDef::~SpecialEffectsGameObjDef (void)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -85,7 +74,6 @@ SpecialEffectsGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_SPECIAL_EFFECTS; 
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -99,7 +87,6 @@ SpecialEffectsGameObjDef::Create (void) const
 	obj->Init (*this);
 	return obj;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -118,7 +105,6 @@ SpecialEffectsGameObjDef::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -151,7 +137,6 @@ SpecialEffectsGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -164,7 +149,6 @@ SpecialEffectsGameObjDef::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK				(csave, VARID_DEF_SOUNDID,				SoundDefID);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -190,7 +174,6 @@ SpecialEffectsGameObjDef::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -202,14 +185,11 @@ SpecialEffectsGameObjDef::Get_Factory (void) const
 	return _SpecialEffectsGameObjDefPersistFactory; 
 }
 
-
-
 /*
 **
 **	Start of SpecialEffectsGameObj
 **
 */
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -223,7 +203,6 @@ SpecialEffectsGameObj::SpecialEffectsGameObj (void)	:
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	~SpecialEffectsGameObj
@@ -233,7 +212,6 @@ SpecialEffectsGameObj::~SpecialEffectsGameObj (void)
 {
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -245,7 +223,6 @@ SpecialEffectsGameObj::Get_Factory (void) const
 {
 	return _SpecialEffectsGameObjPersistFactory;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -278,7 +255,6 @@ SpecialEffectsGameObj::Init (const SpecialEffectsGameObjDef &definition)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -289,7 +265,6 @@ SpecialEffectsGameObj::Get_Definition (void) const
 {
 	return (const SpecialEffectsGameObjDef &)BaseGameObj::Get_Definition();
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -309,7 +284,6 @@ SpecialEffectsGameObj::Save (ChunkSaveClass & csave)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -342,7 +316,6 @@ SpecialEffectsGameObj::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Do_Effect
@@ -355,7 +328,6 @@ SpecialEffectsGameObj::Do_Effect (void)
 	//	Make sure we have a render object
 	//
 	RenderObjClass *model = Peek_Model ();
-	WWASSERT (model != NULL);
 
 	if (model != NULL) {
 
@@ -387,7 +359,6 @@ SpecialEffectsGameObj::Do_Effect (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -400,7 +371,6 @@ SpecialEffectsGameObj::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK	(csave, VARID_IS_INITIALIZED, IsInitialized);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -426,7 +396,6 @@ SpecialEffectsGameObj::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -435,7 +404,6 @@ SpecialEffectsGameObj::Load_Variables (ChunkLoadClass &cload)
 void
 SpecialEffectsGameObj::Think (void)
 {
-	WWPROFILE( "SpecialEffects Think" );
 
 	//
 	//	Kick off the special effect

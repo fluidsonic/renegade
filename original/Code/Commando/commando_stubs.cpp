@@ -2,17 +2,9 @@
 // Provides definitions for globals that were in deleted or excluded source files
 
 #include "always.h"
-#include "gamespybanlist.h"
-#include "GameSpy_QnR.h"
 #include "stackdump.h"       // compat/stackdump.h
 #include "verchk.h"          // compat/verchk.h
 #include "BandTest/BandTest.h"
-
-// GameSpy ban list global (GameSpyBanList.cpp deleted - GameSpy service removed)
-GameSpyBanListClass GameSpyBanList;
-
-// GameSpy QnR global (GameSpy_QnR.cpp never existed; was in h file)
-cGameSpyQnR GameSpyQnR;
 
 // Stack dump stub (stackdump.cpp excluded - uses Windows imagehlp.h)
 void cStackDump::Print_Call_Stack(void)

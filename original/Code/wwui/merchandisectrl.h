@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __MERCHANDISECTRL_H
 #define __MERCHANDISECTRL_H

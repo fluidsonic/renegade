@@ -9,17 +9,10 @@
 #include "hanim.h"
 #include "mesh.h"
 #include "boxrobj.h"
-#include "wwhack.h"
-#include "wwprofile.h"
 #include "assetmgr.h"
 
 #include "vertmaterial.h"
 #include "dx8wrapper.h"
-
-DECLARE_FORCE_LINK(staticanimphys);
-
-
-
 
 /********************************************************************************************
 **
@@ -44,7 +37,6 @@ enum
 	OBSOLETE_STATICANIMPHYS_VARIABLE_DEFID					= 0x00,
 	STATICANIMPHYS_VARIABLE_COLLISIONMODE,
 };										
-
 
 StaticAnimPhysClass::StaticAnimPhysClass(void) :
 	AnimManager(*this),
@@ -220,7 +212,6 @@ void StaticAnimPhysClass::Debug_Display_Shadow(const Vector2 & v0,const Vector2 
 
 }
 
-
 bool StaticAnimPhysClass::Needs_Timestep(void)
 { 
 	return true; 
@@ -228,7 +219,6 @@ bool StaticAnimPhysClass::Needs_Timestep(void)
 
 void StaticAnimPhysClass::Timestep(float dt)
 {
-	WWPROFILE("StaticAnim::Timestep");
 
 	/*
 	** Let the animation manager handle progressing the animation, checking
@@ -242,13 +232,11 @@ void StaticAnimPhysClass::Timestep(float dt)
 	ProjectorManager.Update_From_Model(Model);
 }
 
-
 bool StaticAnimPhysClass::Internal_Link_Rider(PhysClass * rider)	
 {
 	AnimManager.Link_Rider(rider); 
 	return true; 
 }
-
 
 bool StaticAnimPhysClass::Internal_Unlink_Rider(PhysClass * rider)
 { 
@@ -274,7 +262,6 @@ void StaticAnimPhysClass::Load_State(ChunkLoadClass & cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		cload.Close_Chunk();
@@ -298,7 +285,6 @@ bool StaticAnimPhysClass::Save(ChunkSaveClass &csave)
 	
 	return true;
 }
-
 
 bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 {
@@ -329,7 +315,6 @@ bool StaticAnimPhysClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 		
@@ -362,9 +347,6 @@ void StaticAnimPhysClass::On_Post_Load(void)
 	}
 
 }
-
-
-
 
 /********************************************************************************************
 **
@@ -405,7 +387,6 @@ enum
 	STATICANIMPHYSDEF_VARIABLE_COLLIDEINPATHFIND,
 	STATICANIMPHYSDEF_VARIABLE_ISCOSMETIC,
 };
-
 
 StaticAnimPhysDefClass::StaticAnimPhysDefClass(void) :
 	ShadowDynamicObjs(false),
@@ -463,7 +444,6 @@ bool StaticAnimPhysDefClass::Is_Type(const char * type_name)
 		return StaticPhysDefClass::Is_Type(type_name);
 	}
 }
-
 
 bool StaticAnimPhysDefClass::Save(ChunkSaveClass &csave)
 {
@@ -532,7 +512,6 @@ bool StaticAnimPhysDefClass::Load(ChunkLoadClass &cload)
 				break;
 
 			default:
-				WWDEBUG_SAY(("Unhandled Chunk: 0x%X File: %s Line: %d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
 		}
 

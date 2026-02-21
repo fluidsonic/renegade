@@ -9,7 +9,6 @@
 #include "chunkio.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
-#include "wwprofile.h"
 
 #include "win.h"
 //#include "systimer.h"		// for timegettime
@@ -158,23 +157,6 @@ void	TimeManager::Update_Frame_Time()
 	// Single Step
 	static bool single_step = false;
 
-#ifdef WWDEBUG
-	if ( Input::Get_State( INPUT_FUNCTION_DEBUG_SINGLE_STEP ) ) {
-		single_step = !single_step;
-		Debug_Say(( "Single_Step %s\n", single_step ? "ON" : "OFF" ));
-	}
-
-	if ( single_step ) {
-
-//		Wait_Seconds( 0.2 );
-
-		FrameTicks = 0;
-		if ( Input::Get_State( INPUT_FUNCTION_DEBUG_SINGLE_STEP_STEP ) ) {
-			Debug_Say(( "Single_Step STEP!!\n" ));
-			FrameTicks = TICKS_PER_SECOND / 15;
-		}
-	}
-#endif
 
 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Is_Snap_Shot_Mode() ) {
 		FrameTicks = 0;
@@ -222,7 +204,7 @@ void	TimeManager::Update_Frame_Time()
 
 #if 0
 	if (FrameTicks == 0) {
-//		WWDEBUG_SAY(("Frame Ticks was ZERO!\n"));
+//		
 		FrameTicks = 1;
 	}
 #endif
@@ -268,17 +250,6 @@ void	TimeManager::Update( void )
 	WWProfileManager::Increment_Frame_Counter();
 
 
-#ifdef WWDEBUG
-	//
-	// TSS101401
-	// Watch out for unexpected slow frames. They may interrupt networking.
-	//
-	if (Get_Frame_Real_Seconds() > 2) {
-		Debug_Say(("TimeManager::Update: warning, frame %d was slow (%d ms)\n",
-			WWProfileManager::Get_Frame_Count_Since_Reset(),
-			(int)(1000 * Get_Frame_Real_Seconds())));
-	}
-#endif // WWDEBUG
 }
 
 

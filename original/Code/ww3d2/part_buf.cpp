@@ -9,7 +9,6 @@
 #include "bound.h"
 #include "simplevec.h"
 #include "sphere.h"
-#include "wwprofile.h"
 #include <limits.h>
 #include "vp.h"
 #include "texture.h"
@@ -222,7 +221,6 @@ ParticleBufferClass::ParticleBufferClass
 				// This code should not be run, but if it does,
 				// set line emitters to some reasonable value so
 				// it doesn't crash
-				WWASSERT(0);
 				LineRenderer->Init(_DefaultLineEmitterProps);
 			}
 		}
@@ -254,7 +252,6 @@ ParticleBufferClass::ParticleBufferClass
 		}
 		break;
 	default:
-		WWASSERT(0);
 		break;
 	}	
 
@@ -573,7 +570,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 	case W3D_EMITTER_RENDER_MODE_TRI_PARTICLES:
 		{
 			// Set up worldspace point group
-			WWASSERT(src.PointGroup);
 			PointGroup = new PointGroupClass();
 			PointGroup->Set_Flag(PointGroupClass::TRANSFORM, true);
 			PointGroup->Set_Texture(src.PointGroup->Peek_Texture());
@@ -585,7 +581,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 	case W3D_EMITTER_RENDER_MODE_QUAD_PARTICLES:
 		{
 			// Set up worldspace point group
-			WWASSERT(src.PointGroup);
 			PointGroup = new PointGroupClass();
 			PointGroup->Set_Flag(PointGroupClass::TRANSFORM, true);
 			PointGroup->Set_Texture(src.PointGroup->Peek_Texture());
@@ -596,13 +591,11 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 		break;
 	case W3D_EMITTER_RENDER_MODE_LINE:
 		{	
-			WWASSERT(src.LineRenderer);
 			LineRenderer = new SegLineRendererClass(*src.LineRenderer);
 		}
 		break;
 	case W3D_EMITTER_RENDER_MODE_LINEGRP_TETRA:
 		{
-			WWASSERT(src.LineGroup);
 			LineGroup=new LineGroupClass();
 			LineGroup->Set_Flag(LineGroupClass::TRANSFORM, true);
 			LineGroup->Set_Texture(src.LineGroup->Peek_Texture());
@@ -616,7 +609,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 		break;
 	case W3D_EMITTER_RENDER_MODE_LINEGRP_PRISM:
 		{
-			WWASSERT(src.LineGroup);
 			LineGroup=new LineGroupClass();
 			LineGroup->Set_Flag(LineGroupClass::TRANSFORM, true);
 			LineGroup->Set_Texture(src.LineGroup->Peek_Texture());
@@ -629,7 +621,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 		}
 		break;
 	default:
-		WWASSERT(0);
 		break;
 	}
 
@@ -755,7 +746,6 @@ int ParticleBufferClass::Get_Particle_Count(void) const
 
 void ParticleBufferClass::Render(RenderInfoClass & rinfo)
 {
-	WWPROFILE("ParticleBuffer::Render");	
 
 	unsigned int sort_level = SORT_LEVEL_NONE;
 
@@ -1045,7 +1035,6 @@ void ParticleBufferClass::Render_Line_Group(RenderInfoClass & rinfo)
 		}
 		break;
 	default:
-		WWASSERT(0);
 		break;
 	}
 
@@ -1095,7 +1084,6 @@ void ParticleBufferClass::On_Frame_Update(void)
 	}
 	
 	if (Is_Complete()) {
-		WWASSERT(Scene);
 		Scene->Register(this,SceneClass::RELEASE);
 	}
 }
@@ -1355,7 +1343,6 @@ void ParticleBufferClass::Reset_Colors(ParticlePropertyStruct<Vector3> &new_prop
 		unsigned int ckey;
 		for (ckey = 0; ckey < new_props.NumKeyFrames; ckey++) {
 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[ckey] * 1000.0f);
-			WWASSERT(ui_current_key_time > ui_previous_key_time);
 			if (ui_current_key_time >= MaxAge) break;
 			ui_previous_key_time = ui_current_key_time;
 		}
@@ -1515,7 +1502,6 @@ void ParticleBufferClass::Reset_Opacity(ParticlePropertyStruct<float> &new_props
 		unsigned int akey;
 		for (akey = 0; akey < new_props.NumKeyFrames; akey++) {
 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[akey] * 1000.0f);
-			WWASSERT(ui_current_key_time > ui_previous_key_time);
 			if (ui_current_key_time >= MaxAge) break;
 			ui_previous_key_time = ui_current_key_time;
 		}
@@ -1672,7 +1658,6 @@ void ParticleBufferClass::Reset_Size(ParticlePropertyStruct<float> &new_props)
 		unsigned int skey;
 		for (skey = 0; skey < new_props.NumKeyFrames; skey++) {
 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[skey] * 1000.0f);
-			WWASSERT(ui_current_key_time > ui_previous_key_time);
 			if (ui_current_key_time >= MaxAge) break;
 			ui_previous_key_time = ui_current_key_time;
 		}
@@ -1842,7 +1827,6 @@ void ParticleBufferClass::Reset_Rotations(ParticlePropertyStruct<float> &new_pro
 		unsigned int key;
 		for (key = 0; key < new_props.NumKeyFrames; key++) {
 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[key] * 1000.0f);
-			WWASSERT(ui_current_key_time > ui_previous_key_time);
 			if (ui_current_key_time >= MaxAge) break;
 			ui_previous_key_time = ui_current_key_time;
 		}
@@ -2057,7 +2041,6 @@ void ParticleBufferClass::Reset_Frames(ParticlePropertyStruct<float> &new_props)
 		unsigned int key;
 		for (key = 0; key < new_props.NumKeyFrames; key++) {
 			ui_current_key_time = (unsigned int)(new_props.KeyTimes[key] * 1000.0f);
-			WWASSERT(ui_current_key_time > ui_previous_key_time);
 			if (ui_current_key_time >= MaxAge) break;
 			ui_previous_key_time = ui_current_key_time;
 		}
@@ -2205,7 +2188,6 @@ void ParticleBufferClass::Reset_Blur_Times(ParticlePropertyStruct<float> &new_bl
 		unsigned int key;
 		for (key = 0; key < new_blur_times.NumKeyFrames; key++) {
 			ui_current_key_time = (unsigned int)(new_blur_times.KeyTimes[key] * 1000.0f);
-			WWASSERT(ui_current_key_time > ui_previous_key_time);
 			if (ui_current_key_time >= MaxAge) break;
 			ui_previous_key_time = ui_current_key_time;
 		}
@@ -2512,7 +2494,6 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 		// Ensure the current frame keyframe is correct, and calculate frame state
 		if (frame) {
 			// Frame and ucoord are mutually exclusive
-			WWASSERT(ucoord==NULL);
 			// We go from older to younger particles, so we go backwards from the last keyframe until
 			// age >= keytime. This loop must terminate because the 0th keytime is 0.
 			for (; part_age < FrameKeyFrameTimes[fkey]; fkey--);
@@ -2528,7 +2509,6 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 		// ucoord is the same as frame but in float
 		if (ucoord) {
 			// Frame and ucoord are mutually exclusive
-			WWASSERT(frame==NULL);
 			// We go from older to younger particles, so we go backwards from the last keyframe until
 			// age >= keytime. This loop must terminate because the 0th keytime is 0.
 			for (; part_age < FrameKeyFrameTimes[fkey]; fkey--);
@@ -2612,7 +2592,6 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 		// Ensure the current frame keyframe is correct, and calculate frame state
 		if (frame) {
 			// Frame and ucoord are mutually exclusive
-			WWASSERT(ucoord==NULL);
 			// We go from older to younger particles, so we go backwards from the last keyframe until
 			// age >= keytime. This loop must terminate because the 0th keytime is 0.
 			for (; part_age < FrameKeyFrameTimes[fkey]; fkey--);
@@ -2628,7 +2607,6 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 		// ucoord is the same as frame but in float
 		if (ucoord) {
 			// Frame and ucoord are mutually exclusive
-			WWASSERT(frame==NULL);
 			// We go from older to younger particles, so we go backwards from the last keyframe until
 			// age >= keytime. This loop must terminate because the 0th keytime is 0.
 			for (; part_age < FrameKeyFrameTimes[fkey]; fkey--);
@@ -3412,6 +3390,5 @@ ShaderClass ParticleBufferClass::Get_Shader (void) const
 	else if (LineGroup) return LineGroup->Get_Shader();
 	else if (LineRenderer) return LineRenderer->Get_Shader();
 
-	WWASSERT(0);
 	return ShaderClass::_PresetOpaqueShader;
 }

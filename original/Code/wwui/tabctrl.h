@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __TAB_CTRL_H
 #define __TAB_CTRL_H
