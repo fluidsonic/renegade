@@ -1,0 +1,62 @@
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
+#ifndef __RCSTRINGEXTRACTOR_H
+#define __RCSTRINGEXTRACTOR_H
+
+
+#include "wwstring.h"
+
+
+//////////////////////////////////////////////////////////////////////
+//
+//	RCStringExtractorClass
+//
+//////////////////////////////////////////////////////////////////////
+class RCStringExtractorClass
+{
+public:
+
+	///////////////////////////////////////////////////////////////////
+	//	Public constructors/destructors
+	///////////////////////////////////////////////////////////////////
+	RCStringExtractorClass  (void);
+
+	///////////////////////////////////////////////////////////////////
+	//	Public methods
+	///////////////////////////////////////////////////////////////////
+	
+	//
+	//	Configuration
+	//
+	void			Set_Src_RC_Filename (const char *full_path);	
+	void			Set_TranslationDB_Prefix (const char *prefix)		{ Prefix = prefix; }
+	void			Set_TranslationDB_Category (const char *category)	{ CategoryName = category; }
+	
+	//
+	//	Extraction
+	//
+	void			Extract_Strings (void);	
+	
+protected:
+	
+	///////////////////////////////////////////////////////////////////
+	//	Protected methods
+	///////////////////////////////////////////////////////////////////
+	void			Process_Line (StringClass &line, int &current_index);
+	bool			Find_String (StringClass &line, const char *keyword, const char *replacement, StringClass &contents);
+	int			Find_Starting_Index (void);
+	
+	///////////////////////////////////////////////////////////////////
+	//	Protected member data
+	///////////////////////////////////////////////////////////////////
+	StringClass	SrcFilename;
+	StringClass	DestFilename;
+	StringClass	Prefix;
+	StringClass	CategoryName;
+	int			CategoryIndex;
+};
+
+
+#endif //__RCSTRINGEXTRACTOR_H

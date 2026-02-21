@@ -1,2 +1,6 @@
-.worktrees/
 .DS_Store
+.tmp/
+.worktrees/
+client/
+client-orig/
+data/
