@@ -219,7 +219,7 @@ void cTeam::Get_Team_String(int rank, WideStringClass & string) const
 	// Name
 	//
 	//substring.Format(L"%-11s", Name);
-	substring.Format(L"%-11s", Name);
+	substring.Format(L"%-11s", (const WCHAR*)Name);
    string += substring;
 
    //

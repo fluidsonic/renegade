@@ -22,18 +22,12 @@
 *
 ******************************************************************************/
 
-__declspec(dllexport)
-BOOL APIENTRY DllMain(HINSTANCE hinst, DWORD reason, LPVOID)
+// On macOS, DllMain is never called by the dylib loader.
+// Use __attribute__((constructor)) to run initialization when the dylib is loaded.
+__attribute__((constructor))
+static void scripts_dylib_init()
 {
-	if (reason == DLL_PROCESS_ATTACH) {
-//		DebugPrint("\n========== Script.dll loaded ==========\n");
-		DebugPrint("Total registered scripts: %d\n", ScriptRegistrar::Count());
-
-	} else if (reason == DLL_PROCESS_DETACH) {
-//		DebugPrint("\n========== Script.dll Unloaded ==========\n");
-	}
-
-	return TRUE;
+	DebugPrint("Total registered scripts: %d\n", ScriptRegistrar::Count());
 }
 
 /******************************************************************************

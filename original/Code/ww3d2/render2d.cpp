@@ -1,5 +1,6 @@
 #include "render2d.h"
 #include "mutex.h"
+#include <stdio.h>
 #include "ww3d.h"
 #include "refcount.h"
 #include "font3d.h"
@@ -493,8 +494,21 @@ void	Render2DClass::Add_Outline( const RectClass & rect, float width, const Rect
 
 void Render2DClass::Render(void)
 {
+	static unsigned s_early_exit_count = 0;
+	static unsigned s_render_ok_count  = 0;
 	if ( !Indices.Count() || IsHidden) {
+		s_early_exit_count++;
+		// Log periodically so we see if it persists
+		if (s_early_exit_count <= 10 || s_early_exit_count % 300 == 0) {
+			fprintf(stderr, "[Render2D] Early exit #%u: Indices=%d IsHidden=%d\n",
+				s_early_exit_count, Indices.Count(), (int)IsHidden);
+		}
 		return;
+	}
+	s_render_ok_count++;
+	if (s_render_ok_count <= 5) {
+		fprintf(stderr, "[Render2D] Rendering: #%u Indices=%d verts=%d tex=%p\n",
+			s_render_ok_count, Indices.Count(), Vertices.Count(), (void*)Texture);
 	}
 
 	// save the view and projection matrices since we're nuking them

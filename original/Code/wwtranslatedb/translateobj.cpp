@@ -170,10 +170,19 @@ TDBObjClass::Load (ChunkLoadClass &cload)
 			case CHUNKID_TRANSLATED_STRING:
 			{
 				//
-				//	Load the translated string from its chunk
+				//	Load the translated string from its chunk.
+				//	The file stores UTF-16 (2-byte units); wchar_t is 4 bytes on this
+				//	platform, so we read into a uint16_t buffer and zero-extend each unit.
 				//
 				WideStringClass string;
-				cload.Read (string.Get_Buffer((cload.Cur_Chunk_Length () + 1) / 2), cload.Cur_Chunk_Length ());
+				int byte_count = cload.Cur_Chunk_Length();
+				int char_count = byte_count / 2;  // number of UTF-16 code units (incl. null)
+				unsigned short *utf16 = new unsigned short[char_count];
+				cload.Read(utf16, byte_count);
+				WCHAR *buf = string.Get_Buffer(char_count);
+				for (int i = 0; i < char_count; i++)
+					buf[i] = (WCHAR)utf16[i];
+				delete[] utf16;
 
 				//
 				//	Add the translated string to our list
@@ -236,10 +245,19 @@ TDBObjClass::Load_Variables (ChunkLoadClass &cload)
 			case VARID_STRING:
 			{
 				//
-				//	Load the translated string from its chunk
+				//	Load the translated string from its chunk.
+				//	The file stores UTF-16 (2-byte units); wchar_t is 4 bytes on this
+				//	platform, so we read into a uint16_t buffer and zero-extend each unit.
 				//
 				WideStringClass string;
-				cload.Read (string.Get_Buffer((cload.Cur_Micro_Chunk_Length () + 1) / 2), cload.Cur_Micro_Chunk_Length ());
+				int byte_count = cload.Cur_Micro_Chunk_Length();
+				int char_count = byte_count / 2;
+				unsigned short *utf16 = new unsigned short[char_count];
+				cload.Read(utf16, byte_count);
+				WCHAR *buf = string.Get_Buffer(char_count);
+				for (int i = 0; i < char_count; i++)
+					buf[i] = (WCHAR)utf16[i];
+				delete[] utf16;
 
 				//
 				//	Add the translated string to our list

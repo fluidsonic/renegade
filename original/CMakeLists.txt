@@ -55,7 +55,7 @@ add_compile_options(
     -Wno-c++11-extensions
     -Wno-dangling-else
     -Wno-macro-redefined
-    -Wno-non-pod-varargs
+    -Werror=non-pod-varargs
     -fdelayed-template-parsing
 )
 

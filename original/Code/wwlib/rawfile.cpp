@@ -989,22 +989,12 @@ unsigned long RawFileClass::Get_Date_Time(void)
  *=============================================================================================*/
 bool RawFileClass::Set_Date_Time(unsigned long datetime)
 {
-#ifdef _UNIX
-	assert(0);
-	return(false);
-#else
-	if (RawFileClass::Is_Open()) {
-		BY_HANDLE_FILE_INFORMATION info;
+	if (!RawFileClass::Is_Open() || !Handle) return false;
 
-		if (GetFileInformationByHandle(Handle, &info)) {
-			FILETIME filetime;
-			if (DosDateTimeToFileTime((WORD)(datetime >> 16), (WORD)(datetime & 0x0FFFF), &filetime)) {
-				return(SetFileTime(Handle, &info.ftCreationTime, &filetime, &filetime) != 0);
-			}
-		}
-	}
-	return(false);
-#endif
+	// On this platform Get_Date_Time returns st_mtime (Unix timestamp),
+	// so datetime is already a Unix timestamp — pass it straight through.
+	struct timespec times[2] = { {(time_t)datetime, 0}, {(time_t)datetime, 0} };
+	return futimens(fileno((FILE*)Handle), times) == 0;
 }
 
 /***********************************************************************************************
@@ -1077,6 +1067,7 @@ int RawFileClass::Raw_Seek(int pos, int dir)
 	*/
 	if (!Is_Open()) {
 		Error(EBADF, false, Filename);
+		return 0;	// Error() is a no-op stub; prevent fseek(NULL,...) crash
 	}
 
    #ifdef _UNIX

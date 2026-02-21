@@ -37,32 +37,53 @@ void Stop_Main_Loop(int exitCode)
 	ExitCode = exitCode;
 }
 
+static unsigned long s_frame_count = 0;
+
 void _Game_Main_Loop_Loop(void)
 {
+	s_frame_count++;
+
+	if (s_frame_count == 1) {
+		fprintf(stderr, "[loop] First frame reached — main loop is running\n");
+	}
+
+	// Periodic status log every 5 seconds (approx 300 frames at 60fps)
+	if (s_frame_count % 300 == 0) {
+		fprintf(stderr, "[loop] Frame %lu — game loop running\n", s_frame_count);
+	}
 
 	unsigned long time1 = TIMEGETTIME();
 
    TimeManager::Update();
 
+	if (s_frame_count <= 3) {
+		fprintf(stderr, "[loop] frame %lu: Input::Update\n", s_frame_count);
+	}
    Input::Update();
 
-{	
+{
    if (COMBAT_CAMERA != NULL) {
 		Vector3 camera_pos = COMBAT_CAMERA->Get_Position();
 		PathMgrClass::Resolve_Paths( camera_pos );
 	}
 }
 
-{	
+{
+	if (s_frame_count <= 3) {
+		fprintf(stderr, "[loop] frame %lu: GameModeManager::Think / GameInitMgrClass::Think\n", s_frame_count);
+	}
    GameModeManager::Think();
 	GameInitMgrClass::Think();
 }
 
-{	
+{
+	if (s_frame_count <= 3) {
+		fprintf(stderr, "[loop] frame %lu: DialogMgrClass::On_Frame_Update\n", s_frame_count);
+	}
    DialogMgrClass::On_Frame_Update ();
 }
 
-{	
+{
    NetworkObjectMgrClass::Think ();
 	ServerControl.Service();
 }
@@ -76,15 +97,18 @@ void _Game_Main_Loop_Loop(void)
 		cNetwork::Update();
 	}
 
+	if (s_frame_count <= 3) {
+		fprintf(stderr, "[loop] frame %lu: GameModeManager::Render\n", s_frame_count);
+	}
 	GameModeManager::Render();
 
-{	
+{
 	ConsoleBox.Think();
 }
 
 	DEMO_SECURITY_CHECK;
 
-{	
+{
 	if (!ConsoleBox.Is_Exclusive()) {
 		WWAudioClass::Get_Instance ()->On_Frame_Update (0);
 	}

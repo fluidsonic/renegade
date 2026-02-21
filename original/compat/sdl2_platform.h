@@ -54,6 +54,9 @@ void On_Focus_Restore(void);
 // macos_fix.mm cover the two known crash paths and work under lldb.
 void macos_install_alignment_fault_workaround(void);
 void macos_remove_alignment_fault_workaround(void);
+// Bring the app to the foreground after window creation.
+// Terminal-launched apps are not automatically focused on macOS.
+void macos_activate_app(void);
 
 #ifdef __cplusplus
 } // extern "C"

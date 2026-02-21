@@ -39,7 +39,7 @@ cRegistryString::cRegistryString(LPCSTR registry_location, LPCSTR key_name,
 void cRegistryString::Set(LPCSTR value)
 {
 
-   strcpy(Value, value);
+   if (value != Value) strcpy(Value, value);
 
    if (strcmp(RegistryLocation, "")) {
 	   RegistryClass * registry = new RegistryClass(RegistryLocation);

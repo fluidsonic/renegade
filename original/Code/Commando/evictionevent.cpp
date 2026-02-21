@@ -57,9 +57,9 @@ cEvictionEvent::Act(void)
 
 	WideStringClass widestring;
 	widestring.Format(
-		L"%s: %s", 
-		TRANSLATION(IDS_MP_YOU_ARE_EVICTED), 
-		code_string);
+		L"%s: %s",
+		TRANSLATION(IDS_MP_YOU_ARE_EVICTED),
+		(const WCHAR*)code_string);
 
 	//
 	//	Display the message...

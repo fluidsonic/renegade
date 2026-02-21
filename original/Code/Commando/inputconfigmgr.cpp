@@ -1,4 +1,5 @@
 #include "inputconfigmgr.h"
+#include <stdio.h>
 #include "dlgcontrols.h"
 #include "input.h"
 #include "rawfile.h"
@@ -203,7 +204,7 @@ InputConfigMgrClass::Delete_Configuration (int index)
 	Get_Config_Path (config_path);
 
 	StringClass full_path;
-	full_path.Format ("%s\\%s", config_path, ConfigList[index].Get_Filename ());
+	full_path.Format ("%s\\%s", (const char*)config_path, ConfigList[index].Get_Filename ());
 
 	//
 	//	Delete the configuration file
@@ -393,7 +394,7 @@ InputConfigMgrClass::Get_Unique_Config_Filename (StringClass &filename)
 		//
 		//	Check to see if this file exists
 		//
-		full_path.Format ("%s\\%s", (const char *)config_path, filename);
+		full_path.Format ("%s\\%s", (const char *)config_path, (const char*)filename);
 
 	} while (::GetFileAttributes (full_path) != 0xFFFFFFFF);
 
@@ -408,7 +409,7 @@ InputConfigMgrClass::Get_Unique_Config_Filename (StringClass &filename)
 void
 InputConfigMgrClass::Save (void)
 {
-	FileClass *file = _TheFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
+	FileClass *file = _TheWritingFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
 	if (file == NULL) {
 		return ;
 	}
@@ -416,7 +417,12 @@ InputConfigMgrClass::Save (void)
 	//
 	//	Open the file for writing
 	//
-	file->Open (FileClass::WRITE);
+	if (!file->Open (FileClass::WRITE)) {
+		fprintf(stderr, "[InputConfigMgr] Save: failed to open '%s' for writing — skipping save\n",
+		        CFG_DICTIONARY_FILENAME);
+		_TheWritingFileFactory->Return_File (file);
+		return;
+	}
 	ChunkSaveClass csave(file);
 
 	//
@@ -437,7 +443,7 @@ InputConfigMgrClass::Save (void)
 	//	Close the file
 	//
 	file->Close ();
-	_TheFileFactory->Return_File (file);
+	_TheWritingFileFactory->Return_File (file);
 	return ;
 }
 

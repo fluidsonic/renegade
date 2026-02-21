@@ -7,6 +7,7 @@
 #include <new.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdint.h>	// uintptr_t
 
 /**********************************************************************************************
 ** ObjectPoolClass
@@ -39,8 +40,8 @@ public:
 
 protected:
 
-	T	*		FreeListHead;			
-	uint32 *	BlockListHead;			
+	T	*		FreeListHead;
+	uintptr_t *	BlockListHead;		// pointer-arithmetic-correct on both 32-bit and 64-bit
 	int		FreeObjectCount;
 	int		TotalObjectCount;
 	FastCriticalSectionClass ObjectPoolCS;
@@ -156,7 +157,7 @@ ObjectPoolClass<T,BLOCK_SIZE>::~ObjectPoolClass(void)
 	// delete all of the blocks we allocated
 	int block_count = 0;
 	while (BlockListHead != NULL) {
-		uint32 * next_block = *(uint32 **)BlockListHead;
+		uintptr_t * next_block = *(uintptr_t **)BlockListHead;
 		::operator delete(BlockListHead);
 		BlockListHead = next_block;
 		block_count++;
@@ -229,10 +230,12 @@ T * ObjectPoolClass<T,BLOCK_SIZE>::Allocate_Object_Memory(void)
 	if ( FreeListHead == 0 ) {  
 
 		// No free objects, allocate another block
-		uint32 * tmp_block_head = BlockListHead;
-		BlockListHead = (uint32*)::operator new( sizeof(T) * BLOCK_SIZE + sizeof(uint32 *));
-		// Link this block into the block list
-		*(void **)BlockListHead = tmp_block_head;
+		uintptr_t * tmp_block_head = BlockListHead;
+		BlockListHead = (uintptr_t*)::operator new( sizeof(T) * BLOCK_SIZE + sizeof(uintptr_t *));
+		// Link this block into the block list; the header stores a pointer-sized prev-block ptr.
+		// Using uintptr_t* ensures BlockListHead+1 skips sizeof(uintptr_t)==8 bytes on 64-bit,
+		// so the first object slot does not overlap the header (was broken with uint32*+1 == +4 bytes).
+		*(uintptr_t **)BlockListHead = tmp_block_head;
 
 		// Link the objects in the block into the free object list
 		FreeListHead = (T*)(BlockListHead + 1);

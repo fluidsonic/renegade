@@ -3,11 +3,46 @@ set(COMPAT_DIR "${CMAKE_SOURCE_DIR}/compat")
 
 file(GLOB COMMANDO_SOURCES "${ORIG_SRC}/Commando/*.cpp")
 
+# ---- Compile chat.rc → chat.res using llvm-rc ----
+find_program(LLVM_RC NAMES llvm-rc
+    HINTS /opt/homebrew/Cellar/llvm/21.1.8_1/bin /opt/homebrew/bin /usr/local/bin
+    NO_DEFAULT_PATH)
+if(NOT LLVM_RC)
+    message(FATAL_ERROR "llvm-rc not found. Install LLVM: brew install llvm")
+endif()
+
+set(CHAT_RC  "${ORIG_SRC}/Commando/chat.rc")
+set(CHAT_RES "${CMAKE_CURRENT_BINARY_DIR}/chat.res")
+
+add_custom_command(
+    OUTPUT  "${CHAT_RES}"
+    COMMAND "${LLVM_RC}"
+            "/C1252"
+            "/I."
+            "/FO${CHAT_RES}"
+            "chat.rc"
+    WORKING_DIRECTORY "${ORIG_SRC}/Commando"
+    DEPENDS "${CHAT_RC}"
+            "${ORIG_SRC}/Commando/resource.h"
+            "${ORIG_SRC}/Commando/dialogresource.h"
+            "${ORIG_SRC}/Commando/afxres.h"
+    COMMENT "Compiling chat.rc → chat.res"
+)
+
+# chat.res will be copied into Contents/MacOS/ inside the .app bundle
+set_source_files_properties("${CHAT_RES}" PROPERTIES
+    MACOSX_PACKAGE_LOCATION "MacOS"
+    GENERATED TRUE
+)
+
 add_executable(Commando MACOSX_BUNDLE
     ${COMMANDO_SOURCES}
     "${COMPAT_DIR}/sdl2_platform.cpp"
     "${COMPAT_DIR}/d3d8_gl.cpp"
     "${COMPAT_DIR}/macos_fix.mm"
+    "${COMPAT_DIR}/winres.cpp"
+    "${COMPAT_DIR}/wingdi_coretext.cpp"
+    "${CHAT_RES}"
 )
 
 # Build as a proper macOS .app bundle so AppKit/CoreAnalytics can find
@@ -42,9 +77,12 @@ target_include_directories(Commando PRIVATE
     "${ORIG_SRC}/SControl"
 )
 
+# Scripts is loaded dynamically at runtime (like SCRIPTS.DLL on Windows).
+# We must still build it before Commando so the dylib is ready to be found.
+add_dependencies(Commando Scripts)
+
 target_link_libraries(Commando PRIVATE
     Combat
-    Scripts
     SControl
     wwui
     ww3d2
@@ -63,4 +101,10 @@ target_link_libraries(Commando PRIVATE
     "-framework OpenGL"
     "-framework AppKit"
     "-framework Foundation"
+    "-framework CoreText"
+    "-framework CoreGraphics"
+    # Export all global symbols so Scripts.dylib (loaded via dlopen) can find them.
+    "-Wl,-export_dynamic"
+    # Allow dlopen("SCRIPTS.dylib") to find the dylib next to the executable.
+    "-Wl,-rpath,@executable_path"
 )

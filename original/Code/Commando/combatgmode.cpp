@@ -460,7 +460,7 @@ public:
 
 				backdrop.Set_Model(desc);
 				StringClass anim_name;
-				anim_name.Format( "%s.%s", desc, desc );
+				anim_name.Format( "%s.%s", (const char*)desc, (const char*)desc );
 				backdrop.Set_Animation( anim_name );
 				backdrop.Set_Animation_Percentage( 0 );
 			}
@@ -547,7 +547,7 @@ void CombatGameModeClass::Load_Level( void )
 {
 	Debug_Say(("CombatGameModeClass::Load_Level\n"));
 
-	ConsoleBox.Print("Loading level %s\n", The_Game()->Get_Map_Name());
+	ConsoleBox.Print("Loading level %s\n", (const char*)The_Game()->Get_Map_Name());
 
 	CombatManager::Set_Load_Progress(0);
 	LoadingScreenClass loading_screen;	// Try moving this to very start of loading
@@ -599,7 +599,7 @@ void CombatGameModeClass::Load_Level( void )
 
 	bool preload_assets = true;
 
-	DIAG_LOG(( "LOAD", "%s", map_name ));
+	DIAG_LOG(( "LOAD", "%s", (const char*)map_name ));
 
 	NetworkObjectMgrClass::Set_Is_Level_Loading (true);
 

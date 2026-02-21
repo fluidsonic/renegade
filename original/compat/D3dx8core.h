@@ -55,14 +55,14 @@ typedef struct _D3DXIMAGE_INFO {
     DWORD ImageFileFormat;
 } D3DXIMAGE_INFO;
 
-// D3DXCreateTexture stub - returns E_NOTIMPL (no D3D on macOS)
+// D3DXCreateTexture — delegates to IDirect3DDevice8::CreateTexture (real device backed by GL)
 inline HRESULT D3DXCreateTexture(
-    void* pDevice, UINT Width, UINT Height, UINT MipLevels,
+    IDirect3DDevice8* pDevice, UINT Width, UINT Height, UINT MipLevels,
     DWORD Usage, D3DFORMAT Format, D3DPOOL Pool,
     IDirect3DTexture8** ppTexture)
 {
-    if (ppTexture) *ppTexture = NULL;
-    return E_NOTIMPL;
+    if (!pDevice || !ppTexture) return E_POINTER;
+    return pDevice->CreateTexture(Width, Height, MipLevels, Usage, Format, Pool, ppTexture);
 }
 
 // D3DXCreateTextureFromFileExA stub

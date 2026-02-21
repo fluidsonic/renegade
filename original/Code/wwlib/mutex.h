@@ -3,6 +3,7 @@
 
 #include "always.h"
 #include "thread.h"
+#include "critsection.h"
 
 // Always use mutex or critical section when accessing the same data from multiple threads!
 
@@ -51,39 +52,7 @@ public:
 	friend class LockClass;
 };
 
-// ----------------------------------------------------------------------------
-//
-// Critical sections are faster than mutex classes and they should be used
-// for all synchronization.
-//
-// ----------------------------------------------------------------------------
-
-class CriticalSectionClass
-{
-	void* handle;
-	unsigned locked;
-
-	// Lock and unlock are private so that you can't use them directly. Use LockClass as a sentry instead!
-	void Lock();
-	void Unlock();
-
-public:
-	// Name can (and usually should) be NULL. Use name only if you wish to create a globally unique mutex
-	CriticalSectionClass();
-	~CriticalSectionClass();
-
-	class LockClass
-	{
-		CriticalSectionClass& CriticalSection;
-	public:
-		// In order to lock a mutex create a local instance of LockClass with mutex as a parameter.
-		LockClass(CriticalSectionClass& c);
-		~LockClass();
-	private:
-		LockClass &operator=(const LockClass&) { return(*this); }
-	};
-	friend class LockClass;
-};
+// CriticalSectionClass is defined in critsection.h (included above).
 
 // ----------------------------------------------------------------------------
 //

@@ -111,6 +111,9 @@ public:
 	// Color access
 	DynamicVectorClass<unsigned long> &	Get_Color_Array (void)	{ return Colors; }
 
+	// Index count (for diagnostics)
+	int	Get_Index_Count (void) const { return Indices.Count(); }
+
 	// statics to access the Screen Resolution in Pixels
 	static void	Set_Screen_Resolution( const RectClass & screen );
 	static const RectClass & Get_Screen_Resolution( void )			{ return ScreenResolution; }

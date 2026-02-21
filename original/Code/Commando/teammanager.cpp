@@ -378,7 +378,7 @@ void cTeamManager::Construct_Heading(WideStringClass & string)
 	// "Team" or "Clan"
 	//
 	//substring.Format(L"%-11s", The_Game()->Get_Team_Word());
-	substring.Format(L"%-11s", The_Game()->Get_Team_Word());
+	substring.Format(L"%-11s", (const WCHAR*)The_Game()->Get_Team_Word());
 	string += substring;
 
    //

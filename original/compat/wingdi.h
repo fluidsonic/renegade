@@ -65,23 +65,20 @@ typedef struct tagBITMAPINFO {
 #define DIB_RGB_COLORS  0
 #define DIB_PAL_COLORS  1
 
-// CreateDIBSection stub
-inline HBITMAP CreateDIBSection(HDC dc, const BITMAPINFO* bmi, UINT usage, void** ppvBits, HANDLE hSection, DWORD offset) {
-    if (ppvBits) *ppvBits = NULL;
-    return NULL;
-}
+// Core GDI functions — implemented in wingdi_coretext.cpp (CoreText/CoreGraphics)
+HBITMAP CreateDIBSection(HDC dc, const BITMAPINFO* bmi, UINT usage, void** ppvBits, HANDLE hSection, DWORD offset);
+HGDIOBJ SelectObject(HDC dc, HGDIOBJ obj);
+BOOL    DeleteObject(HGDIOBJ obj);
+BOOL    DeleteDC(HDC dc);
+HDC     CreateCompatibleDC(HDC src);
 
-// DC operations stubs
-inline HGDIOBJ SelectObject(HDC dc, HGDIOBJ obj) { return NULL; }
-inline BOOL DeleteObject(HGDIOBJ obj) { return FALSE; }
-inline HPALETTE CreatePalette(const LOGPALETTE* lp) { return NULL; }
-inline HPALETTE SelectPalette(HDC dc, HPALETTE pal, BOOL force) { return NULL; }
-inline UINT RealizePalette(HDC dc) { return 0; }
-inline BOOL DeleteDC(HDC dc) { return FALSE; }
-inline HDC CreateCompatibleDC(HDC dc) { return NULL; }
-inline HBITMAP CreateCompatibleBitmap(HDC dc, int w, int h) { return NULL; }
-inline BOOL BitBlt(HDC dst, int dx, int dy, int w, int h, HDC src, int sx, int sy, DWORD rop) { return FALSE; }
-inline BOOL StretchBlt(HDC dst, int dx, int dy, int dw, int dh, HDC src, int sx, int sy, int sw, int sh, DWORD rop) { return FALSE; }
+// Palette / blit stubs (unused rendering paths)
+inline HPALETTE CreatePalette(const LOGPALETTE* lp) { (void)lp; return NULL; }
+inline HPALETTE SelectPalette(HDC dc, HPALETTE pal, BOOL force) { (void)dc;(void)pal;(void)force; return NULL; }
+inline UINT RealizePalette(HDC dc) { (void)dc; return 0; }
+inline HBITMAP CreateCompatibleBitmap(HDC dc, int w, int h) { (void)dc;(void)w;(void)h; return NULL; }
+inline BOOL BitBlt(HDC dst, int dx, int dy, int w, int h, HDC src, int sx, int sy, DWORD rop) { (void)dst;(void)dx;(void)dy;(void)w;(void)h;(void)src;(void)sx;(void)sy;(void)rop; return FALSE; }
+inline BOOL StretchBlt(HDC dst, int dx, int dy, int dw, int dh, HDC src, int sx, int sy, int sw, int sh, DWORD rop) { (void)dst;(void)dx;(void)dy;(void)dw;(void)dh;(void)src;(void)sx;(void)sy;(void)sw;(void)sh;(void)rop; return FALSE; }
 
 // Raster ops
 #define SRCCOPY  0x00CC0020
@@ -218,10 +215,12 @@ typedef struct tagLOGFONTW {
 } LOGFONTW, *LPLOGFONTW;
 
 // Font resource functions (Windows loads fonts from .fon/.ttf files)
-inline int AddFontResourceA(LPCSTR lpFilename) { return 0; }
-inline int AddFontResourceW(LPCWSTR lpFilename) { return 0; }
-inline BOOL RemoveFontResourceA(LPCSTR lpFilename) { return FALSE; }
-inline BOOL RemoveFontResourceW(LPCWSTR lpFilename) { return FALSE; }
+// Implemented in wingdi_coretext.cpp — extracts font bytes from MIX archives
+// via _TheFileFactory and registers them with CoreText.
+int  AddFontResourceA(LPCSTR lpFilename);
+int  AddFontResourceW(LPCWSTR lpFilename);
+BOOL RemoveFontResourceA(LPCSTR lpFilename);
+BOOL RemoveFontResourceW(LPCWSTR lpFilename);
 #define AddFontResource    AddFontResourceA
 #define RemoveFontResource RemoveFontResourceA
 
@@ -243,38 +242,28 @@ inline int GetDeviceCaps(HDC hdc, int nIndex) {
     return 0;
 }
 
-// Font stubs
-inline HFONT CreateFontA(int cHeight, int cWidth, int cEscapement, int cOrientation,
-    int cWeight, DWORD bItalic, DWORD bUnderline, DWORD bStrikeOut,
-    DWORD iCharSet, DWORD iOutPrecision, DWORD iClipPrecision,
-    DWORD iQuality, DWORD iPitchAndFamily, LPCSTR pszFaceName) { return NULL; }
+// Font/text functions — implemented in wingdi_coretext.cpp (CoreText/CoreGraphics)
+HFONT    CreateFontA(int cHeight, int cWidth, int cEscapement, int cOrientation,
+             int cWeight, DWORD bItalic, DWORD bUnderline, DWORD bStrikeOut,
+             DWORD iCharSet, DWORD iOutPrecision, DWORD iClipPrecision,
+             DWORD iQuality, DWORD iPitchAndFamily, LPCSTR pszFaceName);
 #define CreateFont CreateFontA
 
-inline BOOL GetTextMetricsA(HDC hdc, TEXTMETRIC* lptm) {
-    if (lptm) { memset(lptm, 0, sizeof(TEXTMETRIC)); lptm->tmHeight=16; }
-    return TRUE;
-}
+BOOL     GetTextMetricsA(HDC hdc, TEXTMETRIC* lptm);
 #define GetTextMetrics GetTextMetricsA
 
-inline BOOL GetTextExtentPoint32A(HDC hdc, LPCSTR lpString, int c, SIZE* psizl) {
-    if (psizl) { psizl->cx = c*8; psizl->cy = 16; }
-    return TRUE;
-}
-inline BOOL GetTextExtentPoint32W(HDC hdc, const WCHAR* lpString, int c, SIZE* psizl) {
-    if (psizl) { psizl->cx = c*8; psizl->cy = 16; }
-    return TRUE;
-}
+BOOL     GetTextExtentPoint32A(HDC hdc, LPCSTR lpString, int c, SIZE* psizl);
+BOOL     GetTextExtentPoint32W(HDC hdc, const WCHAR* lpString, int c, SIZE* psizl);
+BOOL     ExtTextOutA(HDC hdc, int x, int y, UINT options, const RECT* lprect,
+             LPCSTR lpString, UINT c, const INT* lpDx);
+BOOL     ExtTextOutW(HDC hdc, int x, int y, UINT options, const RECT* lprect,
+             const WCHAR* lpString, UINT c, const INT* lpDx);
+COLORREF SetBkColor(HDC dc, COLORREF c);
+COLORREF SetTextColor(HDC dc, COLORREF c);
 
-inline BOOL ExtTextOutA(HDC hdc, int x, int y, UINT options, const RECT* lprect,
-    LPCSTR lpString, UINT c, const INT* lpDx) { return TRUE; }
-inline BOOL ExtTextOutW(HDC hdc, int x, int y, UINT options, const RECT* lprect,
-    const WCHAR* lpString, UINT c, const INT* lpDx) { return TRUE; }
-
-// Text
-inline BOOL TextOut(HDC dc, int x, int y, LPCSTR str, int len) { return FALSE; }
-inline COLORREF SetBkColor(HDC dc, COLORREF c) { return 0; }
-inline COLORREF SetTextColor(HDC dc, COLORREF c) { return 0; }
-inline int SetBkMode(HDC dc, int mode) { return 0; }
+// Remaining text stubs
+inline BOOL TextOut(HDC dc, int x, int y, LPCSTR str, int len) { (void)dc;(void)x;(void)y;(void)str;(void)len; return FALSE; }
+inline int  SetBkMode(HDC dc, int mode) { (void)dc;(void)mode; return 0; }
 #define TRANSPARENT 1
 #define OPAQUE      2
 

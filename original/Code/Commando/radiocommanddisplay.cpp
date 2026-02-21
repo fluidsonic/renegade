@@ -147,7 +147,7 @@ RadioCommandDisplayClass::Update (DISPLAY_TYPE type)
 		}
 
 		WideStringClass command_key (0, true);
-		command_key.Format (L"%s + %d", access_key, key_id);
+		command_key.Format (L"%s + %d", (const WCHAR*)access_key, key_id);
 		
 		//
 		//	Insert an item for this radio command

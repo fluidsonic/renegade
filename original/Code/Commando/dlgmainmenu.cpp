@@ -435,7 +435,7 @@ MainMenuDialogClass::Update_Version_Number (void)
 	WideStringClass build_number(BuildInfoClass::Get_Build_Number_String(), true);
 	WideStringClass build_initials(BuildInfoClass::Get_Builder_Initials(), true);
 	WideStringClass build_date(BuildInfoClass::Get_Build_Date_String(), true);
-	version_string.Format (L"v%d.%.3d %s-%s %s", (version_major >> 16), (version_major & 0xFFFF), build_initials, build_number, build_date);
+	version_string.Format (L"v%d.%.3d %s-%s %s", (version_major >> 16), (version_major & 0xFFFF), (const WCHAR*)build_initials, (const WCHAR*)build_number, (const WCHAR*)build_date);
 	Set_Dlg_Item_Text (IDC_VERSION_STATIC, version_string);
 }
 

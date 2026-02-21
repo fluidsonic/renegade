@@ -44,35 +44,26 @@ typedef union _ULARGE_INTEGER {
     ULONGLONG QuadPart;
 } ULARGE_INTEGER, *PULARGE_INTEGER;
 
-// CRITICAL_SECTION wraps pthread_mutex_t
 typedef struct _CRITICAL_SECTION {
     pthread_mutex_t mutex;
-    pthread_mutexattr_t attr;
-    int lock_count;
 } CRITICAL_SECTION, *LPCRITICAL_SECTION;
 
 inline void InitializeCriticalSection(LPCRITICAL_SECTION cs) {
-    pthread_mutexattr_init(&cs->attr);
-    pthread_mutexattr_settype(&cs->attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&cs->mutex, &cs->attr);
-    cs->lock_count = 0;
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&cs->mutex, &attr);
+    pthread_mutexattr_destroy(&attr);
 }
-
 inline void DeleteCriticalSection(LPCRITICAL_SECTION cs) {
     pthread_mutex_destroy(&cs->mutex);
-    pthread_mutexattr_destroy(&cs->attr);
 }
-
 inline void EnterCriticalSection(LPCRITICAL_SECTION cs) {
     pthread_mutex_lock(&cs->mutex);
-    cs->lock_count++;
 }
-
 inline void LeaveCriticalSection(LPCRITICAL_SECTION cs) {
-    cs->lock_count--;
     pthread_mutex_unlock(&cs->mutex);
 }
-
 inline BOOL TryEnterCriticalSection(LPCRITICAL_SECTION cs) {
     return pthread_mutex_trylock(&cs->mutex) == 0;
 }

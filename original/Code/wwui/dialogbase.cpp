@@ -8,6 +8,8 @@
 #include "ww3d.h"
 #include "vector4.h"
 #include "assetmgr.h"
+#include <stdio.h>
+#include <typeinfo>
 #include "texture.h"
 #include "mousemgr.h"
 #include "comboboxctrl.h"
@@ -345,6 +347,19 @@ DialogBaseClass::On_Frame_Update (void)
 void
 DialogBaseClass::Render (void)
 {
+	static unsigned s_dlg_render_count = 0;
+	s_dlg_render_count++;
+	if (s_dlg_render_count <= 3) {
+		fprintf(stderr, "[DialogBase] Render #%u: AreControlsHidden=%d controls=%d children=%d\n",
+			s_dlg_render_count, (int)AreControlsHidden,
+			ControlList.Count(), ChildDialogList.Count());
+		for (int i = 0; i < ControlList.Count(); i++) {
+			fprintf(stderr, "  ctrl[%d]: visible=%d type=%s\n", i,
+				(int)ControlList[i]->Is_Visible(),
+				typeid(*ControlList[i]).name());
+		}
+	}
+
 	Add_Ref ();
 
 	//

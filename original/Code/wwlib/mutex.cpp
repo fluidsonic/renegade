@@ -56,57 +56,5 @@ MutexClass::LockClass::~LockClass()
 	if (!failed) mutex.Unlock();
 }
 
-// ----------------------------------------------------------------------------
-
-CriticalSectionClass::CriticalSectionClass() : handle(NULL), locked(false)
-{
-	#ifdef _UNIX
-		//assert(0);
-	#else
-		handle=new char[sizeof(CRITICAL_SECTION)];
-		InitializeCriticalSection((CRITICAL_SECTION*)handle);
-	#endif
-}
-
-CriticalSectionClass::~CriticalSectionClass()
-{
-	#ifdef _UNIX
-		//assert(0);
-	#else
-		DeleteCriticalSection((CRITICAL_SECTION*)handle);
-		delete[] handle;
-	#endif
-}
-
-void CriticalSectionClass::Lock()
-{
-	#ifdef _UNIX
-		//assert(0);
-	#else
-		EnterCriticalSection((CRITICAL_SECTION*)handle);
-		locked++;
-	#endif
-}
-
-void CriticalSectionClass::Unlock()
-{
-	#ifdef _UNIX
-		//assert(0);
-	#else
-		locked--;
-		LeaveCriticalSection((CRITICAL_SECTION*)handle);
-	#endif
-}
-
-// ----------------------------------------------------------------------------
-
-CriticalSectionClass::LockClass::LockClass(CriticalSectionClass& critical_section) : CriticalSection(critical_section)
-{
-	CriticalSection.Lock();
-}
-
-CriticalSectionClass::LockClass::~LockClass()
-{
-	CriticalSection.Unlock();
-}
+// CriticalSectionClass is implemented in critsection.cpp.
 

@@ -132,9 +132,9 @@ void	MovieGameModeClass::Start_Movie( const char * filename )
 			Play_Movie( full_path );
 
 		} else if ( force_cd ) {
-			PendingMovieFilename	= filename_only;
-			IsPending				= true;
-			CDVerifier.Display_UI( this );
+			// No local file and no CD available (macOS port has no CD drive).
+			// Skip the movie rather than hanging waiting for a CD that will never arrive.
+			Movie_Done();
 		}
 	}
 }

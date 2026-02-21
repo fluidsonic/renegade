@@ -14,6 +14,8 @@
 #include "dialogtransition.h"
 #include "systimer.h"
 #include "tooltip.h"
+#include <stdio.h>
+#include <typeinfo>
 
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -388,6 +390,24 @@ DialogMgrClass::On_Frame_Update (void)
 void
 DialogMgrClass::Render (void)
 {
+	// Diagnostic: log render state on first call and once per 300 frames
+	static unsigned s_render_count = 0;
+	if (s_render_count == 0) {
+		fprintf(stderr, "[DialogMgr] First Render: GameInFocus=%d DialogList.Count()=%d IsFirstRender=%d\n",
+			(int)GameInFocus, DialogList.Count(), (int)IsFirstRender);
+		for (int _i = 0; _i < DialogList.Count(); _i++) {
+			DialogBaseClass* _d = DialogList[_i];
+			fprintf(stderr, "  dialog[%d]: visible=%d isChild=%d class=%s\n",
+				_i, (int)_d->Is_Visible(),
+				(int)(_d->As_ChildDialogClass() != NULL),
+				typeid(*_d).name());
+		}
+	}
+	s_render_count++;
+	if (s_render_count % 300 == 0) {
+		fprintf(stderr, "[DialogMgr] frame %u: dialogs=%d GameInFocus=%d IsInMenuMode=%d IsFirstRender=%d\n",
+			s_render_count, DialogList.Count(), (int)GameInFocus, (int)IsInMenuMode, (int)IsFirstRender);
+	}
 
 	if (!GameInFocus) {
 		GameWasInFocus=false;

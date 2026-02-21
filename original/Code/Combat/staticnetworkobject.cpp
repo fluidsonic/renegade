@@ -462,7 +462,7 @@ DoorNetworkObjectClass::Get_Description (StringClass & description)
 		default:								assert(false);
 	}
 
-   line.Format("DoorState:  %d (%s)\n", DoorState, state_string);
+   line.Format("DoorState:  %d (%s)\n", DoorState, (const char*)state_string);
 	description += line;
 
 	if (PhysObj != NULL) {
@@ -655,7 +655,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 		default:													assert(false);
 	}
 
-	line.Format("State:            %d (%s)\n", State, state_string);
+	line.Format("State:            %d (%s)\n", State, (const char*)state_string);
 	description += line;
 
 	//
@@ -668,7 +668,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 		default:															assert(false);
 	}
 
-	line.Format("DoorStateTop:     %d (%s)\n", DoorStateTop, state_string);
+	line.Format("DoorStateTop:     %d (%s)\n", DoorStateTop, (const char*)state_string);
 	description += line;
 
 	//
@@ -681,7 +681,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 		default:															assert(false);
 	}
 
-	line.Format("DoorStateBottom:  %d (%s)\n", DoorStateBottom, state_string);
+	line.Format("DoorStateBottom:  %d (%s)\n", DoorStateBottom, (const char*)state_string);
 		description += line;
 
 	if (PhysObj != NULL) {

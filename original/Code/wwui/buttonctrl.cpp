@@ -8,6 +8,7 @@
 #include "mousemgr.h"
 #include "stylemgr.h"
 #include "dialogmgr.h"
+#include <stdio.h>
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -48,10 +49,14 @@ ButtonCtrlClass::ButtonCtrlClass (void)	:
 void
 ButtonCtrlClass::Render (void)
 {
+	static unsigned s_btn_render_count = 0;
+	s_btn_render_count++;
+
 	//
 	//	Recreate the renderers (if necessary)
 	//
-	if (Is_Dirty ()) {
+	bool was_dirty = Is_Dirty();
+	if (was_dirty) {
 		Create_Text_Renderers ();
 
 		//
@@ -65,6 +70,14 @@ ButtonCtrlClass::Render (void)
 
 		//Create_Vector_Button ();
 		//Create_Bitmap_Button ();
+	}
+
+	if (s_btn_render_count <= 5) {
+		fprintf(stderr, "[ButtonCtrl] Render #%u: was_dirty=%d UP.Indices=%d DOWN.Indices=%d rect=(%.0f,%.0f,%.0f,%.0f)\n",
+			s_btn_render_count, (int)was_dirty,
+			ButtonRenderers[UP].Get_Index_Count(),
+			ButtonRenderers[DOWN].Get_Index_Count(),
+			Rect.Left, Rect.Top, Rect.Right, Rect.Bottom);
 	}
 
 	if (WasButtonPressedOnMe && IsMouseOverMe) {

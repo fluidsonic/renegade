@@ -156,11 +156,13 @@ void DirectInput::Init(void)
     }
 
     // SDL is already initialised by SDL2_Platform_Init (called from CreateWindowEx).
-    // Enable relative mouse mode so we get relative deltas.
-    SDL_SetRelativeMouseMode(SDL_TRUE);
-    SDL_ShowCursor(SDL_DISABLE);
+    // Do NOT enable relative mouse mode here — the game starts in menu mode where
+    // absolute mouse coordinates are needed.  Relative mode is enabled by Acquire()
+    // when gameplay starts (Input::MenuMode == false).
+    SDL_SetRelativeMouseMode(SDL_FALSE);
+    SDL_ShowCursor(SDL_ENABLE);
 
-    Captured = true;
+    Captured = false;
 }
 
 // ---------------------------------------------------------------------------
@@ -185,8 +187,9 @@ void DirectInput::Acquire(void)
 {
     if (!Captured) {
         Flush();
-        SDL_SetRelativeMouseMode(SDL_TRUE);
-        SDL_ShowCursor(SDL_DISABLE);
+        // Relative mouse mode (cursor capture) is only appropriate during gameplay.
+        // The menu phase uses absolute mouse coords; relative mode is enabled by
+        // the gameplay path explicitly rather than here on every focus restore.
         Captured = true;
     }
 }

@@ -549,20 +549,34 @@ typedef intptr_t (*FARPROC)();
 
 inline HMODULE LoadLibrary(LPCSTR name) {
     if (!name) return NULL;
-    char lower[64]; int i = 0;
-    while (name[i] && i < 63) { lower[i] = (char)((name[i] >= 'A' && name[i] <= 'Z') ? name[i]+32 : name[i]); i++; }
+    // Build lowercase copy for pattern matching.
+    char lower[256]; int i = 0;
+    while (name[i] && i < 255) { lower[i] = (char)((name[i] >= 'A' && name[i] <= 'Z') ? name[i]+32 : name[i]); i++; }
     lower[i] = 0;
+    // D3D8 is handled entirely in the compat layer.
     if (strstr(lower, "d3d8")) return _WINCOMPAT_D3D8_HANDLE;
-    HMODULE h = (HMODULE)dlopen(name, RTLD_LAZY);
-    return h ? h : (HMODULE)(intptr_t)0xDEAD0000;
+    // Try loading as-is first (e.g., the caller already has a .dylib path).
+    HMODULE h = (HMODULE)dlopen(name, RTLD_LAZY | RTLD_GLOBAL);
+    if (h) return h;
+    // If the name ends in .dll, try the macOS equivalent (.dylib).
+    const char *dot = strstr(lower, ".dll");
+    if (dot) {
+        char dylib_name[256];
+        int base_len = (int)(dot - lower);
+        strncpy(dylib_name, name, base_len);
+        strcpy(dylib_name + base_len, ".dylib");
+        h = (HMODULE)dlopen(dylib_name, RTLD_LAZY | RTLD_GLOBAL);
+        if (h) return h;
+    }
+    return NULL;  // Caller can check for NULL and handle gracefully.
 }
 inline HMODULE LoadLibraryA(LPCSTR name) { return LoadLibrary(name); }
 inline BOOL    FreeLibrary(HMODULE h) {
-    if (!h || h == _WINCOMPAT_D3D8_HANDLE || (uintptr_t)h == 0xDEAD0000) return TRUE;
+    if (!h || h == _WINCOMPAT_D3D8_HANDLE) return TRUE;
     return dlclose(h) == 0;
 }
 inline FARPROC GetProcAddress(HMODULE h, LPCSTR name) {
-    if (!h || h == _WINCOMPAT_D3D8_HANDLE || (uintptr_t)h == 0xDEAD0000) return NULL;
+    if (!h || h == _WINCOMPAT_D3D8_HANDLE) return NULL;
     return (FARPROC)(intptr_t)dlsym(h, name);
 }
 
@@ -833,13 +847,13 @@ inline int _snwprintf(wchar_t* buf, size_t count, const wchar_t* fmt, ...) {
 // DebugBreak
 inline void DebugBreak() { __builtin_debugtrap(); }
 
-// Resource access stubs (for executable resources - no-ops on non-Windows)
+// Resource access — implemented in compat/winres.cpp via chat.res parsing
 typedef HANDLE HRSRC;
-inline HRSRC FindResource(HMODULE hmod, LPCSTR name, LPCSTR type) { return NULL; }
-inline HRSRC FindResourceA(HMODULE hmod, LPCSTR name, LPCSTR type) { return NULL; }
-inline HGLOBAL LoadResource(HMODULE hmod, HRSRC res) { return NULL; }
-inline LPVOID LockResource(HGLOBAL res) { return NULL; }
-inline DWORD SizeofResource(HMODULE hmod, HRSRC res) { return 0; }
+HRSRC   FindResource(HMODULE hmod, LPCSTR name, LPCSTR type);
+HRSRC   FindResourceA(HMODULE hmod, LPCSTR name, LPCSTR type);
+HGLOBAL LoadResource(HMODULE hmod, HRSRC res);
+LPVOID  LockResource(HGLOBAL res);
+DWORD   SizeofResource(HMODULE hmod, HRSRC res);
 
 // Additional registry functions
 inline LONG RegDeleteValue(HKEY key, LPCSTR name) { return ERROR_SUCCESS; }
@@ -1184,9 +1198,7 @@ inline BOOL GetComputerName(LPSTR lpBuffer, LPDWORD lpnSize) {
     return TRUE;
 }
 
-// Resource API stubs (Windows .rc resources don't exist on macOS)
-typedef void* HRSRC;
-typedef void* HGLOBAL;
+// Resource type/name constants and misc
 typedef WCHAR* LPWSTR;
 
 #define RT_STRING   ((LPCSTR)6)

@@ -3,13 +3,14 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include "sdl2_platform.h"
+#include "win.h"   // GameInFocus
 
 static SDL_Window*    s_window    = NULL;
 static SDL_GLContext  s_glcontext = NULL;
 
 int SDL2_MouseWheelDelta = 0;
 int SDL2_QuitRequested   = 0;
-int SDL2_HasFocus        = 1;
+int SDL2_HasFocus        = 1;   // window starts focused
 
 int SDL2_Platform_Init(const char* title, int w, int h)
 {
@@ -57,7 +58,14 @@ int SDL2_Platform_Init(const char* title, int w, int h)
     }
 
     SDL_GL_SetSwapInterval(1); // vsync
+
+    // Bring the window to the foreground. When launched from the terminal,
+    // macOS does not focus the app automatically.
+    macos_activate_app();
+    SDL_RaiseWindow(s_window);
+
     fprintf(stderr, "[SDL2] Window created %dx%d, GL context ready\n", w, h);
+    GameInFocus = true;   // window starts with focus; DialogMgrClass::Render guards on this
     return 0;
 }
 
@@ -105,12 +113,14 @@ void SDL2_Platform_PollEvents(void)
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 if (!SDL2_HasFocus) {
                     SDL2_HasFocus = 1;
+                    GameInFocus = true;
                     On_Focus_Restore();
                 }
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
                 if (SDL2_HasFocus) {
                     SDL2_HasFocus = 0;
+                    GameInFocus = false;
                     On_Focus_Loss();
                 }
                 break;

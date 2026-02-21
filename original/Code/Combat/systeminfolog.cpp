@@ -123,12 +123,12 @@ void SystemInfoLog::Get_Final_String(StringClass& string)
 	avgfps.Format("%d.%1.1d",AvgFPS/10,AvgFPS%10);
 	string.Format(
 		"%5s %16s %6s %6d %6d %6s %8d ",
-		vnum,
-		CurrentLevel,
-		ptime,
+		(const char*)vnum,
+		(const char*)CurrentLevel,
+		(const char*)ptime,
 		MinFPS!=1000 ? MinFPS : 0,
 		MaxFPS,
-		avgfps,
+		(const char*)avgfps,
 		CurrentLoadingTime);
 }
 
@@ -264,7 +264,7 @@ void PlayerInfoLog::Get_Compact_Log(StringClass& string)
 		team1size=10*Team1TotalSizes/Team1SizeReported;
 	}
 
-	string.Format("%s\t%d.%d\t%d.%d\t",CurrentMapName,team0size/10,team0size%10,team1size/10,team1size%10);
+	string.Format("%s\t%d.%d\t%d.%d\t",(const char*)CurrentMapName,team0size/10,team0size%10,team1size/10,team1size%10);
 
 	Team0SizeReported=0;
 	Team1SizeReported=0;

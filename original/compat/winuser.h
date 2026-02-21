@@ -346,9 +346,9 @@ inline HANDLE SetClipboardData(UINT fmt, HANDLE data) { return NULL; }
 #define PM_REMOVE        0x0001
 #define PM_NOREMOVE      0x0000
 
-inline HDC GetDC(HWND wnd) { return NULL; }
-inline HDC GetWindowDC(HWND wnd) { return NULL; }
-inline int ReleaseDC(HWND wnd, HDC dc) { return 0; }
+HDC GetDC(HWND wnd);       // implemented in wingdi_coretext.cpp
+int ReleaseDC(HWND wnd, HDC dc);
+inline HDC GetWindowDC(HWND wnd) { (void)wnd; return NULL; }
 inline BOOL ScreenToClient(HWND wnd, LPPOINT pt) { return FALSE; }
 inline BOOL ClientToScreen(HWND wnd, LPPOINT pt) { return FALSE; }
 inline BOOL ClipCursor(const RECT* r) { return FALSE; }

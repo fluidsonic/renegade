@@ -71,6 +71,17 @@ static void remove_sigbus_handler(void)
 extern "C" void macos_install_alignment_fault_workaround(void) { install_sigbus_handler(); }
 extern "C" void macos_remove_alignment_fault_workaround(void)  { remove_sigbus_handler(); }
 
+// Call after SDL_CreateWindow so the window actually appears and has focus.
+// When launched from the terminal, macOS does not automatically bring the
+// app to the foreground — explicit activation is required.
+extern "C" void macos_activate_app(void)
+{
+    if (NSApp) {
+        [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+        [NSApp activateIgnoringOtherApps:YES];
+    }
+}
+
 // ---------------------------------------------------------------------------
 // ObjC swizzles + NSApp pre-initialisation
 // All three steps run from a single constructor so NSApp is ready before main().
