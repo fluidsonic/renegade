@@ -341,7 +341,7 @@ MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				//
 				The_Game()->Set_Map_Cycle(0, mapname);
 
-				GameInitMgrClass::Start_Game(mapname, -1, 0);
+				GameInitMgrClass::Start_Game(mapname, -1);
 				IsStartingPractice = false;
 			}
 			break;

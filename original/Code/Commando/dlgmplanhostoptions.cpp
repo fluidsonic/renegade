@@ -32,7 +32,6 @@
 MPLanHostOptionsMenuClass::MPLanHostOptionsMenuClass (void)	:
 	MenuDialogClass (IDD_MP_LAN_HOST_OPTIONS),
 	mStartTheGame (false),
-	mClanID (0),
 	MapCycleDialog (NULL)
 {
 	return ;
@@ -217,7 +216,7 @@ void MPLanHostOptionsMenuClass::Start_Game(cGameData* theGame)
 	GameInitMgrClass::Set_Is_Server_Required(true);
 
 	int side = cNetInterface::Get_Side_Preference();
-	GameInitMgrClass::Start_Game(theGame->Get_Map_Name(), side, mClanID);
+	GameInitMgrClass::Start_Game(theGame->Get_Map_Name(), side);
 }
 
 ////////////////////////////////////////////////////////////////

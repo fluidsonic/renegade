@@ -133,7 +133,7 @@ void cLanChat::Init_Lan_Protocol_And_Socket(void)
 //-----------------------------------------------------------------------------
 void cLanChat::Accept_Actions(void)
 {
-	DlgMPConnect::DoDialog(cNetInterface::Get_Side_Preference(), 0);
+	DlgMPConnect::DoDialog(cNetInterface::Get_Side_Preference());
 }
 
 //-----------------------------------------------------------------------------

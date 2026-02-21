@@ -55,7 +55,6 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 	bool											mStartTheGame;
-	unsigned long								mClanID;
 	MPLanHostMapCycleOptionsTabClass *	MapCycleDialog;
 };
 

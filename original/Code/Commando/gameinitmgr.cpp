@@ -81,7 +81,7 @@ bool GameInitMgrClass::Is_Game_In_Progress(void)
 //
 ////////////////////////////////////////////////////////////////
 void
-GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned long clanID)
+GameInitMgrClass::Start_Game (const char *map_name, int teamChoice)
 {
 	unsigned long time;
 
@@ -191,7 +191,7 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
 	//
 	//	Send team/player information to the server (if necessary)
 	//
-	Transmit_Player_Data (teamChoice, clanID);
+	Transmit_Player_Data (teamChoice);
 
 	//
 	// Listen for server control messages.
@@ -406,7 +406,7 @@ GameInitMgrClass::Display_End_Game_Menu (void)
 //
 ////////////////////////////////////////////////////////////////
 void
-GameInitMgrClass::Transmit_Player_Data (int teamChoice, unsigned long clanID)
+GameInitMgrClass::Transmit_Player_Data (int teamChoice)
 {
 
 	if (Mode == MODE_SP || Mode == MODE_SKIRMISH) {
@@ -415,7 +415,7 @@ GameInitMgrClass::Transmit_Player_Data (int teamChoice, unsigned long clanID)
 		//	Send generic team information for the client in a single player game
 		//
 		cBioEvent * p_event = new cBioEvent;
-		p_event->Init(teamChoice, clanID);
+		p_event->Init(teamChoice, 0);    // clanID removed — WOL service defunct
 
 	} else if (IsClientRequired) {
 
@@ -423,7 +423,7 @@ GameInitMgrClass::Transmit_Player_Data (int teamChoice, unsigned long clanID)
 		//	Send the player's team choice to the server
 		//
 		cBioEvent * p_event = new cBioEvent;
-		p_event->Init(teamChoice, clanID);
+		p_event->Init(teamChoice, 0);    // clanID removed — WOL service defunct
 	}
 
 	return ;

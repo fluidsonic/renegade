@@ -71,19 +71,7 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
       float Get_Kill_To_Death_Ratio(void) const;
       void Get_Player_String(int rank, WideStringClass & string, bool force_verbose = false);
 
-			unsigned long Get_WOL_ClanID(void) const {return ClanID;}
-			void Set_WOL_ClanID(unsigned long id) {ClanID = id;}
-
-      int Get_Wol_Rank(void) const {return (int)WolRank;}
-      void Set_Wol_Rank(int wol_rank);
-
-			unsigned short Get_WOL_Points(void) const
-				{return WOLPoints;}
-
-      void Set_WOL_Points(unsigned short points)
-				{WOLPoints = points;}
-
-      int Get_Rung(void) const {return (int)Rung;}
+	      int Get_Rung(void) const {return (int)Rung;}
       void Set_Rung(int rung);
 
       int Get_Damage_Scale_Factor(void) const {return DamageScaleFactor;}
@@ -144,10 +132,6 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 		virtual void		Export_Rare(BitStreamClass &packet);
 		virtual void		Export_Occasional(BitStreamClass &packet);
 
-		enum					{NUM_NEWBIE_GAMES = 5};
-		void					Set_Num_Wol_Games(int num_games);
-		int					Get_Num_Wol_Games(void)						{ return NumWolGames; }
-
 		//
 		// N.B. If you change the state of any of these on the server then you
 		//      need to call Mark_As_Modified.
@@ -168,9 +152,6 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
       safe_int				Deaths;
       safe_int				PlayerType;
 		safe_int				Rung;
-		safe_int				WolRank;
-
-		unsigned short WOLPoints;
 
 		int					DamageScaleFactor;
 		int					Ping;
@@ -180,7 +161,6 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 		int					Fps;
 		DWORD					LastUpdateTimeMs;
 		int					FastSortKey;
-		int					NumWolGames;
 		cBoolean				IsWaitingForIntermission;
 
 		//
@@ -189,8 +169,6 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 		//
 		cBoolean				IsInGame;
 		cBoolean				IsActive;
-
-		unsigned long ClanID;
 };
 
 //-----------------------------------------------------------------------------

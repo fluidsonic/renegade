@@ -91,7 +91,7 @@ class LogicalListenerClass : public SoundSceneObjClass
 		static uint32			Get_Newest_Timestamp (void)		{ return m_NewestTimestamp - 1; }
 
 		static uint32			Get_Oldest_Timestamp (void)				{ return m_OldestTimestamp; }
-		static void				Set_Oldest_Timestamp (uint32 timestamp)	{ WWASSERT (m_OldestTimestamp < timestamp); m_OldestTimestamp = timestamp; }
+		static void				Set_Oldest_Timestamp (uint32 timestamp)	{ assert (m_OldestTimestamp < timestamp); m_OldestTimestamp = timestamp; }
 
 	protected:
 

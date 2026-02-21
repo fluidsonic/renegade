@@ -199,30 +199,6 @@ cPlayer * cPlayerManager::Find_Team_Mate(cPlayer * p_player1)
 	return NULL; // Not found
 }
 
-cPlayer* cPlayerManager::Find_Clan_Mate(cPlayer* player)
-{
-	if (player != NULL) {
-		unsigned long clan = player->Get_WOL_ClanID();
-		int playerID = player->Get_Id();
-
-		SLNode<cPlayer>* node = PlayerList.Head();
-
-		while (node) {
-			cPlayer* mate = node->Data();
-
-			if (playerID != mate->Get_Id()) {
-				if (clan == mate->Get_WOL_ClanID()) {
-					return mate;
-				}
-			}
-
-			node = node->Next();
-		}
-	}
-
-	return NULL;
-}
-
 //------------------------------------------------------------------------------------
 bool cPlayerManager::Is_Player_Present(int id)
 {
@@ -300,56 +276,9 @@ int cPlayerManager::Get_Average_Ladder_Points(void)
 }
 
 //------------------------------------------------------------------------------------
-unsigned short cPlayerManager::Get_Average_WOL_Points(void)
-{
-	unsigned long numPlayers = 0;
-	unsigned long totalPoints = 0;
-
-	SList<cPlayer>* playerList = Get_Player_Object_List();
-	SLNode<cPlayer>* playerNode = playerList->Head();
-
-	while (playerNode) {
-		cPlayer* player = playerNode->Data();
-
-		if (player && player->Get_Is_Active().Is_True() && player->Is_Human()) {
-			++numPlayers;
-			totalPoints += player->Get_WOL_Points();
-		}
-
-		playerNode = playerNode->Next();
-	}
-
-	if (numPlayers) {
-		return (unsigned short)(totalPoints / numPlayers);
-	}
-
-	return 0;
-}
-
-//------------------------------------------------------------------------------------
 int cPlayerManager::Get_Average_Games_Played(void)
 {
-	int numPlayers = 0;
-	int totalPlayed = 0;
-
-	SList<cPlayer>* playerList = Get_Player_Object_List();
-	SLNode<cPlayer>* playerNode = playerList->Head();
-
-	while (playerNode) {
-		cPlayer* player = playerNode->Data();
-
-		if (player && player->Get_Is_Active().Is_True() && player->Is_Human()) {
-			++numPlayers;
-			totalPlayed += player->Get_Num_Wol_Games();
-		}
-
-		playerNode = playerNode->Next();
-	}
-
-	if (numPlayers) {
-		return (totalPlayed / numPlayers);
-	}
-
+	// WOL game count removed — always return 0
 	return 0;
 }
 
@@ -934,14 +863,6 @@ void cPlayerManager::Construct_Heading(WideStringClass & string, bool force_verb
 		substring.Format(L"%-8s", TRANSLATION(IDS_MP_LADDER));
 	   string += substring;
 	}
-
-   //
-	// WOL rank
-	//
-   if (GameModeManager::Find("WOL")->Is_Active() && is_verbose) {
-		substring.Format(L"%-8s", TRANSLATION(IDS_MP_RANK));
-	   string += substring;
-   }
 
 }
 

@@ -47,7 +47,6 @@ public:
 	static cPlayer * 					Find_Team_Player(int team_number);
 	static cPlayer	* 					Find_Random_Team_Player(int team_number);
 	static cPlayer	* 					Find_Team_Mate(cPlayer * p_player);
-	static cPlayer*						Find_Clan_Mate(cPlayer* player);
 	static bool	      				Is_Player_Present(int id);
 	static bool	      				Is_Player_Present(WideStringClass & name);
    static const WideStringClass &Get_Player_Name(int id);
@@ -62,7 +61,6 @@ public:
 	static void							Increment_Player_Times(void);
 	static int							Compute_Full_Player_List_Height(void);
 	static int							Get_Average_Ladder_Points(void);
-	static unsigned short		Get_Average_WOL_Points(void);
 	static int							Get_Average_Games_Played(void);
 	static int							Get_Average_Ping(void);
 	static int							Get_Average_FPS(void);

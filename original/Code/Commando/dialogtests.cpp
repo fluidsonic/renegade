@@ -818,7 +818,7 @@ MPJoinMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				//
 				//	Display the "connecting" dialog
 				//
-				DlgMPConnect::DoDialog(-1, 0);
+				DlgMPConnect::DoDialog(-1);
 			}
 		}
 	}

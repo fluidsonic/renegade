@@ -76,7 +76,7 @@ cBioEvent::Act(void)
 			cNetwork::Send_Object_Update(p_player, SenderId);
 		}
 
-		cPlayer * p_player = cGod::Create_Player(SenderId, Nickname, TeamChoice, ClanID);
+		cPlayer * p_player = cGod::Create_Player(SenderId, Nickname, TeamChoice);
 
 		if (!IS_SOLOPLAY) {
 			//

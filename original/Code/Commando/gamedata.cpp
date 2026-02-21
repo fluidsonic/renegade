@@ -1193,31 +1193,8 @@ bool cGameData::Is_Valid_Player_Type(int player_type)
 //-----------------------------------------------------------------------------
 int cGameData::Choose_Player_Type(cPlayer* player, int team_choice, bool is_grunt)
 {
-	if (IsClanGame.Is_True() && !is_grunt) {
-		// Bots are assigned to the smallest team.
-		if (player && !player->Is_Human()) {
-			int team = Choose_Smallest_Team();
-
-
-			return team;
-		}
-
-		// If there are other players from the same clan then team up them.
-		// Otherwise we must be the first of our clan so select the next available team.
-		cPlayer* clanMate = cPlayerManager::Find_Clan_Mate(player);
-
-		if (clanMate) {
-			int team = clanMate->Get_Player_Type();
-
-
-			return team;
-		} else {
-			int team = Choose_Available_Team(team_choice);
-
-
-			return team;
-		}
-
+	if (false) {
+		// WOL clan game logic removed — WOL service defunct
 	} else {
 		if (PLAYERTYPE_RENEGADE == team_choice || IsTeamChangingAllowed.Is_False()) {
 			return Choose_Smallest_Team();

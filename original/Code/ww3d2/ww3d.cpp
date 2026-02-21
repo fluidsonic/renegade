@@ -694,10 +694,6 @@ WW3DErrorType WW3D::Begin_Render(bool clear,bool clearz,const Vector3 & color, v
 	}
 
 
-	// Memory allocation statistics
-	LastFrameMemoryAllocations=WWMemoryLogClass::Get_Allocate_Count();
-	LastFrameMemoryFrees=WWMemoryLogClass::Get_Free_Count();
-	WWMemoryLogClass::Reset_Counters();
 
 	TextureLoader::Update(network_callback);
 //	TextureClass::_Reset_Time_Stamp();

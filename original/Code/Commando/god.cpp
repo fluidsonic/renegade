@@ -172,7 +172,7 @@ void cGod::Think(void)
 
 //-----------------------------------------------------------------------------
 cPlayer * cGod::Create_Player(int client_id, const WideStringClass & name,
-															int team_choice, unsigned long clanID, bool is_invulnerable)
+															int team_choice, bool is_invulnerable)
 {
 
    //
@@ -198,7 +198,6 @@ cPlayer * cGod::Create_Player(int client_id, const WideStringClass & name,
 
 		p_player->Set_Name(name);
 		p_player->Set_Id(client_id);
-		p_player->Set_WOL_ClanID(clanID);
 
 		int player_type = The_Game()->Choose_Player_Type(p_player, team_choice, false);
 		p_player->Set_Player_Type(player_type);
@@ -236,7 +235,7 @@ void cGod::Create_Ai_Player(void)
 		name.Format(L"Guard%d", -client_id);
 	} while (cPlayerManager::Is_Player_Present(name));
 
-	Create_Player(client_id, name, -1, 0);
+	Create_Player(client_id, name, -1);
 }
 
 //-----------------------------------------------------------------------------

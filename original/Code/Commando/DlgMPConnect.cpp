@@ -27,9 +27,9 @@
 *
 ******************************************************************************/
 
-bool DlgMPConnect::DoDialog(int teamChoice, unsigned long clanID)
+bool DlgMPConnect::DoDialog(int teamChoice)
 	{
-	DlgMPConnect* popup = new DlgMPConnect(teamChoice, clanID);
+	DlgMPConnect* popup = new DlgMPConnect(teamChoice);
 
 	if (popup)
 		{
@@ -57,10 +57,9 @@ bool DlgMPConnect::DoDialog(int teamChoice, unsigned long clanID)
 *
 ******************************************************************************/
 
-DlgMPConnect::DlgMPConnect(int teamChoice, unsigned long clanID) :
+DlgMPConnect::DlgMPConnect(int teamChoice) :
 		PopupDialogClass(IDD_MULTIPLAY_CONNECTING),
 		mTeamChoice(teamChoice),
-		mClanID(clanID),
 		mTheGame(NULL),
 		mFailed(false)
 	{
@@ -206,7 +205,7 @@ void DlgMPConnect::On_Periodic(void)
 			// Start the game!
 			GameInitMgrClass::Set_Is_Client_Required(true);
 			GameInitMgrClass::Set_Is_Server_Required(false);
-			GameInitMgrClass::Start_Game(mTheGame->Get_Map_Name(), mTeamChoice, mClanID);
+			GameInitMgrClass::Start_Game(mTheGame->Get_Map_Name(), mTeamChoice);
 			}
 		else
 			{

@@ -38,9 +38,7 @@ DECLARE_NETWORKOBJECT_FACTORY(cPlayer, NETCLASSID_PLAYER);
 const int cPlayer::INVALID_ID		= -1000;
 
 //------------------------------------------------------------------------------------
-cPlayer::cPlayer(void) :
-	ClanID(0),
-	WOLPoints(0)
+cPlayer::cPlayer(void)
 {
 	//
 
@@ -49,14 +47,12 @@ cPlayer::cPlayer(void) :
 	Kills					= 0;
    Deaths				= 0;
 	Rung					= 0;
-	WolRank				= -1;
 	IpAddress			= 0;
 	Fps					= 0;
 	LastUpdateTimeMs	= 0;
 	DamageScaleFactor = 100;
 	Ping					= -1;
 	FastSortKey			= 0;
-	NumWolGames			= 0;
 
 	Reset_Join_Time();
 	Reset_Total_Time();
@@ -500,19 +496,6 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
       string += substring;
 	}
 
-   //
-	// WOL rank
-	//
-   if (GameModeManager::Find("WOL")->Is_Active() && is_verbose) {
-      if ((int)WolRank == -1) {
-         substring.Format(L"%-8s", L" -");
-      } else {
-         substring.Format(L"%-8d", (int)WolRank);
-      }
-      string += substring;
-   }
-
-
 	if (force_verbose) {
 		//
 		// Logged player list has no color so we need to show Nod/GDI
@@ -621,14 +604,6 @@ void cPlayer::Set_Deaths(int new_deaths)
    Deaths = new_deaths;
 
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_OCCASIONAL, true);
-}
-
-//------------------------------------------------------------------------------------
-void cPlayer::Set_Wol_Rank(int wol_rank)
-{
-   WolRank = wol_rank;
-
-	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
 }
 
 //------------------------------------------------------------------------------------
@@ -797,8 +772,8 @@ void cPlayer::Export_Rare(BitStreamClass &packet)
 	packet.Add(Invulnerable.Get());
 	packet.Add(IsActive.Get());
 
-	packet.Add((int)WolRank);
-	packet.Add(NumWolGames);
+	packet.Add((int)0);    // was: WolRank (removed — WOL service defunct)
+	packet.Add((int)0);    // was: NumWolGames (removed — WOL service defunct)
 	//
 
 }
@@ -820,8 +795,8 @@ void cPlayer::Import_Rare(BitStreamClass &packet)
 	Invulnerable.Set(				packet.Get(bool_placeholder));
 	Set_Is_Active(					packet.Get(bool_placeholder));
 
-	WolRank = packet.Get(int_placeholder);
-	NumWolGames = packet.Get(int_placeholder);
+	packet.Get(int_placeholder);    // was: WolRank (removed — WOL service defunct)
+	packet.Get(int_placeholder);    // was: NumWolGames (removed — WOL service defunct)
 }
 
 //------------------------------------------------------------------------------------
@@ -896,11 +871,4 @@ bool cPlayer::Is_Alive_And_Kicking(void) const
 	return Is_Human() && IsInGame.Is_True() && IsActive.Is_True();
 }
 
-//------------------------------------------------------------------------------------
-void cPlayer::Set_Num_Wol_Games(int num_games)
-{
-	NumWolGames = num_games;
-	//
-	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
-}
 

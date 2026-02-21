@@ -328,7 +328,7 @@ void	CampaignManager::Replay_Level( const char * mission_name, int difficulty )
 	cGod::Reset_Inventory();
 	CombatManager::Set_Difficulty_Level( difficulty );
 
-	GameInitMgrClass::Start_Game( mission_name, PLAYERTYPE_RENEGADE, 0 );
+	GameInitMgrClass::Start_Game( mission_name, PLAYERTYPE_RENEGADE );
 }
 
 /*
