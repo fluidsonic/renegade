@@ -4,4 +4,4 @@ plugins {
 
 rootProject.name = "ccr-server"
 
-include(":math", ":net", ":server")
+include(":math", ":net", ":physics", ":server")
