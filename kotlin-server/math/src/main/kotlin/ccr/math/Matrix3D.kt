@@ -21,6 +21,16 @@ data class Matrix3D(
         z = m20 * v.x + m21 * v.y + m22 * v.z + m23,
     )
 
+    fun rotateVector(v: Vector3) = Vector3(
+        x = m00 * v.x + m01 * v.y + m02 * v.z,
+        y = m10 * v.x + m11 * v.y + m12 * v.z,
+        z = m20 * v.x + m21 * v.y + m22 * v.z,
+    )
+
+    fun withTranslation(t: Vector3) = copy(m03 = t.x, m13 = t.y, m23 = t.z)
+
+    fun getZRotation(): Float = kotlin.math.atan2(m10, m00)
+
     companion object {
         val IDENTITY = Matrix3D()
 

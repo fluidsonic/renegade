@@ -53,6 +53,7 @@ tasks.register<JavaExec>("liveProxy") {
 dependencies {
     implementation(project(":math"))
     implementation(project(":net"))
+    implementation(project(":physics"))
 }
 
 tasks.jar {
