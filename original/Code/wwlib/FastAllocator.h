@@ -405,14 +405,22 @@ WWINLINE unsigned FastAllocatorGeneral::Get_Total_Allocation_Count()
 
 WWINLINE void* FastAllocatorGeneral::Alloc(unsigned int n)
 {
+#ifdef __APPLE__
+   // On macOS: bypass pool allocator (designed for Win32 4-byte pointers).
+   // Use malloc with the same size-header protocol so Free() still works.
+   n += sizeof(unsigned int);
+   void* pMemory = ::malloc(n);
+   *((unsigned int*)pMemory) = n;
+   return ((unsigned int*)pMemory)+1;
+#else
    void* pMemory;
 	static int re_entrancy=0;
 	re_entrancy++;
 
-   //We actually allocate n+4 bytes. We store the # allocated 
+   //We actually allocate n+4 bytes. We store the # allocated
    //in the first 4 bytes, and return the ptr to the rest back
    //to the user.
-   n += sizeof(unsigned int); 
+   n += sizeof(unsigned int);
 #ifdef MEMORY_OVERWRITE_TEST
 	n+=sizeof(unsigned int);
 #endif
@@ -441,6 +449,7 @@ WWINLINE void* FastAllocatorGeneral::Alloc(unsigned int n)
 	re_entrancy--;
    *((unsigned int*)pMemory) = n;     //Write modified (augmented by 4) count into first four bytes.
    return ((unsigned int*)pMemory)+1; //return ptr to bytes after it back to user.
+#endif // __APPLE__
 }
 
 // ----------------------------------------------------------------------------
@@ -453,7 +462,9 @@ WWINLINE void FastAllocatorGeneral::Free(void* pAlloc)
 {
    if (pAlloc) {
       unsigned int* n = ((unsigned int*)pAlloc)-1; //Subtract four bytes and the count is stored there.
-
+#ifdef __APPLE__
+      ::free(n);
+#else
 #ifdef MEMORY_OVERWRITE_TEST
 		WWASSERT(*((unsigned int*)((char*)n+*n)-1)==0xabbac0de);
 #endif
@@ -471,6 +482,7 @@ WWINLINE void FastAllocatorGeneral::Free(void* pAlloc)
 			AllocatedWithMalloc-=size;
          ::free(n);
 		}
+#endif // __APPLE__
    }
 }
 

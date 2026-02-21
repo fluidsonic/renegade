@@ -1,14 +1,8 @@
-set(ORIG_SRC "/Users/marc/Documents/ccr/original/Code")
+set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 
 file(GLOB COMMANDO_SOURCES "${ORIG_SRC}/Commando/*.cpp")
 
-# Stub sources: global definitions for excluded/deleted files + macOS main bridge
-set(STUB_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/main_stub.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/commando_stubs.cpp"
-)
-
-add_executable(Commando ${COMMANDO_SOURCES} ${STUB_SOURCES})
+add_executable(Commando ${COMMANDO_SOURCES})
 
 target_include_directories(Commando PRIVATE
     "${ORIG_SRC}"

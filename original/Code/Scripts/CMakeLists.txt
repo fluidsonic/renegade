@@ -1,4 +1,4 @@
-set(ORIG_SRC "/Users/marc/Documents/ccr/original/Code")
+set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 
 file(GLOB SCRIPTS_SOURCES "${ORIG_SRC}/Scripts/*.cpp")
 

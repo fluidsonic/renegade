@@ -3,6 +3,10 @@
 #ifndef WINBASE_H_COMPAT
 #define WINBASE_H_COMPAT
 
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
 #include "windef.h"
 #include "winnt.h"
 #include <pthread.h>
@@ -77,7 +81,6 @@ inline HMODULE GetModuleHandle(LPCSTR name) { return (HMODULE)1; }
 inline HMODULE GetModuleHandleA(LPCSTR name) { return (HMODULE)1; }
 inline BOOL GetModuleFileName(HMODULE mod, LPSTR buf, DWORD size) {
 #ifdef __APPLE__
-    #include <mach-o/dyld.h>
     uint32_t sz = size;
     if (buf && size > 0 && _NSGetExecutablePath(buf, &sz) == 0) return TRUE;
 #endif
@@ -405,21 +408,16 @@ inline LONG InterlockedCompareExchange(volatile LONG* dest, LONG exch, LONG comp
 // Windows DLLs that don't exist on macOS get a sentinel handle so callers don't bail out.
 typedef intptr_t (*FARPROC)();
 
-// Forward declaration for D3D8 proc lookup (defined in d3d8.h)
-inline FARPROC _wincompat_d3d8_get_proc(LPCSTR name);
-
 #define _WINCOMPAT_D3D8_HANDLE ((HMODULE)(intptr_t)0xD3D80000)
 
 inline HMODULE LoadLibrary(LPCSTR name) {
     if (!name) return NULL;
-    // Case-insensitive check for Windows-only DLLs we stub internally
     char lower[64]; int i = 0;
     while (name[i] && i < 63) { lower[i] = (char)((name[i] >= 'A' && name[i] <= 'Z') ? name[i]+32 : name[i]); i++; }
     lower[i] = 0;
     if (strstr(lower, "d3d8")) return _WINCOMPAT_D3D8_HANDLE;
-    // Try real dlopen for native dylibs
     HMODULE h = (HMODULE)dlopen(name, RTLD_LAZY);
-    return h ? h : (HMODULE)(intptr_t)0xDEAD0000; // non-NULL sentinel for unknown DLLs
+    return h ? h : (HMODULE)(intptr_t)0xDEAD0000;
 }
 inline HMODULE LoadLibraryA(LPCSTR name) { return LoadLibrary(name); }
 inline BOOL    FreeLibrary(HMODULE h) {
@@ -427,8 +425,7 @@ inline BOOL    FreeLibrary(HMODULE h) {
     return dlclose(h) == 0;
 }
 inline FARPROC GetProcAddress(HMODULE h, LPCSTR name) {
-    if (h == _WINCOMPAT_D3D8_HANDLE) return _wincompat_d3d8_get_proc(name);
-    if (!h || (uintptr_t)h == 0xDEAD0000) return NULL;
+    if (!h || h == _WINCOMPAT_D3D8_HANDLE || (uintptr_t)h == 0xDEAD0000) return NULL;
     return (FARPROC)(intptr_t)dlsym(h, name);
 }
 

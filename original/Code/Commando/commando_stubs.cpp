@@ -6,8 +6,22 @@
 #include "gamespybanlist.h"
 #include "GameSpy_QnR.h"
 #include "stackdump.h"       // compat/stackdump.h
-#include "BandTest/BandTest.h"
 #include "verchk.h"          // compat/verchk.h
+
+// BandTest types (was a Windows DLL for bandwidth detection)
+enum {
+    BANDTEST_OK, BANDTEST_NO_WINSOCK2, BANDTEST_NO_RAW_SOCKET_PERMISSION,
+    BANDTEST_NO_RAW_SOCKET_CREATE, BANDTEST_NO_UDP_SOCKET_BIND,
+    BANDTEST_NO_TTL_SET, BANDTEST_NO_PING_RESPONSE, BANDTEST_NO_FINAL_PING_TIME,
+    BANDTEST_NO_EXTERNAL_ROUTER, BANDTEST_NO_IP_DETECT, BANDTEST_UNKNOWN_ERROR,
+    BANDTEST_WRONG_API_VERSION, BANDTEST_BAD_PARAM,
+};
+typedef struct tBandtestSettingsStruct {
+    unsigned int AlwaysICMP : 1; unsigned int TTLScatter : 1;
+    unsigned int FastPingPackets : 7; unsigned int SlowPingPackets : 7;
+    unsigned int FastPingThreshold : 5; unsigned int PingProfile : 1;
+} BandtestSettingsStruct;
+#define BANDTEST_API_VERSION 0x101
 
 // WOL NAT traversal stub global (natter.cpp excluded from build - uses dead WWOnline service)
 WOLNATInterfaceClass WOLNATInterface;

@@ -1,4 +1,4 @@
-set(ORIG_SRC "/Users/marc/Documents/ccr/original/Code")
+set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 
 file(GLOB WWPHYS_SOURCES "${ORIG_SRC}/wwphys/*.cpp")
 

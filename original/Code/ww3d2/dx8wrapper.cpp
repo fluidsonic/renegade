@@ -128,6 +128,7 @@ Direct3DCreate8Type	Direct3DCreate8Ptr = NULL;
 HINSTANCE D3D8Lib = NULL;
 
 
+
 /***********************************************************************************
 **
 ** DX8Wrapper Implementation
@@ -210,7 +211,7 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 
 		if (D3D8Lib == NULL) return false;
 
-		Direct3DCreate8Ptr = (Direct3DCreate8Type) GetProcAddress(D3D8Lib, "Direct3DCreate8");
+		Direct3DCreate8Ptr = Direct3DCreate8;
 		if (Direct3DCreate8Ptr) {
 
 			/*
