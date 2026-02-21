@@ -5,7 +5,7 @@
 
 #include "specialbuilds.h"
 
-#include "langmode.h"
+#include "DlgMPConnect.h"
 #include "playermanager.h"
 #include "textdisplay.h"
 #include "gameobjmanager.h"
@@ -33,7 +33,6 @@
 #include "dlgmessagebox.h"
 #include "apppacketstats.h"
 #include "clientfps.h"
-#include "gamechanlist.h"
 #include "packetmgr.h"
 #include "clientpingmanager.h"
 #include "bandwidthgraph.h"
@@ -89,7 +88,6 @@ void cNetwork::Init_Client(unsigned short my_port)
 {
 
 #ifndef FREEDEDICATEDSERVER
-
 
 	if (PClientConnection != NULL) {
 		Cleanup_Client();
@@ -184,7 +182,6 @@ void cNetwork::Cleanup_Client(void)
 {
 #ifndef FREEDEDICATEDSERVER
 
-
    if (I_Am_Client()) {
 
       if (PClientConnection->Is_Established()) { // i.e we did have a connection
@@ -217,8 +214,6 @@ void cNetwork::Accept_Handler(void)
 {
 #ifndef FREEDEDICATEDSERVER
 
-
-
 	CombatManager::Set_My_Id(Get_My_Id());
 
 	NetworkObjectMgrClass::Init_New_Client_ID(Get_My_Id());
@@ -238,11 +233,8 @@ void cNetwork::Accept_Handler(void)
 		PClientFps->Init();
 	}
 
-
    if (!I_Am_Server()) {
-      if (GameModeManager::Find("LAN")->Is_Active()) {
-         PLC->Accept_Actions();
-      }
+      DlgMPConnect::DoDialog(cNetInterface::Get_Side_Preference());
    }
 
 #endif // !FREEDEDICATEDSERVER
@@ -252,7 +244,6 @@ void cNetwork::Accept_Handler(void)
 void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 {
 #ifndef FREEDEDICATEDSERVER
-
 
 	// Close connecting dialog as neccessary.
 	DialogBaseClass* dialog = DialogMgrClass::Find_Dialog(IDD_MULTIPLAY_CONNECTING);
@@ -265,10 +256,6 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 
 	 // Verify refusal code is within valid range
 
-
-   if (GameModeManager::Find("LAN")->Is_Active()) {
-      PLC->Refusal_Actions();
-   }
 
    //
    // The server refused our connection request! At this stage this
@@ -285,7 +272,6 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 	const unsigned long refusalMsg = _refusalStrings[refusal_code - 1];
 
 	DlgMsgBox::DoDialog(TRANSLATE (IDS_MENU_SERVER_MESSAGE_TITLE), TRANSLATE(refusalMsg));
-
 
 	//
 	// N.B. We cannot destroy the connection from inside this callback.
@@ -492,8 +478,6 @@ void cNetwork::Onetime_Shutdown(void)
 
 	REF_PTR_RELEASE(VisTable);
 
-	cGameChannelList::Remove_All();//TSS092201 added
-
 	//
 	// These are only printed once. So only run one game on a test run.
 	//
@@ -530,7 +514,6 @@ void cNetwork::Init_Server(void)
 	PServerConnection->Install_Conn_Handler(Connection_Handler);
 	PServerConnection->Install_Application_Acceptance_Handler(Application_Acceptance_Handler);
 	PServerConnection->Install_Server_Packet_Handler(Server_Packet_Handler);
-
 
 	//if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 	if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
@@ -680,9 +663,6 @@ void cNetwork::Update_Fps(void)
 	}
 }
 
-
-
-
 void cNetwork::Connection_Status_Change_Feedback(void)
 {
 	static unsigned long _last_print = TIMEGETTIME();
@@ -746,7 +726,6 @@ void cNetwork::Update(void)
 	recursion_level++;
 
 	Update_Fps();
-
 
 	if (I_Am_Server()) {
 		if (I_Am_Client()) {
@@ -832,7 +811,6 @@ void cNetwork::Client_Send_Packet(cPacket & packet, int mode)
 {
 #ifndef FREEDEDICATEDSERVER
 
-
 	if (cNetwork::PClientConnection->Is_Established()) {
 
 		PClientConnection->Send_Packet_To_Individual(packet, 0, mode);
@@ -854,7 +832,6 @@ void cNetwork::Client_Send_Packet(cPacket & packet, int mode)
 void cNetwork::Server_Send_Packet(cPacket & packet, int mode, int recipient)
 {
 #ifndef BETACLIENT
-
 
 	if (recipient == ALL) {
 		//
@@ -910,7 +887,6 @@ void cNetwork::Server_Send_Packet_To_All_Connected(cPacket & packet, int mode)
 	// Traverse the rhost list here in the application level, so that
 	// we can record message stats.
 	//
-
 
 	//BYTE message_type = packet.Peek_Message_Type();
 
@@ -1038,7 +1014,6 @@ void cNetwork::Client_Broken_Connection_Handler(void)
    // many attempts. The connection data has already been destroyed.
    //
 
-
    /**/
 	if (PClientConnection->Have_Id()) {
 		//cHelpText::Set(TRANSLATION(IDS_MP_CONNECTION_TO_SERVER_BROKEN));
@@ -1046,7 +1021,6 @@ void cNetwork::Client_Broken_Connection_Handler(void)
 	} else {
 		//cHelpText::Set(TRANSLATION(IDS_MP_UNABLE_CONNECT_TO_SERVER));
 	}
-
 
 	//TSS090401
 	//
@@ -1075,15 +1049,12 @@ void cNetwork::Process_Eviction_Sc(cPacket & packet)
 
 	WWAudioClass::Get_Instance()->Create_Instant_Sound("Evicted_By_Server", Matrix3D(1));
 
-
-
 	UINT min_bps;
 	packet.Get(min_bps);//naughty... type conversion
    float max_packetloss;
 	packet.Get(max_packetloss);
 
    //UINT sustainable_bps  = (UINT) packet.Get();
-
 
    //
    // At this stage, just signal to close down. This is
@@ -1094,7 +1065,6 @@ void cNetwork::Process_Eviction_Sc(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cNetwork::Eviction_Handler(int evicted_rhost_id)
 {
-
 
    //Send_Eviction_Sc(evicted_rhost_id);
 
@@ -1189,7 +1159,6 @@ float cNetwork::Get_Distance_Priority(Vector3 & pos1, Vector3 & pos2)
       priority = 0;
    }
 
-
    return(priority);
 }
 
@@ -1206,8 +1175,6 @@ void cNetwork::Shell_Command(LPCSTR command)
 REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 {
 #ifndef BETACLIENT
-
-
 
 	//
 	// Get player name
@@ -1261,8 +1228,6 @@ void cNetwork::Connection_Handler(int new_rhost_id)
 {
 #ifndef BETACLIENT
 
-
-
    /*
 	//
    // Tell the new guy about all the teams. He needs this early in case he
@@ -1304,7 +1269,6 @@ void cNetwork::Connection_Handler(int new_rhost_id)
 
 #endif // not BETACLIENT
 }
-
 
 //-----------------------------------------------------------------------------
 void cNetwork::Set_Desired_Frame_Sleep_Ms(int b)
@@ -1398,7 +1362,6 @@ cNetwork::Flush(void)
 	PacketManager.Flush(true);
 }
 
-
 void cNetwork::SwitchTeam(int newTeam)
 {
 	cPlayer* player = cPlayerManager::Find_Player(Get_My_Id());
@@ -1412,7 +1375,6 @@ void cNetwork::SwitchTeam(int newTeam)
 		}
 	}
 }
-
 
 //-----------------------------------------------------------------------------
 void cNetwork::Enable_Waiting_Players(void)

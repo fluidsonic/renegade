@@ -6,27 +6,22 @@
 #define LANGMODE_H
 
 #include "GameMode.h"
-#include "LanChat.h"
 
-#define PLC LanGameModeClass::Get_Lan_Interface()
-
-// 
-// Game Mode to do LAN interface
 //
-class	LanGameModeClass :
-		public GameModeClass
+// Game Mode for LAN multiplayer.
+// Manages nickname/side-preference persistence in the registry.
+//
+class LanGameModeClass : public GameModeClass
 {
-	public:
-		static cLanChat * Get_Lan_Interface(void);
+public:
+	virtual const char *Name(void) { return "LAN"; }
+	virtual void Init(void);
+	virtual void Shutdown(void);
+	virtual void Think(void) {}
+	virtual void Render(void) {}
 
-		virtual	const char *Name(void)	{ return "LAN"; }	// the name of this mode
-		virtual	void	Init(void);		 	// called when the mode is activated
-		virtual	void 	Shutdown(void); 	// called when the mode is deactivated
-		virtual	void 	Think(void);		// called each time through the main loop
-		virtual	void 	Render(void) {};		// called each time through the main loop
-
-	private:
-		static cLanChat * PLanChat;
+	static void Load_Lan_Registry_Keys(void);
+	static void Save_Lan_Registry_Keys(void);
 };
 
-#endif	//	LANGMODE_H
+#endif // LANGMODE_H

@@ -26,8 +26,6 @@
 #include "useroptions.h"
 #include "cnetwork.h"
 #include "listctrl.h"
-#include "gamechannel.h"
-#include "gamechanlist.h"
 #include "gamemode.h"
 #include "langmode.h"
 #include "dlgcontrolslisttab.h"
@@ -52,7 +50,6 @@
 #include <ImageCtrl.h>
 #include "bandwidthcheck.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -68,10 +65,9 @@ SplashIntroMenuDialogClass::SplashIntroMenuDialogClass (void)	:
 //	Timer (4.0F),
 	Timer (0.0F),
 	MenuDialogClass (IDD_MENU_SPLASH1)
-{	
+{
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -82,7 +78,6 @@ SplashIntroMenuDialogClass::~SplashIntroMenuDialogClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -101,7 +96,7 @@ SplashIntroMenuDialogClass::On_Init_Dialog (void)
 	}
 	cUserOptions::SplashCount.Set(count+1);
 
-	// 
+	//
 	// Configure the image
 	//
 	if (Get_Dlg_Item (IDC_IMAGE_CTRL) != NULL) {
@@ -110,7 +105,6 @@ SplashIntroMenuDialogClass::On_Init_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -128,7 +122,7 @@ SplashIntroMenuDialogClass::On_Frame_Update (void)
 	if (Timer > 0) {
 		Timer -= TimeManager::Get_Frame_Seconds ();
 		if (Timer <= 0) {
-			
+
 			//
 			//	Time has elapsed, so move onto the main menu dialog
 			//
@@ -141,7 +135,6 @@ SplashIntroMenuDialogClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -153,8 +146,6 @@ SplashIntroMenuDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 	return ;
 }
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	SplashOutroMenuDialogClass
@@ -163,10 +154,9 @@ SplashIntroMenuDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 SplashOutroMenuDialogClass::SplashOutroMenuDialogClass (void)	:
 	Timer (5.0F),
 	MenuDialogClass (IDD_MENU_SPLASH2)
-{	
+{
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -177,7 +167,6 @@ SplashOutroMenuDialogClass::~SplashOutroMenuDialogClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -191,7 +180,7 @@ SplashOutroMenuDialogClass::On_Init_Dialog (void)
 
 	MenuDialogClass::On_Init_Dialog ();
 
-	// 
+	//
 	// Configure the image
 	//
 	if (Get_Dlg_Item (IDC_IMAGE_CTRL) != NULL) {
@@ -200,7 +189,6 @@ SplashOutroMenuDialogClass::On_Init_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -218,7 +206,7 @@ SplashOutroMenuDialogClass::On_Frame_Update (void)
 	/*if (Timer > 0) {
 		Timer -= TimeManager::Get_Frame_Seconds ();
 		if (Timer <= 0) {
-			
+
 			//
 			//	Time has elapsed, so exit the game...
 			//
@@ -260,9 +248,6 @@ SplashOutroMenuDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 	return ;
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	QuitVerificationDialogClass
@@ -276,7 +261,7 @@ QuitVerificationDialogClass::QuitVerificationDialogClass (void)	:
 	//
 	// TSS092501
 	//
-	if (cUserOptions::SkipQuitConfirmDialog.Is_True()) 
+	if (cUserOptions::SkipQuitConfirmDialog.Is_True())
 	{
 		extern void Stop_Main_Loop (int);
 		Stop_Main_Loop(EXIT_SUCCESS);
@@ -284,7 +269,6 @@ QuitVerificationDialogClass::QuitVerificationDialogClass (void)	:
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -302,7 +286,6 @@ QuitVerificationDialogClass::~QuitVerificationDialogClass (void)
 ////////////////////////////////////////////////////////////////
 InternetMainDialogClass *	InternetMainDialogClass::_TheInstance	= NULL;
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	InternetMainDialogClass
@@ -315,7 +298,6 @@ InternetMainDialogClass::InternetMainDialogClass (void)	:
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -342,7 +324,6 @@ InternetMainDialogClass::On_Last_Menu_Ending (void)
 }
 */
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -358,7 +339,6 @@ InternetMainDialogClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -371,7 +351,6 @@ InternetMainDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	StartSPGameDialogClass
@@ -382,8 +361,6 @@ StartSPGameDialogClass::StartSPGameDialogClass (void)	:
 {
 	return ;
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -397,7 +374,6 @@ DifficultyMenuClass::DifficultyMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -410,7 +386,7 @@ MPLanMenuClass::On_Init_Dialog (void)
 
 	DialogControlClass *edit_ctrl = Get_Dlg_Item (IDC_NICKNAME_EDIT);
 	if (edit_ctrl != NULL) {
-		
+
 		//
 		//	Set the text of the nick name control
 		//
@@ -427,11 +403,10 @@ MPLanMenuClass::On_Init_Dialog (void)
 	//	Set the default focus
 	//
 	DialogMgrClass::Set_Focus (Get_Dlg_Item (IDC_MENU_MP_START_SERVER_BUTTON));
-	
+
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -458,14 +433,14 @@ MPLanMenuClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 		{
 			DialogControlClass *edit_ctrl = Get_Dlg_Item (IDC_NICKNAME_EDIT);
 			if (edit_ctrl != NULL) {
-				
+
 				//
 				//	Pass the nickname onto the network interface
 				//
 				WideStringClass wide_nick_name = edit_ctrl->Get_Text ();
 				if (wide_nick_name.Get_Length () > 0) {
 					cNetInterface::Set_Nickname(wide_nick_name);
-					PLC->Save_Lan_Registry_Keys ();
+					LanGameModeClass::Save_Lan_Registry_Keys();
 				}
 			}
 			break;
@@ -476,7 +451,6 @@ MPLanMenuClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, mesage_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -489,7 +463,6 @@ MPLanMenuClass::On_Destroy (void)
 	MenuDialogClass::On_Destroy ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -505,7 +478,6 @@ MPMainMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Folders
@@ -517,7 +489,7 @@ Add_Folders (const char *path, TreeCtrlClass *tree_ctrl, TreeItemClass *parent_i
 	WIN32_FIND_DATA find_info	= { 0 };
 	BOOL keep_going				= TRUE;
 	HANDLE file_find				= NULL;
-	
+
 	StringClass full_path = path;
 	full_path += "\\*.*";
 
@@ -526,7 +498,7 @@ Add_Folders (const char *path, TreeCtrlClass *tree_ctrl, TreeItemClass *parent_i
 	//
 	for (file_find = ::FindFirstFile (full_path, &find_info);
 		 (file_find != INVALID_HANDLE_VALUE) && keep_going;
-		  keep_going = ::FindNextFile (file_find, &find_info)) 
+		  keep_going = ::FindNextFile (file_find, &find_info))
 	{
 		//
 		//	Only do directories
@@ -543,8 +515,8 @@ Add_Folders (const char *path, TreeCtrlClass *tree_ctrl, TreeItemClass *parent_i
 		}
 	}
 
-	if (file_find != INVALID_HANDLE_VALUE) {			  
-		::FindClose (file_find); 
+	if (file_find != INVALID_HANDLE_VALUE) {
+		::FindClose (file_find);
 	}
 
 	//
@@ -553,7 +525,6 @@ Add_Folders (const char *path, TreeCtrlClass *tree_ctrl, TreeItemClass *parent_i
 	tree_ctrl->Sort_Children_Alphabetically (parent_item);
 	return ;
 }*/
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -571,7 +542,6 @@ StartSPGameDialogClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -607,7 +577,6 @@ StartSPGameDialogClass::On_TreeCtrl_Needs_Children (TreeCtrlClass *tree_ctrl, in
 	return ;
 }*/
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -615,12 +584,12 @@ StartSPGameDialogClass::On_TreeCtrl_Needs_Children (TreeCtrlClass *tree_ctrl, in
 ////////////////////////////////////////////////////////////////
 void
 StartSPGameDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
-{	
+{
 
 	//
 	//	Does the user wish to start the tutorial?
 	///
-	if (ctrl_id == IDC_MENU_START_TUTORIAL_BUTTON) {		
+	if (ctrl_id == IDC_MENU_START_TUTORIAL_BUTTON) {
 		const char *TUTORIAL_MAP_NAME = "M00_Tutorial.mix";
 		#define	TUTORIAL_LOAD_MENU_NUMBER		90
 
@@ -631,7 +600,7 @@ StartSPGameDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 		CampaignManager::Reset();
 		CampaignManager::Select_Backdrop_Number( TUTORIAL_LOAD_MENU_NUMBER );
 		GameInitMgrClass::Initialize_SP ();
-		GameInitMgrClass::Start_Game (TUTORIAL_MAP_NAME, -1, 0);
+		GameInitMgrClass::Start_Game (TUTORIAL_MAP_NAME, -1);
 	} else {
 		CampaignManager::Select_Backdrop_Number( 0 );	// Use default load number
 	}
@@ -639,7 +608,6 @@ StartSPGameDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 /*
 ////////////////////////////////////////////////////////////////
@@ -673,7 +641,6 @@ MPServerStartMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Start_Game
@@ -686,7 +653,7 @@ MPServerStartMenuClass::Start_Game (void)
 	//	Read the player's team choice from the combo
 	//
 	//if (The_Game ()->IsTeamChangingAllowed.Is_True () == false) {
-	//	ComboBoxCtrlClass *type_combo = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_TEAM_COMBO);			
+	//	ComboBoxCtrlClass *type_combo = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_TEAM_COMBO);
 	//	if (type_combo->Get_Curr_Sel () == 0) {
 	//		cUserOptions::Set_Team_Choice (PLAYERTYPE_GDI);
 	//	} else {
@@ -716,7 +683,6 @@ MPServerStartMenuClass::Start_Game (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -738,19 +704,19 @@ MPServerStartMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	//		dialog->Start_Dialog ();
 	//		REF_PTR_RELEASE (dialog);
 	//	} else {
-	//		
+	//
 	//		//
 	//		//	Otherwise, simply start the game
 	//		//
-	//		Start_Game ();			
-	//	}		
+	//		Start_Game ();
+	//	}
 	//}
 
 	//
 	// TSS092501 force user to proceed pass this dialog, later on remove it properly
 	//
 	//if (ctrl_id == IDC_MENU_MP_START_BUTTON) {
-	//	Start_Game ();			
+	//	Start_Game ();
 	//}
 	Start_Game();
 
@@ -758,7 +724,6 @@ MPServerStartMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 */
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -788,7 +753,6 @@ MPJoinMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -797,36 +761,9 @@ MPJoinMenuClass::On_Init_Dialog (void)
 void
 MPJoinMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 {
-	if (ctrl_id == IDC_MENU_MP_JOING_BUTTON) {
-		ListCtrlClass *list_ctrl = (ListCtrlClass *)Get_Dlg_Item (IDC_GAME_LIST);
-
-		int index = list_ctrl->Get_Curr_Sel ();
-		if (index >= 0) {
-			cGameChannel *channel = (cGameChannel *)list_ctrl->Get_Entry_Data (index, 0);
-			if (channel != NULL) {
-
-				if (PTheGameData != NULL) {
-					delete PTheGameData;
-					PTheGameData = NULL;
-				}
-
-				PTheGameData = cGameData::Create_Game_Of_Type (channel->Get_Game_Data()->Get_Game_Type());
-				*PTheGameData = *channel->Get_Game_Data ();
-
-				cNetwork::Init_Client();
-
-				//
-				//	Display the "connecting" dialog
-				//
-				DlgMPConnect::DoDialog(-1);
-			}
-		}
-	}
-
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -851,7 +788,6 @@ MPJoinMenuClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Game_List
@@ -859,83 +795,7 @@ MPJoinMenuClass::On_Frame_Update (void)
 ////////////////////////////////////////////////////////////////
 void
 MPJoinMenuClass::Update_Game_List (void)
-{
-	ListCtrlClass *list_ctrl = (ListCtrlClass *)Get_Dlg_Item (IDC_GAME_LIST);
-	if (list_ctrl == NULL) {
-		return ;
-	}
-
-	//
-	//	Start fresh
-	//
-	list_ctrl->Delete_All_Entries ();
-
-	//
-	//	Build the game list
-	//
-	int index = 0;
-	SLNode<cGameChannel> * objnode;
-	for (objnode = cGameChannelList::Get_Chan_List()->Head(); objnode; objnode = objnode->Next()) {
-		cGameChannel * p_channel = objnode->Data();
-
-		int player_count		= p_channel->Get_Game_Data()->Get_Current_Players ();
-		int player_count_max = p_channel->Get_Game_Data()->Get_Max_Players ();
-
-		WideStringClass wide_players_string;
-		wide_players_string.Format (L"%d/%d", player_count, player_count_max);
-
-		WideStringClass wide_owner_name;
-		WideStringClass wide_game_name;
-		//wide_owner_name.Convert_From (p_channel->Get_Game_Data()->Get_Owner ());
-		wide_owner_name = p_channel->Get_Game_Data()->Get_Owner ();
-		//wide_game_name.Convert_From (p_channel->Get_Game_Data()->Get_Game_Name ());
-		wide_game_name = p_channel->Get_Game_Data()->Get_Game_Name ();
-		
-		//
-		//	Insert the entry
-		//
-		int item_index = list_ctrl->Insert_Entry (index++, wide_game_name);
-		if (item_index >= 0) {
-			list_ctrl->Set_Entry_Text (item_index, 1, wide_owner_name);
-			list_ctrl->Set_Entry_Text (item_index, 2, wide_players_string);
-			list_ctrl->Set_Entry_Data (item_index, 0, (uint32)(uintptr_t)p_channel);
-		}
-
-      //
-		//	Is there something wrong with the connection?
-		//
-		if (p_channel->Get_Game_Data()->Get_Version_Number() != cNetwork::Get_Exe_Key()) {
-
-			WideStringClass error_string;
-			if (p_channel->Get_Game_Data()->Do_Exe_Versions_Match() == false) {
-				error_string = TRANSLATE (IDS_MENU_EXE_MISMATCH);
-			} else if (p_channel->Get_Game_Data()->Do_String_Versions_Match() == false) {
-				error_string = TRANSLATE (IDS_MENU_STRINGS_MISMATCH);
-			}
-
-			//
-			//	Notify the user that they can't join this game
-			//
-			if (item_index >= 0) {
-				list_ctrl->Set_Entry_Text (item_index, 0, error_string);
-				list_ctrl->Set_Entry_Color (item_index, 0, Vector3 (0.5F, 0.5F, 0.5F));
-				list_ctrl->Set_Entry_Color (item_index, 1, Vector3 (0.5F, 0.5F, 0.5F));
-				list_ctrl->Set_Entry_Color (item_index, 2, Vector3 (0.5F, 0.5F, 0.5F));
-				list_ctrl->Set_Entry_Data (item_index, 0, 0);
-			}
-		}
-	}
-
-	//
-	//	Select the first entry by default
-	//
-	if (list_ctrl->Get_Entry_Count () > 0) {
-		list_ctrl->Set_Curr_Sel (0);
-	}
-
-	return ;
-}
-
+{}
 
 ////////////////////////////////////////////////////////////////
 //
@@ -964,7 +824,7 @@ DifficultyMenuClass::On_Frame_Update (void)
 	//
 	if (curr_sel != CurrSel) {
 		CurrSel = curr_sel;
-		
+
 		if (CurrSel == -1) {
 			Set_Dlg_Item_Text (IDC_AIM_TEXT,					TRANSLATE (IDS_MENU_NA));
 			Set_Dlg_Item_Text (IDC_PLAYER_HEALTH_TEXT,	TRANSLATE (IDS_MENU_NA));
@@ -996,7 +856,6 @@ DifficultyMenuClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Menu_Activate
@@ -1008,7 +867,6 @@ DifficultyMenuClass::On_Menu_Activate (bool onoff)
 	MenuDialogClass::On_Menu_Activate (onoff);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1058,13 +916,13 @@ DifficultyMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 void
 DeathOptionsPopupClass::On_Init_Dialog ( void )
 {
-	// IML: Ensure that there are no sound effects lingering on any playlist. 
+	// IML: Ensure that there are no sound effects lingering on any playlist.
 	WWAudioClass::Get_Instance ()->Flush_Playlist();
 
 	PopupDialogClass::On_Init_Dialog ();
 
 #if 01
-	
+
 	//
 	//	Activate the menu game mode (if necessary)
 	//
@@ -1076,7 +934,6 @@ DeathOptionsPopupClass::On_Init_Dialog ( void )
 #endif
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1119,7 +976,6 @@ DeathOptionsPopupClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -1128,7 +984,7 @@ DeathOptionsPopupClass::On_Command (int ctrl_id, int message_id, DWORD param)
 void
 FailedOptionsPopupClass::On_Init_Dialog ( void )
 {
-	// IML: Ensure that there are no sound effects lingering on any playlist. 
+	// IML: Ensure that there are no sound effects lingering on any playlist.
 	WWAudioClass::Get_Instance ()->Flush_Playlist();
 
 	PopupDialogClass::On_Init_Dialog ();
@@ -1145,8 +1001,6 @@ FailedOptionsPopupClass::On_Init_Dialog ( void )
 #endif
 	return ;
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1198,7 +1052,6 @@ FailedOptionsPopupClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	EditWheeledVehicleDialogClass
@@ -1215,7 +1068,7 @@ EditWheeledVehicleDialogClass::~EditWheeledVehicleDialogClass(void)
 {
 }
 
-void	
+void
 EditWheeledVehicleDialogClass::On_Init_Dialog (void)
 {
 	if (VehicleDef != NULL) {
@@ -1229,13 +1082,13 @@ EditWheeledVehicleDialogClass::On_Init_Dialog (void)
 		Set_Dlg_Item_Float(IDC_LATERAL_MOMENT_ARM_EDIT,VehicleDef->Get_Lateral_Moment_Arm());
 		Set_Dlg_Item_Float(IDC_TRACTIVE_MOMENT_ARM_EDIT,VehicleDef->Get_Tractive_Moment_Arm());
 		Set_Dlg_Item_Float(IDC_MAX_ENGINE_TORQUE_EDIT,VehicleDef->Get_Max_Engine_Torque());
-		
+
 		Set_Dlg_Item_Int(IDC_GEAR_COUNT_EDIT, VehicleDef->Get_Gear_Count());
-		Set_Dlg_Item_Float(IDC_GEAR_RATIO1_EDIT, VehicleDef->Get_Gear_Ratio(0));	
-		Set_Dlg_Item_Float(IDC_GEAR_RATIO2_EDIT, VehicleDef->Get_Gear_Ratio(1));	
-		Set_Dlg_Item_Float(IDC_GEAR_RATIO3_EDIT, VehicleDef->Get_Gear_Ratio(2));	
-		Set_Dlg_Item_Float(IDC_GEAR_RATIO4_EDIT, VehicleDef->Get_Gear_Ratio(3));	
-		Set_Dlg_Item_Float(IDC_GEAR_RATIO5_EDIT, VehicleDef->Get_Gear_Ratio(4));	
+		Set_Dlg_Item_Float(IDC_GEAR_RATIO1_EDIT, VehicleDef->Get_Gear_Ratio(0));
+		Set_Dlg_Item_Float(IDC_GEAR_RATIO2_EDIT, VehicleDef->Get_Gear_Ratio(1));
+		Set_Dlg_Item_Float(IDC_GEAR_RATIO3_EDIT, VehicleDef->Get_Gear_Ratio(2));
+		Set_Dlg_Item_Float(IDC_GEAR_RATIO4_EDIT, VehicleDef->Get_Gear_Ratio(3));
+		Set_Dlg_Item_Float(IDC_GEAR_RATIO5_EDIT, VehicleDef->Get_Gear_Ratio(4));
 		Set_Dlg_Item_Float(IDC_MAX_STEERING_ANGLE_EDIT, VehicleDef->Get_Max_Steering_Angle());
 		Set_Dlg_Item_Float(IDC_SHIFT_UP_RPM_EDIT, VehicleDef->Get_Shift_Up_Rpm());
 		Set_Dlg_Item_Float(IDC_SHIFT_DOWN_RPM_EDIT, VehicleDef->Get_Shift_Down_Rpm());
@@ -1245,7 +1098,7 @@ EditWheeledVehicleDialogClass::On_Init_Dialog (void)
 		Set_Dlg_Item_Text(IDC_WHEEL_RADIUS,radius_text);
 
 	} else {
-		
+
 		Set_Controls_Hidden(true);
 /*
 		Enable_Dlg_Item(IDC_MASS_EDIT,false);
@@ -1257,18 +1110,18 @@ EditWheeledVehicleDialogClass::On_Init_Dialog (void)
 		Enable_Dlg_Item(IDC_MAX_ENGINE_TORQUE_EDIT,false);
 
 		Enable_Dlg_Item(IDC_GEAR_COUNT_EDIT, false);
-		Enable_Dlg_Item(IDC_GEAR_RATIO1_EDIT, false);	
-		Enable_Dlg_Item(IDC_GEAR_RATIO2_EDIT, false);	
-		Enable_Dlg_Item(IDC_GEAR_RATIO3_EDIT, false);	
-		Enable_Dlg_Item(IDC_GEAR_RATIO4_EDIT, false);	
-		Enable_Dlg_Item(IDC_GEAR_RATIO5_EDIT, false);	
+		Enable_Dlg_Item(IDC_GEAR_RATIO1_EDIT, false);
+		Enable_Dlg_Item(IDC_GEAR_RATIO2_EDIT, false);
+		Enable_Dlg_Item(IDC_GEAR_RATIO3_EDIT, false);
+		Enable_Dlg_Item(IDC_GEAR_RATIO4_EDIT, false);
+		Enable_Dlg_Item(IDC_GEAR_RATIO5_EDIT, false);
 		Enable_Dlg_Item(IDC_MAX_STEERING_ANGLE_EDIT, false);
 */
 	}
 	PopupDialogClass::On_Init_Dialog ();
 }
 
-void	
+void
 EditWheeledVehicleDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 {
 	switch (ctrl_id)
@@ -1284,7 +1137,7 @@ EditWheeledVehicleDialogClass::On_Command (int ctrl_id, int message_id, DWORD pa
 				VehicleDef->Set_Lateral_Moment_Arm(Get_Dlg_Item_Float(IDC_LATERAL_MOMENT_ARM_EDIT));
 				VehicleDef->Set_Tractive_Moment_Arm(Get_Dlg_Item_Float(IDC_TRACTIVE_MOMENT_ARM_EDIT));
 				VehicleDef->Set_Max_Engine_Torque(Get_Dlg_Item_Float(IDC_MAX_ENGINE_TORQUE_EDIT));
-			
+
 				VehicleDef->Set_Gear_Count(Get_Dlg_Item_Int(IDC_GEAR_COUNT_EDIT));
 				VehicleDef->Set_Gear_Ratio(0,Get_Dlg_Item_Float(IDC_GEAR_RATIO1_EDIT));
 				VehicleDef->Set_Gear_Ratio(1,Get_Dlg_Item_Float(IDC_GEAR_RATIO2_EDIT));
@@ -1294,20 +1147,20 @@ EditWheeledVehicleDialogClass::On_Command (int ctrl_id, int message_id, DWORD pa
 				VehicleDef->Set_Max_Steering_Angle(Get_Dlg_Item_Float(IDC_MAX_STEERING_ANGLE_EDIT));
 				VehicleDef->Set_Shift_Up_Rpm(Get_Dlg_Item_Float(IDC_SHIFT_UP_RPM_EDIT));
 				VehicleDef->Set_Shift_Down_Rpm(Get_Dlg_Item_Float(IDC_SHIFT_DOWN_RPM_EDIT));
-				
+
 				PhysicsSceneClass * pscene = PhysicsSceneClass::Get_Instance();
 				if (pscene) {
 					RefPhysListIterator iterator = pscene->Get_Dynamic_Object_Iterator();
 					while (!iterator.Is_Done()) {
-						if (	(iterator.Peek_Obj() != NULL) && 
-								(iterator.Peek_Obj()->Get_Definition() == VehicleDef)) 
+						if (	(iterator.Peek_Obj() != NULL) &&
+								(iterator.Peek_Obj()->Get_Definition() == VehicleDef))
 						{
 							iterator.Peek_Obj()->Definition_Changed();
 						}
 						iterator.Next();
 					}
 				}
-			}			
+			}
 			End_Dialog();
 			break;
 	}
@@ -1316,8 +1169,6 @@ EditWheeledVehicleDialogClass::On_Command (int ctrl_id, int message_id, DWORD pa
 
 	return ;
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1335,7 +1186,7 @@ EditTrackedVehicleDialogClass::~EditTrackedVehicleDialogClass(void)
 {
 }
 
-void	
+void
 EditTrackedVehicleDialogClass::On_Init_Dialog (void)
 {
 	if (VehicleDef != NULL) {
@@ -1349,22 +1200,22 @@ EditTrackedVehicleDialogClass::On_Init_Dialog (void)
 		Set_Dlg_Item_Float(IDC_LATERAL_MOMENT_ARM_EDIT,VehicleDef->Get_Lateral_Moment_Arm());
 		Set_Dlg_Item_Float(IDC_TRACTIVE_MOMENT_ARM_EDIT,VehicleDef->Get_Tractive_Moment_Arm());
 		Set_Dlg_Item_Float(IDC_MAX_ENGINE_TORQUE_EDIT,VehicleDef->Get_Max_Engine_Torque());
-		Set_Dlg_Item_Float(IDC_TRACK_U_SCALE_FACTOR_EDIT, VehicleDef->Get_Track_U_Scale_Factor());	
-		Set_Dlg_Item_Float(IDC_TRACK_V_SCALE_FACTOR_EDIT, VehicleDef->Get_Track_V_Scale_Factor());	
-		Set_Dlg_Item_Float(IDC_TURN_TORQUE_SCALE_FACTOR_EDIT, VehicleDef->Get_Turn_Torque_Scale_Factor());	
-		
+		Set_Dlg_Item_Float(IDC_TRACK_U_SCALE_FACTOR_EDIT, VehicleDef->Get_Track_U_Scale_Factor());
+		Set_Dlg_Item_Float(IDC_TRACK_V_SCALE_FACTOR_EDIT, VehicleDef->Get_Track_V_Scale_Factor());
+		Set_Dlg_Item_Float(IDC_TURN_TORQUE_SCALE_FACTOR_EDIT, VehicleDef->Get_Turn_Torque_Scale_Factor());
+
 		WideStringClass radius_text;
 		radius_text.Format(L"%10.4f",WheelRadius);
 		Set_Dlg_Item_Text(IDC_WHEEL_RADIUS,radius_text);
 
 	} else {
-		
+
 		Set_Controls_Hidden(true);
 	}
 	PopupDialogClass::On_Init_Dialog ();
 }
 
-void	
+void
 EditTrackedVehicleDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 {
 	switch (ctrl_id)
@@ -1383,20 +1234,20 @@ EditTrackedVehicleDialogClass::On_Command (int ctrl_id, int message_id, DWORD pa
 				VehicleDef->Set_Track_U_Scale_Factor(Get_Dlg_Item_Float(IDC_TRACK_U_SCALE_FACTOR_EDIT));
 				VehicleDef->Set_Track_V_Scale_Factor(Get_Dlg_Item_Float(IDC_TRACK_V_SCALE_FACTOR_EDIT));
 				VehicleDef->Set_Turn_Torque_Scale_Factor(Get_Dlg_Item_Float(IDC_TURN_TORQUE_SCALE_FACTOR_EDIT));
-			
+
 				PhysicsSceneClass * pscene = PhysicsSceneClass::Get_Instance();
 				if (pscene) {
 					RefPhysListIterator iterator = pscene->Get_Dynamic_Object_Iterator();
 					while (!iterator.Is_Done()) {
-						if (	(iterator.Peek_Obj() != NULL) && 
-								(iterator.Peek_Obj()->Get_Definition() == VehicleDef)) 
+						if (	(iterator.Peek_Obj() != NULL) &&
+								(iterator.Peek_Obj()->Get_Definition() == VehicleDef))
 						{
 							iterator.Peek_Obj()->Definition_Changed();
 						}
 						iterator.Next();
 					}
 				}
-			}			
+			}
 			End_Dialog();
 			break;
 	}
@@ -1405,7 +1256,6 @@ EditTrackedVehicleDialogClass::On_Command (int ctrl_id, int message_id, DWORD pa
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

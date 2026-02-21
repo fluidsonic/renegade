@@ -7,13 +7,11 @@
 #include "player.h"
 #include "renegadedialogmgr.h"
 #include "netinterface.h"
-#include "langmode.h"
 #include "playermanager.h"
 #include "wwaudio.h"
 #include "saveloadstatus.h"
 #include "combatgmode.h"
 #include "useroptions.h"
-#include "lanchat.h"
 #include "rendobj.h"
 #include "phys.h"
 #include "pscene.h"
@@ -46,14 +44,11 @@
 #include "dazzle.h"
 #include "scripts.h"
 
-
-
 static void _reload_game_configuration_files(void);
 
 // Defines.
 #define PRE_SERVICE_TIME	1500 // Time in milliseconds.
 #define POST_SERVICE_TIME	 250 // Time in milliseconds.
-
 
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -66,14 +61,12 @@ bool		GameInitMgrClass::NeedsGameExit		= false;
 bool		GameInitMgrClass::NeedsGameExitAll	= false;
 int		GameInitMgrClass::Mode					= MODE_UNKNOWN;
 
-
 bool GameInitMgrClass::Is_Game_In_Progress(void)
 {
 	GameModeClass* mode = GameModeManager::Find("Combat");
 	//return (mode && mode->Is_Active());
 	return (mode != NULL && !mode->Is_Inactive());
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -84,7 +77,6 @@ void
 GameInitMgrClass::Start_Game (const char *map_name, int teamChoice)
 {
 	unsigned long time;
-
 
 	// NOTE: Multi-play does not need this fix because it does not sound page swap.
 	if (IS_SOLOPLAY) {
@@ -169,13 +161,6 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice)
 	CombatGameModeClass *game_mode = static_cast<CombatGameModeClass*>(GameModeManager::Find ("Combat"));
 	game_mode->Load_Level ();
 
-   //
-	//	Let the LAN interface know we are starting a game
-	//
-	if (Mode == MODE_LAN) {
-		INIT_STATUS ("Go to location");
-		PLC->Go_To_Location (LANLOC_INGAME);
-	}
 
 	//
 	//	Reset some rendering data
@@ -201,7 +186,6 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	End_Game
@@ -211,7 +195,6 @@ void
 GameInitMgrClass::End_Game (void)
 {
 	unsigned long time;
-
 
 	// Do nothing if the game is not in progress.
 	if ( !IS_MISSION && (!Is_Game_In_Progress())) {
@@ -338,7 +321,6 @@ GameInitMgrClass::End_Game (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Continue_Game
@@ -366,7 +348,6 @@ GameInitMgrClass::Continue_Game(void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -399,7 +380,6 @@ GameInitMgrClass::Display_End_Game_Menu (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Transmit_Player_Data
@@ -428,7 +408,6 @@ GameInitMgrClass::Transmit_Player_Data (int teamChoice)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -491,7 +470,6 @@ GameInitMgrClass::Start_Client_Server (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	End_Client_Server
@@ -518,7 +496,6 @@ GameInitMgrClass::End_Client_Server (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Initialize_SP
@@ -528,7 +505,6 @@ void
 GameInitMgrClass::Initialize_SP (void)
 {
 #ifndef MULTIPLAYERDEMO
-
 
 	if (Mode != MODE_UNKNOWN) {
 		Shutdown ();
@@ -565,7 +541,6 @@ GameInitMgrClass::Initialize_SP (void)
 #endif // !MULTIPLAYERDEMO
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown_SP
@@ -576,7 +551,6 @@ GameInitMgrClass::Shutdown_SP (void)
 {
 #ifndef MULTIPLAYERDEMO
 
-
 //#pragma message ("TSS Fix memory leak here")
 
 	//cSingleData::Set_Is_Single_Player(false);
@@ -584,7 +558,6 @@ GameInitMgrClass::Shutdown_SP (void)
 
 #endif // !MULTIPLAYERDEMO
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -595,7 +568,6 @@ void
 GameInitMgrClass::Initialize_Skirmish(void)
 {
 #ifndef MULTIPLAYERDEMO
-
 
 	if (Mode != MODE_UNKNOWN) {
 		Shutdown ();
@@ -631,7 +603,6 @@ GameInitMgrClass::Initialize_Skirmish(void)
 #endif // !MULTIPLAYERDEMO
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown_Skirmish
@@ -642,13 +613,11 @@ GameInitMgrClass::Shutdown_Skirmish(void)
 {
 #ifndef MULTIPLAYERDEMO
 
-
 	//cSingleData::Set_Is_Single_Player(false);
 	cGameType::Set_Game_Type(GAMETYPE_NONE);
 
 #endif // !MULTIPLAYERDEMO
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -681,7 +650,6 @@ GameInitMgrClass::Initialize_LAN (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown_LAN
@@ -698,7 +666,6 @@ GameInitMgrClass::Shutdown_LAN (void)
 
 	cGameType::Set_Game_Type(GAMETYPE_NONE);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -756,7 +723,6 @@ GameInitMgrClass::Shutdown (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -782,9 +748,6 @@ GameInitMgrClass::Think (void)
 
 	return ;
 }
-
-
-
 
 void _reload_game_configuration_files(void)
 {
@@ -827,10 +790,4 @@ void _reload_game_configuration_files(void)
 	ScriptManager::Shutdown();
 	ScriptManager::Init();
 }
-
-
-
-
-
-
 

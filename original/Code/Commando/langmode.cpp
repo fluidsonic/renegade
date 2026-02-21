@@ -1,45 +1,49 @@
-#include "langmode.h" // I WANNA BE FIRST!
-#include "miscutil.h"
-//
-// class statics
-//
-cLanChat * LanGameModeClass::PLanChat = NULL;
+#include "langmode.h"
+#include "_globals.h"
+#include "registry.h"
+#include "netinterface.h"
 
 //-----------------------------------------------------------------------------
-//
-// called when the mode is activated
-//
 void LanGameModeClass::Init(void)
 {
-
-	PLanChat = new cLanChat();
+	Load_Lan_Registry_Keys();
 }
 
 //-----------------------------------------------------------------------------
-//
-// called when the mode is deactivated
-//
 void LanGameModeClass::Shutdown(void)
 {
-
-	delete PLanChat;
-	PLanChat = NULL;
+	Save_Lan_Registry_Keys();
 }
 
 //-----------------------------------------------------------------------------
-//
-// called each time through the main loop
-//
-void LanGameModeClass::Think(void)
+void LanGameModeClass::Load_Lan_Registry_Keys(void)
 {
+	RegistryClass registry(APPLICATION_SUB_KEY_NAME_NETOPTIONS);
 
-	PLanChat->Think();
+	char name[200];
+	registry.Get_String("MyLanName", name, sizeof(name), "");
+
+	WideStringClass widename;
+	widename.Convert_From(name);
+
+	if (widename.Is_Empty()) {
+		cNetInterface::Set_Random_Nickname();
+	} else {
+		cNetInterface::Set_Nickname(widename);
+	}
+
+	int sidePref = registry.Get_Int("SidePref", -1);
+	cNetInterface::Set_Side_Preference(sidePref);
 }
 
 //-----------------------------------------------------------------------------
-cLanChat * LanGameModeClass::Get_Lan_Interface(void)
+void LanGameModeClass::Save_Lan_Registry_Keys(void)
 {
-	//assert(PLanChat != NULL);
+	RegistryClass registry(APPLICATION_SUB_KEY_NAME_NETOPTIONS);
 
-	return PLanChat;
+	StringClass string;
+	cNetInterface::Get_Nickname().Convert_To(string);
+	registry.Set_String("MyLanName", string);
+
+	registry.Set_Int("SidePref", cNetInterface::Get_Side_Preference());
 }

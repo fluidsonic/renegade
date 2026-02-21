@@ -6,7 +6,6 @@
 #include "win.h"
 #include "miscutil.h"
 #include "cnetwork.h"
-#include "chatshre.h"
 #include "netinterface.h"
 #include "translatedb.h"
 #include "playertype.h"
@@ -58,7 +57,6 @@
 #include "specialbuilds.h"
 
 const int cGameData::MAX_TIME_LIMIT       = 999;
-
 
 cGameData *	PTheGameData = NULL;
 
@@ -293,7 +291,6 @@ void cGameData::Swap_Team_Sides(void)
 
 		int team = p_player->Get_Player_Type();
 
-
 		int new_team = PLAYERTYPE_NOD;
 		if (team == PLAYERTYPE_NOD)
 		{
@@ -321,7 +318,6 @@ void cGameData::Swap_Team_Sides(void)
 void cGameData::Remix_Team_Sides(void)
 {
 	//assert(Is_Team_Game());
-
 
 	if (IsClanGame.Is_True()) {
 		return;
@@ -364,7 +360,6 @@ void cGameData::Remix_Team_Sides(void)
 void cGameData::Rebalance_Team_Sides(void)
 {
 	//assert(Is_Team_Game());
-
 
 	if (IsClanGame.Is_True()) {
 		return;
@@ -487,7 +482,6 @@ void cGameData::Set_Motd(const WCHAR * motd)
 	Motd = motd;
 }
 
-
 //-----------------------------------------------------------------------------
 void cGameData::Set_Mod_Name(const StringClass &mod_name)
 {
@@ -554,7 +548,6 @@ bool cGameData::Is_Map_Valid(char **out_filename)
 
 	return(map_exists);
 }
-
 
 #define PRINT_CONFIG_ERROR	ConsoleBox.Print("File %s - Error:\r\n\t ", Get_Ini_Filename());
 
@@ -714,7 +707,6 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 	return true; // it's valid !
 }
 
-
 //-----------------------------------------------------------------------------
 //
 // Server options are exported in 2 tiers. Tier 1 is the basic parameters
@@ -791,7 +783,6 @@ void cGameData::Import_Tier_1_Data(cPacket & packet)
 	ULONG map_name_crc =		packet.Get(map_name_crc);
 	ULONG mod_name_crc =		packet.Get(mod_name_crc);
 
-
 	//
 	//	Determine what the name of the mod and the map are from their CRC's
 	//
@@ -810,7 +801,6 @@ void cGameData::Import_Tier_1_Data(cPacket & packet)
 	return ;
 }
 
-
 //-----------------------------------------------------------------------------
 bool cGameData::Does_Map_Exist (void)
 {
@@ -826,9 +816,6 @@ bool cGameData::Does_Map_Exist (void)
 
 	return retval;
 }
-
-
-
 
 //-----------------------------------------------------------------------------
 void cGameData::Export_Tier_2_Data(cPacket & packet)
@@ -903,7 +890,6 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
    int		i;
    //float		f;
 
-
 	//p_ini->Get_String(	INI_SECTION_NAME, "Password", Get_Password(), password, sizeof(password));
 	//Set_Password(password);
 
@@ -932,7 +918,6 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 #else ////FREEDEDICATEDSERVER
 	IsDedicated.Set(true);
 #endif //FREEDEDICATEDSERVER
-
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsPassworded",				IsPassworded.Get());
 	IsPassworded.Set(b);
@@ -1024,7 +1009,6 @@ void cGameData::Save_To_Server_Config(LPCSTR config_file)
 {
 
    INIClass * p_ini = Get_INI(config_file);
-
 
 	//
 	// We can't overwrite entries, so clear them out first.
@@ -1204,7 +1188,6 @@ int cGameData::Choose_Player_Type(cPlayer* player, int team_choice, bool is_grun
 	return team_choice;
 }
 
-
 int cGameData::Choose_Available_Team(int preference)
 {
 	// If the perferred team is available then use it.
@@ -1225,7 +1208,6 @@ int cGameData::Choose_Available_Team(int preference)
 
 	return -1;
 }
-
 
 //-----------------------------------------------------------------------------
 int cGameData::Choose_Smallest_Team(void)
@@ -1263,7 +1245,6 @@ int cGameData::Choose_Smallest_Team(void)
 			}
 		}
 	}
-
 
 	return team;
 }
@@ -1330,9 +1311,6 @@ bool cGameData::Is_Game_Over(void)
 	return is_game_over;
 }
 
-
-
-
 //-----------------------------------------------------------------------------
 bool cGameData::Has_Config_File_Changed(void)
 {
@@ -1343,8 +1321,6 @@ bool cGameData::Has_Config_File_Changed(void)
 	}
 	return(false);
 }
-
-
 
 //-----------------------------------------------------------------------------
 unsigned long cGameData::Get_Config_File_Mod_Time(void)
@@ -1366,13 +1342,9 @@ unsigned long cGameData::Get_Config_File_Mod_Time(void)
 	return(0);
 }
 
-
-
-
 //-----------------------------------------------------------------------------
 void cGameData::Game_Over_Processing(void)
 {
-
 
    int winning_team = cTeamManager::Get_Leaders_Id();
 
@@ -1447,7 +1419,6 @@ void cGameData::Game_Over_Processing(void)
 	}
 	cUserOptions::ResultsLogNumber.Set(log_num);
 
-
 	Begin_Intermission();
 }
 
@@ -1472,12 +1443,10 @@ void cGameData::Set_Clan(int slot, unsigned long clanID)
 	mClanSlots[slot] = clanID;
 }
 
-
 unsigned long cGameData::Get_Clan(int slot) const
 {
 	return mClanSlots[slot];
 }
-
 
 void cGameData::Clear_Clans(void)
 {
@@ -1485,7 +1454,6 @@ void cGameData::Clear_Clans(void)
 		mClanSlots[slot] = 0;
 	}
 }
-
 
 int cGameData::Find_Free_Clan_Slot(void) const
 {
@@ -1499,7 +1467,6 @@ int cGameData::Find_Free_Clan_Slot(void) const
 
 	return -1;
 }
-
 
 bool cGameData::Is_Clan_Competing(unsigned long clanID) const
 {
@@ -1543,7 +1510,6 @@ cGameData * cGameData::Create_Game_Of_Type(GameTypeEnum game_type)
 
 	return p_game_data;
 	*/
-
 
 	return new cGameDataCnc;
 }
@@ -1657,7 +1623,6 @@ void cGameData::Show_Game_Settings_Limits(void)
 		}
 	}
 
-
 	// Render if needed  -------------------------------------------------------
 	float charHeight = PTextRenderer->Peek_Font()->Get_Char_Height();
 
@@ -1706,8 +1671,6 @@ void cGameData::Show_Game_Settings_Limits(void)
 	}
 	MultiHUDClass::Set_Bottom_Text_Y_Pos(y);
 
-
-
 	// Dedicated server label
 	if (cNetwork::I_Am_Only_Server()) {
 		Vector2 extent = PTextRenderer->Get_Text_Extents(renderer_dedicated_server_label);
@@ -1751,7 +1714,6 @@ void cGameData::Get_Gameplay_Not_Permitted_Label(WideStringClass& text, unsigned
 
 	text = TRANSLATION(IDS_MP_GAMEPLAY_PENDING);
 }
-
 
 //-----------------------------------------------------------------------------
 void cGameData::Get_Time_Limit_Text(WideStringClass& text)
@@ -1829,7 +1791,6 @@ void cGameData::On_Game_Begin(void)
 	//
 	// Note, On_Game_Begin happens after load.
 	//
-
 
 	GetSystemTime(&GameStartTime);
 	FrameCount = 0;
@@ -1910,7 +1871,6 @@ int	cGameData::Get_Mission_Number_From_Map_Name( const char * map_name )
 		#define	TUTORIAL_LOAD_MENU_NUMBER		90
 		return TUTORIAL_LOAD_MENU_NUMBER;
 	}
-
 
 	// Assume the map name is in the form "mXX.mix" where xx is the level number
 	if ( ::strlen( map_name ) > 0 ) {
@@ -2029,7 +1989,6 @@ void cGameData::Filter_Spawners(void)
 		DynamicVectorClass<SpawnerClass*> spawner_list = SpawnManager::Get_Spawner_List();
 
 		for (int i = 0; i < spawner_list.Count(); i++) {
-
 
 			if (spawner_list[i]->Get_Definition().Is_Multiplay_Weapon_Spawner()) {
 				spawner_list[i]->Enable(false);
@@ -2238,12 +2197,6 @@ cGameData *						The_Game(void)							{return PTheGameData;}
 cGameDataSinglePlayer *		The_Single_Player_Game(void)		{assert(The_Game()->As_Single_Player() != NULL);		return The_Game()->As_Single_Player();}
 cGameDataSkirmish *			The_Skirmish_Game(void)				{assert(The_Game()->As_Skirmish() != NULL);			return The_Game()->As_Skirmish();}
 cGameDataCnc *					The_Cnc_Game(void)					{assert(The_Game()->As_Cnc() != NULL);					return The_Game()->As_Cnc();}
-
-
-
-
-
-
 
 	/*
 	if (Is_Team_Game()) {

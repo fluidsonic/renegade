@@ -2,14 +2,12 @@
 #include "scene.h"
 #include "camera.h"
 #include "ww3d.h"
-#include "debug.h"
 #include "assets.h"
 #include "font3d.h"
 #include "render2d.h"
 #include "saveloadstatus.h"
 #include "cnetwork.h"
 #include "netinterface.h"
-#include "langmode.h"
 #include "miscutil.h"
 #include "_globals.h"
 #include "player.h"
@@ -50,9 +48,7 @@
 #include "dlgmainmenu.h"
 #include "ccamera.h"
 
-
 bool g_is_loading = false;
-
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -64,7 +60,6 @@ MenuGameModeClass2::MenuGameModeClass2 (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -95,7 +90,6 @@ MenuGameModeClass2::Init (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -111,7 +105,6 @@ MenuGameModeClass2::Shutdown (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -145,7 +138,6 @@ MenuGameModeClass2::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -156,7 +148,6 @@ MenuGameModeClass2::Render (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////////
 //
@@ -181,7 +172,6 @@ MenuGameModeClass2::Activate (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////////
 //

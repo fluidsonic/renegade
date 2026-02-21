@@ -4,13 +4,11 @@
 #include "campaign.h"
 #include "cnetwork.h"
 #include "resource.h"
-#include <wwdebug/wwdebug.h>
 #include "dlgmainmenu.h"
 #include "specialbuilds.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
 #include "gamemode.h"
-#include "langmode.h"
 
 /******************************************************************************
 *
@@ -40,7 +38,6 @@ bool DlgMPConnect::DoDialog(int teamChoice)
 	return (popup != NULL);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -65,7 +62,6 @@ DlgMPConnect::DlgMPConnect(int teamChoice) :
 	{
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -85,7 +81,6 @@ DlgMPConnect::DlgMPConnect(int teamChoice) :
 DlgMPConnect::~DlgMPConnect()
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -108,7 +103,6 @@ void DlgMPConnect::Connected(cGameData* theGame)
 	mTheGame = theGame;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -129,7 +123,6 @@ void DlgMPConnect::Failed_To_Connect(void)
 	{
 	mFailed = true;
 	}
-
 
 /******************************************************************************
 *
@@ -165,7 +158,6 @@ void DlgMPConnect::On_Command(int ctrlID, int message, DWORD param)
 
 	PopupDialogClass::On_Command(ctrlID, message, param);
 	}
-
 
 /******************************************************************************
 *
@@ -223,11 +215,6 @@ void DlgMPConnect::On_Periodic(void)
 
 			// Remove the dialog from menuing system
 			End_Dialog();
-
-			if (GameModeManager::Find("LAN")->Is_Active())
-				{
-      		PLC->Refusal_Actions();
-   			}
 
 			Release_Ref();
 			}
