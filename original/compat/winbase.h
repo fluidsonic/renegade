@@ -48,9 +48,10 @@ inline DWORD GetTickCount() {
 #define GetCurrentTime() GetTickCount()
 #endif
 
-// GetLastError / SetLastError
-inline DWORD GetLastError() { return (DWORD)errno; }
-inline void SetLastError(DWORD e) { (void)e; }
+// GetLastError / SetLastError — thread-local so CreateMutex/ERROR_ALREADY_EXISTS work
+inline DWORD& _win_last_error() { thread_local DWORD e = 0; return e; }
+inline DWORD GetLastError() { return _win_last_error(); }
+inline void SetLastError(DWORD e) { _win_last_error() = e; }
 
 // OutputDebugString -> stderr
 inline void OutputDebugString(const char* str) {
@@ -162,9 +163,51 @@ inline HANDLE CreateFileA(LPCSTR name, DWORD access, DWORD share,
     return CreateFile(name, access, share, security, creation, flags, tmpl);
 }
 
+// === WinHandle: tagged heap object for mutex and event HANDLE emulation ===
+#define _WIN_HANDLE_MAGIC 0x57484E44u
+struct WinHandle {
+    unsigned magic;
+    enum { WH_MUTEX, WH_EVENT } type;
+    union {
+        struct { pthread_mutex_t m; } mutex;
+        struct { pthread_mutex_t m; pthread_cond_t c; int signaled; int manual; } event;
+    };
+};
+static inline bool _is_win_handle(HANDLE h) {
+    if (!h || (uintptr_t)h < 0x1000) return false;
+    return ((WinHandle*)h)->magic == _WIN_HANDLE_MAGIC;
+}
+
+// Named handle registry (for singleton mutex detection)
+struct _NamedEntry { char name[128]; WinHandle* h; };
+static inline _NamedEntry* _win_named_registry() { static _NamedEntry r[32] = {}; return r; }
+static inline int& _win_named_count()             { static int c = 0; return c; }
+static inline pthread_mutex_t& _win_reg_lock()    { static pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER; return m; }
+
 inline BOOL CloseHandle(HANDLE h) {
-    if (h == INVALID_HANDLE_VALUE || h == NULL) return FALSE;
-    return close((int)(intptr_t)h) == 0;
+    if (!h || h == INVALID_HANDLE_VALUE) return FALSE;
+    if (_is_win_handle(h)) {
+        WinHandle* wh = (WinHandle*)h;
+        // Remove from named registry
+        pthread_mutex_lock(&_win_reg_lock());
+        for (int i = 0; i < _win_named_count(); i++) {
+            if (_win_named_registry()[i].h == wh) {
+                for (int j = i; j < _win_named_count() - 1; j++)
+                    _win_named_registry()[j] = _win_named_registry()[j + 1];
+                _win_named_count()--;
+                break;
+            }
+        }
+        pthread_mutex_unlock(&_win_reg_lock());
+        if (wh->type == WinHandle::WH_MUTEX)       pthread_mutex_destroy(&wh->mutex.m);
+        else if (wh->type == WinHandle::WH_EVENT) { pthread_cond_destroy(&wh->event.c); pthread_mutex_destroy(&wh->event.m); }
+        wh->magic = 0;
+        free(wh);
+        return TRUE;
+    }
+    if ((uintptr_t)h < 0x10000) return close((int)(intptr_t)h) == 0;  // file descriptor
+    free(h);  // legacy thread handle (raw pthread_t*)
+    return TRUE;
 }
 
 inline BOOL ReadFile(HANDLE h, LPVOID buf, DWORD to_read, LPDWORD read_out, LPVOID overlapped) {
@@ -268,7 +311,25 @@ inline HANDLE CreateThread(LPSECURITY_ATTRIBUTES sec, SIZE_T stack, LPTHREAD_STA
 
 inline DWORD WaitForSingleObject(HANDLE h, DWORD timeout) {
     if (!h) return WAIT_FAILED;
-    pthread_join(*(pthread_t*)h, NULL);
+    if (_is_win_handle(h)) {
+        WinHandle* wh = (WinHandle*)h;
+        if (wh->type == WinHandle::WH_MUTEX) {
+            if (timeout == 0) return pthread_mutex_trylock(&wh->mutex.m) == 0 ? WAIT_OBJECT_0 : WAIT_TIMEOUT;
+            pthread_mutex_lock(&wh->mutex.m);
+            return WAIT_OBJECT_0;
+        }
+        if (wh->type == WinHandle::WH_EVENT) {
+            pthread_mutex_lock(&wh->event.m);
+            while (!wh->event.signaled)
+                pthread_cond_wait(&wh->event.c, &wh->event.m);
+            if (!wh->event.manual) wh->event.signaled = 0;
+            pthread_mutex_unlock(&wh->event.m);
+            return WAIT_OBJECT_0;
+        }
+        return WAIT_FAILED;
+    }
+    if ((uintptr_t)h < 0x1000) return WAIT_OBJECT_0;
+    pthread_join(*(pthread_t*)h, NULL);  // thread handle
     return WAIT_OBJECT_0;
 }
 
@@ -282,19 +343,95 @@ inline HANDLE GetCurrentThread() { return (HANDLE)(uintptr_t)pthread_self(); }
 inline HANDLE GetCurrentProcess() { return (HANDLE)(uintptr_t)getpid(); }
 inline DWORD GetCurrentProcessId() { return (DWORD)getpid(); }
 
-// Event stubs
-inline HANDLE CreateEvent(LPSECURITY_ATTRIBUTES sec, BOOL manual, BOOL initial, LPCSTR name) { return NULL; }
-inline HANDLE CreateEventA(LPSECURITY_ATTRIBUTES sec, BOOL manual, BOOL initial, LPCSTR name) { return NULL; }
-inline HANDLE OpenEvent(DWORD access, BOOL inherit, LPCSTR name) { return NULL; }
+// Events — real pthread_cond_t based
 #define EVENT_MODIFY_STATE 0x0002
-inline BOOL SetEvent(HANDLE h) { return FALSE; }
-inline BOOL ResetEvent(HANDLE h) { return FALSE; }
-inline BOOL PulseEvent(HANDLE h) { return FALSE; }
+inline HANDLE CreateEvent(LPSECURITY_ATTRIBUTES sec, BOOL manual, BOOL initial, LPCSTR name) {
+    WinHandle* wh = (WinHandle*)malloc(sizeof(WinHandle));
+    wh->magic = _WIN_HANDLE_MAGIC;
+    wh->type = WinHandle::WH_EVENT;
+    pthread_mutex_init(&wh->event.m, NULL);
+    pthread_cond_init(&wh->event.c, NULL);
+    wh->event.signaled = initial ? 1 : 0;
+    wh->event.manual = manual ? 1 : 0;
+    return (HANDLE)wh;
+}
+inline HANDLE CreateEventA(LPSECURITY_ATTRIBUTES sec, BOOL manual, BOOL initial, LPCSTR name) {
+    return CreateEvent(sec, manual, initial, name);
+}
+inline HANDLE OpenEvent(DWORD access, BOOL inherit, LPCSTR name) { return NULL; }
+inline BOOL SetEvent(HANDLE h) {
+    if (!_is_win_handle(h)) return FALSE;
+    WinHandle* wh = (WinHandle*)h;
+    if (wh->type != WinHandle::WH_EVENT) return FALSE;
+    pthread_mutex_lock(&wh->event.m);
+    wh->event.signaled = 1;
+    if (wh->event.manual) pthread_cond_broadcast(&wh->event.c);
+    else pthread_cond_signal(&wh->event.c);
+    pthread_mutex_unlock(&wh->event.m);
+    return TRUE;
+}
+inline BOOL ResetEvent(HANDLE h) {
+    if (!_is_win_handle(h)) return FALSE;
+    WinHandle* wh = (WinHandle*)h;
+    if (wh->type != WinHandle::WH_EVENT) return FALSE;
+    pthread_mutex_lock(&wh->event.m);
+    wh->event.signaled = 0;
+    pthread_mutex_unlock(&wh->event.m);
+    return TRUE;
+}
+inline BOOL PulseEvent(HANDLE h) { SetEvent(h); ResetEvent(h); return TRUE; }
 
-// Mutex stubs — return non-NULL so callers don't bail out on "already running" checks
-inline HANDLE CreateMutex(LPSECURITY_ATTRIBUTES sec, BOOL initial, LPCSTR name) { return (HANDLE)1; }
-inline HANDLE OpenMutex(DWORD access, BOOL inherit, LPCSTR name) { return (HANDLE)1; }
-inline BOOL ReleaseMutex(HANDLE h) { return TRUE; }
+// Mutexes — real pthread_mutex_t with named registry for singleton detection
+#ifndef ERROR_ALREADY_EXISTS
+#define ERROR_ALREADY_EXISTS 183
+#endif
+#define MUTEX_ALL_ACCESS 0x1F0001
+inline HANDLE CreateMutex(LPSECURITY_ATTRIBUTES sec, BOOL initial_owner, LPCSTR name) {
+    pthread_mutex_lock(&_win_reg_lock());
+    if (name) {
+        for (int i = 0; i < _win_named_count(); i++) {
+            if (strncmp(_win_named_registry()[i].name, name, 127) == 0) {
+                WinHandle* existing = _win_named_registry()[i].h;
+                pthread_mutex_unlock(&_win_reg_lock());
+                SetLastError(ERROR_ALREADY_EXISTS);
+                return (HANDLE)existing;
+            }
+        }
+    }
+    WinHandle* wh = (WinHandle*)malloc(sizeof(WinHandle));
+    wh->magic = _WIN_HANDLE_MAGIC;
+    wh->type = WinHandle::WH_MUTEX;
+    pthread_mutex_init(&wh->mutex.m, NULL);
+    if (initial_owner) pthread_mutex_lock(&wh->mutex.m);
+    if (name && _win_named_count() < 32) {
+        strncpy(_win_named_registry()[_win_named_count()].name, name, 127);
+        _win_named_registry()[_win_named_count()].h = wh;
+        _win_named_count()++;
+    }
+    SetLastError(0);
+    pthread_mutex_unlock(&_win_reg_lock());
+    return (HANDLE)wh;
+}
+inline HANDLE OpenMutex(DWORD access, BOOL inherit, LPCSTR name) {
+    if (!name) return NULL;
+    pthread_mutex_lock(&_win_reg_lock());
+    for (int i = 0; i < _win_named_count(); i++) {
+        if (strncmp(_win_named_registry()[i].name, name, 127) == 0) {
+            WinHandle* h = _win_named_registry()[i].h;
+            pthread_mutex_unlock(&_win_reg_lock());
+            return (HANDLE)h;
+        }
+    }
+    pthread_mutex_unlock(&_win_reg_lock());
+    return NULL;
+}
+inline BOOL ReleaseMutex(HANDLE h) {
+    if (!_is_win_handle(h)) return FALSE;
+    WinHandle* wh = (WinHandle*)h;
+    if (wh->type != WinHandle::WH_MUTEX) return FALSE;
+    pthread_mutex_unlock(&wh->mutex.m);
+    return TRUE;
+}
 
 // FILETIME (needed by registry APIs)
 #ifndef _FILETIME_

@@ -1,4 +1,5 @@
 #include "mainloop.h"
+#include <stdio.h>
 #include "init.h"
 #include "shutdown.h"
 #include "timemgr.h"
@@ -166,10 +167,15 @@ int Game_Main_Loop(void)
 	unsigned long time;
 
 	// Only run main loop if the init is succesful!
-	if (Game_Init()) {
+	fprintf(stderr, "[trace] Calling Game_Init()...\n");
+	bool init_ok = Game_Init();
+	fprintf(stderr, "[trace] Game_Init() returned %s\n", init_ok ? "true" : "false");
+	if (init_ok) {
+		fprintf(stderr, "[trace] Entering main loop\n");
 		while ( RunMainLoop ) {
 			_Game_Main_Loop_Loop();
 		}
+		fprintf(stderr, "[trace] Exited main loop (ExitCode=%d)\n", ExitCode);
 
 		// IML: Allow a short period to process any outstanding sound effects before shutdown.
 		time = TIMEGETTIME();
@@ -178,6 +184,7 @@ int Game_Main_Loop(void)
 		}
 
 		Game_Shutdown();
+		fprintf(stderr, "[trace] Game_Shutdown() complete\n");
 	}
 
 	return ExitCode;

@@ -1,4 +1,5 @@
 #include "init.h"
+#include <stdio.h>
 #include "debug.h"
 #include "wwmath.h"
 #include "ww3d.h"
@@ -655,6 +656,7 @@ Debug_Say(( "End length %d (count %d) at %d\n", length, count, timeGetTime()-sta
 */
 bool Game_Init(void)
 {
+	fprintf(stderr, "[trace] Game_Init() start\n");
 	WWMEMLOG(MEM_GAMEINIT);
 
 	// Set registry key to 1 for the duration of the init. This way we know if the program crashed while the init.
@@ -671,11 +673,13 @@ bool Game_Init(void)
 	//
 	//	Ensure our directory structure exists
 	//
+	fprintf(stderr, "[trace] Construct_Directory_Structure...\n");
 	Construct_Directory_Structure ();
 
 	//
 	//	Initialize our debugging framework
 	//
+	fprintf(stderr, "[trace] DebugManager::Init...\n");
 	DebugManager::Init();
   	DebugManager::Load_Registry_Settings( APPLICATION_SUB_KEY_NAME_DEBUG );
 	WWDebug_Install_Assert_Handler(Commando_Assert_Handler);
@@ -685,6 +689,7 @@ bool Game_Init(void)
 
 	Get_Version_Number(NULL, NULL);
 
+	fprintf(stderr, "[trace] Setting up file factories...\n");
 	// setup Writing Factory
 	RenegadeWritingFileFactory.Set_Sub_Directory( DATA_SUBDIRECTORY );
 	_TheWritingFileFactory = &RenegadeWritingFileFactory;
@@ -756,6 +761,7 @@ bool Game_Init(void)
 	//
 	// Create an instance of the sound library
 	//
+	fprintf(stderr, "[trace] WWAudioClass init...\n");
 	new WWAudioClass(ConsoleBox.Is_Exclusive());
 	WWAudioClass::Get_Instance()->Initialize( APPLICATION_SUB_KEY_NAME_SOUND );
 	WWAudioClass::Get_Instance()->Set_File_Factory( &AudioFileFactory );
@@ -788,12 +794,16 @@ bool Game_Init(void)
 	PathMgrClass::Initialize ();
 
 	// Initialize WW3D
-	switch ( WW3D::Init(MainWindow, NULL, ConsoleBox.Is_Exclusive() ? true : false)) {
+	fprintf(stderr, "[trace] WW3D::Init(MainWindow=%p, exclusive=%d)...\n", (void*)MainWindow, ConsoleBox.Is_Exclusive());
+	int ww3d_init_result = WW3D::Init(MainWindow, NULL, ConsoleBox.Is_Exclusive() ? true : false);
+	fprintf(stderr, "[trace] WW3D::Init returned %d\n", ww3d_init_result);
+	switch (ww3d_init_result) {
 	case WW3D_ERROR_OK:	// Success!
 		break;
 	case WW3D_ERROR_DIRECTX8_INITIALIZATION_FAILED:
 	default:
 		WWDEBUG_SAY(("WW3D::Init Failed!\r\n"));
+		fprintf(stderr, "[trace] WW3D::Init FAILED (code=%d) - returning false\n", ww3d_init_result);
 		::MessageBox(NULL,
 			"DirectX 8.0 or later is required to play C&C:Renegade.",
 			"Renegade Graphics Initialization Error.",
@@ -807,15 +817,21 @@ bool Game_Init(void)
 		scene->Set_Max_Simultaneous_Shadows(0);
 		DazzleRenderObjClass::Enable_Dazzle_Rendering(false);
 	} else {
+		fprintf(stderr, "[trace] WW3D::Registry_Load_Render_Device...\n");
 		if ( WW3D::Registry_Load_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER, true ) != WW3D_ERROR_OK ) {
 			WWDEBUG_SAY(("WW3D::Registry_Load_Render_Device Failed!\r\n"));
+			fprintf(stderr, "[trace] WW3D::Registry_Load_Render_Device FAILED - returning false\n");
 			return false;
 		}
+		fprintf(stderr, "[trace] WW3D::Registry_Load_Render_Device OK\n");
 
+		fprintf(stderr, "[trace] WW3D::Registry_Save_Render_Device...\n");
 		if ( WW3D::Registry_Save_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER ) != WW3D_ERROR_OK ) {
 			WWDEBUG_SAY(("WW3D::Registry_Save_Render_Device Failed!\r\n"));
+			fprintf(stderr, "[trace] WW3D::Registry_Save_Render_Device FAILED - returning false\n");
 			return false;
 		}
+		fprintf(stderr, "[trace] WW3D::Registry_Save_Render_Device OK\n");
 		WW3D::Enable_Static_Sort_Lists (true);
 	}
 	if (AutoRestart.Get_Restart_Flag() || ServerSettingsClass::Is_Command_Line_Mode() || ConsoleBox.Is_Exclusive()) {
@@ -845,6 +861,7 @@ bool Game_Init(void)
 		DiagLogClass::Init();
 	}
 
+	fprintf(stderr, "[trace] WWPhys::Init / WWSaveLoad::Init...\n");
 	WWPhys::Init();
 	WWSaveLoad::Init();
 
@@ -869,6 +886,7 @@ bool Game_Init(void)
 	//
 	bool dinput_avail = (ConsoleBox.Is_Exclusive()) ? false : true;
 
+	fprintf(stderr, "[trace] Input::Init(dinput_avail=%d)...\n", dinput_avail);
 	Input::Init(dinput_avail);
 	Input::Load_Registry( APPLICATION_SUB_KEY_NAME_CONTROLS );
 	InputConfigMgrClass::Initialize();
@@ -914,6 +932,7 @@ bool Game_Init(void)
 	//		- RenegadeDialogMgrClass
 	//
 	//
+	fprintf(stderr, "[trace] CombatManager::Scene_Init...\n");
 	CombatManager::Scene_Init();
 	if (!ConsoleBox.Is_Exclusive()) {
 		SystemSettings::Init();
@@ -929,6 +948,7 @@ bool Game_Init(void)
 	cGameData::Onetime_Init();
 	cBandwidthGraph::Onetime_Init();
 
+   fprintf(stderr, "[trace] cNetUtil::Wsa_Init...\n");
    cNetUtil::Wsa_Init();
 
 	CombatManager::Init(ConsoleBox.Is_Exclusive() ? false : true);
@@ -1011,7 +1031,9 @@ bool Game_Init(void)
 	// Parse the server settings files if they will be used soon to make sure there are no errors.
 	//
 	if (ServerSettingsClass::Is_Command_Line_Mode()) {
+		fprintf(stderr, "[trace] ServerSettingsClass::Parse...\n");
 		if (!ServerSettingsClass::Parse(false)) {
+			fprintf(stderr, "[trace] ServerSettingsClass::Parse FAILED - returning false\n");
 			AutoRestart.Set_Restart_Flag(false);
 			Game_Shutdown();
 			return (false);
@@ -1046,6 +1068,7 @@ bool Game_Init(void)
 	//
 	GameSpyQnR.TrackUsage();
 
+	fprintf(stderr, "[trace] Game_Init() complete - returning true\n");
 	return true;
 }
 

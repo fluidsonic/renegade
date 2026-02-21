@@ -43,6 +43,7 @@
 
 
 #include "winmain.h"
+#include <stdio.h>
 #define _WIN32_WINDOWS 0x0401
 #include "win.h"
 #include "resource.h"
@@ -426,6 +427,7 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
 		/*
 		** Set the working directory.
 		*/
+		fprintf(stderr, "[trace] Set_Working_Directory...\n");
 		Set_Working_Directory(hInstance);
 
 		//
@@ -433,6 +435,7 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
 		//
 		char tmp_buffer[256];
 		char* tmp_ptr;
+		fprintf(stderr, "[trace] SearchPath('data', 'always.dat')...\n");
 		if (!SearchPath(
 			"data",
 			"always.dat",
@@ -440,21 +443,27 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
 			sizeof(tmp_buffer),
 			tmp_buffer,
 			&tmp_ptr)) {
+			fprintf(stderr, "[trace] SearchPath FAILED - invalid working folder\n");
 			MessageBox(NULL,"Set working folder and try again...","Invalid working folder",MB_OK);
 			return 0;
 		}
+		fprintf(stderr, "[trace] SearchPath OK: %s\n", tmp_buffer);
 
 		/*
 		** Only do these checks if this isn't an auto-restart. If we are restarting then we must have run once OK already. Right?
 		*/
 		if (AutoRestart.Get_Restart_Flag() == false && !ConsoleBox.Is_Exclusive()) {
-			if (!Video_Card_Driver_Check()) return 0;
-			if (!Graphics_Settings_Trouble_Shooting()) return 0;
+			fprintf(stderr, "[trace] Video_Card_Driver_Check...\n");
+			if (!Video_Card_Driver_Check()) { fprintf(stderr, "[trace] Video_Card_Driver_Check failed\n"); return 0; }
+			fprintf(stderr, "[trace] Graphics_Settings_Trouble_Shooting...\n");
+			if (!Graphics_Settings_Trouble_Shooting()) { fprintf(stderr, "[trace] Graphics_Settings_Trouble_Shooting failed\n"); return 0; }
 		}
 
 		//Debug_Say(("Started logging at time %s", cMiscUtil::Get_Text_Time()));
 
-		if (!Create_Main_Window(hInstance, nCmdShow)) return 0;
+		fprintf(stderr, "[trace] Create_Main_Window...\n");
+		if (!Create_Main_Window(hInstance, nCmdShow)) { fprintf(stderr, "[trace] Create_Main_Window FAILED\n"); return 0; }
+		fprintf(stderr, "[trace] Create_Main_Window OK\n");
 
 		Register_Thread_ID(GetCurrentThreadId(), "Main Thread", true);
 	}
@@ -482,7 +491,9 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
 		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER) &Top_Level_Exception_Filter);
 #endif
 			WWDEBUG_SAY(("Game_Main_Loop\n"));
+			fprintf(stderr, "[trace] Entering Game_Main_Loop()...\n");
 			exitCode = Game_Main_Loop();
+			fprintf(stderr, "[trace] Game_Main_Loop() returned %d\n", exitCode);
 
 #ifdef _MSC_VER
 		} __except(Exception_Handler(GetExceptionCode(), GetExceptionInformation())) {};
@@ -796,6 +807,7 @@ void Prog_End(void)
  *=============================================================================================*/
 void Set_Working_Directory(HINSTANCE instance)
 {
+#ifndef __APPLE__
 	char path_to_exe[256];
 	char drive[_MAX_DRIVE];
 	char dir[_MAX_DIR];
@@ -805,4 +817,6 @@ void Set_Working_Directory(HINSTANCE instance)
 	_splitpath(path_to_exe, drive, dir, NULL, NULL);
 	_makepath(path, drive, dir, NULL, NULL);
 	SetCurrentDirectory(path);
+#endif
+	// On macOS: keep CWD as-is — user runs the binary from the directory containing data/
 }

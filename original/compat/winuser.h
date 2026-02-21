@@ -245,10 +245,10 @@ inline BOOL UnregisterClass(LPCSTR name, HINSTANCE inst) { return TRUE; }
 
 inline HWND CreateWindowEx(DWORD exStyle, LPCSTR cls, LPCSTR title, DWORD style,
                            int x, int y, int w, int h, HWND parent, HMENU menu,
-                           HINSTANCE inst, LPVOID param) { return NULL; }
+                           HINSTANCE inst, LPVOID param) { return (HWND)1; }
 inline HWND CreateWindow(LPCSTR cls, LPCSTR title, DWORD style,
                          int x, int y, int w, int h, HWND parent, HMENU menu,
-                         HINSTANCE inst, LPVOID param) { return NULL; }
+                         HINSTANCE inst, LPVOID param) { return (HWND)1; }
 inline int  GetSystemMetrics(int nIndex) { return nIndex == SM_CXSCREEN ? 1920 : nIndex == SM_CYSCREEN ? 1080 : 0; }
 inline BOOL ShowWindow(HWND wnd, int cmd) { return FALSE; }
 inline BOOL UpdateWindow(HWND wnd) { return FALSE; }

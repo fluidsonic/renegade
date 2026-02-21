@@ -74,13 +74,7 @@ public:
 
 
 private:
-
-	static void Delete_Registry_Values(HKEY key);
-	static void Save_Registry_Tree(char *path, INIClass *ini);
-	static void Save_Registry_Values(HKEY key, char *path, INIClass *ini);
-
-
-	int	Key;
+	char	SubKey[512];
 	bool	IsValid;
 
 	//
