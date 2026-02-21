@@ -10,6 +10,8 @@ import ccr.net.protocol.WrapperCrc
 import ccr.net.rcon.RconServer
 import ccr.net.transport.UdpTransport
 import ccr.server.defs.readDefinitions
+import ccr.server.level.LevelLoader
+import ccr.server.level.LoadedLevel
 import ccr.server.mix.MixReader
 import ccr.server.mix.WorldExtents
 import ccr.server.mix.extractLevelExtents
@@ -88,14 +90,17 @@ class GameServer(private val config: ServerConfig) {
     // World extents loaded from the map's .lsd file at startup (null if not available).
     private var worldExtents: WorldExtents? = null
 
+    // Loaded level data (definitions, static/dynamic data, spawners).
+    private var loadedLevel: LoadedLevel? = null
+
     // Soldier definition IDs loaded from always.dat at startup; fall back to config values.
     private var nodSoldierDefId: Int = config.nodSoldierDefId
     private var gdiSoldierDefId: Int = config.gdiSoldierDefId
     private var pistolWeaponDefId: Int = 0
 
     suspend fun run() = coroutineScope {
-        loadDefinitions()  // Load definition IDs from always.dat before accepting clients
-        initEncoders()     // Load world extents and configure all BITPACK_* encoders before accepting clients
+        loadLevel()        // Load level data (definitions, world extents, spawners) from MIX files
+        initEncoders()     // Configure all BITPACK_* encoders from loaded world extents
 
         // Register team singletons with static IDs. These persist for the lifetime of the server.
         NetworkObjectManager.registerObject(teamNod, NET_ID_NOD_TEAM)
@@ -631,6 +636,70 @@ class GameServer(private val config: ServerConfig) {
 
     // ---- Encoder setup ----
 
+    // Loads level data from MIX files using LevelLoader. Populates loadedLevel, and extracts
+    // soldier/weapon definition IDs for spawning. Falls back to the legacy loadDefinitions() path
+    // if the map MIX is not available.
+    private suspend fun loadLevel() {
+        val dataDir = if (config.dataPath.isNotEmpty()) File(config.dataPath) else File(".")
+
+        // Find always MIX (Renegade loads Always2.dat, Always.dbs, Always.dat in init.cpp)
+        val alwaysMix = listOf("always.dbs", "always2.dat", "always.dat").firstNotNullOfOrNull { fileName ->
+            val file = File(dataDir, fileName)
+            if (!file.exists()) return@firstNotNullOfOrNull null
+            try {
+                MixReader(file.readBytes()).also {
+                    println("[SERVER] opened $fileName (${it.fileCount()} files in archive)")
+                }
+            } catch (e: Exception) {
+                println("[SERVER] $fileName: ${e.message}")
+                null
+            }
+        }
+
+        if (config.mapName.isEmpty()) {
+            println("[SERVER] no MapName configured, skipping level load")
+            loadDefinitions()  // fall back to legacy path for definitions only
+            return
+        }
+
+        val baseName = if (config.mapName.endsWith(".mix", ignoreCase = true))
+            config.mapName.dropLast(4) else config.mapName
+        val mixFile = File(dataDir, "$baseName.mix")
+        if (!mixFile.exists()) {
+            println("[SERVER] map MIX not found: ${mixFile.absolutePath}, falling back to legacy loading")
+            loadDefinitions()
+            return
+        }
+
+        val mapMix = MixReader(mixFile.readBytes())
+        println("[SERVER] opened $baseName.mix (${mapMix.fileCount()} files in archive)")
+
+        val level = LevelLoader(alwaysMix, mapMix, baseName).load()
+        loadedLevel = level
+
+        // Extract soldier/weapon definition IDs from the loaded registry
+        val defs = level.definitions
+        println("[SERVER] loaded ${defs.size} definitions via LevelLoader")
+
+        defs.findByName("CnC_Nod_Minigunner_0")?.let {
+            nodSoldierDefId = it.id.toInt()
+            println("[SERVER] NOD soldier: ${it.name} defId=0x${nodSoldierDefId.toUInt().toString(16)}")
+        }
+        defs.findByName("CnC_GDI_MiniGunner_0")?.let {
+            gdiSoldierDefId = it.id.toInt()
+            println("[SERVER] GDI soldier: ${it.name} defId=0x${gdiSoldierDefId.toUInt().toString(16)}")
+        }
+        defs.findByName("Weapon_Pistol_Player")?.let {
+            pistolWeaponDefId = it.id.toInt()
+            println("[SERVER] Using pistol: ${it.name} defId=0x${pistolWeaponDefId.toUInt().toString(16)}")
+        }
+
+        val spawnerCount = level.dynamicData.spawners.size
+        val objectCount = level.dynamicData.gameObjects.size
+        println("[SERVER] level '$baseName': ${spawnerCount} spawners, ${objectCount} game objects, " +
+            "extents=${level.worldExtents ?: "none"}")
+    }
+
     // Configures all BITPACK_* encoders required by soldier/game-object packets.
     // Position encoders use world extents from the map's .lsd file; others use fixed ranges.
     // C++: combatgmode.cpp:1063-1076, control.cpp:454-466, humanstate.cpp:1388-1389, damage.cpp:1321-1325
@@ -693,7 +762,7 @@ class GameServer(private val config: ServerConfig) {
     }
 
     private fun initEncoders() {
-        val extents = loadWorldExtents()
+        val extents = loadedLevel?.worldExtents ?: loadWorldExtents()
         worldExtents = extents
 
         if (extents != null) {
@@ -774,7 +843,14 @@ class GameServer(private val config: ServerConfig) {
             return
         }
 
-        // Hardcoded spawn position for Phase 2A. Proper spawn-point lookup is Phase 2B.
+        // Pick a spawn position from loaded spawners, falling back to a default if none available.
+        val spawner = loadedLevel?.dynamicData?.spawners
+            ?.filter { it.enabled && it.definitionId != 0 }
+            ?.randomOrNull()
+        val spawnPos = spawner?.transform?.position
+        val position = if (spawnPos != null) Vector3(spawnPos.x, spawnPos.y, spawnPos.z)
+            else Vector3(0f, 0f, 5f)
+
         // Model names match the C++ CnC_Nod_Minigunner_0 / CnC_GDI_MiniGunner_0 presets.
         // animName must be non-empty: C++ always sends a real animation; an empty string
         // causes the client to fail loading the soldier's animation state and never ACK.
@@ -788,7 +864,7 @@ class GameServer(private val config: ServerConfig) {
             team         = team,
             modelName    = modelName,
             animName     = "S_A_HUMAN.H_A_AINM",
-            position     = Vector3(0f, 0f, 5f),
+            position     = position,
             weapons      = weapons,
         )
         val netId = NetworkObjectManager.getNewDynamicId()

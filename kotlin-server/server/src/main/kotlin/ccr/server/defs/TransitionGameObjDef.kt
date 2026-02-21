@@ -114,6 +114,8 @@ class TransitionGameObjDef(
 ) : DefinitionClass(name, id, classId) {
 
     companion object {
+        const val CLASS_ID: UInt = 0x300Fu // CLASSID_GAME_OBJECT_DEF_TRANSITION
+
         // Chunk IDs from transitiongameobj.cpp
         private const val CHUNKID_DEF_PARENT = 1111991201u
         private const val CHUNKID_DEF_TRANSITION = 1111991202u
