@@ -11,7 +11,6 @@
 #include "player.h"
 #include "listctrl.h"
 #include "messagewindow.h"
-#include "wolgmode.h"
 #include "translatedb.h"
 #include "string_ids.h"
 
@@ -41,7 +40,6 @@ MPChatChildDialogClass::MPChatChildDialogClass (void)	:
 void
 MPChatChildDialogClass::On_Init_Dialog (void)
 {
-	WWASSERT (The_Game () != NULL);
 
 	//
 	//	Allow the base class to process the message
@@ -143,141 +141,8 @@ void MPChatChildDialogClass::Send_Message(WideStringClass& message, TextMessageE
 ////////////////////////////////////////////////////////////////
 bool MPChatChildDialogClass::Process_Commands(const WCHAR* message)
 {
-	// Does this look like a command?
-	if (message && message[0] == L'/') {
-		// Separate the parameters into individual strings
-		WideStringClass command(255, true);
-		const WCHAR* curr_pos = Get_Parameter_From_String(&message[1], command);
-
-		if (command.Get_Length() > 0 && curr_pos[0] != 0) {
-
-			// Kick a player from the game
-			if (command.Compare_No_Case(L"kick") == 0) {
-				GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-				if (gameMode && gameMode->Is_Active()) {
-					// Get the name parameter from the string
-					WideStringClass user_name(64, true);
-					curr_pos = Get_Parameter_From_String(curr_pos, user_name);
-
-					if (user_name.Get_Length() > 0) {
-						WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-						wolGame->Kick_Player(user_name);
-					}
-				}
-			
-				return true;
-			}
-
-			// Page users outside of this game.
-			if (command.Compare_No_Case(L"page") == 0) {
-				GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-				if (gameMode && gameMode->Is_Active()) {
-					// Get the name parameter from the string
-					WideStringClass user_name(64, true);
-					curr_pos = Get_Parameter_From_String(curr_pos, user_name);
-
-					if (user_name.Get_Length() > 0) {
-						WideStringClass message(0, true);
-						message = curr_pos;
-						message.Trim();
-
-						// If the user is in this game then just send them a private message.
-						cPlayer* recipient = cPlayerManager::Find_Player(user_name);
-
-						if (recipient) {
-							int recipient_id = recipient->Get_Id();
-							Send_Message(message, TEXT_MESSAGE_PRIVATE, recipient_id);
-						} else {
-							// Page external users.
-							WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-							wolGame->Page_WOL_User(user_name, message);
-						}
-					}
-				}
-			
-				return true;
-			}
-
-			// Reply to the last page
-			if (command.Compare_No_Case(L"r") == 0) {
-				GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-				if (gameMode && gameMode->Is_Active()) {
-					WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-
-					WideStringClass message(0, true);
-					message = curr_pos;
-					message.Trim();
-
-					wolGame->Reply_Last_Page(message);
-				}
-			
-				return true;
-			}
-
-			// Locate a WOL user
-			if (command.Compare_No_Case(L"locate") == 0) {
-				GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-				if (gameMode && gameMode->Is_Active()) {
-					// Get the name parameter from the string
-					WideStringClass user_name(64, true);
-					curr_pos = Get_Parameter_From_String(curr_pos, user_name);
-
-					if (user_name.Get_Length() > 0) {
-						WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-						wolGame->Locate_WOL_User(user_name);
-					}
-				}
-			
-				return true;
-			}
-
-			// Invite another WOL user to this game
-			if (command.Compare_No_Case(L"invite") == 0) {
-				GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-				if (gameMode && gameMode->Is_Active()) {
-					// Get the name parameter from the string
-					WideStringClass user_name(64, true);
-					curr_pos = Get_Parameter_From_String(curr_pos, user_name);
-
-					if (user_name.Get_Length() > 0) {
-						WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-
-						WideStringClass message(0, true);
-						message = curr_pos;
-						message.Trim();
-
-						wolGame->Invite_WOL_User(user_name, message);
-					}
-				}
-			
-				return true;
-			}
-
-			// Join another WOL user at their location
-			if (command.Compare_No_Case(L"join") == 0) {
-				GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-				if (gameMode && gameMode->Is_Active()) {
-					// Get the name parameter from the string
-					WideStringClass user_name(64, true);
-					curr_pos = Get_Parameter_From_String(curr_pos, user_name);
-
-					if (user_name.Get_Length() > 0) {
-						WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-						wolGame->Join_WOL_User(user_name);
-					}
-				}
-			
-				return true;
-			}
-		}
-	}
-
+	// WOL removed - in-game chat commands (kick, page, r, locate, invite, join) were WOL-only and have been removed.
+	(void)message;
 	return false;
 }
 
@@ -447,7 +312,6 @@ MPChatChildDialogClass::Complete_Player_Name (const WCHAR *typed_name, WideStrin
 			player_node = player_node->Next ())
 	{
 		cPlayer *player = player_node->Data ();
-		WWASSERT (player != NULL);
 
 		if (player->Get_Is_Active().Is_False()) {
 			continue;
@@ -723,7 +587,6 @@ MPIngameChatPopupClass::~MPIngameChatPopupClass (void)
 void
 MPIngameChatPopupClass::On_Init_Dialog (void)
 {
-	WWASSERT (The_Game () != NULL);
 
 	//
 	//	Align the window with the bottom of the screen

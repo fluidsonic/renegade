@@ -60,7 +60,6 @@ const WCHAR* cGameDataCnc::Get_Static_Game_Name(void)
 //-----------------------------------------------------------------------------
 void cGameDataCnc::Reset_Game(bool is_reloaded)
 {
-   WWDEBUG_SAY(("cGameDataCnc::Reset_Game\n"));
 
 	cGameData::Reset_Game(is_reloaded);
 
@@ -85,7 +84,6 @@ void cGameDataCnc::Reset_Game(bool is_reloaded)
 void
 cGameDataCnc::On_Game_Begin (void)
 {
-   WWDEBUG_SAY(("cGameDataCnc::On_Game_Begin\n"));
 
 	cGameData::On_Game_Begin();
 
@@ -102,7 +100,6 @@ cGameDataCnc::On_Game_Begin (void)
 void
 cGameDataCnc::On_Game_End (void)
 {
-   WWDEBUG_SAY(("cGameDataCnc::On_Game_End\n"));
 
 	//
 	//	Close the bases
@@ -186,13 +183,10 @@ void cGameDataCnc::Import_Tier_2_Data(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cGameDataCnc::Base_Destruction_Score_Tweaking(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cTeam * p_nod = cTeamManager::Find_Team(PLAYERTYPE_NOD);
-	WWASSERT(p_nod != NULL);
 
 	cTeam * p_gdi = cTeamManager::Find_Team(PLAYERTYPE_GDI);
-	WWASSERT(p_gdi != NULL);
 
 	float nod_score = p_nod->Get_Score();
 	float gdi_score = p_gdi->Get_Score();
@@ -215,7 +209,6 @@ void cGameDataCnc::Base_Destruction_Score_Tweaking(void)
 
 	} else {
 
-		WWASSERT(BaseNOD.Is_Base_Destroyed());
 
 		gdi_score += BASE_DESTRUCTION_POINTS_REWARD;
 		if (gdi_score <= nod_score) {
@@ -229,7 +222,6 @@ void cGameDataCnc::Base_Destruction_Score_Tweaking(void)
 //-----------------------------------------------------------------------------
 bool cGameDataCnc::Is_Game_Over(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
  	bool is_game_over = cGameData::Is_Game_Over();
 
@@ -265,7 +257,6 @@ void cGameDataCnc::Load_From_Server_Config(void)
 	cGameData::Load_From_Server_Config(Get_Ini_Filename());
 
    INIClass * p_ini = Get_INI(Get_Ini_Filename());
-   WWASSERT(p_ini != NULL);
 
    bool				b;
    int				i;
@@ -308,7 +299,6 @@ void cGameDataCnc::Save_To_Server_Config(void)
 	cGameData::Save_To_Server_Config(Get_Ini_Filename());
 
    INIClass * p_ini = Get_INI(Get_Ini_Filename());
-   WWASSERT(p_ini != NULL);
 
 
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsFriendlyFirePermitted",	IsFriendlyFirePermitted.Get());

@@ -2,15 +2,11 @@
 // Provides definitions for globals that were in deleted or excluded source files
 
 #include "always.h"
-#include "natter.h"          // compat/natter.h
 #include "gamespybanlist.h"
 #include "GameSpy_QnR.h"
 #include "stackdump.h"       // compat/stackdump.h
 #include "verchk.h"          // compat/verchk.h
 #include "BandTest/BandTest.h"
-
-// WOL NAT traversal stub global (natter.cpp excluded from build - uses dead WWOnline service)
-WOLNATInterfaceClass WOLNATInterface;
 
 // GameSpy ban list global (GameSpyBanList.cpp deleted - GameSpy service removed)
 GameSpyBanListClass GameSpyBanList;

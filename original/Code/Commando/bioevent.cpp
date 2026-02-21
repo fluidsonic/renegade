@@ -31,7 +31,6 @@ cBioEvent::cBioEvent(void) :
 void
 cBioEvent::Init(int teamChoice, unsigned long clanID)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId		= cNetwork::Get_My_Id();
 	Nickname		= cNetInterface::Get_Nickname();
@@ -53,7 +52,6 @@ cBioEvent::Init(int teamChoice, unsigned long clanID)
 void
 cBioEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
    //
    // This is where we validate a player. If we don't want him to play,
@@ -75,7 +73,6 @@ cBioEvent::Act(void)
 			player_node = player_node->Next()) {
 
 			cPlayer * p_player = player_node->Data();
-			WWASSERT(p_player != NULL);
 
 			cNetwork::Send_Object_Update(p_player, SenderId);
 		}
@@ -94,13 +91,11 @@ cBioEvent::Act(void)
 		}
 
 		cPlayer * p_player = cGod::Create_Player(SenderId, Nickname, TeamChoice, ClanID);
-		WWASSERT(p_player != NULL);
 
 		if (!IS_SOLOPLAY) {
 			//
 			// Record his IP address for diagnostic purposes
 			//
-			WWASSERT(cNetwork::Get_Server_Rhost(SenderId) != NULL);
 			SOCKADDR_IN & address = cNetwork::Get_Server_Rhost(SenderId)->Get_Address();
 			p_player->Set_Ip_Address(address.sin_addr.s_addr);
 
@@ -114,7 +109,6 @@ cBioEvent::Act(void)
 			//
 			// Update him about any dynamic game data parameters.
 			//
-			WWDEBUG_SAY(("BioEvent acting\n"));
 			cGameDataUpdateEvent * p_event = new cGameDataUpdateEvent();
 			p_event->Init(p_player->Get_Id());
 
@@ -161,9 +155,7 @@ cBioEvent::Export_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 	packet.Add_Wide_Terminated_String(Nickname);
@@ -171,7 +163,6 @@ cBioEvent::Export_Creation(BitStreamClass & packet)
 	packet.Add(ClanID);
 	packet.Add_Terminated_String(MapName, false);
 
-	WWDEBUG_SAY(("cBioEvent sent\n"));
 
 	Set_Delete_Pending();
 }
@@ -182,7 +173,6 @@ cBioEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 	packet.Get_Wide_Terminated_String(Nickname.Get_Buffer(256), 256, true);
@@ -191,9 +181,7 @@ cBioEvent::Import_Creation(BitStreamClass & packet)
 
 	packet.Get_Terminated_String(MapName, sizeof(MapName), false);
 
-	WWASSERT(SenderId > 0);
 
-	WWDEBUG_SAY(("cBioEvent recd\n"));
 
 	Act();
 }

@@ -6,7 +6,6 @@
 #include	<stddef.h>
 
 #include "bandwidthcheck.h"
-#include "autostart.h"
 #include "registry.h"
 #include "_globals.h"
 #include "useroptions.h"
@@ -15,8 +14,6 @@
 #include "consolemode.h"
 #include "specialbuilds.h"
 #include "gamespyadmin.h"
-
-#include <WWOnline/WOLSession.h>
 
 /*
 ** Class statics.
@@ -99,24 +96,6 @@ WCHAR *BandwidthCheckerClass::BandwidthNames [NUM_BANDS+1] = {
 
 
 
-/***********************************************************************************************
- * BandwidthCheckerClass::Detect -- Create the bandwidth detect wait object                    *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Nothing                                                                           *
- *                                                                                             *
- * OUTPUT:   Nothing                                                                           *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   11/21/2001 2:53PM ST : Created                                                            *
- *=============================================================================================*/
-RefPtr<WaitCondition> BandwidthCheckerClass::Detect(void)
-{
-	return(BandwidthDetectWait::Create());
-}
 
 
 
@@ -152,7 +131,6 @@ void BandwidthCheckerClass::Check_Now(HANDLE event)
 	if (Thread.Is_Running()) {
 		Thread.Stop(2000);
 	}
-	WWASSERT(!Thread.Is_Running());
 	Thread.Execute();
 }
 
@@ -182,7 +160,6 @@ const char *BandwidthCheckerClass::Get_Ping_Server_Name(void)
 	** See if there are ping servers in the registry from a previous run.
 	*/
 	RegistryClass reg(APPLICATION_SUB_KEY_NAME_SERVER_LIST);
-	WWASSERT(list.Count() == 0);
 	reg.Get_Value_List(list);
 	if (list.Count() > 0) {
 
@@ -238,8 +215,6 @@ const char *BandwidthCheckerClass::Get_Ping_Server_Name(void)
 			}
 
 			if (closest_index != -1) {
-				WWASSERT(closest_index >= 0);
-				WWASSERT(closest_index < list.Count());
 				strncpy(server_name_copy, list[closest_index].Peek_Buffer(), sizeof(server_name_copy));
 				server_name_copy[sizeof(server_name_copy) - 1] = 0;
 				server_name = (const char*) server_name_copy;
@@ -275,21 +250,6 @@ void BandwidthCheckerClass::Check(void)
 	struct sockaddr_in address;
 	int failure_code;
 
-	/*
-	** If we are auto starting then just use the previous settings from the registry.
-	*/
-	if (AutoRestart.Is_Active()) {
-		RegistryClass reg(APPLICATION_SUB_KEY_NAME_BANDTEST);
-		int up = reg.Get_Int("Up", 0);
-		int down = reg.Get_Int("Down", up);
-		UpstreamBandwidth = up;
-		DownstreamBandwidth = down;
-		if (up) {
-			GotBandwidth = true;
-			SetEvent(EventNotify);
-			return;
-		}
-	}
 
 	ConsoleBox.Print("Detecting bandwidth...\n");
 
@@ -300,12 +260,10 @@ void BandwidthCheckerClass::Check(void)
 	} else {
 		host_name = Get_Ping_Server_Name();
 	}
-	WWDEBUG_SAY(("BandwidthCheckerClass::Check -- Trying server %s\n", host_name));
 
 	host = gethostbyname(host_name);
 	if (host == NULL) {
 		host_name = DefaultServerName;
-		WWDEBUG_SAY(("BandwidthCheckerClass::Check -- Trying server %s\n", host_name));
 		host = gethostbyname(host_name);
 	}
 
@@ -313,7 +271,6 @@ void BandwidthCheckerClass::Check(void)
 		/*
 		** No DNS or no connection at all. Either way we are in trouble.
 		*/
-		WWDEBUG_SAY(("BandwidthCheckerClass - Unable to resolve host name\n"));
 		ConsoleBox.Print("Unable to resolve host name for bandwidth check\n");
 #ifdef FREEDEDICATEDSERVER
 		UpstreamBandwidth = 1000000;
@@ -379,7 +336,6 @@ void BandwidthCheckerClass::Check(void)
 		** If it's 0, we failed.
 		*/
 		if (UpstreamBandwidth == 0) {
-			WWDEBUG_SAY(("Failed to get bandwidth - error code %s\n", ErrorList[failure_code]));
 			/*
 			** Default to 57600.
 			*/
@@ -406,19 +362,12 @@ void BandwidthCheckerClass::Check(void)
 		** Fix up the upstream bandwidth into one of our connection type bands.
 		*/
 		if (UpstreamBandwidth > 0x7fffffff) {
-			WWDEBUG_SAY(("Upstream bandwidth is huge :-)\n"));
-			WWDEBUG_SAY(("Reported upstream connection bandwidth is > 4M bits per second\n"));
 			UpstreamBandwidth = 4096000;
 			ReportedUpstreamBandwidth = 4096000;
 			UpstreamBandwidthString = BandwidthNames[NUM_BANDS];
 		} else {
 			if (UpstreamBandwidth > 100000) {
-#ifdef WWDEBUG
-				float floater = (float)UpstreamBandwidth / 1024;
-#endif //WWDEBUG
-				WWDEBUG_SAY(("Upstream bandwidth to external router is %.1f kilobits per second\n", floater));
 			} else {
-				WWDEBUG_SAY(("Upstream bandwidth to external router is %d bits per second\n", UpstreamBandwidth));
 			}
 
 			bool got_bw_str = false;
@@ -432,7 +381,6 @@ void BandwidthCheckerClass::Check(void)
 				}
 			}
 			if (!got_bw_str) {
-				WWDEBUG_SAY(("\nReported upstream connection bandwidth is > 4M bits per second\n"));
 				ReportedUpstreamBandwidth = 4096000;
 				UpstreamBandwidthString = BandwidthNames[NUM_BANDS];
 			}
@@ -446,19 +394,12 @@ void BandwidthCheckerClass::Check(void)
 		** Fix up the downstream bandwidth into one of our connection type bands.
 		*/
 		if (DownstreamBandwidth > 0x7fffffff) {
-			WWDEBUG_SAY(("Downstream bandwidth is huge :-)\n"));
-			WWDEBUG_SAY(("Reported downstream connection bandwidth is > 4M bits per second\n"));
 			DownstreamBandwidth = 4096000;
 			ReportedDownstreamBandwidth = 4096000;
 			DownstreamBandwidthString = BandwidthNames[NUM_BANDS];
 		} else {
 			if (DownstreamBandwidth > 100000) {
-#ifdef WWDEBUG
-				float floater = (float)DownstreamBandwidth / 1024;
-#endif //WWDEBUG
-				WWDEBUG_SAY(("Downstream bandwidth to external router is %.1f kilobits per second\n", floater));
 			} else {
-				WWDEBUG_SAY(("Downstream bandwidth to external router is %d bits per second\n", DownstreamBandwidth));
 			}
 
 			bool got_bw_str = false;
@@ -472,7 +413,6 @@ void BandwidthCheckerClass::Check(void)
 				}
 			}
 			if (!got_bw_str) {
-				WWDEBUG_SAY(("\nReported downstream connection bandwidth is > 4M bits per second\n"));
 				ReportedDownstreamBandwidth = 4096000;
 				DownstreamBandwidthString = BandwidthNames[NUM_BANDS];
 			}
@@ -483,7 +423,6 @@ void BandwidthCheckerClass::Check(void)
 		*/
 #ifdef _DEBUG
 		PackedBandwidthType packed = Get_Packed_Bandwidth();
-		WWDEBUG_SAY(("Packed bandwidth as string = %s\n", Get_Bandwidth_As_String(packed)));
 #endif //_DEBUG
 
 	}
@@ -508,8 +447,6 @@ void BandwidthCheckerClass::Check(void)
  *=============================================================================================*/
 void BandwidthCheckerClass::Force_Upstream_Bandwidth(unsigned int up)
 {
-	WWASSERT(up);
-	WWASSERT(cGameSpyAdmin::Is_Gamespy_Game());
 
 	UpstreamBandwidth = up;
 }
@@ -771,164 +708,3 @@ void BandwidthCheckerClass::Get_Compact_Log(StringClass &log_string)
 
 
 
-
-/***********************************************************************************************
- * BandwidthDetectWait::Create -- Create the wait object for bandwidth detection               *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Nothing                                                                           *
- *                                                                                             *
- * OUTPUT:   Ref Ptr to bandwidth wait                                                         *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   11/21/2001 3:00PM ST : Created                                                            *
- *=============================================================================================*/
-RefPtr<BandwidthDetectWait> BandwidthDetectWait::Create(void)
-{
-	return (new BandwidthDetectWait());
-}
-
-
-/***********************************************************************************************
- * BandwidthDetectWait::BandwidthDetectWait -- BandwidthDetectWait constructor                 *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Nothing                                                                           *
- *                                                                                             *
- * OUTPUT:   Nothing                                                                           *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   11/21/2001 3:22PM ST : Created                                                            *
- *=============================================================================================*/
-BandwidthDetectWait::BandwidthDetectWait(void) :
-	SingleWait(TRANSLATE (IDS_MENU_TESTING_BANDWIDTH), 60000),
-	mEvent(NULL),
-	mPingsRemaining(0xffffffff)
-{
-	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
-		WOLSession = WWOnline::Session::GetInstance(false);
-		assert(WOLSession.IsValid());
-	}
-
-}
-
-
-/***********************************************************************************************
- * BandwidthDetectWait::~BandwidthDetectWait -- BandwidthDetectWait destructor                 *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Nothing                                                                           *
- *                                                                                             *
- * OUTPUT:   Nothing                                                                           *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   11/21/2001 3:22PM ST : Created                                                            *
- *=============================================================================================*/
-BandwidthDetectWait::~BandwidthDetectWait()
-{
-	WWDEBUG_SAY(("BandwidthDetectWait: End - %S\n", mEndText));
-
-	if (WOLSession.IsValid()) WOLSession->EnablePinging(true);
-
-	if (mEvent) {
-		CloseHandle(mEvent);
-	}
-}
-
-
-/***********************************************************************************************
- * BandwidthDetectWait::WaitBeginning -- Called to init the wait                               *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Nothing                                                                           *
- *                                                                                             *
- * OUTPUT:   Nothing                                                                           *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   11/21/2001 3:22PM ST : Created                                                            *
- *=============================================================================================*/
-void BandwidthDetectWait::WaitBeginning(void)
-{
-	WWDEBUG_SAY(("BandwidthDetectWait: Beginning\n"));
-
-	mEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-
-	if (mEvent == NULL) {
-		WWDEBUG_SAY(("BandwidthDetectWait: Can't create event\n"));
-		EndWait(Error, TRANSLATE (IDS_MENU_FAILED_TO_CREATE_BW_EVENT));
-	} else {
-		if (WOLSession.IsValid()) WOLSession->EnablePinging(false);
-		mTimeout = 15000;
-	}
-}
-
-
-
-/***********************************************************************************************
- * BandwidthDetectWait::GetResult -- See if there is a result for the wait condition           *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Nothing                                                                           *
- *                                                                                             *
- * OUTPUT:   Result code                                                                       *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   11/21/2001 3:23PM ST : Created                                                            *
- *=============================================================================================*/
-WaitCondition::WaitResult BandwidthDetectWait::GetResult(void)
-{
-	if (mEndResult == Waiting) {
-		/*
-		** Wait for pings to finish first.
-		*/
-
-		unsigned int pingsWaiting = 0;
-		if (!cGameSpyAdmin::Is_Gamespy_Game()) {
-			pingsWaiting = WOLSession->GetPendingPingCount();
-		}
-
-
-		if (mPingsRemaining != pingsWaiting) {
-			mPingsRemaining = pingsWaiting;
-			if (mPingsRemaining == 0) {
-				mTimeout = 60000;
-				BandwidthCheckerClass::Check_Now(mEvent);
-			}
-		}
-
-		if (mPingsRemaining == 0) {
-			DWORD result = WaitForSingleObject(mEvent, 0);
-
-			if (result == WAIT_OBJECT_0) {
-				WWDEBUG_SAY(("BandwidthDetectWait: ConditionMet\n"));
-				EndWait(ConditionMet, TRANSLATE (IDS_MENU_BW_DETECTION_COMPLETE));
-			} else {
-				if (result == WAIT_FAILED)	{
-					WWDEBUG_SAY(("BandwidthDetectWait: WAIT_FAILED\n"));
-					EndWait(Error, TRANSLATE (IDS_MENU_BW_DETECTION_FAILED));
-				}
-			}
-		}
-	}
-
-	if (mEndResult != Waiting && WOLSession.IsValid()) {
-		WOLSession->EnablePinging(true);
-	}
-
-	return(mEndResult);
-}

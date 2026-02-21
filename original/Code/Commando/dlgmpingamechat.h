@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGMPINGAMECHAT_H__
 #define __DLGMPINGAMECHAT_H__

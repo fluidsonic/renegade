@@ -5,7 +5,6 @@
 #include "gamechannel.h"
 #include "gamechanlist.h"
 #include "gameinitmgr.h"
-#include "wolgmode.h"
 #include "dialogmgr.h"
 #include "cnetwork.h"
 #include "ww3d.h"
@@ -52,13 +51,11 @@ MPLanGameListMenuClass::MPLanGameListMenuClass (void)	:
 	UpdateTimer (0),
 	MenuDialogClass (IDD_MP_LAN_GAME_LIST)
 {
-	WWDEBUG_SAY(("MPLanGameListMenu instantiated\n"));
 }
 
 
 MPLanGameListMenuClass::~MPLanGameListMenuClass()
 {
-	WWDEBUG_SAY(("MPLanGameListMenu destroyed\n"));
 }
 
 ////////////////////////////////////////////////////////////////
@@ -197,7 +194,6 @@ MPLanGameListMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				PTheGameData = NULL;
 			}
 			PTheGameData = cGameData::Create_Game_Of_Type (cGameData::GAME_TYPE_CNC);
-			WWASSERT(PTheGameData != NULL);
 
 			// LAN games are NEVER quickmatch
 			The_Game()->Set_QuickMatch_Server(false);
@@ -246,7 +242,6 @@ MPLanGameListMenuClass::On_Frame_Update (void)
 
 	if (UpdateNickname) {
 		EditCtrlClass * nameEdit = (EditCtrlClass*)Get_Dlg_Item(IDC_NICKNAME_EDIT);
-		WWASSERT(nameEdit != NULL);
 		nameEdit->Set_Text(cNetInterface::Get_Nickname());
 		UpdateNickname = false;
 	}
@@ -309,7 +304,6 @@ MPLanGameListMenuClass::Update_Game_List (void)
 		//	Get a pointer to the channel for this game
 		//
 		cGameChannel *channel = objnode->Data ();
-		WWASSERT (channel != NULL);		
 
 		//
 		//	Insert the entry
@@ -470,7 +464,6 @@ MPLanGameListMenuClass::Join_Game (void)
 			//	Create a new game data object that matches the one on the server
 			//
 			PTheGameData = cGameData::Create_Game_Of_Type (channel->Get_Game_Data ()->Get_Game_Type ());
-			WWASSERT(PTheGameData != NULL);
 			*PTheGameData = *channel->Get_Game_Data ();
 
 			// If the game to join is passworded then it is necessary for the user to
@@ -497,7 +490,6 @@ MPLanGameListMenuClass::Join_Game (void)
 ////////////////////////////////////////////////////////////////
 void MPLanGameListMenuClass::ReceiveSignal(DlgPasswordPrompt& passwordDialog)
 {
-	WWASSERT(PTheGameData != NULL);
 	PTheGameData->Set_Password(passwordDialog.GetPassword());
 	Connect_To_Server();
 }

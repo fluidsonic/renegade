@@ -7,7 +7,6 @@
 #include "ccamera.h"
 #include "gametype.h"
 #include "textdisplay.h"
-#include "wwprofile.h"
 #include "serverfps.h"
 #include "useroptions.h"
 #include "serversettings.h"
@@ -24,7 +23,6 @@ void	CombatNetworkReceiverInstanceClass::Print( const char *format, ... )
 
 	ConsoleBox.Print_Maybe(string);
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT( Get_Text_Display() );
 		Get_Text_Display()->Print_System( string );
 	}
 	va_end (arg_list);
@@ -33,7 +31,6 @@ void	CombatNetworkReceiverInstanceClass::Print( const char *format, ... )
 //-----------------------------------------------------------------------------
 void	CombatNetworkReceiverInstanceClass::Print( const Vector3 & color, const char *format, ... )
 {
-	WWASSERT( Get_Text_Display() );
 	va_list arg_list;
 	va_start (arg_list, format);
 	StringClass string;
@@ -41,7 +38,6 @@ void	CombatNetworkReceiverInstanceClass::Print( const Vector3 & color, const cha
 	WideStringClass ws(string, true);
 	ConsoleBox.Add_Message(&ws, (Vector3*)&color);
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT( Get_Text_Display() );
 		Get_Text_Display()->Print( string, color );
 	}
 	va_end (arg_list);
@@ -50,7 +46,6 @@ void	CombatNetworkReceiverInstanceClass::Print( const Vector3 & color, const cha
 //-----------------------------------------------------------------------------
 void CombatNetworkReceiverInstanceClass::Server_Send_Delete_Notifications(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	if (IS_SOLOPLAY) {
 		return;
@@ -65,7 +60,6 @@ void CombatNetworkReceiverInstanceClass::Server_Send_Delete_Notifications(void)
 		player_node = player_node->Next()) {
 
 		cPlayer * p_player = player_node->Data();
-      WWASSERT(p_player != NULL);
 
       int client_id = p_player->Get_Id();
 
@@ -96,7 +90,6 @@ void CombatNetworkReceiverInstanceClass::Server_Send_Delete_Notifications(void)
 //-----------------------------------------------------------------------------
 bool CombatNetworkReceiverInstanceClass::Server_Update_Dynamic_Objects(bool is_urgent)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	if (IS_SOLOPLAY) {
 		return(false);
@@ -136,7 +129,6 @@ bool CombatNetworkReceiverInstanceClass::Server_Update_Dynamic_Objects(bool is_u
 		player_node = player_node->Next()) {
 
 		cPlayer * p_player = player_node->Data();
-      WWASSERT(p_player != NULL);
 
       int client_id = p_player->Get_Id();
 
@@ -213,14 +205,12 @@ bool CombatNetworkReceiverInstanceClass::Client_Update_Dynamic_Objects(bool is_u
 	//
 
 	/*TSS092101*/
-	WWASSERT(cNetwork::I_Am_Client());
 
 	static DWORD last_update_time_ms = 0;
    DWORD time_now_ms = TIMEGETTIME();
 	DWORD time_elapsed_ms = time_now_ms - last_update_time_ms;
 
 	int max_updates_per_second = cUserOptions::NetUpdateRate.Get();
-	WWASSERT(cServerFps::Get_Instance() != NULL);
 	int server_fps = cServerFps::Get_Instance()->Get_Fps();
 	if (server_fps > 0 && server_fps < cUserOptions::NetUpdateRate.Get()) {
 		max_updates_per_second = server_fps;

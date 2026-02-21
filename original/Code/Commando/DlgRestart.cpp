@@ -54,7 +54,6 @@ bool DlgRestart::DoDialog(void)
 DlgRestart::DlgRestart() :
 		PopupDialogClass(IDD_MESSAGEBOX_OK)
 	{
-	WWDEBUG_SAY(("DlgRestart: Instantiated\n"));
 	}
 
 
@@ -76,7 +75,6 @@ DlgRestart::DlgRestart() :
 
 DlgRestart::~DlgRestart()
 	{
-	WWDEBUG_SAY(("DlgRestart: Destructing\n"));
 	}
 
 

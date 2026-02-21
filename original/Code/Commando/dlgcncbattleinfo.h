@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGCNCBATTLEINFO_H
 #define __DLGCNCBATTLEINFO_H

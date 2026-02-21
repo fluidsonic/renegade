@@ -69,11 +69,6 @@ LoadSPGameMenuClass::On_Init_Dialog (void)
 		StringClass file_filter;
 		file_filter = "data\\m*.mix";
 
-#ifdef WWDEBUG
-		if (cDevOptions::FilterLevelFiles.Is_False()) {
-			file_filter = "data\\*.mix";
-		}
-#endif // WWDEBUG
 
 		start_index = Build_List (file_filter, start_index);
 		Build_List ("data\\save\\*.sav", start_index);
@@ -269,7 +264,6 @@ LoadSPGameMenuClass::Get_Game_Rank
 		name.Erase( name.Get_Length()-4, 4 );
 	}
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_MISSION_RANKS );
-	WWASSERT( registry );
 	int rank = 0;
 	if ( registry->Is_Valid() ) {
 		rank = registry->Get_Int( name,   0 );
@@ -297,7 +291,6 @@ LoadSPGameMenuClass::Set_Game_Rank
 		name.Erase( name.Get_Length()-4, 4 );
 	}
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_MISSION_RANKS );
-	WWASSERT( registry );
 	if ( registry->Is_Valid() ) {
 		int old_rank = registry->Get_Int( name, 0 );
 		// Set to the max of old and rank

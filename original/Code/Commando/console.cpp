@@ -26,7 +26,6 @@
 #include "_globals.h"
 #include "registry.h"
 #include "phys3.h"
-#include "wolgmode.h"
 #include "devoptions.h"
 #include "playertype.h"
 #include "pscene.h"
@@ -34,8 +33,6 @@
 #include "string_ids.h"
 #include "vehicle.h"
 #include "wheelvehicle.h"
-#include "wwprofile.h"
-#include "wwmemlog.h"
 #include "wheel.h"
 #include "statistics.h"
 #include "meshmdl.h"
@@ -51,8 +48,6 @@
 #include "textdisplay.h"
 #include "trackedvehicle.h"
 #include "dx8rendererdebugger.h"
-#include "fastallocator.h"
-#include <WWOnline/WOLSession.h>
 #include "consolemode.h"
 
 //#include "dlgmpingamechat.h"
@@ -84,7 +79,6 @@ void 	ConsoleGameModeClass::Init()
 {
 	ConsoleFunctionManager::Init();
 
-	WWASSERT( ConsoleGameModeClass::Instance == NULL );
 
 	ConsoleGameModeClass::Instance = this;
 	InputActive = false;
@@ -113,7 +107,6 @@ void 	ConsoleGameModeClass::Shutdown()
 {
 	Save_Registry_Keys();
 
-	WWASSERT( ConsoleGameModeClass::Instance == this );
 
 	ConsoleGameModeClass::Instance = NULL;
 
@@ -124,7 +117,6 @@ void ConsoleGameModeClass::Load_Registry_Keys(void)
 {
 //	Debug_Say(( "CombatGameModeClass::Load_Registry_Keys...\n" ));
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_OPTIONS );
-	WWASSERT( registry );
 	if ( registry->Is_Valid() ) {
 
       WW3D::Set_Screen_UV_Bias( registry->Get_Int( "ScreenUVBias", 1 ) != 0 );
@@ -138,7 +130,6 @@ void ConsoleGameModeClass::Save_Registry_Keys(void)
 {
 //	Debug_Say(( "CombatGameModeClass::Save_Registry_Keys...\n"));
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_OPTIONS );
-	WWASSERT( registry );
 	if ( registry->Is_Valid() ) {
 		registry->Set_Int( "ScreenUVBias", WW3D::Is_Screen_UV_Biased() );
 
@@ -165,7 +156,6 @@ void ConsoleGameModeClass::Save_Registry_Keys(void)
 */
 void 	ConsoleGameModeClass::Think()
 {
-	WWPROFILE( "Console Think" );
 
    /*
 	//
@@ -209,7 +199,6 @@ void 	ConsoleGameModeClass::Think()
 	** Handle Console Input
 	*/
 	if ( InputActive ) {
-WWPROFILE( "Input Active" );
 
 		int key = Input::Console_Get_Key();
 
@@ -306,12 +295,10 @@ WWPROFILE( "Input Active" );
 				color = COLOR_CONSOLE_TEXT;
 				break;
 			default :
-				DIE;
 				break;
 		}
 
 		if (Get_Text_Display()) {
-			WWASSERT( Get_Text_Display() );
 			Get_Text_Display()->Set_Input_Text( mess );
 			Get_Text_Display()->Set_Help_Text( HelpLine );
 		}
@@ -319,7 +306,6 @@ WWPROFILE( "Input Active" );
 	} else {
 
 		if (Get_Text_Display()) {
-			WWASSERT( Get_Text_Display() );
 			Vector3 color(1,1,1);
 			Get_Text_Display()->Set_Input_Text( "" );
 			Get_Text_Display()->Set_Help_Text( "" );
@@ -333,14 +319,6 @@ WWPROFILE( "Input Active" );
 	**
 	****************************************************************************************/
 
-#ifdef WWDEBUG
-{	WWPROFILE( "Vis Check" );
-	if (Get_Text_Display()) {
-		PhysicsSceneClass * scene = PhysicsSceneClass::Get_Instance();
-		Get_Text_Display()->Display_Vis_Warning( scene && scene->Is_Vis_Sector_Missing() );
-	}
-}
-#endif
 
 	// Note:  As you add more stats, also add to the stats help command.
 
@@ -421,10 +399,10 @@ WWPROFILE( "Input Active" );
 				int(WW3D::Get_Last_Frame_Poly_Count()*FPS/1000));
 			message += working_string;
 
-			unsigned ffheap=FastAllocatorGeneral::Get_Allocator()->Get_Total_Heap_Size();
-			unsigned ffuse=FastAllocatorGeneral::Get_Allocator()->Get_Total_Allocated_Size();
-			unsigned actualuse=FastAllocatorGeneral::Get_Allocator()->Get_Total_Actual_Memory_Usage();
-			unsigned count=FastAllocatorGeneral::Get_Allocator()->Get_Total_Allocation_Count();
+			unsigned ffheap=0;
+			unsigned ffuse=0;
+			unsigned actualuse=0;
+			unsigned count=0;
 			working_string.Format(
 				"\nMalloc count: %d\n"
 				"Free count: %d\n"
@@ -909,7 +887,6 @@ WWPROFILE( "Input Active" );
 				RefPhysListIterator iterator = the_scene->Get_Dynamic_Object_Iterator();
 				for (iterator.First(); !iterator.Is_Done(); iterator.Next()) {
 					PhysClass * obj = iterator.Peek_Obj();
-					WWASSERT(obj != NULL);
 
 					if (obj->As_Phys3Class()) {
 						phys3_count++;
@@ -985,7 +962,6 @@ WWPROFILE( "Input Active" );
 				iterator = the_scene->Get_Static_Object_Iterator();
 				for (iterator.First(); !iterator.Is_Done(); iterator.Next()) {
 					PhysClass * obj = iterator.Peek_Obj();
-					WWASSERT(obj != NULL);
 					if (obj->As_StaticPhysClass()) static_obj_count++;
 					if (obj->As_StaticAnimPhysClass()) static_anim_count++;
 				}
@@ -1114,25 +1090,6 @@ WWPROFILE( "Input Active" );
 			StatisticsDisplayManager::Set_Stat( "ai", message );
 		}
 
-#ifdef WWDEBUG
-   	/*
-		** WOL location diagnostic
-		*/
-#if(0) // obsolete
-		if (StatisticsDisplayManager::Is_Current_Display("wol")) {
-			char string[200];
-      	if (GameModeManager::Find("WOL")->Is_Active()) {
-         	WWASSERT(PWC != NULL);
-	      	//sprintf(string, "WOL location: %s", PWC->Translate_Location());
-	      	sprintf(string, "WOL location: %s", Translate_Location(PWC->Get_Current_Location()));
-      	} else {
-	      	sprintf(string, "WOL is not active.");
-      	}
-
-			StatisticsDisplayManager::Set_Stat( "wol", string );
-		}
-#endif // obsolete
-#endif // WWDEBUG
 	}
 
    if ( Input::Get_State( INPUT_FUNCTION_CNC )) {
@@ -1150,7 +1107,6 @@ WWPROFILE( "Input Active" );
 */
 void 	ConsoleGameModeClass::Parse_Input( char * string )
 {
-   WWASSERT(Get_Console() != NULL);
 	if ( ConsoleInputType == INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE ||
         ConsoleInputType == INPUT_FUNCTION_BEGIN_TEAM_MESSAGE   ||
         ConsoleInputType == INPUT_FUNCTION_BEGIN_PRIVATE_MESSAGE ) {
@@ -1161,7 +1117,6 @@ void 	ConsoleGameModeClass::Parse_Input( char * string )
 				cNetwork::Send_Client_Text_Message(string, ConsoleInputType);
 			} else {
 
-            WWASSERT(ConsoleInputType == INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE);
 
 				WideStringClass text;
 				text.Convert_From(string);
@@ -1171,12 +1126,6 @@ void 	ConsoleGameModeClass::Parse_Input( char * string )
 				}
 			}
 			*/
-      } else if (GameModeManager::Find("WOL")->Is_Active()) {
-				RefPtr<WWOnline::Session> wolSession = WWOnline::Session::GetInstance(false);
-
-				if (wolSession.IsValid()) {
-					wolSession->SendPublicMessage(string);
-				}
       }
 	} else {
 		ConsoleFunctionManager::Parse_Input( string );
@@ -1253,7 +1202,6 @@ StringClass working_string;
 
 void	ConsoleGameModeClass::Update_Profile( void )
 {
-	WWPROFILE( "Update Profile" );
 
 #ifdef ATI_DEMO_HACK
 // HACK
@@ -1504,23 +1452,17 @@ void	ConsoleGameModeClass::End_Profile_Log()
 			char tmp[8];
 			strncpy(tmp,profile_log_names[index],sizeof(tmp));
 			tmp[7]='\0';
-			WWDEBUG_SAY(("%7s ",tmp));
 		}
-		WWDEBUG_SAY(("\n"));
 	}
 
 	while (node) {
 		for (unsigned index=0;index<node->Get_Count();++index) {
-			WWDEBUG_SAY(("%2.2f	",node->Get(index)));
 		}
-		WWDEBUG_SAY(("\n"));
 		node=node->Succ();
 	}
 
-	WWDEBUG_SAY(("\n\n"));
 	node=profile_log_head;
 	while (node) {
-		WWDEBUG_SAY(("%s\n",node->Get_String()));
 		node=node->Succ();
 	}
 

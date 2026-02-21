@@ -1,6 +1,4 @@
 #include "singletoninstancekeeper.h"
-#include "wwdebug.h"
-#include "autostart.h"
 
 
 //
@@ -32,9 +30,6 @@ SingletonInstanceKeeperClass::SingletonInstanceKeeperClass (void)	:
 	AppMutex (NULL),
 	AutoPlayMutex (NULL)
 {
-	if (AutoRestart.Get_Restart_Flag()) {
-		AllowMultipleInstances = true;
-	}
 	return;
 }
 
@@ -82,7 +77,6 @@ SingletonInstanceKeeperClass::Verify_Safe_To_Execute (void)
 	if (::GetLastError () == ERROR_ALREADY_EXISTS) {
 
 		if (AllowMultipleInstances) {
-			WWDEBUG_SAY (("Renegade is already running but AllowMultipleInstances is true\n"));
 			retval = true;
 		} else {
 			//
@@ -94,11 +88,9 @@ SingletonInstanceKeeperClass::Verify_Safe_To_Execute (void)
 				::ShowWindow (main_wnd, SW_RESTORE);
 			}
 
-			WWDEBUG_SAY (("Renegade is already running...Bail!\n"));
 		}
 	} else {
 
-		WWDEBUG_SAY (("Create AppMutex okay.\n"));
 
 		//
 		// Obtain the mutex unique to the Renegade AutoPlay application.
@@ -112,13 +104,11 @@ SingletonInstanceKeeperClass::Verify_Safe_To_Execute (void)
 			//
 			AutoPlayMutex = ::OpenMutex (MUTEX_ALL_ACCESS, FALSE, AUTOPLAY_GUID);
 			if (AutoPlayMutex != NULL) {
-				WWDEBUG_SAY (("Waiting for Autoplay to quit!\n"));
 
 				//
 				//	Wait for up to 30 seconds for the autoplay app to close
 				//
 				if (::WaitForSingleObject (AutoPlayMutex, 30000) == WAIT_FAILED) {
-					WWDEBUG_SAY (("Failed waiting for AutoPlayMutex\n"));
 					::CloseHandle (AutoPlayMutex);
 					AutoPlayMutex = NULL;
 				}
@@ -137,13 +127,11 @@ SingletonInstanceKeeperClass::Verify_Safe_To_Execute (void)
 					AutoPlayMutex = NULL;
 					::Sleep (2500);
 				} else {
-					WWDEBUG_SAY (("Create AutoPlayMutex.\n"));
 				}
 			}
 
 		} while (AutoPlayMutex == NULL);
 
-		WWDEBUG_SAY (("Got AutoPlayMutex okay.\n"));
 		retval = true;
 	}
 

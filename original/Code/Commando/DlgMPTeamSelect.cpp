@@ -1,12 +1,8 @@
 #include "dlgmpteamselect.h"
-#include "wolgmode.h"
 #include "gamedata.h"
-#include "wolgameinfo.h"
-#include "wolloginprofile.h"
 #include "dlgmessagebox.h"
 #include "renegadedialogmgr.h"
 #include <combat/playertype.h>
-#include <wwonline/wolgameoptions.h>
 #include <wwui/listctrl.h>
 #include <wwui/comboboxctrl.h>
 #include <wwui/imagectrl.h>
@@ -17,29 +13,14 @@
 #include "gameinitmgr.h"
 
 
-using namespace WWOnline;
-
-
 // Player list columns
 enum
 	{
 	COL_RANK,
 	COL_NAME,
-// Denzil 02/24/02 Day 1 patch - Remove clan until we can fix formating
-//	COL_CLAN,
 	COL_KD,
 	COL_SCORE
 	};
-
-
-// Private game options processing dispatching
-typedef void (*GameOptionsDispatchFunc)(DlgMPTeamSelect&, const char*);
-
-#define PARSE_INT(s, d, v) {char* ptr = strtok(s, d); if (ptr) {v = atoi(ptr);}}
-#define PARSE_FLOAT(s, d, v) {char* ptr = strtok(s, d); if (ptr) {v = atof(ptr);}}
-#define PARSE_HEXDWORD(s, d, v) {char* ptr = strtok(s, d); if (ptr) {sscanf(ptr, "%08X", &v);}}
-#define PARSE_HEXBYTE(s, d, v) {char* ptr = strtok(s, d); if (ptr) {sscanf(ptr, "%02X", &v);}}
-#define PARSE_STRING(s, d, v) {v = strtok(s, d);}
 
 
 static int CALLBACK ListSortCallback(ListCtrlClass* list, int index1, int index2, uint32 param)
@@ -101,11 +82,9 @@ void DlgMPTeamSelect::DoDialog(Signaler<MPChooseTeamSignal>& target)
 
 DlgMPTeamSelect::DlgMPTeamSelect(void) :
 		MenuDialogClass(IDD_MP_TEAM_SELECT),
-		mWOLGame(true),
 		mCanChoose(true),
 		mTimeRemaining(0.0f)
 	{
-	WWDEBUG_SAY(("DlgMPTeamSelect instantiated\n"));
 	}
 
 
@@ -127,7 +106,6 @@ DlgMPTeamSelect::DlgMPTeamSelect(void) :
 
 DlgMPTeamSelect::~DlgMPTeamSelect()
 	{
-	WWDEBUG_SAY(("DlgMPTeamSelect destroyed\n"));
 	}
 
 
@@ -149,50 +127,8 @@ DlgMPTeamSelect::~DlgMPTeamSelect()
 
 bool DlgMPTeamSelect::FinalizeCreate(void)
 	{
-	GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-	if (gameMode && gameMode->Is_Active())
-		{
-		mWOLGame = true;
-		mWOLSession = Session::GetInstance(false);
-
-		// Cannot continue if WOL session is not initialized
-		if (mWOLSession.IsValid() == false)
-			{
-			return false;
-			}
-
-		// Get the channel we have joined.
-		const RefPtr<ChannelData>& channel = mWOLSession->GetCurrentChannel();
-
-		// Cannot continue if we are not in a channel
-		if (channel.IsValid() == false)
-			{
-			return false;
-			}
-
-		mGameInfo.ImportFromChannel(channel);
-
-		Observer<ChannelEvent>::NotifyMe(*mWOLSession);
-		Observer<UserEvent>::NotifyMe(*mWOLSession);
-		}
-	else
-		{
-		gameMode = GameModeManager::Find("LAN");
-
-		if (gameMode && gameMode->Is_Active())
-			{
-			mWOLGame = false;
-			mGameInfo.ImportFromGame(*The_Game());
-			}
-		}
-
-	if (mGameInfo.IsDataValid() == false)
-		{
-		return false;
-		}
-
-	mCanChoose = (!mGameInfo.IsClanGame() && mGameInfo.IsTeamChange());
+	// WOL removed — in LAN mode team change is always allowed, clan games don't exist
+	mCanChoose = true;
 
 	return true;
 	}
@@ -216,7 +152,6 @@ bool DlgMPTeamSelect::FinalizeCreate(void)
 
 void DlgMPTeamSelect::On_Init_Dialog(void)
 	{
-	WWDEBUG_SAY(("DlgMPTeamSelect On_Init_Dialog\n"));
 
 	MenuDialogClass::On_Init_Dialog();
 
@@ -229,79 +164,32 @@ void DlgMPTeamSelect::On_Init_Dialog(void)
 
 	if (list)
 		{
-		// Configure the columns
-		list->Add_Column(TRANSLATE (IDS_MENU_RANK),  0.15F, Vector3(1, 1, 1));
-
-// Denzil 02/24/02 Day 1 patch - Remove clan until we can fix formatting issues.
-#if(0)
-		list->Add_Column(TRANSLATE (IDS_MENU_NAME),  0.30F, Vector3(1, 1, 1));
-		list->Add_Column(TRANSLATE (IDS_MENU_CLAN),  0.20F, Vector3(1, 1, 1));
-#else
-		list->Add_Column(TRANSLATE (IDS_MENU_NAME),  0.50F, Vector3(1, 1, 1));
-#endif
-
-		list->Add_Column(TRANSLATE (IDS_MENU_KD_RATIO),   0.15F, Vector3(1, 1, 1));
-		list->Add_Column(TRANSLATE (IDS_MENU_SCORE), 0.20F, Vector3(1, 1, 1));
+		list->Add_Column(TRANSLATE (IDS_MENU_RANK),     0.15F, Vector3(1, 1, 1));
+		list->Add_Column(TRANSLATE (IDS_MENU_NAME),     0.50F, Vector3(1, 1, 1));
+		list->Add_Column(TRANSLATE (IDS_MENU_KD_RATIO), 0.15F, Vector3(1, 1, 1));
+		list->Add_Column(TRANSLATE (IDS_MENU_SCORE),    0.20F, Vector3(1, 1, 1));
 		}
 
 	list = (ListCtrlClass*)Get_Dlg_Item(IDC_NOD_LIST_CTRL);
 
 	if (list)
 		{
-		// Configure the columns
-		list->Add_Column(TRANSLATE (IDS_MENU_RANK),  0.15F, Vector3(1, 1, 1));
-
-// Denzil 02/24/02 Day 1 patch - Remove clan until we can fix formatting issues.
-#if(0)
-		list->Add_Column(TRANSLATE (IDS_MENU_NAME),  0.30F, Vector3(1, 1, 1));
-		list->Add_Column(TRANSLATE (IDS_MENU_CLAN),  0.20F, Vector3(1, 1, 1));
-#else
-		list->Add_Column(TRANSLATE (IDS_MENU_NAME),  0.50F, Vector3(1, 1, 1));
-#endif
-
-		list->Add_Column(TRANSLATE (IDS_MENU_KD_RATIO),   0.15F, Vector3(1, 1, 1));
-		list->Add_Column(TRANSLATE (IDS_MENU_SCORE), 0.20F, Vector3(1, 1, 1));		
+		list->Add_Column(TRANSLATE (IDS_MENU_RANK),     0.15F, Vector3(1, 1, 1));
+		list->Add_Column(TRANSLATE (IDS_MENU_NAME),     0.50F, Vector3(1, 1, 1));
+		list->Add_Column(TRANSLATE (IDS_MENU_KD_RATIO), 0.15F, Vector3(1, 1, 1));
+		list->Add_Column(TRANSLATE (IDS_MENU_SCORE),    0.20F, Vector3(1, 1, 1));
 		}
 
-	int sidePref = -1;
+	int sidePref = cNetInterface::Get_Side_Preference();
 
-	if (mWOLGame)
-		{
-		// If this is not a clan game then we can use the preference.
-		if (mGameInfo.IsClanGame() == false)
-			{
-			const RefPtr<LoginInfo>& login = mWOLSession->GetCurrentLogin();
-			WWASSERT(login.IsValid());
-		
-			LoginProfile* profile = LoginProfile::Get(login->GetNickname());
-	
-			if (profile)
-				{
-				sidePref = profile->GetSidePreference();
-				profile->Release_Ref();
-				}
-			}
-	
-		// The start button is disabled until we hear from the host.
-		Enable_Dlg_Item(IDC_STARTGAME, false);
+	// Hide and disable the back button for LAN games.
+	DialogControlClass* ctrl = Get_Dlg_Item(IDCANCEL);
+	ctrl->Show(false);
+	ctrl->Enable(false);
 
-		// Request information about the game.
-		RequestWOLGameInfo();
-		}
-	else
-		{
-		sidePref = cNetInterface::Get_Side_Preference();
+	cPlayerManager::Add_Event_Observer(*this);
 
-		// Hide and disable the back button for LAN games.
-		DialogControlClass* ctrl = Get_Dlg_Item(IDCANCEL);
-		WWASSERT(ctrl != NULL);
-		ctrl->Show(false);
-		ctrl->Enable(false);
-
-		cPlayerManager::Add_Event_Observer(*this);
-
-		PopulateWithLANPlayers();
-		}
+	PopulateWithLANPlayers();
 
 	InitSideChoice(sidePref);
 
@@ -405,11 +293,6 @@ void DlgMPTeamSelect::On_Command(int ctrlID, int message, DWORD param)
 
 void DlgMPTeamSelect::On_Last_Menu_Ending(void)
 	{
-	// If this the WOL screen then return to the menu...
-	if (GameInitMgrClass::Is_WOL_Initialized())
-		{
-		RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_INTERNET_GAME_LIST);
-		}
 	}
 
 
@@ -448,7 +331,7 @@ void DlgMPTeamSelect::InitSideChoice(int sidePref)
 * DESCRIPTION
 *
 * INPUTS
-*     Side - 
+*     Side -
 *
 * RESULT
 *     NONE
@@ -471,7 +354,7 @@ void DlgMPTeamSelect::SelectSideChoice(int side)
 * DESCRIPTION
 *
 * INPUTS
-*     Side - 
+*     Side -
 *
 * RESULT
 *     NONE
@@ -490,37 +373,6 @@ int DlgMPTeamSelect::GetSideChoice(void)
 		}
 
 	return PLAYERTYPE_RENEGADE;
-	}
-
-
-/******************************************************************************
-*
-* NAME
-*     DlgMPTeamSelect::RequestWOLGameInfo
-*
-* DESCRIPTION
-*     Send a request to the game server for informaiton about the game.
-*
-* INPUTS
-*     NONE
-*
-* RESULT
-*     NONE
-*
-******************************************************************************/
-
-void DlgMPTeamSelect::RequestWOLGameInfo(void)
-	{
-	WWDEBUG_SAY(("DlgMPTeamSelect requesting game info\n"));
-
-	// Get the hosts name and send a request for player information.
-	const RefPtr<ChannelData>& channel = mWOLSession->GetCurrentChannel();
-
-	if (channel.IsValid())
-		{
-		Observer<GameOptionsMessage>::NotifyMe(*mWOLSession);
-		mWOLSession->SendPrivateGameOptions(channel->GetName(), "RGINFO");
-		}
 	}
 
 
@@ -550,7 +402,7 @@ void DlgMPTeamSelect::ShowTimeRemaining(float remainingSeconds)
 
 	WideStringClass timeString(0, true);
 	timeString.Format(L"%02d:%02d:%02d", hours, mins, seconds);
-	
+
 	WideStringClass text(0, true);
 	text.Format(L"%s: %s", TRANSLATION(IDS_MP_TIME_REMAINING), (const WCHAR*)timeString);
 	Set_Dlg_Item_Text(IDC_TIME_REMAINING_TEXT, (const WCHAR*)text);
@@ -614,378 +466,6 @@ bool DlgMPTeamSelect::FindPlayerInListCtrl(const WCHAR* name, ListCtrlClass*& ou
 /******************************************************************************
 *
 * NAME
-*     DlgMPTeamSelect::HandleNotification(ChannelEvent)
-*
-* DESCRIPTION
-*     Handle channel events that occur while the user is deceiding on the team.
-*
-* INPUTS
-*     ChannelEvent - 
-*
-* RESULT
-*     NONE
-*
-******************************************************************************/
-
-void DlgMPTeamSelect::HandleNotification(ChannelEvent& event)
-	{
-	// This user has been kicked from the game.
-	if (ChannelKicked == event.GetStatus())
-		{
-		DlgMsgBox::DoDialog(TRANSLATE(IDS_MENU_SERVER_MESSAGE_TITLE),
-			TRANSLATE(IDS_MENU_SERVER_KICKED_MESSAGE));
-
-		End_Dialog();
-		}
-	}
-
-
-/******************************************************************************
-*
-* NAME
-*     DlgMPTeamSelect::HandleNotification(UserEvent)
-*
-* DESCRIPTION
-*     Handle user events that occur while the user is making their team choice.
-*
-* INPUTS
-*
-* RESULT
-*
-******************************************************************************/
-
-void DlgMPTeamSelect::HandleNotification(UserEvent& userEvent)
-	{
-	const RefPtr<UserData>& user = userEvent.Subject();
-
-	if (user.IsValid() == false)
-		{
-		return;
-		}
-
-	// Show clan information for users as it arrives
-	switch (userEvent.GetEvent())
-		{
-#if(0) // Denzil 02/24/02 Day 1 patch - Removed clan until we fix formatting
-		case UserEvent::SquadInfo:
-			{
-			ListCtrlClass* list = NULL;
-			int itemIndex = -1;
-			bool found = FindPlayerInListCtrl(user->GetName(), list, itemIndex);
-
-			if (found)
-				{
-				RefPtr<SquadData> clan = user->GetSquad();
-
-				if (clan.IsValid())
-					{
-					WideStringClass clanAbbr(0, true);
-					clanAbbr = clan->GetAbbr();
-					list->Set_Entry_Text(itemIndex, COL_CLAN, clanAbbr);
-					}
-				}
-			}
-			break;
-#endif
-
-#if(0)
-		case UserEvent::Join:
-			mWOLSession->RequestUserDetails(user, REQUEST_SQUADINFO);
-			break;
-#endif
-
-		// Remove users that leave the game.
-		case UserEvent::Leave:
-			{
-			ListCtrlClass* list = NULL;
-			int itemIndex = -1;
-			bool found = FindPlayerInListCtrl(user->GetName(), list, itemIndex);
-
-			if (found)
-				{
-				list->Delete_Entry(itemIndex);
-				}
-			}
-			break;
-
-		default:
-			break;
-		}
-	}
-
-
-/******************************************************************************
-*
-* NAME
-*     DlgMPTeamSelect::HandleNotification(GameOptionsMessage)
-*
-* DESCRIPTION
-*     Handle game options messages that come in from the server.
-*
-* INPUTS
-*     GameOpts - 
-*
-* RESULT
-*     NONE
-*
-******************************************************************************/
-
-void DlgMPTeamSelect::HandleNotification(GameOptionsMessage& message)
-	{
-	// Only listen to messages coming for the game host
-	const RefPtr<ChannelData>& channel = mWOLSession->GetCurrentChannel();
-
-	if (channel.IsValid() == false)
-		{
-		return;
-		}
-
-	const WideStringClass& hostName = channel->GetName();
-	WideStringClass sender(0, true);
-	sender = message.GetSendersName();
-
-	if (hostName.Compare_No_Case(sender) == 0)
-		{
-		static struct {const char* Token; GameOptionsDispatchFunc Dispatch;} _dispatch[] =
-			{
-			{"GINFO:", ProcessWOLGameInfo},
-			{"TINFO:", ProcessWOLTeamInfo},
-			{"PINFO:", ProcessWOLPlayerInfo},
-			{NULL, NULL}
-			};
-
-		int index = 0;
-		const char* token = _dispatch[index].Token;
-		const char* options = message.GetOptions();
-
-		while (token)
-			{
-			// Find the first occurance of the token in the message
-			const char* cmd = strstr(options, token);
-
-			// If the token was found and it is at the start of the message
-			// then invoke the handler for this message.
-			if (cmd && cmd == options)
-				{
-				const char* data = (options + strlen(token));
-				_dispatch[index].Dispatch(*this, data);
-
-				// We have heard from the host so it is okay to allow the player to start.
-				Enable_Dlg_Item(IDC_STARTGAME, true);
-				break;
-				}
-
-			++index;
-			token = _dispatch[index].Token;
-			}
-		}
-	}
-
-
-/******************************************************************************
-*
-* NAME
-*     DlgMPTeamSelect::ProcessWOLGameInfo
-*
-* DESCRIPTION
-*     Process the game information options packet.
-*
-* INPUTS
-*
-* RESULT
-*     NONE
-*
-******************************************************************************/
-
-void DlgMPTeamSelect::ProcessWOLGameInfo(DlgMPTeamSelect& dialog, const char* data)
-	{
-	if (data)
-		{
-		char info[255];
-		strncpy(info, data, 255);
-
-		// Get players name
-		unsigned long mapCRC = 0;
-		PARSE_HEXDWORD(info, " ", mapCRC);
-
-		StringClass mapname(64, true);
-		ModPackageMgrClass::Find_Filename_From_CRC ("*.mix", mapCRC, &mapname);
-		
-		WideStringClass text(255, true);
-		text.Format(TRANSLATE (IDS_MENU_MAP_NAME_FORMAT), (const char*)mapname);
-		dialog.Set_Dlg_Item_Text(IDC_MAPNAME_TEXT, text);
-
-		float timeRemaining = 0.0f;
-		PARSE_FLOAT(NULL, " ", timeRemaining);
-		dialog.mTimeRemaining = timeRemaining;
-		dialog.ShowTimeRemaining(timeRemaining);
-
-		int gdiScore = 0;
-		PARSE_INT(NULL, " ", gdiScore);
-		text.Format(TRANSLATE (IDS_MENU_SCORE_NAME_FORMAT), gdiScore);
-		dialog.Set_Dlg_Item_Text(IDC_GDI_SCORE, text);
-
-		int nodScore = 0;
-		PARSE_INT(NULL, " ", nodScore);
-		text.Format(TRANSLATE (IDS_MENU_SCORE_NAME_FORMAT), nodScore);
-		dialog.Set_Dlg_Item_Text(IDC_NOD_SCORE, text);
-
-		// Clear the player lists
-		ListCtrlClass* list = (ListCtrlClass*)dialog.Get_Dlg_Item(IDC_GDI_LIST_CTRL);
-
-		if (list)
-			{
-			list->Delete_All_Entries();
-			}
-
-		list = (ListCtrlClass*)dialog.Get_Dlg_Item(IDC_NOD_LIST_CTRL);
-
-		if (list)
-			{
-			list->Delete_All_Entries();
-			}
-		}
-	}
-
-
-/******************************************************************************
-*
-* NAME
-*     DlgMPTeamSelect::ProcessWOLTeamInfo
-*
-* DESCRIPTION
-*     Process the team information options packet.
-*
-* INPUTS
-*
-* RESULT
-*     NONE
-*
-******************************************************************************/
-
-void DlgMPTeamSelect::ProcessWOLTeamInfo(DlgMPTeamSelect& dialog, const char* data)
-	{
-	if (data)
-		{
-		char info[255];
-		strncpy(info, data, 255);
-
-		// Get team GDI information
-		int teamID = 0;
-		PARSE_INT(info, " ", teamID);
-
-		int score = 0;
-		PARSE_INT(NULL, " ", score);
-
-		// Output info
-		WideStringClass text(0, true);
-		text.Format(TRANSLATE (IDS_MENU_SCORE_NAME_FORMAT), score);
-
-		int ctrlID = ((teamID == PLAYERTYPE_GDI) ? IDC_GDI_SCORE : IDC_NOD_SCORE);
-		dialog.Set_Dlg_Item_Text(ctrlID, text);
-		}
-	}
-
-
-/******************************************************************************
-*
-* NAME
-*     DlgMPTeamSelect::ProcessWOLPlayerInfo
-*
-* DESCRIPTION
-*     Process the per player information packet.
-*
-* INPUTS
-*
-* RESULT
-*     NONE
-*
-******************************************************************************/
-
-void DlgMPTeamSelect::ProcessWOLPlayerInfo(DlgMPTeamSelect& dialog, const char* data)
-	{
-	if (data)
-		{
-		char info[255];
-		strncpy(info, data, 255);
-
-		// Get players name
-		char* name = "";
-		PARSE_STRING(info, " ", name);
-
-		// Team type
-		int type = -1;
-		PARSE_INT(NULL, " ", type);
-
-		// Rank
-		int rung = 0;
-		PARSE_INT(NULL, " ", rung);
-
-		// Kills
-		int kills = 0;
-		PARSE_INT(NULL, " ", kills);
-
-		// Deaths
-		int deaths = 0;
-		PARSE_INT(NULL, " ", deaths);
-
-		// Score
-		int score = 0;
-		PARSE_INT(NULL, " ", score);
-
-		int listID = ((type == PLAYERTYPE_GDI) ? IDC_GDI_LIST_CTRL : IDC_NOD_LIST_CTRL);
-		ListCtrlClass* list = (ListCtrlClass*)dialog.Get_Dlg_Item(listID);
-
-		if (list)
-			{
-			WideStringClass playerName(64, true);
-			playerName = name;
-
-			int itemIndex = list->Find_Entry(COL_NAME, playerName);
-			
-			if (itemIndex == -1)
-				{
-				itemIndex = list->Insert_Entry(list->Get_Entry_Count(), L"");
-				}
-
-			if (itemIndex != -1)
-				{
-				WideStringClass text(255, true);
-
-				// Set the players name and clan affiliation
-				list->Set_Entry_Text(itemIndex, COL_NAME, playerName);
-
-#if(0) // Denzil 02/24/02 Day 1 patch - Remove clan until we can fix formating
-				RefPtr<UserData> user = dialog.mWOLSession->FindUser(playerName);
-
-				if (user.IsValid())
-					{
-					RefPtr<SquadData> clan = user->GetSquad();
-
-					if (clan.IsValid())
-						{
-						text = clan->GetAbbr();
-						list->Set_Entry_Text(itemIndex, COL_CLAN, text);
-						}
-					}
-#endif
-				
-				text.Format(L"%d/%d", kills, deaths);
-				list->Set_Entry_Text(itemIndex, COL_KD, text);
-
-				list->Set_Entry_Int(itemIndex, COL_RANK, rung);
-				list->Set_Entry_Int(itemIndex, COL_SCORE, score);
-
-				list->Sort(ListSortCallback, 0);
-				}
-			}
-		}
-	}
-
-
-/******************************************************************************
-*
-* NAME
 *     DlgMPTeamSelect::HandleNotification(PlayerMgrEvent)
 *
 * DESCRIPTION
@@ -1000,7 +480,7 @@ void DlgMPTeamSelect::HandleNotification(PlayerMgrEvent& event)
 	{
 	PLAYERMGR_ACTION action = event.GetAction();
 
-	if ((action == PLAYER_ACTIVATED))// || (action == PLAYER_ADDED))
+	if ((action == PLAYER_ACTIVATED))
 		{
 		AddLANPlayerInfo(event.Subject());
 		}
@@ -1014,7 +494,7 @@ void DlgMPTeamSelect::HandleNotification(PlayerMgrEvent& event)
 /******************************************************************************
 *
 * NAME
-*     DlgMPTeamSelect::ProcessWithLANPlayers
+*     DlgMPTeamSelect::PopulateWithLANPlayers
 *
 * DESCRIPTION
 *
@@ -1060,14 +540,12 @@ void DlgMPTeamSelect::PopulateWithLANPlayers(void)
 
 void DlgMPTeamSelect::AddLANPlayerInfo(cPlayer* player)
 	{
-	WWASSERT(player != NULL);
 	RemoveLANPlayerInfo(player);
-	
+
 	int playerType = player->Get_Player_Type();
 	int listID = ((playerType == PLAYERTYPE_GDI) ? IDC_GDI_LIST_CTRL : IDC_NOD_LIST_CTRL);
 
 	ListCtrlClass* list = (ListCtrlClass*)Get_Dlg_Item(listID);
-	WWASSERT(list != NULL);
 
 	int itemIndex = list->Insert_Entry(list->Get_Entry_Count(), L"");
 
@@ -1115,7 +593,6 @@ void DlgMPTeamSelect::AddLANPlayerInfo(cPlayer* player)
 
 void DlgMPTeamSelect::RemoveLANPlayerInfo(cPlayer* player)
 	{
-	WWASSERT(player != NULL);
 
 	ListCtrlClass* list = NULL;
 	int itemIndex = -1;

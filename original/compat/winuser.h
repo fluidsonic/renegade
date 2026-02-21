@@ -6,6 +6,7 @@
 #include "windef.h"
 #include <stdio.h>
 #include <stdarg.h>
+#include "sdl2_platform.h"
 
 // Window messages
 #define WM_NULL         0x0000
@@ -245,10 +246,21 @@ inline BOOL UnregisterClass(LPCSTR name, HINSTANCE inst) { return TRUE; }
 
 inline HWND CreateWindowEx(DWORD exStyle, LPCSTR cls, LPCSTR title, DWORD style,
                            int x, int y, int w, int h, HWND parent, HMENU menu,
-                           HINSTANCE inst, LPVOID param) { return (HWND)1; }
+                           HINSTANCE inst, LPVOID param) {
+    // Create the real SDL2 window + OpenGL context
+    int ww = (w > 0 && w < 10000) ? w : 800;
+    int hh = (h > 0 && h < 10000) ? h : 600;
+    if (SDL2_Platform_Init(title ? title : "Renegade", ww, hh) != 0) {
+        fprintf(stderr, "[winuser] SDL2_Platform_Init failed\n");
+        return NULL;
+    }
+    return (HWND)SDL2_Platform_GetWindow();
+}
 inline HWND CreateWindow(LPCSTR cls, LPCSTR title, DWORD style,
                          int x, int y, int w, int h, HWND parent, HMENU menu,
-                         HINSTANCE inst, LPVOID param) { return (HWND)1; }
+                         HINSTANCE inst, LPVOID param) {
+    return CreateWindowEx(0, cls, title, style, x, y, w, h, parent, menu, inst, param);
+}
 inline int  GetSystemMetrics(int nIndex) { return nIndex == SM_CXSCREEN ? 1920 : nIndex == SM_CYSCREEN ? 1080 : 0; }
 inline BOOL ShowWindow(HWND wnd, int cmd) { return FALSE; }
 inline BOOL UpdateWindow(HWND wnd) { return FALSE; }

@@ -8,7 +8,6 @@
 #include "assets.h"
 #include "transition.h"
 #include "conversationmgr.h"
-#include "wwprofile.h"
 #include "phys.h"
 #include "rendobj.h"
 
@@ -17,14 +16,12 @@
 */
 void		LevelManager::Release_Level( void )
 {
-WWPROFILE( "Release Level" );
 	SaveGameManager::Set_Map_Filename( NULL );
 	ConversationMgrClass::Reset_Active_Conversations ();
 
 	//
 	// Stop (and free) any currently playing sounds
 	//
-   WWASSERT(WWAudioClass::Get_Instance() != NULL);
    SoundSceneClass *sound_scene = WWAudioClass::Get_Instance ()->Get_Sound_Scene ();
 	if( sound_scene != NULL ) {
 		sound_scene->Flush_Scene ();

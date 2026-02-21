@@ -28,7 +28,6 @@ cSuicideEvent::cSuicideEvent(void)
 void
 cSuicideEvent::Init(void)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId = cNetwork::Get_My_Id();
 
@@ -45,9 +44,7 @@ cSuicideEvent::Init(void)
 void
 cSuicideEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
-   WWDEBUG_SAY(("Client %d committed suicide.\n", SenderId));
 
 	SmartGameObj * p_soldier = GameObjManager::Find_Soldier_Of_Client_ID(SenderId);
 	if (p_soldier != NULL)
@@ -82,11 +79,9 @@ cSuicideEvent::Act(void)
 void
 cSuicideEvent::Export_Creation(BitStreamClass & packet)
 {
-   WWASSERT(cNetwork::I_Am_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 
@@ -99,11 +94,9 @@ cSuicideEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

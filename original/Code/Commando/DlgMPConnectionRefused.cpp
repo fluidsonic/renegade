@@ -57,9 +57,7 @@ bool DlgMPConnectionRefused::DoDialog(const WCHAR * text, bool show_splash_scree
 DlgMPConnectionRefused::DlgMPConnectionRefused(const WCHAR * text, bool show_splash_screen) :
 		PopupDialogClass(IDD_MULTIPLAY_CONNECTION_REFUSED)
 	{
-	WWDEBUG_SAY(("DlgMPConnectionRefused: Instantiated\n"));
 
-	WWASSERT(text != NULL);
 	Text.Format(text);
 
 	ShowSplashScreen = show_splash_screen;
@@ -84,7 +82,6 @@ DlgMPConnectionRefused::DlgMPConnectionRefused(const WCHAR * text, bool show_spl
 
 DlgMPConnectionRefused::~DlgMPConnectionRefused()
 	{
-	WWDEBUG_SAY(("DlgMPConnectionRefused: Destructing\n"));
 	}
 
 

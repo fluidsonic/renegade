@@ -13,14 +13,12 @@
 #include "textdisplay.h"
 #include "font3d.h"
 #include "gamedata.h"
-#include "wwdebug.h"
 #include "chunkio.h"
 #include "useroptions.h"
 #include "smartgameobj.h"
 #include "playertype.h"
 #include "devoptions.h"
 #include "render2d.h"
-#include "wwprofile.h"
 #include "gametype.h"
 #include "translatedb.h"
 #include "string_ids.h"
@@ -44,18 +42,12 @@ Notifier<PlayerMgrEvent> cPlayerManager::mNotifier;
 //------------------------------------------------------------------------------------
 void cPlayerManager::Onetime_Init(void)
 {
-	WWDEBUG_SAY(("cPlayerManager::Onetime_Init\n"));
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT(PFont == NULL);
-		WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
    	PFont = WW3DAssetManager::Get_Instance()->Get_Font3DInstance("FONT6x8.TGA");
-   	WWASSERT(PFont != NULL);
 		PFont->Set_Mono_Spaced();
 		SET_REF_OWNER(PFont);
 
-		WWASSERT(PTextRenderer == NULL);
 		PTextRenderer = new Render2DTextClass(PFont);
-   	WWASSERT(PTextRenderer != NULL);
 		PTextRenderer->Set_Coordinate_Range(Render2DClass::Get_Screen_Resolution());
 	}
    ZeroMemory(Player_Array, sizeof(Player_Array));
@@ -64,14 +56,11 @@ void cPlayerManager::Onetime_Init(void)
 //------------------------------------------------------------------------------------
 void cPlayerManager::Onetime_Shutdown(void)
 {
-	WWDEBUG_SAY(("cPlayerManager::Onetime_Shutdown\n"));
 
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT(PTextRenderer != NULL);
 		delete PTextRenderer;
 		PTextRenderer = NULL;
 
-		WWASSERT(PFont != NULL);
 		PFont->Release_Ref();
 		PFont = NULL;
 	}
@@ -80,10 +69,8 @@ void cPlayerManager::Onetime_Shutdown(void)
 //------------------------------------------------------------------------------------
 void cPlayerManager::Think(void)
 {
-	WWPROFILE("cPlayerManager::Think");
 
 	if (MultiHUDClass::Is_On()) {
-		WWASSERT(PTextRenderer != NULL);
 		Render_Player_List();
 	}
 	else {
@@ -94,9 +81,7 @@ void cPlayerManager::Think(void)
 //-----------------------------------------------------------------------------------
 void cPlayerManager::Render(void)
 {
-	WWPROFILE("cPlayerManager::Render");
 	if (PTextRenderer != NULL) {
-		WWASSERT(PTextRenderer != NULL);
 		PTextRenderer->Render();
 	}
 }
@@ -107,7 +92,6 @@ cPlayer * cPlayerManager::Find_Player(int id)
    SLNode<cPlayer> * objnode;
 	for (objnode = PlayerList.Head(); objnode; objnode = objnode->Next()) {
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 		if (p_player->Get_Is_Active().Is_True() &&
 			 p_player->Get_Id() == id) {
 			return p_player; // found it
@@ -123,7 +107,6 @@ cPlayer * cPlayerManager::Find_Player(const WideStringClass & name)
    SLNode<cPlayer> * objnode;
 	for (objnode = PlayerList.Head(); objnode; objnode = objnode->Next()) {
 		cPlayer *p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 
       if (p_player->Get_Is_Active().Is_True() &&
 			 !name.Compare_No_Case(p_player->Get_Name())) {
@@ -146,7 +129,6 @@ cPlayer * cPlayerManager::Find_Inactive_Player(const WideStringClass & name)
 		objnode = objnode->Next())
 	{
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 
       if (p_player->Get_Is_Active().Is_False() &&
 			!p_player->Get_Name().Compare_No_Case(name)) {
@@ -163,12 +145,10 @@ cPlayer * cPlayerManager::Find_Inactive_Player(const WideStringClass & name)
 cPlayer * cPlayerManager::Find_Team_Player(int team_number)
 {
 	//WWASSERT(The_Game()->Is_Team_Game());
-	WWASSERT(team_number >= 0 && team_number < MAX_TEAMS);
 
    SLNode<cPlayer> * objnode;
 	for (objnode = PlayerList.Head(); objnode; objnode = objnode->Next()) {
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 		if (p_player->Get_Is_Active().Is_True() &&
 			 p_player->Get_Player_Type() == team_number) {
 			return p_player; // found it
@@ -183,7 +163,6 @@ cPlayer * cPlayerManager::Find_Team_Player(int team_number)
 cPlayer * cPlayerManager::Find_Random_Team_Player(int team_number)
 {
 	//WWASSERT(The_Game()->Is_Team_Game());
-	WWASSERT(team_number >= 0 && team_number < MAX_TEAMS);
 
    int chosen_player = rand() % Tally_Team_Size(team_number);
 
@@ -191,7 +170,6 @@ cPlayer * cPlayerManager::Find_Random_Team_Player(int team_number)
 	SLNode<cPlayer> * objnode;
 	for (objnode = PlayerList.Head(); objnode; objnode = objnode->Next()) {
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 		if (p_player->Get_Is_Active().Is_True() &&
 			 p_player->Get_Player_Type() == team_number &&
 			 count++ == chosen_player) {
@@ -205,17 +183,13 @@ cPlayer * cPlayerManager::Find_Random_Team_Player(int team_number)
 //------------------------------------------------------------------------------------
 cPlayer * cPlayerManager::Find_Team_Mate(cPlayer * p_player1)
 {
-	WWASSERT(p_player1 != NULL);
-	WWASSERT(p_player1->Get_Is_Active().Is_True());
 	//WWASSERT(The_Game()->Is_Team_Game());
 
 	int team_number = p_player1->Get_Player_Type();
-	WWASSERT(team_number >= 0 && team_number < MAX_TEAMS);
 
    SLNode<cPlayer> * objnode;
 	for (objnode = PlayerList.Head(); objnode; objnode = objnode->Next()) {
 		cPlayer * p_player2 = objnode->Data();
-      WWASSERT(p_player2 != NULL);
 		if (p_player2->Get_Is_Active().Is_True() &&
 			p_player2->Get_Id() != p_player1->Get_Id() &&
 			p_player2->Get_Player_Type() == team_number) {
@@ -236,7 +210,6 @@ cPlayer* cPlayerManager::Find_Clan_Mate(cPlayer* player)
 
 		while (node) {
 			cPlayer* mate = node->Data();
-			WWASSERT(mate != NULL);
 
 			if (playerID != mate->Get_Id()) {
 				if (clan == mate->Get_WOL_ClanID()) {
@@ -267,15 +240,12 @@ bool cPlayerManager::Is_Player_Present(WideStringClass & name)
 const WideStringClass & cPlayerManager::Get_Player_Name(int id)
 {
    cPlayer * p_player = Find_Player(id);
-   WWASSERT(p_player != NULL);
-   WWASSERT(p_player->Get_Is_Active().Is_True());
    return p_player->Get_Name();
 }
 
 //------------------------------------------------------------------------------------
 void cPlayerManager::Add(cPlayer * p_player)
 {
-   WWASSERT(p_player != NULL);
    PlayerList.Add_Tail(p_player);
 
 	PlayerMgrEvent event(PLAYER_ADDED, p_player);
@@ -285,7 +255,6 @@ void cPlayerManager::Add(cPlayer * p_player)
 //------------------------------------------------------------------------------------
 void cPlayerManager::Remove(cPlayer * p_player)
 {
-	WWASSERT(p_player != NULL);
    PlayerList.Remove(p_player);
 
 	PlayerMgrEvent event(PLAYER_REMOVED, p_player);
@@ -445,7 +414,6 @@ int cPlayerManager::Get_Average_FPS(void)
 //------------------------------------------------------------------------------------
 static int Sum_Positions(int position)
 {
-	WWASSERT(position >= 1);
 
 	int retval = 0;
 
@@ -459,9 +427,7 @@ static int Sum_Positions(int position)
 //------------------------------------------------------------------------------------
 void cPlayerManager::Compute_Ladder_Points(int winning_team)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
-	WWASSERT(PTheGameData != NULL);
 	if (The_Game()->IsLaddered.Is_False())	{
 		return;
 	}
@@ -504,7 +470,6 @@ void cPlayerManager::Compute_Ladder_Points(int winning_team)
 		if (Player_Array[i]->Get_Player_Type() == winning_team) {
 			Player_Array[i]->Set_Ladder_Points(Sum_Positions(win_pos));
 			win_pos--;
-			WWASSERT(win_pos >= 0);
 		} else {
 			Player_Array[i]->Set_Ladder_Points(-Sum_Positions(lose_pos));
 			lose_pos++;
@@ -533,12 +498,6 @@ void cPlayerManager::Compute_Ladder_Points(int winning_team)
 		float ratio_present = player_duration_s / game_duration_s;
 		float ladder_points = ratio_present * Player_Array[i]->Get_Ladder_Points();
 		/*
-		WWDEBUG_SAY(("%5.2f * %-4d = %5.2f (%d)\n",
-			ratio_present,
-			Player_Array[i]->Get_Ladder_Points(),
-			ladder_points,
-			cMathUtil::Round(ladder_points)
-			));
 		*/
 		Player_Array[i]->Set_Ladder_Points(cMathUtil::Round(ladder_points));
 	}
@@ -552,7 +511,6 @@ void cPlayerManager::Compute_Ladder_Points(int winning_team)
 //------------------------------------------------------------------------------------
 void cPlayerManager::Increment_Player_Times(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	//
 	// Increment the participation time of all active players
@@ -570,11 +528,9 @@ void cPlayerManager::Increment_Player_Times(void)
 //------------------------------------------------------------------------------------
 WideStringClass cPlayerManager::Determine_Mvp_Name(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	WideStringClass mvp_name;
 
-	WWASSERT(The_Game() != NULL);
 	DWORD min_qualifying_time_ms = The_Game()->Get_Min_Qualifying_Time_Minutes() * 60 * 1000;
 
 	//
@@ -602,11 +558,6 @@ WideStringClass cPlayerManager::Determine_Mvp_Name(void)
 int cPlayerManager::Compute_Full_Player_List_Height(void)
 {
 	bool show_inactive = false;
-#ifdef WWDEBUG
-	if (cDevOptions::ShowInactivePlayers.Is_True()) {
-		show_inactive = true;
-	}
-#endif // WWDEBUG
 
 	int count = 0;
 	if (show_inactive) {
@@ -615,7 +566,6 @@ int cPlayerManager::Compute_Full_Player_List_Height(void)
 		count = Count();
 	}
 
-   WWASSERT(PFont != NULL);
 	int height = (int)((count + 1) * PFont->Char_Height() * Y_INCREMENT_FACTOR);
 
 	return height;
@@ -629,7 +579,6 @@ void cPlayerManager::Remove_Inactive(void)
 		objnode != NULL;)
 	{
 		cPlayer * p_player = objnode->Data();
-		WWASSERT(p_player != NULL);
 		objnode = objnode->Next();
 
 		if (p_player->Get_Is_Active().Is_False())
@@ -643,18 +592,15 @@ void cPlayerManager::Remove_Inactive(void)
 //------------------------------------------------------------------------------------
 void cPlayerManager::Remove_All(void)
 {
-	WWDEBUG_SAY(("cPlayerManager::Remove_All\n"));
 
 	for (SLNode<cPlayer> * objnode = PlayerList.Head(); objnode != NULL;) {
 
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 		objnode = objnode->Next();
 		PlayerList.Remove(p_player);
 		delete p_player;
 	}
 
-   WWASSERT(PlayerList.Get_Count() == 0);
 
 	//Remove_Inactive();
 }
@@ -670,7 +616,6 @@ int cPlayerManager::Count(void)
 		objnode = objnode->Next()) {
 
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 
 		if (p_player->Get_Is_Active().Is_True())
 		{
@@ -697,7 +642,6 @@ void cPlayerManager::Reset_Players(void)
 		objnode = objnode->Next()) {
 
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 		p_player->Reset_Player();
    }
 }
@@ -705,7 +649,6 @@ void cPlayerManager::Reset_Players(void)
 //-----------------------------------------------------------------------------
 int cPlayerManager::Tally_Team_Size(int type)
 {
-	WWROOTPROFILE("Tally_Team_Size");
    //WWASSERT(team >= 0 && team < MAX_TEAMS);
    //WWASSERT(The_Game()->Is_Team_Game());
 
@@ -714,7 +657,6 @@ int cPlayerManager::Tally_Team_Size(int type)
 	cPlayer * p_player = NULL;
    for (objnode = PlayerList.Head(); objnode != NULL; objnode = objnode->Next()) {
 		p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
       if (p_player->Get_Is_Active().Is_True() &&
 			 p_player->Get_Player_Type() == type) {
          tally++;
@@ -740,7 +682,6 @@ bool cPlayerManager::Is_Kill_Treasonous(cPlayer * p_killer, cPlayer * p_victim)
 //-----------------------------------------------------------------------------
 void cPlayerManager::Sort_Players(bool fast_sort)
 {
-	WWPROFILE("cPlayerManager::Sort_Players");
 
    ZeroMemory(Player_Array, sizeof(Player_Array));
 
@@ -753,13 +694,11 @@ void cPlayerManager::Sort_Players(bool fast_sort)
    SLNode<cPlayer> * objnode;
    for (objnode = Get_Player_Object_List()->Head(); objnode; objnode = objnode->Next()) {
 		p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 
 		//if (p_player->Is_Living()) {
 			//active_players++;
 		//}
 
-      WWASSERT(num_players < MAX_PLAYERS);
       Player_Array[num_players] = p_player;
       num_players++;
    }
@@ -809,13 +748,9 @@ int cPlayerManager::Player_Compare(const void * elem1, const void * elem2)
 	// data-safe variables being accessed.
    //
 
-   WWASSERT(elem1 != NULL);
-   WWASSERT(elem2 != NULL);
 
    cPlayer * p_player1 = *((cPlayer **)elem1);
    cPlayer * p_player2 = *((cPlayer **)elem2);
-   WWASSERT(p_player1 != NULL);
-   WWASSERT(p_player2 != NULL);
 
    int result;
 
@@ -909,14 +844,10 @@ int cPlayerManager::Fast_Player_Compare(const void * elem1, const void * elem2)
    //
    // Used by qsort
    //
-   WWASSERT(elem1 != NULL);
-   WWASSERT(elem2 != NULL);
 
    cPlayer * p_player1 = *((cPlayer **)elem1);
    cPlayer * p_player2 = *((cPlayer **)elem2);
 
-   WWASSERT(p_player1 != NULL);
-   WWASSERT(p_player2 != NULL);
 
 	if (p_player1->Get_Fast_Sort_Key() > p_player2->Get_Fast_Sort_Key()) {
 		return -1;
@@ -938,7 +869,6 @@ void cPlayerManager::Construct_Heading(WideStringClass & string, bool force_verb
 {
 	string.Format(L"");
 
-	WWASSERT(PTheGameData != NULL);
 	//bool is_verbose = force_verbose || The_Game()->IsIntermission.Get() || MultiHUDClass::Get_Verbose_Lists();
 	bool is_verbose = force_verbose ||
 		               The_Game()->IsIntermission.Is_True() ||
@@ -1019,48 +949,6 @@ void cPlayerManager::Construct_Heading(WideStringClass & string, bool force_verb
 	   string += substring;
    }
 
-#ifdef WWDEBUG
-   //
-   // Ping
-   //
-   if (cDevOptions::ShowPing.Is_True()) {
-		substring.Format(L"%-8s", L"Ping");
-	   string += substring;
-   }
-
-   //
-   // Player Id
-   //
-   if (cDevOptions::ShowId.Is_True()) {
-		substring.Format(L"%-8s", L"Id");
-	   string += substring;
-   }
-
-   //
-   // Fps
-   //
-   if (cNetwork::I_Am_Server() && cDevOptions::ShowClientFps.Is_True()) {
-		substring.Format(L"%-8s", L"Fps");
-	   string += substring;
-   }
-
-	//
-	// GameSpy auth. state
-	//
-   if (cNetwork::I_Am_Server() && cGameSpyAdmin::Is_Gamespy_Game() && 
-		cDevOptions::ShowGameSpyAuthState.Is_True()) {
-      substring.Format(L"%-12s", L"GS_AUTH");
-      string += substring;
-   }
-
-	//
-	// IP Address
-	//
-	if (cNetwork::I_Am_Server() && cDevOptions::ShowIpAddresses.Is_True()) {
-		substring.Format(L"%-30s", L"IP Address");
-	   string += substring;
-	}
-#endif // WWDEBUG
 }
 
 //-----------------------------------------------------------------------------
@@ -1073,7 +961,6 @@ void cPlayerManager::List_Print(WideStringClass & text, Vector3 color)
 		return;
 	}
 
-	WWASSERT(PTextRenderer != NULL);
 
 	PTextRenderer->Set_Location(Vector2(cMathUtil::Round(XPos), cMathUtil::Round(YPos)));
 
@@ -1081,20 +968,17 @@ void cPlayerManager::List_Print(WideStringClass & text, Vector3 color)
 
 	PTextRenderer->Draw_Text(text, c);
 
-   WWASSERT(PFont != NULL);
    YPos += PFont->Char_Height() * Y_INCREMENT_FACTOR;
 }
 
 //-----------------------------------------------------------------------------
 void cPlayerManager::Line(float x, float length, int line_color)
 {
-   WWASSERT(length > 0);
 
 	if (PTextRenderer == NULL) {
 		return;
 	}
 
-	WWASSERT(PTextRenderer != NULL);
 
 	float y = YPos + PTextRenderer->Peek_Font()->Char_Height() / 2.0f;
 
@@ -1116,7 +1000,6 @@ void cPlayerManager::Render_Player_List(void)
 		return;
 	}
 
-	WWASSERT(PTheGameData != NULL);
 	if (GameModeManager::Find("Combat") == NULL ||
 		!GameModeManager::Find("Combat")->Is_Active() ||
 		The_Game()->IsIntermission.Is_True()) {
@@ -1157,7 +1040,6 @@ void cPlayerManager::Render_Player_List(void)
 	sort=true;//XXX
 
 	if (sort) {
-		WWPROFILE("Team & Player sorts");
 		cTeamManager::Sort_Teams();
 		cPlayerManager::Sort_Players(true);
 	}
@@ -1193,14 +1075,8 @@ void cPlayerManager::Render_Player_List(void)
 	int count = current_count;
 
 	bool show_inactive = false;
-#ifdef WWDEBUG
-	if (cDevOptions::ShowInactivePlayers.Is_True()) {
-		show_inactive = true;
-	}
-#endif // WWDEBUG
 
 	for (int j = 0; j < count; j++) {
-      WWASSERT(j < MAX_PLAYERS);
 	   cPlayer * p_player = Player_Array[j];
 		if (!p_player) continue;
 
@@ -1261,8 +1137,6 @@ void cPlayerManager::Render_Player_List(void)
 	PTextRenderer->Reset();
 
 
-   WWASSERT(PFont != NULL);
-	WWASSERT(PTextRenderer != NULL);
 
 	DEMO_SECURITY_CHECK;
 
@@ -1360,7 +1234,6 @@ void cPlayerManager::Render_Player_List(void)
 //-----------------------------------------------------------------------------
 void cPlayerManager::Log_Player_List(void)
 {
-	WWDEBUG_SAY(("cPlayerManager::Log_Player_List\n"));
 
 	StringClass results_filename;
 	results_filename.Format("results%d.txt", cUserOptions::ResultsLogNumber.Get());
@@ -1410,7 +1283,6 @@ bool cPlayerManager::Save(ChunkSaveClass & csave)
    SLNode<cPlayer> * objnode;
 	for (objnode = PlayerList.Head(); objnode; objnode = objnode->Next()) {
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 		csave.Begin_Chunk(CHUNKID_PLAYER);
 		p_player->Save(csave);
 		csave.End_Chunk();

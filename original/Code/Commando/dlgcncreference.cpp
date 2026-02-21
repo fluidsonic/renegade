@@ -187,7 +187,6 @@ CnCReferenceMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			//
 			// Play a custom SFX for feedback
 			//
-			WWASSERT(WWAudioClass::Get_Instance() != NULL);
 			WWAudioClass::Get_Instance()->Create_Instant_Sound("Committed_Suicide", Matrix3D(1));
 
 			GameInitMgrClass::Continue_Game();
@@ -206,7 +205,6 @@ CnCReferenceMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			//
 			// Play a custom SFX for feedback
 			//
-			WWASSERT(WWAudioClass::Get_Instance() != NULL);
 			WWAudioClass::Get_Instance()->Create_Instant_Sound("Changed_Team", Matrix3D(1));
 			
 			GameInitMgrClass::Continue_Game();

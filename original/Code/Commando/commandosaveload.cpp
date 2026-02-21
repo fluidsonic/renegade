@@ -2,7 +2,6 @@
 #include "chunkio.h"
 #include "cnetwork.h"
 #include "debug.h"
-#include "wwmemlog.h"
 #include "god.h"
 #include "campaign.h"
 
@@ -22,7 +21,6 @@ enum	{
 */
 bool	CommandoSaveLoadClass::Save( ChunkSaveClass &csave )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	csave.Begin_Chunk( CHUNKID_NETWORK );
 	cNetwork::Save( csave );
@@ -41,7 +39,6 @@ bool	CommandoSaveLoadClass::Save( ChunkSaveClass &csave )
 
 bool	CommandoSaveLoadClass::Load( ChunkLoadClass &cload )
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {

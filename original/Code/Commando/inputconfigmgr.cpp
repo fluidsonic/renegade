@@ -429,7 +429,6 @@ void
 InputConfigMgrClass::Save (void)
 {
 	FileClass *file = _TheFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
-	WWASSERT (file != NULL);
 	if (file == NULL) {
 		return ;
 	}
@@ -472,7 +471,6 @@ void
 InputConfigMgrClass::Load (void)
 {
 	FileClass *file = _TheFileFactory->Get_File (CFG_DICTIONARY_FILENAME);
-	WWASSERT (file != NULL);
 	if (file == NULL) {
 		return ;
 	}

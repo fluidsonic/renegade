@@ -60,7 +60,14 @@ typedef unsigned int        ULONG;
 typedef int                 INT;
 typedef unsigned long       ULONG_PTR;
 typedef long                LONG;
+/* In Objective-C/Objective-C++ mode __OBJC__ is defined, and objc.h defines
+   BOOL as 'bool'. Match that here so the later typedef bool BOOL in objc.h
+   is a harmless compatible redefinition rather than a conflicting one. */
+#ifdef __OBJC__
+typedef bool                BOOL;
+#else
 typedef int                 BOOL;
+#endif
 typedef unsigned short      USHORT;
 typedef short               SHORT;
 typedef char                CHAR;

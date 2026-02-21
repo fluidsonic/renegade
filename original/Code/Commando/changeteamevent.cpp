@@ -35,7 +35,6 @@ cChangeTeamEvent::cChangeTeamEvent(void)
 void
 cChangeTeamEvent::Init(void)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId = cNetwork::Get_My_Id();
 
@@ -52,7 +51,6 @@ cChangeTeamEvent::Init(void)
 void
 cChangeTeamEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	cPlayer * p_player = cPlayerManager::Find_Player(SenderId);
 
@@ -63,7 +61,6 @@ cChangeTeamEvent::Act(void)
 	{
 		int team = p_player->Get_Player_Type();
 
-		WWASSERT(team == PLAYERTYPE_NOD || team == PLAYERTYPE_GDI);
 
 		int new_team = PLAYERTYPE_NOD;
 		
@@ -78,7 +75,6 @@ cChangeTeamEvent::Act(void)
 
 		p_player->Set_Player_Type(new_team);
 
-		WWDEBUG_SAY(("Client %d changed team.\n", SenderId));
 
 		//
 		//	Only reset the player's cash if they've changed teams after 60 seconds
@@ -143,11 +139,9 @@ cChangeTeamEvent::Act(void)
 void
 cChangeTeamEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 
@@ -158,13 +152,11 @@ cChangeTeamEvent::Export_Creation(BitStreamClass & packet)
 void
 cChangeTeamEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 
 	packet.Get(SenderId);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

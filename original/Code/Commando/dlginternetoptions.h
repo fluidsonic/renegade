@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGINTERNETOPTIONS_H
 #define __DLGINTERNETOPTIONS_H

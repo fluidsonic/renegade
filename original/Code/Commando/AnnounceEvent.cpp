@@ -35,7 +35,6 @@ CSAnnouncement::~CSAnnouncement()
 
 void CSAnnouncement::Init(int to_id, int announcementID, AnnouncementEnum type, int radio_cmd_id)
 	{
-	WWASSERT(cNetwork::I_Am_Client());
 
 	mToID = to_id;
 	mFromID = cNetwork::Get_My_Id();
@@ -72,7 +71,6 @@ void CSAnnouncement::Init(int to_id, int announcementID, AnnouncementEnum type, 
 
 void CSAnnouncement::Act(void)
 	{
-	WWASSERT(cNetwork::I_Am_Server());
 
 	if (GameModeManager::Find("Combat")->Is_Active())
 		{
@@ -86,7 +84,6 @@ void CSAnnouncement::Act(void)
 
 void CSAnnouncement::Export_Creation(BitStreamClass& packet)
 	{
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 	packet.Add(mToID);
@@ -101,7 +98,6 @@ void CSAnnouncement::Export_Creation(BitStreamClass& packet)
 
 void CSAnnouncement::Import_Creation(BitStreamClass& packet)
 	{
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 	packet.Get(mToID);
@@ -139,7 +135,6 @@ SCAnnouncement::~SCAnnouncement()
 
 void SCAnnouncement::Init(int to_id, int from_id, int announcementID, AnnouncementEnum type, int radio_cmd_id)
 	{
-	WWASSERT(cNetwork::I_Am_Server());
 
 	mToID = to_id;
 	mFromID = from_id;
@@ -181,7 +176,6 @@ void SCAnnouncement::Init(int to_id, int from_id, int announcementID, Announceme
 
 void SCAnnouncement::Set_Dirty_Bit_For_Team(DIRTY_BIT bit, int team)
 	{
-	WWASSERT(team == PLAYERTYPE_NOD || team == PLAYERTYPE_GDI);
 
 	SList<cPlayer>* playerList = cPlayerManager::Get_Player_Object_List();
 
@@ -292,7 +286,6 @@ void SCAnnouncement::Import_Creation(BitStreamClass& packet)
 	{
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	packet.Get(mToID);
 	packet.Get(mFromID);

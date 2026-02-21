@@ -37,7 +37,6 @@
 #include "dx8wrapper.h"
 #include "pscene.h"
 #include "systeminfolog.h"
-#include "cpudetect.h"
 #include "dx8caps.h"
 #include "registry.h"
 #include "specialbuilds.h"
@@ -258,7 +257,6 @@ static void Log_System_Information()
 
 	StringClass string; // This will be a long string so don't allocate locally!
 	string.Format("Computer name: %s\r\nUser name: %s\r\n\r\n",name,user);
-	string+=CPUDetectClass::Get_Processor_Log();
 	if (DX8Wrapper::Get_Current_Caps()) {
 		string+=DX8Wrapper::Get_Current_Caps()->Get_Log();
 	}
@@ -266,7 +264,6 @@ static void Log_System_Information()
 	string+="Compact tab-delimited version:\r\n";
 	StringClass tmp;	// This will be long so no local alloc needed
 
-	string+=CPUDetectClass::Get_Compact_Log();
 	if (DX8Wrapper::Get_Current_Caps()) {
 		string+=DX8Wrapper::Get_Current_Caps()->Get_Compact_Log();
 	}
@@ -290,27 +287,6 @@ static void Log_System_Information()
 	DWORD written;
 	HANDLE file;
 
-#ifdef WWDEBUG
-	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
-	if ( registry.Is_Valid() ) {
-		int disable=registry.Get_Int( SYSTEM_INFO_LOG_DISABLE );
-		if (!disable) {
-			if (!SysInfoCopyThread.Is_Running()) {
-				StringClass filename(0,true);
-	//			filename="\\\\havoc\\rock\\projects\\renegade\\logs\\";
-				filename="\\\\tanya\\game\\Projects\\Renegade\\_sysinfo_logs\\";
-				tmp.Format("%d_%d_",DX8Wrapper::Get_Current_Caps()->Get_Vendor(),DX8Wrapper::Get_Current_Caps()->Get_Device());
-				filename+=tmp;
-				filename+=name;
-				filename+=".txt";
-
-				SysInfoCopyThread.String=string;
-				SysInfoCopyThread.Filename=filename;
-				SysInfoCopyThread.Execute();
-			}
-		}
-	}
-#endif
 
 	// Write log to local work folder
 	file = CreateFile("sysinfo.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
@@ -381,7 +357,6 @@ void Game_Shutdown(void)
 
 //	CommandoAssetManager::Shutdown();
 	WW3D::_Invalidate_Textures();
-	WWASSERT( WW3DAssetManager::Get_Instance() );
 	WW3DAssetManager::Delete_This();
 //	if ( WW3DAssetManager::Get_Instance() ) {
 //		delete WW3DAssetManager::Get_Instance();
@@ -416,7 +391,6 @@ void Game_Shutdown(void)
 	while (FileFactoryListClass::Get_Instance() != NULL) {
 		FileFactoryClass * factory = FileFactoryListClass::Get_Instance()->Remove_FileFactory();
 		if (factory != NULL) {
-			WWDEBUG_SAY(("Removing pesky old file factory\n"));
 			delete factory;
 		} else {
 			break;

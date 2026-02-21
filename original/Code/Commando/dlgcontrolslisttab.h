@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGCONTROLSLISTTAB_H
 #define __DLGCONTROLSLISTTAB_H

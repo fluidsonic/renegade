@@ -75,8 +75,6 @@ CNCPurchaseMenuClass::On_Init_Dialog (void)
 {
 	MenuDialogClass::On_Init_Dialog ();
 
-	WWASSERT(COMBAT_STAR != NULL);
-	WWASSERT(COMBAT_STAR->Get_Player_Data() != NULL);
 
 	//
 	//	Get the player's current money
@@ -286,8 +284,6 @@ CNCPurchaseMenuClass::Add_Item_To_Shopping_Cart (int ctrl_id)
 	//
 	//	Can the player afford this item?
 	//
-	WWASSERT(COMBAT_STAR != NULL);
-	WWASSERT(COMBAT_STAR->Get_Player_Data() != NULL);
 
 	int funds	= (int) COMBAT_STAR->Get_Player_Data ()->Get_Money ();
 	int cost		= Definition->Get_Cost (item_index) * CostScalingFactor;
@@ -334,8 +330,6 @@ CNCPurchaseMenuClass::Clear_Shopping_Cart (void)
 	//
 	TotalCost	= 0;
 	
-	WWASSERT(COMBAT_STAR != NULL);
-	WWASSERT(COMBAT_STAR->Get_Player_Data() != NULL);
 
 	int funds	= (int) COMBAT_STAR->Get_Player_Data ()->Get_Money ();
 	ShoppingList.Delete_All ();
@@ -402,7 +396,6 @@ CNCPurchaseMenuClass::Purchase (void)
 	//
 	if (allow_purchase) {		
 		for (int index = 0; index < ShoppingList.Count (); index ++) {
-			WWASSERT (COMBAT_STAR != NULL);
 
 			//
 			//	Lookup the merchandise control we'll be purchasing
@@ -583,8 +576,6 @@ CNCPurchaseMenuClass::On_Frame_Update (void)
 		return ;
 	}
 
-	WWASSERT(COMBAT_STAR != NULL);
-	WWASSERT(COMBAT_STAR->Get_Player_Data() != NULL);
 
 	//
 	//	Update the player's money every frame

@@ -26,7 +26,6 @@ cLoadingEvent::cLoadingEvent(void)
 void
 cLoadingEvent::Init(bool flag)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId		= cNetwork::Get_My_Id();
 	IsLoading	= flag;
@@ -44,7 +43,6 @@ cLoadingEvent::Init(bool flag)
 void
 cLoadingEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	cPlayer * p_player = cPlayerManager::Find_Player(SenderId);
 	if (p_player != NULL)
@@ -75,13 +73,11 @@ cLoadingEvent::Act(void)
 void
 cLoadingEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	//WWDEBUG_SAY(("cLoadingEvent::Export_Creation (%d)\n", IsLoading));
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 	packet.Add(IsLoading);
@@ -97,12 +93,10 @@ cLoadingEvent::Import_Creation(BitStreamClass & packet)
 
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 	packet.Get(IsLoading);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

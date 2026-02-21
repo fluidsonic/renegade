@@ -25,7 +25,6 @@ cWarpEvent::cWarpEvent(void)
 void
 cWarpEvent::Init(WideStringClass & player_name)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId = cNetwork::Get_My_Id();
 	PlayerName = player_name;
@@ -43,7 +42,6 @@ cWarpEvent::Init(WideStringClass & player_name)
 void
 cWarpEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	SoldierGameObj * p_warp_soldier = GameObjManager::Find_Soldier_Of_Client_ID(SenderId);
 
@@ -69,7 +67,6 @@ cWarpEvent::Act(void)
 			p_warp_soldier->Set_Transform(soldier_tm);
 			p_warp_soldier->Perturb_Position(2);
 
-		   WWDEBUG_SAY(("Client %d warped.\n", SenderId));
 		}
 	}
 
@@ -80,11 +77,9 @@ cWarpEvent::Act(void)
 void
 cWarpEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 	packet.Add_Wide_Terminated_String(PlayerName, true);
@@ -98,12 +93,10 @@ cWarpEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 	packet.Get_Wide_Terminated_String(PlayerName.Get_Buffer(256), 256, true);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

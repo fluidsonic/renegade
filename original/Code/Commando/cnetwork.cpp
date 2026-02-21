@@ -6,7 +6,6 @@
 #include "specialbuilds.h"
 
 #include "langmode.h"
-#include "wolgmode.h"
 #include "playermanager.h"
 #include "textdisplay.h"
 #include "gameobjmanager.h"
@@ -17,11 +16,9 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "msgstatlistgroup.h"
-#include "wwprofile.h"
 #include "gametype.h"
 #include "crc.h"
 #include "render2d.h"
-#include "wwmemlog.h"
 #include "svrgoodbyeevent.h"
 #include "gameoptionsevent.h"
 #include "evictionevent.h"
@@ -31,7 +28,6 @@
 #include "sbbomanager.h"
 #include "clientgoodbyeevent.h"
 //#include "helptext.h"
-#include	"natter.h"
 #include	"vistable.h"
 #include "gameinitmgr.h"
 #include "dlgmessagebox.h"
@@ -43,7 +39,6 @@
 #include "bandwidthgraph.h"
 #include "buildnum.h"
 #include "messagewindow.h"
-#include "wwmemlog.h"
 #include "consolemode.h"
 #include "slavemaster.h"
 #include "gamedataupdateevent.h"
@@ -93,18 +88,15 @@ bool												cNetwork::SensibleUpdates					= true;
 //-----------------------------------------------------------------------------
 void cNetwork::Init_Client(unsigned short my_port)
 {
-	WWMEMLOG(MEM_NETWORK);
 
 #ifndef FREEDEDICATEDSERVER
 
-   WWDEBUG_SAY(("cNetwork::Init_Client\n"));
 
 	if (PClientConnection != NULL) {
 		Cleanup_Client();
 	}
 
 	PClientStatList = new cMsgStatList;
-	WWASSERT(PClientStatList != NULL);
 	//PClientStatList->Init(MESSAGE_COUNT);
 	PClientStatList->Init(1);
 	for (int i = 0; i < PClientStatList->Get_Num_Stats(); i++) {
@@ -118,9 +110,7 @@ void cNetwork::Init_Client(unsigned short my_port)
 		PClientStatList->Set_Name(i, "message");
 	}
 
-   WWASSERT(PClientConnection == NULL);
    PClientConnection = new cConnection;
-   WWASSERT(PClientConnection != NULL);
 
 	CombatManager::Set_I_Am_Client(true);
 
@@ -130,7 +120,6 @@ void cNetwork::Init_Client(unsigned short my_port)
 	PClientConnection->Install_Client_Packet_Handler(Client_Packet_Handler);
 
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		WWASSERT(PTheGameData != NULL);
 		The_Game()->Set_Password(cGameSpyAdmin::Get_Password_Attempt());
 	}
 
@@ -141,7 +130,6 @@ void cNetwork::Init_Client(unsigned short my_port)
 
 		bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
 
-		WWASSERT(bbo > 0);
 		cBandwidthGraph::Set_Scale(200000);
 
 		HaveDoneTeamChangeDialog = false;
@@ -149,15 +137,11 @@ void cNetwork::Init_Client(unsigned short my_port)
 		//WWASSERT(GameModeManager::Find("WOL")->Is_Active());
 		bbo = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 		//bbo = cUserOptions::BandwidthBps.Get();
-		WWASSERT(bbo > 0);
 
 		int bw_scale = (bbo * 2) / 10;
 		bw_scale = (bw_scale / 1000) * 1000;
 		cBandwidthGraph::Set_Scale(bw_scale);
 
-		if (GameModeManager::Find("WOL")->Is_Active()) {
-			HaveDoneTeamChangeDialog = true;
-		}
 	}
 
 	PClientConnection->Set_Bandwidth_Budget_Out(bbo);
@@ -165,7 +149,6 @@ void cNetwork::Init_Client(unsigned short my_port)
    BOOL is_flow_control_enabled = !IS_SOLOPLAY;
    PClientConnection->Enable_Flow_Control(is_flow_control_enabled);
 
-	WWASSERT(PTheGameData != NULL);
    PClientConnection->Init_As_Client(
 		The_Game()->Get_Ip_Address(), The_Game()->Get_Port(), my_port);
 
@@ -205,10 +188,8 @@ void cNetwork::Init_Client(unsigned short my_port)
 //-----------------------------------------------------------------------------
 void cNetwork::Cleanup_Client(void)
 {
-	WWMEMLOG(MEM_NETWORK);
 #ifndef FREEDEDICATEDSERVER
 
-   WWDEBUG_SAY(("cNetwork::Cleanup_Client\n"));
 
    if (I_Am_Client()) {
 
@@ -240,12 +221,9 @@ void cNetwork::Cleanup_Client(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Accept_Handler(void)
 {
-	WWMEMLOG(MEM_NETWORK);
 #ifndef FREEDEDICATEDSERVER
 
-   WWDEBUG_SAY(("cNetwork::Accept_Handler\n"));
 
-   WWASSERT(I_Am_Client());
 
 	CombatManager::Set_My_Id(Get_My_Id());
 
@@ -256,14 +234,12 @@ void cNetwork::Accept_Handler(void)
 		//
 		// Create C->S mirrored client control object
 		//
-		WWASSERT(PClientControl == NULL);
 		PClientControl = new CClientControl;
 		PClientControl->Init();
 
 		//
 		// Create C->S mirrored client fps object
 		//
-		WWASSERT(PClientFps == NULL);
 		PClientFps = new CClientFps;
 		PClientFps->Init();
 	}
@@ -272,14 +248,6 @@ void cNetwork::Accept_Handler(void)
    if (!I_Am_Server()) {
       if (GameModeManager::Find("LAN")->Is_Active()) {
          PLC->Accept_Actions();
-      } else {
-			 GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-			 if (gameMode && gameMode->Is_Active()) {
-				 WolGameModeClass* wolGame = static_cast<WolGameModeClass*>(gameMode);
-				 WWASSERT(wolGame);
-				 wolGame->Accept_Actions();
-			 }
       }
    }
 
@@ -291,7 +259,6 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 {
 #ifndef FREEDEDICATEDSERVER
 
-   WWDEBUG_SAY(("cNetwork::Refusal_Handler\n"));
 
 	// Close connecting dialog as neccessary.
 	DialogBaseClass* dialog = DialogMgrClass::Find_Dialog(IDD_MULTIPLAY_CONNECTING);
@@ -303,20 +270,10 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 	}
 
 	 // Verify refusal code is within valid range
-	 WWASSERT(REFUSAL_CLIENT_ACCEPTED <= refusal_code && REFUSAL_BY_APPLICATION >= refusal_code);
 
-   WWASSERT(I_Am_Client());
 
    if (GameModeManager::Find("LAN")->Is_Active()) {
       PLC->Refusal_Actions();
-   } else {
-		 GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-		 if (gameMode && gameMode->Is_Active()) {
-			 WolGameModeClass* wolGame = static_cast<WolGameModeClass*>(gameMode);
-			 WWASSERT(wolGame);
-			 wolGame->Refusal_Actions();
-		 }
    }
 
    //
@@ -460,12 +417,10 @@ int cNetwork::Get_Data_Files_CRC(void)
 
 void cNetwork::Compute_Exe_Key(void)
 {
-   WWDEBUG_SAY(("cNetwork::Compute_Exe_Key\n"));
 
 	char exe_filename[500];
    int succeeded = 0;
 	succeeded = ::GetModuleFileName(NULL, exe_filename, sizeof(exe_filename));
-	WWASSERT(succeeded);
 
 	StringClass key_string;
 	StringClass string;
@@ -477,7 +432,6 @@ void cNetwork::Compute_Exe_Key(void)
 	//
 	string.Format("RENEGADE %u", BuildInfoClass::Get_Build_Number());
 
-	WWDEBUG_SAY(("File id string: %s\n", string));
 	key_string += string;
 	key_string += " ";
 	ExeCRC = CRCEngine()(string, strlen(string));
@@ -496,7 +450,6 @@ void cNetwork::Compute_Exe_Key(void)
 	//
 	//cMiscUtil::Get_File_Id_String("Data\\strings.tdb", string);
 	string.Format("strings.tdb %u", TranslateDBClass::Get_Version_Number());
-	WWDEBUG_SAY(("File id string: %s\n", string));
 	key_string += string;
 	key_string += " ";
 	StringsCRC = CRCEngine()(string, strlen(string));
@@ -521,8 +474,6 @@ void cNetwork::Compute_Exe_Key(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Onetime_Init(void)
 {
-	WWMEMLOG(MEM_NETWORK);
-   WWDEBUG_SAY(("cNetwork::Onetime_Init\n"));
 
 	Compute_Exe_Key();
 
@@ -537,7 +488,6 @@ void cNetwork::Onetime_Init(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Onetime_Shutdown(void)
 {
-   WWDEBUG_SAY(("cNetwork::Onetime_Shutdown\n"));
 
    Set_Receiver(NULL);
 	delete NetworkReceiver;
@@ -570,17 +520,13 @@ void cNetwork::Onetime_Shutdown(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Init_Server(void)
 {
-	WWMEMLOG(MEM_NETWORK);
-   WWDEBUG_SAY(("cNetwork::Init_Server\n"));
 
 #ifndef BETACLIENT
 
 	NetworkObjectClass::Set_Is_Server(true);
 
 	PServerStatListGroup = new cMsgStatListGroup;
-	WWASSERT(PServerStatListGroup != NULL);
 	//PServerStatListGroup->Init(The_Game()->Get_Max_Players(), MESSAGE_COUNT);
-	WWASSERT(PTheGameData != NULL);
 	PServerStatListGroup->Init(The_Game()->Get_Max_Players(), 1);
 
 	/*
@@ -592,9 +538,7 @@ void cNetwork::Init_Server(void)
 	}
 	*/
 
-   WWASSERT(PServerConnection == NULL);
    PServerConnection = new cConnection;
-   WWASSERT(PServerConnection != NULL);
 
    CombatManager::Set_I_Am_Server(true);
 
@@ -610,12 +554,10 @@ void cNetwork::Init_Server(void)
 		 (GameModeManager::Find("LAN")->Is_Active() && !cGameSpyAdmin::Is_Gamespy_Game())) {
 
 		ULONG bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
-		WWASSERT(bbo > 0);
 		PServerConnection->Set_Bandwidth_Budget_Out(bbo);
 		cBandwidthGraph::Set_Scale(200000);
 	} else {
 		//WWASSERT(GameModeManager::Find("WOL")->Is_Active());
-		WWASSERT(cUserOptions::BandwidthBps.Get() > 0);
 		unsigned long bw = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 
 		/*
@@ -645,7 +587,6 @@ void cNetwork::Init_Server(void)
    BOOL is_flow_control_enabled = !IS_SOLOPLAY;
    PServerConnection->Enable_Flow_Control(is_flow_control_enabled);
 
-	WWASSERT(PTheGameData != NULL);
 	PServerConnection->Init_As_Server(
 		The_Game()->Get_Port(),
 		The_Game()->Get_Max_Players(),
@@ -672,7 +613,6 @@ void cNetwork::Init_Server(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Cleanup_Server(void)
 {
-   WWDEBUG_SAY(("cNetwork::Cleanup_Server\n"));
 
    if (I_Am_Server()) {
 
@@ -748,7 +688,6 @@ void cNetwork::Update_Fps(void)
 // Needed for release mode too. ST - 1/23/2002 11:02PM
 //#ifdef WWDEBUG
 		if (I_Am_Server()) {
-			WWASSERT(cServerFps::Get_Instance() != NULL);
 			cServerFps::Get_Instance()->Set_Fps(Fps);
 		}
 //#endif // WWDEBUG
@@ -807,14 +746,11 @@ void cNetwork::Connection_Status_Change_Feedback(void)
 	//
 	StringClass temp_string;
 	widestring.Convert_To(temp_string);
-	WWDEBUG_SAY(("\n***%s\n", temp_string.Peek_Buffer()));
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Update(void)
 {
-	WWPROFILE( "cNetwork::Update" );
-	WWMEMLOG(MEM_GAMEDATA);
 
 	bool flush_packets = false;
 
@@ -826,27 +762,12 @@ void cNetwork::Update(void)
 	//
 	static int recursion_level = 0;
 	recursion_level++;
-	WWASSERT(recursion_level == 1);
 
 	Update_Fps();
 
-#ifdef WWDEBUG
-	//
-	// Watch out for unexpected slow frames. They may interrupt networking.
-	//
-	static DWORD last_time_ms = TIMEGETTIME();
-	DWORD time_now_ms = TIMEGETTIME();
-	if (time_now_ms - last_time_ms > 2000) {
-		Debug_Say(("\n***cNetwork::Update: warning, think # %d was slow (%u ms)\n\n",
-			ThinkCount,
-			time_now_ms - last_time_ms));
-	}
-	last_time_ms = time_now_ms;
-#endif // WWDEBUG
 
 	if (I_Am_Server()) {
 		if (I_Am_Client()) {
-			WWPROFILE( "Client Send" );
 			PClientConnection->Service_Send();
 
 			if (PClientConnection->Is_Bad_Connection() != LastServerConnectionStateBad) {
@@ -860,23 +781,19 @@ void cNetwork::Update(void)
 //			GameSpyQnR.Think();
 //		}
 
-		WWPROFILE( "Server Read" );
 		PServerConnection->Service_Read();
 
 		if (!g_is_loading) {
-			WWPROFILE( "Shared CS Think" );
 			Shared_Client_And_Server_Think();
 		}
 
 		if (I_Am_Client() && !g_is_loading) {
-			WWPROFILE( "Client_Think" );
 			if (Client_Think()) {
 				flush_packets = true;
 			}
 		}
 
 		if (!g_is_loading) {
-			WWPROFILE( "Server_Think" );
 			if (Server_Think()) {
 				flush_packets = true;
 			} else {
@@ -886,19 +803,16 @@ void cNetwork::Update(void)
 		}
 
 		{
-		WWPROFILE( "Server Send" );
 		PServerConnection->Service_Send();
 		}
 
 		if (I_Am_Client()) {
-			WWPROFILE( "Client Read" );
 			PClientConnection->Service_Read();
 		}
 
 	} else if (I_Am_Client()) {
 
 		{
-		WWPROFILE( "Client Read" );
 		PClientConnection->Service_Read();
 		}
 
@@ -908,19 +822,16 @@ void cNetwork::Update(void)
 		}
 
 		if (!g_is_loading) {
-			WWPROFILE( "Shared CS Think" );
 			Shared_Client_And_Server_Think();
 		}
 
 		if (!g_is_loading) {
-			WWPROFILE( "Client_Think" );
 			if (Client_Think()) {
 				flush_packets = true;
 			}
 		}
 
 		{
-		WWPROFILE( "Client Send" );
 		if (PClientConnection != NULL) {
 			PClientConnection->Service_Send();
 		}
@@ -936,7 +847,6 @@ void cNetwork::Update(void)
 	}
 
 	recursion_level--;
-	WWASSERT(recursion_level == 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -944,7 +854,6 @@ void cNetwork::Client_Send_Packet(cPacket & packet, int mode)
 {
 #ifndef FREEDEDICATEDSERVER
 
-   WWASSERT(I_Am_Client());
 
 	if (cNetwork::PClientConnection->Is_Established()) {
 
@@ -957,7 +866,6 @@ void cNetwork::Client_Send_Packet(cPacket & packet, int mode)
 		*/
 
 	} else {
-		WWDEBUG_SAY(("cNetwork::Client_Send_Packet: warning: Connection not yet established.\n"));
 		//TSS2001 XXX DIE;
 	}
 
@@ -969,8 +877,6 @@ void cNetwork::Server_Send_Packet(cPacket & packet, int mode, int recipient)
 {
 #ifndef BETACLIENT
 
-   WWASSERT(I_Am_Server());
-   WWASSERT(PServerConnection->Is_Established());
 
 	if (recipient == ALL) {
 		//
@@ -985,7 +891,6 @@ void cNetwork::Server_Send_Packet(cPacket & packet, int mode, int recipient)
          objnode; objnode = objnode->Next()) {
 
 		   cPlayer * p_player = objnode->Data();
-         WWASSERT(p_player != NULL);
 
 			//if (p_player->Is_Human()) {
 			if (p_player->Get_Is_Active().Is_True() &&
@@ -1028,8 +933,6 @@ void cNetwork::Server_Send_Packet_To_All_Connected(cPacket & packet, int mode)
 	// we can record message stats.
 	//
 
-	WWASSERT(I_Am_Server());
-   WWASSERT(PServerConnection->Is_Established());
 
 	//BYTE message_type = packet.Peek_Message_Type();
 
@@ -1050,8 +953,6 @@ void cNetwork::Server_Send_Packet_To_All_Connected(cPacket & packet, int mode)
 //-----------------------------------------------------------------------------
 LPCSTR cNetwork::Get_Client_Enumeration_String(void)
 {
-   WWASSERT(I_Am_Server());
-   WWASSERT(PServerConnection->Is_Established());
 
    char temp_str[10];
    strcpy(ClientEnumerationString, "");
@@ -1073,37 +974,30 @@ LPCSTR cNetwork::Get_Client_Enumeration_String(void)
 //-----------------------------------------------------------------------------
 cRemoteHost * cNetwork::Get_Server_Rhost(int client_id)
 {
-   WWASSERT(I_Am_Server());
    return PServerConnection->Get_Remote_Host(client_id);
 }
 
 //-----------------------------------------------------------------------------
 cRemoteHost * cNetwork::Get_Client_Rhost(void)
 {
-   WWASSERT(I_Am_Client());
    return PClientConnection->Get_Remote_Host(SERVER_RHOST_ID);
 }
 
 //-----------------------------------------------------------------------------
 float cNetwork::Get_Server_Rhost_Threshold_Priority(int client_id)
 {
-   WWASSERT(I_Am_Server());
-   WWASSERT(Get_Server_Rhost(client_id) != NULL);
    return Get_Server_Rhost(client_id)->Get_Threshold_Priority();
 }
 
 //-----------------------------------------------------------------------------
 float cNetwork::Get_Client_Rhost_Threshold_Priority(void)
 {
-   WWASSERT(I_Am_Client());
-   WWASSERT(Get_Client_Rhost() != NULL);
    return Get_Client_Rhost()->Get_Threshold_Priority();
 }
 
 //-----------------------------------------------------------------------------
 int cNetwork::Get_My_Id(void)
 {
-   WWASSERT(I_Am_Client());
    return PClientConnection->Get_Local_Id();
 }
 
@@ -1112,7 +1006,6 @@ LPCSTR cNetwork::Get_Client_String(int recipient)
 {
    //WWASSERT(I_Am_Server());
    if (recipient > 0) {
-		WWASSERT(PServerConnection->Is_Established());
 
 		if (recipient == ALL) {
 			sprintf(ClientString, "all %d clients (%s)",
@@ -1128,7 +1021,6 @@ LPCSTR cNetwork::Get_Client_String(int recipient)
    //
    // Note: This WWASSERT would catch the overwrite AFTER it has happened...
    //
-   WWASSERT(strlen(ClientString) < sizeof(ClientString));
 
    return(ClientString);
 }
@@ -1136,20 +1028,17 @@ LPCSTR cNetwork::Get_Client_String(int recipient)
 //-----------------------------------------------------------------------------
 void cNetwork::Server_Broken_Connection_Handler(int broken_rhost_id)
 {
-	WWASSERT(broken_rhost_id >= 0);
 
    //
    // The net lib calls this when a reliable packet fails after
    // many attempts. The connection data has already been destroyed.
    //
-   WWDEBUG_SAY(("\n***Connection to client %d broken   \n\n", broken_rhost_id));
 
 	WideStringClass widestring;
 	widestring.Format(
 		L"%s %d\n",
 		TRANSLATION(IDS_MP_CONNECTION_TO_CLIENT_BROKEN),
 		broken_rhost_id);
-   WWASSERT(CombatManager::Get_Message_Window () != NULL);
 	//Get_Text_Display()->Print_System(widestring);
 
 	//
@@ -1171,8 +1060,6 @@ void cNetwork::Client_Broken_Connection_Handler(void)
    // many attempts. The connection data has already been destroyed.
    //
 
-   WWASSERT(Get_Text_Display() != NULL);
-   WWASSERT(PClientConnection != NULL);
 
    /**/
 	if (PClientConnection->Have_Id()) {
@@ -1194,7 +1081,6 @@ void cNetwork::Client_Broken_Connection_Handler(void)
 	/**/
 
 	/*
-	WWDEBUG_SAY(("Connection to server broken.\n"));
 
 	if (PClientConnection->Have_Id()) {
 		DlgMPConnectionRefused::DoDialog(TRANSLATION(IDS_MP_CONNECTION_TO_SERVER_BROKEN), true);
@@ -1208,11 +1094,9 @@ void cNetwork::Client_Broken_Connection_Handler(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Process_Eviction_Sc(cPacket & packet)
 {
-   WWDEBUG_SAY(("cNetwork::Process_Eviction_Sc\n"));
 
 	WWAudioClass::Get_Instance()->Create_Instant_Sound("Evicted_By_Server", Matrix3D(1));
 
-   WWASSERT(I_Am_Client());
 
 
 	UINT min_bps;
@@ -1222,26 +1106,18 @@ void cNetwork::Process_Eviction_Sc(cPacket & packet)
 
    //UINT sustainable_bps  = (UINT) packet.Get();
 
-	WWDEBUG_SAY(("\n* You were evicted from the server for inadequate bandwidth performance.\n"
-         "* This server requires packetloss of less than %5.2f %%, and a minimum\n"
-         "* sustainable bandwidth of %d bps.\n", max_packetloss, min_bps));
 
    //
    // At this stage, just signal to close down. This is
    // a convenience during development
    //
-   DIE;
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Eviction_Handler(int evicted_rhost_id)
 {
-	WWMEMLOG(MEM_NETWORK);
-   WWDEBUG_SAY(("cNetwork::Eviction_Handler\n"));
 
-	WWASSERT(evicted_rhost_id >= 0);
 
-   WWASSERT(I_Am_Server());
    //Send_Eviction_Sc(evicted_rhost_id);
 
 	cEvictionEvent * p_event = new cEvictionEvent;
@@ -1283,7 +1159,6 @@ cPlayer * cNetwork::Get_My_Player_Object(void)
 int cNetwork::Get_My_Team_Number(void)
 {
    cPlayer * p_me = Get_My_Player_Object();
-   WWASSERT(p_me != NULL);
    return p_me->Get_Player_Type();
 }
 
@@ -1291,7 +1166,6 @@ int cNetwork::Get_My_Team_Number(void)
 Vector3 cNetwork::Get_My_Color(void)
 {
    cPlayer * p_me = cPlayerManager::Find_Player(Get_My_Id());
-   WWASSERT(p_me != NULL);
    return p_me->Get_Color();
 }
 
@@ -1313,9 +1187,7 @@ float cNetwork::Get_Distance_Priority(Vector3 & pos1, Vector3 & pos2)
    Vector3 gap = pos2 - pos1;
    float d = gap.Length();
 
-	WWASSERT(PTheGameData != NULL);
 	float max_distance = The_Game()->Get_Maximum_World_Distance();
-   WWASSERT(max_distance > 0);
 
 	float range1 = max_distance / 25.0f;
    float range2 = max_distance / 5.0f;
@@ -1339,7 +1211,6 @@ float cNetwork::Get_Distance_Priority(Vector3 & pos1, Vector3 & pos2)
       priority = 0;
    }
 
-   WWASSERT(priority > -WWMATH_EPSILON && priority < 1 + WWMATH_EPSILON);
 
    return(priority);
 }
@@ -1347,11 +1218,9 @@ float cNetwork::Get_Distance_Priority(Vector3 & pos1, Vector3 & pos2)
 //-----------------------------------------------------------------------------
 void cNetwork::Shell_Command(LPCSTR command)
 {
-	WWASSERT(command != NULL);
 
 	HINSTANCE hinst = ShellExecute(NULL, NULL, command, NULL, "", SW_SHOW);
 	if ((intptr_t) hinst <= 32) {
-      WWDEBUG_SAY(("Error: ShellExecute failed.\n"));
 	}
 }
 
@@ -1360,9 +1229,7 @@ REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 {
 #ifndef BETACLIENT
 
-   WWDEBUG_SAY(("cNetwork::Application_Acceptance_Handler\n"));
 
-	WWASSERT(I_Am_Server());
 
 	//
 	// Get player name
@@ -1384,7 +1251,6 @@ REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 	int client_exe_key = packet.Get(client_exe_key);
 
 	// Make sure the clients password matches the games password.
-	WWASSERT(PTheGameData != NULL);
 	if (The_Game()->IsPassworded.Is_True() && password.Compare(The_Game()->Get_Password()) != 0) {
 		return REFUSAL_BAD_PASSWORD;
 	}
@@ -1418,14 +1284,9 @@ REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cNetwork::Connection_Handler(int new_rhost_id)
 {
-	WWMEMLOG(MEM_NETWORK);
 #ifndef BETACLIENT
 
-   WWDEBUG_SAY(("cNetwork::Connection_Handler\n"));
 
-	WWASSERT(new_rhost_id >= 0);
-   WWASSERT(I_Am_Server());
-   WWASSERT(Receiver != NULL);
 
    /*
 	//
@@ -1436,7 +1297,6 @@ void cNetwork::Connection_Handler(int new_rhost_id)
    cTeam * p_team;
    for (team_node = cTeamManager::Get_Team_Object_List()->Head(); team_node; team_node = team_node->Next()) {
 		p_team = team_node->Data();
-      WWASSERT(p_team != NULL);
 		Send_Server_New_Team(p_team, new_rhost_id);
    }
 	*/
@@ -1453,7 +1313,6 @@ void cNetwork::Connection_Handler(int new_rhost_id)
 			team_node = team_node->Next()) {
 
 			cTeam * p_team = team_node->Data();
-			WWASSERT(p_team != NULL);
 
 			Send_Object_Update(p_team, new_rhost_id);
 		}
@@ -1475,17 +1334,12 @@ void cNetwork::Connection_Handler(int new_rhost_id)
 //-----------------------------------------------------------------------------
 void cNetwork::Set_Desired_Frame_Sleep_Ms(int b)
 {
-   WWASSERT(b >= 0);
 
-#ifdef WWDEBUG
-	cDevOptions::DesiredFrameSleepMs.Set(b);
-#endif //WWDEBUG
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Set_Simulated_Packet_Loss_Pc(int b)
 {
-   WWASSERT(b >= 0);
 
    if (PClientConnection != NULL) {
       PClientConnection->Set_Packet_Loss(b);
@@ -1495,15 +1349,11 @@ void cNetwork::Set_Simulated_Packet_Loss_Pc(int b)
    }
 
    //SimulatedPacketLossPc = b;
-#ifdef WWDEBUG
-	cDevOptions::SimulatedPacketLossPc.Set(b);
-#endif //WWDEBUG
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Set_Simulated_Packet_Duplication_Pc(int b)
 {
-   WWASSERT(b >= 0);
 
    if (PClientConnection != NULL) {
       PClientConnection->Set_Packet_Duplication(b);
@@ -1513,17 +1363,11 @@ void cNetwork::Set_Simulated_Packet_Duplication_Pc(int b)
    }
 
    //SimulatedPacketDuplicationPc = b;
-#ifdef WWDEBUG
-	cDevOptions::SimulatedPacketDuplicationPc.Set(b);
-#endif
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Set_Simulated_Latency_Range_Ms(int lower, int upper)
 {
-   WWASSERT(lower >= 0);
-   WWASSERT(upper >= 0);
-   WWASSERT(lower <= upper);
 
    if (PClientConnection != NULL) {
       PClientConnection->Set_Packet_Latency_Range(lower, upper);
@@ -1535,37 +1379,24 @@ void cNetwork::Set_Simulated_Latency_Range_Ms(int lower, int upper)
    //SimulatedLatencyRangeMsLower = lower;
    //SimulatedLatencyRangeMsUpper = upper;
 
-#ifdef WWDEBUG
-	cDevOptions::SimulatedLatencyRangeMsLower.Set(lower);
-	cDevOptions::SimulatedLatencyRangeMsUpper.Set(upper);
-#endif
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Set_Spam_Count(int spam_count)
 {
-   WWASSERT(spam_count >= 0);
 
 	//SpamCount = spam_count;
-#ifdef WWDEBUG
-	cDevOptions::SpamCount.Set(spam_count);
-#endif
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Get_Simulated_Latency_Range_Ms(int & lower, int & upper)
 {
-#ifdef WWDEBUG
-	lower = cDevOptions::SimulatedLatencyRangeMsLower.Get();
-	upper = cDevOptions::SimulatedLatencyRangeMsUpper.Get();
-#endif
 }
 
 //-----------------------------------------------------------------------------
 void
 cNetwork::Flush(void)
 {
-   WWDEBUG_SAY(("cNetwork::Flush\n"));
 
 	const bool is_urgent = true;
 
@@ -1615,7 +1446,6 @@ void cNetwork::Enable_Waiting_Players(void)
    for (objnode = cPlayerManager::Get_Player_Object_List()->Head() ; objnode != NULL ; objnode = objnode->Next()) {
 
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
 
 		if (p_player->Is_Human() && p_player->Get_Is_Waiting_For_Intermission().Is_True()) {
 

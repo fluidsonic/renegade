@@ -23,8 +23,6 @@ cServerFps::cServerFps(void)
 void
 cServerFps::Set_Fps(int fps)
 {
-	WWASSERT(fps >= 0);
-	WWASSERT(cNetwork::I_Am_Server());
 
 	Fps = fps;
 
@@ -35,7 +33,6 @@ cServerFps::Set_Fps(int fps)
 void
 cServerFps::Export_Frequent(BitStreamClass &packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Add(Fps);
 }
@@ -44,7 +41,6 @@ cServerFps::Export_Frequent(BitStreamClass &packet)
 void
 cServerFps::Import_Frequent(BitStreamClass &packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	packet.Get(Fps);
 }
@@ -56,7 +52,6 @@ cServerFps::Create_Instance
 	void
 )
 {
-	WWASSERT(TheInstance == NULL);
 	TheInstance = new cServerFps;
 }
 
@@ -67,7 +62,6 @@ cServerFps::Destroy_Instance
 	void
 )
 {
-	WWASSERT(TheInstance != NULL);
 	delete TheInstance;
 	TheInstance = NULL;
 }

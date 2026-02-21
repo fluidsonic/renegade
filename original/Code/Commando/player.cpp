@@ -5,13 +5,11 @@
 
 #include "playermanager.h"
 #include "teammanager.h"
-#include "wwdebug.h"
 #include "miscutil.h"
 #include "cnetwork.h"
 #include "textdisplay.h"
 #include "WWAudio.H"
 #include "gamedata.h"
-#include "wwdebug.h"
 #include "chunkio.h"
 #include "useroptions.h"
 #include "smartgameobj.h"
@@ -91,7 +89,6 @@ void cPlayer::Delete(void)
 //------------------------------------------------------------------------------------
 void cPlayer::Init(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_CREATION, true);
 }
@@ -123,9 +120,9 @@ bool cPlayer::Save(ChunkSaveClass & csave)
 
 	WRITE_MICRO_CHUNK(csave, MICROCHUNK_ID, Id);
 	WRITE_MICRO_CHUNK_WIDESTRING(csave,	MICROCHUNK_NAME, Name);
-	WRITE_MICRO_CHUNK(csave, MICROCHUNK_KILLS, Kills());
-	WRITE_MICRO_CHUNK(csave, MICROCHUNK_DEATHS, Deaths());
-	WRITE_MICRO_CHUNK(csave, MICROCHUNK_TEAMNUMBER, PlayerType());
+	WRITE_MICRO_CHUNK(csave, MICROCHUNK_KILLS, Kills);
+	WRITE_MICRO_CHUNK(csave, MICROCHUNK_DEATHS, Deaths);
+	WRITE_MICRO_CHUNK(csave, MICROCHUNK_TEAMNUMBER, PlayerType);
 	void * old_ptr = this;
 	WRITE_MICRO_CHUNK(csave, MICROCHUNK_REMAP_POINTER, old_ptr);
 
@@ -184,7 +181,6 @@ bool cPlayer::Load(ChunkLoadClass &cload)
 //------------------------------------------------------------------------------------
 void cPlayer::On_Create(void)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
    //
    // Don't show a join message unless:
@@ -197,10 +193,9 @@ void cPlayer::On_Create(void)
 
    if (!IS_MISSION && cPlayerManager::Is_Player_Present(cNetwork::Get_My_Id())) {
 
-		WWASSERT(CombatManager::Get_Message_Window() != NULL);
 
       if (cNetwork::Show_Welcome_Message(Name)) {
-         switch (PlayerType()) {
+         switch (PlayerType) {
             case PLAYERTYPE_RENEGADE:
 				{
 					WideStringClass widestring;
@@ -218,7 +213,6 @@ void cPlayer::On_Create(void)
 		      case PLAYERTYPE_GDI:
 				{
 					WideStringClass widestring;
-					WWASSERT(PTheGameData != NULL);
 					if (The_Game()->IsTeamChangingAllowed.Is_True()) {
 						widestring.Format(
 							L"%s, %s.\n",
@@ -241,11 +235,10 @@ void cPlayer::On_Create(void)
                break;
 				}
             default:
-               DIE;
          }
 
       } else {
-         switch (PlayerType()) {
+         switch (PlayerType) {
             case PLAYERTYPE_MUTANT:
             case PLAYERTYPE_NEUTRAL:
                break;
@@ -267,7 +260,6 @@ void cPlayer::On_Create(void)
 		      case PLAYERTYPE_GDI:
 				{
 					WideStringClass widestring;
-					WWASSERT(PTheGameData != NULL);
 					if (The_Game()->IsTeamChangingAllowed.Is_True()) {
 						widestring.Format(
 							L"%s %s\n",
@@ -291,7 +283,6 @@ void cPlayer::On_Create(void)
 				}
 
             default:
-               DIE;
          }
       }
    }
@@ -342,7 +333,6 @@ void cPlayer::Set_Name(const WideStringClass & name)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Player_Type(int type)
 {
-	WWASSERT(type >= PLAYERTYPE_FIRST && type <= PLAYERTYPE_LAST);
 
 	PlayerType = type;
 
@@ -376,7 +366,7 @@ void cPlayer::Reset_Player(void)
 //------------------------------------------------------------------------------------
 Vector3 cPlayer::Get_Color(void) const
 {
-   switch (PlayerType()) {
+   switch (PlayerType) {
 
       case PLAYERTYPE_NEUTRAL:
 			return COLOR_NEUTRAL;
@@ -417,7 +407,6 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
 
 	string.Format(L"");
 
-	WWASSERT(The_Game() != NULL);
 	bool is_verbose = force_verbose ||
 		               The_Game()->IsIntermission.Is_True() ||
 							//MultiHUDClass::Get_Verbose_Lists();
@@ -497,13 +486,8 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
 	// Money.
 	// Do not show other team's money.
 	//
-	WWASSERT(PTheGameData != NULL);
 	if ((The_Game()->Is_Cnc() || The_Game()->Is_Skirmish()) && is_verbose) {
-#ifdef WWDEBUG
-		bool show = cDevOptions::ShowMoney.Is_True() ||
-#else
 		bool show =
-#endif // WWDEBUG
 			  cNetwork::I_Am_Only_Server() ||
 			 (cNetwork::I_Am_Client() &&
 			  cNetwork::Get_My_Player_Object() != NULL &&
@@ -544,65 +528,6 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
       string += substring;
    }
 
-#ifdef WWDEBUG
-   //
-   // Ping
-   //
-   if (cDevOptions::ShowPing.Is_True()) {
-      /*
-		int ping = Get_Avg_Ping();
-      if (ping >= 0) {
-         substring.Format(L"%-8d", ping);
-      } else {
-         substring.Format(L"%-8s", L"");
-		}
-		*/
-		int ping = Get_Ping();
-      if (ping >= 0) {
-         substring.Format(L"%-8d", ping);
-      } else {
-         substring.Format(L"%-8s", L"");
-		}
-      string += substring;
-   }
-
-   //
-   // Player Id
-   //
-   if (cDevOptions::ShowId.Is_True()) {
-      substring.Format(L"%-8d", Id);
-      string += substring;
-   }
-
-	//
-	// Fps
-	//
-   if (cNetwork::I_Am_Server() && cDevOptions::ShowClientFps.Is_True()) {
-      substring.Format(L"%-8d", Fps);
-      string += substring;
-   }
-
-	//
-	// GameSpy auth. state
-	//
-   if (cNetwork::I_Am_Server() && cGameSpyAdmin::Is_Gamespy_Game() && 
-		cDevOptions::ShowGameSpyAuthState.Is_True()) {
-		WideStringClass wide_string;
-		wide_string.Convert_From(cGameSpyAuthMgr::Describe_Auth_State(GameSpyAuthState));
-      substring.Format(L"%-12s", wide_string);
-      string += substring;
-   }
-
-	//
-	// IP Address
-	//
-	if (cNetwork::I_Am_Server() && cDevOptions::ShowIpAddresses.Is_True()) {
-		WideStringClass wide_ip;
-		wide_ip.Convert_From(cNetUtil::Address_To_String(IpAddress));
-		substring.Format(L"%-30s", wide_ip);
-      string += substring;
-	}
-#endif // WWDEBUG
 
 	if (force_verbose) {
 		//
@@ -646,7 +571,6 @@ void cPlayer::Increment_Score(float add)
 	//
 	if (Is_Team_Player()) {
       cTeam * p_team = cTeamManager::Find_Team(Get_Player_Type());
-		WWASSERT(p_team != NULL);
 		p_team->Increment_Score(add);
 	}
 
@@ -682,7 +606,6 @@ void cPlayer::Increment_Money(float add)
 	//
 	if (Is_Team_Player()) {
       cTeam * p_team = cTeamManager::Find_Team(Get_Player_Type());
-		WWASSERT(p_team != NULL);
 		p_team->Increment_Money(add);
 	}
 	*/
@@ -701,7 +624,6 @@ void cPlayer::Set_Ladder_Points(int points)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Kills(int new_kills)
 {
-   WWASSERT(new_kills >= 0);
 
    Kills = new_kills;
 
@@ -711,7 +633,6 @@ void cPlayer::Set_Kills(int new_kills)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Deaths(int new_deaths)
 {
-   WWASSERT(new_deaths >= 0);
 
    Deaths = new_deaths;
 
@@ -721,7 +642,6 @@ void cPlayer::Set_Deaths(int new_deaths)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Wol_Rank(int wol_rank)
 {
-   WWASSERT(wol_rank >= -1);
    WolRank = wol_rank;
 
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
@@ -730,14 +650,12 @@ void cPlayer::Set_Wol_Rank(int wol_rank)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Rung(int rung)
 {
-   WWASSERT(rung >= 0);
    Rung = rung;
 }
 
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Damage_Scale_Factor(int factor)
 {
-   WWASSERT(factor >= 0 && factor <= 100);
    DamageScaleFactor = factor;
 
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
@@ -764,10 +682,7 @@ void cPlayer::Reset_Total_Time(void)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Ip_Address(ULONG ip_address)
 {
-   WWASSERT(ip_address != 0);
 
-	WWDEBUG_SAY(("cPlayer::Set_Ip_Address to %s\n",
-		cNetUtil::Address_To_String(ip_address)));
 
 	IpAddress = ip_address;
 }
@@ -775,7 +690,6 @@ void cPlayer::Set_Ip_Address(ULONG ip_address)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_Fps(int fps)
 {
-   WWASSERT(fps >= 0);
 
 	Fps = fps;
 }
@@ -807,7 +721,6 @@ void cPlayer::Increment_Kills(void)
 		return;
 	}
 
-   WWASSERT(cNetwork::I_Am_Server());
 
    Set_Kills((int)Kills + 1);
 }
@@ -819,7 +732,6 @@ void cPlayer::Increment_Deaths(void)
 		return;
 	}
 
-   WWASSERT(cNetwork::I_Am_Server());
 
    Set_Deaths((int)Deaths + 1);
 }
@@ -839,11 +751,9 @@ int cPlayer::Get_Avg_Ping(void) const
    if (cNetwork::I_Am_Server()) {
       if (Id > 0) {
 			cRemoteHost * p_rhost = cNetwork::Get_Server_Rhost(Id);
-			WWASSERT(p_rhost != NULL);
 			ping = p_rhost->Get_Average_Internal_Pingtime_Ms();
 		}
    } else if (Id == cNetwork::Get_My_Id()) {
-      WWASSERT(cNetwork::I_Am_Only_Client());
       cRemoteHost * p_rhost = cNetwork::Get_Client_Rhost();
       if (p_rhost != NULL) {
          //
@@ -886,7 +796,6 @@ void cPlayer::Import_Creation(BitStreamClass &packet)
 {
 	NetworkObjectClass::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	packet.Get_Wide_Terminated_String(Name.Get_Buffer(256), 256);
 }
@@ -1038,7 +947,6 @@ void cPlayer::Set_GameSpy_Auth_State_Entry_Time_Ms(DWORD time_ms)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_GameSpy_Challenge_String(StringClass & challenge_string)
 {
-	WWASSERT(!challenge_string.Is_Empty());
 
 	GameSpyChallengeString = challenge_string;
 }
@@ -1046,7 +954,6 @@ void cPlayer::Set_GameSpy_Challenge_String(StringClass & challenge_string)
 //------------------------------------------------------------------------------------
 void cPlayer::Set_GameSpy_Hash_Id(StringClass & hash_id)
 {
-	WWASSERT(!hash_id.Is_Empty());
 
 	GameSpyHashId = hash_id;
 }

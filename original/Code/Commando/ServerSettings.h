@@ -1,5 +1,4 @@
 #include <win.h>
-#include "wwonline/wolsession.h"
 
 class StringClass;
 
@@ -12,7 +11,6 @@ class ServerSettingsClass
 		enum GameModeTypeEnum {
 			MODE_NONE = 0,
 			MODE_LAN,
-			MODE_WOL,
 			MODE_GAMESPY
 		};
 
@@ -30,18 +28,12 @@ class ServerSettingsClass
 		static GameModeTypeEnum Get_Game_Mode(void) {return(GameMode);}
 		static int Get_Disk_Log_Size(void) {return(DiskLogSize);}
 
-		/*
-		** Populating ini file with server list.
-		*/
-		static char *Get_Preferred_Server(const WWOnline::IRCServerList &server_list);
-		static void Write_Server_List(const WWOnline::IRCServerList &server_listvoid);
 	private:
 		static char SettingsFile[MAX_PATH];
 		static bool IsActive;
 
 		static char MasterPassword[128];
 		static unsigned long MasterBandwidth;
-		static char PreferredLoginServer[256];
 		static GameModeTypeEnum GameMode;
 		static int DiskLogSize;
 

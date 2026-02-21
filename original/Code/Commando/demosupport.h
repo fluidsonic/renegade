@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <wwlib/realcrc.h>
 #include "bittype.h"
-#include "wwdebug.h"
 #include "gamedata.h"
 #include "specialbuilds.h"
 
@@ -49,7 +48,6 @@ cDemoSupport::Security_Check
 		 (CRC_Stringi(The_Game()->Get_Map_Name()) != 721292856) &&
 		 (::rand() % 5000 == 2273)) {
 
-		WWDEBUG_SAY(("cDemoSupport::Security_Check: failed.\n"));
 
 		//
 		// Hacked. Bail. Don't care how cleanly it exits.

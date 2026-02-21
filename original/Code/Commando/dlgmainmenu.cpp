@@ -22,7 +22,6 @@
 #include "registry.h"
 #include "_globals.h"
 #include "dialogtests.h"
-#include "dlgwolwait.h"
 #include "nicenum.h"
 #include "dlgmessagebox.h"
 #include "translatedb.h"
@@ -342,7 +341,6 @@ MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				//
 				// We will cycle on the same map until they get tired of practicing.
 				//
-				WWASSERT(The_Game() != NULL);
 				The_Game()->Set_Map_Cycle(0, mapname);
 
 				GameInitMgrClass::Start_Game(mapname, -1, 0);

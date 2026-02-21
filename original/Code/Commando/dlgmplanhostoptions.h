@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLG_MP_LAN_HOST_OPTIONS_H
 #define __DLG_MP_LAN_HOST_OPTIONS_H
@@ -17,7 +14,6 @@
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class cGameData;
-class WolGameModeClass;
 class DlgMsgBoxEvent;
 class ModPackageClass;
 class MPLanHostMapCycleOptionsTabClass;
@@ -29,8 +25,7 @@ class MPLanHostMapCycleOptionsTabClass;
 //
 ////////////////////////////////////////////////////////////////
 class MPLanHostOptionsMenuClass :
-	public MenuDialogClass,
-	protected Signaler<WolGameModeClass>
+	public MenuDialogClass
 {
 public:
 
@@ -54,7 +49,6 @@ private:
 	////////////////////////////////////////////////////////////////
 	//	Private methods
 	////////////////////////////////////////////////////////////////
-	void ReceiveSignal(WolGameModeClass&);
 	void Start_Game(cGameData* theGame);
 
 	////////////////////////////////////////////////////////////////
@@ -133,17 +127,12 @@ public:
 
 protected:
 	void ReceiveSignal(bool&);
-	void ConfigureWOLControls(void);
 	bool IsHostAClanMember(void) const;
 
 private:
-	bool mIsWOLGame;
 	bool mPassword;
 	bool mChangeTeams;
 	bool mRemixTeams;
-	bool mLaddered;
-	bool mClanGame;
-	bool mQuickmatch;
 
 	////////////////////////////////////////////////////////////////
 	//	Private member data

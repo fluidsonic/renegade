@@ -5,7 +5,6 @@
 #include "_globals.h"
 #include "registry.h"
 #include "renegadedialogmgr.h"
-#include "wwmemlog.h"
 #include "gameinitmgr.h"
 #include "wwaudio.h"
 #include "specialbuilds.h"
@@ -24,7 +23,6 @@ bool	SkipAllIntroMovies = false;
 
 void	MovieGameModeClass::Init()
 {
-	WWMEMLOG(MEM_BINK);
 	BINKMovie::Init();
 	IsPending = false;
 	IsPlaying = false;
@@ -50,7 +48,6 @@ void 	MovieGameModeClass::Shutdown()
 */
 void 	MovieGameModeClass::Think()
 {
-	WWMEMLOG(MEM_BINK);
 	if ( Is_Active() ) {
 		BINKMovie::Update();
 
@@ -76,7 +73,6 @@ void 	MovieGameModeClass::Think()
 
 void 	MovieGameModeClass::Render()
 {
-	WWMEMLOG(MEM_BINK);
 	if ( Is_Active() ) {
 
 		if (IsPlaying) {
@@ -93,19 +89,12 @@ void 	MovieGameModeClass::Render()
 
 void	MovieGameModeClass::Start_Movie( const char * filename )
 {
-	WWMEMLOG(MEM_BINK);
 	
 	//
 	//	Check to see if we should enforce the CD or not...
 	//
 	bool force_cd = true;
 
-#ifdef WWDEBUG
-	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
-	if ( registry.Is_Valid() ) {
-		force_cd = (registry.Get_Int( "DisableCDCheck", 0 ) == 0);
-	}
-#endif //WWDEBUG
 
 #if defined(BETACLIENT) || defined(FREEDEDICATEDSERVER) || defined(MULTIPLAYERDEMO)
 	force_cd = false;

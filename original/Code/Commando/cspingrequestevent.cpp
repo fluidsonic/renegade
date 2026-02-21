@@ -9,7 +9,6 @@
 #include "networkobjectmgr.h"
 #include "apppackettypes.h"
 #include "scpingresponseevent.h"
-#include "wwprofile.h"
 
 
 DECLARE_NETWORKOBJECT_FACTORY(cCsPingRequestEvent, NETCLASSID_CSPINGREQUESTEVENT);
@@ -29,9 +28,7 @@ cCsPingRequestEvent::Init(int ping_number)
 {
 	//WWDEBUG_SAY(("cCsPingRequestEvent::Init at frame %d\n", WWProfileManager::Get_Frame_Count_Since_Reset()));
 
-	WWASSERT(ping_number >= 0);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	SenderId		= cNetwork::Get_My_Id();
 	PingNumber	= ping_number;
@@ -45,7 +42,6 @@ cCsPingRequestEvent::Init(int ping_number)
 void
 cCsPingRequestEvent::Act(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cScPingResponseEvent * p_event = new cScPingResponseEvent;
 	p_event->Init(SenderId, PingNumber);
@@ -59,7 +55,6 @@ cCsPingRequestEvent::Export_Creation(BitStreamClass & packet)
 {
 	//WWDEBUG_SAY(("cCsPingRequestEvent::Export at frame %d\n", WWProfileManager::Get_Frame_Count_Since_Reset()));
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -73,7 +68,6 @@ cCsPingRequestEvent::Export_Creation(BitStreamClass & packet)
 void
 cCsPingRequestEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 

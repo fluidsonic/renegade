@@ -8,7 +8,6 @@
 //-----------------------------------------------------------------------------
 #include "chatshre.h"
 
-#include "wwdebug.h"
 
 //-----------------------------------------------------------------------------
 
@@ -32,7 +31,6 @@ LPCSTR Translate_Location(ChatLocationEnum location)
 		ADD_CASE(LANLOC_INGAME);
 
 		default: 
-			WWASSERT(0);
 			return ""; // to avoid compiler warning
 	}
 }

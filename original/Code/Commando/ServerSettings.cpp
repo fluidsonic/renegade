@@ -1,6 +1,5 @@
 #include "ServerSettings.h"
 #include "slavemaster.h"
-#include "wwdebug.h"
 #include "gamedata.h"
 #include "gdcnc.h"
 #include "ini.h"
@@ -11,12 +10,10 @@
 #include "_globals.h"
 #include "bandwidth.h"
 #include "mpsettingsmgr.h"
-#include "wwonline/wolserver.h"
 #include "useroptions.h"
 #include "gamespyadmin.h"
 #include "servercontrol.h"
 #include "gamesideservercontrol.h"
-#include "autostart.h"
 #include "GameSpy_QnR.h"
 #include "bandwidthcheck.h"
 
@@ -34,11 +31,7 @@ bool ServerSettingsClass::IsActive = false;
 char ServerSettingsClass::MasterPassword[128];
 ServerSettingsClass::GameModeTypeEnum ServerSettingsClass::GameMode = MODE_NONE;
 unsigned long ServerSettingsClass::MasterBandwidth = 0;
-char ServerSettingsClass::PreferredLoginServer[256];
 int ServerSettingsClass::DiskLogSize = -1;
-
-const char *ServerListTag = "Available Westwood Servers:";
-const char *ServerListEnd = ";  End generated section.";
 
 
 
@@ -101,7 +94,6 @@ bool ServerSettingsClass::Parse(bool apply)
 	char remote_admin_pass[128];
 	char game_type[32];
 	char heartbeat_list[512];
-	bool wol = true;
 	char remote_admin_ip[128];
 
 	MasterPassword[0] = 0;
@@ -111,9 +103,7 @@ bool ServerSettingsClass::Parse(bool apply)
 	*/
 	if (IsActive) {
 
-		WWASSERT(The_Game() || !apply);
 		if (apply) {
-			WWDEBUG_SAY(("Applying server settings\n"));
 			ConsoleBox.Print("Applying server settings\n");
 		}
 
@@ -122,7 +112,6 @@ bool ServerSettingsClass::Parse(bool apply)
 		*/
 		RawFileClass file(SettingsFile);
 		if (!file.Is_Available()) {
-			WWDEBUG_SAY(("Server startup file '%s' not found\n", SettingsFile));
 			ConsoleBox.Print("Error - server startup file '%s' not found - aborting\n", SettingsFile);
 			ConsoleBox.Wait_For_Keypress();
 			return(false);
@@ -135,7 +124,6 @@ bool ServerSettingsClass::Parse(bool apply)
 		ini.Get_String(MasterServerSection, ConfigSettingsName, "", master_settings, sizeof(master_settings));
 		if (strlen(master_settings) == 0) {
 			if (apply) {
-				WWDEBUG_SAY(("No master server settings specified - using defaults\n"));
 				ConsoleBox.Print("No master server settings specified - using defaults\n");
 			}
 		}
@@ -148,23 +136,18 @@ bool ServerSettingsClass::Parse(bool apply)
 		/*
 		** Game Type.
 		*/
-		ini.Get_String(MasterServerSection, "GameType", "WOL", game_type, sizeof(game_type));
+		ini.Get_String(MasterServerSection, "GameType", "LAN", game_type, sizeof(game_type));
 		if (cGameSpyAdmin::Get_Is_Server_Gamespy_Listed()) {
 			strcpy(game_type, "GameSpy");
 		}
-		if (stricmp(game_type, "WOL") == 0) {
-			GameMode = MODE_WOL;
-		} else if (stricmp(game_type, "LAN") == 0) {
-			wol = false;
+		if (stricmp(game_type, "LAN") == 0) {
 			GameMode = MODE_LAN;
 		} else if (stricmp(game_type, "GameSpy") == 0) {
-			wol = false;
 			cGameSpyAdmin::Set_Is_Server_Gamespy_Listed(true);
 			GameSpyQnR.Enable_Reporting(true);
 			GameMode = MODE_GAMESPY;
 		} else {
-			WWDEBUG_SAY(("Bad game type specified in server.ini\n"));
-			ConsoleBox.Print("Error - Unknown game type in server settings. Use 'LAN', 'WOL', or 'GameSpy' - aborting\n");
+			ConsoleBox.Print("Error - Unknown game type in server settings. Use 'LAN' or 'GameSpy' - aborting\n");
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
 		}
@@ -185,13 +168,11 @@ bool ServerSettingsClass::Parse(bool apply)
 		sprintf(filename, "data\\%s", master_settings);
 		file.Set_Name(filename);
 		if (!file.Is_Available()) {
-			WWDEBUG_SAY(("Server settings file '%s' not found\n", filename));
 			ConsoleBox.Print("Error - server settings file '%s' not found - aborting\n", filename);
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
 		} else {
 			if (!Check_Game_Settings_File(master_settings)) {
-				WWDEBUG_SAY(("Server settings file '%s' not usable\n", master_settings));
 				ConsoleBox.Print("Error - server settings file '%s' contains errors - aborting\n", master_settings);
 				ConsoleBox.Wait_For_Keypress();;
 				return(false);
@@ -207,16 +188,8 @@ bool ServerSettingsClass::Parse(bool apply)
 
 		RegistryClass restart_reg(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
 		if (restart_reg.Is_Valid ()) {
-			restart_reg.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_FLAG, 1);
-			switch (GameMode) {
-				case MODE_WOL:
-					restart_reg.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_TYPE, 1);
-					break;
-				case MODE_LAN:
-				case MODE_GAMESPY:
-					restart_reg.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_TYPE, 0);
-					break;
-			}
+			restart_reg.Set_Int("AutoRestartFlag", 1);
+			restart_reg.Set_Int("AutoRestartType", 0);
 		}
 
 		/*
@@ -227,8 +200,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		/*
 		** We only need to validate this for the FDS. The regular game can allow the login name to be specified in the registry.
 		*/
-		if (wol && strlen(master_nick) == 0) {
-			WWDEBUG_SAY(("Error - No login nickname specified for master server - aborting\n"));
+		if (strlen(master_nick) == 0) {
 			ConsoleBox.Print("Error - No login nickname specified for master server - aborting\n");
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
@@ -243,8 +215,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		/*
 		** We only need to validate this for the FDS. The regular game can allow the login name to be specified in the registry.
 		*/
-		if (wol && strlen(master_pass) == 0) {
-			WWDEBUG_SAY(("Error - No login password specified for master server - aborting\n"));
+		if (strlen(master_pass) == 0) {
 			ConsoleBox.Print("Error - No login password specified for master server - aborting\n");
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
@@ -260,8 +231,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		** We only need to validate the serial number if we are the FDS. For the regular game, the master serial will be stored
 		** in the registry.
 		*/
-		if (wol && strlen(master_serial) == 0) {
-			WWDEBUG_SAY(("Error - No serial number specified for master server - aborting\n"));
+		if (strlen(master_serial) == 0) {
 			ConsoleBox.Print("Error - No serial number specified for master server - aborting\n");
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
@@ -272,8 +242,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		** Get the port number.
 		*/
 		master_port = ini.Get_Int(MasterServerSection, "Port", 0xffffffff);
-		if (wol && master_port != 0xffffffff && (master_port < 0 || master_port > 0xffff)) {
-			WWDEBUG_SAY(("Error - Invalid port number %d specified for master server - aborting\n", master_port));
+		if (master_port != 0xffffffff && (master_port < 0 || master_port > 0xffff)) {
 			ConsoleBox.Print("Error - Invalid port number %d specified for master server - aborting\n", master_port);
 			ConsoleBox.Wait_For_Keypress();
 			return(false);
@@ -286,7 +255,6 @@ bool ServerSettingsClass::Parse(bool apply)
 		gsqport = ini.Get_Int(MasterServerSection, "GameSpyQueryPort", gsqport);
 		if (!gsqport) gsqport = cUserOptions::GameSpyQueryPort.Get();
 		if (gsqport < 0 || gsqport > 0xffff) {
-			WWDEBUG_SAY(("Error - Invalid port number %d specified for GameSpy Query Port - aborting\n", gsqport));
 			ConsoleBox.Print("Error - Invalid port number %d specified for GameSpy Query Port - aborting\n", gsqport);
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
@@ -300,7 +268,6 @@ bool ServerSettingsClass::Parse(bool apply)
 		gsgport = ini.Get_Int(MasterServerSection, "GameSpyGamePort", gsgport);
 		if (!gsgport) gsgport = cUserOptions::GameSpyGamePort.Get();
 		if (gsgport < 0 || gsgport > 0xffff || gsgport == gsqport) {
-			WWDEBUG_SAY(("Error - Invalid port number %d specified for GameSpy Game Port - aborting\n", gsgport));
 			ConsoleBox.Print("Error - Invalid port number %d specified for GameSpy Game Port - aborting\n", gsgport);
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
@@ -312,7 +279,6 @@ bool ServerSettingsClass::Parse(bool apply)
 		*/
 		master_bw = ini.Get_Int(MasterServerSection, "BandwidthUp", 0xffffffff);
 		if (master_bw != 0 && master_bw != 0xffffffff && master_bw < 33600) {
-			WWDEBUG_SAY(("Error - Insufficient bandwidth specified for master server - aborting\n"));
 			ConsoleBox.Print("Error - Insufficient bandwidth specified for master server - aborting\n");
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
@@ -324,23 +290,16 @@ bool ServerSettingsClass::Parse(bool apply)
 		*/
 		DiskLogSize = ini.Get_Int(MasterServerSection, "DiskLogSize", 7);
 		if (DiskLogSize > 365) {
-			WWDEBUG_SAY(("Error - Disk log size too large - aborting\n"));
 			ConsoleBox.Print("Error - Disk log size too large - aborting\n");
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
 		}
 
 		/*
-		** Get the preferred login server. No preference means use default from ping profile.
-		*/
-		ini.Get_String(MasterServerSection, "LoginServer", "", PreferredLoginServer, sizeof(PreferredLoginServer));
-
-		/*
 		** Get the Network Update Rate override.
 		*/
 		int nur = ini.Get_Int(MasterServerSection, "NetUpdateRate", 8);
 		if (nur < 5 || nur > 30) {
-			WWDEBUG_SAY(("Error - Bad NetUpdateRate specified - aborting\n"));
 			ConsoleBox.Print("Error - NetUpdateRate must be between 5 and 30 - aborting\n");
 			ConsoleBox.Wait_For_Keypress();;
 			return(false);
@@ -416,47 +375,6 @@ bool ServerSettingsClass::Parse(bool apply)
 		//if (apply) {
 
 			/*
-			** Serial number.
-			*/
-			if (wol) {
-				if (strlen(master_serial)) {
-					StringClass serial(master_serial, true);
-					StringClass encrypted_serial;
-					Encrypt_Serial(serial, encrypted_serial);
-					RegistryClass reg_base(APPLICATION_SUB_KEY_NAME);
-					if (reg_base.Is_Valid()) {
-						reg_base.Set_String(KEY_SLAVE_SERIAL, encrypted_serial.Peek_Buffer());
-					}
-				}
-
-				/*
-				** Nickname.
-				*/
-				if (strlen(master_nick)) {
-					RegistryClass reg_wol(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
-					if (reg_wol.Is_Valid()) {
-						reg_wol.Set_String("AutoLogin", master_nick);
-						reg_wol.Set_String("LastLogin", master_nick);
-						reg_wol.Set_Int("AutoLoginPrompt", 0);
-						MPSettingsMgrClass::Set_Auto_Login(master_nick);
-					}
-				}
-
-				/*
-				** Password.
-				*/
-				MPSettingsMgrClass::Set_Auto_Password(master_pass);
-
-				/*
-				** Port number.
-				*/
-				if (master_port != 0xffffffff) {
-					RegistryClass reg_fw(APPLICATION_SUB_KEY_NAME_NET_FIREWALL);
-					reg_fw.Set_Int("ForcePort", master_port);
-				}
-			}
-
-			/*
 			** Bandwidth.
 			*/
 			if (master_bw != 0xffffffff) {
@@ -466,22 +384,7 @@ bool ServerSettingsClass::Parse(bool apply)
 						if (master_bw == 0) master_bw = 1000000;
 						cUserOptions::Set_Bandwidth_Bps(master_bw);
 					} else {
-						if (wol) {
-							reg_netopt.Set_Int("BandwidthType", BANDWIDTH_AUTO);
-
-							/*
-							** We want this to be set always on the first time through, but not neccessarily on the second, apply, pass.
-							*/
-							if (master_bw != 0 || !apply) {
-								RegistryClass reg_bw(APPLICATION_SUB_KEY_NAME_BANDTEST);
-								if (reg_bw.Is_Valid()) {
-									reg_bw.Set_Int("Up", master_bw);
-									reg_bw.Set_Int("Down", master_bw);
-								}
-							}
-						} else {
-							cUserOptions::Set_Bandwidth_Type(BANDWIDTH_LANT1);
-						}
+						cUserOptions::Set_Bandwidth_Type(BANDWIDTH_LANT1);
 					}
 				}
 			}
@@ -520,13 +423,11 @@ bool ServerSettingsClass::Parse(bool apply)
 					sprintf(filename, "data\\%s", slave_settings);
 					file.Set_Name(filename);
 					if (!file.Is_Available()) {
-						WWDEBUG_SAY(("Slave server settings file '%s' not found\n", filename));
 						ConsoleBox.Print("Error - Slave server settings file '%s' not found - aborting\n", filename);
 						ConsoleBox.Wait_For_Keypress();;
 						return(false);
 					} else {
 						if (!Check_Game_Settings_File(slave_settings)) {
-							WWDEBUG_SAY(("Server settings file '%s' not usable\n", slave_settings));
 							ConsoleBox.Print("Error - server settings file '%s' contains errors - aborting\n", slave_settings);
 							ConsoleBox.Wait_For_Keypress();;
 							return(false);
@@ -538,16 +439,14 @@ bool ServerSettingsClass::Parse(bool apply)
 				** Make sure there's a nickname and a serial.
 				*/
 				ini.Get_String(slave_section, "Nickname", "", slave_nick, sizeof(slave_nick));
-				if (wol && strlen(slave_nick) == 0) {
-					WWDEBUG_SAY(("Error - No login nickname specified for slave %d - aborting\n", i+1));
+				if (strlen(slave_nick) == 0) {
 					ConsoleBox.Print("Error - No login nickname specified for slave %d - aborting\n", i+1);
 					ConsoleBox.Wait_For_Keypress();;
 					return(false);
 				}
 
 				ini.Get_String(slave_section, "Serial", "", slave_serial, sizeof(slave_serial));
-				if (wol && strlen(slave_serial) == 0) {
-					WWDEBUG_SAY(("Error - No serial number specified for slave %d - aborting\n", i+1));
+				if (strlen(slave_serial) == 0) {
 					ConsoleBox.Print("Error - No serial number specified for slave %d - aborting\n", i+1);
 					ConsoleBox.Wait_For_Keypress();;
 					return(false);
@@ -558,8 +457,7 @@ bool ServerSettingsClass::Parse(bool apply)
 				*/
 				ini.Get_String(slave_section, "Password", "", slave_pass, sizeof(slave_pass));
 #ifdef FREEDEDICATEDSERVER
-				if (wol && strlen(slave_pass) == 0) {
-					WWDEBUG_SAY(("Error - No login password specified for slave %d - aborting\n", i+1));
+				if (strlen(slave_pass) == 0) {
 					ConsoleBox.Print("Error - No login password specified for slave %d - aborting\n", i+1);
 					ConsoleBox.Wait_For_Keypress();;
 					return(false);
@@ -572,7 +470,6 @@ bool ServerSettingsClass::Parse(bool apply)
 				slave_port = ini.Get_Int(slave_section, "Port", 0);
 
 				if (slave_port < 0 || slave_port > 0xffff) {
-					WWDEBUG_SAY(("Error - Invalid port number %d specified for slave %d - aborting\n", slave_port, i+1));
 					ConsoleBox.Print("Error - Invalid port number %d specified for slave %d - aborting\n", slave_port, i+1);
 					ConsoleBox.Wait_For_Keypress();;
 					return(false);
@@ -583,7 +480,6 @@ bool ServerSettingsClass::Parse(bool apply)
 				*/
 				slave_bw = ini.Get_Int(slave_section, "BandwidthUp", 0xffffffff);
 				if (slave_bw != 0 && slave_bw != 0xffffffff && slave_bw < 33600) {
-					WWDEBUG_SAY(("Error - Insufficient bandwidth specified for slave %d - aborting\n", i+1));
 					ConsoleBox.Print("Error - Insufficient bandwidth specified for slave %d - aborting\n", i+1);
 					ConsoleBox.Wait_For_Keypress();;
 					return(false);
@@ -633,7 +529,6 @@ void ServerSettingsClass::Encrypt_Serial(StringClass serial_in, StringClass &ser
 	char stringbuffer[ENCRYPTION_STRING_LENGTH];
 	int p;
 
-	WWASSERT(numberlength);
 
 	s = new char [numberlength + 1];
 	memcpy(s, serial_in.Peek_Buffer(), numberlength + 1);
@@ -652,7 +547,6 @@ void ServerSettingsClass::Encrypt_Serial(StringClass serial_in, StringClass &ser
 	** Read the key.
 	*/
 	if (!ReadFile(handle, stringbuffer, sizeof (stringbuffer), &bytesread, NULL)) {
-		WWDEBUG_SAY(("Unable to read serial encryption key file\n"));
 		delete [] s;
 		serial_out = serial_in;
 		return;
@@ -710,119 +604,6 @@ void ServerSettingsClass::Decrypt_Serial(StringClass serial_in, StringClass &ser
 
 
 /***********************************************************************************************
- * ServerSettingsClass::Get_Preferred_Server -- Get the users specified server                 *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Server list from servserv                                                         *
- *                                                                                             *
- * OUTPUT:   Name of preferred server                                                          *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   2/1/2002 1:18PM ST : Created                                                              *
- *=============================================================================================*/
-char *ServerSettingsClass::Get_Preferred_Server(const WWOnline::IRCServerList &server_list)
-{
-	if (IsActive && server_list.size()) {
-		Write_Server_List(server_list);
-	}
-	return(PreferredLoginServer);
-}
-
-
-
-/***********************************************************************************************
- * ServerSettingsClass::Write_Server_List -- Write the server list into the settings ini file  *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Server list                                                                       *
- *                                                                                             *
- * OUTPUT:   Nothing                                                                           *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   2/1/2002 1:19PM ST : Created                                                              *
- *=============================================================================================*/
-void ServerSettingsClass::Write_Server_List(const WWOnline::IRCServerList &server_list)
-{
-	WWASSERT(server_list.size());
-	WWASSERT(strlen(SettingsFile) != 0);
-
-	char temp[256];
-
-	if (server_list.size()) {
-		RawFileClass file(SettingsFile);
-
-		/*
-		** This is a bit hacky. Basically we just want the .ini file commented with the latest server list.
-		**
-		** We will do this by reading in the file, looking for a tag that tells us where to write the server list, then writing
-		** the file back out with the server list in place.
-		*/
-		if (file.Is_Available()) {
-			unsigned long size = file.Size();
-			if (size) {
-
-				/*
-				** Read the file.
-				*/
-				char *file_buffer = new char[size + 8192];
-#ifdef WWDEBUG
-				unsigned long read_size =
-#endif //WWDEBUG
-				file.Read(file_buffer, size);
-				WWASSERT(read_size == size);
-				file.Close();
-
-				/*
-				** Find the placeholder tag.
-				*/
-				char *tag = strstr(file_buffer, ServerListTag);
-				char *end_tag = strstr(file_buffer, ServerListEnd);
-				if (tag && end_tag) {
-
-					/*
-					** Write out the first portion of the file unchanged.
-					*/
-					file.Open(FileClass::WRITE);
-					file.Write(file_buffer, (tag - file_buffer) + strlen(ServerListTag));
-
-					/*
-					** Insert the server list.
-					*/
-					char *server_list_text = new char [8192];
-					strcpy(server_list_text, "\r\n;\r\n");
-
-					for (unsigned int i = 0; i < server_list.size(); i++)	{
-						const RefPtr<WWOnline::IRCServerData> &server = server_list[i];
-						if (server->HasLanguageCode()) {
-							const char *server_name = server->GetName();
-							sprintf(temp, ";    %s\r\n", server_name);
-							strcat(server_list_text, temp);
-						}
-					}
-					strcat(server_list_text, ";\r\n");
-					file.Write(server_list_text, strlen(server_list_text));
-
-					/*
-					** Write out the post server list sections of the original file.
-					*/
-					file.Write(end_tag, (file_buffer + size) - end_tag);
-					file.Close();
-				}
-			}
-		}
-	}
-}
-
-
-
-
-/***********************************************************************************************
  * ServerSettingsClass::Check_Game_Settings_File -- Check game settings for validity           *
  *                                                                                             *
  *                                                                                             *
@@ -839,7 +620,6 @@ void ServerSettingsClass::Write_Server_List(const WWOnline::IRCServerList &serve
 bool ServerSettingsClass::Check_Game_Settings_File(char *config_file)
 {
 	cGameDataCnc *game_settings = (cGameDataCnc*) cGameData::Create_Game_Of_Type(cGameData::GAME_TYPE_CNC);
-	WWASSERT(game_settings != NULL);
 
 	if (game_settings) {
 		game_settings->Set_Ini_Filename(config_file);

@@ -1,14 +1,11 @@
 #include "always.h"
 #include <windows.h>
 #include "slavemaster.h"
-#include "wwdebug.h"
 #include "registry.h"
 #include "_globals.h"
-#include "autostart.h"
 #include "ini.h"
 #include "rawfile.h"
 #include "inisup.h"
-#include "natter.h"
 #include "gamesideservercontrol.h"
 #include "win.h"
 #include "gamedata.h"
@@ -270,7 +267,6 @@ void SlaveMasterClass::Wait_For_Slave_Shutdown(void)
 			}
 			if (num_running && num_running != last_num_running) {
 				ConsoleBox.Print("Waiting for %d slave(s) to shut down\n", num_running);
-				WWDEBUG_SAY(("Waiting for %d slave(s) to shut down\n", num_running));
 				last_num_running = num_running;
 			}
 			if (num_running == 0) {
@@ -287,7 +283,6 @@ void SlaveMasterClass::Wait_For_Slave_Shutdown(void)
 						unsigned long ver = GetProcessVersion(SlaveServers[i].ProcessInfo.dwProcessId);
 						if (ver && ver == GetProcessVersion(GetCurrentProcessId())) {
 
-							WWDEBUG_SAY(("Terminating process %d due to timeout\n", SlaveServers[i].ProcessInfo.dwProcessId));
 
 							/*
 							** Get a handle to the process.
@@ -297,7 +292,6 @@ void SlaveMasterClass::Wait_For_Slave_Shutdown(void)
 								TerminateProcess(proc_handle, 0);
 								CloseHandle(proc_handle);
 							} else {
-								WWDEBUG_SAY(("Failed to get process handle for termination - error code %d\n", GetLastError()));
 							}
 							num_running++;
 						}
@@ -326,8 +320,6 @@ void SlaveMasterClass::Wait_For_Slave_Shutdown(void)
  *=============================================================================================*/
 SlaveServerClass *SlaveMasterClass::Get_Slave(int index)
 {
-	WWASSERT(index < NumSlaveServers);
-	WWASSERT(index >= 0);
 	if (index >= 0 && index <NumSlaveServers) {
 		return(&SlaveServers[index]);
 	}
@@ -495,7 +487,6 @@ void SlaveMasterClass::Reset(void)
  *=============================================================================================*/
 void SlaveMasterClass::Add_Slave(bool enable, char *nick, char *serial, unsigned short port, char *settings_file, int bandwidth, char *password)
 {
-	WWASSERT(NumSlaveServers < MAX_SLAVES);
 	SlaveServers[NumSlaveServers++].Set(enable, nick, serial, port, settings_file, bandwidth, password);
 }
 
@@ -556,7 +547,6 @@ bool SlaveMasterClass::Aquire_Slave(int index)
 			*/
 			SlaveServers[index].ProcessInfo.hProcess = NULL;	// Don't know handle.
 			GetWindowThreadProcessId(slave_window, &SlaveServers[index].ProcessInfo.dwProcessId);
-			WWDEBUG_SAY(("Slave found by HWND with process ID %d\n", SlaveServers[index].ProcessInfo.dwProcessId));
 
 			RegistryClass reg(APPLICATION_SUB_KEY_NAME_NET_SLAVE);
 			if (reg.Is_Valid()) {
@@ -588,7 +578,6 @@ bool SlaveMasterClass::Aquire_Slave(int index)
 			*/
 			SlaveServers[index].ProcessInfo.hProcess = NULL;	// Don't know handle.
 			SlaveServers[index].ProcessInfo.dwProcessId = proc_id;
-			WWDEBUG_SAY(("Slave found with process ID %d\n", SlaveServers[index].ProcessInfo.dwProcessId));
 			return(true);
 		}
 	}
@@ -656,14 +645,6 @@ void SlaveMasterClass::Startup_Slaves(void)
 							strcpy(DefaultRegistryModifier, slave_name+1);
 							RegistryClass slave_reg(APPLICATION_SUB_KEY_NAME);
 							DefaultRegistryModifier[0] = 0;
-
-							/*
-							** If we are autostarting then take inventory of which slaves are running already.
-							** An autostart after a crash should still see the slaves running. An autostart after a reboot will see no slaves.
-							*/
-							if (AutoRestart.Is_Active()) {
-								slave_running = Aquire_Slave(i);
-							}
 
 							/*
 							** Figure out the name of the .exe to run.
@@ -735,7 +716,6 @@ void SlaveMasterClass::Startup_Slaves(void)
 								}
 
 							} else {
-								WWDEBUG_SAY(("Failed to start slave process - error code %d\n", GetLastError()));
 								SlaveServers[i].IsRunning = false;
 							}
 						}
@@ -788,7 +768,7 @@ void SlaveMasterClass::Shutdown_Slaves(void)
 				strcpy(DefaultRegistryModifier, slave_name+1);
 				RegistryClass slave_reg(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
 				DefaultRegistryModifier[0] = 0;
-				slave_reg.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_FLAG, 0);
+				slave_reg.Set_Int("AutoRestartFlag", 0);
 
 				/*
 				** Send the password to the slave to authenticate the connection.
@@ -853,7 +833,7 @@ bool SlaveMasterClass::Shutdown_Slave(char *slave_login)
 				strcpy(DefaultRegistryModifier, slave_name+1);
 				RegistryClass slave_reg(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
 				DefaultRegistryModifier[0] = 0;
-				slave_reg.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_FLAG, 0);
+				slave_reg.Set_Int("AutoRestartFlag", 0);
 
 				/*
 				** Send the password to the slave to authenticate the connection.
@@ -940,7 +920,6 @@ char *SlaveMasterClass::Get_Slave_Info(char *buffer, int buflen)
  *=============================================================================================*/
 void SlaveMasterClass::Create_Registry_Copies(void)
 {
-	WWASSERT(!SlaveMode);
 
 	/*
 	** Make sure the Process ID isn't set in our base registry. It's shouldn't be unless I ran with the /slave command during dev.
@@ -1081,14 +1060,14 @@ void SlaveMasterClass::Create_Registry_Copies(void)
 				DefaultRegistryModifier[0] = 0;
 
 				if (reg.Is_Valid()) {
-					reg.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_FLAG, 1);
+					reg.Set_Int("AutoRestartFlag", 1);
 
 					int game_type = 0;
 					GameModeClass *game_mode = GameModeManager::Find("WOL");
 					if (game_mode && game_mode->Is_Active()) {
 						game_type = 1;
 					}
-					reg.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_TYPE, game_type);
+					reg.Set_Int("AutoRestartType", game_type);
 				}
 			}
 
@@ -1184,7 +1163,6 @@ void SlaveMasterClass::Delete_Registry_Copies(void)
 {
 	HKEY base_key;
 	long result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, APPLICATION_SUB_KEY_NAME, 0, KEY_ALL_ACCESS, &base_key);
-	WWASSERT(result == ERROR_SUCCESS);
 
 	if (result == ERROR_SUCCESS) {
 		int index = 0;

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGCNCPURCHASEMENU_H
 #define __DLGCNCPURCHASEMENU_H

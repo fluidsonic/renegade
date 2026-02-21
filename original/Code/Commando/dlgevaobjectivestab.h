@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLG_EVA_OBJECTIVES_TAB_H
 #define __DLG_EVA_OBJECTIVES_TAB_H

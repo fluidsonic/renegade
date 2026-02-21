@@ -639,7 +639,6 @@ ServerSettingsClass::ServerSettingsClass(ServerSettingsClass *other)
  *=============================================================================================*/
 ServerSettingsClass *ServerSettingsManagerClass::Get_Settings(int index)
 {
-	WWASSERT(index >= 0 && index < ServerSettingsList.Count());
 	return(ServerSettingsList[index]);
 }
 
@@ -749,8 +748,6 @@ void ServerSettingsManagerClass::Clear_Settings_List(void)
  *=============================================================================================*/
 void ServerSettingsManagerClass::Load_Settings(ServerSettingsClass *settings)
 {
-	WWASSERT(settings != NULL);
-	WWASSERT(The_Game() != NULL);
 
 	if (settings && The_Game()) {
 		char filename[MAX_PATH];
@@ -813,8 +810,6 @@ void ServerSettingsManagerClass::Delete_Configuration(ServerSettingsClass *setti
  *=============================================================================================*/
 void ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *settings)
 {
-	WWASSERT(settings != NULL);
-	WWASSERT(The_Game() != NULL);
 
 	if (settings && The_Game()) {
 		char filename[MAX_PATH];
@@ -822,7 +817,6 @@ void ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *setting
 		RawFileClass file(filename);
 		if (!file.Is_Available()) {
 			file.Create();
-			WWASSERT(file.Is_Available());
 		}
 		if (file.Is_Available()) {
 			//StringClass string(128, true);
@@ -851,8 +845,6 @@ void ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *setting
  *=============================================================================================*/
 ServerSettingsClass *ServerSettingsManagerClass::Add_Configuration(WideStringClass *display_name)
 {
-	WWASSERT(display_name != NULL);
-	WWASSERT(The_Game());
 
 	if (display_name != NULL) {
 		if (The_Game()) {
@@ -869,8 +861,6 @@ ServerSettingsClass *ServerSettingsManagerClass::Add_Configuration(WideStringCla
 			for (i=0 ; i<ServerSettingsList.Count() ; i++) {
 				ServerSettingsClass *settings = ServerSettingsList[i];
 				if (settings) {
-					WWASSERT(settings->FileNumber >= 0);
-					WWASSERT(settings->FileNumber < MAX_SETTINGS_FILES);
 					population[settings->FileNumber] = 1;
 				}
 			}

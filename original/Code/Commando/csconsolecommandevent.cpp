@@ -25,11 +25,7 @@ cCsConsoleCommandEvent::cCsConsoleCommandEvent(void)
 void
 cCsConsoleCommandEvent::Init(LPCSTR command)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
-	WWASSERT(command != NULL);
-   WWASSERT(::strlen(command) > 0);
-   WWASSERT(::strlen(command) < sizeof(Command));
 
 	::strcpy(Command, command);
 
@@ -42,7 +38,6 @@ cCsConsoleCommandEvent::Init(LPCSTR command)
 void
 cCsConsoleCommandEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	if (GameModeManager::Find("Combat")->Is_Active()) {
 		ConsoleFunctionManager::Parse_Input(Command);
@@ -53,7 +48,6 @@ cCsConsoleCommandEvent::Act(void)
 void
 cCsConsoleCommandEvent::Export_Creation(BitStreamClass & packet)
 {
-   WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -66,7 +60,6 @@ cCsConsoleCommandEvent::Export_Creation(BitStreamClass & packet)
 void
 cCsConsoleCommandEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 

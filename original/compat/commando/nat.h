@@ -7,11 +7,7 @@
 
 // Minimal stub - no actual NAT functionality needed
 #ifndef fw_assert
-#ifdef WWDEBUG
-#define fw_assert WWASSERT
-#else
 #define fw_assert assert
-#endif
 #endif
 
 // Forward declarations

@@ -1,7 +1,6 @@
 #include "overlay.h"
 #include "scene.h"
 #include "camera.h"
-#include "wwprofile.h"
 #include "ww3d.h"
 #include "dx8renderer.h"
 #include "textwindow.h"
@@ -52,7 +51,6 @@ void 	OverlayGameModeClass::Shutdown()
 
 void 	OverlayGameModeClass::Render()
 {
-	WWPROFILE( "Overlay Render" );
 	WW3D::Render( Scene, Camera );
 }
 

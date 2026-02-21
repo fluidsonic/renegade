@@ -31,7 +31,6 @@ cPurchaseResponseEvent::cPurchaseResponseEvent(void)
 void
 cPurchaseResponseEvent::Init(int response_id, int client_id)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	PurchaserId	= client_id;
 	ResponseId = response_id;
@@ -54,14 +53,12 @@ cPurchaseResponseEvent::Act(void)
 		return;
 	}
 
-   WWASSERT(cNetwork::I_Am_Client());
 
 	/*
 	if (PurchaserId != cNetwork::Get_My_Id()) {
 		return;
 	}
 	*/
-   WWASSERT(PurchaserId == cNetwork::Get_My_Id());
 
 	WideStringClass wide_string;
 
@@ -70,7 +67,6 @@ cPurchaseResponseEvent::Act(void)
 		//
 		// Play a custom SFX for feedback
 		//
-		WWASSERT(WWAudioClass::Get_Instance() != NULL);
 		WWAudioClass::Get_Instance()->Create_Instant_Sound("Purchase_Granted", Matrix3D(1));
 	} else if ( ResponseId == VendorClass::PERR_NO_FUNDS ) {
 		wide_string.Format( L"%s\n", TRANSLATION(IDS_MP_CNC_INSUFFICIENT_FUNDS) );
@@ -93,7 +89,6 @@ cPurchaseResponseEvent::Act(void)
 void
 cPurchaseResponseEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -107,7 +102,6 @@ cPurchaseResponseEvent::Export_Creation(BitStreamClass & packet)
 void
 cPurchaseResponseEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Import_Creation(packet);
 

@@ -10,7 +10,6 @@
 #include "cnetwork.h"
 #include "netinterface.h"
 #include "langmode.h"
-#include "wolgmode.h"
 #include "miscutil.h"
 #include "_globals.h"
 #include "player.h"
@@ -29,8 +28,6 @@
 #include "texture.h"
 #include "combatgmode.h"
 #include "font3d.h"
-#include "wwprofile.h"
-#include "wwmemlog.h"
 #include "physlist.h"
 #include "pscene.h"
 #include "dazzle.h"
@@ -169,7 +166,6 @@ MenuGameModeClass2::Render (void)
 void 
 MenuGameModeClass2::Activate (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	GameModeClass::Activate();
 
 	//
@@ -195,7 +191,6 @@ MenuGameModeClass2::Activate (void)
 void 
 MenuGameModeClass2::Deactivate (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	//
 	//	Resume game sounds as necessary
 	//

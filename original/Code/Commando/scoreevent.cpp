@@ -26,7 +26,6 @@ cScoreEvent::cScoreEvent(void)
 void
 cScoreEvent::Init(int amount)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId = cNetwork::Get_My_Id();
 	Amount = amount;
@@ -44,7 +43,6 @@ cScoreEvent::Init(int amount)
 void
 cScoreEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	cPlayer * p_player = cPlayerManager::Find_Player(SenderId);
 
@@ -55,7 +53,6 @@ cScoreEvent::Act(void)
 		//
 		p_player->Increment_Score(Amount);
 
-	   WWDEBUG_SAY(("Client %d incrementing score by %d.\n", SenderId, Amount));
 	}
 
 	Set_Delete_Pending();
@@ -65,11 +62,9 @@ cScoreEvent::Act(void)
 void
 cScoreEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 	packet.Add(Amount);
@@ -83,12 +78,10 @@ cScoreEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 	packet.Get(Amount);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

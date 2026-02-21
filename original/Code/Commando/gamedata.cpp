@@ -7,7 +7,6 @@
 #include "miscutil.h"
 #include "cnetwork.h"
 #include "chatshre.h"
-#include "wwdebug.h"
 #include "netinterface.h"
 #include "translatedb.h"
 #include "playertype.h"
@@ -31,20 +30,17 @@
 #include "textdisplay.h"
 #include "render2d.h"
 #include "render2dsentence.h"
-#include "wwprofile.h"
 #include "winevent.h"
 #include "realcrc.h"
 #include "useroptions.h"
 #include "gdsingleplayer.h"
 #include "gdcnc.h"
-#include "wolgmode.h"
 #include "font3d.h"
 #include "nat.h"
 #include "csdamageevent.h"
 #include "sctextobj.h"
 #include "widestring.h"
 #include "vehicle.h"
-#include "wolgameinfo.h"
 #include "spawn.h"
 #include "dlgcncwinscreen.h"
 #include "dialogmgr.h"
@@ -92,7 +88,6 @@ ULONG g_ip_override = INADDR_NONE;
 //------------------------------------------------------------------------------------
 void cGameData::Onetime_Init(void)
 {
-	WWDEBUG_SAY(("cGameData::Onetime_Init\n"));
 	if (!ConsoleBox.Is_Exclusive()) {
 		PTextRenderer = new Render2DSentenceClass;
 		StyleMgrClass::Assign_Font(PTextRenderer, StyleMgrClass::FONT_INGAME_TXT);
@@ -104,10 +99,8 @@ void cGameData::Onetime_Init(void)
 //------------------------------------------------------------------------------------
 void cGameData::Onetime_Shutdown(void)
 {
-	WWDEBUG_SAY(("cGameData::Onetime_Shutdown\n"));
 
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT(PTextRenderer != NULL);
 		delete PTextRenderer;
 		PTextRenderer = NULL;
 	}
@@ -125,7 +118,6 @@ cGameData::cGameData(void)	:
 
 	IsIntermission.Set(				false);
 	IsDedicated.Set(					false);
-	IsAutoRestart.Set(				false);
 	IsFriendlyFirePermitted.Set(	false);
 	IsTeamChangingAllowed.Set(		true);
 	IsPassworded.Set(					false);
@@ -188,7 +180,6 @@ cGameData& cGameData::operator=(const cGameData& rhs)
 	IsIntermission						= rhs.IsIntermission;
 
 	IsDedicated							= rhs.IsDedicated;
-	IsAutoRestart						= rhs.IsAutoRestart;
 	IsFriendlyFirePermitted			= rhs.IsFriendlyFirePermitted;
 	IsTeamChangingAllowed			= rhs.IsTeamChangingAllowed;
 	IsPassworded						= rhs.IsPassworded;
@@ -238,7 +229,6 @@ cGameData& cGameData::operator=(const cGameData& rhs)
 //-----------------------------------------------------------------------------
 void cGameData::Reset_Game(bool is_reloaded)
 {
-   WWDEBUG_SAY(("cGameData::Reset_Game\n"));
 
 	//
 	// Game_Reset is called on both C & S at the beginning of every game.
@@ -261,7 +251,6 @@ void cGameData::Reset_Game(bool is_reloaded)
 	}
 
 	if (Get_Text_Display()) {
-   	WWASSERT(Get_Text_Display() != NULL);
    	Get_Text_Display()->Flush();
 	}
 
@@ -295,7 +284,6 @@ void cGameData::Reset_Game(bool is_reloaded)
 void cGameData::Swap_Team_Sides(void)
 {
 	//WWASSERT(Is_Team_Game());
-	WWASSERT(cNetwork::I_Am_Server());
 
 	for (
 		SLNode<cPlayer> * player_node = cPlayerManager::Get_Player_Object_List()->Head();
@@ -303,11 +291,9 @@ void cGameData::Swap_Team_Sides(void)
 		player_node = player_node->Next()) {
 
 		cPlayer * p_player = player_node->Data();
-		WWASSERT(p_player != NULL);
 
 		int team = p_player->Get_Player_Type();
 
-		WWASSERT(team == PLAYERTYPE_NOD || team == PLAYERTYPE_GDI);
 
 		int new_team = PLAYERTYPE_NOD;
 		if (team == PLAYERTYPE_NOD)
@@ -336,9 +322,7 @@ void cGameData::Swap_Team_Sides(void)
 void cGameData::Remix_Team_Sides(void)
 {
 	//WWASSERT(Is_Team_Game());
-	WWASSERT(cNetwork::I_Am_Server());
 
-	WWASSERT(IsClanGame.Is_False() && "Remix teams not allowed");
 
 	if (IsClanGame.Is_True()) {
 		return;
@@ -353,7 +337,6 @@ void cGameData::Remix_Team_Sides(void)
 		player_node = player_node->Next()) {
 
 		cPlayer * p_player = player_node->Data();
-		WWASSERT(p_player != NULL);
 
 		int new_team = PLAYERTYPE_NOD;
 		if (rand() % 2 == 0)
@@ -382,9 +365,7 @@ void cGameData::Remix_Team_Sides(void)
 void cGameData::Rebalance_Team_Sides(void)
 {
 	//WWASSERT(Is_Team_Game());
-	WWASSERT(cNetwork::I_Am_Server());
 
-	WWASSERT(IsClanGame.Is_False() && "Rebalance teams not allowed");
 
 	if (IsClanGame.Is_True()) {
 		return;
@@ -394,10 +375,8 @@ void cGameData::Rebalance_Team_Sides(void)
 	// Rebalance teams numerically
 	//
 	cTeam * p_nod = cTeamManager::Find_Team(PLAYERTYPE_NOD);
-	WWASSERT(p_nod != NULL);
 
 	cTeam * p_gdi = cTeamManager::Find_Team(PLAYERTYPE_GDI);
-	WWASSERT(p_gdi != NULL);
 
 	int move_count = 0;
 
@@ -412,14 +391,12 @@ void cGameData::Rebalance_Team_Sides(void)
 		if (nod_tally > gdi_tally + 1)
 		{
 			cPlayer * p_player = cPlayerManager::Find_Team_Player(PLAYERTYPE_NOD);
-			WWASSERT(p_player != NULL);
 			p_player->Set_Player_Type(PLAYERTYPE_GDI);
 			move_count++;
 		}
 		else if (gdi_tally > nod_tally + 1)
 		{
 			cPlayer * p_player = cPlayerManager::Find_Team_Player(PLAYERTYPE_GDI);
-			WWASSERT(p_player != NULL);
 			p_player->Set_Player_Type(PLAYERTYPE_NOD);
 			move_count++;
 		}
@@ -444,7 +421,6 @@ void cGameData::Set_Ip_And_Port(void)
 	/*
 	SOCKADDR_IN local_address;
    bool retcode = cNetUtil::Get_Local_Address(&local_address);
-	WWASSERT(retcode == true);
 
 	//
 	// hack
@@ -465,20 +441,6 @@ void cGameData::Set_Ip_And_Port(void)
 
 	if (g_ip_override != INADDR_NONE) {
 		ip = g_ip_override;
-	}
-
-	//
-	// IP is set automatically in WOL unless there is an IP override and a port overrride.
-	//
-	if (GameModeManager::Find("WOL")->Is_Active()) {
-
-		if (g_ip_override == INADDR_NONE || WOLNATInterface.Get_Force_Port() == 0) {
-			unsigned long temp = FirewallHelper.Get_Local_Address();
-			if (temp) {
-				//ip = temp;
-				ip = ::ntohl(temp);
-			}
-		}
 	}
 
 	//WWASSERT(ip != 0);
@@ -521,14 +483,12 @@ void cGameData::Set_Radar_Mode(RadarModeEnum mode)
 //-----------------------------------------------------------------------------
 void cGameData::Set_Intermission_Time_Seconds(int time)
 {
-	WWASSERT(time >= 0);
 	IntermissionTimeSeconds = time;
 }
 
 //-----------------------------------------------------------------------------
 void cGameData::Set_Motd(const WCHAR * motd)
 {
-	WWASSERT(motd != NULL);
 
 	Motd = motd;
 }
@@ -573,7 +533,6 @@ void cGameData::Set_Ip_Address(ULONG ip_address)
 //-----------------------------------------------------------------------------
 void cGameData::Set_Port(int port)
 {
-   WWASSERT(port >= MIN_SERVER_PORT && port <= MAX_SERVER_PORT);
 	Port = port;
 }
 
@@ -683,12 +642,7 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 	}
 #endif //FREEDEDICATEDSERVER
 
-#ifdef FREEDEDICATEDSERVER
-	if (Get_Max_Players() == 0 && ServerSettingsClass::Get_Game_Mode() !=
-		ServerSettingsClass::MODE_WOL) {
-#else
 	if (Get_Max_Players() == 0) {
-#endif
 		PRINT_CONFIG_ERROR;
 		ConsoleBox.Print("Max player count must be greater than 0\n\n");
 		outMsg = TRANSLATE(IDS_HOPTERR_MAXPLAYER_0);
@@ -880,37 +834,6 @@ bool cGameData::Does_Map_Exist (void)
 }
 
 
-//-----------------------------------------------------------------------------
-void cGameData::Import_Tier_1_Data(const WOLGameInfo& gameInfo)
-{
-	Set_Map_Name(gameInfo.MapName());
-	Set_Mod_Name(gameInfo.ModName());
-
-	WideStringClass title(gameInfo.Title());
-	Set_Game_Title(title);
-
-	Set_Max_Players(gameInfo.MaxPlayers());
-	Set_Current_Players(gameInfo.NumPlayers());
-
-	// Set game flags
-	IsDedicated.Set(gameInfo.IsDedicated());
-	IsPassworded.Set(gameInfo.IsPassworded());
-	IsLaddered.Set(gameInfo.IsLaddered());
-	IsFriendlyFirePermitted.Set(gameInfo.IsFriendlyFire());
-	IsFreeWeapons.Set(gameInfo.IsFreeWeapons());
-	RemixTeams.Set(gameInfo.IsTeamRemix());
-	IsTeamChangingAllowed.Set(gameInfo.IsTeamChange());
-	IsClanGame.Set(gameInfo.IsClanGame());
-	IsQuickMatchServer = gameInfo.IsQuickmatch();
-
-	CanRepairBuildings.Set(gameInfo.IsRepairBuildings());
-	DriverIsAlwaysGunner.Set(gameInfo.IsDriverGunner());
-	SpawnWeapons.Set(gameInfo.IsSpawnWeapons());
-
-	Clear_Clans();
-	mClanSlots[0] = gameInfo.ClanID1();
-	mClanSlots[1] = gameInfo.ClanID2();
-}
 
 
 //-----------------------------------------------------------------------------
@@ -965,8 +888,6 @@ void cGameData::Import_Tier_2_Data(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cGameData::Load_From_Server_Config(LPCSTR config_file)
 {
-	WWASSERT(config_file != NULL);
-   WWASSERT(cMiscUtil::Is_String_Different(config_file, ""));
 
    INIClass * p_ini = Get_INI(config_file);
 	StringClass full_filename(config_file, true);
@@ -978,7 +899,6 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 
 		p_ini = Get_INI(config_file);
    }
-	WWASSERT(p_ini != NULL);
 
 	LastServerConfigModTime = Get_Config_File_Mod_Time();
 
@@ -1019,8 +939,6 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 	IsDedicated.Set(true);
 #endif //FREEDEDICATEDSERVER
 
-	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsAutoRestart",				IsAutoRestart.Get());
-	IsAutoRestart.Set(b);
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsPassworded",				IsPassworded.Get());
 	IsPassworded.Set(b);
@@ -1110,11 +1028,8 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 //-----------------------------------------------------------------------------
 void cGameData::Save_To_Server_Config(LPCSTR config_file)
 {
-	WWASSERT(config_file != NULL);
-   WWASSERT(cMiscUtil::Is_String_Different(config_file, ""));
 
    INIClass * p_ini = Get_INI(config_file);
-   WWASSERT(p_ini != NULL);
 
 
 	//
@@ -1130,7 +1045,6 @@ void cGameData::Save_To_Server_Config(LPCSTR config_file)
    //p_ini->Put_Int(	   	INI_SECTION_NAME, "IntermissionTimeSeconds",	Get_Intermission_Time_Seconds());
    p_ini->Put_Int(			INI_SECTION_NAME, "Port",							Get_Port());
 	p_ini->Put_Bool(			INI_SECTION_NAME, "IsDedicated",					IsDedicated.Get());
-	p_ini->Put_Bool(			INI_SECTION_NAME, "IsAutoRestart",				IsAutoRestart.Get());
 	p_ini->Put_Bool(			INI_SECTION_NAME, "IsPassworded",				IsPassworded.Get());
 	p_ini->Put_Bool(			INI_SECTION_NAME, "IsQuickMatch",				IsQuickMatchServer.Get());
 	p_ini->Put_Bool(			INI_SECTION_NAME, "IsLaddered",					IsLaddered.Get());
@@ -1173,7 +1087,6 @@ void cGameData::Save_To_Server_Config(LPCSTR config_file)
 //-----------------------------------------------------------------------------
 void cGameData::Soldier_Added(SoldierGameObj * p_soldier)
 {
-	WWASSERT(p_soldier != NULL);
 
 	if (IsFreeWeapons.Is_True() &&
 		 p_soldier->Get_Player_Type() != PLAYERTYPE_NEUTRAL) {
@@ -1187,7 +1100,6 @@ void cGameData::Soldier_Added(SoldierGameObj * p_soldier)
 			weapon = 1 + rand() % 7;
 		}
 
-		WWASSERT(p_soldier->Get_Weapon_Bag() != NULL);
 		p_soldier->Get_Weapon_Bag()->Select_Key_Number(weapon);
 	}
 }
@@ -1195,15 +1107,6 @@ void cGameData::Soldier_Added(SoldierGameObj * p_soldier)
 //-----------------------------------------------------------------------------
 void cGameData::Begin_Intermission(void)
 {
-	// If we are transitioning from one game to another we must first end the
-	// previous game.
-	GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-	if (gameMode && gameMode->Is_Active()) {
-		WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-		wolGame->End_Game();
-	}
-
 	IsIntermission.Set(true);
    IntermissionTimeRemaining = Get_Intermission_Time_Seconds();
 
@@ -1222,14 +1125,12 @@ void cGameData::Set_Maximum_World_Distance(float distance)
 	//
 	//	You will typically get this assert if you don't have the level file.
 	//
-	WWASSERT(distance > 0);
 	MaximumWorldDistance = distance;
 }
 
 //-----------------------------------------------------------------------------
 void cGameData::Set_Min_Qualifying_Time_Minutes(int minutes)
 {
-	WWASSERT(minutes >= 0);
 	MinQualifyingTimeMinutes = minutes;
 }
 
@@ -1256,7 +1157,6 @@ WideStringClass cGameData::Get_Team_Word(void)
 //-----------------------------------------------------------------------------
 void cGameData::Set_Time_Remaining_Seconds(float time_remaining_seconds)
 {
-   WWASSERT(time_remaining_seconds >= 0);
 
 	TimeRemainingSeconds = time_remaining_seconds;
 }
@@ -1304,8 +1204,6 @@ int cGameData::Choose_Player_Type(cPlayer* player, int team_choice, bool is_grun
 		if (player && !player->Is_Human()) {
 			int team = Choose_Smallest_Team();
 
-			WWDEBUG_SAY(("CLANS: Bot '%S' assigned to smallest team (%d)\n",
-				(const WCHAR*)player->Get_Name(), team));
 
 			return team;
 		}
@@ -1317,21 +1215,15 @@ int cGameData::Choose_Player_Type(cPlayer* player, int team_choice, bool is_grun
 		if (clanMate) {
 			int team = clanMate->Get_Player_Type();
 
-			WWDEBUG_SAY(("CLANS: Player '%S' assigned to team with clanmates (%d)\n",
-				(const WCHAR*)player->Get_Name(), team));
 
 			return team;
 		} else {
 			int team = Choose_Available_Team(team_choice);
 
-			WWDEBUG_SAY(("CLANS: Player '%S' assigned to available team (%d)\n",
-				(const WCHAR*)player->Get_Name(), team));
 
 			return team;
 		}
 
-		WWDEBUG_SAY(("CLANS: ERROR - Player not assigned to team\n"));
-		WWASSERT("ERROR: Player not assigned to team");
 	} else {
 		if (PLAYERTYPE_RENEGADE == team_choice || IsTeamChangingAllowed.Is_False()) {
 			return Choose_Smallest_Team();
@@ -1360,8 +1252,6 @@ int cGameData::Choose_Available_Team(int preference)
 		return team->Get_Id();
 	}
 
-	WWDEBUG_SAY(("ERROR: No available team found\n"));
-	WWASSERT("ERROR: No available team found");
 	return -1;
 }
 
@@ -1372,9 +1262,7 @@ int cGameData::Choose_Smallest_Team(void)
 	//WWASSERT(Is_Team_Game());
 
 	cTeam * p_team_0 = cTeamManager::Find_Team(0);
-	WWASSERT(p_team_0 != NULL);
 	cTeam * p_team_1 = cTeamManager::Find_Team(1);
-	WWASSERT(p_team_1 != NULL);
 
 	int team = -999;
 
@@ -1405,7 +1293,6 @@ int cGameData::Choose_Smallest_Team(void)
 		}
 	}
 
-	WWASSERT(team != -999);
 
 	return team;
 }
@@ -1413,7 +1300,6 @@ int cGameData::Choose_Smallest_Team(void)
 //-----------------------------------------------------------------------------
 bool cGameData::Is_Game_Over(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	bool is_game_over = false;
 
@@ -1515,9 +1401,7 @@ unsigned long cGameData::Get_Config_File_Mod_Time(void)
 //-----------------------------------------------------------------------------
 void cGameData::Game_Over_Processing(void)
 {
-   WWDEBUG_SAY(("cGameData::Game_Over_Processing\n"));
 
-	WWASSERT(cNetwork::I_Am_Server());
 
    int winning_team = cTeamManager::Get_Leaders_Id();
 
@@ -1529,7 +1413,6 @@ void cGameData::Game_Over_Processing(void)
 		// Verify that the new settings are good.
 		//
 		cGameDataCnc *test_game_settings = (cGameDataCnc*) Create_Game_Of_Type(cGameData::GAME_TYPE_CNC);
-		WWASSERT(test_game_settings != NULL);
 
 		bool ok = false;
 
@@ -1615,14 +1498,12 @@ bool cGameData::Is_Gameplay_Permitted(void)
 
 void cGameData::Set_Clan(int slot, unsigned long clanID)
 {
-	WWASSERT(slot >= 0 && slot < MAX_CLAN_SLOTS);
 	mClanSlots[slot] = clanID;
 }
 
 
 unsigned long cGameData::Get_Clan(int slot) const
 {
-	WWASSERT(slot >= 0 && slot < MAX_CLAN_SLOTS);
 	return mClanSlots[slot];
 }
 
@@ -1692,7 +1573,6 @@ cGameData * cGameData::Create_Game_Of_Type(GameTypeEnum game_type)
 	return p_game_data;
 	*/
 
-	WWASSERT(game_type == GAME_TYPE_CNC);
 
 	return new cGameDataCnc;
 }
@@ -1730,7 +1610,6 @@ void cGameData::Add_Bottom_Text(WideStringClass & text)
 	y -= 1.2 * PFont->Char_Height();
 	MultiHUDClass::Set_Bottom_Text_Y_Pos(y);
 
-   WWASSERT(PTextRenderer != NULL);
 	PTextRenderer->Set_Location(Vector2(cMathUtil::Round(x), cMathUtil::Round(y)));
 	PTextRenderer->Draw_Text(text);
 */
@@ -1969,7 +1848,6 @@ void cGameData::Render(void)
 	Show_Game_Settings_Limits();
 
 	if (PTextRenderer != NULL) {
-		WWPROFILE("cGameData::Render");
 		PTextRenderer->Render();
 	}
 }
@@ -1981,7 +1859,6 @@ void cGameData::On_Game_Begin(void)
 	// Note, On_Game_Begin happens after load.
 	//
 
-   WWDEBUG_SAY(("cGameData::On_Game_Begin\n"));
 
 	GetSystemTime(&GameStartTime);
 	FrameCount = 0;
@@ -2047,26 +1924,11 @@ void cGameData::On_Game_Begin(void)
 		}
 	}
 
-	GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-	if (gameMode && gameMode->Is_Active()) {
-		WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-		WWASSERT(wolGame != NULL);
-		wolGame->Start_Game(this);
-	}
 }
 
 //-----------------------------------------------------------------------------
 void cGameData::On_Game_End(void)
 {
-   WWDEBUG_SAY(("cGameData::On_Game_End\n"));
-
-	GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-	if (gameMode && gameMode->Is_Active()) {
-		WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-		wolGame->End_Game();
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -2089,7 +1951,6 @@ int	cGameData::Get_Mission_Number_From_Map_Name( const char * map_name )
 //-----------------------------------------------------------------------------
 const StringClass& cGameData::Get_Map_Cycle(int map)
 {
-	WWASSERT(map >= 0 && map < MAX_MAPS);
 
 #ifdef MULTIPLAYERDEMO
 	MapCycle[map].Format("C&C_Under.mix");
@@ -2102,7 +1963,6 @@ const StringClass& cGameData::Get_Map_Cycle(int map)
 void
 cGameData::Set_Map_Cycle(int map, const StringClass & map_name)
 {
-	WWASSERT(map >= 0 && map < MAX_MAPS);
 
 	MapCycle[map] = map_name;
 }
@@ -2190,7 +2050,6 @@ void cGameData::ReceiveSignal(MPChooseTeamSignal& choice)
 //-----------------------------------------------------------------------------
 void cGameData::Filter_Spawners(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	if (SpawnWeapons.Is_False()) {
 		//
@@ -2200,7 +2059,6 @@ void cGameData::Filter_Spawners(void)
 
 		for (int i = 0; i < spawner_list.Count(); i++) {
 
-			WWASSERT(spawner_list[i] != NULL);
 
 			if (spawner_list[i]->Get_Definition().Is_Multiplay_Weapon_Spawner()) {
 				spawner_list[i]->Enable(false);
@@ -2218,7 +2076,6 @@ void cGameData::Set_Mvp_Name(const WideStringClass name)
 //------------------------------------------------------------------------------------
 void cGameData::Set_Mvp_Count(int count)
 {
-	WWASSERT(count >= 0);
 
 	MvpCount = count;
 }
@@ -2312,7 +2169,6 @@ void cGameData::Get_Description(WideStringClass & description)
 			break;
 
 		default:
-			DIE;
 	}
 	description += (attribute + delimiter + value + newline);
 
@@ -2432,7 +2288,6 @@ cGameDataCnc *					The_Cnc_Game(void)					{WWASSERT(The_Game()->As_Cnc() != NULL
 //-----------------------------------------------------------------------------
 void cGameData::Set_Min_Game_Time_Required_Mins(int mins)
 {
-	WWASSERT(mins >= 0 );
 	MinGameTimeRequiredMins = mins;
 }
 */
@@ -2441,7 +2296,6 @@ void cGameData::Set_Min_Game_Time_Required_Mins(int mins)
 //-----------------------------------------------------------------------------
 void cGameData::Set_Full_Score_Time_Threshold_Mins(int mins)
 {
-	WWASSERT(mins >= 0);
 	FullScoreTimeThresholdMins = mins;
 }
 */

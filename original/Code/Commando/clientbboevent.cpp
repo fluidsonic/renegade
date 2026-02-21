@@ -25,7 +25,6 @@ cClientBboEvent::cClientBboEvent(void)
 void
 cClientBboEvent::Init(int bbo)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 	//WWASSERT(bbo > 0);
 
 	SenderId = cNetwork::Get_My_Id();
@@ -44,12 +43,10 @@ cClientBboEvent::Init(int bbo)
 void
 cClientBboEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	cRemoteHost * p_rhost = cNetwork::Get_Server_Rhost(SenderId);
 	if (p_rhost != NULL)	{
 		p_rhost->Set_Maximum_Bps(Bbo);
-	   WWDEBUG_SAY(("Client %d adjusted bbo to %d.\n", SenderId, Bbo));
 	}
 
 	Set_Delete_Pending();
@@ -59,12 +56,9 @@ cClientBboEvent::Act(void)
 void
 cClientBboEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
-	WWASSERT(Bbo > 0);
 
 	packet.Add(SenderId);
 	packet.Add(Bbo);
@@ -76,15 +70,12 @@ cClientBboEvent::Export_Creation(BitStreamClass & packet)
 void
 cClientBboEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 
 	packet.Get(SenderId);
 	packet.Get(Bbo);
 
-	WWASSERT(SenderId > 0);
-	WWASSERT(Bbo > 0);
 
 	Act();
 }

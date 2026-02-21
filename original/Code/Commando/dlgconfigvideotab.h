@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGCONFIGVIDEOTAB_H
 #define __DLGCONFIGVIDEOTAB_H

@@ -2,7 +2,6 @@
 
 #include <math.h>
 
-#include "wwdebug.h"
 #include "wwmath.h"
 #include "vector3.h"
 #include "gameobjmanager.h"
@@ -12,7 +11,6 @@
 #include "vehicle.h"
 #include "useroptions.h"
 #include "playermanager.h"
-#include "wwprofile.h"
 
 //
 // Class statics
@@ -38,9 +36,6 @@ cPriority::Compute_Object_Priority
 	SoldierGameObj *			client_soldier
 )
 {
-	WWPROFILE("ObjPri");
-	WWASSERT(client_id > 0);
-	WWASSERT(p_netobject != NULL);
 
 	//
 	// Compute the priority of this object to the given client at his given position.
@@ -91,8 +86,6 @@ cPriority::Compute_Object_Priority
 		p_netobject->Reset_Client_Hint_Count(client_id);
 
 		/*
-		WWDEBUG_SAY(("cPriority::Compute_Object_Priority %5.3f on object %d due to client %d hint.\n",
-			priority, p_netobject->Get_Network_ID(), client_id));
 		*/
 	}
 
@@ -111,8 +104,6 @@ cPriority::Compute_Facing_Factor
 	SoldierGameObj *client_soldier
 )
 {
-	WWASSERT(client_id > 0);
-	WWASSERT(p_netobject != NULL);
 
 	float facing_factor = 1;
 
@@ -123,7 +114,6 @@ cPriority::Compute_Facing_Factor
 
 	if (p_soldier != NULL)
 	{
-		WWASSERT(p_soldier->Peek_Human_Phys() != NULL);
 		float client_facing = p_soldier->Peek_Human_Phys()->Get_Heading();
 
 		Vector3 subject_position;
@@ -154,7 +144,6 @@ cPriority::Get_Object_Distance
 	NetworkObjectClass *		p_netobject
 )
 {
-	WWASSERT(p_netobject != NULL);
 
 	//
 	// Objects without a physical location will return a distance of zero.
@@ -221,7 +210,6 @@ cPriority::Compute_Relevance_Factor
 	SoldierGameObj *client_soldier
 )
 {
-	WWASSERT(p_netobject != NULL);
 
 	//
 	// This bumps the priority of objects that you are shooting or that are
@@ -260,7 +248,6 @@ cPriority::Compute_Relevance_Factor
 		factor -= cUserOptions::IrrelevancePenalty.Get();
 	}
 
-	WWASSERT(factor > 0);
 
 	return factor;
 }
@@ -303,9 +290,6 @@ cPriority::Compute_Object_Priority_2
 	SoldierGameObj *			client_soldier
 )
 {
-	WWPROFILE("ObjPri");
-	WWASSERT(client_id > 0);
-	WWASSERT(p_netobject != NULL);
 
 	//
 	// Compute the priority of this object to the given client at his given position.
@@ -360,8 +344,6 @@ cPriority::Compute_Facing_Factor_2
 	SoldierGameObj *client_soldier
 )
 {
-	WWASSERT(client_id > 0);
-	WWASSERT(p_netobject != NULL);
 
 	float facing_factor = 1;
 
@@ -373,7 +355,6 @@ cPriority::Compute_Facing_Factor_2
 	if (p_soldier != NULL)
 	{
 		HumanPhysClass *hphys = p_soldier->Peek_Human_Phys();
-		WWASSERT(hphys != NULL);
 		float client_facing = hphys->Get_Heading();
 
 		Vector3 subject_position;
@@ -404,7 +385,6 @@ cPriority::Get_Object_Distance_2
 	NetworkObjectClass *		p_netobject
 )
 {
-	WWASSERT(p_netobject != NULL);
 
 	//
 	// Objects without a physical location will return a distance of zero.
@@ -488,7 +468,6 @@ cPriority::Compute_Relevance_Factor_2
 	SoldierGameObj *client_soldier
 )
 {
-	WWASSERT(p_netobject != NULL);
 
 	//
 	// This bumps the priority of objects that you are shooting or that are
@@ -528,7 +507,6 @@ cPriority::Compute_Relevance_Factor_2
 		factor -= cUserOptions::IrrelevancePenalty.Get();
 	}
 
-	WWASSERT(factor > 0);
 
 	return factor;
 }

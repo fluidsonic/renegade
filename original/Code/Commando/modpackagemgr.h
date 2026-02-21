@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __MODPACKAGEMGR_H
 #define __MODPACKAGEMGR_H

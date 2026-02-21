@@ -34,9 +34,7 @@ cGameOptionsEvent::cGameOptionsEvent(void)
 void
 cGameOptionsEvent::Init(int client_id)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
-	WWASSERT(The_Game() != NULL);
 	HostedGameNumber = The_Game()->Get_Hosted_Game_Number();
 
 	Set_Object_Dirty_Bit(client_id, BIT_CREATION, true);
@@ -46,8 +44,6 @@ cGameOptionsEvent::Init(int client_id)
 void
 cGameOptionsEvent::Act(void)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
-	WWASSERT(The_Game() != NULL);
 
 	The_Game()->Set_Hosted_Game_Number(HostedGameNumber);
 
@@ -64,11 +60,9 @@ cGameOptionsEvent::Act(void)
 void
 cGameOptionsEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(PTheGameData != NULL);
 
 	//GAMESPY
 	//
@@ -87,7 +81,6 @@ cGameOptionsEvent::Export_Creation(BitStreamClass & packet)
 	packet.Add((uint32)CRC_Stringi(The_Game()->Get_Map_Name()));
 #endif // MULTIPLAYERDEMO
 
-	WWDEBUG_SAY(("cGameOptionsEvent sent\n"));
 
 	Set_Delete_Pending();
 }
@@ -98,9 +91,7 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
-	WWASSERT(PTheGameData != NULL);
 
 	The_Game()->Import_Tier_1_Data((cPacket &) packet);
 
@@ -142,7 +133,6 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 
 #endif // MULTIPLAYERDEMO
 
-	WWDEBUG_SAY(("cGameOptionsEvent recd\n"));
 
 	if (act) {
 		Act();

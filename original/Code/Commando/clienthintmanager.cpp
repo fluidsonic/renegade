@@ -35,7 +35,6 @@ cClientHintManager::Think
 		return;
 	}
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
    SoldierGameObj * p_my_soldier = GameObjManager::Find_Soldier_Of_Client_ID(cNetwork::Get_My_Id());
 
@@ -81,9 +80,7 @@ cClientHintManager::Think
 	int count = NetworkObjectMgrClass::Get_Object_Count();
 
 	NetworkObjectClass **object_list = (NetworkObjectClass **) _alloca((count * sizeof(NetworkObjectClass*)) + 128);
-	WWASSERT(object_list != NULL);
 	SmartGameObj * player_ptr = GameObjManager::Find_Soldier_Of_Client_ID(cNetwork::Get_My_Id());
-	WWASSERT(player_ptr != NULL);
 
 	//
 	// Traverse the vehicles and soldiers and gather data about update rates.
@@ -91,7 +88,6 @@ cClientHintManager::Think
 	for (int index = 0; index < count; index ++)
 	{
 		NetworkObjectClass * p_object = NetworkObjectMgrClass::Get_Object(index);
-		WWASSERT(p_object != NULL);
 
 		BYTE type = p_object->Get_App_Packet_Type();
 
@@ -200,7 +196,6 @@ cClientHintManager::Think
 	if (most_broken_object_index != -1 && worst_percentage > 100 + (10.0f * hint_factor)) {
 		//NetworkObjectClass * p_object = NetworkObjectMgrClass::Get_Object(longest_delayed_index);
 		NetworkObjectClass * p_object = object_list[most_broken_object_index];
-		WWASSERT(p_object != NULL);
 
 		cCsHint * p_hint = new cCsHint;
 		p_hint->Init(p_object->Get_Network_ID());
@@ -209,16 +204,6 @@ cClientHintManager::Think
 
 		//WWDEBUG_SAY(("cClientHintManager::Think, requesting hint for object id %d, avg = %5.2f, max = %d\n",
 		//	p_object->Get_Network_ID(), average_delay_ms, maximum_delay_ms));
-		WWDEBUG_SAY(("cClientHintManager::Think, requesting hint for object id %d (%s), priority = %5.2f, ave update rate = %dms\n",
-			p_object->Get_Network_ID(),
-			cAppPacketStats::Interpret_Type(p_object->Get_App_Packet_Type()),
-			p_object->Get_Cached_Priority(),
-			p_object->Get_Clientside_Update_Frequency()));
-		WWDEBUG_SAY(("      Compared to object id %d with priority %5.2f, avg update rate %dms\n",
-			object_list[most_broken_object_index-1]->Get_Network_ID(),
-			object_list[most_broken_object_index-1]->Get_Cached_Priority(),
-			object_list[most_broken_object_index-1]->Get_Clientside_Update_Frequency()));
-		WWDEBUG_SAY(("      Client hint factor = %5.2f\n", hint_factor));
 	}
 }
 
@@ -236,8 +221,6 @@ cClientHintManager::Think
 //
 int __cdecl cClientHintManager::Priority_Compare(const void **object1, const void **object2)
 {
-	WWASSERT(object1 != NULL);
-	WWASSERT(object2 != NULL);
 
 	NetworkObjectClass *n1 = (NetworkObjectClass*) *object1;
 	NetworkObjectClass *n2 = (NetworkObjectClass*) *object2;

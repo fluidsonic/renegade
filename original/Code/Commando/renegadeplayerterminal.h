@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __RENEGADEPLAYERTERMINAL_H
 #define __RENEGADEPLAYERTERMINAL_H

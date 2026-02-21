@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __FLOODPROTECTIONMGR_H
 #define __FLOODPROTECTIONMGR_H

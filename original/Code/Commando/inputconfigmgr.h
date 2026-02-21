@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __INPUT_CONFIG_MGR_H
 #define __INPUT_CONFIG_MGR_H

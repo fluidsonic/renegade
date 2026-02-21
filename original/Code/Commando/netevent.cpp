@@ -6,7 +6,6 @@
 void
 cNetEvent::Init(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	if (cNetwork::I_Am_Client())
 	{

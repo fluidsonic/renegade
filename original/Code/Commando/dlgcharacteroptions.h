@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGOPTIONSCHARACTER_H
 #define __DLGOPTIONSCHARACTER_H

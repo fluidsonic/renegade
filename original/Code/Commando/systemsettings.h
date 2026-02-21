@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef	SYSTEMSETTINGS_H
 #define	SYSTEMSETTINGS_H

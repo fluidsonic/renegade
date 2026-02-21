@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 
-#include "wwdebug.h"
 #include "assets.h"
 #include "font3d.h"
 #include "render2d.h"
@@ -34,7 +33,6 @@
 #include "packetmgr.h"
 #include "apppacketstats.h"
 #include "connect.h"
-#include "wwprofile.h"
 #include "vehicle.h"
 #include "csdamageevent.h"
 #include "specialbuilds.h"
@@ -60,14 +58,11 @@ float							cDiagnostics::DiagnosticY	= 0;
 void cDiagnostics::Init(void)
 {
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
    	PFont = WW3DAssetManager::Get_Instance()->Get_Font3DInstance("FONT6x8.TGA");
-   	WWASSERT(PFont != NULL);
 		SET_REF_OWNER(PFont);
 		PFont->Set_Mono_Spaced();
 
 		PRenderer = new Render2DTextClass(PFont);
-		WWASSERT(PRenderer != NULL);
 
 		RectClass rect = Render2DClass::Get_Screen_Resolution();
 		PRenderer->Set_Coordinate_Range(rect);
@@ -124,11 +119,9 @@ void cDiagnostics::Add_Diagnostic(LPCSTR format, ...)
 		va_start(va, format);
 		::vsprintf(buffer, format, va);
 
-		WWASSERT(PRenderer != NULL);
 		PRenderer->Set_Location(Vector2(DiagnosticX, DiagnosticY));
 		PRenderer->Draw_Text(buffer);
 
-		WWASSERT(PRenderer->Peek_Font() != NULL);
 		DiagnosticY += (int)(PRenderer->Peek_Font()->Char_Height() * 1.2);
 	}
 }
@@ -212,25 +205,6 @@ void cDiagnostics::Render(void)
 		}
 		RendererFps=0;
 	}
-#ifdef WWDEBUG
-
-	bool god_status = cDevOptions::ShowGodStatus.Is_True() && cNetwork::I_Am_Client();
-	if (god_status!=RendererGodStatus) {
-		RendererGodStatus=god_status;
-		changed=true;
-	}
-
-	bool vip_status = cNetwork::I_Am_Client();
-	if (vip_status != RendererVipStatus) {
-		RendererVipStatus = vip_status;
-		changed = true;
-	}
-
-	// If diagnostics are displayed, changes happen most likely every frame
-	if (cDevOptions::ShowDiagnostics.Is_True() || cDevOptions::ShowObjectTally.Is_True()) {
-		changed=true;
-	}
-#endif //WWDEBUG
 
 	if (cDevOptions::ShowFps.Is_True()) {
 		// Stop the flicker
@@ -276,147 +250,6 @@ void cDiagnostics::Render(void)
 		PRenderer->Draw_Text(fps_text);
 	}
 
-#ifdef WWDEBUG
-
-	//
-	// Show god status
-	//
-	if (god_status) {
-		cPlayer * p_player = cNetwork::Get_My_Player_Object();
-		if (p_player != NULL && p_player->Invulnerable.Is_True()) {
-
-			RectClass rect = Render2DClass::Get_Screen_Resolution();
-			PRenderer->Set_Location(Vector2(rect.Left + 10, rect.Bottom - 20));
-			PRenderer->Draw_Text("GOD");
-		}
-	}
-
-	//
-	// Show vip status
-	//
-	if (vip_status) {
-		cPlayer * p_player = cNetwork::Get_My_Player_Object();
-		if (p_player != NULL && p_player->Get_Damage_Scale_Factor() < 100) {
-
-			RectClass rect = Render2DClass::Get_Screen_Resolution();
-			PRenderer->Set_Location(Vector2(rect.Left + 10, rect.Bottom - 30));
-			PRenderer->Draw_Text("VIP");
-		}
-	}
-
-   /*
-	if (cNetwork::I_Am_Server() && cDevOptions::ShowBandwidthBudgetOut.Is_True()) {
-		Add_Diagnostic("BBO: %d bps\n", cNetwork::PServerConnection->Get_Bandwidth_Budget_Out());
-	}
-	*/
-
-	if (cDevOptions::ShowObjectTally.Is_True()) {
-		Show_Object_Tally();
-	}
-
-	if (cDevOptions::ShowDiagnostics.Is_True()) {
-
-		if (cNetwork::I_Am_Server()) {
-			Add_Diagnostic("BBO (server):       %d bps\n", cNetwork::PServerConnection->Get_Bandwidth_Budget_Out());
-		}
-
-		if (cNetwork::I_Am_Client()) {
-			Add_Diagnostic("BBO (client):       %d bps\n", cNetwork::PClientConnection->Get_Bandwidth_Budget_Out());
-			Add_Diagnostic("CSC Last Ping:      %d ms", CombatManager::Get_Last_Round_Trip_Ping_Ms());
-			Add_Diagnostic("CSC Avg. Ping:      %d ms", CombatManager::Get_Avg_Round_Trip_Ping_Ms());
-		}
-
-		int low		= 0;
-		int high		= 0;
-		int current	= 0;
-		cConnection::Get_Latency(low, high, current);
-		Add_Diagnostic("latency sim:        (%d, %d) : %d", low, high, current);
-
-		cConnection::Get_Latency(low, high, current);
-		Add_Diagnostic("#netobjects:        %d", NetworkObjectMgrClass::Get_Object_Count());
-		Add_Diagnostic("#players:           %d", cPlayerManager::Count());
-
-		if (cNetwork::I_Am_Server()) {
-			Add_Diagnostic("NetToCombatRatio:   %-5.2f", cSbboManager::Get_Net_To_Combat_Ratio());
-			Add_Diagnostic("ThinkCount:         %d", cNetwork::Get_Think_Count());
-		}
-
-		Add_Diagnostic("I_Am_Client:        %d",		cNetwork::I_Am_Client());
-		Add_Diagnostic("I_Am_Server:        %d",		cNetwork::I_Am_Server());
-		Add_Diagnostic("NetUpdateRate:      %d",		cUserOptions::NetUpdateRate.Get());
-		Add_Diagnostic("ClientHintFactor:   %5.2f",	cUserOptions::ClientHintFactor.Get());
-		Add_Diagnostic("MaxFacingPenalty:   %5.2f",	cUserOptions::MaxFacingPenalty.Get());
-
-		if (cNetwork::I_Am_Client()) {
-			SoldierGameObj * p_my_soldier = GameObjManager::Find_Soldier_Of_Client_ID(cNetwork::Get_My_Id());
-			if (p_my_soldier != NULL) {
-
-				int tally = p_my_soldier->Tally_Vis_Visible_Soldiers();
-				if (tally >= 0) {
-					Add_Diagnostic("Soldiers VV:        %d", tally);
-				} else {
-					Add_Diagnostic("Soldiers VV:        NO VIS HERE");
-				}
-
-          //Add_Diagnostic("--------------------");
-			 //Add_Diagnostic("In elevator:        %d", p_my_soldier->Is_In_Elevator());
-			}
-		}
-
-		if (PTheGameData != NULL) {
-			Add_Diagnostic("ip addy:            %s:%u",
-				cNetUtil::Address_To_String(PTheGameData->Get_Ip_Address()),
-				PTheGameData->Get_Port());
-
-			Add_Diagnostic("mapname:            %s", PTheGameData->Get_Map_Name());
-			Add_Diagnostic("HostedGameNumber:   %d", cGameData::Get_Hosted_Game_Number());
-		}
-
-		Add_Diagnostic("PacketManager:");
-		Add_Diagnostic("  FlushFrequency:   %d", PacketManager.Get_Flush_Frequency());
-		Add_Diagnostic("  AllowDeltas:      %d", PacketManager.Get_Allow_Deltas());
-		Add_Diagnostic("  AllowCombos:      %d", PacketManager.Get_Allow_Combos());
-
-		//Add_Diagnostic("Frames:             %d", WWProfileManager::Get_Frame_Count_Since_Reset());
-
-		//
-		// Let's track how many vehicles are in the world, and how many of those
-		// have drivers.
-		//
-		int vehicle_count = 0;
-		int vehicle_driven_count = 0;
-		SLNode<BaseGameObj> * objnode;
-		for (objnode = GameObjManager::Get_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
-			WWASSERT(objnode->Data() != NULL);
-			PhysicalGameObj * p_phys_obj = objnode->Data()->As_PhysicalGameObj();
-			if (p_phys_obj != NULL && p_phys_obj->As_VehicleGameObj() != NULL) {
-				vehicle_count++;
-				if (p_phys_obj->As_VehicleGameObj()->Get_Driver() != NULL) {
-					vehicle_driven_count++;
-				}
-			}
-		}
-		Add_Diagnostic("Vehicles:           %d (%d with driver)", vehicle_count, vehicle_driven_count);
-
-		//Add_Diagnostic("AreClientsTrusted:    %d", cCsDamageEvent::Get_Are_Clients_Trusted());
-		//Add_Diagnostic("DriverIsAlwaysGunner: %d", VehicleGameObj::Get_Driver_Is_Always_Gunner());
-		//Add_Diagnostic("CameraLockedToTurret: %d", VehicleGameObj::Get_Camera_Locked_To_Turret());
-
-		if (PTheGameData != NULL) {
-			Add_Diagnostic("SpawnWeapons:       %d", PTheGameData->SpawnWeapons.Get());
-
-			/*
-			StringClass mvp_name;
-			PTheGameData->Get_Mvp_Name().Convert_To(mvp_name);
-			Add_Diagnostic("MVP:                %s", mvp_name.Peek_Buffer());
-			*/
-
-			Add_Diagnostic("Win Type:           %d", (int) PTheGameData->Get_Win_Type());
-			Add_Diagnostic("DurationS:          %u", (int) PTheGameData->Get_Game_Duration_S());
-		}
-	}
-
-#endif // WWDEBUG
 	PRenderer->Render();
 
 }
@@ -508,7 +341,6 @@ void cDiagnostics::Render(void)
 			SLNode<BaseGameObj> * objnode;
 			PhysicalGameObj * p_phys_obj;
 			for (objnode = GameObjManager::Get_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
-				WWASSERT(objnode->Data() != NULL);
 				p_phys_obj = objnode->Data()->As_PhysicalGameObj();
 				if (p_phys_obj != NULL && p_phys_obj->As_SoldierGameObj() != NULL) {
 					Add_Diagnostic("Soldier: ID %d, Type %d",
@@ -597,7 +429,6 @@ void cDiagnostics::Render(void)
 				SLNode<cNick> * objnode;
 				for (objnode = PWC->Get_Banned_List()->Head(); objnode; objnode = objnode->Next()) {
 					cNick * p_nick = objnode->Data();
-					WWASSERT(p_nick != NULL);
 					Add_Diagnostic("Banned : %s", p_nick->Nickname);
 				}
 			}
@@ -663,8 +494,6 @@ void cDiagnostics::Render(void)
 														(lzo_byte *) 			dest,
 														(unsigned *)			&compressed_size);
 
-	WWASSERT(lzo_code == LZO_E_OK);
-	WWASSERT(compressed_size <= COMPRESSED_BUFFER_SIZE);
 	Debug_Say(("Compressed from %d to %d bytes\n",
 		source_size, compressed_size));
 
@@ -678,16 +507,12 @@ void cDiagnostics::Render(void)
 														(lzo_byte*)				source2,
 														(unsigned *)			&decompressed_size);
 
-	WWASSERT(lzo_code_2 == LZO_E_OK);
-	WWASSERT(decompressed_size <= SOURCE_BUFFER_SIZE);
 	Debug_Say(("Decompressed from %d to %d bytes\n",
 		compressed_size, decompressed_size));
 
 	//
 	// Compare with original
 	//
-	WWASSERT(decompressed_size == source_size);
-	WWASSERT(memcmp(source, source2, source_size) == 0);
 	*/
 
 
@@ -699,7 +524,6 @@ void cDiagnostics::Render(void)
 /*
 #include "overlay.h"
 #include "langmode.h"
-#include "wolgmode.h"
 #include "chatshre.h"
 #include "useroptions.h"
 #include "menu.h"
@@ -710,7 +534,6 @@ void cDiagnostics::Render(void)
 #include "gameobjmanager.h"
 #include "gametype.h"
 #include "quat.h"
-#include "wwprofile.h"
 */
 //#include "nettgas.h"
 			//sprintf(buffer, "SFPS %d", cNetwork::Get_Server_Fps());
@@ -742,7 +565,6 @@ void cDiagnostics::Render(void)
 
 		if (cNetwork::I_Am_Only_Client())
 		{
-			WWASSERT(cServerFps::Get_Instance() != NULL);
 			sprintf(buffer, "SFPS %d", RendererSFps);
 			rect = Render2DClass::Get_Screen_Resolution();
 			PRenderer->Set_Location(Vector2(rect.Right - 70, rect.Top + 20));
@@ -754,7 +576,6 @@ void cDiagnostics::Render(void)
 		//
 		// Strip the leading "APPPACKETTYPE_"
 		//
-		WWASSERT(::strlen(cAppPacketStats::Interpret_Type(i)) > 14);
 		char name[200] = "";
 		::strcpy(name, &cAppPacketStats::Interpret_Type(i)[14]);
 

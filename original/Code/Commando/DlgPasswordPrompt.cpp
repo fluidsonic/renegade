@@ -56,7 +56,6 @@ bool DlgPasswordPrompt::DoDialog(Signaler<DlgPasswordPrompt>* target)
 DlgPasswordPrompt::DlgPasswordPrompt() :
 		PopupDialogClass(IDD_MP_JOIN_PASSWORD)
 	{
-	WWDEBUG_SAY(("DlgPasswordPrompt Instantiated\n"));
 	}
 
 
@@ -78,7 +77,6 @@ DlgPasswordPrompt::DlgPasswordPrompt() :
 
 DlgPasswordPrompt::~DlgPasswordPrompt()
 	{
-	WWDEBUG_SAY(("DlgPasswordPrompt Destroyed\n"));
 	}
 
 

@@ -43,7 +43,6 @@ const WCHAR* cGameDataSinglePlayer::Get_Static_Game_Name(void)
 //-----------------------------------------------------------------------------
 int cGameDataSinglePlayer::Choose_Player_Type(cPlayer* player, int team_choice, bool is_grunt)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	int team;
 

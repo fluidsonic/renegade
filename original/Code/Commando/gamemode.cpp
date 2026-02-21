@@ -1,7 +1,5 @@
 #include "gamemode.h"
-#include "wwprofile.h"
 #include "ww3d.h"
-#include "wwdebug.h"
 #include "miscutil.h"
 #include "slist.h"
 //#include "menu.h"
@@ -109,14 +107,12 @@ void GameModeManager::List_Active_Game_Modes(void)
 	if (!Get_Text_Display()) {
 		return;
 	}
-	WWASSERT(Get_Text_Display() != NULL);
 
 	Get_Text_Display()->Print_System("Active game modes:");
 
 	for (SLNode<GameModeClass> * game_mode_node = GameModeList.Head();
 		game_mode_node != NULL; game_mode_node = game_mode_node->Next()) {
 		GameModeClass * p_mode = game_mode_node->Data();
-		WWASSERT(p_mode != NULL);
 
 		if (p_mode->Is_Active()) {
 			Get_Text_Display()->Print_System( "  %s", p_mode->Name() );
@@ -154,7 +150,6 @@ void	GameModeManager::Think( void )
 
 void GameModeManager::Safely_Deactivate(void)
 {
-	WWPROFILE( "Deactivate" );
 	//
 	// This method safely deactivates any inactive pending mode without
 	// attempting a think
@@ -164,7 +159,6 @@ void GameModeManager::Safely_Deactivate(void)
 		game_mode_node != NULL; game_mode_node = game_mode_node->Next()) {
 
 		GameModeClass * p_mode = game_mode_node->Data();
-		WWASSERT(p_mode != NULL);
 		p_mode->Safely_Deactivate(); // if required
 	}
 }
@@ -174,7 +168,6 @@ void GameModeManager::Safely_Deactivate(void)
 */
 void	GameModeManager::Render( void )
 {
-	WWPROFILE( "Render" );
 
 	if (!ConsoleBox.Is_Exclusive()) {
 
@@ -205,13 +198,11 @@ void	GameModeManager::Render( void )
 		}
 
 		{
-			WWPROFILE( "Begin_Render" );
 
 			WW3D::Begin_Render (clear, clear, BackgroundMgrClass::Get_Clear_Color());
 		}
 
 		if (GameInFocus) {
-			WWPROFILE( "Render Game Modes" );
 			for (	SLNode<GameModeClass> *game_mode_node = GameModeList.Head();
 					game_mode_node != NULL;
 					game_mode_node = game_mode_node->Next()) {
@@ -224,42 +215,35 @@ void	GameModeManager::Render( void )
 		}
 
 		{
-			WWPROFILE( "Message Window" );
 			if (CombatManager::Get_Message_Window () != NULL) {
 				CombatManager::Get_Message_Window ()->Render();
 			}
 		}
 
 		{
-			WWPROFILE( "ObjectiveViewer" );
 			ObjectiveManager::Render_Viewer();
 		}
 
 		{
-			WWPROFILE( "DialogMgr" );
 			DialogMgrClass::Render();
 		}
 
 		{
-			WWPROFILE( "cDiagnostics" );
 			cDiagnostics::Render();
 		}
 
 		/*
 		{
-			WWPROFILE( "cHelpText" );
 			cHelpText::Render();
 		}
 		*/
 
 		// Only update the movie when the application is active
 		if (GameInFocus) {
-			WWPROFILE( "BINK" );
 			BINKMovie::Render();
 		}
 
 		{
-			WWPROFILE( "End_Render" );
 			WW3D::End_Render();
 		}
 
@@ -269,7 +253,6 @@ void	GameModeManager::Render( void )
 		}
 
 		{
-			WWPROFILE( "Switch_Thread" );
 			ThreadClass::Switch_Thread(); // This is important when working with multiple threads!
 		}
 

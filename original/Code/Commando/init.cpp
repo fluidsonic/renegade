@@ -14,7 +14,6 @@
 #include "_globals.h"
 #include "combatgmode.h"	// gamemode
 #include "langmode.h"		// gamemode
-#include "wolgmode.h"		// gamemode
 #include "movie.h"			// gamemode
 #include "gamemenu.h"		// gamemode
 #include "overlay.h"			// gamemode
@@ -61,9 +60,7 @@
 #include "bandwidthgraph.h"
 #include "buildnum.h"
 #include "dx8wrapper.h"
-#include "autostart.h"
 #include "except.h"
-#include "wwmemlog.h"
 #include "except.h"
 #include "consolemode.h"
 #include "serversettings.h"
@@ -256,71 +253,12 @@ void Commando_Assert_Handler(const char * message)
 	//    THE REGISTRY SWITCHES!!!!!!!!!!!!!
 	//
 	//
-#ifdef WWDEBUG
-	Copy_Logs(DebugManager::Get_Version_Number());
-#endif // WWDEBUG
 	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
 	if ( registry.Is_Valid() ) {
 		registry.Set_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, 0 );
 
 	}
 
-#ifdef WWDEBUG
-
-   if (cDevOptions::SoundEffectOnAssert.Is_True() &&
-		WWAudioClass::Get_Instance() != NULL) {
-		//
-		// Sound effect
-		//
-		WWAudioClass::Get_Instance()->Create_Instant_Sound("Debug_Assertion", Matrix3D(1));
-   }
-
-   if (cDevOptions::DisplayLogfileOnAssert.Is_True()) {
-		//
-		// Open up the logfile so that the user can see the assert
-		// at the bottom.
-		//
-		cNetwork::Shell_Command(DebugManager::Logfile_Name());
-	}
-
-	//LOG_CALL_STACK;
-
-	if (cDevOptions::BreakToDebuggerOnAssert.Is_True()) {
-
-		if (cDevOptions::ShutdownInputOnAssert.Is_True()) {
-			//
-			// This input shutdown is to help those of us who still have the
-			// DirectInput / debugger problem. For some of us the registry fix
-			// doesn't help.
-			//
-			Input::Shutdown();
-		}
-																																			/*
-
-									  m
-			$m                mm            m
-			 "$mmmmm        m$"    mmmmmmm$"
-					 """$m   m$    m$""""""
-			mmmmmmm$$$$$$$$$"mmmm
-		  mmm$$$$$$$$$$$$$$$$$$ m$$$$m  "    m  "
-		$$$$$$$$$$$$$$$$$$$$$$  $$$$$$"$$$
-		 mmmmmmmmmmmmmmmmmmmmm  $$$$$$$$$$
-		 $$$$$$$$$$$$$$$$$$$$$  $$$$$$$"""  m
-		 "$$$$$$$$$$$$$$$$$$$$$ $$$$$$  "      "
-			  """""""$$$$$$$$$$$m """"
-				 mmmmmmmm"  m$   "$mmmmm
-			  $$""""""      "$     """"""$$
-			m$"               "m           "
-                       																												*/
-
-		_asm int 0x03;
-	}
-
-	if (cDevOptions::ExitThreadOnAssert.Is_True()) {
-      ExitThread(1);
-   }
-
-#endif // WWDEBUG
 
 }
 
@@ -548,9 +486,6 @@ void Copy_Logs(unsigned version)
 
 void Application_Exception_Callback(void)
 {
-#ifdef WWDEBUG
-	Copy_Logs(DebugManager::Get_Version_Number());
-#endif // WWDEBUG
 	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
 	if ( registry.Is_Valid() ) {
 		registry.Set_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, 0 );
@@ -657,16 +592,12 @@ Debug_Say(( "End length %d (count %d) at %d\n", length, count, timeGetTime()-sta
 bool Game_Init(void)
 {
 	fprintf(stderr, "[trace] Game_Init() start\n");
-	WWMEMLOG(MEM_GAMEINIT);
 
 	// Set registry key to 1 for the duration of the init. This way we know if the program crashed while the init.
 	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
 	if ( registry.Is_Valid() ) {
 		registry.Set_Int( VALUE_NAME_GAME_INITIALIZATION_IN_PROGRESS, 1 );
 		unsigned crash_version=registry.Get_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, 0 );
-#ifdef WWDEBUG
-		if (crash_version) Copy_Logs(crash_version);
-#endif // WWDEBUG
 		registry.Set_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, 0 );
 	}
 
@@ -753,9 +684,6 @@ bool Game_Init(void)
 	// Thumbnail manager pre init will ensure that thumbnail database
 	// is up-to-date.
 	bool show_thumbnail_pre_init_dialog = true;
-#ifdef WWDEBUG
-	show_thumbnail_pre_init_dialog = cDevOptions::ShowThumbnailPreInitDialog.Get();
-#endif // WWDEBUG
 //	ThumbnailManagerClass::Pre_Init(show_thumbnail_pre_init_dialog);
 
 	//
@@ -802,7 +730,6 @@ bool Game_Init(void)
 		break;
 	case WW3D_ERROR_DIRECTX8_INITIALIZATION_FAILED:
 	default:
-		WWDEBUG_SAY(("WW3D::Init Failed!\r\n"));
 		fprintf(stderr, "[trace] WW3D::Init FAILED (code=%d) - returning false\n", ww3d_init_result);
 		::MessageBox(NULL,
 			"DirectX 8.0 or later is required to play C&C:Renegade.",
@@ -819,7 +746,6 @@ bool Game_Init(void)
 	} else {
 		fprintf(stderr, "[trace] WW3D::Registry_Load_Render_Device...\n");
 		if ( WW3D::Registry_Load_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER, true ) != WW3D_ERROR_OK ) {
-			WWDEBUG_SAY(("WW3D::Registry_Load_Render_Device Failed!\r\n"));
 			fprintf(stderr, "[trace] WW3D::Registry_Load_Render_Device FAILED - returning false\n");
 			return false;
 		}
@@ -827,14 +753,13 @@ bool Game_Init(void)
 
 		fprintf(stderr, "[trace] WW3D::Registry_Save_Render_Device...\n");
 		if ( WW3D::Registry_Save_Render_Device( APPLICATION_SUB_KEY_NAME_RENDER ) != WW3D_ERROR_OK ) {
-			WWDEBUG_SAY(("WW3D::Registry_Save_Render_Device Failed!\r\n"));
 			fprintf(stderr, "[trace] WW3D::Registry_Save_Render_Device FAILED - returning false\n");
 			return false;
 		}
 		fprintf(stderr, "[trace] WW3D::Registry_Save_Render_Device OK\n");
 		WW3D::Enable_Static_Sort_Lists (true);
 	}
-	if (AutoRestart.Get_Restart_Flag() || ServerSettingsClass::Is_Command_Line_Mode() || ConsoleBox.Is_Exclusive()) {
+	if (ServerSettingsClass::Is_Command_Line_Mode() || ConsoleBox.Is_Exclusive()) {
 		if (!ConsoleBox.Is_Exclusive()) {
 			::ShowWindow( MainWindow, SW_MINIMIZE );	// minimize if we are starting automatically.
 		}
@@ -958,7 +883,6 @@ bool Game_Init(void)
 	// This order is also draw and think order
 	GameModeManager::Add( new CombatGameModeClass );
 	GameModeManager::Add( new LanGameModeClass );
-	GameModeManager::Add( new WolGameModeClass );
 	GameModeManager::Add( new OverlayGameModeClass );
 	GameModeManager::Add( new MenuGameModeClass2 );		// Putting menu after overlay so we see the text
 	GameModeManager::Add( new MovieGameModeClass );
@@ -1034,7 +958,6 @@ bool Game_Init(void)
 		fprintf(stderr, "[trace] ServerSettingsClass::Parse...\n");
 		if (!ServerSettingsClass::Parse(false)) {
 			fprintf(stderr, "[trace] ServerSettingsClass::Parse FAILED - returning false\n");
-			AutoRestart.Set_Restart_Flag(false);
 			Game_Shutdown();
 			return (false);
 		}
@@ -1043,9 +966,7 @@ bool Game_Init(void)
 	//
 	// If this is a post crash restart (or a FDS starting up) then just go straight into the game.
 	//
-	if (AutoRestart.Get_Restart_Flag()) {
-		AutoRestart.Restart_Game();
-	} else if (cGameSpyAdmin::Is_Gamespy_Game()) {
+	if (cGameSpyAdmin::Is_Gamespy_Game()) {
 		if (!ConsoleBox.Is_Exclusive()) {
 			RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_SPLASH_IN);
 		}
@@ -1099,8 +1020,6 @@ char *Build_Registry_Location_String(char *base, char *modifier, char *sub)
 {
 	static char _whole_registry_string[1024];
 
-	WWASSERT(base != NULL);
-	WWASSERT(sub != NULL);
 
 
 	if (modifier == NULL) {

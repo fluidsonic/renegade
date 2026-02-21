@@ -35,7 +35,6 @@ CClientFps::~CClientFps(void)
 void
 CClientFps::Init(void)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	ClientId = cNetwork::Get_My_Id();
 
@@ -48,9 +47,7 @@ CClientFps::Init(void)
 void
 CClientFps::Set_Fps(int fps)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
-	WWASSERT(fps >= 0);
 
 	Fps = (BYTE) fps;
 
@@ -61,7 +58,6 @@ CClientFps::Set_Fps(int fps)
 void
 CClientFps::Act(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cPlayer * p_player = cPlayerManager::Find_Player(ClientId);
 	if (p_player != NULL)
@@ -74,7 +70,6 @@ CClientFps::Act(void)
 void
 CClientFps::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	NetworkObjectClass::Export_Creation(packet);
 
@@ -85,7 +80,6 @@ CClientFps::Export_Creation(BitStreamClass & packet)
 void
 CClientFps::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	NetworkObjectClass::Import_Creation(packet);
 
@@ -96,7 +90,6 @@ CClientFps::Import_Creation(BitStreamClass & packet)
 void
 CClientFps::Export_Frequent(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	packet.Add(Fps);
 }
@@ -105,7 +98,6 @@ CClientFps::Export_Frequent(BitStreamClass & packet)
 void
 CClientFps::Import_Frequent(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(Fps);
 

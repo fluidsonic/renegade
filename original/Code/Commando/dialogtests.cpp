@@ -29,7 +29,6 @@
 #include "gamechannel.h"
 #include "gamechanlist.h"
 #include "gamemode.h"
-#include "wolgmode.h"
 #include "langmode.h"
 #include "dlgcontrolslisttab.h"
 #include "campaign.h"
@@ -50,7 +49,6 @@
 #include "dlgmplanhostoptions.h"
 #include "shellapi.h"
 #include "gamespyadmin.h"
-#include "dlgmpwolmain.h"
 #include "specialbuilds.h"
 #include "gamespy_qnr.h"
 #include <ImageCtrl.h>
@@ -436,7 +434,6 @@ GameSpyMainDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 			{
 				if (!DetectingBandwidth) {
 					RefPtr<SerialWait> serverWait = SerialWait::Create();
-					WWASSERT(serverWait.IsValid());
 
 					DetectingBandwidth = true;
 					Add_Ref();
@@ -481,7 +478,6 @@ void GameSpyMainDialogClass::Host_Game(void) {
 	//	Create the new game data
 	//
 	PTheGameData = cGameData::Create_Game_Of_Type (cGameData::GAME_TYPE_CNC);
-	WWASSERT(PTheGameData != NULL);
 
 	The_Game()->Load_From_Server_Config ();
 	
@@ -547,7 +543,6 @@ GameSpyOptionsDialogClass::On_Init_Dialog (void)
 	//	Put the nickname into the nickname edit control
 	//      
 	EditCtrlClass * name_edit = (EditCtrlClass *) Get_Dlg_Item(IDC_NICKNAME_EDIT);
-	WWASSERT(name_edit != NULL);
 	name_edit->Set_Text_Limit(30);
 	name_edit->Set_Text(cNetInterface::Get_Nickname());
 
@@ -720,10 +715,6 @@ InternetMainDialogClass::On_Last_Menu_Ending (void)
 void
 InternetMainDialogClass::On_Init_Dialog (void)
 {
-#ifdef MULTIPLAYERDEMO
-	Get_Dlg_Item(IDC_MENU_MP_INTERNET_WOL)->Enable(false);
-#endif // MULTIPLAYERDEMO
-
 #ifdef BETACLIENT
 	Get_Dlg_Item(IDC_MENU_MP_INTERNET_GAMESPY)->Enable(false);
 #endif // BETACLIENT
@@ -742,13 +733,6 @@ InternetMainDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 {
 	switch (ctrl_id)
 	{
-		case IDC_MENU_MP_INTERNET_WOL:
-		{
-			GameInitMgrClass::Initialize_WOL ();
-			START_DIALOG (MPWolMainMenuClass);
-			break;
-		}
-
 		case IDC_MENU_MP_INTERNET_GAMESPY:
 		{
 			START_DIALOG (GameSpyMainDialogClass);
@@ -1157,14 +1141,6 @@ MPServerStartMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 void
 MPJoinMenuClass::On_Init_Dialog (void)
 {
-#if(1)
-	assert(!"NEW_WWONLINE: Denzil look here!");
-#else
-	if (WolGameModeClass::PWolChat != NULL) {
-		WolGameModeClass::PWolChat->Go_To_GameList ();
-	}
-#endif
-
 	//
 	//	Get a pointer to the list control
 	//
@@ -1208,7 +1184,6 @@ MPJoinMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				}
 
 				PTheGameData = cGameData::Create_Game_Of_Type (channel->Get_Game_Data()->Get_Game_Type());
-				WWASSERT(PTheGameData != NULL);
 				*PTheGameData = *channel->Get_Game_Data ();
 
 				cNetwork::Init_Client();
@@ -1268,17 +1243,6 @@ MPJoinMenuClass::Update_Game_List (void)
 	//
 	list_ctrl->Delete_All_Entries ();
 
-#if(1)
-	assert(!"NEW_WWONLINE: Denzil look here!");
-#else
-	//
-	//	Update the channel list
-	//
-	if (GameModeManager::Find("WOL")->Is_Active()) {
-		WolGameModeClass::PWolChat->My_Request_Channel_List(true);
-	}
-#endif
-
 	//
 	//	Build the game list
 	//
@@ -1286,12 +1250,6 @@ MPJoinMenuClass::Update_Game_List (void)
 	SLNode<cGameChannel> * objnode;
 	for (objnode = cGameChannelList::Get_Chan_List()->Head(); objnode; objnode = objnode->Next()) {
 		cGameChannel * p_channel = objnode->Data();
-		WWASSERT(p_channel != NULL);		
-
-	   if (GameModeManager::Find("WOL")->Is_Active()) {
-			WWASSERT(p_channel->Get_Wol_Channel() != NULL);
-			p_channel->Get_Game_Data()->Set_Current_Players(p_channel->Get_Wol_Channel()->currentUsers);
-		}		
 
 		int player_count		= p_channel->Get_Game_Data()->Get_Current_Players ();
 		int player_count_max = p_channel->Get_Game_Data()->Get_Max_Players ();
@@ -1445,7 +1403,6 @@ DifficultyMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				GameInitMgrClass::Initialize_SP();
 				CampaignManager::Start_Campaign( difficulty );
 			} else {
-				WWDEBUG_SAY(( "REPLAY %d\n", difficulty ));
 
 				//
 				//	End the current game before we load the new one	 (CODE REMOVED FROM LOADSPGAME)

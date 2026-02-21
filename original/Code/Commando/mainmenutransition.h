@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __MAIN_MENU_TRANSITION_H
 #define __MAIN_MENU_TRANSITION_H

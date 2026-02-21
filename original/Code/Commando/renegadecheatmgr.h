@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __RENEGADECHEATMGR_H
 #define __RENEGADECHEATMGR_H

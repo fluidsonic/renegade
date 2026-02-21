@@ -1,6 +1,5 @@
 #include "always.h"
 #include "buildnum.h"
-#include "wwdebug.h"
 #include <stdio.h>
 #include "win.h"
 
@@ -185,11 +184,7 @@ char *BuildInfoClass::Get_Build_Version_String(void)
 BuildInfoClass::BuildType BuildInfoClass::Get_Build_Type(void)
 {
 	#ifndef _DEBUG
-		#ifdef WWDEBUG
-			return(BUILD_PROFILE);
-		#else //WWDEBUG
 			return(BUILD_RELEASE);
-		#endif //WWDEBUG
 	#else //_DEBUG
 		return(BUILD_DEBUG);
 	#endif //_DEBUG
@@ -224,7 +219,6 @@ char *BuildInfoClass::Get_Build_Type_String(void)
 			return("PROFILE");
 
 		default:
-			WWASSERT(false);
 			return("UNKNOWN");
 	}
 }
@@ -272,8 +266,6 @@ char *BuildInfoClass::Composite_Build_Info(void)
  *=============================================================================================*/
 void BuildInfoClass::Log_Build_Info(void)
 {
-	WWDEBUG_SAY((Composite_Build_Info()));
-	WWDEBUG_SAY(("\n"));
 }
 
 

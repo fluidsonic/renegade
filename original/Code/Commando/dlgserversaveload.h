@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef _DLG_SERVER_SAVELOAD_H
 #define _DLG_SERVER_SAVELOAD_H

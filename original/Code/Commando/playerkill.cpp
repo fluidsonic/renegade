@@ -31,7 +31,6 @@ cPlayerKill::cPlayerKill(void)
 void
 cPlayerKill::Init(int killer_id, int victim_id)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	KillerId = killer_id;
 	VictimId = victim_id;
@@ -86,7 +85,6 @@ cPlayerKill::Act(void)
          killer_name,
          TRANSLATION(IDS_MP_TREASON_PHRASE), 
          victim_name);
-		WWASSERT(Get_Text_Display() != NULL);
 		Get_Text_Display()->Print_Informational(formatted_text);
 
    } else {
@@ -97,7 +95,6 @@ cPlayerKill::Act(void)
          killer_name,
 			TRANSLATION(IDS_MP_DEFAULT_KILL_PHRASE),
          victim_name);
-		WWASSERT(Get_Text_Display() != NULL);
 		Get_Text_Display()->Print_Informational(formatted_text);
 
 		if (cNetwork::I_Am_Client() && KillerId == cNetwork::Get_My_Id() && 
@@ -108,7 +105,6 @@ cPlayerKill::Act(void)
 	*/
 
 	if (p_killer != NULL && p_victim != NULL) {
-		WWASSERT(CombatManager::Get_Message_Window() != NULL);		
 		
 		//
 		//	Determine which message to display
@@ -154,7 +150,6 @@ cPlayerKill::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	packet.Get(KillerId);
 	packet.Get(VictimId);

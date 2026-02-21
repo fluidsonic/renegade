@@ -23,18 +23,10 @@
 #include "input.h"
 #include "dlgmainmenu.h"
 #include "dlgwebpage.h"
-#include "dlgmpwolpagebuddy.h"
-#include "dlgmpwolbuddies.h"
-#include "dlgmpwolchat.h"
-#include "dlgmpwolgamelist.h"
 #include "dlgsavegame.h"
 #include "dlgcontrols.h"
-#include "dlgmpwolquickmatchoptions.h"
-#include "dlgmpwolmain.h"
-#include "dlgwolsettings.h"
 #include "dlghelpscreen.h"
 #include "dlgcncreference.h"
-#include "wwmemlog.h"
 #include "consolemode.h"
 #include "specialbuilds.h"
 
@@ -80,7 +72,7 @@ DialogFactoryBaseClass *FactoryArray[FACTORY_COUNT] =
 	NULL,//new DialogFactoryClass<MPServerStartMenuClass>,
 	new DialogFactoryClass<MultiplayOptionsMenuClass>,
 	NULL,
-	new DialogFactoryClass<MPWolMainMenuClass>,
+	NULL,//new DialogFactoryClass<MPWolMainMenuClass>,
 	new DialogFactoryClass<MPLanGameListMenuClass>,
 	NULL,	//IDC_MENU_MP_LAN_JOIN_BUTTON
 	NULL,	//IDC_MENU_MP_LAN_START_BUTTON
@@ -163,7 +155,6 @@ private:
 void
 RenegadeDialogMgrClass::Initialize (void)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 	const char *	STYLE_MGR_INI	= "stylemgr.ini";
 
 	_TheWWUIInput = new RenegadeUIInputClass;
@@ -207,7 +198,6 @@ RenegadeDialogMgrClass::Do_Simple_Dialog (int dlg_res_id)
 void
 RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 {
-	WWMEMLOG(MEM_GAMEDATA);
 
 	switch (location)
 	{
@@ -221,14 +211,6 @@ RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 
 		case LOC_SPLASH_OUT:
 			START_DIALOG (SplashOutroMenuDialogClass);
-			break;
-
-		case LOC_INTERNET_MAIN:
-			MPWolMainMenuClass::Display ();
-			break;
-
-		case LOC_INTERNET_GAME_LIST:
-			MPWolGameListMenuClass::DoDialog ();
 			break;
 
 		case LOC_LAN_MAIN:
@@ -341,48 +323,6 @@ Default_On_Command (DialogBaseClass *dialog, int ctrl_id, int mesage_id, DWORD p
 			dialog->End_Dialog ();
 			break ;
 		}
-
-		case IDC_MP_SHORTCUT_NEWS:
-			DlgWebPage::DoDialog("News");
-			break;
-
-		case IDC_MP_SHORTCUT_CLANS:
-			DlgWebPage::DoDialog("BattleClans");
-			break;
-
-		case IDC_MP_SHORTCUT_RANKINGS:
-			DlgWebPage::DoDialog("Ladder");
-			break;
-
-		case IDC_MP_SHORTCUT_ACCOUNT:
-			DlgWOLSettings::DoDialog();
-			break;
-
-		#ifdef QUICKMATCH_OPTIONS
-		case IDC_MP_SHORTCUT_QUICKMATCH_OPTIONS:
-			START_DIALOG(MPWolQuickMatchOptionsMenuClass);
-			break;
-		#endif // QUICKMATCH_OPTIONS
-
-		case IDC_MP_SHORTCUT_NET_STATUS:
-			DlgWebPage::DoDialog("NetStatus");
-			break;
-
-		case IDC_MP_SHORTCUT_BUDDIES:
-			MPWolBuddiesMenuClass::Display();
-			break;
-
-		case IDC_MP_SHORTCUT_PAGE_BUDDY:
-			START_DIALOG (MPWolPageBuddyPopupClass);
-			break;
-
-		case IDC_MP_SHORTCUT_CHAT:
-			MPWolChatMenuClass::DoDialog();
-			break;
-
-		case IDC_MP_SHORTCUT_GAMELIST:
-			MPWolGameListMenuClass::DoDialog();
-			break;
 
 		case IDC_MP_SHORTCUT_INTERNET_OPTIONS:
 			START_DIALOG (MultiplayOptionsMenuClass);

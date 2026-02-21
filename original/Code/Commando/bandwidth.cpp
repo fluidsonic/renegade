@@ -1,7 +1,6 @@
 #include "bandwidth.h"  // I WANNA BE FIRST!
 
 #include "miscutil.h"
-#include "wwdebug.h"
 #include "translatedb.h"
 #include "string_ids.h"
 #include "useroptions.h"
@@ -12,8 +11,6 @@
 ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type)
 {
 	/*
-	WWASSERT(bandwidth_type >= BANDWIDTH_FIRST &&
-		      bandwidth_type <= BANDWIDTH_LAST);
 	*/
 
 //	WWASSERT(bandwidth_type != BANDWIDTH_CUSTOM);
@@ -40,7 +37,6 @@ ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type
 			return bps;
 		}
 		default:
-			DIE;
 			return 0xffffffff; // to avoid compiler warning
    }
 }
@@ -51,8 +47,6 @@ const WCHAR *cBandwidth::Get_Bandwidth_String_From_Type(BANDWIDTH_TYPE_ENUM band
 	static char _bandwidth_auto_txt[128];
 	static WideStringClass s;
 	/*
-	WWASSERT(bandwidth_type >= BANDWIDTH_FIRST &&
-				bandwidth_type <= BANDWIDTH_LAST);
 	*/
 
 	switch (bandwidth_type) {
@@ -79,7 +73,6 @@ const WCHAR *cBandwidth::Get_Bandwidth_String_From_Type(BANDWIDTH_TYPE_ENUM band
 			return(s);
 		}
 		default:
-			DIE;
 			return L"ERROR"; // to avoid compiler warning
    }
 }
@@ -87,7 +80,6 @@ const WCHAR *cBandwidth::Get_Bandwidth_String_From_Type(BANDWIDTH_TYPE_ENUM band
 //-----------------------------------------------------------------------------
 BANDWIDTH_TYPE_ENUM cBandwidth::Get_Bandwidth_Type_From_String(LPCSTR bandwidth_string)
 {
-	WWASSERT(bandwidth_string != NULL);
 
    if (cMiscUtil::Is_String_Same(bandwidth_string, "BANDWIDTH_MODEM_288")) {
       return BANDWIDTH_MODEM_288;
@@ -106,7 +98,6 @@ BANDWIDTH_TYPE_ENUM cBandwidth::Get_Bandwidth_Type_From_String(LPCSTR bandwidth_
    } else if (strnicmp(bandwidth_string, "BANDWIDTH_AUTO ", 15) == 0) {
       return BANDWIDTH_AUTO;
    } else {
-      DIE;
 		return BANDWIDTH_CUSTOM; // to avoid compiler warning
    }
 }

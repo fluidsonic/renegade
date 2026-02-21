@@ -36,13 +36,11 @@ cWinEvent::cWinEvent(void)
 void
 cWinEvent::Init(int winner, int loser, bool is_cycle_over)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	Winner			= winner;
 	Loser				= loser;
 	IsMapCycleOver	= is_cycle_over;
 
-	WWASSERT(The_Game() != NULL);
 	HostedGameNumber = The_Game()->Get_Hosted_Game_Number();
 
 	Set_Object_Dirty_Bit(BIT_CREATION, true);
@@ -61,13 +59,11 @@ cWinEvent::Act(void)
 		return;
 	}
 
-	WWASSERT(cNetwork::I_Am_Client());
 
 	WWAudioClass::Get_Instance()->Create_Instant_Sound("Game_Over", Matrix3D(1));
 
 	WideStringClass win_text;
 
-	WWASSERT(PTheGameData != NULL);
 	//if (The_Game()->Is_Team_Game()) {
 
 	WideStringClass champ_text;
@@ -115,8 +111,6 @@ cWinEvent::Act(void)
 void
 cWinEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
-	WWASSERT(The_Game() != NULL);
 
 	cNetEvent::Export_Creation(packet);
 
@@ -143,7 +137,6 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	int win_type = 0;
 	DWORD duration_s = 0;
@@ -160,7 +153,6 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 	packet.Get(mvp_count);
 
 	//TSS092601
-	WWASSERT(The_Game() != NULL);
 
 	//
 	// This is just causing no end of trouble so I'm going to simplify it.

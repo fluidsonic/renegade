@@ -24,9 +24,7 @@ cCsHint::cCsHint(void)
 void
 cCsHint::Init(int subject_id)
 {
-	WWASSERT(subject_id >= 0);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	SenderId		= cNetwork::Get_My_Id();
 	SubjectId	= subject_id;
@@ -42,7 +40,6 @@ cCsHint::Init(int subject_id)
 void
 cCsHint::Act(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	NetworkObjectClass * p_object = NetworkObjectMgrClass::Find_Object(SubjectId);
 	if (p_object != NULL)
@@ -57,7 +54,6 @@ cCsHint::Act(void)
 void
 cCsHint::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -71,7 +67,6 @@ cCsHint::Export_Creation(BitStreamClass & packet)
 void
 cCsHint::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 

@@ -395,14 +395,6 @@ SOURCE=.\afxres.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\AutoStart.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\AutoStart.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\buildnum.cpp
 # End Source File
 # Begin Source File
@@ -1595,14 +1587,6 @@ SOURCE=.\skinpackagemgr.cpp
 # Begin Source File
 
 SOURCE=.\skinpackagemgr.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\WebBrowser.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\WebBrowser.h
 # End Source File
 # End Group
 # Begin Group "NetEvents"

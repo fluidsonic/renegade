@@ -1,6 +1,5 @@
 #include "consolemode.h"
 #include "consolefunction.h"
-#include "wwdebug.h"
 #include "conio.h"
 #include "slavemaster.h"
 #include <stdio.h>
@@ -108,10 +107,8 @@ void ConsoleModeClass::Init(void)
 			** Get the input and output handles.
 			*/
 			ConsoleOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-			WWASSERT(ConsoleOutputHandle != INVALID_HANDLE_VALUE);
 
 			ConsoleInputHandle = GetStdHandle(STD_INPUT_HANDLE);
-			WWASSERT(ConsoleInputHandle != INVALID_HANDLE_VALUE);
 
 
 			/*

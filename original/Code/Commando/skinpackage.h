@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SKINPACKAGE_H
 #define __SKINPACKAGE_H

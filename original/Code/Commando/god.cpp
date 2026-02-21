@@ -22,10 +22,8 @@
 #include "debug.h"
 #include "renegadedialogmgr.h"
 #include "cheatmgr.h"
-#include "wwmemlog.h"
 #include "dialogmgr.h"
 #include "encyclopediamgr.h"
-#include "wolgmode.h"
 #include "specialbuilds.h"
 #include "demosupport.h"
 
@@ -94,10 +92,8 @@ bool cGod::Load(ChunkLoadClass &cload)
 //-----------------------------------------------------------------------------
 void cGod::Think(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	//if (The_Game()->IsIntermission.Is_True()) {
-	WWASSERT(PTheGameData != NULL);
 	if (The_Game()->IsIntermission.Is_True() ||
 		 cPlayerManager::Get_Player_Object_List()->Head() == NULL) {
 		return;
@@ -110,7 +106,6 @@ void cGod::Think(void)
 
 	if ( State == GOD_STATE_SINGLE_INIT ) {
 
-		WWASSERT( cPlayerManager::Get_Player_Object_List()->Head() != NULL );
 		// Create a Commando for the Player
 		SoldierGameObj * soldier = Create_Commando( cPlayerManager::Get_Player_Object_List()->Head()->Data() );
 
@@ -154,7 +149,6 @@ void cGod::Think(void)
 			objnode = objnode->Next()) {
 
 			cPlayer * p_player = objnode->Data();
-			WWASSERT(p_player != NULL);
 
 			if (p_player->Get_Is_Active().Is_False()) {
 				continue;
@@ -180,10 +174,6 @@ void cGod::Think(void)
 cPlayer * cGod::Create_Player(int client_id, const WideStringClass & name,
 															int team_choice, unsigned long clanID, bool is_invulnerable)
 {
-	WWMEMLOG(MEM_NETWORK);
-	WWASSERT(cNetwork::I_Am_Server());
-	WWASSERT(PTheGameData != NULL);
-	WWASSERT(cPlayerManager::Count() < The_Game()->Get_Max_Players());
 
    //
 	// Assign a player type
@@ -204,7 +194,6 @@ cPlayer * cGod::Create_Player(int client_id, const WideStringClass & name,
 
 	if (p_player == NULL) {
       p_player = new cPlayer();
-      WWASSERT(p_player != NULL);
 		is_new = true;
 
 		p_player->Set_Name(name);
@@ -228,13 +217,6 @@ cPlayer * cGod::Create_Player(int client_id, const WideStringClass & name,
 	//
 	if (is_new) {
 		p_player->Init();
-
-		GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-		if (gameMode && gameMode->Is_Active()) {
-			WolGameModeClass* wolGame = reinterpret_cast<WolGameModeClass*>(gameMode);
-			wolGame->Init_WOL_Player(p_player);
-		}
 	}
 
 	return p_player;
@@ -243,9 +225,6 @@ cPlayer * cGod::Create_Player(int client_id, const WideStringClass & name,
 //-----------------------------------------------------------------------------
 void cGod::Create_Ai_Player(void)
 {
-	WWASSERT(PTheGameData != NULL);
-	WWASSERT(cPlayerManager::Count() < The_Game()->Get_Max_Players());
-   WWASSERT(cNetwork::I_Am_Server());
 
 	//
 	// For id, count downwards from -2.
@@ -254,7 +233,6 @@ void cGod::Create_Ai_Player(void)
 	WideStringClass name;
 	do {
 		client_id--;
-		WWASSERT(client_id > cPlayer::INVALID_ID);
 		name.Format(L"Guard%d", -client_id);
 	} while (cPlayerManager::Is_Player_Present(name));
 
@@ -264,10 +242,7 @@ void cGod::Create_Ai_Player(void)
 //-----------------------------------------------------------------------------
 SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int model_num*/)
 {
-   WWASSERT(cNetwork::I_Am_Server());
-	WWASSERT(player_type >= PLAYERTYPE_NEUTRAL && player_type <= PLAYERTYPE_LAST);
 
-	WWASSERT(PTheGameData != NULL);
 
 	StringClass preset_name;
 	preset_name.Format("Commando");
@@ -278,7 +253,6 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 		SpawnerClass * p_spawner = SpawnManager::Get_Primary_Spawner();
 		if (p_spawner != NULL) {
 			const DynamicVectorClass<int>	& def_list = p_spawner->Get_Definition().Get_Spawn_Definition_ID_List();
-			WWASSERT(def_list.Count() >= 1);
 			PhysicalGameObjDef * p_def = (PhysicalGameObjDef *)DefinitionMgrClass::Find_Definition(def_list[0]);
 			if (p_def != NULL) {
 				preset_name.Format("%s", p_def->Get_Name());
@@ -294,13 +268,9 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 		}
 	}
 
-	WWASSERT(!preset_name.Is_Empty());
 	PhysicalGameObj * p_phys_obj = ObjectLibraryManager::Create_Object(preset_name);
-	WWASSERT(p_phys_obj != NULL);
 
 	SoldierGameObj * p_soldier = p_phys_obj->As_SoldierGameObj();
-	WWASSERT(p_soldier != NULL);
-	WWASSERT(p_soldier->Peek_Physical_Object() != NULL);
 
 	if (IS_SOLOPLAY) {
 		// Setup initial health depending on difficulty level
@@ -359,7 +329,6 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 
 	if (cNetwork::I_Am_Client() && client_id == cNetwork::Get_My_Id()) {
 		ActionParamsStruct parameters;
-		WWASSERT(p_soldier->Get_Action() != NULL);
 		p_soldier->Get_Action()->Follow_Input(parameters);
 		CombatManager::Set_The_Star(p_soldier);
 
@@ -369,9 +338,6 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 		CheatMgrClass::Get_Instance()->Apply_Cheats();
 
 
-#ifdef WWDEBUG
-		Reinitialize_Ai_On_Star();
-#endif // WWDEBUG
 	}
 
 	return p_soldier;
@@ -380,8 +346,6 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 //-----------------------------------------------------------------------------
 SoldierGameObj * cGod::Create_Commando(cPlayer * p_player)
 {
-   WWASSERT(cNetwork::I_Am_Server());
-	WWASSERT(p_player != NULL);
 
 	int client_id		= p_player->Get_Id();
 	int player_type	= p_player->Get_Player_Type();
@@ -393,54 +357,20 @@ SoldierGameObj * cGod::Create_Commando(cPlayer * p_player)
 //-----------------------------------------------------------------------------
 void cGod::Create_Grunt(Vector3 & pos)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	int client_id		= SmartGameObj::SERVER_CONTROL_OWNER;
 
-	WWASSERT(PTheGameData != NULL);
 	int player_type	= The_Game()->Choose_Player_Type(NULL, -1, true);
 	//int model_num		= rand() % NUM_MP_PLAYABLE_MODELS;
 
 	SoldierGameObj * p_soldier = Create_Commando(
 		client_id, player_type/*, model_num*/);
-	WWASSERT(p_soldier != NULL);
 
 	p_soldier->Set_Position(pos);
 	p_soldier->Perturb_Position();
 }
 
 //-----------------------------------------------------------------------------
-#ifdef WWDEBUG
-void cGod::Reinitialize_Ai_On_Star(void)
-{
-	WWASSERT(cNetwork::I_Am_Client());
-
-	SmartGameObj * p_my_soldier = GameObjManager::Find_Soldier_Of_Client_ID(cNetwork::Get_My_Id());
-
-	if (p_my_soldier != NULL) {
-
-		//
-		// Remove any innate observers
-		//
-		const GameObjObserverList & observer_list = p_my_soldier->Get_Observers();
-		for (int index = 0; index < observer_list.Count(); index++) {
-			if (!stricmp(observer_list[index]->Get_Name(), "Innate Soldier")) {
-				p_my_soldier->Remove_Observer(observer_list[index]);
-				break; // probably not safe to continue
-			}
-		}
-
-		cPlayer * p_player = cNetwork::Get_My_Player_Object();
-		WWASSERT(p_player != NULL);
-
-		ActionParamsStruct parameters;
-		WWASSERT(p_my_soldier->Get_Action() != NULL);
-		p_my_soldier->Get_Action()->Follow_Input(parameters);
-
-		CombatManager::Set_Is_Star_Determining_Target(true);
-	}
-}
-#endif // WWDEBUG
 
 //-----------------------------------------------------------------------------
 Matrix3D		_StarRespawnTM;
@@ -460,7 +390,6 @@ void cGod::Star_Killed( void )
 {
 	if ( State == GOD_STATE_SINGLE_RUNNING ) {
 		State = GOD_STATE_SINGLE_DEAD;
-		WWDEBUG_SAY(( "Star Killed\n" ));
 
 		_DeathInventory.Store_Inventory( COMBAT_STAR );
 
@@ -483,7 +412,6 @@ void cGod::Star_Killed( void )
 
 void cGod::Respawn( void )
 {
-	WWASSERT( State == GOD_STATE_SINGLE_DEAD );
 	SoldierGameObj * soldier = Create_Commando( cPlayerManager::Get_Player_Object_List()->Head()->Data() );
 	soldier->Set_Transform( _StarRespawnTM );
 	_DeathInventory.Restore_Inventory( soldier );
@@ -527,7 +455,6 @@ void cGod::Restart( void )
 
 void cGod::Load_Game( void )
 {
-	WWASSERT( State == GOD_STATE_SINGLE_DEAD );
 	GameInitMgrClass::End_Game();
 	RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_LOAD_GAME);
 }
@@ -537,7 +464,6 @@ void cGod::Mission_Failed( void )
 {
 	if ( State == GOD_STATE_SINGLE_RUNNING ) {
 		State = GOD_STATE_SINGLE_DEAD;
-		WWDEBUG_SAY(( "Mission Failed\n" ));
 
 		FailedOptionsPopupClass * popup = new FailedOptionsPopupClass;
 		popup->Start_Dialog();

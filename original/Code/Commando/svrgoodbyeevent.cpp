@@ -39,7 +39,6 @@ cSvrGoodbyeEvent::cSvrGoodbyeEvent(void)
 void
 cSvrGoodbyeEvent::Init(bool flag)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	IsQuickFullExitRequested = flag;
 
@@ -76,7 +75,6 @@ cSvrGoodbyeEvent::Act(void)
 
       if (IsQuickFullExitRequested)
 		{
-			WWDEBUG_SAY(("Quick full exit instructed from server.\n"));
 			cDevOptions::QuickFullExit.Set(true);
 		} 
 		else 
@@ -99,7 +97,6 @@ cSvrGoodbyeEvent::Act(void)
 void
 cSvrGoodbyeEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -114,7 +111,6 @@ cSvrGoodbyeEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	packet.Get(IsQuickFullExitRequested);
 

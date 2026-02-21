@@ -134,7 +134,5 @@ cClientPingManager::Response_Received
 	}
 	else
 	{
-		WWDEBUG_SAY(("WARNING: cClientPingManager::Response_Received ping number mismatch (%d, %d)\n",
-			ping_number, PingNumber));
 	}
 }

@@ -3,10 +3,8 @@
 #include <memory.h>
 #include <string.h>
 
-#include "wwdebug.h"
 #include "mathutil.h"
 #include "networkobjectmgr.h"
-#include "wwprofile.h"
 
 //
 // Class statics
@@ -37,18 +35,11 @@ cAppPacketStats::Dump_Diagnostics
 	void
 )
 {
-	WWDEBUG_SAY(("\n"));
-	WWDEBUG_SAY(("---------------------------------------------------------\n"));
-	WWDEBUG_SAY(("cAppPacketStats::Dump_Diagnostics:\n"));
-	WWDEBUG_SAY(("%s\n", Get_Heading()));
 
 	for (BYTE i = 0; i < APPPACKETTYPE_COUNT; i++)
 	{
-		WWDEBUG_SAY(("%s\n", Get_Description(i)));
 	}
 
-	WWDEBUG_SAY(("\n"));
-	WWDEBUG_SAY(("---------------------------------------------------------\n"));
 }
 
 //-----------------------------------------------------------------------------
@@ -58,7 +49,6 @@ cAppPacketStats::Increment_Packets_Sent
 	BYTE app_packet_type
 )
 {
-	WWASSERT(app_packet_type != APPPACKETTYPE_ALL && app_packet_type < APPPACKETTYPE_COUNT);
 
 	PacketsSent[app_packet_type]++;
 	
@@ -73,8 +63,6 @@ cAppPacketStats::Increment_Bits_Sent
 	DWORD	bits
 )
 {
-	WWASSERT(app_packet_type != APPPACKETTYPE_ALL && app_packet_type < APPPACKETTYPE_COUNT);
-	WWASSERT(bits >= 0);
 
 	BitsSent[app_packet_type] += bits;
 
@@ -90,8 +78,6 @@ cAppPacketStats::Increment_Bits_Sent_Tier
 	DWORD					bits
 )
 {
-	WWASSERT(app_packet_type != APPPACKETTYPE_ALL && app_packet_type < APPPACKETTYPE_COUNT);
-	WWASSERT(bits >= 0);
 
 	BitsSentTier[app_packet_type][tier] += bits;
 
@@ -105,7 +91,6 @@ cAppPacketStats::Get_Packets_Sent
 	BYTE app_packet_type
 )
 {
-	WWASSERT(app_packet_type < APPPACKETTYPE_COUNT);
 
 	return PacketsSent[app_packet_type];
 }
@@ -117,7 +102,6 @@ cAppPacketStats::Get_Bits_Sent
 	BYTE	app_packet_type
 )
 {
-	WWASSERT(app_packet_type < APPPACKETTYPE_COUNT);
 
 	return BitsSent[app_packet_type];
 }
@@ -130,7 +114,6 @@ cAppPacketStats::Get_Bits_Sent_Tier
 	PACKET_TIER_ENUM	tier
 )
 {
-	WWASSERT(app_packet_type < APPPACKETTYPE_COUNT);
 
 	return BitsSentTier[app_packet_type][tier];
 }
@@ -223,7 +206,6 @@ cAppPacketStats::Interpret_Type
    }
 
 	return "ERROR";
-	DIE;
 }
 
 //-----------------------------------------------------------------------------
@@ -244,7 +226,6 @@ cAppPacketStats::Update_Object_Tally
 		if (p_object != NULL) 
 		{
 			BYTE type = p_object->Get_App_Packet_Type();
-			WWASSERT(type < APPPACKETTYPE_ALL);
 
 			ObjectTally[type]++;
 			ObjectTally[APPPACKETTYPE_ALL]++;
@@ -252,7 +233,6 @@ cAppPacketStats::Update_Object_Tally
 			/*
 			if (type == APPPACKETTYPE_UNKNOWN)
 			{
-				WWDEBUG_SAY(("WTF is this?\n"));
 			}
 			*/
 		}
@@ -266,7 +246,6 @@ cAppPacketStats::Get_Object_Tally
 	BYTE app_packet_type
 )
 {
-	WWASSERT(app_packet_type < APPPACKETTYPE_COUNT);
 
 	return ObjectTally[app_packet_type];
 }
@@ -304,7 +283,6 @@ cAppPacketStats::Get_Description
 	BYTE type
 )
 {
-	WWASSERT(type < APPPACKETTYPE_COUNT);
 
 	float num_bytes = BitsSent[type] / 8.0f;
 	DWORD average_bytes = 0;
@@ -322,7 +300,6 @@ cAppPacketStats::Get_Description
 	//
 	// Strip the leading "APPPACKETTYPE_"
 	//
-	WWASSERT(::strlen(Interpret_Type(type)) > 14);
 	char name[200] = "";
 	::strcpy(name, &Interpret_Type(type)[14]);
 

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLG_MP_LAN_GAME_LIST_H
 #define __DLG_MP_LAN_GAME_LIST_H

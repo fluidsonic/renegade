@@ -27,7 +27,6 @@ bool DlgMpChangeLanNickname::DoDialog(void)
 DlgMpChangeLanNickname::DlgMpChangeLanNickname() :
 	PopupDialogClass(IDD_MP_CHANGE_LAN_NICKNAME)
 {
-	WWDEBUG_SAY(("DlgMpChangeLanNickname Instantiated\n"));
 
 	DialogCount++;
 }
@@ -35,7 +34,6 @@ DlgMpChangeLanNickname::DlgMpChangeLanNickname() :
 //-----------------------------------------------------------------------------
 DlgMpChangeLanNickname::~DlgMpChangeLanNickname()
 {
-	WWDEBUG_SAY(("DlgMpChangeLanNickname Destroyed\n"));
 
 	DialogCount--;
 }

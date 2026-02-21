@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __RENEGADE_DIALOG_MGR_H
 #define __RENEGADE_DIALOG_MGR_H
@@ -94,7 +91,6 @@ public:
 inline void
 RenegadeDialogMgrClass::Do_Dialog_By_Button_ID (int button_id)
 {
-	WWASSERT (button_id >= DIALOG_LINK_FIRST && button_id <= DIALOG_LINK_LAST);
 	
 	//
 	//	Start the dialog

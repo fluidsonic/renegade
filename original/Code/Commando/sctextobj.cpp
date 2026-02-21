@@ -43,9 +43,7 @@ cScTextObj::Init
 	int								recipient_id
 )
 {
-	WWASSERT(sender_id == HOST_TEXT_SENDER || sender_id >= 0);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	Text						= text;
 	Type						= type;
@@ -64,11 +62,8 @@ cScTextObj::Init
 		case TEXT_MESSAGE_TEAM:
 		{
 			//WWASSERT(The_Game()->Is_Team_Game());
-			WWASSERT(SenderId >= 0);
 
 			cPlayer * p_sender = cPlayerManager::Find_Player(SenderId);
-			WWASSERT(p_sender != NULL);
-			WWASSERT(p_sender->Is_Team_Player());
 
 			int team = p_sender->Get_Player_Type();
 			Set_Dirty_Bit_For_Team(BIT_CREATION, team);
@@ -85,7 +80,6 @@ cScTextObj::Init
 		}
 
 		default:
-			DIE;
 	}
 
 	//
@@ -152,7 +146,6 @@ cScTextObj::Init
 void
 cScTextObj::Set_Dirty_Bit_For_Team(DIRTY_BIT bit, int team)
 {
-	WWASSERT(team == PLAYERTYPE_NOD || team == PLAYERTYPE_GDI);
 
 	for (
 		SLNode<cPlayer> * player_node = cPlayerManager::Get_Player_Object_List()->Head();
@@ -160,7 +153,6 @@ cScTextObj::Set_Dirty_Bit_For_Team(DIRTY_BIT bit, int team)
 		player_node = player_node->Next())
 	{
 		cPlayer * p_player = player_node->Data();
-		WWASSERT(p_player != NULL);
 
 		if (p_player->Get_Is_Active().Is_True() &&
 			 p_player->Get_Player_Type() == team)
@@ -240,10 +232,8 @@ cScTextObj::Act(void)
 					break;
 
 				default:
-					DIE;
 			}
 
-			WWASSERT(WWAudioClass::Get_Instance() != NULL);
 			WWAudioClass::Get_Instance()->Create_Instant_Sound(sound_name, Matrix3D(1));
 
 			WideStringClass formatted_text;
@@ -263,7 +253,6 @@ cScTextObj::Act(void)
 			//	Display the message...
 			//
 			/*
-			WWASSERT(Get_Text_Display() != NULL);
 			Get_Text_Display()->Print(formatted_text, sender_color);
 			formatted_text.Format(L"%s\n", Text);
 			Get_Text_Display()->Print(formatted_text, text_color);
@@ -336,7 +325,6 @@ cScTextObj::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	BYTE type = packet.Get(type);
 	Type = (TextMessageEnum) type;

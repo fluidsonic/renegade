@@ -8,7 +8,6 @@
 #include "useroptions.h"
 
 #include "_globals.h"
-#include "wwdebug.h"
 #include "player.h"
 #include "cnetwork.h"
 #include "registry.h"
@@ -23,14 +22,13 @@
 #include "debug.h"
 #include "rawfile.h"
 #include "serversettings.h"
-#include "autostart.h"
 #include "consolemode.h"
 #include "GameSpy_QnR.h"
 #include "gamespyadmin.h"
 #include "specialbuilds.h"
 #include "useroptions.h"
 
-extern char DefaultRegistryModifier[1024];
+char DefaultRegistryModifier[1024] = {};
 
 //
 // Class statics
@@ -66,7 +64,6 @@ cRegistryInt cUserOptions::ResultsLogNumber(						APPLICATION_SUB_KEY_NAME_NETOP
 //-----------------------------------------------------------------------------
 bool cUserOptions::Parse_Command_Line(LPCSTR command)
 {
-	WWASSERT(command != NULL);
 
 	bool retcode = true;
 
@@ -115,9 +112,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 
 		if (strstr(cmd, "REGMOD=")) {
 			strcpy(DefaultRegistryModifier, strstr(cmd, "REGMOD=") + 7);
-			#ifdef WWDEBUG
-			OutputDebugString("Registry modifier on command line\n");
-			#endif //WWDEBUG
 			Reread();
 			continue;
 		}
@@ -148,15 +142,14 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 		if (strstr(cmd, "GAMESPYSERVER=")) {
 			char server_config_file[MAX_PATH];
 			strcpy(server_config_file, strstr(cmd, "GAMESPYSERVER=") + 14);
-			WWDEBUG_SAY(("Set to load gamespy server settings from config file %s\n", server_config_file));
 			RawFileClass file(server_config_file);
 			if (file.Is_Available()) {
 				ServerSettingsClass::Set_Settings_File_Name(server_config_file);
 
 				RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
 				if (registry.Is_Valid ()) {
-					registry.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_FLAG, 1);
-					registry.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_TYPE, 0);
+					registry.Set_Int("AutoRestartFlag", 1);
+					registry.Set_Int("AutoRestartType", 0);
 				}
 				cGameSpyAdmin::Set_Is_Server_Gamespy_Listed(true);
 				GameSpyQnR.Enable_Reporting(true);
@@ -307,15 +300,14 @@ void cUserOptions::Set_Server_INI_File(char *cmd_line_entry)
 {
 	char server_config_file[MAX_PATH];
 	strcpy(server_config_file, strstr(cmd_line_entry, "STARTSERVER=") + 12);
-	WWDEBUG_SAY(("Set to load server settings from config file %s\n", server_config_file));
 	RawFileClass file(server_config_file);
 	if (file.Is_Available()) {
 		ServerSettingsClass::Set_Settings_File_Name(server_config_file);
 
 		RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
 		if (registry.Is_Valid ()) {
-			registry.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_FLAG, 1);
-			registry.Set_Int(AutoRestartClass::REG_VALUE_AUTO_RESTART_TYPE, 1);
+			registry.Set_Int("AutoRestartFlag", 1);
+			registry.Set_Int("AutoRestartType", 1);
 		}
 	}
 }
@@ -332,11 +324,9 @@ void cUserOptions::Set_Bandwidth_Type(BANDWIDTH_TYPE_ENUM bandwidth_type)
 	if (bandwidth_type != BANDWIDTH_CUSTOM) {
 		if (bandwidth_type == BANDWIDTH_AUTO && BandwidthCheckerClass::Got_Bandwidth()) {
 			ULONG bps = BandwidthCheckerClass::Get_Upstream_Bandwidth();
-			WWASSERT(bps > 0);
 			BandwidthBps.Set(bps);
 		} else {
 			ULONG bps = cBandwidth::Get_Bandwidth_Bps_From_Type(bandwidth_type);
-			WWASSERT(bps > 0);
 			BandwidthBps.Set(bps);
 		}
 	}
@@ -355,7 +345,6 @@ BANDWIDTH_TYPE_ENUM cUserOptions::Get_Bandwidth_Type(void)
 //-----------------------------------------------------------------------------
 void cUserOptions::Set_Bandwidth_Bps(int bandwidth_bps)
 {
-	WWASSERT(bandwidth_bps > 0);
 
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
 		GameSpyBandwidthType.Set(BANDWIDTH_CUSTOM);

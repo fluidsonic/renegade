@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGCONFIGAUDIOTAB_H
 #define __DLGCONFIGAUDIOTAB_H

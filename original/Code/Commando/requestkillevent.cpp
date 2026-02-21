@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "wwdebug.h"
 #include "networkobjectfactory.h"
 #include "cnetwork.h"
 #include "networkobjectmgr.h"
@@ -24,7 +23,6 @@ cRequestKillEvent::cRequestKillEvent(void)
 void
 cRequestKillEvent::Init(int object_id)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	ObjectId = object_id;
 
@@ -41,12 +39,10 @@ cRequestKillEvent::Init(int object_id)
 void
 cRequestKillEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	NetworkObjectClass *	p_object = NetworkObjectMgrClass::Find_Object(ObjectId);
 	if (p_object != NULL) {
 		p_object->Set_Delete_Pending();
-		WWDEBUG_SAY(("* cRequestKillEvent::Act: killing object id %d\n", ObjectId));
 	}
 
 	Set_Delete_Pending();
@@ -56,7 +52,6 @@ cRequestKillEvent::Act(void)
 void
 cRequestKillEvent::Export_Creation(BitStreamClass & packet)
 {
-   WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -71,7 +66,6 @@ cRequestKillEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(ObjectId);
 

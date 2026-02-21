@@ -10,7 +10,6 @@
 #include "menubackdrop.h"
 #include "listctrl.h"
 #include "gamemode.h"
-#include "wolgmode.h"
 #include "translatedb.h"
 #include "string_ids.h"
 #include "cnetwork.h"
@@ -69,14 +68,8 @@ CNCWinScreenMenuClass::CNCWinScreenMenuClass (void)	:
 		HeaderModel = WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("HUD_NODWINBAN");
 	}
 
-	//
-	// Should we show ladder points?
-	//
-	WWASSERT(GameModeManager::Find("WOL") != NULL);
-	WWASSERT(The_Game() != NULL);
-	if (GameModeManager::Find("WOL")->Is_Active() && The_Game()->IsLaddered.Is_True()) {
-		ShowLadderPoints = true;
-	}
+	// WOL ladder points are not shown (WOL removed)
+	ShowLadderPoints = false;
 
 	_TheInstance = this;
 	return ;
@@ -493,7 +486,6 @@ CNCWinScreenMenuClass::Populate_Player_Lists (int team_id, int list_ctrl1_id)
 			player_node = player_node->Next ())
 	{
 		cPlayer *player = player_node->Data ();
-		WWASSERT (player != NULL);
 
 		if (player->Get_Is_Active().Is_False ()) {
 			continue;
@@ -586,8 +578,6 @@ CNCWinScreenMenuClass::ListSortCallback
 	const void *elem2
 )
 {
-   WWASSERT (elem1 != NULL);
-   WWASSERT (elem2 != NULL);
    cPlayer *player1 = *((cPlayer **)elem1);
    cPlayer *player2 = *((cPlayer **)elem2);
 
@@ -608,29 +598,5 @@ CNCWinScreenMenuClass::ListSortCallback
 void
 CNCWinScreenMenuClass::Build_Player_Display_Name (const cPlayer *player, WideStringClass &outName)
 {
-// Denzil 02/24/02 Day 1 Patch - Do not show clan abbreviation for now because
-// it does not always fit in the space alloted. For now it is better not to
-// show it than to have it chopped off.
-#if(0)
-	GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-	if (gameMode && gameMode->Is_Active()) {
-		WolGameModeClass* wolGame = static_cast<WolGameModeClass*>(gameMode);
-		WWASSERT(wolGame);
-
-		RefPtr<WWOnline::UserData> user = wolGame->Get_WOL_User_Data(player->Get_Name());
-
-		if (user.IsValid()) {
-			// Set there clan information
-			RefPtr<WWOnline::SquadData> clan = user->GetSquad();
-
-			if (clan.IsValid()) {
-				outName.Format(L"%s [%S]", player->Get_Name(), clan->GetAbbr());
-				return;
-			}
-		}
-	}
-#endif
-
 	outName = player->Get_Name();
 }

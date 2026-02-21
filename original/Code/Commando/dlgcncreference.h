@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGCNCREFERENCE_H
 #define __DLGCNCREFERENCE_H

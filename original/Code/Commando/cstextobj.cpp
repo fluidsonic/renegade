@@ -28,13 +28,10 @@ cCsTextObj::cCsTextObj(void)
 void
 cCsTextObj::Init(WideStringClass & text, TextMessageEnum type, int sender_id, int recipient)
 {
-	WWASSERT(sender_id >= 0);
 
-	WWASSERT(cNetwork::I_Am_Client());
 
 	/*
 	if (type == TEXT_MESSAGE_PRIVATE) {
-		WWASSERT(recipient != -1);
 	}
 	*/
 
@@ -74,7 +71,6 @@ cCsTextObj::Init(WideStringClass & text, TextMessageEnum type, int sender_id, in
 void
 cCsTextObj::Act(void)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	if (GameModeManager::Find("Combat")->Is_Active()) {
 		cScTextObj * p_test_obj = new cScTextObj;
@@ -88,7 +84,6 @@ cCsTextObj::Act(void)
 void
 cCsTextObj::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -104,7 +99,6 @@ cCsTextObj::Export_Creation(BitStreamClass & packet)
 void
 cCsTextObj::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 

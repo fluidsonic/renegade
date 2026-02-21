@@ -18,12 +18,10 @@ cGameDataUpdateEvent::cGameDataUpdateEvent(void)
 void
 cGameDataUpdateEvent::Init(int client_id)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 	//WWASSERT(client_id >= 0);
 
 	// WAS: cGameDataUpdateEvent::cGameDataUpdateEvent(); (illegal qualified constructor call)
 
-	WWASSERT(The_Game() != NULL);
 	TimeRemainingSeconds = (int) The_Game()->Get_Time_Remaining_Seconds();
 	//ServerIsGameplayPermitted = The_Game()->Get_Server_Is_Gameplay_Permitted();
 	HostedGameNumber = The_Game()->Get_Hosted_Game_Number();
@@ -39,7 +37,6 @@ cGameDataUpdateEvent::Init(int client_id)
 void
 cGameDataUpdateEvent::Act(void)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	if (The_Game() != NULL && TimeRemainingSeconds > 0)
 	{
@@ -55,7 +52,6 @@ cGameDataUpdateEvent::Act(void)
 void
 cGameDataUpdateEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -70,7 +66,6 @@ cGameDataUpdateEvent::Export_Creation(BitStreamClass & packet)
 void
 cGameDataUpdateEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Import_Creation(packet);
 

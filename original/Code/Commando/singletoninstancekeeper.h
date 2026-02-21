@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __SINGLETONINSTANCEKEEPER_H
 #define __SINGLETONINSTANCEKEEPER_H

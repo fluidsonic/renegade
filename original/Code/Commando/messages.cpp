@@ -16,7 +16,6 @@
 #include "playertype.h"
 #include "translatedb.h"
 #include "string_ids.h"
-#include "wolgmode.h"
 #include "bitpackids.h"
 #include "msgstatlistgroup.h"
 #include "vistable.h"
@@ -34,7 +33,6 @@
 #include "cstextobj.h"
 #include "loadingevent.h"
 #include "clientcontrol.h"
-#include "wwprofile.h"
 #include "changeteamevent.h"
 #include "DlgMPTeamSelect.h"
 #include "dlgmessagebox.h"
@@ -75,10 +73,7 @@ void cNetwork::Tell_Client_About_Dynamic_Objects
 
 if (cDevOptions::UseNewTCADO.Is_False()) {
 
-	WWPROFILE("TCADO");
 
-	WWASSERT(client_id >= 0);
-   WWASSERT(cNetwork::I_Am_Server());
 	if (Get_Server_Rhost(client_id) == NULL) {
 		return;
 	}
@@ -96,7 +91,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	int count = 0;
 
 	{
- 		WWPROFILE("GetVis");
 		pvs = COMBAT_SCENE->Get_Vis_Table (dest_pos);
 		count = NetworkObjectMgrClass::Get_Object_Count();
 	}
@@ -117,7 +111,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	SoldierGameObj * player_ptr = GameObjManager::Find_Soldier_Of_Client_ID(client_id);
 
 	{
-		WWPROFILE("ListBuild");
 		/*
 		** Go through the object list once and figure out all the priorities.
 		*/
@@ -263,7 +256,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	max_bytes += bytes_out << 1;
 
 	{
-		WWPROFILE("SendG");
 		/*
 		** Send the guaranteed stuff first. This has to be done anyway so let's see how much of it there is.
 		*/
@@ -279,12 +271,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 			** See if we are using too much bandwidth and don't send more if we are.
 			*/
 			if (!full && bytes_out > max_bytes) {
-	#ifdef WWDEBUG
-				if (cDevOptions::ExtraNetDebug.Is_True()) {
-					WWDEBUG_SAY(("*** WARNING: Tell_Client_About_Dynamic_Objects - Insufficient bandwidth to send all guaranteed packets ***\n"));
-					WWDEBUG_SAY(("*** After %d objects, bytes_out = %d, max_bytes = %d\n", i, bytes_out, max_bytes));
-				}
-	#endif //WWDEBUG
 				avail_bytes_per_update >>= 1;
 				full = true;
 				//break;
@@ -299,7 +285,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	int num_priorities = 0;
 
 	{
-		WWPROFILE("CalcRate");
 		for (i=0 ; i<object_list.Count() ; i++) {
 			temp_obj = object_list[i];
 			if (temp_obj->Get_App_Packet_Type() != APPPACKETTYPE_SERVERFPS) {
@@ -374,7 +359,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	}
 
 	{
-		WWPROFILE("SendN");
 		/*
 		** Send those packets whos time has come.
 		*/
@@ -416,10 +400,7 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 
 	const unsigned char dirty_check = (NetworkObjectClass::BIT_FREQUENT ^ 0xffffffff) & (NetworkObjectClass::BIT_CREATION | NetworkObjectClass::BIT_RARE | NetworkObjectClass::BIT_OCCASIONAL);
 
-	WWPROFILE("TCADO");
 
-	WWASSERT(client_id >= 0);
-   WWASSERT(cNetwork::I_Am_Server());
 	if (Get_Server_Rhost(client_id) == NULL) {
 		return;
 	}
@@ -485,7 +466,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	//max_bytes <<= 1;
 
 	{
-		WWPROFILE("GetVis");
 		if (update_priorities) {
 			pvs = COMBAT_SCENE->Get_Vis_Table(dest_pos);
 		}
@@ -502,7 +482,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	SoldierGameObj * player_ptr = GameObjManager::Find_Soldier_Of_Client_ID(client_id);
 
 	{
-		WWPROFILE("ListBuild");
 		/*
 		** Go through the object list once and figure out all the priorities.
 		*/
@@ -541,12 +520,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 					** See if we are using too much bandwidth and don't send any more guaranteed packets if we are.
 					*/
 					if (!global_packet_allowance_full && bytes_out > max_bytes) {
-#ifdef WWDEBUG
-						if (cDevOptions::ExtraNetDebug.Is_True()) {
-							WWDEBUG_SAY(("*** WARNING: Tell_Client_About_Dynamic_Objects - Insufficient bandwidth to send all guaranteed packets ***\n"));
-							WWDEBUG_SAY(("*** After %d objects, bytes_out = %d, max_bytes = %d\n", global_count, bytes_out, max_bytes));
-						}
-#endif //WWDEBUG
 						global_packet_allowance_full = true;
 					}
 
@@ -698,7 +671,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	int num_priorities = 0;
 
 	{
-		WWPROFILE("CalcRate");
 		for (i=0 ; i<object_list.Count() ; i++) {
 			temp_obj = object_list[i];
 			if (temp_obj->Get_App_Packet_Type() != APPPACKETTYPE_SERVERFPS) {
@@ -777,7 +749,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	}
 
 	{
-		WWPROFILE("SendN");
 		/*
 		** Send those packets whos time has come.
 		*/
@@ -811,7 +782,6 @@ void cNetwork::Tell_Server_About_Dynamic_Objects
 {
 #ifndef FREEDEDICATEDSERVER
 
-   WWASSERT (cNetwork::I_Am_Client());
 
 	//
 	//	Loop over each network object
@@ -847,8 +817,6 @@ void cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
 {
 #ifndef BETACLIENT
 
-	WWASSERT (client_id >= 0);
-   WWASSERT (cNetwork::I_Am_Server ());
 
 	if (Get_Server_Rhost (client_id) == NULL) {
 		return;
@@ -895,14 +863,11 @@ void cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
 int
 cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 {
-	WWPROFILE( "send obj upd" );
-	WWASSERT(client_id >= 0);
 
    Debug_Network_Prolific((
       "Sending update for object %d to %s",
       object->Get_Network_ID (), Get_Client_String(client_id)));
 
-	WWASSERT(object->Get_Network_ID() > 0);
 
 	// Track number of bits sent.
 	int bits_sent = 0;
@@ -949,7 +914,6 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 		//	Lookup the factory for this object
 		//
 		NetworkObjectFactoryClass *factory = NetworkObjectFactoryMgrClass::Find_Factory (net_classid);
-		WWASSERT (factory != NULL);
 
 		//
 		//	Store any data in the packet that's needed in order
@@ -1028,18 +992,6 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 		}
 	}
 
-#ifdef WWDEBUG
-	if (client_id > 0) {
-		//
-		// It is useful to be able to generate a bunch of
-		// extra bandwidth
-		//
-		for (int i = 0; i < cDevOptions::SpamCount.Get (); i ++) {
-			WWDEBUG_SAY(("Sending spam\n"));
-			Server_Send_Packet(packet, mode, client_id);
-		}
-	}
-#endif // WWDEBUG
 
 	//
 	//	Reset the dirty bits for this client
@@ -1058,7 +1010,6 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 		//if (type == APPPACKETTYPE_UNKNOWN)
 		if (type == APPPACKETTYPE_SIMPLE)
 		{
-			WWDEBUG_SAY(("WTF is this?\n"));
 		}
 		/**/
 
@@ -1075,9 +1026,7 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 //-----------------------------------------------------------------------------
 void cNetwork::Intermission_Over_Processing(void)
 {
-	WWDEBUG_SAY(("cNetwork::Intermission_Over_Processing\n"));
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	//
 	//	Terminate the win screen dialog
@@ -1093,7 +1042,6 @@ void cNetwork::Intermission_Over_Processing(void)
 		objnode->Next()) {
 
 		cPlayer * p_player = objnode->Data();
-      WWASSERT(p_player != NULL);
       Delete_Player_Objects(p_player->Get_Id());
 
 		if (p_player->Is_Human()) {
@@ -1119,13 +1067,6 @@ void cNetwork::Intermission_Over_Processing(void)
 		if (The_Game () != NULL && The_Game ()->Is_Map_Cycle_Over () == false) {
 			extern bool g_b_core_restart;
 			g_b_core_restart = true;
-			GameModeClass *game_mode = GameModeManager::Find("WOL");
-			if (game_mode && game_mode->Is_Active()) {
-				WolGameModeClass* wol_game = (WolGameModeClass*) game_mode;
-				if (wol_game->Post_Game_Check()) {
-					g_b_core_restart = false;
-				}
-			}
 		} else {
 			GameInitMgrClass::Set_Needs_Game_Exit (true);
 		}
@@ -1134,7 +1075,6 @@ void cNetwork::Intermission_Over_Processing(void)
 	//
 	// TSS092601
 	//
-	WWASSERT(PTheGameData != NULL);
 	The_Game()->IsIntermission.Set(false);
 }
 
@@ -1143,13 +1083,11 @@ void cNetwork::End_Game_Test(void)
 {
 #ifndef BETACLIENT
 
-   WWASSERT(cNetwork::I_Am_Server());
 
 	if (IS_MISSION || !GameModeManager::Find("Combat")->Is_Active()) {
 		return;
 	}
 
-	WWASSERT(PTheGameData != NULL);
 	if (The_Game()->IsIntermission.Is_True()) {
 
       if (The_Game()->Get_Intermission_Time_Remaining() < WWMATH_EPSILON) {
@@ -1188,9 +1126,7 @@ void cNetwork::End_Game_Test(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Shared_Client_And_Server_Think(void)
 {
-	WWASSERT(I_Am_Client() || I_Am_Server());
 
-	WWASSERT(PTheGameData != NULL);
 	The_Game()->Think();
 
 	Hibernation_Think();
@@ -1215,7 +1151,6 @@ bool cNetwork::Client_Think(void)
 	//
 	// Client reload if necessary
 	//
-	WWASSERT(PTheGameData != NULL);
 	if (I_Am_Only_Client() &&
 		 The_Game()->IsIntermission.Is_True() &&
 		 The_Game()->Get_Intermission_Time_Remaining() < WWMATH_EPSILON)
@@ -1254,7 +1189,6 @@ bool cNetwork::Client_Think(void)
 
 	cClientHintManager::Think();
 
-	WWASSERT(Receiver!= NULL);
 	ret_code = Receiver->Client_Update_Dynamic_Objects();
 
 	//
@@ -1306,7 +1240,6 @@ VisTableClass * cNetwork::Peek_Temp_Vis_Table(void)
 		VisTable = new VisTableClass(COMBAT_SCENE->Get_Vis_Table_Size(), 0);
 	}
 
-	WWASSERT(VisTable != NULL);
 	VisTable->Reset_All();
 	return VisTable;
 }
@@ -1335,7 +1268,6 @@ void cNetwork::Hibernation_Think(void)
 
 
 			VisTableClass * p_vis_table = Peek_Temp_Vis_Table();
-			WWASSERT(p_vis_table != NULL);
 
 			//
 			// Build a union of all players' PVS's
@@ -1345,7 +1277,6 @@ void cNetwork::Hibernation_Think(void)
 				p_smart_objnode;
 				p_smart_objnode = p_smart_objnode->Next()) {
 
-				WWASSERT(p_smart_objnode->Data() != NULL);
 				SoldierGameObj * p_soldier = p_smart_objnode->Data()->As_SoldierGameObj();
 
 				if (p_soldier != NULL && p_soldier->Has_Player()) {
@@ -1403,25 +1334,21 @@ void cNetwork::Hibernation_Think(void)
 //-----------------------------------------------------------------------------
 bool cNetwork::Server_Think(void)
 {
-	WWASSERT(I_Am_Server());
 
 	bool ret_code = false;
 	{
-		WWPROFILE( "God Think" );
 		if (GameModeManager::Find( "Combat" )->Is_Active()) {
 			cGod::Think();
 		}
 	}
 
 	{
-		WWPROFILE( "End_Game_Test" );
 	   End_Game_Test();
 	}
 
    //
 	// Update clients about dynamic & static objects
 	//
-	WWASSERT(Receiver!= NULL);
 
 	//
 	// TSS121101
@@ -1432,12 +1359,10 @@ bool cNetwork::Server_Think(void)
 	if (I_Am_Server())
 	{
 		{
-			WWPROFILE( "svrupd dyn" );
 			ret_code = Receiver->Server_Update_Dynamic_Objects();
 		}
 
 		{
-			WWPROFILE( "svrupd del" );
 			Receiver->Server_Send_Delete_Notifications();
 		}
 	}
@@ -1448,26 +1373,20 @@ bool cNetwork::Server_Think(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Server_Kill_Connection( int client_id )
 {
-	WWASSERT(client_id >= 0);
-	WWASSERT(I_Am_Server());
    PServerConnection->Destroy_Connection( client_id );
 
-   WWDEBUG_SAY(("cNetwork::Server_Kill_Connection for client %d\n", client_id));
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Delete_Player_Objects(int client_id)
 {
-	WWDEBUG_SAY(("cNetwork::Delete_Player_Objects %d\n", client_id));
 
-   WWASSERT(I_Am_Server());
 
    //
    // Delete all objects controlled by this guy; inform all clients.
    //
 	SLNode<BaseGameObj> * objnode;
 	for (objnode = GameObjManager::Get_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
-		WWASSERT(objnode->Data() != NULL);
       PhysicalGameObj * p_phys_obj = objnode->Data()->As_PhysicalGameObj();
 		if (p_phys_obj != NULL) {
 
@@ -1492,9 +1411,7 @@ void cNetwork::Delete_Player_Objects(int client_id)
 //void cNetwork::Cleanup_After_Client(int client_id, bool is_departure_graceful)
 void cNetwork::Cleanup_After_Client(int client_id)
 {
-	WWDEBUG_SAY(("cNetwork::Cleanup_After_Client %d\n", client_id));
 
-   WWASSERT(I_Am_Server());
 
    Remove_Player(client_id);
 
@@ -1506,7 +1423,6 @@ void cNetwork::Cleanup_After_Client(int client_id)
 	// We need to special-case these new delete notifications or delete_pending
 	// will clear them first.
 	//
-	WWASSERT(Receiver!= NULL);
 	Receiver->Server_Send_Delete_Notifications();
 
 	NetworkObjectMgrClass::Restore_Dirty_Bits(client_id);
@@ -1517,9 +1433,7 @@ void cNetwork::Cleanup_After_Client(int client_id)
 //-----------------------------------------------------------------------------
 void cNetwork::Remove_Player(int player_id)
 {
-	WWDEBUG_SAY(("cNetwork::Remove_Player %d\n", player_id));
 
-	WWASSERT(I_Am_Server());
 
    cPlayer * p_player = cPlayerManager::Find_Player(player_id);
 
@@ -1549,18 +1463,13 @@ void cNetwork::Test_For_Team_Defaulting(cPlayer * p_player)
 	// reverse the team scores of Nod and GDI.
 	//
 
-	WWDEBUG_SAY(("cNetwork::Test_For_Team_Defaulting\n"));
 
-	WWASSERT(p_player != NULL);
-	WWASSERT(IS_MULTIPLAY);
 
 	int count_nod = cPlayerManager::Tally_Team_Size(PLAYERTYPE_NOD);
 	int count_gdi = cPlayerManager::Tally_Team_Size(PLAYERTYPE_GDI);
 
 	cTeam * p_team_nod = cTeamManager::Find_Team(PLAYERTYPE_NOD);
-	WWASSERT(p_team_nod != NULL);
 	cTeam * p_team_gdi = cTeamManager::Find_Team(PLAYERTYPE_GDI);
-	WWASSERT(p_team_gdi != NULL);
 
 	float score_nod = p_team_nod->Get_Score();
 	float score_gdi = p_team_gdi->Get_Score();
@@ -1569,7 +1478,6 @@ void cNetwork::Test_For_Team_Defaulting(cPlayer * p_player)
 		 count_nod == 0 &&
 		 score_nod > score_gdi) {
 
-		WWDEBUG_SAY(("Reversing Nod and GDI scores due to Nod defaulting.\n"));
 
 		p_team_gdi->Set_Score(score_nod);
 		p_team_nod->Set_Score(score_gdi);
@@ -1578,7 +1486,6 @@ void cNetwork::Test_For_Team_Defaulting(cPlayer * p_player)
 		 count_gdi == 0 &&
 		 score_gdi > score_nod) {
 
-		WWDEBUG_SAY(("Reversing Nod and GDI scores due to GDI defaulting.\n"));
 
 		p_team_gdi->Set_Score(score_nod);
 		p_team_nod->Set_Score(score_gdi);

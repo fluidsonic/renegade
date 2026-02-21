@@ -59,11 +59,6 @@ void	SystemSettings::Registry_Load( const char * sub_key )
 */
 void	SystemSettings::Add_Console_Functions( DynamicVectorClass<ConsoleFunctionClass *> & list )
 {
-#ifdef WWDEBUG
-	for ( int index = 0; index < SettingList.Count(); index++ ) {
-		list.Add( SettingList[ index ]->Create_Console_Function() );
-	}
-#endif
 }
 
 
@@ -459,7 +454,6 @@ public:
 	}
 	virtual	int Get_Enum_Count( void ) { return sizeof(names)/sizeof(char*); }
 	virtual	const char * Get_Enum_Name( int selection ) {
-		WWASSERT(selection>=0 && selection<sizeof(names)/sizeof(char*));
 		return names[ selection ];
 	}
 };
@@ -478,7 +472,6 @@ public:
 	}
 	virtual	int Get_Enum_Count( void ) { return sizeof(names)/sizeof(char*); }
 	virtual	const char * Get_Enum_Name( int selection ) {
-		WWASSERT(selection>=0 && selection<sizeof(names)/sizeof(char*));
 		return names[ selection ];
 	}
 };
@@ -506,7 +499,6 @@ public:
 	}
 	virtual	int Get_Enum_Count( void ) { return sizeof(names)/sizeof(char*); }
 	virtual	const char * Get_Enum_Name( int selection ) {
-		WWASSERT(selection>=0 && selection<sizeof(names)/sizeof(char*));
 		return names[ selection ];
 	}
 };

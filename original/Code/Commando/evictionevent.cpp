@@ -29,8 +29,6 @@ cEvictionEvent::cEvictionEvent(void)
 void
 cEvictionEvent::Init(int client_id, EvictionCodeEnum code)
 {
-	WWASSERT(cNetwork::I_Am_Server());
-	WWASSERT(client_id >= 0);
 
 	EvictionCode = code;
 
@@ -46,7 +44,6 @@ cEvictionEvent::Init(int client_id, EvictionCodeEnum code)
 void
 cEvictionEvent::Act(void)
 {
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
    WideStringClass code_string;
 	switch (EvictionCode)
@@ -56,7 +53,6 @@ cEvictionEvent::Act(void)
 			break;
 
 		default:
-			DIE;
 	}
 
 	WideStringClass widestring;
@@ -64,7 +60,6 @@ cEvictionEvent::Act(void)
 		L"%s: %s", 
 		TRANSLATION(IDS_MP_YOU_ARE_EVICTED), 
 		code_string);
-   WWASSERT(CombatManager::Get_Message_Window() != NULL);
 
 	//
 	//	Display the message...
@@ -77,7 +72,6 @@ cEvictionEvent::Act(void)
 void
 cEvictionEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Export_Creation(packet);
 
@@ -92,7 +86,6 @@ cEvictionEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	int eviction_code = packet.Get(eviction_code);
 	EvictionCode = (EvictionCodeEnum) eviction_code;

@@ -1,18 +1,11 @@
 #ifndef _BANDWIDTHCHECK_H
 #define _BANDWIDTHCHECK_H
 
-#include <WWOnline/WaitCondition.h>
 #include <wwlib/except.h>
 #include <wwlib/wwstring.h>
 #include <wwlib/thread.h>
 #include <windows.h>
 #include <BandTest/BandTest.h>
-
-
-namespace WWOnline {
-	class Session;
-}
-
 
 
 class BandwidthCheckerClass
@@ -36,7 +29,6 @@ class BandwidthCheckerClass
 		} PackedBandwidthType;
 		#pragma pack(pop)
 
-		static RefPtr<WaitCondition> Detect(void);
 		static void Check_Now(HANDLE event);
 
 		static bool Got_Bandwidth(void) {return(GotBandwidth);};
@@ -84,43 +76,6 @@ class BandwidthCheckerClass
 		static const char *DefaultServerName;
 
 };
-
-
-/*
-** Wait code for bandwidth detection.
-**
-**
-**
-*/
-class BandwidthDetectWait : public SingleWait
-{
-	public:
-		static RefPtr<BandwidthDetectWait> Create(void);
-
-		void WaitBeginning(void);
-		WaitResult GetResult(void);
-
-
-	protected:
-		BandwidthDetectWait();
-		virtual ~BandwidthDetectWait();
-
-		BandwidthDetectWait(const BandwidthDetectWait&);
-		const BandwidthDetectWait& operator = (const BandwidthDetectWait&);
-
-		RefPtr<WWOnline::Session> WOLSession;
-		unsigned int mPingsRemaining;
-		HANDLE mEvent;
-
-
-};
-
-
-
-
-
-
-
 
 
 

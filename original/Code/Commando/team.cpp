@@ -7,7 +7,6 @@
 #include "cnetwork.h"
 #include "playermanager.h"
 #include "gamedata.h"
-#include "wwdebug.h"
 #include "useroptions.h"
 #include "playertype.h"
 #include "colors.h"
@@ -42,8 +41,6 @@ cTeam::~cTeam(void)
 //------------------------------------------------------------------------------------
 void cTeam::Init(int team_number)//, WideStringClass & name)
 {
-   WWASSERT(team_number >= 0 && team_number < MAX_TEAMS);
-   WWASSERT(cNetwork::I_Am_Server());
 
    //WWDEBUG_SAY(("* Adding team object %d (%s)\n", team_number, name));
 
@@ -71,7 +68,6 @@ void cTeam::Init(int team_number)//, WideStringClass & name)
 	if (TeamNumber == PLAYERTYPE_NOD) {
 		Set_Network_ID(NETID_NOD_TEAM);
 	} else {
-		WWASSERT(TeamNumber == PLAYERTYPE_GDI);
 		Set_Network_ID(NETID_GDI_TEAM);
 	}
 }
@@ -82,7 +78,6 @@ void cTeam::Init_Team_Name(void)
 	if (TeamNumber == PLAYERTYPE_NOD) {
 		Name = TRANSLATION(IDS_MP_TEAMNAME_MISSIONS_TEAM_0);
 	} else {
-		WWASSERT(TeamNumber == PLAYERTYPE_GDI);
 		Name = TRANSLATION(IDS_MP_TEAMNAME_MISSIONS_TEAM_1);
 	}
 }
@@ -101,8 +96,6 @@ void cTeam::Reset(void)
 //------------------------------------------------------------------------------------
 void cTeam::Set_Kills(int new_kills)
 {
-   WWASSERT(cNetwork::I_Am_Only_Client());
-   WWASSERT(new_kills >= 0);
    
    Kills = new_kills;
 
@@ -112,8 +105,6 @@ void cTeam::Set_Kills(int new_kills)
 //------------------------------------------------------------------------------------
 void cTeam::Set_Deaths(int new_deaths)
 {
-   WWASSERT(cNetwork::I_Am_Only_Client());
-   WWASSERT(new_deaths >= 0);
 
    Deaths = new_deaths;
 
@@ -149,7 +140,6 @@ void cTeam::Increment_Kills(void)
 		return;
 	}
 
-   WWASSERT(cNetwork::I_Am_Server());
 
    Kills++;
 
@@ -163,7 +153,6 @@ void cTeam::Increment_Deaths(void)
 		return;
 	}
 
-   WWASSERT(cNetwork::I_Am_Server());
 
    Deaths++;
 
@@ -177,7 +166,6 @@ void cTeam::Increment_Score(float increment)
 		return;
 	}
 
-   WWASSERT(cNetwork::I_Am_Server());
 
    Score += increment;
 
@@ -207,7 +195,6 @@ void cTeam::Get_Team_String(int rank, WideStringClass & string) const
    
 	string.Format(L"");
 
-	WWASSERT(PTheGameData != NULL);
 	//bool is_verbose = The_Game()->IsIntermission.Get() || MultiHUDClass::Get_Verbose_Lists();
 	bool is_verbose = //force_verbose || 
 		               The_Game()->IsIntermission.Is_True() || 
@@ -278,14 +265,9 @@ void cTeam::Get_Team_String(int rank, WideStringClass & string) const
 	//
 	// Money
 	//
-	WWASSERT(PTheGameData != NULL);
 	if ((The_Game()->Is_Cnc() || The_Game()->Is_Skirmish()) && is_verbose) {
 
-#ifdef WWDEBUG
-		bool show = cDevOptions::ShowMoney.Is_True() ||
-#else
 		bool show = 
-#endif // WWDEBUG
 			  cNetwork::I_Am_Only_Server() ||
 			 (cNetwork::I_Am_Client() && 
 			  cNetwork::Get_My_Player_Object() != NULL &&
@@ -324,7 +306,6 @@ int cTeam::Tally_Money(void) const
 			player_node = player_node->Next ())
 	{
 		cPlayer * p_player = player_node->Data();
-		WWASSERT(p_player != NULL);
 
 		if (p_player->Get_Is_Active().Is_True() && 
 			 p_player->Get_Player_Type() == TeamNumber) 
@@ -355,7 +336,6 @@ void cTeam::Import_Creation(BitStreamClass &packet)
 	//packet.Get_Wide_Terminated_String(Name.Get_Buffer(256), 256);
 	Init_Team_Name();
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 }
 
 //------------------------------------------------------------------------------------

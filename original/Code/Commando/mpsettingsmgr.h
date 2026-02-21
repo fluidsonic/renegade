@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLG_MP_SETTINGS_MGR_H
 #define __DLG_MP_SETTINGS_MGR_H
@@ -9,16 +6,10 @@
 #include "vector.h"
 #include "widestring.h"
 
-#if defined(_MSC_VER)
-#pragma warning(push, 3)
-#endif
 
 #include <vector>
 #include <map>
 
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations

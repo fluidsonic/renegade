@@ -34,9 +34,7 @@ cDonateEvent::cDonateEvent(void)
 void
 cDonateEvent::Init(int amount, int recipient_id)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
-	WWASSERT(amount >= MinimumAcceptableDonation);
 
 	SenderId		= cNetwork::Get_My_Id();
 	Amount		= amount;
@@ -55,7 +53,6 @@ cDonateEvent::Init(int amount, int recipient_id)
 void
 cDonateEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	cPlayer * p_donor = cPlayerManager::Find_Player(SenderId);
 	cPlayer * p_recipient = cPlayerManager::Find_Player(RecipientId);
@@ -92,12 +89,9 @@ cDonateEvent::Act(void)
 void
 cDonateEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
-	WWASSERT(RecipientId > 0);
 
 	packet.Add(SenderId);
 	packet.Add(Amount);
@@ -112,14 +106,11 @@ cDonateEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 	packet.Get(Amount);
 	packet.Get(RecipientId);
 
-	WWASSERT(SenderId > 0);
-	WWASSERT(RecipientId > 0);
 
 	Act();
 }

@@ -16,7 +16,6 @@
 #include "playertype.h"
 #include "colors.h"
 #include "render2d.h"
-#include "wwprofile.h"
 #include "gametype.h"
 #include "playermanager.h"
 #include "translatedb.h"
@@ -45,16 +44,11 @@ static bool renderer_is_intermission_true;
 void cTeamManager::Onetime_Init(void)
 {
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT(PFont == NULL);
-		WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
    	PFont = WW3DAssetManager::Get_Instance()->Get_Font3DInstance("FONT6x8.TGA");
-   	WWASSERT(PFont != NULL);
 		PFont->Set_Mono_Spaced();
 		SET_REF_OWNER(PFont);
 
-		WWASSERT(PTextRenderer == NULL);
 		PTextRenderer = new Render2DTextClass(PFont);
-   	WWASSERT(PTextRenderer != NULL);
 		PTextRenderer->Set_Coordinate_Range(Render2DClass::Get_Screen_Resolution());
 	}
 	renderer_team_heading=L"";
@@ -66,11 +60,9 @@ void cTeamManager::Onetime_Init(void)
 void cTeamManager::Onetime_Shutdown(void)
 {
 	if (!ConsoleBox.Is_Exclusive()) {
-		WWASSERT(PTextRenderer != NULL);
 		delete PTextRenderer;
 		PTextRenderer = NULL;
 
-		WWASSERT(PFont != NULL);
 		PFont->Release_Ref();
 		PFont = NULL;
 	}
@@ -79,13 +71,11 @@ void cTeamManager::Onetime_Shutdown(void)
 //------------------------------------------------------------------------------------
 void cTeamManager::Think(void)
 {
-	WWPROFILE( "cTeamManager::Think" );
 
 	if (PTextRenderer == NULL) {
 		return;
 	}
 	if (MultiHUDClass::Is_On()) {
-		WWASSERT(PTextRenderer != NULL);
 		Render_Team_List();
 	}
 	else {
@@ -97,26 +87,22 @@ void cTeamManager::Think(void)
 //-----------------------------------------------------------------------------------
 void cTeamManager::Render(void)
 {
-	WWPROFILE("cTeamManager::Render");
 	if (PTextRenderer == NULL) {
 		return;
 	}
 
-	WWASSERT(PTextRenderer != NULL);
 	PTextRenderer->Render();
 }
 
 //------------------------------------------------------------------------------------
 cTeam * cTeamManager::Find_Team(int team_number)
 {
-   WWASSERT(team_number >= 0 && team_number < MAX_TEAMS);
 
    SLNode<cTeam> * objnode;
 
 	cTeam *obj;
    for (objnode = TeamList.Head(); objnode; objnode = objnode->Next()) {
 		obj = objnode->Data();
-      WWASSERT(obj != NULL);
 		if (obj->Get_Id() == team_number) {
 			return obj; // found it
 		}
@@ -145,14 +131,12 @@ cTeam* cTeamManager::Find_Empty_Team(void)
 //------------------------------------------------------------------------------------
 void cTeamManager::Add(cTeam * p_team)
 {
-   WWASSERT(p_team != NULL);
    TeamList.Add_Tail(p_team);
 }
 
 //------------------------------------------------------------------------------------
 void cTeamManager::Remove(cTeam * p_team)
 {
-   WWASSERT(p_team != NULL);
    TeamList.Remove(p_team);
    delete p_team;
 }
@@ -160,7 +144,6 @@ void cTeamManager::Remove(cTeam * p_team)
 //------------------------------------------------------------------------------------
 void cTeamManager::Remove(int team_number)
 {
-   WWASSERT(team_number >= 0 && team_number < MAX_TEAMS);
 
    cTeam * p_team = Find_Team(team_number);
    if (p_team != NULL) {
@@ -185,11 +168,9 @@ int cTeamManager::Compute_Team_List_Height(void)
 	int height = 0;
 
 	if (The_Game()->Is_Team_Game()) {
-		WWASSERT(PFont != NULL);
 		height = (int)(4 * PFont->Char_Height() * Y_INCREMENT_FACTOR);
 	}
 	*/
-	WWASSERT(PFont != NULL);
 	int height = (int)(4 * PFont->Char_Height() * Y_INCREMENT_FACTOR);
 
 	return height;
@@ -198,7 +179,6 @@ int cTeamManager::Compute_Team_List_Height(void)
 //-----------------------------------------------------------------------------
 void cTeamManager::Log_Team_List(void)
 {
-	WWDEBUG_SAY(("cTeamManager::Log_Team_List\n"));
 
 	StringClass results_filename;
 	results_filename.Format("results%d.txt", cUserOptions::ResultsLogNumber.Get());
@@ -238,10 +218,8 @@ void cTeamManager::Log_Team_List(void)
 //-----------------------------------------------------------------------------
 WideStringClass cTeamManager::Get_Team_Name(int team_number)
 {
-   WWASSERT(team_number >= 0 && team_number < MAX_TEAMS);
 
    cTeam * p_team = cTeamManager::Find_Team(team_number);
-   WWASSERT(p_team != NULL);
    return p_team->Get_Name();
 }
 
@@ -252,7 +230,6 @@ void cTeamManager::Reset_Teams(void)
 	cTeam * p_team = NULL;
    for (objnode = TeamList.Head(); objnode != NULL; objnode = objnode->Next()) {
 		p_team = objnode->Data();
-      WWASSERT(p_team != NULL);
       p_team->Reset();
    }
 }
@@ -264,7 +241,6 @@ int cTeamManager::Get_Non_Empty_Team_Count(void)
    cTeam * p_team;
    for (SLNode<cTeam> * objnode = TeamList.Head(); objnode != NULL; objnode = objnode->Next()) {
 		p_team = objnode->Data();
-      WWASSERT(p_team != NULL);
 
       if (p_team->Tally_Size() > 0) {
          num_teams++;
@@ -277,7 +253,6 @@ int cTeamManager::Get_Non_Empty_Team_Count(void)
 //-----------------------------------------------------------------------------
 void cTeamManager::Sort_Teams(void)
 {
-	WWPROFILE("cTeamManager::Sort_Teams");
 
    ZeroMemory(Team_Array, sizeof(Team_Array));
 
@@ -285,9 +260,7 @@ void cTeamManager::Sort_Teams(void)
    cTeam * p_team;
    for (SLNode<cTeam> * objnode = TeamList.Head(); objnode != NULL; objnode = objnode->Next()) {
 		p_team = objnode->Data();
-      WWASSERT(p_team != NULL);
 
-      WWASSERT(num_teams < MAX_TEAMS);
       Team_Array[num_teams] = p_team;
       num_teams++;
    }
@@ -298,15 +271,12 @@ void cTeamManager::Sort_Teams(void)
 //-----------------------------------------------------------------------------
 int cTeamManager::Get_Leaders_Id(void)
 {
-   WWASSERT(Team_Array[0] != NULL);
    return Team_Array[0]->Get_Id();
 }
 
 //-----------------------------------------------------------------------------
 int cTeamManager::Sort_Score_Ktd_Kills(cTeam * p_team1, cTeam * p_team2)
 {
-   WWASSERT(p_team1 != NULL);
-   WWASSERT(p_team2 != NULL);
 
    int result;
 
@@ -343,13 +313,9 @@ int cTeamManager::Team_Compare(const void * elem1, const void * elem2)
    // Used by qsort
    //
 
-   WWASSERT(elem1 != NULL);
-   WWASSERT(elem2 != NULL);
 
    cTeam * p_team1 = *((cTeam **)elem1);
    cTeam * p_team2 = *((cTeam **)elem2);
-   WWASSERT(p_team1 != NULL);
-   WWASSERT(p_team2 != NULL);
 
    //
    // Sort order:
@@ -372,7 +338,6 @@ void cTeamManager::List_Print(WideStringClass & text, Vector3 color)
 		return;
 	}
 
-	WWASSERT(PTextRenderer != NULL);
 
 	PTextRenderer->Set_Location(Vector2(cMathUtil::Round(XPos), cMathUtil::Round(YPos)));
 
@@ -380,7 +345,6 @@ void cTeamManager::List_Print(WideStringClass & text, Vector3 color)
 
 	PTextRenderer->Draw_Text(text, c);
 
-	WWASSERT(PFont != NULL);
    YPos += PFont->Char_Height() * Y_INCREMENT_FACTOR;
 }
 
@@ -389,7 +353,6 @@ void cTeamManager::Construct_Heading(WideStringClass & string)
 {
 	string.Format(L"");
 
-	WWASSERT(PTheGameData != NULL);
 	//bool is_verbose = The_Game()->IsIntermission.Get() || MultiHUDClass::Get_Verbose_Lists();
 	bool is_verbose = //force_verbose ||
 		               The_Game()->IsIntermission.Is_True() ||
@@ -473,10 +436,7 @@ void cTeamManager::Render_Team_List(void)
 	if (PTextRenderer == NULL) {
 		return;
 	}
-   WWASSERT(PFont != NULL);
-	WWASSERT(PTextRenderer != NULL);
 
-	WWASSERT(PTheGameData != NULL);
 	if (GameModeManager::Find("Combat") == NULL ||
 		!GameModeManager::Find("Combat")->Is_Active() ||
 		The_Game()->IsIntermission.Is_True()) {
@@ -531,7 +491,6 @@ void cTeamManager::Render_Team_List(void)
 	}
    for (int j = 0; j < MAX_TEAMS; j++) {
 	   cTeam * p_team = Team_Array[j];
-		WWASSERT(p_team != NULL);
 		renderer_team_colors[j]=p_team->Get_Color();
 		if (changed) {
 			p_team->Get_Team_String(j + 1, renderer_team_strings[j]);
@@ -546,7 +505,6 @@ void cTeamManager::Render_Team_List(void)
 		}
    }
 
-	WWASSERT(PTheGameData != NULL);
 	if (The_Game()->IsIntermission.Is_True()!=renderer_is_intermission_true) {
 		renderer_is_intermission_true=The_Game()->IsIntermission.Is_True();
 		changed=true;
@@ -572,7 +530,6 @@ void cTeamManager::Render_Team_List(void)
 	//
 	// Show Win text
 	//
-	WWASSERT(PTheGameData != NULL);
 	if (The_Game()->IsIntermission.Is_True()) {
 
 		int combined_height =

@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __CDVERIFY_H
 #define __CDVERIFY_H

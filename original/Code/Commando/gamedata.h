@@ -258,7 +258,6 @@ class	cGameData :
 
 		cBoolean			IsIntermission;
 		cBoolean			IsDedicated;
-		cBoolean			IsAutoRestart;
 		cBoolean 		IsFriendlyFirePermitted;
 		cBoolean 		IsTeamChangingAllowed;
 		cBoolean 		IsPassworded;

@@ -80,7 +80,6 @@ void ScoreScreenGameModeClass::Save_Stats( void )
 	}
 
 
-	WWASSERT(PTheGameData != NULL);
 	_SSStats_mission_number = cGameData::Get_Mission_Number_From_Map_Name( _SSStats_map_name );
 
 	// Oh, this is just terrible!!!  Byon

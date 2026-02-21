@@ -33,13 +33,10 @@ cBandwidthGraph::Onetime_Init
 	void
 )
 {
-	WWDEBUG_SAY(("cBandwidthGraph::Onetime_Init\n"));
 
 	bool can_render = ConsoleBox.Is_Exclusive() ? false : true;
 	if (can_render) {
-		WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
    	PFont = WW3DAssetManager::Get_Instance()->Get_Font3DInstance("FONT6x8.TGA");
-   	WWASSERT(PFont != NULL);
 		PFont->Set_Mono_Spaced();
 		SET_REF_OWNER(PFont);
 
@@ -62,7 +59,6 @@ cBandwidthGraph::Onetime_Shutdown
 	void
 )
 {
-	WWDEBUG_SAY(("cBandwidthGraph::Onetime_Close\n"));
 	if (PTextRenderer != NULL)
 	{
 		delete PTextRenderer;
@@ -91,7 +87,6 @@ cBandwidthGraph::Bandwidth_Graph
 	if (PTextRenderer == NULL) {
 		return;
 	}
-	WWASSERT(PTextRenderer != NULL);
 
 	float x1 = 0;
 	float x2 = bps / (float) BandwidthScaler * BarWidth;
@@ -168,12 +163,6 @@ cBandwidthGraph::Think
 {
 	bool bail = true;
 
-#ifdef WWDEBUG
-	if (cDevOptions::ShowBandwidth.Is_True())
-	{
-		bail = false;
-	}
-#endif // WWDEBUG
 
 	if (bail)
 	{
@@ -186,7 +175,6 @@ cBandwidthGraph::Think
 		return;
 	}
 
-	WWASSERT(PTextRenderer != NULL);
 
 	PTextRenderer->Reset();
 
@@ -279,12 +267,6 @@ cBandwidthGraph::Render
 {
 	bool bail = true;
 
-#ifdef WWDEBUG
-	if (cDevOptions::ShowBandwidth.Is_True())
-	{
-		bail = false;
-	}
-#endif // WWDEBUG
 
 	if (bail)
 	{
@@ -295,6 +277,5 @@ cBandwidthGraph::Render
 		return;
 	}
 
-	WWASSERT(PTextRenderer != NULL);
 	PTextRenderer->Render();
 }

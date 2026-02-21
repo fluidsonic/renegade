@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLG_MAIN_MENU_H
 #define __DLG_MAIN_MENU_H

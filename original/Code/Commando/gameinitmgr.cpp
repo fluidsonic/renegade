@@ -8,7 +8,6 @@
 #include "renegadedialogmgr.h"
 #include "netinterface.h"
 #include "langmode.h"
-#include "wolgmode.h"
 #include "playermanager.h"
 #include "wwaudio.h"
 #include "saveloadstatus.h"
@@ -28,11 +27,8 @@
 #include "bioevent.h"
 #include "devoptions.h"
 #include "svrgoodbyeevent.h"
-#include	"natter.h"
 #include "apppacketstats.h"
 #include "packetmgr.h"
-#include "autostart.h"
-#include "wwmemlog.h"
 #include "gamesideservercontrol.h"
 #include "slavemaster.h"
 #include "hud.h"
@@ -71,7 +67,6 @@ bool		GameInitMgrClass::RestoreMusic		= false;
 bool		GameInitMgrClass::NeedsGameExit		= false;
 bool		GameInitMgrClass::NeedsGameExitAll	= false;
 int		GameInitMgrClass::Mode					= MODE_UNKNOWN;
-int		GameInitMgrClass::WOLReturnDialog	= RenegadeDialogMgrClass::LOC_INTERNET_MAIN;
 
 
 bool GameInitMgrClass::Is_Game_In_Progress(void)
@@ -92,8 +87,6 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
 {
 	unsigned long time;
 
-	WWASSERT(map_name != NULL);
-   WWDEBUG_SAY (("GameInitMgrClass::Start_Game(%s)\n", map_name));
 
 	// NOTE: Multi-play does not need this fix because it does not sound page swap.
 	if (IS_SOLOPLAY) {
@@ -127,7 +120,6 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
 	//	Set the map name
 	//
 	StringClass map(map_name,true);
-	WWASSERT(PTheGameData != NULL);
 	The_Game ()->Set_Map_Name (map);
 
 	//
@@ -143,14 +135,6 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
 	//
 	//	Check to ensure the game is configured correctly
 	//
-	#ifdef WWDEBUG
-	WideStringClass outMsg;
-	
-	if (!The_Game()->Is_Valid_Settings(outMsg)) {
-		WWDEBUG_SAY(("ERROR: %S\n", (const WCHAR*)outMsg));
-		WWASSERT("The_Game()->Is_Valid_Settings()");
-	}
-	#endif
 
 	//
 	// Reset Data Safe state.
@@ -188,13 +172,11 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
 	game_mode->Load_Level ();
 
    //
-	//	Let the LAN or WOL interface know we are starting a game
+	//	Let the LAN interface know we are starting a game
 	//
 	if (Mode == MODE_LAN) {
 		INIT_STATUS ("Go to location");
 		PLC->Go_To_Location (LANLOC_INGAME);
-	} else if (Mode == MODE_WOL) {
-		INIT_STATUS ("Go to game channel");
 	}
 
 	//
@@ -212,11 +194,6 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice, unsigned lon
 	//	Send team/player information to the server (if necessary)
 	//
 	Transmit_Player_Data (teamChoice, clanID);
-
-	//
-	// Set the auto restart flag if required.
-	//
-	AutoRestart.Set_Restart_Flag((The_Game()->IsAutoRestart.Is_True()) ? true : false);
 
 	//
 	// Listen for server control messages.
@@ -237,7 +214,6 @@ GameInitMgrClass::End_Game (void)
 {
 	unsigned long time;
 
-	WWDEBUG_SAY (("GameInitMgrClass::End_Game\n"));
 
 	// Do nothing if the game is not in progress.
 	if ( !IS_MISSION && (!Is_Game_In_Progress())) {
@@ -316,13 +292,6 @@ GameInitMgrClass::End_Game (void)
 	}
 
 	//
-	// Disable auto restart mode.
-	//
-	// For forced exits the mode will already be correct.
-	//
-	if (!cGameData::Is_Manual_Exit()) {
-		AutoRestart.Set_Restart_Flag(false);
-	}
 
 	//
 	//	Shutdown the combat system
@@ -341,21 +310,9 @@ GameInitMgrClass::End_Game (void)
 		GameModeManager::Find ("Menu")->Deactivate ();
 	}
 
-	// Leave the WWOnline game.
-	GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-	if (gameMode && gameMode->Is_Active()) {
-		WolGameModeClass* wolGame = static_cast<WolGameModeClass*>(gameMode);
-		WWASSERT(wolGame != NULL);
-		wolGame->Leave_Game();
-	}
-
 	if (cNetwork::I_Am_Server()) {
 
 		bool is_quick_full_exit_requested = false;
-#ifdef WWDEBUG
-		is_quick_full_exit_requested = cDevOptions::QuickFullExit.Get();
-#endif // WWDEBUG
 
 #pragma message("(TSS) ***** Memory leak here - please fix (ST - 6/14/2001 2:06PM) *****")
 		cSvrGoodbyeEvent * p_event = new cSvrGoodbyeEvent;
@@ -449,12 +406,6 @@ GameInitMgrClass::Display_End_Game_Menu (void)
 			}
 			break;
 
-		//
-		//	Display the WOL main menu
-		//
-		case MODE_WOL:
-			RenegadeDialogMgrClass::Goto_Location ((RenegadeDialogMgrClass::LOCATION)WOLReturnDialog);
-			break;
 	}
 
 	return ;
@@ -469,8 +420,6 @@ GameInitMgrClass::Display_End_Game_Menu (void)
 void
 GameInitMgrClass::Transmit_Player_Data (int teamChoice, unsigned long clanID)
 {
-	WWMEMLOG(MEM_NETWORK);
-   WWDEBUG_SAY (("GameInitMgrClass::Transmit_Player_Data\n"));
 
 	if (Mode == MODE_SP || Mode == MODE_SKIRMISH) {
 
@@ -489,7 +438,6 @@ GameInitMgrClass::Transmit_Player_Data (int teamChoice, unsigned long clanID)
 		p_event->Init(teamChoice, clanID);
 	}
 
-   WWDEBUG_SAY (("GameInitMgrClass::Transmit_Player_Data Done\n"));
 	return ;
 }
 
@@ -502,20 +450,11 @@ GameInitMgrClass::Transmit_Player_Data (int teamChoice, unsigned long clanID)
 void
 GameInitMgrClass::Start_Client_Server (void)
 {
-   WWDEBUG_SAY (("GameInitMgrClass::Start_Client_Server\n"));
 
-	assert(GameModeManager::Find("WOL"));
-	if (GameModeManager::Find("WOL")->Is_Active()) {
-		WWASSERT(PTheGameData != NULL);
-		The_Game()->Set_Port(WOLNATInterface.Get_Port_As_Server());
-	} else if (GameModeManager::Find("LAN")->Is_Active() && cGameSpyAdmin::Is_Gamespy_Game()) {
-		WWASSERT(PTheGameData != NULL);
+	if (GameModeManager::Find("LAN")->Is_Active() && cGameSpyAdmin::Is_Gamespy_Game()) {
 		The_Game()->Set_Port(cUserOptions::GameSpyGamePort.Get());
 	}
 
-#ifdef WWDEBUG
-	cRemoteHost::Set_Allow_Extra_Modem_Bandwidth_Throttling(cDevOptions::ExtraModemBandwidthThrottling.Get());
-#endif //WWDEBUG
 
 	//
 	//	Start the server (if necessary)
@@ -550,18 +489,11 @@ GameInitMgrClass::Start_Client_Server (void)
 			PacketManager.Set_Is_Server(false);
 		}
 
-		assert(GameModeManager::Find("WOL"));
-		if (GameModeManager::Find("WOL")->Is_Active()) {
-			cNetwork::Init_Client(WOLNATInterface.Get_Port_As_Server_Client());
-		} else {
-			cNetwork::Init_Client();
-		}
+		cNetwork::Init_Client();
 
 		//
 		//	Wait for the client to connect to the server
 		//
-		WWDEBUG_SAY(("BEFORE GameInitMgrClass::Start_Client_Server tight update loop\n"));
-		WWDEBUG_SAY(("Game IP = %s\n", cNetUtil::Address_To_String(The_Game()->Get_Ip_Address())));
 		unsigned long time = TIMEGETTIME();
 		do {
 			cNetwork::Update ();
@@ -569,7 +501,6 @@ GameInitMgrClass::Start_Client_Server (void)
 				break;
 			}
 		} while (!cNetwork::PClientConnection->Is_Established ());
-		WWDEBUG_SAY(("AFTER GameInitMgrClass::Start_Client_Server tight update loop\n"));
 	}
 
 	// Sample output every 2 seconds.
@@ -586,7 +517,6 @@ GameInitMgrClass::Start_Client_Server (void)
 void
 GameInitMgrClass::End_Client_Server (void)
 {
-   WWDEBUG_SAY (("GameInitMgrClass::End_Client_Server\n"));
 
 	//
 	//	Cleanup the client
@@ -616,7 +546,6 @@ GameInitMgrClass::Initialize_SP (void)
 {
 #ifndef MULTIPLAYERDEMO
 
-   WWDEBUG_SAY (("GameInitMgrClass::Initialize_SP\n"));
 
 	if (Mode != MODE_UNKNOWN) {
 		Shutdown ();
@@ -640,9 +569,7 @@ GameInitMgrClass::Initialize_SP (void)
 	//
 	//	Create the new game type
 	//
-	WWASSERT (PTheGameData == NULL);
 	PTheGameData = new cGameDataSinglePlayer;
-	WWASSERT(PTheGameData != NULL);
 
 	//
 	//	Remember our state
@@ -666,7 +593,6 @@ GameInitMgrClass::Shutdown_SP (void)
 {
 #ifndef MULTIPLAYERDEMO
 
-   WWDEBUG_SAY (("GameInitMgrClass::Shutdown_SP\n"));
 
 //#pragma message ("TSS Fix memory leak here")
 
@@ -687,7 +613,6 @@ GameInitMgrClass::Initialize_Skirmish(void)
 {
 #ifndef MULTIPLAYERDEMO
 
-   WWDEBUG_SAY(("GameInitMgrClass::Initialize_Skirmish\n"));
 
 	if (Mode != MODE_UNKNOWN) {
 		Shutdown ();
@@ -711,9 +636,7 @@ GameInitMgrClass::Initialize_Skirmish(void)
 	//
 	//	Create the new game type
 	//
-	WWASSERT (PTheGameData == NULL);
 	PTheGameData = new cGameDataSkirmish;
-	WWASSERT(PTheGameData != NULL);
 
 	//
 	//	Remember our state
@@ -736,7 +659,6 @@ GameInitMgrClass::Shutdown_Skirmish(void)
 {
 #ifndef MULTIPLAYERDEMO
 
-   WWDEBUG_SAY(("GameInitMgrClass::Shutdown_Skirmish\n"));
 
 	//cSingleData::Set_Is_Single_Player(false);
 	cGameType::Set_Game_Type(GAMETYPE_NONE);
@@ -753,7 +675,6 @@ GameInitMgrClass::Shutdown_Skirmish(void)
 void
 GameInitMgrClass::Initialize_LAN (void)
 {
-   WWDEBUG_SAY (("GameInitMgrClass::Initialize_LAN\n"));
 
 	if (Mode != MODE_UNKNOWN) {
 		Shutdown ();
@@ -786,7 +707,6 @@ GameInitMgrClass::Initialize_LAN (void)
 void
 GameInitMgrClass::Shutdown_LAN (void)
 {
-   WWDEBUG_SAY (("GameInitMgrClass::Shutdown_LAN\n"));
 
    //
 	//	Deactive the LAN interface
@@ -799,69 +719,12 @@ GameInitMgrClass::Shutdown_LAN (void)
 
 ////////////////////////////////////////////////////////////////
 //
-//	Initialize_WOL
-//
-////////////////////////////////////////////////////////////////
-void
-GameInitMgrClass::Initialize_WOL (void)
-{
-#ifndef MULTIPLAYERDEMO
-
-	WWDEBUG_SAY (("GameInitMgrClass::Initialize_WOL\n"));
-
-	if (Mode != MODE_UNKNOWN) {
-		Shutdown ();
-	}
-
-	//cSingleData::Set_Is_Single_Player (false);
-	cGameType::Set_Game_Type(GAMETYPE_MULTIPLAY);
-
-	//
-	// Activate WOL interface
-	//
-	GameModeManager::Find ("WOL")->Activate ();
-
-	//
-	//	Remember our state
-	//
-	IsClientRequired	= false;
-	IsServerRequired	= false;
-	Mode					= MODE_WOL;
-	return ;
-
-#endif // !MULTIPLAYERDEMO
-}
-
-
-////////////////////////////////////////////////////////////////
-//
-//	Shutdown_WOL
-//
-////////////////////////////////////////////////////////////////
-void
-GameInitMgrClass::Shutdown_WOL (void)
-{
-#ifndef MULTIPLAYERDEMO
-
-   WWDEBUG_SAY (("GameInitMgrClass::Shutdown_WOL\n"));
-
-	GameModeManager::Find ("WOL")->Deactivate ();
-
-	cGameType::Set_Game_Type(GAMETYPE_NONE);
-
-#endif // !MULTIPLAYERDEMO
-}
-
-
-////////////////////////////////////////////////////////////////
-//
 //	Shutdown
 //
 ////////////////////////////////////////////////////////////////
 void
 GameInitMgrClass::Shutdown (void)
 {
-   WWDEBUG_SAY (("GameInitMgrClass::Shutdown\n"));
 
 	switch (Mode)
 	{
@@ -875,10 +738,6 @@ GameInitMgrClass::Shutdown (void)
 
 		case MODE_LAN:
 			Shutdown_LAN ();
-			break;
-
-		case MODE_WOL:
-			Shutdown_WOL ();
 			break;
 	}
 

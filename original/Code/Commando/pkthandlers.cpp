@@ -16,19 +16,16 @@ extern bool g_is_loading;
 NetworkObjectClass *
 Create_Network_Object (cPacket &packet, int class_id, int network_obj_id)
 {
-	WWASSERT(network_obj_id > 0);
 
 	//
 	//	Lookup the factory for this type of network object
 	//
 	NetworkObjectFactoryClass *factory = NetworkObjectFactoryMgrClass::Find_Factory (class_id);
-	WWASSERT (factory != NULL);
 
 	//
 	//	Create the new object
 	//
 	NetworkObjectClass *new_object = factory->Create (packet);
-	WWASSERT (new_object != NULL);
 
 	new_object->Set_Network_ID(network_obj_id);//TSS2001b
 
@@ -40,11 +37,6 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 {
 #ifndef BETACLIENT
 
-	WWASSERT(I_Am_Server());
-	WWASSERT(
-		rhost_id >= PServerConnection->Get_Min_RHost() &&
-		rhost_id <= PServerConnection->Get_Max_RHost());
-	WWASSERT(Receiver != NULL);
 
 	/*TSS082801
 	// TSS - hack
@@ -68,8 +60,6 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 		// some damage packets are on the wire. Then a new client joins, gets the same client_id,
 		// and sends some damage packets with the same id's.
 		//
-		WWDEBUG_SAY(("cNetwork::Server_Packet_Handler: flushing packet from invalid rhost_id %d\n",
-			rhost_id));
 
 		packet.Flush();
 		return;
@@ -94,10 +84,6 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 		//WWASSERT (object == NULL);
 		if (object != NULL)
 		{
-#ifdef WWDEBUG
-			//sockaddr_in *actual_from_addr_ptr = (LPSOCKADDR_IN) &packet.Get_From_Address_Wrapper()->FromAddress;
-			//sockaddr_in rhost_addr = PServerConnection->Get_Remote_Host(rhost_id)->Get_Address();
-#endif //WWDEBUG
 
 //#pragma message("(TSS) APPPACKETTYPE_CSDAMAGEEVENT workaround for unknown crash bug.\n")
 
@@ -132,17 +118,10 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 		//	Create the network object
 		//
 		object = Create_Network_Object (packet, net_classid, network_obj_id);
-#ifdef WWDEBUG
-		object->Set_Created_By_Packet_ID(packet.Get_Id());
-#endif //WWDEBUG
 		object->Import_Creation (packet);
 
 		/*
 		//XXX
-		WWDEBUG_SAY(("Created object # %-3d of type %-20s and id %d\n",
-			NetworkObjectMgrClass::Get_Object_Count(),
-			cAppPacketStats::Interpret_Type(object->Get_App_Packet_Type()),
-			network_obj_id));
 		*/
 	}
 
@@ -207,9 +186,6 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 	//WWASSERT(packet.Is_Flushed());
 	if (!packet.Is_Flushed())
 	{
-		WWDEBUG_SAY(("cNetwork::Client_Packet_Handler: packet not flushed for object of type %s\n",
-			cAppPacketStats::Interpret_Type(object->Get_App_Packet_Type())));
-		DIE;
 	}
 
 #endif // not BETACLIENT
@@ -220,8 +196,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 {
 #ifndef FREEDEDICATEDSERVER
 
-	WWASSERT(I_Am_Client());
-	WWASSERT(Receiver != NULL);
 
 	// TSS - hack
 	if (g_is_loading) {
@@ -256,9 +230,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 		//WWASSERT (object == NULL);
 		if (object != NULL)
 		{
-			WWDEBUG_SAY(("cNetwork::Client_Packet_Handler: received BIT_CREATION for existing object of type %s\n",
-				cAppPacketStats::Interpret_Type(object->Get_App_Packet_Type())));
-			DIE;
 		}
 
 		//
@@ -284,10 +255,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 
 		/*
 		//XXX
-		WWDEBUG_SAY(("Created object # %-3d of type %-20s and id %d\n",
-			NetworkObjectMgrClass::Get_Object_Count(),
-			cAppPacketStats::Interpret_Type(object->Get_App_Packet_Type()),
-			network_obj_id));
 		*/
 	}
 
@@ -351,8 +318,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 	//WWASSERT(packet.Is_Flushed());
 	if (!packet.Is_Flushed())
 	{
-		WWDEBUG_SAY(("cNetwork::Client_Packet_Handler: packet not flushed for object of type %s\n",
-			cAppPacketStats::Interpret_Type(object->Get_App_Packet_Type())));
 		//DIE;
 	}
 

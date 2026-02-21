@@ -10,7 +10,6 @@
 #include <winsock.h>
 #include <stdio.h>
 
-#include "wwdebug.h"
 #include "netutil.h"
 #include "useroptions.h"
 #include "GameSpy_QnR.h"
@@ -30,13 +29,11 @@ cNicEnum::Init
 	void
 )
 {
-	WWDEBUG_SAY(("cNicEnum::Init\n"));
 
 	WSADATA wsa_data;
 	int startup_rc = ::WSAStartup(MAKEWORD(1, 1), &wsa_data);
 	if (startup_rc != 0) 
 	{
-		WWDEBUG_SAY(("  WSAStartup failed!\n"));
 		return;
 	}
 
@@ -45,9 +42,7 @@ cNicEnum::Init
 	//
 	ULONG local_addresses[MAX_NICS];
 	ULONG num_addresses = Enumerate_Nics(local_addresses, MAX_NICS);
-	WWASSERT(num_addresses <= MAX_NICS);
 
-	WWDEBUG_SAY(("  Found %d NIC(s)\n", num_addresses));
 
 	USHORT index	= 0;
 	USHORT class_1	= 0;
@@ -118,7 +113,6 @@ cNicEnum::Init
 		}
 	}
 
-	WWDEBUG_SAY(("  Of which %d are non-internet addressable.\n", num_lan_addresses));
 
 	//
 	// Next, copy the Internet addressable addresses. Weed out localhost and multicast 
@@ -170,7 +164,6 @@ cNicEnum::Init
 		GSNicList[NumGSNics++] = lan_addresses[index];
 	}
 
-	WWASSERT(NumNics == NumGSNics);
 
 	//
 	// Initialize or update PreferredLanNic if required.
@@ -222,16 +215,9 @@ cNicEnum::Init
 		}
 	}
 
-	WWDEBUG_SAY(("  PreferredLanNic is %u (%s)\n", 
-		(ULONG) cUserOptions::PreferredLanNic.Get(), 
-		cNetUtil::Address_To_String(cUserOptions::PreferredLanNic.Get())));
 
-	WWDEBUG_SAY(("  PreferredGameSpyNic is %u (%s)\n", 
-		(ULONG) cUserOptions::PreferredGameSpyNic.Get(), 
-		cNetUtil::Address_To_String(cUserOptions::PreferredGameSpyNic.Get())));
 
 	int cleanup_rc = ::WSACleanup();
-	WWASSERT(cleanup_rc != SOCKET_ERROR);
 }
 
 //---------------------------------------------------------------------------
@@ -242,17 +228,13 @@ cNicEnum::Enumerate_Nics
 	ULONG		max_nics
 )
 {
-	WWASSERT(addresses != NULL);
-	WWASSERT(max_nics > 0);
 
-	WWDEBUG_SAY(("cNicEnum::Enumerate_Nics\n"));
 
 	//
 	// Get the local hostname
 	//
 	char local_host_name[300];
 	int gethostname_rc = ::gethostname(local_host_name, sizeof(local_host_name));
-	WWASSERT(gethostname_rc != SOCKET_ERROR);
 
 	//
 	// Resolve hostname for local adapter addresses. 
@@ -261,7 +243,6 @@ cNicEnum::Enumerate_Nics
 	LPHOSTENT p_hostent = ::gethostbyname(local_host_name);
 	if (p_hostent == NULL) 
 	{
-		DIE;
 	}
 
 	ULONG num_addresses = 0;
@@ -270,7 +251,6 @@ cNicEnum::Enumerate_Nics
 		IN_ADDR in_addr;
 		::memcpy(&in_addr, p_hostent->h_addr_list[num_addresses], sizeof(in_addr));
 		addresses[num_addresses] = in_addr.s_addr;
-		WWDEBUG_SAY(("  NIC: %s\n", cNetUtil::Address_To_String(addresses[num_addresses])));
 		num_addresses++;
 	}
 
@@ -313,13 +293,11 @@ cNicEnum::Init
 	void
 )
 {
-	WWDEBUG_SAY(("cNicEnum::Init\n"));
 
 	WSADATA wsa_data;
 	int startup_rc = ::WSAStartup(MAKEWORD(1, 1), &wsa_data);
 	if (startup_rc != 0) 
 	{
-		WWDEBUG_SAY(("  WSAStartup failed!\n"));
 		return;
 	}
 
@@ -328,9 +306,7 @@ cNicEnum::Init
 	//
 	ULONG local_addresses[MAX_NICS];
 	ULONG num_addresses = Enumerate_Nics(local_addresses, MAX_NICS);
-	WWASSERT(num_addresses <= MAX_NICS);
 
-	WWDEBUG_SAY(("  Found %d NIC(s)\n", num_addresses));
 
 	//
 	// We are going to discard anything that is internet addressable.
@@ -406,7 +382,6 @@ cNicEnum::Init
 		}
 	}
 
-	WWDEBUG_SAY(("  Of which %d are non-internet addressable.\n", NumNics));
 
 	//
 	// Initialize or update PreferredLanNic if required.
@@ -455,16 +430,9 @@ cNicEnum::Init
 		}
 	}
 
-	WWDEBUG_SAY(("  PreferredLanNic is %u (%s)\n", 
-		(ULONG) cUserOptions::PreferredLanNic.Get(), 
-		cNetUtil::Address_To_String(cUserOptions::PreferredLanNic.Get())));
 
-	WWDEBUG_SAY(("  PreferredGameSpyNic is %u (%s)\n", 
-		(ULONG) cUserOptions::PreferredGameSpyNic.Get(), 
-		cNetUtil::Address_To_String(cUserOptions::PreferredGameSpyNic.Get())));
 
 	int cleanup_rc = ::WSACleanup();
-	WWASSERT(cleanup_rc != SOCKET_ERROR);
 }
 */
 

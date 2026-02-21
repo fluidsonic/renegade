@@ -10,8 +10,6 @@
 #include "mpsettingsmgr.h"
 #include "registry.h"
 #include "_globals.h"
-#include "natter.h"
-#include "WOLLogonMgr.h"
 
 ////////////////////////////////////////////////////////////////
 //
@@ -50,17 +48,10 @@ MultiplayOptionsMenuClass::On_Init_Dialog (void)
 	Check_Dlg_Button (IDC_SHOW_CLAN_CHAT_CHECK,	MPSettingsMgrClass::Get_Option_Flag (MPSettingsMgrClass::OPTION_CLAN_CHAT_ONLY));
 
 	//
-	//	Get the firewall options
+	//	Configure the firewall options (port number is 0 by default, no send delay)
 	//
-	bool is_send_delay	= false;
-	int	port_number		= 0;
-	WOLNATInterface.Get_Config(NULL, port_number, is_send_delay);
-
-	//
-	//	Configure the firewall options
-	//
-	Check_Dlg_Button (IDC_SEND_DELAY_CHECK, is_send_delay);
-	Set_Dlg_Item_Int (IDC_PORT_EDIT, port_number);
+	Check_Dlg_Button (IDC_SEND_DELAY_CHECK, false);
+	Set_Dlg_Item_Int (IDC_PORT_EDIT, 0);
 
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
@@ -127,14 +118,5 @@ MultiplayOptionsMenuClass::Save_Settings (void)
 	MPSettingsMgrClass::Set_Option_Flag (MPSettingsMgrClass::OPTION_DISPLAY_NONASIAN,	Is_Dlg_Button_Checked (IDC_DISPLAY_NONASIAN_CHECK));
 	MPSettingsMgrClass::Set_Option_Flag (MPSettingsMgrClass::OPTION_BUDDY_CHAT_ONLY,	Is_Dlg_Button_Checked (IDC_SHOW_BUDDIES_CHAT_CHECK));
 	MPSettingsMgrClass::Set_Option_Flag (MPSettingsMgrClass::OPTION_CLAN_CHAT_ONLY,	Is_Dlg_Button_Checked (IDC_SHOW_CLAN_CHAT_CHECK));
-	WOLLogonMgr::ConfigureSession();
-
-	//
-	//	Apply the firewall options
-	//
-	bool is_send_delay	= Is_Dlg_Button_Checked (IDC_SEND_DELAY_CHECK);
-	int port_number		= Get_Dlg_Item_Int (IDC_PORT_EDIT);
-
-	WOLNATInterface.Set_Config(NULL, port_number, is_send_delay);
 	return ;
 }

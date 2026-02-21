@@ -20,7 +20,6 @@ cSbboManager::Reset
 	void
 )
 {
-	WWASSERT(cNetwork::I_Am_Server());
 
 	AccumTimeSNetUpdate		= 0;
 	AccumTimeSCombatThink	= 0;
@@ -46,7 +45,6 @@ cSbboManager::Think
 		return;
 	}
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	float total_time = AccumTimeSNetUpdate + AccumTimeSCombatThink;
 
@@ -90,8 +88,6 @@ cSbboManager::Increment_Accum_Time_S_Net_Update
 	float time_increment_s
 )
 {
-	WWASSERT(cNetwork::I_Am_Server());
-	WWASSERT(time_increment_s >= 0);
 
 	AccumTimeSNetUpdate += time_increment_s;
 }
@@ -103,8 +99,6 @@ cSbboManager::Increment_Accum_Time_S_Combat_Think
 	float time_increment_s
 )
 {
-	WWASSERT(cNetwork::I_Am_Server());
-	WWASSERT(time_increment_s >= 0);
 
 	AccumTimeSCombatThink += time_increment_s;
 }
@@ -116,7 +110,6 @@ cSbboManager::Get_Net_To_Combat_Ratio
 	void
 )
 {
-	WWASSERT(cNetwork::I_Am_Server());
 	
 	return NetToCombatRatio;
 }

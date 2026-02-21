@@ -1,5 +1,6 @@
 #include "mainloop.h"
 #include <stdio.h>
+#include "sdl2_platform.h"
 #include "init.h"
 #include "shutdown.h"
 #include "timemgr.h"
@@ -7,7 +8,6 @@
 #include "gamemode.h"
 #include "debug.h"
 #include "msgloop.h"
-#include "wwprofile.h"
 #include "cnetwork.h"
 #include "miscutil.h"
 //#include "gamesettings.h"
@@ -16,14 +16,11 @@
 #include "multihud.h"
 #include "gamedata.h"
 #include "diagnostics.h"
-#include "wwprofile.h"
 #include "crandom.h"
 #include "dialogmgr.h"
 #include "ccamera.h"
 #include "pathmgr.h"
 #include "networkobjectmgr.h"
-#include "WebBrowser.h"
-#include "autostart.h"
 #include "gameinitmgr.h"
 #include "servercontrol.h"
 #include "consolemode.h"
@@ -47,7 +44,6 @@ void Stop_Main_Loop(int exitCode)
 
 void _Game_Main_Loop_Loop(void)
 {
-	WWPROFILE( "Main Loop" );
 
 	unsigned long time1 = TIMEGETTIME();
 
@@ -82,7 +78,6 @@ void _Game_Main_Loop_Loop(void)
 }
 
 	if (cGameSpyAdmin::Is_Gamespy_Game()) {
-		WWPROFILE( "cGameSpyAdmin Think" );
 		cGameSpyAdmin::Think();
 	}
 
@@ -90,20 +85,13 @@ void _Game_Main_Loop_Loop(void)
 	// If the following assert hits it may indicate that your
 	// working directory pathname got cleared in the project settings.
 	//
-	WWASSERT(GameModeManager::Find("Combat") != NULL);
 
 	if (!GameModeManager::Find("Combat")->Is_Active()) {
 		cNetwork::Update();
 	}
 
-	// Denzil - Embedded browser
-	if (WebBrowser::IsWebPageDisplayed() == false) {
-		GameModeManager::Render();
-	}
+	GameModeManager::Render();
 
-	if (AutoRestart.Is_Active()) {
-		AutoRestart.Think();
-	}
 
 {	WWPROFILE("ConsoleBox");
 	ConsoleBox.Think();
@@ -120,10 +108,6 @@ void _Game_Main_Loop_Loop(void)
   // PROFILE(	"Audio", WWAudioClass::Get_Instance ()->On_Frame_Update (0) );
 
    Windows_Message_Handler();
-#ifdef WWDEBUG
-   // Sometimes it is useful to be able to artificially lower the frame rate
-   Sleep(cDevOptions::DesiredFrameSleepMs.Get());
-#endif
 
 #if 0
 {	WWPROFILE( "Random" );
@@ -173,6 +157,11 @@ int Game_Main_Loop(void)
 	if (init_ok) {
 		fprintf(stderr, "[trace] Entering main loop\n");
 		while ( RunMainLoop ) {
+			// Check SDL2 quit request (window close, Cmd-Q, etc.)
+			if (SDL2_QuitRequested) {
+				Stop_Main_Loop(0);
+				break;
+			}
 			_Game_Main_Loop_Loop();
 		}
 		fprintf(stderr, "[trace] Exited main loop (ExitCode=%d)\n", ExitCode);

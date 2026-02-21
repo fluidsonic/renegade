@@ -17,7 +17,6 @@
 #pragma warning(disable : 4201)
 #include "systimer.h"
 
-#include "wwdebug.h"
 #include "_globals.h"
 #include "netutil.h"
 #include "langmode.h"
@@ -51,7 +50,6 @@ cLanChat::cLanChat(void) :
 	PositionBroadcastNumber(0),
 	CurrentLocation(LANLOC_LOBBY)
 {
-   WWDEBUG_SAY(("cLanChat::cLanChat\n"));
 
 	ZeroMemory(&Socket, sizeof(Socket));
 	ZeroMemory(&LocalAddress, sizeof(LocalAddress));
@@ -67,7 +65,6 @@ cLanChat::cLanChat(void) :
 //-----------------------------------------------------------------------------
 cLanChat::~cLanChat(void)
 {
-   WWDEBUG_SAY(("cLanChat::~cLanChat\n"));
 
 	Save_Lan_Registry_Keys();
 	if (Socket != INVALID_SOCKET) {
@@ -78,11 +75,8 @@ cLanChat::~cLanChat(void)
 //-----------------------------------------------------------------------------
 void cLanChat::Load_Lan_Registry_Keys(void)
 {
-	WWDEBUG_SAY(("cLanChat::Load_Lan_Registry_Keys\n"));
 
 	RegistryClass * registry = new RegistryClass(APPLICATION_SUB_KEY_NAME_NETOPTIONS);
-	WWASSERT(registry);
-	WWASSERT(registry->Is_Valid());
 
    char name[200];
 	registry->Get_String("MyLanName", name, sizeof(name), "");
@@ -110,11 +104,8 @@ void cLanChat::Load_Lan_Registry_Keys(void)
 //-----------------------------------------------------------------------------
 void cLanChat::Save_Lan_Registry_Keys(void)
 {
-	WWDEBUG_SAY(("cLanChat::Save_Lan_Registry_Keys...\n"));
 
 	RegistryClass * registry = new RegistryClass(APPLICATION_SUB_KEY_NAME_NETOPTIONS);
-	WWASSERT(registry);
-	WWASSERT(registry->Is_Valid());
 
 	if (!cGameSpyAdmin::Is_Gamespy_Game()) {
 		StringClass string;
@@ -130,14 +121,12 @@ void cLanChat::Save_Lan_Registry_Keys(void)
 //-----------------------------------------------------------------------------
 void cLanChat::Init_Lan_Protocol_And_Socket(void)
 {
-	WWASSERT(!IS_SOLOPLAY);
    if (cGameSpyAdmin::Is_Gamespy_Game()) {
 	   return;
    }
 
    bool is_internet = false;
    if (!cNetUtil::Protocol_Init(is_internet)) {
-      DIE;
    }
 
 	//
@@ -148,7 +137,6 @@ void cLanChat::Init_Lan_Protocol_And_Socket(void)
 	}
 
    bool succeeded = cNetUtil::Create_Bound_Socket(Socket, LAN_PORT, LocalAddress);
-	WWASSERT(succeeded);
 }
 
 //-----------------------------------------------------------------------------
@@ -197,7 +185,6 @@ void cLanChat::Send_Position_Broadcast(void)
 		packet.Add(is_hosting);
 
 		if (is_hosting) {
-			WWASSERT(PTheGameData != NULL);
 			packet.Add((int) The_Game()->Get_Game_Type());
 			The_Game()->Export_Tier_1_Data(packet);
 		}
@@ -222,7 +209,6 @@ void cLanChat::Process_Position_Broadcast(cPacket & packet)
 
       packet.Flush();
 
-		WWDEBUG_SAY(("*** LAN NICKNAME COLLISION (%s) ***\n", sender));
 
 		DlgMpChangeLanNickname::DoDialog();
 
@@ -234,7 +220,6 @@ void cLanChat::Process_Position_Broadcast(cPacket & packet)
 		int game_type = packet.Get(game_type);
 		cGameData * p_game_data = cGameData::Create_Game_Of_Type(
 			(cGameData::GameTypeEnum) game_type);
-		WWASSERT(p_game_data != NULL);
 		p_game_data->Import_Tier_1_Data(packet);
 
 		/*
@@ -242,10 +227,7 @@ void cLanChat::Process_Position_Broadcast(cPacket & packet)
 		// TSS2001f
 		// Manually correct hosting ip address according to recv address
 		//
-		WWASSERT(packet.Get_From_Address_Wrapper() != NULL);
 		p_game_data->Set_Ip_Address(packet.Get_From_Address_Wrapper()->FromAddress.sin_addr.s_addr);
-		WWDEBUG_SAY(("Manually setting ip to %s\n",
-			cNetUtil::Address_To_String(p_game_data->Get_Ip_Address())));
 		*/
 
 		//
@@ -291,7 +273,6 @@ void cLanChat::Lan_Packet_Handler(cPacket & packet)
 				break;
 
 			default:
-				WWDEBUG_SAY(("cLanChat::Lan_Packet_Handler: received bogus packet_type (%d)\n", packet_type));
 				//DIE;
 				packet.Flush();
 				break;

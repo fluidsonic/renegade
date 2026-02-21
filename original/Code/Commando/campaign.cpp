@@ -54,7 +54,6 @@ void	CampaignManager::Init( void )
 	// Load CAMPAIGN.INI to get campain flow
 	INIClass	* campaignINI = Get_INI( CAMPAIGN_INI_FILENAME );
 	if (campaignINI != NULL) {
-		WWASSERT( campaignINI && campaignINI->Section_Count() > 0 );
 		int count =  campaignINI->Entry_Count( SECTION_CAMPAIGN );
 		for ( int entry = 0; entry < count; entry++ )	{
 			StringClass	description(0,true);
@@ -390,7 +389,6 @@ void	CampaignManager::Select_Backdrop_Number_By_MP_Type( int type )
 	Select_Backdrop_Number( load_menu_number );
 	*/
 
-	WWASSERT(type == cGameData::GAME_TYPE_CNC);
 
 	#define	MULTIPLAY_LOAD_MENU_NUMBER_CNC1					94
 	#define	MULTIPLAY_LOAD_MENU_NUMBER_CNC2					95

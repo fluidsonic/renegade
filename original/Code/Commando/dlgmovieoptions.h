@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGOPTIONSMOVIE_H
 #define __DLGOPTIONSMOVIE_H

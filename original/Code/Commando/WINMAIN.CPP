@@ -42,6 +42,10 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 
+// Prevent SDL2 from hijacking main() — we keep WinMain as the entry point.
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h>
+
 #include "winmain.h"
 #include <stdio.h>
 #define _WIN32_WINDOWS 0x0401
@@ -64,8 +68,6 @@
 #include "except.h"
 
 #include "DirectInput.h"
-#include "WebBrowser.h"
-#include "wwmemlog.h"
 
 #include "datasafe.h"
 
@@ -76,7 +78,6 @@
 #include "buildnum.h"
 #include "dx8wrapper.h"
 #include "formconv.h"
-#include "autostart.h"
 #include "consolemode.h"
 #include "specialbuilds.h"
 #include "slavemaster.h"
@@ -124,12 +125,10 @@ void Set_Working_Directory(HINSTANCE hInstance);
 
 #include "packet.h"
 
-#ifndef _MSC_VER
 long Top_Level_Exception_Filter(EXCEPTION_POINTERS *e_info)
 {
 	return(Exception_Handler(e_info->ExceptionRecord->ExceptionCode, e_info));
 }
-#endif //_MSC_VER
 
 
 
@@ -152,6 +151,8 @@ long Top_Level_Exception_Filter(EXCEPTION_POINTERS *e_info)
  *=============================================================================================*/
 int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
+	SDL_SetMainReady(); // Tell SDL2 that main() is handled by us (SDL_MAIN_HANDLED)
+
 	WWMemoryLogClass::Init();	// This switches memlog from static to dynamic allocations mode
 
 #ifdef _DEBUG
@@ -179,23 +180,7 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	//flibble3 = flibble3;
 #endif //_DEBUG
 
-#ifdef WWDEBUG
-	//
-	// If necessary, disable packet optimizations
-	//
-	if (cDevOptions::PacketOptimizationsEnabled.Is_False()) {
-		PacketManager.Disable_Optimizations();
-	}
-#endif //WWDEBUG
 
-#ifdef _DEBUG // Denzil - DO NOT COMPILE INTO FINAL BUILD
-	bool webInstalled = WebBrowser::InstallPrerequisites();
-
-	if (!webInstalled) {
-		::MessageBox(NULL, "Embedded browser prerequisites missing\n\nBrowser functionality questionable.\n\n(Please call Denzil @ 27272)",
-				"Renegade Warning!", MB_ICONWARNING|MB_OK);
-	}
-#endif // WWDEBUG
 
    if (!cUserOptions::Parse_Command_Line(lpCmdLine)) {
 		return(0);
@@ -421,7 +406,6 @@ static bool Video_Card_Driver_Check()
 int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, int nCmdShow )
 {
 	{
-		WWMEMLOG(MEM_GAMEINIT);
 		//LPSTR	command	= lpCmdLine;
 
 		/*
@@ -452,7 +436,7 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
 		/*
 		** Only do these checks if this isn't an auto-restart. If we are restarting then we must have run once OK already. Right?
 		*/
-		if (AutoRestart.Get_Restart_Flag() == false && !ConsoleBox.Is_Exclusive()) {
+		if (!ConsoleBox.Is_Exclusive()) {
 			fprintf(stderr, "[trace] Video_Card_Driver_Check...\n");
 			if (!Video_Card_Driver_Check()) { fprintf(stderr, "[trace] Video_Card_Driver_Check failed\n"); return 0; }
 			fprintf(stderr, "[trace] Graphics_Settings_Trouble_Shooting...\n");
@@ -470,43 +454,16 @@ int Start_Application( HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /
 
 	int exitCode = EXIT_SUCCESS;
 
-#ifdef WWDEBUG
-	if (cDevOptions::EnableExceptionHandler.Is_False()) {
-		exitCode = Game_Main_Loop();
-	} else {
-#endif //WWDEBUG
 
 		Register_Application_Exception_Callback(&Application_Exception_Callback);
 		Register_Application_Version_Callback(&BuildInfoClass::Composite_Build_Info);
 
-#ifdef _MSC_VER
-		/*
-		** The __try/__except construct is part of the WIN32 interface. This is not the same
-		** as C++ exception handling. There is no additional code overhead required
-		** with this interface and the compilers exception handling options should be disabled
-		** to prevent the compiler generating additional stack unwinding code.
-		*/
-		__try {
-#else
 		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER) &Top_Level_Exception_Filter);
-#endif
-			WWDEBUG_SAY(("Game_Main_Loop\n"));
 			fprintf(stderr, "[trace] Entering Game_Main_Loop()...\n");
 			exitCode = Game_Main_Loop();
 			fprintf(stderr, "[trace] Game_Main_Loop() returned %d\n", exitCode);
 
-#ifdef _MSC_VER
-		} __except(Exception_Handler(GetExceptionCode(), GetExceptionInformation())) {};
-
-		/*
-		** Set the exception filter to use on shutdown.
-		*/
-#else
 		SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER) &Top_Level_Exception_Filter);
-#endif
-#ifdef WWDEBUG
-	}
-#endif //WWDEBUG
 
 	Unregister_Thread_ID(GetCurrentThreadId(), "Main Thread");
 
@@ -557,11 +514,9 @@ long FAR PASCAL Main_Window_Proc( HWND hwnd, UINT message, WPARAM wParam, LPARAM
 		*/
 		case WM_ACTIVATEAPP:
 			if (wParam && !GameInFocus) {
-				WWDEBUG_SAY(("***** FOCUS GAINED *****\n"));
 				GameInFocus = true;
 				On_Focus_Restore();
 			} else if (!wParam && GameInFocus) {
-				WWDEBUG_SAY(("***** FOCUS LOST *****\n"));
 				GameInFocus = false;
 				On_Focus_Loss();
 			}
@@ -778,9 +733,7 @@ void On_Focus_Loss(void)
  *=============================================================================================*/
 void On_Focus_Restore(void)
 {
-	if (WebBrowser::IsWebPageDisplayed() == false) {
-		DirectInput::Acquire();
-	}
+	DirectInput::Acquire();
 
 	GameModeManager::Hide_Render_Frames(1);	// Hide the first rendered frame
 }

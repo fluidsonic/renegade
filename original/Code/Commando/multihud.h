@@ -36,15 +36,6 @@ public:
 	static void		Render_Text(WideStringClass & text, float x, float y, ULONG color = 0xFFFFFFFF);
    static void		Show_Player_Names(void);
 
-#ifdef WWDEBUG
-	static void		Render_Debug_Text(LPCSTR text, float x, float y, ULONG color = 0xFFFFFFFF);
-	static void		Show_Import_State_Counts(NetworkObjectClass *object);
-	static void		Show_Distance_And_Priority(NetworkObjectClass *object);
-	static void		Show_Player_Rhost_Data(SmartGameObj * smart_obj);
-   static void		Show_Description(NetworkObjectClass * p_object, float height_offset, float max_distance);
-   static void		Show_Spawner_Data(void);
-	static void		Show_Client_Rhost_Data(void);
-#endif
 
 	static void		Set_Bottom_Text_Y_Pos(float y)				{BottomTextYPos = y;}
 	static float	Get_Bottom_Text_Y_Pos(void)					{return BottomTextYPos;}
@@ -63,10 +54,6 @@ private:
 	static const float				MAX_OVERLAY_DISTANCE_M;
    static const float				Y_INCREMENT_FACTOR;
 	static float						BottomTextYPos;
-#ifdef WWDEBUG
-	static Render2DTextClass	*	PTextRenderer;
-	static Font3DInstanceClass *	PFont;
-#endif // WWDEBUG
 	static Render2DSentenceClass*	NameRenderer;
 	//static bool							VerboseLists;
 	static bool							IsOn;

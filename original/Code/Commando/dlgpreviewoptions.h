@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGOPTIONSPREVIEW_H
 #define __DLGOPTIONSPREVIEW_H

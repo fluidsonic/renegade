@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DIALOG_TESTS_H
 #define __DIALOG_TESTS_H
@@ -9,9 +6,7 @@
 #include "menudialog.h"
 #include "childdialog.h"
 #include "resource.h"
-#include "DlgWOLWait.h"
 #include <Notify.h>
-#include <WWOnline/RefPtr.h>
 
 
 class WheeledVehicleDefClass;

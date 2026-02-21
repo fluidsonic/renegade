@@ -5,11 +5,9 @@
 #include "timemgr.h"
 #include "_globals.h"
 #include "registry.h"
-#include "wwprofile.h"
 #include "combat.h"
 #include "ccamera.h"
 #include "render2Dsentence.h"
-#include "wwmemlog.h"
 #include "consolemode.h"
 
 /*
@@ -37,18 +35,14 @@ void	TextDisplayGameModeClass::Init()
 {
 	if (!ConsoleBox.Is_Exclusive()) {
 		// Build Fonts
-		WWASSERT(WW3DAssetManager::Get_Instance() != NULL);
 		Font = WW3DAssetManager::Get_Instance()->Get_Font3DInstance( "FONT8x8.TGA" );
-   	WWASSERT(Font != NULL);
 		SET_REF_OWNER( Font );
 		MonoFont = WW3DAssetManager::Get_Instance()->Get_Font3DInstance( "FONT8x8.TGA" );
-   	WWASSERT(MonoFont != NULL);
 		SET_REF_OWNER( MonoFont );
 		MonoFont->Set_Mono_Spaced();
 
 
 		// Update Instance
-		WWASSERT( TextDisplayGameModeClass::Instance == NULL );
 		TextDisplayGameModeClass::Instance = this;
 
 		DisplayVisWarning = false;
@@ -95,7 +89,6 @@ void 	TextDisplayGameModeClass::Shutdown()
 		REF_PTR_RELEASE( MonoFont );
 
 		// Update Instance
-		WWASSERT( TextDisplayGameModeClass::Instance == this );
 		TextDisplayGameModeClass::Instance = NULL;
 	}
 }
@@ -106,7 +99,6 @@ void 	TextDisplayGameModeClass::Shutdown()
 void TextDisplayGameModeClass::Load_Registry_Keys(void)
 {
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_OPTIONS );
-	WWASSERT( registry );
 	if ( registry->Is_Valid() ) {
 		MaxScrollLines = registry->Get_Int( "MaxScrollLines", MaxScrollLines );
 		ScrollLinesPersistTime = registry->Get_Float( "ScrollLinesPersistTime", ScrollLinesPersistTime );
@@ -117,7 +109,6 @@ void TextDisplayGameModeClass::Load_Registry_Keys(void)
 void TextDisplayGameModeClass::Save_Registry_Keys(void)
 {
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_OPTIONS );
-	WWASSERT( registry );
 	if ( registry->Is_Valid() ) {
 		registry->Set_Int( "MaxScrollLines", MaxScrollLines );
 		registry->Set_Float( "ScrollLinesPersistTime", ScrollLinesPersistTime );
@@ -130,7 +121,6 @@ void TextDisplayGameModeClass::Save_Registry_Keys(void)
 */
 void 	TextDisplayGameModeClass::Think()
 {
-	WWPROFILE( "TextDisplay Think" );
 
 	if (Font == NULL) {
 		return;
@@ -174,8 +164,6 @@ void 	TextDisplayGameModeClass::Think()
 
 void 	TextDisplayGameModeClass::Render()
 {
-	WWMEMLOG(MEM_GAMEDATA);
-	WWPROFILE( "TextDisplay Render" );
 
 	if (Font == NULL) {
 		return;
@@ -212,7 +200,6 @@ void 	TextDisplayGameModeClass::Render()
 	SLNode<TextDisplayLine> *linenode;
 	if (!changed) {
 		int j=0;
-		WWASSERT(RendererLines.Count()==RendererColors.Count());
 		for (	linenode = ScrollLines.Head(); linenode; linenode = linenode->Next(), j++ ) {
 			if (j>=RendererLines.Count()) {
 				changed=true;

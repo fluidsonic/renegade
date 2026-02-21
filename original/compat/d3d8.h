@@ -204,7 +204,8 @@ struct IDirect3D8 : public IUnknown {
     virtual HRESULT CreateDevice(UINT adapter, D3DDEVTYPE devType, HWND hFocusWnd, DWORD behaviorFlags, D3DPRESENT_PARAMETERS* pPP, IDirect3DDevice8** ppDevice) { return E_NOTIMPL; }
 };
 
-inline IDirect3D8* Direct3DCreate8(UINT sdk_version) { return NULL; }
+// Implemented in d3d8_gl.cpp — returns a real OpenGL-backed IDirect3D8
+IDirect3D8* Direct3DCreate8(UINT sdk_version);
 
 // Convenience typedefs
 typedef IDirect3DSurface8*       LPDIRECT3DSURFACE8;

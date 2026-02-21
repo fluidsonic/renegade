@@ -8,9 +8,7 @@
 bool GameCombatNetworkHandlerClass::Can_Damage(ArmedGameObj * p_armed_damager, 
 	PhysicalGameObj * p_phys_victim)
 {
-	WWASSERT(p_phys_victim != NULL);
 
-	WWASSERT(PTheGameData != NULL);
 	if (!The_Game()->Is_Gameplay_Permitted()) {
 		return false;
 	}
@@ -49,10 +47,7 @@ float GameCombatNetworkHandlerClass::Get_Damage_Factor
 //-----------------------------------------------------------------------------
 void GameCombatNetworkHandlerClass::On_Soldier_Kill(SoldierGameObj * p_soldier, SoldierGameObj * p_victim)
 {
-	WWASSERT(p_soldier != NULL);
-	WWASSERT(p_victim != NULL);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	int killer_id = p_soldier->Get_Control_Owner();
 	int victim_id = p_victim->Get_Control_Owner();
@@ -82,7 +77,6 @@ void GameCombatNetworkHandlerClass::On_Soldier_Kill(SoldierGameObj * p_soldier, 
 
 		if (p_soldier->Is_Team_Player()) {
 			cTeam * p_team = cTeamManager::Find_Team(p_soldier->Get_Player_Type());
-			WWASSERT(p_team != NULL);
 			p_team->Increment_Kills();
 		}
 	}
@@ -91,8 +85,6 @@ void GameCombatNetworkHandlerClass::On_Soldier_Kill(SoldierGameObj * p_soldier, 
 //-----------------------------------------------------------------------------
 void GameCombatNetworkHandlerClass::On_Soldier_Death(SoldierGameObj * p_soldier)
 {
-	WWASSERT(p_soldier != NULL);
-	WWASSERT(cNetwork::I_Am_Server());
 
 	if (p_soldier->Has_Player()) {
 		cPlayer * p_player = cPlayerManager::Find_Player(p_soldier->Get_Control_Owner());
@@ -103,7 +95,6 @@ void GameCombatNetworkHandlerClass::On_Soldier_Death(SoldierGameObj * p_soldier)
 
 	if (p_soldier->Is_Team_Player()) {
 		cTeam * p_team = cTeamManager::Find_Team(p_soldier->Get_Player_Type());
-		WWASSERT(p_team != NULL);
 		p_team->Increment_Deaths();
 	}
 }
@@ -111,7 +102,6 @@ void GameCombatNetworkHandlerClass::On_Soldier_Death(SoldierGameObj * p_soldier)
 //-----------------------------------------------------------------------------
 bool GameCombatNetworkHandlerClass::Is_Gameplay_Permitted(void)
 {
-	WWASSERT(The_Game() != NULL);
 	return The_Game()->Is_Gameplay_Permitted();
 }
 

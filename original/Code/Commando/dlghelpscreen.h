@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGHELPSCREEN_H
 #define __DLGHELPSCREEN_H

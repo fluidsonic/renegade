@@ -12,7 +12,6 @@
 #include "dialogmgr.h"
 #include "gamemode.h"
 #include "langmode.h"
-#include "wolgmode.h"
 
 /******************************************************************************
 *
@@ -66,7 +65,6 @@ DlgMPConnect::DlgMPConnect(int teamChoice, unsigned long clanID) :
 		mTheGame(NULL),
 		mFailed(false)
 	{
-	WWDEBUG_SAY(("DlgMPConnect: Instantiated\n"));
 	}
 
 
@@ -88,7 +86,6 @@ DlgMPConnect::DlgMPConnect(int teamChoice, unsigned long clanID) :
 
 DlgMPConnect::~DlgMPConnect()
 	{
-	WWDEBUG_SAY(("DlgMPConnect: Destructing\n"));
 	}
 
 
@@ -209,7 +206,6 @@ void DlgMPConnect::On_Periodic(void)
 
 		if (mTheGame->Is_Valid_Settings(outMsg))
 			{
-			WWDEBUG_SAY(("DlgMPConnect: Starting the game.\n"));
 
 			CampaignManager::Select_Backdrop_Number_By_MP_Type(mTheGame->Get_Game_Type());
 
@@ -220,7 +216,6 @@ void DlgMPConnect::On_Periodic(void)
 			}
 		else
 			{
-			WWDEBUG_SAY(("ERROR: %s\n", (const WCHAR*)outMsg));
 			}
 
 		// Release the keep alive reference (this will delete this object)
@@ -240,17 +235,6 @@ void DlgMPConnect::On_Periodic(void)
 				{
       		PLC->Refusal_Actions();
    			}
-			else
-				{
-		 		GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-		 		if (gameMode && gameMode->Is_Active())
-					{
-			 		WolGameModeClass* wolGame = static_cast<WolGameModeClass*>(gameMode);
-			 		WWASSERT(wolGame);
-			 		wolGame->Refusal_Actions();
-		 			}
-				}
 
 			Release_Ref();
 			}

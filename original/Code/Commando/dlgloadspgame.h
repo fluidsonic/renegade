@@ -1,6 +1,3 @@
-#if defined(_MSC_VER)
-#pragma once
-#endif
 
 #ifndef __DLGLOADSPGAME_H
 #define __DLGLOADSPGAME_H

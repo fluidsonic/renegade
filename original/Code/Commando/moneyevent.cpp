@@ -26,7 +26,6 @@ cMoneyEvent::cMoneyEvent(void)
 void
 cMoneyEvent::Init(int amount)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId = cNetwork::Get_My_Id();
 	Amount = amount;
@@ -44,7 +43,6 @@ cMoneyEvent::Init(int amount)
 void
 cMoneyEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	cPlayer * p_player = cPlayerManager::Find_Player(SenderId);
 
@@ -52,7 +50,6 @@ cMoneyEvent::Act(void)
 
 		p_player->Set_Money(Amount);
 
-	   WWDEBUG_SAY(("Client %d setting money to %d.\n", SenderId, Amount));
 	}
 
 	Set_Delete_Pending();
@@ -62,11 +59,9 @@ cMoneyEvent::Act(void)
 void
 cMoneyEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 	packet.Add(Amount);
@@ -80,12 +75,10 @@ cMoneyEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 	packet.Get(Amount);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

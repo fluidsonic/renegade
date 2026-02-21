@@ -14,7 +14,6 @@ DECLARE_NETWORKOBJECT_FACTORY(cClientGoodbyeEvent, NETCLASSID_CLIENTGOODBYEEVENT
 //-----------------------------------------------------------------------------
 cClientGoodbyeEvent::cClientGoodbyeEvent(void)
 {
-	WWDEBUG_SAY(("cClientGoodbyeEvent::cClientGoodbyeEvent\n"));
 
 	SenderId = -1;
 
@@ -25,9 +24,7 @@ cClientGoodbyeEvent::cClientGoodbyeEvent(void)
 void
 cClientGoodbyeEvent::Init(void)
 {
-	WWDEBUG_SAY(("cClientGoodbyeEvent::Init\n"));
 
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId	= cNetwork::Get_My_Id();
 
@@ -44,11 +41,8 @@ cClientGoodbyeEvent::Init(void)
 void
 cClientGoodbyeEvent::Act(void)
 {
-	WWDEBUG_SAY(("cClientGoodbyeEvent::Act\n"));
 
-	WWASSERT(cNetwork::I_Am_Server());
 
-	WWASSERT(SenderId > 0);
 
 	Set_Delete_Pending();
 
@@ -66,13 +60,10 @@ cClientGoodbyeEvent::Act(void)
 void
 cClientGoodbyeEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWDEBUG_SAY(("cClientGoodbyeEvent::Export_Creation\n"));
 
-	WWASSERT(cNetwork::I_Am_Only_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 
@@ -83,15 +74,12 @@ cClientGoodbyeEvent::Export_Creation(BitStreamClass & packet)
 void
 cClientGoodbyeEvent::Import_Creation(BitStreamClass & packet)
 {
-	WWDEBUG_SAY(("cClientGoodbyeEvent::Import_Creation\n"));
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	cNetEvent::Import_Creation(packet);
 
 	packet.Get(SenderId);
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }

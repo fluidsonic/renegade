@@ -31,7 +31,6 @@ cPurchaseRequestEvent::cPurchaseRequestEvent(void)
 void
 cPurchaseRequestEvent::Init(VendorClass::PURCHASE_TYPE type, int item_index, int alt_skin_index)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	SenderId			= cNetwork::Get_My_Id();
 	PurchaseType	= type;
@@ -51,7 +50,6 @@ cPurchaseRequestEvent::Init(VendorClass::PURCHASE_TYPE type, int item_index, int
 void
 cPurchaseRequestEvent::Act(void)
 {
-   WWASSERT(cNetwork::I_Am_Server());
 
 	//
 	//	Lookup the data needed to make the purchase
@@ -60,7 +58,6 @@ cPurchaseRequestEvent::Act(void)
 
 	VendorClass::PURCHASE_ERROR result = VendorClass::PERR_UNKNOWN;
 
-	WWASSERT(The_Game() != NULL);
 	if (The_Game()->Is_Gameplay_Permitted()) 
 	{
 		//
@@ -98,11 +95,9 @@ cPurchaseRequestEvent::Act(void)
 void
 cPurchaseRequestEvent::Export_Creation(BitStreamClass & packet)
 {
-	WWASSERT(cNetwork::I_Am_Client());
 
 	cNetEvent::Export_Creation(packet);
 
-	WWASSERT(SenderId > 0);
 
 	packet.Add(SenderId);
 	packet.Add(PurchaseType);
@@ -118,14 +113,12 @@ cPurchaseRequestEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-	WWASSERT(cNetwork::I_Am_Server());
 
 	packet.Get(SenderId);
 	packet.Get(PurchaseType);
 	packet.Get(ItemIndex);
 	packet.Get(AltSkinIndex);	
 
-	WWASSERT(SenderId > 0);
 
 	Act();
 }
