@@ -1,0 +1,83 @@
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
+#ifndef __POPUP_DIALOG_H
+#define __POPUP_DIALOG_H
+
+
+#include "dialogbase.h"
+#include "rendobj.h"
+#include "wwstring.h"
+#include "render2dsentence.h"
+
+
+////////////////////////////////////////////////////////////////
+//	Forward declarations
+////////////////////////////////////////////////////////////////
+class SimpleSceneClass;
+class CameraClass;
+
+
+////////////////////////////////////////////////////////////////
+//
+//	PopupDialogClass
+//
+////////////////////////////////////////////////////////////////
+class PopupDialogClass : public DialogBaseClass
+{
+public:
+
+	////////////////////////////////////////////////////////////////
+	//	Public constructors/destructors
+	////////////////////////////////////////////////////////////////
+	PopupDialogClass (int res_id);
+	virtual ~PopupDialogClass (void);
+
+	////////////////////////////////////////////////////////////////
+	//	Public methods
+	////////////////////////////////////////////////////////////////
+
+	//
+	//	RTTI
+	//
+	virtual PopupDialogClass *	As_PopupDialogClass (void)	{ return this; }
+
+	//
+	//	Display methods
+	//
+	virtual void				Render (void);
+
+	virtual void Set_Title(const WCHAR* title);
+
+protected:
+
+	////////////////////////////////////////////////////////////////
+	//	Protected methods
+	////////////////////////////////////////////////////////////////
+	void				Build_Background_Renderers (void);
+	
+	//
+	// Set whether or not background is darkened
+	//
+	void				Set_Background_Darkened(bool flag)		{ IsBackgroundDarkened = flag; }
+
+	//
+	//	From DialogBaseClass
+	//
+	void				On_Init_Dialog (void);	
+
+
+	////////////////////////////////////////////////////////////////
+	//	Protected member data
+	////////////////////////////////////////////////////////////////	
+	Render2DClass				BlackoutRenderer;
+	Render2DClass				BackgroundRenderer;
+	Render2DSentenceClass	TextRenderer;
+	bool							IsBackgroundDarkened;
+
+};
+
+
+#endif //__POPUP_DIALOG_H
+

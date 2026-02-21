@@ -1,0 +1,22 @@
+#include "scripts.h"
+#include "toolkit.h"
+#include <string.h>
+#include <stdio.h>
+#include "Mission3.h"
+
+#ifdef _XBOX
+#include "wwhack.h"
+
+#endif
+
+DECLARE_SCRIPT(MS04_Gunboat_Waypath_Movement, "")
+{
+	void Created( GameObject * obj ) 
+	{
+		ActionParamsStruct params;
+		params.Set_Basic( this, 45, 999 );
+		params.Set_Movement( Vector3(0,0,0), 1.0f, 3.0f );
+		params.WaypathID = 100033;
+		Commands->Action_Goto( obj, params );
+	}
+};

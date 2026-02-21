@@ -1,0 +1,70 @@
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
+#ifndef __SKINPACKAGEMGR_H
+#define __SKINPACKAGEMGR_H
+
+
+#include "vector.h"
+#include "skinpackage.h"
+
+
+//////////////////////////////////////////////////////////////////////
+//	Forward declarations
+//////////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////
+//
+//	SkinPackageMgrClass
+//
+//////////////////////////////////////////////////////////////////////
+class SkinPackageMgrClass
+{
+public:
+
+	///////////////////////////////////////////////////////////////////
+	//	Public methods
+	///////////////////////////////////////////////////////////////////
+
+	//
+	//	Initialization
+	//
+	static void		Initialize (void);
+	static void		Shutdown (void);
+
+	//
+	//	List support
+	//
+	static void		Build_List (void);
+	static void		Reset_List (void);
+
+	//
+	//	Package enumeration
+	//
+	static int								Get_Package_Count (void)	{ return PackageList.Count (); }
+	static const SkinPackageClass *	Get_Package (int index)		{ return &PackageList[index]; }
+
+	//
+	//	Current package support
+	//
+	static const SkinPackageClass &	Get_Current_Package (void)	{ return CurrentPackage; }
+	static void								Set_Current_Package (const char *package_filename);
+	static void								Set_Current_Package (int index);
+	
+protected:
+	
+	///////////////////////////////////////////////////////////////////
+	//	Protected methods
+	///////////////////////////////////////////////////////////////////
+	
+	///////////////////////////////////////////////////////////////////
+	//	Protected member data
+	///////////////////////////////////////////////////////////////////
+	static DynamicVectorClass<SkinPackageClass>	PackageList;
+	static SkinPackageClass								CurrentPackage;
+};
+
+
+#endif //__SKINPACKAGEMGR_H

@@ -1,0 +1,65 @@
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
+#ifndef __DLG_CONTROL_SAVELOAD_H
+#define __DLG_CONTROL_SAVELOAD_H
+
+
+#include "menudialog.h"
+#include "dlgmessagebox.h"
+
+
+////////////////////////////////////////////////////////////////
+//	Forward declarations
+////////////////////////////////////////////////////////////////
+class InputConfigClass;
+
+
+////////////////////////////////////////////////////////////////
+//
+//	ControlSaveLoadMenuClass
+//
+////////////////////////////////////////////////////////////////
+class ControlSaveLoadMenuClass : public MenuDialogClass, public Observer<DlgMsgBoxEvent>
+{
+public:
+
+	//////////////////////////////////////////////////////////////
+	//	Public constructors/destructor
+	//////////////////////////////////////////////////////////////
+	ControlSaveLoadMenuClass (void);		
+
+	//////////////////////////////////////////////////////////////
+	//	Public methods
+	//////////////////////////////////////////////////////////////
+	
+	//
+	//	Inherited
+	//
+	void		On_Init_Dialog (void);
+	void		On_Command (int ctrl_id, int message_id, DWORD param);
+	void		On_ListCtrl_Delete_Entry (ListCtrlClass *list_ctrl, int ctrl_id, int item_index);
+	void		On_ListCtrl_Sel_Change (ListCtrlClass *list_ctrl, int	ctrl_id, int old_index, int	new_index);
+	void		On_EditCtrl_Enter_Pressed (EditCtrlClass *edit_ctrl, int ctrl_id);
+
+private:	
+
+	////////////////////////////////////////////////////////////////
+	//	Static methods
+	////////////////////////////////////////////////////////////////
+	static int CALLBACK ListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param);
+
+	//////////////////////////////////////////////////////////////
+	//	Private methods
+	//////////////////////////////////////////////////////////////
+	void		Delete_Config (void);
+	void		Load_Config (void);
+	void		Save_Config (bool prompt);
+	int		Insert_Configuration (const InputConfigClass &config);
+	void		HandleNotification (DlgMsgBoxEvent &event);
+};
+
+
+#endif //__DLG_CONTROL_SAVELOAD_H
+

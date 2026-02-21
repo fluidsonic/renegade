@@ -1,0 +1,81 @@
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
+#ifndef __DLG_MAIN_MENU_H
+#define __DLG_MAIN_MENU_H
+
+
+#include "menudialog.h"
+#include "resource.h"
+
+
+////////////////////////////////////////////////////////////////
+//	Forward declarations
+////////////////////////////////////////////////////////////////
+class RenderObjClass;
+
+
+////////////////////////////////////////////////////////////////
+//
+//	MainMenuDialogClass
+//
+////////////////////////////////////////////////////////////////
+class MainMenuDialogClass : public MenuDialogClass
+{
+public:
+
+	////////////////////////////////////////////////////////////////
+	//	Public constructors/destructors
+	////////////////////////////////////////////////////////////////
+	MainMenuDialogClass (void);
+	~MainMenuDialogClass (void);
+
+	////////////////////////////////////////////////////////////////
+	//	Public methods
+	////////////////////////////////////////////////////////////////
+
+	//
+	//	Notifications
+	//
+	void			On_Command (int ctrl_id, int mesage_id, DWORD param);
+
+	//
+	//	Transition support
+	//
+	DialogTransitionClass *	Get_Transition_In (DialogBaseClass *prev_dlg);
+	DialogTransitionClass *	Get_Transition_Out (DialogBaseClass *next_dlg);
+
+	//
+	//	Singleton access
+	//
+	static void							Display (void);
+	static MainMenuDialogClass *	Get_Instance (void)	{ return _TheInstance; }
+
+protected:
+
+	////////////////////////////////////////////////////////////////
+	//	Protected methods
+	////////////////////////////////////////////////////////////////
+	void			On_Init_Dialog (void);
+	void			On_Menu_Activate (bool onoff);
+	void			Update_Version_Number (void);
+	StringClass	Choose_Skirmish_Map (void);
+
+private:
+
+	////////////////////////////////////////////////////////////////
+	//	Private member data
+	////////////////////////////////////////////////////////////////
+	RenderObjClass *	LogoModel;
+	RenderObjClass *	TitleTransModel;
+	RenderObjClass *	GizmoModel;
+	bool					IsStartingPractice;
+
+	static bool			Animated;
+
+	static MainMenuDialogClass *	_TheInstance;
+};
+
+
+#endif //__DLG_MAIN_MENU_H

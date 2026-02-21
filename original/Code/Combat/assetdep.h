@@ -1,0 +1,49 @@
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
+#ifndef __ASSET_DEP_H
+#define __ASSET_DEP_H
+
+
+#include "vector.h"
+
+
+///////////////////////////////////////////////////////////////////////
+// Forward declarations
+///////////////////////////////////////////////////////////////////////
+class ChunkSaveClass;
+class ChunkLoadClass;
+class StringClass;
+
+
+///////////////////////////////////////////////////////////////////////
+//
+//	AssetDependencyManager
+//
+///////////////////////////////////////////////////////////////////////
+class AssetDependencyManager
+{
+public:
+	
+	////////////////////////////////////////////////////////////////////
+	//	Public data types
+	////////////////////////////////////////////////////////////////////
+	typedef DynamicVectorClass<StringClass>	ASSET_LIST;
+
+
+	////////////////////////////////////////////////////////////////////
+	//	Public methods
+	////////////////////////////////////////////////////////////////////
+	static void				Save_Always_Dependencies (const char *path, ASSET_LIST &asset_list);
+	static void				Save_Level_Dependencies (const char *full_path, ASSET_LIST &asset_list);
+	static void				Save_Dependencies (ChunkSaveClass &csave, ASSET_LIST &asset_list);
+
+	static void				Load_Level_Assets (const char *level_name);
+	static void				Load_Always_Assets (void);
+	static void				Load_Assets (const char *filename);
+	static void				Load_Assets (ChunkLoadClass &cload);
+};
+
+
+#endif //__ASSET_DEP_H

@@ -1,0 +1,93 @@
+#ifndef	CINEMATICGAMEOBJ_H
+#define	CINEMATICGAMEOBJ_H
+
+#ifndef	ALWAYS_H
+	#include "always.h"
+#endif
+
+#ifndef ARMEDGAMEOBJ_H
+	#include "armedgameobj.h"
+#endif
+
+class	AudibleSoundClass;
+
+/*
+** CinematicGameObjDef - Defintion class for a CinematicGameObj
+*/
+class CinematicGameObjDef : public ArmedGameObjDef
+{
+public:
+	CinematicGameObjDef( void );
+
+	virtual uint32								Get_Class_ID( void ) const;
+	virtual PersistClass *					Create( void ) const ;
+	virtual bool								Save( ChunkSaveClass &csave );
+	virtual bool								Load( ChunkLoadClass &cload );
+	virtual const PersistFactoryClass &	Get_Factory( void ) const;
+
+	DECLARE_EDITABLE( CinematicGameObjDef, ArmedGameObjDef );
+
+protected:
+	int											SoundDefID;
+	StringClass									SoundBoneName;
+	StringClass									AnimationName;
+	bool											AutoFireWeapon;
+	bool											DestroyAfterAnimation;
+	bool											CameraRelative;
+
+	friend	class								CinematicGameObj;
+};
+
+
+/*
+**
+*/
+class CinematicGameObj : public ArmedGameObj {
+
+public:
+	CinematicGameObj();
+	virtual	~CinematicGameObj();
+
+	// Definitions
+	virtual	void	Init( void );
+	void	Init( const CinematicGameObjDef & definition );
+	const CinematicGameObjDef & Get_Definition( void ) const ;
+	void	Cinematic_Init( void );
+
+	// Save / Load / Construction Factory
+	virtual	bool	Save( ChunkSaveClass & csave );
+	virtual	bool	Load( ChunkLoadClass & cload );
+	virtual	void	On_Post_Load( void );
+	virtual	const	PersistFactoryClass & Get_Factory( void ) const;
+
+	// Think
+	virtual	void	Think( void );
+	virtual	void	Post_Think( void );
+
+	// Type Identification
+	virtual	CinematicGameObj		*As_CinematicGameObj( void )	{ return this; }
+
+	// Sound
+	void				Set_Sound( int	sound_def_id, const char * bone_name = ""  );
+
+	// Damage
+	virtual	bool	Takes_Explosion_Damage( void )						{ return false; }
+	virtual	void	Completely_Damaged( const OffenseObjectClass & damager );
+
+	// Information
+	float				Get_Animation_Length( void );
+
+	// Network support
+	//TSS: why import with no export?
+	//virtual	void	Import_Creation( BitStreamClass &packet );
+
+	// Network support
+	virtual void	Export_Rare( BitStreamClass &packet );
+	virtual void	Import_Rare( BitStreamClass &packet );
+
+protected:
+	AudibleSoundClass		*Sound;
+};
+
+
+#endif	//	CINEMATICGAMEOBJ_H

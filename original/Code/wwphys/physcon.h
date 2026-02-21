@@ -1,0 +1,107 @@
+#if defined(_MSC_VER)
+#pragma once
+#endif
+
+#ifndef PHYSCON_H
+#define PHYSCON_H
+
+#include "always.h"
+#include "vector3.h"
+
+
+class ChunkLoadClass;
+class ChunkSaveClass;
+
+/**
+** PhysicsConstants
+** This is just a collection of global variables used by the physics simulation
+*/
+class PhysicsConstants
+{
+
+public:
+
+	/*
+	** One-Time initialization.  This is called from WWPhys::Init automatically.  Some of the
+	** constants are filled in with default values in this function.
+	*/
+	static void		Init(void);
+
+	/*
+	** In this engine friction usually occurs between a moving object and 
+	** polygons in the static terrain.
+	*/
+	enum 
+	{
+		DYNAMIC_OBJ_TYPE_TIRE			= 0,			// (tires on humvees, etc)
+		DYNAMIC_OBJ_TYPE_TRACK,							// (tracks on tanks, APCs, etc)
+		DYNAMIC_OBJ_TYPE_GENERIC,						// (generic dynamic objects, may need to expand this one)
+		
+		DYNAMIC_OBJ_TYPE_MAX,
+	};
+
+	/*
+	** Friction coefficients for various objects on various surface types
+	*/
+	static void		Set_Contact_Friction_Coefficient(int obj_type,int surface_type,float friction);
+	static float	Get_Contact_Friction_Coefficient(int obj_type,int surface_type);
+	static void		Set_Contact_Drag_Coefficient(int obj_type,int surface_type,float drag);
+	static float	Get_Contact_Drag_Coefficient(int obj_type,int surface_type);
+
+	static void		Set_Override_Surface_Type(int type);
+	static void		Set_Override_Surface_Friction(float friction);
+	static void		Set_Override_Surface_Drag(float drag);
+
+	/*
+	** Save/Load support.
+	*/
+	static void		Save(ChunkSaveClass & csave);
+	static void		Load(ChunkLoadClass & cload);
+
+public:
+
+	/*
+	** Accleration of gravity
+	*/
+	static Vector3	GravityAcceleration;
+
+	/*
+	** Linear Damping factor.  
+	*/
+	static float	LinearDamping;
+	
+	/*
+	** Angular Damping factor.  
+	*/
+	static float	AngularDamping;
+	
+	/*
+	** epsilon for detecting resting contact.  If the
+	** velocity is within this epsilon of zero, a
+	** point is considered to be in resting contact.
+	*/
+	static float	RestingContactVelocity;
+
+	/*
+	** Square of the minimum velocity a point must
+	** have before applying a dynamic friction to it.
+	*/
+	static float	MinFrictionVelocity;
+	static float	MinFrictionVelocity2;
+
+	/*
+	** Default values for contact friction and drag
+	*/
+	static float	DefaultContactFriction;
+	static float	DefaultContactDrag;
+
+	/*
+	** For debugging you can globally override the surface type
+	*/
+	static int		SurfaceTypeOverride;
+	static float	OverrideFriction;
+	static float	OverrideDrag;
+};
+
+
+#endif PHYSCON_H

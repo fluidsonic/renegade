@@ -1,0 +1,33 @@
+#ifndef __SCOREEVENT_H__
+#define __SCOREEVENT_H__
+
+#include "netevent.h"
+#include "netclassids.h"
+
+//-----------------------------------------------------------------------------
+//
+// A C->S mirrored object for score cheat.
+//
+class	cScoreEvent : public cNetEvent
+{
+public:
+   cScoreEvent(void);
+
+	void						Init(int amount);
+
+	virtual void			Export_Creation(BitStreamClass &packet);
+	virtual void			Import_Creation(BitStreamClass &packet);
+
+	virtual uint32			Get_Network_Class_ID(void) const				{return NETCLASSID_SCOREEVENT;}
+
+private:
+
+	virtual void			Act(void);
+
+	int						SenderId;
+	int						Amount;
+};
+
+//-----------------------------------------------------------------------------
+
+#endif	// __SCOREEVENT_H__

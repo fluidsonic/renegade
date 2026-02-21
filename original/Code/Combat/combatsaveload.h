@@ -1,0 +1,40 @@
+#ifndef	COMBATSAVELOAD_H
+#define	COMBATSAVELOAD_H
+
+#ifndef	ALWAYS_H
+	#include "always.h"
+#endif
+
+#ifndef	SAVELOADSUBSYSTEM_H
+	#include "saveloadsubsystem.h"
+#endif
+
+#ifndef	COMBATCHUNKID_H
+	#include "combatchunkid.h"
+#endif
+
+/*
+**
+*/
+class CombatSaveLoadClass : public SaveLoadSubSystemClass {
+
+public:
+	CombatSaveLoadClass(void) {}
+	virtual ~CombatSaveLoadClass(void) {}
+
+	virtual uint32	Chunk_ID (void) const { return CHUNKID_COMBAT; }
+
+protected:
+	virtual bool	Save( ChunkSaveClass &csave );
+	virtual bool	Load( ChunkLoadClass &cload );
+	virtual const char*		Name() const { return "CombatSaveLoadClass"; }
+	virtual void	On_Post_Load (void);
+
+};
+
+/*
+**
+*/
+extern	CombatSaveLoadClass	_CombatSaveLoad;
+
+#endif	//	COMBATSAVELOAD_H
