@@ -85,7 +85,6 @@ class PathDebugPlotterClass : public RenderObjClass
 		DecorationPhysClass *				m_PhysObj;
 };
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 // Inlines
@@ -106,7 +105,6 @@ PathDebugPlotterClass::Add (const Vector3 &start, const Vector3 &end, const Vect
 	return ;
 }
 
-
 inline void
 PathDebugPlotterClass::Render (RenderInfoClass &rinfo)
 {
@@ -124,7 +122,6 @@ PathDebugPlotterClass::Render (RenderInfoClass &rinfo)
 
 	return ;
 }
-
 
 inline void
 PathDebugPlotterClass::Display (bool display)

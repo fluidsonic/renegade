@@ -1,10 +1,8 @@
 
 #include "vector.h"
 
-
 #ifndef __DIALOGUE_H
 #define __DIALOGUE_H
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -13,12 +11,10 @@ class DialogueOptionClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
 
-
 ////////////////////////////////////////////////////////////////
 //	Typedefs
 ////////////////////////////////////////////////////////////////
 typedef DynamicVectorClass<DialogueOptionClass *>	DIALOGUE_OPTION_LIST;
-
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -52,7 +48,6 @@ typedef enum {
 }	DialogEvents;
 
 extern const char * const DIALOG_EVENT_NAMES[DIALOG_MAX];
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -107,7 +102,6 @@ protected:
 	float			Weight;
 	int			ConversationID;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -167,7 +161,6 @@ protected:
 	DIALOGUE_OPTION_LIST		OptionList;
 	float							SilenceWeight;
 };
-
 
 #endif //__DIALOGUE_H
 

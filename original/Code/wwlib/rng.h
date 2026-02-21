@@ -13,6 +13,5 @@ class RandomNumberGenerator {
 		virtual void Get_Block(void * output, unsigned int size) = 0;
 };
 
-
 #endif
 

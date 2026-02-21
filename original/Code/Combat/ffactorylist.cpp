@@ -1,7 +1,6 @@
 #include "ffactorylist.h"
 #include "wwfile.h"
 
-
 FileFactoryListClass * FileFactoryListClass::Instance = NULL;
 
 /*
@@ -28,7 +27,6 @@ void	FileFactoryListClass::Add_FileFactory( FileFactoryClass * factory, const ch
 	FactoryNameList.Add( name );
 	Reset_Search_Start ();
 }
-
 
 /*
 **
@@ -80,7 +78,6 @@ FileFactoryClass *FileFactoryListClass::Remove_FileFactory(void)
 	return(factory);
 }
 
-
 void	FileFactoryListClass::Add_Temp_FileFactory( FileFactoryClass * factory )
 {
 	TempFactory = factory;
@@ -92,7 +89,6 @@ FileFactoryClass * FileFactoryListClass::Remove_Temp_FileFactory( void )
 	TempFactory = NULL;
 	return factory;
 }
-
 
 FileClass * FileFactoryListClass::Get_File( char const *filename )
 {
@@ -154,7 +150,6 @@ void FileFactoryListClass::Return_File( FileClass *file )
 	// This is kinda bad. Just return it to the first one.  (Since they all do the same thing)
 	FactoryList[0]->Return_File( file );
 }
-
 
 void FileFactoryListClass::Set_Search_Start( const char *name )
 {

@@ -8,7 +8,6 @@
 #include "dialogbase.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -25,7 +24,6 @@ TreeCtrlClass *			TreeCtrlClass::CurrentSorter			= NULL;
 uint32						TreeCtrlClass::CurrentSortUserData	= 0;
 const char *				TreeCtrlClass::ICON_FOLDER				= "if_treefld.tga";
 const char *				TreeCtrlClass::ICON_FOLDER_OPEN		= "if_treefld_open.tga";
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -69,7 +67,6 @@ TreeCtrlClass::TreeCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~TreeCtrlClass
@@ -85,7 +82,6 @@ TreeCtrlClass::~TreeCtrlClass (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -122,7 +118,6 @@ TreeCtrlClass::Create_Text_Renderers (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -222,7 +217,6 @@ TreeCtrlClass::Render_Item (TreeItemClass *item, float x_pos, float &y_pos, int 
 		StyleMgrClass::Render_Text (item->Get_Name (), &TextRenderer, text_rect, true, true,
 								StyleMgrClass::LEFT_JUSTIFY, IsEnabled);
 
-
 		//
 		//	Adjust the width of the rectangle so its the approximate size
 		// of the text
@@ -301,7 +295,6 @@ TreeCtrlClass::Render_Item (TreeItemClass *item, float x_pos, float &y_pos, int 
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Scroll_Pos
@@ -329,7 +322,6 @@ TreeCtrlClass::Set_Scroll_Pos (int new_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Count_Visible_Rows
@@ -354,7 +346,6 @@ TreeCtrlClass::Count_Visible_Rows (void)
 	
 	return total;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -386,7 +377,6 @@ TreeCtrlClass::Count_Visible_Rows (TreeItemClass *item)
 
 	return total;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -421,7 +411,6 @@ TreeCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -436,7 +425,6 @@ TreeCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ACTION);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -494,7 +482,6 @@ TreeCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_VScroll
@@ -506,7 +493,6 @@ TreeCtrlClass::On_VScroll (ScrollBarCtrlClass *, int , int new_position)
 	Set_Scroll_Pos (new_position);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -537,7 +523,6 @@ TreeCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Sort_Children_Alphabetically
@@ -549,7 +534,6 @@ TreeCtrlClass::Sort_Children_Alphabetically (TreeItemClass *parent)
 	Sort_Children (parent, Alphabetic_Sort_Callback, 0);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -584,10 +568,8 @@ TreeCtrlClass::Sort_Children (TreeItemClass *parent, TREECTRL_SORT_CALLBACK sort
 		}
 	}
 
-
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -605,7 +587,6 @@ TreeCtrlClass::Sort_Callback (const void *elem1, const void *elem2)
 	//	
 	return CurrentSortCallback (CurrentSorter, item1, item2, CurrentSortUserData);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -638,7 +619,6 @@ TreeCtrlClass::Alphabetic_Sort_Callback
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Top_Item
@@ -659,7 +639,6 @@ TreeCtrlClass::Find_Top_Item (void)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -690,7 +669,6 @@ TreeCtrlClass::Find_Last_Visible_Item (void)
 
 	return curr_item;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -752,7 +730,6 @@ TreeCtrlClass::Hit_Test (const Vector2 &mouse_pos, HITTYPE &type)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -782,7 +759,6 @@ TreeCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_DblClk
@@ -810,7 +786,6 @@ TreeCtrlClass::On_LButton_DblClk (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -821,7 +796,6 @@ TreeCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -837,7 +811,6 @@ TreeCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -851,7 +824,6 @@ TreeCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -870,7 +842,6 @@ TreeCtrlClass::On_Mouse_Wheel (int direction)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -935,7 +906,6 @@ TreeCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -946,7 +916,6 @@ TreeCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -992,7 +961,6 @@ TreeCtrlClass::Ensure_Visible (TreeItemClass *item_to_find)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1040,7 +1008,6 @@ TreeCtrlClass::Insert_Item
 	Set_Dirty ();
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1107,7 +1074,6 @@ TreeCtrlClass::Delete_Item (TreeItemClass *item)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_All_Items
@@ -1134,7 +1100,6 @@ TreeCtrlClass::Delete_All_Items (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Select_Item
@@ -1153,7 +1118,6 @@ TreeCtrlClass::Select_Item (TreeItemClass *item)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Selected_Item
@@ -1164,7 +1128,6 @@ TreeCtrlClass::Get_Selected_Item (void)
 {
 	return SelectedItem;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1199,7 +1162,6 @@ TreeCtrlClass::Get_Next_Sibling (TreeItemClass *item)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Prev_Sibling
@@ -1232,7 +1194,6 @@ TreeCtrlClass::Get_Prev_Sibling (TreeItemClass *item)
 	
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1283,7 +1244,6 @@ TreeCtrlClass::Find_Prev_Visible (TreeItemClass *item)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1341,7 +1301,6 @@ TreeCtrlClass::Find_Next_Visible (TreeItemClass *item)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1402,7 +1361,6 @@ TreeCtrlClass::Update_Scroll_Bar_Visibility (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Expanded
@@ -1427,13 +1385,11 @@ TreeCtrlClass::On_Expanded (TreeItemClass *item)
 	return ;
 }
 
-
 //********************************************************************************//
 //
 //	Start of TreeItemClass
 //
 //********************************************************************************//
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1451,7 +1407,6 @@ TreeItemClass::Remove_Child (TreeItemClass *child)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Expand
@@ -1468,7 +1423,6 @@ TreeItemClass::Expand (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Name
@@ -1481,7 +1435,6 @@ TreeItemClass::Set_Name (const WCHAR *name)
 	TreeCtrl->Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1504,7 +1457,6 @@ TreeItemClass::Set_Icon (const char *texture_name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Selected_Icon
@@ -1525,7 +1477,6 @@ TreeItemClass::Set_Selected_Icon (const char *texture_name)
 	TreeCtrl->Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1551,7 +1502,6 @@ TreeItemClass::Get_Prev_Child (TreeItemClass *child)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Prev_Child
@@ -1576,7 +1526,6 @@ TreeItemClass::Get_Next_Child (TreeItemClass *child)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Indent_Level
@@ -1598,7 +1547,6 @@ TreeItemClass::Get_Indent_Level (void)
 	return retval;	
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Last_Child
@@ -1615,7 +1563,6 @@ TreeItemClass::Get_Last_Child (void)
 
 	return retval;	
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

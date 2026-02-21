@@ -141,14 +141,11 @@ cBioEvent::Export_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Export_Creation(packet);
 
-
-
 	packet.Add(SenderId);
 	packet.Add_Wide_Terminated_String(Nickname);
 	packet.Add(TeamChoice);
 	packet.Add(ClanID);
 	packet.Add_Terminated_String(MapName, false);
-
 
 	Set_Delete_Pending();
 }
@@ -159,15 +156,12 @@ cBioEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
 	packet.Get_Wide_Terminated_String(Nickname.Get_Buffer(256), 256, true);
 	packet.Get(TeamChoice);
 	packet.Get(ClanID);
 
 	packet.Get_Terminated_String(MapName, sizeof(MapName), false);
-
-
 
 	Act();
 }

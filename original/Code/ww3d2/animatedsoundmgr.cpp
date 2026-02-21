@@ -12,13 +12,11 @@
 #include "htree.h"
 #include "hanim.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //	Static member initialization
 //////////////////////////////////////////////////////////////////////
 HashTemplateClass<StringClass, AnimatedSoundMgrClass::ANIM_SOUND_LIST *>	AnimatedSoundMgrClass::AnimationNameHash;
 DynamicVectorClass<AnimatedSoundMgrClass::ANIM_SOUND_LIST *>					AnimatedSoundMgrClass::AnimSoundLists;
-
 
 //////////////////////////////////////////////////////////////////////
 //	Local inlines
@@ -140,7 +138,6 @@ Build_List_From_String
 	return count;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Initialize
@@ -259,7 +256,6 @@ AnimatedSoundMgrClass::Initialize (const char *ini_filename)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -284,7 +280,6 @@ AnimatedSoundMgrClass::Shutdown (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Does_Animation_Have_Embedded_Sounds
@@ -295,7 +290,6 @@ AnimatedSoundMgrClass::Does_Animation_Have_Embedded_Sounds (HAnimClass *anim)
 {
 	return (Find_Sound_List (anim) != NULL);
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -322,7 +316,6 @@ AnimatedSoundMgrClass::Find_Sound_List (HAnimClass *anim)
 	ANIM_SOUND_LIST *retval = AnimationNameHash.Get (full_name);
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //

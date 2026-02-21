@@ -7,7 +7,6 @@
 #include "damage.h"
 #include "encyclopediamgr.h"
 
-
 /*
 ** DamageableGameObjDef - Defintion class for a DamageableGameObj
 */
@@ -90,7 +89,6 @@ public:
 
 	// Type identification
 	virtual	DamageableGameObj	*As_DamageableGameObj( void )	{ return this; }
-
 
 	// Teams / Playertypes
 	virtual int Get_Player_Type(void) const {return PlayerType;}

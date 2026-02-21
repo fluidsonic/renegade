@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
 DECLARE_SCRIPT(M09_Objective_Controller, "") // Object Controller id: 2000071
 {
 	
@@ -188,7 +187,6 @@ DECLARE_SCRIPT(M09_Objective_Controller, "") // Object Controller id: 2000071
 			block1 = block2 = block3 = block4 = 0;
 		}
 
-
 		if (type == MOBIUS_KILLED)
 		{
 			Commands->Set_HUD_Help_Text ( IDS_M09DSGN_DSGN0073I1DSGN_TXT, TEXT_COLOR_OBJECTIVE_PRIMARY );
@@ -346,7 +344,6 @@ DECLARE_SCRIPT (M09_Mobius_Suit_Objective, "")
 			Commands->Set_Position (mobius, mobius_loc );
 		}
 	}
-
 
 	void Entered (GameObject * obj, GameObject * enterer)
 	{
@@ -708,11 +705,6 @@ DECLARE_SCRIPT (M09_Animating_Mutant, "Animation=0:int")
 	}
 };
 
-
-
-
-
-
 DECLARE_SCRIPT (M09_LabRoom_Controller, "")
 {
 	bool triggered;
@@ -863,11 +855,6 @@ DECLARE_SCRIPT (M09_Mobius_Initial_Conversation, "")
 		}
 	}
 };
-
-
-
-
-
 
 DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 {
@@ -1050,7 +1037,6 @@ DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 								
 		}
 	}
-
 
 	void Created (GameObject *obj)
 	{
@@ -1252,7 +1238,6 @@ DECLARE_SCRIPT (M09_Mobius_Follow, "")  //Mobius (Pre-Suit): 2000010
 				Commands->Start_Timer (obj, this, 5.0f, TOO_FAR);
 			}
 		}
-
 
 		/*if (stationary == false)
 		{
@@ -1649,7 +1634,6 @@ DECLARE_SCRIPT (M09_Stationary_StealthTank, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M09_Vehicle_Attack_01, "")	
 {
 	bool attacking, charge, charging;
@@ -1877,7 +1861,6 @@ DECLARE_SCRIPT (M09_Sam_Engineer_2, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M09_Excavation_Tunnel_Encounter_On, "")
 {
@@ -2114,7 +2097,6 @@ DECLARE_SCRIPT (M09_Tunnel_Spawner_383_381, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M09_Excavation_Tunnel_3, "")
 {
 	bool already_entered;
@@ -2241,8 +2223,6 @@ DECLARE_SCRIPT (M09_CheckpointA_Controller, "") //2000969
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT (M09_CheckpointA_Counter, "")
 {
@@ -2486,8 +2466,6 @@ DECLARE_SCRIPT (M09_First_Mutant_Encounter_Zone, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT (M09_First_Mutant_Encounter, "")
 {
 	
@@ -2729,8 +2707,6 @@ DECLARE_SCRIPT (M09_Mutant_Excavation_Zone_01, "")
 			Commands->Send_Custom_Event (obj, Commands->Find_Object (2000175), ATTACK, 2000159, 0.0f);
 			Commands->Send_Custom_Event (obj, Commands->Find_Object (2000346), ATTACK, 2000160, 0.0f);
 			Commands->Send_Custom_Event (obj, Commands->Find_Object (2000174), ATTACK, 2000161, 0.0f);
-
-
 
 		}
 	}
@@ -3212,7 +3188,6 @@ DECLARE_SCRIPT (M09_Invincible_MrShuman, "")
 };
 		
 
-
 DECLARE_SCRIPT (M09_Elevator_Movement_Zone, "Direction:int, Anim_num:int, Elev_obj_num:int")
 {
 	void Entered (GameObject * obj, GameObject * enterer)
@@ -3245,7 +3220,6 @@ DECLARE_SCRIPT (M09_Elevator_Movement_Zone, "Direction:int, Anim_num:int, Elev_o
 	}
 };
 
-
 DECLARE_SCRIPT (M09_Elevator_All_Zone, "Controller_num:int")
 {
 	bool star_in_zone;
@@ -3265,7 +3239,6 @@ DECLARE_SCRIPT (M09_Elevator_All_Zone, "Controller_num:int")
 		
 		mobius = Commands->Find_Object (2000010);
 	}
-
 
 	void Entered (GameObject * obj, GameObject * enterer)
 	{
@@ -3330,7 +3303,6 @@ DECLARE_SCRIPT (M09_Elevator_All_Controller, "Waypoint_num:int, Elev_obj_num:int
 		mobius = Commands->Find_Object (2000010);
 
 		Commands->Static_Anim_Phys_Goto_Last_Frame ( Get_Int_Parameter("Elev_obj_num"), elevators [Get_Int_Parameter("Anim_num")] );
-
 
 	}
 
@@ -3476,7 +3448,6 @@ DECLARE_SCRIPT (M09_Elevator_All_Controller, "Waypoint_num:int, Elev_obj_num:int
 			}
 		}
 
-
 	}
 };
 
@@ -3487,7 +3458,6 @@ DECLARE_SCRIPT (M09_Block_Off, "")
 	 	Commands->Send_Custom_Event (obj, Commands->Find_Object(2000071), BLOCK_OFF, 0, 0.0f);
 	}
 };
-
 
 DECLARE_SCRIPT (M09_Mutant_Attack, "Target_num:int")
 {
@@ -3663,7 +3633,6 @@ DECLARE_SCRIPT (M09_Mutant_Encounter_Controller, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M09_Damage_Modifier, "Damage_multiplier:float")
 {
@@ -3966,7 +3935,6 @@ DECLARE_SCRIPT(M09_Gunner, "")
 		{
 			Commands->Attach_To_Object_Bone( obj, NULL, NULL );
 
-
 			//Commands->Enable_Collisions ( obj );
 
 			ActionParamsStruct params;
@@ -4119,7 +4087,6 @@ DECLARE_SCRIPT(M09_Innate_Enable_Zone, "SoundProjector:int, Radius=7.0:float, To
 			//Commands->Start_Timer (obj, this, 4.0f, INNATE_RECYCLE);
 		}
 	}
-
 
 	void Entered (GameObject * obj, GameObject * enterer)
 	{

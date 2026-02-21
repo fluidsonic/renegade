@@ -5,12 +5,10 @@
 #include "phys.h"
 #include "timemgr.h"
 #include "chunkio.h"
-#include "debug.h"
 #include "assets.h"
 #include "matinfo.h"
 #include "definitionclassids.h"
 #include "networkobjectfactory.h"
-
 
 //////////////////////////////////////////////////////////////
 //	NetworkGameObjectFactoryClass
@@ -67,14 +65,12 @@ NetworkGameObjectFactoryClass::Create (cPacket &packet) const
 //////////////////////////////////////////////////////////////
 static NetworkGameObjectFactoryClass _NetworkGameObjectFactory;
 
-
 /*
 ** BaseGameObjDef
 */
 enum	{
 	CHUNKID_DEF_PARENT							= 1111991123,
 };
-
 
 bool	BaseGameObjDef::Save( ChunkSaveClass & csave )
 {

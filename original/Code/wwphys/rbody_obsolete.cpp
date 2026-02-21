@@ -156,15 +156,12 @@ Assert_State_Valid();
 
 	Assert_State_Valid();
 
-
 	if (ContactBox != NULL) { 
 		ContactBox->Compute_Forces();
 	}
 
-
 }
 #endif
-
 
 /*
 ** This was a version of Timestep which used a binary search through time to try
@@ -177,7 +174,6 @@ void RigidBodyClass::Timestep(float dt)
 	if ( Is_Immovable() ) {
 		return;
 	}
-
 
 	Inc_Ignore_Counter();
 
@@ -307,7 +303,6 @@ void RigidBodyClass::Timestep(float dt)
 			*/
 			ContactBox->Compute_Contacts();
 
-
 #if 0   // Compute an impulse for the worst contact
 
 			Vector3 point;
@@ -393,7 +388,6 @@ void RigidBodyClass::Timestep(float dt)
 
 #ifdef RBODY_DEBUGGING
 #endif
-
 
 	Dec_Ignore_Counter();
 	Model->Set_Transform(Matrix3D(Rotation,State.Position));

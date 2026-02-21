@@ -4,7 +4,6 @@
 
 #include	"rawfile.h"
 
-
 /*
 **	This is the definition of a buffered read raw file class. 
 */

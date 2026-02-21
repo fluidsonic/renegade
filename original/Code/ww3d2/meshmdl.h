@@ -270,7 +270,6 @@ protected:
 	friend class DX8PolygonRendererClass;
 };
 
-
 /**
 ** GapFillerClass
 ** This class is used to generate gap-filling polygons for "N-Patched" meshes
@@ -300,11 +299,6 @@ public:
 	void Add_Polygon(unsigned polygon_index,unsigned vidx1,unsigned vidx2, unsigned vidx3);
 	void Shrink_Buffers();
 };
-
-
-
-
-
 
 #endif
 

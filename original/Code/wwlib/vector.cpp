@@ -39,7 +39,6 @@ BooleanVectorClass::BooleanVectorClass(unsigned size, unsigned char * array) :
 //	BitCount = size;
 }
 
-
 /***********************************************************************************************
  * BooleanVectorClass::BooleanVectorClass -- Copy constructor of boolean array.                *
  *                                                                                             *
@@ -60,7 +59,6 @@ BooleanVectorClass::BooleanVectorClass(BooleanVectorClass const & vector)
 	LastIndex = -1;
 	*this = vector;
 }
-
 
 /***********************************************************************************************
  * BooleanVectorClass::operator = -- Assignment operator.                                      *
@@ -88,7 +86,6 @@ BooleanVectorClass & BooleanVectorClass::operator =(BooleanVectorClass const & v
 	return(*this);
 }
 
-
 /***********************************************************************************************
  * BooleanVectorClass::operator == -- Comparison operator for boolean vector.                  *
  *                                                                                             *
@@ -109,7 +106,6 @@ bool BooleanVectorClass::operator == (const BooleanVectorClass & vector) const
 	Fixup(LastIndex);
 	return(BitCount == vector.BitCount && BitArray == vector.BitArray);
 }
-
 
 /***********************************************************************************************
  * BooleanVectorClass::Resize -- Resizes a boolean vector object.                              *
@@ -167,7 +163,6 @@ int BooleanVectorClass::Resize(unsigned size)
 	return(true);
 }
 
-
 /***********************************************************************************************
  * BooleanVectorClass::Clear -- Resets boolean vector to empty state.                          *
  *                                                                                             *
@@ -191,7 +186,6 @@ void BooleanVectorClass::Clear(void)
 	BitArray.Clear();
 }
 
-
 /***********************************************************************************************
  * BooleanVectorClass::Reset -- Clear all boolean values in array.                             *
  *                                                                                             *
@@ -214,7 +208,6 @@ void BooleanVectorClass::Reset(void)
 	}
 }
 
-
 /***********************************************************************************************
  * BooleanVectorClass::Set -- Forces all boolean elements to true.                             *
  *                                                                                             *
@@ -236,7 +229,6 @@ void BooleanVectorClass::Set(void)
 		memset(&BitArray[0], '\xFF', BitArray.Length());
 	}
 }
-
 
 /***********************************************************************************************
  * BooleanVectorClass::Fixup -- Updates the boolean vector to a known state.                   *
@@ -298,7 +290,6 @@ void BooleanVectorClass::Fixup(int index) const
 	}
 }
 
-
 /***********************************************************************************************
  * BooleanVectorClass::Init -- Initializes the bit vector from an user array.                  *
  *                                                                                             *
@@ -318,7 +309,6 @@ void BooleanVectorClass::Init(unsigned size, unsigned char * array)
 	BitCount = size;
 	BitArray.Resize(((size + (8-1)) / 8), array);
 }
-
 
 /***********************************************************************************************
  * BooleanVectorClass::Init -- Initializes the bit vector from an user array.                  *

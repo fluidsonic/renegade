@@ -1,7 +1,6 @@
 #ifndef __BACKGROUNDMGR_H
 #define __BACKGROUNDMGR_H
 
-
 // Includes.
 #include "combat.h"
 #include "combatchunkid.h"
@@ -14,7 +13,6 @@
 #include "vector3.h"
 #include	"vector3i.h"
 #include "vertmaterial.h"
-
 
 // Forward declarations.
 class CameraClass;
@@ -34,7 +32,6 @@ class VisibilityClass {
 	private :
 		bool Visible;
 };
-
 
 class HazeClass : public VisibilityClass
 {
@@ -74,7 +71,6 @@ class HazeClass : public VisibilityClass
 		ShaderClass			    Shader;
 };
 
-
 class StarfieldClass : public VisibilityClass
 {
 	public:
@@ -112,7 +108,6 @@ class StarfieldClass : public VisibilityClass
 		unsigned					ActiveVertexCount;
 		unsigned					ActiveTriangleCount;
 };
-
 
 class SkyObjectClass	: public VisibilityClass
 {
@@ -153,7 +148,6 @@ class SkyObjectClass	: public VisibilityClass
 		Vector2				  *TexCoordArray;
 		unsigned				  *DiffuseArray;
 };
-
 
 class CloudLayerClass : public VisibilityClass
 {
@@ -196,7 +190,6 @@ class CloudLayerClass : public VisibilityClass
 		unsigned				  *DiffuseArray;
 };
 
-
 class SkyGlowClass : public VisibilityClass
 {
 	public:
@@ -231,7 +224,6 @@ class SkyGlowClass : public VisibilityClass
 		ShaderClass			    Shader;
 };
 
-
 class LightningBoltClass : public VisibilityClass, public SegmentedLineClass
 {
 	public:
@@ -253,7 +245,6 @@ class LightningBoltClass : public VisibilityClass, public SegmentedLineClass
 		BranchStruct *Branches;
 		int			  BranchCount;
 };
-
 
 class LightningClass
 {
@@ -278,7 +269,6 @@ class LightningClass
 		bool					  PlayedThunder;
 };
 
-
 class WarBlitzClass
 {
 	public:
@@ -298,7 +288,6 @@ class WarBlitzClass
 		Vector3			 SamplePosition;
 		bool				 PlayedSample;
 };
-
 
 class	SkyClass : public RenderObjClass
 {
@@ -393,7 +382,6 @@ class	SkyClass : public RenderObjClass
 		float								WarBlitzDistribution;
 };
 
-
 class BackgroundParameterClass
 {
 	public:
@@ -418,7 +406,6 @@ class BackgroundParameterClass
 
 		friend class BackgroundMgrClass;
 };
-
 
 class	BackgroundMgrClass : public SaveLoadSubSystemClass, public NetworkObjectClass
 {
@@ -605,7 +592,6 @@ class	BackgroundMgrClass : public SaveLoadSubSystemClass, public NetworkObjectCl
 		static SkyClass						  *_Sky;
 		static DazzleRenderObjClass		  *_Dazzle;
 };
-
 
 // Externals.
 extern BackgroundMgrClass _TheBackgroundMgr;

@@ -31,10 +31,8 @@
 #include "healthbarctrl.h"
 #include "systimer.h"
 
-
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
-
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -46,7 +44,6 @@ const float	RES_SCREEN_HEIGHT	= 300;
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 DEFAULT_DLG_CMD_HANDLER		DialogBaseClass::DefaultCmdHandler = NULL;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -64,7 +61,6 @@ DialogBaseClass::DialogBaseClass (int res_id)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~DialogBaseClass
@@ -75,7 +71,6 @@ DialogBaseClass::~DialogBaseClass (void)
 	Free_Controls ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -264,7 +259,6 @@ DialogBaseClass::Start_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	End_Dialog
@@ -303,7 +297,6 @@ DialogBaseClass::End_Dialog (void)
 	DialogMgrClass::UnRegister_Dialog (this);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -344,7 +337,6 @@ DialogBaseClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -379,7 +371,6 @@ DialogBaseClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Enable_Dlg_Item
@@ -402,7 +393,6 @@ DialogBaseClass::Enable_Dlg_Item (int id, bool onoff)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -429,8 +419,6 @@ DialogBaseClass::Is_Dlg_Item_Enabled (int id)
 	return retval;
 }
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Dlg_Item
@@ -454,7 +442,6 @@ DialogBaseClass::Get_Dlg_Item (int id) const
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -481,7 +468,6 @@ DialogBaseClass::Get_Dlg_Item_Text (int id) const
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Dlg_Item_Text
@@ -504,7 +490,6 @@ DialogBaseClass::Set_Dlg_Item_Text (int id, const WCHAR *text)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -536,7 +521,6 @@ DialogBaseClass::Get_Dlg_Item_Int (int id) const
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Dlg_Item_Int
@@ -565,7 +549,6 @@ DialogBaseClass::Set_Dlg_Item_Int (int id, int value)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -597,7 +580,6 @@ DialogBaseClass::Get_Dlg_Item_Float (int id) const
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Dlg_Item_Float
@@ -627,7 +609,6 @@ DialogBaseClass::Set_Dlg_Item_Float (int id, float value)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Check_Dlg_Button
@@ -650,7 +631,6 @@ DialogBaseClass::Check_Dlg_Button (int id, bool onoff)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -677,7 +657,6 @@ DialogBaseClass::Is_Dlg_Button_Checked (int id) const
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Free_Controls
@@ -701,7 +680,6 @@ DialogBaseClass::Free_Controls (void)
 	LastFocusControl = NULL;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -775,7 +753,6 @@ DialogBaseClass::Send_Mouse_Input (DialogControlClass *control, const Vector2 &m
 
 	return;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -875,7 +852,6 @@ DialogBaseClass::Update_Mouse_State (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -893,7 +869,6 @@ DialogBaseClass::On_Command (int ctrl_id, int message_id, DWORD param)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -914,7 +889,6 @@ DialogBaseClass::On_Activate (bool onoff)
 				break;
 			}
 		}
-
 
 		//
 		//	Let go of the currently focus'd control
@@ -940,7 +914,6 @@ DialogBaseClass::On_Activate (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Is_Active
@@ -951,7 +924,6 @@ DialogBaseClass::Is_Active (void)
 {
 	return (DialogMgrClass::Get_Active_Dialog () == this);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1024,7 +996,6 @@ DialogBaseClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Key_Up
@@ -1050,7 +1021,6 @@ DialogBaseClass::On_Key_Up (uint32 key_id)
 	Release_Ref ();
 	return handled;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1080,7 +1050,6 @@ DialogBaseClass::On_Unicode_Char(uint16 unicode)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Next_Control
@@ -1107,7 +1076,6 @@ DialogBaseClass::Find_Next_Control
 	int focus_index		= max (control_list.ID (control), 0);
 	int new_focus_index	= -1;
 	int inc					= (direction < 0) ? -1 : 1;
-
 
 	//
 	//	Find the next control in the sequence
@@ -1141,7 +1109,6 @@ DialogBaseClass::Find_Next_Control
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1243,7 +1210,6 @@ DialogBaseClass::Find_Next_Group_Control
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Control_Index
@@ -1254,7 +1220,6 @@ DialogBaseClass::Find_Control_Index (DialogControlClass *control)
 {
 	return ControlList.ID (control);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1275,7 +1240,6 @@ DialogBaseClass::Add_Control (DialogControlClass *control)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1312,7 +1276,6 @@ DialogBaseClass::Remove_Control (DialogControlClass *control)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1352,7 +1315,6 @@ DialogBaseClass::Find_Control (const Vector2 &mouse_pos)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Focus_Control
@@ -1376,7 +1338,6 @@ DialogBaseClass::Find_Focus_Control (void)
 	return focus_index;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Child_Dialog
@@ -1396,7 +1357,6 @@ DialogBaseClass::Add_Child_Dialog (ChildDialogClass *child)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1443,7 +1403,6 @@ DialogBaseClass::Remove_Child_Dialog (ChildDialogClass *child)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Build_Control_List
@@ -1472,7 +1431,6 @@ DialogBaseClass::Build_Control_List (CONTROL_LIST &list)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1522,7 +1480,6 @@ DialogBaseClass::Set_Rect (const RectClass &rect)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -1539,7 +1496,6 @@ DialogBaseClass::On_Init_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1572,7 +1528,6 @@ DialogBaseClass::Set_Default_Focus (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

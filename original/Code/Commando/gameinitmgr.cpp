@@ -28,7 +28,6 @@
 #include "apppacketstats.h"
 #include "packetmgr.h"
 #include "gamesideservercontrol.h"
-#include "slavemaster.h"
 #include "hud.h"
 #include "serversettings.h"
 #include "specialbuilds.h"
@@ -80,15 +79,15 @@ GameInitMgrClass::Start_Game (const char *map_name, int teamChoice)
 
 	// NOTE: Multi-play does not need this fix because it does not sound page swap.
 	if (IS_SOLOPLAY) {
-	
+
 		// IML: First, allow a short period to process any outstanding sound effects that may have
 		// been started by the caller.
 		time = TIMEGETTIME();
 		while (TIMEGETTIME() - time < PRE_SERVICE_TIME) {
 			WWAudioClass::Get_Instance ()->On_Frame_Update (0);
 		}
-		
- 		// IML: Ensure that there are no sound effects lingering on any playlist. 
+
+ 		// IML: Ensure that there are no sound effects lingering on any playlist.
 		WWAudioClass::Get_Instance ()->Flush_Playlist();
 
 		// IML: Allow audio system to clean-up after flush.
@@ -211,7 +210,7 @@ GameInitMgrClass::End_Game (void)
 			WWAudioClass::Get_Instance ()->On_Frame_Update (0);
 		}
 
-		// IML: Ensure that there are no sound effects lingering on any playlist. 
+		// IML: Ensure that there are no sound effects lingering on any playlist.
 		WWAudioClass::Get_Instance ()->Flush_Playlist();
 
 		// IML: Allow audio system to clean-up after flush.
@@ -252,11 +251,6 @@ GameInitMgrClass::End_Game (void)
 	//	Notify the game data object that the game is over
 	//
 	cGameData* theGame = PTheGameData;
-
-	//
-	// Shut down slave game servers.
-	//
-	SlaveMaster.Shutdown_Slaves();
 
 	//
 	// Stop listening for server control messages.

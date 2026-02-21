@@ -502,14 +502,12 @@ protected:
 	friend class DX8VertexBufferClass;
 };
 
-
 WWINLINE void DX8Wrapper::_Set_DX8_Transform(D3DTRANSFORMSTATETYPE transform,const Matrix4& m)
 {
 	SNAPSHOT_SAY(("DX8 - SetTransform\n"));
 	DX8_RECORD_MATRIX_CHANGE();
 	DX8CALL(SetTransform(transform,(D3DMATRIX*)&m));
 }
-
 
 WWINLINE void DX8Wrapper::_Set_DX8_Transform(D3DTRANSFORMSTATETYPE transform,const Matrix3D& m)
 {
@@ -740,7 +738,6 @@ WWINLINE unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4& color)
 
 #endif
 
-
 WWINLINE void DX8Wrapper::Set_Alpha (const float alpha, unsigned int &color)
 {
 	unsigned char *component = (unsigned char*) &color;
@@ -951,7 +948,6 @@ WWINLINE bool DX8Wrapper::Is_Light_Enabled(unsigned index)
 	return render_state.LightEnable[index];
 }
 
-
 WWINLINE void DX8Wrapper::Set_Render_State(const RenderStateStruct& state)
 {
 	if (render_state.index_buffer) {
@@ -990,7 +986,6 @@ WWINLINE void DX8Wrapper::Release_Render_State()
 	for (unsigned i=0;i<MAX_TEXTURE_STAGES;++i) REF_PTR_RELEASE(render_state.Textures[i]);
 }
 
-
 WWINLINE RenderStateStruct::RenderStateStruct()
 	:
 	material(0),
@@ -1007,7 +1002,6 @@ WWINLINE RenderStateStruct::~RenderStateStruct()
 	REF_PTR_RELEASE(index_buffer);
 	for (unsigned i=0;i<MAX_TEXTURE_STAGES;++i) REF_PTR_RELEASE(Textures[i]);
 }
-
 
 WWINLINE RenderStateStruct& RenderStateStruct::operator= (const RenderStateStruct& src)
 {
@@ -1045,6 +1039,5 @@ WWINLINE RenderStateStruct& RenderStateStruct::operator= (const RenderStateStruc
 
 	return *this;
 }
-
 
 #endif

@@ -1,7 +1,6 @@
 #include "networkobjectfactory.h"
 #include "networkobjectfactorymgr.h"
 
-
 /////////////////////////////////////////////////////////
 //
 //	NetworkObjectFactoryClass
@@ -14,7 +13,6 @@ NetworkObjectFactoryClass::NetworkObjectFactoryClass (void)	:
 	NetworkObjectFactoryMgrClass::Register_Factory (this);
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////
 //

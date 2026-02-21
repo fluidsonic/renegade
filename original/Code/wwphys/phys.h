@@ -21,7 +21,6 @@
 
 #include "umbrasupport.h"
 
-
 class	CullSystemClass;
 class	CullLinkClass;
 class MonoClass;
@@ -74,9 +73,6 @@ class PhysDefClass;
 namespace Umbra { class Object; }
 #endif
 
-
-
-
 /*
 ** Macros for rendering debug widgets.  In the release build, these will automatically
 ** be removed.  These macros can be used inside a member function of any physics object
@@ -87,8 +83,6 @@ namespace Umbra { class Object; }
 #define DEBUG_RENDER_AABOX(box,c,o)
 #define DEBUG_RENDER_OBBOX(box,c,o)
 #define DEBUG_RENDER_AXES(tm,c)		
-
-
 
 /***************************************************************************************
 
@@ -107,12 +101,10 @@ Physics Class Hierarchy (Pre-Apr 98):
                             |                           |                         |
                       WheeledPhysClass           TrackedPhysClass          HoverPhysClass
 
-
   
 
 Physics Class Hierarchy (Apr 98):
 ---------------------------------
-
 
   MoveableObjClass   RefCountClass  CollideableObjClass
          |                 |                |
@@ -152,7 +144,6 @@ Physics Class Hierarchy (Apr 98):
 	- A lot of things will be Phys4Classes, these are axis-aligned boxes to
 	the collision system.  They can move in x,y, and z and rotate inside their box
 
-
 Physics Class Hierarchy (Sept 98):
 ----------------------------------
 
@@ -162,7 +153,6 @@ Physics Class Hierarchy (Sept 98):
   main focus of the lowest levels of the Phys class hierarchy.  Wrote a new base
   class 'PhysClass' which everything will be derived from.  It must be as lightweight
   as possible since now everything rendered in the game scene must be a PhysClass.
-
 
 							PhysClass
 								 |
@@ -174,8 +164,6 @@ Physics Class Hierarchy (Sept 98):
 														Projectile			Controllable		
 								
 																				Char		Vehicle    
-
-
 
 Dec 1, 1998
 
@@ -221,10 +209,7 @@ August 29, 2000
 	Adding  Export_State,Import_State functions which can be used by the App to do 
 	network communication of physics object states.
 
-
 ****************************************************************************************/
-
-
 
 /**
 ** PhysClass
@@ -388,7 +373,6 @@ public:
 	void								Set_Collision_Group(unsigned char group)				{ group &= COLLISION_MASK; Flags &= ~COLLISION_MASK; Flags |= group; }
 	unsigned char					Get_Collision_Group(void) const							{ return Flags & COLLISION_MASK; }
 
-
 	/*
 	** The IGNOREME state is basically used when the object is processing its move.  It
 	** is a way of temporarily making the collision system ignore an object (so you don't
@@ -397,7 +381,6 @@ public:
 	void								Inc_Ignore_Counter(void);
 	void								Dec_Ignore_Counter(void);
 	bool								Is_Ignore_Me(void) const									{ return ((Flags & IGNORE_MASK) > 0); }
-
 
 	/*
 	** The IMMOVABLE state is used to turn off an object's simulation.
@@ -672,7 +655,6 @@ private:
 	PhysClass & operator = (const PhysClass & src);
 };
 
-
 inline void PhysClass::Inc_Ignore_Counter(void)		
 { 
 	int count = (Flags & IGNORE_MASK) >> IGNORE_SHIFT;
@@ -688,7 +670,6 @@ inline void PhysClass::Dec_Ignore_Counter(void)
 	Flags &= ~IGNORE_MASK;
 	Flags |= (count << IGNORE_SHIFT);
 }
-
 
 inline CollisionReactionType PhysClass::Collision_Occurred(CollisionEventClass & event)
 { 
@@ -725,7 +706,6 @@ inline bool PhysClass::Is_Pre_Lit(void)
 	}
 }
 
-
 /**
 ** PhysDefClass - Initialization structure for a PhysClass
 */
@@ -760,7 +740,5 @@ protected:
 	
 	friend class PhysClass;
 };
-
-
 
 #endif

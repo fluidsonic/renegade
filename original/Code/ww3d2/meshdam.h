@@ -1,6 +1,5 @@
 #if 0
 
-
 #ifndef MESHDAM_H
 #define MESHDAM_H
 
@@ -30,7 +29,6 @@ struct DamageColorStruct
 	RGBStruct	Color0;		// original color.
 	RGBStruct	Color1;		// damaged color.
 };
-
 
 /*
 ** DamageClass - this class encapsulates the information needed
@@ -62,8 +60,6 @@ protected:
 	friend class MeshClass;
 };
 
-
 #endif
-
 
 #endif //0

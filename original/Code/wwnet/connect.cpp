@@ -29,7 +29,6 @@
 #include "packetmgr.h"
 #include "bwbalance.h"
 
-
 //
 // class statics
 //
@@ -38,7 +37,6 @@ UINT cConnection::TotalCompressedBytesSent		= 0;
 UINT cConnection::TotalUncompressedBytesSent		= 0;
 
 static const int		INVALID_RHOST_ID			= -1;
-
 
 //#ifdef WWDEBUG
 /***********************************************************************************************
@@ -68,7 +66,6 @@ char * Addr_As_String(sockaddr_in *addr)
 	return(_string);
 }
 //#endif //WWDEBUG
-
 
 //------------------------------------------------------------------------------------
 cConnection::cConnection() :
@@ -233,8 +230,6 @@ void cConnection::Init_As_Client(LPSOCKADDR_IN p_server_address, unsigned short 
 void cConnection::Init_As_Client(ULONG server_ip, USHORT server_port, unsigned short my_port)
 {
 
-
-
    SOCKADDR_IN server_address;
 	ZeroMemory(&server_address, sizeof(server_address));
 
@@ -287,7 +282,6 @@ void cConnection::Init_As_Server(USHORT server_port, int max_players,
             num_tries++;
          }
       } while (!is_bound && num_tries < 50 && server_port <= MAX_SERVER_PORT);
-
 
 		// WOL NAT removed — no firewall notification needed
    }
@@ -436,7 +430,6 @@ void cConnection::Set_Packet_Loss(double percent_lost)
    // as well as for non-established connections
    //
 
-
    SimulatedPacketLossPerRANDMAX = (UINT) cMathUtil::Round(
 		percent_lost / 100.0 * RAND_MAX);
 
@@ -449,7 +442,6 @@ void cConnection::Set_Packet_Duplication(double percent_duplicated)
    // This sets simultedpacketloss to a common value for all rhosts
    // as well as for non-established connections
    //
-
 
    //
    // Globally:
@@ -475,7 +467,6 @@ int cConnection::Single_Player_recvfrom(char * data)
    //
    // TSS - this relies on doing all recvs in one shot
    //
-
 
    int ret_code;
 
@@ -513,11 +504,9 @@ bool cConnection::Receive_Packet()
 {
 	//
 
-
    cPacket packet;
 
 	int ret_code = 0;
-
 
    if (ret_code == 0) {
 		ret_code = Receive_Wrapper(packet);
@@ -529,7 +518,6 @@ bool cConnection::Receive_Packet()
 			return(false);
 		}
 
-
 #ifndef WRAPPER_CRC
    	if (!packet.Is_Crc_Correct()) {
       	packet.Flush();
@@ -540,7 +528,6 @@ bool cConnection::Receive_Packet()
 	}
 
 	// WOL NAT firewall probe packets removed
-
 
 	//
 	// A ret_code of zero indicates either:
@@ -626,7 +613,6 @@ bool cConnection::Receive_Packet()
 
       case PACKETTYPE_CONNECT_CS: {
 
-
             //
             // Reliable message, ack it.
             //
@@ -640,7 +626,6 @@ bool cConnection::Receive_Packet()
       case PACKETTYPE_ACCEPT_SC: {
 				//
 
-
             if (LocalId != ID_UNKNOWN) {
                //
                // This is a duplicate packet... discard here.
@@ -649,7 +634,6 @@ bool cConnection::Receive_Packet()
                Send_Ack(p_from_address, packet_id);
                packet.Flush();
             } else {
-
 
 					packet.Get(LocalId); // This is where we learn our id
                Send_Ack(p_from_address, packet_id);
@@ -674,9 +658,7 @@ bool cConnection::Receive_Packet()
 
       case PACKETTYPE_REFUSAL_SC: {
 
-
             if (LocalId == ID_UNKNOWN) {
-
 
                if (packet_id > HighestRefusalPacketRcvId) {
                   HighestRefusalPacketRcvId = packet_id;
@@ -753,7 +735,6 @@ bool cConnection::Receive_Packet()
 			   return true;
          }
 
-
       case PACKETTYPE_RELIABLE: {
 
 				//
@@ -817,7 +798,6 @@ bool cConnection::Receive_Packet()
 void cConnection::Process_Connection_Request(cPacket & packet)
 {
 	LPSOCKADDR_IN p_address = &packet.Get_From_Address_Wrapper()->FromAddress;
-
 
    int new_rhost_id = ID_UNKNOWN;
 
@@ -883,7 +863,6 @@ int cConnection::Single_Player_sendto(cPacket & packet)
 {
 	//
 
-
 	SList<cPacket> * p_packet_list;
    if (IsServer) {
 		p_packet_list = cSinglePlayerData::Get_Input_Packet_List(CLIENT_LIST);
@@ -918,7 +897,6 @@ int cConnection::Address_To_Rhostid(const SOCKADDR_IN* p_address)
 
    return INVALID_RHOST_ID;
 }
-
 
 //#include "packetmgr.h"
 //unsigned char last_packet[1024];
@@ -998,7 +976,6 @@ int cConnection::Send_Wrapper(cPacket & packet, LPSOCKADDR_IN p_address)
 
    bool is_lost = false;
 
-
    int ret_code = 0;
    if (is_lost) {
       ret_code = full_packet.Get_Compressed_Size_Bytes(); // just don't send !
@@ -1055,7 +1032,6 @@ int cConnection::Low_Level_Receive_Wrapper(cPacket & packet)
 					//
 					if (CanProcess) {
 
-
 						for (int i=MinRHost ; i<MaxRHost ; i++) {
 							cRemoteHost *rhost_ptr = PRHost[i];
 
@@ -1081,8 +1057,6 @@ int cConnection::Low_Level_Receive_Wrapper(cPacket & packet)
 				break;
 			}
 		}
-
-
 
 		if (bytes) {
 			sockaddr_in *addr_ptr = (LPSOCKADDR_IN) &packet.Get_From_Address_Wrapper()->FromAddress;
@@ -1203,7 +1177,6 @@ void cConnection::Handle_Send_Resource_Failure(int rhost_id)
 			WSA_CHECK(::getsockopt(Sock, SOL_SOCKET, SO_SNDBUF,
 				(char *)&newbuffersize, &len));
 
-
          if (failure_ratio > 0.05f) {
 				time_of_last_reset = time_now;
          }
@@ -1223,7 +1196,6 @@ void cConnection::Handle_Send_Resource_Failure(int rhost_id)
 //------------------------------------------------------------------------------------
 void cConnection::Send_Packet_To_Address(cPacket & packet, LPSOCKADDR_IN p_address)
 {
-
 
 	// TSS - need reverse lookup of addressee from address
    int rhost_id = Address_To_Rhostid(p_address);
@@ -1417,8 +1389,6 @@ void cConnection::Send_Refusal_Sc(LPSOCKADDR_IN p_address, REFUSAL_CODE refusal_
    // This is a refusal originating from the wwnet layer
    //
 
-
-
    //
    // The id is not per-client... because we don't hold per client information
    // for this guy.
@@ -1487,7 +1457,6 @@ void cConnection::Send_Keepalives()
    /////// Keepalives are only sent when we have heard nothing from the rhost for a while.
    //
 
-
    if (LocalId != ID_UNKNOWN) {
       for (int rhost_id = MinRHost; rhost_id <= MaxRHost; rhost_id++) {
 		   if (PRHost[rhost_id] != NULL && ThisFrameTimeMs -
@@ -1499,7 +1468,6 @@ void cConnection::Send_Keepalives()
 				PRHost[rhost_id]->Set_Last_Service_Count(ServiceCount);
 
             PRHost[rhost_id]->Set_Last_Keepalive_Time_Ms(ThisFrameTimeMs);
-
 
             //
 
@@ -1544,7 +1512,6 @@ bool cConnection::Demultiplex_R_Or_U_Packet(cPacket * p_packet, int rhost_id)
 
    bool is_aborted;
 
-
    if (IsServer) {
 		//
 		//Server_Packet_Handler(*p_packet, rhost_id);
@@ -1572,7 +1539,6 @@ bool cConnection::Demultiplex_R_Or_U_Packet(cPacket * p_packet, int rhost_id)
 void cConnection::Service_Read()
 {
 	//
-
 
    CombinedStats.StatSample[STAT_ServiceCount]++;
 
@@ -1671,7 +1637,6 @@ void cConnection::Service_Read()
 						break;
 					}
 					*/
-
 
 					if (p_packet->Get_Type() == PACKETTYPE_RELIABLE) {
                   bool abort = Demultiplex_R_Or_U_Packet(p_packet, rhost_id);
@@ -1781,7 +1746,6 @@ void cConnection::Service_Read()
 	if (time_spent > cNetUtil::Get_Max_Receive_Time_Ms()) {
    }
 	*/
-
 
 	if (IsServer) {
 		//
@@ -1996,7 +1960,6 @@ void cConnection::Service_Send(bool is_urgent)
                   // Define the connection as broken
                   //
 
-
                   Destroy_Connection(rhost_id);
                   //
 
@@ -2018,7 +1981,6 @@ void cConnection::Service_Send(bool is_urgent)
 	}
 
 	IsBadConnection = any_bad;
-
 
 	//
    // Unreliable sends and resends
@@ -2077,7 +2039,6 @@ void cConnection::Service_Send(bool is_urgent)
    // Send keepalives if necessary
    //
    Send_Keepalives();
-
 
 	//
 	// Monkey with the stats for a while
@@ -2197,7 +2158,6 @@ void cConnection::Set_Rhost_Is_In_Game(int id, bool state)
 	}
 }
 
-
 void cConnection::Set_Rhost_Expect_Packet_Flood(int id, bool state)
 {
 	if (IsServer) {
@@ -2209,8 +2169,6 @@ void cConnection::Set_Rhost_Expect_Packet_Flood(int id, bool state)
 		}
 	}
 }
-
-
 
 //-----------------------------------------------------------------------------
 bool cConnection::Is_Time_To_Resend_Packet_To_Remote_Host(const cPacket *packet, cRemoteHost *rhost)
@@ -2256,8 +2214,6 @@ bool cConnection::Is_Time_To_Resend_Packet_To_Remote_Host(const cPacket *packet,
 	}
 	return(false);
 }
-
-
 
 //-----------------------------------------------------------------------------
 bool cConnection::Is_Packet_Too_Old(const cPacket *packet, cRemoteHost *rhost)
@@ -2314,20 +2270,12 @@ bool cConnection::Is_Packet_Too_Old(const cPacket *packet, cRemoteHost *rhost)
 	return(false);
 }
 
-
-
 //-----------------------------------------------------------------------------
 void cConnection::Allow_Extra_Timeout_For_Loading(void)
 {
 	ExtraTimeoutTime = cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE;
 	ExtraTimeoutTimeStarted = TIMEGETTIME();
 }
-
-
-
-
-
-
 
 	//KEEPALIVE_TIMEOUT_MS(cNetUtil::Get_Default_Keepalive_Timeout_Ms()),
 	//MAX_RESENDS(cNetUtil::Get_Default_Max_Resends()),

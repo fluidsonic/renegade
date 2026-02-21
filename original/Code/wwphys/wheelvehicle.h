@@ -104,7 +104,6 @@ protected:
 	friend class WheeledVehicleClass;
 };
 
-
 /*
 ** Inline functions
 */
@@ -113,7 +112,6 @@ inline const WheeledVehicleDefClass * WheeledVehicleClass::Get_WheeledVehicleDef
 {
 	return (WheeledVehicleDefClass *)Definition;
 }
-
 
 #endif
 

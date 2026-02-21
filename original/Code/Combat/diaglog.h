@@ -5,7 +5,6 @@
 	#include "always.h"
 #endif
 
-
 #define	DIAG_LOG( a ) 		DiagLogClass::Log_Timed a 
 
 /*

@@ -60,4 +60,3 @@ class cMsgStat
 
 #endif // MSGSTAT_H
 
-

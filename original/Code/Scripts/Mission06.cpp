@@ -4,8 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
-
 // ************************* M06B
 // Objective Controller
 DECLARE_SCRIPT(M06_Objective_Controller, "") // 100018
@@ -142,7 +140,6 @@ DECLARE_SCRIPT(M06_Objective_Controller, "") // 100018
 						Commands->Set_Objective_HUD_Info_Position(609, 90.0f, "POG_M08_2_02.tga", IDS_POG_DISABLE, Commands->Get_Position (object));
 					}
 				}
-
 
 				
 			}
@@ -481,8 +478,6 @@ DECLARE_SCRIPT(M06_Sydney_Mobius, "")
 			
 			}
 
-
-
 		}
 		if(type == M06_MOVE_SYDNEY && !dont_move)
 		{
@@ -596,7 +591,6 @@ DECLARE_SCRIPT(M06_MidtroB_Explosion_Controller, "Loc0_ID=0:int, Loc1_ID=0:int, 
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M06_Activate_Midtro, "")
 {
@@ -824,7 +818,6 @@ DECLARE_SCRIPT(M06_GDI_Prisoner, "")
 		Commands->Enable_HUD_Pokable_Indicator( obj, true );
 	}
 
-
 	void Poked(GameObject * obj, GameObject * poker)
 	{
 		if ((Commands->Is_A_Star(poker)) && (!conversation) && (!poked))
@@ -868,7 +861,6 @@ DECLARE_SCRIPT(M06_GDI_Prisoner, "")
 
 			Commands->Start_Timer (obj, this, 10.0f, ESCAPE_CHATEAU);
 
-
 		}
 	}
 
@@ -898,7 +890,6 @@ DECLARE_SCRIPT(M06_Activate_Secret_Door, "Secret_Door_ID=0:int")
 		SAVE_VARIABLE( already_poked, 1 );
 		
 	}
-
 
 	void Created(GameObject * obj)
 	{
@@ -1299,7 +1290,6 @@ DECLARE_SCRIPT(M06_Escort_Tank, "")
 		
 	}
 
-
 	void Enemy_Seen(GameObject * obj, GameObject *enemy )
 	{
 		if(!attacking)
@@ -1486,7 +1476,6 @@ DECLARE_SCRIPT(M06_Alarm_Behavior, "Alarm_Enemy_Seen=0.0:float, Alarm_Damaged=0.
 		SAVE_VARIABLE( havoc_id, 5 );
 		SAVE_VARIABLE( attacking_havoc, 6 );
 	}
-
 
 	void Created(GameObject * obj)
 	{
@@ -1760,7 +1749,6 @@ DECLARE_SCRIPT(M06_Alarm_Switch, "")
 	{
 		SAVE_VARIABLE( destroyed, 1 );
 	}
-
 
 	void Created(GameObject * obj)
 	{
@@ -2458,7 +2446,6 @@ DECLARE_SCRIPT(M06_Lab_Guard, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M06_Nod_Tower, "")
 {
 	
@@ -2523,7 +2510,6 @@ DECLARE_SCRIPT(M06_Courtyard_Controller, "")
 		//		Commands->Attach_Script(search_apache, "M06_Courtyard_Apache", "");
 			}
 
-
 		}
 		
 	}
@@ -2564,7 +2550,6 @@ DECLARE_SCRIPT(M06_Hedgemaze_Controller, "")
 
 				Commands->Create_Logical_Sound(obj, M06_DISABLE_HEDGEMAZE_SPAWN, Vector3 (0,0,0), 2500.0f);
 			}
-
 
 		}
 		
@@ -2626,7 +2611,6 @@ DECLARE_SCRIPT(M06_Barracks_Controller, "")
 				
 				Commands->Create_Logical_Sound(obj, M06_DISABLE_BARRACKS_SPAWN, Vector3 (0,0,0), 2500.0f);
 			}
-
 
 		}
 		
@@ -3123,7 +3107,6 @@ DECLARE_SCRIPT(M06_Enable_Lab, "")
 		}
 	}
 
-
 };
 
 DECLARE_SCRIPT(M06_Alarm_Engineer, "")
@@ -3145,7 +3128,6 @@ DECLARE_SCRIPT(M06_Alarm_Engineer, "")
 		broken_alarm_id = 0;
 		fixing_alarm = false;
 	}
-
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
@@ -3600,7 +3582,6 @@ DECLARE_SCRIPT(M06_Assistance_Farmer_DLS, "")
 		
 	}
 
-
 };
 
 DECLARE_SCRIPT(M06_Greenhouse_Shaft_Unit, "")
@@ -3949,7 +3930,6 @@ DECLARE_SCRIPT(M06_Enable_Floor2_Library, "")
 		}
 	}
 
-
 	
 };
 
@@ -4027,7 +4007,6 @@ DECLARE_SCRIPT(M06_Enable_Floor2_Conference, "")
 
 		}
 	}
-
 
 	
 };
@@ -4147,7 +4126,6 @@ DECLARE_SCRIPT(M06_Enable_Warroom_DoorGuard, "")
 		}
 	}
 
-
 	
 };
 
@@ -4226,7 +4204,6 @@ DECLARE_SCRIPT(M06_Enable_WarRoom, "")
 			Commands->Attach_Script(kane, "M06_KaneHead", "");
 		}
 	}
-
 
 	
 };
@@ -4810,8 +4787,6 @@ DECLARE_SCRIPT(M06_North_Barracks_Unit, "")
 	}
 
 };
-
-
 
 DECLARE_SCRIPT (M06_Courtyard_Apache, "")
 {
@@ -5667,7 +5642,4 @@ DECLARE_SCRIPT(M06_Enable_Alarm_Objective, "")
 
 	
 };
-
-
-
 

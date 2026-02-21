@@ -15,7 +15,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 
-
 /////////////////////////////////////////////////////////////////////////////
 // Structures and typedefs
 /////////////////////////////////////////////////////////////////////////////
@@ -24,7 +23,6 @@ typedef struct _PERFORMANCE_SETTING
 	int ctrl_id;
 	int value;
 } PERFORMANCE_SETTING;
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -95,7 +93,6 @@ const int MAX_LOD_HIGH	= 10000;
 const int MAX_LOD_MED	= 5000;
 const int MAX_LOD_LOW	= 0;
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DlgConfigPerformanceTabClass
@@ -107,7 +104,6 @@ DlgConfigPerformanceTabClass::DlgConfigPerformanceTabClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~DlgConfigPerformanceTabClass
@@ -117,7 +113,6 @@ DlgConfigPerformanceTabClass::~DlgConfigPerformanceTabClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -143,7 +138,6 @@ DlgConfigPerformanceTabClass::On_Init_Dialog (void)
 	ChildDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -180,7 +174,6 @@ DlgConfigPerformanceTabClass::Build_Expert_Window_List (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Display_Expert_Settings
@@ -199,7 +192,6 @@ DlgConfigPerformanceTabClass::Display_Expert_Settings (bool onoff)
 
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -254,7 +246,6 @@ DlgConfigPerformanceTabClass::Setup_Controls (void)
 
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -327,7 +318,6 @@ DlgConfigPerformanceTabClass::Load_Values (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Determine_Performance_Setting
@@ -382,7 +372,6 @@ DlgConfigPerformanceTabClass::Determine_Performance_Setting (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -404,7 +393,6 @@ DlgConfigPerformanceTabClass::On_Command (int ctrl_id, int message_id, DWORD par
 	ChildDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -458,7 +446,6 @@ DlgConfigPerformanceTabClass::Get_Settings (DynamicVectorClass<int> &settings)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Update_Expert_Controls
@@ -502,7 +489,6 @@ DlgConfigPerformanceTabClass::Update_Expert_Controls (int level)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_SliderCtrl_Pos_Changed
@@ -522,7 +508,6 @@ DlgConfigPerformanceTabClass::On_SliderCtrl_Pos_Changed
 
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

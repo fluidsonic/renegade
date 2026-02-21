@@ -40,7 +40,6 @@ private:
 
 };
 
-
 /**
 ** TimedDecorationPhysDefClass
 ** Definition data structure for TimedDecorationPhysClass
@@ -76,6 +75,5 @@ protected:
 
 	friend class TimedDecorationPhysClass;
 };
-
 
 #endif

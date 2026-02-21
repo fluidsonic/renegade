@@ -2,10 +2,8 @@
 #ifndef __HEALTHBARCTRL_H
 #define __HEALTHBARCTRL_H
 
-
 #include "render2d.h"
 #include "dialogcontrol.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -51,6 +49,5 @@ protected:
 	Render2DClass			TextureRenderer;
 	float						Percent;
 };
-
 
 #endif //__HEALTHBARCTRL_H

@@ -22,7 +22,6 @@ MultiplayOptionsMenuClass::MultiplayOptionsMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -56,7 +55,6 @@ MultiplayOptionsMenuClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -96,7 +94,6 @@ MultiplayOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

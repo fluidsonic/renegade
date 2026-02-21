@@ -43,4 +43,3 @@ template<typename T> class Signaler
 
 #endif // __SIGNALER_H__
 
-

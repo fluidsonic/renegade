@@ -1,7 +1,6 @@
 #ifndef LZOSTRAW_H
 #define LZOSTRAW_H
 
-
 #include	"straw.h"
 
 /*
@@ -62,6 +61,5 @@ class LZOStraw : public Straw
 		LZOStraw(LZOStraw & rvalue);
 		LZOStraw & operator = (LZOStraw const & pipe);
 };
-
 
 #endif

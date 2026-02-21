@@ -22,7 +22,6 @@
 #include "mousemgr.h"
 #include "directinput.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -31,7 +30,6 @@ enum
 	COL_OPTION,
 	COL_VALUE,
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -44,7 +42,6 @@ CNCServerInfoDialogClass::CNCServerInfoDialogClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~CNCServerInfoDialogClass
@@ -55,7 +52,6 @@ CNCServerInfoDialogClass::~CNCServerInfoDialogClass (void)
 	GameInitMgrClass::Continue_Game ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -136,7 +132,6 @@ CNCServerInfoDialogClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -155,5 +150,4 @@ CNCServerInfoDialogClass::On_Frame_Update (void)
 
 	return ;
 }
-
 

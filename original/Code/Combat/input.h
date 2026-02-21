@@ -14,7 +14,6 @@
 
 #include "widestring.h"
 
-
 /*
 **	Forward declarations
 */
@@ -210,7 +209,6 @@ typedef enum {
 
 } InputFunction;
 
-
 class	InputFunctionMode;
 class	InputFunctionModeState;
 
@@ -345,7 +343,6 @@ private:
 	static	short	Get_Key( const char *name );
 	static	const char * Get_Key_Name (short key_id);
 };
-
 
 inline float Input::Get_Amount( InputFunction function )
 {

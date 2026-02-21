@@ -56,7 +56,6 @@ DECLARE_SCRIPT(MDD_Objective_Controller, "")
 	// Param 3 = Convoy truck special - counting
 };
 
-
 DECLARE_SCRIPT (MDD_Respawn_Controller, "")
 {
 	bool active_area [M02_AREACOUNT];
@@ -670,7 +669,6 @@ Commands->Debug_Message (">>>>>>>>>>>>>>>> UNIT COUNT = %i, UNIT MAX = %i.\n",ar
 	}
 };
 
-
 DECLARE_SCRIPT (MDD_Nod_Soldier, "Area_Number:int,Area_Officer:int,Pre_Placed:int")
 {
 	Vector3 my_home_point;
@@ -1168,7 +1166,6 @@ DECLARE_SCRIPT (MDD_Nod_Soldier, "Area_Number:int,Area_Officer:int,Pre_Placed:in
 	}
 };
 
-
 // SOLDIER TYPE PARAMETERS FOR GDI
 // 1 = Rocket Soldier
 // 2 = Minigunner Officer
@@ -1334,7 +1331,6 @@ DECLARE_SCRIPT (MDD_GDI_Soldier, "Area_ID:int, Soldier_Type=0:int")
 	//DEMO
 };
 
-
 DECLARE_SCRIPT (MDD_Stationary_Vehicle,"Area_ID:int")
 {
 	void Created (GameObject* obj)
@@ -1406,7 +1402,6 @@ DECLARE_SCRIPT (MDD_Stationary_Vehicle,"Area_ID:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (MDD_Nod_Apache, "Area_ID:int")
 {
@@ -1582,7 +1577,6 @@ DECLARE_SCRIPT (MDD_Nod_Apache, "Area_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (MDD_Nod_Stealth, "")
 {
 	bool nofiring;
@@ -1649,7 +1643,6 @@ DECLARE_SCRIPT (MDD_Nod_Stealth, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (MDD_Flying_Vehicle, "Unit_ID:int")
 {
@@ -1747,7 +1740,6 @@ DECLARE_SCRIPT (MDD_Flying_Vehicle, "Unit_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (MDD_Commando, "")
 {
 	void Created (GameObject* obj)
@@ -1756,7 +1748,6 @@ DECLARE_SCRIPT (MDD_Commando, "")
 		Commands->Set_Shield_Type (obj, "Blamo");
 	}
 };
-
 
 DECLARE_SCRIPT (MDD_Havoc_Unit, "")
 {

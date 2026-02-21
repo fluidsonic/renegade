@@ -12,7 +12,6 @@ typedef union {
 	} QuadPart;
 } QuadValue;
 
-
 /***********************************************************************************************
  * Get_CPU_Rate -- Fetch the rate of CPU ticks per second.                                     *
  *                                                                                             *
@@ -46,15 +45,11 @@ unsigned long Get_CPU_Rate(unsigned long & high)
 	return(0);
 }
 
-
 unsigned long Get_CPU_Clock(unsigned long & high)
 {
 	high = 0;
 	return 0;
 }
-
-
-
 
 /*
 **
@@ -81,7 +76,5 @@ static unsigned long TSC_High;
 
 void RDTSC(void) { TSC_Low = 0; TSC_High = 0; }
 
-
 int Get_RDTSC_CPU_Speed(void) { return 0; }
-
 

@@ -12,7 +12,6 @@
 
 class RefCountClass;
 
-
 #ifndef NDEBUG
 
 struct ActiveRefStruct
@@ -31,7 +30,6 @@ struct ActiveRefStruct
 
 #endif
 
-
 /*
 ** Macros for setting and releasing a pointer to a ref counted object.
 ** If you have a member variable which can be pointed at a ref counted object and
@@ -40,7 +38,6 @@ struct ActiveRefStruct
 */
 #define REF_PTR_SET(dst,src)	{ if (src) (src)->Add_Ref(); if (dst) (dst)->Release_Ref(); (dst) = (src); }
 #define REF_PTR_RELEASE(x)		{ if (x) x->Release_Ref(); x = NULL; }
-
 
 /*
 **  Rules regarding the use of RefCountClass
@@ -113,7 +110,6 @@ public:
 																				assert(NumRefs >= 0); 
 																				if (NumRefs == 0) Delete_This(); 
 																			}
-
 
 	/*
 	** Check the number of references to this object.  
@@ -212,7 +208,5 @@ public:
 #endif
 
 };
-
-
 
 #endif

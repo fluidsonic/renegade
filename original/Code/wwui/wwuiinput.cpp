@@ -1,12 +1,10 @@
 #include "wwuiinput.h"
 #include "dialogmgr.h"
 
-
 WWUIInputClass::WWUIInputClass(void) :
 	mIMEManager(NULL)
 {
 }
-
 
 WWUIInputClass::~WWUIInputClass(void)
 {
@@ -14,7 +12,6 @@ WWUIInputClass::~WWUIInputClass(void)
 		mIMEManager->Release_Ref();
 	}
 }
-
 
 void WWUIInputClass::InitIME(HWND hwnd)
 {
@@ -28,7 +25,6 @@ void WWUIInputClass::InitIME(HWND hwnd)
 	}
 }
 
-
 IME::IMEManager* WWUIInputClass::GetIME(void) const
 {
 	if (mIMEManager) {
@@ -37,7 +33,6 @@ IME::IMEManager* WWUIInputClass::GetIME(void) const
 
 	return mIMEManager;
 }
-
 
 bool WWUIInputClass::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT& result)
 {
@@ -71,12 +66,10 @@ bool WWUIInputClass::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM l
 	return false;
 }
 
-
 void WWUIInputClass::HandleNotification(IME::UnicodeChar& unicode)
 {
 	DialogMgrClass::On_Unicode_Char(unicode.Subject());
 }
-
 
 void WWUIInputClass::HandleNotification(IME::IMEEvent& event)
 	{

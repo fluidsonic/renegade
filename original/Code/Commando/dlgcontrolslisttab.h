@@ -2,18 +2,15 @@
 #ifndef __DLGCONTROLSLISTTAB_H
 #define __DLGCONTROLSLISTTAB_H
 
-
 #include "childdialog.h"
 #include "resource.h"
 #include "vector.h"
 #include "dlgmessagebox.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class InputCtrlClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -74,7 +71,6 @@ protected:
 	int PendingFunctionID;
 	int PendingDIK_ID;
 };
-
 
 #endif //__DLGCONTROLSLISTTAB_H
 

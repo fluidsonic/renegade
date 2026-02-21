@@ -9,10 +9,6 @@
 
 #include "umbrasupport.h"
 
-
-
-
-
 /***********************************************************************************************
 **
 ** DynamicPhysClass Implementation
@@ -25,7 +21,6 @@ const int MIN_VIS_UPDATE_TICK_DELAY = 250;  // min number of milliseconds betwee
 bool DynamicPhysClass::_DisableDynamicPhysSimulation		= false;
 bool DynamicPhysClass::_DisableDynamicPhysRendering		= false;
 
-
 /*
 ** Chunk ID's used by DynamicPhysClass
 */
@@ -33,7 +28,6 @@ enum
 {
 	DYNAMICPHYS_CHUNK_PHYS			= 813001100,
 };
-
 
 DynamicPhysClass::DynamicPhysClass(void) :
 	DirtyVisObjectID(true),
@@ -130,7 +124,6 @@ void DynamicPhysClass::Internal_Update_Visibility_Status(void)
 
 }
 
-
 bool DynamicPhysClass::Save(ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk(DYNAMICPHYS_CHUNK_PHYS);
@@ -168,8 +161,6 @@ void DynamicPhysClass::On_Post_Load(void)
 	Update_Visibility_Status();
 }
 
-
-
 /***********************************************************************************************
 **
 ** DynamicPhysDefClass Implementation
@@ -182,7 +173,6 @@ enum
 {
 	DYNAMICPHYSDEF_CHUNK_PHYSDEF	= 813001104,			// parent class data.
 };
-
 
 DynamicPhysDefClass::DynamicPhysDefClass(void)
 {

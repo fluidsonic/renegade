@@ -3,7 +3,6 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 #include "bitstream.h"
-#include "debug.h"
 #include "hanim.h"
 #include "combat.h"
 #include "smartgameobj.h"

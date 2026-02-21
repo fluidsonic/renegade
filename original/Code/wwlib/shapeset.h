@@ -98,7 +98,6 @@ class ShapeSet
 					SFLAG_RLE=0x02					// Is it RLE compressed?
 				};
 
-
 				/*
 				**	Size of the data for this frame.
 				*/
@@ -137,7 +136,6 @@ class ShapeSet
 		ShapeSet const & operator = (ShapeSet const & rvalue);
 };
 
-
 /*********************************************************************************************** 
  * ShapeSet::Get_Data -- Fetches pointer to raw shape data.                                    * 
  *                                                                                             * 
@@ -164,7 +162,6 @@ inline void * ShapeSet::Get_Data(int shape) const
 	return(NULL);
 }
 
-
 /*********************************************************************************************** 
  * ShapeSet::Get_Rect -- Fetch the sub-rectangle of a shape.                                   * 
  *                                                                                             * 
@@ -189,7 +186,6 @@ inline Rect ShapeSet::Get_Rect(int shape) const
 	}
 	return(Rect(0,0,0,0));
 }
-
 
 /*********************************************************************************************** 
  * ShapeSet::Is_Transparent -- Is the specified shape containing transparent pixels?           * 
@@ -216,7 +212,6 @@ inline bool ShapeSet::Is_Transparent(int shape) const
 	return(false);
 }
 
-
 inline bool ShapeSet::Is_RLE_Compressed(int shape) const
 {
 	ShapeRecord const * record = Fetch_Record_Pointer(shape);
@@ -225,7 +220,5 @@ inline bool ShapeSet::Is_RLE_Compressed(int shape) const
 	}
 	return(false);
 }
-
-
 
 #endif

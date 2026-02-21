@@ -1,7 +1,6 @@
 #include "mutex.h"
 #include <windows.h>
 
-
 // ----------------------------------------------------------------------------
 
 MutexClass::MutexClass(const char* name) : handle(NULL), locked(false)
@@ -57,12 +56,6 @@ MutexClass::LockClass::~LockClass()
 	if (!failed) mutex.Unlock();
 }
 
-
-
-
-
-
-
 // ----------------------------------------------------------------------------
 
 CriticalSectionClass::CriticalSectionClass() : handle(NULL), locked(false)
@@ -116,5 +109,4 @@ CriticalSectionClass::LockClass::~LockClass()
 {
 	CriticalSection.Unlock();
 }
-
 

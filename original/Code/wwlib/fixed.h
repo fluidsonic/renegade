@@ -177,5 +177,4 @@ class fixed
 		} Data;
 };
 
-
 #endif

@@ -4,7 +4,6 @@
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
-#include "debug.h"
 #include "basecontroller.h"
 #include "combat.h"
 

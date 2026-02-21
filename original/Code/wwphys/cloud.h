@@ -28,7 +28,6 @@ protected:
 
 };
 
-
 CloudShadowClass::CloudShadowClass(void) :
 	ShadowTexture(NULL),
 	TextureWidth(0),

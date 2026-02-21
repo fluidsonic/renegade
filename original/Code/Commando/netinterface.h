@@ -45,7 +45,4 @@ class cNetInterface
 //-----------------------------------------------------------------------------
 #endif // NETINTERFACE_H
 
-
-
-
       //static WideStringClass &	Get_Nickname(void);

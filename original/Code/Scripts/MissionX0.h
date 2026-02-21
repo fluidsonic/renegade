@@ -5,7 +5,6 @@
 
 #include "toolkit.h"
 
-
 // Predefined Constants
 
 // Public Variables
@@ -354,5 +353,4 @@ enum
 };
 
 #endif // _MISSION4_H_
-
 

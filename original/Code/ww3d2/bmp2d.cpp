@@ -86,7 +86,6 @@ Bitmap2DObjClass::Bitmap2DObjClass
 
 	Enable_Sort();
 
-
 	// If we want to be able to colorize this bitmap later (by setting
 	// emissive color for the vertex material, or via a vertex emissive color
 	// array) we need to enable the primary gradient in the shader (it is

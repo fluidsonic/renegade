@@ -105,7 +105,6 @@ private:
 	friend class HRawAnimClass;
 };
 
-
 WWINLINE int BitChannelClass::Get_Bit(int frame) const
 {
 	if ((frame < FirstFrame) || (frame > LastFrame)) {
@@ -208,8 +207,6 @@ private:
 	friend class HCompressedAnimClass;
 };
 
-
-
 /******************************************************************************
 
 	TimeCodedBitChannelClass is used to store a boolean "on/off" value for each frame
@@ -245,6 +242,5 @@ private:
 
 	friend class HCompressedAnimClass;
 };
-
 
 #endif

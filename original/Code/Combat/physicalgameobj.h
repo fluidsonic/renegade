@@ -35,7 +35,6 @@ class		CinematicGameObj;
 class		SimpleGameObj;
 class		ActiveConversationClass;
 
-
 /*
 ** PhysicalGameObjDef - Defintion class for a PhysicalGameObj
 */
@@ -154,7 +153,6 @@ public:
 	void		Reset_Server_Skips(BYTE value);
 	void		Increment_Server_Skips(void);
 
-
 	/*
 	// Color Tinting
 	void		Set_Tint(Vector3 color);
@@ -246,6 +244,5 @@ private:
 	bool					HUDPokableIndicatorEnabled;
 	bool					IsInnateConversationsEnabled;
 };
-
 
 #endif	//	PHYSICALGAMEOBJ_H

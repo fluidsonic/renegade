@@ -3,7 +3,6 @@
 #include "persistfactory.h"
 #include "definitionfactory.h"
 #include "simpledefinitionfactory.h"
-#include "debug.h"
 #include "objectives.h"
 #include "combat.h"
 #include "messagewindow.h"

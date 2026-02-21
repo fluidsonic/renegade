@@ -45,7 +45,6 @@ private:
 	Random2Class	Generator;
 };
 
-
 // Get a random 32 bit long between min and max (both inclusive)
 inline int CRandom::Get_Int( int min, int max )
 {
@@ -60,7 +59,6 @@ inline int CRandom::Get_Int( int min, int max )
 	return Get_Int( max - min ) + min;
 }
 
-
 // Get a random float between min and max (both inclusive)
 inline float CRandom::Get_Float( float min, float max )
 {
@@ -74,8 +72,6 @@ inline float CRandom::Get_Float( float min, float max )
 	// Get one
 	return Get_Float() *  ( max - min ) + min;
 }
-
-
 
 /*
 ** A free random number generator.  This can be used for any numbers not required to

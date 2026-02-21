@@ -7,14 +7,11 @@
 #include "lightcull.h"
 #include "staticphys.h"
 
-
-
 bool PhysicsSceneClass::Do_Groups_Collide(int group0,int group1)
 {
 	int index = group0 | (group1 << COLLISION_FLAG_SHIFT);
 	return AllowCollisionFlags[index];
 }
-
 
 void PhysicsSceneClass::Enable_Collision_Detection(int group0,int group1)
 {
@@ -63,7 +60,6 @@ void PhysicsSceneClass::Enable_All_Collision_Detections(int group)
 		AllowCollisionFlags[index] = 1;
 	}
 }
-
 
 void PhysicsSceneClass::Disable_All_Collision_Detections(int group)
 {
@@ -404,7 +400,6 @@ void PhysicsSceneClass::Add_Collected_Objects_To_List
 	}
 }
 
-
 void PhysicsSceneClass::Add_Collected_Collideable_Objects_To_List
 (
 	int colgroup,
@@ -614,7 +609,6 @@ void PhysicsSceneClass::Collect_Lights
 
 	Add_Collected_Lights_To_List(static_lights,dynamic_lights,list);
 }
-
 
 void PhysicsSceneClass::Collect_Lights
 (

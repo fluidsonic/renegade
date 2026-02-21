@@ -10,7 +10,6 @@
 #include	"index.h"
 #include "crc.h"
 
-
 /*
 **	The value entries for the INI file are stored as objects of this type.
 **	The entry identifier and value string are combined into this object.
@@ -46,5 +45,4 @@ struct INISection : public Node<INISection *> {
 		INISection(INISection const & rvalue);
 		INISection operator = (INISection const & rvalue);
 };
-
 

@@ -3,11 +3,7 @@
 #include "rinfo.h"
 #include "matpass.h"
 
-
-
 static NonRefMaterialEffectListClass _AllocatedEffects;
-
-
 
 /*************************************************************************************************
 **
@@ -34,7 +30,6 @@ void MaterialEffectClass::Timestep_All_Effects(float dt)
 		it.Next();
 	}
 }
-
 
 /*************************************************************************************************
 **
@@ -64,7 +59,4 @@ void SimpleEffectClass::Render_Pop(RenderInfoClass & rinfo)
 { 
 	rinfo.Pop_Material_Pass(); 
 }
-
-
-
 

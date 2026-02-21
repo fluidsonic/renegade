@@ -6,7 +6,6 @@
 #include "vector3.h"
 #include "render2dsentence.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DialogButtonClass
@@ -49,7 +48,6 @@ protected:
 	void					Create_Component_Button2 (void);
 	void					Create_Text_Renderers (void);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected constants
 	////////////////////////////////////////////////////////////////
@@ -68,6 +66,5 @@ protected:
 	bool							WasButtonPressedOnMe;
 	bool							IsMouseOverMe;
 };
-
 
 #endif //__DIALOG_BUTTON_H

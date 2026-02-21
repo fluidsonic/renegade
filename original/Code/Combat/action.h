@@ -21,7 +21,6 @@
 	#include "actionparams.h"
 #endif
 
-
 /*
 **
 */
@@ -105,7 +104,6 @@ protected:
 
 // Debugging
 void	Toggle_Display_Findpaths( void );
-
 
 #endif	// ACTION_H
 

@@ -33,7 +33,6 @@ protected:
 	SceneIterator(void) { };
 };
 
-
 /**
 ** SceneClass
 ** This is a bunch of render objects that define a 3D scene.
@@ -122,7 +121,6 @@ public:
 	///////////////////////////////////////////////////////////////////////////////////
 	virtual float				Compute_Point_Visibility(	RenderInfoClass & rinfo,
 																		const Vector3 & point)	{ return 1.0f; }
-
 
 	///////////////////////////////////////////////////////////////////////////////////
 	//	Save-Load, records the fog, depth cue, etc settings into a chunk

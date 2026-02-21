@@ -139,7 +139,6 @@ Editor Script - M00_Trigger_When_Destroyed_RMV
   This script triggers when the object it is attached to is destroyed.
 */
 
-
 DECLARE_SCRIPT(M00_Trigger_When_Destroyed_RMV, "Start_Now=1:int, Receive_Type=2:int, Receive_Param_On=1:int, Receive_Param_Off=0:int, Target_ID:int, Send_Type:int, Send_Param:int, Min_Delay=0.0:float, Max_Delay=0.0:float, Debug_Mode=0:int")
 {
 	bool	script_enabled;
@@ -1280,7 +1279,6 @@ DECLARE_SCRIPT(M00_Trigger_Timer_Expired_RAD, "Start_Now=0:int, Receive_Type=15:
   1+ = Adjust to this particular numbered state.
 
 */
-
 
 DECLARE_SCRIPT(M00_Trigger_State_Sequence_RAD, "Start_Now=0:int, Receive_Type:int, Num_States=2:int, Loop_States=0:int, Send_Type:int, Target_ID:int, Min_Delay=0.0:float, Max_Delay=0.0:float, Debug_Mode=0:int")
 {

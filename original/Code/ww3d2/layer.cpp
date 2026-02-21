@@ -2,7 +2,6 @@
 #include "scene.h"
 #include "camera.h"
 
-
 /***********************************************************************************************
  * LayerClass::LayerClass -- default constructor                                               *
  *                                                                                             *
@@ -68,7 +67,6 @@ LayerClass::LayerClass
 	ClearColor = color; 
 }
 
-
 /***********************************************************************************************
  * LayerClass::~LayerClass -- destructor                                                       *
  *                                                                                             *
@@ -93,7 +91,6 @@ LayerClass::~LayerClass(void)
 	}
 }
 
-
 /***********************************************************************************************
  * LayerClass::Set_Scene -- Set the scene used by this layer                                   *
  *                                                                                             *
@@ -117,7 +114,6 @@ void LayerClass::Set_Scene(SceneClass * scene)
 	}
 }
 
-
 /***********************************************************************************************
  * LayerClass::Get_Scene -- get the scene being rendered by this layer                         *
  *                                                                                             *
@@ -138,7 +134,6 @@ SceneClass * LayerClass::Get_Scene(void) const
 	return Scene;
 }
 
-
 /***********************************************************************************************
  * LayerClass::Peek_Scene -- get the scene being rendered by this layer                        *
  *                                                                                             *
@@ -155,7 +150,6 @@ SceneClass * LayerClass::Peek_Scene(void) const
 {
 	return Scene;
 }
-
 
 /***********************************************************************************************
  * LayerClass::Set_Camera -- Set the camera being used by this layer                           *
@@ -180,7 +174,6 @@ void LayerClass::Set_Camera(CameraClass * cam)
 	}
 }
 
-
 /***********************************************************************************************
  * LayerClass::Get_Camera -- get the camera being used by this layer                           *
  *                                                                                             *
@@ -201,7 +194,6 @@ CameraClass * LayerClass::Get_Camera(void) const
 	return Camera;
 }
 
-
 /*********************************************************************************************** 
  * LC::Peek_Camera -- Get copy of camera.                                                      * 
  *                                                                                             * 
@@ -218,7 +210,6 @@ CameraClass * LayerClass::Peek_Camera(void) const
 {
 	return Camera;
 }
-
 
 /*********************************************************************************************** 
  * LC::Set -- Kinda like an assignment operator.                                               * 

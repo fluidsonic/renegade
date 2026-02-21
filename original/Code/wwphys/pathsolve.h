@@ -2,7 +2,6 @@
 #ifndef __PATH_SOLVE_H
 #define __PATH_SOLVE_H
 
-
 #include "vector.h"
 #include "vector3.h"
 #include "hermitespline.h"
@@ -10,7 +9,6 @@
 #include "binheap.h"
 #include "refcount.h"
 #include "postloadable.h"
-
 
 /////////////////////////////////////////////////////////////////////////
 // Forward declarations
@@ -23,9 +21,7 @@ class WayPathClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
 
-
 typedef DynamicVectorClass<AABoxClass *>		BOX_LIST;
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -112,7 +108,6 @@ public:
 	void					Process_Initial_Sector (void);
 	void					Unlink_Pathfind_Hooks (void);
 
-
 protected:
 
 	/////////////////////////////////////////////////////////////////////////
@@ -142,7 +137,6 @@ protected:
 	//	Raw path access
 	//
 	PATHPOINT_LIST &	Get_Raw_Path (void)	{ return m_Path; }
-
 
 	/////////////////////////////////////////////////////////////////////////
 	// Protected methods
@@ -215,7 +209,6 @@ private:
 	friend class PathClass;
 };
 
-
 /////////////////////////////////////////////////////////////////////////
 //	Inlines
 /////////////////////////////////////////////////////////////////////////
@@ -227,6 +220,5 @@ PathSolveClass::Get_Start_Pos (void) const		{ return m_StartPos; }
 
 inline const Vector3 &
 PathSolveClass::Get_Dest_Pos (void) const			{ return m_DestPos; }
-
 
 #endif //__PATH_SOLVE_H

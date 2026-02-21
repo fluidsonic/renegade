@@ -21,12 +21,10 @@ MaterialInfoClass::MaterialInfoClass(const MaterialInfoClass & src)
 	}
 }
 
-
 MaterialInfoClass::~MaterialInfoClass(void)
 {
 	Free();
 }
-
 
 MaterialInfoClass * MaterialInfoClass::Clone(void) const
 { 
@@ -66,7 +64,6 @@ void MaterialInfoClass::Set_Texture_Reduction_Factor(float trf)
 	}
 }
 
-
 void MaterialInfoClass::Process_Texture_Reduction(void)
 {
 	for (int i = 0; i < Textures.Count(); i++) {
@@ -88,7 +85,6 @@ void MaterialInfoClass::Free(void)
 	}
 	Textures.Delete_All();
 }
-
 
 MaterialRemapperClass::MaterialRemapperClass(MaterialInfoClass * src,MaterialInfoClass * dest) :
 	TextureCount(0),

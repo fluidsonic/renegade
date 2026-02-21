@@ -20,10 +20,8 @@
 #include "soundenvironment.h"
 #include "wwaudio.h"
 
-
 // Singletons.
 WeatherMgrClass _TheWeatherMgr;
-
 
 // Static data.
 DEFINE_AUTO_POOL(WeatherSystemClass::RayStruct, WeatherSystemClass::GROWTH_STEP);
@@ -43,7 +41,6 @@ WindClass										*WeatherMgrClass::_Wind;
 WeatherSystemClass							*WeatherMgrClass::_Precipitation [PRECIPITATION_COUNT];
 bool												 WeatherMgrClass::_FogEnabled;
 bool												 WeatherMgrClass::_Dirty;
-
 
 /***********************************************************************************************
  * WindClass::WindClass --																							  *
@@ -78,7 +75,6 @@ WindClass::WindClass (float heading, float speed, float variability, SoundEnviro
 	}
 }
 
-
 /***********************************************************************************************
  * WindClass::~WindClass --																						  *
  *                                                                                             *
@@ -101,7 +97,6 @@ WindClass::~WindClass()
 	}
 }
 
-
 /***********************************************************************************************
  * WindClass::Set --																									  *
  *                                                                                             *
@@ -121,7 +116,6 @@ void WindClass::Set (float heading, float speed, float variability)
 	Speed			= speed;
 	Variability = variability;
 }
-
 
 /***********************************************************************************************
  * WindClass::Update --																								  *
@@ -177,7 +171,6 @@ bool WindClass::Update()
 	// Is the wind essentially idle (ie. it is not contributing to the scene visually or audibly)?
 	return (Speed > 0.0f);
 }
-
 
 /***********************************************************************************************
  * WeatherSystemClass::WeatherSystemClass --																	  *
@@ -236,7 +229,6 @@ WeatherSystemClass::WeatherSystemClass	(PhysicsSceneClass *scene,
 	const TextureClass::MipCountType  mipcount	 = TextureClass::MIP_LEVELS_5;
 	const float								 oopagecount = 1.0f / pagecount;
 
-
 	// How old is the weather system?
 	Age = prime ? MAX_AGE : 0.0f;
 
@@ -291,7 +283,6 @@ WeatherSystemClass::WeatherSystemClass	(PhysicsSceneClass *scene,
 	}
 }
 
-
 /***********************************************************************************************
  * WeatherSystemClass::WeatherSystemClass --																	  *
  *                                                                                             *
@@ -321,7 +312,6 @@ WeatherSystemClass::~WeatherSystemClass()
 		RayCount--;
 	}
 
-
 	// Clean-up particles.
 	particleptr = ParticleHead;
 	while (particleptr != NULL) {
@@ -332,13 +322,11 @@ WeatherSystemClass::~WeatherSystemClass()
 		particleptr = nextparticleptr;
 	}
 
-
 	REF_PTR_RELEASE (Material);
 	delete [] TextureArray;
 	REF_PTR_RELEASE (Texture);
 	REF_PTR_RELEASE (IndexBuffer);
 }
-
 
 /***********************************************************************************************
  * WeatherSystemClass::Set_Density --																			  *
@@ -404,7 +392,6 @@ void WeatherSystemClass::Set_Density (float density)
 
 	RayCount = raycount;
 }
-
 
 /***********************************************************************************************
  * WeatherSystemClass::Update --																					  *
@@ -761,7 +748,6 @@ bool WeatherSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 		particleptr = nextparticleptr;
 	}
 
-
 	// Spawn any new particles that need to be spawned on this update.
 	// NOTE: For accuracy, accumulate fractional spawncounts so that they can be used on a later iteration.
 	s = Spawn_Count (time);
@@ -782,7 +768,6 @@ bool WeatherSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 	// Is the weather still active (ie. it is contributing to the scene visually or audibly)?
 	return ((ParticleDensity > 0.0f) || (ParticleCount > 0));
 }
-
 
 /***********************************************************************************************
  * WeatherSystemClass::Spawn --																					  *
@@ -905,7 +890,6 @@ bool WeatherSystemClass::Spawn (RayStruct *suppliedrayptr)
 	return (false);
 }
 
-
 /***********************************************************************************************
  * WeatherSystemClass::Kill --																					  *
  *                                                                                             *
@@ -939,7 +923,6 @@ void WeatherSystemClass::Kill (ParticleStruct *particleptr)
 	// Decrement the no. of global weather particles.
 	_GlobalParticleCount--;
 }
-
 
 /***********************************************************************************************
  * WeatherSystemClass::Render --																					  *
@@ -1165,14 +1148,12 @@ void WeatherSystemClass::Render (RenderInfoClass &rinfo)
 			processedparticlecount += particlecount;
 		}
 
-
 		#if WEATHER_PARTICLE_SORT
 		#else
 		DX8Wrapper::Set_DX8_Render_State (D3DRS_ZBIAS, 0);
 		#endif
 	}
 }
-
 
 /***********************************************************************************************
  * WeatherSystemClass::Get_Obj_Space_Bounding_Sphere --													  *
@@ -1191,7 +1172,6 @@ void WeatherSystemClass::Get_Obj_Space_Bounding_Sphere (SphereClass &sphere) con
 	sphere.Init ((ObjectMin + ObjectMax) * 0.5f, ((ObjectMax - ObjectMin) * 0.5f).Length());
 }
 
-
 /***********************************************************************************************
  * WeatherSystemClass::Get_Obj_Space_Bounding_Box --														  *
  *                                                                                             *
@@ -1208,7 +1188,6 @@ void WeatherSystemClass::Get_Obj_Space_Bounding_Box (AABoxClass &box) const
 {
 	box.Init ((ObjectMin + ObjectMax) * 0.5f, (ObjectMax - ObjectMin) * 0.5f);
 }
-
 
 /***********************************************************************************************
  * RainSystemClass::RainSystemClass --																			  *
@@ -1238,7 +1217,6 @@ RainSystemClass::RainSystemClass (PhysicsSceneClass *scene, float particledensit
  	}
 }
 
-
 /***********************************************************************************************
  * RainSystemClass::~RainSystemClass --																		  *
  *                                                                                             *
@@ -1260,7 +1238,6 @@ RainSystemClass::~RainSystemClass()
 		SoundEnvironment->Remove_User();
 	}
 }
-
 
 /***********************************************************************************************
  * RainSystemClass::Update --																						  *
@@ -1292,7 +1269,6 @@ bool RainSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 	return (WeatherSystemClass::Update (wind, cameraposition));
 }
 
-
 /***********************************************************************************************
  * SnowSystemClass::SnowSystemClass --																			  *
  *                                                                                             *
@@ -1309,7 +1285,6 @@ SnowSystemClass::SnowSystemClass (PhysicsSceneClass *scene, float particledensit
 	: WeatherSystemClass (scene, 40.0f, 20.0f, particledensity, 0.1f, 0.32f, 0.32f, 3.5f, Vector2 (0.0f, 0.5f), Vector2 (1.0f, 0.25f), PAGE_COUNT, false, 1.0f, 2.0f, WeatherSystemClass::RENDER_MODE_CAMERA_ALIGNED, true, prime)
 {
 }
-
 
 /***********************************************************************************************
  * SnowSystemClass::Update --																						  *
@@ -1329,7 +1304,6 @@ bool SnowSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 	return (WeatherSystemClass::Update (wind, cameraposition));
 }
 
-
 /***********************************************************************************************
  * AshSystemClass::AshSystemClass --																			  *
  *                                                                                             *
@@ -1346,7 +1320,6 @@ AshSystemClass::AshSystemClass (PhysicsSceneClass *scene, float particledensity,
 	: WeatherSystemClass (scene, 40.0f, 20.0f, particledensity, 0.1f, 0.32f, 0.32f, 3.0f, Vector2 (0.0f, 0.75f), Vector2 (1.0f, 0.25f), PAGE_COUNT, false, 1.0f, 2.0f, WeatherSystemClass::RENDER_MODE_CAMERA_ALIGNED, true, prime)
 {
 }
-
 
 /***********************************************************************************************
  * AshSystemClass::Update --																						  *
@@ -1365,7 +1338,6 @@ bool AshSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 	// Base class update.
 	return (WeatherSystemClass::Update (wind, cameraposition));
 }
-
 
 /***********************************************************************************************
  * WeatherParameterClass::Initialize --																		  *
@@ -1387,7 +1359,6 @@ void WeatherParameterClass::Initialize()
 	OverrideTarget	  = 0.0f;
 	OverrideDuration = 0.0f;
 }
-
 
 /***********************************************************************************************
  * WeatherParameterClass::Set --																					  *
@@ -1411,7 +1382,6 @@ void WeatherParameterClass::Set (float target, float ramptime, bool override)
 		OverrideDuration = ramptime;
 	}
 }
-
 
 /***********************************************************************************************
  * WeatherParameterClass::Update --																				  *
@@ -1445,7 +1415,6 @@ bool WeatherParameterClass::Update (float time, bool override)
 
 	return (CurrentValue != previouscurrentvalue);
 }
-
 
 /***********************************************************************************************
  * WeatherParameterClass::Update --																				  *
@@ -1489,7 +1458,6 @@ void WeatherParameterClass::Update (float &value, float &target, float &duration
 	}
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::WeatherMgrClass --																			  *
  *                                                                                             *
@@ -1507,7 +1475,6 @@ WeatherMgrClass::WeatherMgrClass()
 	Set_Network_ID (NETID_SERVER_WEATHER);
 	Set_App_Packet_Type (APPPACKETTYPE_NETWEATHER);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Init --																						  *
@@ -1533,7 +1500,6 @@ void WeatherMgrClass::Init (SoundEnvironmentClass *soundenvironment)
 
 	Reset();
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Reset --																						  *
@@ -1581,7 +1547,6 @@ void WeatherMgrClass::Reset()
 	Set_Dirty();
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Shutdown --																					  *
  *                                                                                             *
@@ -1599,7 +1564,6 @@ void WeatherMgrClass::Shutdown()
 	Reset();
 	REF_PTR_RELEASE (_SoundEnvironment);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Set_Wind --																					  *
@@ -1624,7 +1588,6 @@ bool WeatherMgrClass::Set_Wind (float heading, float speed, float variability, f
 	return (false);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Override_Wind --																			  *
  *                                                                                             *
@@ -1648,7 +1611,6 @@ bool WeatherMgrClass::Override_Wind (float heading, float speed, float variabili
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Set_Wind --																					  *
@@ -1678,7 +1640,6 @@ bool WeatherMgrClass::Set_Wind (float heading, float speed, float variability, f
 	return (false);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Get_Wind --																					  *
  *                                                                                             *
@@ -1697,7 +1658,6 @@ void WeatherMgrClass::Get_Wind (float &heading, float &speed, float &variability
 	speed			= _Parameters [PARAMETER_WIND_SPEED].Value();
 	variability = _Parameters [PARAMETER_WIND_VARIABILITY].Value();
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Restore_Wind --																				  *
@@ -1722,7 +1682,6 @@ void WeatherMgrClass::Restore_Wind (float ramptime)
 	}
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Set_Precipitation --																		  *
  *                                                                                             *
@@ -1745,7 +1704,6 @@ bool WeatherMgrClass::Set_Precipitation (PrecipitationEnum precipitation, float 
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Override_Precipitation --																  *
@@ -1781,7 +1739,6 @@ bool WeatherMgrClass::Override_Precipitation (PrecipitationEnum precipitation, f
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Set_Precipitation --																		  *
@@ -1823,7 +1780,6 @@ bool WeatherMgrClass::Set_Precipitation (PrecipitationEnum precipitation, float 
 	return (false);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Get_Precipitation --																		  *
  *                                                                                             *
@@ -1857,7 +1813,6 @@ void WeatherMgrClass::Get_Precipitation (PrecipitationEnum precipitation, float 
 	}
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Restore_Precipitation --																	  *
  *                                                                                             *
@@ -1881,7 +1836,6 @@ void WeatherMgrClass::Restore_Precipitation (float ramptime)
 	}
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Set_Fog_Range --																			  *
  *                                                                                             *
@@ -1904,7 +1858,6 @@ bool WeatherMgrClass::Set_Fog_Range (float startdistance, float enddistance, flo
 	return (false);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Get_Fog_Range --																			  *
  *                                                                                             *
@@ -1922,7 +1875,6 @@ void WeatherMgrClass::Get_Fog_Range (float &startdistance, float &enddistance)
 	startdistance = _Parameters [PARAMETER_FOG_START_DISTANCE].Value();
 	enddistance	  = _Parameters [PARAMETER_FOG_END_DISTANCE].Value();
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Update --																						  *
@@ -2054,7 +2006,6 @@ void WeatherMgrClass::Update (PhysicsSceneClass *scene, CameraClass *camera)
 	Set_Dirty (false);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Save --																						  *
  *                                                                                             *
@@ -2083,7 +2034,6 @@ bool WeatherMgrClass::Save (ChunkSaveClass &csave)
 	Save_Dynamic (csave);
 	return (true);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Save_Dynamic --																						  *
@@ -2114,7 +2064,6 @@ bool WeatherMgrClass::Save_Dynamic (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return (true);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Load --																						  *
@@ -2149,7 +2098,6 @@ bool WeatherMgrClass::Load (ChunkLoadClass &cload)
 	return (retval);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Load_Micro_Chunks --																		  *
  *                                                                                             *
@@ -2180,7 +2128,6 @@ bool WeatherMgrClass::Load_Micro_Chunks (ChunkLoadClass &cload)
 	return (true);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Load_Dynamic --																						  *
  *                                                                                             *
@@ -2209,7 +2156,6 @@ bool WeatherMgrClass::Load_Dynamic (ChunkLoadClass &cload)
 	}
 	return (retval);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Load_Dynamic_Micro_Chunks --																		  *
@@ -2246,7 +2192,6 @@ bool WeatherMgrClass::Load_Dynamic_Micro_Chunks (ChunkLoadClass &cload)
 	return (true);
 }
 
-
 /***********************************************************************************************
  * WeatherMgrClass::Export_Rare --																				  *
  *                                                                                             *
@@ -2277,7 +2222,6 @@ void WeatherMgrClass::Export_Rare (BitStreamClass &packet)
 	packet.Add (_WindOverrideCount);
 	packet.Add (_PrecipitationOverrideCount);
 }
-
 
 /***********************************************************************************************
  * WeatherMgrClass::Import_Rare --																				  *
@@ -2312,7 +2256,6 @@ void WeatherMgrClass::Import_Rare (BitStreamClass &packet)
 	// Flag that weather data has been imported.
 	_Imported = true;
 }
-
 
 #undef EXPORT_PARAMETER
 #undef IMPORT_PARAMETER

@@ -19,17 +19,14 @@
 #include "wwaudio.h"
 #include "dlghelpscreen.h"
 #include "crandom.h"
-#include "slavemaster.h"
 #include "string_ids.h"
 #include "translatedb.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 EVAEncyclopediaMenuClass *	EVAEncyclopediaMenuClass::_TheInstance = NULL;
 int								EVAEncyclopediaMenuClass::_NextTabIndex = -4;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -43,7 +40,6 @@ EVAEncyclopediaMenuClass::EVAEncyclopediaMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	EVAEncyclopediaMenuClass
@@ -54,7 +50,6 @@ EVAEncyclopediaMenuClass::~EVAEncyclopediaMenuClass (void)
 	_TheInstance = NULL;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -113,7 +108,6 @@ EVAEncyclopediaMenuClass::On_Init_Dialog (void)
 	Get_Dlg_Item(IDC_OPTIONS_MULTIPLAY_SUICIDE)->Enable(is_suicide_enabled);
 	Get_Dlg_Item(IDC_OPTIONS_MULTIPLAY_SUICIDE)->Show(is_suicide_enabled);
 
-
 	//
 	// Enable or disable the change teams button
 	//
@@ -130,11 +124,9 @@ EVAEncyclopediaMenuClass::On_Init_Dialog (void)
 	Get_Dlg_Item(IDC_OPTIONS_MULTIPLAY_CHANGE_TEAMS)->Enable(is_team_change_enabled);
 	Get_Dlg_Item(IDC_OPTIONS_MULTIPLAY_CHANGE_TEAMS)->Show(is_team_change_enabled);
 
-
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -159,7 +151,6 @@ EVAEncyclopediaMenuClass::On_Destroy (void)
 	MenuDialogClass::On_Destroy ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -199,7 +190,6 @@ EVAEncyclopediaMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display
@@ -225,7 +215,6 @@ EVAEncyclopediaMenuClass::Display (TAB_ID tab_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Prompt_User
@@ -237,10 +226,9 @@ EVAEncyclopediaMenuClass::Prompt_User (void)
 	//
 	//	Display the message box
 	//
-	DlgMsgBox::DoDialog (TRANSLATE (IDS_MENU_TEXT054), TRANSLATE (IDS_EXIT_GAME_VERIFICATION), DlgMsgBox::YesNo, this);	
+	DlgMsgBox::DoDialog (TRANSLATE (IDS_MENU_TEXT054), TRANSLATE (IDS_EXIT_GAME_VERIFICATION), DlgMsgBox::YesNo, this);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -257,7 +245,6 @@ EVAEncyclopediaMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Exit_Game
@@ -267,11 +254,6 @@ void
 EVAEncyclopediaMenuClass::Exit_Game (void)
 {
 	bool stop = false;
-	if (GameModeManager::Find("WOL")->Is_Active() || GameModeManager::Find("LAN")->Is_Active()) {
-		if (cNetwork::I_Am_Server() && The_Game() && The_Game()->IsDedicated.Is_True() && SlaveMaster.Am_I_Slave()) {
-			stop = true;
-		}
-	}
 
 	//
 	//	Close the dialog
@@ -280,9 +262,6 @@ EVAEncyclopediaMenuClass::Exit_Game (void)
 
 	GameInitMgrClass::End_Game();
 
-	//
-	// Dedicated slave servers should just quit here.
-	//
 	if (stop) {
 		extern void Stop_Main_Loop (int exitCode);
 		Stop_Main_Loop (EXIT_SUCCESS);

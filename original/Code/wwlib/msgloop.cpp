@@ -3,14 +3,12 @@
 #include	"win.h"
 #include	"sdl2_platform.h"
 
-
 /*
 **	Tracks modeless dialog box messages by keeping a record of all active modeless dialog
 **	box handles and then determining if the windows message applies to the dialog box. If it
 **	does, then the default message handling should not be performed.
 */
 static DynamicVectorClass<HWND> _ModelessDialogs;
-
 
 /*
 **	Tracks windows accelerators with this structure.
@@ -26,14 +24,12 @@ struct AcceleratorTracker {
 };
 static DynamicVectorClass<AcceleratorTracker> _Accelerators;
 
-
 /*
 **	In those cases where message intercept needs to occur but not for purposes
 **	of a modeless dialog box or a windows accelerator, then this is a function
 **	pointer to than message intercept handler.
 */
 bool (*Message_Intercept_Handler)(MSG &msg) = NULL;
-
 
 /***********************************************************************************************
  * Windows_Message_Handler -- Handles windows message.                                         *
@@ -62,7 +58,6 @@ void Windows_Message_Handler(void)
     SDL2_Platform_PollEvents();
 }
 
-
 /***********************************************************************************************
  * Add_Modeless_Dialog -- Adds a modeless dialog box to the message handler.                   *
  *                                                                                             *
@@ -86,7 +81,6 @@ void Add_Modeless_Dialog(HWND dialog)
 	_ModelessDialogs.Add(dialog);
 }
 
-
 /***********************************************************************************************
  * Remove_Modeless_Dialog -- Removes the dialog box from the message tracking handler.         *
  *                                                                                             *
@@ -107,7 +101,6 @@ void Remove_Modeless_Dialog(HWND dialog)
 {
 	_ModelessDialogs.Delete(dialog);
 }
-
 
 /***********************************************************************************************
  * Add_Accelerator -- Adds a keyboard accelerator to the message handler.                      *
@@ -134,7 +127,6 @@ void Add_Accelerator(HWND window, HACCEL accelerator)
 {
 	_Accelerators.Add(AcceleratorTracker(window, accelerator));
 }
-
 
 /***********************************************************************************************
  * Remove_Accelerator -- Removes an accelerator from the message processor.                    *

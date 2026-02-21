@@ -20,7 +20,6 @@
 #include "meshgeometry.h"
 #include "hashtemplate.h"
 
-
 /*
 ** Global Instance of the DX8MeshRender
 */
@@ -34,7 +33,6 @@ static DynamicVectorClass<Vector3>				_TempNormalBuffer;
 static TextureCategoryList							texture_category_delete_list;
 static FVFCategoryList								fvf_category_container_delete_list;
 
-
 // helper data structure
 class PolyRemover : public MultiListObjectClass
 {
@@ -46,7 +44,6 @@ public:
 
 typedef MultiListClass<PolyRemover>			PolyRemoverList;
 typedef MultiListIterator<PolyRemover>		PolyRemoverListIterator;
-
 
 /**
 ** PolyRenderTaskClass
@@ -128,9 +125,7 @@ private:
 
 DEFINE_AUTO_POOL(MatPassTaskClass, 256);
 
-
 // ----------------------------------------------------------------------------
-
 
 inline static bool Equal_Material(const VertexMaterialClass* mat1,const VertexMaterialClass* mat2)
 {
@@ -138,7 +133,6 @@ inline static bool Equal_Material(const VertexMaterialClass* mat1,const VertexMa
 	int crc1 = mat2 ? mat2->Get_CRC() : 0;
 	return (crc0 == crc1);
 }
-
 
 DX8TextureCategoryClass::DX8TextureCategoryClass(
 	DX8FVFCategoryContainer* container_,
@@ -205,7 +199,6 @@ void DX8TextureCategoryClass::Remove_Polygon_Renderer(DX8PolygonRendererClass* p
 		texture_category_delete_list.Add_Tail(this);
 	}
 }
-
 
 void DX8FVFCategoryContainer::Remove_Texture_Category(DX8TextureCategoryClass* tex_category)
 {
@@ -287,7 +280,6 @@ void DX8RigidFVFCategoryContainer::Render_Delayed_Procedural_Material_Passes(voi
 
 	delayed_matpass_head = delayed_matpass_tail = NULL;
 }
-
 
 void DX8TextureCategoryClass::Log(bool only_visible)
 {
@@ -1230,7 +1222,6 @@ void DX8SkinFVFCategoryContainer::Render(void)
 			MeshModelClass * mmc = mesh->Peek_Model();
 			int mesh_vertex_count=mmc->Get_Vertex_Count();
 
-
 			DX8_RECORD_SKIN_RENDER(mesh->Get_Num_Polys(),mesh_vertex_count);
 
 			if (_TempVertexBuffer.Length() < mesh_vertex_count) _TempVertexBuffer.Resize(mesh_vertex_count); 
@@ -1283,7 +1274,6 @@ void DX8SkinFVFCategoryContainer::Render(void)
 				norm++;
 			}
 
-
 			mesh->Set_Base_Vertex_Offset(vertex_offset);
 			vertex_offset+=mesh_vertex_count;
 			
@@ -1329,7 +1319,6 @@ void DX8SkinFVFCategoryContainer::Add_Visible_Skin(MeshClass * mesh)
 	VisibleSkinHead = mesh;
 	VisibleVertexCount += mesh->Peek_Model()->Get_Vertex_Count();
 }
-
 
 // ----------------------------------------------------------------------------
 
@@ -1542,7 +1531,6 @@ void DX8TextureCategoryClass::Render(void)
 			DX8Wrapper::Set_Texture(i,Peek_Texture(i));
 		}
 
-
 	SNAPSHOT_SAY(("Set_Material(%s)\n",Peek_Material() ? Peek_Material()->Get_Name() : "NULL"));
 	DX8Wrapper::Set_Material(Peek_Material());
 
@@ -1559,7 +1547,6 @@ void DX8TextureCategoryClass::Render(void)
 		MeshClass * mesh = prt->Peek_Mesh();
 
 		SNAPSHOT_SAY(("mesh = %s\n",mesh->Get_Name()));
-
 
 		/*
 		** If the user is not installing LightEnvironmentClasses, we leave the lighting render
@@ -1613,7 +1600,6 @@ void DX8TextureCategoryClass::Render(void)
 			identity=true;
 		}
 
-
 		if (identity) {
 			SNAPSHOT_SAY(("Set_World_Identity\n"));
 			DX8Wrapper::Set_World_Identity();
@@ -1645,7 +1631,6 @@ void DX8TextureCategoryClass::Render(void)
 
 	Clear_Render_List();
 }
-
 
 DX8MeshRendererClass::DX8MeshRendererClass()
 	:
@@ -1728,7 +1713,6 @@ void DX8MeshRendererClass::Unregister_Mesh_Type(MeshClass* mesh)
 		delete gf;
 	}
 }
-
 
 void DX8MeshRendererClass::Register_Mesh_Type(MeshClass* mesh)
 {
@@ -1824,7 +1808,6 @@ void DX8MeshRendererClass::Request_Log_Statistics()
 	statistics_requested=WW3D::Get_Frame_Count();
 }
 
-
 // ---------------------------------------------------------------------------
 //
 // Render all meshes that are added to visible lists
@@ -1884,7 +1867,6 @@ void DX8MeshRendererClass::Flush(void)
 	DX8Wrapper::Set_Vertex_Buffer(NULL);
 	DX8Wrapper::Set_Index_Buffer(NULL,0);
 }
-
 
 void DX8MeshRendererClass::Add_To_Render_List(DecalMeshClass * decalmesh)
 {
@@ -1952,10 +1934,4 @@ void DX8MeshRendererClass::Invalidate()
 
 	texture_category_container_lists_rigid.Delete_All();
 }
-
-
-
-
-
-
 

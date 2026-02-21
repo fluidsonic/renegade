@@ -7,13 +7,11 @@
 #include "chunkio.h"
 #include "SoundScene.h"
 
-
 ///////////////////////////////////////////////////////////////////////
 // Global singleton instance
 ///////////////////////////////////////////////////////////////////////
 StaticAudioSaveLoadClass _StaticAudioSaveLoadSubsystem;
 DynamicAudioSaveLoadClass _DynamicAudioSaveLoadSubsystem;
-
 
 ///////////////////////////////////////////////////////////////////////
 //	Constants
@@ -25,7 +23,6 @@ enum
 	CHUNKID_DYNAMIC_VARIABLES
 };
 
-
 enum
 {
 	VARID_INCLUDE_FILE		= 0x01,
@@ -34,7 +31,6 @@ enum
 	VARID_LOGICAL_LISTENER_GLOBAL_SCALE,
 	VARID_BACKGROUND_MUSIC_NAME
 };
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -47,7 +43,6 @@ StaticAudioSaveLoadClass::Chunk_ID (void) const
 	return CHUNKID_STATIC_SAVELOAD;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Contains_Data
@@ -58,7 +53,6 @@ StaticAudioSaveLoadClass::Contains_Data (void) const
 {
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -83,7 +77,6 @@ StaticAudioSaveLoadClass::Save (ChunkSaveClass &csave)
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -117,14 +110,11 @@ StaticAudioSaveLoadClass::Load (ChunkLoadClass &cload)
 	return retval;
 }
 
-
 //*******************************************************************//
 //*
 //*	Start of DynamicAudioSaveLoadClass
 //*
 //*******************************************************************//
-
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -137,7 +127,6 @@ DynamicAudioSaveLoadClass::Chunk_ID (void) const
 	return CHUNKID_DYNAMIC_SAVELOAD;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Contains_Data
@@ -148,7 +137,6 @@ DynamicAudioSaveLoadClass::Contains_Data (void) const
 {
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -181,7 +169,6 @@ DynamicAudioSaveLoadClass::Save (ChunkSaveClass &csave)
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //

@@ -1,5 +1,4 @@
 #include "beacongameobj.h"
-#include "debug.h"
 #include "phys.h"
 #include "combat.h"
 #include "soldier.h"

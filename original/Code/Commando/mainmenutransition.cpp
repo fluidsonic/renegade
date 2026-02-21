@@ -22,7 +22,6 @@ static const float OUT_END_FRAME		= 99.0F;
 
 static const char *ANIM_NAME			= "IF_TITLETRANS.IF_TITLETRANS";
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MainMenuTransitionClass
@@ -40,7 +39,6 @@ MainMenuTransitionClass::MainMenuTransitionClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~MainMenuTransitionClass
@@ -52,7 +50,6 @@ MainMenuTransitionClass::~MainMenuTransitionClass (void)
 	REF_PTR_RELEASE (TransitionAnim);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -66,7 +63,6 @@ MainMenuTransitionClass::Set_Dialogs (DialogBaseClass *dialog, DialogBaseClass *
 	OtherDlg	= other_dlg;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -84,7 +80,6 @@ MainMenuTransitionClass::Set_Model (RenderObjClass *model)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -108,7 +103,6 @@ MainMenuTransitionClass::Set_Type (TYPE type)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -158,7 +152,6 @@ MainMenuTransitionClass::On_Frame_Update (void)
 	DialogTransitionClass::On_Frame_Update ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -231,7 +224,6 @@ MainMenuTransitionClass::Update_Controls (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

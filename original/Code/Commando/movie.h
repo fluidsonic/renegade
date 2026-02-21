@@ -20,7 +20,6 @@
 #include "cdverify.h"
 #include "wwstring.h"
 
-
 // Game Mode to do movies
 class	MovieGameModeClass : public GameMajorModeClass, public Observer<CDVerifyEvent>
 {

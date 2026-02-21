@@ -25,4 +25,3 @@ class DlgPasswordPrompt :
 		void On_EditCtrl_Enter_Pressed(EditCtrlClass* edit, int id);
 	};
 
-

@@ -1,7 +1,6 @@
 #include "dialogtransition.h"
 #include "dialogmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DialogTransitionClass
@@ -12,7 +11,6 @@ DialogTransitionClass::DialogTransitionClass (TYPE type)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

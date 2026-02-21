@@ -5,7 +5,6 @@
 #include "always.h"
 #include "saveloadsubsystem.h"
 
-
 /**
 **
 ** PhysStaticDataSaveSystemClass
@@ -47,7 +46,6 @@ protected:
 ** global instance of the static data save sub-system
 */
 extern PhysStaticDataSaveSystemClass _PhysStaticDataSaveSystem;
-
 
 /**
 **

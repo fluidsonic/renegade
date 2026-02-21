@@ -4,7 +4,6 @@
 #include "gamedata.h"
 #include "basecontroller.h"
 
-
 class	cGameDataSkirmish : public cGameData {
 public:
 

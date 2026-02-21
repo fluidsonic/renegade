@@ -2,7 +2,6 @@
 #include "toolkit.h"
 #include "mission2.h"
 
-
 // Mission Objective Controller and Initializer
 
 DECLARE_SCRIPT(M02_Objective_Controller, "")
@@ -473,7 +472,6 @@ DECLARE_SCRIPT(M02_Objective_Controller, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M02_Objective_Zone, "")
 {
@@ -2114,7 +2112,6 @@ DECLARE_SCRIPT(M02_Objective_Zone, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Respawn_Controller, "")
 {
 	bool active_area [M02_AREACOUNT];
@@ -3314,7 +3311,6 @@ DECLARE_SCRIPT (M02_Respawn_Controller, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Reset_Spawn, "Area_ID:int,Spawn_Type:int")
 {
 	void Destroyed (GameObject *obj)
@@ -3331,7 +3327,6 @@ DECLARE_SCRIPT (M02_Reset_Spawn, "Area_ID:int,Spawn_Type:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Nod_Soldier, "Area_Number:int,Area_Officer:int,Pre_Placed:int")
 {
@@ -3843,7 +3838,6 @@ DECLARE_SCRIPT (M02_Nod_Soldier, "Area_Number:int,Area_Officer:int,Pre_Placed:in
 	}
 };
 
-
 DECLARE_SCRIPT(M02_Obelisk, "")
 {
 	bool info_given;
@@ -3918,7 +3912,6 @@ DECLARE_SCRIPT(M02_Obelisk, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Power_Plant, "")
 {
@@ -4005,7 +3998,6 @@ DECLARE_SCRIPT (M02_Power_Plant, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Dam_MCT, "")
 {
 	bool destroyed;
@@ -4041,7 +4033,6 @@ DECLARE_SCRIPT (M02_Dam_MCT, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Helipad, "")
 {
 	void Killed(GameObject *obj, GameObject *killer)
@@ -4054,7 +4045,6 @@ DECLARE_SCRIPT (M02_Helipad, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Destroy_Objective, "Objective_ID:int")
 {
@@ -4125,7 +4115,6 @@ DECLARE_SCRIPT (M02_Destroy_Objective, "Objective_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Nod_Convoy_Truck, "")
 {
 	void Killed(GameObject *obj, GameObject *killer)
@@ -4145,7 +4134,6 @@ DECLARE_SCRIPT (M02_Nod_Convoy_Truck, "")
 		}
 	}
 };
-
 
 // SOLDIER TYPE PARAMETERS FOR GDI
 // 1 = Rocket Soldier
@@ -4396,7 +4384,6 @@ DECLARE_SCRIPT (M02_GDI_Soldier, "Area_ID:int, Soldier_Type=0:int")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Stationary_Vehicle,"Area_ID:int")
 {
 	void Created (GameObject* obj)
@@ -4496,7 +4483,6 @@ DECLARE_SCRIPT (M02_Stationary_Vehicle,"Area_ID:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Nod_Apache, "Area_ID:int")
 {
@@ -4667,7 +4653,6 @@ DECLARE_SCRIPT (M02_Nod_Apache, "Area_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Nod_Vehicle, "Area_ID:int")
 {
 	void Created (GameObject* obj)
@@ -4756,7 +4741,6 @@ DECLARE_SCRIPT (M02_Nod_Vehicle, "Area_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Player_Vehicle, "Area_ID:int")
 {
 	bool entered_me;
@@ -4830,7 +4814,6 @@ DECLARE_SCRIPT (M02_Player_Vehicle, "Area_ID:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Nod_Sakura, "Area_ID:int")
 {
@@ -4923,7 +4906,6 @@ DECLARE_SCRIPT (M02_Nod_Sakura, "Area_ID:int")
 	}
 };
 
-
 // This script handles approach vehicles.
 
 DECLARE_SCRIPT (M02_Approach_Vehicle, "Area_ID:int")
@@ -4969,7 +4951,6 @@ DECLARE_SCRIPT (M02_Approach_Vehicle, "Area_ID:int")
 		Commands->Apply_Damage(obj, 10000.0f, "Blamokiller");
 	}
 };
-
 
 // This script is currently only used for an Orca above a SAM Site objective, in A03.
 
@@ -5017,7 +4998,6 @@ DECLARE_SCRIPT (M02_Destroy_Vehicle, "")
 		Commands->Action_Attack(obj, params);
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Mendoza, "")
 {
@@ -5199,7 +5179,6 @@ DECLARE_SCRIPT (M02_Mendoza, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Nod_Jet, "")
 {
 	void Created (GameObject * obj)
@@ -5221,7 +5200,6 @@ DECLARE_SCRIPT (M02_Nod_Jet, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Nod_Jet_Waypath, "")
 {
@@ -5246,7 +5224,6 @@ DECLARE_SCRIPT (M02_Nod_Jet_Waypath, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_GDI_Helicopter, "")
 {
 	void Created (GameObject * obj)
@@ -5268,7 +5245,6 @@ DECLARE_SCRIPT (M02_GDI_Helicopter, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M02_Commando_Start, "")
 {
 	void Created (GameObject * obj)
@@ -5278,7 +5254,6 @@ DECLARE_SCRIPT (M02_Commando_Start, "")
 		Commands->Give_PowerUp (obj, "POW_SniperRifle_Player", false);
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Data_Disk, "Disk_ID:int")
 {
@@ -5315,7 +5290,6 @@ DECLARE_SCRIPT (M02_Data_Disk, "Disk_ID:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M02_Encyclopedia_Reveal, "Disk_ID:int")
 {

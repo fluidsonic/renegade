@@ -2,10 +2,8 @@
 #ifndef __DLGOPTIONSPREVIEW_H
 #define __DLGOPTIONSPREVIEW_H
 
-
 #include "menudialog.h"
 #include "resource.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -37,7 +35,6 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
 
 #endif //__DLGOPTIONSPREVIEW_H
 

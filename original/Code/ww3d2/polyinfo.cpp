@@ -30,7 +30,6 @@ void PolygonInfoClass::Set_Shader(ShaderClass *shader)
 	Shader = new ShaderClass(* shader);
 }
 
-
 PolygonInfoClass::~PolygonInfoClass()
 {
 	if(Texture)
@@ -42,5 +41,4 @@ PolygonInfoClass::~PolygonInfoClass()
 	if(Shader)
 		delete Shader;
 }
-
 

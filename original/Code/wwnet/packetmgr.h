@@ -21,7 +21,6 @@
 
 #define WRAPPER_CRC
 
-
 /*
 ** Header used at the beginning of a packet to identify the number of packets packed in this packet IYSWIM.
 */
@@ -42,7 +41,6 @@ struct PacketPackHeaderStruct {
 	unsigned short MorePackets : 1;
 };
 
-
 /*
 ** Header used at the beginning of every delta packet.
 */
@@ -57,7 +55,6 @@ struct PacketDeltaHeaderStruct {
 	*/
 	unsigned char BytePack : 1;
 };
-
 
 #pragma pack(pop)
 
@@ -76,7 +73,6 @@ struct PacketDeltaHeaderStruct {
 #define PACKET_MANAGER_RECEIVE_BUFFERS_AS_SERVER (64 * 32)
 #define PACKET_MANAGER_MAX_PACKETS 31
 #define UDP_HEADER_SIZE 28
-
 
 /*
 ** This class intercepts packets at the lowest level and applies delta based compression and packet combining to reduce
@@ -125,7 +121,6 @@ class PacketManagerClass
 		void Set_Stats_Sampling_Frequency_Delay(unsigned long time_ms);
 		unsigned long Get_Stats_Sampling_Frequency_Delay(void) {return(StatsFrequency);};
 
-
 		/*
 		** Class configuration.
 		*/
@@ -153,7 +148,6 @@ class PacketManagerClass
 			STATE_WS_BUFFERS_FULL,
 		};
 		ErrorStateEnum Get_Error_State(void);
-
 
 	private:
 
@@ -312,7 +306,6 @@ class PacketManagerClass
 		CriticalSectionClass CriticalSection;
 
 };
-
 
 /*
 ** Single instance of the packet manager.

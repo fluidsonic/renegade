@@ -5,9 +5,7 @@
 #include "matrixmapper.h"
 #include "texture.h"
 
-
 uint32 DecalSystemClass::DecalIDGenerator = 0;
-
 
 /*
 ** DecalSystemClass Implementation
@@ -28,7 +26,6 @@ DecalSystemClass::DecalSystemClass(void)
 {
 }
 
-
 /***********************************************************************************************
  * DecalSystemClass::~DecalSystemClass -- Destructor                                           *
  *                                                                                             *
@@ -43,7 +40,6 @@ DecalSystemClass::DecalSystemClass(void)
 DecalSystemClass::~DecalSystemClass(void)
 {
 }
-
 
 /***********************************************************************************************
  * DecalSystemClass::Lock_Decal_Generator -- returns a DecalGenerator                          *
@@ -62,7 +58,6 @@ DecalGeneratorClass * DecalSystemClass::Lock_Decal_Generator(void)
 	DecalGeneratorClass * gen = new DecalGeneratorClass(Generate_Decal_Id(), this);
 	return gen;
 }
-
 
 /***********************************************************************************************
  * DecalSystemClass::Unlock_Decal_Generator -- Destroys the decal generator                    *
@@ -84,7 +79,6 @@ void DecalSystemClass::Unlock_Decal_Generator(DecalGeneratorClass * generator)
 	delete generator;
 }
 
-
 /***********************************************************************************************
  * DecalSystemClass::Generate_Unique_Global_Decal_Id -- Generates a unique id for a decal      *
  *                                                                                             *
@@ -102,7 +96,6 @@ uint32 DecalSystemClass::Generate_Unique_Global_Decal_Id(void)
 { 
 	return DecalIDGenerator++; 
 }
-
 
 /*
 ** DecalGeneratorClass Implementation
@@ -131,7 +124,6 @@ DecalGeneratorClass::DecalGeneratorClass(uint32 id,DecalSystemClass * system) :
 
 }
 
-
 /***********************************************************************************************
  * DecalGeneratorClass::~DecalGeneratorClass -- Destructor                                     *
  *                                                                                             *
@@ -148,7 +140,6 @@ DecalGeneratorClass::~DecalGeneratorClass(void)
 {
 	REF_PTR_RELEASE(Material);
 }
-
 
 /***********************************************************************************************
  * DecalGeneratorClass::Add_Mesh -- Meshes that generate a decal should add themselves         *
@@ -170,7 +161,6 @@ void DecalGeneratorClass::Add_Mesh(RenderObjClass * mesh)
 	MeshList.Add(mesh);
 }
 
-
 /***********************************************************************************************
  * DecalGeneratorClass::Get_Mesh_List -- returns the list of meshes                            *
  *                                                                                             *
@@ -189,7 +179,6 @@ NonRefRenderObjListClass & DecalGeneratorClass::Get_Mesh_List(void)
 {
 	return MeshList;
 }
-
 
 /***********************************************************************************************
  * DecalGeneratorClass::Set_Mesh_Transform -- sets the current mesh coordinate system          *
@@ -235,7 +224,6 @@ void DecalGeneratorClass::Set_Mesh_Transform(const Matrix3D & mesh_transform)
 		Mapper->Set_Texture_Transform(mesh_to_texture,texsize);
 	}
 }
-
 
 /*
 ** MultiFixedPoolDecalSystemClass implementation
@@ -402,7 +390,6 @@ void MultiFixedPoolDecalSystemClass::LogicalDecalClass::Clear(uint32 decal_id)
 		MeshList.Remove_Head();
 	}
 }
-
 
 /*
 ** MultiFixedPoolDecalSystemClass::LogicalDecalPoolClass implementation

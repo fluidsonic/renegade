@@ -1,7 +1,6 @@
 #include "buildingmonitor.h"
 #include "building.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Killed
@@ -17,7 +16,6 @@ BuildingMonitorClass::Killed (GameObject *game_obj, GameObject *killer)
 	Building->On_Destroyed ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -53,7 +51,6 @@ BuildingMonitorClass::Damaged (GameObject *game_obj, GameObject *killer, float a
 		}
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

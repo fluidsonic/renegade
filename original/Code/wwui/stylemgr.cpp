@@ -11,12 +11,10 @@
 #include "ffactory.h"
 #include "wwaudio.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
 static const char *	DEFAULT_BACKDROP_NAME	= "GRADENT_TEST.TGA";
-
 
 struct FONT_DESC
 {
@@ -24,7 +22,6 @@ struct FONT_DESC
 	int				point_size;
 	bool				is_bold;
 };
-
 
 static FONT_DESC	DEFAULT_FONTS[StyleMgrClass::FONT_MAX] =
 {
@@ -46,7 +43,6 @@ static FONT_DESC	DEFAULT_FONTS[StyleMgrClass::FONT_MAX] =
 	{ "Arial MT",					14,	false },
 	{ "Arial MT",					9,		true }
 
-
 	/*{ "Arial Unicode MS",	52,	false },
 	{ "Arial Unicode MS",	12,	true },
 	{ "Arial Unicode MS",	12,		true },
@@ -58,7 +54,6 @@ static FONT_DESC	DEFAULT_FONTS[StyleMgrClass::FONT_MAX] =
 	{ "Arial Unicode MS",	14,	true }*/
 
 };
-
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -87,7 +82,6 @@ float							StyleMgrClass::ScaleY						= 1.0F;
 
 DynamicVectorClass<StringClass>	StyleMgrClass::FontFileList;
 StringClass								StyleMgrClass::EventAudioList[StyleMgrClass::EVENT_AUDIO_MAX];
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -126,7 +120,6 @@ StyleMgrClass::Initialize (void)
 	BackdropTexture = WW3DAssetManager::Get_Instance()->Get_Texture (DEFAULT_BACKDROP_NAME, TextureClass::MIP_LEVELS_1);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -260,7 +253,6 @@ StyleMgrClass::Initialize_From_INI (const char *filename)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -290,7 +282,6 @@ StyleMgrClass::Shutdown (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Font
@@ -305,7 +296,6 @@ StyleMgrClass::Get_Font (FONT_STYLE style)
 	}
 	return font;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -323,7 +313,6 @@ StyleMgrClass::Render_Backdrop (Render2DClass *renderer, const RectClass &rect)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Assign_Font
@@ -335,7 +324,6 @@ StyleMgrClass::Assign_Font (Render2DSentenceClass *renderer, FONT_STYLE style)
 	renderer->Set_Font (Fonts[style]);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -391,7 +379,6 @@ StyleMgrClass::Render_Text
 	return ;
 }*/
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render_Title_Text
@@ -446,7 +433,6 @@ StyleMgrClass::Render_Title_Text
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render_Text
@@ -478,7 +464,6 @@ StyleMgrClass::Render_Text
 	Render_Text (text, renderer, text_color, shadow_color, rect, do_shadow, do_clip, justify, is_vcentered);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -558,7 +543,6 @@ StyleMgrClass::Render_Text
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render_Text
@@ -627,8 +611,6 @@ StyleMgrClass::Render_Text
 	renderer->Draw_Text (text, text_color);
 	return ;
 }*/
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -737,7 +719,6 @@ StyleMgrClass::Render_Wrapped_Text
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render_Wrapped_Text
@@ -772,8 +753,6 @@ StyleMgrClass::Render_Wrapped_Text_Ex
 		do_shadow, do_vcenter, justify);
 	return ;
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -857,10 +836,8 @@ StyleMgrClass::Render_Wrapped_Text_Ex
 		curr_rect.Top	+= text_height;
 	}
 
-
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -920,7 +897,6 @@ StyleMgrClass::Render_Wrapped_Text
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Configure_Hilighter
@@ -943,7 +919,6 @@ StyleMgrClass::Configure_Hilighter (Render2DClass *renderer)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render_Hilight
@@ -955,7 +930,6 @@ StyleMgrClass::Render_Hilight (Render2DClass *renderer, const RectClass &rect)
 	renderer->Add_Quad (rect, HilightColor);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1054,7 +1028,6 @@ StyleMgrClass::Render_Glow
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Configure_Renderer
@@ -1075,7 +1048,6 @@ StyleMgrClass::Configure_Renderer (Render2DClass *renderer)
 	//shader->Set_Depth_Compare (ShaderClass::PASS_LEQUAL);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

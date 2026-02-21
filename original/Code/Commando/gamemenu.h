@@ -30,7 +30,5 @@ private:
 	class AudibleSoundClass *	MenuMusic;
 };
 
-
 #endif
-
 

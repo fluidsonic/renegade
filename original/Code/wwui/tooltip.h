@@ -6,7 +6,6 @@
 #include "render2dsentence.h"
 #include "widestring.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ToolTipClass
@@ -46,7 +45,6 @@ private:
 	void				Create_Background_Renderer (void);
 	void				Update_Rect (void);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Private member data
 	////////////////////////////////////////////////////////////////
@@ -58,6 +56,5 @@ private:
 	Vector3					TextColor;
 	Vector3					BkColor;
 };
-
 
 #endif //__TOOLTIP_H

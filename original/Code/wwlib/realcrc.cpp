@@ -72,7 +72,6 @@ unsigned long  CRC32_Table[ 256 ] =
 
 #define CRC32(c,crc) (CRC32_Table[((unsigned long)(crc) ^ (c)) & 0xFFL] ^ (((crc) >> 8) & 0x00FFFFFFL))
 
-
 /***********************************************************************************************
  * CRC_Memory -- calculates a CRC for a block of memory                                        *
  *                                                                                             *
@@ -93,7 +92,6 @@ unsigned long	CRC_Memory( const unsigned char *data, unsigned long length, unsig
 	return (crc ^ 0xFFFFFFFF); 						// invert new CRC and return it
 }
 
-
 /***********************************************************************************************
  * CRC_String -- Calculates a CRC for a NULL-terminated string                                 *
  *                                                                                             *
@@ -113,7 +111,6 @@ unsigned long	CRC_String( const char *string, unsigned long crc )
 	}
 	return (crc ^ 0xFFFFFFFF); 						// invert new CRC and return it
 }
-
 
 /***********************************************************************************************
  * CRC_Stringi -- Calculates a CRC for a string, case-insensitive                              *

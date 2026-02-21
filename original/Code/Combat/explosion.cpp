@@ -1,5 +1,4 @@
 #include "explosion.h"
-#include "debug.h"
 #include "damage.h"
 #include "combat.h"
 #include "sound3d.h"
@@ -172,7 +171,6 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 	// Make a camera convention transform pointing in the blast direction
 	Vector3 pos = up_tm.Get_Translation();
 
-
 	Matrix3D blast_tm;
 	blast_tm.Look_At( pos, pos + blast_direction, FreeRandom.Get_Float( 0, DEG_TO_RADF( 360 ) ) );
 
@@ -182,7 +180,6 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 		Debug_Say(( "Explosion Def %d not found\n", explosion_def_id ));
 		return;
 	}
-
 
 	// Make the Phys Object
 	if ( explosion_def->PhysDefID != 0 ) {
@@ -226,13 +223,11 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 																		explosion_def->DecalSize, false, NULL );
 	}
 
-
 	// Apply the damage
 //	if ( CombatManager::I_Am_Server() )		 Clients can create damage now...
 	{
 		float radius = explosion_def->DamageRadius;
 		if (radius > 0.0f) {
-
 
 			// Create an offense object to carry the damage information
 			OffenseObjectClass offense( explosion_def->DamageStrength, explosion_def->DamageWarhead, damager );
@@ -312,7 +307,6 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 
 }
 
-
 void	ExplosionManager::Explosion_Damage_Building( int explosion_def_id, BuildingGameObj * building, bool mct_damage, ArmedGameObj * damager )
 {
 //	if ( CombatManager::I_Am_Server() )			Clients can make damage now
@@ -324,7 +318,6 @@ void	ExplosionManager::Explosion_Damage_Building( int explosion_def_id, Building
 		building->Apply_Damage_Building( offense, mct_damage );
 	}
 }
-
 
 /*
 ** Broadcastes server explosion event
@@ -356,9 +349,6 @@ void	ExplosionManager::Explode( int explosion_def_id, const Vector3 & pos, int o
 		Create_Explosion_At( explosion_def_id, pos, owner, Vector3( 0,0,-1), force_victim );
 	}
 }
-
-
-
 
 /* 04/23/01 - reenabling - in the hopes that sr was to blame
 /**/

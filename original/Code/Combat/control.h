@@ -113,7 +113,6 @@ private:
 	float			AnalogValues[ ANALOG_CONTROL_COUNT ];
 };
 
-
 inline void	ControlClass::Set_Analog( AnalogControl control, float value )	
 {
 	AnalogValues[ control ] = value; 

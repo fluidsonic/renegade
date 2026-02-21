@@ -10,6 +10,5 @@ T Bound(T original, T minval, T maxval)
 	return(original);
 };
 
-
 #endif
 

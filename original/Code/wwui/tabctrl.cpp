@@ -13,8 +13,6 @@
 #include "font3d.h"
 #include "childdialog.h"
 
-
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -38,7 +36,6 @@ static const float		ANGLE_MAX			= 245;
 static const float		BLINK_DELAY			= 500;
 static const float		PAGE_AREA_OFFSET	= 245;
 static const float		PIXELS_PER_SEC		= 500;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -82,7 +79,6 @@ TabCtrlClass::TabCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~TabCtrlClass
@@ -93,7 +89,6 @@ TabCtrlClass::~TabCtrlClass (void)
 	Free_Tabs ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -201,7 +196,6 @@ TabCtrlClass::Create_Text_Renderer (void)
 				HilightRenderer.Set_Location (Vector2 (x_pos, y_pos));
 				HilightRenderer.Draw_Sentence (RGB_TO_INT32 (147, 155, 153));*/
 
-
 			StyleMgrClass::Render_Glow (title, &HilightGlowRenderer, text_rect, 7, 7,
 									StyleMgrClass::Get_Tab_Glow_Color ());
 
@@ -260,7 +254,6 @@ TabCtrlClass::Create_Text_Renderer (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -400,7 +393,6 @@ TabCtrlClass::Create_Control_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -420,7 +412,6 @@ TabCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -450,7 +441,6 @@ TabCtrlClass::Update_Client_Rect (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -484,7 +474,6 @@ TabCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -503,7 +492,6 @@ TabCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -515,7 +503,6 @@ TabCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Move
@@ -526,7 +513,6 @@ TabCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -542,7 +528,6 @@ TabCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -556,7 +541,6 @@ TabCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -596,7 +580,6 @@ TabCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -607,7 +590,6 @@ TabCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -645,7 +627,6 @@ TabCtrlClass::Tab_From_Pos (const Vector2 &mouse_pos)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Pos_From_Tab
@@ -662,7 +643,6 @@ TabCtrlClass::Pos_From_Tab (int index)
 	//
 	return ClientRect.Top + (tab_height * (index + 1)) - (tab_height / 2);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -699,7 +679,6 @@ TabCtrlClass::Set_Curr_Tab (int index)
 	return ;	
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Bubble
@@ -734,7 +713,6 @@ TabCtrlClass::Update_Bubble (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -784,7 +762,6 @@ TabCtrlClass::Update_Selector (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Tab
@@ -823,7 +800,6 @@ TabCtrlClass::Add_Tab (ChildDialogClass *dialog)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Remove_Tab
@@ -846,7 +822,6 @@ TabCtrlClass::Remove_Tab (int index)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Free_Tabs
@@ -866,7 +841,6 @@ TabCtrlClass::Free_Tabs (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Wheel
@@ -883,7 +857,6 @@ TabCtrlClass::On_Mouse_Wheel (int direction)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -905,7 +878,6 @@ TabCtrlClass::Apply_Changes_On_Tabs (void)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Discard_Changes_On_Tabs
@@ -925,7 +897,6 @@ TabCtrlClass::Discard_Changes_On_Tabs (void)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

@@ -25,7 +25,5 @@ protected:
 	int				Completed;
 };
 
-
-
 #endif
 

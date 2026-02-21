@@ -27,7 +27,6 @@
 				pobject = NULL;					\
 			}											\
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	MMSLockClass
@@ -39,10 +38,8 @@ class MMSLockClass
 		MMSLockClass (void) { ::AIL_lock (); }
 		~MMSLockClass (void) { ::AIL_unlock (); }
 
-
 	static CRITICAL_SECTION _MSSLockCriticalSection;
 };
-
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -63,6 +60,5 @@ Get_Filename_From_Path (LPCTSTR path)
 	// Return the filename part of the path
 	return filename;
 }
-
 
 #endif //__UTILS_H

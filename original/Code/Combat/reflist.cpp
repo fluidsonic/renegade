@@ -1,9 +1,6 @@
 #include "reflist.h"
 #include "scriptablegameobj.h"
 
-
-
-
 bool	ReferencerClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_REF_VARIABLES );
@@ -12,11 +9,9 @@ bool	ReferencerClass::Save( ChunkSaveClass & csave )
 	return true;
 }
 
-
 bool	ReferencerClass::Load( ChunkLoadClass & cload )
 {
 	cload.Open_Chunk();
-
 
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
@@ -38,7 +33,6 @@ bool	ReferencerClass::Load( ChunkLoadClass & cload )
 	return true;
 }
 
-
 void	ReferencerClass::On_Post_Load(void)	
 {
 	// if we found our target, re-link to it.  
@@ -48,7 +42,6 @@ void	ReferencerClass::On_Post_Load(void)
 		*this = data;
 	}
 }
-
 
 const ReferencerClass & ReferencerClass::operator = ( const ScriptableGameObj * reference_target )
 {
@@ -73,7 +66,6 @@ const ReferencerClass & ReferencerClass::operator = ( const ScriptableGameObj * 
 			}
 		}
 	}
-
 
 	if ( reference_target != NULL ) {			// if new reference is non-null
 		ReferenceTarget = (ReferenceableClass<ScriptableGameObj> *) (reference_target);		// set it and link list

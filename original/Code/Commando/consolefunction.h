@@ -9,7 +9,6 @@
 	#include "vector.h"
 #endif
 
-
 /*
 ** Console Function
 */

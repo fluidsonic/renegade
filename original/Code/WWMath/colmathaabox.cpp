@@ -8,7 +8,6 @@
 #include "aabox.h"
 #include "obbox.h"
 
-
 /***********************************************************************************************
  * CollisionMath::Intersection_Test -- Test intersection between two AABoxes                   *
  *                                                                                             *
@@ -62,8 +61,6 @@ CollisionMath::OverlapType CollisionMath::Overlap_Test(const AABoxClass & box,co
 
 	return INSIDE;
 }
-
-
 
 /***********************************************************************************************
  * CollisionMath::Overlap_Test -- Tests overlap between an AABox and a line segment            *
@@ -296,7 +293,6 @@ CollisionMath::OverlapType CollisionMath::Overlap_Test(const AABoxClass & box,co
 }
 #endif // Alternate Overlap Test for AABox-Ray
 
-
 /***********************************************************************************************
  * CollisionMath::Overlap_Test -- Tests overlap between an AABox and a triangle                *
  *                                                                                             *
@@ -315,7 +311,6 @@ CollisionMath::OverlapType CollisionMath::Overlap_Test(const AABoxClass & box,co
 	CollisionMath::Collide(box,Vector3(0,0,0),tri,&res);
 	return eval_overlap_collision(res);
 }
-
 
 /***********************************************************************************************
  * CollisionMath::Collide -- Collision test for a moving AABox and a plane                     *
@@ -382,10 +377,6 @@ bool CollisionMath::Collide
 	return false;
 }
 
-
-
-
-
 /*
 ** AABCollisionStruct
 ** Contains all of the intermediate and temporary values used by
@@ -421,7 +412,6 @@ private:
 	AABCollisionStruct(const AABCollisionStruct&);
 	AABCollisionStruct & operator = (const AABCollisionStruct&);
 };
-
 
 /***********************************************************************************************
  * aab_separation_test -- tests two AAB's for separation on an axis                            *
@@ -486,7 +476,6 @@ static inline bool aab_separation_test
 	return false;
 }
 
-
 /***********************************************************************************************
  * CollisionMath::Collide -- Collision test for two moving AABoxes                             *
  *                                                                                             *
@@ -548,5 +537,4 @@ exit:
 	}
 	return false;
 }
-
 

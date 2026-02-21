@@ -36,7 +36,6 @@ BOOL APIENTRY DllMain(HINSTANCE hinst, DWORD reason, LPVOID)
 	return TRUE;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -57,7 +56,6 @@ ScriptClass* Create_Script(const char* name)
 {
 	return ScriptRegistrar::CreateScript(name);
 }
-
 
 /******************************************************************************
 *
@@ -81,7 +79,6 @@ void Destroy_Script(ScriptClass* script)
 	delete script;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -102,7 +99,6 @@ int Get_Script_Count(void)
 {
 	return ScriptRegistrar::Count();
 }
-
 
 /******************************************************************************
 *
@@ -131,7 +127,6 @@ const char* Get_Script_Name(int index)
 	return NULL;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -158,7 +153,6 @@ const char* Get_Script_Param_Description(int index)
 
 	return NULL;
 }
-
 
 /******************************************************************************
 *
@@ -198,7 +192,6 @@ bool Set_Script_Commands(ScriptCommandsClass* commands)
 
 	return true;
 }
-
 
 /******************************************************************************
 *

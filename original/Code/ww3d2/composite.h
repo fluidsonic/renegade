@@ -54,6 +54,4 @@ protected:
 	AABoxClass						ObjBox;					// object-space bounding box
 };
 
-
-
 #endif

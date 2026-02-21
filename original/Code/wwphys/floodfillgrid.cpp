@@ -4,7 +4,6 @@
 #include "colmath.h"
 #include "colmathaabox.h"
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	FloodfillGridClass
@@ -22,7 +21,6 @@ FloodfillGridClass::FloodfillGridClass (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	~FloodfillGridClass
@@ -33,7 +31,6 @@ FloodfillGridClass::~FloodfillGridClass (void)
 	Reset ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -53,7 +50,6 @@ FloodfillGridClass::Reset (void)
 	m_CellSize.Y	= 0;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -100,7 +96,6 @@ FloodfillGridClass::Initialize
 	::memset (m_Grid, 0, sizeof (FloodfillBoxClass *) * m_CellsX * m_CellsY);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -149,7 +144,6 @@ FloodfillGridClass::Collect_Boxes (const AABoxClass &vol)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Find_Box
@@ -186,7 +180,6 @@ FloodfillGridClass::Find_Box  (const Vector3 &pos)
 
 	return box;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -246,6 +239,4 @@ FloodfillGridClass::Compute_Box_Count(const AABoxClass & vol)
 
 	return count;
 }
-
-
 

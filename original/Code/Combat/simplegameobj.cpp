@@ -4,7 +4,6 @@
 #include "pscene.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
-#include "debug.h"
 #include "simpledefinitionfactory.h"
 #include "phys.h"
 #include "apppackettypes.h"

@@ -38,7 +38,6 @@ protected:
 	friend	class								CinematicGameObj;
 };
 
-
 /*
 **
 */
@@ -88,6 +87,5 @@ public:
 protected:
 	AudibleSoundClass		*Sound;
 };
-
 
 #endif	//	CINEMATICGAMEOBJ_H

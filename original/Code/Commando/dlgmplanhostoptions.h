@@ -2,13 +2,11 @@
 #ifndef __DLG_MP_LAN_HOST_OPTIONS_H
 #define __DLG_MP_LAN_HOST_OPTIONS_H
 
-
 #include "menudialog.h"
 #include "resource.h"
 #include "childdialog.h"
 #include <wwlib/vector.h>
 #include <Signaler.h>
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -17,7 +15,6 @@ class cGameData;
 class DlgMsgBoxEvent;
 class ModPackageClass;
 class MPLanHostMapCycleOptionsTabClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -58,8 +55,6 @@ private:
 	MPLanHostMapCycleOptionsTabClass *	MapCycleDialog;
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPLanHostBasicOptionsTabClass
@@ -97,8 +92,6 @@ private:
 	static int BandTestMaxPlayers;
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPLanHostAdvancedOptionsTabClass
@@ -126,7 +119,6 @@ public:
 
 protected:
 	void ReceiveSignal(bool&);
-	bool IsHostAClanMember(void) const;
 
 private:
 	bool mPassword;
@@ -137,8 +129,6 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -186,8 +176,6 @@ private:
 	DynamicVectorClass<WideStringClass>	MapCycleList;
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPLanHostVictoryOptionsTabClass
@@ -220,7 +208,6 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
 
 /*
 ////////////////////////////////////////////////////////////////
@@ -268,16 +255,5 @@ public:
 	bool		On_Apply (void);
 };
 
-
-
 #endif //__DLG_MP_LAN_HOST_OPTIONS_H
-
-
-
-
-
-
-
-
-
 

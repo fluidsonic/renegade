@@ -13,7 +13,6 @@
 #include "explosion.h"
 #include "combat.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cScExplosionEvent, NETCLASSID_SCEXPLOSIONEVENT);
 
 //-----------------------------------------------------------------------------
@@ -54,7 +53,6 @@ cScExplosionEvent::Act(void)
 //	assert(CombatManager::I_Am_Client());
 
 	ExplosionManager::Explode( DefID, Position, OwnerID, VictimID );
-
 
 	Set_Delete_Pending();
 }

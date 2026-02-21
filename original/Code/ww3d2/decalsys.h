@@ -81,7 +81,6 @@ protected:
 	static uint32							DecalIDGenerator;
 };
 
-
 /**
 ** DecalGeneratorClass
 ** This class encapsulates the information needed to generate a decal.   It also tracks
@@ -163,7 +162,6 @@ protected:
 
 	friend class DecalSystemClass;
 };
-
 
 /**
 ** MultiFixedPoolDecalSystemClass: This is for decal systems which use several fixed-size decal
@@ -259,9 +257,6 @@ protected:
 	uint32											PoolCount;
 
 };
-
-
-
 
 #endif //DECALSYS_H
 

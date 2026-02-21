@@ -7,7 +7,6 @@
 #include "pscene.h"
 #include "physcoltest.h"
 
-
 /**
 ** RenderObjPhysClass
 ** The *ONLY* purpose of this class is as a wrapper when render objects are added 
@@ -42,7 +41,6 @@ public:
 	virtual bool								Load (ChunkLoadClass &cload);
 	virtual void								On_Post_Load (void);
 
-
 private:
 
 	// Not implemented...
@@ -50,7 +48,6 @@ private:
 	RenderObjPhysClass & operator = (const RenderObjPhysClass &);
 
 };
-
 
 #endif
 

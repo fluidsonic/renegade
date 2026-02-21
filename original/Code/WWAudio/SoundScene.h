@@ -16,7 +16,6 @@ class RenderObjClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	Typedefs
@@ -28,7 +27,6 @@ typedef MultiListClass<AudibleSoundClass>						AUDIBLE_SOUND_LIST;
 typedef MultiListClass<SoundCullObjClass>						SOUND_LIST;
 typedef MultiListClass<LogicalSoundClass>						LOGICAL_SOUND_LIST;
 typedef MultiListClass<LogicalListenerClass>					LOGICAL_LISTENER_LIST;
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -183,6 +181,5 @@ class SoundSceneClass
 
 		bool								m_IsBatchMode;
 };
-
 
 #endif //__SOUNDSCENE_H

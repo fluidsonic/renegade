@@ -27,7 +27,6 @@ public:
 	static void				Destroy_Instance(void);
 	static cServerFps *	Get_Instance(void);
 
-
 private:
 
 	//

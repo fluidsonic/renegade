@@ -25,7 +25,6 @@
 
 #endif //SAFE_DELETE
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Global variable initialization
@@ -37,7 +36,6 @@ const char *EMITTER_TYPE_NAMES[EMITTER_TYPEID_COUNT] =
 {
 	"Default"
 };
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -64,7 +62,6 @@ ParticleEmitterDefClass::ParticleEmitterDefClass (void)
 	::memset (&m_LineProperties, 0, sizeof (m_LineProperties));
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -94,7 +91,6 @@ ParticleEmitterDefClass::ParticleEmitterDefClass (const ParticleEmitterDefClass 
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	~ParticleEmitterDefClass
@@ -123,7 +119,6 @@ ParticleEmitterDefClass::~ParticleEmitterDefClass (void)
 	SAFE_DELETE (m_pVelocityRandomizer);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -199,7 +194,6 @@ ParticleEmitterDefClass::Free_Props (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Velocity_Random
@@ -219,7 +213,6 @@ ParticleEmitterDefClass::Set_Velocity_Random (Vector3Randomizer *randomizer)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -241,7 +234,6 @@ ParticleEmitterDefClass::Set_Creation_Volume (Vector3Randomizer *randomizer)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_User_String
@@ -253,7 +245,6 @@ ParticleEmitterDefClass::Set_User_String (const char *pstring)
 	m_pUserString = ::_strdup (pstring); 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -267,7 +258,6 @@ ParticleEmitterDefClass::Set_Name (const char *pname)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Texture_Filename
@@ -279,7 +269,6 @@ ParticleEmitterDefClass::Set_Texture_Filename (const char *pname)
 	Normalize_Filename (); 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -304,7 +293,6 @@ ParticleEmitterDefClass::Normalize_Filename (void)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -374,7 +362,6 @@ ParticleEmitterDefClass::Load_W3D (ChunkLoadClass &chunk_load)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Initialize_To_Ver2
@@ -406,7 +393,6 @@ ParticleEmitterDefClass::Initialize_To_Ver2 (void)
 	Free_Props ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -485,7 +471,6 @@ ParticleEmitterDefClass::Convert_To_Ver2 (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Read_Header
@@ -518,7 +503,6 @@ ParticleEmitterDefClass::Read_Header (ChunkLoadClass &chunk_load)
 	// Return the WW3DErrorType return code
 	return ret_val;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -563,7 +547,6 @@ ParticleEmitterDefClass::Read_User_Data (ChunkLoadClass &chunk_load)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Read_Info
@@ -594,7 +577,6 @@ ParticleEmitterDefClass::Read_Info (ChunkLoadClass &chunk_load)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Create_Randomizer
@@ -624,7 +606,6 @@ ParticleEmitterDefClass::Create_Randomizer (W3dVolumeRandomizerStruct &info)
 
 	return randomizer;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -666,7 +647,6 @@ ParticleEmitterDefClass::Initialize_Randomizer_Struct
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Read_InfoV2
@@ -704,7 +684,6 @@ ParticleEmitterDefClass::Read_InfoV2 (ChunkLoadClass &chunk_load)
 	// Return the WW3DErrorClass::ErrorType return code
 	return ret_val;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -817,7 +796,6 @@ ParticleEmitterDefClass::Read_Props (ChunkLoadClass &chunk_load)
 	return ret_val;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	Read_Color_Keyframe
@@ -854,7 +832,6 @@ ParticleEmitterDefClass::Read_Color_Keyframe
 
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -893,7 +870,6 @@ ParticleEmitterDefClass::Read_Opacity_Keyframe
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	Read_Size_Keyframe
@@ -931,7 +907,6 @@ ParticleEmitterDefClass::Read_Size_Keyframe
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	Read_Line_Properties
@@ -956,7 +931,6 @@ ParticleEmitterDefClass::Read_Line_Properties(ChunkLoadClass & chunk_load)
 	// Return the WW3DErrorType return code
 	return ret_val;
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -1003,7 +977,6 @@ ParticleEmitterDefClass::Read_Rotation_Keyframes (ChunkLoadClass &chunk_load)
 	}
 	return ret_val;
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -1127,7 +1100,6 @@ ParticleEmitterDefClass::Save_W3D (ChunkSaveClass &chunk_save)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Save_Header
@@ -1161,7 +1133,6 @@ ParticleEmitterDefClass::Save_Header (ChunkSaveClass &chunk_save)
 	// Return the WW3DErrorType return code
 	return ret_val;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -1209,7 +1180,6 @@ ParticleEmitterDefClass::Save_User_Data (ChunkSaveClass &chunk_save)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Save_Info
@@ -1238,7 +1208,6 @@ ParticleEmitterDefClass::Save_Info (ChunkSaveClass &chunk_save)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Save_InfoV2
@@ -1266,7 +1235,6 @@ ParticleEmitterDefClass::Save_InfoV2 (ChunkSaveClass &chunk_save)
 	// Return the WW3DErrorType return code
 	return ret_val;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -1317,7 +1285,6 @@ ParticleEmitterDefClass::Save_Props (ChunkSaveClass &chunk_save)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Save_Color_Keyframes
@@ -1355,7 +1322,6 @@ ParticleEmitterDefClass::Save_Color_Keyframes (ChunkSaveClass &chunk_save)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Save_Opacity_Keyframes
@@ -1392,7 +1358,6 @@ ParticleEmitterDefClass::Save_Opacity_Keyframes (ChunkSaveClass &chunk_save)
 	// Return the WW3DErrorType return code
 	return ret_val;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -1503,7 +1468,6 @@ ParticleEmitterDefClass::Save_Rotation_Keyframes (ChunkSaveClass & chunk_save)
 	return ret_val;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Save_Frame_Keyframes
@@ -1612,7 +1576,6 @@ ParticleEmitterDefClass::Set_Color_Keyframes (ParticlePropertyStruct<Vector3> &k
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Opacity_Keyframes
@@ -1627,7 +1590,6 @@ ParticleEmitterDefClass::Set_Opacity_Keyframes (ParticlePropertyStruct<float> &k
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Size_Keyframes
@@ -1641,7 +1603,6 @@ ParticleEmitterDefClass::Set_Size_Keyframes (ParticlePropertyStruct<float> &keyf
 	::Copy_Emitter_Property_Struct (m_SizeKeyframes, keyframes);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -1697,7 +1658,6 @@ ParticleEmitterDefClass::Get_Color_Keyframes (ParticlePropertyStruct<Vector3> &k
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Opacity_Keyframes
@@ -1708,7 +1668,6 @@ ParticleEmitterDefClass::Get_Opacity_Keyframes (ParticlePropertyStruct<float> &k
 	::Copy_Emitter_Property_Struct (keyframes, m_OpacityKeyframes);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -1732,7 +1691,6 @@ ParticleEmitterDefClass::Get_Rotation_Keyframes (ParticlePropertyStruct<float> &
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Frame_Keyframes
@@ -1755,7 +1713,6 @@ ParticleEmitterDefClass::Get_Blur_Time_Keyframes (ParticlePropertyStruct<float> 
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Create
@@ -1765,7 +1722,6 @@ ParticleEmitterPrototypeClass::Create (void)
 {
 	return ParticleEmitterClass::Create_From_Definition (*m_pDefinition);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //

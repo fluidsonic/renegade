@@ -86,15 +86,9 @@ cEvictionEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	int eviction_code = packet.Get(eviction_code);
 	EvictionCode = (EvictionCodeEnum) eviction_code;
 
 	Act();
 }
-
-
-
-
-
 

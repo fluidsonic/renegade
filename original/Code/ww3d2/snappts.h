@@ -7,7 +7,6 @@
 #include "vector3.h"
 #include "w3derr.h"
 
-
 class ChunkLoadClass;
 
 class SnapPointsClass : public DynamicVectorClass<Vector3>, public RefCountClass

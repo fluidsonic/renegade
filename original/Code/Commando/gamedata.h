@@ -162,7 +162,6 @@ class	cGameData :
 		void	Set_Do_Maps_Loop (bool onoff)			{ DoMapsLoop = onoff; }
 		bool	Is_Map_Valid(char **filename = NULL);
 
-
 		//
 		// Ideally, none of these would exist, so comment out any unused ones...
 		//
@@ -185,7 +184,6 @@ class	cGameData :
 		virtual bool	Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server = false);
 		virtual void	Export_Tier_1_Data(cPacket & packet);
 		virtual void	Import_Tier_1_Data(cPacket & packet);
-		virtual void	Import_Tier_1_Data(const WOLGameInfo& gameInfo);
 		virtual void	Export_Tier_2_Data(cPacket & packet);
 		virtual void	Import_Tier_2_Data(cPacket & packet);
 
@@ -231,7 +229,6 @@ class	cGameData :
 		static	bool	Is_Manual_Exit(void)									{return IsManualExit;}
 		static	void	Set_Manual_Exit(bool is_manual_exit) 			{IsManualExit = is_manual_exit;}
 
-
 		static	void					Set_Win_Text(WideStringClass & text);
 		static	WideStringClass	Get_Win_Text(void)					{return WinText;}
 
@@ -252,7 +249,6 @@ class	cGameData :
 
 		virtual	void	Get_Description(WideStringClass & description);
 
-
 		WideStringClass	Get_Settings_Description(void)						{return(SettingsDescription);}
 		void					Set_Settings_Description(WideStringClass desc)	{SettingsDescription = desc;}
 
@@ -269,7 +265,6 @@ class	cGameData :
 		cBoolean 		CanRepairBuildings;
 		cBoolean 		DriverIsAlwaysGunner;
 		cBoolean 		SpawnWeapons;
-
 
 		enum {MAX_MAPS = 100};
 
@@ -363,23 +358,6 @@ extern cGameDataSkirmish *				The_Skirmish_Game(void);
 extern cGameDataCnc *					The_Cnc_Game(void);
 
 #endif	// GAMEDATA_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //extern cGameDataDeathMatch *			The_Deathmatch_Game(void);
 //extern cGameDataTeamDeathMatch *		The_Team_Deathmatch_Game(void);

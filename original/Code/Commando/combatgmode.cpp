@@ -4,7 +4,6 @@
 #include "input.h"
 #include "cnetwork.h"
 #include "AudibleSound.H"
-#include "debug.h"
 #include "registry.h"
 #include "_globals.h"
 #include "console.h"
@@ -86,7 +85,6 @@ static bool				ForceGodPending								= true;
 static int				DefaultToFirstPerson							= true;
 static bool				PendingCampaignContinue						= false;
 
-
 /*
 **
 */
@@ -164,7 +162,6 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 		}
 		esc_pressed_time=current_time;
 	}
-
 
 	// HACK: In ATI demo toggle the statistics display using TAB
 	if ( Input::Get_State( INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE ) ) {
@@ -257,7 +254,6 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 		MultiHUDClass::Next_Playerlist_Format();
 	}
 
-
 	if (	(The_Game() != NULL &&
 		    (Input::Get_State(INPUT_FUNCTION_BEGIN_PUBLIC_MESSAGE) ||
 		     (Input::Get_State(INPUT_FUNCTION_BEGIN_TEAM_MESSAGE) && cNetwork::I_Am_Client()))) &&
@@ -341,7 +337,6 @@ public:
 	LoadingScreenClass()
 	{
 		int color = 0xFFFFFFFF;
-
 
 		backdropText.Set_Texture_Size_Hint( 256 );
 		backdropText2.Set_Texture_Size_Hint( 256 );
@@ -480,7 +475,6 @@ public:
 				color = c.Convert_To_ARGB();
 			}
 
-
 		}
 		SaveLoadStatus::Reset_Status_Count();
 	}
@@ -504,7 +498,6 @@ public:
 			default:	return 1.0f;
 		}
 	}
-
 
 	void Render(bool update_network = false)
 	{
@@ -546,7 +539,6 @@ public:
 };
 
 #define LOADTIME_NETWORK_UPDATE if (!IS_SOLOPLAY) cNetwork::Update()
-
 
 /*
 **
@@ -614,7 +606,6 @@ void CombatGameModeClass::Load_Level( void )
 	TextureLoader::Suspend_Texture_Load();
 
 	CombatManager::Load_Level_Threaded( map_name, preload_assets );
-
 
 	while (!CombatManager::Is_Load_Level_Complete() ) {
 		loading_screen.Render(true);
@@ -767,7 +758,6 @@ void CombatGameModeClass::Load_Level( void )
 	}
 }
 
-
 void 	CombatGameModeClass::Core_Shutdown()
 {
 	Debug_Say(("CombatGameModeClass::Core_Shutdown\n"));
@@ -851,8 +841,6 @@ void CombatGameModeClass::Post_Load_Id_Uniqueness_Check(void)
 
 //	Debug_Say(("  %d unique physical objects were loaded.\n", phys_obj_count));
 
-
-
 	//
 	// Make sure no 2 static objects have the same id.
 	//
@@ -912,7 +900,6 @@ void CombatGameModeClass::Post_Load_Dynamic_Object_Filtering(void)
 	//
 	// Remove any grunts unless this is a mission.
 	//
-
 
    SLNode<SmartGameObj> * objnode;
    for (objnode = GameObjManager::Get_Smart_Game_Obj_List()->Head(); objnode; objnode = objnode->Next()) {
@@ -1137,17 +1124,11 @@ void 	CombatGameModeClass::Think()
 	// Network Update needs to be between input and think
 	//
 
-	float time_1;
-	{
-	WWMeasureItClass net_upd_time_s(&time_1);
+	float time_1 = 0.0f;
 	cNetwork::Update();
-	}
 
-	float time_2;
-	{
-	WWMeasureItClass combat_think_time_s(&time_2);
+	float time_2 = 0.0f;
 	CombatManager::Think();
-	}
 
 	if (cNetwork::I_Am_Server())
 	{
@@ -1181,7 +1162,6 @@ void 	CombatGameModeClass::Think()
 		CampaignManager::Continue();
 	}
 
-
 #ifdef MULTIPLAYERDEMO
 	//
 	// Security check. Randomly every few minutes, check to see if a special
@@ -1195,7 +1175,6 @@ void 	CombatGameModeClass::Think()
 		Stop_Main_Loop(EXIT_SUCCESS);
 	}
 #endif // MULTIPLAYERDEMO
-
 
 	if (g_b_core_restart)	{
 
@@ -1361,7 +1340,6 @@ void	CombatGameModeClass::Suspend(void)
 	return ;
 }
 
-
 /*
 **
 */
@@ -1405,32 +1383,6 @@ void	CombatGameModeClass::Quick_Save( void )
 	HUDInfo::Set_HUD_Help_Text( TRANSLATE( IDS_M00DSGN_DSGN1017I1DSGN_TXT ), Vector3( 0,1,0 ) );
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/**/
 	/*

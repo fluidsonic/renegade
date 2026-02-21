@@ -10,7 +10,6 @@
 
 class UmbraCommanderClass;
 
-
 /*
 ** Static Variables
 */
@@ -24,7 +23,6 @@ static Umbra::Vector3					_umbra_box_verts[8];
 static Umbra::Vector3i					_umbra_box_faces[12];
 static int									_umbra_box_vert_count = 8;
 static int									_umbra_box_face_count = 12;
-
 
 /*
 ** 
@@ -74,7 +72,6 @@ static void _convert_matrix_westwood_to_umbra(const Matrix3D & in,Umbra::Matrix4
 #endif
 }
 
-
 static void _convert_frustum_westwood_to_umbra(const CameraClass & camera,Umbra::Frustum & out)
 {
 	camera.Get_Clip_Planes(out.zNear,out.zFar);
@@ -89,7 +86,6 @@ static void _convert_frustum_westwood_to_umbra(const CameraClass & camera,Umbra:
 
 //	out.zFar = 1500.0;
 }
-
 
 static void _init_umbra_box(const AABoxClass & obj_bound_box) 
 {
@@ -125,7 +121,6 @@ static void _init_umbra_box(const AABoxClass & obj_bound_box)
 	_umbra_box_verts[7].v[1] = obj_bound_box.Center.Y - obj_bound_box.Extent.Y;
 	_umbra_box_verts[7].v[2] = obj_bound_box.Center.Z + obj_bound_box.Extent.Z;
 
-
 	// -z face
 	_umbra_box_faces[0].i = 2; _umbra_box_faces[0].j = 0; _umbra_box_faces[0].k = 3;
 	_umbra_box_faces[1].i = 2; _umbra_box_faces[1].j = 1; _umbra_box_faces[1].k = 0;
@@ -150,11 +145,6 @@ static void _init_umbra_box(const AABoxClass & obj_bound_box)
 	_umbra_box_faces[10].i = 2; _umbra_box_faces[10].j = 7; _umbra_box_faces[10].k = 6;
 	_umbra_box_faces[11].i = 2; _umbra_box_faces[11].j = 3; _umbra_box_faces[11].k = 7;
 }
-
-
-
-
-
 
 /**
 ** UmbraCommanderClass
@@ -188,10 +178,6 @@ protected:
 
 	RefPhysListClass * VisObjList;
 };
-
-
-
-
 
 /*
 ** UmbraSupport implementation
@@ -338,7 +324,6 @@ Umbra::Model * UmbraSupport::Create_Mesh_Model(MeshClass & mesh)
 	}
 }
 
-
 void UmbraSupport::Collect_Visible_Objects(const CameraClass & camera,RefPhysListClass & visible_obj_list)
 {
 	Umbra::Matrix4x4 camtocell;
@@ -357,7 +342,6 @@ void UmbraSupport::Collect_Visible_Objects(const CameraClass & camera,RefPhysLis
 	_TheCommander->Set_List(visible_obj_list);
 	_TheCamera->resolveVisibility(_TheCommander,1,0.0);
 }
-
 
 void UmbraSupport::Update_Umbra_Object(PhysClass * obj)
 {

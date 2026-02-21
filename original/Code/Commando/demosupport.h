@@ -48,7 +48,6 @@ cDemoSupport::Security_Check
 		 (CRC_Stringi(The_Game()->Get_Map_Name()) != 721292856) &&
 		 (::rand() % 5000 == 2273)) {
 
-
 		//
 		// Hacked. Bail. Don't care how cleanly it exits.
 		//
@@ -65,7 +64,4 @@ cDemoSupport::Security_Check
 //-----------------------------------------------------------------------------
 
 #endif // __DEMOSUPPORT_H__
-
-
-
 

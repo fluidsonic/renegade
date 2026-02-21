@@ -9,7 +9,6 @@
 #include "binheap.h"
 #include "refcount.h"
 
-
 /////////////////////////////////////////////////////////////////////////
 // Forward declarations
 /////////////////////////////////////////////////////////////////////////
@@ -18,7 +17,6 @@ class WaypointClass;
 class PathSolveClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -106,7 +104,6 @@ public:
 	float					Get_Velocity (void) const		{ return m_Velocity; }
 	void					Set_Velocity (float velocity)	{ m_Velocity = velocity; }
 
-
 	//
 	// Traversal type methods
 	//
@@ -154,7 +151,6 @@ public:
 	static bool			Are_Move_Vectors_Displayed (void)	{ return m_DisplayMoveVectors; }
 	static void			Display_Move_Vectors (bool onoff)	{ m_DisplayMoveVectors = onoff; }
 
-
 protected:
 
 	/////////////////////////////////////////////////////////////////////////
@@ -184,7 +180,6 @@ protected:
 
 	} PATH_NODE;
 
-
 	/////////////////////////////////////////////////////////////////////////
 	// Protected methods
 	/////////////////////////////////////////////////////////////////////////
@@ -195,7 +190,6 @@ protected:
 
 	void					Add_Waypath_Data (DynamicVectorClass<PATH_NODE> &node_list, WaypathClass *waypath, int start_index, int end_index);
 	void					Add_Waypoint_Info_To_Node_List (DynamicVectorClass<PATH_NODE> &node_list, WaypointClass *waypoint, WaypointClass *next_point);
-
 
 	typedef DynamicVectorClass<AABoxClass *>		BOX_LIST;
 	bool					Is_Point_In_Boxes (const Vector3 &point, BOX_LIST &box_list);
@@ -240,11 +234,9 @@ private:
 	static bool									m_DisplayMoveVectors;
 };
 
-
 /////////////////////////////////////////////////////////////////////////
 //	Inlines
 /////////////////////////////////////////////////////////////////////////
-
 
 /////////////////////////////////////////////////////////////////////////
 //	Get_Action_Type
@@ -260,7 +252,6 @@ PathClass::Get_Action_Type (void)
 	return retval;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //	Get_Action_Destination
 /////////////////////////////////////////////////////////////////////////
@@ -274,7 +265,6 @@ PathClass::Get_Action_Destination (Vector3 &dest)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //	Get_Action_Entrance
 /////////////////////////////////////////////////////////////////////////
@@ -287,7 +277,6 @@ PathClass::Get_Action_Entrance (Vector3 &position)
 
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 //	Get_Action_Mechanism
@@ -303,6 +292,5 @@ PathClass::Get_Action_Mechanism (void)
 
 	return mechanism_id;
 }
-
 
 #endif //__COMMANDO_PATH_H

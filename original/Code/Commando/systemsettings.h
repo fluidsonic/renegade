@@ -71,7 +71,6 @@ public:
 	virtual	ConsoleFunctionClass *	Create_Console_Function()	= 0;
 };
 
-
 /*
 ** Bool Entry
 */
@@ -98,7 +97,6 @@ private:
 	virtual	bool					Get_Bool( void )							= 0;
 	virtual	void					Set_Bool( bool state )					= 0;
 };
-
 
 /*
 ** Slider Entry
@@ -134,7 +132,6 @@ private:
 	virtual	int					Get_Slider( void ) 							= 0;
 	virtual	void					Set_Slider( int value )						= 0;
 };
-
 
 /*
 ** Enum Entry

@@ -15,7 +15,6 @@ class FloodfillBoxClass;
 class PathfindSectorClass;
 class PathfindPortalClass;
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Data types
 //////////////////////////////////////////////////////////////////////////
@@ -47,7 +46,6 @@ typedef enum
 
 } DIRECTION_MASK;
 
-
 inline PATHFIND_DIR
 Mask_to_Dir (DIRECTION_MASK mask)
 {
@@ -73,7 +71,6 @@ Clockwise_Pathfind_Dir (PATHFIND_DIR dir)
 	return PATHFIND_DIR((dir + 3) % DIR_MAX);
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //
 //	FloodfillBoxClass
@@ -98,7 +95,6 @@ class FloodfillBoxClass : public RefCountClass
 				m_Next (NULL)					{ ::memset (m_Neighbors, 0, sizeof (m_Neighbors));  }
 
 		virtual ~FloodfillBoxClass (void)	{ Remove (); }
-
 
 		//////////////////////////////////////////////////////////////////////
 		//	Access to the Position/Orientation state of the object
@@ -239,7 +235,6 @@ class FloodfillBoxClass : public RefCountClass
 		static FloodfillBoxClass *	m_First;
 		static FloodfillBoxClass *	m_Last;
 };
-
 
 //////////////////////////////////////////////////////////////////////////
 // Find_Relative
@@ -466,7 +461,6 @@ FloodfillBoxClass::Part_Of_Portal (PATHFIND_DIR dir)
 	int bit = (1 << (dir + 4));
 	return (m_DirectionInfo & bit) == bit;
 }
-
 
 #endif //__FLOODFILLBOX_H
 

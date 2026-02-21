@@ -8,7 +8,6 @@
 #include "ww3d.h"
 #include <stdlib.h>
 
-
 /******************************************************************************
 *
 * NAME
@@ -55,7 +54,6 @@ SubTitleManagerClass* SubTitleManagerClass::Create(const char* filename, const c
 	return instance;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -77,7 +75,6 @@ SubTitleManagerClass::SubTitleManagerClass()
 	mActiveSubTitle(NULL)
 {
 }
-
 
 /******************************************************************************
 *
@@ -106,14 +103,12 @@ SubTitleManagerClass::~SubTitleManagerClass()
 	}
 }
 
-
 void SubTitleManagerClass::Set_Font(FontCharsClass* font)
 {
 	if (font) {
 		Renderer.Set_Font(font);
 	}
 }
-
 
 /******************************************************************************
 *
@@ -159,7 +154,6 @@ bool SubTitleManagerClass::Load_Sub_Titles(const char* moviename, const char* su
 
 	return true;
 }
-
 
 /******************************************************************************
 *
@@ -232,7 +226,6 @@ bool SubTitleManagerClass::Process(unsigned long movieTime)
 	return update;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -253,7 +246,6 @@ void SubTitleManagerClass::Reset(void)
 	mSubTitleIndex = 0;
 	mActiveSubTitle = NULL;
 }
-
 
 /******************************************************************************
 *
@@ -304,7 +296,6 @@ void SubTitleManagerClass::Draw_Sub_Title(const SubTitleClass* subtitle)
 
 	Renderer.Draw_Sentence(rgbColor);
 }
-
 
 void SubTitleManagerClass::Render()
 {

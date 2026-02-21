@@ -2,7 +2,6 @@
 #ifndef __WAYPATHPOSITION_H
 #define __WAYPATHPOSITION_H
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	WaypathPositionClass
@@ -46,6 +45,5 @@ private:
 	int		WaypointIndex;
 	float		Percent;
 };
-
 
 #endif //__WAYPATHPOSITION_H

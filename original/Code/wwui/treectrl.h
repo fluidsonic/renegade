@@ -2,13 +2,11 @@
 #ifndef __TREECTRL_H
 #define __TREECTRL_H
 
-
 #include "dialogcontrol.h"
 #include "vector.h"
 #include "render2dsentence.h"
 #include "scrollbarctrl.h"
 #include "listiconmgr.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -16,14 +14,12 @@
 class TreeItemClass;
 class TreeCtrlClass;
 
-
 //////////////////////////////////////////////////////////////////////
 //	Typedefs
 //////////////////////////////////////////////////////////////////////
 typedef DynamicVectorClass<TreeItemClass *>	TREE_ITEM_LIST;
 
 typedef int (CALLBACK *TREECTRL_SORT_CALLBACK) (TreeCtrlClass *tree_ctrl, TreeItemClass *item1, TreeItemClass *item2, uint32 user_param);
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -149,7 +145,6 @@ protected:
 	friend class TreeItemClass;
 };
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	TreeItemClass
@@ -258,7 +253,5 @@ protected:
 	bool					NeedsChildren;
 };
 
-
 #endif //__TREECTRL_H
-
 

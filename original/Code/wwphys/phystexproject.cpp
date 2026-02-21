@@ -21,7 +21,6 @@ PhysTexProjectClass::PhysTexProjectClass(void)
 {
 }
 
-
 /***********************************************************************************************
  * PhysTexProjectClass::~PhysTexProjectClass -- Destructor                                     *
  *                                                                                             *
@@ -37,7 +36,6 @@ PhysTexProjectClass::PhysTexProjectClass(void)
 PhysTexProjectClass::~PhysTexProjectClass(void)
 {
 }
-
 
 /***********************************************************************************************
  * PhysTexProjectClass::Compute_Perspective_Projection -- compute projection of a Phys object  *
@@ -71,7 +69,6 @@ bool PhysTexProjectClass::Compute_Perspective_Projection
 	return TexProjectClass::Compute_Perspective_Projection(box,tm,lightpos,nearz,farz);
 }
 
-
 /***********************************************************************************************
  * PhysTexProjectClass::Compute_Ortho_Projection -- Compute projection of a Phys object        *
  *                                                                                             *
@@ -103,7 +100,6 @@ bool PhysTexProjectClass::Compute_Ortho_Projection
 
 	return TexProjectClass::Compute_Ortho_Projection(box,tm,lightdir,nearz,farz);
 }
-
 
 /***********************************************************************************************
  * PhysTexProjectClass::Compute_Texture -- Render the given Phys object to texture             *

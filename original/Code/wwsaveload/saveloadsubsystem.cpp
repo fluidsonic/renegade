@@ -1,7 +1,6 @@
 #include "saveloadsubsystem.h"
 #include "saveload.h"
 
-
 SaveLoadSubSystemClass::SaveLoadSubSystemClass(void) :
 	NextSubSystem(NULL)
 {

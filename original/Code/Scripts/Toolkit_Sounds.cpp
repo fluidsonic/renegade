@@ -716,7 +716,6 @@ DECLARE_SCRIPT(RMV_Sound_Play_Near_Player, "Receive_Type:int, Receive_Param:int,
 	}
 };
 
-
 /*********************************************************************************************** 
 **
 ** Building State Sound System - Plays sounds at a simple object location.  Requires Building

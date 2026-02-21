@@ -40,9 +40,7 @@ class BINKMovieClass
 		bool Is_Complete();
 };
 
-
 static BINKMovieClass* CurrentMovie;
-
 
 void BINKMovie::Play(const char* filename,const char* subtitlename, FontCharsClass* font)
 {
@@ -54,7 +52,6 @@ void BINKMovie::Play(const char* filename,const char* subtitlename, FontCharsCla
 	CurrentMovie = new BINKMovieClass(filename,subtitlename,font);
 }
 
-
 void BINKMovie::Stop()
 {
 	if (CurrentMovie) {
@@ -63,14 +60,12 @@ void BINKMovie::Stop()
 	}
 }
 
-
 void BINKMovie::Update()
 {
 	if (CurrentMovie) {
 		CurrentMovie->Update();
 	}
 }
-
 
 void BINKMovie::Render()
 {
@@ -79,18 +74,15 @@ void BINKMovie::Render()
 	}
 }
 
-
 void BINKMovie::Init()
 {
 	BinkSoundUseDirectSound(0);
 }
 
-
 void BINKMovie::Shutdown()
 {
 	Stop();
 }
-
 
 bool BINKMovie::Is_Complete()
 {
@@ -100,7 +92,6 @@ bool BINKMovie::Is_Complete()
 
 	return true;
 }
-
 
 // ----------------------------------------------------------------------------
 
@@ -202,7 +193,6 @@ BINKMovieClass::BINKMovieClass(const char* filename, const char* subtitlename, F
 	}
 }
 
-
 BINKMovieClass::~BINKMovieClass()
 {
 	if (Bink == NULL) {
@@ -228,7 +218,6 @@ BINKMovieClass::~BINKMovieClass()
 	}
 }
 
-
 void BINKMovieClass::Update()
 {
 	if (!Bink) {
@@ -237,7 +226,6 @@ void BINKMovieClass::Update()
 
 	FrameChanged |= !BinkWait(Bink);
 }
-
 
 static unsigned char* Get_Tex_Address(unsigned char* buffer, int x, int y, int w, int h)
 {
@@ -255,7 +243,6 @@ static unsigned char* Get_Tex_Address(unsigned char* buffer, int x, int y, int w
 
 	return buffer + x * 2 + y * 2 * w;
 }
-
 
 void BINKMovieClass::Render()
 {
@@ -330,7 +317,6 @@ void BINKMovieClass::Render()
 		SubTitleManager->Render();
 	}
 }
-
 
 bool BINKMovieClass::Is_Complete()
 {

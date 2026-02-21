@@ -1,13 +1,11 @@
 #ifndef TRACKEDVEHICLE_H
 #define TRACKEDVEHICLE_H
 
-
 #include "always.h"
 #include "vehiclephys.h"
 
 class TrackedVehicleDefClass;
 class MeshClass;
-
 
 /**
 ** TrackedVehicleClass
@@ -77,7 +75,6 @@ private:
 
 };
 
-
 /**
 ** TrackedVehicleDefClass
 ** Initialization/Editor Integration for TrackedVehicleClass
@@ -124,8 +121,6 @@ protected:
 
 	friend class TrackedVehicleClass;
 };
-
-
 
 #endif
 

@@ -925,7 +925,6 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 					}
 					break;
 
-
 				case M01_CLEAR_HON_OBJECTIVE_PASS_JDG://HON is destroyed--clear objective
 					{
 						Commands->Set_Objective_Status( M01_HON_OBJECTIVE_JDG, OBJECTIVE_STATUS_ACCOMPLISHED );
@@ -1528,7 +1527,6 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 								}
 								Vector3 newPosition (51.023f, -35.918f, 0.246f);
 								Commands->Set_Position ( STAR, newPosition );
-
 
 								Commands->Set_Is_Rendered( obj, false );
 
@@ -2341,7 +2339,6 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 					}
 					break;
 
-
 				case M01_SEND_CHURCH_CHINOOK_JDG://havoc is in church area--send reinforcements
 					{
 						Commands->Create_Sound ( "M01EVAG_DSGN0268I1EVAG_SND", Vector3 (0,0,0), obj );//enemy aircraft detected
@@ -2564,7 +2561,6 @@ DECLARE_SCRIPT(M01_Hand_of_Nod_Building_Script_JDG, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M01_Flyover_Generic_Script_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -2585,8 +2581,6 @@ DECLARE_SCRIPT(M01_Flyover_Generic_Script_JDG, "")
 		Commands->Set_Shield_Strength ( obj, myNewShield );
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_Ambient_Sound_Controller_JDG, "")
 {
@@ -3149,8 +3143,6 @@ DECLARE_SCRIPT(M01_COMM_Commander_Guy, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_HandOfNod_SAMSite_Script, "")//M01_HON_SAM_SITE_JDG==100031
 {
 	void Damaged( GameObject * obj, GameObject * damager, float amount )
@@ -3169,8 +3161,6 @@ DECLARE_SCRIPT(M01_HandOfNod_SAMSite_Script, "")//M01_HON_SAM_SITE_JDG==100031
 		Commands->Send_Custom_Event( obj, Commands->Find_Object (M01_MISSION_CONTROLLER_JDG), 0, M01_HON_SAMSITE_HAS_BEEN_DESTROYED_JDG, 5 );	
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_Destroyed_SAMSITE_JDG, "")
 {
@@ -4371,8 +4361,6 @@ DECLARE_SCRIPT(M01_Announce_Barn_Objective_Zone, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_Tiberium_Cave_Helicopter_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -5403,8 +5391,6 @@ DECLARE_SCRIPT(M01_Interrogation_Room_Surprise_Guy_JDG, "")//this guys ID is 101
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_Medium_Tank_Tunnel_Squish_Guy_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -5496,8 +5482,6 @@ DECLARE_SCRIPT(M01_Billys_Conversation_Zone_JDG, "")//this guys ID is 101661
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_Tank_Entering_Tunnel_Zone_JDG, "")//this guys ID is 
 {
@@ -5604,8 +5588,6 @@ DECLARE_SCRIPT(M01_Player_Is_Entering_Tailgun_Alley_JDG, "")//this guys ID is 10
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_Player_Is_Entering_Tailgun_Alley_Backway_JDG, "")//this guys ID is 101691
 {
@@ -7385,8 +7367,6 @@ DECLARE_SCRIPT(M01_GDI_Base_Artillery_Controller_JDG, "")//M01_GDIBASE_ARTILLERY
 	}				
 };
 
-
-
 DECLARE_SCRIPT(M01_Nod_GuardTower_01_Enter_Zone_JDG, "")
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -7893,8 +7873,6 @@ DECLARE_SCRIPT(M01_Barn_Point_Guard_02_JDG, "")//this guys ID is 101658
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_Barn_Door_Guard_JDG, "")//this guys ID is M01_BARN_DOOR_GUARD_ID	101512
 {
 	void Created( GameObject * obj ) 
@@ -8091,16 +8069,6 @@ DECLARE_SCRIPT(M01_TurretBeach_GDI_Guy_02_JDG, "")
 		}
 	}
 };
-
-
-
-
-
-
-
-
-
-
 
 DECLARE_SCRIPT(M01_DetentionPen_CivDeathMonitor, "")
 {
@@ -8679,8 +8647,6 @@ DECLARE_SCRIPT(M01_HON_Escorts_Warroom_MCT_Protector02_JDG, "")//103375
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_HON_Engineer02_JDG, "")//101948
 {
 	bool repairSoundPlaying;
@@ -8751,10 +8717,6 @@ DECLARE_SCRIPT(M01_HON_Engineer02_JDG, "")//101948
 		}
 	}
 };
-
-
-
-
 
 DECLARE_SCRIPT(M01_HON_Chinook_Spawned_Soldier_03_GDI_JDG, "")
 {
@@ -8917,7 +8879,6 @@ DECLARE_SCRIPT(M01_BuggyNew_Controller_JDG, "")//this guys id is 103367
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M01_BuggyScript_New_JDG, "")
 {
@@ -9223,10 +9184,6 @@ DECLARE_SCRIPT(M01_Church_Loveshack_InterrogationConv_Zone_JDG, "")//103392
 		}
 	}
 };
-
-
-
-
 
 DECLARE_SCRIPT(M01_GDI_Escort_Conversation_Controller_GDI, "")//103396 
 {
@@ -10047,19 +10004,6 @@ DECLARE_SCRIPT(M01_COMM_Chinook_Spawned_Soldier_GDI, "")
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 DECLARE_SCRIPT(M01_Barn_Truck_JDG, "")//
 {
 	void Killed( GameObject * obj, GameObject * killer ) 
@@ -10104,8 +10048,6 @@ DECLARE_SCRIPT(M01_GDIBase_EvacMonitor_JDG, "")//M01_GDIBASE_EVAC_MONITOR_JDG
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_ChurchArea_EvacMonitor_JDG, "")//M01_CHURCHAREA_EVAC_MONITOR_JDG
 {
@@ -10403,7 +10345,6 @@ DECLARE_SCRIPT(M01_Comm_Repair_Engineer_JDG, "")//this guys ID is M01_COMM_CENTE
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M01_Comm_Center_Building_Script_JDG, "")
 {
@@ -11392,8 +11333,6 @@ DECLARE_SCRIPT(M01_HON_Dojo_Civ_01_JDG, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_Nod_GuardTower_Tailgun_JDG, "")//100246
 {
 	void Created( GameObject * obj ) 
@@ -11735,12 +11674,6 @@ DECLARE_SCRIPT(M01_GDIBase_FirstChinook_Script_JDG, "")//
 		}
 	}
 };
-
-
-
-
-
-
 
 DECLARE_SCRIPT(M01_Church_EvacController_JDG, "")//103394 
 {
@@ -12537,8 +12470,6 @@ DECLARE_SCRIPT(M01_Church_LoveShack_Nun_JDG, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_BarnArea_Air_Evac_Rope_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -13284,8 +13215,6 @@ DECLARE_SCRIPT(M01_GDIBasePOW_Air_Evac_Rope_JDG, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_GDIBasePOW_Air_Evac_Waypath_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -13320,13 +13249,6 @@ DECLARE_SCRIPT(M01_GDIBasePOW_Air_Evac_Waypath_JDG, "")
 	}
 };
 
-
-
-
-
-
-
-
 DECLARE_SCRIPT(M01_Evac_TroopBone_JDG, "")
 {
 	void Animation_Complete(GameObject * obj, const char *anim)
@@ -13337,8 +13259,6 @@ DECLARE_SCRIPT(M01_Evac_TroopBone_JDG, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_GDIBaseCommander_Air_Evac_Waypath_JDG, "")
 {
@@ -13408,14 +13328,6 @@ DECLARE_SCRIPT(M01_GDIBaseCommander_Air_Evac_Rope_JDG, "")
 		}
 	}
 };
-
-
-
-
-
-
-
-
 
 DECLARE_SCRIPT(M01_TriggerZone_GDIBase_BaseCommander_JDG, "")//106267 and 106268
 {
@@ -13538,8 +13450,6 @@ DECLARE_SCRIPT(M01_GDIBase_FirstChinookFlamethrowerGuy_JDG, "")
 	}
 };
 
-
-
 /*DECLARE_SCRIPT(M01_GDIBase_SecondChinookFlamethrowerGuy_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -13626,21 +13536,6 @@ DECLARE_SCRIPT(M01_GDIBase_SecondChinookMinigunnerGuy_JDG, "")
 	}
 };*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 DECLARE_SCRIPT(M01_TibCave_StartZone_JDG, "")//108922
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -13682,7 +13577,6 @@ DECLARE_SCRIPT(M01_TibCave_StartZone_JDG, "")//108922
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M01_Visceroid01_JDG, "")//106908
 {
@@ -13872,7 +13766,6 @@ DECLARE_SCRIPT(M01_Tiberium_Cave_Spawn_Helicopter_Zone_JDG, "")//M01_TIB_TUNNEL_
 	
 	}	
 };
-
 
 DECLARE_SCRIPT(M01_TiberiumCave_UpThere_NodGuy_JDG, "")//103274
 {
@@ -14667,8 +14560,6 @@ DECLARE_SCRIPT(M01_BarnArea_NOD_Commander_Trigger_Zone_JDG, "")//M01_BARNAREA_NO
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_GDI_GuardTower_NOD_Commander_JDG, "")//M01_BARNAREA_NOD_COMMANDER_JDG
 {
 	int guardTowerIntro;
@@ -14788,7 +14679,6 @@ DECLARE_SCRIPT(M01_GDI_GuardTower_NOD_Commander_JDG, "")//M01_BARNAREA_NOD_COMMA
 		{
 			Commands->Send_Custom_Event( obj, objectiveController, 0, M01_CLEAR_FIRST_NOD_COMMANDER_PASS_JDG, 5 );
 		}
-
 
 		if (STAR)
 		{
@@ -15015,16 +14905,6 @@ DECLARE_SCRIPT(M01_GDIBase_LightTank_PastTunnelZone_JDG, "")
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
 DECLARE_SCRIPT(M01_KeyCard01_Script_JDG, "")
 {
 	void Custom( GameObject * obj, int type, int param, GameObject * sender ) 
@@ -15037,8 +14917,6 @@ DECLARE_SCRIPT(M01_KeyCard01_Script_JDG, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_GDIBase_AI_ExitZone_JDG, "")
 {
@@ -15091,18 +14969,6 @@ DECLARE_SCRIPT(M01_GDIBase_AI_ExitZone_JDG, "")
 		}
 	}
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 DECLARE_SCRIPT(M01_GDIBase_LightTank_JDG, "")//M01_TAILGUNAREA_NOD_LIGHTTANK_JDG 102435
 {
@@ -15218,10 +15084,6 @@ DECLARE_SCRIPT(M01_GDIBase_LightTank_JDG, "")//M01_TAILGUNAREA_NOD_LIGHTTANK_JDG
 	}
 };
 
-
-
-
-
 DECLARE_SCRIPT(M01_GDIBase_BackPath_NodGuy_JDG, "")//103337
 {
 	void Created( GameObject * obj ) 
@@ -15261,20 +15123,6 @@ DECLARE_SCRIPT(M01_GDIBase_BackPath_NodGuy_JDG, "")//103337
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 DECLARE_SCRIPT(M01_Sinking_Gunboat_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -15290,7 +15138,6 @@ DECLARE_SCRIPT(M01_Sinking_Gunboat_JDG, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M01_PlayerEntering_BarnArea_Zone_JDG, "")
 {
@@ -15328,15 +15175,6 @@ DECLARE_SCRIPT(M01_PlayerLeaving_BarnArea_Zone_JDG, "")
 	}
 };
 
-
-
-
-
-
-
-
-
-
 DECLARE_SCRIPT(M01_Barn_EntryZone_JDG, "")//113734
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -15352,8 +15190,6 @@ DECLARE_SCRIPT(M01_Barn_EntryZone_JDG, "")//113734
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_GDI_BaseCommander_Backside_EntryZone_JDG, "")//113733
 {
@@ -15383,21 +15219,6 @@ DECLARE_SCRIPT(M01_GDI_BaseCommander_Backside_EntryZone_JDG, "")//113733
 		}
 	}
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 DECLARE_SCRIPT(M01_Obelisk_UpdateDisc_JDG, "")
 {
@@ -15641,7 +15462,6 @@ DECLARE_SCRIPT(M01_Comm_Center_Pen_Gate, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M01_CommCenter_SAMSite_Script, "")
 {
 	void Damaged( GameObject * obj, GameObject * damager, float amount )
@@ -15666,8 +15486,6 @@ DECLARE_SCRIPT(M01_CommCenter_SAMSite_Script, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_Commander_Shack_Zone_JDG, "")//115985  
 {
@@ -15750,8 +15568,6 @@ DECLARE_SCRIPT(M01_Commander_Shack_Zone_JDG, "")//115985
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_TurretBeach_Engineer_JDG, "")//this guys ID is M01_TURRETBEACH_ENGINEER_ID 101654
 {
@@ -16295,17 +16111,6 @@ DECLARE_SCRIPT(M01_TurretBeach_Chinook_Spawned_Soldier_NOD, "")
 		}
 	}
 };
-
-
-
-
-
-
-
-
-
-
-
 
 DECLARE_SCRIPT(M01_FP_NodBase_Dogfight_Contoller_JDG, "")
 {
@@ -17280,9 +17085,6 @@ DECLARE_SCRIPT(M01_First_AutoRifle_JDG, "")
 	}
 };
 
-
-
-
 DECLARE_SCRIPT(M01_Announce_First_ObjectiveZone_JDG, "")//116380
 {
 	void Created( GameObject * obj ) 
@@ -17557,8 +17359,6 @@ DECLARE_SCRIPT(M01_GDIBaseCommander_Air_Evac_Chopper_JDG, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M01_GDIBaseCommander_EvacController_JDG, "")//106694
 {
 	bool evacing;
@@ -17684,11 +17484,6 @@ DECLARE_SCRIPT(M01_GDIBaseCommander_EvacController_JDG, "")//106694
 	}
 };
 
-
-
-
-
-
 DECLARE_SCRIPT(M01_Base_Nod_Minigunner_JDG, "")//116384
 {
 	void Created( GameObject * obj ) 
@@ -17714,10 +17509,6 @@ DECLARE_SCRIPT(M01_POW_Nod_Minigunner01_JDG, "")//116388
 	}
 };
 
-
-
-
-
 DECLARE_SCRIPT(M01_GDIBase_POWEncounter02_Controller_JDG, "")//M01_GDIBASE_POWSCENE02_MONITOR_JDG 103331
 {
 	bool transportCalled;
@@ -17727,7 +17518,6 @@ DECLARE_SCRIPT(M01_GDIBase_POWEncounter02_Controller_JDG, "")//M01_GDIBASE_POWSC
 	int evac_waypath_id;
 	int evac_helicopter_id;
 	int evac_rope_id;
-
 
 	REGISTER_VARIABLES()
 	{
@@ -17993,7 +17783,6 @@ DECLARE_SCRIPT(M01_C130_Dropoff_Dude_JDG, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M01_Base_GDI_Fodder_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -18058,7 +17847,6 @@ DECLARE_SCRIPT(M01_Nod_Truck_JDG, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M01_C4_Tutorial_Zone_JDG, "")
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -18075,8 +17863,6 @@ DECLARE_SCRIPT(M01_C4_Tutorial_Zone_JDG, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_Mainframe_Tutorial_Zone_JDG, "")
 {
@@ -18156,12 +17942,6 @@ DECLARE_SCRIPT(M01_BarnArea_NOD_Commander_Trigger_Zone02_JDG, "")//103343
 		}
 	}
 };
-
-
-
-
-
-
 
 DECLARE_SCRIPT(M01_TurretBeach_Turret_01_Script_JDG, "")//M01_TURRETBEACH_TURRET_01_ID 101434
 {
@@ -19168,10 +18948,6 @@ DECLARE_SCRIPT(M01_Base_GDI_Grenadier_JDG, "")//116383
 	}
 };
 
-
-
-
-
 DECLARE_SCRIPT(M01_MediumTank_ReminderZone_JDG, "")//122848
 {
 	bool commandClearance;
@@ -19711,17 +19487,6 @@ DECLARE_SCRIPT(M01_Announce_TankAirstrikeZone_JDG, "")
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
 DECLARE_SCRIPT(M01_GDI_GuardTower_02_Enter_Zone_JDG, "")
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -19884,8 +19649,6 @@ DECLARE_SCRIPT(M01_GuardTower02_Sniper_Target01_JDG, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_GuardTower02_Sniper_TowerZone_JDG, "")//123645 
 {
@@ -20630,7 +20393,6 @@ DECLARE_SCRIPT(M01_GiveMCTSpeech_Zone_JDG, "")//124260
 	}
 };
 
-
 DECLARE_SCRIPT(M01_Havoc_In_WarroomZone_JDG, "")
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -20991,7 +20753,6 @@ DECLARE_SCRIPT(M01_TurretBeach_FodderHovercraft_Controller_JDG, "")//121630  M01
 	}
 };
 
-
 DECLARE_SCRIPT(M01_Hovercraft_Explosion_Controller_JDG, "")//121839
 {
 	int tank_id;
@@ -21022,8 +20783,6 @@ DECLARE_SCRIPT(M01_Hovercraft_Explosion_Controller_JDG, "")//121839
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_FodderHovercraft_Script_JDG, "")
 {
@@ -21473,8 +21232,6 @@ DECLARE_SCRIPT(M01_Duncan_Assailer_JDG, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M01_Duncan_InHere_ConvController_JDG, "")
 {
@@ -22018,5 +21775,4 @@ DECLARE_SCRIPT(M01_Base_GDI_Minigunner_JDG, "")//116382
 		}
 	}
 };
-
 

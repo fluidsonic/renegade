@@ -23,11 +23,4 @@
 	cRegistryBool cDevOptions::UseNewTCADO(						APPLICATION_SUB_KEY_NAME_DEBUG,	"NewTCADO",								true);
    cRegistryBool cDevOptions::ShowFps(								APPLICATION_SUB_KEY_NAME_NETDEBUG, "ShowFps",							false);
 
-
-
-
-
-
-
-
 	//cRegistryBool cDevOptions::DoThumbnailPreInit(				APPLICATION_SUB_KEY_NAME_DEBUG,	"DoThumbnailPreInit",				true);

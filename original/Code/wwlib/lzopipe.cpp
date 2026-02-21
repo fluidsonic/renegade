@@ -5,7 +5,6 @@
 #include	<assert.h>
 #include	<string.h>
 
-
 /***********************************************************************************************
  * LZOPipe::LZOPipe -- Constructor for the LZO processor pipe.                                 *
  *                                                                                             *
@@ -36,7 +35,6 @@ LZOPipe::LZOPipe(CompControl control, int blocksize) :
 	BlockHeader.CompCount = 0xFFFF;
 }
 
-
 /***********************************************************************************************
  * LZOPipe::~LZOPipe -- Deconstructor for the LZO pipe object.                                 *
  *                                                                                             *
@@ -59,7 +57,6 @@ LZOPipe::~LZOPipe(void)
 	delete [] Buffer2;
 	Buffer2 = NULL;
 }
-
 
 /***********************************************************************************************
  * LZOPipe::Put -- Send some data through the LZO processor pipe.                              *
@@ -200,7 +197,6 @@ int LZOPipe::Put(void const * source, int slen)
 
 	return(total);
 }
-
 
 /***********************************************************************************************
  * LZOPipe::Flush -- Flushes any partially accumulated block.                                  *

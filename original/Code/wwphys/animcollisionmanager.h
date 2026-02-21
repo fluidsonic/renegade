@@ -97,7 +97,6 @@ public:
 
 protected:
 
-
 	/*
 	** Multi-mesh collision detection support
 	*/
@@ -183,7 +182,6 @@ protected:
 
 };
 
-
 /**
 ** AnimCollisionManagerDefClass
 ** This class is meant to be a component of a definition class for a physics object
@@ -209,7 +207,6 @@ public:
 	StringClass									AnimationName;
 
 };
-
 
 /*
 ** Use this macro to make all of the member variables in an AnimCollisionManagerDefClass editable.
@@ -242,9 +239,6 @@ public:
 #define	ANIMCOLLISIONMANAGERDEF_EDITABLE_PARAMS( class_name, member_name )															
 
 #endif																																		
-
-
-
 
 #endif //ANIMCOLLISIONMANAGER_H
 

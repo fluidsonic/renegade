@@ -14,7 +14,6 @@
 ** This module contains the save-load related methods of PhysicsSceneClass.  
 */
 
-
 /*
 ** Chunk-ID's for PhysicsSceneClass
 **
@@ -80,7 +79,6 @@ struct IOSunLightStruct
 	float32				Intensity;
 	IOVector3Struct	Color;
 };
-
 
 void PhysicsSceneClass::Export_Vis_Data(ChunkSaveClass & csave)
 {
@@ -324,11 +322,9 @@ void PhysicsSceneClass::Load_Level_Dynamic_Data(ChunkLoadClass & cload)
 	}
 }
 
-
 void PhysicsSceneClass::Save_LDD_Variables(ChunkSaveClass & csave)
 {
 }
-
 
 void PhysicsSceneClass::Load_LDD_Variables(ChunkLoadClass & cload)
 {
@@ -341,7 +337,6 @@ void PhysicsSceneClass::Load_LDD_Variables(ChunkLoadClass & cload)
 		cload.Close_Micro_Chunk();
 	}
 }
-
 
 void PhysicsSceneClass::Save_Static_Objects(ChunkSaveClass & csave)
 {
@@ -522,7 +517,6 @@ void PhysicsSceneClass::Save_Sun_Light(ChunkSaveClass & csave)
 	csave.Write(&sun,sizeof(sun));	
 }	
 
-
 void PhysicsSceneClass::Save_Dynamic_Objects(ChunkSaveClass & csave)
 {
 	/*
@@ -542,7 +536,6 @@ void PhysicsSceneClass::Save_Dynamic_Objects(ChunkSaveClass & csave)
 		}
 	}
 }
-
 
 void PhysicsSceneClass::Load_Dynamic_Objects(ChunkLoadClass & cload)
 {

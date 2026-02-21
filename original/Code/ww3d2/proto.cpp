@@ -10,7 +10,6 @@
 MeshLoaderClass		_MeshLoader;
 HModelLoaderClass		_HModelLoader;
 
-
 /*
 ** Prototype Classes
 ** These prototypes are the "built-in" ones for the W3D library.
@@ -43,7 +42,6 @@ RenderObjClass * PrimitivePrototypeClass::Create(void)
 	return (RenderObjClass *)( SET_REF_OWNER( Proto->Clone() ) ); 
 }	
 
-
 class HModelPrototypeClass : public PrototypeClass
 {
 public:
@@ -55,7 +53,6 @@ public:
 	virtual RenderObjClass *	Create(void)					{ return NEW_REF( HLodClass, (*HModelDef) ); }	
 	HModelDefClass *				HModelDef;
 };
-
 
 /***********************************************************************************************
  * MeshLoaderClass::Load -- reads in a mesh and creates a prototype for it                     *
@@ -93,7 +90,6 @@ PrototypeClass * MeshLoaderClass::Load_W3D(ChunkLoadClass & cload)
 	
 	}
 }
-
 
 /***********************************************************************************************
  * HModelLoaderClass::Load -- reads in an hmodel and creates a prototype for it                *

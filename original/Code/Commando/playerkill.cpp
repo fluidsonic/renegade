@@ -15,7 +15,6 @@
 #include "apppackettypes.h"
 #include "messagewindow.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cPlayerKill, NETCLASSID_PLAYERKILL);
 
 //-----------------------------------------------------------------------------
@@ -149,7 +148,6 @@ void
 cPlayerKill::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
-
 
 	packet.Get(KillerId);
 	packet.Get(VictimId);

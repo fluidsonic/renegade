@@ -4,7 +4,6 @@
 #include "texture.h"
 #include "render2d.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListIconMgrClass
@@ -61,7 +60,6 @@ ListIconMgrClass::Add_Icon (const char *texture_name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Remove_Icon
@@ -87,7 +85,6 @@ ListIconMgrClass::Remove_Icon (const char *texture_name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Icons
@@ -110,7 +107,6 @@ ListIconMgrClass::Reset_Icons (void)
 	TextureNames.Delete_All ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -143,7 +139,6 @@ ListIconMgrClass::Render_Icon (const RectClass &clip_rect, const char *texture_n
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render_Icons
@@ -158,7 +153,6 @@ ListIconMgrClass::Render_Icons (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -182,7 +176,6 @@ ListIconMgrClass::Find_Texture (const char *texture_name)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

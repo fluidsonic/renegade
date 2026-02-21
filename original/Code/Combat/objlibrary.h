@@ -20,4 +20,3 @@ public:
 
 #endif  // OBJLIBRARY_H
 
-

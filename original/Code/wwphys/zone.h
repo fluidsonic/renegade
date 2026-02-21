@@ -35,9 +35,6 @@
 
 */
 
-
-
-
 /*
 ** ZoneClass!
 **
@@ -59,7 +56,6 @@ private:
 	OBBoxClass	Box;
 
 };
-
 
 #endif
 

@@ -2,10 +2,8 @@
 #ifndef __DLG_EVA_WEAPONS_TAB_H
 #define __DLG_EVA_WEAPONS_TAB_H
 
-
 #include "dlgevaviewertab.h"
 #include "resource.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -33,7 +31,6 @@ protected:
 	////////////////////////////////////////////////////////////////
 	void		On_Init_Dialog (void);
 };
-
 
 #endif //__DLG_EVA_WEAPONS_TAB_H
 

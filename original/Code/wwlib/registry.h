@@ -69,7 +69,6 @@ public:
 	static void Load_Registry(const char *filename, char *old_path, char *new_path);
 	static void Save_Registry(const char *filename, char *path);
 
-
 private:
 	char	SubKey[512];
 	bool	IsValid;

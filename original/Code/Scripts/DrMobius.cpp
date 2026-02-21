@@ -1,7 +1,6 @@
 #include "scripts.h"
 #include "dprint.h"
 
-
 DECLARE_SCRIPT(Dr_Mobius_Script, "")
 {
 	GameObject *CurrentLeader;

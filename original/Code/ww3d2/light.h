@@ -9,7 +9,6 @@
 class ChunkLoadClass;
 class ChunkSaveClass;
 
-
 /**
 ** LightClass 
 ** This "render object" is a light source.  

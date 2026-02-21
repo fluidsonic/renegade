@@ -19,5 +19,3 @@
 	virtual	void	Exited( GameObject * obj, GameObject * exiter ) {}
 */
 
-
-

@@ -1,11 +1,9 @@
 #ifndef POLYINFO_H
 #define POLYINFO_H
 
-
 class TextureClass;
 class VertexMaterialClass;
 class ShaderClass;
-
 
 /**
 **	PolyInfo.h
@@ -41,7 +39,6 @@ public:
 	}
 
 	~PolygonInfoClass();
-
 
 protected:
 

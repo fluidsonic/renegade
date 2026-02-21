@@ -1,5 +1,4 @@
 #include "powerup.h"
-#include "debug.h"
 #include "combat.h"
 #include "phys.h"
 #include "persistfactory.h"

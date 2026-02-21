@@ -3,7 +3,6 @@
 #include "persistfactory.h"
 #include "wwphysids.h"
 
-
 /*
 ** Declare a PersistFactory for RenderObjPhysClasses
 */
@@ -163,5 +162,4 @@ void RenderObjPhysClass::On_Post_Load (void)
 		Model->Set_User_Data((void*)this);
 	}
 }
-
 

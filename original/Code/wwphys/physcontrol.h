@@ -8,10 +8,8 @@
 class	ChunkSaveClass;
 class	ChunkLoadClass;
 
-
 class ChunkLoadClass;
 class ChunkSaveClass;
-
 
 /*
 
@@ -25,7 +23,6 @@ class ChunkSaveClass;
 	another object if you want to.
 
 */
-
 
 class PhysControllerClass 
 {
@@ -59,7 +56,6 @@ private:
 	Vector3				MoveVector;
 	float					TurnLeft;
 };
-
 
 inline bool PhysControllerClass::Is_Inactive(void)
 {

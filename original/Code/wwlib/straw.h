@@ -34,5 +34,4 @@ class Straw
 		Straw & operator = (Straw const & pipe);
 };
 
-
 #endif

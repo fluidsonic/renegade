@@ -3,8 +3,6 @@
 #include "MainLoop.h"
 #include "String_IDs.h"
 #include <WWTranslateDB/TranslateDB.h>
-#include <WWDebug/WWDebug.h>
-
 /******************************************************************************
 *
 * NAME
@@ -34,7 +32,6 @@ bool DlgRestart::DoDialog(void)
 	return (popup != NULL);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -56,7 +53,6 @@ DlgRestart::DlgRestart() :
 	{
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -76,7 +72,6 @@ DlgRestart::DlgRestart() :
 DlgRestart::~DlgRestart()
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -99,7 +94,6 @@ void DlgRestart::On_Init_Dialog(void)
 	Set_Dlg_Item_Text(IDC_MESSAGE, TRANSLATE(IDS_RESTART_PROMPT));
 	PopupDialogClass::On_Init_Dialog();
 	}
-
 
 /******************************************************************************
 *

@@ -48,7 +48,6 @@ float GameCombatNetworkHandlerClass::Get_Damage_Factor
 void GameCombatNetworkHandlerClass::On_Soldier_Kill(SoldierGameObj * p_soldier, SoldierGameObj * p_victim)
 {
 
-
 	int killer_id = p_soldier->Get_Control_Owner();
 	int victim_id = p_victim->Get_Control_Owner();
 
@@ -104,32 +103,6 @@ bool GameCombatNetworkHandlerClass::Is_Gameplay_Permitted(void)
 {
 	return The_Game()->Is_Gameplay_Permitted();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/*
 	if (p_soldier->Has_Player()) {

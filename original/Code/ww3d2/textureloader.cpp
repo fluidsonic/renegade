@@ -108,7 +108,6 @@ void TextureLoadTaskListClass::Remove(TextureLoadTaskClass *task)
 	task->List	= 0;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // SynchronizedTextureLoadTaskListClass implementation
@@ -162,7 +161,6 @@ void SynchronizedTextureLoadTaskListClass::Remove(TextureLoadTaskClass *task)
 	TextureLoadTaskListClass::Remove(task);
 }
 
-
 // Locks
 
 // To prevent deadlock, threads should acquire locks in the order in which
@@ -178,7 +176,6 @@ static SynchronizedTextureLoadTaskListClass	_ForegroundQueue;
 static SynchronizedTextureLoadTaskListClass	_BackgroundQueue;
 static TextureLoadTaskListClass					_FreeList;
 
-
 // The background texture loading thread.
 static class LoaderThreadClass : public ThreadClass
 {
@@ -191,7 +188,6 @@ public:
 
 	void Thread_Function();
 } _TextureLoadThread;
-
 
 // TODO: Legacy - remove this call!
 IDirect3DTexture8* Load_Compressed_Texture(
@@ -256,7 +252,6 @@ static bool Is_Format_Compressed(WW3DFormat texture_format,bool allow_compressio
 	return compressed;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // 
 // TextureLoader implementation
@@ -272,7 +267,6 @@ void TextureLoader::Init()
 	_TextureLoadThread.Set_Priority(-4);
 }
 
-
 void TextureLoader::Deinit()
 {
 	FastCriticalSectionClass::LockClass lock(_BackgroundCriticalSection);
@@ -282,12 +276,10 @@ void TextureLoader::Deinit()
 	TextureLoadTaskClass::Delete_Free_Pool();
 }
 
-
 bool TextureLoader::Is_DX8_Thread(void)
 {
 	return (ThreadClass::_Get_Current_Thread_ID() == DX8Wrapper::_Get_Main_Thread_ID());
 }
-
 
 // ----------------------------------------------------------------------------
 //
@@ -426,7 +418,6 @@ IDirect3DTexture8* TextureLoader::Load_Thumbnail(const StringClass& filename)//,
 #endif
 }
 
-
 // ----------------------------------------------------------------------------
 //
 // Load image to a surface. The function tries to create texture that matches
@@ -540,7 +531,6 @@ IDirect3DSurface8* TextureLoader::Load_Surface_Immediate(
 	return d3d_surface;
 }
 
-
 void TextureLoader::Request_Thumbnail(TextureClass *tc)
 {
 	// Grab the foreground lock. This prevents the foreground thread
@@ -581,7 +571,6 @@ void TextureLoader::Request_Thumbnail(TextureClass *tc)
 	}
 }
 
-
 void TextureLoader::Request_Background_Loading(TextureClass *tc)
 {
 	// Grab the foreground lock. This prevents the foreground thread
@@ -610,7 +599,6 @@ void TextureLoader::Request_Background_Loading(TextureClass *tc)
 		_ForegroundQueue.Push_Back(task);
 	}
 }
-
 
 void TextureLoader::Request_Foreground_Loading(TextureClass *tc)
 {
@@ -700,7 +688,6 @@ void TextureLoader::Request_Foreground_Loading(TextureClass *tc)
 	}
 }
 
-
 void TextureLoader::Flush_Pending_Load_Tasks(void)
 {
 	// This function can only be called from the main thread.
@@ -739,7 +726,6 @@ void TextureLoader::Flush_Pending_Load_Tasks(void)
 	}
 }
 
-
 // Nework update macro for texture loader.
 #pragma warning(disable:4201) // warning C4201: nonstandard extension used : nameless struct/union
 #include <mmsystem.h>
@@ -751,7 +737,6 @@ void TextureLoader::Flush_Pending_Load_Tasks(void)
 			time = time2;                                \
 		}                                               \
 	}                                                  \
-
 
 void TextureLoader::Update(void (*network_callback)(void))
 {
@@ -807,7 +792,6 @@ void TextureLoader::Process_Foreground_Thumbnail(TextureLoadTaskClass *task)
 	}
 }
 
-
 void TextureLoader::Process_Foreground_Load(TextureLoadTaskClass *task)
 {
 	// Is high-priority task?
@@ -831,7 +815,6 @@ void TextureLoader::Process_Foreground_Load(TextureLoadTaskClass *task)
 	}
 }
 
-
 void TextureLoader::Begin_Load_And_Queue(TextureLoadTaskClass *task)
 {
 	// should only be called from the DX8 thread.
@@ -854,7 +837,6 @@ void TextureLoader::Begin_Load_And_Queue(TextureLoadTaskClass *task)
 	}
 }
 
-
 void TextureLoader::Load_Thumbnail(TextureClass *tc)
 {
 	// All D3D operations must run from main thread
@@ -869,7 +851,6 @@ void TextureLoader::Load_Thumbnail(TextureClass *tc)
 	d3d_texture->Release();
 	d3d_texture = 0;
 }
-
 
 void LoaderThreadClass::Thread_Function(void)
 {
@@ -896,7 +877,6 @@ void LoaderThreadClass::Thread_Function(void)
 		Switch_Thread();
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
@@ -926,12 +906,10 @@ TextureLoadTaskClass::TextureLoadTaskClass()
 	}
 }
 
-
 TextureLoadTaskClass::~TextureLoadTaskClass(void)
 {
 	Deinit();
 }
-
 
 TextureLoadTaskClass *TextureLoadTaskClass::Create(TextureClass *tc, TaskType type, PriorityType priority)
 {
@@ -950,14 +928,12 @@ TextureLoadTaskClass *TextureLoadTaskClass::Create(TextureClass *tc, TaskType ty
 	return task;
 }
 
-
 void TextureLoadTaskClass::Destroy(void)
 {
 	// detach the task from its texture, and return to free pool.
 	Deinit();
 	_FreeList.Push_Front(this);
 }
-
 
 void TextureLoadTaskClass::Delete_Free_Pool(void)
 {
@@ -966,7 +942,6 @@ void TextureLoadTaskClass::Delete_Free_Pool(void)
 		delete task;
 	}
 }
-
 
 void TextureLoadTaskClass::Init(TextureClass* tc, TaskType type, PriorityType priority)
 {
@@ -988,7 +963,6 @@ void TextureLoadTaskClass::Init(TextureClass* tc, TaskType type, PriorityType pr
 	MipLevelCount	= Texture->MipLevelCount;
 	Reduction		= Texture->Get_Reduction();
 
-
 	for (int i = 0; i < TextureClass::MIP_LEVELS_MAX; ++i) {
 		LockedSurfacePtr[i]		= NULL;
 		LockedSurfacePitch[i]	= 0;
@@ -1005,11 +979,9 @@ void TextureLoadTaskClass::Init(TextureClass* tc, TaskType type, PriorityType pr
 	}
 }
 
-
 void TextureLoadTaskClass::Deinit()
 {
 	// task should not be on any list when it is being detached from texture.
-
 
 	for (int i = 0; i < TextureClass::MIP_LEVELS_MAX; ++i) {
 	}
@@ -1029,7 +1001,6 @@ void TextureLoadTaskClass::Deinit()
 		REF_PTR_RELEASE(Texture);
 	}
 }
-
 
 bool TextureLoadTaskClass::Begin_Load(void)
 {
@@ -1059,7 +1030,6 @@ bool TextureLoadTaskClass::Begin_Load(void)
 	return true;
 }
 
-
 // ----------------------------------------------------------------------------
 //
 // Load mipmap levels to a pre-generated and locked texture object based on
@@ -1087,7 +1057,6 @@ bool TextureLoadTaskClass::Load(void)
 	return loaded;
 }
 
-
 void TextureLoadTaskClass::End_Load(void)
 {
 
@@ -1096,7 +1065,6 @@ void TextureLoadTaskClass::End_Load(void)
 
 	State = STATE_LOAD_COMPLETE;
 }
-
 
 void TextureLoadTaskClass::Finish_Load(void)
 {
@@ -1120,14 +1088,12 @@ void TextureLoadTaskClass::Finish_Load(void)
 	}
 }
 
-
 void TextureLoadTaskClass::Apply_Missing_Texture(void)
 {
 
 	D3DTexture = MissingTexture::_Get_Missing_Texture();
 	Apply(true);
 }
-
 
 void TextureLoadTaskClass::Apply(bool initialize)
 {
@@ -1328,7 +1294,6 @@ bool TextureLoadTaskClass::Begin_Uncompressed_Load(void)
 	return true;
 }
 
-
 void TextureLoadTaskClass::Lock_Surfaces(void)
 {
 	MipLevelCount = D3DTexture->GetLevelCount();
@@ -1344,7 +1309,6 @@ void TextureLoadTaskClass::Lock_Surfaces(void)
 		LockedSurfacePitch[i]	= locked_rect.Pitch;
 	}
 }
-
 
 void TextureLoadTaskClass::Unlock_Surfaces(void)
 {
@@ -1363,7 +1327,6 @@ void TextureLoadTaskClass::Unlock_Surfaces(void)
 #endif
 
 }
-
 
 bool TextureLoadTaskClass::Load_Compressed_Mipmap(void)
 {
@@ -1392,7 +1355,6 @@ bool TextureLoadTaskClass::Load_Compressed_Mipmap(void)
 
 	return true;
 }
-
 
 bool TextureLoadTaskClass::Load_Uncompressed_Mipmap(void)
 {
@@ -1500,7 +1462,6 @@ bool TextureLoadTaskClass::Load_Uncompressed_Mipmap(void)
 
 	return true;
 }
-
 
 unsigned char * TextureLoadTaskClass::Get_Locked_Surface_Ptr(unsigned int level)
 {

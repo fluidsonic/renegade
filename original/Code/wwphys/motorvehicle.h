@@ -7,10 +7,8 @@
 class MotorVehicleDefClass;
 class LookupTableClass;
 
-
 #define RPM_TO_RADS(x) ((x) * (2.0f * WWMATH_PI) / 60.0f)
 #define RADS_TO_RPM(x) ((x) * 60.0f / (2.0f * WWMATH_PI))
-
 
 /**
 ** MotorVehicleClass 
@@ -113,7 +111,6 @@ inline const MotorVehicleDefClass * MotorVehicleClass::Get_MotorVehicleDef(void)
 	return (MotorVehicleDefClass *)Definition; 
 }
 
-
 /**
 ** MotorVehicleDefClass
 ** Initialization Structure/Factory/Editor Integration for a MotorVehicleClass
@@ -179,6 +176,5 @@ protected:
 
 	friend class MotorVehicleClass;
 };
-
 
 #endif

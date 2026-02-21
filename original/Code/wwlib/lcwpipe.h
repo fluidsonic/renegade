@@ -3,7 +3,6 @@
 
 #include	"pipe.h"
 
-
 /*
 **	Performs LCW compression/decompression on the data stream that is piped through this
 **	class. The data is compressed in blocks so of small enough size to be compressed
@@ -62,6 +61,5 @@ class LCWPipe : public Pipe
 		LCWPipe(LCWPipe & rvalue);
 		LCWPipe & operator = (LCWPipe const & pipe);
 };
-
 
 #endif

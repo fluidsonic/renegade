@@ -22,7 +22,6 @@
 #include "dialogmgr.h"
 #include "specialbuilds.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -44,7 +43,6 @@ CnCReferenceMenuClass::CnCReferenceMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CnCReferenceMenuClass
@@ -55,7 +53,6 @@ CnCReferenceMenuClass::~CnCReferenceMenuClass (void)
 	_TheInstance = NULL;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -130,7 +127,6 @@ CnCReferenceMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroy
@@ -153,7 +149,6 @@ CnCReferenceMenuClass::On_Destroy (void)
 	MenuDialogClass::On_Destroy ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -235,7 +230,6 @@ CnCReferenceMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display
@@ -262,7 +256,6 @@ CnCReferenceMenuClass::Display (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -297,7 +290,6 @@ CnCReferenceMenuClass::On_Menu_Activate (bool onoff)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -356,7 +348,6 @@ CnCReferenceMenuClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Prompt_User
@@ -377,7 +368,6 @@ CnCReferenceMenuClass::Prompt_User (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	HandleNotification
@@ -392,7 +382,6 @@ CnCReferenceMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -413,23 +402,6 @@ CnCReferenceMenuClass::Exit_Game (void)
 	GameInitMgrClass::Display_End_Game_Menu ();
 	return ;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/*
 	bool is_suicide_enabled = 

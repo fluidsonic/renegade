@@ -41,7 +41,6 @@ void	TextDisplayGameModeClass::Init()
 		SET_REF_OWNER( MonoFont );
 		MonoFont->Set_Mono_Spaced();
 
-
 		// Update Instance
 		TextDisplayGameModeClass::Instance = this;
 
@@ -302,7 +301,6 @@ void	TextDisplayGameModeClass::Print( const char * string, const Vector3 & color
    ScrollLines.Add_Tail( line );
 }
 
-
 void	TextDisplayGameModeClass::Print( const WideStringClass & string, const Vector3 & color )
 {
 	if (Font == NULL) {
@@ -330,7 +328,6 @@ void	TextDisplayGameModeClass::Print_System( const WideStringClass & string )
 	Print( string, Vector4( 1,1,0,1 ) );
 }
 
-
 void	TextDisplayGameModeClass::Print_Informational( const char * format, ... )
 {
 	va_list arg_list;
@@ -348,24 +345,6 @@ void	TextDisplayGameModeClass::Print_Informational( const WideStringClass & stri
 }
 
 /*
-** TextDebugDisplayHandler
-*/
-void	TextDebugDisplayHandlerClass::Display_Text( const char * string, const Vector4 & color )
-{
-	if (Get_Text_Display() != NULL) {
-		Get_Text_Display()->Print( string, color );
-	}
-}
-
-void	TextDebugDisplayHandlerClass::Display_Text( const WideStringClass & string, const Vector4 & color )
-{
-	if (Get_Text_Display() != NULL) {
-		Get_Text_Display()->Print( string, color );
-	}
-}
-
-
-/*
 ** StatisticsDisplay
 */
 static float													_StatsScrollOffset = 0;
@@ -376,13 +355,6 @@ static Vector2													_StatsLocation( 0,0 );
 
 void	StatisticsDisplayManager::Render(Render2DTextClass * renderer)
 {
-	if (WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0)) {
-		_StatsScrollOffset -= 32.0f;
-	}
-	if (WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC1)) {
-		_StatsScrollOffset += 32.0f;
-	}
-
 	renderer->Reset();
 	renderer->Set_Location( _StatsLocation );
 	renderer->Draw_Text( _StatsText, _StatsColor );

@@ -3,7 +3,6 @@
 #include	<stddef.h>
 //#include	<string.h>
 
-
 /***********************************************************************************************
  * Straw::~Straw -- Destructor for a straw segment.                                            *
  *                                                                                             *
@@ -32,7 +31,6 @@ Straw::~Straw(void)
 	ChainFrom = NULL;
 	ChainTo = NULL;
 }
-
 
 /***********************************************************************************************
  * Straw::Get_From -- Connect one straw segment to another.                                    *
@@ -69,7 +67,6 @@ void Straw::Get_From(Straw * straw)
 	}
 }
 
-
 /***********************************************************************************************
  * Straw::Get -- Fetch some data from the straw chain.                                         *
  *                                                                                             *
@@ -97,5 +94,4 @@ int Straw::Get(void * source, int slen)
 	}
 	return(0);
 }
-
 

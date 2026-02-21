@@ -2,7 +2,6 @@
 
 SysTimeClass SystemTime;
 
-
 /***********************************************************************************************
  * SysTimeClass::Reset -- Reset class to good state                                            *
  *                                                                                             *
@@ -22,8 +21,6 @@ void SysTimeClass::Reset(void)
 	StartTime = timeGetTime();
 	WrapAdd = 0 - StartTime;
 }
-
-
 
 /***********************************************************************************************
  * SysTimeClass::Is_Getting_Late -- Are we running out of timer time?                          *
@@ -50,28 +47,4 @@ bool SysTimeClass::Is_Getting_Late(void)
 	}
 	return(false);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

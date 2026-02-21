@@ -6,7 +6,6 @@
 #include "vector3.h"
 #include "render2dsentence.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ButtonCtrlClass
@@ -61,7 +60,6 @@ protected:
 
 	void					Update_Pulse (bool is_mouse_over);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected constants
 	////////////////////////////////////////////////////////////////
@@ -83,6 +81,5 @@ protected:
 	bool							IsBitmapMode;
 	int							PulseTime;
 };
-
 
 #endif //__BUTTON_CTRL_H

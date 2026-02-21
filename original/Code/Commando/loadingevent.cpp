@@ -10,7 +10,6 @@
 #include "apppackettypes.h"
 #include "gamedataupdateevent.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cLoadingEvent, NETCLASSID_LOADINGEVENT);
 
 //-----------------------------------------------------------------------------
@@ -78,7 +77,6 @@ cLoadingEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add(IsLoading);
 
@@ -93,10 +91,8 @@ cLoadingEvent::Import_Creation(BitStreamClass & packet)
 
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
 	packet.Get(IsLoading);
-
 
 	Act();
 }

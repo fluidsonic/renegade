@@ -5,7 +5,6 @@
 #include "saveloadids.h"
 #include "definitionclassids.h"
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	These are the chunk IDs that serve as 'globally-unique' persist identifiers for
@@ -26,7 +25,6 @@ enum
 	CHUNKID_LOGICALLISTENER
 };
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	These are the globally-unique class identifiers that the definition system
@@ -37,6 +35,5 @@ enum
 {
 	CLASSID_SOUND_DEF			= CLASSID_SOUND,
 };
-
 
 #endif //__SOUND_CHUNK_IDS_H

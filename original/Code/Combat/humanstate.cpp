@@ -1,5 +1,4 @@
 #include "humanstate.h"
-#include "debug.h"
 #include "animcontrol.h"
 #include "humanphys.h"
 #include "weapons.h"
@@ -29,8 +28,6 @@
 ** Static instance of HumanRecoilClass for recoil calculations
 */
 static HumanRecoilClass _TheRecoiler;
-
-
 
 /******************************************************************************************
 **
@@ -183,7 +180,6 @@ bool	HumanStateClass::Load( ChunkLoadClass &cload )
 
 			case CHUNKID_VARIABLES:
 
-
 				while (cload.Open_Micro_Chunk()) {
 
 					switch(cload.Cur_Micro_Chunk_ID()) {
@@ -210,7 +206,6 @@ bool	HumanStateClass::Load( ChunkLoadClass &cload )
 					}
 					cload.Close_Micro_Chunk();
 				}
-
 
 				if ( HumanPhys != NULL ) {
 					REQUEST_REF_COUNTED_POINTER_REMAP( (RefCountClass **)&HumanPhys );
@@ -263,7 +258,6 @@ void	HumanStateClass::Update_Weapon( WeaponClass * weapon, bool new_weapon )
 			  weapon->Get_Owner()->As_SoldierGameObj()->Is_Human_Controlled() ) {
 			WeaponFired = weapon->Is_Firing();
 		}
-
 
 		if ( weapon->Is_Triggered() || new_weapon || Get_State_Flag( CROUCHED_FLAG ) ) {
 			if ( weapon->Is_Safety_Set() ) {		// Don't blend anim when un-safetying
@@ -411,12 +405,10 @@ void	HumanStateClass::Set_State( HumanStateType state, int sub_state )
 	Update_Animation();
 }
 
-
 bool	HumanStateClass::Is_State_Interruptable( void )
 {
 	return (State == UPRIGHT) || (State == WOUNDED) || (State == LAND) || (State == LOITER) || (State == ANIMATION);
 }
-
 
 #define ADD_CASE(exp)  case exp: return #exp; break;  
 const char *  HumanStateClass::Get_State_Name( void )
@@ -478,7 +470,6 @@ void	HumanStateClass::Start_Transition_Animation( const char * anim_name, bool b
 		return;
 	}
 
-
 	Set_State( TRANSITION );
 
 	float blend_time = blend ? 0.2 : 0;
@@ -506,7 +497,6 @@ void	HumanStateClass::Start_Scripted_Animation( const char * anim_name, bool ble
 	if (( Get_State() == DEATH ) || ( Get_State() == DESTROY ) ) {
 		return;
 	}
-
 
 	Set_State( ANIMATION );
 
@@ -695,7 +685,6 @@ void	HumanStateClass::Update_Animation( void )
 			NoAnimBlend = false;
 		}
 
-
 		if ( torso_anim_name[1] == '2' ) {
 			// Lets try aiming
 			StringClass	anim1_name(0,true);
@@ -766,7 +755,6 @@ void	HumanStateClass::Update_Animation( void )
 		}
 
 	} else if ( State == DIVE ) {
-
 
 		const char * anim_name = NULL;
 #if 0
@@ -1072,7 +1060,6 @@ void	HumanStateClass::Post_Think( void )
 				Set_Sub_State( (HumanSubStateType)new_sub_state );
 			}
 
-
 #if 0		// Disable all leg twisting
 
 // ===================================================================			// LEG TWIST!!!!!
@@ -1126,7 +1113,6 @@ void	HumanStateClass::Post_Think( void )
 				}
 
 				if ( legs_rotation != 0 ) {
-
 
 					if ( !HumanPhys->Peek_Model()->Is_Bone_Captured( root_bone ) ) {
 						HumanPhys->Peek_Model()->Capture_Bone( root_bone );
@@ -1231,7 +1217,6 @@ BoneToOuchType	_BoneToOuchTypeList[] = {
 	{ "K_R UPPERARM", HumanStateClass::RIGHT_ARM_FROM_BEHIND },
 };
 #define	BONE_LIST_COUNT	( sizeof(_BoneToOuchTypeList) / sizeof(_BoneToOuchTypeList[0]) )
-
 
 int	HumanStateClass::Get_Ouch_Type( const	Vector3 & direction, const char * collision_box_name )
 {

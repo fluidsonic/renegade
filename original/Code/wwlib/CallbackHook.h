@@ -18,7 +18,6 @@ class CallbackHook
 		const CallbackHook& operator=(const CallbackHook&);
 	};
 
-
 template<class T> class Callback :
 		public CallbackHook
 	{

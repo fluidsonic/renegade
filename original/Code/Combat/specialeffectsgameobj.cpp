@@ -8,7 +8,6 @@
 #include "chunkio.h"
 #include "rendobj.h"
 #include "timemgr.h"
-#include "debug.h"
 #include "phys.h"
 #include "combat.h"
 

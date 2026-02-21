@@ -1,5 +1,4 @@
 #include "scriptcommands.h"
-#include "debug.h"
 #include "combat.h"
 #include "smartgameobj.h"
 #include "damage.h"
@@ -51,7 +50,6 @@
 #include "globalsettings.h"
 #include "screenfademanager.h"
 
-
 #define	SCRIPT_TRACE(x)	if (ScriptTrace) {Debug_Say(x);}
 bool		ScriptTrace	= false;
 
@@ -84,7 +82,6 @@ void Modify_Action( GameObject * obj, int action_id, const ActionParamsStruct & 
 
 	return ;
 }
-
 
 int	Get_Action_ID( GameObject * obj )
 {
@@ -145,7 +142,6 @@ bool	Is_Performing_Pathfind_Action( GameObject * obj )
 	return retval;
 }
 
-
 void Action_Reset( GameObject * obj, float priority )
 {
 	SCRIPT_PTR_CHECK( obj );
@@ -201,7 +197,6 @@ void Action_Enter_Exit( GameObject * obj, const ActionParamsStruct & params )
 	}
 }
 
-
 void Action_Face_Location( GameObject * obj, const ActionParamsStruct & params )
 {
 	SCRIPT_PTR_CHECK( obj );
@@ -212,7 +207,6 @@ void Action_Face_Location( GameObject * obj, const ActionParamsStruct & params )
 		smart->Get_Action()->Face_Location( params );
 	}
 }
-
 
 void Action_Dock( GameObject * obj, const ActionParamsStruct & params )
 {
@@ -225,7 +219,6 @@ void Action_Dock( GameObject * obj, const ActionParamsStruct & params )
 	}
 }
 
-
 void Action_Follow_Input( GameObject * obj, const ActionParamsStruct & params )
 {
 	SCRIPT_PTR_CHECK( obj );
@@ -236,8 +229,6 @@ void Action_Follow_Input( GameObject * obj, const ActionParamsStruct & params )
 		smart->Get_Action()->Follow_Input( params );
 	}
 }
-
-
 
 /*
 ** Physical control
@@ -303,7 +294,6 @@ void	Set_Facing( GameObject * obj, float degrees )
 		return;
 	}
 
-
 	SCRIPT_TRACE((	"ST>Set_Facing( %d, %f )\n", pgobj->Get_ID(), degrees ));
 	Vector3 pos;
 	pgobj->Get_Position(&pos);
@@ -314,7 +304,6 @@ void	Set_Facing( GameObject * obj, float degrees )
 
 	pgobj->Set_Transform(tm);
 }
-
 
 /*
 ** Collision Control
@@ -375,7 +364,6 @@ void	Destroy_Object( GameObject * obj )
 	obj->Set_Delete_Pending();
 }
 
-
 GameObject * Find_Object( int obj_id )
 {
 	return GameObjManager::Find_ScriptableGameObj( obj_id );
@@ -398,9 +386,6 @@ const char * Get_Preset_Name( GameObject * obj )
 	SCRIPT_PTR_CHECK_RET( obj, "" );
 	return obj->Get_Definition ().Get_Name ();
 }
-
-
-
 
 /******************************************************************************
 *
@@ -432,7 +417,6 @@ GameObject* Create_Object(const char* name, const Matrix3D& tm)
 	return object;
 }
 
-
 GameObject* Create_Object(const char* type_name, const Vector3 & position)
 {
 	SCRIPT_PTR_CHECK_RET(type_name, NULL);
@@ -455,7 +439,6 @@ GameObject* Create_Object(const char* type_name, const Vector3 & position)
 	return Create_Object(type_name, tm);
 #endif
 }
-
 
 GameObject* Create_Object_At_Bone(GameObject* host_obj, const char* new_obj_type_name, const char* bone_name)
 {
@@ -485,7 +468,6 @@ GameObject* Create_Object_At_Bone(GameObject* host_obj, const char* new_obj_type
 	return Create_Object(new_obj_type_name, tm);
 #endif
 }
-
 
 // Attach a script to and object.
 void Attach_Script(GameObject* object, const char* scriptName, const char* scriptParams)
@@ -520,7 +502,6 @@ void Add_To_Dirty_Cull_List(GameObject* obj)
 	}
 }
 
-
 /*
 ** Timers
 */
@@ -531,8 +512,6 @@ void	Start_Timer( GameObject * obj, ScriptClass * script, float duration, int ti
 	SCRIPT_TRACE((	"ST>Start_Timer( %d, %d, %f, %d )\n", obj->Get_ID(), script->Get_ID(), duration, timer_id ));
 	obj->Start_Observer_Timer( script->Get_ID(), duration, timer_id );
 }
-
-
 
 /*
 ** Weapons
@@ -582,7 +561,6 @@ void	Select_Weapon( GameObject * obj, const char * weapon_name )
 	}
 }
 
-
 /*
 **
 */
@@ -597,7 +575,6 @@ void	Send_Custom_Event( GameObject * from, GameObject * to, int type, int param,
 	SCRIPT_TRACE(("ST>Send_Custom_Event( %d, %d %d, %d )\n",
 		((from != NULL) ? from->Get_ID() : 0), to->Get_ID(), type, param));
 #endif
-
 
 	if ( to ) {
 		if ( delay <= 0 ) {
@@ -625,7 +602,6 @@ void	Send_Damaged_Event( GameObject * object, GameObject * damager )
 	}
 }
 
-
 /*
 **
 */
@@ -634,12 +610,10 @@ float	Get_Random( float min, float max )
 	return FreeRandom.Get_Float( min, max );
 }
 
-
 int	Get_Random_Int( int min, int max )
 {
 	return FreeRandom.Get_Int( min, max );
 }
-
 
 /*
 **	Find_Random_Simple_Object
@@ -686,7 +660,6 @@ GameObject *Find_Random_Simple_Object ( const char *preset_name )
 
 	return retval;
 }
-
 
 /*
 ** Object Display
@@ -828,7 +801,6 @@ void	Set_Animation( GameObject * obj, const char * anim_name, bool looping, cons
 	}
 }
 
-
 void	Set_Animation_Frame( GameObject * obj, const char * anim_name, int frame )
 {
 	SCRIPT_PTR_CHECK( obj );
@@ -849,7 +821,6 @@ void	Set_Animation_Frame( GameObject * obj, const char * anim_name, int frame )
 
 	pgobj->Set_Animation_Frame ( anim_name, frame );
 }
-
 
 /*
 **
@@ -909,7 +880,6 @@ int Create_2D_WAV_Sound( const char * wav_filename )
 	return sound_id;
 }
 
-
 int Create_3D_Sound_At_Bone( const char * sound_preset_name, GameObject * obj, const char * bone_name )
 {
 	WWAudioClass* audio = WWAudioClass::Get_Instance();
@@ -945,7 +915,6 @@ int Create_3D_Sound_At_Bone( const char * sound_preset_name, GameObject * obj, c
 
 	return sound_id;
 }
-
 
 int Create_3D_WAV_Sound_At_Bone( const char * wav_filename, GameObject * obj, const char * bone_name )
 {
@@ -1033,7 +1002,6 @@ void Monitor_Sound( GameObject * game_obj, int sound_id )
 	return ;
 }
 
-
 void Fade_Background_Music( const char * wav_filename, int fade_out_time, int fade_in_time )
 {
 	SCRIPT_TRACE(("ST>Fade_Background_Music( %s, %d, %d )\n", wav_filename, fade_out_time, fade_in_time));
@@ -1049,7 +1017,6 @@ void Fade_Background_Music( const char * wav_filename, int fade_out_time, int fa
 
 	return ;
 }
-
 
 void Set_Background_Music( const char * wav_filename )
 {
@@ -1082,8 +1049,6 @@ void Stop_Background_Music( void )
 
 	return ;
 }
-
-
 
 void Start_Sound( int sound_id )
 {
@@ -1118,7 +1083,6 @@ void Start_Sound( int sound_id )
 	return ;
 }
 
-
 void Stop_Sound( int sound_id, bool destroy_sound )
 {
 	SCRIPT_TRACE(("ST>Stop_Sound( %d )\n", sound_id));
@@ -1151,7 +1115,6 @@ void Stop_Sound( int sound_id, bool destroy_sound )
 
 	return ;
 }
-
 
 /*
 **
@@ -1247,7 +1210,6 @@ void	Set_Shield_Type( GameObject * obj, const char * name )
 	dgobj->Get_Defense_Object()->Set_Shield_Type( ArmorWarheadManager::Get_Armor_Type( name ) );
 }
 
-
 int	Get_Player_Type( GameObject * obj )
 {
 	SCRIPT_PTR_CHECK_RET( obj, 0 );
@@ -1274,7 +1236,6 @@ void	Set_Player_Type( GameObject * obj, int type )
 
 }
 
-
 /*
 **
 */
@@ -1283,7 +1244,6 @@ float	Get_Distance( const Vector3 & p1, const Vector3 & p2 )
 	Vector3 v = p1 - p2;
 	return v.Length();
 }
-
 
 /*
 **
@@ -1313,7 +1273,6 @@ void	Force_Camera_Look( const Vector3 & target )
 		COMBAT_CAMERA->Force_Look( target );
 	}
 }
-
 
 /*
 **
@@ -1373,7 +1332,6 @@ GameObject * Find_Closest_Soldier( const Vector3 & pos, float min_dist, float ma
 	return closest_obj;
 }
 
-
 /*
 **
 */
@@ -1426,7 +1384,6 @@ bool Get_Damage_Bone_Direction( void )
 	return DamageModelDirection;
 }
 
-
 /*
 **
 */
@@ -1441,7 +1398,6 @@ void	Control_Enable( GameObject * obj, bool enable )
 		Debug_Say(( "This object can't Control_Enable\n" ));
 	}
 }
-
 
 /*
 **
@@ -1466,7 +1422,6 @@ bool	Is_Object_Visible( GameObject * looker, GameObject * obj )
 	}
 	return false;
 }
-
 
 void	Enable_Enemy_Seen( GameObject * obj, bool enable )
 {
@@ -1496,8 +1451,6 @@ void	Display_Text( int string_id )
 	TDBObjClass *	 obj = TranslateDBClass::Find_Object( string_id );
 
 	if ( obj ) {
-		DebugManager::Display_Text( obj->Get_String(), _DisplayColor );
-
 		int sound_def_id = (int)obj->Get_Sound_ID ();
 		if (sound_def_id > 0) {
 			//	Create the sound object
@@ -1516,7 +1469,6 @@ void	Display_Float( float value, const char * format )
 	wide_format.Convert_From( format );
 	WideStringClass string;
 	string.Format( wide_format, value );
-	DebugManager::Display_Text( string, _DisplayColor );
 }
 
 void	Display_Int( int value, const char * format )
@@ -1525,7 +1477,6 @@ void	Display_Int( int value, const char * format )
 	wide_format.Convert_From( format );
 	WideStringClass string;
 	string.Format( wide_format, value );
-	DebugManager::Display_Text( string, _DisplayColor );
 }
 
 /*
@@ -1539,13 +1490,11 @@ void	Save_Data( ScriptSaver & saver, int id, int size, void * data )
 	saver.CSave.End_Micro_Chunk();
 }
 
-
 void Save_Pointer(ScriptSaver& saver, int id, void* pointer)
 {
 	SCRIPT_PTR_CHECK(pointer);
 	Save_Data(saver, id, sizeof(pointer), pointer);
 }
-
 
 bool	Load_Begin( ScriptLoader & loader, int * id )
 {
@@ -1564,14 +1513,12 @@ void	Load_Data( ScriptLoader & loader, int size, void * data )
 	loader.CLoad.Read(data, chunkSize);
 }
 
-
 void Load_Pointer(ScriptLoader& loader, void** pointer)
 {
 	SCRIPT_PTR_CHECK(pointer);
 	Load_Data(loader, sizeof(void*), pointer);
 	REQUEST_POINTER_REMAP(pointer);
 }
-
 
 void	Load_End( ScriptLoader & loader )
 {
@@ -1583,12 +1530,10 @@ void Begin_Chunk(ScriptSaver& saver, unsigned int chunkID)
 	saver.CSave.Begin_Chunk(chunkID);
 }
 
-
 void End_Chunk(ScriptSaver& saver)
 {
 	saver.CSave.End_Chunk();
 }
-
 
 bool Open_Chunk(ScriptLoader& loader, unsigned int* chunkID)
 {
@@ -1602,12 +1547,10 @@ bool Open_Chunk(ScriptLoader& loader, unsigned int* chunkID)
 	return false;
 }
 
-
 void Close_Chunk(ScriptLoader& loader)
 {
 	loader.CLoad.Close_Chunk();
 }
-
 
 //
 //	Clear_Map_Cell
@@ -1621,7 +1564,6 @@ Clear_Map_Cell( int cell_x, int cell_y )
 	return ;
 }
 
-
 //
 //	Clear_Map_Cell_By_Pos
 //
@@ -1633,7 +1575,6 @@ Clear_Map_Cell_By_Pos( const Vector3 &world_space_pos )
 	HUDClass::Add_Map_Reveal();
 	return ;
 }
-
 
 //
 //	Clear_Map_Region_By_Pos
@@ -1647,7 +1588,6 @@ Clear_Map_Region_By_Pos( const Vector3 &world_space_pos, int pixel_radius )
 	return ;
 }
 
-
 //
 //	Clear_Map_Cell_By_Pixel_Pos
 //
@@ -1660,7 +1600,6 @@ Clear_Map_Cell_By_Pixel_Pos( int pixel_pos_x, int pixel_pos_y )
 	return ;
 }
 
-
 //
 //	Show_Player_Map_Marker
 //
@@ -1671,7 +1610,6 @@ Show_Player_Map_Marker( bool onoff )
 	MapMgrClass::Show_Player_Marker( onoff );
 	return ;
 }
-
 
 //
 //	Reveal_Map
@@ -1705,7 +1643,6 @@ Get_Safe_Flight_Height (float x_pos, float y_pos)
 	SCRIPT_TRACE((	"ST>Get_Safe_Flight_Height( %.2f, %.2f )\n", x_pos, y_pos ));
 	return HeightDBClass::Get_Height ( Vector3 ( x_pos, y_pos, 0 ) );
 }
-
 
 /*
 **
@@ -1812,7 +1749,6 @@ void	Enable_Radar( bool enable )
 	RadarManager::Set_Hidden( !enable );
 }
 
-
 /*
 **
 */
@@ -1867,8 +1803,6 @@ void	Create_Explosion_At_Bone( const char * explosion_def_name, GameObject * obj
 
 }
 
-
-
 /*
 **
 */
@@ -1878,13 +1812,11 @@ void	Enable_HUD( bool enable )
 	HUDClass::Enable( enable );
 }
 
-
 void	Mission_Complete( bool success )
 {
 	SCRIPT_TRACE((	"ST>Mission_Complete( %d )\n", success ));
    CombatManager::Mission_Complete( success );
 }
-
 
 void	Give_PowerUp( GameObject * obj, const char * preset_name, bool display_on_hud )
 {
@@ -1905,7 +1837,6 @@ void	Give_PowerUp( GameObject * obj, const char * preset_name, bool display_on_h
 		Debug_Say(( "Only Samrt objs can get powerups\n" ));
 	}
 }
-
 
 bool Innate_Soldier_Enable( GameObject * obj, int bits, bool state )
 {
@@ -1934,36 +1865,30 @@ bool Innate_Soldier_Enable( GameObject * obj, int bits, bool state )
 	return old_state;
 }
 
-
 bool	Innate_Soldier_Enable_Enemy_Seen( GameObject * obj, bool state )
 {
 	return Innate_Soldier_Enable( obj, SOLDIER_INNATE_EVENT_ENEMY_SEEN, state );
 }
-
 
 bool	Innate_Soldier_Enable_Gunshot_Heard( GameObject * obj, bool state )
 {
 	return Innate_Soldier_Enable( obj, SOLDIER_INNATE_EVENT_GUNSHOT_HEARD, state );
 }
 
-
 bool	Innate_Soldier_Enable_Footsteps_Heard( GameObject * obj, bool state )
 {
 	return Innate_Soldier_Enable( obj, SOLDIER_INNATE_EVENT_FOOTSTEP_HEARD, state );
 }
-
 
 bool	Innate_Soldier_Enable_Bullet_Heard( GameObject * obj, bool state )
 {
 	return Innate_Soldier_Enable( obj, SOLDIER_INNATE_EVENT_BULLET_HEARD, state );
 }
 
-
 bool	Innate_Soldier_Enable_Actions( GameObject * obj, bool state )
 {
 	return Innate_Soldier_Enable( obj, SOLDIER_INNATE_ACTIONS, state );
 }
-
 
 // Disable all innate abilities
 void Innate_Disable(GameObject* object)
@@ -1971,13 +1896,11 @@ void Innate_Disable(GameObject* object)
 	Innate_Soldier_Enable(object, 0xFFFFFFFF, false);
 }
 
-
 // Enable all innate abilities
 void Innate_Enable(GameObject* object)
 {
 	Innate_Soldier_Enable(object, 0xFFFFFFFF, true);
 }
-
 
 void	Set_Innate_Soldier_Home_Location( GameObject * obj, const Vector3& home_pos, float home_radius )
 {
@@ -2062,7 +1985,6 @@ void	Set_Innate_Is_Stationary( GameObject * obj, bool stationary )
 		Debug_Say(( "Can only Set_Innate_Is_Stationary on a soldier\n" ));
 	}
 }
-
 
 void	Innate_Force_State_Bullet_Heard( GameObject * obj, const Vector3 & pos )
 {
@@ -2153,7 +2075,6 @@ void	Innate_Force_State_Enemy_Seen( GameObject * obj, GameObject * enemy )
 	}
 }
 
-
 /*
 **
 */
@@ -2174,7 +2095,6 @@ void	Static_Anim_Phys_Goto_Frame( int obj_id, float frame, const char * anim_nam
 		}
 	}
 }
-
 
 void	Static_Anim_Phys_Goto_Last_Frame( int obj_id, const char * anim_name )
 {
@@ -2267,7 +2187,6 @@ void	Shake_Camera( const Vector3 & pos, float radius, float intensity, float dur
 	}
 }
 
-
 void	Enable_Spawner( int id, bool enable )
 {
 	SCRIPT_TRACE((	"ST>Enable_Spawned( %d, %d )\n",id, enable ));
@@ -2293,7 +2212,6 @@ void	Enable_Engine( GameObject* object, bool onoff )
 		}
 	}
 }
-
 
 /*
 **
@@ -2443,7 +2361,6 @@ void	Join_Conversation_Facing( GameObject * object, int active_conversation_id, 
 	return ;
 }
 
-
 void	Join_Conversation( GameObject * object, int active_conversation_id, bool allow_move, bool allow_head_turn, bool allow_face )
 {
 	int obj_id = 0;
@@ -2486,7 +2403,6 @@ void	Join_Conversation( GameObject * object, int active_conversation_id, bool al
 	return ;
 }
 
-
 void	Stop_All_Conversations( void )
 {
 	SCRIPT_TRACE((	"ST>Stop_All_Conversations( )\n" ));
@@ -2497,7 +2413,6 @@ void	Stop_All_Conversations( void )
 	ConversationMgrClass::Reset_Active_Conversations();
 	return ;
 }
-
 
 void	Stop_Conversation( int active_conversation_id )
 {
@@ -2518,7 +2433,6 @@ void	Stop_Conversation( int active_conversation_id )
 
 	return ;
 }
-
 
 void	Start_Conversation( int active_conversation_id, int action_id )
 {
@@ -2564,7 +2478,6 @@ void	Monitor_Conversation( GameObject * object, int active_conversation_id )
 	return ;
 }
 
-
 void	Start_Random_Conversation( GameObject * object )
 {
 	SCRIPT_PTR_CHECK( object );
@@ -2587,7 +2500,6 @@ void	Start_Random_Conversation( GameObject * object )
 
 	return ;
 }
-
 
 /*
 **
@@ -2619,7 +2531,6 @@ void	Lock_Soldier_Facing( GameObject * object, GameObject * object_to_face, bool
 	return ;
 }
 
-
 /*
 **
 */
@@ -2645,7 +2556,6 @@ void	Unlock_Soldier_Facing( GameObject * object )
 
 	return ;
 }
-
 
 /*
 **
@@ -2708,7 +2618,6 @@ void	Set_Is_Visible( GameObject * object, bool visible )
 	}
 }
 
-
 void	Set_Is_Rendered( GameObject * object, bool rendered )
 {
 	SCRIPT_PTR_CHECK( object );
@@ -2722,7 +2631,6 @@ void	Set_Is_Rendered( GameObject * object, bool rendered )
 		Debug_Say(( "Can only Set_Is_Rendered on a PhysicalGameObj\n" ));
 	}
 }
-
 
 /*
 **
@@ -2825,7 +2733,6 @@ void	Set_Building_Power( GameObject * object, bool onoff )
 	}
 }
 
-
 void	Play_Building_Announcement( GameObject * object, int text_id )
 {
 	SCRIPT_PTR_CHECK( object );
@@ -2838,7 +2745,6 @@ void	Play_Building_Announcement( GameObject * object, int text_id )
 		Debug_Say(( "Object is not a Building\n" ));
 	}
 }
-
 
 GameObject * Find_Nearest_Building_To_Pos( const Vector3 & position, const char * mesh_prefix )
 {
@@ -2879,7 +2785,6 @@ GameObject * Find_Nearest_Building_To_Pos( const Vector3 & position, const char 
 	return best_building;
 }
 
-
 GameObject * Find_Nearest_Building( GameObject * object, const char * mesh_prefix )
 {
 	SCRIPT_PTR_CHECK_RET( object, NULL );
@@ -2897,7 +2802,6 @@ GameObject * Find_Nearest_Building( GameObject * object, const char * mesh_prefi
 	//
 	return Find_Nearest_Building_To_Pos( position, mesh_prefix );
 }
-
 
 int	Team_Members_In_Zone( GameObject * object, int player_type )
 {
@@ -3037,7 +2941,6 @@ void	Text_File_Close( int handle )
 	}
 }
 
-
 /*
 **
 */
@@ -3058,7 +2961,6 @@ void	Enable_Vehicle_Transitions( GameObject * object, bool enable )
 	}
 }
 
-
 /*
 **
 */
@@ -3069,7 +2971,6 @@ void	Display_GDI_Player_Terminal (void)
 	PlayerTerminalClass::Get_Instance ()->Display_Terminal (COMBAT_STAR, PlayerTerminalClass::TYPE_GDI);
 	return ;
 }
-
 
 /*
 **
@@ -3082,7 +2983,6 @@ void	Display_NOD_Player_Terminal (void)
 	return ;
 }
 
-
 /*
 **
 */
@@ -3094,7 +2994,6 @@ void	Display_Mutant_Player_Terminal (void)
 	return ;
 }
 
-
 /*
 **
 */
@@ -3103,7 +3002,6 @@ bool	Reveal_Encyclopedia_Character( int object_id )
 	SCRIPT_TRACE((	"ST>Reveal_Encyclopedia_Character( %d )\n", object_id ));
 	return EncyclopediaMgrClass::Reveal_Object( EncyclopediaMgrClass::TYPE_CHARACTER, object_id );
 }
-
 
 /*
 **
@@ -3114,7 +3012,6 @@ bool	Reveal_Encyclopedia_Weapon( int object_id )
 	return EncyclopediaMgrClass::Reveal_Object( EncyclopediaMgrClass::TYPE_WEAPON, object_id );
 }
 
-
 /*
 **
 */
@@ -3124,7 +3021,6 @@ bool	Reveal_Encyclopedia_Vehicle( int object_id )
 	return EncyclopediaMgrClass::Reveal_Object( EncyclopediaMgrClass::TYPE_VEHICLE, object_id );
 }
 
-
 /*
 **
 */
@@ -3133,7 +3029,6 @@ bool	Reveal_Encyclopedia_Building( int object_id )
 	SCRIPT_TRACE((	"ST>Reveal_Encyclopedia_Building( %d )\n", object_id ));
 	return EncyclopediaMgrClass::Reveal_Object( EncyclopediaMgrClass::TYPE_BUILDING, object_id );
 }
-
 
 /*
 **
@@ -3147,7 +3042,6 @@ void	Display_Encyclopedia_Event_UI( void )
 	return ;
 }
 
-
 /*
 **
 */
@@ -3157,7 +3051,6 @@ void	Scale_AI_Awareness( float sight_scale, float hearing_scale )
 	SmartGameObj::Set_Global_Sight_Range_Scale( sight_scale );
 //	SoundSystem::Set_Global_Listener_Scale( hearing_scale );
 }
-
 
 /*
 **
@@ -3283,7 +3176,6 @@ void	Set_Num_Tertiary_Objectives( int count )
 	ObjectiveManager::Set_Num_Specified_Tertiary_Objectives( count );
 }
 
-
 void	Enable_Letterbox( bool onoff, float seconds )
 {
 	SCRIPT_TRACE(( "ST>Enable_Letterbox( %d, %f)\n", onoff,seconds ));
@@ -3301,8 +3193,6 @@ void	Set_Screen_Fade_Opacity( float opacity, float seconds )
 	SCRIPT_TRACE(( "ST>Set_Screen_Fade_Opacity( %f, %f)\n", opacity,seconds ));
 	ScreenFadeManager::Set_Screen_Overlay_Opacity(opacity,seconds);
 }
-
-
 
 /*
 **

@@ -23,7 +23,6 @@
 
 //const USHORT MAX_MESSAGE_TYPES = 256;
 
-
 //
 // ResendTimeoutMs is dynamic, and works like this: It starts out very low,
 // say 10ms, as given by DEFAULT_RESEND_TIMEOUT_MS. Then it is kept 10%
@@ -59,7 +58,6 @@ class cRemoteHost
 		void Set_List_Processing_Time(int list_type, int processing_time_ms);
       int Get_List_Processing_Time(int list_type);
 
-
 		int Get_Last_Contact_Time()						{return LastContactTime;}
 		void Set_Last_Contact_Time(int time)			{LastContactTime = time;}
 
@@ -80,7 +78,6 @@ class cRemoteHost
 		float Get_Bandwidth_Multiplier(void) const	{return BandwidthMultiplier;}
 		void Set_Average_Priority(float ave)			{AverageObjectPriority = ave;}
 		float Get_Average_Priority(void)					{return(AverageObjectPriority);}
-
 
 		USHORT Get_Resend_Timeout_Ms() const			{return ResendTimeoutMs;}
 
@@ -134,7 +131,6 @@ class cRemoteHost
 		void Increment_Resends(void)						{TotalResends++;}
 		void Set_Total_Resent_Packets_In_Queue (int resent_packets) {TotalResentPacketsInQueue = resent_packets;}
 
-
 		inline int Get_Priority_Update_Counter(void)	{return(PriorityUpdateCounter);}
 		inline void Increment_Priority_Count(void)	{PriorityUpdateCounter++; if (PriorityUpdateCounter > PriorityUpdateRate) PriorityUpdateCounter = 0;}
 		static void Set_Priority_Update_Rate(int rate)	{PriorityUpdateRate = rate;}
@@ -146,7 +142,6 @@ class cRemoteHost
       cRemoteHost& operator=(const cRemoteHost& rhs); // Disallow assignment (compile/link time)
 		void Dam_The_Flood(void);
 		bool Is_Outgoing_Flooded(void);
-
 
 		cNetStats		Stats;
 		double			ThresholdPriority;
@@ -203,20 +198,6 @@ class cRemoteHost
 
 #endif // RHOST_H
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       //
       // When this is set to true, sends to ALL will include this rhost.
       // This is needed to allow a slot to be reserved for a rhost before
@@ -226,7 +207,6 @@ class cRemoteHost
       // readyness.
       //
       //bool IsReadyForAllData;
-
 
 				//int NumFailsInSampleTime;
 		//int NumConsecutiveTPCorrectionsDownwards;

@@ -4,7 +4,6 @@
 
 #include "gametype.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	CheatMgrClass
@@ -77,6 +76,5 @@ protected:
 	//
 	static CheatMgrClass *_TheInstance;
 };
-
 
 #endif //__CHEATMGR_H

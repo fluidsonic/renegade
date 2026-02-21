@@ -2,7 +2,6 @@
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
-#include "debug.h"
 #include "wwphysids.h"
 #include "meshmdl.h"
 #include "gameobjmanager.h"
@@ -21,12 +20,10 @@
 #include "encyclopediamgr.h"
 #include "apppackettypes.h"
 
-
 /////////////////////////////////////////////////////////////////////////////
 //	Namespaces
 /////////////////////////////////////////////////////////////////////////////
 using namespace BuildingConstants;
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -48,7 +45,6 @@ static const char *	BULDING_TYPE_NAMES[TYPE_COUNT + 1] =
 	"Base Defense",
 };
 
-
 static const char *	BULDING_TEAM_NAMES[BASE_COUNT] =
 {
 	"GDI",
@@ -60,7 +56,6 @@ static const char *	BULDING_TEAM_NAMES[BASE_COUNT] =
 //
 bool	BuildingGameObj::CanRepairBuildings	= true;
 
-
 /************************************************************************************************
 **
 ** BuildingGameObjDef
@@ -69,7 +64,6 @@ bool	BuildingGameObj::CanRepairBuildings	= true;
 SimplePersistFactoryClass<BuildingGameObjDef, CHUNKID_GAME_OBJECT_DEF_BUILDING>	_BuildingGameObjDefPersistFactory;
 
 DECLARE_DEFINITION_FACTORY(BuildingGameObjDef, CLASSID_GAME_OBJECT_DEF_BUILDING, "<Generic Building>") _BuildingGameObjDefDefFactory;
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -114,7 +108,6 @@ BuildingGameObjDef::BuildingGameObjDef (void)	:
 	EDITABLE_PARAM(BuildingGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, NodDestroyReportID);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Class_ID
@@ -125,7 +118,6 @@ BuildingGameObjDef::Get_Class_ID (void) const
 { 
 	return CLASSID_GAME_OBJECT_DEF_BUILDING; 
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -139,7 +131,6 @@ BuildingGameObjDef::Create (void) const
 	obj->Init( *this );
 	return obj;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -157,7 +148,6 @@ enum	{
 	MICROCHUNKID_DEF_GDI_DESTROY_REPORT_ID, 
 	MICROCHUNKID_DEF_NOD_DESTROY_REPORT_ID, 
 };
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -183,7 +173,6 @@ BuildingGameObjDef::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -241,7 +230,6 @@ BuildingGameObjDef::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -252,7 +240,6 @@ BuildingGameObjDef::Get_Factory (void) const
 { 
 	return _BuildingGameObjDefPersistFactory; 
 }
-
 
 int BuildingGameObjDef::Get_Damage_Report(int team) const
 {
@@ -265,7 +252,6 @@ int BuildingGameObjDef::Get_Damage_Report(int team) const
 	return 0;
 }
 
-
 int BuildingGameObjDef::Get_Destroy_Report(int team) const
 {
 	if (PLAYERTYPE_GDI == team) {
@@ -277,15 +263,12 @@ int BuildingGameObjDef::Get_Destroy_Report(int team) const
 	return 0;
 }
 
-
-
 /************************************************************************************************
 **
 ** BuildingGameObj
 **
 ************************************************************************************************/
 SimplePersistFactoryClass<BuildingGameObj, CHUNKID_GAME_OBJECT_BUILDING>	_BuildingGameObjPersistFactory;
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -297,7 +280,6 @@ BuildingGameObj::Get_Factory (void) const
 {
 	return _BuildingGameObjPersistFactory;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -319,7 +301,6 @@ BuildingGameObj::BuildingGameObj (void)	:
 	Update_State ();
 	Set_App_Packet_Type(APPPACKETTYPE_BUILDING);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -344,7 +325,6 @@ BuildingGameObj::~BuildingGameObj (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Init
@@ -354,7 +334,6 @@ void BuildingGameObj::Init( void )
 {
 	Init( Get_Definition() );
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -368,7 +347,6 @@ BuildingGameObj::Init (const BuildingGameObjDef &definition)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Definition
@@ -379,7 +357,6 @@ BuildingGameObj::Get_Definition (void) const
 {
 	return (const BuildingGameObjDef &)BaseGameObj::Get_Definition();
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //	Save/Load constants
@@ -392,7 +369,6 @@ enum	{
 	MICROCHUNKID_ISPOWERON,
 	MICROCHUNKID_COLLECTION_SPHERE
 };
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -414,7 +390,6 @@ BuildingGameObj::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -469,7 +444,6 @@ BuildingGameObj::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -606,7 +580,6 @@ BuildingGameObj::Is_Interior_Mesh_Name (const char * name)
 #endif
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Is_Exterior_Mesh_Name
@@ -627,7 +600,6 @@ BuildingGameObj::Is_Exterior_Mesh_Name (const char * name)
 	return strchr(name,'^') != NULL;
 #endif
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -653,7 +625,6 @@ BuildingGameObj::Name_Prefix_Matches_This_Building (const char * name)
 	return retval;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Normalized_Health
@@ -668,9 +639,7 @@ BuildingGameObj::Set_Normalized_Health (float health)
 	DefenseObject.Set_Health (health * DefenseObject.Get_Health_Max ());
 	Update_State ();
 
-
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -762,7 +731,6 @@ BuildingGameObj::Update_State (bool force_update)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Play_Announcement
@@ -818,7 +786,6 @@ BuildingGameObj::Play_Announcement(int text_id, bool broadcast)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Stop_Current_Announcement
@@ -836,7 +803,6 @@ BuildingGameObj::Stop_Current_Announcement (void)
 		CurrentAnnouncement = NULL;
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -875,7 +841,6 @@ BuildingGameObj::Initialize_Building (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Reset_Components
@@ -905,7 +870,6 @@ BuildingGameObj::Reset_Components (void)
 	Aggregates.Reset_List();
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Add_Mesh
@@ -922,7 +886,6 @@ BuildingGameObj::Add_Mesh (StaticPhysClass * terrain)
 		terrain->Set_Observer(this);
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -941,7 +904,6 @@ BuildingGameObj::Remove_Mesh (StaticPhysClass * terrain)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Add_Aggregate
@@ -954,7 +916,6 @@ BuildingGameObj::Add_Aggregate (BuildingAggregateClass * aggregate)
 	aggregate->Set_Observer(this);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Remove_Aggregate
@@ -966,7 +927,6 @@ BuildingGameObj::Remove_Aggregate (BuildingAggregateClass * aggregate)
 	aggregate->Set_Observer(NULL);
 	Aggregates.Remove(aggregate);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -983,7 +943,6 @@ BuildingGameObj::Add_Light (LightPhysClass * light)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Enable_Alternate_Materials
@@ -997,7 +956,6 @@ BuildingGameObj::Enable_Alternate_Materials (RefMultiListClass<StaticPhysClass> 
 		Enable_Alternate_Materials(it.Peek_Obj()->Peek_Model(),onoff);
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1022,7 +980,6 @@ BuildingGameObj::Enable_Alternate_Materials (RenderObjClass * model,bool onoff)
 	}
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	CnC_Initialize
@@ -1042,7 +999,6 @@ BuildingGameObj::CnC_Initialize (BaseControllerClass *base)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	On_Damaged
@@ -1060,7 +1016,6 @@ BuildingGameObj::On_Damaged (void)
 
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1092,7 +1047,6 @@ BuildingGameObj::On_Destroyed (void)
 	EncyclopediaMgrClass::Reveal_Object (this);
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1145,7 +1099,6 @@ BuildingGameObj::Import_Rare (BitStreamClass &packet)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Export_Rare
@@ -1165,7 +1118,6 @@ BuildingGameObj::Export_Rare (BitStreamClass &packet)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Precision
@@ -1177,7 +1129,6 @@ BuildingGameObj::Set_Precision (void)
 	cEncoderList::Set_Precision (BITPACK_BUILDING_STATE, -1, (int)BuildingStateClass::STATE_COUNT);
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1329,7 +1280,6 @@ BuildingGameObj::Collect_Building_Components (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	Export_Creation
@@ -1358,7 +1308,6 @@ BuildingGameObj::Export_Creation (BitStreamClass &packet)
 	packet.Add (CollectionSphere.Radius,		BITPACK_BUILDING_RADIUS);
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1396,7 +1345,6 @@ BuildingGameObj::Import_Creation (BitStreamClass &packet)
 	return ;
 }
 
-
 /*
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -1420,7 +1368,6 @@ BuildingGameObj::Compute_Object_Priority (int client_id, const Vector3 &client_p
 	return priority;
 }
 */
-
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -1468,7 +1415,6 @@ BuildingGameObj::Get_Description(StringClass & description)
 	line.Format("ISC:   %d\n", Get_Import_State_Count());
 	description += line;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -1542,7 +1488,6 @@ BuildingGameObj::Find_Closest_Poly_For_Model
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////
 //

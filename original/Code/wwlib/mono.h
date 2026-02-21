@@ -60,6 +60,5 @@ class MonoClass {
 		MonoClass & operator = (MonoClass const & );
 };
 
-
 #endif
 

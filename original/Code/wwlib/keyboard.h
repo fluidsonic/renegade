@@ -1,10 +1,8 @@
 #ifndef KEY_H
 #define KEY_H
 
-
 #include	"_xmouse.h"
 #include	"win.h"
-
 
 typedef enum {
 	WWKEY_SHIFT_BIT	= 0x100,
@@ -15,7 +13,6 @@ typedef enum {
 	WWKEY_DBL_BIT		= 0x2000,
 	WWKEY_BTN_BIT		= 0x8000
 } WWKey_Type;
-
 
 class WWKeyboardClass
 {
@@ -72,8 +69,6 @@ class WWKeyboardClass
 		int Head;
 		int Tail;
 };
-
-
 
 #define	VK_NONE				  0x00
 #define	VK_LBUTTON          0x01
@@ -484,7 +479,6 @@ typedef enum KeyASCIIType {
 	KA_RLSE_BIT  		= WWKEY_RLS_BIT
 } KeyASCIIType;
 
-
 typedef enum KeyNumType {
 	KN_NONE				= 0,
 
@@ -629,6 +623,5 @@ struct KeyboardClass : public WWKeyboardClass
 	int Mouse_X(void) {return(Get_Mouse_X());};
 	int Mouse_Y(void) {return(Get_Mouse_Y());};
 };
-
 
 #endif

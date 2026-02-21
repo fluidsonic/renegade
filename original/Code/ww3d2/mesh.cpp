@@ -46,7 +46,6 @@ static SimpleDynVecClass<uint32> temp_apt;
 #define COMPUTE_NORMALS
 #endif
 
-
 /*
 ** Temporary storage used during decal creation
 */
@@ -59,7 +58,6 @@ enum
 {
 	CHUNKID_USER_LIGHTING_ARRAY = 0x07520213,
 };
-
 
 /***********************************************************************************************
  * MeshClass::MeshClass -- Constructor for MeshClass                                           *
@@ -87,7 +85,6 @@ MeshClass::MeshClass(void) :
 {
 }
 
-
 /***********************************************************************************************
  * MeshClass::MeshClass -- Copy Constructor for MeshClass                                      *
  *                                                                                             *
@@ -114,7 +111,6 @@ MeshClass::MeshClass(const MeshClass & that) :
 {
 	REF_PTR_SET(Model,that.Model);					// mesh instances share models by default
 }
-
 
 /***********************************************************************************************
  * operator == -- assignment operator for MeshClass                                            *
@@ -151,7 +147,6 @@ MeshClass & MeshClass::operator = (const MeshClass & that)
 	return * this;
 }
 
-
 /***********************************************************************************************
  * MeshClass::~MeshClass -- destructor                                                         *
  *                                                                                             *
@@ -169,7 +164,6 @@ MeshClass::~MeshClass(void)
 	TheDX8MeshRenderer.Unregister_Mesh_Type(this);
 	Free();
 }
-
 
 /***********************************************************************************************
  * MeshClass::Contains -- Determines whether mesh contains a (worldspace) point.               *
@@ -191,7 +185,6 @@ bool MeshClass::Contains(const Vector3 &point)
 	Matrix3D::Inverse_Transform_Vector(Transform, point, &obj_point);
 	return Model->Contains(obj_point);
 }
-
 
 /***********************************************************************************************
  * MeshClass::Free -- Releases all memory/assets in use by this mesh                           *
@@ -215,7 +208,6 @@ void MeshClass::Free(void)
 	}
 }
 
-
 /***********************************************************************************************
  * MeshClass::Clone -- Creates a clone of this mesh                                            *
  *                                                                                             *
@@ -233,7 +225,6 @@ RenderObjClass * MeshClass::Clone(void) const
 	return NEW_REF( MeshClass, (*this));
 }
 
-
 /***********************************************************************************************
  * MeshClass::Get_Name -- returns the name of the mesh                                         *
  *                                                                                             *
@@ -250,7 +241,6 @@ const char * MeshClass::Get_Name(void) const
 { 
 	return Model->Get_Name(); 
 }
-
 
 /***********************************************************************************************
  * MeshClass::Set_Name -- sets the name of this mesh                                           *
@@ -286,7 +276,6 @@ uint32 MeshClass::Get_W3D_Flags(void)
 	return Model->W3dAttributes; 
 }
 
-
 /***********************************************************************************************
  * MeshClass::Get_User_Text -- access to the text buffer                                       *
  *                                                                                             *
@@ -303,7 +292,6 @@ const char * MeshClass::Get_User_Text(void) const
 { 
 	return Model->Get_User_Text(); 
 }		
-
 
 /***********************************************************************************************
  * MeshClass::Get_Material_Info -- returns a pointer to the material info                      *
@@ -327,7 +315,6 @@ MaterialInfoClass * MeshClass::Get_Material_Info(void)
 	}
 	return NULL;
 }
-
 
 /***********************************************************************************************
  * MeshClass::Get_Model -- user access to the mesh model                                       *
@@ -377,7 +364,6 @@ void MeshClass::Scale(float scale)
    if (container) container->Update_Obj_Space_Bounding_Volumes();
 }
 
-
 /***********************************************************************************************
  * MeshClass::Scale -- Scales the mesh                                                         *
  *                                                                                             *
@@ -409,7 +395,6 @@ void MeshClass::Scale(float scalex, float scaley, float scalez)
    if (container) container->Update_Obj_Space_Bounding_Volumes();
 }
 
-
 /***********************************************************************************************
  * MeshClass::Get_Deformed_Vertices -- Gets the deformed vertices for a skin                   *
  *                                                                                             *
@@ -426,7 +411,6 @@ void	MeshClass::Get_Deformed_Vertices(Vector3 *dst_vert, Vector3 *dst_norm)
 {
 	Model->get_deformed_vertices(dst_vert,dst_norm,Container->Get_HTree());
 }
-
 
 /***********************************************************************************************
  * MeshClass::Get_Deformed_Vertices -- Gets the deformed vertices for a skin                   *
@@ -527,7 +511,6 @@ void MeshClass::Create_Decal(DecalGeneratorClass * generator)
 	}
 }
 
-
 /***********************************************************************************************
  * MeshClass::Delete_Decal -- removes a decal from this mesh                                   *
  *                                                                                             *
@@ -546,7 +529,6 @@ void MeshClass::Delete_Decal(uint32 decal_id)
 		DecalMesh->Delete_Decal(decal_id);
 	}
 }
-
 
 /***********************************************************************************************
  * MeshClass::Get_Num_Polys -- returns the number of polys (tris) in this mesh                 *
@@ -570,7 +552,6 @@ int MeshClass::Get_Num_Polys(void) const
 		return 0;
 	}
 }
-
 
 /***********************************************************************************************
  * MeshClass::Render -- renders this mesh                                                      *
@@ -721,7 +702,6 @@ void MeshClass::Render(RenderInfoClass & rinfo)
 	}
 }
 
-
 /***********************************************************************************************
  * MeshClass::Render_Material_Pass -- Render a procedural material pass for this mesh          *
  *                                                                                             *
@@ -853,7 +833,6 @@ void MeshClass::Render_Material_Pass(MaterialPassClass * pass,IndexBufferClass *
 	}
 }
 
-
 /***********************************************************************************************
  * MeshClass::Special_Render -- special render function for meshes                             *
  *                                                                                             *
@@ -915,7 +894,6 @@ void MeshClass::Replace_Texture(TextureClass* texture,TextureClass* new_texture)
 	Model->Replace_Texture(texture,new_texture);
 }
 
-
 /***********************************************************************************************
  * MeshClass::Replace_VertexMaterial -- Replaces existing vertex material with a new one. Will *
  *                                                                                             *
@@ -935,7 +913,6 @@ void MeshClass::Replace_VertexMaterial(VertexMaterialClass* vmat,VertexMaterialC
 {
 	Model->Replace_VertexMaterial(vmat,new_vmat);
 }
-
 
 /***********************************************************************************************
  * MeshClass::Make_Unique -- Makes mesh unique in the renderer, but still shares system ram ge *
@@ -1028,7 +1005,6 @@ WW3DErrorType MeshClass::Load_W3D(ChunkLoadClass & cload)
 
 }
 
-
 /***********************************************************************************************
  * MeshClass::Cast_Ray -- compute a ray intersection with this mesh                            *
  *                                                                                             *
@@ -1080,7 +1056,6 @@ bool MeshClass::Cast_Ray(RayCollisionTestClass & raytest)
 	return hit;
 }
 
-
 /***********************************************************************************************
  * MeshClass::Cast_AABox -- cast an AABox against this mesh                                    *
  *                                                                                             *
@@ -1098,7 +1073,6 @@ bool MeshClass::Cast_AABox(AABoxCollisionTestClass & boxtest)
 	if ((Get_Collision_Type() & boxtest.CollisionType) == 0) return false;
 	if (boxtest.Result->StartBad) return false;
 
-
 	// This function analyses the tranform to call optimized functions in certain cases
 	bool hit = Model->Cast_World_Space_AABox(boxtest, Get_Transform());
 
@@ -1108,7 +1082,6 @@ bool MeshClass::Cast_AABox(AABoxCollisionTestClass & boxtest)
 
 	return hit;
 }
-
 
 /***********************************************************************************************
  * Cast_OBBox -- Cast an obbox against this mesh                                               *
@@ -1135,7 +1108,6 @@ bool MeshClass::Cast_OBBox(OBBoxCollisionTestClass & boxtest)
 	tm.Get_Orthogonal_Inverse(world_to_obj);
 	OBBoxCollisionTestClass localtest(boxtest,world_to_obj);
 
-
 	bool hit = Model->Cast_OBBox(localtest);
 
 	/*
@@ -1151,7 +1123,6 @@ bool MeshClass::Cast_OBBox(OBBoxCollisionTestClass & boxtest)
 
 	return hit;
 }
-
 
 /***********************************************************************************************
  * MeshClass::Intersect_AABox -- test for intersection with given AABox                        *
@@ -1179,7 +1150,6 @@ bool MeshClass::Intersect_AABox(AABoxIntersectionTestClass & boxtest)
 	return Model->Intersect_OBBox(local_test);
 }
 
-
 /***********************************************************************************************
  * MeshClass::Intersect_OBBox -- test for intersection with the given OBBox                    *
  *                                                                                             *
@@ -1205,7 +1175,6 @@ bool MeshClass::Intersect_OBBox(OBBoxIntersectionTestClass & boxtest)
 	return Model->Intersect_OBBox(local_test);
 }
 
-
 /***********************************************************************************************
  * MeshClass::Get_Obj_Space_Bounding_Sphere -- returns obj-space bounding sphere               *
  *                                                                                             *
@@ -1228,7 +1197,6 @@ void MeshClass::Get_Obj_Space_Bounding_Sphere(SphereClass & sphere) const
 	}
 }
 
-
 /***********************************************************************************************
  * MeshClass::Get_Obj_Space_Bounding_Box -- returns the obj-space bounding box                 *
  *                                                                                             *
@@ -1250,7 +1218,6 @@ void MeshClass::Get_Obj_Space_Bounding_Box(AABoxClass & box) const
 	}
 }
 
-
 /***********************************************************************************************
  * MeshClass::Generate_Culling_Tree -- Generates a hierarchical culling tree for the mesh      *
  *                                                                                             *
@@ -1267,7 +1234,6 @@ void MeshClass::Generate_Culling_Tree(void)
 {
 	Model->Generate_Culling_Tree();
 }
-
 
 /***********************************************************************************************
  * MeshClass::Add_Dependencies_To_List -- Add dependent files to the list.                     *
@@ -1317,7 +1283,6 @@ void MeshClass::Add_Dependencies_To_List
 	return ;
 }
 
-
 /***********************************************************************************************
  * MeshClass::Update_Cached_Bounding_Volumes -- default collision sphere.                      *
  *                                                                                             *
@@ -1348,7 +1313,6 @@ void MeshClass::Update_Cached_Bounding_Volumes(void) const
 
 	Validate_Cached_Bounding_Volumes();
 }
-
 
 // This utility function recurses throughout the subobjects of a renderobject, and for each
 // MeshClass it finds it sets the given MeshModel flag on its model. This is useful for stuff
@@ -1447,7 +1411,6 @@ void MeshClass::setup_materials_for_user_lighting(void)
 	}
 }
 
-
 void MeshClass::setup_material_for_user_lighting(VertexMaterialClass * mtl)
 {
 	// (gth) The terrain pre-lit stuff *must* use the diffuse and ambient arrays (to get vertex alpha
@@ -1460,7 +1423,6 @@ void MeshClass::setup_material_for_user_lighting(VertexMaterialClass * mtl)
 		mtl->Set_Diffuse_Color_Source(VertexMaterialClass::COLOR1);
 	}
 }
-
 
 void MeshClass::Save_User_Lighting (ChunkSaveClass & csave)
 {
@@ -1486,12 +1448,4 @@ void MeshClass::Load_User_Lighting (ChunkLoadClass & cload)
 
 	Set_Has_User_Lighting(true);
 }
-
-
-
-
-
-
-
-
 

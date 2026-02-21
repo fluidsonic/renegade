@@ -46,7 +46,6 @@ void BufferedFileClass::Close(void)
 	Reset_Buffer();
 }
 
-
 /***********************************************************************************************
  * BufferedFileClass::Read -- Reads the specified number of bytes into a memory buffer.             *
  *                                                                                             *
@@ -130,7 +129,6 @@ int BufferedFileClass::Read(void * buffer, int size)
 	return read;
 }
 
-
 /***********************************************************************************************
  * BufferedFileClass::Write -- Writes the specified data to the buffer specified.                   *
  *                                                                                             *
@@ -156,7 +154,6 @@ int BufferedFileClass::Write(void const * buffer, int size)
 
 	return BASECLASS::Write( buffer, size );
 }
-
 
 /***********************************************************************************************
  * BufferedFileClass::Seek -- Reposition the file pointer as indicated.                             *

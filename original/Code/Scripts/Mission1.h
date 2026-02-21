@@ -1,11 +1,9 @@
 #ifndef _MISSION1_H_
 #define _MISSION1_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
-
 
 // Predefined Constants
 #define M01_CHURCH_OBJECTIVE_JDG				100
@@ -184,7 +182,6 @@
 #define M01_DETENTION_GATE_IS_DOWN_JDG			400004
 #define M01_DETENTION_GATE_DOWN_SAM_DEAD_JDG	400005
 
-
 /*****************************************************************************************************
 Starting level 04 defines here
 ******************************************************************************************************/
@@ -250,8 +247,6 @@ Starting level 04 defines here
 #define M04_TIBERIUM_SIMPLEMUTANT_JDG			102240
 #define M04_TIBERIUM_CHAMBERCONTROLLER_JDG		104113
 
-
-
 // Public Variables
 
 // Enumerations
@@ -260,7 +255,6 @@ enum
 	M01_CAPT_DUNCAN_HAS_BEEN_FOUND_JDG,
 	M01_GDI_BASE_POWS_RESCUED_JDG,
 	M01_GDI_BASE_POWS_OVER_JDG,
-
 
 	M01_START_GDIBASE_FRONT_CONVERSATION,
 	//M01_ANNOUNCE_LIGHTHOUSE_SNIPER_JDG,

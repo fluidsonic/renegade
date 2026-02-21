@@ -1,9 +1,7 @@
 #include "bones.h"
-#include "debug.h"
 #include "assets.h"
 #include "wwstring.h"
 #include "stl.h"
-
 
 static bool _BonesMangerInitted = false;
 
@@ -36,7 +34,6 @@ void Load_Bones( void )
 	INIClass	* bonesINI = Get_INI( BONES_INI_FILENAME );
 	if (bonesINI != NULL) {
 
-
 		int count =  bonesINI->Entry_Count( SECTION_LIST );		// Load gang list
 		for ( int entry = 0; entry < count; entry++ )	{
 			char	name[80];
@@ -57,7 +54,6 @@ void Load_Bones( void )
 		Debug_Say(("Load_Bones - Unable to load %s\n", BONES_INI_FILENAME));
 	}
 }
-
 
 /*
 **

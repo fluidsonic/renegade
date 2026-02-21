@@ -6,7 +6,6 @@
 #include "movephys.h"
 #include "ode.h"
 
-
 class Phys3DefClass;
 class Phys3HistoryClass;
 
@@ -155,7 +154,6 @@ protected:
 		Vector3				Velocity;		
 	};
 
-
 	/*
 	** Phys3 Movement algorithm
 	*/
@@ -230,8 +228,6 @@ private:
 
 };
 
-
-
 inline void Phys3Class::Get_Velocity(Vector3 * set_vel) const 
 { 
 	*set_vel = State.Velocity; 
@@ -267,7 +263,6 @@ Phys3Class::StateStruct::operator = (const StateStruct & that)
 	Velocity = that.Velocity; 
 	return *this;
 }
-
 
 /**
 ** Phys3DefClass

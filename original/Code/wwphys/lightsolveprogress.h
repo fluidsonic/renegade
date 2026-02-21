@@ -58,5 +58,4 @@ inline LightSolveProgressClass::LightSolveProgressClass(void) :
 {
 }
 
-
 #endif

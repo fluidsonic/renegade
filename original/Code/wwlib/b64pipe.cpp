@@ -3,7 +3,6 @@
 #include	"base64.h"
 #include	<string.h>
 
-
 /***********************************************************************************************
  * Base64Pipe::Put -- Processes a block of data through the pipe.                              *
  *                                                                                             *
@@ -87,7 +86,6 @@ int Base64Pipe::Put(void const * source, int slen)
 	return(total);
 }
 
-
 /***********************************************************************************************
  * Base64Pipe::Flush -- Flushes the final pending data through the pipe.                       *
  *                                                                                             *
@@ -121,6 +119,4 @@ int Base64Pipe::Flush(void)
 	len += Pipe::Flush();
 	return(len);
 }
-
-
 

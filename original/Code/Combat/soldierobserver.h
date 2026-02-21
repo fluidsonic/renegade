@@ -122,7 +122,6 @@ private:
 	bool Take_Cover( SoldierGameObj * soldier, bool force_face = false, const Vector3 & face_pos = Vector3(0,0,0) );
 	void Look_Random( SoldierGameObj * soldier, float duration );
 
-
 	/*
 	** Innate AI Cover Positions
 	*/

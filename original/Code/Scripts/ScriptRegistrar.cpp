@@ -34,7 +34,6 @@ void ScriptRegistrar::RegisterScript(ScriptFactory* factory)
 	}
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -76,7 +75,6 @@ void ScriptRegistrar::UnregisterScript(ScriptFactory* factory)
 	}
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -114,7 +112,6 @@ ScriptImpClass* ScriptRegistrar::CreateScript(const char* scriptName)
 	return NULL;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -150,7 +147,6 @@ ScriptFactory* ScriptRegistrar::GetScriptFactory(const char* name)
 	return NULL;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -183,7 +179,6 @@ ScriptFactory* ScriptRegistrar::GetScriptFactory(int index)
 
 	return NULL;
 }
-
 
 /******************************************************************************
 *

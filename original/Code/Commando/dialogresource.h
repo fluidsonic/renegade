@@ -2,7 +2,6 @@
 #ifndef __DIALOG_RESOURCE_H
 #define __DIALOG_RESOURCE_H
 
-
 //
 //	These button IDs are used for "simple" buttons
 // that's only purpose is to start a new dialog.
@@ -124,7 +123,6 @@
 #define IDC_BUY_CHARACTER11_BUTTON			4010
 #define IDC_BUY_CHARACTER12_BUTTON			4011
 #define IDC_BUY_CHARACTER13_BUTTON			4012
-
 
 #define IDC_SCORE_TABCTRL						40001
 #define IDC_GENERIC_TABCTRL					40002

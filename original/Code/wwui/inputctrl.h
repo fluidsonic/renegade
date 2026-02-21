@@ -7,13 +7,11 @@
 #include "render2dsentence.h"
 #include "bittype.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Special virtual keys
 ////////////////////////////////////////////////////////////////
 #define VK_MOUSEWHEEL_UP      0x100
 #define VK_MOUSEWHEEL_DOWN    0x101
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -84,6 +82,5 @@ protected:
 	uint32						UserData;	
 	int							PendingKeyID;
 };
-
 
 #endif //__INPUTBOX_CTRL_H

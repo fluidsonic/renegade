@@ -17,7 +17,6 @@
 	#include "refcount.h"
 #endif
 
-
 class	ChunkSaveClass;
 class	ChunkLoadClass;
 
@@ -54,7 +53,6 @@ private:
 	bool							InUse;
 };
 
-
 /*
 **
 */
@@ -80,7 +78,5 @@ private:
 	static	DynamicVectorClass<CoverEntryClass *>		CoverPositions;
 
 };
-
-
 
 #endif	// COVER_H

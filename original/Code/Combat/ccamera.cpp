@@ -5,7 +5,6 @@
 #include "pscene.h"
 #include "combat.h"
 #include "input.h"
-#include "debug.h"
 #include "assets.h"
 #include "slist.h"
 #include <string.h>
@@ -27,7 +26,6 @@
 #include "buildingaggregate.h"
 #include "persistfactory.h"
 
-
 #define MIN_FOV				0.02f
 #define MAX_FOV				2.6f
 
@@ -35,7 +33,6 @@
 #define CCAMERA_FARZ							300.0f			// far clip plane distance
 #define CCAMERA_SHRINK_NEARZ_DIST		0.5f				// third person distance below which we start shrinking nearz
 #define CCAMERA_MIN_NEARZ					0.2f				// how small nearz gets when we're up against a wall
-
 
 Vector3	FirstPersonOffsetTweak( 0, 0, 0 );
 
@@ -253,7 +250,6 @@ CCameraProfileClass	*	CCameraProfileClass::Find( const char * name )
 //	}
 //	return NULL;
 }
-
 
 /*
 ** CCameraClass 
@@ -503,7 +499,6 @@ bool	CCameraClass::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 /*
 **
 */
@@ -675,7 +670,6 @@ void CCameraClass::Update()
 {
 	Handle_Input();
 
-
 	if ( SnapShotMode != SNAPSHOT_OFF ) {
 		Handle_Snap_Shot_Mode();
 		return;
@@ -688,7 +682,6 @@ void CCameraClass::Update()
 
 	Vector3	anchor_position = AnchorPosition;
 	float		camera_heading  =	Heading;
-
 
 	CCameraProfileClass	profile;
 
@@ -777,7 +770,6 @@ void CCameraClass::Update()
 
 	Set_View_Plane( profile.FOV );	// Apply Zoom
 
-
 	// Calculate the Camera Transform
 	Matrix3D	tm(1);													// Setup base position
 	tm.Translate( anchor_position );
@@ -806,7 +798,6 @@ void CCameraClass::Update()
 	camera_move.Rotate_X( -(WWMath::Max( -Tilt * profile.TiltTweak, 0 )) );
 	tm.Translate(camera_move);										// Pull back
 	Vector3 end_pos = tm.Get_Translation();					// Save the end position
-
 
 	// Sweep the view plane back until it hits something
 	if ( profile.Distance != 0 ) {
@@ -1004,7 +995,6 @@ bool	CCameraClass::Determine_Targeting_Position( void )
 			} else {
 				COMBAT_STAR->Get_Position(&player_pos);
 			}
-
 
 			float player_dx = player_pos.X - cast_start.X;
 			float player_dy = player_pos.Y - cast_start.Y;
@@ -1284,7 +1274,6 @@ void	CCameraClass::Handle_Input( void )
 	// Hold F9 to control the camera
 	assert( CurrentProfile != NULL );
 
-
 	if ( CinematicSnipingEnabled ) {
 
 		float zoom_change = CinematicSnipingDesiredZoom - SniperZoom;
@@ -1293,7 +1282,6 @@ void	CCameraClass::Handle_Input( void )
 		SniperZoom += zoom_change;
 		CurrentProfile->Set_Zoom( SniperZoom );
 	}
-
 
 	if ( COMBAT_STAR != NULL && COMBAT_STAR->Is_Control_Enabled() == false ) {
 		// Don't move camera if control is disabled
@@ -1337,7 +1325,6 @@ void	CCameraClass::Handle_Input( void )
 
 		// Update Zooming Sound.....
 	}
-
 
 	//	Adjust Tilt
 	float tilt_amount =	Input::Get_Amount( INPUT_FUNCTION_WEAPON_UP ) - 
@@ -1483,7 +1470,6 @@ void	CCameraClass::Set_Is_Star_Sniping( bool onoff )
 	return ;
 }
 
-
 void CCameraClass::Update_Sniper_Listener_Pos( void )
 {
 	if ( SniperListener != NULL ) {
@@ -1508,7 +1494,6 @@ void CCameraClass::Update_Sniper_Listener_Pos( void )
 
 	return ;
 }
-
 
 void CCameraClass::Set_Sniper_Distance( float dist )
 {

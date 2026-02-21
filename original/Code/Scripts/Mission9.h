@@ -1,13 +1,11 @@
 #ifndef _MISSION9_H_
 #define _MISSION9_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
 
 #define check		10000
-
 
 // Predefined Constants
 

@@ -6,11 +6,9 @@
 #include "animcollisionmanager.h"
 #include "dynamicshadowmanager.h"
 
-
 class ChunkLoadClass;
 class ChunkSaveClass;
 class DynamicAnimPhysDefClass;
-
 
 /**
 ** DynamicAnimPhysClass
@@ -72,7 +70,6 @@ private:
 
 };
 
-
 /**
 ** DynamicAnimPhysDefClass
 ** Definition data structure for DynamicAnimPhysClass
@@ -111,8 +108,6 @@ protected:
 	friend class DynamicAnimPhysClass;
 };
 
-
-
 /*
 ** Inlines
 */
@@ -120,8 +115,6 @@ inline const DynamicAnimPhysDefClass * DynamicAnimPhysClass::Get_DynamicAnimPhys
 {
 	return (DynamicAnimPhysDefClass *)Definition;
 }
-
-
 
 #endif //DYNAMICANIMPHYS_H
 

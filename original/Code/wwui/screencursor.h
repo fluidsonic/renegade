@@ -6,7 +6,6 @@
 #include "win.h"
 #include "render2d.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 //	ScreenCursorClass
@@ -47,6 +46,5 @@ private:
 	Render2DClass			Renderer;
 	TextureClass *			Texture;
 };
-
 
 #endif //__SCREENCURSOR_H

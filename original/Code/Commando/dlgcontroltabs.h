@@ -2,15 +2,12 @@
 #ifndef __DLGCONTROLTABS_H
 #define __DLGCONTROLTABS_H
 
-
 #include "dlgcontrolslisttab.h"
 #include "resource.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -23,7 +20,6 @@ public:
 	ControlsBasicMvmtTabClass (void);
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ControlsMultiPlayTabClass
@@ -34,7 +30,6 @@ class ControlsMultiPlayTabClass : public ControlsListTabClass
 public:
 	ControlsMultiPlayTabClass (void);
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -47,7 +42,6 @@ public:
 	ControlsMiscTabClass (void);
 
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -67,7 +61,6 @@ private:
 	void			Load_Controls (void);
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ControlsWeaponsTabClass
@@ -78,7 +71,6 @@ class ControlsWeaponsTabClass : public ControlsListTabClass
 public:
 	ControlsWeaponsTabClass (void);
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -97,7 +89,6 @@ public:
 private:
 	void			Load_Controls (void);
 };
-
 
 #endif //__DLGCONTROLTABS_H
 

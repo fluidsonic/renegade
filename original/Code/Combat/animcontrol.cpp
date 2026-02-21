@@ -1,6 +1,5 @@
 #include "animcontrol.h"
 #include "assets.h"
-#include "debug.h"
 #include "rendobj.h"
 #include "chunkio.h"
 #include "saveload.h"
@@ -291,7 +290,6 @@ void	AnimChannelClass::Update_Model( RenderObjClass	*anim_model )
 	}
 }
 
-
 /*
 ** BlendableAnimChannelClass
 */
@@ -444,7 +442,6 @@ void	BlendableAnimChannelClass::Set_Animation( const HAnimClass * anim, float bl
 	}
 }
 
-
 void	BlendableAnimChannelClass::Update( float dtime ) 
 {
 	if ( BlendTotal != 0.0f )	{			// if blending between two animations
@@ -474,7 +471,6 @@ void	BlendableAnimChannelClass::Get_Animation_Data( AnimationDataList & list, fl
 	NewChannel.Get_Animation_Data( list, weight * blend_ratio );
 	OldChannel.Get_Animation_Data( list, weight * ( 1 - blend_ratio ) );
 }
-
 
 void	BlendableAnimChannelClass::Update_Model( RenderObjClass	*anim_model )
 {
@@ -799,7 +795,6 @@ void	HumanAnimControlClass::Set_Model( RenderObjClass	*anim_model )
 		}
 	}
 }
-
 
 /*
 **

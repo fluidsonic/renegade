@@ -62,7 +62,6 @@ protected:
 	static bool				_HierarchicalVisCullingEnabled;
 };
 
-
 inline bool PhysAABTreeCullClass::Cast_Ray(PhysRayCollisionTestClass & raytest)
 {
 	return Cast_Ray_Recursive(RootNode,raytest);
@@ -77,6 +76,5 @@ inline bool PhysAABTreeCullClass::Cast_OBBox(PhysOBBoxCollisionTestClass & boxte
 {
 	return Cast_OBBox_Recursive(RootNode,boxtest);
 }
-
 
 #endif // PHYSAABTREECULL_H

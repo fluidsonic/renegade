@@ -29,7 +29,6 @@ HelpScreenDialogClass::HelpScreenDialogClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~HelpScreenDialogClass
@@ -39,7 +38,6 @@ HelpScreenDialogClass::~HelpScreenDialogClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -83,7 +81,6 @@ HelpScreenDialogClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -107,7 +104,6 @@ HelpScreenDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display
@@ -119,7 +115,6 @@ HelpScreenDialogClass::Display (void)
 	START_DIALOG (HelpScreenDialogClass);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -155,7 +150,6 @@ HelpScreenDialogClass::On_Menu_Activate (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroy
@@ -177,7 +171,6 @@ HelpScreenDialogClass::On_Destroy (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

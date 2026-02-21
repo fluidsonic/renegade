@@ -5,7 +5,6 @@
 #include "dlgconfigperformancetab.h"
 #include "systemsettings.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	TechOptionsMenuClass
@@ -16,7 +15,6 @@ TechOptionsMenuClass::TechOptionsMenuClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -42,7 +40,6 @@ TechOptionsMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -58,7 +55,6 @@ TechOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

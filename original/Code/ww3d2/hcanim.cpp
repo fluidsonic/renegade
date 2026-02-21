@@ -7,7 +7,6 @@
 #include <string.h>
 #include <nstrdup.h>
 
-
 struct NodeCompressedMotionStruct
 {
 	NodeCompressedMotionStruct();
@@ -41,7 +40,6 @@ struct NodeCompressedMotionStruct
 		} vd;
 	};
 
-
 	TimeCodedBitChannelClass *			Vis;
 };
 
@@ -64,7 +62,6 @@ NodeCompressedMotionStruct::NodeCompressedMotionStruct() :
 		vd.Z = NULL;
 		vd.Q = NULL;
 }
-
 
 /***********************************************************************************************
  * NodeCompressedMotionStruct::~NodeCompressedMotionStruct -- destructor                       *
@@ -104,7 +101,6 @@ NodeCompressedMotionStruct::~NodeCompressedMotionStruct()
 
 }  // ~NodeCompressedMotionStruct
 
-
 /*********************************************************************************************** 
  * HCompressedAnimClass::HCompressedAnimClass -- constructor                                   * 
  *                                                                                             * 
@@ -128,7 +124,6 @@ HCompressedAnimClass::HCompressedAnimClass(void) :
 	memset(HierarchyName,0,W3D_NAME_LEN);
 }
 
-
 /*********************************************************************************************** 
  * HCompressedAnimClass::~HCompressedAnimClass -- Destructor                                   * 
  *                                                                                             * 
@@ -145,7 +140,6 @@ HCompressedAnimClass::~HCompressedAnimClass(void)
 {
 	Free();
 }
-
 
 /*********************************************************************************************** 
  * HCompressedAnimClass::Free -- De-allocates all memory in use                                * 
@@ -165,7 +159,6 @@ void HCompressedAnimClass::Free(void)
 		delete[] NodeMotion;
 	}
 }
-
 
 /*********************************************************************************************** 
  * HCompressedAnimClass::Load -- Loads hierarchy animation from a file                         * 
@@ -343,7 +336,6 @@ bool HCompressedAnimClass::read_channel(ChunkLoadClass & cload,AdaptiveDeltaMoti
   
 }	// read_channel
 
-
 /*********************************************************************************************** 
  * HCompressedAnimClass::add_channel -- Adds a motion channel to the animation                 * 
  *                                                                                             * 
@@ -406,9 +398,6 @@ void HCompressedAnimClass::add_channel(AdaptiveDeltaMotionChannelClass * newchan
 
 }	// add_channel
 
-
-
-
 /***********************************************************************************************
  * HCompressedAnimClass::read_bit_channel -- read a bit channel from the file                  *
  *                                                                                             *
@@ -429,7 +418,6 @@ bool HCompressedAnimClass::read_bit_channel(ChunkLoadClass & cload,TimeCodedBitC
 	return result;		 
   
 }	// read_bit_channel
-
 
 /***********************************************************************************************
  * HCompressedAnimClass::add_bit_channel -- install a bit channel into the animation           *
@@ -581,12 +569,9 @@ bool HCompressedAnimClass::Get_Visibility(int pividx,float frame)
 		return (NodeMotion[pividx].Vis->Get_Bit((int)frame) == 1);
 	}
 
-
 	// default to always visible...
 	return 1;
 }
-
-
 
 /***********************************************************************************************
  * HAnimClass::Is_Node_Motion_Present -- return true if there is motion defined for this frame *
@@ -636,6 +621,5 @@ bool HCompressedAnimClass::Has_Visibility (int pividx)
 {
 	return NodeMotion[pividx].Vis != NULL;
 }
-
 
 // eof - hcanim.cpp

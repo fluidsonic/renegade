@@ -5,7 +5,6 @@
 #include "saveloadsubsystem.h"
 #include "vector.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -21,13 +20,11 @@ class OratorClass;
 ////////////////////////////////////////////////////////////////
 extern class ConversationMgrClass	_ConversationMgrSaveLoad;
 
-
 ////////////////////////////////////////////////////////////////
 //	Typedefs
 ////////////////////////////////////////////////////////////////
 typedef DynamicVectorClass<ConversationClass *>			CONVERSATION_LIST;
 typedef DynamicVectorClass<ActiveConversationClass *>	ACTIVE_CONVERSATION_LIST;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -63,7 +60,6 @@ public:
 	//
 	static void								Initialize (void)	{}
 	static void								Shutdown (void)	{ Reset (); }
-
 
 	//
 	//	Conversation editing
@@ -149,7 +145,6 @@ private:
 	static bool								DisplayEmotIcons;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //	Get_Conversation_Count
 ////////////////////////////////////////////////////////////////	
@@ -163,7 +158,6 @@ ConversationMgrClass::Get_Conversation_Count (void)
 
 	return total;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //	Peek_Conversation
@@ -201,7 +195,6 @@ ConversationMgrClass::Peek_Conversation (int index_to_find)
 
 	return conversation;
 }
-
 
 #endif //__CONVERSATION_MGR_H
 

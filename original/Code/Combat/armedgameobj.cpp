@@ -1,5 +1,4 @@
 #include "armedgameobj.h"
-#include "debug.h"
 #include "weaponbag.h"
 #include "weapons.h"
 #include "rendobj.h"
@@ -131,7 +130,6 @@ ArmedGameObj::ArmedGameObj( void ) :
 	WeaponBag = new WeaponBagClass( this );
 }
 
-
 ArmedGameObj::~ArmedGameObj( void )
 {
 	delete WeaponBag;
@@ -229,7 +227,6 @@ const ArmedGameObjDef & ArmedGameObj::Get_Definition( void ) const
 	return (const ArmedGameObjDef &)BaseGameObj::Get_Definition();
 }
 
-
 /*
 ** ArmedGameObj Save and Load
 */
@@ -302,7 +299,6 @@ void	ArmedGameObj::On_Post_Load( void )
 	PhysicalGameObj::On_Post_Load();
 	Init_Muzzle_Bones();
 }
-
 
 //-----------------------------------------------------------------------------
 void ArmedGameObj::Import_Frequent(BitStreamClass & packet)
@@ -379,7 +375,6 @@ void ArmedGameObj::Import_State_Cs(BitStreamClass & packet)
 void	ArmedGameObj::Post_Think( void )
 {
 	PhysicalGameObj::Post_Think();
-
 
 	if ( Is_Delete_Pending() ) {				// don't update if destroying... (so we don't create a new laser!)
 		return;

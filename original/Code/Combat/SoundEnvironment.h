@@ -4,11 +4,9 @@
 // Includes.
 #include "refcount.h"
 
-
 // Class declarations.
 class CameraClass;
 class PhysicsSceneClass;
-
 
 // A simple class that, upon each update, will determine of there is an object vertically
 // above the camera (at any height). If so then an amplitude value is attenuated. If, the
@@ -39,7 +37,6 @@ class SoundEnvironmentClass : public RefCountClass
 		float		 AmplitudeSum;
 		float		*AmplitudeBuffer;
 };
-
 
 #endif // SOUNDENVIRONMENT_H
 

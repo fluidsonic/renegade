@@ -2,7 +2,6 @@
 #include "camera.h"
 #include "matpass.h"
 
-
 /***********************************************************************************************
 **
 ** RenderInfoClass Implementation
@@ -80,8 +79,6 @@ RenderInfoClass::RINFO_OVERRIDE_FLAGS & RenderInfoClass::Current_Override_Flags(
 {
 	return OverrideFlag[OverrideFlagLevel];
 }
-
-
 
 /***********************************************************************************************
 **

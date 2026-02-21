@@ -56,10 +56,5 @@ protected:
 
 };
 
-
 #endif // PHYSGRIDCULL_H
-
-
-
-
 

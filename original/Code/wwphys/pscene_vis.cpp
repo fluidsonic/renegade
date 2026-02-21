@@ -12,14 +12,11 @@
 #include "light.h"
 #include "visrasterizer.h"
 
-
-
 /************************************************************************************
 **
 ** PhysicsSceneClass Visibility system
 **
 ************************************************************************************/
-
 
 void PhysicsSceneClass::Enable_Vis(bool onoff)
 {
@@ -227,7 +224,6 @@ VisTableClass * PhysicsSceneClass::Get_Vis_Table_For_Rendering(const CameraClass
 	return pvs;
 }
 
-
 uint32 PhysicsSceneClass::Get_Dynamic_Object_Vis_ID
 (
 	const AABoxClass & obj_bounds,
@@ -258,8 +254,6 @@ bool PhysicsSceneClass::Is_Vis_Sample_Point_Locked(void)
 	return VisSamplePointLocked;
 }
 
-
-
 /***********************************************************************************************
  * PhysicsSceneClass::Release_Vis_Resources -- Releases resources used by the VIS code         *
  *                                                                                             *
@@ -276,7 +270,6 @@ void PhysicsSceneClass::Release_Vis_Resources(void)
 {
 	REF_PTR_RELEASE(VisCamera);
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Reset_Vis -- Sets the internal vis reset flag.                           *
@@ -304,7 +297,6 @@ void PhysicsSceneClass::Reset_Vis(bool doitnow)
 	}
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Validate_Vis -- Clears the internal vis reset flag                       *
  *                                                                                             *
@@ -329,7 +321,6 @@ void PhysicsSceneClass::Validate_Vis(void)
 	*/
 	VisResetNeeded = false;
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Internal_Vis_Reset -- Resets the vis system if needed                    *
@@ -384,7 +375,6 @@ void PhysicsSceneClass::Internal_Vis_Reset(void)
 	}
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Get_Vis_Camera -- returns a pointer (ref-counted) to the vis camera      *
  *                                                                                             *
@@ -437,7 +427,6 @@ PhysicsSceneClass::Update_Vis
 {
 	return Update_Vis(camera_tm.Get_Translation(),camera_tm,direction_bits);
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Update_Vis -- Performs a vis sample from the given coord system          *
@@ -513,7 +502,6 @@ PhysicsSceneClass::Update_Vis
 	*/
 	VisSampleClass vis_sample(camera_tm,direction_bits);
 
-
 	for (int i=0; i<VIS_DIRECTIONS; i++) {
 		if (vis_sample.Direction_Enabled((VisDirType)i)) {
 			if (!vis_sample.Sample_Useless() || (direction_bits & VIS_FORCE_ACCEPT)) {
@@ -554,7 +542,6 @@ PhysicsSceneClass::Update_Vis
 	return vis_sample;
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Get_Static_Light_Count -- returns the number of static lights            *
  *                                                                                             *
@@ -583,7 +570,6 @@ int PhysicsSceneClass::Get_Static_Light_Count(void)
 	
 	return counter;
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Generate_Vis_For_Light -- generate a PVS for the specified light         *
@@ -644,7 +630,6 @@ void PhysicsSceneClass::Generate_Vis_For_Light(int light_index)
 	REF_PTR_RELEASE(camera);
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Vis_Render_And_Scan -- Renders the scene and scans for visible objects   *
  *                                                                                             *
@@ -679,7 +664,6 @@ void PhysicsSceneClass::Vis_Render_And_Scan(VisRenderContextClass & context,VisS
 
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Generate_Vis_Statistics_Report -- Stats about the visibility in the leve *
  *                                                                                             *
@@ -711,7 +695,6 @@ void PhysicsSceneClass::Generate_Vis_Statistics_Report(DynamicVectorClass<VisSec
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Optimize_Visibility_Data -- combines and removes redundant vis data      *
@@ -775,7 +758,6 @@ void PhysicsSceneClass::Optimize_Visibility_Data(VisOptProgressClass & stats)
 	stats.Set_Final_Dynamic_Cell_Count(DynamicObjVisSystem->Partition_Node_Count());
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Merge_Vis_Sector_IDs -- Merges two sector ID's                           *
  *                                                                                             *
@@ -797,7 +779,6 @@ void PhysicsSceneClass::Merge_Vis_Sector_IDs(uint32 id0,uint32 id1)
 	StaticCullingSystem->Merge_Vis_Sector_IDs(id0,id1);
 	StaticLightingSystem->Merge_Vis_Sector_IDs(id0,id1);
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Merge_Vis_Object_IDs -- combines two vis object ID's                     *

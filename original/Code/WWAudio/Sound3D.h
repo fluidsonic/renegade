@@ -5,9 +5,6 @@
 #include "AudibleSound.H"
 #include "mempool.h"
 
-
-
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Sound3DClass
@@ -38,7 +35,6 @@ class Sound3DClass : public AudibleSoundClass
 		//	Public operators
 		//////////////////////////////////////////////////////////////////////
 		const Sound3DClass &operator= (const Sound3DClass &src);
-
 
 		//////////////////////////////////////////////////////////////////////
 		//	Identification methods
@@ -158,6 +154,5 @@ class Sound3DClass : public AudibleSoundClass
 		bool						m_IsStatic;
 		unsigned int			m_LastUpdate;
 };
-
 
 #endif //__SOUND3DOBJ_H

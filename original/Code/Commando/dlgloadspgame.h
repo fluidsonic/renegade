@@ -2,11 +2,9 @@
 #ifndef __DLGLOADSPGAME_H
 #define __DLGLOADSPGAME_H
 
-
 #include "menudialog.h"
 #include "resource.h"
 #include "dlgmessagebox.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -24,7 +22,6 @@ public:
 		CurrSortCol (1),
 		IsSortAscending (false),
 		MenuDialogClass (IDD_MENU_LOAD_SP_GAME)	{}
-
 
 	////////////////////////////////////////////////////////////////
 	//	Public methods
@@ -82,7 +79,6 @@ private:
 
 	static LoadSPGameMenuClass *_TheInstance;
 };
-
 
 #endif //__DLGLOADSPGAME_H
 

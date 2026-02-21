@@ -11,7 +11,6 @@
 #include "playertype.h"
 #include "consolemode.h"
 
-
 //-----------------------------------------------------------------------------
 cGameDataCnc::cGameDataCnc(void)	:
 	IsPlaying (false),
@@ -209,7 +208,6 @@ void cGameDataCnc::Base_Destruction_Score_Tweaking(void)
 
 	} else {
 
-
 		gdi_score += BASE_DESTRUCTION_POINTS_REWARD;
 		if (gdi_score <= nod_score) {
 			gdi_score = nod_score + 1;
@@ -262,7 +260,6 @@ void cGameDataCnc::Load_From_Server_Config(void)
    int				i;
    //float				f;
 
-
    i = p_ini->Get_Int(	INI_SECTION_NAME, "MaxPlayers",					Get_Max_Players());
 	Set_Max_Players(i);
 
@@ -287,8 +284,6 @@ void cGameDataCnc::Load_From_Server_Config(void)
    i = p_ini->Get_Int(	INI_SECTION_NAME, "StartingCredits",				Get_Starting_Credits());
 	Set_Starting_Credits(i);
 
-
-
 	Release_INI(p_ini);
 	return ;
 }
@@ -300,7 +295,6 @@ void cGameDataCnc::Save_To_Server_Config(void)
 
    INIClass * p_ini = Get_INI(Get_Ini_Filename());
 
-
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsFriendlyFirePermitted",	IsFriendlyFirePermitted.Get());
 	p_ini->Put_Bool(	INI_SECTION_NAME, "DoMapsLoop",					DoMapsLoop);
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsTeamChangingAllowed",	IsTeamChangingAllowed.Get());
@@ -309,7 +303,6 @@ void cGameDataCnc::Save_To_Server_Config(void)
 	p_ini->Put_Bool(	INI_SECTION_NAME, "BaseDestructionEndsGame",	BaseDestructionEndsGame.Get());
 	p_ini->Put_Bool(	INI_SECTION_NAME, "BeaconPlacementEndsGame",	BeaconPlacementEndsGame.Get());
 	p_ini->Put_Int(   INI_SECTION_NAME, "StartingCredits",			Get_Starting_Credits());
-
 
 	Save_INI(p_ini, Get_Ini_Filename());
    Release_INI(p_ini);
@@ -387,8 +380,6 @@ void cGameDataCnc::Get_Description(WideStringClass & description)
 	description += (attribute + delimiter + value + newline);
 }
 
-
-
 #define PRINT_CONFIG_ERROR	ConsoleBox.Print("File %s - Error:\r\n\t ", Get_Ini_Filename());
 
 //-----------------------------------------------------------------------------
@@ -431,14 +422,6 @@ bool cGameDataCnc::Is_Gameplay_Permitted(void)
 
 	return permitted;
 }
-
-
-
-
-
-
-
-
 
 /*
 void cGameDataCnc::Get_Description(WideStringClass & description)

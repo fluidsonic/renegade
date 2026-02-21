@@ -2,13 +2,11 @@
 #ifndef __PATH_OBJECT_H
 #define __PATH_OBJECT_H
 
-
 #include "aabox.h"
 #include "obbox.h"
 
 // Forward declarations
 class PhysClass;
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -26,7 +24,6 @@ public:
 	PathObjectClass (void);
 	~PathObjectClass (void);
 
-
 	//////////////////////////////////////////////////////////////////
 	//	Public data types
 	//////////////////////////////////////////////////////////////////
@@ -37,7 +34,6 @@ public:
 		CAN_USE_EQUIPMENT		= 4,
 		IS_VEHICLE				= 8
 	} Flags;
-
 
 	//////////////////////////////////////////////////////////////////
 	//	Public methods
@@ -79,7 +75,6 @@ private:
 	int			m_Flags;
 	int			m_KeyRing;
 };
-
 
 //////////////////////////////////////////////////////////////////
 //	Inlines
@@ -168,6 +163,5 @@ inline float PathObjectClass::Get_Width (void) const
 {
 	return m_CollisionBox.Extent.Y;
 }
-
 
 #endif //__PATH_OBJECT_H

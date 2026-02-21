@@ -3,7 +3,6 @@
 
 const char * RESOURCE_FILE_TYPE_NAME = "File";
 
-
 ResourceFileClass::ResourceFileClass(HMODULE hmodule, char const *filename) :
 	ResourceName(NULL),
 	hModule(NULL),

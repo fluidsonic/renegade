@@ -19,7 +19,6 @@ bool PhysControllerClass::Save(ChunkSaveClass & csave)
 	return true;
 }
 
-
 bool PhysControllerClass::Load(ChunkLoadClass & cload)
 {
 	while (cload.Open_Chunk()) {
@@ -40,7 +39,6 @@ bool PhysControllerClass::Load(ChunkLoadClass & cload)
 		}
 		cload.Close_Chunk();
 	}
-
 
 	return true;
 }

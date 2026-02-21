@@ -3,14 +3,12 @@
 #ifndef SAVELOADSUBSYSTEM_H
 #define SAVELOADSUBSYSTEM_H
 
-
 #include "always.h"
 #include "bittype.h"
 #include "postloadable.h"
 
 class ChunkLoadClass;
 class ChunkSaveClass;
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -49,7 +47,5 @@ private:
 
 	friend class SaveLoadSystemClass;
 };
-
-
 
 #endif

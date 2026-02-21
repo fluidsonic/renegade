@@ -21,7 +21,6 @@
 #include "mousemgr.h"
 #include "directinput.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -35,7 +34,6 @@ enum
 	COL_VEHICLE,
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CNCTeamInfoDialogClass
@@ -47,7 +45,6 @@ CNCTeamInfoDialogClass::CNCTeamInfoDialogClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~CNCTeamInfoDialogClass
@@ -58,7 +55,6 @@ CNCTeamInfoDialogClass::~CNCTeamInfoDialogClass (void)
 	GameInitMgrClass::Continue_Game ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -114,7 +110,6 @@ CNCTeamInfoDialogClass::On_Init_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -239,7 +234,6 @@ CNCTeamInfoDialogClass::Configure_Icons (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Populate_Player_List
@@ -347,7 +341,6 @@ CNCTeamInfoDialogClass::Populate_Player_List (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListSortCallback
@@ -367,7 +360,6 @@ CNCTeamInfoDialogClass::ListSortCallback
 	return (rank1 - rank2);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -386,7 +378,6 @@ CNCTeamInfoDialogClass::On_Frame_Update (void)
 
 	return ;
 }
-
 
 void CNCTeamInfoDialogClass::Build_Player_Display_Name(const cPlayer* player, WideStringClass& outName)
 {

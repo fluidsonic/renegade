@@ -13,7 +13,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cSuicideEvent, NETCLASSID_SUICIDEEVENT);
 
 //-----------------------------------------------------------------------------
@@ -45,7 +44,6 @@ void
 cSuicideEvent::Act(void)
 {
 
-
 	SmartGameObj * p_soldier = GameObjManager::Find_Soldier_Of_Client_ID(SenderId);
 	if (p_soldier != NULL)
 	{
@@ -71,7 +69,6 @@ cSuicideEvent::Act(void)
 	cScTextObj * p_message = new cScTextObj;
 	p_message->Init(text, TEXT_MESSAGE_PUBLIC, false, HOST_TEXT_SENDER, -1);
 
-
 	Set_Delete_Pending();
 }
 
@@ -81,7 +78,6 @@ cSuicideEvent::Export_Creation(BitStreamClass & packet)
 {
 
 	cNetEvent::Export_Creation(packet);
-
 
 	packet.Add(SenderId);
 
@@ -94,9 +90,7 @@ cSuicideEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
-
 
 	Act();
 }

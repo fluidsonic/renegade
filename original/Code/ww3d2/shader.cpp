@@ -3,11 +3,9 @@
 #include "Dx8Wrapper.h"
 #include "dx8caps.h"
 
-
 bool ShaderClass::ShaderDirty=true;
 unsigned long ShaderClass::CurrentShader=0;
 unsigned long _PolygonCullMode = D3DCULL_CW;
-
 
 /*
 ** Definitions of the preset shaders:
@@ -64,7 +62,6 @@ ShaderClass ShaderClass::_PresetOpaque2DShader(SC_OP_2D);
 	ALPHATEST_DISABLE, CULL_MODE_ENABLE, \
 	DETAILCOLOR_DISABLE, DETAILALPHA_DISABLE) )
 ShaderClass ShaderClass::_PresetOpaqueSpriteShader(SC_OP_SPRITE);
-
 
 // Texturing, no zbuffer reading/writing, no gradients, additive blending,
 // no fogging - mostly for additive 2D objects.
@@ -195,7 +192,6 @@ ShaderClass ShaderClass::_PresetMultiplicative2DShader(SC_MUL_2D);
 	DETAILCOLOR_DISABLE, DETAILALPHA_DISABLE) )
 ShaderClass ShaderClass::_PresetMultiplicativeSpriteShader(SC_MUL_SPRITE);
 
-
 /***********************************************************************************************
  * ShaderClass::Init_From_Material3 -- Initialize a shader from a Material3 structure          *
  *                                                                                             *
@@ -216,7 +212,6 @@ void ShaderClass::Init_From_Material3(const W3dMaterial3Struct & mat3)
 		Set_Src_Blend_Func( SRCBLEND_SRC_ALPHA );
 	}
 }
-
 
 /***********************************************************************************************
  * ShaderClass::Enable_Fog -- Turn on fog for this shader.                                     *
@@ -283,7 +278,6 @@ void ShaderClass::Enable_Fog (const char *source)
 	}
 }
 
-
 /***********************************************************************************************
  * ShaderClass::Report_Unable_To_Fog --																		  *	
  *                                                                                             *
@@ -332,7 +326,6 @@ const Blend dstBlendLUT[ShaderClass::DSTBLEND_MAX] =
  	Blend(D3DBLEND_INVSRCALPHA, true)
 };
 
-
 /***********************************************************************************************
  * ShaderClass::Apply -- Apply the renderstates for this shader                                *
  *                                                                                             *
@@ -361,7 +354,6 @@ void ShaderClass::Apply()
 	}
 
 	if(!diff) return;
-
 
 	CurrentShader=ShaderBits;
 	ShaderDirty=false;
@@ -811,7 +803,6 @@ void ShaderClass::Apply()
 	// Not supported yet
 }
 
-
 /***********************************************************************************************
  * ShaderClass::Invert_Backface_Culling -- Globally invert the sense of all backface culling   *
  *                                                                                             *
@@ -833,7 +824,6 @@ void ShaderClass::Invert_Backface_Culling(bool onoff)
 	}
 	Invalidate();
 }
-
 
 /***********************************************************************************************
  * ShaderClass::Get_SS_Category -- Helper function for static sort system                      *
@@ -868,7 +858,6 @@ ShaderClass::StaticSortCategoryType ShaderClass::Get_SS_Category(void) const
 	// category: Everything else
 	return SSCAT_OTHER;
 }
-
 
 /***********************************************************************************************
  * ShaderClass::Guess_Sort_Level -- Guess the static sort level                                *

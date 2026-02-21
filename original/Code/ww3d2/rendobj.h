@@ -147,7 +147,6 @@ public:
 	RenderObjClass & operator = (const RenderObjClass &);
 	virtual ~RenderObjClass(void)																					{ }
 
-
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Render Object Interface - Cloning and Identification
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +157,6 @@ public:
 	virtual const char *			Get_Base_Model_Name (void) const											{ return NULL; }
 	virtual void					Set_Base_Model_Name (const char *name)									{ }
 	virtual int						Get_Num_Polys(void) const													{ return 0; }
-
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Render Object Interface - Rendering
@@ -175,7 +173,6 @@ public:
 	virtual void					Special_Render(SpecialRenderInfoClass & rinfo)						{ }
 	virtual void					On_Frame_Update(void) 														{ }
 	virtual void					Restart(void)																	{ }	
-
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Render Object Interface - "Scene Graph"
@@ -220,7 +217,6 @@ public:
 
 	// This is public only so objects can recursively call this on their sub-objects
 	virtual void					Update_Sub_Object_Transforms(void);
-
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Render Object Interface - Hierarchical Animation
@@ -284,7 +280,6 @@ public:
 	virtual void					Get_Obj_Space_Bounding_Box(AABoxClass & box) const;
    virtual void               Update_Obj_Space_Bounding_Volumes(void)								{ };
 
-
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Render Object Interface - Predictive LOD
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -308,7 +303,6 @@ public:
 	virtual void	Set_LOD_Bias(float bias)																	{ }
 	virtual int	Calculate_Cost_Value_Arrays(float screen_area, float *values, float *costs) const;
 	virtual RenderObjClass *	Get_Current_LOD(void)														{ Add_Ref(); return this; }
-
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Render Object Interface - Dependency Generation
@@ -397,7 +391,6 @@ protected:
 
 	void								Save_Sub_Object_User_Lighting(ChunkSaveClass & csave,RenderObjClass * sub_obj,int bone_index);
 	void								Load_Sub_Object_User_Lighting(ChunkLoadClass & cload);
-
 
 	enum 
 	{
@@ -521,8 +514,5 @@ WWINLINE bool RenderObjClass::Is_Transform_Identity_No_Validity_Check() const
 {
 	return IsTransformIdentity;
 }
-
-
-
 
 #endif

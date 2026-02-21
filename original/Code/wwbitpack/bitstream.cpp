@@ -6,7 +6,6 @@
 #include "mathutil.h"
 #include "widestring.h"
 
-
 //-----------------------------------------------------------------------------
 BitStreamClass::BitStreamClass() :
 	cBitPacker(),
@@ -114,7 +113,6 @@ void BitStreamClass::Get_Terminated_String(char * buffer, USHORT buffer_size, bo
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 void BitStreamClass::Add_Wide_Terminated_String(const WCHAR *string, bool permit_empty)
 {
@@ -157,7 +155,6 @@ void BitStreamClass::Get_Wide_Terminated_String(WCHAR *buffer, USHORT buffer_len
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 UINT BitStreamClass::Get_Compressed_Size_Bytes() const
 {
@@ -173,7 +170,6 @@ UINT BitStreamClass::Get_Compression_Pc() const
 	if (cEncoderList::Is_Compression_Enabled()) {
 	} else {
 	}
-
 
 	UINT compression_pc = (UINT) cMathUtil::Round(100 * c_size / (float) u_size);
 

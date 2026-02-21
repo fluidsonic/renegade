@@ -3,7 +3,6 @@
 
 #include "always.h"
 
-
 /**
 ** VisOptProgressClass
 ** This class encapsulates the progress and final statistics for a vis optimization process.
@@ -79,8 +78,6 @@ protected:
 	int						SectorsMerged;										// Number of arbitrary vis sectors merged
 
 };
-
-
 
 #endif //VISOPTPROGRESS_H
 

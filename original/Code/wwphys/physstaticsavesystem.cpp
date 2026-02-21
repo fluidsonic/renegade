@@ -13,7 +13,6 @@
 PhysStaticDataSaveSystemClass			_PhysStaticDataSaveSystem;
 PhysStaticObjectsSaveSystemClass		_PhysStaticObjectsSaveSystem;
 
-
 /**************************************************************************************
 **
 ** PhysStaticDataSaveSystemClass Implementation
@@ -62,7 +61,6 @@ void PhysStaticDataSaveSystemClass::On_Post_Load(void)
 	PhysicsSceneClass::Get_Instance()->Post_Load_Level_Static_Data();
 	//PathfindClass::Get_Instance()->On_Post_Load();
 }
-
 
 /**************************************************************************************
 **

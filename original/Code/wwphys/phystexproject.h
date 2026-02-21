@@ -29,9 +29,7 @@ public:
 	bool						Compute_Ortho_Projection(PhysClass * obj,const Vector3 & lightdir,float nearz=-1.0f,float farz=-1.0f);
 	bool						Compute_Texture(PhysClass * obj,bool additive_projection = false);
 
-
 };
-
 
 #endif
 

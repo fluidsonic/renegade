@@ -10,7 +10,6 @@
 #include "stylemgr.h"
 #include "ffactory.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -26,7 +25,6 @@ static const RectClass	EdgeTopUVRect		(1,	2,		31,	30);
 static const RectClass	EdgeRightUVRect	(34,	1,		62,	31);
 static const RectClass	EdgeLeftUVRect		(2,	31,	30,	63);
 static const RectClass	EdgeBottomUVRect	(31,	34,	63,	62);
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -74,7 +72,6 @@ MapCtrlClass::MapCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~MapCtrlClass
@@ -85,7 +82,6 @@ MapCtrlClass::~MapCtrlClass (void)
 	Free_Cloud_Data ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -107,7 +103,6 @@ MapCtrlClass::Create_Text_Renderers (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -297,7 +292,6 @@ MapCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Cloud_Renderer
@@ -376,7 +370,6 @@ MapCtrlClass::Create_Cloud_Renderer (void)
 					delta_rect.Right	= ((cloud_rect.Right - (cloud_x_pos + cloud_width)) / cloud_width);
 					delta_rect.Bottom	= ((cloud_rect.Bottom - (cloud_y_pos + cloud_height)) / cloud_height);
 
-
 					if (Is_Cell_Shrouded (cell_x - 1, cell_y)) {
 						RectClass uv_rect = EdgeLeftUVRect;
 
@@ -454,7 +447,6 @@ MapCtrlClass::Create_Cloud_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -478,7 +470,6 @@ MapCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -509,7 +500,6 @@ MapCtrlClass::Update_Client_Rect (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -547,7 +537,6 @@ MapCtrlClass::Render (void)
 	DialogControlClass::Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -592,7 +581,6 @@ MapCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -608,7 +596,6 @@ MapCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	IsZoomingOut	= false;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -699,7 +686,6 @@ MapCtrlClass::Set_Map_Texture (const char *filename)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Focus
@@ -711,7 +697,6 @@ MapCtrlClass::On_Set_Focus (void)
 	DialogControlClass::On_Set_Focus ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -728,7 +713,6 @@ MapCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -772,7 +756,6 @@ MapCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -806,7 +789,6 @@ MapCtrlClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Marker
@@ -837,7 +819,6 @@ MapCtrlClass::Add_Marker
 	return (MarkerList.Count () - 1);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Marker_Data
@@ -848,7 +829,6 @@ MapCtrlClass::Get_Marker_Data (int index)
 {
 	return MarkerList[index].Get_User_Data ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -862,7 +842,6 @@ MapCtrlClass::Set_Marker_Data (int index, uint32 user_data)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Remove_Marker
@@ -874,7 +853,6 @@ MapCtrlClass::Remove_Marker (int index)
 	MarkerList.Delete (index);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -915,7 +893,6 @@ MapCtrlClass::Set_Marker_Texture (const char *filename)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Center_View_About_Marker
@@ -946,7 +923,6 @@ MapCtrlClass::Center_View_About_Marker (int marker_index)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1001,7 +977,6 @@ MapCtrlClass::Marker_From_Pos (const Vector2 &mouse_pos)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Clamp_Scroll_Pos
@@ -1033,7 +1008,6 @@ MapCtrlClass::Clamp_Scroll_Pos (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Initialize_Cloud
@@ -1054,7 +1028,6 @@ MapCtrlClass::Initialize_Cloud (int cells_x, int cells_y)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Cloud
@@ -1066,7 +1039,6 @@ MapCtrlClass::Reset_Cloud (void)
 	::memset (CloudVector, 0xFF, sizeof (uint32) * ((CloudSize.I * CloudSize.J) / sizeof (uint32)) + 1);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1099,7 +1071,6 @@ MapCtrlClass::Set_Cloud_Cell (int cell_x, int cell_y, bool is_visible)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Free_Cloud_Data
@@ -1116,7 +1087,6 @@ MapCtrlClass::Free_Cloud_Data (void)
 	CloudSize.Set (0, 0);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1160,7 +1130,6 @@ MapCtrlClass::Position_To_Coord (const Vector2 &mouse_pos)
 
 	return result;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

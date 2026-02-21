@@ -10,8 +10,6 @@
 #include "apppackettypes.h"
 #include "damage.h"
 #include "armedgameobj.h"
-#include "debug.h"
-
 DECLARE_NETWORKOBJECT_FACTORY(cCsDamageEvent, NETCLASSID_CSDAMAGEEVENT);
 
 //
@@ -43,7 +41,6 @@ cCsDamageEvent::Init
 	int	warhead 
 )
 {
-
 
 	SenderId			= CombatManager::Get_My_Id();
 	DamagerGOID		= damager_go_id;
@@ -117,7 +114,6 @@ cCsDamageEvent::Export_Creation
 
 	NetworkObjectClass::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add(DamagerGOID);
 	packet.Add(DamageeGOID);
@@ -142,7 +138,6 @@ cCsDamageEvent::Import_Creation
 	packet.Get(DamageeGOID);
 	packet.Get(Damage);
 	packet.Get(Warhead);
-
 
 	Act();
 }

@@ -2,7 +2,6 @@
 #ifndef __DIALOG_BASE_H
 #define __DIALOG_BASE_H
 
-
 #include "vector.h"
 #include "vector3.h"
 #include "rect.h"
@@ -23,7 +22,6 @@ class ChildDialogClass;
 class DialogBaseClass;
 class DialogTransitionClass;
 
-
 ////////////////////////////////////////////////////////////////
 //	Usefull Macros
 ////////////////////////////////////////////////////////////////
@@ -32,12 +30,10 @@ class DialogTransitionClass;
 		dialog->Start_Dialog ();					\
 		REF_PTR_RELEASE (dialog);	}
 
-
 ////////////////////////////////////////////////////////////////
 //	Typedefs
 ////////////////////////////////////////////////////////////////
 typedef bool (CALLBACK *DEFAULT_DLG_CMD_HANDLER) (DialogBaseClass *dialog, int ctrl_id, int mesage_id, DWORD param);
-
 
 class DialogEvent :
 		public TypedEventPtr<DialogEvent, DialogBaseClass>
@@ -63,7 +59,6 @@ public:
 private:
 	EventID mEvent;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -137,7 +132,6 @@ public:
 
 	int						Get_Control_Count (void) const	{ return ControlList.Count (); }
 	DialogControlClass *	Get_Control (int index) const		{ return ControlList[index]; }
-
 
 	//
 	//	Control enable state access

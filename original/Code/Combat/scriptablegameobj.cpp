@@ -1,7 +1,6 @@
 #include "scriptablegameobj.h"
 #include "damage.h"
 #include "scripts.h"
-#include "debug.h"
 #include "explosion.h"
 #include "assets.h"
 #include "combatsound.h"
@@ -98,7 +97,6 @@ bool	ScriptableGameObjDef::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 /*
 ** Game Object Observer Timer (used in Scripts)
 */
@@ -159,7 +157,6 @@ bool	GameObjObserverTimerClass::Load( ChunkLoadClass & cload )
 	cload.Close_Chunk();
 	return true;
 }
-
 
 /*
 ** Game Object Custom Timer (used in Scripts)
@@ -234,7 +231,6 @@ bool	GameObjCustomTimerClass::Load( ChunkLoadClass & cload )
 	return true;
 }
 
-
 /*
 ** ScriptableGameObj
 */
@@ -264,7 +260,6 @@ ScriptableGameObj::~ScriptableGameObj( void )
 		CustomTimerList.Delete(0);
 	}
 }
-
 
 /*
 **
@@ -303,7 +298,6 @@ void	ScriptableGameObj::Copy_Settings( const ScriptableGameObjDef & definition )
 	return ;
 }
 
-
 /*
 **
 */
@@ -326,7 +320,6 @@ void	ScriptableGameObj::Re_Init( const ScriptableGameObjDef & definition )
 	return ;
 }
 
-
 /*
 **
 */
@@ -338,7 +331,6 @@ void	ScriptableGameObj::Post_Re_Init( void )
 	Start_Observers();
 	return ;
 }
-
 
 const ScriptableGameObjDef & ScriptableGameObj::Get_Definition( void ) const
 {
@@ -362,7 +354,6 @@ void	ScriptableGameObj::Set_Delete_Pending( void )
 		BaseGameObj::Set_Delete_Pending ();
 	}
 }
-
 
 /*
 ** ScriptableGameObj Save and Load
@@ -421,7 +412,6 @@ bool	ScriptableGameObj::Save( ChunkSaveClass & csave )
 bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 {
 	ReferenceableGameObj * referenceable_ptr = NULL;
-
 
 	while (cload.Open_Chunk()) {
 		switch(cload.Cur_Chunk_ID()) {
@@ -581,7 +571,6 @@ void	ScriptableGameObj::Post_Think( void )
 {
 	BaseGameObj::Post_Think();
 
-
 	// Note: The cinematic script comes later in the obj list then the things it creates.
 	// This means that objects the script creates when it thinks (via timers) dont think
 	// (bump animation forward) until the next frame.  Be wary of changing this order.
@@ -669,7 +658,6 @@ void	ScriptableGameObj::On_Sound_Ended( SoundSceneObjClass *sound_obj )
 	return ;
 }
 
-
 /*
 **
 */
@@ -678,7 +666,6 @@ void	ScriptableGameObj::Export_Creation( BitStreamClass &packet )
 	BaseGameObj::Export_Creation( packet );
 	return ;
 }
-
 
 /*
 **

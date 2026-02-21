@@ -123,8 +123,6 @@ private:
 
 };
 
-
-
 /**
 ** StaticPhysDefClass
 ** Definition data structure for StaticPhysClass
@@ -157,7 +155,6 @@ protected:
 
 	friend class StaticPhysClass;
 };
-
 
 /*
 **
@@ -230,10 +227,5 @@ inline bool StaticPhysClass::Intersects(const OBBoxClass & obbox)
 	return result.StartBad;
 }
 
-
-
 #endif
-
-
-
 

@@ -364,7 +364,6 @@ void TextureClass::Invalidate_Old_Unused_Textures(unsigned invalidation_time_ove
 	}
 }
 
-
 // ----------------------------------------------------------------------------
 
 void TextureClass::Init()
@@ -381,7 +380,6 @@ void TextureClass::Init()
 		}
 		LastInactivationSyncTime=0;
 	}
-
 
 	if (!D3DTexture) {
 		if (!WW3D::Get_Thumbnail_Enabled() || MipLevelCount==MIP_LEVELS_1) {
@@ -834,7 +832,6 @@ void TextureClass::_Init_Filters(TextureClass::TextureFilterMode filter_type)
 		}
 		_MipMapFilters[i][FILTER_TYPE_BEST]=_MipMapFilters[i-1][FILTER_TYPE_BEST];
 
-
 	}
 
 	// Set default to best. The level of best filter mode is controlled by the input parameter.
@@ -989,7 +986,6 @@ void setup_texture_attributes(TextureClass * tex, W3dTextureInfoStruct * texinfo
 	if (tex->Get_U_Addr_Mode() == TextureClass::TEXTURE_ADDRESS_CLAMP) texinfo->Attributes |= W3DTEXTURE_CLAMP_U;
 	if (tex->Get_V_Addr_Mode() == TextureClass::TEXTURE_ADDRESS_CLAMP) texinfo->Attributes |= W3DTEXTURE_CLAMP_V;
 }
-
 
 void Save_Texture(TextureClass * texture,ChunkSaveClass & csave)
 {

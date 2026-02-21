@@ -7,7 +7,6 @@
 #include <windows.h>
 #include <BandTest/BandTest.h>
 
-
 class BandwidthCheckerClass
 {
 
@@ -76,8 +75,5 @@ class BandwidthCheckerClass
 		static const char *DefaultServerName;
 
 };
-
-
-
 
 #endif //_BANDWIDTHCHECK_H

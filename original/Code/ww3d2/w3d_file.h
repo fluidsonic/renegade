@@ -88,7 +88,6 @@ Version 2.0:
 		W3D_CHUNK_SKIN_CONNECTION,				// skins connected to the hierarchy
 		W3D_CHUNK_CONNECTION_AUX_DATA			// extension of the connection header
 
-
 Dec 12, 1997
 
 	Changed MESH_CONNECTIONS chunks into HMODEL chunks because the name
@@ -97,7 +96,6 @@ Dec 12, 1997
 
 	Added W3D_CHUNK_LODMODEL.  An LOD Model contains a set of names for
 	render objects, each with a specified distance range.
-
 
 Feb 6, 1998
 
@@ -206,7 +204,6 @@ October 19, 1998
 *				W3D_CHUNK_TEXTURE_IDS
 *				W3D_CHUNK_STAGE_TEXCOORDS
 
-
 	Added a Collection chunk type.  When we export a bunch of independent meshes 
 	(turning off the hierarchy and animation options) this chunk will be added 
 	on to the end of the file.  It lists by name each render object that was
@@ -270,14 +267,11 @@ June 5, 2001
 
 ********************************************************************************/
 
-
 #define W3D_MAKE_VERSION(major,minor)		(((major) << 16) | (minor))
 #define W3D_GET_MAJOR_VERSION(ver)			((ver)>>16)
 #define W3D_GET_MINOR_VERSION(ver)			((ver) & 0xFFFF)
 
 #define W3D_NAME_LEN	16
-
-
 
 /********************************************************************************
 
@@ -338,7 +332,6 @@ enum {
 					W3D_CHUNK_TEXTURE_IDS				=0x00000049,	// single or per-tri array of uint32 texture indices (check chunk size)
 					W3D_CHUNK_STAGE_TEXCOORDS			=0x0000004A,	// per-vertex texture coordinates (array of W3dTexCoordStruct's)
 					W3D_CHUNK_PER_FACE_TEXCOORD_IDS	=0x0000004B,	// indices to W3D_CHUNK_STAGE_TEXCOORDS, (array of Vector3i)
-
 
 		W3D_CHUNK_DEFORM									=0x00000058,	// mesh deform or 'damage' information.
 			W3D_CHUNK_DEFORM_SET							=0x00000059,	// set of deform information
@@ -448,15 +441,11 @@ enum {
 
 };
 
-
-
 struct W3dChunkHeader
 {
 	uint32		ChunkType;			// Type of chunk (see above enumeration)
 	uint32		ChunkSize;			// Size of the chunk, (not including the chunk header)
 };
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // vector
@@ -554,7 +543,6 @@ struct W3dRGBAStruct
 	uint8			A;
 };
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 // MATERIALS
 //
@@ -574,7 +562,6 @@ struct W3dMaterialInfoStruct
 	uint32		ShaderCount;			// how many shaders are used
 	uint32		TextureCount;			// how many textures are used
 };
-
 
 #define		W3DVERTMAT_USE_DEPTH_CUE								0x00000001
 #define		W3DVERTMAT_ARGB_EMISSIVE_ONLY							0x00000002
@@ -674,7 +661,6 @@ inline void W3d_Vertex_Material_Reset(W3dVertexMaterialStruct * vmat)
 	vmat->Opacity = 1.0f;
 	vmat->Translucency = 0.0f;
 }
-
 
 // W3dShaderStruct bits.  These control every setting in the shader.  Use the helper functions
 // to set them and test them more easily.
@@ -777,7 +763,6 @@ enum PS2_SHADER_SETTINGS {
 	PSS_PS2_PRIGRADIENT_HIGHLIGHT,
 	PSS_PS2_PRIGRADIENT_HIGHLIGHT2,
 
-
 	PSS_DEPTHCOMPARE_PASS_NEVER = 0,			
 	PSS_DEPTHCOMPARE_PASS_LESS,			
 	PSS_DEPTHCOMPARE_PASS_ALWAYS,	
@@ -875,7 +860,6 @@ inline int W3d_Shader_Get_Pri_Gradient(const W3dPS2ShaderStruct * s)					 { retu
 inline int W3d_Shader_Get_Texturing(const W3dPS2ShaderStruct * s)						 { return s->Texturing; } 
 inline int W3d_Shader_Get_Alpha_Test(const W3dPS2ShaderStruct * s)					 { return s->AlphaTest; }
 
-
 inline int W3d_Shader_Get_Depth_Compare(const W3dShaderStruct * s)				 { return s->DepthCompare; }
 inline int W3d_Shader_Get_Depth_Mask(const W3dShaderStruct * s)					 { return s->DepthMask; }
 inline int W3d_Shader_Get_Dest_Blend_Func(const W3dShaderStruct * s)				 { return s->DestBlend; }
@@ -888,8 +872,6 @@ inline int W3d_Shader_Get_Detail_Alpha_Func(const W3dShaderStruct * s)			 { retu
 inline int W3d_Shader_Get_Alpha_Test(const W3dShaderStruct * s)					 { return s->AlphaTest; }
 inline int W3d_Shader_Get_Post_Detail_Color_Func(const W3dShaderStruct * s)	 { return s->PostDetailColorFunc; }
 inline int W3d_Shader_Get_Post_Detail_Alpha_Func(const W3dShaderStruct * s)	 { return s->PostDetailAlphaFunc; }
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Texture Animation parameters
@@ -937,7 +919,6 @@ struct W3dTextureInfoStruct
 	uint32					FrameCount;					// Number of frames (1 if not animated)
 	float32					FrameRate;					// Frame rate, frames per second in floating point
 };
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // A triangle, occurs inside the W3D_CHUNK_TRIANGLES chunk
@@ -1210,7 +1191,6 @@ struct W3dMeshAABTreeNode
 	uint32					BackOrPolyCount;		// index of the back child or polycount
 };
 
-
 /********************************************************************************
 
 	WHT ( Westwood Hierarchy Tree )
@@ -1268,7 +1248,6 @@ struct W3dPivotFixupStruct
 	float32					TM[4][3];				// this is a direct dump of a MAX 3x4 matrix
 };
 
-
 /********************************************************************************
 
 	WHA (Westwood Hierarchy Animation)
@@ -1303,7 +1282,6 @@ struct W3dCompressedAnimHeaderStruct
 	uint16					FrameRate;
 	uint16					Flavor;
 };
-
 
 enum 
 {
@@ -1432,7 +1410,6 @@ struct W3dAdaptiveDeltaAnimChannelStruct
 			W3D_CHUNK_MORPHANIM_KEYDATA,									// array of W3dMorphAnimKeyStruct's (use chunk length to determine how many)
 		W3D_CHUNK_MORPHANIM_PIVOTCHANNELDATA,							// uin32 per pivot in the htree, indicating which channel controls the pivot
 
-
 ********************************************************************************/
 struct W3dMorphAnimHeaderStruct
 {
@@ -1449,8 +1426,6 @@ struct W3dMorphAnimKeyStruct
 	uint32					MorphFrame;
 	uint32					PoseFrame;
 };
-
-
 
 /********************************************************************************
 
@@ -1482,14 +1457,12 @@ struct W3dHModelHeaderStruct
 	uint16					NumConnections;				
 };
 
-
 struct W3dHModelNodeStruct
 {
 	// Note: the full name of the Render object is expected to be: <HModelName>.<RenderObjName>
 	char						RenderObjName[W3D_NAME_LEN];
 	uint16					PivotIdx;
 };
-
 
 /********************************************************************************
 
@@ -1513,7 +1486,6 @@ struct W3dLODStruct
 	float32					LODMin;								// "artist" inspired switching distances
 	float32					LODMax;
 };
-
 
 /********************************************************************************
 
@@ -1544,7 +1516,6 @@ struct W3dCollectionHeaderStruct
 	uint32		pad[2];
 };
 
-
 /*
 ** Placeholder chunks.  Also known as "PROXIES".  These are used by the Renegade
 ** level editor to instruct the editor to instance a particular named object
@@ -1561,7 +1532,6 @@ struct W3dPlaceholderStruct
 	float32		transform[4][3];				// this is a direct dump of a MAX 3x4 matrix
 	uint32		name_len;
 };
-
 
 /*							 
 ** Transform chunks.  These chunks refer to other W3D files which should be transformed by
@@ -1580,8 +1550,6 @@ struct W3dTransformNodeStruct
 	float32		transform[4][3];				// this is a direct dump of a MAX 3x4 matrix
 	uint32		name_len;
 };
-
-
 
 /********************************************************************************
 
@@ -1741,7 +1709,6 @@ struct W3dEmitterPropertyStruct
 	uint32				reserved[4];
 };
 
-
 struct W3dEmitterColorKeyframeStruct
 {
 	float32				Time;
@@ -1809,7 +1776,6 @@ struct W3dEmitterBlurTimeKeyframeStruct
 	float32				BlurTime;
 };
 
-
 // W3D_CHUNK_EMITTER_LINE_PROPERTIES
 // Contains a W3dEmitterLinePropertiesStruct.
 // Emiter Line Flags (used in the Flags field of W3dEmitterLinePropertiesStruct):
@@ -1826,7 +1792,6 @@ struct W3dEmitterBlurTimeKeyframeStruct
 
 #define W3D_ELINE_DEFAULT_BITS	(W3D_ELINE_MERGE_INTERSECTIONS | (W3D_ELINE_UNIFORM_WIDTH_TEXTURE_MAP << W3D_ELINE_TEXTURE_MAP_MODE_OFFSET))
 
-
 struct W3dEmitterLinePropertiesStruct
 {
 	uint32							Flags;
@@ -1838,7 +1803,6 @@ struct W3dEmitterLinePropertiesStruct
 	float32							VPerSec;
 	uint32							Reserved[9];
 };
-
 
 /********************************************************************************
 
@@ -1904,7 +1868,6 @@ struct W3dAggregateMiscInfo
 	uint32				reserved[3];
 };
 
-
 /********************************************************************************
 
 	HLod (Hierarchical LOD Model)
@@ -1955,7 +1918,6 @@ struct W3dHLodSubObjectStruct
 	char						Name[W3D_NAME_LEN*2];
 };
 
-
 /********************************************************************************
 
 	Collision Boxes
@@ -1995,9 +1957,6 @@ struct W3dBoxStruct
 	W3dVectorStruct	Extent;						// extent of the box
 };
 
-
-
-
 /********************************************************************************
 
 	NULL Objects
@@ -2016,7 +1975,6 @@ struct W3dNullObjectStruct
 	char					Name[2*W3D_NAME_LEN];	// name is in the form <containername>.<boxname>
 };
 
-
 /********************************************************************************
 
 	Dazzle Objects
@@ -2029,8 +1987,6 @@ struct W3dNullObjectStruct
 
 ********************************************************************************/
 
-
-
 /********************************************************************************
 
 	Sound render objects
@@ -2040,7 +1996,6 @@ struct W3dNullObjectStruct
 	These objects are used to trigger a sound effect in the world.  When the object
 	is shown, its associated sound is added to the world and played, when the object
 	is hidden, the associated sound is stopped and removed from the world.
-
 
 ********************************************************************************/
 
@@ -2059,11 +2014,9 @@ struct W3dSoundRObjHeaderStruct
 	uint32				Padding[8];
 };
 
-
 /*
 ** Include the obsolete structures and chunk ID's
 */
 #include "w3d_obsolete.h"
-
 
 #endif // W3D_FILE_H

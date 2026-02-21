@@ -2,14 +2,10 @@
 #ifndef LISTNODE_H
 #define LISTNODE_H
 
-
 /*
 ** Includes
 */
 #include	"assert.h"
-
-
-
 
 /*
 **	This is a doubly linked list node. Typical use of this node is to derive
@@ -73,7 +69,6 @@ class GenericNode {
 		GenericNode * PrevNode;
 };
 
-
 /*
 **	This is a generic list handler. It manages N generic nodes. Use the interface class
 **	to the generic list for added convenience.
@@ -130,8 +125,6 @@ class GenericList {
 		GenericList & operator = (GenericList const &);
 };
 
-
-
 /*
 **	This node class serves only as an "interface class" for the normal node
 **	object. In order to use this interface class you absolutely must be sure
@@ -152,7 +145,6 @@ class Node : public GenericNode {
 		bool Is_Valid(void) const {return(GenericNode::Is_Valid());}
 };
 
-
 /*
 **	This is an "interface class" for a list of nodes. The rules for the class T object
 **	are the same as the requirements required of the node class.
@@ -172,7 +164,6 @@ class List : public GenericList {
 		List(List<T> const & rvalue);
 		List<T> operator = (List<T> const & rvalue);
 };
-
 
 /*
 
@@ -196,8 +187,6 @@ public:
 	DataNode<T> * Prev_Valid(void) const { return (DataNode<T> *)GenericNode::Prev_Valid(); }
 };
 
-
-
 /*
 
 	The ContextDataNode template class is an extension of the DataNode class and has an additional
@@ -213,7 +202,6 @@ public:
 	void Set_Context(C context) { Context = context; };
 	C Get_Context() { return Context; };
 };
-
 
 /*
 **	A SafeContextDataNode requires the user to supply context and
@@ -235,7 +223,6 @@ private:
 	// the purpose of the SafeContextDataNode. -DRM
 	SafeContextDataNode();
 };
-
 
 /*
 	The DoubleNode class has double everything a DataNode has!
@@ -280,6 +267,5 @@ public:
 	SECONDARY Get_Secondary() { return SecondaryValue; };
 	void Unlink() { Primary.Unlink(); Secondary.Unlink(); };
 };
-
 
 #endif

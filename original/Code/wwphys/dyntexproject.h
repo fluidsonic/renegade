@@ -61,6 +61,4 @@ protected:
 	Vector3				LightVector;				//	copy of the light vector (postion or direction)
 };
 
-
-
 #endif

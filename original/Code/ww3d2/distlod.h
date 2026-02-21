@@ -11,7 +11,6 @@ class		ChunkLoadClass;
 struct	DistLODNodeDefStruct;
 class		DistLODDefClass;
 
-
 /*
 ** DistLODClass
 ** Distance based LOD switching.  This is a simple LOD object which switches models
@@ -120,7 +119,6 @@ private:
 	int								VpPushLod;				// which model was used for the vp->push (in CurLod changes before the pop)
 	LODNodeClass *					Lods;						// one LODNodeClass for each level
 };
-
 
 /*
 ** Loaders for DistLODClass

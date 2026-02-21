@@ -101,7 +101,6 @@ public:
 		OUCH_SUPER_FIRE,
 	} HumanOuchType;
 
-
 	HumanStateClass( void );
 	~HumanStateClass( void );
 

@@ -4,7 +4,6 @@
 #include "customevents.h"
 #include "dprint.h"
 
-
 DECLARE_SCRIPT(MXX_Group_Member_DEL, "GroupName:string")
 	{
 	const char* mGroupName;
@@ -28,7 +27,6 @@ DECLARE_SCRIPT(MXX_Group_Member_DEL, "GroupName:string")
 		assert(controller != NULL);
 		controller->RemoveFromGroup(mGroupName, owner);
 		}
-
 
 	// Notify group that a member was killed.
 	void Killed(GameObject* owner, GameObject* killer)
@@ -63,7 +61,6 @@ DECLARE_SCRIPT(MXX_Group_Member_DEL, "GroupName:string")
 		group->SendCustomEvent(owner, SCMD_GROUP_EVENT, (int)&info);
 		}
 
-
 	// Notify group that a member heard a sound.
 	void Sound_Heard(GameObject* owner, const CombatSound& sound)
 		{
@@ -80,7 +77,6 @@ DECLARE_SCRIPT(MXX_Group_Member_DEL, "GroupName:string")
 		group->SendCustomEvent(owner, SCMD_GROUP_EVENT, (int)&info);
 		}
 
-
 	// Notify group that a member saw the enemy.
 	void Enemy_Seen(GameObject* owner, GameObject* enemy)
 		{
@@ -96,7 +92,6 @@ DECLARE_SCRIPT(MXX_Group_Member_DEL, "GroupName:string")
 		assert(group != NULL);
 		group->SendCustomEvent(owner, SCMD_GROUP_EVENT, (int)&info);
 		}
-
 
 	#ifdef _DEBUG
 	void Custom(GameObject* owner, int event, int data, GameObject* sender)

@@ -7,7 +7,6 @@
 #include "resource.h"
 #include "sctextobj.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPChatChildDialogClass
@@ -57,7 +56,6 @@ protected:
 	void	Complete_Player_Name (const WCHAR *typed_name, WideStringClass &completed_name);
 	bool	Find_Current_Command (const WCHAR *	message, int &start_index, int &end_index);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
 	////////////////////////////////////////////////////////////////
@@ -67,7 +65,6 @@ protected:
 	bool					TestForAutoCompletion;
 	bool					EndDialogOnSend;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -114,7 +111,6 @@ protected:
 	void	Configure_Recipient_Combobox (void);
 	void	Configure_Message_Log_List (void);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
 	////////////////////////////////////////////////////////////////
@@ -122,6 +118,5 @@ protected:
 	TextMessageEnum				DefaultType;
 	MPChatChildDialogClass *	ChatModule;
 };
-
 
 #endif //__DLGMPINGAMECHAT_H__

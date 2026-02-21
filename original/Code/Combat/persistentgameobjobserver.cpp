@@ -1,8 +1,6 @@
 #include "persistentgameobjobserver.h"
 #include "chunkio.h"
 #include "persistfactory.h"
-#include "debug.h"
-
 /*
 **
 */
@@ -131,7 +129,6 @@ bool	PersistentGameObjObserverManager::Load( ChunkLoadClass & cload )
 	cload.Close_Chunk();
 	return true;
 }
-
 
 void	PersistentGameObjObserverManager::Reset( void )
 {

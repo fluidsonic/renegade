@@ -10,12 +10,10 @@
 #include "sphere.h"
 #include "boxrobj.h"
 
-
 /*
 ** Loader Instance
 */
 HLodLoaderClass			_HLodLoader;
-
 
 /** 
 ** ProxyRecordClass
@@ -63,8 +61,6 @@ public:
 	}
 };
 
-
-
 /*
 ** The HLod Loader Implementation
 */
@@ -102,7 +98,6 @@ PrototypeClass *HLodLoaderClass::Load_W3D( ChunkLoadClass &cload )
 	return NULL;
 }
 
-
 /*
 ** HLod Prototype Implementation
 */
@@ -124,7 +119,6 @@ RenderObjClass * HLodPrototypeClass::Create(void)
 	HLodClass * hlod = NEW_REF( HLodClass , ( *Definition ) ); 
 	return hlod;
 }
-
 
 /*
 ** HLodDef Implementation
@@ -150,7 +144,6 @@ HLodDefClass::HLodDefClass(void) :
 {
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::HLodDefClass -- Copy Constructor                                              *
  *                                                                                             *
@@ -174,7 +167,6 @@ HLodDefClass::HLodDefClass(HLodClass &src_lod) :
 	return ;
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::~HLodDefClass -- Destructor                                                   *
  *                                                                                             *
@@ -192,7 +184,6 @@ HLodDefClass::~HLodDefClass(void)
 	Free ();
 	return ;
 }
-
 
 /***********************************************************************************************
  * HLodDefClass::Free -- releases all resources being used                                     *
@@ -228,7 +219,6 @@ void HLodDefClass::Free(void)
 
 	return ;
 }
-
 
 /***********************************************************************************************
  * HLodDefClass::Initialize -- init this def from an HLod                                      *
@@ -293,7 +283,6 @@ void HLodDefClass::Initialize(HLodClass &src_lod)
 	return;
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::Save -- save this HLodDef                                                     *
  *                                                                                             *
@@ -329,7 +318,6 @@ WW3DErrorType HLodDefClass::Save(ChunkSaveClass & csave)
 	// Return the WW3DErrorType return code
 	return ret_val;
 }
-
 
 /***********************************************************************************************
  * HLodDefClass::Save_Header -- writes the HLodDef header                                      *
@@ -379,7 +367,6 @@ WW3DErrorType HLodDefClass::Save_Header(ChunkSaveClass &csave)
 	return ret_val;
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::Save_Lod_Array -- Saves the lod array                                         *
  *                                                                                             *
@@ -406,7 +393,6 @@ WW3DErrorType HLodDefClass::Save_Lod_Array(ChunkSaveClass &csave)
 	return success ? WW3D_ERROR_OK : WW3D_ERROR_SAVE_FAILED;
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::Save_Aggregate_Array -- Save the array of aggregate models                    *
  *                                                                                             *
@@ -431,7 +417,6 @@ WW3DErrorType HLodDefClass::Save_Aggregate_Array(ChunkSaveClass & csave)
 	}
 	return WW3D_ERROR_OK;
 }
-
 
 /***********************************************************************************************
  * HLodDefClass::Load_W3D -- Loads this HLodDef from a W3d File                                *
@@ -496,7 +481,6 @@ WW3DErrorType HLodDefClass::Load_W3D(ChunkLoadClass & cload)
 	return WW3D_ERROR_OK;
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::read_header -- loads the HLodDef header from a W3d file                       *
  *                                                                                             *
@@ -534,7 +518,6 @@ bool HLodDefClass::read_header(ChunkLoadClass & cload)
 	Lod = new SubObjectArrayClass[LodCount];
 	return true;
 }
-
 
 /***********************************************************************************************
  * HLodDefClass::read_proxy_array -- load the proxy names                                      *
@@ -585,7 +568,6 @@ bool HLodDefClass::read_proxy_array(ChunkLoadClass & cload)
 	return true;
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::SubObjectArrayClass::SubObjectArrayClass -- LodArray constructor              *
  *                                                                                             *
@@ -605,7 +587,6 @@ HLodDefClass::SubObjectArrayClass::SubObjectArrayClass(void) :
 {
 }
 
-
 /***********************************************************************************************
  * HLodDefClass::SubObjectArrayClass::~SubObjectArrayClass -- LodArray destructor              *
  *                                                                                             *
@@ -622,7 +603,6 @@ HLodDefClass::SubObjectArrayClass::~SubObjectArrayClass(void)
 {
 	Reset();
 }
-
 
 /***********************************************************************************************
  * HLodDefClass::SubObjectArrayClass::Reset -- release the contents of this array              *
@@ -654,7 +634,6 @@ void HLodDefClass::SubObjectArrayClass::Reset(void)
 
 	ModelCount = 0;
 }
-
 
 /***********************************************************************************************
  * HLodDefClass::SubObjectArrayClass::Load_W3D -- LodArray load function                       *
@@ -773,9 +752,6 @@ bool HLodDefClass::SubObjectArrayClass::Save_W3D(ChunkSaveClass &csave)
 	return ret_val;
 }
 
-
-
-
 /***********************************************************************************************
  * HLodClass::HLodClass -- Constructor                                                         *
  *                                                                                             *
@@ -801,7 +777,6 @@ HLodClass::HLodClass(void) :
 	LODBias(1.0f)
 {
 }
-
 
 /***********************************************************************************************
  * HLodClass::HLodClass -- copy constructor                                                    *
@@ -830,7 +805,6 @@ HLodClass::HLodClass(const HLodClass & src) :
 {
 	*this = src;
 }
-
 
 /***********************************************************************************************
  * HLodClass::HLodClass -- Constructor                                                         *
@@ -928,7 +902,6 @@ HLodClass::HLodClass(const char * name,RenderObjClass ** lods,int count) :
 	Update_Obj_Space_Bounding_Volumes();
 }
 
-
 /***********************************************************************************************
  * HLodClass::HLodClass -- Constructs an HLod from an HLodDef                                  *
  *                                                                                             *
@@ -1012,7 +985,6 @@ HLodClass::HLodClass(const HLodDefClass & def) :
 	return ;
 }
 
-
 /***********************************************************************************************
  * HLodClass::HLodClass -- Constructs an HLod from an HModelDef                                *
  *                                                                                             *
@@ -1081,7 +1053,6 @@ HLodClass::HLodClass(const HModelDefClass & def) :
 	return ;
 }
 
-
 /***********************************************************************************************
  * HLodClass::operator -- assignment operator                                                  *
  *                                                                                             *
@@ -1148,7 +1119,6 @@ HLodClass & HLodClass::operator = (const HLodClass & that)
 
 	Recalculate_Static_LOD_Factors();
 
-
 	// So that the object is ready for use after construction, we will
 	// complete its initialization by initializing its cost and value arrays
 	// according to a screen area of 1 pixel.
@@ -1164,7 +1134,6 @@ HLodClass & HLodClass::operator = (const HLodClass & that)
 	Update_Obj_Space_Bounding_Volumes();
 	return *this;
 }
-
 
 /***********************************************************************************************
  * HLodClass::~HLodClass -- Destructor                                                         *
@@ -1182,7 +1151,6 @@ HLodClass::~HLodClass(void)
 {
 	Free();
 }
-
 
 /***********************************************************************************************
  * HLodClass::Free -- releases all resources                                                   *
@@ -1241,7 +1209,6 @@ void HLodClass::Free(void)
 	REF_PTR_RELEASE(ProxyArray);
 }
 
-
 /***********************************************************************************************
  * HLodClass::Clone -- virtual copy constructor                                                *
  *                                                                                             *
@@ -1258,7 +1225,6 @@ RenderObjClass * HLodClass::Clone(void) const
 {
 	return new HLodClass(*this);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Obj_Space_Bounding_Box -- Return the bounding box mesh if we have one.		  *
@@ -1313,7 +1279,6 @@ void HLodClass::Get_Obj_Space_Bounding_Box(AABoxClass & box) const
 	}
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Obj_Space_Bounding_Sphere -- Use the bounding box mesh to calculate a sphere.* 
  *                                                                                             *
@@ -1333,7 +1298,6 @@ void HLodClass::Get_Obj_Space_Bounding_Sphere(SphereClass & sphere) const
 	sphere.Center = box.Center;
 	sphere.Radius = box.Extent.Length();
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Obj_Space_Bounding_Sphere -- Use the bounding box mesh to calculate a sphere.* 
@@ -1367,7 +1331,6 @@ const SphereClass &HLodClass::Get_Bounding_Sphere(void) const
 
 	return CachedBoundingSphere;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Obj_Space_Bounding_Box -- Return the bounding box mesh if we have one.		  *
@@ -1405,7 +1368,6 @@ const AABoxClass &HLodClass::Get_Bounding_Box(void) const
 	return CachedBoundingBox;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Set_Max_Screen_Size -- Set max-screen-size for an LOD                            *
  *                                                                                             *
@@ -1440,7 +1402,6 @@ void HLodClass::Set_Max_Screen_Size(int lod_index, float size)
 	return ;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Max_Screen_Size -- get max-screen-size for an LOD                            *
  *                                                                                             *
@@ -1468,7 +1429,6 @@ float HLodClass::Get_Max_Screen_Size(int lod_index) const
 	return size;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Lod_Count -- returns number of levels of detail                              *
  *                                                                                             *
@@ -1485,7 +1445,6 @@ int HLodClass::Get_Lod_Count(void) const
 {
 	return LodCount;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Set_LOD_Bias --  sets LOD bias                                                   *
@@ -1510,7 +1469,6 @@ void HLodClass::Set_LOD_Bias(float bias)
 		AdditionalModels[i].Model->Set_LOD_Bias(bias);
 	}
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Lod_Model_Count -- number of sub-objs in a given level of detail             *
@@ -1538,7 +1496,6 @@ int HLodClass::Get_Lod_Model_Count(int lod_index) const
 	// Return the number of models that compose this Lod
 	return count;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Peek_Lod_Model -- returns pointer to a model in one of the LODs                  *
@@ -1568,7 +1525,6 @@ RenderObjClass *HLodClass::Peek_Lod_Model(int lod_index, int model_index) const
 	// Return a pointer to the requested model
 	return pmodel;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Lod_Model -- returns a pointer to a model in one of the LODs                 *
@@ -1602,7 +1558,6 @@ RenderObjClass *HLodClass::Get_Lod_Model(int lod_index, int model_index) const
 	return pmodel;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Lod_Model_Bone -- returns the bone index of a model                          *
  *                                                                                             *
@@ -1632,7 +1587,6 @@ int HLodClass::Get_Lod_Model_Bone(int lod_index, int model_index) const
 	return bone_index;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Additional_Model_Count -- number of additional sub-objs                      *
  *                                                                                             *
@@ -1649,7 +1603,6 @@ int HLodClass::Get_Additional_Model_Count(void) const
 {
 	return AdditionalModels.Count();
 }
-
 
 /***********************************************************************************************
  * HLodClass::Peek_Additional_Model -- returns pointer to an additional model                  *
@@ -1678,7 +1631,6 @@ RenderObjClass * HLodClass::Peek_Additional_Model (int model_index) const
 	// Return a pointer to the requested model
 	return pmodel;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Additional_Model -- returns pointer to an additional model                   *
@@ -1711,7 +1663,6 @@ RenderObjClass * HLodClass::Get_Additional_Model (int model_index) const
 	return pmodel;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Additional_Model_Bone -- returns the bone index of an additional model       *
  *                                                                                             *
@@ -1740,7 +1691,6 @@ int HLodClass::Get_Additional_Model_Bone (int model_index) const
 	return bone_index;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Is_NULL_Lod_Included -- does this HLod have NULL as its lowest LOD               *
  *                                                                                             *
@@ -1765,7 +1715,6 @@ bool HLodClass::Is_NULL_Lod_Included(void) const
 	// Return the true/false result code
 	return included;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Include_NULL_Lod -- Add NULL as the lowest LOD                                   *
@@ -1857,7 +1806,6 @@ void HLodClass::Include_NULL_Lod(bool include)
 	return ;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Proxy_Count -- Returns the number of proxy records                           *
  *                                                                                             *
@@ -1878,7 +1826,6 @@ int HLodClass::Get_Proxy_Count(void) const
 		return 0;
 	}
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Proxy -- returns the information for the i'th proxy                          *
@@ -1920,7 +1867,6 @@ bool HLodClass::Get_Proxy (int index, ProxyClass &proxy) const
 	return retval;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Num_Polys -- returns polycount of the current LOD                            *
  *                                                                                             *
@@ -1953,7 +1899,6 @@ int HLodClass::Get_Num_Polys(void) const
 
 	return polycount;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Render -- render this HLod                                                       *
@@ -1993,7 +1938,6 @@ void HLodClass::Render(RenderInfoClass & rinfo)
 	}
 }
 
-
 /***********************************************************************************************
  * HLodClass::Special_Render -- Special_Render for HLod                                        *
  *                                                                                             *
@@ -2029,7 +1973,6 @@ void HLodClass::Special_Render(SpecialRenderInfoClass & rinfo)
 	}
 }
 
-
 /***********************************************************************************************
  * HLodClass::Set_Transform -- Sets the transform                                              *
  *                                                                                             *
@@ -2048,7 +1991,6 @@ void HLodClass::Set_Transform(const Matrix3D &m)
 	Set_Sub_Object_Transforms_Dirty(true);
 }
 
-
 /***********************************************************************************************
  * HLodClass::Set_Position -- Sets the position                                                *
  *                                                                                             *
@@ -2066,7 +2008,6 @@ void HLodClass::Set_Position(const Vector3 &v)
 	Animatable3DObjClass::Set_Position(v); 
 	Set_Sub_Object_Transforms_Dirty(true);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Notify_Added -- callback notifies subobjs that they were added                   *
@@ -2095,7 +2036,6 @@ void HLodClass::Notify_Added(SceneClass * scene)
 	}
 }
 
-
 /***********************************************************************************************
  * HLodClass::Notify_Removed -- notifies subobjs that they were removed                        *
  *                                                                                             *
@@ -2123,7 +2063,6 @@ void HLodClass::Notify_Removed(SceneClass * scene)
 	RenderObjClass::Notify_Removed(scene);
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Num_Sub_Objects -- returns total number of sub-objects                       *
  *                                                                                             *
@@ -2145,7 +2084,6 @@ int HLodClass::Get_Num_Sub_Objects(void) const
 	count += AdditionalModels.Count();
 	return count;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Sub_Object -- returns a pointer to specified sub-object                      *
@@ -2172,7 +2110,6 @@ RenderObjClass * HLodClass::Get_Sub_Object(int index) const
 	return AdditionalModels[index].Model;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Add_Sub_Object -- add a sub-object to this HLod                                  *
  *                                                                                             *
@@ -2189,7 +2126,6 @@ int HLodClass::Add_Sub_Object(RenderObjClass * subobj)
 {
 	return Add_Sub_Object_To_Bone(subobj,0);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Remove_Sub_Object -- remove a sub-object from this HLod                          *
@@ -2265,7 +2201,6 @@ int HLodClass::Remove_Sub_Object(RenderObjClass * removeme)
 	return 0;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Num_Sub_Objects_On_Bone -- returns the number of objects on the given bone   *
  *                                                                                             *
@@ -2292,7 +2227,6 @@ int HLodClass::Get_Num_Sub_Objects_On_Bone(int boneindex) const
 	}
 	return count;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Sub_Object_On_Bone -- returns obj on the given bone                          *
@@ -2332,7 +2266,6 @@ RenderObjClass * HLodClass::Get_Sub_Object_On_Bone(int index,int boneindex) cons
 	return NULL;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Sub_Object_Bone_Index -- returns bone index of given object                  *
  *                                                                                             *
@@ -2361,7 +2294,6 @@ int HLodClass::Get_Sub_Object_Bone_Index(RenderObjClass * subobj) const
 	}
 	return 0;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Add_Sub_Object_To_Bone -- adds a sub-object to a bone                            *
@@ -2402,7 +2334,6 @@ int HLodClass::Add_Sub_Object_To_Bone(RenderObjClass * subobj,int boneindex)
 	return result;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Set_Animation -- set animation state to the base-pose                            *
  *                                                                                             *
@@ -2421,7 +2352,6 @@ void HLodClass::Set_Animation(void)
 	Set_Sub_Object_Transforms_Dirty(true);
 }
 
-
 /***********************************************************************************************
  * HLodClass::Set_Animation -- set animation state to an animation frame                       *
  *                                                                                             *
@@ -2439,7 +2369,6 @@ void HLodClass::Set_Animation(HAnimClass * motion,float frame,int mode)
 	Animatable3DObjClass::Set_Animation(motion,frame,mode);
 	Set_Sub_Object_Transforms_Dirty(true);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Set_Animation -- set animation state to a blend of two animations                *
@@ -2466,7 +2395,6 @@ void HLodClass::Set_Animation
 	Set_Sub_Object_Transforms_Dirty(true);
 }
 
-
 /***********************************************************************************************
  * HLodClass::Set_Animation -- set animation state to a combination of anims                   *
  *                                                                                             *
@@ -2484,7 +2412,6 @@ void HLodClass::Set_Animation(HAnimComboClass * anim_combo)
 	Animatable3DObjClass::Set_Animation(anim_combo);
 	Set_Sub_Object_Transforms_Dirty(true);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Cast_Ray -- cast a ray against this HLod                                         *
@@ -2520,7 +2447,6 @@ bool HLodClass::Cast_Ray(RayCollisionTestClass & raytest)
 	return res;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Cast_AABox -- Cast a swept AABox against this HLod                               *
  *                                                                                             *
@@ -2554,7 +2480,6 @@ bool HLodClass::Cast_AABox(AABoxCollisionTestClass & boxtest)
 
 	return res;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Cast_OBBox -- Cast a swept OBBox against this HLod                               *
@@ -2590,7 +2515,6 @@ bool HLodClass::Cast_OBBox(OBBoxCollisionTestClass & boxtest)
 	return res;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Intersect_AABox -- Intersect an AABox with this HLod                             *
  *                                                                                             *
@@ -2625,7 +2549,6 @@ bool HLodClass::Intersect_AABox(AABoxIntersectionTestClass & boxtest)
 	return res;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Intersect_OBBox -- Intersect an OBBox with this HLod                             *
  *                                                                                             *
@@ -2659,7 +2582,6 @@ bool HLodClass::Intersect_OBBox(OBBoxIntersectionTestClass & boxtest)
 
 	return res;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Prepare_LOD -- Prepare for LOD processing                                        *
@@ -2696,7 +2618,6 @@ void HLodClass::Prepare_LOD(CameraClass &camera)
 		int minlod = Calculate_Cost_Value_Arrays(norm_area, Value, Cost);
 		if (CurLod < minlod) Set_LOD_Level(minlod);
 
-
 		/*
 		** Add myself to the LOD optimizer:
 		*/
@@ -2720,7 +2641,6 @@ void HLodClass::Prepare_LOD(CameraClass &camera)
 	}
 
 }
-
 
 /***********************************************************************************************
  * HLodClass::Recalculate_Static_LOD_Factors -- compute lod factors                            *
@@ -2767,7 +2687,6 @@ void HLodClass::Recalculate_Static_LOD_Factors(void)
 
 }
 
-
 /***********************************************************************************************
  * HLodClass::Increment_LOD -- move to next lod                                                *
  *                                                                                             *
@@ -2800,7 +2719,6 @@ void HLodClass::Increment_LOD(void)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * HLodClass::Decrement_LOD -- move to previous lod                                            *
@@ -2835,7 +2753,6 @@ void HLodClass::Decrement_LOD(void)
 	}
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Cost -- returns the cost of this LOD                                         *
  *                                                                                             *
@@ -2852,7 +2769,6 @@ float HLodClass::Get_Cost(void) const
 {
 	return(Cost[CurLod]);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_Value -- returns the value of this LOD                                       *
@@ -2871,7 +2787,6 @@ float HLodClass::Get_Value(void) const
 	return(Value[CurLod]);
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Post_Increment_Value -- returns the post increment value                     *
  *                                                                                             *
@@ -2888,7 +2803,6 @@ float HLodClass::Get_Post_Increment_Value(void) const
 {
 	return(Value[CurLod + 1]);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Set_LOD_Level -- set the current lod level                                       *
@@ -2909,7 +2823,6 @@ void HLodClass::Set_LOD_Level(int lod)
 
 	if (lod == CurLod) return;
 
-
 	if (Is_In_Scene()) {
 		int model_count = Lod[CurLod].Count();
 		for (int i = 0; i < model_count; i++) {
@@ -2926,7 +2839,6 @@ void HLodClass::Set_LOD_Level(int lod)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * HLodClass::Get_LOD_Level -- returns the current LOD level                                   *
@@ -2945,7 +2857,6 @@ int HLodClass::Get_LOD_Level(void) const
 	return CurLod;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_LOD_Count -- returns the number of levels of detail                          *
  *                                                                                             *
@@ -2962,7 +2873,6 @@ int HLodClass::Get_LOD_Count(void) const
 {
 	return LodCount;
 }
-
 
 /***********************************************************************************************
  * HLodClass::Calculate_Cost_Value_Arrays -- computes the cost-value arrays                    *
@@ -3012,7 +2922,6 @@ int HLodClass::Calculate_Cost_Value_Arrays(float screen_area, float *values, flo
 	return minlod;
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Current_LOD -- returns a render object which represents the current LOD      *
  *                                                                                             *
@@ -3034,7 +2943,6 @@ RenderObjClass * HLodClass::Get_Current_LOD(void)
 
 	return Get_Lod_Model(CurLod, 0);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Set_Texture_Reduction_Factor -- resizeable texture support                       *
@@ -3104,7 +3012,6 @@ void HLodClass::Scale(float scale)
    if (container) container->Update_Obj_Space_Bounding_Volumes();
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Num_Snap_Points -- returns the number of snap points in this model           *
  *                                                                                             *
@@ -3126,7 +3033,6 @@ int HLodClass::Get_Num_Snap_Points(void)
 	}
 }
 
-
 /***********************************************************************************************
  * HLodClass::Get_Snap_Point -- returns specified snap-point                                   *
  *                                                                                             *
@@ -3147,7 +3053,6 @@ void HLodClass::Get_Snap_Point(int index,Vector3 * set)
 		set->X = set->Y = set->Z = 0;
 	}
 }
-
 
 /***********************************************************************************************
  * HLodClass::Update_Sub_Object_Transforms -- updates transforms of all sub-objects            *
@@ -3198,7 +3103,6 @@ void HLodClass::Update_Sub_Object_Transforms(void)
 
 	Set_Sub_Object_Transforms_Dirty(false);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Update_Obj_Space_Bounding_Volumes -- update object-space bounding volumes        *
@@ -3252,7 +3156,6 @@ void HLodClass::Update_Obj_Space_Bounding_Volumes(void)
 			}
 		}
 	}
-
 
 	int i;
 	RenderObjClass * robj = NULL;
@@ -3314,7 +3217,6 @@ void HLodClass::Update_Obj_Space_Bounding_Volumes(void)
    if (container) container->Update_Obj_Space_Bounding_Volumes();
 }
 
-
 /***********************************************************************************************
  * HLodClass::add_lod_model -- adds a model to one of the lods                                 *
  *                                                                                             *
@@ -3343,7 +3245,6 @@ void HLodClass::add_lod_model(int lod,RenderObjClass * robj,int boneindex)
 	Lod[lod].Add(newnode);
 }
 
-
 /***********************************************************************************************
  * HLodClass::Create_Decal -- create a decal on this HLod                                      *
  *                                                                                             *
@@ -3368,7 +3269,6 @@ void HLodClass::Create_Decal(DecalGeneratorClass * generator)
 		AdditionalModels[model].Model->Create_Decal(generator);
 	}
 }
-
 
 /***********************************************************************************************
  * HLodClass::Delete_Decal -- remove a decal from this HLod                                    *
@@ -3398,7 +3298,6 @@ void HLodClass::Delete_Decal(uint32 decal_id)
 	}
 }
 
-
 /***********************************************************************************************
  * HLodClass::Set_HTree -- replace the hierarchy tree                                          *
  *                                                                                             *
@@ -3415,7 +3314,6 @@ void HLodClass::Set_HTree(HTreeClass * htree)
 {
 	Animatable3DObjClass::Set_HTree(htree);
 }
-
 
 /***********************************************************************************************
  * HLodClass::Set_Hidden -- Propogates the hidden bit to particle emitters.                    *

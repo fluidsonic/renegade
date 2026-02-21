@@ -42,11 +42,6 @@ class cMiscUtil
 	private:
 };
 
-
 #endif // MISCUTIL_H
-
-
-
-
 
 		//static int		Get_Exe_Key(void);

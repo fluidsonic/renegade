@@ -1,7 +1,6 @@
 #include	"always.h"
 #include	"shapipe.h"
 
-
 /***********************************************************************************************
  * SHAPipe::Put -- Pass data through the pipe, but use it to build a SHA digest.               *
  *                                                                                             *
@@ -26,7 +25,6 @@ int SHAPipe::Put(void const * source, int slen)
 	return(Pipe::Put(source, slen));
 }
 
-
 /***********************************************************************************************
  * SHAPipe::Result -- Fetches the current SHA value.                                           *
  *                                                                                             *
@@ -47,5 +45,4 @@ int SHAPipe::Result(void * result) const
 {
 	return(SHA.Result(result));
 }
-
 

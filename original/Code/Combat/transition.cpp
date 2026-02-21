@@ -1,6 +1,5 @@
 #include "transition.h"
 #include "soldier.h"
-#include "debug.h"
 #include "assets.h"
 #include "combat.h"
 #include "ccamera.h"
@@ -14,7 +13,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "pathaction.h"
-
 
 /*
 **
@@ -31,7 +29,6 @@ const char * TransitionTypeNames[] = {
 		"VEHICLE_ENTER",
 		"VEHICLE_EXIT",
 };
-
 
 /*
 **
@@ -209,7 +206,6 @@ bool	TransitionCompletionDataStruct::Load( ChunkLoadClass & cload )
 	return true;
 }
 
-
 /*
 ** TransitionInstanceClass
 */
@@ -299,7 +295,6 @@ bool	TransitionInstanceClass::Check( SoldierGameObj *obj, bool action_trigger )
 					break;
 			}
 
-
 			// If still has length
 			if ( vel.Length() > MIN_VELOCITY ) {
 				vel.Normalize();
@@ -370,7 +365,6 @@ bool	TransitionInstanceClass::Check( SoldierGameObj *obj, bool action_trigger )
 				condition = false;
 			}
 			break;
-
 
 		default:
 			Debug_Say(( "Unrecognized Transition Type\n" ));
@@ -617,7 +611,6 @@ void	TransitionInstanceClass::Set_Parent_Transform( const Matrix3D & tm )
 	OBBoxClass::Transform( tm, Data.Get_Zone(), &Zone );
 }
 
-
 /*
 ** TransitionManager
 */
@@ -663,7 +656,6 @@ bool	TransitionManager::Check( SoldierGameObj *obj, bool action_trigger )
 	}
 	return false;
 }
-
 
 void	TransitionManager::Build_Ladder_List (DynamicVectorClass<TransitionInstanceClass *> &list)
 {

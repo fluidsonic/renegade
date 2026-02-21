@@ -4,7 +4,6 @@
 
 #include <WWLib/wwstring.h>
 
-
 #define SERVER_CONTROL_PORT_KEY		"ControlPort"
 #define SERVER_CONTROL_PASSWORD_KEY	"ControlPassword"
 #define SERVER_CONTROL_LOOPBACK_KEY	"ControlLoopbackOnly"
@@ -12,7 +11,6 @@
 
 #define DEFAULT_SERVER_CONTROL_PORT 		63999
 #define DEFAULT_SERVER_CONTROL_PASSWORD	"not_a_valid_password"	// Password removed per Security review requirements. LFeenanEA - 27th January 2025
-
 
 /*
 ** This is the game side interface to the server control lib.
@@ -35,9 +33,5 @@ class GameSideServerControlClass
 		static StringClass Response;
 
 };
-
-
-
-
 
 #endif //_GAMESIDESERVERCONTROL_H

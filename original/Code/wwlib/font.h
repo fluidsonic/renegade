@@ -28,5 +28,4 @@ class FontClass {
 		virtual int Set_YSpacing(int y) = 0;
 };
 
-
 #endif

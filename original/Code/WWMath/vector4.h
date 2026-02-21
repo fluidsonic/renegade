@@ -19,7 +19,6 @@ public:
 	float Z;
 	float W;
 
-
 	// Constructors
 	WWINLINE Vector4(void) {};
 	WWINLINE Vector4(const Vector4 & v) { X = v.X; Y = v.Y; Z = v.Z; W = v.W; }
@@ -180,7 +179,6 @@ WWINLINE float Vector4::Dot_Product(const Vector4 &a,const Vector4 &b)
 	return a*b;
 }
 
-
 /************************************************************************** 
  * Vector Equality Operator -- Detemine if two vectors are identical      * 
  *                                                                        * 
@@ -278,7 +276,6 @@ WWINLINE float Vector4::Length2() const
 	return X*X + Y*Y + Z*Z + W*W;
 }
 
-
 /*********************************************************************************************** 
  * Swap -- swap two Vector4's                                                                  * 
  *                                                                                             * 
@@ -357,7 +354,6 @@ WWINLINE bool Vector4::Is_Valid(void) const
 {
 	return (WWMath::Is_Valid_Float(X) && WWMath::Is_Valid_Float(Y) && WWMath::Is_Valid_Float(Z) && WWMath::Is_Valid_Float(W));
 }
-
 
 #endif /* VECTOR4_H */
 

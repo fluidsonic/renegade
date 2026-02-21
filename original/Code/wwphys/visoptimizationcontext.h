@@ -4,7 +4,6 @@
 #include "always.h"
 #include "vector.h"
 
-
 class PhysicsSceneClass;
 class VisTableMgrClass;
 class VisTableClass;
@@ -76,8 +75,5 @@ protected:
 
 	VisOptProgressClass &						Stats;				// Progress and statistics tracker object.
 };
-
-
-
 
 #endif //VISOPTIMIZATIONCONTEXT_H

@@ -2,7 +2,6 @@
 #include <shellapi.h>
 #include <direct.h>
 
-
 //
 // For the text box showing patch info
 //
@@ -59,7 +58,6 @@ BOOL CALLBACK Update_Info_Proc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lPara
       return(0);
     break;
 
-
     case WM_COMMAND:
       switch(wParam) {
         case IDOK:
@@ -80,15 +78,8 @@ BOOL CALLBACK Update_Info_Proc(HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lPara
   return(FALSE);
 }
 
-
-
-
-
-
-
 // Restart the computer for certain types of patches
 void Shutdown_Computer_Now(void);
-
 
 __declspec(dllexport) LPVOID CALLBACK PatchCallBack(UINT ID, LPVOID Param);
 
@@ -96,7 +87,6 @@ typedef LPVOID (CALLBACK* PATCHCALLBACK)(UINT, LPVOID);
 typedef	UINT (CALLBACK *PATCHFUNC)( LPSTR, PATCHCALLBACK, BOOL);
 
 int rtpErrCode = -1;
-
 
 DWORD CALLBACK ApplyPatchThread(LPVOID _file) {
 
@@ -268,7 +258,6 @@ void Apply_Patch(char *patchfile,ConfigFile &config,int skuIndex, bool show_dial
       version=atol(cptr);
     DBGMSG("VERSION TO = "<<version);
 
-
     char      string[256];
     Wstring   key;
     // Get the InstallPath from the specified registry key
@@ -296,7 +285,6 @@ void Apply_Patch(char *patchfile,ConfigFile &config,int skuIndex, bool show_dial
       DBGMSG("Can't open reg key for writing");
     regRetval=RegSetValueEx(regKey,"Version",0,REG_DWORD,(uint8 *)&version,
         sizeof(version));
-
 
 		// Create blocking DLG for update info
 		if (show_dialog) {
@@ -347,8 +335,6 @@ void Apply_Patch(char *patchfile,ConfigFile &config,int skuIndex, bool show_dial
   }
 }
 
-
-
 void Shutdown_Computer_Now(void)
 {
   HANDLE hToken;
@@ -396,8 +382,6 @@ void Shutdown_Computer_Now(void)
   }
 }
 
-
-
 //
 // Callback during the patching process
 //
@@ -410,7 +394,6 @@ __declspec(dllexport) LPVOID CALLBACK PatchCallBack(UINT Id, LPVOID Param)
   // Make sure our windows get updated
 //  MSG     msg;
   int     counter=0;
-
 
 // Let the main thread do this now.
 //  while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE ))

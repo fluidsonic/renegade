@@ -3,7 +3,6 @@
 
 #include	"pipe.h"
 
-
 /*
 **	Performs LZO compression/decompression on the data stream that is piped through this
 **	class. The data is compressed in blocks so of small enough size to be compressed
@@ -61,6 +60,5 @@ class LZOPipe : public Pipe
 		LZOPipe(LZOPipe & rvalue);
 		LZOPipe & operator = (LZOPipe const & pipe);
 };
-
 
 #endif

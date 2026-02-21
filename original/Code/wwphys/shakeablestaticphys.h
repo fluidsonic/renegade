@@ -4,9 +4,7 @@
 #include "always.h"
 #include "staticanimphys.h"
 
-
 class ShakeableStaticPhysDefClass;
-
 
 /**
 ** ShakeableStaticPhysClass
@@ -34,7 +32,6 @@ public:
 
 };
 
-
 /*
 ** ShakeableStaticPhysClass
 */
@@ -57,10 +54,6 @@ protected:
 
 	friend class								ShakeableStaticPhysClass;
 };
-
-
-
-
 
 #endif //SHAKEABLESTATICPHYS_H
 

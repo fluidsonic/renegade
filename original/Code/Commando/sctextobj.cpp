@@ -44,7 +44,6 @@ cScTextObj::Init
 )
 {
 
-
 	Text						= text;
 	Type						= type;
 	SenderId					= sender_id;
@@ -325,7 +324,6 @@ cScTextObj::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	BYTE type = packet.Get(type);
 	Type = (TextMessageEnum) type;
 	packet.Get(SenderId);
@@ -335,9 +333,6 @@ cScTextObj::Import_Creation(BitStreamClass & packet)
 
 	Act();
 }
-
-
-
 
 		/*
 		//

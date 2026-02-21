@@ -18,8 +18,6 @@
 #include <stdio.h>
 #include "trim.h"
 #include "singletoninstancekeeper.h"
-#include "slavemaster.h"
-#include "debug.h"
 #include "rawfile.h"
 #include "serversettings.h"
 #include "consolemode.h"
@@ -49,7 +47,6 @@ cRegistryInt		cUserOptions::GameSpyQueryPort(			APPLICATION_SUB_KEY_NAME_GAMESPY
 cRegistryInt		cUserOptions::GameSpyGamePort(			APPLICATION_SUB_KEY_NAME_GAMESPY,    "GameSpyGamePort",				4848);
 cRegistryInt		cUserOptions::SplashCount(			APPLICATION_SUB_KEY_NAME_GAMESPY,    "SplashCount",				0);
 cRegistryBool		cUserOptions::DoneClientBandwidthTest(			APPLICATION_SUB_KEY_NAME_GAMESPY,    "DoneClientBandwidthTest",				false);
-
 
 cRegistryInt cUserOptions::PreferredLanNic(						APPLICATION_SUB_KEY_NAME_NETOPTIONS, "PreferredLanNic",					0);
 cRegistryInt cUserOptions::NetUpdateRate(							APPLICATION_SUB_KEY_NAME_NETOPTIONS, "NetUpdateRate",						10);
@@ -114,24 +111,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 			continue;
 		}
 
-		if (strstr(cmd, "SLAVE")) {
-			SlaveMaster.Set_Slave_Mode(true);
-			DebugManager::Set_Is_Slave(true);
-
-			// Save out process ID so our master server can find us.
-			char tempmod[512];
-			strcpy(tempmod, DefaultRegistryModifier);
-			strcpy(DefaultRegistryModifier, "");
-			RegistryClass reg(APPLICATION_SUB_KEY_NAME);
-			if (reg.Is_Valid()) {
-				reg.Set_Int("ProcessId", GetCurrentProcessId());
-			}
-			strcpy(DefaultRegistryModifier, tempmod);
-
-			RegistryClass::Set_Read_Only(true);
-			continue;
-		}
-
 		if (strstr(cmd, "STARTSERVER=")) {
 			Set_Server_INI_File(cmd);
 			continue;
@@ -144,7 +123,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 	}
 
 	free(command_line);
-
 
 #ifndef BETACLIENT
 
@@ -206,7 +184,7 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 			end = strchr(start, ' ');
 			if (!end) end = start + strlen(start);
 		}
-		
+
 		char nickname2[300] = "";
 		::strncpy(nickname2, start, end - start);
 		nickname2[end - start] = 0;
@@ -262,12 +240,9 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 
 #endif // !BETACLIENT
 
-
 	// Return true if command line options scanned OK.
 	return(retcode);
 }
-
-
 
 //-----------------------------------------------------------------------------
 void cUserOptions::Set_Server_INI_File(char *cmd_line_entry)
@@ -309,9 +284,6 @@ void cUserOptions::Set_Bandwidth_Bps(int bandwidth_bps)
 	BandwidthBps.Set(bandwidth_bps);
 }
 
-
-
-
 //-----------------------------------------------------------------------------
 void cUserOptions::Reread(void)
 {
@@ -320,18 +292,6 @@ void cUserOptions::Reread(void)
 	BandwidthBps.Set(RegistryClass(APPLICATION_SUB_KEY_NAME_NETOPTIONS).Get_Int("BandwidthBps", BandwidthBps.Get()));
 	GameSpyBandwidthType.Set(RegistryClass(APPLICATION_SUB_KEY_NAME_GAMESPY).Get_Int("GameSpyBandwidthType", GameSpyBandwidthType.Get()));
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 cRegistryInt cUserOptions::GameListFilterMaxPing(				APPLICATION_SUB_KEY_NAME_NETOPTIONS, "GameListFilterMaxPing",								9999);

@@ -4,7 +4,6 @@
 
 #include "wwpacket.h"
 
-
 enum PACKET_TIER_ENUM
 {
 	PACKET_TIER_CREATION,
@@ -63,7 +62,6 @@ public:
 	//
 	int					Get_Network_ID (void) const								{ return NetworkID; }
 	void					Set_Network_ID (int id);
-
 
 	//
 	//	Class ID support
@@ -163,7 +161,6 @@ public:
 	void					Set_Unreliable_Override(bool flag)					{UnreliableOverride = flag;}
 	bool					Get_Unreliable_Override(void)							{return UnreliableOverride;}
 
-
 	//
 	//	Static methods
 	//
@@ -186,12 +183,10 @@ private:
 	//	Private constants
 	////////////////////////////////////////////////////////////////
 
-
 	////////////////////////////////////////////////////////////////
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 	int					NetworkID;
-
 
 	//
 	// Per client update information. Bandwidth will be allocated per object, per client.
@@ -228,8 +223,6 @@ private:
 	static bool			IsServer;
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Cached_Priority
@@ -250,8 +243,6 @@ inline float NetworkObjectClass::Get_Cached_Priority_2(int client_id) const
 	return(CachedPriority_2[client_id]);
 }
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Object_Dirty_Bit
@@ -261,7 +252,6 @@ inline bool NetworkObjectClass::Get_Object_Dirty_Bit_2 (int client_id, DIRTY_BIT
 {
 	return ((ClientStatus[client_id] & dirty_bit) == dirty_bit);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -273,7 +263,6 @@ inline BYTE NetworkObjectClass::Get_Object_Dirty_Bits_2 (int client_id)
 	return ClientStatus[client_id];
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Client_Hint_Count
@@ -283,9 +272,6 @@ inline BYTE NetworkObjectClass::Get_Client_Hint_Count_2(int client_id)
 {
 	return UpdateInfo[client_id].ClientHintCount;
 }
-
-
-
 
 	//virtual void		Clear_Object_Dirty_Bits (int client_id);
 	//static void			Set_Random_Float (float random_float);

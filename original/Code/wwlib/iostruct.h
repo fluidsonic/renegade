@@ -1,6 +1,5 @@
 
 
-
 #ifndef IOSTRUCT_H
 #define IOSTRUCT_H
 
@@ -37,8 +36,6 @@ struct IOQuaternionStruct
 {
 	float32		Q[4];
 };
-
-
 
 #endif
 

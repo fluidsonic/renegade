@@ -22,11 +22,9 @@ class	ScriptRegistrant : public ScriptFactory
 			}
 	};
 
-
 // Register script factory
 #define REGISTER_SCRIPT(x, d) \
 	class x; \
 	ScriptRegistrant<x> _## x ##Registrant(#x, d);
-
 
 #endif // _SCRIPTREGISTRANT_H_

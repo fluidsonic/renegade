@@ -27,9 +27,6 @@ public:
 	virtual void Return_File( FileClass *file ) = 0;
 };
 
-
-
-
 //
 // Handy auto pointer class.  Prevents you from having to call Return_File manually
 //
@@ -56,16 +53,9 @@ private:
 						file_auto_ptr(const file_auto_ptr &other);
 	file_auto_ptr	&operator=(const file_auto_ptr &other);
 
-
 	FileClass			*_Ptr;
 	FileFactoryClass	*_Fac;
 };
-
-
-
-
-
-
 
 /*
 ** RawFileFactoryClass is a derived FileFactoryClass which
@@ -76,7 +66,6 @@ public:
 	virtual FileClass * Get_File( char const *filename );
 	virtual void Return_File( FileClass *file );
 };
-
 
 /*
 ** SimpleFileFactoryClass is a slightly more capable derivative of
@@ -110,7 +99,6 @@ protected:
 	// Mutex must be mutable because const functions lock on it.
 	mutable CriticalSectionClass	Mutex;
 };
-
 
 /*
 ** TheFileFactory is a static pointer to the single file factory (only one

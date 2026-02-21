@@ -25,7 +25,6 @@
 #include "mapmgr.h"
 #include "wwphysids.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -64,7 +63,6 @@ CNCPurchaseMenuClass::CNCPurchaseMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -74,7 +72,6 @@ void
 CNCPurchaseMenuClass::On_Init_Dialog (void)
 {
 	MenuDialogClass::On_Init_Dialog ();
-
 
 	//
 	//	Get the player's current money
@@ -171,7 +168,6 @@ CNCPurchaseMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -198,7 +194,6 @@ CNCPurchaseMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -212,7 +207,6 @@ CNCPurchaseMenuClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Merchandise_DblClk
@@ -224,7 +218,6 @@ CNCPurchaseMenuClass::On_Merchandise_DblClk (MerchandiseCtrlClass *ctrl, int ctr
 	Purchase_Item (ctrl_id);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -248,7 +241,6 @@ CNCPurchaseMenuClass::Purchase_Item (int ctrl_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Merchandise_Selected
@@ -264,7 +256,6 @@ CNCPurchaseMenuClass::On_Merchandise_Selected (MerchandiseCtrlClass *ctrl, int c
 	Add_Item_To_Shopping_Cart (ctrl_id);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -316,7 +307,6 @@ CNCPurchaseMenuClass::Add_Item_To_Shopping_Cart (int ctrl_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Clear_Shopping_Cart
@@ -355,7 +345,6 @@ CNCPurchaseMenuClass::Clear_Shopping_Cart (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -563,7 +552,6 @@ CNCPurchaseMenuClass::Is_Definition_OK (DefinitionClass *definition)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -575,7 +563,6 @@ CNCPurchaseMenuClass::On_Frame_Update (void)
 	if (COMBAT_STAR == NULL) {
 		return ;
 	}
-
 
 	//
 	//	Update the player's money every frame
@@ -607,7 +594,6 @@ CNCPurchaseMenuClass::On_Frame_Update (void)
 	MenuDialogClass::On_Frame_Update ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -654,7 +640,6 @@ CNCPurchaseMenuClass::On_Key_Down (uint32 key_id, uint32 key_data)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -706,7 +691,6 @@ CNCPurchaseMenuClass::Update_Building_Health (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Configure_Building_Icons
@@ -756,7 +740,6 @@ CNCPurchaseMenuClass::Configure_Building_Icons (void)
 	Update_Building_Health ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

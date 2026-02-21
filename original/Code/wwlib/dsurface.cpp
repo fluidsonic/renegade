@@ -23,7 +23,6 @@ unsigned short DSurface::EighthbrightMask = 0;
 
 DDPIXELFORMAT DSurface::PixelFormat;
 
-
 /***********************************************************************************************
  * DSurface::DSurface -- Off screen direct draw surface constructor.                           *
  *                                                                                             *
@@ -77,7 +76,6 @@ DSurface::DSurface(int width, int height, bool system_memory, DDPIXELFORMAT *pix
 			Description->dwFlags |= DDSD_PIXELFORMAT;
 		}
 
-
 		DirectDrawObject->CreateSurface(Description, &SurfacePtr, NULL);
 
 		/*
@@ -89,7 +87,6 @@ DSurface::DSurface(int width, int height, bool system_memory, DDPIXELFORMAT *pix
 			SurfacePtr->GetSurfaceDesc(Description);
 			BytesPerPixel = (Description->ddpfPixelFormat.dwRGBBitCount+7)/8;
 			IsVideoRam = ((Description->ddsCaps.dwCaps & DDSCAPS_VIDEOMEMORY) != 0);
-
 
 			/*
 			**	If this is a hicolor surface, then build the shift values for
@@ -144,7 +141,6 @@ DSurface::DSurface(int width, int height, bool system_memory, DDPIXELFORMAT *pix
 	}
 }
 
-
 /***********************************************************************************************
  * DSurface::~DSurface -- Destructor for a direct draw surface object.                         *
  *                                                                                             *
@@ -183,7 +179,6 @@ DSurface::~DSurface(void)
 	SurfacePtr = NULL;
 }
 
-
 /***********************************************************************************************
  * DSurface::DSurface -- Default constructor for surface object.                               *
  *                                                                                             *
@@ -213,8 +208,6 @@ DSurface::DSurface(void) :
 	Description->dwSize = sizeof(DDSURFACEDESC);
 }
 
-
-
 /***********************************************************************************************
  * DSurface::GetDC -- Get the windows device context from our surface                          *
  *                                                                                             *
@@ -232,13 +225,11 @@ HDC DSurface::GetDC(void)
 	HDC hdc = NULL;
 	HRESULT hr;
 
-
 	// We have to remove all current locks to get the device context unfortunately...
 	while (LockCount) {
 		Unlock();
 		DCUnlockCount++;
 	}
-
 
 	hr = SurfacePtr->GetDC(&hdc);
 	if (hr != DD_OK)
@@ -260,7 +251,6 @@ HDC DSurface::GetDC(void)
 
 	return (hdc);
 }
-
 
 /***********************************************************************************************
  * DSurface::ReleaseDC -- Release the windows device context from our surface                  *
@@ -294,9 +284,6 @@ int DSurface::ReleaseDC(HDC hdc)
 
 	return (1);
 }
-
-
-
 
 /***********************************************************************************************
  * DSurface::Create_Primary -- Creates a primary (visible) surface.                            *
@@ -432,7 +419,6 @@ DSurface * DSurface::Create_Primary(DSurface ** backsurface1)
 				shift <<= 1;
 			}
 
-
 			/*
 			**	Create the halfbright mask.
 			*/
@@ -448,7 +434,6 @@ DSurface * DSurface::Create_Primary(DSurface ** backsurface1)
 
 	return(surface);
 }
-
 
 /***********************************************************************************************
  * DSurface::DSurface -- Create a surface attached to specified DDraw Surface Object.          *
@@ -485,7 +470,6 @@ DSurface::DSurface(LPDIRECTDRAWSURFACE surfaceptr) :
 	}
 }
 
-
 /***********************************************************************************************
  * DSurface::Bytes_Per_Pixel -- Fetches the bytes per pixel of the surface.                    *
  *                                                                                             *
@@ -505,7 +489,6 @@ int DSurface::Bytes_Per_Pixel(void) const
 {
 	return(BytesPerPixel);
 }
-
 
 /***********************************************************************************************
  * DSurface::Stride -- Fetches the bytes between rows.                                         *
@@ -527,7 +510,6 @@ int DSurface::Stride(void) const
 {
 	return(Description->lPitch);
 }
-
 
 /***********************************************************************************************
  * DSurface::Lock -- Fetches a working pointer into surface memory.                            *
@@ -567,7 +549,6 @@ void * DSurface::Lock(Point2D point) const
 	return(((char*)LockPtr) + point.Y * Stride() + point.X * Bytes_Per_Pixel());
 }
 
-
 /***********************************************************************************************
  * DSurface::Unlock -- Unlock a previously locked surface.                                     *
  *                                                                                             *
@@ -597,7 +578,6 @@ bool DSurface::Unlock(void) const
 	}
 	return(false);
 }
-
 
 /***********************************************************************************************
  * DSurface::Restore_Check -- Checks for and restores surface memory if necessary.             *
@@ -629,7 +609,6 @@ void DSurface::Restore_Check(void) const
 	}
 }
 
-
 /***********************************************************************************************
  * DSurface::Blit_From -- Blit graphic memory from one rectangle to another.                   *
  *                                                                                             *
@@ -656,7 +635,6 @@ bool DSurface::Blit_From(Rect const & destrect, Surface const & ssource, Rect co
 {
 	return(Blit_From(Get_Rect(), destrect, ssource, ssource.Get_Rect(), sourcerect, trans));
 }
-
 
 /*********************************************************************************************** 
  * DSurface::Blit_From -- Blit from one surface to this one.                                   * 
@@ -728,7 +706,6 @@ bool DSurface::Blit_From(Rect const & dcliprect, Rect const & destrect, Surface 
 	return(false);
 }
 
-
 /***********************************************************************************************
  * DSurface::Fill_Rect -- This routine will fill the specified rectangle.                      *
  *                                                                                             *
@@ -749,7 +726,6 @@ bool DSurface::Fill_Rect(Rect const & fillrect, int color)
 {
 	return(DSurface::Fill_Rect(Get_Rect(), fillrect, color));
 }
-
 
 /*********************************************************************************************** 
  * DSurface::Fill_Rect -- Fills a rectangle with clipping control.                             * 
@@ -819,7 +795,6 @@ bool DSurface::Fill_Rect(Rect const & cliprect, Rect const & fillrect, int color
 	return(result == DD_OK);
 }
 
-
 /*********************************************************************************************** 
  * DSurface::Build_Hicolor_Pixel -- Construct a hicolor pixel according to the surface pixel f * 
  *                                                                                             * 
@@ -844,7 +819,6 @@ int DSurface::Build_Hicolor_Pixel(int red, int green, int blue)
 {
 	return(((red >> RedLeft) << RedRight) | ((green >> GreenLeft) << GreenRight) | ((blue >> BlueLeft) << BlueRight));
 }
-
 
 /*********************************************************************************************** 
  * DSurface::Build_Remap_Table -- Build a highcolor remap table.                               * 
@@ -875,5 +849,4 @@ void DSurface::Build_Remap_Table(unsigned short * table, PaletteClass const & pa
 		table[index] = (unsigned short)Build_Hicolor_Pixel(palette[index].Get_Red(), palette[index].Get_Green(), palette[index].Get_Blue());
 	}
 }
-
 

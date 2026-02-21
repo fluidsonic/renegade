@@ -5,12 +5,10 @@
 #include "always.h"
 #include "vehiclefactorygameobj.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward delcarations
 ////////////////////////////////////////////////////////////////
 class BaseControllerClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -61,7 +59,6 @@ protected:
 	float					CinematicLengthToDropOff;
 	float					CinematicLengthToVehicleDisplay;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -131,7 +128,6 @@ protected:
 	bool					IsCinematicStarted;
 	PhysicalGameObj *	CinematicObject;
 };
-
 
 #endif	// __AIRSTRIPGAMEOBJ_H
 

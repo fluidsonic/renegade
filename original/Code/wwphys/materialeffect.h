@@ -6,12 +6,9 @@
 #include "multilist.h"
 #include "refcount.h"
 
-
 class PhysClass;
 class RenderInfoClass;
 class	MaterialPassClass;
-
-
 
 /**
 ** MaterialEffectClass
@@ -66,7 +63,6 @@ private:
 	bool					SuppressShadows;
 };
 
-
 /**
 ** SimpleEffectClass
 ** This is a material effect object which simply causes a material pass to be added.  The texture
@@ -91,9 +87,6 @@ private:
 	MaterialPassClass *	MatPass;
 
 };
-
-
-
 
 #endif //MATERIALEFFECT_H
 

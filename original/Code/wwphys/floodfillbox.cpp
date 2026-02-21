@@ -3,14 +3,11 @@
 #include "pathfindportal.h"
 #include "pathfind.h"
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Static member initialization
 //////////////////////////////////////////////////////////////////////////
 FloodfillBoxClass *FloodfillBoxClass::m_First = NULL;
 FloodfillBoxClass *FloodfillBoxClass::m_Last = NULL;
-
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -29,7 +26,6 @@ FloodfillBoxClass::Is_Two_Way_Traversible (PATHFIND_DIR dir)
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -70,7 +66,6 @@ FloodfillBoxClass::Is_New_Portal (PATHFIND_DIR dir, PathfindSectorClass *dest_se
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -142,7 +137,6 @@ FloodfillBoxClass::Make_Portal
 		min_point.Z = max (min_z1, min_z2);
 		max_point.Z = min (max_z1, max_z2);
 	}
-
 
 	bool keep_going = true;
 

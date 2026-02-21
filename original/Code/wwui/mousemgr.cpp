@@ -3,7 +3,6 @@
 #include "assetmgr.h"
 #include "texture.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -17,7 +16,6 @@ static const char * TEXTURE_NAME[MouseMgrClass::CURSOR_COUNT] =
 	"cursor_rotate.tga"
 };
 
-
 static Vector2 HOTSPOTS[MouseMgrClass::CURSOR_COUNT] =
 {
 	Vector2 (0, 0),
@@ -27,7 +25,6 @@ static Vector2 HOTSPOTS[MouseMgrClass::CURSOR_COUNT] =
 	Vector2 (15, 17),
 	Vector2 (15, 15)
 };
-
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -55,7 +52,6 @@ MouseMgrClass::Initialize (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -77,7 +73,6 @@ MouseMgrClass::Shutdown (void)
 	Show_Cursor (false);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -109,7 +104,6 @@ MouseMgrClass::Show_Cursor (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Cursor
@@ -127,7 +121,6 @@ MouseMgrClass::Set_Cursor (CURSOR_TYPE type)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Begin_Wait_Cursor
@@ -142,7 +135,6 @@ MouseMgrClass::Begin_Wait_Cursor(void)
 
 	++CursorWaitCount;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -163,7 +155,6 @@ MouseMgrClass::End_Wait_Cursor(void)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -178,5 +169,4 @@ MouseMgrClass::Render (void)
 
 	return ;
 }
-
 

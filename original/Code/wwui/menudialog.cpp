@@ -6,14 +6,12 @@
 #include "childdialog.h"
 #include "dialogcontrol.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 MenuDialogClass *								MenuDialogClass::ActiveMenu	= NULL;
 MenuBackDropClass *							MenuDialogClass::BackDrop		= NULL;
 DynamicVectorClass<MenuDialogClass *>	MenuDialogClass::MenuStack;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -29,7 +27,6 @@ MenuDialogClass::MenuDialogClass (int res_id)	:
 	MenuStack.Add (this);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -53,7 +50,6 @@ MenuDialogClass::~MenuDialogClass (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Initialize
@@ -65,7 +61,6 @@ MenuDialogClass::Initialize (void)
 	BackDrop = new MenuBackDropClass;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -82,7 +77,6 @@ MenuDialogClass::Shutdown (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -112,7 +106,6 @@ MenuDialogClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -124,7 +117,6 @@ MenuDialogClass::On_Init_Dialog (void)
 	DialogBaseClass::Set_Default_Focus ();
 	return ;
 }*/
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -142,7 +134,6 @@ MenuDialogClass::Start_Dialog (void)
 	DialogBaseClass::Start_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -172,7 +163,6 @@ MenuDialogClass::On_Activate (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Menu_Activate
@@ -183,7 +173,6 @@ MenuDialogClass::On_Menu_Activate (bool onoff)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -212,7 +201,6 @@ MenuDialogClass::End_Dialog (void)
 	DialogBaseClass::End_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

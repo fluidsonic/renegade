@@ -9,7 +9,6 @@
 #include	"rlerle.h"
 #include	"shapeset.h"
 
-
 /*********************************************************************************************** 
  * Draw_Shape -- Draw a shape to the surface.                                                  * 
  *                                                                                             * 
@@ -102,7 +101,6 @@ void Draw_Shape(Surface & surface, ConvertClass & convert, ShapeSet const * shap
 		}
 	}
 }
-
 
 /*********************************************************************************************** 
  * Blit_Block -- Blit a block of data to the surface.                                          * 

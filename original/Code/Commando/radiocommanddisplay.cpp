@@ -20,15 +20,12 @@
 #include "vehicle.h"
 #include "soldier.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 float					RadioCommandDisplayClass::DisplayTimer		= 0.0F;
 bool					RadioCommandDisplayClass::IsDisplayed		= false;
 TextWindowClass *	RadioCommandDisplayClass::TextWindow		= NULL;
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -47,7 +44,6 @@ RadioCommandDisplayClass::Shutdown (void)
 	DisplayTimer	= 0.0F;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -101,7 +97,6 @@ RadioCommandDisplayClass::Initialize (void)
 	DisplayTimer = 0.0F;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -176,7 +171,6 @@ RadioCommandDisplayClass::Update (DISPLAY_TYPE type)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display
@@ -211,7 +205,6 @@ RadioCommandDisplayClass::Display (bool onoff, DISPLAY_TYPE type)
 	return ;	
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -238,7 +231,6 @@ RadioCommandDisplayClass::Render (void)
 	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

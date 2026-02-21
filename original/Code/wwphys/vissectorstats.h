@@ -8,7 +8,6 @@
 class StaticPhysClass;
 class VisTableClass;
 
-
 /**
 ** VisSectorStatsClass
 ** This object is used to compute some statistics about the given vis sector.  For example,
@@ -50,7 +49,6 @@ protected:
 	StaticPhysClass *		PhysObj;
 };
 
-
 /*
 ** inlines
 */
@@ -84,7 +82,6 @@ inline StaticPhysClass *VisSectorStatsClass::Peek_Phys_Obj(void)
 {
 	return PhysObj;
 }
-
 
 #endif // VISSECTORSTATS_H
 

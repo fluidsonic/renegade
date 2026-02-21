@@ -33,12 +33,10 @@ static void Save_Registry_INI()
 	Get_Registry_INI().Save(f);
 }
 
-
 bool RegistryClass::Exists(const char * sub_key)
 {
 	return Get_Registry_INI().Find_Section(sub_key) != NULL;
 }
-
 
 RegistryClass::RegistryClass(const char * sub_key, bool create) : IsValid(false)
 {
@@ -53,7 +51,6 @@ RegistryClass::~RegistryClass(void)
 {
 	IsValid = false;
 }
-
 
 int RegistryClass::Get_Int(const char * name, int def_value)
 {
@@ -70,7 +67,6 @@ void RegistryClass::Set_Int(const char * name, int value)
 	Save_Registry_INI();
 }
 
-
 bool RegistryClass::Get_Bool(const char * name, bool def_value)
 {
 	assert(IsValid);
@@ -86,7 +82,6 @@ void RegistryClass::Set_Bool(const char * name, bool value)
 	Save_Registry_INI();
 }
 
-
 float RegistryClass::Get_Float(const char * name, float def_value)
 {
 	assert(IsValid);
@@ -101,7 +96,6 @@ void RegistryClass::Set_Float(const char * name, float value)
 	Get_Registry_INI().Put_Float(SubKey, name, value);
 	Save_Registry_INI();
 }
-
 
 char * RegistryClass::Get_String(const char * name, char * value, int value_size,
 	const char * default_string)
@@ -127,7 +121,6 @@ void RegistryClass::Set_String(const char * name, const char * value)
 	Get_Registry_INI().Put_String(SubKey, name, value);
 	Save_Registry_INI();
 }
-
 
 void RegistryClass::Get_String(const WCHAR * name, WideStringClass & string, const WCHAR * default_string)
 {
@@ -156,7 +149,6 @@ void RegistryClass::Set_String(const WCHAR * name, const WCHAR * value)
 	Save_Registry_INI();
 }
 
-
 int RegistryClass::Get_Bin_Size(const char * name)
 {
 	assert(IsValid);
@@ -182,7 +174,6 @@ void RegistryClass::Set_Bin(const char * name, const void * buffer, int buffer_s
 	Get_Registry_INI().Put_UUBlock(SubKey, name, buffer, buffer_size);
 	Save_Registry_INI();
 }
-
 
 void RegistryClass::Get_Value_List(DynamicVectorClass<StringClass> & list)
 {
@@ -213,7 +204,6 @@ void RegistryClass::Deleta_All_Values(void)
 	}
 	Save_Registry_INI();
 }
-
 
 // Bulk operations - no-op on macOS (these were Windows registry import/export utilities)
 void RegistryClass::Save_Registry(const char * filename, char * path) {}

@@ -45,11 +45,9 @@
 // 	typedef HashListClass<TestHashClass *, 4, UserClass> HashTableClass;
 // 	typedef HashNodeClass<TestHashClass *, UserClass> HashTableNodeClass;
 
-
 template<class T, class U> class HashNodeClass;
 template<class T, class U> class HashNodeFriendClass;
 template<class T, class U, int NumHashValues> class HashListClass;
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +164,6 @@ class HashNodeClass : public DataNode<HashNodeClass<T,U> *>, public U
 		
 		bool Is_In_List()  		{return(Flag.InList);}
 		bool Is_Key_Set()  		{return(Flag.KeySet);}
-
 
 	protected:
 		// Record that we are keeping in hash table.  
@@ -285,7 +282,6 @@ class HashListClass : protected HashNodeFriendClass<T,U>
 		HashNodeClass<T,U> *Last_Valid()  {
 			return((HashNodeClass<T,U> *)List.Last_Valid());
 		}
-
 
 		// Add a record to hash creating new HashNodeClass.					  			
 		HashNodeClass<T,U> *Add(T record, unsigned key);								
@@ -585,21 +581,5 @@ void HashListClass<T, U, NumHashValues>::Move_To(HashListClass<T,U> *newlist)
 #pragma warning (pop)
 
 #endif // HASHLIST_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
  

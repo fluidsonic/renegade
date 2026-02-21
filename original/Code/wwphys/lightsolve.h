@@ -33,6 +33,5 @@ static bool		Does_Model_Get_Static_Light_Solve(RenderObjClass * model);
 
 };
 
-
 #endif //LIGHTSOLVE_H
 

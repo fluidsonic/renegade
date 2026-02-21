@@ -146,7 +146,6 @@ DECLARE_SCRIPT(M00_Soldier_Powerup_Grant, "")
 
 };
 
-
 // DAY - Attach to disable powerup manager on an instance or preset
 DECLARE_SCRIPT(M00_Soldier_Powerup_Disable, "")
 {
@@ -163,7 +162,6 @@ DECLARE_SCRIPT(M00_Soldier_Powerup_Disable, "")
 		}
 	}
 };
-
 
 // DAY - Used to destroy a powerup dropped by the powerup manager over time.  Based on Difficulty.
 DECLARE_SCRIPT(M00_Powerup_Destroy, "")
@@ -184,7 +182,6 @@ DECLARE_SCRIPT(M00_Powerup_Destroy, "")
 		}
 	}
 };
-
 
 /*********************************************************************************************** 
 **
@@ -209,7 +206,6 @@ DECLARE_SCRIPT (M00_Reveal_Enc_Building_DAY, "BuildingEncyclopediaID:int")
 
 };
 
-
 // DAY - Reveals a Character entry in the Encyclopedia.  Param is the Encyclopedia ID listed in the Characters.ini file.
 DECLARE_SCRIPT (M00_Reveal_Enc_Character_DAY, "CharacterEncyclopediaID:int")
 {
@@ -226,7 +222,6 @@ DECLARE_SCRIPT (M00_Reveal_Enc_Character_DAY, "CharacterEncyclopediaID:int")
 	}
 
 };
-
 
 // DAY - Reveals a Vehicle entry in the Encyclopedia.  Param is the Encyclopedia ID listed in the Vehicles.ini file.
 DECLARE_SCRIPT (M00_Reveal_Enc_Vehicle_DAY, "VehicleEncyclopediaID:int")
@@ -245,7 +240,6 @@ DECLARE_SCRIPT (M00_Reveal_Enc_Vehicle_DAY, "VehicleEncyclopediaID:int")
 
 };
 
-
 // DAY - Reveals a Weapon entry in the Encyclopedia.  Param is the Encyclopedia ID listed in the Weapons.ini file.
 //			Normally not necessary as picking up weapon will reveal entry.
 DECLARE_SCRIPT (M00_Reveal_Enc_Weapon_DAY, "WeaponEncyclopediaID:int")
@@ -263,8 +257,6 @@ DECLARE_SCRIPT (M00_Reveal_Enc_Weapon_DAY, "WeaponEncyclopediaID:int")
 	}
 
 };
-
-
 
 /*********************************************************************************************** 
 **
@@ -336,7 +328,6 @@ DECLARE_SCRIPT (M00_GrantMoney_Powerup, "ScoreAmount:float,Entire_Team=0:int,Ran
 
 };
 
-
 // Attach this script to the Tiberium Refinery controller. It will issue money to that
 // controller's team until the Refinery is destroyed.
 
@@ -361,7 +352,6 @@ DECLARE_SCRIPT (M00_Tiberium_Refinery, "MoneyAmount:int,TimerLength:int")
 	}
 };
 
-
 DECLARE_SCRIPT (M00_CNC_Crate, "")
 {
 	void Custom (GameObject * obj, int type, int param, GameObject * sender)
@@ -372,7 +362,6 @@ DECLARE_SCRIPT (M00_CNC_Crate, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M00_Death_Powerup, "")
 {

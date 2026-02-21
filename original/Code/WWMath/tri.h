@@ -8,7 +8,6 @@
 #include "vector2.h"
 #include <assert.h>
 
-
 /**
 ** TriClass
 ** When the math library needs to deal with triangles, this will be the form used.
@@ -35,11 +34,9 @@ public:
 		((Vector3 *)N)->Normalize();
 	}
 
-
 	bool Contains_Point(const Vector3 & ipoint) const;
 	void Find_Dominant_Plane(int * axis1,int * axis2) const;
 };
-
 
 /*
 ** Utility functions:
@@ -172,7 +169,6 @@ inline bool Point_In_Triangle_2D(const Vector3 &tri_point0, const Vector3 &tri_p
 		}
 	}
 }
-
 
 // This function tests a semi-infinite axis-aligned ray vs. a triangle.
 // The inputs are blah blah blah

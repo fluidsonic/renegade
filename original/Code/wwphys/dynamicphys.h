@@ -67,7 +67,6 @@ private:
 
 };
 
-
 /**
 ** DynamicPhysDefClass
 ** Definition data structure for DynamicPhysClass
@@ -97,10 +96,5 @@ protected:
 	friend class DynamicPhysClass;
 };
 
-
-
-
 #endif //DYNAMICPHYS_H
-
-
 

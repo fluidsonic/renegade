@@ -5,7 +5,6 @@
 #include "vector.h"
 #include "aabox.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	UnitCoordinationZoneMgr
@@ -47,6 +46,5 @@ private:
 	///////////////////////////////////////////////////////////////////
 	static DynamicVectorClass<AABoxClass>	ZoneList;
 };
-
 
 #endif //__UNITCOORDINATIONZONEMGR_H

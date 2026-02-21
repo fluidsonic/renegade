@@ -2,19 +2,16 @@
 #ifndef __DROPDOWN_CTRL_H
 #define __DROPDOWN_CTRL_H
 
-
 #include "dialogcontrol.h"
 #include "vector.h"
 #include "render2dsentence.h"
 #include "bittype.h"
 #include "scrollbarctrl.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class ComboBoxCtrlClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -77,7 +74,6 @@ public:
 	//
 	void					On_VScroll (ScrollBarCtrlClass *scrollbar, int ctrl_id, int new_position);
 
-
 protected:
 
 	////////////////////////////////////////////////////////////////
@@ -100,7 +96,6 @@ protected:
 	int					Entry_From_Pos (const Vector2 &mouse_pos);
 	void					Update_Scroll_Pos (void);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected data types
 	////////////////////////////////////////////////////////////////
@@ -122,7 +117,6 @@ protected:
 
 	typedef DynamicVectorClass<ENTRY>	ENTRY_LIST;
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
 	////////////////////////////////////////////////////////////////
@@ -142,6 +136,5 @@ protected:
 	bool							ButtonClickedOnMe;
 	int							DisplayTime;
 };
-
 
 #endif //__DROPDOWN_CTRL_H

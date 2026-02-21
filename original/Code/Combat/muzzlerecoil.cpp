@@ -2,7 +2,6 @@
 #include "timemgr.h"
 #include "rendobj.h"
 
-
 MuzzleRecoilClass::MuzzleRecoilClass(void)
 {
 	Init(0);

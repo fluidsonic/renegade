@@ -9,7 +9,6 @@
 #include "colmath.h"
 #include "coltype.h"
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IntersectionTestClass
 //
@@ -37,7 +36,6 @@ public:
 public:
 	int								CollisionType; 
 };
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // AABoxIntersectionTestClass
@@ -99,7 +97,6 @@ inline bool AABoxIntersectionTestClass::Intersect_Triangle(const TriClass & tri)
 	return CollisionMath::Intersection_Test(Box,tri);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // OBBoxIntersectionTestClass
 //
@@ -126,7 +123,6 @@ public:
 	OBBoxClass						Box;					// world space obbox that we want to test with
 	AABoxClass						BoundingBox;		// axis aligned w-s bounding box
 };
-
 
 inline OBBoxIntersectionTestClass::OBBoxIntersectionTestClass(const OBBoxClass & box,int collision_type) :
 	IntersectionTestClass(collision_type),
@@ -205,7 +201,5 @@ inline void OBBoxIntersectionTestClass::update_bounding_box(void)
 	BoundingBox.Center = Box.Center;
 	Box.Basis.Rotate_AABox_Extent(Box.Extent,&BoundingBox.Extent);
 }
-
-
 
 #endif

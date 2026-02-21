@@ -92,7 +92,6 @@ private:
 	AnimMode		Mode;
 };
 
-
 /*
 ** BlendableAnimChannelClass
 */
@@ -138,7 +137,6 @@ private:
 	float					BlendTotal;		// in seconds
 };
 
-
 /*
 ** AnimControlClass
 */
@@ -177,7 +175,6 @@ protected:
 	RenderObjClass	*Model;
 };
 
-
 /*
 ** SimpleAnimControlClass
 */
@@ -203,7 +200,6 @@ public:
 	virtual	float	Get_Target_Frame( void )							{ return Channel.Get_Target_Frame(); }
 	virtual	float	Get_Current_Frame( void )							{ return Channel.Get_Frame(); }
 
-
 	// Update the animation
 	virtual	void	Update( float dtime );
 
@@ -211,7 +207,6 @@ private:
 	BlendableAnimChannelClass	Channel;
 
 };
-
 
 /*
 ** HumanAnimControlClass
@@ -270,5 +265,4 @@ private:
 };
 
 #endif		// ANIMCONTROL_H
-
 

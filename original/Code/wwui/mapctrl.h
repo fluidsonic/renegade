@@ -9,7 +9,6 @@
 #include "render2dsentence.h"
 #include "bittype.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MapMarkerClass
@@ -40,7 +39,6 @@ public:
 	//	Public methods
 	////////////////////////////////////////////////////////////////
 
-
 	//
 	//	Accessors
 	//
@@ -67,7 +65,6 @@ protected:
 	uint32				UserData;
 	uint32				Color;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -139,7 +136,6 @@ public:
 	void				Reset_Cloud (void);
 	void				Set_Cloud_Cell (int cell_x, int cell_y, bool is_visible);
 
-
 protected:
 
 	////////////////////////////////////////////////////////////////
@@ -166,7 +162,6 @@ protected:
 	void				Free_Cloud_Data (void);
 
 	void				Update_Pulse (void);
-
 
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
@@ -203,7 +198,6 @@ protected:
 	DynamicVectorClass<MapMarkerClass>	MarkerList;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //	Is_Cell_Shrouded
 ////////////////////////////////////////////////////////////////
@@ -230,6 +224,5 @@ MapCtrlClass::Is_Cell_Shrouded (int cell_x, int cell_y)
 
 	return retval;
 }
-
 
 #endif //__MAP_CTRL_H

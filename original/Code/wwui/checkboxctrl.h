@@ -7,7 +7,6 @@
 #include "render2dsentence.h"
 #include "bittype.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CheckBoxCtrlClass
@@ -73,6 +72,5 @@ protected:
 	RectClass					TextRect;
 	RectClass					MaxRect;
 };
-
 
 #endif //__CHECKBOX_CTRL_H

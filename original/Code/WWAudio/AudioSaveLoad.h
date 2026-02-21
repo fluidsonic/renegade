@@ -6,11 +6,9 @@
 #include "vector.h"
 #include "bittype.h"
 
-
 // Singleton instances
 extern class StaticAudioSaveLoadClass _StaticAudioSaveLoadSubsystem;
 extern class DynamicAudioSaveLoadClass _DynamicAudioSaveLoadSubsystem;
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -44,7 +42,6 @@ protected:
 	virtual bool				Load (ChunkLoadClass &cload);
 	virtual const char*		Name() const { return "StaticAudioSaveLoadClass"; }
 };
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -82,7 +79,5 @@ protected:
 	//bool							Load_Micro_Chunks (ChunkLoadClass &cload);
 };
 
-
 #endif //__AUDIO_SAVE_LOAD_H
-
 

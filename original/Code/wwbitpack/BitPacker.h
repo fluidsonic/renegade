@@ -9,10 +9,8 @@
 #ifndef BITPACKER_H
 #define BITPACKER_H
 
-
 #include "always.h"
 #include "bittype.h"
-
 
 #pragma warning(disable:4514)
 
@@ -58,9 +56,6 @@ class cBitPacker
 
 #endif // BITPACKER_H
 
-
-
-
 		/*
 		void Reset() {BitWritePosition = 0;}
 		UINT Get_Compressed_Size_Bytes() const;
@@ -72,7 +67,6 @@ class cBitPacker
 		int Get_Num_Bits(void) {return NumBits;}
 
 		void Increment_Bit_Position(int num_bits);
-
 
 		//inline void Advance_Bit_Position();
 

@@ -7,7 +7,6 @@
 
 #include "ffactory.h"
 
-
 void	Get_Version_Number(DWORD *major, DWORD *minor);
 bool	Game_Init(void);
 void	Install_Fonts (bool onoff);

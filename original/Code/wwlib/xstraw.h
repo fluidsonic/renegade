@@ -50,5 +50,4 @@ class FileStraw : public Straw
 		FileStraw & operator = (FileStraw const & pipe);
 };
 
-
 #endif

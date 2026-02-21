@@ -7,7 +7,6 @@
 #include "cstextobj.h"
 #include "sctextobj.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPIngameTeamChatPopupClass
@@ -21,7 +20,6 @@ MPIngameTeamChatPopupClass::On_Init_Dialog (void)
 
 	PopupDialogClass::On_Init_Dialog ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

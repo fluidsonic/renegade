@@ -8,9 +8,7 @@
 #include "servercontrolsocket.h"
 
 #ifndef DebugString
-#ifdef WWDEBUG_SAY
-#define DebugString WWDEBUG_SAY
-#endif
+#define DebugString(...) ((void)0)
 #endif
 
 #ifdef WWASSERT
@@ -72,7 +70,6 @@ class ServerControlClass
 		bool Is_Authenticated(unsigned long address, unsigned short port);
 		void Reset_Timeout(unsigned long address, unsigned short port);
 		void Respond(const char *message, unsigned long ip, unsigned short port);
-
 
 		/*
 		** Type of messages that can be sent.
@@ -149,6 +146,5 @@ class ServerControlClass
 ** Single instance of local controller.
 */
 extern ServerControlClass ServerControl;
-
 
 #endif //SERVERCONTROL_H

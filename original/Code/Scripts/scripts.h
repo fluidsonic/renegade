@@ -10,7 +10,6 @@
 class CombatSound;
 class ScriptFactory;
 
-
 // ScriptVariables
 class ScriptVariableClass 
 {
@@ -32,7 +31,6 @@ private:
 	int							ID;
 	ScriptVariableClass *	Next;
 };
-
 
 class ScriptImpClass : public ScriptClass
 {
@@ -155,7 +153,6 @@ private:
 	ScriptVariableClass *	AutoVariableList;
 };
 
-
 // Declare script definition
 #define	DECLARE_SCRIPT(x, d) \
 	REGISTER_SCRIPT(x, d) \
@@ -166,7 +163,6 @@ private:
 #define SAVE_DATA(id, var) Commands->Save_Data(saver, id, sizeof(var), &var)
 #define SAVE_STRING(id, string) Commands->Save_Data(saver, id, strlen(string), string)
 #define SAVE_END()
-
 
 #define LOAD_BEGIN() \
 { \

@@ -74,8 +74,6 @@ private:
 	
 };
 
-
-
 /***********************************************************************************************
 ** MaterialRemapperClass
 ** This class is used when we need to "remap" all of the material pointers in a mesh
@@ -178,8 +176,6 @@ protected:
 	VertexMaterialClass *								LastMaterial;
 	TextureClass *											LastTexture;
 };
-
-
 
 inline int MaterialInfoClass::Add_Vertex_Material(VertexMaterialClass * vmat)
 {

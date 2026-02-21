@@ -1,5 +1,4 @@
 #include "soldier.h"
-#include "debug.h"
 #include "pscene.h"
 #include "combat.h"
 #include "weapons.h"

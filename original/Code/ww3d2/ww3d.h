@@ -59,7 +59,6 @@ public:
 		NPATCHES_GAP_FILLING_FORCE
 	};
 
-
 	static WW3DErrorType		Init(void * hwnd, char *defaultpal = NULL, bool lite = false);
 	static WW3DErrorType		Shutdown(void);
 	static bool					Is_Initted(void)								{ return IsInitted; }
@@ -114,7 +113,6 @@ public:
 	static WW3DErrorType		End_Render(bool flip_frame = true);
 
 	static void Flip_To_Primary(void);
-
 
 	/*
 	** Timing
@@ -334,7 +332,6 @@ private:
 	static int							LastFrameMemoryFrees;
 };
 
-
 /*
 ** RenderStatistics
 ** This struct holds the results of a performance sampling.  The WW3D object returns
@@ -384,7 +381,5 @@ struct RenderStatistics
       long     UserStat1;
       long     UserStat2;
 };
-
-
 
 #endif

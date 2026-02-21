@@ -75,7 +75,6 @@ public:
 	StringClass		HumanFiringAnimation;
 };
 
-
 /*
 **
 */
@@ -163,7 +162,6 @@ public:
 
 	float			GrenadeSafetyTime;
 };
-
 
 /*
 ** Weapon Manager

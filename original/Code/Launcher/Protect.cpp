@@ -108,7 +108,6 @@ Protect::Protect()
 	UnmapViewOfFile(mapAddress);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -135,7 +134,6 @@ Protect::~Protect()
 		mLauncherMutex = NULL;
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -205,7 +203,6 @@ void Protect::SendMappedFileHandle(HANDLE process, DWORD threadID) const
 
 	CloseHandle(event);
 	}
-
 
 /******************************************************************************
 *
@@ -364,7 +361,6 @@ RefPtr<UString> Protect::GetPassKey(void) const
 	return passKey;
 	}
 
-
 #else
 
 HANDLE mLauncherMutex = NULL;
@@ -414,8 +410,6 @@ void InitializeProtect(void)
 		return;
 		}
 	}
-
-
 
 CDAPFN_DECLARE_GLOBAL(SendProtectMessage, CDAPFN_OVERHEAD_L5, CDAPFN_CONSTRAINT_NONE);
 
@@ -618,7 +612,6 @@ void SendProtectMessage(HANDLE process, DWORD threadID)
 	CloseHandle(event);
 	CDAPFN_ENDMARK(SendProtectMessage);
 	}
-
 
 void ShutdownProtect(void)
 	{

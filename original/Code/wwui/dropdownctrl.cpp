@@ -12,7 +12,6 @@
 #include "dialogmgr.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DropDownCtrlClass
@@ -42,7 +41,6 @@ DropDownCtrlClass::DropDownCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~DropDownCtrlClass
@@ -52,7 +50,6 @@ DropDownCtrlClass::~DropDownCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -116,7 +113,6 @@ DropDownCtrlClass::Create_Text_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Control_Renderer
@@ -155,7 +151,6 @@ DropDownCtrlClass::Create_Control_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -173,7 +168,6 @@ DropDownCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -247,7 +241,6 @@ DropDownCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -275,7 +268,6 @@ DropDownCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -287,7 +279,6 @@ DropDownCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	Set_Curr_Sel (Entry_From_Pos (mouse_pos));
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -306,7 +297,6 @@ DropDownCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Move
@@ -321,7 +311,6 @@ DropDownCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -361,7 +350,6 @@ DropDownCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -372,7 +360,6 @@ DropDownCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -391,7 +378,6 @@ DropDownCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -419,7 +405,6 @@ DropDownCtrlClass::Add_String (const WCHAR* string)
 	return (EntryList.Count () - 1);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_String
@@ -440,7 +425,6 @@ DropDownCtrlClass::Delete_String (int index)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -469,7 +453,6 @@ DropDownCtrlClass::Find_String (const WCHAR* string)
 	return retval;
 }
 
-
 int DropDownCtrlClass::Find_Closest_String(const WCHAR* string)
 {
 	int retval = -1;
@@ -489,7 +472,6 @@ int DropDownCtrlClass::Find_Closest_String(const WCHAR* string)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Item_Data
@@ -507,7 +489,6 @@ DropDownCtrlClass::Set_Item_Data (int index, uint32 data)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -529,7 +510,6 @@ DropDownCtrlClass::Get_Item_Data (int index)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Content
@@ -550,7 +530,6 @@ DropDownCtrlClass::Reset_Content (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -588,7 +567,6 @@ DropDownCtrlClass::Entry_From_Pos (const Vector2 &mouse_pos)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Curr_Sel
@@ -618,7 +596,6 @@ DropDownCtrlClass::Set_Curr_Sel (int index)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_String
@@ -641,7 +618,6 @@ DropDownCtrlClass::Get_String (int index, WideStringClass &string) const
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_String
@@ -662,7 +638,6 @@ DropDownCtrlClass::Get_String (int index) const
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -699,7 +674,6 @@ DropDownCtrlClass::Update_Scroll_Pos (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Add_To_Dialog
@@ -716,7 +690,6 @@ DropDownCtrlClass::On_Add_To_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Remove_From_Dialog
@@ -731,7 +704,6 @@ DropDownCtrlClass::On_Remove_From_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

@@ -3,7 +3,6 @@
 #include "streamer.h"
 #include "odevice.h"
 
-
 static MsgManager         *msg_manager=NULL;
 
 static int                debug_enabled=0;
@@ -22,10 +21,8 @@ static int                error_enabled=0;
 static ostream           *error_ostream=NULL;  
 static Streamer           error_streamer;
 
-
 // Don't dare touch this semaphore in application code!
 Sem4                      DebugLibSemaphore;
-
 
 int MsgManager::setAllStreams(OutputDevice *device)
 {
@@ -53,7 +50,6 @@ int MsgManager::setAllStreams(OutputDevice *device)
 
   return(0);
 }
-
 
 int MsgManager::setDebugStream(OutputDevice *device)
 {
@@ -106,8 +102,6 @@ int MsgManager::setErrorStream(OutputDevice *device)
   DebugLibSemaphore.Post();
   return(0);
 }
-
-
 
 ostream *MsgManager::debugStream(void)
 {

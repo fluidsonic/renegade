@@ -5,11 +5,9 @@
 #include "string_ids.h"
 #include "translatedb.h"
 
-
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #include "directinput.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -62,8 +60,6 @@ const INPUT_FUNCTION_NAME FUNCTION_NAMES[] =
 
 const int INPUT_NAME_COUNT	= sizeof (FUNCTION_NAMES) / sizeof (FUNCTION_NAMES[0]);
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	ControlsListTabClass
@@ -79,7 +75,6 @@ ControlsListTabClass::ControlsListTabClass (int res_id)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -93,7 +88,6 @@ ControlsListTabClass::On_Init_Dialog (void)
 	ChildDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -138,7 +132,6 @@ ControlsListTabClass::Find_Function_By_Key (int curr_function_id, int dik_id)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -259,7 +252,6 @@ ControlsListTabClass::On_InputCtrl_Get_Key_Info
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Prompt_User
@@ -290,7 +282,6 @@ ControlsListTabClass::Prompt_User (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Remap_Key
@@ -318,7 +309,6 @@ ControlsListTabClass::Remap_Key (int ctrl_id, int function_id, int dik_id)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -378,7 +368,6 @@ ControlsListTabClass::Load_Key_Mappings (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Reload
@@ -390,7 +379,6 @@ ControlsListTabClass::On_Reload (void)
 	Load_Key_Mappings ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -405,8 +393,6 @@ ControlsListTabClass::Add_Function (int function_id, int pri_ctrl_id, int sec_ct
 	SecondaryCtrlIDList.Add (sec_ctrl_id);
 	return ;
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -459,7 +445,6 @@ ControlsListTabClass::HandleNotification (DlgMsgBoxEvent &event)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Clear_Key
@@ -500,7 +485,6 @@ ControlsListTabClass::Clear_Key (int dik_id, bool clear_zoom)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

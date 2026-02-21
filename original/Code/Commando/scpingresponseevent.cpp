@@ -3,13 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "debug.h"
 #include "networkobjectfactory.h"
 #include "cnetwork.h"
 #include "networkobjectmgr.h"
 #include "apppackettypes.h"
 #include "clientpingmanager.h"
-
 
 DECLARE_NETWORKOBJECT_FACTORY(cScPingResponseEvent, NETCLASSID_SCPINGRESPONSEEVENT);
 
@@ -26,8 +24,6 @@ void
 cScPingResponseEvent::Init(int sender_id, int ping_number)
 {
 	//
-
-
 
 	PingNumber	= ping_number;
 
@@ -49,7 +45,6 @@ void
 cScPingResponseEvent::Export_Creation(BitStreamClass & packet)
 {
 	//
-
 
 	cNetEvent::Export_Creation(packet);
 

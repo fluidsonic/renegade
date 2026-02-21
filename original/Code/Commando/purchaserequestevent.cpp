@@ -13,7 +13,6 @@
 #include "apppackettypes.h"
 #include "consolemode.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cPurchaseRequestEvent, NETCLASSID_PURCHASEREQUESTEVENT);
 
 //-----------------------------------------------------------------------------
@@ -98,7 +97,6 @@ cPurchaseRequestEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add(PurchaseType);
 	packet.Add(ItemIndex);
@@ -113,12 +111,10 @@ cPurchaseRequestEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
 	packet.Get(PurchaseType);
 	packet.Get(ItemIndex);
 	packet.Get(AltSkinIndex);	
-
 
 	Act();
 }

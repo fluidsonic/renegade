@@ -1,13 +1,11 @@
 #ifndef _MISSION6_H_
 #define _MISSION6_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
 
 #define M06_OBJECTIVE_ACTIVATE	101
-
 
 // Predefined Constants
 
@@ -55,7 +53,6 @@
 
 // Timers
 #define M06_DEAD_HAVOC			100600
-
 
 // Public Variables
 

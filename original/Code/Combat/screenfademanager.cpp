@@ -3,8 +3,6 @@
 #include "vector3.h"
 #include "timemgr.h"
 #include "chunkio.h"
-#include "debug.h"
-
 /**
 ** FloatInterpolatorClass
 ** This class can be used to manage a single floating point number which linearly
@@ -103,7 +101,6 @@ void FloatInterpolatorClass::Update(float dt)
 	}
 }
 
-
 /*
 ** Static variables
 */
@@ -115,14 +112,12 @@ static FloatInterpolatorClass		_OverlayBlue(0.0f);
 
 static Render2DClass *				_Renderer = NULL;
 
-
 /*
 ** Constants
 */
 const float								LETTERBOX_SIZE = 0.125f;
 const Vector3							BLACK(0,0,0);
 const Vector3							WHITE(0,0,0);
-
 
 /*
 ** ScreenFadeManager implementation
@@ -203,7 +198,6 @@ void ScreenFadeManager::Set_Screen_Overlay_Opacity(float opacity,float time)
 {
 	_OverlayOpacity.Set_Target_Value(opacity,time);
 }
-
 
 /*
 **

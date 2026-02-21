@@ -4,7 +4,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "imagectrl.h"
-#include "debug.h"
 #include "wwstring.h"
 #include "gamedata.h"
 #include "combat.h"
@@ -79,7 +78,6 @@ void ScoreScreenGameModeClass::Save_Stats( void )
 		_SSStats_map_name = map_name;
 	}
 
-
 	_SSStats_mission_number = cGameData::Get_Mission_Number_From_Map_Name( _SSStats_map_name );
 
 	// Oh, this is just terrible!!!  Byon
@@ -118,7 +116,6 @@ ScoreScreenDialogClass::ScoreScreenDialogClass (void)	:
 	ScoreScreenActive = true;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -278,7 +275,6 @@ ScoreScreenDialogClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -294,7 +290,6 @@ ScoreScreenDialogClass::On_Destroy (void)
 	}
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -317,11 +312,8 @@ ScoreScreenDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 			break;
 	}
 
-
 	return ;
 }
-
-
 
 /*
 **

@@ -80,9 +80,6 @@ class cNetUtil
 
 #endif // NETUTIL_H
 
-
-
-
       //static USHORT Get_Header_Bytes() {return HeaderBytes;}
       //static USHORT Get_Max_Packet_App_Data_Size() {return MaxPacketAppDataSize;}
 
@@ -90,7 +87,6 @@ class cNetUtil
       //static USHORT MaxPacketAppDataSize;
 
 	   //static const WORD WS_VERSION_REQD;
-
 
 		//static int Get_Net_Stats_Sample_Time_Ms()					{return NETSTATS_SAMPLE_TIME_MS;}
 		//static int Get_Default_Multi_Sends()						{return DefaultMultiSends;}

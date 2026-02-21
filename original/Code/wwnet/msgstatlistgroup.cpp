@@ -80,7 +80,6 @@ DWORD cMsgStatListGroup::Get_Num_Msg_Sent(int list_num, int message_type) const
 		list_num = NumLists;
 	}
 
-
 	return PStatList[list_num].Get_Num_Msg_Sent(message_type);
 }
 
@@ -90,7 +89,6 @@ DWORD cMsgStatListGroup::Get_Num_Byte_Sent(int list_num, int message_type) const
 	if (list_num == ALL_LISTS) {
 		list_num = NumLists;
 	}
-
 
 	return PStatList[list_num].Get_Num_Byte_Sent(message_type);
 }
@@ -102,7 +100,6 @@ DWORD cMsgStatListGroup::Get_Num_Msg_Recd(int list_num, int message_type) const
 		list_num = NumLists;
 	}
 
-
 	return PStatList[list_num].Get_Num_Msg_Recd(message_type);
 }
 
@@ -112,7 +109,6 @@ DWORD cMsgStatListGroup::Get_Num_Byte_Recd(int list_num, int message_type) const
 	if (list_num == ALL_LISTS) {
 		list_num = NumLists;
 	}
-
 
 	return PStatList[list_num].Get_Num_Byte_Recd(message_type);
 }
@@ -124,7 +120,6 @@ DWORD cMsgStatListGroup::Compute_Avg_Num_Byte_Sent(int list_num, int message_typ
 		list_num = NumLists;
 	}
 
-
 	return PStatList[list_num].Compute_Avg_Num_Byte_Sent(message_type);
 }
 
@@ -135,7 +130,6 @@ DWORD cMsgStatListGroup::Compute_Avg_Num_Byte_Recd(int list_num, int message_typ
 		list_num = NumLists;
 	}
 
-
 	return PStatList[list_num].Compute_Avg_Num_Byte_Recd(message_type);
 }
 
@@ -145,7 +139,6 @@ cMsgStatList * cMsgStatListGroup::Get_Stat_List(int list_num)
 	if (list_num == ALL_LISTS) {
 		list_num = NumLists;
 	}
-
 
 	return &PStatList[list_num];
 }

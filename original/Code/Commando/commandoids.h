@@ -13,8 +13,6 @@
 	#include "definitionclassids.h"
 #endif
 
-
-
 /*
 ** CHUNKIDs
 */
@@ -94,7 +92,6 @@ enum {
 	CHUNKID_SOLDIER_OBSERVER,
 };
 
-
 /*
 ** Game Object CLASSIDs
 */
@@ -122,7 +119,6 @@ enum {
 	// MISC DEFINITIONS
 };
 
-
 /*
 ** Munitions CLASSIDs
 */
@@ -131,6 +127,5 @@ enum {
 	CLASSID_DEF_AMMO,
 	CLASSID_DEF_EXPLOSION,
 };
-
 
 #endif	//	COMMANDOIDS_H

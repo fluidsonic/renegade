@@ -5,7 +5,6 @@
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
-#include "debug.h"
 #include "scriptzone.h"
 #include "basecontroller.h"
 #include "combatchunkid.h"

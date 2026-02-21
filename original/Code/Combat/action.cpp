@@ -13,7 +13,6 @@
 #include "movephys.h"
 #include "pathfind.h"
 #include "pathfindportal.h"
-#include "debug.h"
 #include "animcontrol.h"
 #include "conversationmgr.h"
 #include "activeconversation.h"
@@ -151,7 +150,6 @@ void	Delete_Action_Code( void )
 	ActionDeleteList.Delete_All(false);
 }
 
-
 /*
 ** Follow Input Action Code Class
 */
@@ -270,7 +268,6 @@ public:
 	}
 };
 
-
 /*
 ** Stand Action Code Class
 */
@@ -319,7 +316,6 @@ public:
 		return ACTION_IN_PROGRESS;
 	}
 };
-
 
 /*
 ** Play Animation Action Code Class
@@ -403,7 +399,6 @@ public:
 		return ACTION_IN_PROGRESS;
 	}
 };
-
 
 /*
 ** Base Action Code Class
@@ -502,7 +497,6 @@ public:
 		}
 		return true;
 	}
-
 
 		// Return a pointer to the object that will be doing the movement
 	SmartGameObj *Peek_Transport_Object( SmartGameObj *game_obj )
@@ -690,7 +684,6 @@ protected:
 	PilotClass				Pilot;
 };
 
-
 /*
 ** Goto Action Code Class
 */
@@ -825,7 +818,6 @@ public:
 		return ;
 	}
 
-
 	virtual	void	Init( ActionClass * action )
 	{
 		BaseActionCodeClass::Init( action );
@@ -878,7 +870,6 @@ public:
 	{
 		return ( PathAction.Get_State () != PathActionClass::STATE_FINISHED );
 	}
-
 
 	virtual	ActResult	Arrived()
 	{
@@ -1362,7 +1353,6 @@ Clip_Point (Vector3 *point, const AABoxClass &box)
 		return act_result;
 	}
 
-
 	virtual	ActResult	Pathfind( void )
 	{
 		ActResult act_result	= ACTION_IN_PROGRESS;
@@ -1537,7 +1527,6 @@ private:
 	Vector3				TargetPrevPos;
 };
 
-
 /*
 ** EnterExit Action Code Class
 */
@@ -1589,7 +1578,6 @@ public:
 		return ACTION_DONE;
 	}
 };
-
 
 /*
 ** Dive Action Code Class
@@ -1659,7 +1647,6 @@ public:
 		return ACTION_DONE;
 	}
 };
-
 
 /*
 ** Attack - Location
@@ -1916,7 +1903,6 @@ public:
 			Action->Get_Parameters().MovePathfind			= parameters.MovePathfind;
 		}
 
-
 		//
 		//	Reset some of the internal flags
 		//
@@ -2018,7 +2004,6 @@ public:
 			}
 		}
 
-
 		Attack_Absolute( target_pos );
 
 #if 0
@@ -2075,7 +2060,6 @@ public:
 	Vector3	WanderPos;
 	float		WanderTimer;
 };
-
 
 /*
 ** Face - Location
@@ -2202,8 +2186,6 @@ public:
 
 	float	EndTime;
 };
-
-
 
 /*
 ** Have a conversation
@@ -2345,7 +2327,6 @@ public:
 			SoldierGameObj *soldier = obj->As_SoldierGameObj ();
 			if( soldier != NULL ) {
 
-
 				//
 				//	Should we join an already active conversation or should
 				// we start our own conversation?
@@ -2483,7 +2464,6 @@ public:
 				}
 			}
 
-
 			State ++;
 		}
 
@@ -2495,11 +2475,6 @@ private:
 	int								State;
 	Vector3							OriginalPos;
 };
-
-
-
-
-
 
 /*
 ** Dock vehicle (backup) into a bay
@@ -2583,7 +2558,6 @@ public:
 
 		return true;
 	}
-
 
 	virtual	void	Init( ActionClass * action )
 	{
@@ -2793,14 +2767,6 @@ private:
 	int	State;
 	float	OriginalMoveSpeed;
 };
-
-
-
-
-
-
-
-
 
 /*
 **
@@ -3106,7 +3072,6 @@ bool	ActionClass::Modify( const ActionParamsStruct & parameters, bool modify_mov
 	return retval;
 }
 
-
 bool	ActionClass::Reset( float priority )
 {
 	if ( priority >= Parameters.Priority ) {
@@ -3246,7 +3211,6 @@ bool	ActionClass::Is_Busy( void )
 	return retval;
 }
 
-
 /*
 ** ActionClass Save and Load
 */
@@ -3305,7 +3269,6 @@ bool	ActionClass::Load( ChunkLoadClass &cload )
 
 	return true;
 }
-
 
 void	ActionClass::Begin_Hibernation( void )
 {

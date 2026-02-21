@@ -648,7 +648,6 @@ DECLARE_SCRIPT(M00_ChainRxn_Barrel_JDG, "Controller_ID :int")
 	}
 };
 
-
 /* M00_Advanced_Guard_Tower
 
   This script handles the functionality of the Advanced Guard Tower in both single and multiplayer
@@ -905,7 +904,6 @@ DECLARE_SCRIPT (M00_Advanced_Guard_Tower, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M00_Advanced_Guard_Tower_Gun, "")
 {
 	int missile_object;
@@ -987,7 +985,6 @@ DECLARE_SCRIPT (M00_Advanced_Guard_Tower_Gun, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M00_Advanced_Guard_Tower_Missile, "")
 {
 	bool firing;
@@ -1036,7 +1033,6 @@ DECLARE_SCRIPT (M00_Advanced_Guard_Tower_Missile, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M00_Purchase_Terminal_GDI, "")
 {
 	void Poked (GameObject * obj, GameObject * poker)
@@ -1053,7 +1049,6 @@ DECLARE_SCRIPT (M00_Purchase_Terminal_NOD, "")
 	}
 };
 
-
 DECLARE_SCRIPT (M00_Purchase_Terminal_Mutant, "")
 {
 	void Poked (GameObject * obj, GameObject * poker)
@@ -1061,7 +1056,6 @@ DECLARE_SCRIPT (M00_Purchase_Terminal_Mutant, "")
 		Commands->Display_Mutant_Player_Terminal ();
 	}
 };
-
 
 DECLARE_SCRIPT (M00_Nod_Turret, "")
 {
@@ -1199,7 +1193,6 @@ DECLARE_SCRIPT (M00_Nod_Turret, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M00_Nod_Obelisk_CNC, "Controller_ID=0:int")
 {
 	int obelisk_id;
@@ -1274,7 +1267,6 @@ DECLARE_SCRIPT(M00_Nod_Obelisk_CNC, "Controller_ID=0:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M00_Obelisk_Weapon_CNC, "")
 {
@@ -1450,7 +1442,6 @@ DECLARE_SCRIPT (M00_Obelisk_Weapon_CNC, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M00_Nod_Obelisk, "Controller_ID=0:int")
 {
 	int obelisk_id;
@@ -1517,7 +1508,6 @@ DECLARE_SCRIPT(M00_Nod_Obelisk, "Controller_ID=0:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M00_Obelisk_Weapon, "")
 {
@@ -1882,7 +1872,6 @@ DECLARE_SCRIPT (M00_Damage_Modifier_DME, "Damage_multiplier:float, Star_Modifier
 	}
 };
 
-
 DECLARE_SCRIPT (M00_Base_Defense, "MinAttackDistance=0:int, MaxAttackDistance=300:int, AttackTimer=10:int")
 {
 	int token_01_id;
@@ -1903,7 +1892,6 @@ DECLARE_SCRIPT (M00_Base_Defense, "MinAttackDistance=0:int, MaxAttackDistance=30
 		// find out what my team preset is.
 		player_type = Commands->Get_Player_Type( obj );
 		Commands->Debug_Message( "***** Player Type Saved *****\n" );
-
 
 		Commands->Enable_Hibernation (obj, false);
 		Commands->Innate_Enable (obj);

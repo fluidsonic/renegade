@@ -2,12 +2,10 @@
 #include "chunkio.h"
 #include "w3d_file.h"
 
-
 /*
 ** Static instance of PhysicsConstants so that the constructor gets called and all arrays are filled
 */
 static PhysicsConstants _PhysicsConstantsObject;
-
 
 /*
 ** Physics Constants - see the header file for explanation
@@ -44,9 +42,6 @@ float			ContactFrictionCoefficient[PhysicsConstants::DYNAMIC_OBJ_TYPE_MAX][SURFA
 float			ContactDragCoefficient[PhysicsConstants::DYNAMIC_OBJ_TYPE_MAX][SURFACE_TYPE_MAX];
 
 float test[2][2] = { 1,2,3,4 };
-
-
-
 
 /*
 ** PhysicsConstants Member functions
@@ -145,7 +140,6 @@ enum
 	PHYSCONSTANT_DEFAULTCONTACTFRICTION,
 	PHYSCONSTANT_MINFRICTIONVELOCITY2
 };
-
 
 void PhysicsConstants::Save(ChunkSaveClass & csave)
 {

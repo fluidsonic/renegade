@@ -9,7 +9,6 @@
 #include "sortingrenderer.h"
 #include "coltest.h"
 
-
 /*
 ** Chunk ID's used by SceneClass
 */
@@ -49,7 +48,6 @@ protected:
 	friend class SimpleSceneClass;
 };
 
-
 /***********************************************************************************************
  * SceneClass::SceneClass -- constructor                                                       *
  *                                                                                             *
@@ -72,7 +70,6 @@ SceneClass::SceneClass(void) :
 	FogEnd(1000.0f)	// Arbitrary default value
 {
 }
-
 
 /***********************************************************************************************
  * SceneClass::~SceneClass -- destructor                                                       *
@@ -112,7 +109,6 @@ void SceneClass::Add_Render_Object(RenderObjClass * obj)
 	obj->Notify_Added(this);
 }
 
-
 /***********************************************************************************************
  * SceneClass::Remove_Render_Object -- base remove function                                    *
  *                                                                                             *
@@ -133,7 +129,6 @@ void SceneClass::Remove_Render_Object(RenderObjClass * obj)
 {
 	obj->Notify_Removed(this);
 }
-
 
 /***********************************************************************************************
  * SceneClass::Render -- preps the scene for rendering, derived classes should add functionalit*
@@ -202,7 +197,6 @@ void SceneClass::Save(ChunkSaveClass & csave)
 	csave.End_Chunk();
 }
 
-
 /***********************************************************************************************
  * SceneClass::Load -- loads scene settings from a chunk                                       *
  *                                                                                             *
@@ -235,7 +229,6 @@ void SceneClass::Load(ChunkLoadClass & cload)
 	}
 	cload.Close_Chunk();
 }
-
 
 /***********************************************************************************************
  * SimpleSceneClass -- Constructor                                                             *
@@ -315,7 +308,6 @@ void SimpleSceneClass::Add_Render_Object(RenderObjClass * obj)
 	RenderList.Add(obj);
 }
 
-
 /***********************************************************************************************
  * SimpleSceneClass::Remove_Render_Object -- remove a render object from this scene            *
  *                                                                                             *
@@ -367,8 +359,6 @@ void SimpleSceneClass::Unregister(RenderObjClass * obj,RegType for_what)
 	}
 }
 
-
-
 /***********************************************************************************************
  * SimpleSceneClass::Visiblity_Check -- set the visiblity status of the render objects         *
  *                                                                                             *
@@ -407,7 +397,6 @@ void SimpleSceneClass::Visibility_Check(CameraClass * camera)
    Visibility_Checked = true;
 }
 
-
 /***********************************************************************************************
  * SimpleSceneClass::Compute_Point_Visibility -- returns visibility of a point                 *
  *                                                                                             *
@@ -445,7 +434,6 @@ float SimpleSceneClass::Compute_Point_Visibility
 		return 0.0f;
 	}
 }
-
 
 /***********************************************************************************************
  * SimpleSceneClass::Render -- Render this scene                                               *
@@ -553,7 +541,6 @@ SceneIterator * SimpleSceneClass::Create_Iterator(bool onlyvisible)
 	return it;
 }
 
-
 /***********************************************************************************************
  * SimpleSceneClass::Destroy_Iterator -- destroy an iterater of this scene                     *
  *                                                                                             *
@@ -570,7 +557,6 @@ void SimpleSceneClass::Destroy_Iterator(SceneIterator * it)
 {
 	delete it;
 }
-
 
 SimpleSceneIterator::SimpleSceneIterator(RefRenderObjListClass * list,bool onlyvis) : 
 	RobjIterator(list)

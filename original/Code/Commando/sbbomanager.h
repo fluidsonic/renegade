@@ -1,7 +1,6 @@
 #ifndef __SBBOMANAGER_H__
 #define __SBBOMANAGER_H__
 
-
 //-----------------------------------------------------------------------------
 //
 // Manager for server bandwidth budget out ("sbbo")

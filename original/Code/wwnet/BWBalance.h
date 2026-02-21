@@ -31,7 +31,6 @@ class BandwidthBalancerClass
 		void Allocate_Client_Structs(int num_structs);
 		void Adjust_Connection_Budget(cConnection *connection);
 
-
 		/*
 		** Struct to keep info about each client.
 		*/
@@ -60,10 +59,6 @@ class BandwidthBalancerClass
 		int NumClients;
 };
 
-
-
 extern BandwidthBalancerClass BandwidthBalancer;
-
-
 
 #endif //_BWBALANCE_H

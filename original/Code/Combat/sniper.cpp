@@ -4,7 +4,6 @@
 #include "assets.h"
 #include "combat.h"
 #include "ccamera.h"
-#include "debug.h"
 #include "globalsettings.h"
 #include "timemgr.h"
 
@@ -38,7 +37,6 @@ Vector2 ZOOM_UV_LR( 128, 62 );
 Vector2 ZOOM_OFFSET_TOP( 177, 620 );
 Vector2 ZOOM_OFFSET_BOTTOM( 177, 316 );
 
-
 /*
 **
 */
@@ -54,7 +52,6 @@ Render2DClass		*	_Sniper2DBaseRenderer;
 Render2DClass		*	_Sniper2DRenderer;
 
 #define	HUD_SNIPER_TEXTURE			"hud_sniper.tga"
-
 
 static	void	Info_Editor_Init( void ); 
 static	void	Info_Editor_Update( void ); 
@@ -95,7 +92,6 @@ void 	SniperHUDClass::Shutdown( void )
 
 //	Info_Editor_Shutdown(); 
 }
-
 
 void  SniperHUDClass::Build_Base( void ) 
 {
@@ -210,7 +206,6 @@ void  SniperHUDClass::Build_Base( void )
 	_Sniper2DBaseRenderer->Add_Line( Vector2(0, screen_center.Y), Vector2(LEFT_LINE_2.X*screen_scale.X,screen_center.Y), 1, blackuv );
 }
 
-
 /*
 **
 */
@@ -281,7 +276,6 @@ void 	SniperHUDClass::Render( void )
 		_Sniper2DRenderer->Render();
 	}
 }
-
 
 #if 0
 
@@ -380,6 +374,5 @@ static	void	Info_Editor_Shutdown( void )
 		InfoEditorFieldList.Delete(0);
 	}
 }
-
 
 #endif

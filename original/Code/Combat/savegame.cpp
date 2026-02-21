@@ -1,6 +1,5 @@
 #include "savegame.h"
 #include "definitionmgr.h"
-#include "debug.h"
 #include "chunkio.h"
 #include "ffactory.h"
 #include "combatsaveload.h"
@@ -106,7 +105,6 @@ void _cdecl SaveGameManager::Save_Game( const char * filename, ... )
 	_TheWritingFileFactory->Return_File(file);
 
 }
-
 
 void	SaveGameManager::Pre_Load_Game
 (
@@ -224,7 +222,6 @@ void	SaveGameManager::Load_Game( const char * filename )
 					cload.Close_Micro_Chunk();
 				}
 
-
 				{
 				// Load level specific Defs
 				StringClass temp_ddb(MapFilename,true);
@@ -255,7 +252,6 @@ void	SaveGameManager::Load_Game( const char * filename )
 	file->Close();
 	_TheFileFactory->Return_File(file);
 }
-
 
 bool	SaveGameManager::Smart_Peek_Description
 (
@@ -310,7 +306,6 @@ bool	SaveGameManager::Smart_Peek_Description
 
 	return retval;
 }
-
 
 bool SaveGameManager::Peek_Description
 (

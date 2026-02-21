@@ -4,19 +4,15 @@
 #include "colmath.h"
 #include "colmathinlines.h"
 
-
-
 /*
 ** Declare the pool for GridLinks
 */
 DEFINE_AUTO_POOL(GridLinkClass,256);
 
-
 /*
 ** Current version of the file format
 */
 const uint32 GRID_CURRENT_VERSION = 0x00010000;
-
 
 /*
 ** Chunk Id's used by the aabtree code to save itself into a file
@@ -26,7 +22,6 @@ enum
 	GRID_CHUNK_VERSION					= 0x00000001,	// version wrapper, contains 32bit version #
 	GRID_CHUNK_PARAMETERS				= 0x00000100,	// parameters for the grid cull system
 };
-
 
 /*
 ** IOGridParametersStruct
@@ -40,7 +35,6 @@ struct IOGridParametersStruct
 	uint32				CellCount[3];
 	float32				MaxObjExtent;
 };
-
 
 /*************************************************************************
 **
@@ -69,16 +63,11 @@ GridLinkClass::~GridLinkClass(void)
 {
 }
 
-
-
-
-
 /*************************************************************************
 **
 ** GridCullSystemClass Implementation
 **
 *************************************************************************/
-
 
 /***********************************************************************************************
  * GridCullSystemClass::GridCullSystemClass -- Constructor                                     *
@@ -107,7 +96,6 @@ GridCullSystemClass::GridCullSystemClass(void) :
 	Reset_Statistics();
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::~GridCullSystemClass -- Destructor                                     *
  *                                                                                             *
@@ -127,7 +115,6 @@ GridCullSystemClass::~GridCullSystemClass(void)
 		Cells = NULL;
 	}
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::Collect_Objects -- Collect all objects touching the given point        *
@@ -173,7 +160,6 @@ void GridCullSystemClass::Collect_Objects(const Vector3 & point)
 	*/
 	collect_objects_in_leaf(point,NoGridList);
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::Collect_Objects -- Collect all objects touching the given AABox        *
@@ -221,7 +207,6 @@ void GridCullSystemClass::Collect_Objects(const AABoxClass & box)
 	collect_objects_in_leaf(box,NoGridList);
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::Collect_Objects -- Collect all objects touching the given OBBox        *
  *                                                                                             *
@@ -268,7 +253,6 @@ void GridCullSystemClass::Collect_Objects(const OBBoxClass & box)
 	collect_objects_in_leaf(box,NoGridList);
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::Collect_Objects -- Collect all objects touching the given Frustum      *
  *                                                                                             *
@@ -314,7 +298,6 @@ void GridCullSystemClass::Collect_Objects(const FrustumClass & frustum)
 	*/
 	collect_objects_in_leaf(frustum,NoGridList);
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::Re_Partition -- re-compute grid parameters for the given volume        *
@@ -367,7 +350,6 @@ void GridCullSystemClass::Re_Partition(const Vector3 & input_min,const Vector3 &
 	Origin = min;
 	Vector3 world_dim = max - min;
 	MaxObjExtent = objdim;
-
 
 	/*
 	** how many cells should we use on each dimension?
@@ -429,7 +411,6 @@ void GridCullSystemClass::Re_Partition(const Vector3 & input_min,const Vector3 &
 	}
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::Collect_And_Unlink_All -- collects all objects and removes them from t *
  *                                                                                             *
@@ -487,7 +468,6 @@ void GridCullSystemClass::Collect_And_Unlink_All(void)
 	}
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::Update_Culling -- updates an objects position in the grid              *
  *                                                                                             *
@@ -512,7 +492,6 @@ void GridCullSystemClass::Update_Culling(CullableClass * obj)
 		link_object(obj,address);
 	}
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::Load -- load function                                                  *
@@ -591,7 +570,6 @@ void GridCullSystemClass::Load(ChunkLoadClass & cload)
 	}
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::Save -- Save function                                                  *
  *                                                                                             *
@@ -638,7 +616,6 @@ void GridCullSystemClass::Save(ChunkSaveClass & csave)
 	csave.End_Chunk();
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::Reset_Statistics -- reset debugging stats                              *
  *                                                                                             *
@@ -660,7 +637,6 @@ void GridCullSystemClass::Reset_Statistics(void)
 	Stats.NodesRejected = 0;
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::Get_Statistics -- returns reference to the statistics structure        *
  *                                                                                             *
@@ -677,7 +653,6 @@ const GridCullSystemClass::StatsStruct & GridCullSystemClass::Get_Statistics(voi
 {
 	return Stats;
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::Add_Object_Internal -- links an object into the system                 *
@@ -701,7 +676,6 @@ void GridCullSystemClass::Add_Object_Internal(CullableClass * obj)
 	ObjCount++;
 	obj->Add_Ref();
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::Remove_Object_Internal -- unlinks an object from the system            *
@@ -727,7 +701,6 @@ void GridCullSystemClass::Remove_Object_Internal(CullableClass * obj)
 	ObjCount--;
 	obj->Release_Ref();
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::link_object -- figures out which cell the object is in and links it    *
@@ -797,7 +770,6 @@ void GridCullSystemClass::unlink_object(CullableClass * obj)
 	}
 }
 
-
 /***********************************************************************************************
  * GridCullSystemClass::link_object_to_list -- grid list link function                         *
  *                                                                                             *
@@ -827,7 +799,6 @@ void GridCullSystemClass::link_object_to_list(CullableClass ** head,CullableClas
 
 	*head = obj;
 }
-
 
 /***********************************************************************************************
  * GridCullSystemClass::unlink_object_from_list -- grid list unlink function                   *
@@ -875,8 +846,6 @@ void GridCullSystemClass::unlink_object_from_list(CullableClass ** head,Cullable
 	link->Prev = NULL;
 	link->Next = NULL;
 }
-
-
 
 /*************************************************************************
 **

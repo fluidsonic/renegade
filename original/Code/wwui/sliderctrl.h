@@ -7,7 +7,6 @@
 #include "render2d.h"
 #include "bittype.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	SliderCtrlClass
@@ -66,7 +65,6 @@ protected:
 	int						MaxPos;
 	int						CurrPos;
 };
-
 
 #endif //__SLIDER_CTRL_H
 

@@ -13,8 +13,6 @@ target_include_directories(wwnet BEFORE PRIVATE
     "${ORIG_SRC}/wwutil"
     "${ORIG_SRC}/wwsaveload"
     "${ORIG_SRC}/wwbitpack"
-    "${ORIG_SRC}/wolapi"
-    "${ORIG_SRC}/WWOnline"
 )
 
 target_link_libraries(wwnet wwsaveload wwutil wwlib wwmath)

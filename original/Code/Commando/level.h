@@ -13,5 +13,4 @@ public:
 	static	void		Release_Level( void );
 };
 
-
 #endif

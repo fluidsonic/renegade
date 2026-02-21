@@ -1,7 +1,6 @@
 #ifndef DDSFILE_H
 #define DDSFILE_H
 
-
 #include "always.h"
 #include "ww3dformat.h"
 #include "wwstring.h"

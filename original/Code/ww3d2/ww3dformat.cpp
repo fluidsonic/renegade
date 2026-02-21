@@ -58,7 +58,6 @@ void Get_WW3D_Format_Name(WW3DFormat format, StringClass& name)
 	}
 }
 
-
 // extract the luminance from the RGB using the CIE 709 standard
 unsigned char RGB_to_CIEY(Vector4 color)
 {

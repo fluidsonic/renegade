@@ -11,7 +11,7 @@
 #include <wwtranslatedb/translatedb.h>
 #include "modpackagemgr.h"
 #include "gameinitmgr.h"
-
+#include "gamemode.h"
 
 // Player list columns
 enum
@@ -22,14 +22,12 @@ enum
 	COL_SCORE
 	};
 
-
 static int CALLBACK ListSortCallback(ListCtrlClass* list, int index1, int index2, uint32 param)
 	{
 	int rank1 = (int)list->Get_Entry_Data(index1, COL_RANK);
 	int rank2 = (int)list->Get_Entry_Data(index2, COL_RANK);
 	return (rank1 - rank2);
 	}
-
 
 /******************************************************************************
 *
@@ -63,7 +61,6 @@ void DlgMPTeamSelect::DoDialog(Signaler<MPChooseTeamSignal>& target)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -87,7 +84,6 @@ DlgMPTeamSelect::DlgMPTeamSelect(void) :
 	{
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -107,7 +103,6 @@ DlgMPTeamSelect::DlgMPTeamSelect(void) :
 DlgMPTeamSelect::~DlgMPTeamSelect()
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -132,7 +127,6 @@ bool DlgMPTeamSelect::FinalizeCreate(void)
 
 	return true;
 	}
-
 
 /******************************************************************************
 *
@@ -202,7 +196,6 @@ void DlgMPTeamSelect::On_Init_Dialog(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -228,7 +221,6 @@ void DlgMPTeamSelect::On_Frame_Update(void)
 
 	MenuDialogClass::On_Frame_Update();
 	}
-
 
 /******************************************************************************
 *
@@ -274,7 +266,6 @@ void DlgMPTeamSelect::On_Command(int ctrlID, int message, DWORD param)
 	MenuDialogClass::On_Command(ctrlID, message, param);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -294,7 +285,6 @@ void DlgMPTeamSelect::On_Command(int ctrlID, int message, DWORD param)
 void DlgMPTeamSelect::On_Last_Menu_Ending(void)
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -322,7 +312,6 @@ void DlgMPTeamSelect::InitSideChoice(int sidePref)
 	SelectSideChoice(side);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -344,7 +333,6 @@ void DlgMPTeamSelect::SelectSideChoice(int side)
 	Check_Dlg_Button(IDC_TEAM_GDI_CHECK, (PLAYERTYPE_GDI == side));
 	Check_Dlg_Button(IDC_TEAM_NOD_CHECK, (PLAYERTYPE_NOD == side));
 	}
-
 
 /******************************************************************************
 *
@@ -374,7 +362,6 @@ int DlgMPTeamSelect::GetSideChoice(void)
 
 	return PLAYERTYPE_RENEGADE;
 	}
-
 
 /******************************************************************************
 *
@@ -407,7 +394,6 @@ void DlgMPTeamSelect::ShowTimeRemaining(float remainingSeconds)
 	text.Format(L"%s: %s", TRANSLATION(IDS_MP_TIME_REMAINING), (const WCHAR*)timeString);
 	Set_Dlg_Item_Text(IDC_TIME_REMAINING_TEXT, (const WCHAR*)text);
 	}
-
 
 /******************************************************************************
 *
@@ -462,7 +448,6 @@ bool DlgMPTeamSelect::FindPlayerInListCtrl(const WCHAR* name, ListCtrlClass*& ou
 	return false;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -489,7 +474,6 @@ void DlgMPTeamSelect::HandleNotification(PlayerMgrEvent& event)
 		RemoveLANPlayerInfo(event.Subject());
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -523,7 +507,6 @@ void DlgMPTeamSelect::PopulateWithLANPlayers(void)
 		playerNode = playerNode->Next();
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -576,7 +559,6 @@ void DlgMPTeamSelect::AddLANPlayerInfo(cPlayer* player)
 
 	list->Sort(ListSortCallback, 0);
 	}
-
 
 /******************************************************************************
 *

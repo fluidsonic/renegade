@@ -11,7 +11,6 @@ class	PhysControllerClass;
 class MoveablePhysDefClass;
 class DynTexProjectClass;
 
-
 /**
 ** MoveablePhysClass
 ** All objects that can be moved around in the world in some way will support this interface.
@@ -69,7 +68,6 @@ public:
 	void								Set_Controller(PhysControllerClass * control)		{ Controller = control; }	
 	PhysControllerClass *		Get_Controller(void)											{ return Controller; }
 
-
 	/*
 	** Save-Load system
 	*/
@@ -114,7 +112,6 @@ protected:
 	MoveablePhysClass & operator = (const MoveablePhysClass &);
 };
 
-
 inline void MoveablePhysClass::Get_Inertia_Inv(Matrix3 * set_I_inv)					
 { 
 	set_I_inv->Make_Identity();
@@ -122,7 +119,6 @@ inline void MoveablePhysClass::Get_Inertia_Inv(Matrix3 * set_I_inv)
 	(*set_I_inv)[1][1] = MassInv;
 	(*set_I_inv)[2][2] = MassInv;
 }
-
 
 /*
 ** MoveablePhysDefClass
@@ -168,7 +164,5 @@ protected:
 	
 	friend class MoveablePhysClass;
 };
-
-
 
 #endif

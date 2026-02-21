@@ -6,7 +6,6 @@
 #include "widestring.h"
 #include "vector.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -15,7 +14,6 @@ class Render2DClass;
 class Render2DSentenceClass;
 class FontCharsClass;
 class RectClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -58,7 +56,6 @@ public:
 
 	} JUSTIFICATION;
 
-
 	typedef enum
 	{
 		EVENT_MOUSE_CLICK		= 0,
@@ -68,7 +65,6 @@ public:
 		EVENT_AUDIO_MAX
 
 	} EVENT_AUDIO;
-
 
 	////////////////////////////////////////////////////////////////
 	//	Public methods

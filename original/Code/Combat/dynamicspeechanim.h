@@ -5,7 +5,6 @@
 #include "hmorphanim.h"
 #include "viseme.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DynamicSpeechAnimClass
@@ -48,6 +47,5 @@ protected:
 	////////////////////////////////////////////////////////////////
 	static VisemeManager		VisemeLookupMgr;
 };
-
 
 #endif //__DYNAMICSPEECHANIM_H

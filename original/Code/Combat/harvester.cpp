@@ -4,7 +4,6 @@
 #include "animcontrol.h"
 #include "vehiclephys.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -13,7 +12,6 @@ enum
 	ACTIONID_GOTO_TIBERIUM	= 1000,
 	ACTIONID_DOCK,
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -33,7 +31,6 @@ HarvesterClass::HarvesterClass (void) :
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~HarvesterClass
@@ -43,7 +40,6 @@ HarvesterClass::~HarvesterClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -56,7 +52,6 @@ HarvesterClass::Initialize (void)
 	Go_Harvest ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -101,7 +96,6 @@ HarvesterClass::Go_Harvest (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Go_Unload_Tiberium
@@ -131,7 +125,6 @@ HarvesterClass::Go_Unload_Tiberium (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Unload_Tiberium
@@ -144,7 +137,6 @@ HarvesterClass::Unload_Tiberium (void)
 	State = STATE_UNLOADING;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -174,7 +166,6 @@ HarvesterClass::Harvest_Tiberium (void)
 	Play_Harvest_Animation (true);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -215,7 +206,6 @@ HarvesterClass::Action_Complete
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Animation_Complete
@@ -230,7 +220,6 @@ HarvesterClass::Animation_Complete
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -254,7 +243,6 @@ HarvesterClass::Attach (GameObject *game_obj)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Detach
@@ -273,7 +261,6 @@ HarvesterClass::Detach (GameObject * /*game_obj*/)
 	Vehicle = NULL;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -325,7 +312,6 @@ HarvesterClass::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Stop
@@ -344,7 +330,6 @@ HarvesterClass::Stop (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -375,7 +360,6 @@ HarvesterClass::Play_Harvest_Animation (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Custom
@@ -399,7 +383,6 @@ HarvesterClass::Custom
 
 	return ;
 }
-
 
 void HarvesterClass::Damaged(GameObject* damaged, GameObject* killer, float amount)
 {
@@ -432,7 +415,6 @@ void HarvesterClass::Damaged(GameObject* damaged, GameObject* killer, float amou
 		}
 	}
 }
-
 
 void HarvesterClass::Destroyed(GameObject* destroyed)
 {

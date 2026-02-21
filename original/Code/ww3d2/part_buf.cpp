@@ -277,7 +277,6 @@ ParticleBufferClass::ParticleBufferClass
 	TotalActiveCount++;
 }
 
-
 ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 	RenderObjClass(src),
 	NewParticleQueue(NULL),
@@ -494,7 +493,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 		// (including the Values array) - there is an implicit starting value of 0.
 	}
 
-
 	// Set up the frame keyframes
 	// Frame and UCoord both use Frame Key Frames for the source data
 	NumRandomFrameEntriesMinus1 = src.NumRandomFrameEntriesMinus1;
@@ -505,7 +503,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 		} else {
 			UCoord = NEW_REF( ShareBufferClass<float>, (MaxNum) );
 		}
-
 
 		// Copy frame keyframes
 		FrameKeyFrameTimes = new unsigned int [NumFrameKeyFrames];
@@ -553,7 +550,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 		BlurTimeKeyFrameValues = new float [1];
 		BlurTimeKeyFrameValues[0] = src.BlurTimeKeyFrameValues[0];
 	}
-
 
 	// We do not add a ref for the emitter (see DTor for detailed explanation)
 	// if (Emitter) Emitter->Add_Ref();
@@ -646,7 +642,6 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 	TotalActiveCount++;
 }
 
-
 ParticleBufferClass & ParticleBufferClass::operator = (const ParticleBufferClass & that)
 {
 	RenderObjClass::operator = (that);
@@ -657,7 +652,6 @@ ParticleBufferClass & ParticleBufferClass::operator = (const ParticleBufferClass
 
 	return * this;
 }
-
 
 ParticleBufferClass::~ParticleBufferClass(void)
 {
@@ -726,12 +720,10 @@ ParticleBufferClass::~ParticleBufferClass(void)
 	TotalActiveCount--;
 }
 
-
 RenderObjClass * ParticleBufferClass::Clone(void) const
 {
 	return new ParticleBufferClass(*this);
 }
-
 
 int ParticleBufferClass::Get_Num_Polys(void) const
 {
@@ -897,7 +889,6 @@ void ParticleBufferClass::Render_Particles(RenderInfoClass & rinfo)
 		PointGroup->Set_Point_Frame(((int)(FrameKeyFrameValues[0])) & 0xFF);
 	}
 
-
 	// Pass the point buffer to the point group and render it.
 	// If we are using pingpong position buffers pass the right one
 	int pingpong = 0;
@@ -911,7 +902,6 @@ void ParticleBufferClass::Render_Particles(RenderInfoClass & rinfo)
 	Update_Bounding_Box();	
 	PointGroup->Render(rinfo);	
 }
-
 
 void ParticleBufferClass::Render_Line(RenderInfoClass & rinfo)
 {
@@ -985,7 +975,6 @@ void ParticleBufferClass::Render_Line_Group(RenderInfoClass & rinfo)
 	if (!Frame) {
 		LineGroup->Set_Line_UCoord(FrameKeyFrameValues[0]);
 	}
-
 
 	// Pass the point buffer to the line group and render it.
 	// If we are using pingpong position buffers pass the right one
@@ -1066,10 +1055,6 @@ void ParticleBufferClass::Scale(float scale)
 	SizeRandom *= scale;
 }
 
-
-
-
-
 // The particle buffer never receives a Set_Transform/Position call,
 // evem though its bounding volume changes. Since bounding volume
 // invalidations ordinarily occur when these functions are called,
@@ -1088,20 +1073,17 @@ void ParticleBufferClass::On_Frame_Update(void)
 	}
 }
 
-
 void ParticleBufferClass::Notify_Added(SceneClass * scene)
 {
 	RenderObjClass::Notify_Added(scene);
 	scene->Register(this,SceneClass::ON_FRAME_UPDATE);
 }
 
-
 void ParticleBufferClass::Notify_Removed(SceneClass * scene)
 {
 	scene->Unregister(this,SceneClass::ON_FRAME_UPDATE);
 	RenderObjClass::Notify_Removed(scene);
 }
-
 
 void ParticleBufferClass::Get_Obj_Space_Bounding_Sphere(SphereClass & sphere) const
 {
@@ -1118,7 +1100,6 @@ void ParticleBufferClass::Get_Obj_Space_Bounding_Sphere(SphereClass & sphere) co
 	sphere.Radius = BoundingBox.Extent.Length();
 }
 
-
 void ParticleBufferClass::Get_Obj_Space_Bounding_Box(AABoxClass & box) const
 {
 	// This ugly cast is done because the alternative is to make everything
@@ -1130,7 +1111,6 @@ void ParticleBufferClass::Get_Obj_Space_Bounding_Box(AABoxClass & box) const
 	// objspace == worldspace.
 	box = BoundingBox;
 }
-
 
 void ParticleBufferClass::Prepare_LOD(CameraClass &camera)
 {
@@ -1444,7 +1424,6 @@ void ParticleBufferClass::Reset_Colors(ParticlePropertyStruct<Vector3> &new_prop
 	}
 }
 
-
 void ParticleBufferClass::Reset_Opacity(ParticlePropertyStruct<float> &new_props)
 {
 	unsigned int i;	// Used in loops
@@ -1598,7 +1577,6 @@ void ParticleBufferClass::Reset_Opacity(ParticlePropertyStruct<float> &new_props
 		}
 	}
 }
-
 
 void ParticleBufferClass::Reset_Size(ParticlePropertyStruct<float> &new_props)
 {
@@ -1765,7 +1743,6 @@ void ParticleBufferClass::Reset_Size(ParticlePropertyStruct<float> &new_props)
 		}
 	}
 }
-
 
 void ParticleBufferClass::Reset_Rotations(ParticlePropertyStruct<float> &new_props, float orient_rnd)
 {
@@ -1975,8 +1952,6 @@ void ParticleBufferClass::Reset_Rotations(ParticlePropertyStruct<float> &new_pro
 	}
 }
 
-
-
 void ParticleBufferClass::Reset_Frames(ParticlePropertyStruct<float> &new_props)
 {
 
@@ -2137,7 +2112,6 @@ void ParticleBufferClass::Reset_Frames(ParticlePropertyStruct<float> &new_props)
 	}
 }
 
-
 void ParticleBufferClass::Reset_Blur_Times(ParticlePropertyStruct<float> &new_blur_times)
 {
 
@@ -2284,7 +2258,6 @@ void ParticleBufferClass::Reset_Blur_Times(ParticlePropertyStruct<float> &new_bl
 	}
 }
 
-
 // This informs the buffer that the emitter is dead, so it can release
 // its pointer to it and be removed itself after all its particles dies
 // out.
@@ -2295,7 +2268,6 @@ void ParticleBufferClass::Emitter_Is_Dead(void)
 	// Emitter->Release_Ref();
 	Emitter = NULL;
 }
-
 
 // This set's the buffer's current emitter - this should usually be
 // called only by the emitter's copy constructor after it clones a
@@ -2336,7 +2308,6 @@ NewParticleStruct * ParticleBufferClass::Add_Uninitialized_New_Particle(void)
 	return ptr;
 }
 
-
 void ParticleBufferClass::Update_Cached_Bounding_Volumes(void) const
 {
 	// This ugly cast is done because the alternative is to make everything
@@ -2349,7 +2320,6 @@ void ParticleBufferClass::Update_Cached_Bounding_Volumes(void) const
 	CachedBoundingBox = BoundingBox;
 	Validate_Cached_Bounding_Volumes();
 }
-
 
 void ParticleBufferClass::Update_Kinematic_Particle_State(void)
 {
@@ -2379,7 +2349,6 @@ void ParticleBufferClass::Update_Kinematic_Particle_State(void)
 
 	BoundingBoxDirty = true;
 }
-
 
 void ParticleBufferClass::Update_Visual_Particle_State(void)
 {
@@ -2433,7 +2402,6 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 	} else {
 		position = Position[0]->Get_Array();
 	}
-
 
 	for (part = Start; part < sub1_end; part++) {
 
@@ -2631,7 +2599,6 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 	}
 }
 
-
 void ParticleBufferClass::Update_Bounding_Box(void)
 {
 	// Ensure all particle positions are updated. If bounding box still not
@@ -2693,7 +2660,6 @@ void ParticleBufferClass::Update_Bounding_Box(void)
 	BoundingBox.Init(MinMaxAABoxClass(min_coords,max_coords));
 	BoundingBoxDirty = false;
 }
-
 
 // NOTE: typically, the number of new particles created in a frame is small
 // relative to the total number of particles, so this is not the most
@@ -2775,7 +2741,6 @@ void ParticleBufferClass::Get_New_Particles(void)
 	}
 }
 
-
 void ParticleBufferClass::Kill_Old_Particles(void)
 {
 	// Scan from Start and find the first particle which has an age less than
@@ -2817,7 +2782,6 @@ void ParticleBufferClass::Kill_Old_Particles(void)
    // NOTE: we do not scan the new particles, because they have been already
    // preculled to be under MaxAge.
 }
-
 
 void ParticleBufferClass::Update_Non_New_Particles(unsigned int elapsed)
 {
@@ -3002,7 +2966,6 @@ void ParticleBufferClass::Get_Opacity_Key_Frames (ParticlePropertyStruct<float> 
 	return ;
 }
 
-
 void ParticleBufferClass::Get_Size_Key_Frames (ParticlePropertyStruct<float> &sizes) const
 {
 	int real_keyframe_count = (NumSizeKeyFrames > 0) ? (NumSizeKeyFrames - 1) : 0;
@@ -3058,7 +3021,6 @@ void ParticleBufferClass::Get_Size_Key_Frames (ParticlePropertyStruct<float> &si
 
 	return ;
 }
-
 
 void ParticleBufferClass::Get_Rotation_Key_Frames (ParticlePropertyStruct<float> &rotations) const
 {
@@ -3120,7 +3082,6 @@ void ParticleBufferClass::Get_Rotation_Key_Frames (ParticlePropertyStruct<float>
 
 	return ;
 }
-
 
 void ParticleBufferClass::Get_Frame_Key_Frames (ParticlePropertyStruct<float> &frames) const
 {
@@ -3242,7 +3203,6 @@ void ParticleBufferClass::Set_LOD_Max_Screen_Size(int lod_level,float max_screen
 	LODMaxScreenSizes[lod_level] = max_screen_size;
 }
 
-
 float ParticleBufferClass::Get_LOD_Max_Screen_Size(int lod_level)
 {
 	if ((lod_level <0) || (lod_level > 17)) {
@@ -3250,7 +3210,6 @@ float ParticleBufferClass::Get_LOD_Max_Screen_Size(int lod_level)
 	}
 	return LODMaxScreenSizes[lod_level];
 }
-
 
 int ParticleBufferClass::Get_Line_Texture_Mapping_Mode(void) const
 {

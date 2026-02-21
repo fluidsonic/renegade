@@ -1,7 +1,6 @@
 #ifndef WWSAVELOADSTATUS_H
 #define WWSAVELOADSTATUS_H
 
-
 #include "always.h"
 #include "wwstring.h"
 

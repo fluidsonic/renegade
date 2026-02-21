@@ -10,7 +10,6 @@
 #include "apppackettypes.h"
 #include "playermanager.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cWarpEvent, NETCLASSID_WARPEVENT);
 
 //-----------------------------------------------------------------------------
@@ -80,7 +79,6 @@ cWarpEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add_Wide_Terminated_String(PlayerName, true);
 
@@ -93,10 +91,8 @@ cWarpEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
 	packet.Get_Wide_Terminated_String(PlayerName.Get_Buffer(256), 256, true);
-
 
 	Act();
 }

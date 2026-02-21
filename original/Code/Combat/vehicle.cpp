@@ -1,6 +1,5 @@
 #include "vehicle.h"
 #include "animcontrol.h"
-#include "debug.h"
 #include "combat.h"
 #include "pscene.h"
 #include "assets.h"

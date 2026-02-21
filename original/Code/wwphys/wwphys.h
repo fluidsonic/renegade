@@ -1,9 +1,7 @@
 #ifndef WWPHYS
 #define WWPHYS
 
-
 #include "always.h"
-
 
 class WWPhys
 {
@@ -15,8 +13,6 @@ public:
 	static void Init(void);
 	static void Shutdown(void);
 };
-
-
 
 #endif
 

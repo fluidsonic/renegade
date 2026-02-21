@@ -2,7 +2,6 @@
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
-#include "debug.h"
 #include "definitionmgr.h"
 #include "crandom.h"
 #include "damage.h"

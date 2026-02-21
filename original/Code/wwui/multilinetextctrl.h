@@ -2,11 +2,9 @@
 #ifndef __MULTILINETEXTCTRL_H
 #define __MULTILINETEXTCTRL_H
 
-
 #include "render2d.h"
 #include "render2dsentence.h"
 #include "scrollbarctrl.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -67,6 +65,5 @@ protected:
 	int							RowsPerPage;
 	float							MouseWheelIncrement;
 };
-
 
 #endif //__MULTILINETEXTCTRL_H

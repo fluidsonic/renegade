@@ -1,6 +1,5 @@
 #include "coltest.h"
 
-
 AABoxCollisionTestClass::AABoxCollisionTestClass(const AABoxCollisionTestClass & that) :
 	CollisionTestClass(that),
 	Box(that.Box),
@@ -30,7 +29,6 @@ AABoxCollisionTestClass::AABoxCollisionTestClass(const AABoxClass & aabox,const 
 	if (endmin.Z < SweepMin.Z) SweepMin.Z = endmin.Z;
 }
 
-
 bool AABoxCollisionTestClass::Cull(const AABoxClass & box)
 {
 //	const float MOVE_THRESHOLD = 2.0f;
@@ -57,7 +55,6 @@ bool AABoxCollisionTestClass::Cull(const AABoxClass & box)
 		return false;
 //	}
 }
-
 
 void AABoxCollisionTestClass::Rotate(ROTATION_TYPE rotation) 
 {
@@ -112,7 +109,6 @@ void AABoxCollisionTestClass::Rotate(ROTATION_TYPE rotation)
 		if (realmax.Y <= pts[i].Y) realmax.Y = pts[i].Y;
 		if (realmax.Z <= pts[i].Z) realmax.Z = pts[i].Z;
 	}
-
 
 #endif
 	
@@ -182,7 +178,6 @@ void AABoxCollisionTestClass::Rotate(ROTATION_TYPE rotation)
 #endif
 }
 
-
 void AABoxCollisionTestClass::Transform(const Matrix3D & tm)
 {
 	// NOTE: this function will expand the box to enclose the rotated
@@ -230,8 +225,6 @@ void AABoxCollisionTestClass::Transform(const Matrix3D & tm)
 	SweepMin = realmin;
 	SweepMax = realmax;
 }
-
-
 
 OBBoxCollisionTestClass::OBBoxCollisionTestClass
 (
@@ -306,7 +299,6 @@ OBBoxCollisionTestClass::OBBoxCollisionTestClass
 	Box.Extent = that.Box.Extent;
 	Box.Basis = tm; // copies the 3x3 rotation portion of the transform
 }
-
 
 bool OBBoxCollisionTestClass::Cull(const AABoxClass & box)
 {

@@ -6,7 +6,6 @@
 #include "gameobjref.h"
 #include "matrix3d.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -14,7 +13,6 @@ class PathClass;
 class SmartGameObj;
 class ChunkSaveClass;
 class ChunkLoadClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -204,7 +202,6 @@ private:
 	float					m_MinCircleAngle;
 	float					m_MaxCircleAngle;
 };
-
 
 #endif //__PILOT_H
 

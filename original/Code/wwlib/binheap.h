@@ -248,7 +248,6 @@ class BinaryHeapClass
 			return (op1->Heap_Key() <= op2->Heap_Key());
 		}
 
-
 		bool	Greater_Than(HeapNodeClass<Key_Type> *op1, HeapNodeClass<Key_Type> *op2)
 		{
 			if (op1 == 0)
@@ -279,6 +278,5 @@ class BinaryHeapClass
 		// binary tree.
 		bool								Own_Array;
 };
-
 
 #endif //BINARY_HEAP_CLASS_H

@@ -386,7 +386,6 @@ The following are params for when the individual objectives are activated and an
 					Commands->Send_Custom_Event( obj, objectiveReminder, M01_ADD_OBJECTIVE_POG_JDG, 2, 0 );
 				}
 
-
 				//Commands->Create_Sound ( "00-n040e", Vector3 (0,0,0), obj);
 				
 				
@@ -1348,7 +1347,6 @@ DECLARE_SCRIPT(M04_CargoMissileRooms_Dude_Controller_JDG, "")//this guys ID numb
 		}
 	}*/
 };
-
 
 DECLARE_SCRIPT(M04_MissileRoom_UpperGuard_01_JDG, "")//left side
 {
@@ -3923,7 +3921,6 @@ DECLARE_SCRIPT(M04_AftDeck_02_Controller_JDG, "")//this guys number is M04_AFT_D
 	}
 };
 
-
 DECLARE_SCRIPT(M04_Aft_FirstMateBodyguard_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -4556,7 +4553,6 @@ DECLARE_SCRIPT(M04_Apache_Enter_Zone_JDG, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M04_ApacheRoom_Controller_JDG, "")//this guys ID number is M04_APACHE_CONTROLLER_JDG	200586
 {
 	int m04apache_ID;
@@ -4741,7 +4737,6 @@ DECLARE_SCRIPT(M04_ApacheRoom_Sniper02_JDG, "")
 		}
 	}
 };
-
 
 /***********************************************************************************************************
 The following are the initial scripts for the fore deck
@@ -5444,7 +5439,6 @@ DECLARE_SCRIPT(M04_GruntMessHall_Entry_Zone_JDG, "")
 The following are the scripts and controller for the end fire fight.
 **********************************************************************************************************/
 
-
 DECLARE_SCRIPT(M04_Firefight_Start_Battle_Music_JDG, "")
 {
 	bool playerHasLevel3Keycard;
@@ -5483,9 +5477,6 @@ DECLARE_SCRIPT(M04_Firefight_NodGuys, "")
 		Commands->Send_Custom_Event( obj, Commands->Find_Object (M04_END_FIREFIGHT_CONTROLLER_JDG), 0, 666, 0 );//tell controller you've been killed
 	}
 };
-
-
-
 
 DECLARE_SCRIPT(M04_PostFirstMate_SamRoom_PatrolGuy_JDG, "")
 {
@@ -5858,8 +5849,6 @@ DECLARE_SCRIPT(M04_EnterCargoBay_BottomRight_Zone_JDG, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M04_EnterCargoBay_TopLeft_Zone_JDG, "")
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -6190,8 +6179,6 @@ DECLARE_SCRIPT(M04_EngineRoom_Stationary_Tech_JDG, "Console_ID :int")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M04_Catwalk_Enter_Zone_01_JDG, "")//this guy comes out level 2 door
 {
@@ -7481,8 +7468,6 @@ DECLARE_SCRIPT(M04_Visceroid_Dude_02_JDG, "")//M04_TIBERIUM_HOLD_TECH02_JDG	 102
 	}
 };
 
-
-
 DECLARE_SCRIPT(M04_Keycard_01_Script_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -7817,8 +7802,6 @@ DECLARE_SCRIPT(M04_MissileRoom_ObjectiveZone_JDG, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M04_Announce_Keycard_02_Objective_Zone_JDG, "")
 {
 	void Entered( GameObject * obj, GameObject * enterer ) 
@@ -7853,8 +7836,6 @@ DECLARE_SCRIPT(M04_Announce_Keycard_02_Objective_Zone_JDG, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M04_EngineRoom_SniperScript_JDG, "")
 {
@@ -8931,11 +8912,6 @@ DECLARE_SCRIPT(M04_ApacheRoom_Apache_JDG, "")
 	}
 };
 
-
-
-
-
-
 DECLARE_SCRIPT(M04_CargoHold_Stationary_Officer_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -9056,7 +9032,6 @@ DECLARE_SCRIPT(M04_Firefight_Prisoner, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M04_Firefight_Controller_JDG, "")//this guys ID number is M04_END_FIREFIGHT_CONTROLLER_JDG 100948
 {
@@ -10441,41 +10416,4 @@ DECLARE_SCRIPT(M04_Objective_Reminder_Controller_JDG, "")//105760
 		}
 	}
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

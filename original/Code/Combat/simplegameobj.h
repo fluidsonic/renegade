@@ -11,7 +11,6 @@
 
 #include "playerterminal.h"
 
-
 /*
 ** SimpleGameObjDef - Defintion class for a SimpleGameObj
 */
@@ -32,7 +31,6 @@ public:
 	PlayerTerminalClass::TYPE				Get_Player_Terminal_Type( void ) const	{ return PlayerTerminalType; }
 	bool											Get_Is_Editor_Object( void )	const		{ return IsEditorObject; }
 
-
 protected:
 
 	bool											IsEditorObject;
@@ -42,7 +40,6 @@ protected:
 	// See playerterminal.h
 	PlayerTerminalClass::TYPE				PlayerTerminalType;
 };
-
 
 /*
 **

@@ -4,8 +4,6 @@
 #include "DefinitionFactory.h"
 #include "SimpleDefinitionFactory.h"
 #include "PlayerType.h"
-#include "Debug.h"
-
 CNCModeSettingsDef* CNCModeSettingsDef::_mInstance = NULL;
 
 // Factories

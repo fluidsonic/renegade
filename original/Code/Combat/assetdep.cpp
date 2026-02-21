@@ -11,7 +11,6 @@
 static void Asset_Name_From_Filename (StringClass& new_name, const char *filename);
 static void Get_Filename_From_Path (StringClass& new_name, const char *filename);
 
-
 ///////////////////////////////////////////////////////////////////////
 //	Constants
 ///////////////////////////////////////////////////////////////////////
@@ -24,7 +23,6 @@ enum
 
 	VARID_ASSET_FILENAME		= 0x01,
 };
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -62,7 +60,6 @@ AssetDependencyManager::Save_Always_Dependencies (const char *path, ASSET_LIST &
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Save_Level_Dependencies
@@ -98,7 +95,6 @@ AssetDependencyManager::Save_Level_Dependencies (const char *full_path, ASSET_LI
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Save_Dependencies
@@ -120,7 +116,6 @@ AssetDependencyManager::Save_Dependencies (ChunkSaveClass &csave, ASSET_LIST &as
 	csave.End_Chunk ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -147,7 +142,6 @@ AssetDependencyManager::Load_Level_Assets (const char *level_name)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Load_Always_Assets
@@ -162,7 +156,6 @@ AssetDependencyManager::Load_Always_Assets (void)
 	Load_Assets (ALWAYS_FILENAME);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -202,7 +195,6 @@ AssetDependencyManager::Load_Assets (const char *filename)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -261,7 +253,6 @@ AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////
 //
 //  Get_Filename_From_Path
@@ -280,7 +271,6 @@ void Get_Filename_From_Path (StringClass& new_filename, const char *path)
 
 	new_filename=filename;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////
 //

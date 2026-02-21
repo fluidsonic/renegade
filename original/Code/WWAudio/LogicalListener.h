@@ -80,7 +80,6 @@ class LogicalListenerClass : public SoundSceneObjClass
 		bool									Load (ChunkLoadClass &cload);
 		const PersistFactoryClass &	Get_Factory (void) const;
 
-
 		//////////////////////////////////////////////////////////////////////
 		//	Timestamp
 		//////////////////////////////////////////////////////////////////////				
@@ -112,7 +111,6 @@ class LogicalListenerClass : public SoundSceneObjClass
 		static uint32			m_OldestTimestamp;
 		static uint32			m_NewestTimestamp;
 };
-
 
 #endif //__LOGICAL_LISTENER_H
 

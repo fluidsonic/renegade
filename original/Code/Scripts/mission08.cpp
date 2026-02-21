@@ -521,7 +521,6 @@ DECLARE_SCRIPT(M08_Activate_Objective_806, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M08_Helipad, "")
 {
 	
@@ -687,8 +686,6 @@ DECLARE_SCRIPT(M08_Prison_Patrol, "Waypath_ID=0:int, Waypath_Loc:Vector3")
 	}
 
 };
-
-
 
 DECLARE_SCRIPT(M08_Initial_Prisoner, "Reinforcment_ID=0:int")
 {
@@ -1229,7 +1226,6 @@ DECLARE_SCRIPT(M08_GDI_Free_Prison, "Soldier_ID=0:int")
 //		SAVE_VARIABLE( soldier_id, 1 );
 	}
 
-
 	void Killed (GameObject * obj, GameObject * killer)
 	{
 		int soldier_id = Get_Int_Parameter("Soldier_ID");
@@ -1249,7 +1245,6 @@ DECLARE_SCRIPT(M08_Prison_Controller, "")  //100246
 		SAVE_VARIABLE( gdi1, 1 );
 		SAVE_VARIABLE( gdi2, 2 );
 	}
-
 
 	void Created(GameObject * obj)
 	{
@@ -1293,8 +1288,6 @@ DECLARE_SCRIPT(M08_Prison_Controller, "")  //100246
 		
 	}
 };
-
-
 
 DECLARE_SCRIPT(M08_APC_Soldier, "APC_ID=0:int")
 {
@@ -1539,8 +1532,6 @@ DECLARE_SCRIPT(M08_PetraA22_Stealth_Tank, "")
 
 };
 
-
-
 DECLARE_SCRIPT(M08_Petra_Convoy, "")  
 {
 	
@@ -1713,7 +1704,6 @@ DECLARE_SCRIPT(M08_Activate_Stealth_Trap, "")
 			GameObject *crate7 = Commands->Create_Object("M08_Rubble_Stub", Vector3(222.456f, 202.921f, -15.889f));
 			Commands->Set_Facing( crate7, 0.000f );
 			crate7_id = Commands->Get_ID(crate7);
-
 
 			// Rear
 			Commands->Create_Explosion( "Generic Ground 01", Vector3(106.852f, 221.987f, -3.990f), obj );
@@ -2935,8 +2925,6 @@ DECLARE_SCRIPT(M08_Deactivate_Encounter, "Activate_Zone=0:int")
 
 };
 
-
-
 DECLARE_SCRIPT(M08_Encounter_Unit, "Waypath_ID=0:int, Priority=0:int, Suicide=0:int, Stationary_at_End=0:int")
 {
 	int waypath_id;
@@ -3617,7 +3605,6 @@ DECLARE_SCRIPT(M08_Petra_A_Unit, "Unit_ID=0:int")
 		
 	}
 
-
 	void Killed (GameObject * obj, GameObject * killer)
 	{
 		int unit_id = Get_Int_Parameter("Unit_ID");
@@ -4006,7 +3993,6 @@ DECLARE_SCRIPT(M08_Petra_B_Unit, "Unit_ID=0:int")
 		
 	}
 
-
 	void Killed (GameObject * obj, GameObject * killer)
 	{
 		int unit_id = Get_Int_Parameter("Unit_ID");
@@ -4383,7 +4369,6 @@ DECLARE_SCRIPT(M08_Petra_C_Unit, "Unit_ID=0:int")
 		
 		
 	}
-
 
 	void Killed (GameObject * obj, GameObject * killer)
 	{
@@ -5579,7 +5564,6 @@ DECLARE_SCRIPT(M08_Unarmed_Prisoner, "Exit_Cell_ID=0:int, Weapon_Loc_ID=0:int")
 			Commands->Set_Innate_Is_Stationary(obj, false);
 			Commands->Grant_Key (obj, 1, true);
 
-
 			params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN + 5, EXIT_CELL );
 			params.Set_Movement( Commands->Find_Object(Get_Int_Parameter("Exit_Cell_ID")), RUN, 1.0f );
 			Commands->Action_Goto( obj, params );
@@ -5587,7 +5571,6 @@ DECLARE_SCRIPT(M08_Unarmed_Prisoner, "Exit_Cell_ID=0:int, Weapon_Loc_ID=0:int")
 		}
 
 	}
-
 
 	void Poked(GameObject * obj, GameObject * poker)
 	{
@@ -5639,9 +5622,7 @@ DECLARE_SCRIPT(M08_Free_Prisoners_Zone, "Prisoner1_ID=0:int, Prisoner2_ID=0:int,
 		}
 	}
 
-
 };
-
 
 DECLARE_SCRIPT(M08_Sakura, "")
 {
@@ -6572,7 +6553,6 @@ DECLARE_SCRIPT(M08_Apache, "Area:int")
 	}
 };
 
-
 DECLARE_SCRIPT(M08_Mobile_Apache, "Entrance_Path_ID=0:int, Helipad_ID=0:int")
 {
 	
@@ -6908,7 +6888,6 @@ DECLARE_SCRIPT (M08_Immortal_Star_DLS, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M08_Enable_Stealth, "On=1:int")
 {

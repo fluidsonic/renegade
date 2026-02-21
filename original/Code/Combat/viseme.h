@@ -22,7 +22,6 @@
 	VISEME_COUNT		= 8,
 } VISEME_ID;*/
 
-
 typedef enum VISEME_ID
 {
 	VISEME_CAT = 0,				// 0  "cAt"
@@ -43,8 +42,6 @@ typedef enum VISEME_ID
 	VISEME_EARTH,					// 15 "buttER"
 	VISEME_COUNT,
 } VISEME_ID;
-
-
 
 class VisemeManager
 {

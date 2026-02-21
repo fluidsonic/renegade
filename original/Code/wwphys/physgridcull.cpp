@@ -12,16 +12,13 @@
 #include "iostruct.h"
 #include "colmathinlines.h"
 
-
 #define  NEW_CAST_FUNCTIONS 1
-
 
 /*
 ** Constants
 */
 const int		MAX_PHYSGRID_CELLS = 2048;
 const float		MIN_PHYSGRID_CELL_DIMENSION = 60.0f;
-
 
 /*
 ** Persist save/load system
@@ -31,7 +28,6 @@ enum
 	PHYSGRID_CHUNK_VARIABLES				= 0x00770001,	// variables wrapper, contains micro-chunks
 	PHYSGRID_CHUNK_PARENT_CLASS			= 0x00770104	// wraps the parent class's save data
 };
-
 
 /*******************************************************************************************************
 **
@@ -43,7 +39,6 @@ PhysGridCullClass::PhysGridCullClass(PhysicsSceneClass * scene) :
 	Scene(scene)
 {
 }
-
 
 PhysGridCullClass::~PhysGridCullClass(void)
 {
@@ -248,8 +243,6 @@ bool PhysGridCullClass::cast_ray_recursive
 	
 	return res;
 }
-
-
 
 bool PhysGridCullClass::Cast_AABox(PhysAABoxCollisionTestClass & boxtest)
 {

@@ -15,7 +15,6 @@ static enum
 	MBEVENT_SAVE_PROMPT
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ControlSaveLoadMenuClass
@@ -26,7 +25,6 @@ ControlSaveLoadMenuClass::ControlSaveLoadMenuClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -76,7 +74,6 @@ ControlSaveLoadMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -103,7 +100,6 @@ ControlSaveLoadMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -154,7 +150,6 @@ ControlSaveLoadMenuClass::Delete_Config (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	HandleNotification
@@ -204,7 +199,6 @@ ControlSaveLoadMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Config
@@ -240,7 +234,6 @@ ControlSaveLoadMenuClass::Load_Config (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -340,7 +333,6 @@ ControlSaveLoadMenuClass::Save_Config (bool prompt)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_Delete_Entry
@@ -369,7 +361,6 @@ ControlSaveLoadMenuClass::On_ListCtrl_Delete_Entry
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -406,7 +397,6 @@ ControlSaveLoadMenuClass::Insert_Configuration (const InputConfigClass &config)
 
 	return item_index;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -456,7 +446,6 @@ ControlSaveLoadMenuClass::On_ListCtrl_Sel_Change
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListSortCallback
@@ -504,7 +493,6 @@ ControlSaveLoadMenuClass::ListSortCallback
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

@@ -21,7 +21,6 @@ public:
 	WWINLINE int&			operator[] (int n);
 };
 
-
 WWINLINE Vector3i::Vector3i(void)
 {
 }
@@ -69,7 +68,6 @@ public:
 	WWINLINE const	unsigned short &	operator[] (int n) const;
 	WWINLINE unsigned short & operator[] (int n);
 };
-
 
 WWINLINE Vector3i16::Vector3i16(void)
 {

@@ -2,8 +2,6 @@
 #include "combat.h"
 #include "ccamera.h"
 #include "gametype.h"
-#include "debug.h"
-
 /*
 **
 */
@@ -17,7 +15,6 @@ bool					HUDInfo::IsHUDHelpTextDirty	= true;
 WideStringClass	HUDInfo::HUDHelpText;
 Vector3				HUDInfo::HUDHelpTextColor (1.0F, 1.0F, 1.0F);
 bool					HUDInfo::IsMCT	 = false;
-
 
 /*
 **
@@ -114,7 +111,6 @@ void	HUDInfo::Update_Info_Object( void )
 		}
 	}
 }
-
 
 void	HUDInfo::Set_Weapon_Target_Object( DamageableGameObj * obj )
 { 

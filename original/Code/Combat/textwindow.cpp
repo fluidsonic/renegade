@@ -11,18 +11,15 @@
 #include "rendobj.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 SceneClass *TextWindowClass::Scene	= NULL;
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
 static const char *	FONT_NAME	= "Arial MT";
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -44,7 +41,6 @@ TextWindowClass::TextWindowClass (void) :
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~TextWindowClass
@@ -56,7 +52,6 @@ TextWindowClass::~TextWindowClass (void)
 	Free_Contents ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -70,7 +65,6 @@ TextWindowClass::Initialize (SceneClass *scene)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -82,7 +76,6 @@ TextWindowClass::Shutdown (void)
 	REF_PTR_RELEASE (Scene);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -99,7 +92,6 @@ TextWindowClass::Free_Backdrop (void)
 	IsDisplayed		= false;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -123,7 +115,6 @@ TextWindowClass::Free_Contents (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Free_Renderers
@@ -141,7 +132,6 @@ TextWindowClass::Free_Renderers (void)
 	TextRenderers[1] = NULL;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -325,7 +315,6 @@ TextWindowClass::Set_Backdrop
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -336,7 +325,6 @@ TextWindowClass::On_Frame_Update (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -357,7 +345,6 @@ TextWindowClass::Add_Column (const WCHAR *column_name, float width, const Vector
 	IsViewDirty = true;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -385,7 +372,6 @@ TextWindowClass::Remove_Column (int index)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_All_Columns
@@ -404,7 +390,6 @@ TextWindowClass::Delete_All_Columns (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Item_Count
@@ -415,7 +400,6 @@ TextWindowClass::Get_Item_Count (void) const
 {
 	return Columns[0]->Get_Item_Count ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -431,7 +415,6 @@ TextWindowClass::Get_Display_Count (void)
 
 	return CurrentDisplayCount;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -450,7 +433,6 @@ TextWindowClass::Delete_Item (int index)
 	IsViewDirty = true;
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -481,7 +463,6 @@ TextWindowClass::Insert_Item (int index, const WCHAR *text)
 	return index;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Item_Text
@@ -501,7 +482,6 @@ TextWindowClass::Set_Item_Text (int index, int col_index, const WCHAR *text)
 	IsViewDirty = true;
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -523,7 +503,6 @@ TextWindowClass::Set_Item_Color (int index, int col_index, const Vector3 &color)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Item_Data
@@ -539,7 +518,6 @@ TextWindowClass::Set_Item_Data (int index, uint32 user_data)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Item_Data
@@ -553,7 +531,6 @@ TextWindowClass::Get_Item_Data (int index)
 	//
 	return Columns[0]->Get_Item_Data (index);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -570,7 +547,6 @@ TextWindowClass::Delete_All_Items (void)
 	IsViewDirty = true;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -610,7 +586,6 @@ TextWindowClass::Build_View (void)
 	TextRenderers[1]->Set_Font (font);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -696,7 +671,6 @@ TextWindowClass::Update_View (float *total_height, bool info_only)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Total_Display_Height
@@ -711,7 +685,6 @@ TextWindowClass::Get_Total_Display_Height (void)
 
 	return total_height;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -777,7 +750,6 @@ TextWindowClass::Update_Row
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display
@@ -798,7 +770,6 @@ TextWindowClass::Display (bool onoff)
 	return ;	
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Page_Down
@@ -811,7 +782,6 @@ TextWindowClass::Page_Down (void)
 	Update_View ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -827,7 +797,6 @@ TextWindowClass::Page_Up (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Scroll_To_Top
@@ -840,7 +809,6 @@ TextWindowClass::Scroll_To_Top (void)
 	Update_View ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -871,13 +839,11 @@ TextWindowClass::Render (void)
 	return ;
 }
 
-
 //********************************************************************************//
 //
 //	Start of TextColumnClass
 //
 //********************************************************************************//
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -890,7 +856,6 @@ TextColumnClass::Free_Data (void)
 	Delete_All_Items ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -906,7 +871,6 @@ TextColumnClass::Reset_Contents (void)
 	Free_Data ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -931,7 +895,6 @@ TextColumnClass::Insert_Item (int index, const WCHAR *item_name)
 	return index;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_Item
@@ -952,7 +915,6 @@ TextColumnClass::Delete_Item (int index)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

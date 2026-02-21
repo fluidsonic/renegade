@@ -56,8 +56,6 @@ static const float min_update_rate = 5000.0f;					// Priority 0.001 update rate
 static const float unseen_update_rate = 10000.0f;				// Priority 0 update rate.
 static const unsigned short infinity_update_rate = 0xffff;	// Lowest update rate - no updates at all.
 
-
-
 //-----------------------------------------------------------------------------
 //
 // This is the most crucial place for server filtering
@@ -70,9 +68,7 @@ void cNetwork::Tell_Client_About_Dynamic_Objects
 {
 #ifndef BETACLIENT
 
-
 if (cDevOptions::UseNewTCADO.Is_False()) {
-
 
 	if (Get_Server_Rhost(client_id) == NULL) {
 		return;
@@ -124,7 +120,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 
 			float priority = 0.0f;
 
-
 			if (p_object->Get_App_Packet_Type() == APPPACKETTYPE_SERVERFPS) {
 				priority = 0.05f;
 				p_object->Set_Cached_Priority(priority);
@@ -147,7 +142,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 						priority = 0.0f;
 					}
 				}
-
 
 				if (p_object->Get_Object_Dirty_Bit(client_id, NetworkObjectClass::BIT_CREATION) ||
 					p_object->Get_Object_Dirty_Bit(client_id, NetworkObjectClass::BIT_RARE) ||
@@ -378,16 +372,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 
 } else {
 
-
-
-
-
-
-
-
-
-
-
 	/*
 	**
 	**    Optimized version of TCADO
@@ -397,9 +381,7 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 	**
 	*/
 
-
 	const unsigned char dirty_check = (NetworkObjectClass::BIT_FREQUENT ^ 0xffffffff) & (NetworkObjectClass::BIT_CREATION | NetworkObjectClass::BIT_RARE | NetworkObjectClass::BIT_OCCASIONAL);
-
 
 	if (Get_Server_Rhost(client_id) == NULL) {
 		return;
@@ -523,7 +505,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 						global_packet_allowance_full = true;
 					}
 
-
 				} else {
 
 					/*
@@ -636,12 +617,9 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 		}
 	}
 
-
-
 	/*
 	** Now we have a list of non-guaranteed objects that we would like to send.
 	*/
-
 
 	/*
 	** Factor in the bandwidth multiplier.
@@ -655,7 +633,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 		}
 	}
 	avail_bytes_per_update = (int) (mult * (float)avail_bytes_per_update);
-
 
 	/*
 	** If we used tons of bandwidth on guaranteed packets then throttle back on non-guaranteed stuff.
@@ -768,7 +745,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 		REF_PTR_RELEASE(pvs);
 	}
 
-
 }
 
 #endif // not BETACLIENT
@@ -781,7 +757,6 @@ void cNetwork::Tell_Server_About_Dynamic_Objects
 )
 {
 #ifndef FREEDEDICATEDSERVER
-
 
 	//
 	//	Loop over each network object
@@ -816,7 +791,6 @@ void cNetwork::Tell_Server_About_Dynamic_Objects
 void cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
 {
 #ifndef BETACLIENT
-
 
 	if (Get_Server_Rhost (client_id) == NULL) {
 		return;
@@ -863,10 +837,6 @@ void cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
 int
 cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 {
-
-   Debug_Network_Prolific((
-      "Sending update for object %d to %s",
-      object->Get_Network_ID (), Get_Client_String(client_id)));
 
 
 	// Track number of bits sent.
@@ -992,7 +962,6 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 		}
 	}
 
-
 	//
 	//	Reset the dirty bits for this client
 	//
@@ -1022,11 +991,9 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 	return(bits_sent);
 }
 
-
 //-----------------------------------------------------------------------------
 void cNetwork::Intermission_Over_Processing(void)
 {
-
 
 	//
 	//	Terminate the win screen dialog
@@ -1082,7 +1049,6 @@ void cNetwork::Intermission_Over_Processing(void)
 void cNetwork::End_Game_Test(void)
 {
 #ifndef BETACLIENT
-
 
 	if (IS_MISSION || !GameModeManager::Find("Combat")->Is_Active()) {
 		return;
@@ -1266,7 +1232,6 @@ void cNetwork::Hibernation_Think(void)
 			}
 		} else {
 
-
 			VisTableClass * p_vis_table = Peek_Temp_Vis_Table();
 
 			//
@@ -1381,7 +1346,6 @@ void cNetwork::Server_Kill_Connection( int client_id )
 void cNetwork::Delete_Player_Objects(int client_id)
 {
 
-
    //
    // Delete all objects controlled by this guy; inform all clients.
    //
@@ -1412,7 +1376,6 @@ void cNetwork::Delete_Player_Objects(int client_id)
 void cNetwork::Cleanup_After_Client(int client_id)
 {
 
-
    Remove_Player(client_id);
 
    Delete_Player_Objects(client_id);
@@ -1433,7 +1396,6 @@ void cNetwork::Cleanup_After_Client(int client_id)
 //-----------------------------------------------------------------------------
 void cNetwork::Remove_Player(int player_id)
 {
-
 
    cPlayer * p_player = cPlayerManager::Find_Player(player_id);
 
@@ -1463,8 +1425,6 @@ void cNetwork::Test_For_Team_Defaulting(cPlayer * p_player)
 	// reverse the team scores of Nod and GDI.
 	//
 
-
-
 	int count_nod = cPlayerManager::Tally_Team_Size(PLAYERTYPE_NOD);
 	int count_gdi = cPlayerManager::Tally_Team_Size(PLAYERTYPE_GDI);
 
@@ -1478,14 +1438,12 @@ void cNetwork::Test_For_Team_Defaulting(cPlayer * p_player)
 		 count_nod == 0 &&
 		 score_nod > score_gdi) {
 
-
 		p_team_gdi->Set_Score(score_nod);
 		p_team_nod->Set_Score(score_gdi);
 	}
 	else if (p_player->Get_Player_Type() == PLAYERTYPE_GDI &&
 		 count_gdi == 0 &&
 		 score_gdi > score_nod) {
-
 
 		p_team_gdi->Set_Score(score_nod);
 		p_team_nod->Set_Score(score_gdi);

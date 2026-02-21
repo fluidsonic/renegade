@@ -3,7 +3,6 @@
 #include "combat.h"
 #include "animcontrol.h"
 #include "wwpacket.h"
-#include "debug.h"
 #include "gameobjmanager.h"
 #include "vehicle.h"
 #include "persistfactory.h"

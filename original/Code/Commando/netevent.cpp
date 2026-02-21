@@ -32,6 +32,3 @@ cNetEvent::Import_Creation(BitStreamClass &packet)
 	NetworkObjectClass::Import_Creation(packet);
 }
 
-
-
-

@@ -19,4 +19,3 @@ private:
 
 #endif	// __CLIENTHINTMANAGER_H__
 
-

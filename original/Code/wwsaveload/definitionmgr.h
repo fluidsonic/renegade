@@ -11,7 +11,6 @@
 #include "hashtemplate.h"
 #include "vector.h"
 
-
 // Forward declarations
 class DefinitionClass;
 
@@ -141,6 +140,5 @@ DefinitionMgrClass::Get_First (void)
 
 	return definition;
 }
-
 
 #endif //__DEFINITION_MGR_H

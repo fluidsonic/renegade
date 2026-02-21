@@ -2,10 +2,8 @@
 #ifndef __TERRAINMATERIAL_H
 #define __TERRAINMATERIAL_H
 
-
 #include "wwstring.h"
 #include "refcount.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -13,7 +11,6 @@
 class TextureClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -78,6 +75,5 @@ protected:
 	bool						AreUVsMirrored;
 	int						SurfaceType;
 };
-
 
 #endif //__TERRAINMATERIAL_H

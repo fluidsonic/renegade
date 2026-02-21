@@ -17,7 +17,6 @@
 #include "campaign.h"
 #include "mpsettingsmgr.h"
 #include "specialbuilds.h"
-#include "dlgmpslaveservers.h"
 #include "dlgserversaveload.h"
 #include "modpackagemgr.h"
 #include "modpackage.h"
@@ -37,14 +36,12 @@ MPLanHostOptionsMenuClass::MPLanHostOptionsMenuClass (void)	:
 	return ;
 }
 
-
 MPLanHostOptionsMenuClass::~MPLanHostOptionsMenuClass (void)
 {
 
 	REF_PTR_RELEASE (MapCycleDialog);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -77,7 +74,7 @@ MPLanHostOptionsMenuClass::On_Init_Dialog (void)
 
 		TABCTRL_ADD_TAB (tab_ctrl, MPLanHostAdvancedOptionsTabClass);
 		TABCTRL_ADD_TAB (tab_ctrl, MPLanHostVictoryOptionsTabClass);
-		
+
 		//
 		//	Keep a pointer around to the map cycle tab so we can
 		// modify its contents as necessary
@@ -89,7 +86,6 @@ MPLanHostOptionsMenuClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -106,7 +102,6 @@ MPLanHostOptionsMenuClass::Enable_Mod_Selection (bool onoff)
 	MapCycleDialog->Enable_Mod_Selection (onoff);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -128,7 +123,6 @@ MPLanHostOptionsMenuClass::On_Periodic (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -173,8 +167,6 @@ MPLanHostOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 								}
 							}
 
-							SlaveMaster.Startup_Slaves();
-
 							Start_Game(The_Game());
 						} else {
 							WideStringClass errorMsg(0, true);
@@ -195,7 +187,6 @@ MPLanHostOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				//
 				if (tab_ctrl->Apply_Changes_On_Tabs()) {
 					End_Dialog();
-					ServerSaveLoadMenuClass::Set_From_Slave_Config(false);
 					START_DIALOG(ServerSaveLoadMenuClass);
 				}
 			}
@@ -205,8 +196,6 @@ MPLanHostOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
-
 
 void MPLanHostOptionsMenuClass::Start_Game(cGameData* theGame)
 {
@@ -319,7 +308,6 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -369,7 +357,6 @@ void MPLanHostBasicOptionsTabClass::InitSideChoiceCombo(int sidePref)
 		}
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -421,7 +408,6 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_EditCtrl_Change
@@ -455,7 +441,6 @@ MPLanHostBasicOptionsTabClass::On_EditCtrl_Change (EditCtrlClass *edit, int ctrl
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPLanHostAdvancedOptionsTabClass
@@ -466,7 +451,6 @@ MPLanHostAdvancedOptionsTabClass::MPLanHostAdvancedOptionsTabClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -509,20 +493,12 @@ MPLanHostAdvancedOptionsTabClass::On_Init_Dialog (void)
 
 	//Check_Dlg_Button (IDC_TRUST_CLIENTS_CHECK,		The_Game ()->IsClientTrusted.Is_True ());
 
-	// WOL removed - mIsWOLGame is always false
-	mIsWOLGame = false;
 	mPassword = The_Game()->IsPassworded.Get();
-	mLaddered = false;
-	mClanGame = false;
-	mQuickmatch = false;
-	ConfigureWOLControls();
 
 	if (The_Game()->IsDedicated.Is_False()) {
 		Check_Dlg_Button(IDC_SERVER_RESTART_CHECK, false);
 		Enable_Dlg_Item(IDC_SERVER_RESTART_CHECK, false);
 	}
-
-	Enable_Dlg_Item(IDC_MENU_MP_LAN_SLAVE_SERVER_BUTTON, false);
 
 	//
 	//	Fill in the Motd control
@@ -536,13 +512,11 @@ MPLanHostAdvancedOptionsTabClass::On_Init_Dialog (void)
 	//
 	MPLanHostOptionsMenuClass *parent_dlg = static_cast<MPLanHostOptionsMenuClass *> (Get_Parent_Dialog ());
 	if (parent_dlg != NULL) {
-		parent_dlg->Enable_Mod_Selection (mLaddered == false);
+		parent_dlg->Enable_Mod_Selection (true);
 	}
 
 	return ;
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -585,7 +559,6 @@ MPLanHostAdvancedOptionsTabClass::On_Apply (void)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -605,49 +578,25 @@ MPLanHostAdvancedOptionsTabClass::On_Command (int ctrl_id, int message_id, DWORD
 				restart_enabled = false;
 			}
 
-#ifndef MULTIPLAYERDEMO
-			if (restart_enabled) {
-				Enable_Dlg_Item (IDC_SERVER_RESTART_CHECK, true);
-			} else {
-				Check_Dlg_Button(IDC_SERVER_RESTART_CHECK, false);
-				Enable_Dlg_Item(IDC_SERVER_RESTART_CHECK, false);
-			}
-#endif // MULTIPLAYERDEMO
-
-			bool canClan = (IsHostAClanMember() && !mChangeTeams && !mRemixTeams);
-			Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, (mIsWOLGame && canClan));
-
-			bool clanGame = (((param != 0) || canClan) ? mClanGame : false);
-			Check_Dlg_Button(IDC_CLAN_GAME_CHECK, (mIsWOLGame && clanGame));
+			Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, false);
+			Check_Dlg_Button(IDC_CLAN_GAME_CHECK, false);
 		}
 		break;
 
 		case IDC_SERVER_RESTART_CHECK:
 		break;
 
-		//
-		// Bring up the slave server config dialog.
-		//
-		case IDC_MENU_MP_LAN_SLAVE_SERVER_BUTTON:
-			if (WW3D::Is_Windowed()) {
-				START_DIALOG(SlaveServerDialogClass);
-			} else {
-				DlgMsgBox::DoDialog(IDS_MENU_TEXT329, IDS_SLAVES_NEED_WINDOWED, DlgMsgBox::Okay);
-			}
-			break;
-
 		case IDC_TEAM_CHANGE_CHECK:
 			{
 			mChangeTeams = (param != 0);
 
 			// Change Team and Clans are mutually exclusive
-			bool canClan = (!mChangeTeams && !Is_Dlg_Button_Checked(IDC_REMIX_TEAMS_CHECK) && !Is_Dlg_Button_Checked(IDC_ALLOW_QUICKMATCH));
-			Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, canClan);
-			Check_Dlg_Button(IDC_CLAN_GAME_CHECK, canClan && mClanGame);
+			Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, false);
+			Check_Dlg_Button(IDC_CLAN_GAME_CHECK, false);
 
 			// Change Team and laddered are mutually exclusive
 			Enable_Dlg_Item(IDC_LADDERED_CHECK, !mChangeTeams);
-			Check_Dlg_Button(IDC_LADDERED_CHECK, !mChangeTeams && mLaddered);
+			Check_Dlg_Button(IDC_LADDERED_CHECK, false);
 			}
 			break;
 
@@ -656,47 +605,24 @@ MPLanHostAdvancedOptionsTabClass::On_Command (int ctrl_id, int message_id, DWORD
 			mRemixTeams = (param != 0);
 
 			// Remix teams and clans are mutually exclusive
-			bool canClan = (!mRemixTeams && !Is_Dlg_Button_Checked(IDC_TEAM_CHANGE_CHECK) && !Is_Dlg_Button_Checked(IDC_ALLOW_QUICKMATCH));
-			Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, canClan);
-			Check_Dlg_Button(IDC_CLAN_GAME_CHECK, canClan && mClanGame);
+			Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, false);
+			Check_Dlg_Button(IDC_CLAN_GAME_CHECK, false);
 			}
 			break;
 
 		// If clan is checked then quickmatch is not allowed.
 		case IDC_CLAN_GAME_CHECK:
-			mClanGame = (param != 0);
-			ConfigureWOLControls();
 			break;
 
 		// If quickmatch is checked then laddered must be checked as well.
 		case IDC_ALLOW_QUICKMATCH:
-			mQuickmatch = (param != 0);
-			ConfigureWOLControls();
 			break;
 
 		// If clan is checked then quickmatch is not allowed.
 		case IDC_LADDERED_CHECK:
-			{
-			mLaddered = (param != 0);
-
-			//
-			//	Don't allow the user to select a MOD package if the game is laddered
-			//
-			MPLanHostOptionsMenuClass *parent_dlg = static_cast<MPLanHostOptionsMenuClass *> (Get_Parent_Dialog ());
-			if (parent_dlg != NULL) {
-				parent_dlg->Enable_Mod_Selection (mLaddered == false);
-			}
-
-			// Laddered games and team changing is mutually exclusive
-			bool canChangeTeam = (!mLaddered && !Is_Dlg_Button_Checked(IDC_CLAN_GAME_CHECK));
-			Enable_Dlg_Item(IDC_TEAM_CHANGE_CHECK, canChangeTeam);
-			Check_Dlg_Button(IDC_TEAM_CHANGE_CHECK, canChangeTeam && mChangeTeams);
-			}
 			break;
 	}
 }
-
-
 
 void MPLanHostAdvancedOptionsTabClass::HandleNotification (DlgMsgBoxEvent &event)
 {
@@ -711,109 +637,12 @@ void MPLanHostAdvancedOptionsTabClass::HandleNotification (DlgMsgBoxEvent &event
 	}
 }
 
-
-
-
 void MPLanHostAdvancedOptionsTabClass::ReceiveSignal(bool& hasPassword)
 {
 	if (mPassword != hasPassword) {
 		mPassword = hasPassword;
-		ConfigureWOLControls();
 	}
 }
-
-
-void MPLanHostAdvancedOptionsTabClass::ConfigureWOLControls(void)
-{
-	bool isDedicated = Is_Dlg_Button_Checked(IDC_DEDICATED_SERVER_CHECK);
-	bool isQuickmatch = Is_Dlg_Button_Checked(IDC_ALLOW_QUICKMATCH);
-	bool isTeamChange = Is_Dlg_Button_Checked(IDC_TEAM_CHANGE_CHECK);
-	bool isTeamRemix = Is_Dlg_Button_Checked(IDC_REMIX_TEAMS_CHECK);
-	bool isClanMember = IsHostAClanMember();
-
-	//---------------------------------------------------------------------------
-	// Clan games allowed if:
-	//   - WOL is active.
-	//   - Quickmatch is OFF
-	//   - Change team is OFF
-	//   - Remix team is OFF
-	//   - Host is member of a clan OR game is dedicated.
-	//
-	// Requirements if ON:
-	//   - Team Change must be OFF
-	//   - Team Remix must be OFF
-	//---------------------------------------------------------------------------
-	bool canClan = (mIsWOLGame && !isQuickmatch && !isTeamChange && !isTeamRemix && (isClanMember || isDedicated));
-	Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, canClan);
-
-	bool clanned = (canClan && mClanGame);
-	Check_Dlg_Button(IDC_CLAN_GAME_CHECK, clanned);
-
-	//---------------------------------------------------------------------------
-	// Quickmatch allowed if:
-	//   - WOL is active
-	//   - No password
-	//   - Clan is OFF
-	//
-	// Requirements if ON:
-	//   - Ladderd must be ON
-	//   - Clan must be OFF
-	//---------------------------------------------------------------------------
-	bool canQuickmatch = (mIsWOLGame && !mPassword && !clanned);
-	Enable_Dlg_Item(IDC_ALLOW_QUICKMATCH, canQuickmatch);
-
-	isQuickmatch = (canQuickmatch && mQuickmatch);
-	Check_Dlg_Button(IDC_ALLOW_QUICKMATCH, isQuickmatch);
-
-	//---------------------------------------------------------------------------
-	// Ladder option available if WOL active and quickmatch is OFF
-	//---------------------------------------------------------------------------
-	bool canLadder = (mIsWOLGame && !isQuickmatch && !isTeamChange);
-	Enable_Dlg_Item(IDC_LADDERED_CHECK, canLadder);
-
-	bool laddered = ((canLadder && mLaddered) || isQuickmatch);
-	Check_Dlg_Button(IDC_LADDERED_CHECK, laddered);
-
-	//---------------------------------------------------------------------------
-	// Team change not allowed with clan or laddered games.
-	//---------------------------------------------------------------------------
-	bool canChangeTeams = (!clanned && !laddered && The_Game()->Is_Editable_Teaming());
-	Enable_Dlg_Item(IDC_TEAM_CHANGE_CHECK, canChangeTeams);
-
-	bool changeTeams = (canChangeTeams && mChangeTeams);
-	Check_Dlg_Button(IDC_TEAM_CHANGE_CHECK, changeTeams);
-
-	//---------------------------------------------------------------------------
-	// Remix teams not allowed with clan games
-	//---------------------------------------------------------------------------
-	bool remixTeams = (!clanned && mRemixTeams);
-	Enable_Dlg_Item(IDC_REMIX_TEAMS_CHECK, !clanned);
-	Check_Dlg_Button(IDC_REMIX_TEAMS_CHECK, remixTeams);
-
-	//---------------------------------------------------------------------------
-	// Double check availability of controls
-	//---------------------------------------------------------------------------
-
-	// Ladder is available only if change teams if off
-	Enable_Dlg_Item(IDC_LADDERED_CHECK, !changeTeams && canLadder);
-	Check_Dlg_Button(IDC_LADDERED_CHECK, !changeTeams && laddered);
-
-	// Clan is available only if change team and remix team is off.
-	canClan = (!changeTeams && !remixTeams && canClan);
-	Enable_Dlg_Item(IDC_CLAN_GAME_CHECK, canClan);
-	Check_Dlg_Button(IDC_CLAN_GAME_CHECK, canClan && clanned);
-}
-
-
-bool MPLanHostAdvancedOptionsTabClass::IsHostAClanMember(void) const
-{
-	GameModeClass* gameMode = GameModeManager::Find("WOL");
-
-	// WOL removed - clan membership not available
-	(void)gameMode;
-	return false;
-}
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -825,7 +654,6 @@ MPLanHostMapCycleOptionsTabClass::MPLanHostMapCycleOptionsTabClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -843,7 +671,6 @@ List_Contains(DynamicVectorClass<WideStringClass> & list, WideStringClass & item
 
 	return false;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -886,7 +713,6 @@ MPLanHostMapCycleOptionsTabClass::On_Init_Dialog (void)
 	ChildDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -956,7 +782,6 @@ MPLanHostMapCycleOptionsTabClass::On_Apply (void)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Enable_Mod_Selection
@@ -977,7 +802,7 @@ MPLanHostMapCycleOptionsTabClass::Enable_Mod_Selection (bool onoff)
 		Enable_Dlg_Item (IDC_MOD_PACKAGE_COMBO, true);
 	} else {
 		Enable_Dlg_Item (IDC_MOD_PACKAGE_COMBO, false);
-		
+
 		//
 		//	Ensure no mod package is selected and rebuild the map list if necessary
 		//
@@ -989,7 +814,6 @@ MPLanHostMapCycleOptionsTabClass::Enable_Mod_Selection (bool onoff)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1062,7 +886,6 @@ MPLanHostMapCycleOptionsTabClass::Build_Mod_Package_List (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Map
@@ -1085,7 +908,6 @@ MPLanHostMapCycleOptionsTabClass::Add_Map (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1114,7 +936,6 @@ MPLanHostMapCycleOptionsTabClass::Remove_Map (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -1137,7 +958,6 @@ MPLanHostMapCycleOptionsTabClass::On_Command (int ctrl_id, int message_id, DWORD
 	ChildDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1166,7 +986,6 @@ MPLanHostMapCycleOptionsTabClass::On_ListCtrl_DblClk
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ComboBoxCtrl_Sel_Change
@@ -1184,7 +1003,6 @@ MPLanHostMapCycleOptionsTabClass::On_ComboBoxCtrl_Sel_Change
 	Populate_Map_List_Ctrl ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1219,7 +1037,6 @@ MPLanHostMapCycleOptionsTabClass::Populate_Map_List_Ctrl (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1308,7 +1125,6 @@ MPLanHostMapCycleOptionsTabClass::Fill_Map_Ctrls (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Build_Map_List
@@ -1341,7 +1157,6 @@ MPLanHostMapCycleOptionsTabClass::Build_Map_List (const ModPackageClass *package
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Build_Map_List
@@ -1367,7 +1182,6 @@ MPLanHostMapCycleOptionsTabClass::Build_Map_List (void)
 		file_filter.Format("data\\mp_*.mix");
 	}
 
-
 	for (file_find = ::FindFirstFile (file_filter, &find_info);
 		 (file_find != INVALID_HANDLE_VALUE) && keep_going;
 		  keep_going = ::FindNextFile (file_find, &find_info))
@@ -1391,8 +1205,6 @@ MPLanHostMapCycleOptionsTabClass::Build_Map_List (void)
 	return ;
 }
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPLanHostVictoryOptionsTabClass
@@ -1403,7 +1215,6 @@ MPLanHostVictoryOptionsTabClass::MPLanHostVictoryOptionsTabClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1437,7 +1248,6 @@ MPLanHostVictoryOptionsTabClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Apply
@@ -1463,7 +1273,6 @@ MPLanHostVictoryOptionsTabClass::On_Apply (void)
 
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1497,7 +1306,6 @@ MPLanHostVictoryOptionsTabClass::Update_Enable_State (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -1526,8 +1334,6 @@ MPLanHostVictoryOptionsTabClass::On_Command (int ctrl_id, int message_id, DWORD 
 	ChildDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1578,11 +1384,9 @@ MPLanHostCnCOptionsTabClass::On_Init_Dialog (void)
 		radar_combobox->Set_Curr_Sel (The_Game ()->Get_Radar_Mode ());
 	}
 
-
 	ChildDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

@@ -157,7 +157,6 @@ protected:
 	bool												IsInterruptable;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //	Peek_Conversation
 ////////////////////////////////////////////////////////////////
@@ -166,6 +165,5 @@ ActiveConversationClass::Peek_Conversation (void) const
 {
 	return Conversation;
 }
-
 
 #endif //__ACTIVE_CONVERSATION_H

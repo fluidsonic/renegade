@@ -89,7 +89,6 @@ private:
 	VTOLVehicleClass & operator = (const VTOLVehicleClass &);
 };
 
-
 /**
 ** VTOLVehicleDefClass
 ** Initialization/Editor Integration for VTOLVehicleClass
@@ -158,7 +157,6 @@ protected:
 
 	friend class VTOLVehicleClass;
 };
-
 
 #endif
 

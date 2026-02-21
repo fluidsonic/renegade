@@ -14,7 +14,6 @@
 
 static SegLineRendererClass _LineRenderer;
 
-
 /*
 ** SegmentedLineClass implementation:
 */
@@ -56,7 +55,6 @@ void SegmentedLineClass::Reset_Line(void)
 {
 	LineRenderer.Reset_Line();
 }
-
 
 // These are segment points, and include the start and end point of the
 // entire line. Therefore there must be at least two.
@@ -113,7 +111,6 @@ void SegmentedLineClass::Delete_Point(unsigned int point_idx)
 		PointLocations.Delete(point_idx);
 	}
 }
-
 
 TextureClass * SegmentedLineClass::Get_Texture(void)
 {
@@ -262,7 +259,6 @@ void SegmentedLineClass::Set_Freeze_Random(int onoff)
 {
 	LineRenderer.Set_Freeze_Random(onoff);
 }
-
 
 void SegmentedLineClass::Set_Disable_Sorting(int onoff)
 {
@@ -480,8 +476,6 @@ void SegmentedLineClass::Set_Texture_Reduction_Factor(float trf)
 	if (LineRenderer.Peek_Texture()) LineRenderer.Peek_Texture()->Set_Reduction_Factor(trf);
 }*/
 
-
-
 void SegmentedLineClass::Render_Seg_Line(RenderInfoClass & rinfo)
 {
 	// Line must have at least two points to be valid
@@ -498,7 +492,6 @@ void SegmentedLineClass::Render_Seg_Line(RenderInfoClass & rinfo)
 		bounding_sphere
 		);
 }
-
 
 bool SegmentedLineClass::Cast_Ray(RayCollisionTestClass & raytest)
 {
@@ -543,5 +536,4 @@ bool SegmentedLineClass::Cast_Ray(RayCollisionTestClass & raytest)
 
 	return retval;
 }
-
 

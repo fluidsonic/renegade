@@ -2,17 +2,14 @@
 #ifndef __INPUT_CONFIG_MGR_H
 #define __INPUT_CONFIG_MGR_H
 
-
 #include "inputconfig.h"
 #include "vector.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class ChunkSaveClass;
 class ChunkLoadClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -49,7 +46,6 @@ public:
 	static void		Load_Configuration (const InputConfigClass &config);
 	static void		Save_Current_Configuration (void);	
 	static void		Save_Configuration (const InputConfigClass &config);
-
 
 	//
 	//	Configuration list support
@@ -89,7 +85,6 @@ private:
 	static DynamicVectorClass<InputConfigClass>	ConfigList;
 	static int												CurrentConfigIndex;
 };
-
 
 #endif //__INPUT_CONFIG_MGR_H
 

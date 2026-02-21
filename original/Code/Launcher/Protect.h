@@ -11,7 +11,6 @@
 template<typename T> class RefPtr;
 class UString;
 
-
 class Protect
 	{
 	public:

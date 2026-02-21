@@ -1,6 +1,5 @@
 #include "cullsys.h"
 
-
 /*************************************************************************
 **
 ** CullableClass Implementation
@@ -50,7 +49,6 @@ CullSystemClass * CullableClass::Get_Culling_System(void) const
 	}
 	return NULL;
 }
-
 
 /*************************************************************************
 **
@@ -107,7 +105,4 @@ void CullSystemClass::Add_To_Collection(CullableClass * obj)
 	obj->NextCollected = CollectionHead;
 	CollectionHead = obj;
 }
-
-
-
 

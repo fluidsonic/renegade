@@ -1,7 +1,6 @@
 #include "timemgr.h"
 #include "always.h"
 #include "ww3d.h"
-#include "debug.h"
 #include "slist.h"
 #include "input.h"
 #include "combat.h"
@@ -13,7 +12,6 @@
 #include "win.h"
 //#include "systimer.h"		// for timegettime
 #include "systimer.h"
-
 
 /*
 **
@@ -90,14 +88,12 @@ void FrameTimeHistogramClass::Add(float frame_time)
 	Counts[slot]++;
 }
 
-
 FrameTimeHistogramClass FrameTimeHistogram(16,15.0f);
 
 FrameTimeHistogramClass& TimeManager::Peek_Frame_Time_Histogram()
 {
 	return FrameTimeHistogram;
 }
-
 
 /*
 **
@@ -120,7 +116,6 @@ void TimeManager::Reset(void)
 	FrameSeconds = 0.0f;
 	RealFrameSeconds = 0.0f;
 }
-
 
 /*
 **
@@ -156,7 +151,6 @@ void	TimeManager::Update_Frame_Time()
 
 	// Single Step
 	static bool single_step = false;
-
 
 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Is_Snap_Shot_Mode() ) {
 		FrameTicks = 0;
@@ -246,10 +240,6 @@ void	TimeManager::Update( void )
 {
 	Update_Frame_Time();
 
-	// tell the profiling code that another frame has gone by
-	WWProfileManager::Increment_Frame_Counter();
-
 
 }
-
 

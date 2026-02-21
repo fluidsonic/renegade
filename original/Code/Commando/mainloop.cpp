@@ -6,7 +6,6 @@
 #include "timemgr.h"
 #include "input.h"
 #include "gamemode.h"
-#include "debug.h"
 #include "msgloop.h"
 #include "cnetwork.h"
 #include "miscutil.h"
@@ -26,7 +25,6 @@
 #include "consolemode.h"
 #include "demosupport.h"
 
-
 /*
 **
 */
@@ -39,7 +37,6 @@ void Stop_Main_Loop(int exitCode)
 	ExitCode = exitCode;
 }
 
-
 void _Game_Main_Loop_Loop(void)
 {
 
@@ -48,7 +45,6 @@ void _Game_Main_Loop_Loop(void)
    TimeManager::Update();
 
    Input::Update();
-
 
 {	
    if (COMBAT_CAMERA != NULL) {
@@ -82,7 +78,6 @@ void _Game_Main_Loop_Loop(void)
 
 	GameModeManager::Render();
 
-
 {	
 	ConsoleBox.Think();
 }
@@ -108,9 +103,6 @@ void _Game_Main_Loop_Loop(void)
 	}
 }
 #endif
-
-   DebugManager::Update();
-
 
 	/*
 	** Sleep for a while if we are hogging the CPU.

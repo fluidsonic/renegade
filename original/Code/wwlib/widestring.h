@@ -208,7 +208,6 @@ WideStringClass::WideStringClass (const WCHAR *string, bool hint_temporary)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////
 //	WideStringClass
 ///////////////////////////////////////////////////////////////////
@@ -233,7 +232,6 @@ WideStringClass::~WideStringClass (void)
 	Free_String ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////
 //	Is_Empty
@@ -373,7 +371,6 @@ WideStringClass::operator >= (const WCHAR *string) const
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////
 //	Erase
 ///////////////////////////////////////////////////////////////////
@@ -407,7 +404,6 @@ inline void WideStringClass::Trim(void)
 	int len = wcslen(m_Buffer);
 	Store_Length(len);
 }
-
 
 ///////////////////////////////////////////////////////////////////
 //	operator=
@@ -729,7 +725,6 @@ WideStringClass::Convert_To (StringClass &string)
 {
 	return (string.Copy_Wide (m_Buffer));
 }
-
 
 inline bool	
 WideStringClass::Convert_To (StringClass &string) const

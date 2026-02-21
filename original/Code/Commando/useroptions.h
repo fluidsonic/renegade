@@ -19,7 +19,6 @@
 #include "regstring.h"
 #include "bandwidth.h"
 
-
 //-----------------------------------------------------------------------------
 //
 // Various options that the player chooses
@@ -71,15 +70,6 @@ class cUserOptions
 
 //-----------------------------------------------------------------------------
 #endif // USEROPTIONS_H
-
-
-
-
-
-
-
-
-
 
 /*
 		static cRegistryInt	GameListFilterMaxPing;

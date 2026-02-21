@@ -153,6 +153,4 @@ WWINLINE const Matrix3D & HTreeClass::Get_Transform(int pivot) const
 	return Pivot[pivot].Transform;
 }
 
-
-
 #endif

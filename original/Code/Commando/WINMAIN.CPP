@@ -60,7 +60,6 @@
 #include "WWAudio.H"
 #include "FFactory.H"
 
-#include "debug.h"
 #include "verchk.h"
 #include "devoptions.h"
 #include "dialogmgr.h"
@@ -80,7 +79,6 @@
 #include "formconv.h"
 #include "consolemode.h"
 #include "specialbuilds.h"
-#include "slavemaster.h"
 
 #include "serversettings.h"
 
@@ -153,8 +151,6 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 {
 	SDL_SetMainReady(); // Tell SDL2 that main() is handled by us (SDL_MAIN_HANDLED)
 
-	WWMemoryLogClass::Init();	// This switches memlog from static to dynamic allocations mode
-
 #ifdef _DEBUG
 	/*
 	**	Setup to track memory heap integrity and check for
@@ -190,7 +186,7 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	// There's a couple of options we need for the FDS
 	//
 #ifdef FREEDEDICATEDSERVER
-	if (!SlaveMaster.Am_I_Slave() && !ServerSettingsClass::Is_Server_Settings_File_Set()) {
+	if (!ServerSettingsClass::Is_Server_Settings_File_Set()) {
 		cUserOptions::Set_Server_INI_File("STARTSERVER=server.ini");
 	}
 	ConsoleBox.Set_Exclusive(true);

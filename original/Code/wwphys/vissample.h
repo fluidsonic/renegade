@@ -52,8 +52,5 @@ protected:
 
 };
 
-
-
-
 	
 #endif

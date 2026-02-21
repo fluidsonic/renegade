@@ -14,7 +14,6 @@
 //////////////////////////////////////////////////////////////////////////
 extern class TranslateDBClass _TheTranslateDB;
 
-
 //////////////////////////////////////////////////////////////////////////
 // Typedefs
 //////////////////////////////////////////////////////////////////////////
@@ -30,7 +29,6 @@ extern const char *	ENGLISH_STRING_NOT_FOUND;
 #define TRANSLATION					TranslateDBClass::Get_String
 #define TRANSLATE						TranslateDBClass::Get_String
 #define TRANSLATE_BY_DESC(desc)	TranslateDBClass::Get_String (desc);
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -105,7 +103,6 @@ public:
 	WWINLINE static TDBObjClass *	Find_Object (uint32 id);
 	WWINLINE static TDBObjClass * Find_Object (const char *id_desc);
 
-
 	//
 	//	Content management
 	//
@@ -173,7 +170,6 @@ protected:
 	//
 	static uint32				Find_Unique_ID (void);
 
-
 	//////////////////////////////////////////////////////////////
 	//	Protected data types
 	//////////////////////////////////////////////////////////////
@@ -198,7 +194,6 @@ private:
 	static FILTER_OPT				FilterType;
 	static uint32					FilterCategoryID;
 };
-
 
 //////////////////////////////////////////////////////////////
 //	Get_String
@@ -244,7 +239,6 @@ TranslateDBClass::Get_String (uint32 id)
 	return string;
 }
 
-
 //////////////////////////////////////////////////////////////
 //	Get_String
 //////////////////////////////////////////////////////////////
@@ -272,7 +266,6 @@ TranslateDBClass::Get_String (const char *id_desc)
 
 	return string;
 }
-
 
 //////////////////////////////////////////////////////////////
 //	Get_English_String
@@ -318,7 +311,6 @@ TranslateDBClass::Get_English_String (uint32 id)
 	return string;
 }
 
-
 //////////////////////////////////////////////////////////////
 //
 //	Find_Object
@@ -361,7 +353,6 @@ TranslateDBClass::Find_Object (uint32 id)
 
 	return object;
 }
-
 
 #endif //__TRANSLATE_DB_H
 

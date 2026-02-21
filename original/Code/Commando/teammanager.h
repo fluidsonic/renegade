@@ -66,11 +66,3 @@ private:
 
 #endif // TEAMMANAGER_H
 
-
-
-
-
-
-
-
-

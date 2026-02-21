@@ -19,6 +19,5 @@ class CombatDazzleClass : public DazzleVisibilityClass
 
 extern CombatDazzleClass _TheCombatDazzleHandler;
 
-
 #endif
 

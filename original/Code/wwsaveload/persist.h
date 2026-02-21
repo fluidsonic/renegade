@@ -10,7 +10,6 @@ class PersistFactoryClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	PersistClass
@@ -31,7 +30,5 @@ public:
 	virtual bool								Load (ChunkLoadClass &cload)		{ return true; }
 
 };
-
-
 
 #endif

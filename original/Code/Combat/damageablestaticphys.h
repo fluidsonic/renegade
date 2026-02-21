@@ -5,7 +5,6 @@
 #include "staticanimphys.h"
 #include "damage.h"
 
-
 class DamageableStaticPhysDefClass;
 
 /**
@@ -59,7 +58,6 @@ protected:
 	friend class DSAPONetworkObjectClass;
 };
 
-
 /*
 ** DamageableStaticPhysDefClass
 ** Damageable static objects support two animation loops and several sequences.  An object
@@ -104,7 +102,6 @@ protected:
 	friend class								DamageableStaticPhysClass;
 	friend class								DSAPONetworkObjectClass;
 };
-
 
 #endif	// DAMAGEABLESTATICPHYS_H
 

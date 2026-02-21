@@ -11,7 +11,6 @@
 #include "assets.h"
 #include "savegame.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CharacterOptionsMenuClass
@@ -25,7 +24,6 @@ CharacterOptionsMenuClass::CharacterOptionsMenuClass (void)	:
 	SkinPackageMgrClass::Build_List ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -45,7 +43,6 @@ CharacterOptionsMenuClass::~CharacterOptionsMenuClass (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -103,7 +100,6 @@ CharacterOptionsMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -115,7 +111,6 @@ CharacterOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -167,7 +162,6 @@ CharacterOptionsMenuClass::Fill_Character_Combobox (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ComboBoxCtrl_Sel_Change
@@ -196,7 +190,6 @@ CharacterOptionsMenuClass::On_ComboBoxCtrl_Sel_Change
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Character_Selected
@@ -217,7 +210,6 @@ CharacterOptionsMenuClass::On_Character_Selected (int index)
 	Display_Default_Model (definition_id);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -251,7 +243,6 @@ CharacterOptionsMenuClass::Display_Default_Model (int definition_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display_Model
@@ -274,7 +265,6 @@ CharacterOptionsMenuClass::Display_Model (const char *model_name)
 	viewer_ctrl->Set_Interface_Mode (ViewerCtrlClass::Z_ROTATION, 45.0F);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

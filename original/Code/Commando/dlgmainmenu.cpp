@@ -11,7 +11,6 @@
 #include "meshgeometry.h"
 #include "dialogmgr.h"
 #include "gameinitmgr.h"
-#include "debug.h"
 #include "dialogcontrol.h"
 #include "specialbuilds.h"
 #include "buildnum.h"
@@ -53,7 +52,6 @@ MainMenuDialogClass::MainMenuDialogClass (void)	:
 		Animated = false;
 	}
 
-
 	if (TitleTransModel != NULL && GizmoModel != NULL && Animated) {
 
 		//
@@ -73,7 +71,6 @@ MainMenuDialogClass::MainMenuDialogClass (void)	:
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -95,7 +92,6 @@ MainMenuDialogClass::~MainMenuDialogClass (void)
 	REF_PTR_RELEASE (GizmoModel);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -138,7 +134,6 @@ MainMenuDialogClass::On_Menu_Activate (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -168,7 +163,6 @@ MainMenuDialogClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Transition_In
@@ -197,8 +191,7 @@ MainMenuDialogClass::Get_Transition_In (DialogBaseClass *prev_dlg)
 	//	We only want to transition between menu dialogs
 	//
 	if (prev_dlg == NULL ||
-			(prev_dlg != QuitVerificationDialogClass::Get_Instance () &&
-			 DlgWOLWait::Get_Instance() == nullptr))	// WOL removed
+			(prev_dlg != QuitVerificationDialogClass::Get_Instance ()))
 	{
 		transition = new MainMenuTransitionClass;
 		transition->Set_Model (TitleTransModel);
@@ -216,7 +209,6 @@ MainMenuDialogClass::Get_Transition_In (DialogBaseClass *prev_dlg)
 
 	return transition;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -250,7 +242,6 @@ MainMenuDialogClass::Get_Transition_Out (DialogBaseClass *next_dlg)
 
 	return transition;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -309,7 +300,6 @@ MainMenuDialogClass::Choose_Skirmish_Map (void)
 	return mapname;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -352,7 +342,7 @@ MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 				GameInitMgrClass::Initialize_LAN ();
 			} else {
 				DlgMsgBox::DoDialog(
-					TRANSLATE(IDS_MP_UNABLE_INITIALIZE_LAN), 
+					TRANSLATE(IDS_MP_UNABLE_INITIALIZE_LAN),
 					TRANSLATE(IDS_MP_NO_LAN_IP_ADDRESSES_FOUND));
 				allow_default = false;
 			}
@@ -372,7 +362,6 @@ MainMenuDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	}
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -423,7 +412,6 @@ MainMenuDialogClass::Display (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Version_Number
@@ -450,29 +438,6 @@ MainMenuDialogClass::Update_Version_Number (void)
 	version_string.Format (L"v%d.%.3d %s-%s %s", (version_major >> 16), (version_major & 0xFFFF), build_initials, build_number, build_date);
 	Set_Dlg_Item_Text (IDC_VERSION_STATIC, version_string);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 				//TRANSLATE_ME
 				//const WCHAR * title	= L"Unable to initialize LAN";

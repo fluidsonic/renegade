@@ -64,7 +64,6 @@ SubTitleParserClass::SubTitleParserClass(Straw& input)
 	}
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -83,7 +82,6 @@ SubTitleParserClass::SubTitleParserClass(Straw& input)
 SubTitleParserClass::~SubTitleParserClass()
 {
 }
-
 
 /******************************************************************************
 *
@@ -160,7 +158,6 @@ DynamicVectorClass<SubTitleClass*>* SubTitleParserClass::Get_Sub_Titles(const ch
 	return subTitleCollection;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -210,7 +207,6 @@ bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 
 	return false;
 }
-
 
 /******************************************************************************
 *
@@ -309,7 +305,6 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 	return true;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -346,7 +341,6 @@ void SubTitleParserClass::Parse_Token(wchar_t* token, wchar_t* param, SubTitleCl
 		}
 	}
 }
-
 
 /******************************************************************************
 *
@@ -385,14 +379,12 @@ wchar_t* SubTitleParserClass::Get_Next_Line(void)
 	return NULL;
 }
 
-
 // Convert a time string in the format hh:mm:ss:tt into 1/60 second ticks.
 unsigned long Decode_Time_String(wchar_t* string)
 {
 	#define TICKS_PER_SECOND 60
 	#define TICKS_PER_MINUTE (60 * TICKS_PER_SECOND)
 	#define TICKS_PER_HOUR   (60 * TICKS_PER_MINUTE)
-
 
 	wchar_t buffer[12];
 	wcsncpy(buffer, string, 12);
@@ -429,13 +421,11 @@ unsigned long Decode_Time_String(wchar_t* string)
 	return time;
 }
 
-
 void Parse_Time(wchar_t* param, SubTitleClass* subTitle)
 {
 	unsigned long time = Decode_Time_String(param);
 	subTitle->Set_Display_Time(time);
 }
-
 
 void Parse_Duration(wchar_t* param, SubTitleClass* subTitle)
 {
@@ -445,7 +435,6 @@ void Parse_Duration(wchar_t* param, SubTitleClass* subTitle)
 		subTitle->Set_Display_Duration(time);
 	}
 }
-
 
 void Parse_Position(wchar_t* param, SubTitleClass* subTitle)
 {
@@ -459,7 +448,6 @@ void Parse_Position(wchar_t* param, SubTitleClass* subTitle)
 			{L"Center", SubTitleClass::Center},
 			{NULL, SubTitleClass::Center}
 	};
-
 
 	wchar_t* ptr = param;
 
@@ -489,7 +477,6 @@ void Parse_Position(wchar_t* param, SubTitleClass* subTitle)
 	subTitle->Set_Alignment(align);
 }
 
-
 void Parse_Color(wchar_t* param, SubTitleClass* subTitle)
 {
 
@@ -509,7 +496,6 @@ void Parse_Color(wchar_t* param, SubTitleClass* subTitle)
 
 	subTitle->Set_RGB_Color(red, green, blue);
 }
-
 
 void Parse_Text(wchar_t* param, SubTitleClass* subTitle)
 {

@@ -25,13 +25,6 @@ const LPCSTR NETTGA_YOU_INDICATOR			= "you.tga";
 
 #endif // NETTGAS_H
 
-
-
-
-
-
-
-
 //const LPCSTR NETTGA_SPECTATABLE_INDICATOR	= "specable.tga";
 //const LPCSTR NETTGA_SPECTATING_EYE			= "eye.tga";
 

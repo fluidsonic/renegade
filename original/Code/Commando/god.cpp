@@ -19,7 +19,6 @@
 #include "combatgmode.h"
 #include "gameinitmgr.h"
 #include "scripts.h"
-#include "debug.h"
 #include "renegadedialogmgr.h"
 #include "cheatmgr.h"
 #include "dialogmgr.h"
@@ -87,7 +86,6 @@ bool cGod::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 //-----------------------------------------------------------------------------
 void cGod::Think(void)
@@ -242,7 +240,6 @@ void cGod::Create_Ai_Player(void)
 SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int model_num*/)
 {
 
-
 	StringClass preset_name;
 	preset_name.Format("Commando");
 
@@ -335,7 +332,6 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 		//	Let the cheat manager apply its cheats to the new player
 		//
 		CheatMgrClass::Get_Instance()->Apply_Cheats();
-
 
 	}
 
@@ -458,7 +454,6 @@ void cGod::Load_Game( void )
 	RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_LOAD_GAME);
 }
 
-
 void cGod::Mission_Failed( void )
 {
 	if ( State == GOD_STATE_SINGLE_RUNNING ) {
@@ -469,7 +464,6 @@ void cGod::Mission_Failed( void )
 		popup->Release_Ref();
 	}
 }
-
 
 void cGod::Store_Inventory( SoldierGameObj * soldier )
 {
@@ -489,5 +483,4 @@ void cGod::Reset_Inventory( void )
 {
 	LevelStartInventory.Reset();
 }
-
 

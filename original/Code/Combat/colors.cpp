@@ -2,7 +2,6 @@
 
 #include "playertype.h"
 
-
 Vector3 Get_Color_For_Team(int team)
 {
 

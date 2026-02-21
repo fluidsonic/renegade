@@ -9,12 +9,10 @@
 #include "soldier.h"
 #include "gametype.h"
 
-
 ///////////////////////////////////////////////////////////////////////
 // Global singleton instance
 ///////////////////////////////////////////////////////////////////////
 EncyclopediaMgrClass _TheEncyclopediaMgrSaveLoadSubsystem;
-
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -32,7 +30,6 @@ enum
 	VARID_SCALE,
 };
 
-
 const char *ENCY_INI_FILENAMES[EncyclopediaMgrClass::TYPE_COUNT] =
 {
 	"characters.ini",
@@ -41,13 +38,11 @@ const char *ENCY_INI_FILENAMES[EncyclopediaMgrClass::TYPE_COUNT] =
 	"buildings.ini",
 };
 
-
 ///////////////////////////////////////////////////////////////////////
 // Static member initialization
 ///////////////////////////////////////////////////////////////////////
 BooleanVectorClass	EncyclopediaMgrClass::KnownObjectVector[TYPE_COUNT];
 BooleanVectorClass	EncyclopediaMgrClass::CopyOfKnownObjectVector[TYPE_COUNT];
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -68,7 +63,6 @@ EncyclopediaMgrClass::Initialize (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -86,7 +80,6 @@ EncyclopediaMgrClass::Shutdown (void)
 
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -133,7 +126,6 @@ EncyclopediaMgrClass::Build_Bit_Vector (TYPE type)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Reveal_Object
@@ -156,7 +148,6 @@ EncyclopediaMgrClass::Reveal_Object (TYPE type, int object_id)
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Is_Object_Revealed
@@ -177,7 +168,6 @@ EncyclopediaMgrClass::Is_Object_Revealed (TYPE type, int object_id)
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Reveal_Objects
@@ -189,7 +179,6 @@ EncyclopediaMgrClass::Reveal_Objects (TYPE type)
 	KnownObjectVector[type].Set ();
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -209,7 +198,6 @@ EncyclopediaMgrClass::Reveal_All_Objects (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Hide_Objects
@@ -221,7 +209,6 @@ EncyclopediaMgrClass::Hide_Objects (TYPE type)
 	KnownObjectVector[type].Reset ();
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -240,7 +227,6 @@ EncyclopediaMgrClass::Hide_All_Objects (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -269,7 +255,6 @@ EncyclopediaMgrClass::Save (ChunkSaveClass &csave)
 	csave.End_Chunk ();
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -332,7 +317,6 @@ EncyclopediaMgrClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -357,7 +341,6 @@ EncyclopediaMgrClass::Load_Variables (ChunkLoadClass &cload)
 	//SaveLoadSystemClass::Register_Post_Load_Callback (this);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -402,7 +385,6 @@ EncyclopediaMgrClass::Reveal_Object (DamageableGameObj *game_obj)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display_Event_UI
@@ -426,8 +408,6 @@ EncyclopediaMgrClass::Display_Event_UI (void)
 	return ;
 }
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	Store_Data
@@ -442,7 +422,6 @@ EncyclopediaMgrClass::Store_Data (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

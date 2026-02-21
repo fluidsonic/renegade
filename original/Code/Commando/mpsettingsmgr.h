@@ -6,10 +6,8 @@
 #include "vector.h"
 #include "widestring.h"
 
-
 #include <vector>
 #include <map>
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations

@@ -1,7 +1,6 @@
 #ifndef POSTLOADABLE_H
 #define POSTLOADABLE_H
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	PostLoadableClass
@@ -26,8 +25,6 @@ private:
 
 	bool									IsPostLoadRegistered;
 };
-
-
 
 #endif
 

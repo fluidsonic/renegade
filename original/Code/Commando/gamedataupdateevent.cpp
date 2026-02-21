@@ -78,6 +78,3 @@ cGameDataUpdateEvent::Import_Creation(BitStreamClass & packet)
 	Set_Delete_Pending();
 }
 
-
-
-

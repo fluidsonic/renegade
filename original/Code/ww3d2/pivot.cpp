@@ -1,8 +1,6 @@
 #include "pivot.h"
 #include "wwmath.h"
 
-
-
 /*********************************************************************************************** 
  * PivotClass::PivotClass -- Constructor for PivotClass                                        * 
  *                                                                                             * 
@@ -26,7 +24,6 @@ PivotClass::PivotClass(void) :
 	WorldSpaceTranslation(false)
 {
 }
-
 
 void PivotClass::Capture_Update(void)
 {

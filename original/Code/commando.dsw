@@ -39,18 +39,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "GameSpy"=.\GameSpy\GameSpy.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
 Project: "LevelEdit"=.\Tools\LevelEdit\LevelEdit.dsp - Package Owner=<4>
 
 Package=<5>
@@ -181,9 +169,6 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name SControl
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name GameSpy
     End Project Dependency
 }}}
 

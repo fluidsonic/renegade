@@ -6,13 +6,11 @@
 #include "playerterminal.h"
 #include "purchasesettings.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class PurchaseSettingsDefClass;
 class MerchandiseCtrlClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -93,7 +91,6 @@ private:
 	float											HealthUpdateTimer;
 	float											EnabledStateUpdateTimer;
 };
-
 
 #endif //__DLGCNCPURCHASEMENU_H
 

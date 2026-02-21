@@ -2,12 +2,10 @@
 #ifndef __RADIOCOMMANDDISPLAY_H
 #define __RADIOCOMMANDDISPLAY_H
 
-
 #include "wwstring.h"
 #include "vector.h"
 #include "vector3.h"
 #include "textwindow.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -73,6 +71,5 @@ private:
 	static bool						IsDisplayed;
 	static TextWindowClass *	TextWindow;
 };
-
 
 #endif //__RADIOCOMMANDDISPLAY_H

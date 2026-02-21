@@ -40,7 +40,6 @@ const int DEFAULT_RESOLUTION_HEIGHT = 600;
 const int DEFAULT_BIT_DEPTH = 32;
 const int DEFAULT_TEXTURE_BIT_DEPTH = 16;
 
-
 /***********************************************************************************
 **
 ** DX8Wrapper Static Variables
@@ -121,12 +120,9 @@ static DynamicVectorClass<StringClass>					_RenderDeviceNameTable;
 static DynamicVectorClass<StringClass>					_RenderDeviceShortNameTable;
 static DynamicVectorClass<RenderDeviceDescClass>	_RenderDeviceDescriptionTable;
 
-
 typedef IDirect3D8* (WINAPI *Direct3DCreate8Type) (UINT SDKVersion);
 Direct3DCreate8Type	Direct3DCreate8Ptr = NULL;
 HINSTANCE D3D8Lib = NULL;
-
-
 
 /***********************************************************************************
 **
@@ -160,8 +156,6 @@ void Non_Fatal_Log_DX8_ErrorCode(unsigned res,const char * file,int line)
 	if (new_res==D3D_OK) {
 	}
 }
-
-
 
 bool DX8Wrapper::Init(void * hwnd, bool lite)
 {
@@ -364,7 +358,6 @@ void DX8Wrapper::Do_Onetime_Device_Dependent_Shutdowns(void)
 		CurrentCaps=NULL;
 	}
 }
-
 
 bool DX8Wrapper::Create_Device(void)
 {
@@ -657,8 +650,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 	if (bits != -1)		BitDepth = bits;
 	if (windowed != -1)	IsWindowed = (windowed != 0);
 
-
-
 	/*
 	** Initialize values for D3DPRESENT_PARAMETERS members.
 	*/
@@ -720,7 +711,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 			return false;
 		}
 
-
 		/*
 		** Find an appropriate Z buffer
 		*/
@@ -756,7 +746,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 		// We already resized the window
 		resize_window = false;
 // End Denzil - DX window initialization
-
 
 		/*
 		** Try to find a mode that matches the user's desired bit-depth.
@@ -1036,9 +1025,7 @@ bool DX8Wrapper::Registry_Load_Render_Device( const char * sub_key, bool resize_
 			TextureBitDepth=16;
 		}
 
-
 //		_RenderDeviceDescriptionTable.
-
 
 		if ( Set_Render_Device( name, width,height,depth,windowed, resize_window ) != true) {
 			if (depth==16) depth=32;
@@ -1098,7 +1085,6 @@ bool DX8Wrapper::Registry_Load_Render_Device( const char * sub_key, bool resize_
 		return true;
 	}
 
-
 	return Set_Any_Render_Device();
 }
 
@@ -1125,7 +1111,6 @@ bool DX8Wrapper::Registry_Load_Render_Device( const char * sub_key, char *device
 	texture_depth=-1;
 	return false;
 }
-
 
 bool DX8Wrapper::Find_Color_And_Z_Mode(int resx,int resy,int bitdepth,D3DFORMAT * set_colorbuffer,D3DFORMAT * set_zmode)
 {
@@ -1180,7 +1165,6 @@ bool DX8Wrapper::Find_Color_And_Z_Mode(int resx,int resy,int bitdepth,D3DFORMAT 
 	*/
 	return Find_Z_Mode(*set_colorbuffer,*set_colorbuffer, set_zmode);
 };
-
 
 // find the resolution mode with at least resx,resy with the highest supported
 // refresh rate
@@ -1295,7 +1279,6 @@ bool DX8Wrapper::Test_Z_Mode(D3DFORMAT colorbuffer,D3DFORMAT backbuffer, D3DFORM
 	}
 	return true;
 }
-
 
 void DX8Wrapper::Reset_Statistics()
 {
@@ -1429,7 +1412,6 @@ void DX8Wrapper::End_Scene(bool flip_frames)
 	Set_Material(NULL);
 }
 
-
 void DX8Wrapper::Flip_To_Primary(void)
 {
 	// If we are fullscreen and the current frame is odd then we need
@@ -1474,7 +1456,6 @@ void DX8Wrapper::Flip_To_Primary(void)
 		}
 	}
 }
-
 
 void DX8Wrapper::Clear(bool clear_color, bool clear_z_stencil, const Vector3 &color, float z, unsigned int stencil)
 {
@@ -1738,7 +1719,6 @@ void DX8Wrapper::Draw(
 		}
 	}
 #endif	// MESH_RENDER_SHAPSHOT_ENABLED
-
 
 	SNAPSHOT_SAY(("DX8 - draw %d polygons (%d vertices)\n",polygon_count,vertex_count));
 
@@ -2192,7 +2172,6 @@ IDirect3DSurface8 * DX8Wrapper::_Create_DX8_Surface(const char *filename_)
 	return surface;
 }
 
-
 /***********************************************************************************************
  * DX8Wrapper::_Update_Texture -- Copies a texture from system memory to video memory          *
  *                                                                                             *
@@ -2366,7 +2345,6 @@ SurfaceClass * DX8Wrapper::_Get_DX8_Back_Buffer(unsigned int num)
 	return surf;
 }
 
-
 TextureClass *
 DX8Wrapper::Create_Render_Target (int width, int height, WW3DFormat format)
 {
@@ -2419,7 +2397,6 @@ DX8Wrapper::Create_Render_Target (int width, int height, WW3DFormat format)
 	return tex;
 }
 
-
 void
 DX8Wrapper::Set_Render_Target (TextureClass * texture)
 {
@@ -2436,7 +2413,7 @@ void
 DX8Wrapper::Set_Render_Target(IDirect3DSwapChain8 *swap_chain)
 {
 	DX8_THREAD_ASSERT();
-	WWASSERT (swap_chain != NULL);
+	assert (swap_chain != NULL);
 
 	//
 	//	Get the back buffer for the swap chain
@@ -2528,7 +2505,7 @@ DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *render_target, bool use_default
 		//	Keep a copy of the current render target (for housekeeping)
 		//
 		CurrentRenderTarget = render_target;
-		WWASSERT (CurrentRenderTarget != NULL);
+		assert (CurrentRenderTarget != NULL);
 		if (CurrentRenderTarget != NULL) {
 			CurrentRenderTarget->AddRef ();
 
@@ -2554,7 +2531,6 @@ DX8Wrapper::Set_Render_Target(IDirect3DSurface8 *render_target, bool use_default
 	IsRenderToTexture = false;
 	return ;
 }
-
 
 IDirect3DSwapChain8 *
 DX8Wrapper::Create_Additional_Swap_Chain (HWND render_window)

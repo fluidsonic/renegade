@@ -42,7 +42,6 @@ DECLARE_SCRIPT(MPR_A01_TiberiumCloud_PMP, "Death_Rate=5:int,Explode_Height=1.0:f
 	}
 };
 
-
 /*
 MPR_A01_CivLeader
 
@@ -138,7 +137,6 @@ DECLARE_SCRIPT(MPR_A01_CivLeader_PMP, "Follower_ID:int")
 	}
 };
 
-
 /*
 MPR_A01_CivFollower
 
@@ -186,7 +184,6 @@ DECLARE_SCRIPT(MPR_A01_CivFollower_PMP, "Host_ID:int, Host_distance=1.5:float")
 	}
 };
 
-
 /*
 MPR_A01_EscortDestination
 
@@ -207,7 +204,6 @@ DECLARE_SCRIPT(MPR_A01_EscortDestination_PMP,"")
 		Commands->Action_Movement_Goto_Location(obj, Vector3 (-264.0f,-73.0f,-0.67f),0.5f); //temp until pathfind fixed
 	}
 };
-
 
 /*
 MPR_A01_EscortDestination
@@ -242,7 +238,6 @@ DECLARE_SCRIPT(MPR_A01_EscortDies_PMP,"CIV01_ID:int, CIV02_ID:int, CIV03_ID:int"
 		Commands->Send_Custom_Event(obj, Commands->Find_Object(CIV03_ID),MPR_CUSTOM_I_AM_DEAD_DEL, 0);
 	}
 };
-
 
 /*
 MPR_A01_SeeEnemy
@@ -318,7 +313,6 @@ DECLARE_SCRIPT(MPR_A01_SeeEnemy_PMP,"CIV01_ID:int, CIV02_ID:int, CIV03_ID:int, N
 	}
 };
 
-
 /*
 MPR_A01_GET_BARN_ZONE_ID
 
@@ -334,7 +328,6 @@ DECLARE_SCRIPT(MPR_A01_Get_Barn_Zone_id_PMP,"")
 		MPR_A01_BARNZONE_GOTHERE_ID_PMP = Commands->Get_ID (obj);
 	}
 };
-
 
 /*
 MPR_A01_EVAC_CALL
@@ -371,7 +364,6 @@ DECLARE_SCRIPT(MPR_A01_Evac_Call_PMP,"")
 		}
 	}
 };
-
 
 /*
 MPR_A01_Chinook_Evac_Civies
@@ -426,7 +418,6 @@ DECLARE_SCRIPT(MPR_A01_Chinook_Evac_Civies_PMP,"")
 	}
 };
 
-
 /*
 MPR_A01_GET_TO_CHINOOK
 
@@ -457,7 +448,6 @@ DECLARE_SCRIPT(MPR_A01_Get_To_Chinook_PMP,"")
 	}
 };
 
-
 /*
 MPR_A01_GET_CIV01_ID
 
@@ -473,7 +463,6 @@ DECLARE_SCRIPT(MPR_A01_Get_Civ01_id_PMP,"")
 		MPR_A01_CIV02_ID_PMP = Commands->Get_ID (obj);
 	}
 };
-
 
 /*
 MPR_A01_GET_CIV02_ID
@@ -491,7 +480,6 @@ DECLARE_SCRIPT(MPR_A01_Get_Civ02_id_PMP,"")
 	}
 };
 
-
 /*
 MPR_A01_GET_CIV03_ID
 
@@ -507,7 +495,6 @@ DECLARE_SCRIPT(MPR_A01_Get_Civ03_ID_PMP,"")
 		MPR_A01_CIV03_ID_PMP = Commands->Get_ID (obj);
 	}
 };
-
 
 /*
 M00_Generic_Wandering
@@ -571,7 +558,6 @@ DECLARE_SCRIPT(M00_Generic_Wandering_PMP, "Wander_radius=:float,Seconds_to_wait=
 	}
 };
 
-
 /*
 MPR_Looping_Path_JDG
 
@@ -620,7 +606,6 @@ DECLARE_SCRIPT(MPR_Looping_Path_JDG, "DestObjID1=:int, DestObjID2=:int")
 	}
 };
 
-
 /*
 MPR_A03_Bridge_Exploding_DEL
 
@@ -655,7 +640,6 @@ DECLARE_SCRIPT(MPR_A03_Bridge_Exploding_DEL, "AnimationName=:string")
 	}
 };
 
-
 /*
 MPR_A03_Bridge_Trigger_DEL
 
@@ -685,7 +669,6 @@ DECLARE_SCRIPT(MPR_A03_Bridge_Trigger_DEL, "BridgeID=:int")
 		}
 	}
 };
-
 
 /*
 Demo_Harvester
@@ -934,7 +917,6 @@ DECLARE_SCRIPT(MPR_ApacheTrigger, "ApacheID:int,Position:int")
 	}
 };
 
-
 /*
 MPR_ApacheShootAtPlayer
 
@@ -996,7 +978,6 @@ DECLARE_SCRIPT(MPR_ApacheShootAtPlayer, "ApacheID:int")
 		}
 	}
 };
-
 
 /*
 MPR_ApacheController
@@ -1166,7 +1147,6 @@ DECLARE_SCRIPT(MPR_ApacheController, "")
 	}
 };
 
-
 /*
 MPR_ApacheController
 
@@ -1191,7 +1171,6 @@ MPR_ApacheController::Transition MPR_ApacheController::_mTransitions[APACHE_POSI
 	// Position 4 - Move into position on the left side and hover
 	{"m_ap_move1-4", "m_ap_loitr4"},
 };
-
 
 /*
 MPR_A01_Orca_Strike_On_Turret
@@ -1364,7 +1343,6 @@ DECLARE_SCRIPT(MPR_A01_Orca_Strike_On_Turret_RAD, "Target_Number:int, AnimationN
 	}
 };
 
-
 /*
 MPR_A01_Orca_Turret
 
@@ -1473,7 +1451,6 @@ DECLARE_SCRIPT(MPR_A01_Orca_Turret_Attack_Zone_RAD, "")
 		}
 	}
 };
-
 
 /*
 MPR_A04_Obelisk_Weapon
@@ -1632,7 +1609,6 @@ DECLARE_SCRIPT(MPR_A04_Obelisk_Weapon_RAD, "ObeliskWeaponID:int, NodLightTankID:
 	}
 };
 
-
 /*
 MPR_A04_Main_Control_Terminal
 
@@ -1696,7 +1672,6 @@ DECLARE_SCRIPT(MPR_A04_Main_Control_Terminal_RAD, "ObeliskControllerID:int, Buil
 		}
 	}
 };
-
 
 /*
 MPR_A05_Tank_Controller
@@ -1816,7 +1791,6 @@ DECLARE_SCRIPT(MPR_A05_Tank_Controller_RAD, "My_Number:int, MammothTank:int")
 	}
 };
 
-
 /*
 MPR_A06_RMV_Final_Zone_Trigger
 
@@ -1910,7 +1884,6 @@ DECLARE_SCRIPT(MPR_A06_Final_Zone_Trigger_RMV, "")
 	} 
 };
 
-
 /*
 MPR_A05_RMV_C130_Zone_Trigger
 
@@ -1931,7 +1904,6 @@ DECLARE_SCRIPT(MPR_A05_C130_Zone_Trigger_RMV, "")
 		}
 	}
 };
-
 
 /*
 MPR_A05_RMV_A10_Trigger_When_SAM_Destroyed
@@ -1957,7 +1929,6 @@ DECLARE_SCRIPT(MPR_A05_A10_Trigger_When_SAM_Destroyed_RMV, "")
 		}
 	}
 };
-
 
 /*
 MPR_A02_RMV_Zone_Trigger_For_Dogfight
@@ -2027,7 +1998,6 @@ DECLARE_SCRIPT(MPR_A05_C130_Dropoff_Animation_RMV, "Cinematic=:string,ObjToCreat
 	}
 };
 
-
 /*
 MPR_A05_RMV_A10_Air_Strike
 
@@ -2095,7 +2065,6 @@ DECLARE_SCRIPT(MPR_A05_A10_Air_Strike_RMV, "")
 	} 
 };
 
-
 /*
 MPR_A02_RMV_Apache_Dogfight
 
@@ -2111,7 +2080,6 @@ DECLARE_SCRIPT(MPR_A02_Apache_Dogfight_RMV, "")
 		Commands->Create_Object( "Apache Destroyed", Vector3(0,0,0) );
 	}
 };
-
 
 /*
 MPR_A02_RMV_Orca_Dogfight
@@ -2172,7 +2140,6 @@ DECLARE_SCRIPT(MPR_A02_Orca_Dogfight_RMV, "")
 		}
 	}
 };
-
 
 /*
 MPR_A01_RMV_Intro_Cinematic
@@ -2240,7 +2207,6 @@ DECLARE_SCRIPT(MPR_A01_Intro_Cinematic_RMV, "")
 	}
 };
 
-
 /*
 MPR_A02_DRILL_INSTRUCTOR
 
@@ -2250,7 +2216,6 @@ cadet guys. The following is the script for the Drill Instructor.
 
   DEBUG NAMING CONVENTION
 */
-
 
 //insert new drill scripts here
 DECLARE_SCRIPT(MPR_A02_Drill_Instructor_JDG, "")
@@ -2294,7 +2259,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Instructor_JDG, "")
 			float timeDelay = Commands->Get_Random (1.5f,2.5f);
 			Commands->Start_Timer ((Commands->Find_Object(MPR_A02_drill_instructor_id_JDG)), timeDelay, MPR_A02_TIMER_DRILL_INSTRUCTOR_ATTACK_DELAY_JDG);
 		}
-
 
 		//When Havoc enters zone come to attention
 		if ((Param == MPR_A02_PARAM_CADETS_TEN_HUT_JDG) && (Type == MPR_A02_CUSTOM_DRILL_INSTRUCTOR_JDG))
@@ -2808,7 +2772,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Instructor_JDG, "")
 		//sets up random things to yell at cadet guy	
 	}
 
-
 	void Yell_At_Cadet (void)
 	{
 		
@@ -2999,7 +2962,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Instructor_JDG, "")
 	}	
 };
 
-
 /*
 MPR_A02_DRILL_Zone
 
@@ -3032,7 +2994,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Start_Zone_JDG, "")
 		}
 	}
 };
-
 
 /*
 MPR_A02_DRILL_CADET_1
@@ -3107,7 +3068,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Cadet_1_JDG, "")
 
 			Commands->Action_Attack_Object (obj, (Commands->Get_The_Star()), 150.0f, 50);
 		}
-
 
 		if ((Timer_ID == MPR_A02_TIMER_CADET_1_TEN_HUT_DELAY_JDG) && (state != CADET_1_INNATE))
 		{
@@ -3215,7 +3175,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Cadet_1_JDG, "")
 		}
 	}
 };
-
 
 /*
 MPR_A02_DRILL_CADET_2
@@ -3398,7 +3357,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Cadet_2_JDG, "")
 	}
 };
 
-
 /*
 MPR_A02_DRILL_CADET_3
 
@@ -3580,7 +3538,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Cadet_3_JDG, "")
 	}
 };
 
-
 /*
 MPR_A02_Drill_Kill_Havoc_Zone
 
@@ -3612,7 +3569,6 @@ DECLARE_SCRIPT(MPR_A02_Drill_Kill_Havoc_Zone_JDG, "")
 		}
 	}
 };
-
 
 /*
 MPR_A04_SuicideRun_StartZone
@@ -3658,7 +3614,6 @@ DECLARE_SCRIPT(MPR_A04_SuicideRun_StartZone_JDG, "")
 		}
 	}
 };
-
 
 /*
 MPR_A04_SuicideRun_GDI_Minigunner_1
@@ -3793,7 +3748,6 @@ DECLARE_SCRIPT(MPR_A04_SuicideRun_GDI_Minigunner_1_JDG, "")
 	}
 };
 
-
 /*
 MPR_A04_SuicideRun_GDI_Minigunner_2
 
@@ -3922,7 +3876,6 @@ DECLARE_SCRIPT(MPR_A04_SuicideRun_GDI_Minigunner_2_JDG, "")
 	}
 };
 
-
 /*
 MPR_A04_SuicideRun_GDI_Medium_Tank
 
@@ -3987,7 +3940,6 @@ DECLARE_SCRIPT(MPR_A04_SuicideRun_GDI_Medium_Tank_JDG, "")
 		}
 	}
 };
-
 
 /*
 MPR_A04_SuicideRun_NOD_Minigunner
@@ -4060,7 +4012,6 @@ DECLARE_SCRIPT(MPR_A04_SuicideRun_NOD_Minigunner_JDG, "")
 	}
 };
 
-
 /*
 MPR_A04_SuicideRun_NOD_Light_Tank
 
@@ -4112,7 +4063,6 @@ DECLARE_SCRIPT(MPR_A04_SuicideRun_NOD_Light_Tank_JDG, "")
 	}
 };
 
-
 /*
 MPR_A04_SuicideRun_Console
 
@@ -4141,7 +4091,6 @@ DECLARE_SCRIPT(MPR_A04_SuicideRun_Console_JDG, "")
 		status = MPR_A04_SUICIDERUN_CONSOLE_DEAD;
 	}
 };
-
 
 /*
 MPR_A02_DriveBy_EnterZone
@@ -4175,7 +4124,6 @@ DECLARE_SCRIPT(MPR_A02_DriveBy_EnterZone_JDG, "")
 	}
 };
 
-
 /*
 MPR_A02_DriveBy_Harvester
 
@@ -4190,7 +4138,6 @@ DECLARE_SCRIPT(MPR_A02_DriveBy_Harvester_JDG, "")
 		//DebugPrint("JDG, MPRA02, DriveBy, Harvester Created Okay\n");
 	
 		MPR_A02_driveby_harvester_id_JDG = Commands->Get_ID (obj);
-
 
 		Commands->Set_Health(obj, 400.0f);
 	}
@@ -4371,7 +4318,6 @@ DECLARE_SCRIPT(MPR_A03_Helicopter_EnterZone_JDG, "")
 	}
 };
 
-
 /*
 MPR_A03_Helicopter_Injured_NOD_Pilot
 
@@ -4451,7 +4397,6 @@ DECLARE_SCRIPT(MPR_A03_Helicopter_Injured_NOD_Pilot_JDG, "")
 	}
 };
 
-
 /*
 MPR_A03_BridgeScene_EnterZone
 
@@ -4499,7 +4444,6 @@ DECLARE_SCRIPT(MPR_A03_BridgeScene_EnterZone_JDG, "")
 	}
 };
 
-
 /*
 MPR_A03_BridgeScene_BlowUpZone
 
@@ -4531,7 +4475,6 @@ DECLARE_SCRIPT(MPR_A03_BridgeScene_BlowUpZone_JDG, "")
 		}
 	}
 };
-
 
 /*
 MPR_A03_BridgeScene_Engineer

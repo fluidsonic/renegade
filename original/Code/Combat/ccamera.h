@@ -160,5 +160,4 @@ protected:
 	void				Handle_Snap_Shot_Mode( void );
 };
 
-
 #endif		// CCAMERA_H

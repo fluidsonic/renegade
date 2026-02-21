@@ -41,6 +41,5 @@ protected:
 	DynamicVectorClass<TCBClass> Params;
 };
 
-
 #endif
 

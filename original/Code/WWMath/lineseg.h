@@ -13,7 +13,6 @@ class PlaneClass;
 class SphereClass;
 class Matrix3D;
 
-
 class LineSegClass
 {
 
@@ -48,6 +47,5 @@ protected:
 	Vector3				Dir;		// normalized direction.
 	float					Length;	// length of the segment
 };
-
 
 #endif

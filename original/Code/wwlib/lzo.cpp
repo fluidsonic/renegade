@@ -12,7 +12,6 @@ static CriticalSectionClass mutex;
 
 #define	BUFFER_OVERRUN_TEST_VALUE	((char)0x7d)
 
-
 /***********************************************************************************************
  * LZOCompressor::Compress -- compress a buffer using LZO                                      *
  *                                                                                             *
@@ -35,13 +34,10 @@ int LZOCompressor::Compress
 {
 	CriticalSectionClass::LockClass m(mutex);
 
-
 	int result = lzo1x_1_compress(in,in_len,out,out_len,WorkBuffer);
-
 
 	return result;
 }
-
 
 /***********************************************************************************************
  * LZOCompressor::Decompress -- decompress a buffer using LZO                                  *

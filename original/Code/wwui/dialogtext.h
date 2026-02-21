@@ -7,7 +7,6 @@
 #include "render2d.h"
 #include "render2dsentence.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DialogTextClass
@@ -51,6 +50,5 @@ protected:
 	Render2DClass				ControlRenderer;
 	bool							IsTitle;
 };
-
 
 #endif //__DIALOG_TEXT_H

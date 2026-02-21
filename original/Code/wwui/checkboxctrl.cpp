@@ -8,7 +8,6 @@
 #include "dialogbase.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CheckBoxCtrlClass
@@ -28,7 +27,6 @@ CheckBoxCtrlClass::CheckBoxCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~CheckBoxCtrlClass
@@ -38,7 +36,6 @@ CheckBoxCtrlClass::~CheckBoxCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -90,7 +87,6 @@ CheckBoxCtrlClass::Create_Text_Renderers (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -156,7 +152,6 @@ CheckBoxCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -176,7 +171,6 @@ CheckBoxCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -223,7 +217,6 @@ CheckBoxCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -261,7 +254,6 @@ void CheckBoxCtrlClass::Set_Check (bool onoff)
 	Internal_Set_Check(onoff, false);
 }
 
-
 void CheckBoxCtrlClass::Internal_Set_Check(bool onoff, bool notify)
 {
 	IsChecked = onoff;
@@ -271,7 +263,6 @@ void CheckBoxCtrlClass::Internal_Set_Check(bool onoff, bool notify)
 		Parent->On_Command (Get_ID (), 0, onoff);
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -285,7 +276,6 @@ CheckBoxCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -296,7 +286,6 @@ CheckBoxCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -312,7 +301,6 @@ CheckBoxCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -326,7 +314,6 @@ CheckBoxCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -358,7 +345,6 @@ CheckBoxCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -369,5 +355,4 @@ CheckBoxCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 

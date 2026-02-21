@@ -8,7 +8,6 @@
 #include "quat.h"
 #include "w3d_file.h"
 
-
 /*
 
 	PivotClass
@@ -17,8 +16,6 @@
 	PivotClass.
 	
 */
-
-
 
 struct PivotClass
 {
@@ -47,7 +44,5 @@ public:
 	void Capture_Update(void);
 
 };
-
-
 
 #endif

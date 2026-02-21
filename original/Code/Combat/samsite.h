@@ -30,7 +30,6 @@ protected:
 	friend	class								SamSiteGameObj;
 };
 
-
 /*
 **
 */
@@ -74,7 +73,6 @@ protected:
 	float								Timer;
 
 };
-
 
 #endif	//	SAMSITE_H
 

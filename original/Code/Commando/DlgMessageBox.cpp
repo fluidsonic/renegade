@@ -49,7 +49,6 @@ bool DlgMsgBox::DoDialog(const WCHAR* title, const WCHAR* text,
 	return (popup != NULL);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -75,7 +74,6 @@ bool DlgMsgBox::DoDialog(int titleID, int textID,
 	return DoDialog(title, text, type, observer, user_data);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -99,7 +97,6 @@ DlgMsgBox::DlgMsgBox() :
 		CurrentCount++;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -120,7 +117,6 @@ DlgMsgBox::~DlgMsgBox()
 	{
 		CurrentCount--;
 	}
-
 
 /******************************************************************************
 *
@@ -147,7 +143,6 @@ void DlgMsgBox::SetResourceType(DlgMsgBox::Type type)
 	DialogResID = _types[type];
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -172,7 +167,6 @@ void DlgMsgBox::End_Dialog(void)
 
 	PopupDialogClass::End_Dialog();
 	}
-
 
 /******************************************************************************
 *

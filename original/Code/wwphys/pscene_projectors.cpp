@@ -21,7 +21,6 @@
 #include "dx8caps.h"
 #include "vertmaterial.h"
 
-
 #define DEBUG_SHADOW_RENDERING				0
 
 #if (DEBUG_SHADOW_RENDERING)
@@ -77,7 +76,6 @@ private:
 	DynamicVectorClass<ShadowTexClass>	ShadowTextures;
 };
 
-
 /**
 ** DynamicShadowTexMgrClass
 ** This class manages a pool of render target textures which are shared by the currently
@@ -111,7 +109,6 @@ private:
 
 };
 
-
 /*
 **
 ** Instantiate the Shadow Texture Managers.
@@ -119,7 +116,6 @@ private:
 */
 static StaticShadowTexMgrClass		_StaticShadowTexMgr;
 static DynamicShadowTexMgrClass		_DynamicShadowTexMgr;
-
 
 static TextureClass* Create_Projector_Render_Target(unsigned w,unsigned h)
 {
@@ -189,7 +185,6 @@ StaticShadowTexMgrClass::ShadowTexClass::~ShadowTexClass(void)
 	REF_PTR_RELEASE(Texture);
 }
 
-
 /************************************************************************************
 **
 ** StaticShadowTexMgrClass Implemenation
@@ -248,7 +243,6 @@ void StaticShadowTexMgrClass::Remove_Shadow_Texture
 		}
 	}
 }
-
 
 /************************************************************************************
 **
@@ -368,9 +362,6 @@ TextureClass * DynamicShadowTexMgrClass::Allocate_Render_Target_Texture(void)
 	return texture;
 }
 
-
-
-
 /************************************************************************************
 **
 ** PhysicsSceneClass Texture Projection Code
@@ -389,7 +380,6 @@ void PhysicsSceneClass::Release_Projector_Resources(void)
 	_StaticShadowTexMgr.Reset();
 //	_DynamicShadowTexMgr.Reset();
 }
-
 
 void PhysicsSceneClass::Set_Shadow_Resolution(unsigned int res)
 {
@@ -410,7 +400,6 @@ unsigned int PhysicsSceneClass::Get_Max_Simultaneous_Shadows(void)
 {
 	return _DynamicShadowTexMgr.Get_Max_Simultaneous_Shadows();
 }
-
 
 SpecialRenderInfoClass *
 PhysicsSceneClass::Get_Shadow_Render_Context(int width,int height)
@@ -613,7 +602,6 @@ float PhysicsSceneClass::Compute_Projector_Attenuation(TexProjectClass * dynamic
 	}
 	return 1.0f - (dist - ShadowAttenStart) / (ShadowAttenEnd - ShadowAttenStart);
 }
-
 
 void PhysicsSceneClass::Apply_Projectors
 (

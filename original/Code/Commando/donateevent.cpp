@@ -35,7 +35,6 @@ void
 cDonateEvent::Init(int amount, int recipient_id)
 {
 
-
 	SenderId		= cNetwork::Get_My_Id();
 	Amount		= amount;
 	RecipientId	= recipient_id;
@@ -92,7 +91,6 @@ cDonateEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add(Amount);
 	packet.Add(RecipientId);
@@ -106,16 +104,10 @@ cDonateEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
 	packet.Get(Amount);
 	packet.Get(RecipientId);
 
-
 	Act();
 }
-
-
-
-
 

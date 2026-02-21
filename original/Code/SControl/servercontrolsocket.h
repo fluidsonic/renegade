@@ -9,9 +9,7 @@
 #include	<winsock.h>
 
 #ifndef DebugString
-#ifdef WWDEBUG_SAY
-#define DebugString WWDEBUG_SAY
-#endif
+#define DebugString(...) ((void)0)
 #endif
 
 #ifdef WWASSERT
@@ -88,7 +86,6 @@ class ServerControlSocketClass
 		** Error handling.
 		*/
 		void Clear_Socket_Error(void);
-
 
 	private:
 
@@ -170,6 +167,5 @@ class ServerControlSocketClass
 		*/
 		char Key[12];
 };
-
 
 #endif //SERVERCONTROLSOCKET_H

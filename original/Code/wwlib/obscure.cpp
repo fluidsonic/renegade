@@ -193,4 +193,3 @@ long Obfuscate(char const * string)
 	return(code);
 }
 
-

@@ -44,7 +44,6 @@ void cMiscUtil::Seconds_To_Hms(float seconds, int & h, int & m, int & s)
    seconds -= m * 60;
    s = (int) seconds;
 
-
    //assert(fabs((h * 3600 + m * 60 + s) / 60) - mins < WWMATH_EPSILON);
 }
 
@@ -186,22 +185,6 @@ void cMiscUtil::Remove_File(LPCSTR filename)
 
 	::DeleteFile(filename);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 #define SIZE_OF_NT_SIGNATURE   sizeof(DWORD)

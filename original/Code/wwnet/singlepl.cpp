@@ -50,7 +50,3 @@ SList<cPacket> * cSinglePlayerData::Get_Input_Packet_List(int type)
 	return &InputPacketList[type];
 }
 
-
-
-
-

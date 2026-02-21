@@ -38,7 +38,6 @@ int Find_POT(int val)
 	return( 1 << (recpos + 1));
 }
 
-
 /************************************************************************** 
  * Find_POT_Log2 -- finds log2 of closest inclusive power of 2 to a value * 
  *                                                                        * 
@@ -76,5 +75,4 @@ unsigned int Find_POT_Log2(unsigned int val)
 	// be rounded up to the next highest power of 2.
 	return recpos + 1;
 }
-
 

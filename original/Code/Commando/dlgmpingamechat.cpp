@@ -14,7 +14,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 
-
 static const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& param);
 
 ////////////////////////////////////////////////////////////////
@@ -30,7 +29,6 @@ MPChatChildDialogClass::MPChatChildDialogClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -62,7 +60,6 @@ MPChatChildDialogClass::On_Init_Dialog (void)
 	Get_Dlg_Item (IDC_MESSAGE_EDIT)->Set_Focus ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -118,7 +115,6 @@ MPChatChildDialogClass::Process_Message (void)
 	return ;
 }
 
-
 void MPChatChildDialogClass::Send_Message(WideStringClass& message, TextMessageEnum type, int recipientID)
 {
 	//
@@ -133,7 +129,6 @@ void MPChatChildDialogClass::Send_Message(WideStringClass& message, TextMessageE
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 // Process Commands
@@ -145,7 +140,6 @@ bool MPChatChildDialogClass::Process_Commands(const WCHAR* message)
 	(void)message;
 	return false;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -182,7 +176,6 @@ const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& pa
 
 	return curr_pos;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -285,7 +278,6 @@ MPChatChildDialogClass::Auto_Complete_Name (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Complete_Player_Name
@@ -334,7 +326,6 @@ MPChatChildDialogClass::Complete_Player_Name (const WCHAR *typed_name, WideStrin
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	On_EditCtrl_Enter_Pressed
@@ -357,7 +348,6 @@ MPChatChildDialogClass::On_EditCtrl_Enter_Pressed (EditCtrlClass *edit_ctrl, int
 
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -400,7 +390,6 @@ MPChatChildDialogClass::On_EditCtrl_Change (EditCtrlClass *edit_ctrl, int ctrl_i
 	
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -449,7 +438,6 @@ MPChatChildDialogClass::Find_Current_Command(const WCHAR* message, int& start_in
 
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -521,7 +509,6 @@ MPChatChildDialogClass::On_EditCtrl_Key_Down
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -545,9 +532,6 @@ MPChatChildDialogClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPIngameChatPopupClass
@@ -566,7 +550,6 @@ MPIngameChatPopupClass::MPIngameChatPopupClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~MPIngameChatPopupClass
@@ -577,7 +560,6 @@ MPIngameChatPopupClass::~MPIngameChatPopupClass (void)
 	REF_PTR_RELEASE (ChatModule);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -621,7 +603,6 @@ MPIngameChatPopupClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -641,7 +622,6 @@ MPIngameChatPopupClass::Render (void)
 	PopupDialogClass::Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

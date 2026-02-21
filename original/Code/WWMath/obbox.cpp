@@ -8,7 +8,6 @@
 #include <assert.h>
 //#include <stdlib.h>
 
-
 /***********************************************************************************************
  * OBBoxClass::OBBoxClass -- Constructor that computes the box for a set of points             *
  *                                                                                             *
@@ -96,7 +95,6 @@ OBBoxClass::OBBoxClass(const Vector3 * /*points*/, int /*n*/)
 	box.center.x = xmean;
 	box.center.y = ymean;
 	box.center.z = zmean;
-
 
 	// Box axes are the eigenvectors of the covariance matrix with
 	// adjusted lengths to enclose the points.  If U, V, and W are the
@@ -222,7 +220,6 @@ void OBBoxClass::Init_From_Box_Points(Vector3 * points,int num)
 	}
 }
 
-
 /***********************************************************************************************
  * OBBoxClass::Init_Random -- initalize a random oriented box                                  *
  *                                                                                             *
@@ -252,9 +249,6 @@ void OBBoxClass::Init_Random(float min_extent,float max_extent)
 
 	Basis = Build_Matrix3(orient);
 }
-
-
-
 
 /***********************************************************************************************
  * Oriented_Boxes_Intersect_On_Axis -- test if two boxes intersect on given axis               *
@@ -292,7 +286,6 @@ bool Oriented_Boxes_Intersect_On_Axis
 	}
 	return true;
 }
-
 
 /***********************************************************************************************
  * Oriented_Boxes_Intersect -- test if two oriented boxes intersect                            *
@@ -371,10 +364,6 @@ bool Oriented_Boxes_Intersect
 	return true;
 }
 
-
-
-
-
 /***********************************************************************************************
  * Oriented_Boxes_Collide_On_Axis -- test if two boxes collide on the given axis               *
  *                                                                                             *
@@ -418,7 +407,6 @@ bool Oriented_Boxes_Collide_On_Axis
 	return true;
 }
 
-
 /***********************************************************************************************
  * Oriented_Boxes_Collide -- test if two oriented boxes collide                                *
  *                                                                                             *
@@ -453,7 +441,6 @@ bool Oriented_Boxes_Collide
 	Vector3 B0(box1.Basis[0][0],box1.Basis[1][0],box1.Basis[2][0]);
 	Vector3 B1(box1.Basis[0][1],box1.Basis[1][1],box1.Basis[2][1]);
 	Vector3 B2(box1.Basis[0][2],box1.Basis[1][2],box1.Basis[2][2]);
-
 
 	/////////////////////////////////////////////////////////////////////////
 	// L = A0
@@ -624,8 +611,6 @@ exit:
 	return intersect;
 }
 
-
-
 /***********************************************************************************************
  * Oriented_Box_Intersects_Tri_On_Axis -- tests if the box and tri intersect on the axis       *
  *                                                                                             *
@@ -673,7 +658,6 @@ bool Oriented_Box_Intersects_Tri_On_Axis(const OBBoxClass & box,const TriClass &
 		return true;
 	}
 }
-
 
 /***********************************************************************************************
  * Oriented_Box_Intersects_Tri -- tests if the given box and tri intersect                     *

@@ -5,7 +5,6 @@
 #include "mousemgr.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DialogButtonClass
@@ -30,7 +29,6 @@ DialogButtonClass::DialogButtonClass (void)	:
 	StyleMgrClass::Configure_Renderer (&ButtonRenderers[1]);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -68,7 +66,6 @@ DialogButtonClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -79,7 +76,6 @@ DialogButtonClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -93,7 +89,6 @@ DialogButtonClass::On_LButton_Down (const Vector2 &mouse_pos)
 	WasButtonPressedOnMe = true;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -118,7 +113,6 @@ DialogButtonClass::On_LButton_Up (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Move
@@ -130,7 +124,6 @@ DialogButtonClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	IsMouseOverMe = Rect.Contains (mouse_pos);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -178,7 +171,6 @@ Blit_Section
 	renderer.Add_Quad (screen_rect, uv_rect);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -250,7 +242,6 @@ DialogButtonClass::Create_Component_Button (void)
 	::Blit_Section (ButtonRenderers[1], Vector2 (Rect.Right - edge_width, Rect.Bottom - height), Vector2 (right - edge_width, dn_start + bottom - height),
 		Vector2 (edge_width, height), texture_dimensions);
 
-
 	Vector2 horz_top_pos ((right / 2) - 5, 0);	
 	Vector2 horz_bottom_pos ((right / 2) - 5, bottom - height);
 	Vector2 horz_size (10, height);
@@ -279,7 +270,6 @@ DialogButtonClass::Create_Component_Button (void)
 		x_pos += horz_size.X;
 		remaining_width -= horz_size.X;
 	}
-
 
 	Vector2 vert_left_pos (0, (bottom / 2) - 5);
 	Vector2 vert_right_pos (right - edge_width, (bottom / 2) - 5);
@@ -342,7 +332,6 @@ DialogButtonClass::Create_Component_Button (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Component_Button2
@@ -404,7 +393,6 @@ DialogButtonClass::Create_Component_Button2 (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Text_Renderers
@@ -424,7 +412,6 @@ DialogButtonClass::Create_Text_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -443,7 +430,6 @@ DialogButtonClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -458,7 +444,6 @@ DialogButtonClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

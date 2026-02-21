@@ -8,7 +8,6 @@
 #include "mempool.h"
 #include "multilist.h"
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 //	SoundCullObjClass
@@ -67,7 +66,6 @@ class SoundCullObjClass : public MultiListObjectClass, public CullableClass
 		mutable AABoxClass		m_AABox;
 };
 
-
 __inline const Matrix3D &
 SoundCullObjClass::Get_Transform (void) const
 {
@@ -79,7 +77,6 @@ SoundCullObjClass::Get_Transform (void) const
 	// Return a reference to the matrix
 	return m_Transform;
 }
-
 
 __inline void
 SoundCullObjClass::Set_Transform (const Matrix3D &transform)
@@ -95,7 +92,6 @@ SoundCullObjClass::Set_Transform (const Matrix3D &transform)
 	return ;
 }
 
-
 __inline void
 SoundCullObjClass::Set_Sound_Obj (SoundSceneObjClass *sound_obj)
 {
@@ -109,7 +105,6 @@ SoundCullObjClass::Set_Sound_Obj (SoundSceneObjClass *sound_obj)
 
 	return ;
 }
-
 
 __inline const AABoxClass &
 SoundCullObjClass::Get_Bounding_Box (void) const

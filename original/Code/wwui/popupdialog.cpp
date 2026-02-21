@@ -6,13 +6,11 @@
 #include "texture.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
 const int	TITLE_BORDER_WIDTH	= 10;
 const int	TITLE_BORDER_HEIGHT	= 8;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -42,7 +40,6 @@ PopupDialogClass::PopupDialogClass (int res_id)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~PopupDialogClass
@@ -53,13 +50,11 @@ PopupDialogClass::~PopupDialogClass (void)
 	return ;
 }
 
-
 void PopupDialogClass::Set_Title(const WCHAR* title)
 	{
 	DialogBaseClass::Set_Title(title);
 	Build_Background_Renderers();
 	}
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -82,7 +77,6 @@ PopupDialogClass::On_Init_Dialog (void)
 	StyleMgrClass::Play_Sound (StyleMgrClass::EVENT_POPUP);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -153,7 +147,6 @@ PopupDialogClass::Build_Background_Renderers (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

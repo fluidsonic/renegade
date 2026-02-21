@@ -11,7 +11,6 @@
 #include "stylemgr.h"
 #include "vector4.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -23,7 +22,6 @@ static const float FULL_WIDTH		= 200.0F;
 static const RectClass	BAR_TOP_UVS			(1, 3, 13, 44);
 static const RectClass	BAR_BOTTOM_UVS		(14, 4, 26, 44);
 static const RectClass	BAR_TILE_UVS		(27, 10, 39, 37);
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -55,7 +53,6 @@ ShortcutBarCtrlClass::ShortcutBarCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ShortcutBarCtrlClass
@@ -65,7 +62,6 @@ ShortcutBarCtrlClass::~ShortcutBarCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -138,7 +134,6 @@ ShortcutBarCtrlClass::Create_Text_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Control_Renderers
@@ -163,7 +158,6 @@ ShortcutBarCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Hidden_State_Renderers
@@ -186,7 +180,6 @@ ShortcutBarCtrlClass::Create_Hidden_State_Renderers (void)
 	Render_Strip (Rect, false);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -259,7 +252,6 @@ ShortcutBarCtrlClass::Render_Strip (const RectClass &screen_rect, bool flip_uvs)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Displayed_State_Renderers
@@ -304,7 +296,6 @@ ShortcutBarCtrlClass::Create_Displayed_State_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -319,7 +310,6 @@ ShortcutBarCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ACTION);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -348,7 +338,6 @@ ShortcutBarCtrlClass::Update_Client_Rect (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -379,7 +368,6 @@ ShortcutBarCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -397,7 +385,6 @@ ShortcutBarCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -408,7 +395,6 @@ ShortcutBarCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -445,7 +431,6 @@ ShortcutBarCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Focus
@@ -457,7 +442,6 @@ ShortcutBarCtrlClass::On_Set_Focus (void)
 	DialogControlClass::On_Set_Focus ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -472,7 +456,6 @@ ShortcutBarCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -509,7 +492,6 @@ ShortcutBarCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -520,7 +502,6 @@ ShortcutBarCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -564,7 +545,6 @@ ShortcutBarCtrlClass::Set_Hidden_State (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Button
@@ -577,7 +557,6 @@ ShortcutBarCtrlClass::Add_Button (int ctrl_id, const WCHAR *text)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -602,7 +581,6 @@ ShortcutBarCtrlClass::Remove_Button (int ctrl_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Entry_Rect
@@ -625,7 +603,6 @@ ShortcutBarCtrlClass::Get_Entry_Rect (int index, RectClass &rect)
 	rect.Bottom	= int(rect.Top + entry_height);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -656,7 +633,6 @@ ShortcutBarCtrlClass::Entry_From_Pos (const Vector2 &mouse_pos)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -697,7 +673,6 @@ ShortcutBarCtrlClass::Set_Curr_Sel (int index, bool snap_mouse)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Wheel
@@ -717,7 +692,6 @@ ShortcutBarCtrlClass::On_Mouse_Wheel (int direction)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -740,7 +714,6 @@ ShortcutBarCtrlClass::Get_Window_Rect (void) const
 	return (*retval);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Send_Command
@@ -755,7 +728,6 @@ ShortcutBarCtrlClass::Send_Command (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -802,7 +774,6 @@ ShortcutBarCtrlClass::Update_Pulse (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

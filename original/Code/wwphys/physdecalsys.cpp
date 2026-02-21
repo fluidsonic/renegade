@@ -9,16 +9,10 @@
 #include "robjlist.h"
 #include "texture.h"
 
-
 #define DEBUG_DECALS 0
 
 const float DECAL_BACKFACE_THRESHHOLD	= 0.4f;		// backface rejection threshhold
 const float DECAL_HALF_SLAB_THICKNESS	= 0.2f;		// thickness of the bounding volume for decals
-
-
-
-
-
 
 PhysDecalSysClass::PhysDecalSysClass(PhysicsSceneClass * parent_scene) :
 	ParentScene(parent_scene),
@@ -299,7 +293,6 @@ bool PhysDecalSysClass::internal_remove_decal(uint32 id,MeshClass * deleted_mesh
 	}
 	return success;
 }
-
 
 /*
 ** LogicalDecalClass Implementation

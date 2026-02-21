@@ -1,7 +1,6 @@
 #ifndef WEATHERMGR_H
 #define WEATHERMGR_H
 
-
 // Code controlling defines.
 #define WEATHER_PARTICLE_SORT 0
 
@@ -19,7 +18,6 @@
 #include "vector2.h"
 #include "vector3.h"
 
-
 // Class declarations.
 class ChunkLoadClass;
 class ChunkSaveClass;
@@ -32,7 +30,6 @@ class	DX8IndexBufferClass;
 #endif
 
 class AudibleSoundClass;
-
 
 class WindClass
 {
@@ -59,7 +56,6 @@ class WindClass
 		Vector2					  Velocity;
 		AudibleSoundClass		 *Sound;
 };
-
 
 class WeatherSystemClass : public RenderObjClass
 {
@@ -202,7 +198,6 @@ class WeatherSystemClass : public RenderObjClass
 		static unsigned						_GlobalParticleCount;	// Total no. of particles over all weather systems.
 };
 
-
 class RainSystemClass : public WeatherSystemClass
 {
 	public:
@@ -222,7 +217,6 @@ class RainSystemClass : public WeatherSystemClass
 		SoundEnvironmentClass *SoundEnvironment;
 };
 
-
 class SnowSystemClass : public WeatherSystemClass
 {
 	public:
@@ -238,7 +232,6 @@ class SnowSystemClass : public WeatherSystemClass
 		};
 };
 
-
 class AshSystemClass : public WeatherSystemClass
 {
 	public:
@@ -253,7 +246,6 @@ class AshSystemClass : public WeatherSystemClass
 			PAGE_COUNT = 4
 		};
 };
-
 
 class WeatherParameterClass
 {
@@ -279,8 +271,6 @@ class WeatherParameterClass
 
 		friend class WeatherMgrClass;
 };
-
-
 
 class	WeatherMgrClass : public SaveLoadSubSystemClass, public NetworkObjectClass
 {
@@ -408,9 +398,7 @@ class	WeatherMgrClass : public SaveLoadSubSystemClass, public NetworkObjectClass
 		static bool							_Dirty;
 };
 
-
 // Externals.
 extern WeatherMgrClass _TheWeatherMgr;
-
 
 #endif // WEATHERMGR_H

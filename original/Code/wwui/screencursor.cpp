@@ -8,7 +8,6 @@
 #include "rect.h"
 #include "dialogmgr.h"
 
-
 ///////////////////////////////////////////////////////////////////
 //
 //	ScreenCursorClass
@@ -23,7 +22,6 @@ ScreenCursorClass::ScreenCursorClass (void)	:
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////
 //
 //	~ScreenCursorClass
@@ -34,7 +32,6 @@ ScreenCursorClass::~ScreenCursorClass (void)
 	REF_PTR_RELEASE (Texture);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////
 //
@@ -63,7 +60,6 @@ ScreenCursorClass::Set_Texture (TextureClass *texture)
 	Renderer.Set_Coordinate_Range (Render2DClass::Get_Screen_Resolution ());
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////
 //

@@ -19,7 +19,6 @@ public:
 	virtual bool								Load(ChunkLoadClass &cload);
 };
 
-
 /**
 ** CatmullRomSpline1DClass
 ** This is is an implementation of 1D catmull-rom splines

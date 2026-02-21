@@ -2,7 +2,6 @@
 #include	"buff.h"
 //#include	<stddef.h>
 
-
 /***********************************************************************************************
  * Buffer::Buffer -- Constructor for buffer object.                                            *
  *                                                                                             *
@@ -33,7 +32,6 @@ Buffer::Buffer(void * buffer, long size) :
 	}
 }
 
-
 // Alternate constructor for char * pointer.
 Buffer::Buffer(char * buffer, long size) :
 	BufferPtr(buffer),
@@ -46,7 +44,6 @@ Buffer::Buffer(char * buffer, long size) :
 	}
 }
 
-
 // Alternate constructor for void const * pointer.
 Buffer::Buffer(void const * buffer, long size) :
 	BufferPtr((void*)buffer),
@@ -58,7 +55,6 @@ Buffer::Buffer(void const * buffer, long size) :
 		IsAllocated = true;
 	}
 }
-
 
 /***********************************************************************************************
  * Buffer::Buffer -- Self-allocating constructor for buffer object.                            *
@@ -88,7 +84,6 @@ Buffer::Buffer(long size) :
 	}
 }
 
-
 /***********************************************************************************************
  * Buffer::Buffer -- Copy constructor for buffer object.                                       *
  *                                                                                             *
@@ -110,7 +105,6 @@ Buffer::Buffer(Buffer const & buffer) :
 	BufferPtr = buffer.BufferPtr;
 	Size = buffer.Size;
 }
-
 
 /***********************************************************************************************
  * Buffer::operator = -- Assignment operator for the buffer object.                            *
@@ -140,7 +134,6 @@ Buffer & Buffer::operator = (Buffer const & buffer)
 	return(*this);
 }
 
-
 /***********************************************************************************************
  * Buffer::~Buffer -- Destructor for buffer object.                                            *
  *                                                                                             *
@@ -159,7 +152,6 @@ Buffer::~Buffer(void)
 {
 	Reset();
 }
-
 
 /***********************************************************************************************
  * Buffer::Reset -- Clears the buffer object to null state.                                    *

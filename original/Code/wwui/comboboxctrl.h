@@ -9,7 +9,6 @@
 #include "dropdownctrl.h"
 #include "EditCtrl.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ComboBoxCtrlClass
@@ -113,6 +112,5 @@ protected:
 	int							CurrSel;
 	EditCtrlClass				EditControl;
 };
-
 
 #endif //__COMBOBOX_CTRL_H

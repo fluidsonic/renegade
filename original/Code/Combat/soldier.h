@@ -21,7 +21,6 @@
 	#include "dialogue.h"
 #endif
 
-
 struct TransitionCompletionDataStruct;
 class	PrivateTimerClass;
 class DynamicSpeechAnimClass;
@@ -30,7 +29,6 @@ class PersistantSurfaceEmitterClass;
 class SoldierObserverClass;
 
 //const int NO_FLAG = -1;
-
 
 /*
 **
@@ -42,8 +40,6 @@ typedef enum {
 	SOLDIER_INNATE_EVENT_BULLET_HEARD 	=	1 << 3,
 	SOLDIER_INNATE_ACTIONS					=	1 << 4,
 } SoldierInnateEvents;
-
-
 
 /*
 ** SoldierGameObjDef - Defintion class for a SoldierGameObj
@@ -81,7 +77,6 @@ protected:
 	friend	class								SoldierGameObj;
 	friend	class								SoldierObserverClass;
 };
-
 
 /*
 **
@@ -167,7 +162,6 @@ public:
 	virtual void	Import_Occasional( BitStreamClass &packet );
    virtual void	Export_Frequent( BitStreamClass & packet );
    virtual void	Import_Frequent( BitStreamClass & packet );
-
 
 	bool				Is_Dead( void )			{ return Get_State() == HumanStateClass::DEATH; }
 	bool				Is_Destroyed( void )		{ return Get_State() == HumanStateClass::DESTROY; }
@@ -255,7 +249,6 @@ public:
 	void					Stop_Current_Speech( void );
 	RenderObjClass *	Find_Head_Model( void );
 	void					Prepare_Speech_Framework( void );
-
 
 	//
 	//	"Ghost" support.  "Ghosts" are soldier's who have their collision turned off
@@ -392,7 +385,6 @@ protected:
 	void						Reset_RenderObjs( void );
 
 	void						Update_Healing_Effect( void );
-
 
 	//
 	//	Static debug support

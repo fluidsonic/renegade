@@ -2,7 +2,6 @@
 #include	"cstraw.h"
 #include	<string.h>
 
-
 /***********************************************************************************************
  * CacheStraw::Get -- Fetch data from the data source.                                         *
  *                                                                                             *

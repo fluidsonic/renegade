@@ -1,11 +1,9 @@
 #ifndef _MISSION11_H_
 #define _MISSION11_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
-
 
 // Predefined Constants
 //CHARACTERS
@@ -131,7 +129,6 @@ enum
 	//M11_PICK_A_NEW_WAYPATH_JDG,
 
 	//M11_DOING_ANIMATION_01_JDG,
-
 
 	//mission controller specific commands
 	M11_ATTACH_HAVOCS_SCRIPT_JDG,

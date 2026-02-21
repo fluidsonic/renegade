@@ -4,7 +4,6 @@
 
 #include "renegadedialogmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	GameInitMgrClass
@@ -91,6 +90,5 @@ private:
 	static bool		NeedsGameExit;
 	static bool		NeedsGameExitAll;
 };
-
 
 #endif //__GAME_INIT_MGR_H

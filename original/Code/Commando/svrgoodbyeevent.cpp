@@ -103,28 +103,8 @@ cSvrGoodbyeEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(IsQuickFullExitRequested);
 
 	Act();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

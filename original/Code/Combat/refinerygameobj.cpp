@@ -6,7 +6,6 @@
 #include "persistfactory.h"
 #include "definitionmgr.h"
 #include "combatchunkid.h"
-#include "debug.h"
 #include "scriptzone.h"
 #include "combat.h"
 #include "wwaudio.h"

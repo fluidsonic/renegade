@@ -6,14 +6,12 @@
 #include "ccamera.h"
 #include "texture.h"
 #include "physicalgameobj.h"
-#include "debug.h"
 #include "animobj.h"
 #include "soldier.h"
 #include "weapons.h"
 #include "decophys.h"
 #include "stealtheffect.h"
 #include "animcontrol.h"
-
 
 /*
 **
@@ -57,7 +55,6 @@ HTreeClass		*	BobHTree;
 HAnimClass		*	BobHAnim;
 float					BobFrame;
 float					BobRecoil;
-
 
 static	void		Set_Bob( int bob_state );
 static	void		Set_Bob_Recoil( float amount );
@@ -116,7 +113,6 @@ void 	WeaponViewClass::Reset()
 	Release_Weapon_Assets();
 	Release_Hands_Assets();
 }
-
 
 enum	{
 	CHUNKID_VARIABLES						=	730011054,
@@ -218,7 +214,6 @@ void 	WeaponViewClass::Think()
 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Is_Lerping() ) {
 		bail = true;
 	}
-
 
 	WeaponClass * weapon = NULL;
 
@@ -374,7 +369,6 @@ void 	WeaponViewClass::Think()
 		}
 	}
 
-
 	if ( HandsPhysObj != NULL && WeaponModel != NULL ) {
 
 		// make sure the "hands" object has the stealth effect
@@ -434,7 +428,6 @@ void 	WeaponViewClass::Think()
 			if ( new_weapon_state != WeaponState ) {
 				WeaponState = new_weapon_state;
 
-
 				float anim_blend_time = 0.15f;
 				if ( new_weapon_state == WEAPON_STATE_FIRE ) {
 					anim_blend_time = 0;	// No blend when firing
@@ -458,7 +451,6 @@ void 	WeaponViewClass::Think()
 //				}
 			}
 		}
-
 
 		// Lets put the gun relative to the camera
 		Matrix3D tm = COMBAT_CAMERA->Get_Transform();
@@ -612,7 +604,6 @@ static void	Aquire_Weapon_Assets( const WeaponClass * weapon )
 		HandAnimControl.Set_Animation( (HAnimClass*)NULL );
 	}
 
-
 	if ( HandsPhysObj == NULL || HandsPhysObj->Peek_Model() == NULL ) {
 		return;
 	}
@@ -762,7 +753,6 @@ static void	Release_Hands_Assets( void )
 	}
 }
 
-
 /*
 **
 */
@@ -794,7 +784,6 @@ static void	Set_Bob( int bob_state )
 		}
 	}
 }
-
 
 static void	Set_Bob_Recoil( float amount )		
 { 

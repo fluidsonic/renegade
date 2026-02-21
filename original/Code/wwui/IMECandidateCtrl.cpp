@@ -41,7 +41,6 @@ IMECandidateCtrl::IMECandidateCtrl() :
 	mScrollBarCtrl.Set_Advise_Sink(this);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -60,7 +59,6 @@ IMECandidateCtrl::IMECandidateCtrl() :
 IMECandidateCtrl::~IMECandidateCtrl()
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -83,7 +81,6 @@ void IMECandidateCtrl::Init(IME::IMECandidate* candidate)
 	mCandidate = candidate;
 	Changed(candidate);
 	}
-
 
 /******************************************************************************
 *
@@ -118,7 +115,6 @@ void IMECandidateCtrl::Changed(IME::IMECandidate* candidate)
 	Set_Dirty();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -143,7 +139,6 @@ void IMECandidateCtrl::Reset(void)
 	mScrollBarCtrl.Show(false);
 	mCandidate = NULL;
 	}
-
 
 /******************************************************************************
 *
@@ -190,7 +185,6 @@ void IMECandidateCtrl::CreateControlRenderer(void)
 	rect.Bottom -= 1;
 	renderer.Add_Quad(rect, bkColor);
 	}
-
 
 /******************************************************************************
 *
@@ -257,7 +251,6 @@ void IMECandidateCtrl::CreateTextRenderer(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -289,7 +282,6 @@ void IMECandidateCtrl::Render(void)
 	DialogControlClass::Render();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -315,7 +307,6 @@ void IMECandidateCtrl::SetCurrSel(int index)
 			}
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -354,7 +345,6 @@ int IMECandidateCtrl::EntryFromPos(const Vector2& mousePos)
 	
 	return -1;
 	}
-
 
 /******************************************************************************
 *
@@ -402,7 +392,6 @@ void IMECandidateCtrl::UpdateScrollPos(void)
 			}
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -464,7 +453,6 @@ void IMECandidateCtrl::Update_Client_Rect(void)
 	Set_Dirty();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -518,7 +506,6 @@ void IMECandidateCtrl::CalculateCandidatePageExtent(Vector2& outExtent, Vector2&
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -542,7 +529,6 @@ void IMECandidateCtrl::On_Set_Cursor(const Vector2& mousePos)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -561,7 +547,6 @@ void IMECandidateCtrl::On_LButton_Down(const Vector2& mousePos)
 	{
 	SetCurrSel(EntryFromPos(mousePos));
 	}
-
 
 /******************************************************************************
 *
@@ -590,7 +575,6 @@ void IMECandidateCtrl::On_LButton_Up(const Vector2& mousePos)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -611,7 +595,6 @@ void IMECandidateCtrl::On_Add_To_Dialog(void)
 	Parent->Add_Control(&mScrollBarCtrl);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -631,7 +614,6 @@ void IMECandidateCtrl::On_Remove_From_Dialog(void)
 	{
 	Parent->Remove_Control(&mScrollBarCtrl);
 	}
-
 
 /******************************************************************************
 *

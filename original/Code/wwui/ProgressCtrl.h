@@ -61,5 +61,4 @@ class ProgressCtrlClass :
 		unsigned int mStep;
 	};
 
-
 #endif //__PROGRESS_CTRL_H

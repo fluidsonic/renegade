@@ -7,11 +7,9 @@
 
 #include "winblows.h"
 
-
 HINSTANCE Global_instance;
 LPSTR     Global_commandline;
 int       Global_commandshow;
-
 
 /*
  * WinMain - initialization, message loop
@@ -31,7 +29,6 @@ int PASCAL WinMain( HINSTANCE instance, HINSTANCE, char *command_line, int comma
     GetModuleFileName(instance,(char *)&path_to_exe,512);
     argc=1;
     argv[0]=path_to_exe;
-
 
     int   command_scan=0;
     char  command_char;
@@ -61,29 +58,7 @@ int PASCAL WinMain( HINSTANCE instance, HINSTANCE, char *command_line, int comma
 
     } while ( command_char != 0 && command_char != 13 && argc<20 );
 
-
 #ifdef MULTIPLAYERDEMO
-	/*
-	** Force some command line arguments for console mode demo server.
-	*/
-
-	/*
-	** If the user didn't specify a server.ini then add the default to the command line.
-	*/
-	char temp[256];
-	bool found = false;
-	for (int i=1 ; i<argc ; i++) {
-		strcpy(temp, argv[i]);
-		strupr(temp);
-		if (strstr(temp, "GAMESPYSERVER=")) {
-			found = true;
-			break;
-		}
-	}
-	if (!found) {
-		argv[argc++] = "GAMESPYSERVER=server.ini";
-	}
-
 	/*
 	** Add the 'NODX' flag. If it's already there, well, it's there twice now.
 	*/
@@ -93,7 +68,6 @@ int PASCAL WinMain( HINSTANCE instance, HINSTANCE, char *command_line, int comma
     return(main(argc,argv));
 
 } /* WinMain */
-
 
 int Print_WM(UINT message,char *out)
 {

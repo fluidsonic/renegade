@@ -2,10 +2,8 @@
 #ifndef __DLGMULTIPLAYOPTIONS_H
 #define __DLGMULTIPLAYOPTIONS_H
 
-
 #include "menudialog.h"
 #include "resource.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -39,7 +37,6 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
 
 #endif //__DLGMULTIPLAYOPTIONS_H
 

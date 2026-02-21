@@ -4,7 +4,6 @@
 #include	<assert.h>
 #include	<string.h>
 
-
 /***********************************************************************************************
  * LZOStraw::LZOStraw -- Constructor for LZO straw object.                                     *
  *                                                                                             *
@@ -38,7 +37,6 @@ LZOStraw::LZOStraw(CompControl control, int blocksize) :
 	}
 }
 
-
 /***********************************************************************************************
  * LZOStraw::~LZOStraw -- Destructor for the LZO straw.                                        *
  *                                                                                             *
@@ -61,7 +59,6 @@ LZOStraw::~LZOStraw(void)
 	delete [] Buffer2;
 	Buffer2 = NULL;
 }
-
 
 /***********************************************************************************************
  * LZOStraw::Get -- Fetch data through the LZO processor.                                      *

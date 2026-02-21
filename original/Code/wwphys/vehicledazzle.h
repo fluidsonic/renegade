@@ -41,6 +41,5 @@ private:
 	VehicleDazzleClass & operator = (const VehicleDazzleClass & that);
 };
 
-
 #endif // VEHICLEDAZZLE_H
 

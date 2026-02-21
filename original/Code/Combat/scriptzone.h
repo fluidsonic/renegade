@@ -37,7 +37,6 @@ namespace ZoneConstants
 	} ZoneType;
 }
 
-
 /*
 ** ZoneGameObjDef - Defintion class for a ZoneGameObj
 */
@@ -68,7 +67,6 @@ protected:
 	bool											IsEnvironmentZone;
 	friend	class								ScriptZoneGameObj;
 };
-
 
 /*
 **
@@ -114,7 +112,6 @@ public:
 
    bool	Is_Environment_Zone( void )						{ return Get_Definition().IsEnvironmentZone; }
 
-
 protected:
 	OBBoxClass			BoundingBox;
 	int					PlayerType;
@@ -128,7 +125,6 @@ protected:
 };
 
 #endif
-
 
 #if 0
 

@@ -1,7 +1,6 @@
 #include "soldierobserver.h"
 #include "soldier.h"
 #include "action.h"
-#include "debug.h"
 #include "crandom.h"
 #include "cover.h"
 #include "wwaudio.h"
@@ -16,7 +15,6 @@
 #include "timemgr.h"
 #include "weaponbag.h"
 #include "playertype.h"
-
 
 #define	THINK_RATE 1
 #define	THINK_ID 100123
@@ -106,7 +104,6 @@ SoldierObserverClass::SoldierObserverClass( void ) :
 {
 }
 
-
 SoldierObserverClass::~SoldierObserverClass( void )
 {
 	Release_Cover_Position();
@@ -132,7 +129,6 @@ const PersistFactoryClass &	SoldierObserverClass::Get_Factory (void) const
 {
 	return _SoldierObserverPersistFactory;
 }
-
 
 enum	{
 	CHUNKID_PARENT							=	 410001836,
@@ -194,7 +190,6 @@ bool	SoldierObserverClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 bool	SoldierObserverClass::Load (ChunkLoadClass &cload)
 {
 	while (cload.Open_Chunk()) {
@@ -249,7 +244,6 @@ bool	SoldierObserverClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 /*
 **
 */
@@ -257,7 +251,6 @@ void	SoldierObserverClass::Attach( GameObject * obj )
 {
 	// Warning, Attach may not be called on loaded scripts
 }
-
 
 void	SoldierObserverClass::Detach( GameObject * obj )
 {
@@ -277,11 +270,9 @@ void	SoldierObserverClass::Detach( GameObject * obj )
 	GameObjObserverManager::Delete_Register( this );
 }
 
-
 void SoldierObserverClass::Created( GameObject* obj )
 {
 	SmartGameObj* smart = obj->As_SmartGameObj();
-
 
 //	Debug_Say(("Innate soldier [%d] created\n", obj->Get_ID()));
 
@@ -317,14 +308,12 @@ void SoldierObserverClass::Created( GameObject* obj )
 
 }
 
-
 void SoldierObserverClass::Destroyed(GameObject* obj)
 {
 //	Debug_Say(("Innate soldier [%d] destroyed\n", obj->Get_ID()));
 
 	Release_Cover_Position();
 }
-
 
 void SoldierObserverClass::Timer_Expired(GameObject* obj, int timer_id)
 {
@@ -337,12 +326,10 @@ void SoldierObserverClass::Timer_Expired(GameObject* obj, int timer_id)
 	}
 }
 
-
 void SoldierObserverClass::Killed(GameObject* obj, GameObject* killer)
 {
 //	Debug_Say(("Innate soldier [%d] killed by [%d]\n", obj->Get_ID(), killer ? killer->Get_ID() : -1));
 }
-
 
 void SoldierObserverClass::Damaged(GameObject* obj, GameObject* damager, float amount)
 {
@@ -396,7 +383,6 @@ void SoldierObserverClass::Damaged(GameObject* obj, GameObject* damager, float a
 		}
 	}
 }
-
 
 void SoldierObserverClass::Sound_Heard(GameObject* obj, const CombatSound& sound)
 {
@@ -459,7 +445,6 @@ void SoldierObserverClass::Sound_Heard(GameObject* obj, const CombatSound& sound
 	}
 }
 
-
 void SoldierObserverClass::Enemy_Seen(GameObject* obj, GameObject* enemy)
 {
 	if ( obj->Is_Hibernating() ) {
@@ -511,7 +496,6 @@ void SoldierObserverClass::Enemy_Seen(GameObject* obj, GameObject* enemy)
 	}
 }
 
-
 void	SoldierObserverClass::Custom( GameObject * obj, int type, int param, GameObject * sender )
 {
 	if ( type == CUSTOM_EVENT_ATTACK_ARRIVED ) {
@@ -553,7 +537,6 @@ void SoldierObserverClass::Action_Complete( GameObject * obj, int action_id, Act
 		}
 	}
 }
-
 
 /*
 **
@@ -770,8 +753,6 @@ void SoldierObserverClass::Notify_Neighbors_Enemy( SoldierGameObj * soldier, Gam
 	}
 }
 
-
-
 void SoldierObserverClass::Poked( GameObject * obj, GameObject * poker )
 {
 	if ( obj != NULL && obj->As_PhysicalGameObj() != NULL ) {
@@ -850,7 +831,6 @@ void SoldierObserverClass::Think( SoldierGameObj * soldier, bool is_new_state )
 	if ( soldier->Get_Action()->Is_Busy() ) {
 		return ;
 	}
-
 
 	// Check how long we have been in this state, and if we should switch
 	StateTimer += 1;
@@ -938,7 +918,6 @@ void	SoldierObserverClass::Reset_Conversation_Timer( void )
 	ConversationTimer = WWMath::Random_Float( 20.0F, 60.0F );
 }
 
-
 /*********************************************************************************************** 
 **													Innate AI State Actions
 ***********************************************************************************************/
@@ -1009,7 +988,6 @@ void SoldierObserverClass::State_Act_Idle( SoldierGameObj * soldier )
 	Look_Random( soldier, ActionTimer );
 }
 
-
 /*
 **
 */
@@ -1035,7 +1013,6 @@ void SoldierObserverClass::State_Act_Footsteps_Heard( SoldierGameObj * soldier )
 
 	Look_Random( soldier, 0 );		// No random looking!
 }
-
 
 /*
 **
@@ -1270,7 +1247,6 @@ void	SoldierObserverClass::State_Act_Attack( SoldierGameObj * soldier )
 		Action_Attack_Object( soldier, enemy, weapon_range, kneel, best_pos, 0.5f );
 	}
 }
-
 
 /*********************************************************************************************** 
 **													Innate AI Actions

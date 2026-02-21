@@ -27,7 +27,6 @@ public:
 	RenderObjClass *				CollidedRenderObj;	// actual render object collided against (may be NULL!)
 };
 
-
 /*
 ** CollisionReactionType
 ** This is an enumeration of possible replies that an observer can make when
@@ -70,6 +69,5 @@ public:
 	virtual void							Object_Removed_From_Scene(PhysClass * observed_obj)	{ };
 	virtual void							Object_Shattered_Something(PhysClass * observed_obj, PhysClass * shattered_obj, int surface_type) { };
 };
-
 
 #endif	// PHYSOBSERVER_H

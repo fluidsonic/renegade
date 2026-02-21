@@ -84,6 +84,5 @@ protected:
 	int							LadderIndex;
 };
 
-
 #endif	//	TRANSITIONGAMEOBJ_H
 

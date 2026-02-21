@@ -13,7 +13,6 @@ const float	DEFAULT_THICKNESS = 0.1f;
 const float CONTACT_GRAVITY_MULTIPLIER = 2.0f;	// maximum contact force is multiplier * gravity.
 const float CONTACT_DAMPING_FACTOR = 0.33f;		// ratio of damping / (critical damping) (less than zero is underdamped)
 
-
 OctBoxClass::OctBoxClass
 (
 	RigidBodyClass & parent,
@@ -27,7 +26,6 @@ OctBoxClass::OctBoxClass
 {
 	Set_Thickness(Thickness);
 }
-
 
 OctBoxClass::~OctBoxClass(void)
 {
@@ -107,7 +105,6 @@ bool OctBoxClass::Is_In_Contact_Zone(void)
 	return the_scene->Intersection_Test(wrld_outer_box,colgroup,coltype,true);
 }
 
-
 OctBoxClass::CollisionResult
 OctBoxClass::Compute_Contacts(bool lock_to_centroids)
 {
@@ -116,7 +113,6 @@ OctBoxClass::Compute_Contacts(bool lock_to_centroids)
 	Parent.Dec_Ignore_Counter();
 	return result;
 }
-
 
 OctBoxClass::CollisionResult			
 OctBoxClass::Internal_Compute_Contacts(bool lock_to_centroids)
@@ -166,7 +162,6 @@ OctBoxClass::Internal_Compute_Contacts(bool lock_to_centroids)
 	return RESULT_CONTACT;
 }
 
-
 void OctBoxClass::Compute_Octant_Contact(int oi,bool lock_to_centroids)
 {
 	static Vector3 _octant_offset[8] =
@@ -208,7 +203,6 @@ void OctBoxClass::Compute_Octant_Contact(int oi,bool lock_to_centroids)
 													Parent.Get_Collision_Group(),
 													COLLISION_TYPE_PHYSICAL | COLLISION_TYPE_VEHICLE);
 	PhysicsSceneClass::Get_Instance()->Cast_Ray(raytest,true);
-
 
 	/*
 	** Compute the contact for this octant-box. 
@@ -282,7 +276,4 @@ void OctBoxClass::Compute_Octant_Contact(int oi,bool lock_to_centroids)
 		}
 	}
 }
-
-
-
 

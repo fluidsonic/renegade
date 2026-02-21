@@ -76,5 +76,3 @@ cServerFps::Get_Instance
 	return TheInstance;
 }
 
-
-

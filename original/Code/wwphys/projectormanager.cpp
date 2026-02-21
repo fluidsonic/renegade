@@ -7,7 +7,6 @@
 #include "phys.h"
 #include "texture.h"
 
-
 /*
 ** load up a texture.  also strips off the path since the game has everything
 ** on one place
@@ -24,7 +23,6 @@ TextureClass * create_projector_texture_from_filename( const char * filename )
 	}
 	return texture;
 }
-
 
 /********************************************************************************************
 **
@@ -145,7 +143,6 @@ void ProjectorManagerClass::Update_From_Model(RenderObjClass * model)
 	}
 }
 
-
 /********************************************************************************************
 **
 ** ProjectorManagerDefClass Implementation
@@ -173,7 +170,6 @@ enum
 
 	PROJECTORMANAGERDEF_VARIABLE_INTENSITY,
 };
-
 
 ProjectorManagerDefClass::ProjectorManagerDefClass(void) :
 	IsEnabled(false),

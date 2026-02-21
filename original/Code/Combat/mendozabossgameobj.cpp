@@ -2,7 +2,6 @@
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
-#include "debug.h"
 #include "animcontrol.h"
 #include "crandom.h"
 #include "weapons.h"

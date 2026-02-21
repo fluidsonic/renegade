@@ -116,24 +116,6 @@ bool cNetStats::Update_If_Sample_Done(int this_frame_time, bool force_update)
    return is_updated;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //const USHORT cNetStats::SAMPLE_TIME = 500;
 
    // crash here when exit server thread before client

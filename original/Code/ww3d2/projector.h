@@ -7,9 +7,7 @@
 #include "aabox.h"
 #include "obbox.h"
 
-
 class MatrixMapperClass;
-
 
 /**
 ** ProjectorClass
@@ -45,7 +43,5 @@ protected:
 	MatrixMapperClass *			Mapper;
 };
 
-
 #endif
-
 

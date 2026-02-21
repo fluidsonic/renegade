@@ -65,7 +65,6 @@ class Vector3Randomizer {
 		// Derived classes should have a private dummy assignment operator to block usage
 };
 
-
 /*
 ** Vector3SolidBoxRandomizer is a randomizer for generating points uniformly distributed inside a
 ** box which is centered on the origin.
@@ -95,7 +94,6 @@ class Vector3SolidBoxRandomizer : public Vector3Randomizer {
 
 		Vector3	Extents;
 };
-
 
 /*
 ** Vector3SolidSphereRandomizer is a randomizer for generating points uniformly distributed inside
@@ -127,7 +125,6 @@ class Vector3SolidSphereRandomizer : public Vector3Randomizer {
 		float	Radius;
 };
 
-
 /*
 ** Vector3HollowSphereRandomizer is a randomizer for generating points uniformly distributed on the
 ** surface of a sphere which is centered on the origin.
@@ -157,7 +154,6 @@ class Vector3HollowSphereRandomizer : public Vector3Randomizer {
 
 		float	Radius;
 };
-
 
 /*
 ** Vector3SolidCylinderRandomizer is a randomizer for generating points uniformly distributed
@@ -191,7 +187,5 @@ class Vector3SolidCylinderRandomizer : public Vector3Randomizer {
 		float	Radius;
 };
 
-
 #endif
-
 

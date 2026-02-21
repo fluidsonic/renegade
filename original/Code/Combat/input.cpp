@@ -3,7 +3,6 @@
 #include "assets.h"
 #include "ini.h"
 #include "directinput.h"
-#include "debug.h"
 #include "timemgr.h"
 #include "registry.h"
 #include "ffactory.h"
@@ -13,7 +12,6 @@
 #include "vehicle.h"
 #include "combat.h"
 #include "ccamera.h"
-
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -25,7 +23,6 @@
 ////////////////////////////////////////////////////////////////
 #define VK_MOUSEWHEEL_UP      0x100
 #define VK_MOUSEWHEEL_DOWN    0x101
-
 
 /*
 **
@@ -72,7 +69,6 @@ const char *DEFAULT_INPUT_FILENAME = "DEFAULT_INPUT.CFG";
 #define	ENTRY_MOUSE_INVERT			"MouseInvert"
 #define	ENTRY_MOUSE_2D_INVERT		"Mouse2DInvert"
 #define	ENTRY_TARGET_STEERING		"TargetSteering"
-
 
 typedef struct {
 	short	ID;
@@ -198,7 +194,6 @@ StringID	ButtonNames[] = {
 };
 
 #define	NUM_BUTTON_NAMES	( sizeof(ButtonNames) / sizeof(ButtonNames[0]) )
-
 
 StringID	SliderNames[] = {
 	{	Input::SLIDER_MOUSE_LEFT,	"Mouse_Left"	},
@@ -394,7 +389,6 @@ StringID	Functions[ NUM_FUNCTIONS ] = {
 
 };
 
-
 /*
 ** FunctionKeyStates
 */
@@ -570,7 +564,6 @@ int	FunctionKeyStates[ NUM_FUNCTIONS ] =
 	BUTTON_HIT, //INPUT_FUNCTION_PROFILE_RESET,
 };
 
-
 /*
 **
 */
@@ -582,7 +575,6 @@ public:
 	float	Max;
 	float	Acceleration;
 };
-
 
 /*
 **
@@ -607,7 +599,6 @@ int	_StatsHelpScreen;
 int	_StatsObjectives;
 int	_StatsMap;
 int	_StatsMenu;
-
 
 /*
 **
@@ -646,7 +637,6 @@ void	Input::Shutdown( void )
 	return ;
 }
 
-
 void	Input::Free_Mappings( void )
 {
 	//
@@ -661,7 +651,6 @@ void	Input::Free_Mappings( void )
 	AcceleratedKeyList.Delete_All ();
 	return;
 }
-
 
 void	Input::Load_Registry( const char * key )
 {
@@ -689,8 +678,6 @@ void	Input::Save_Registry( const char * key )
 	}
 	delete registry;*/
 }
-
-
 
 float	Input::Get_Mouse_Sensitivity( void )
 {
@@ -740,7 +727,6 @@ void	Input::Flush( void )
 	}
 }
 
-
 void	Input::Update_Sliders( void )
 {
 	if (!UsingDirectInput) {
@@ -763,7 +749,6 @@ void	Input::Update_Sliders( void )
 		mouse_y = 0.0f;
 		mouse_z = 0.0f;
 	}
-
 
 	// it comes in as inverted
 	if ( !MouseInvert ) {
@@ -799,7 +784,6 @@ void	Input::Update_Sliders( void )
 	return ;
 }
 
-
 void	Input::Update( void )
 {
 	if (!UsingDirectInput) {
@@ -821,7 +805,7 @@ void	Input::Update( void )
 	memset( FunctionValue, 0, sizeof( FunctionValue ) );
 
 	// No ESC, O, M, F1, etc in cinematics!
-	if ( COMBAT_CAMERA && COMBAT_CAMERA->Is_In_Cinematic() && !DebugManager::Allow_Cinematic_Keys() ) {
+	if ( COMBAT_CAMERA && COMBAT_CAMERA->Is_In_Cinematic() && !true ) {
 		return;
 	}
 
@@ -964,7 +948,6 @@ void	Input::Console_Add_Key( int key )
 	}
 }
 
-
 /*
 **
 */
@@ -976,7 +959,6 @@ bool	Input::Is_Button_Down (int button_id)
 
 	return ((DirectInput::Get_Button_Value(button_id) & BUTTON_BIT_HELD) != 0);
 }
-
 
 /*
 **
@@ -1062,7 +1044,6 @@ float	Input::Get_Value( int function_index, int input, float clamp )
 	return 0.0f;
 }
 
-
 /*
 **
 */
@@ -1079,7 +1060,6 @@ short	Input::Get_Function( const char *name )
 	}
 	return 0;
 }
-
 
 /*
 **
@@ -1139,7 +1119,6 @@ short	Input::Get_Key( const char *name )
 	return 0;
 }
 
-
 /*
 **
 */
@@ -1149,7 +1128,6 @@ Input::Get_Primary_Key_For_Function (int function_id)
 	return FunctionPrimaryKeys[ function_id ];
 }
 
-
 /*
 **
 */
@@ -1158,7 +1136,6 @@ Input::Get_Secondary_Key_For_Function (int function_id)
 {
 	return FunctionSecondaryKeys[ function_id ];
 }
-
 
 /*
 **
@@ -1181,10 +1158,8 @@ Input::Set_Primary_Key_For_Function (int function_id, int key_id)
 		Set_Primary_Key_For_Function ( INPUT_FUNCTION_MOVE_UP, key_id );
 	}
 
-
 	return ;
 }
-
 
 /*
 **
@@ -1209,7 +1184,6 @@ Input::Set_Secondary_Key_For_Function (int function_id, int key_id)
 
 	return ;
 }
-
 
 /*
 **
@@ -1281,8 +1255,6 @@ typedef struct
 	int text_id;
 	int dik_id;
 }	KEY_NAME_MAPPING;
-
-
 
 const KEY_NAME_MAPPING DIK_KEY_NAME_ARRAY[] =
 {
@@ -1412,7 +1384,6 @@ const KEY_NAME_MAPPING DIK_KEY_NAME_ARRAY[] =
 
 const int KEYNAME_MAP_COUNT	= sizeof (DIK_KEY_NAME_ARRAY) / sizeof (KEY_NAME_MAPPING);
 
-
 /*
 **
 */
@@ -1480,7 +1451,6 @@ Input::Load_Configuration (const char *filename)
 	return ;
 }
 
-
 /*
 **
 */
@@ -1501,7 +1471,6 @@ Input::Load_Accelerated_Keys (INIClass	*input_ini)
 
 	return ;
 }
-
 
 /*
 **
@@ -1527,7 +1496,6 @@ Input::Load_Accelerated_Key (INIClass *input_ini, const char *section_name)
 	AcceleratedKeyList.Add (def);
 	return ;
 }
-
 
 /*
 **
@@ -1559,7 +1527,6 @@ Input::Save_Accelerated_Keys (INIClass	*input_ini)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Translated_Key_Name
@@ -1584,7 +1551,6 @@ Input::Get_Translated_Key_Name (int dik_id, WideStringClass &name)
 	return ;
 }
 
-
 /*
 **
 */
@@ -1607,7 +1573,6 @@ Input::Load_Misc_Settings (INIClass *input_ini)
 	return ;
 }
 
-
 /*
 **
 */
@@ -1623,7 +1588,6 @@ Input::Save_Misc_Settings (INIClass	*input_ini)
 	return ;
 }
 
-
 /*
 **
 */
@@ -1632,7 +1596,6 @@ Input::Find_First_Function_By_Primary_Key (int key_id)
 {
 	return Find_Next_Function_By_Primary_Key (-1, key_id);
 }
-
 
 /*
 **
@@ -1652,8 +1615,6 @@ Input::Find_Next_Function_By_Primary_Key (int function_id, int key_id)
 	return retval;
 }
 
-
-
 /*
 **
 */
@@ -1662,7 +1623,6 @@ Input::Find_First_Function_By_Secondary_Key (int key_id)
 {
 	return Find_Next_Function_By_Secondary_Key (-1, key_id);
 }
-
 
 /*
 **

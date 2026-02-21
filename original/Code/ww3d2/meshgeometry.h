@@ -13,7 +13,6 @@
 #include "coltest.h"
 #include "inttest.h"
 
-
 class AABoxClass;
 class OBBoxClass;
 class SphereClass;
@@ -212,7 +211,6 @@ inline TriIndex * MeshGeometryClass::get_polys(void)
 {
 	return Poly->Get_Array();
 }
-
 
 inline uint32 * MeshGeometryClass::get_shade_indices(bool create)
 {

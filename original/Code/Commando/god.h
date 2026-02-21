@@ -32,7 +32,6 @@ class cGod
 		static void					Create_Ai_Player(void);
 		static void					Create_Grunt(Vector3 & pos);
 
-
 		static void					Reset( void );
 		static void					Star_Killed( void );
 		static void					Respawn( void );

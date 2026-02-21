@@ -87,19 +87,5 @@ class cTeam : public NetworkObjectClass {
       int					TeamNumber;
 };
 
-
 #endif	//	TEAM_H
-
-
-
-
-
-
-
-
-
-
-
-
-
 

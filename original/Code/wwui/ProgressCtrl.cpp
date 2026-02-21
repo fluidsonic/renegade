@@ -29,7 +29,6 @@ ProgressCtrlClass::ProgressCtrlClass(void) :
 	StyleMgrClass::Configure_Renderer(&mControlRenderer);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -49,7 +48,6 @@ ProgressCtrlClass::ProgressCtrlClass(void) :
 ProgressCtrlClass::~ProgressCtrlClass()
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -108,7 +106,6 @@ void ProgressCtrlClass::Create_Control_Renderers(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -135,7 +132,6 @@ float ProgressCtrlClass::Calculate_Bar_Width(unsigned int position)
 	return barWidth;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -161,7 +157,6 @@ void ProgressCtrlClass::Update_Client_Rect(void)
 	
 	Set_Dirty();
 	}
-
 
 /******************************************************************************
 *
@@ -191,7 +186,6 @@ void ProgressCtrlClass::Render(void)
 	mControlRenderer.Render();
 	DialogControlClass::Render();
 	}
-
 
 /******************************************************************************
 *
@@ -231,7 +225,6 @@ void ProgressCtrlClass::Set_Range(unsigned int min, unsigned int max)
 	Set_Dirty();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -254,7 +247,6 @@ void ProgressCtrlClass::Get_Range(unsigned int& min, unsigned int& max)
 	min = mMinLimit;
 	max = mMaxLimit;
 	}
-
 
 /******************************************************************************
 *
@@ -285,7 +277,6 @@ void ProgressCtrlClass::Set_Position(unsigned int position)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -307,7 +298,6 @@ void ProgressCtrlClass::Delta_Position(int delta)
 	Set_Position(mPosition + delta);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -328,7 +318,6 @@ unsigned int ProgressCtrlClass::Get_Position(void) const
 	{
 	return mPosition;
 	}
-
 
 /******************************************************************************
 *
@@ -353,7 +342,6 @@ void ProgressCtrlClass::Set_Step(unsigned int step)
 	mStep = min<unsigned int>((mMaxLimit - mMinLimit), step);
 	mStep = max<unsigned int>(1, mStep);
 	}
-
 
 /******************************************************************************
 *

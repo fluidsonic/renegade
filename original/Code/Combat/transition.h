@@ -64,7 +64,6 @@ private:
 
 typedef DynamicVectorClass<TransitionDataClass *> TRANSITION_DATA_LIST;
 
-
 /*
 ** TransitionCompletionDataClass
 */
@@ -132,6 +131,4 @@ public:
 };
 
 #endif	//	TRANSITION_H
-
-
 

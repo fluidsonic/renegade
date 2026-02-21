@@ -17,7 +17,6 @@ class RenderObjClass;
 class	SimpleSceneClass;
 class	CameraClass;
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MessageWindowClass
@@ -103,7 +102,6 @@ private:
 	DynamicVectorClass<WideStringClass>	MessageLog;
 	DynamicVectorClass<Vector3> MessageLogColor;
 };
-
 
 #endif //__MESSAGE_WINDOW_H
 

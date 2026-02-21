@@ -9,7 +9,6 @@
 #include "boxrobj.h"
 #include "chunkio.h"
 
-
 /*
 ** Set this if you want verbose logging.  It will be un-set if debugging is not enabled...
 */
@@ -20,8 +19,6 @@
 #else
 #define VERBOSE_LOG(x)
 #endif
-
-
 
 /**
 ** PushRecordClass
@@ -40,7 +37,6 @@ public:
 
 	PushRecordClass * Get_Next(void) const								{ return Next; }
 	void Set_Next(PushRecordClass * next)								{ Next = next; }
-
 
 	static void Add_To_List(PushRecordClass ** head, PhysClass * obj)
 	{
@@ -76,7 +72,6 @@ protected:
 
 DEFINE_AUTO_POOL(PushRecordClass,32);
 
-
 /*
 ** Chunk ID's used by AnimCollisionManagerClass
 */
@@ -95,13 +90,11 @@ enum
 	ANIMCOLLISIONMANAGER_VARIABLE_PREVANIMATIONNAME,
 };										
 
-
 /********************************************************************************************
 **
 ** AnimCollisionManagerClass::CollideableObjClass Implementation
 **
 ********************************************************************************************/
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::CollideableObjClass::CollideableObjClass -- Constructor          *
@@ -120,7 +113,6 @@ AnimCollisionManagerClass::CollideableObjClass::CollideableObjClass(void) :
 	EndTransform(1)
 {
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::CollideableObjClass::CollideableObjClass -- Constructor          *
@@ -166,7 +158,6 @@ AnimCollisionManagerClass::CollideableObjClass::CollideableObjClass
 	*this = that;
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::CollideableObjClass::~CollideableObjClass -- Destructor          *
  *                                                                                             *
@@ -183,7 +174,6 @@ AnimCollisionManagerClass::CollideableObjClass::~CollideableObjClass(void)
 {
 	REF_PTR_RELEASE(CollisionMesh);
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::CollideableObjClass::operator = -- assignment operator           *
@@ -229,7 +219,6 @@ AnimCollisionManagerClass::CollideableObjClass::Set_Collision_Object(RenderObjCl
 	REF_PTR_SET(CollisionMesh,mesh);
 	StartTransform = EndTransform = CollisionMesh->Get_Transform();
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::CollideableObjClass::Intersect_Scene -- intersection test        *
@@ -289,7 +278,6 @@ AnimCollisionManagerClass::CollideableObjClass::Intersect_Scene
 	};
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::CollideableObjClass::Clear_Collision_Bits -- disables collision  *
  *                                                                                             *
@@ -310,7 +298,6 @@ int AnimCollisionManagerClass::CollideableObjClass::Clear_Collision_Bits(void)
 	CollisionMesh->Set_Collision_Type(0);
 	return oldbits;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::CollideableObjClass::Restore_Collision_Bits -- set collision bit *
@@ -338,7 +325,6 @@ void AnimCollisionManagerClass::CollideableObjClass::Restore_Collision_Bits(int 
 **
 ********************************************************************************************/
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::AnimCollisionManagerClass -- Constructor                         *
  *                                                                                             *
@@ -365,7 +351,6 @@ AnimCollisionManagerClass::AnimCollisionManagerClass(PhysClass & parent) :
 {
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::~AnimCollisionManagerClass -- Destructor                         *
  *                                                                                             *
@@ -384,7 +369,6 @@ AnimCollisionManagerClass::~AnimCollisionManagerClass(void)
 	REF_PTR_RELEASE(PrevAnimation);
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Set_Animation_Mode -- set the current anim mode                  *
  *                                                                                             *
@@ -401,7 +385,6 @@ void AnimCollisionManagerClass::Set_Animation_Mode(AnimModeType mode)
 {
 	AnimationMode = mode;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Get_Animation_Mode -- Get the current anim mode                  *
@@ -420,7 +403,6 @@ AnimCollisionManagerClass::Get_Animation_Mode(void)
 {
 	return AnimationMode;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Set_Animation -- Set the current animation                       *
@@ -450,7 +432,6 @@ void AnimCollisionManagerClass::Set_Animation(const char * anim_name)
 
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Internal_Set_Animation -- Set the current animation pointer      *
  *                                                                                             *
@@ -478,7 +459,6 @@ void AnimCollisionManagerClass::Internal_Set_Animation(const char * anim_name)
 	}
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Peek_Animation -- Get the current animation                      *
  *                                                                                             *
@@ -495,7 +475,6 @@ HAnimClass * AnimCollisionManagerClass::Peek_Animation(void)
 {
 	return CurAnimation;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Set_Target_Frame -- Set the target animation frame               *
@@ -514,7 +493,6 @@ void AnimCollisionManagerClass::Set_Target_Frame(float frame)
 	TargetFrame = frame;
 	Parent.Enable_Is_State_Dirty(true);
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Set_Target_Frame_End -- Set the target frame to the end of the c *
@@ -554,7 +532,6 @@ float AnimCollisionManagerClass::Get_Target_Frame(void)
 	return TargetFrame;
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Is_At_Target -- returns true if in TARGET mode and done animatin *
  *                                                                                             *
@@ -571,7 +548,6 @@ bool AnimCollisionManagerClass::Is_At_Target(void)
 {
 	return ((TargetFrame == CurFrame) && (AnimationMode == ANIMATE_TARGET));
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Set_Loop_Start -- Sets frame0 for an anim loop                   *
@@ -592,7 +568,6 @@ void AnimCollisionManagerClass::Set_Loop_Start(float frame0)
 	Parent.Enable_Is_State_Dirty(true);
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Set_Loop_End -- Sets frame1 for an anim loop                     *
  *                                                                                             *
@@ -612,7 +587,6 @@ void AnimCollisionManagerClass::Set_Loop_End(float frame1)
 	Parent.Enable_Is_State_Dirty(true);
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Get_Loop_Start -- returns frame0 for an anim loop                *
  *                                                                                             *
@@ -629,7 +603,6 @@ float AnimCollisionManagerClass::Get_Loop_Start(void)
 {
 	return LoopStart;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Get_Loop_End -- returns frame1 for an anim loop                  *
@@ -669,7 +642,6 @@ void AnimCollisionManagerClass::Set_Current_Frame(float frame)
 #endif
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Get_Current_Frame -- Get the current frame                       *
  *                                                                                             *
@@ -686,7 +658,6 @@ float AnimCollisionManagerClass::Get_Current_Frame(void)
 {
 	return CurFrame;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Set_Collision_Mode -- Set the current collision mode             *
@@ -705,7 +676,6 @@ void AnimCollisionManagerClass::Set_Collision_Mode(CollisionModeType mode)
 	CollisionMode = mode;
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Get_Collision_Mode -- Get the current collision mode             *
  *                                                                                             *
@@ -722,7 +692,6 @@ AnimCollisionManagerClass::CollisionModeType AnimCollisionManagerClass::Get_Coll
 {
 	return CollisionMode;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Init -- Init this collision manager                              *
@@ -770,7 +739,6 @@ void AnimCollisionManagerClass::Init(const AnimCollisionManagerDefClass & def)
 	}
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Update_Cached_Model_Parameters -- find all of the collideable me *
  *                                                                                             *
@@ -797,7 +765,6 @@ void AnimCollisionManagerClass::Update_Cached_Model_Parameters(void)
 	Recursive_Collect_Collision_Models(Parent.Peek_Model());
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Is_Collision_Model -- classify a sub-object as collideable or no *
  *                                                                                             *
@@ -823,7 +790,6 @@ bool AnimCollisionManagerClass::Is_Collision_Model(RenderObjClass * subobj)
 				(subobj->Get_Container() != NULL) &&
 				(subobj->Get_Container()->Get_Sub_Object_Bone_Index(subobj)	!= 0) );
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Recursive_Count_Collision_Models -- count the collideable meshes *
@@ -858,7 +824,6 @@ int AnimCollisionManagerClass::Recursive_Count_Collision_Models(RenderObjClass *
 
 	return count;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Recursive_Collect_Collision_Models -- collect collideable meshes *
@@ -900,7 +865,6 @@ void AnimCollisionManagerClass::Recursive_Collect_Collision_Models(RenderObjClas
 		subobj->Release_Ref();
 	}
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Timestep -- Update the state of this object                      *
@@ -1059,7 +1023,6 @@ bool AnimCollisionManagerClass::Timestep(float dt)
 	return object_animated;
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Revert_Animation_State -- revert to previous anim frame          *
  *                                                                                             *
@@ -1093,7 +1056,6 @@ void AnimCollisionManagerClass::Revert_Animation_State(void)
 	*/
 	PushRecordClass::Revert_List(PushList);
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Check_Collision -- Check the given collision object              *
@@ -1227,7 +1189,6 @@ bool AnimCollisionManagerClass::Check_Collision(CollideableObjClass & collisiono
 	return revert;
 }
 
-
 /***********************************************************************************************
  * AnimCollisionManagerClass::Is_Intersecting -- intersection test                             *
  *                                                                                             *
@@ -1248,7 +1209,6 @@ bool AnimCollisionManagerClass::Is_Intersecting(void)
 	}
 	return !intersection_list.Is_Empty();
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Push_Collided_Object -- push an object we collided with          *
@@ -1279,7 +1239,6 @@ bool AnimCollisionManagerClass::Push_Collided_Object(PhysClass * obj,const Matri
 
 	return result;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Save -- save!                                                    *
@@ -1315,7 +1274,6 @@ bool AnimCollisionManagerClass::Save(ChunkSaveClass &csave)
 	csave.End_Chunk();
 	return true;
 }
-
 
 /***********************************************************************************************
  * AnimCollisionManagerClass::Load -- Load!                                                    *
@@ -1379,7 +1337,6 @@ bool AnimCollisionManagerClass::Load(ChunkLoadClass &cload)
 
 	return true;
 }	
-
 
 /********************************************************************************************
 **

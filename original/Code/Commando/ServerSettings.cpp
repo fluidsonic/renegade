@@ -1,5 +1,4 @@
 #include "ServerSettings.h"
-#include "slavemaster.h"
 #include "gamedata.h"
 #include "gdcnc.h"
 #include "ini.h"
@@ -15,14 +14,10 @@
 #include "gamesideservercontrol.h"
 #include "bandwidthcheck.h"
 
-
-
 const char *ConfigSettingsName = "Config";
 const char *MasterServerSection = "Server";
-const char *SlaveServerSection = "Slave";
 
 #define ENCRYPTION_STRING_LENGTH				128
-#define KEY_SLAVE_SERIAL						"Serial"
 
 char ServerSettingsClass::SettingsFile[MAX_PATH];
 bool ServerSettingsClass::IsActive = false;
@@ -30,11 +25,6 @@ char ServerSettingsClass::MasterPassword[128];
 ServerSettingsClass::GameModeTypeEnum ServerSettingsClass::GameMode = MODE_NONE;
 unsigned long ServerSettingsClass::MasterBandwidth = 0;
 int ServerSettingsClass::DiskLogSize = -1;
-
-
-
-
-
 
 /***********************************************************************************************
  * ServerSettingsClass::Set_Settings_File_Name -- Set the name of the settings file            *
@@ -58,8 +48,6 @@ void ServerSettingsClass::Set_Settings_File_Name(char *filename)
 	}
 }
 
-
-
 /***********************************************************************************************
  * ServerSettingsClass::Parse -- Pull the server info out of the settings file                 *
  *                                                                                             *
@@ -77,13 +65,6 @@ void ServerSettingsClass::Set_Settings_File_Name(char *filename)
 bool ServerSettingsClass::Parse(bool apply)
 {
 	char master_settings[MAX_PATH];
-	char slave_settings[MAX_PATH];
-	char slave_section[256];
-	char slave_nick[128];
-	char slave_serial[128];
-	char slave_pass[128];
-	int slave_port;
-	int slave_bw;
 	char master_nick[128];
 	char master_serial[128];
 	int master_port;
@@ -130,7 +111,6 @@ bool ServerSettingsClass::Parse(bool apply)
 		** Load the master server settings from the ini file.
 		*/
 
-
 		/*
 		** Game Type.
 		*/
@@ -161,7 +141,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		** Restart Flag
 		*/
 
-		RegistryClass restart_reg(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+		RegistryClass restart_reg(APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 		if (restart_reg.Is_Valid ()) {
 			restart_reg.Set_Int("AutoRestartFlag", 1);
 			restart_reg.Set_Int("AutoRestartType", 0);
@@ -343,7 +323,6 @@ bool ServerSettingsClass::Parse(bool apply)
 			ServerControl.Allow_Remote_Admin(false);
 		}
 
-
 		/*
 		** Set the master settings into the registry.
 		*/
@@ -359,121 +338,9 @@ bool ServerSettingsClass::Parse(bool apply)
 				}
 			}
 		//}
-
-
-
-		if (apply) {
-			SlaveMaster.Reset();
-		}
-
-		/*
-		** Read the slave server info.
-		*/
-		for (int i=0 ; i<MAX_SLAVES ; i++) {
-
-			slave_settings[0] = 0;
-			slave_nick[0] = 0;
-			slave_serial[0] = 0;
-			slave_port = 0;
-			slave_bw = 0xffffffff;
-
-			/*
-			** See if this slave is enabled in the .ini
-			*/
-			sprintf(slave_section, "%s%d", SlaveServerSection, i+1);
-			bool enabled = ini.Get_Bool(slave_section, "Enable", false);
-
-			if (enabled) {
-
-				/*
-				** Make sure the slaves config file is present.
-				*/
-				ini.Get_String(slave_section, ConfigSettingsName, "", slave_settings, sizeof(slave_settings));
-				if (strlen(slave_settings) != 0) {
-					sprintf(filename, "data\\%s", slave_settings);
-					file.Set_Name(filename);
-					if (!file.Is_Available()) {
-						ConsoleBox.Print("Error - Slave server settings file '%s' not found - aborting\n", filename);
-						ConsoleBox.Wait_For_Keypress();;
-						return(false);
-					} else {
-						if (!Check_Game_Settings_File(slave_settings)) {
-							ConsoleBox.Print("Error - server settings file '%s' contains errors - aborting\n", slave_settings);
-							ConsoleBox.Wait_For_Keypress();;
-							return(false);
-						}
-					}
-				}
-
-				/*
-				** Make sure there's a nickname and a serial.
-				*/
-				ini.Get_String(slave_section, "Nickname", "", slave_nick, sizeof(slave_nick));
-				if (strlen(slave_nick) == 0) {
-					ConsoleBox.Print("Error - No login nickname specified for slave %d - aborting\n", i+1);
-					ConsoleBox.Wait_For_Keypress();;
-					return(false);
-				}
-
-				ini.Get_String(slave_section, "Serial", "", slave_serial, sizeof(slave_serial));
-				if (strlen(slave_serial) == 0) {
-					ConsoleBox.Print("Error - No serial number specified for slave %d - aborting\n", i+1);
-					ConsoleBox.Wait_For_Keypress();;
-					return(false);
-				}
-
-				/*
-				** Get the password.
-				*/
-				ini.Get_String(slave_section, "Password", "", slave_pass, sizeof(slave_pass));
-#ifdef FREEDEDICATEDSERVER
-				if (strlen(slave_pass) == 0) {
-					ConsoleBox.Print("Error - No login password specified for slave %d - aborting\n", i+1);
-					ConsoleBox.Wait_For_Keypress();;
-					return(false);
-				}
-#endif //FREEDEDICATEDSERVER
-
-				/*
-				** Get the port number.
-				*/
-				slave_port = ini.Get_Int(slave_section, "Port", 0);
-
-				if (slave_port < 0 || slave_port > 0xffff) {
-					ConsoleBox.Print("Error - Invalid port number %d specified for slave %d - aborting\n", slave_port, i+1);
-					ConsoleBox.Wait_For_Keypress();;
-					return(false);
-				}
-
-				/*
-				** Get the bandwidth allowance.
-				*/
-				slave_bw = ini.Get_Int(slave_section, "BandwidthUp", 0xffffffff);
-				if (slave_bw != 0 && slave_bw != 0xffffffff && slave_bw < 33600) {
-					ConsoleBox.Print("Error - Insufficient bandwidth specified for slave %d - aborting\n", i+1);
-					ConsoleBox.Wait_For_Keypress();;
-					return(false);
-				}
-			}
-
-			/*
-			** Apply the settings.
-			*/
-			if (apply) {
-				SlaveMaster.Add_Slave(enabled, slave_nick, slave_serial, (unsigned short)slave_port, slave_settings, slave_bw, slave_pass);
-			}
-		}
-		if (apply) {
-			SlaveMaster.Save();
-		}
 	}
 	return(true);
 }
-
-
-
-
-
 
 /***********************************************************************************************
  * ServerSettingsClass::Encrypt_Serial -- Serial number encryption/decryption                  *
@@ -498,7 +365,6 @@ void ServerSettingsClass::Encrypt_Serial(StringClass serial_in, StringClass &ser
 	unsigned long bytesread;
 	char stringbuffer[ENCRYPTION_STRING_LENGTH];
 	int p;
-
 
 	s = new char [numberlength + 1];
 	memcpy(s, serial_in.Peek_Buffer(), numberlength + 1);
@@ -548,9 +414,6 @@ void ServerSettingsClass::Encrypt_Serial(StringClass serial_in, StringClass &ser
 	delete [] s;
 }
 
-
-
-
 /***********************************************************************************************
  * ServerSettingsClass::Decrypt_Serial -- Serial number decryption                             *
  *                                                                                             *
@@ -570,8 +433,6 @@ void ServerSettingsClass::Decrypt_Serial(StringClass serial_in, StringClass &ser
 {
 	Encrypt_Serial(serial_in, serial_out, false);
 }
-
-
 
 /***********************************************************************************************
  * ServerSettingsClass::Check_Game_Settings_File -- Check game settings for validity           *

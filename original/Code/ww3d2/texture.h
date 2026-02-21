@@ -265,7 +265,6 @@ public:
 
 };
 
-
 // Utility functions for loading and saving texture descriptions from/to W3D files
 TextureClass *Load_Texture(ChunkLoadClass & cload);
 void Save_Texture(TextureClass * texture, ChunkSaveClass & csave);

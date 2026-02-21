@@ -2,10 +2,8 @@
 #ifndef __DLGHELPSCREEN_H
 #define __DLGHELPSCREEN_H
 
-
 #include "menudialog.h"
 #include "resource.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -21,7 +19,6 @@ public:
 	////////////////////////////////////////////////////////////////	
 	HelpScreenDialogClass (void);
 	~HelpScreenDialogClass (void);
-
 
 	////////////////////////////////////////////////////////////////
 	//	Public methods
@@ -41,7 +38,6 @@ private:
 	MenuBackDropClass *	OldBackdrop;
 	
 };
-
 
 #endif //__DLGHELPSCREEN_H
 

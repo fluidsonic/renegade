@@ -3,14 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "debug.h"
 #include "networkobjectfactory.h"
 #include "gamemode.h"
 #include "cnetwork.h"
 #include "networkobjectmgr.h"
 #include "apppackettypes.h"
 #include "floodprotectionmgr.h"
-
 
 DECLARE_NETWORKOBJECT_FACTORY(cCsTextObj, NETCLASSID_CSTEXTOBJ);
 
@@ -28,7 +26,6 @@ cCsTextObj::cCsTextObj(void)
 void
 cCsTextObj::Init(WideStringClass & text, TextMessageEnum type, int sender_id, int recipient)
 {
-
 
 	/*
 	if (type == TEXT_MESSAGE_PRIVATE) {

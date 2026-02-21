@@ -58,13 +58,8 @@ class BuildInfoClass
 		*/
 		static char *Composite_Build_Info(void);
 
-
-
-
 	private:
 		static char BuildNumber [64];
 		static char BuildDate   [64];
 };
-
-
 

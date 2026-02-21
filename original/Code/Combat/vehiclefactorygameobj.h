@@ -5,14 +5,12 @@
 #include "always.h"
 #include "building.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward delcarations
 ////////////////////////////////////////////////////////////////
 class BaseControllerClass;
 class VehicleGameObj;
 class SoldierGameObj;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -64,7 +62,6 @@ protected:
 	int					PadClearingWarhead;  // warhead used to destroy objects blocking construction area
 	float					TotalBuildingTime;	// total time for slowest vehicle to be constructed and driven out.
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -173,7 +170,6 @@ protected:
 
 	static int			MaxVehiclesPerTeam;
 };
-
 
 #endif	// __VEHICLEFACTORYGAMEOBJ_H
 

@@ -2,8 +2,6 @@
 #ifndef CCBUFF_H
 #define CCBUFF_H
 
-
-
 /*
 **	A general purpose buffer pointer handler object. It holds not only the pointer to the
 **	buffer, but its size as well. By using this class instead of separate pointer and size
@@ -45,6 +43,5 @@ class Buffer {
 		*/
 		bool IsAllocated;
 };
-
 
 #endif

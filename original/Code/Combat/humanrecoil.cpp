@@ -4,12 +4,10 @@
 #include "htree.h"
 #include <string.h>
 
-
 /*
 ** Static members of HumanRecoilClass
 */
 bool HumanRecoilClass::IsInitted = false;
-
 
 /*
 ** Recoil Data
@@ -41,7 +39,6 @@ static RecoilDataStruct _RecoilData[] =
 };
 
 const int _RECOIL_BONE_COUNT = sizeof(_RecoilData) / sizeof(RecoilDataStruct);
-
 
 /***********************************************************************************************
 **
@@ -103,5 +100,4 @@ void HumanRecoilClass::Initialize(RenderObjClass * model)
 	}
 	IsInitted = true;
 }
-
 

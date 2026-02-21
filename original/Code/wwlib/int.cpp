@@ -15,7 +15,5 @@ bool bignum::Borrow = false;
 bignum bignum::Remainder;
 #endif
 
-
-
 //BigInt Gcd(const BigInt & a, const BigInt & n);
 

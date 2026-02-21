@@ -3,11 +3,7 @@
 
 #include <string.h>
 
-
 NullLoaderClass _NullLoader;
-
-
-
 
 Null3DObjClass::Null3DObjClass(const char * name)																	
 {
@@ -67,7 +63,6 @@ NullPrototypeClass::NullPrototypeClass (const W3dNullObjectStruct &null)
 {
 	Definition = null;
 }
-
 
 /*
 ** NullLoaderClass

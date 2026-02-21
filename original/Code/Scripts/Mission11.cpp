@@ -4,7 +4,6 @@
 #include "mission1.h"
 #include "mission11.h"
 
-
 /***********************************************************************************************************************
 Putting level specific character scripts here...sydney, petrova, havoc, etc...
 ************************************************************************************************************************/
@@ -109,7 +108,6 @@ DECLARE_SCRIPT(M11_VoltRifle_Script_JDG, "")
 
 			Vector3 spawn_location10 (20.696f, 1.720f, -29.855f);
 			Vector3 spawn_location11 (20.648f, -0.227f, -29.855f);
-
 
 			Commands->Create_Object ( "POW_VoltAutoRifle_Player", spawn_location01 );
 			Commands->Create_Object ( "POW_VoltAutoRifle_Player", spawn_location02 );
@@ -391,7 +389,6 @@ DECLARE_SCRIPT(M11_Mission_Controller_JDG, "")
 						}
 					}
 					break;
-
 
 				case M11_END_FORTH_OBJECTIVE_JDG: //nuke switch has been poked--end protect sydney objective then end sabotage
 					{
@@ -1184,7 +1181,6 @@ DECLARE_SCRIPT(M11_ExternalArtillery_Controller_JDG, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M11_Floor01_StealthSoldier01_JDG, "")
 {
@@ -2698,7 +2694,6 @@ DECLARE_SCRIPT(M11_Barracks_Scientist_JDG, "")//M11_BARRACKS_SCIENTIST_JDG 10040
 			}
 		}
 
-
 		else if (action_id == M01_WALKING_WAYPATH_02_JDG)
 		{
 			if (obj && STAR && deadYet == false)
@@ -2972,8 +2967,6 @@ DECLARE_SCRIPT(M11_Barracks_LivingQuarters_T17_EntryZone_JDG, "")//100393 this i
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M11_Barracks_LivingQuarters_T15_EntryZone_JDG, "")//this is a bedroom on left side 100377 2 nod soldiers talking about escaped mutants
 {
@@ -3329,12 +3322,6 @@ DECLARE_SCRIPT(M11_Laboratory_EntryZone_JDG, "")
 
  
 
-
-
-
-
-
-
 DECLARE_SCRIPT(M11_Mutant_TrajectoryBone_JDG, "")//
 {
 	void Created( GameObject * obj ) 
@@ -3351,7 +3338,6 @@ DECLARE_SCRIPT(M11_Mutant_TrajectoryBone_JDG, "")//
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M11_Mutant_ShatterGlass_JDG, "")
 {
@@ -3386,9 +3372,6 @@ DECLARE_SCRIPT(M11_Cryochamber_DestroyedSimple_JDG, "")
 		Commands->Set_Health ( obj, 0.25f );	
 	}
 };
-
-
-
 
 /***********************************************************************************************************************
 Putting Mutant crypt related scripts here...turn on spawner--turn off spawners etc...
@@ -4743,7 +4726,6 @@ DECLARE_SCRIPT(M11_PowerCore_EntryZone_JDG, "")
 Putting SYNDEY Escort related stuff here
 ************************************************************************************************************************/
 
-
 DECLARE_SCRIPT(M11_NukeSilo_Protector_JDG, "")
 {
 	void Created( GameObject * obj ) 
@@ -4752,7 +4734,6 @@ DECLARE_SCRIPT(M11_NukeSilo_Protector_JDG, "")
 		Commands->Set_Innate_Soldier_Home_Location ( obj, myPosition, 3 );
 	}
 };
-
 
 /***********************************************************************************************************************
 Putting OBJECTIVE related stuff here--zones etc.
@@ -4844,8 +4825,6 @@ DECLARE_SCRIPT(M11_Start_Fifth_Objective_Zone_JDG, "")//player's fifth objective
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M11_End_Mission_Switch_JDG, "")//this guys ID is M11_END_MISSION_SWITCH_JDG 100106
 {
@@ -5098,10 +5077,6 @@ DECLARE_SCRIPT(M11_Lab_Cryochamber_Switch01_JDG, "")
 		}
 	}
 };
-
-
-
-
 
 DECLARE_SCRIPT(M11_Laboratory_Scientist_JDG, "")
 {
@@ -6156,7 +6131,6 @@ DECLARE_SCRIPT(M11_Barracks_Visceroid_KeyCarrier_JDG, "")//
 	}
 };
 
-
 DECLARE_SCRIPT(M11_Barracks_Visceroid_Morpher_JDG, "")//
 {
 	void Created( GameObject * obj ) 
@@ -6670,10 +6644,6 @@ DECLARE_SCRIPT(M11_PowerCore_TriggerPetrova_EnterZone_JDG, "")
 		}
 	}
 };
-
-
-
-
 
 DECLARE_SCRIPT(M11_Barracks_MutantUprising_BlackhandGuy_JDG, "")//M11_BARRACKS_MUTANTUPRISING_BLACKHAND_JDG 100387
 {
@@ -8608,7 +8578,6 @@ DECLARE_SCRIPT(M11_Silo_ElevatorController_JDG, "")//100698
 	}
 };
 
-
 DECLARE_SCRIPT(M11_Silo_ElevatorZone01_JDG, "")//100699
 {
 	bool sydeyIsInTheZone;
@@ -9147,8 +9116,6 @@ DECLARE_SCRIPT(M11_Petrova_StealthSoldier_Controller_JDG, "")//106230
 	}
 };
 
-
-
 DECLARE_SCRIPT(M11_Petrova_StealthSoldier_Initial01_JDG, "")//M11_PETROVA_STEALTHSPAWNER_01_JDG
 {
 	void Created( GameObject * obj ) 
@@ -9174,7 +9141,6 @@ DECLARE_SCRIPT(M11_Petrova_StealthSoldier_Initial01_JDG, "")//M11_PETROVA_STEALT
 			}
 		}
 	}
-
 
 	void Killed( GameObject * obj, GameObject * killer ) 
 	{
@@ -9257,7 +9223,6 @@ DECLARE_SCRIPT(M11_Petrova_StealthSoldier_Initial03_JDG, "")//M11_PETROVA_STEALT
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M11_Petrova_StealthSoldier_Reinforcement01_JDG, "")//M11_PETROVA_STEALTHSPAWNER_01_JDG
 {
@@ -10457,7 +10422,6 @@ DECLARE_SCRIPT(M11_ThirdFloor_Elevator_Switch_Script_JDG, "")//101692 101693 101
 	}
 };
 
-
 DECLARE_SCRIPT(M11_SecondFloor_Elevator_Switch_Script_JDG, "")//101717 101718 101719 101720
 {
 	bool sydney_in_motion;
@@ -11157,7 +11121,6 @@ DECLARE_SCRIPT(M11_CeilingRepellers_Controller2_JDG, "")//106908
 				}
 			}
 
-
 			else if (param == M01_MODIFY_YOUR_ACTION_04_JDG)//set rope "C" to idle anim
 			{
 				GameObject * rope_C = Commands->Find_Object ( rope_C_id );
@@ -11174,7 +11137,6 @@ DECLARE_SCRIPT(M11_CeilingRepellers_Controller2_JDG, "")//106908
 					float delayTimer = Commands->Get_Random ( 2, 5 );
 					Commands->Send_Custom_Event ( obj, obj, 0, M01_MODIFY_YOUR_ACTION_02_JDG, delayTimer );
 				}
-
 
 			}
 		}
@@ -11193,8 +11155,6 @@ DECLARE_SCRIPT(M11_CeilingRepellers_RopeC_JDG, "")
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(M11_CeilingRepeller2_JDG, "")
 {
@@ -11223,8 +11183,4 @@ DECLARE_SCRIPT(M11_CeilingRepeller2_JDG, "")
 		}
 	}
 };
-
-
-
-
 

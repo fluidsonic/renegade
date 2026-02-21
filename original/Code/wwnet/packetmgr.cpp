@@ -50,7 +50,6 @@ inline int PacketManagerClass::Add_Bit(bool bit, unsigned char * &bitstream, int
 	return(position);
 }
 
-
 /***********************************************************************************************
  * PacketManagerClass::Get_Bit -- Get a bit from a delta compressed bitstream                  *
  *                                                                                             *
@@ -83,9 +82,6 @@ inline unsigned char PacketManagerClass::Get_Bit(unsigned char * &bitstream, int
 
 	return(whole);
 }
-
-
-
 
 /***********************************************************************************************
  * PacketManagerClass::PacketManagerClass -- Class constructor.                                *
@@ -126,7 +122,6 @@ PacketManagerClass::PacketManagerClass(void)
 	ReceiveBuffers = new ReceiveBufferClass[NumReceiveBuffers];
 }
 
-
 /***********************************************************************************************
  * PacketManagerClass::~PacketManagerClass -- Class destructor                                 *
  *                                                                                             *
@@ -152,7 +147,6 @@ PacketManagerClass::~PacketManagerClass(void)
 		ReceiveBuffers = NULL;
 	}
 }
-
 
 /***********************************************************************************************
  * PacketManagerClass::Set_Is_Server -- Set whether to operate in server mode or not.          *
@@ -204,8 +198,6 @@ void PacketManagerClass::Set_Is_Server(bool is_server)
 	}
 }
 
-
-
 /***********************************************************************************************
  * PacketManagerClass::Build_Delta_Packet_Patch -- Calc a delta between two packets            *
  *                                                                                             *
@@ -236,7 +228,6 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
 	** the stream at the end starting at a byte boundry.
 	**
 	*/
-
 
 	/*
 	** Locals.
@@ -312,7 +303,6 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
 			write_bit_pos = 0;
 		}
 
-
 		/*
 		** Try a byte for byte check in the chunks that don't match. For any bytes that are different, save the changed value
 		** so we can add it to the end of the delta packet later.
@@ -365,9 +355,6 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
 	return(-1);
 }
 
-
-
-
 /***********************************************************************************************
  * PacketManagerClass::Reconstruct_From_Delta -- Rebuild a packet from a delta stream          *
  *                                                                                             *
@@ -403,7 +390,6 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 	if (base_packet_size > 500) {
 		return(0);
 	}
-
 
 	pm_assert(base_packet != NULL);
 	pm_assert(reconstructed_packet != NULL);
@@ -444,7 +430,6 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 			pm_assert(bitty == 0);
 		}
 	}
-
 
 	/*
 	** Now use the per byte bitmask to restore the rest of the data.
@@ -499,7 +484,6 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 	return(restored_bytes);
 }
 
-
 /***********************************************************************************************
  * PacketManagerClass::Get_Next_Free_Buffer_Index -- Get next buffer to use for taking packets *
  *                                                                                             *
@@ -529,8 +513,6 @@ int PacketManagerClass::Get_Next_Free_Buffer_Index(void)
 	}
 	return(return_index);
 }
-
-
 
 /***********************************************************************************************
  * PacketManagerClass::Take_Packet -- Intercept a packet before it's sent                      *
@@ -575,10 +557,6 @@ bool PacketManagerClass::Take_Packet(unsigned char *packet, int packet_len, unsi
 
 	return(false);
 }
-
-
-
-
 
 /***********************************************************************************************
  * PacketManagerClass::Flush -- Coalesce and send any pending packets                          *
@@ -780,7 +758,6 @@ void PacketManagerClass::Flush(bool forced)
 		pm_assert(header->NumPackets > 0 && header->NumPackets <= PACKET_MANAGER_MAX_PACKETS);
 	}
 
-
 	/*
 	** Merge ready buffers where possible. This is the step that adds runs of different sizeed packets into the same packet.
 	*/
@@ -791,7 +768,6 @@ void PacketManagerClass::Flush(bool forced)
 				PacketPackHeaderStruct *current_header = (PacketPackHeaderStruct*) SendBuffers[i].PacketBuffer;
 				int current_len = SendBuffers[i].PacketSendLength;
 				socket = SendBuffers[i].PacketSendSocket;
-
 
 				/*
 				** See if we can find another packet for the same destination that will fit into the same buffer.
@@ -817,7 +793,6 @@ void PacketManagerClass::Flush(bool forced)
 		}
 	}
 
-
 	/*
 	** Send any packets marked as ready.
 	*/
@@ -828,7 +803,6 @@ void PacketManagerClass::Flush(bool forced)
 			addr.sin_port = SendBuffers[i].Port;
 			memcpy (&addr.sin_addr.s_addr, &SendBuffers[i].IPAddress[0], 4);
 			socket = SendBuffers[i].PacketSendSocket;
-
 
 #ifdef WRAPPER_CRC
 
@@ -852,7 +826,6 @@ void PacketManagerClass::Flush(bool forced)
 			int result = sendto(socket, (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength, 0, (LPSOCKADDR) &addr, sizeof(SOCKADDR_IN));
 
 #endif //WRAPPER_CRC
-
 
 			if (result == SOCKET_ERROR){
 				if (WSAGetLastError() != WSAEWOULDBLOCK) {
@@ -884,8 +857,6 @@ void PacketManagerClass::Flush(bool forced)
 }
 }
 
-
-
 /***********************************************************************************************
  * PacketManagerClass::Disable_Optimizations -- Disable all low level optimizations            *
  *                                                                                             *
@@ -906,8 +877,6 @@ void PacketManagerClass::Disable_Optimizations(void)
 	AllowDeltas = false;
 	AllowCombos = false;
 }
-
-
 
 /***********************************************************************************************
  * PacketManagerClass::Break_Packet -- Break up in incoming packet into it's original packets  *
@@ -1021,7 +990,6 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	return(true);
 }
 
-
 /***********************************************************************************************
  * PacketManagerClass::Clear_Socket_Error -- Clear an error condition on a socket              *
  *                                                                                             *
@@ -1046,8 +1014,6 @@ void PacketManagerClass::Clear_Socket_Error(SOCKET socket)
 		getsockopt (socket, SOL_SOCKET, SO_ERROR, (char*)&error_code, &length);
 	}
 }
-
-
 
 /***********************************************************************************************
  * PacketManagerClass::Get_Packet -- Return the next incoming packet to the app                *
@@ -1158,9 +1124,6 @@ int PacketManagerClass::Get_Packet(SOCKET socket, unsigned char *packet_buffer, 
 }
 }
 
-
-
-
 /***********************************************************************************************
  * PacketManager::Reset_Stats -- Reset bandwidth stats                                         *
  *                                                                                             *
@@ -1183,9 +1146,6 @@ void PacketManagerClass::Reset_Stats(void)
 	ResetStatsIn = true;
 	ResetStatsOut = true;
 }
-
-
-
 
 /***********************************************************************************************
  * PacketManager::Get_Stats_Index -- Get stats struct index for ip/port pair                   *
@@ -1234,8 +1194,6 @@ int PacketManagerClass::Get_Stats_Index(unsigned long ip_address, unsigned short
 	}
 	return(-1);
 }
-
-
 
 /***********************************************************************************************
  * PacketManager::Register_Packet_In -- Register an incoming packet for bandwidth stats        *
@@ -1286,8 +1244,6 @@ void PacketManagerClass::Register_Packet_In(unsigned char *ip_address, unsigned 
 	}
 }
 
-
-
 /***********************************************************************************************
  * PacketManager::Register_Packet_Out -- Register an outgoing packet for bandwidth stats       *
  *                                                                                             *
@@ -1336,7 +1292,6 @@ void PacketManagerClass::Register_Packet_Out(unsigned char *ip_address, unsigned
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * PacketManagerClass::Update_Stats -- Periodically update the bandwidth stats                 *
@@ -1428,9 +1383,6 @@ void PacketManagerClass::Update_Stats(bool forced)
 	}
 }
 
-
-
-
 /***********************************************************************************************
  * PacketManager::Get_Total_Raw_Bandwidth_In -- Get total uncompressed bandwidth in            *
  *                                                                                             *
@@ -1449,7 +1401,6 @@ unsigned long PacketManagerClass::Get_Total_Raw_Bandwidth_In(void)
 {
 	return(TotalUncompressedBandwidthIn);
 }
-
 
 /***********************************************************************************************
  * PacketManager::Get_Total_Raw_Bandwidth_Out -- Get total uncompressed bandwidth out          *
@@ -1471,7 +1422,6 @@ unsigned long PacketManagerClass::Get_Total_Raw_Bandwidth_Out(void)
 
 }
 
-
 /***********************************************************************************************
  * PacketManager::Get_Total_Compressed_Bandwidth_In -- Get total compressed bandwidth in       *
  *                                                                                             *
@@ -1491,7 +1441,6 @@ unsigned long PacketManagerClass::Get_Total_Compressed_Bandwidth_In(void)
 	return(TotalCompressedBandwidthIn);
 }
 
-
 /***********************************************************************************************
  * PacketManager::Get_Total_Compressed_Bandwidth_Out -- Get total compressed bandwidth out     *
  *                                                                                             *
@@ -1510,7 +1459,6 @@ unsigned long PacketManagerClass::Get_Total_Compressed_Bandwidth_Out(void)
 {
 	return(TotalCompressedBandwidthOut);
 }
-
 
 /***********************************************************************************************
  * PacketManager::Get_Raw_Bandwidth_In -- Get uncompressed bandwidth in from given address     *
@@ -1540,7 +1488,6 @@ unsigned long PacketManagerClass::Get_Raw_Bandwidth_In(SOCKADDR_IN *address)
 	return(bw);
 }
 
-
 /***********************************************************************************************
  * PacketManager::Get_Raw_Bandwidth_Out -- Get uncompressed bandwidth to given address         *
  *                                                                                             *
@@ -1568,8 +1515,6 @@ unsigned long PacketManagerClass::Get_Raw_Bandwidth_Out(SOCKADDR_IN *address)
 	}
 	return(bw);
 }
-
-
 
 /***********************************************************************************************
  * PacketManager::Get_Raw_Bytes_Out -- Get uncompressed bytes to given address                 *
@@ -1599,9 +1544,6 @@ unsigned long PacketManagerClass::Get_Raw_Bytes_Out(SOCKADDR_IN *address)
 	return(bytes);
 }
 
-
-
-
 /***********************************************************************************************
  * PacketManager::Get_Compressed_Bandwidth_In -- Get compressed bandwidth in from address      *
  *                                                                                             *
@@ -1629,7 +1571,6 @@ unsigned long PacketManagerClass::Get_Compressed_Bandwidth_In(SOCKADDR_IN *addre
 	}
 	return(bw);
 }
-
 
 /***********************************************************************************************
  * PacketManager::Get_Compressed_Bandwidth_Out -- Get compressed bandwidth to address          *
@@ -1659,7 +1600,6 @@ unsigned long PacketManagerClass::Get_Compressed_Bandwidth_Out(SOCKADDR_IN *addr
 	return(bw);
 }
 
-
 /***********************************************************************************************
  * PacketManagerClass::Set_Stats_Sampling_Frequency -- Set sample freq for stats               *
  *                                                                                             *
@@ -1681,8 +1621,6 @@ void PacketManagerClass::Set_Stats_Sampling_Frequency_Delay(unsigned long time_m
 	Reset_Stats();
 }
 
-
-
 /***********************************************************************************************
  * PacketManagerClass::Get_Error_State -- Report and clear winsock error state                 *
  *                                                                                             *
@@ -1703,16 +1641,6 @@ PacketManagerClass::ErrorStateEnum PacketManagerClass::Get_Error_State(void)
 	ErrorState = STATE_OK;
 	return(state);
 }
-
-
-
-
-
-
-
-
-
-
 
 /*
 ** Operators required to allow us to add BandwidthStateStruct to a dynamic vector.

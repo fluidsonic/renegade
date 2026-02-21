@@ -4,7 +4,6 @@
 #include "_globals.h"
 #include "time.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -23,19 +22,15 @@ MPSettingsMgrClass::GameModeMap	MPSettingsMgrClass::_mModePrefs;
 
 int										MPSettingsMgrClass::OptionFlags	= OPTION_DEFAULTS;
 
-
 ////////////////////////////////////////////////////////////////
 //	Constants
 ////////////////////////////////////////////////////////////////
 static const int MAX_PERSONA_LEN			= 64;
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //	Registry key names
 ////////////////////////////////////////////////////////////////////////////////////////////////
-//static const char *QUICKMATCH_SUB_KEY	= APPLICATION_SUB_KEY_NAME_WOLSETTINGS "\\QuickMatch";
-
-
+//static const char *QUICKMATCH_SUB_KEY	= APPLICATION_SUB_KEY_NAME_MP_SETTINGS "\\QuickMatch";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //	Registry value names
@@ -48,7 +43,6 @@ static const char *REG_VALUE_AUTOLOGIN_PROMPT	= "AutoLoginPrompt";
 static const char *REG_VALUE_OPTIONS				= "Options";
 static const char *REG_VALUE_ARE_SKINS_UNLOCKED	= "PrimeSocket";
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Settings
@@ -60,7 +54,7 @@ MPSettingsMgrClass::Load_Settings (void)
 	//
 	//	Attempt to open the MP settings sub-key
 	//
-	RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS, false);
+	RegistryClass registry (APPLICATION_SUB_KEY_NAME_MP_SETTINGS, false);
 	if (registry.Is_Valid ()) {
 
 		//
@@ -83,7 +77,6 @@ MPSettingsMgrClass::Load_Settings (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Last_Logon
@@ -94,13 +87,12 @@ MPSettingsMgrClass::Set_Last_Login(const char *name)
 {
 	LastLogin = name;
 
-	RegistryClass registry(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+	RegistryClass registry(APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 
 	if (registry.Is_Valid()) {
 		registry.Set_String(REG_VALUE_LAST_LOGIN, LastLogin);
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -113,7 +105,6 @@ MPSettingsMgrClass::Get_Last_Login(void)
 	return (const char*)LastLogin;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Auto_Login
@@ -124,13 +115,12 @@ MPSettingsMgrClass::Set_Auto_Login(const char* login)
 {
 	AutoLogin = login;
 
-	RegistryClass registry(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+	RegistryClass registry(APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 
 	if (registry.Is_Valid()) {
 		registry.Set_String(REG_VALUE_AUTOLOGIN, AutoLogin);
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -143,8 +133,6 @@ MPSettingsMgrClass::Get_Auto_Login(void)
 	return (const char*)AutoLogin;
 }
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Auto_Password
@@ -155,7 +143,7 @@ MPSettingsMgrClass::Set_Auto_Password(const char* pass)
 {
 	AutoPassword = pass;
 
-	RegistryClass registry(APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+	RegistryClass registry(APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 
 	if (registry.Is_Valid()) {
 		registry.Set_String(REG_VALUE_AUTOPASSWORD, AutoPassword);
@@ -172,8 +160,6 @@ MPSettingsMgrClass::Get_Auto_Password(void)
 {
 	return (const char*)AutoPassword;
 }
-
-
 
 #ifdef OBSOLETE
 ////////////////////////////////////////////////////////////////
@@ -199,7 +185,6 @@ MPSettingsMgrClass::Get_QuickMatch_Mode_Preference (const char *mode)
 	return (*modePref).second;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_QuickMatch_Mode_Preference
@@ -211,7 +196,6 @@ MPSettingsMgrClass::Set_QuickMatch_Mode_Preference (const char *mode, int prefer
 	_mModePrefs[mode] = preference;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -247,14 +231,13 @@ MPSettingsMgrClass::Set_Is_Sidebar_Help_Displayed (bool onoff)
 	//
 	//	Attempt to open the MP settings sub-key
 	//
-	RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+	RegistryClass registry (APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 	if (registry.Is_Valid ()) {
 		registry.Set_Bool (REG_VALUE_SIDEBAR_HELP, DisplaySidebarHelp);
 	}
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -269,14 +252,13 @@ MPSettingsMgrClass::Enable_Auto_Login_Prompt (bool onoff)
 	//
 	//	Attempt to open the MP settings sub-key
 	//
-	RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+	RegistryClass registry (APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 	if (registry.Is_Valid ()) {
 		registry.Set_Bool (REG_VALUE_AUTOLOGIN_PROMPT, IsAutoLoginPromptEnabled);
 	}
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -295,14 +277,13 @@ MPSettingsMgrClass::Set_Option_Flag (OPTION flag, bool onoff)
 	//
 	//	Save this setting in the registry
 	//
-	RegistryClass registry (APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+	RegistryClass registry (APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 	if (registry.Is_Valid ()) {
 		registry.Set_Int (REG_VALUE_OPTIONS, OptionFlags);
 	}
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

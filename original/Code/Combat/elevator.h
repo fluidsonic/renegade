@@ -26,7 +26,6 @@ typedef enum
 	ZONE_MAX
 } ELEVATOR_ZONE;
 
-
 /*
 ** ElevatorPhysDefClass
 */
@@ -65,7 +64,6 @@ protected:
 
 	friend	class								ElevatorPhysClass;
 };
-
 
 /*
 ** ElevatorPhysClass

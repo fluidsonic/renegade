@@ -48,7 +48,6 @@ char* strtrim(char* buffer)
 	return buffer;
 }
 
-
 wchar_t* wcstrim(wchar_t* buffer)
 {
 	if (buffer) {

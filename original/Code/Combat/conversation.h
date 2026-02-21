@@ -9,7 +9,6 @@
 #include "soldier.h"
 #include "conversationremark.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -132,6 +131,5 @@ protected:
 	float										MaxDist;
 	bool										IsInterruptable;
 };
-
 
 #endif //__CONVERSATION_H

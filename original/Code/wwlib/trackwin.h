@@ -1,7 +1,6 @@
 #ifndef TRACKWIN_H
 #define TRACKWIN_H
 
-
 #ifdef NEVER
 
 #include	"trect.h"

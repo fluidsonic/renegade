@@ -5,7 +5,6 @@
 #include "objectives.h"
 #include "imagectrl.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -16,13 +15,11 @@ enum
 	COL_STATUS
 };
 
-
 //
 //	This is extremely poor, but I need to get the index
 // of the currently displayed POG in the HUD.
 //
 extern int	CurrentObjectiveIndex;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -34,7 +31,6 @@ EvaObjectivesTabClass::EvaObjectivesTabClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -64,7 +60,6 @@ EvaObjectivesTabClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -76,7 +71,6 @@ EvaObjectivesTabClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	ChildDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -92,7 +86,6 @@ EvaObjectivesTabClass::On_ListCtrl_Sel_Change (ListCtrlClass *list_ctrl, int ctr
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -133,7 +126,6 @@ EvaObjectivesTabClass::Update_Curr_Objective_Controls (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -210,7 +202,6 @@ EvaObjectivesTabClass::Fill_Objectives_List (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

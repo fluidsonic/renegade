@@ -16,7 +16,6 @@ enum {
 	VISTABLE_CHUNK_LZOBYTES							// pvs bytes, compressed with lzo
 };
 
-
 /**
 ** BitCounterClass 
 ** This class is used to accelerate some of the bit-vector comparing and counting that
@@ -51,7 +50,6 @@ BitCounterClass::BitCounterClass(void)
 }
 
 static BitCounterClass _TheBitCounter;
-
 
 /****************************************************************************************************
 **
@@ -96,7 +94,6 @@ VisTableClass & VisTableClass::operator = (const VisTableClass & that)
 	Timestamp = that.Timestamp;
 	return *this;
 }
-
 
 VisTableClass::~VisTableClass(void)
 {
@@ -294,13 +291,11 @@ float VisTableClass::Match_Fraction(const VisTableClass & that)
 	}
 }
 
-
 /****************************************************************************************************
 **
 ** CompressedVisTableClass Implementation
 **
 ****************************************************************************************************/
-
 
 CompressedVisTableClass::CompressedVisTableClass(void) :
 	BufferSize(0),
@@ -481,7 +476,6 @@ void CompressedVisTableClass::Compress(uint8 * src_buffer,int src_size)
 	BufferSize = comp_size;
 	Buffer = new uint8[BufferSize];
 	memcpy(Buffer,comp_buffer,BufferSize);
-
 
 	delete[] comp_buffer;
 }

@@ -25,7 +25,3 @@ class	cGameDataSinglePlayer : public cGameData {
 
 #endif	// GDSINGLEPLAYER_H
 
-
-
-
-

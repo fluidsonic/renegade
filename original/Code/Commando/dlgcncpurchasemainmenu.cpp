@@ -33,9 +33,7 @@
 #include "gamedata.h"
 #include "specialbuilds.h"
 
-
 bool CNCPurchaseMainMenuClass::SecretsEnabled = false;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -52,7 +50,6 @@ CNCPurchaseMainMenuClass::CNCPurchaseMainMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~CNCPurchaseMainMenuClass
@@ -64,7 +61,6 @@ CNCPurchaseMainMenuClass::~CNCPurchaseMainMenuClass (void)
 	REF_PTR_RELEASE (ChatModule);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -164,7 +160,6 @@ CNCPurchaseMainMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroy
@@ -176,7 +171,6 @@ CNCPurchaseMainMenuClass::On_Destroy (void)
 	MenuDialogClass::On_Destroy ();	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -241,7 +235,6 @@ CNCPurchaseMainMenuClass::Configure_Purchase_Controls (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -254,7 +247,6 @@ CNCPurchaseMainMenuClass::Render (void)
 	HUDClass::Damage_Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -305,7 +297,6 @@ CNCPurchaseMainMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -384,7 +375,6 @@ CNCPurchaseMainMenuClass::Do_Purchase_Screen (PurchaseSettingsDefClass::TYPE typ
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Clear_Selections
@@ -415,7 +405,6 @@ CNCPurchaseMainMenuClass::Clear_Selections (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -477,7 +466,6 @@ CNCPurchaseMainMenuClass::Purchase (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Merchandise_Selected
@@ -535,7 +523,6 @@ CNCPurchaseMainMenuClass::On_Merchandise_Selected (MerchandiseCtrlClass *ctrl, i
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Merchandise_DblClk
@@ -547,7 +534,6 @@ CNCPurchaseMainMenuClass::On_Merchandise_DblClk (MerchandiseCtrlClass *ctrl, int
 	Purchase_Item (ctrl_id);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -588,7 +574,6 @@ CNCPurchaseMainMenuClass::Purchase_Item (int ctrl_id)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -633,7 +618,6 @@ CNCPurchaseMainMenuClass::On_Frame_Update (void)
 	MenuDialogClass::On_Frame_Update ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -711,7 +695,6 @@ CNCPurchaseMainMenuClass::Refresh_Beacon_State (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -836,7 +819,6 @@ CNCPurchaseMainMenuClass::Refresh_Button_States (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Key_Down
@@ -912,7 +894,6 @@ CNCPurchaseMainMenuClass::On_Key_Down (uint32 key_id, uint32 key_data)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

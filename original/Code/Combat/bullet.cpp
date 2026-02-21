@@ -4,7 +4,6 @@
 #include "pscene.h"
 #include "weaponmanager.h"
 #include "assets.h"
-#include "debug.h"
 #include "armedgameobj.h"
 #include "crandom.h"
 #include "surfaceeffects.h"
@@ -23,12 +22,10 @@
 #include "simplegameobj.h"
 #include "c4.h"
 
-
 /*
 ** Constants for this module
 */
 const float _INSTANT_BULLET_THRESHHOLD	= 400;  // If speed is >= _INSTANT_BULLET_THRESHHOLD m/s, treat it an an instant bullet
-
 
 /**
 ** BeamEffectManagerClass
@@ -47,13 +44,11 @@ public:
 	*/
 	void								Create_Beam_Effect(const AmmoDefinitionClass * ammo_def,const Vector3 & p0,const Vector3 & p1);
 
-
 	/*
 	** PhysObserver Interface - whenever a beam expires, we put it into a list so we can
 	** recycle it next time we need a beam effect
 	*/
 	virtual void					Object_Removed_From_Scene(PhysClass * observed_obj);
-
 
 private:
 
@@ -63,7 +58,6 @@ private:
 };
 
 static BeamEffectManagerClass _TheBeamEffectManager;
-
 
 void	BeamEffectManagerClass::Shutdown( void )
 {
@@ -163,8 +157,6 @@ void BeamEffectManagerClass::Internal_Get_New_Beam(SegmentedLineClass ** set_bea
 
 	}
 }
-
-
 
 /*
 ** Core Bullet Data for simulation
@@ -411,7 +403,6 @@ ExpirationReactionType	BulletDataClass::Bullet_Expired( void )
 	return EXPIRATION_DENIED; // Don't let it die, I'll pull it from the scene later
 }
 
-
 /*
 ** BulletClass (for non-instant bullets)
 */
@@ -448,7 +439,6 @@ private:
 	friend	class		BulletManager;
 
 };
-
 
 BulletClass::BulletClass( void ) :
 	Projectile( NULL ),
@@ -681,7 +671,6 @@ void BulletClass::On_Post_Load (void)
 	return ;
 }
 
-
 CollisionReactionType BulletClass::Collision_Occurred( const CollisionEventClass & event )
 {
 	// Copy the data from the Projectile
@@ -705,7 +694,6 @@ ExpirationReactionType	BulletClass::Object_Expired(PhysClass * observed_obj)
 	}
 	return result;
 }
-
 
 #define	RANDOM_VECTOR( spread )		Vector3( FreeRandom.Get_Float( -(spread), (spread) ),	\
 															FreeRandom.Get_Float( -(spread), (spread) ),	\

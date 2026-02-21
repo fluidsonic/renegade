@@ -8,8 +8,6 @@
 #include "aabox.h"
 #include "obbox.h"
 
-
-
 CollisionMath::OverlapType
 CollisionMath::Overlap_Test(const AAPlaneClass & plane,const Vector3 & point)
 {
@@ -84,14 +82,12 @@ CollisionMath::Overlap_Test(const AAPlaneClass & plane,const AABoxClass & box)
 	return eval_overlap_mask(mask);
 }
 
-
 CollisionMath::OverlapType
 CollisionMath::Overlap_Test(const AAPlaneClass & /*plane*/,const OBBoxClass & /*box*/)
 {
 // TODO
 	return POS;
 }
-
 
 // Plane functions.  Where is operand B with respect to the plane
 

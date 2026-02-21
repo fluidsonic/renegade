@@ -4,15 +4,12 @@
 #include "vehiclephys.h"
 #include "physcontrol.h"
 
-
 /*
 ** Dazzle parsing constants
 */
 const char *	HEADLIGHT_NAME_PREFIX					= "REN_HEADLIGHT";
 const char *	BRAKELIGHT_NAME_PREFIX					= "REN_BRAKELIGHT";
 const char *	BLINKLIGHT_NAME_PREFIX					= "REN_BLINKLIGHT";
-
-
 
 /***********************************************************************************************
  * VehicleDazzleClass::VehicleDazzleClass -- Constructor                                       *
@@ -34,7 +31,6 @@ VehicleDazzleClass::VehicleDazzleClass(void) :
 {
 }
 
-
 /***********************************************************************************************
  * VehicleDazzleClass::~VehicleDazzleClass -- Destructor                                       *
  *                                                                                             *
@@ -51,7 +47,6 @@ VehicleDazzleClass::~VehicleDazzleClass(void)
 {
 	REF_PTR_RELEASE(Model);
 }
-
 
 /***********************************************************************************************
  * VehicleDazzleClass::Set_Model -- sets the dazzle model for this object to control           *
@@ -74,7 +69,6 @@ void VehicleDazzleClass::Set_Model(DazzleRenderObjClass * model)
 	}
 }
 
-
 /***********************************************************************************************
  * VehicleDazzleClass::Set_Time_Of_Day -- updates any parameters which depend on time of day   *
  *                                                                                             *
@@ -90,7 +84,6 @@ void VehicleDazzleClass::Set_Model(DazzleRenderObjClass * model)
 void VehicleDazzleClass::Set_Time_Of_Day(float time)
 {
 }
-
 
 /***********************************************************************************************
  * VehicleDazzleClass::Pre_Render_Update -- Update dazzle state prior to rendering             *
@@ -150,7 +143,6 @@ void VehicleDazzleClass::Pre_Render_Update(VehiclePhysClass * parent)
 	}
 }
 
-
 /***********************************************************************************************
  * VehicleDazzleClass::Is_Vehicle_Dazzle -- static function for filtering vehicle dazzles      *
  *                                                                                             *
@@ -168,7 +160,6 @@ bool VehicleDazzleClass::Is_Vehicle_Dazzle(RenderObjClass * obj)
 	int type = Determine_Type(obj);
 	return type != NONE;
 }
-
 
 /***********************************************************************************************
  * VehicleDazzleClass::Determine_Type -- Determine the type of vehicle dazzle this is          *

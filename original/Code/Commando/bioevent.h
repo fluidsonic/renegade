@@ -35,4 +35,3 @@ private:
 
 #endif	// __BIOEVENT_H__
 
-

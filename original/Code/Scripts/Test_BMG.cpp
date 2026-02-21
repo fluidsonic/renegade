@@ -33,7 +33,6 @@ DECLARE_SCRIPT(BMG_Test_Script, "" )
 
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////                                   /////////////////////////////////////////
@@ -61,8 +60,6 @@ DECLARE_SCRIPT(BMG_Toggle_Control, "" )
 	}
 
 };
-
-
 
 DECLARE_SCRIPT(BMG_Test_Enter_Vehicle, "" )
 {
@@ -96,11 +93,7 @@ DECLARE_SCRIPT(BMG_Test_Enter_Vehicle, "" )
 		}
 	}
 
-
-
 };
-
-
 
 DECLARE_SCRIPT(BMG_Test_Pogs, "" )
 {
@@ -130,14 +123,11 @@ DECLARE_SCRIPT(BMG_Test_Pogs, "" )
 					break;
 		}
 
-
 //		GameObject *controller = Commands->Create_Object("Invisible_Object", Vector3(0,0,0));
 //		Commands->Attach_Script(controller, "Test_Cinematic", "test.txt");
 	}
 
-
 };
-
 
 DECLARE_SCRIPT(BMG_Test_Misc_Script, "" )
 {
@@ -271,7 +261,6 @@ DECLARE_SCRIPT(BMG_Monitor_Events, "" )
 				Commands->Debug_Message("BMG CUSTOM VEHICLE EXITED %d %d\n", param, Commands->Get_ID( sender ) );
 				break;
 
-
 			default:
 				Commands->Debug_Message("BMG CUSTOM %d %d\n", type, param );
 				break;
@@ -282,7 +271,6 @@ DECLARE_SCRIPT(BMG_Monitor_Events, "" )
 	{
 		Commands->Debug_Message("BMG ENEMY_SEEN %d\n", Commands->Get_ID( enemy ) );
 	}
-
 
 };
 
@@ -295,8 +283,6 @@ DECLARE_SCRIPT(BMG_Test_Powerup, "" )
 		}
 	}
 };
-
-
 
 DECLARE_SCRIPT(BMG_Test_Walking, "" )
 {
@@ -325,9 +311,6 @@ DECLARE_SCRIPT(BMG_Test_Walking, "" )
 	}
 };
 
-
-
-
 DECLARE_SCRIPT(BMG_Vehicle_Awareness, "" )
 {
 	void Created(GameObject* obj)
@@ -347,7 +330,6 @@ DECLARE_SCRIPT(BMG_Vehicle_Awareness, "" )
 
 };
 
-
 DECLARE_SCRIPT(BMG_Test_Score, "" )
 {
 	void Created(GameObject* obj)
@@ -363,7 +345,6 @@ DECLARE_SCRIPT(BMG_Test_Score, "" )
 			Commands->Debug_Message("Add Score\n");
 		}
 	}
-
 
 };
 
@@ -382,8 +363,6 @@ DECLARE_SCRIPT(BMG_Test_Flash, "" )
 
 };
 
-
-
 DECLARE_SCRIPT(BMG_Test_Objective, "" )
 {
 	void Created(GameObject* obj)
@@ -401,7 +380,6 @@ DECLARE_SCRIPT(BMG_Test_Objective, "" )
 	}
 
 };
-
 
 DECLARE_SCRIPT(BMG_Test_Messages, "speed=1.0:float")
 {
@@ -426,7 +404,6 @@ DECLARE_SCRIPT(BMG_Test_Messages, "speed=1.0:float")
 	}
 
 };
-
 
 DECLARE_SCRIPT(BMG_Test_Anim_Speed, "speed=1.0:float")
 {
@@ -516,7 +493,6 @@ DECLARE_SCRIPT( BMG_Test_Radar, "" )
 	}
 };
 
-
 DECLARE_SCRIPT( BMG_Test_Animation, "" )
 {
 	void Created( GameObject * obj )
@@ -536,7 +512,6 @@ DECLARE_SCRIPT( BMG_Test_Animation, "" )
 	}
 };
 
-
 DECLARE_SCRIPT( BMG_Test_Attack, "" )
 {
 	void Created(GameObject* obj)
@@ -549,7 +524,6 @@ DECLARE_SCRIPT( BMG_Test_Attack, "" )
 		Commands->Action_Attack( obj, params );
 	}
 };
-
 
 DECLARE_SCRIPT( BMG_Test_Damage, "" )
 {
@@ -666,8 +640,6 @@ DECLARE_SCRIPT( BMG_Test_Custom, "" )
 	}
 };
 
-
-
 DECLARE_SCRIPT(BMG_Test_Running, "" )
 {
 	int state;
@@ -707,7 +679,6 @@ DECLARE_SCRIPT(BMG_Set_Home, "")
 	}
 };
 
-
 DECLARE_SCRIPT(BMG_Look_Test, "")
 {
 	void Created(GameObject* obj)
@@ -737,7 +708,6 @@ DECLARE_SCRIPT(BMG_Look_Test, "")
 	}
 };
 
-
 DECLARE_SCRIPT(BMG_Timer_Test, "")
 {
 	void Created(GameObject* obj)
@@ -753,7 +723,6 @@ DECLARE_SCRIPT(BMG_Timer_Test, "")
 	}
 
 };
-
 
 DECLARE_SCRIPT(BMG_Shooter, "")
 {
@@ -771,7 +740,6 @@ DECLARE_SCRIPT(BMG_Shooter, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(BMG_Test_Display_Text, "" )
 {
@@ -854,7 +822,6 @@ DECLARE_SCRIPT(BMG_Test_Objectives, "")
 	}
 };
 
-
 DECLARE_SCRIPT( BMG_Test_Priority_1, "" )
 {
 	void Created( GameObject * obj )
@@ -875,7 +842,6 @@ DECLARE_SCRIPT( BMG_Test_Priority_1, "" )
 		params.Set_Animation( "S_A_HUMAN.H_A_611A", false );
 		Commands->Action_Play_Animation( obj, params );
 //		Commands->Action_Play_Animation( obj, this, 90, "S_A_HUMAN.H_A_611A", false, 0 );
-
 
 //		Vector3 pos = Commands->Get_Position( Commands->Get_The_Star() );
 //		Commands->Action_Goto_Location( obj, this, 70, pos, 0.2f, 0.5f, 0 );
@@ -925,7 +891,6 @@ DECLARE_SCRIPT( BMG_Test_Priority_2, "" )
 
 };
 
-
 DECLARE_SCRIPT(BMG_Test_Zone, "")
 {
 
@@ -939,7 +904,6 @@ DECLARE_SCRIPT(BMG_Test_Zone, "")
 		Commands->Debug_Message("Test Zone Exited\n");
 	}
 };
-
 
 DECLARE_SCRIPT(BMG_Test_Cinematic, "ScriptName=:string")
 {
@@ -990,7 +954,6 @@ DECLARE_SCRIPT(BMG_Test_C130_DropOff_Cinematic, "ObjToCreate=:string")
 		Vector3 pos = Commands->Get_Bone_Position( obj, "CARGO" );
 		Commands->Create_Explosion( "Rocket Explosion", pos, killer );
 	}
-
 
 };
 
@@ -1102,7 +1065,6 @@ DECLARE_SCRIPT(BMG_Test_Debug, "position=3.1 4.2 5.3:vector3")
 	}
 
 };
-
 
 DECLARE_SCRIPT(BMG_Test_Anim, "")
 {

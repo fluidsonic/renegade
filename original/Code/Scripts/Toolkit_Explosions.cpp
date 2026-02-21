@@ -94,7 +94,6 @@ DECLARE_SCRIPT(M00_Explosion_Create_At_Bone_RMV, "Start_Now=0:int, Receive_Type:
 	}
 };
 
-
 DECLARE_SCRIPT(M00_Create_Random_Explosion_DLS, "Explosion_Name:string, Delay_Min=0.0f:float, Delay_Max=4.0f:float, Loc_ID0=0:int, Loc_ID1=0:int, Loc_ID2=0:int, Loc_ID3=0:int, Loc_ID4=0:int, Loc_ID5=0:int, Loc_ID6=0:int, Loc_ID7=0:int, Loc_ID8=0:int, Loc_ID9=0:int")
 {
 	bool active;
@@ -165,7 +164,6 @@ DECLARE_SCRIPT(M00_Create_Random_Explosion_DLS, "Explosion_Name:string, Delay_Mi
 		}
 	}
 };
-
 
 DECLARE_SCRIPT( M00_NukeStrike_Anim, "")
 {

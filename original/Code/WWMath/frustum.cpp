@@ -1,6 +1,5 @@
 #include "frustum.h"
 
-
 /***********************************************************************************************
  * FrustumClass::Init -- Initialize a frustum object                                           *
  *                                                                                             *

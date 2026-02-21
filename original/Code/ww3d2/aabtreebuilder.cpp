@@ -9,7 +9,6 @@
 #define WWASSERT	assert					// can't use WWASSERT because we use this module in the MAX plugin...
 const float COINCIDENCE_EPSILON = 0.001f;
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::AABTreeBuilderClass -- Constructor                                     *
  *                                                                                             *
@@ -31,7 +30,6 @@ AABTreeBuilderClass::AABTreeBuilderClass(void) :
 {
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::~AABTreeBuilderClass -- Destructor                                     *
  *                                                                                             *
@@ -48,7 +46,6 @@ AABTreeBuilderClass::~AABTreeBuilderClass(void)
 { 
 	Reset();
 }
-
 
 /***********************************************************************************************
  * AABTreeBuilderClass::Reset -- reset the builder, delete all arrays                          *
@@ -139,7 +136,6 @@ void AABTreeBuilderClass::Build_AABTree(int polycount,TriIndex * polys,int vertc
 
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Build_Tree -- recursivly builds the culling tree                       *
  *                                                                                             *
@@ -227,7 +223,6 @@ void AABTreeBuilderClass::Build_Tree(CullNodeStruct * node,int polycount,int * p
 
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Select_Splitting_Plane -- select a partition for the given polys       *
  *                                                                                             *
@@ -285,7 +280,6 @@ AABTreeBuilderClass::Select_Splitting_Plane(int polycount,int * polyindices)
 
 	return best_plane_stats;
 }
-
 
 /***********************************************************************************************
  * AABTreeBuilderClass::Compute_Plane_Score -- evaluate the suitability of a partition plane   *
@@ -353,7 +347,6 @@ AABTreeBuilderClass::Compute_Plane_Score(int polycount,int * polyindices,const A
 	return sc;
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Which_Side -- which side of a plane is the given poly                  *
  *                                                                                             *
@@ -419,7 +412,6 @@ AABTreeBuilderClass::Which_Side(const AAPlaneClass & plane,int poly_index)
 	return BOTH;
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Split_Polys -- partition the polys with a plane                        *
  *                                                                                             *
@@ -475,7 +467,6 @@ void AABTreeBuilderClass::Split_Polys
 	** when we are all done, the counts should match. 
 	*/
 }
-
 
 /***********************************************************************************************
  * AABTreeBuilderClass::Compute_Bounding_Box -- compute bounding boxes for the cull nodes      *
@@ -542,7 +533,6 @@ void AABTreeBuilderClass::Compute_Bounding_Box(CullNodeStruct * node)
 
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Assign_Index -- assign an array index to each node                     *
  *                                                                                             *
@@ -577,7 +567,6 @@ int AABTreeBuilderClass::Assign_Index(CullNodeStruct * node,int index)
 	return index;
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Node_Count -- Count the nodes in the tree                              *
  *                                                                                             *
@@ -598,7 +587,6 @@ int AABTreeBuilderClass::Node_Count(void)
 		return 0;
 	}
 }
-
 
 /***********************************************************************************************
  * AABTreeBuilderClass::Poly_Count -- returns number of polys                                  *
@@ -641,7 +629,6 @@ int AABTreeBuilderClass::Node_Count_Recursive(CullNodeStruct * node,int curcount
 	return curcount;
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Update_Min -- ensure given vector is < min of the poly                 *
  *                                                                                             *
@@ -667,7 +654,6 @@ void AABTreeBuilderClass::Update_Min(int poly_index,Vector3 & min)
 	}
 }
 
-
 /***********************************************************************************************
  * AABTreeBuilderClass::Update_Max -- ensure given vector is > max of poly                     *
  *                                                                                             *
@@ -692,7 +678,6 @@ void AABTreeBuilderClass::Update_Max(int poly_index,Vector3 & max)
 		if (point->Z  > max.Z) max.Z = point->Z;
 	}
 }
-
 
 /***********************************************************************************************
  * AABTreeBuilderClass::Update_Min_Max -- ensure given vector is in min max of poly            *
@@ -722,8 +707,6 @@ void	AABTreeBuilderClass::Update_Min_Max(int poly_index, Vector3 & min, Vector3 
 		if (point->Z  > max.Z) max.Z = point->Z;
 	}
 }
-
-
 
 /***********************************************************************************************
  * AABTreeBuilderClass::Export -- Saves this AABTree into a W3D chunk                          *
@@ -783,7 +766,6 @@ void AABTreeBuilderClass::Export(ChunkSaveClass & csave)
 
 	csave.End_Chunk(); // W3D_CHUNK_AABTREE done
 }
-
 
 /***********************************************************************************************
  * AABTreeBuilderClass::Build_W3D_AABTree_Recursive -- Build array of indices and W3dMeshAABTr *
@@ -849,7 +831,4 @@ void AABTreeBuilderClass::Build_W3D_AABTree_Recursive
 		Build_W3D_AABTree_Recursive(node->Back,w3d_nodes,poly_indices,cur_node,cur_poly);
 	}
 }
-
-
-
 

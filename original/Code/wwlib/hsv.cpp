@@ -4,7 +4,6 @@
 
 HSVClass const HSVClass::BlackColor(0, 0, 0);
 
-
 /***********************************************************************************************
  * HSVClass::Adjust -- Adjust an HSV color toward specified color.                             *
  *                                                                                             *
@@ -47,7 +46,6 @@ void HSVClass::Adjust(int ratio, HSVClass const & hsv)
 	Hue = (unsigned char)(Get_Hue() + (hue * ratio) / 256);
 }
 
-
 /***********************************************************************************************
  * HSVClass::Difference -- Finds the difference between two HSV color objects.                 *
  *                                                                                             *
@@ -78,7 +76,6 @@ int HSVClass::Difference(HSVClass const & hsv) const
 	return(hue*hue + saturation*saturation + value*value);
 }
 
-
 /***********************************************************************************************
  * HSVClass::operator RGBClass -- Conversion operator for RGBClass object.                     *
  *                                                                                             *
@@ -106,7 +103,6 @@ HSVClass::operator RGBClass (void) const
 	int value = Get_Value();
 	int red, green, blue;
 
-
 	hue *= 6;
 	f = hue % 255;
 
@@ -131,7 +127,6 @@ HSVClass::operator RGBClass (void) const
 	tmp = 255 - (saturation * (255 - f)) / 255;
 	values[6] = (value * tmp) / 255;
 
-
 	// This should not be rounded.
 	i = hue / 255;
 
@@ -147,5 +142,4 @@ HSVClass::operator RGBClass (void) const
 	RGBClass rgb((unsigned char)red, (unsigned char)green, (unsigned char)blue);
 	return(rgb);
 }
-
 

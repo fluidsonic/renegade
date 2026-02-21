@@ -24,7 +24,6 @@ class RefineryGameObj;
 class ComCenterGameObj;
 class RepairBayGameObj;
 
-
 /**
 ** BuildingConstants
 ** Convienent namespace declaration for the constants used with buildings
@@ -202,7 +201,6 @@ public:
 	void											Get_Collection_Sphere (SphereClass *sphere) const	{ *sphere = CollectionSphere; }
 	void											Set_Collection_Sphere (const SphereClass &sphere)	{ CollectionSphere = sphere; }
 
-
 	/*
 	** CnC mode suport
 	*/
@@ -224,7 +222,6 @@ public:
 	//virtual	void								Get_Extended_Information( StringClass & description );
 	virtual	void								Get_Description( StringClass & description );
 	virtual bool								Is_Tagged(void)									{ return false; }
-
 
 	/*
 	**

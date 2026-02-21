@@ -12,7 +12,6 @@ DECLARE_SCRIPT (DME_Test_Powerup, "")
 		SAVE_VARIABLE(reward_type, 1);
 	}
 
-
 	void Killed( GameObject * obj, GameObject * killer ) 
 	{
 		
@@ -158,7 +157,6 @@ DECLARE_SCRIPT (DME_Test_Powerup, "")
 			}
 		}
 
-
 	}	
 	
 };
@@ -215,7 +213,6 @@ DECLARE_SCRIPT (DME_Test_Ejected_Soldier, "")
 	}
 };
 
-
 DECLARE_SCRIPT (DME_Test_Paradrop, "")
 {
 	void Created ( GameObject * obj )
@@ -268,7 +265,6 @@ DECLARE_SCRIPT (DME_Test_Paradrop, "")
 
 };
 
-
 DECLARE_SCRIPT (DME_Test_Worker_Wander, "Work_Area=3:int")
 {
 	int loc_id [20], count, choice, last_loc, poke_choice;
@@ -307,7 +303,6 @@ DECLARE_SCRIPT (DME_Test_Worker_Wander, "Work_Area=3:int")
 			Worker_Loop (obj);												//if occupied, tells worker to choose a now location.
 		}
 	}
-
 
 	void Worker_Loop ( GameObject * obj )		//this is the main function that checks if the location is occupied
 	{											//and if it is not, tells the servant to go to that location.
@@ -378,8 +373,6 @@ DECLARE_SCRIPT (DME_Test_Worker_Wander, "Work_Area=3:int")
 		reward_given = false;
 		poked = false;
 		anim_playing = false;
-
-
 
 		loc_id [0] = 100001;				//these are the dave's arrow id's for all 3 work areas.
 		loc_id [1] = 100002;
@@ -674,9 +667,6 @@ DECLARE_SCRIPT (DME_Test_Work_Area, "")		//this script needs to be placed on all
 	}
 };
 
-
-
-
 DECLARE_SCRIPT (M05_Tank_Drop_01_DME, "")	
 {
 	bool entered;
@@ -777,7 +767,6 @@ DECLARE_SCRIPT (M05_Tank_Attack_DME, "")
 	
 };
 
-
 DECLARE_SCRIPT (M05_Tech_Wander_DME, "Work_Area=1:int")
 {
 	int loc_id [7], count, choice, last_loc, poke_choice;
@@ -816,7 +805,6 @@ DECLARE_SCRIPT (M05_Tech_Wander_DME, "Work_Area=1:int")
 			Worker_Loop (obj);												//if occupied, tells worker to choose a now location.
 		}
 	}
-
 
 	void Worker_Loop ( GameObject * obj )		//this is the main function that checks if the location is occupied
 	{											//and if it is not, tells the servant to go to that location.
@@ -886,8 +874,6 @@ DECLARE_SCRIPT (M05_Tech_Wander_DME, "Work_Area=1:int")
 		star_seen = false;
 		reward_given = false;
 		anim_playing = false;
-
-
 
 		loc_id [0] = 2000025;				//these are the dave's arrow id's for all 3 work areas.
 		loc_id [1] = 2000026;
@@ -988,7 +974,6 @@ DECLARE_SCRIPT(DME_Cinematic_Test, "")
 		Commands->Create_Object ( "XG_TransprtBone", Vector3(0.0f, 0.0f, 0.0f));*/
 	}
 
-
 	void Damaged( GameObject * obj, GameObject * damager, float amount ) 
 	{
 	/*	GameObject * chinook_obj0 = Commands->Create_Object ( "Invisible_Object", Vector3(0.0f, 0.0f, 0.0f));
@@ -1021,6 +1006,4 @@ DECLARE_SCRIPT(DME_Cinematic_Test, "")
 //                             MISSION X0                               //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
-
-
 

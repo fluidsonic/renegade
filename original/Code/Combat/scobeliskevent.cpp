@@ -13,7 +13,6 @@
 #include "explosion.h"
 #include "combat.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cScObeliskEvent, NETCLASSID_SCOBELISKEVENT);
 
 //-----------------------------------------------------------------------------
@@ -52,7 +51,6 @@ cScObeliskEvent::Act(void)
 {
 
 	ExplosionManager::Explode( DefID, Position, OwnerID );
-
 
 	Set_Delete_Pending();
 }

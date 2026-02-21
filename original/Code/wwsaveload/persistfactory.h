@@ -1,7 +1,5 @@
 
 
-
-
 #ifndef PERSISTFACTORY_H
 #define PERSISTFACTORY_H
 
@@ -37,9 +35,6 @@ private:
 	friend class SaveLoadSystemClass;
 };
 
-
-
-
 /*
 ** SimplePersistFactoryClass
 ** This template automates the creation of a PersistFactory for any type of Persist
@@ -64,7 +59,6 @@ public:
 	};
 };
 
-
 template<class T, int CHUNKID> PersistClass * 
 SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const 
 {
@@ -83,7 +77,6 @@ SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const
 	return new_obj;
 }
 
-
 template<class T, int CHUNKID> void
 SimplePersistFactoryClass<T,CHUNKID>::Save(ChunkSaveClass & csave,PersistClass * obj) const 
 {
@@ -96,6 +89,5 @@ SimplePersistFactoryClass<T,CHUNKID>::Save(ChunkSaveClass & csave,PersistClass *
 	obj->Save(csave);
 	csave.End_Chunk();
 }
-
 
 #endif

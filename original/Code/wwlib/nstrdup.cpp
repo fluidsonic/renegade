@@ -24,4 +24,3 @@ char * nstrdup(const char *str)
 	return retval;
 }
 
-

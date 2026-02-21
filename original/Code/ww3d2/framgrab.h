@@ -6,7 +6,6 @@
 #include "always.h"
 #endif
 
-
 #ifndef _WINDOWS_
 #include "windows.h"
 #endif
@@ -18,7 +17,6 @@
 #ifndef _INC_VFW
 #include "vfw.h"
 #endif
-
 
 // FramGrab.h: interface for the FrameGrabClass class.
 //

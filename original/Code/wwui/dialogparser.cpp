@@ -9,12 +9,10 @@
 #define ALIGN_WORD_PTR(p)	((WORD *)(((uintptr_t)(p) + 1) & ~(uintptr_t)1))
 #define ALIGN_DWORD_PTR(p) ((DWORD *)(((uintptr_t)(p) + 3) & ~(uintptr_t)3))
 
-
 //////////////////////////////////////////////////////////////////////////////
 //	Local prototypes
 //////////////////////////////////////////////////////////////////////////////
 WORD *Skip_Dlg_Field (WORD *src, WCHAR *buffer = NULL, int buffer_len = 0, WORD *ctrl_type = NULL);
-
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -107,7 +105,6 @@ Skip_Dlg_Field (WORD *src, WCHAR *buffer, int buffer_len, WORD *ctrl_type)
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////
 //
 //	Parse_Template
@@ -161,7 +158,6 @@ DialogParserClass::Parse_Template
 			wide_string_id.Convert_To (ascii_string_id);
 			(*dlg_title) = TRANSLATE_BY_DESC(ascii_string_id);
 		}
-
 
 		//
 		//	Do we need to skip past the font settings?

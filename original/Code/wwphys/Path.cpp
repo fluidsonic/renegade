@@ -14,7 +14,6 @@
 #include "persistfactory.h"
 #include "assetmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
 ////////////////////////////////////////////////////////////////
@@ -47,7 +46,6 @@ enum
 	VARID_TOTAL_DIST
 };
 
-
 ///////////////////////////////////////////////////////////////////////////
 //	Local macros
 ///////////////////////////////////////////////////////////////////////////
@@ -57,14 +55,12 @@ enum
 				pobject = NULL;					\
 			}											\
 
-
 ///////////////////////////////////////////////////////////////////////////
 //	Constants
 ///////////////////////////////////////////////////////////////////////////
 static const float DEF_VEHICLE_VELOCITY	= 40.0F;
 static const float DEF_HUMAN_VELOCITY		= 2.5F; //5.0F;
 static const float ASSUMED_FPS				= 30.0F; //15.0F;
-
 
 ///////////////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -101,7 +97,6 @@ PathClass::PathClass (void)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	~PathClass
@@ -113,7 +108,6 @@ PathClass::~PathClass (void)
 	SAFE_DELETE (m_Spline);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -161,7 +155,6 @@ PathClass::Initialize (const Vector3 &start, const Vector3 &end)
 	Initialize_Spline (node_list);
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -356,7 +349,6 @@ PathClass::Initialize (PathSolveClass &path_solve)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Add_Waypoint_Info_To_Node_List
@@ -429,7 +421,6 @@ PathClass::Add_Waypoint_Info_To_Node_List
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Add_Waypath_Data
@@ -490,7 +481,6 @@ PathClass::Add_Waypath_Data
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -561,7 +551,6 @@ PathClass::Initialize (WaypathClass *waypath, int start_pt_id, int end_pt_id)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -725,7 +714,6 @@ PathClass::Evaluate_Next_Point (const Vector3 &curr_pos, Vector3 &new_pos)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Curve_Sharpness
@@ -745,7 +733,6 @@ PathClass::Get_Curve_Sharpness (Vector3 *position) const
 	return sharpness;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Get_Last_Eval_Time
@@ -756,7 +743,6 @@ PathClass::Get_Last_Eval_Time (void) const
 {
 	return m_SplineTime;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -778,7 +764,6 @@ PathClass::Get_Remaining_Path_Length (void)
 
 	return length;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -829,7 +814,6 @@ PathClass::Display_Path (bool onoff)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Traversal_Type
@@ -847,7 +831,6 @@ PathClass::Set_Traversal_Type (TRAVERSAL_TYPE type)
 
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -878,7 +861,6 @@ Find_Intersection_X
 	return retval;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Find_Intersection_Y
@@ -907,7 +889,6 @@ Find_Intersection_Y
 
 	return retval;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -960,7 +941,6 @@ Find_Side_Intersection
 	return retval;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Is_Point_In_Boxes
@@ -985,7 +965,6 @@ PathClass::Is_Point_In_Boxes
 	return retval;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Clip_Control_Point
@@ -1005,7 +984,6 @@ PathClass::Clip_Control_Point
 	//
 	for (int index = 0; index < sector_list.Count (); index ++) {		
 		AABoxClass &box = *(sector_list[index]);
-
 
 		//
 		//	Clip the line to each of the four sides of the box (don't care about
@@ -1032,7 +1010,6 @@ PathClass::Clip_Control_Point
 
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -1084,7 +1061,6 @@ PathClass::Initialize_Vehicle_Spline (DynamicVectorClass<PATH_NODE> &node_list)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Initialize_Human_Spline
@@ -1134,7 +1110,6 @@ PathClass::Initialize_Human_Spline(DynamicVectorClass<PATH_NODE> &node_list)
 				m_EndTime = curr_time;
 			}			
 		}
-
 
 		//
 		//	Do we need to fix-up the time values for the last action node?
@@ -1192,7 +1167,6 @@ PathClass::Initialize_Human_Spline(DynamicVectorClass<PATH_NODE> &node_list)
 	(*((HermiteSpline3DClass*)m_Spline)) = temp_spline;
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -1284,7 +1258,6 @@ PathClass::Clip_Spline_To_Pathfind_Data
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Initialize_Spline
@@ -1311,7 +1284,6 @@ PathClass::Initialize_Spline (DynamicVectorClass<PATH_NODE> &node_list)
 			m_StartPos	= node_list[1].pos;
 			m_DestPos	= m_StartPos;
 		}
-
 
 		Vector3 point;
 		Vector3 last_point = m_StartPos;
@@ -1370,7 +1342,6 @@ PathClass::Initialize_Spline (DynamicVectorClass<PATH_NODE> &node_list)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Path_Object
@@ -1383,7 +1354,6 @@ PathClass::Set_Path_Object (PathObjectClass &path_object)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	Get_Path_Object
@@ -1395,7 +1365,6 @@ PathClass::Get_Path_Object (PathObjectClass &path_object) const
 	path_object = m_PathObject;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1455,7 +1424,6 @@ PathClass::Save (ChunkSaveClass &csave)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -1492,7 +1460,6 @@ PathClass::Load (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //

@@ -103,7 +103,6 @@ public:
 
 	bool				IsCameraCinematic;
 
-
 	/*
 	** Parameters
 	*/
@@ -259,7 +258,6 @@ public:
 		return parameter;
 	}
 
-
 #define	CHUNKID_VARIABLES								1000
 #define	CHUNKID_OBJECT_SLOTS							1001
 #define	CHUNKID_CONTROL_LINES						1002
@@ -373,7 +371,6 @@ public:
 					}
 				}
 				break;
-
 
 				case CHUNKID_CONTROL_LINES:
 				{
@@ -566,7 +563,6 @@ public:
 					Commands->Innate_Disable( obj );
 				}
 
-
 			} else {
 //				Commands->Debug_Message( "Slot Object not found %d\n", slot );
 			}
@@ -664,7 +660,6 @@ public:
 		} else {
 			parameter = atoi( parameter_name );
 		}
-
 
 		GameObject * to = Commands->Find_Object( to_id );
 		if ( to ) {

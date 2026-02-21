@@ -369,26 +369,5 @@ cAppPacketStats::Get_Description
 	return WorkingString;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		//ADD_CASE(APPPACKETTYPE_FLAGCAPEVENT);
 		//ADD_CASE(APPPACKETTYPE_STEALTHEVENT);

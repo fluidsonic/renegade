@@ -2,7 +2,6 @@
 #ifndef __CONTROL_ADVISE_SINK_H
 #define __CONTROL_ADVISE_SINK_H
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -20,7 +19,6 @@ class ComboBoxCtrlClass;
 class MerchandiseCtrlClass;
 class TreeCtrlClass;
 class TreeItemClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -114,6 +112,5 @@ public:
 	virtual void	On_Merchandise_Selected (MerchandiseCtrlClass *ctrl, int ctrl_id) {}
 	virtual void	On_Merchandise_DblClk (MerchandiseCtrlClass *ctrl, int ctrl_id) {}
 };
-
 
 #endif //__CONTROL_ADVISE_SINK_H

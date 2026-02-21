@@ -2,10 +2,8 @@
 #ifndef __DLGINTERNETOPTIONS_H
 #define __DLGINTERNETOPTIONS_H
 
-
 #include "menudialog.h"
 #include "resource.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -42,6 +40,5 @@ protected:
 	//	Protected member data
 	///////////////////////////////////////////////////////////////////
 };
-
 
 #endif //__DLGINTERNETOPTIONS_H

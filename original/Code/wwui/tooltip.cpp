@@ -22,7 +22,6 @@ ToolTipClass::ToolTipClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ToolTipClass
@@ -32,7 +31,6 @@ ToolTipClass::~ToolTipClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -68,7 +66,6 @@ ToolTipClass::Create_Text_Renderer (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -119,7 +116,6 @@ ToolTipClass::Create_Background_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -136,7 +132,6 @@ ToolTipClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Position
@@ -151,7 +146,6 @@ ToolTipClass::Set_Position (const Vector2 &pos)
 	Update_Rect ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -169,7 +163,6 @@ ToolTipClass::Set_Text (const WCHAR *text)
 	Update_Rect ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -196,7 +189,6 @@ ToolTipClass::Update_Rect (void)
 	//
 	Rect.Right	= Rect.Left + (text_extent.X + 5); //10);
 	Rect.Bottom	= Rect.Top + (text_extent.Y + 4); //* 2);
-
 
 	//
 	//	Clip the rectangle to the right side of the screen

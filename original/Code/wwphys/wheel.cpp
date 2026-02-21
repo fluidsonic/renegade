@@ -6,7 +6,6 @@
 #include "physcon.h"
 #include "pscene.h"
 
-
 // Wheel friction is a proportional controller, this is the constant.
 // TODO: Should we make this an editable parameter of VehiclePhysDefClass?
 const float		WHEEL_FRICTION_PENALTY_CONSTANT			= 1.0f / 7.5f;
@@ -23,8 +22,6 @@ const Vector3	TRACTIVE_FORCE_COLOR						= Vector3(1,0,0);
 // Note, each "real" wheel gets an equal fraction of this, so if you have 4 wheels, the max 
 // acceleration any single wheel will exert is one quarter of the total.
 const float		MAX_SUSPENSION_ACCEL = 50.0f;
-
-
 
 /*
 ** Wheels:  An instance of this object will contain information on each
@@ -67,7 +64,6 @@ const float		MAX_SUSPENSION_ACCEL = 50.0f;
 	SuspensionElementClass Implementation
 
 *********************************************************************************************************/
-
 
 /***********************************************************************************************
  * SuspensionElementClass::SuspensionElementClass -- Constructor                               *
@@ -112,7 +108,6 @@ SuspensionElementClass::SuspensionElementClass(void):
 {
 }
 
-
 /***********************************************************************************************
  * SuspensionElementClass::~SuspensionElementClass -- Destructor                               *
  *                                                                                             *
@@ -142,7 +137,6 @@ SuspensionElementClass::~SuspensionElementClass(void)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * SuspensionElementClass::Init -- Initialization, pass in bone indices for this wheel         *
@@ -210,7 +204,6 @@ void SuspensionElementClass::Init(VehiclePhysClass * obj,int pbone,int rbone,int
 		ObjWheelTM.Get_Translation(&pos);
 		Matrix3D::Inverse_Transform_Vector(ObjForkTM,pos,&pos);
 
-
 		ForkZ = pos.Z;
 		ForkSin0 = pos.Z / ForkLength;
 		ForkCos0 = pos.X / ForkLength;
@@ -230,7 +223,6 @@ void SuspensionElementClass::Init(VehiclePhysClass * obj,int pbone,int rbone,int
 		TranslationScale = 1.0f / Vector3::Dot_Product(ObjAxis,springdir);
 	}
 }
-
 
 /***********************************************************************************************
  * SuspensionElementClass::Intersect_Spring -- Intersect the suspension spring with the terrai *
@@ -317,7 +309,6 @@ void SuspensionElementClass::Non_Physical_Intersect_Spring(float suspension_frac
 	ContactSurface = 0;
 }
 
-
 /***********************************************************************************************
  * SuspensionElementClass::Update_Model -- Update the wheel transforms in the model.           *
  *                                                                                             *
@@ -348,7 +339,6 @@ void SuspensionElementClass::Update_Model(void)
 	}
 }
 
-
 /***********************************************************************************************
  * SuspensionElementClass::Non_Physical_Update -- Update the wheel transforms in the model.           *
  *                                                                                             *
@@ -378,8 +368,6 @@ void SuspensionElementClass::Non_Physical_Update(float suspension_fraction,float
 		Translate_Wheel(model);
 	}
 }
-
-
 
 /***********************************************************************************************
  * SuspensionElementClass::Translate_Wheel_On_Axis -- Translates the wheel to the contact poin *
@@ -414,7 +402,6 @@ void SuspensionElementClass::Translate_Wheel_On_Axis(RenderObjClass * model)
 		
 }
 
-
 /***********************************************************************************************
  * SuspensionElementClass::Translate_Wheel -- Translates the wheel to the contact point        *
  *                                                                                             *
@@ -446,7 +433,6 @@ void SuspensionElementClass::Translate_Wheel(RenderObjClass * model)
 
 	model->Control_Bone(PositionBone,position_tm);
 }
-
 
 /***********************************************************************************************
  * SuspensionElementClass::Rotate_Fork -- Rotates the "fork" until the wheel touches           *
@@ -501,13 +487,11 @@ void SuspensionElementClass::Rotate_Fork(RenderObjClass * model)
 	model->Control_Bone(ForkBone,fork_rotation);
 }
 
-
 /*********************************************************************************************************
 
 	WheelClass Implementation
 
 *********************************************************************************************************/
-
 
 /***********************************************************************************************
  * WheelClass::WheelClass -- Constructor                                                       *
@@ -533,7 +517,6 @@ WheelClass::WheelClass(void) :
 {
 }
 
-
 /***********************************************************************************************
  * WheelClass::~WheelClass -- Destructor                                                       *
  *                                                                                             *
@@ -557,7 +540,6 @@ WheelClass::~WheelClass(void)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * WheelClass::Init -- Initialize the wheel object                                             *
@@ -605,8 +587,6 @@ void WheelClass::Init
 		Radius = (WheelP0 - rotation_tm.Get_Translation()).Length();
 	} 
 }
-
-
 
 /***********************************************************************************************
  * WheelClass::Compute_Force_And_Torque -- Computes wheel forces                               *
@@ -701,7 +681,6 @@ if (sum.Length2() < 0.001f) {
 	Apply_Forces(force,torque);
 }
 
-
 /***********************************************************************************************
  * WheelClass::Compute_Suspension_Force -- Computes the suspension force                       *
  *                                                                                             *
@@ -738,7 +717,6 @@ void WheelClass::Compute_Suspension_Force(const Vector3 & pdot,const Vector3 & l
 	*suspension_force = Normal;
 	*suspension_force *= sforce;
 }
-
 
 /***********************************************************************************************
  * WheelClass::Apply_Forces -- Computes the final forces and adds them in.                     *
@@ -788,7 +766,6 @@ void WheelClass::Apply_Forces(Vector3 * force,Vector3 * torque)
 
 	// Debugging
 }
-
 
 /***********************************************************************************************
  * WheelClass::Get_Ideal_Drive_Wheel_Angular_Velocity -- Computes the current angular velocity *
@@ -899,7 +876,6 @@ void WVWheelClass::Compute_Traction_Forces
 	}
 }
 
-
 void WVWheelClass::Update_Model(void)
 {
 	WheelClass::Update_Model();
@@ -919,7 +895,6 @@ void WVWheelClass::Non_Physical_Update(float suspension_fraction,float rotation)
 	rotation_tm.Rotate_Z(rotation);
 	model->Control_Bone(RotationBone,rotation_tm);
 }
-
 
 void WVWheelClass::Roll_Wheel(void)
 {
@@ -950,7 +925,6 @@ void WVWheelClass::Roll_Wheel(void)
 			}
 			
 			Rotation += RotationDelta;
-
 
 		} else {
 			
@@ -1044,7 +1018,6 @@ void TrackWheelClass::Compute_Traction_Forces
 	*set_lateral_force = wheel_force.Y;
 }
 
-
 void TrackWheelClass::Update_Model(void)
 {
 	WheelClass::Update_Model();
@@ -1064,7 +1037,6 @@ void TrackWheelClass::Non_Physical_Update(float suspension_fraction,float rotati
 	rotation_tm.Rotate_Z(rotation);
 	model->Control_Bone(RotationBone,rotation_tm);
 }
-
 
 void TrackWheelClass::Roll_Wheel(void)
 {
@@ -1095,8 +1067,6 @@ void TrackWheelClass::Roll_Wheel(void)
 	else if (Rotation < 0.0f) Rotation += 2.0f*(float)WWMATH_PI;
 	LastPoint = Contact;
 }
-
-
 
 /*************************************************************************************
 

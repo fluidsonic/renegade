@@ -1,7 +1,6 @@
 #include "dx8polygonrenderer.h"
 #include "dx8renderer.h"
 
-
 // ----------------------------------------------------------------------------
 
 DX8PolygonRendererClass::DX8PolygonRendererClass(

@@ -19,7 +19,6 @@
 #include "vector3i.h"
 #include "visrasterizer.h"
 
-
 #define RING_NUM_LOD	(20)
 #define RING_LOWEST_LOD (3)
 #define RING_HIGHEST_LOD (30)
@@ -28,7 +27,6 @@
 #define RING_SORT_LEVEL		1		// the static sort level for all rings (when enabled)
 
 static bool Ring_Array_Valid = false;
-
 
 /**
 ** RingMeshClass
@@ -73,15 +71,11 @@ private:
 	TriIndex	*tri_poly;	// array of triangle polys, vertex indices (can be discard if switch to fan renderer)
 };
 
-
 RingMeshClass RingMeshArray[RING_NUM_LOD];
-
-
 
 /*
 ** RingRenderObjClass Implementation
 */
-
 
 /***********************************************************************************************
  * RingRenderObjClass::RingRenderObjClass -- Constructor                                   *
@@ -175,7 +169,6 @@ RingRenderObjClass::RingRenderObjClass(const W3dRingStruct & def)
 #endif
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::RingRenderObjClass -- Copy constructor                              *
  *                                                                                             *
@@ -217,7 +210,6 @@ RingRenderObjClass::RingRenderObjClass(const RingRenderObjClass & src)
 #endif
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::~RingRenderObjClass -- destructor                                       *
  *                                                                                             *
@@ -235,7 +227,6 @@ RingRenderObjClass::~RingRenderObjClass()
 	REF_PTR_RELEASE(RingMaterial);
 	REF_PTR_RELEASE(RingTexture);
 } // destructor
-
 
 /***********************************************************************************************
  * RingRenderObjClass::operator -- assignment operator                                       *
@@ -278,7 +269,6 @@ RingRenderObjClass & RingRenderObjClass::operator = (const RingRenderObjClass & 
 
 	return *this;
 }
-
 
 /***********************************************************************************************
  * RingRenderObjClass::Generate_Shared_Mesh_Arrays  -- Generates mesh LOD arrays.				  *
@@ -343,8 +333,6 @@ void RingRenderObjClass::Init_Material (void)
 
 }	// Init_Material
 
-
-
 /***********************************************************************************************
  * RingRenderObjClass::Get_Num_Polys -- returns number of polygons                           *
  *                                                                                             *
@@ -379,7 +367,6 @@ void RingRenderObjClass::Set_Texture(TextureClass *tf)
 	REF_PTR_SET(RingTexture,tf);
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Get_Name -- returns name                                              *
  *                                                                                             *
@@ -396,7 +383,6 @@ const char * RingRenderObjClass::Get_Name(void) const
 {
 	return Name;
 }
-
 
 /***********************************************************************************************
  * RingRenderObjClass::Set_Name -- sets the name                                             *
@@ -503,7 +489,6 @@ void RingRenderObjClass::render_ring(RenderInfoClass & rinfo,const Vector3 & cen
 
 } // render_ring
 
-
 /***********************************************************************************************
  * RingRenderObjClass::vis_render_ring -- submits box to the GERD for VIS                      *
  *                                                                                             *
@@ -522,7 +507,6 @@ void RingRenderObjClass::vis_render_ring(SpecialRenderInfoClass & rinfo,const Ve
 {
 }	// vis_render_ring
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Clone -- clones the ring                                                *
  *                                                                                             *
@@ -540,7 +524,6 @@ RenderObjClass * RingRenderObjClass::Clone(void) const
 	return new RingRenderObjClass(*this);
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Class_ID -- returns the class-id for Rings's                            *
  *                                                                                             *
@@ -557,7 +540,6 @@ int RingRenderObjClass::Class_ID(void) const
 {
 	return RenderObjClass::CLASSID_RING;
 }
-
 
 /***********************************************************************************************
  * RingRenderObjClass::Render -- render this box                                              *
@@ -612,9 +594,7 @@ void RingRenderObjClass::Render(RenderInfoClass & rinfo)
 
 		CurrentLOD = lod_int;
 
-
 		// End LOD Determination
-
 
 		Matrix3D temp = Transform;
 
@@ -667,7 +647,6 @@ void RingRenderObjClass::Render(RenderInfoClass & rinfo)
 	}
 }	// Render
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Get_Default_Color - get the default (or first frame) value				  *
  *                                                                                             *
@@ -692,7 +671,6 @@ Vector3 RingRenderObjClass::Get_Default_Color(void) const
 
 	return value;
 }
-
 
 /***********************************************************************************************
  * RingRenderObjClass::Get_Default_Alpha - get the default (or first frame) value				  *
@@ -719,7 +697,6 @@ float RingRenderObjClass::Get_Default_Alpha(void) const
 	return value;
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Get_Default_Inner_Scale - get the default (or first frame) value		  *
  *                                                                                             *
@@ -744,7 +721,6 @@ Vector2 RingRenderObjClass::Get_Default_Inner_Scale(void) const
 
 	return value;
 }
-
 
 /***********************************************************************************************
  * RingRenderObjClass::Get_Default_Outer_Scale - get the default (or first frame) value		  *
@@ -771,7 +747,6 @@ Vector2 RingRenderObjClass::Get_Default_Outer_Scale(void) const
 	return value;
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Special_Render -- special render this box (vis)                        *
  *                                                                                             *
@@ -795,7 +770,6 @@ void RingRenderObjClass::Special_Render(SpecialRenderInfoClass & rinfo)
 	}
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Set_Transform -- set the transform for this box                        *
  *                                                                                             *
@@ -813,7 +787,6 @@ void RingRenderObjClass::Set_Transform(const Matrix3D &m)
 	RenderObjClass::Set_Transform(m);
 	update_cached_box();
 }
-
 
 /***********************************************************************************************
  * RingRenderObjClass::Set_Position -- Set the position of this box                           *
@@ -833,7 +806,6 @@ void RingRenderObjClass::Set_Position(const Vector3 &v)
 	update_cached_box();
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::update_cached_box -- update the world-space version of this box        *
  *                                                                                             *
@@ -851,7 +823,6 @@ void RingRenderObjClass::update_cached_box(void)
 	CachedBox.Center = Transform.Get_Translation() + ObjSpaceCenter;
 	CachedBox.Extent = ObjSpaceExtent;
 }
-
 
 /***********************************************************************************************
  * RingRenderObjClass::Get_Obj_Space_Bounding_Ring -- return the object-space bounding sphe *
@@ -871,7 +842,6 @@ void RingRenderObjClass::Get_Obj_Space_Bounding_Sphere(SphereClass & sphere) con
 	sphere.Radius = ObjSpaceExtent.Length();
 }
 
-
 /***********************************************************************************************
  * RingRenderObjClass::Get_Obj_Space_Bounding_Box -- returns the obj-space bounding box       *
  *                                                                                             *
@@ -889,7 +859,6 @@ void RingRenderObjClass::Get_Obj_Space_Bounding_Box(AABoxClass & box) const
 	box.Center = ObjSpaceCenter;
 	box.Extent = ObjSpaceExtent;
 }
-
 
 /***********************************************************************************************
  * SphereRenderObjClass::Update_On_Visibilty	-- Either starts or stops the animation based on visibility*
@@ -976,7 +945,6 @@ void RingRenderObjClass::animate()
 
 	return ;
 } // animate
-
 
 /*
 ** RingLoaderClass Implementation
@@ -1181,7 +1149,6 @@ RenderObjClass * RingPrototypeClass::Create(void)
 */
 RingLoaderClass _RingLoader;
 
-
 //
 // Vertices are ordered as such
 //  center, followed by outer ring
@@ -1243,7 +1210,6 @@ OuterScale (1.0F, 1.0F)
 {
 } // empty ringmesh Constructor
 
-
 void RingMeshClass::Set_Tiling (int count)
 {
 	if (TileCount != count) {
@@ -1267,7 +1233,6 @@ void RingMeshClass::Set_Tiling (int count)
 
 	return ;
 }
-
 
 void RingMeshClass::Scale (const Vector2 &inner_scale, const Vector2 &outer_scale)
 {
@@ -1304,7 +1269,6 @@ void RingMeshClass::Scale (const Vector2 &inner_scale, const Vector2 &outer_scal
 
 	return ;
 }
-
 
 /***********************************************************************************************
  * RingMeshClass::Generate - Create Ring Geometry                                              *
@@ -1389,7 +1353,6 @@ void RingMeshClass::Generate(float radius, int slices)
 
 	return ;
 }
-
 
 /***********************************************************************************************
  * RingMeshClass::~RingMeshClass -- Destructor                                                 *

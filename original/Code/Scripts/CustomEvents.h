@@ -82,7 +82,6 @@ typedef enum {
 
 } SCRIPT_CUSTOMEVENT;
 
-
 // Script timer IDs
 typedef enum {
 	// Global timers 0-99

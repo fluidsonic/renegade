@@ -69,7 +69,6 @@ private:
 
 };
 
-
 /**
 ** HumanPhysDefClass - Initialization Structure/Factory/Editor Integration for a HumanPhysClass
 */

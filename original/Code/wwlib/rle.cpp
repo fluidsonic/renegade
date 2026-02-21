@@ -3,7 +3,6 @@
 #include	<assert.h>
 #include	<stdlib.h>
 
-
 /*********************************************************************************************** 
  * RLEEngine::Compress -- Compresses a sequence of bytes.                                      * 
  *                                                                                             * 
@@ -81,7 +80,6 @@ int RLEEngine::Compress(void const * source, void * dest, int length) const
 	return(outlen);
 }
 
-
 /*********************************************************************************************** 
  * RLEEngine::Line_Compress -- Compress a line of data.                                        * 
  *                                                                                             * 
@@ -126,7 +124,6 @@ int RLEEngine::Line_Compress(void const * source, void * dest, int length) const
 	*/
 	return(Compress(source, NULL, length) + sizeof(short));
 }
-
 
 /*********************************************************************************************** 
  * RLEEngine::Decompress -- Decompress a sequence of RLE compressed bytes.                     * 
@@ -185,7 +182,6 @@ int RLEEngine::Decompress(void const * source, void * dest, int length) const
 	*/
 	return(dptr - (unsigned char const *)dest);
 }
-
 
 /*********************************************************************************************** 
  * RLEEngine::Line_Decompress -- Decompresses a line-compressed RLE data sequence.             * 

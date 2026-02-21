@@ -2,7 +2,6 @@
 #include "listctrl.h"
 #include "cheatmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CheatOptionsMenuClass
@@ -13,7 +12,6 @@ CheatOptionsMenuClass::CheatOptionsMenuClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -33,7 +31,6 @@ CheatOptionsMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -45,7 +42,6 @@ CheatOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

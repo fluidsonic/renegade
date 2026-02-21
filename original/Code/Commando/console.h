@@ -14,10 +14,6 @@
 #endif
 
 
-class WWProfileIterator;
-
-
-
 #define	Get_Console()		ConsoleGameModeClass::Get_Instance()
 
 /*
@@ -25,7 +21,7 @@ class WWProfileIterator;
 */
 class	ConsoleGameModeClass : public GameModeClass {
 public:
-	
+
 	virtual	const char *Name()	{ return "Console"; }	// the name of this mode
 	virtual	void	Init();		 	// called when the mode is activated
 	virtual	void 	Shutdown(); 	// called when the mode is deactivated
@@ -40,8 +36,6 @@ public:
 	void		Toggle_Player_Position( void )							{ ShowPlayerPosition = !ShowPlayerPosition; }
 	void		Set_Player_Position( Vector3 & pos, float facing )	{ PlayerPosition = pos; PlayerFacing = facing; }
 
-	void		Profile_Command( const char * command );
-
 	static	ConsoleGameModeClass * Get_Instance() { return Instance; }
 
 	static void Load_Registry_Keys(void);
@@ -52,8 +46,8 @@ private:
 	void		Clear_Suggestion(void);
 	void		Accept_Suggestion(char * cmd);
 	void		Update_Suggestion(char * cmd,bool go_to_next);
-	
-	enum { 
+
+	enum {
 		MAX_INPUT_LINE_LENGTH		= 100,
 		MAX_DRAWER_CHARS				= 4000,
 	};
@@ -73,15 +67,6 @@ private:
 	Vector3	PlayerPosition;
 	float		PlayerFacing;
 
-	// Profile Display
-	WWProfileIterator	* ProfileIterator;
-
-	void		Update_Profile( void );
-	void		Begin_Profile_Log( void );
-	void		End_Profile_Log( void );
-	void		Process_Profile_Log( void );
-	void		Update_Memory_Log( void );
-
 	bool	PerformanceSamplingActive;
    DWORD ConsoleInputType;
    int   PromptLength;
@@ -89,7 +74,5 @@ private:
 
 	static ConsoleGameModeClass * Instance;
 };
-
-
 
 #endif

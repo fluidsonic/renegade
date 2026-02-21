@@ -577,7 +577,6 @@ void DX8Caps::Compute_Caps(WW3DFormat display_format, const D3DADAPTER_IDENTIFIE
 		adapter_id.DeviceIdentifier.Data4[6],
 		adapter_id.DeviceIdentifier.Data4[7]));
 
-
 	SupportNPatches = ((Caps.DevCaps&D3DDEVCAPS_NPATCHES)==D3DDEVCAPS_NPATCHES);
 	SupportZBias = ((Caps.RasterCaps&D3DPRASTERCAPS_ZBIAS)==D3DPRASTERCAPS_ZBIAS);
 	supportGamma=((Caps.Caps2&D3DCAPS2_FULLSCREENGAMMA)==D3DCAPS2_FULLSCREENGAMMA);
@@ -972,7 +971,6 @@ void DX8Caps::Vendor_Specific_Hacks(const D3DADAPTER_IDENTIFIER8& adapter_id)
 			SupportAnisotropicFiltering=false;
 		}
 
-
 	}
 
 	if (VendorId==VENDOR_3DFX) {
@@ -1017,7 +1015,6 @@ void DX8Caps::Vendor_Specific_Hacks(const D3DADAPTER_IDENTIFIER8& adapter_id)
 			MaxTexturesPerPass=1;
 			CanDoMultiPass=false;
 		}
-
 
 	}
 }

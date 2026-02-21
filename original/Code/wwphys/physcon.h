@@ -5,7 +5,6 @@
 #include "always.h"
 #include "vector3.h"
 
-
 class ChunkLoadClass;
 class ChunkSaveClass;
 
@@ -99,6 +98,5 @@ public:
 	static float	OverrideFriction;
 	static float	OverrideDrag;
 };
-
 
 #endif PHYSCON_H

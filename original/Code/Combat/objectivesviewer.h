@@ -66,5 +66,4 @@ private:
 	TextWindowClass *	TextWindow;
 };
 
-
 #endif //__OBJECTIVES_VIEWER_H

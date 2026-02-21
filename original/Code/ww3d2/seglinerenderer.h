@@ -11,12 +11,9 @@ class RenderInfoClass;
 class SphereClass;
 struct W3dEmitterLinePropertiesStruct;
 
-
 // The maximum allowable level of subdivision. This should be no more than 7 to avoid increasing
 // the chunk buffer size too much
 #define MAX_SEGLINE_SUBDIV_LEVELS 7
-
-
 
 /**
 ** SegLineRendererClass
@@ -140,8 +137,6 @@ private:
 	friend class SegmentedLineClass;
 };
 
-
-
 inline SegLineRendererClass::TextureMapMode SegLineRendererClass::Get_Texture_Mapping_Mode(void) const
 { 
 	return (TextureMapMode)((Bits & TEXTURE_MAP_MODE_MASK) >> TEXTURE_MAP_MODE_OFFSET); 
@@ -162,7 +157,6 @@ inline void SegLineRendererClass::Set_UV_Offset_Rate(const Vector2 &rate)
 {
 	UVOffsetDeltaPerMS = rate * 0.001f;
 }
-
 
 #endif //SEGLINERENDERER_H
 

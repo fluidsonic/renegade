@@ -4,13 +4,11 @@
 #include "always.h"
 #include "vector3.h"
 
-
 class ChunkLoadClass;
 class ChunkSaveClass;
 class PhysClass;
 class DynTexProjectClass;
 class DynamicShadowManagerDefClass;
-
 
 /**
 ** DynamicShadowManagerClass
@@ -73,7 +71,6 @@ protected:
 	Vector3							BlobBoxProjectionScale;
 };
 
-
 inline void DynamicShadowManagerClass::Set_Shadow_Planes(float znear,float zfar)
 {
 	ShadowNearZ = znear;
@@ -85,7 +82,6 @@ inline void DynamicShadowManagerClass::Get_Shadow_Planes(float * set_znear,float
 	*set_znear = ShadowNearZ;
 	*set_zfar = ShadowFarZ;
 }
-
 
 #endif // DYNAMICSHADOWMANAGER_H
 

@@ -11,7 +11,6 @@
 #include "v3_rnd.h"
 #include "meshgeometry.h"
 
-
 /* We have chunking logic which handles N segments at a time. To simplify the subdivision logic,
 ** we will ensure that N is a power of two and that N >= 2^MAX_SEGLINE_SUBDIV_LEVELS, so that the
 ** subdivision logic can be inside the chunking loop.
@@ -26,9 +25,6 @@
 #define MAX_SEGLINE_POINT_BUFFER_SIZE (1 + SEGLINE_CHUNK_SIZE)
 // This macro depends on the assumption that each line segment is two polys.
 #define MAX_SEGLINE_POLY_BUFFER_SIZE (SEGLINE_CHUNK_SIZE * 2)
-
-
-
 
 SegLineRendererClass::SegLineRendererClass(void) :
 		Texture(NULL),
@@ -121,7 +117,6 @@ void SegLineRendererClass::Init(const W3dEmitterLinePropertiesStruct & props)
 	Set_UV_Offset_Rate(Vector2(props.UPerSec,props.VPerSec));
 }
 
-
 void SegLineRendererClass::Set_Texture(TextureClass *texture)
 { 
 	REF_PTR_SET(Texture,texture); 
@@ -155,8 +150,6 @@ void SegLineRendererClass::Reset_Line(void)
 	LastUsedSyncTime = WW3D::Get_Sync_Time();
 	CurrentUVOffset.Set(0.0f,0.0f);
 }
-
-
 
 void SegLineRendererClass::Render
 (	
@@ -219,7 +212,6 @@ void SegLineRendererClass::Render
 		unsigned int sidx;	// Segment index
 		unsigned int iidx;	// Intersection index
 
-
 		/*
 		** Transform points in chunk from objectspace to eyespace:
 		*/
@@ -234,7 +226,6 @@ void SegLineRendererClass::Render
 
 		VectorProcessorClass::Transform(&xformed_pts[0],
 			&points[chidx], modelview, point_cnt);
-
 
 		/*
 		** Prepare v parameter per point - used for texture mapping (esp. tiled mapping mode)
@@ -269,7 +260,6 @@ void SegLineRendererClass::Render
 				break;
 		}
 
-
 		/*
 		** Fractal noise recursive subdivision:
 		** We find the midpoint for each section, apply a random offset, and recurse. We also find
@@ -287,7 +277,6 @@ void SegLineRendererClass::Render
 		Vector3 *points = xformed_subdiv_pts;
 		float *tex_v = subdiv_tex_v;
 		point_cnt = sub_point_cnt;
-
 
 		/*
 		** Calculate line segment edge planes:
@@ -417,7 +406,6 @@ void SegLineRendererClass::Render
 
 		// The two dummy segments for the clipping edges of the first and last real segments will be
 		// defined later, with the first and last intersections.
-
 
 		/*
 		** Calculate segment edge intersections:
@@ -642,7 +630,6 @@ void SegLineRendererClass::Render
 			}
 
 		}	// for iidx
-
 
 		/*
 		** Intersection merging: when an intersection is inside an adjacent segment and certain
@@ -1043,7 +1030,6 @@ void SegLineRendererClass::Render
 			shader.Set_Texturing(ShaderClass::TEXTURING_DISABLE);
 		}
 
-
 		/*
 		** Render
 		*/		
@@ -1103,7 +1089,6 @@ void SegLineRendererClass::Render
 	DX8Wrapper::Set_Transform(D3DTS_VIEW,view);
 
 }
-
 
 void SegLineRendererClass::subdivision_util(unsigned int point_cnt, const Vector3 *xformed_pts,
 	const float *base_tex_v, unsigned int *p_sub_point_cnt, Vector3 *xformed_subdiv_pts,
@@ -1180,7 +1165,5 @@ void SegLineRendererClass::subdivision_util(unsigned int point_cnt, const Vector
 	// Output:
 	*p_sub_point_cnt = sub_pidx;
 }
-
-
 
 #endif //0

@@ -2,7 +2,6 @@
 #include	"pkpipe.h"
 #include	<string.h>
 
-
 /***********************************************************************************************
  * PKPipe::PKPipe -- Constructor for the public key pipe object.                               *
  *                                                                                             *
@@ -30,7 +29,6 @@ PKPipe::PKPipe(CryptControl control, RandomStraw & rnd) :
 	BytesLeft(0)
 {
 }
-
 
 /***********************************************************************************************
  * PKPipe::Put_To -- Chains one pipe to another.                                               *
@@ -68,7 +66,6 @@ void PKPipe::Put_To(Pipe * pipe)
 	}
 }
 
-
 /***********************************************************************************************
  * PKPipe::Key -- Submit a key to enable processing of data flow.                              *
  *                                                                                             *
@@ -102,7 +99,6 @@ void PKPipe::Key(PKey const * key)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * PKPipe::Put -- Submit data to the pipe for processing.                                      *
@@ -197,7 +193,6 @@ int PKPipe::Put(void const * source, int length)
 	return(total);
 }
 
-
 /***********************************************************************************************
  * PKPipe::Encrypted_Key_Length -- Fetch the encrypted key length.                             *
  *                                                                                             *
@@ -219,7 +214,6 @@ int PKPipe::Encrypted_Key_Length(void) const
 	if (CipherKey == NULL) return(0);
 	return(CipherKey->Block_Count(BLOWFISH_KEY_SIZE) * CipherKey->Crypt_Block_Size());
 }
-
 
 /***********************************************************************************************
  * PKPipe::Plain_Key_Length -- Returns the number of bytes to encrypt key.                     *

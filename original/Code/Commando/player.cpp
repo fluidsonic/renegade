@@ -29,7 +29,6 @@
 #include "playerkill.h"
 #include "consolemode.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cPlayer, NETCLASSID_PLAYER);
 
 //
@@ -184,7 +183,6 @@ void cPlayer::On_Create(void)
    //
 
    if (!IS_MISSION && cPlayerManager::Is_Player_Present(cNetwork::Get_My_Id())) {
-
 
       if (cNetwork::Show_Welcome_Message(Name)) {
          switch (PlayerType) {
@@ -642,7 +640,6 @@ void cPlayer::Reset_Total_Time(void)
 void cPlayer::Set_Ip_Address(ULONG ip_address)
 {
 
-
 	IpAddress = ip_address;
 }
 
@@ -680,7 +677,6 @@ void cPlayer::Increment_Kills(void)
 		return;
 	}
 
-
    Set_Kills((int)Kills + 1);
 }
 
@@ -690,7 +686,6 @@ void cPlayer::Increment_Deaths(void)
 	if (!CombatManager::Is_Gameplay_Permitted()) {
 		return;
 	}
-
 
    Set_Deaths((int)Deaths + 1);
 }
@@ -754,7 +749,6 @@ void cPlayer::Export_Creation(BitStreamClass &packet)
 void cPlayer::Import_Creation(BitStreamClass &packet)
 {
 	NetworkObjectClass::Import_Creation(packet);
-
 
 	packet.Get_Wide_Terminated_String(Name.Get_Buffer(256), 256);
 }
@@ -854,7 +848,6 @@ void cPlayer::Set_Is_Active(bool flag)
 			}
 		}
 
-
 		IsActive.Set(flag);
 
 		Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
@@ -870,5 +863,4 @@ bool cPlayer::Is_Alive_And_Kicking(void) const
 
 	return Is_Human() && IsInGame.Is_True() && IsActive.Is_True();
 }
-
 

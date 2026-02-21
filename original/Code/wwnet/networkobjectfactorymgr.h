@@ -44,5 +44,4 @@ private:
 	static NetworkObjectFactoryClass *	_FactoryListHead;
 };
 
-
 #endif //__NETWORK_OBJECT_FACTORY_MGR_H

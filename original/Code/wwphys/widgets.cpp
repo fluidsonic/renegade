@@ -8,8 +8,6 @@
 #include "rendobj.h"
 #include "ramfile.h"
 
-
-
 void WidgetSystem::Init_Debug_Widgets(void)
 {
 }

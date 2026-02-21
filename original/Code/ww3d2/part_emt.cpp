@@ -10,7 +10,6 @@
 #include "texture.h"
 #include "part_ldr.h"
 
-
 // Global variable which is only used to communicate the worldspace emitter
 // velocity from ParticleEmitterClass::Create_New_Particles() to
 // ParticleEmitterClass::Initialize_Particle(), for velocity inheritance.
@@ -25,7 +24,6 @@ bool ParticleEmitterClass::DebugDisable = false;
 // (gth) 09/17/2000 - particle emitters now have a local RemoveOnComplete flag
 // which is initialized to the state of DefaultRemoveOnComplete.
 bool ParticleEmitterClass::DefaultRemoveOnComplete = true;
-
 
 ParticleEmitterClass::ParticleEmitterClass(float emit_rate, unsigned int burst_size,
 			Vector3Randomizer *pos_rnd, Vector3 base_vel, Vector3Randomizer *vel_rnd, float out_vel,
@@ -82,7 +80,6 @@ ParticleEmitterClass::ParticleEmitterClass(float emit_rate, unsigned int burst_s
 	NameString = ::_strdup ("ParticleEmitter");
 }
 
-
 ParticleEmitterClass::ParticleEmitterClass(const ParticleEmitterClass & src) :
 	IsInScene(false),
 	RenderObjClass(src)
@@ -123,7 +120,6 @@ ParticleEmitterClass::ParticleEmitterClass(const ParticleEmitterClass & src) :
 	NameString = ::_strdup (src.NameString);
 }
 
-
 ParticleEmitterClass & ParticleEmitterClass::operator = (const ParticleEmitterClass & that)
 {
 	RenderObjClass::operator = (that);
@@ -134,7 +130,6 @@ ParticleEmitterClass & ParticleEmitterClass::operator = (const ParticleEmitterCl
 
 	return * this;
 }
-
 
 ParticleEmitterClass::~ParticleEmitterClass(void)
 {
@@ -158,7 +153,6 @@ ParticleEmitterClass::~ParticleEmitterClass(void)
 
 	return ;
 }
-
 
 ParticleEmitterClass *
 ParticleEmitterClass::Create_From_Definition (const ParticleEmitterDefClass &definition)
@@ -386,18 +380,15 @@ void ParticleEmitterClass::Start(void)
 	}
 }
 
-
 void ParticleEmitterClass::Stop(void)
 {
 	Active = false;
 }
 
-
 bool ParticleEmitterClass::Is_Stopped(void)
 {
 	return (Active == false);
 }
-
 
 void ParticleEmitterClass::Set_Position_Randomizer(Vector3Randomizer *rand)
 {
@@ -407,7 +398,6 @@ void ParticleEmitterClass::Set_Position_Randomizer(Vector3Randomizer *rand)
 	}
 	PosRand = rand;
 }
-
 
 void ParticleEmitterClass::Set_Velocity_Randomizer(Vector3Randomizer *rand)
 {
@@ -421,7 +411,6 @@ void ParticleEmitterClass::Set_Velocity_Randomizer(Vector3Randomizer *rand)
 	}
 }
 
-
 Vector3Randomizer *ParticleEmitterClass::Get_Creation_Volume (void) const
 {
 	Vector3Randomizer *randomizer = NULL;
@@ -431,7 +420,6 @@ Vector3Randomizer *ParticleEmitterClass::Get_Creation_Volume (void) const
 	}
 	return randomizer;
 }
-
 
 Vector3Randomizer *ParticleEmitterClass::Get_Velocity_Random (void) const	
 {
@@ -448,18 +436,15 @@ void ParticleEmitterClass::Set_Base_Velocity(const Vector3& base_vel)
 	BaseVel = base_vel * 0.001f;	// Convert from seconds to ms
 }
 
-
 void ParticleEmitterClass::Set_Outwards_Velocity(float out_vel)
 {
 	OutwardVel = out_vel * 0.001f;	// Convert from seconds to ms
 }
 
-
 void ParticleEmitterClass::Set_Velocity_Inheritance_Factor(float inh_factor)
 {
 	VelInheritFactor = inh_factor;
 }
-
 
 // Emit particles (put in particle buffer). This is called by the particle
 // buffer On_Frame_Update() function to avoid order dependence.
@@ -485,7 +470,6 @@ void ParticleEmitterClass::Emit(void)
 	}
 }
 
-
 // Collision sphere is a point - emitter emits also when not visible, so this
 // is only important to avoid affecting the collision spheres of composite
 // objects into which the emitter is inserted.
@@ -496,7 +480,6 @@ void ParticleEmitterClass::Update_Cached_Bounding_Volumes(void) const
 	CachedBoundingBox.Extent.Set(0,0,0);
 	Validate_Cached_Bounding_Volumes();
 }
-
 
 // Note that creation location and velocity are in local coordinates, so new
 // particles need to be transformed into worldspace. It is important to get
@@ -594,7 +577,6 @@ void ParticleEmitterClass::Create_New_Particles(const Quaternion & curr_quat, co
 	}
 }
 
-
 // Initialize one new particle at the given NewParticleStruct address, with
 // the given age and emitter transform (expressed as a quaternion and origin
 // vector). (must check if address is NULL).
@@ -646,7 +628,6 @@ void ParticleEmitterClass::Initialize_Particle(NewParticleStruct * newpart,
 	// Rotate velocity to worldspace and add emitter's inherited velocity.
 	newpart->Velocity = InheritedWorldSpaceEmitterVel + quat.Rotate_Vector(rand_vel);
 }
-
 
 ParticleEmitterDefClass *
 ParticleEmitterClass::Build_Definition (void) const
@@ -745,7 +726,6 @@ ParticleEmitterClass::Build_Definition (void) const
 		if (blur_times.KeyTimes != NULL) delete [] blur_times.KeyTimes;
 		if (blur_times.Values != NULL) delete [] blur_times.Values;
 
-
 		//
 		// Set up the line parameters 
 		//
@@ -766,7 +746,6 @@ ParticleEmitterClass::Build_Definition (void) const
 	return pdefinition;
 }
 
-
 WW3DErrorType
 ParticleEmitterClass::Save (ChunkSaveClass &chunk_save) const
 {
@@ -784,7 +763,6 @@ ParticleEmitterClass::Save (ChunkSaveClass &chunk_save) const
 	return ret_val;
 }
 
-
 void
 ParticleEmitterClass::Set_Name (const char *pname)
 {
@@ -799,7 +777,6 @@ ParticleEmitterClass::Set_Name (const char *pname)
 	return ;
 }
 
-
 void
 ParticleEmitterClass::Update_On_Visibilty(void)
 {
@@ -813,7 +790,6 @@ ParticleEmitterClass::Update_On_Visibilty(void)
 
 	return ;
 }
-
 
 void
 ParticleEmitterClass::Add_Dependencies_To_List

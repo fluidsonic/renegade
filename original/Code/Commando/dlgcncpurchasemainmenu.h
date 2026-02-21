@@ -2,16 +2,13 @@
 #ifndef __DLGCNCPURCHASEMAINMENU_H
 #define __DLGCNCPURCHASEMAINMENU_H
 
-
 #include "menudialog.h"
 #include "purchasesettings.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class MPChatChildDialogClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -78,8 +75,6 @@ private:
 	int										MessageLogLength;
 	static bool								SecretsEnabled;
 };
-
-
 
 #endif //__DLGCNCPURCHASEMAINMENU_H
 

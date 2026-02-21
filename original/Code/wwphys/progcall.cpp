@@ -1,7 +1,5 @@
 #include "progcall.h"
 
-
-
 ProgressCallbackClass::ProgressCallbackClass(void)
 {
 	Reset();

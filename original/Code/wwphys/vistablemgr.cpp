@@ -2,7 +2,6 @@
 #include "vistable.h"
 #include "chunkio.h"
 
-
 const int VIS_LRU_FRAMES = 5;
 
 /**
@@ -120,7 +119,6 @@ VisDecompressionCacheClass::Release_Old_Tables(void)
 	}
 }
 
-
 /*******************************************************************************************
 **
 ** VisTableManagerClass Implemenation
@@ -144,9 +142,6 @@ enum
 	VISMGR_VARIABLE_VISOBJECTCOUNT,
 	VISMGR_VARIABLE_VISSECTORCOUNT,
 };
-
-
-
 
 VisTableMgrClass::VisTableMgrClass(void) :
 	VisSectorCount(0),
@@ -328,7 +323,6 @@ void VisTableMgrClass::Delete_All_Vis_Tables(void)
 	}
 }
 
-
 void VisTableMgrClass::Save(ChunkSaveClass & csave)
 {
 
@@ -355,7 +349,6 @@ void VisTableMgrClass::Save(ChunkSaveClass & csave)
 		}
 	}
 }
-
 
 void VisTableMgrClass::Load(ChunkLoadClass & cload)
 {
@@ -408,6 +401,4 @@ void VisTableMgrClass::Load(ChunkLoadClass & cload)
 		cload.Close_Chunk();
 	}
 }
-
-
 

@@ -11,7 +11,6 @@ class ChunkSaveClass;
 class ChunkLoadClass;
 class VisDecompressionCacheClass;
 
-
 /*
 ** VisTableMgrClass
 ** This class collects the visibility tables and vis-id allocation into one place. 
@@ -69,6 +68,5 @@ protected:
 	VisDecompressionCacheClass *							Cache;	
 	unsigned int												FrameCounter;
 };
-
 
 #endif

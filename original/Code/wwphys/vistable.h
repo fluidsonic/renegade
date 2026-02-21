@@ -107,8 +107,6 @@ protected:
 	friend class VisTableClass;
 };
 
-
-
 inline int VisTableClass::Get_Bit(int i) const
 { 
 
@@ -124,6 +122,5 @@ inline void VisTableClass::Set_Bit(int i,bool onoff)
 		Buffer[i>>5] &= ~(0x80000000u >> (i & 0x01F)); 
 	} 
 }
-
 
 #endif

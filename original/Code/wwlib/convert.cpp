@@ -5,7 +5,6 @@
 #include	"hsv.h"
 #include	"rlerle.h"
 
-
 ConvertClass::ConvertClass(PaletteClass const & artpalette, PaletteClass const & screenpalette, Surface const & surface) :
 	BBP(surface.Bytes_Per_Pixel()),
 	PlainBlitter(NULL),
@@ -118,7 +117,6 @@ ConvertClass::ConvertClass(PaletteClass const & artpalette, PaletteClass const &
 	}
 }
 
-
 ConvertClass::~ConvertClass(void)
 {
 	delete PlainBlitter;
@@ -167,7 +165,6 @@ ConvertClass::~ConvertClass(void)
 	RLETranslucent3Blitter = NULL;
 }
 
-
 Blitter const * ConvertClass::Blitter_From_Flags(ShapeFlags_Type flags) const
 {
 	if (flags & SHAPE_REMAP) return(RemapBlitter);
@@ -193,7 +190,6 @@ Blitter const * ConvertClass::Blitter_From_Flags(ShapeFlags_Type flags) const
 
 	return(TransBlitter);
 }
-
 
 RLEBlitter const * ConvertClass::RLEBlitter_From_Flags(ShapeFlags_Type flags) const
 {
@@ -224,7 +220,4 @@ RLEBlitter const * ConvertClass::RLEBlitter_From_Flags(ShapeFlags_Type flags) co
 
 	return(RLETransBlitter);
 }
-
-
-
 

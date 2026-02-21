@@ -2,15 +2,12 @@
 #ifndef __DLGCONFIGAUDIOTAB_H
 #define __DLGCONFIGAUDIOTAB_H
 
-
 //////////////////////////////////////////////////////////////////////
 //	Forward declarations
 //////////////////////////////////////////////////////////////////////
 class AudibleSoundClass;
 
-
 #include "childdialog.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -70,6 +67,5 @@ protected:
 	int						DialogVolumeTestSoundStartTime;
 	int						CinematicVolumeTestSoundStartTime;
 };
-
 
 #endif //__DLGCONFIGAUDIOTAB_H

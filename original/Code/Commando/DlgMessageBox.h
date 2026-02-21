@@ -45,7 +45,6 @@ class DlgMsgBoxEvent :
 		unsigned long mUserData;
 	};
 
-
 class DlgMsgBox :
 		public PopupDialogClass,
 		public Notifier<DlgMsgBoxEvent>

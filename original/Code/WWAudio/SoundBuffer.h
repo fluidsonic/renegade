@@ -8,10 +8,8 @@
 
 #include "RefCount.H"
 
-
 // Forward declarations
 class FileClass;
-
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -89,7 +87,6 @@ class SoundBufferClass : public RefCountClass
 		unsigned long			m_Type;
 };
 
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //	StreamSoundBufferClass
@@ -135,6 +132,5 @@ class StreamSoundBufferClass : public SoundBufferClass
 		//	Protected member data
 		//////////////////////////////////////////////////////////////////////		
 };
-
 
 #endif //__SOUNDBUFFER_H

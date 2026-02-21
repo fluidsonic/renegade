@@ -76,8 +76,6 @@ bit8 ConfigFile::getInt(char *key,sint32 &value)
   return(getInt(sKey,value));
 }    
 
-
-
 // Get a config entry as an integer
 bit8 ConfigFile::getInt(Wstring &key,sint16 &value)
 {
@@ -96,8 +94,6 @@ bit8 ConfigFile::getInt(char *key,sint16 &value)
   sKey.set(key);
   return(getInt(sKey,value));
 }
-
-
 
 /************* Static functions below **************/
 

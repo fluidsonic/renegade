@@ -7,7 +7,6 @@
 #include "render2dsentence.h"
 #include "bittype.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ShortcutBarCtrlClass
@@ -77,7 +76,6 @@ protected:
 	void				Send_Command (void);
 	void				Update_Pulse (void);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected data types
 	////////////////////////////////////////////////////////////////
@@ -109,6 +107,5 @@ protected:
 	float							BarOpacity;
 	float							PulseDirection;
 };
-
 
 #endif //__SHORTCUT_BAR_CTRL_H

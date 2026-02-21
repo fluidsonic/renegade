@@ -1,8 +1,6 @@
 #include "gameobjobserver.h"
 #include "simplevec.h"
 #include "chunkio.h"
-#include "debug.h"
-
 SimpleDynVecClass<GameObjObserverClass *>	  	PendingDeleteList;
 
 int	GameObjObserverManager::NextID	= 8000000;
@@ -65,7 +63,4 @@ bool	GameObjObserverManager::Load( ChunkLoadClass & cload )
 
 	return true;
 }
-
-
-
 

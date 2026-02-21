@@ -12,7 +12,6 @@
 
 #include "mathutil.h"
 
-
 //
 // Class statics
 //
@@ -88,8 +87,4 @@ void cMsgStat::Set_Name(LPCSTR name)
 
 	::strcpy(Name, name);
 }
-
-
-
-
 

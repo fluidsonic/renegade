@@ -39,7 +39,6 @@ class	CSAnnouncement :
 		AnnouncementEnum mType;
 	};
 
-
 class	SCAnnouncement :
 		public cNetEvent
 	{

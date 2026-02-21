@@ -6,7 +6,6 @@
 #include "obbox.h"
 #include "rbody.h"
 
-
 /**
 ** OctBoxClass
 ** This class encapsulates the collision detection algorithms used by Renegade's "rigid-body" 

@@ -8,7 +8,6 @@
 #include "camera.h"
 #include "phys.h"
 
-
 /***********************************************************************************************
 **
 ** GridEffectClass Implementation
@@ -16,7 +15,6 @@
 ***********************************************************************************************/
 
 const float DEFAULT_GRID_PARAMTER_RATE = 0.5f;
-
 
 GridEffectClass::GridEffectClass(void) :
 	CurrentParameter(0.0f),
@@ -53,7 +51,6 @@ GridEffectClass::GridEffectClass(void) :
 	MaterialPass->Set_Texture(PhysResourceMgrClass::Peek_Grid_Texture(),0);
 	MaterialPass->Set_Texture(PhysResourceMgrClass::Peek_Grid_Texture(),1);
 }
-
 
 GridEffectClass::~GridEffectClass(void)
 {

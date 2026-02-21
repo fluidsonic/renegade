@@ -5,11 +5,9 @@
 #include "vistable.h"
 #include "dynamicaabtreecull.h"
 
-
 const float MIN_OBJECT_MATCH_FRACTION = 0.99f;
 const float MIN_SECTOR_MATCH_FRACTION = 0.99f;
 const float MIN_PRUNE_MATCH_FRACTION = 0.90f;		
-
 
 /***************************************************************************************************
 **
@@ -183,7 +181,6 @@ void VisOptimizationContextClass::Combine_Redundant_Objects(void)
 	}
 }
 
-
 void VisOptimizationContextClass::Build_Sector_Tables_From_Object_Tables(VisTableMgrClass * vis_mgr)
 {
 	int i,j;
@@ -226,7 +223,6 @@ void VisOptimizationContextClass::Combine_Redundant_Sectors(void)
 		REF_PTR_RELEASE (table_i);
 	}
 }
-
 
 void VisOptimizationContextClass::Combine_Sector_Tables(int sector_id_0,int sector_id_1)
 {
@@ -295,7 +291,6 @@ void VisOptimizationContextClass::Combine_Object_Tables(int object_id_0,int obje
 	*/
 	Scene->Merge_Vis_Object_IDs(id0,id1);
 }
-
 
 void VisOptimizationContextClass::Install_Results(VisTableMgrClass * vismgr)
 {

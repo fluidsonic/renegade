@@ -50,5 +50,4 @@ protected:
 	friend class DefinitionFactoryMgrClass;
 };
 
-
 #endif //__DEFINITION_FACTORY_H

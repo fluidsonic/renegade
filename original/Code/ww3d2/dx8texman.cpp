@@ -9,7 +9,6 @@
 
 DX8TextureTrackerList DX8TextureManagerClass::Managed_Textures;
 
-
 /***********************************************************************************************
  * DX8TextureManagerClass::Shutdown -- Shuts down the texture manager                          *
  *                                                                                             *
@@ -56,7 +55,6 @@ void DX8TextureManagerClass::Add(DX8TextureTrackerClass *track)
 	Managed_Textures.Add(track);
 }
 
-
 /***********************************************************************************************
  * DX8TextureManagerClass::Remove -- Removes a texture from being managed                      *
  *                                                                                             *
@@ -90,7 +88,6 @@ void DX8TextureManagerClass::Remove(TextureClass *tex)
 	}
 }
 
-
 /***********************************************************************************************
  * DX8TextureManagerClass::Release_Textures -- Releases the internal d3d texture               *
  *                                                                                             *
@@ -118,7 +115,6 @@ void DX8TextureManagerClass::Release_Textures()
 		it.Next();
 	}
 }
-
 
 /***********************************************************************************************
  * DX8TextureManagerClass::Recreate_Textures -- Reallocates lost textures                      *

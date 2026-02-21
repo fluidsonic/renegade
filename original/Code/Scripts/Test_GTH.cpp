@@ -12,7 +12,6 @@
 #define GTH_DEBUG_FLOAT( x , format )		
 #endif
 
-
 /*
 ** GTH_Drop_Object_On_Death  (verified)
 ** This script will create an object at the position of the object when it dies.
@@ -279,7 +278,6 @@ DECLARE_SCRIPT(GTH_Speed_Controlled_Anim,"Stop_Speed=0.1:float,StopAnim=none:str
 		
 	void	( * Set_Animation )( GameObject * obj, const char * anim_name, bool looping, const char * sub_obj_name = NULL, float start_frame = 0.0F, float end_frame = -1.0F, bool is_blended = false );
 
-
 	void Timer_Expired( GameObject * obj, int timer_id ) 
 	{
 		if (timer_id == TIMER_ID_TICK) {
@@ -389,7 +387,6 @@ DECLARE_SCRIPT(GTH_On_Enter_Mission_Complete, "Success=1:int, Player_Type=2:int"
 	}	
 };
 
-
 /*
 ** GTH_On_Death_Mission_Complete (verified)
 ** When you kill something this script on it, the mission is complete.  NOTE this 
@@ -429,7 +426,6 @@ DECLARE_SCRIPT(GTH_On_Killed_Mission_Complete, "Success=1:int, Player_Type=2:int
 		}
 	}	
 };
-
 
 /*
 ** GTH_Create_Objective
@@ -495,7 +491,6 @@ DECLARE_SCRIPT(GTH_Create_Objective,"Creation_Type=0:int,Objective_ID=0:int,Obje
 	}
 };
 
-
 /*
 ** GTH_Objective_Complete
 ** Ends an objective with either success or failure.  All of the following things
@@ -551,7 +546,6 @@ DECLARE_SCRIPT(GTH_Objective_Complete_Enter_Kill_Poke, "Objective_ID=0:int, Succ
 	}	
 };
 
-
 /*
 ** GTH_User_Controllable_Base_Defense (verified)
 ** Just like M00_Base_Defense except that if a player enters, he can control the object
@@ -568,7 +562,6 @@ DECLARE_SCRIPT (GTH_User_Controllable_Base_Defense, "MinAttackDistance=0:int, Ma
 	int token_03_id;
 	int player_type;
 	bool occupied;
-
 
 	REGISTER_VARIABLES()
 	{
@@ -736,7 +729,6 @@ DECLARE_SCRIPT (GTH_User_Controllable_Base_Defense, "MinAttackDistance=0:int, Ma
 	}
 };
 
-
 /*
 ** GTH_Credit_Trickle
 ** This script will give an amount money to its team at a regular interval.  You can use it to
@@ -768,7 +760,6 @@ DECLARE_SCRIPT(GTH_Credit_Trickle, "Credits=1:int,Delay=2.0:float")
 	}
 };
 
-
 /*
 ** GTH_Enable_Spawner_On_Enter
 ** This script will enable or disable a spawner when its zone is entered
@@ -796,11 +787,6 @@ DECLARE_SCRIPT(GTH_Enable_Spawner_On_Enter, "SpawnerID=0:int,Player_Type=2:int,E
 		Commands->Enable_Spawner( Get_Int_Parameter("SpawnerID"),enable);
 	}
 };
-
-
-
-
-
 
 /*
 ** GTH_CTF_Object
@@ -865,7 +851,6 @@ DECLARE_SCRIPT(GTH_CTF_Object2, "Update_Delay=0.05:float,Enemy_Player_Type=0:int
 	int captured_by_id;
 	Vector3 home_position;
 	float capture_timer;
-
 
 	REGISTER_VARIABLES()
 	{

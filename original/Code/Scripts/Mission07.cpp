@@ -1552,7 +1552,6 @@ DECLARE_SCRIPT(M07_In_Nuke_Blast, "")
 		}
 	}
 
-
 	void Entered (GameObject * obj, GameObject * enterer)
 	{
 		if(!active)
@@ -1796,7 +1795,6 @@ DECLARE_SCRIPT(M07_Evac_Site_APC, "")
 	}
 
 };
-
 
 DECLARE_SCRIPT(M07_Evac_Site_APC_Soldier, "APC_ID=0:int")
 {
@@ -2721,7 +2719,6 @@ DECLARE_SCRIPT(M07_TownSquare_Controller, "")  //
 				chinooks_active = false;
 			}
 
-
 		}
 		if (type == M07_RADAR_KILLED)
 		{
@@ -3459,7 +3456,6 @@ DECLARE_SCRIPT(M07_Nod_Obelisk_MCT, "")
 
 };
 
-
 DECLARE_SCRIPT(M07_Park_Zone, "Zone=0:int")
 {
 		
@@ -3490,7 +3486,6 @@ DECLARE_SCRIPT(M07_Park_Zone, "Zone=0:int")
 	}
 
 };
-
 
 DECLARE_SCRIPT(M07_Activate_Encounter, "Spawner_ID1=0:int, Spawner_ID2=0:int, Spawner_ID3=0:int, Spawner_ID4=0:int, Spawner_ID5=0:int, Spawner_ID6=0:int")
 {
@@ -3625,8 +3620,6 @@ DECLARE_SCRIPT(M07_Deactivate_Encounter, "Activate_Zone=0:int")
 	}
 
 };
-
-
 
 DECLARE_SCRIPT(M07_Encounter_Unit, "Waypath_ID=0:int, Priority=0:int, Suicide=0:int, Stationary_at_End=0:int")
 {
@@ -4191,10 +4184,8 @@ DECLARE_SCRIPT(M07_Inn_Balcony_Sniper, "APC_ID=0:int")
 	}
 };
 
-
 DECLARE_SCRIPT(M07_Activate_V01, "")
 {
-
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -4222,7 +4213,6 @@ DECLARE_SCRIPT(M07_Activate_V01, "")
 
 DECLARE_SCRIPT(M07_Deactivate_V01, "")
 {
-
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -4312,7 +4302,6 @@ DECLARE_SCRIPT(M07_V01_Controller, "")
 
 DECLARE_SCRIPT(M07_V01_Destroyed_Flame_Tank, "")
 {
-
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -4509,7 +4498,6 @@ DECLARE_SCRIPT(M07_V01_Unit, "")
 	{
 		ActionParamsStruct params;
 
-
 		if(timer_id == GO_STAR)
 		{
 			params.Set_Basic( this, INNATE_PRIORITY_ENEMY_SEEN, GO_STAR );
@@ -4526,7 +4514,6 @@ DECLARE_SCRIPT(M07_V01_Unit, "")
 
 DECLARE_SCRIPT(M07_Activate_Triangle_Apache, "")
 {
-
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -4641,10 +4628,8 @@ DECLARE_SCRIPT(M07_Triangle_Apache, "")
 	
 };
 
-
 DECLARE_SCRIPT(M07_Relocate_Triangle_Apache, "")
 {
-
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -4840,7 +4825,6 @@ DECLARE_SCRIPT(M07_Triangle_Unit, "")
 DECLARE_SCRIPT(M07_Activate_Hostage_Encounter, "")
 {
 
-
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
 	REGISTER_VARIABLES()
@@ -4941,7 +4925,6 @@ DECLARE_SCRIPT(M07_Hostage, "")
 {
 	bool poked;
 
-
 	enum{WAYPATH, SWITCH_TYPE};
 
 	// Register variables to be Auto-Saved
@@ -4990,7 +4973,6 @@ DECLARE_SCRIPT(M07_Hostage, "")
 	}
 
 	
-
 
 	void Action_Complete(GameObject * obj, int action_id, ActionCompleteReason reason)
 	{
@@ -5167,7 +5149,6 @@ DECLARE_SCRIPT(M07_APC_Dec_Soldier, "APC_ID=0:int")
 
 DECLARE_SCRIPT(M07_Activate_Bridge_Civ, "")
 {
-
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -5671,7 +5652,6 @@ DECLARE_SCRIPT(M07_Flyover_Controller, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M07_Activate_Flyover, "Text_File:string")
 {
 	bool already_entered;
@@ -5752,7 +5732,6 @@ DECLARE_SCRIPT(M07_Move_To_Evac, "")
 	{
 		
 	}
-
 
 	void Entered (GameObject * obj, GameObject * enterer)
 	{
@@ -5839,7 +5818,6 @@ DECLARE_SCRIPT(M07_Player_Rocket_Emplacement, "")
 
 };
 
-
 DECLARE_SCRIPT(M07_Playertype_Neutral, "")
 {
 		
@@ -5858,7 +5836,6 @@ DECLARE_SCRIPT(M07_Playertype_Neutral, "")
 	}
 
 };
-
 
 DECLARE_SCRIPT(M07_Inn_Evac, "")//104496
 {
@@ -6516,8 +6493,6 @@ DECLARE_SCRIPT(M07_Obelisk_Unit, "")
 
 };
 
-
-
 DECLARE_SCRIPT (M07_Park_Stealth_Tank, "")	
 {
 	float health;
@@ -6692,5 +6667,4 @@ DECLARE_SCRIPT(M07_Hotwire_Dead, "")
 	}
 
 };
-
 

@@ -157,7 +157,6 @@ cPlayer * cPlayerManager::Find_Team_Player(int team_number)
 	return NULL; // Not found
 }
 
-
 //------------------------------------------------------------------------------------
 cPlayer * cPlayerManager::Find_Random_Team_Player(int team_number)
 {
@@ -310,7 +309,6 @@ int cPlayerManager::Get_Average_Ping(void)
 
 	return 0;
 }
-
 
 //------------------------------------------------------------------------------------
 int cPlayerManager::Get_Average_FPS(void)
@@ -529,7 +527,6 @@ void cPlayerManager::Remove_All(void)
 		delete p_player;
 	}
 
-
 	//Remove_Inactive();
 }
 
@@ -676,7 +673,6 @@ int cPlayerManager::Player_Compare(const void * elem1, const void * elem2)
 	// data-safe variables being accessed.
    //
 
-
    cPlayer * p_player1 = *((cPlayer **)elem1);
    cPlayer * p_player2 = *((cPlayer **)elem2);
 
@@ -765,7 +761,6 @@ int cPlayerManager::Player_Compare(const void * elem1, const void * elem2)
    return result;
 }
 
-
 //-----------------------------------------------------------------------------
 int cPlayerManager::Fast_Player_Compare(const void * elem1, const void * elem2)
 {
@@ -775,7 +770,6 @@ int cPlayerManager::Fast_Player_Compare(const void * elem1, const void * elem2)
 
    cPlayer * p_player1 = *((cPlayer **)elem1);
    cPlayer * p_player2 = *((cPlayer **)elem2);
-
 
 	if (p_player1->Get_Fast_Sort_Key() > p_player2->Get_Fast_Sort_Key()) {
 		return -1;
@@ -876,7 +870,6 @@ void cPlayerManager::List_Print(WideStringClass & text, Vector3 color)
 		return;
 	}
 
-
 	PTextRenderer->Set_Location(Vector2(cMathUtil::Round(XPos), cMathUtil::Round(YPos)));
 
 	int c = ((int)(color[0]*255)&0xFF) << 16 | ((int)(color[1]*255)&0xFF) << 8 | ((int)(color[2]*255)&0xFF) << 0 | 0xFF000000;
@@ -893,7 +886,6 @@ void cPlayerManager::Line(float x, float length, int line_color)
 	if (PTextRenderer == NULL) {
 		return;
 	}
-
 
 	float y = YPos + PTextRenderer->Peek_Font()->Char_Height() / 2.0f;
 
@@ -1050,8 +1042,6 @@ void cPlayerManager::Render_Player_List(void)
 	if (!changed) return;
 
 	PTextRenderer->Reset();
-
-
 
 	DEMO_SECURITY_CHECK;
 
@@ -1265,6 +1255,4 @@ bool cPlayerManager::Load(ChunkLoadClass &cload)
 }
 
 //-----------------------------------------------------------------------------
-
-
 

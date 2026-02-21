@@ -39,7 +39,6 @@ protected:
 	friend	class								C4GameObj;
 };
 
-
 /*
 **
 */
@@ -102,7 +101,6 @@ private:
 
 	void				Detonate( void );
 	void				Restore_Owner( void );
-
 
 };
 

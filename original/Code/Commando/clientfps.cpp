@@ -6,7 +6,6 @@
 #include "playermanager.h"
 #include "apppackettypes.h"
 
-
 CClientFps *		PClientFps = NULL;
 
 DECLARE_NETWORKOBJECT_FACTORY(CClientFps, NETCLASSID_CLIENTFPS);
@@ -47,7 +46,6 @@ CClientFps::Init(void)
 void
 CClientFps::Set_Fps(int fps)
 {
-
 
 	Fps = (BYTE) fps;
 

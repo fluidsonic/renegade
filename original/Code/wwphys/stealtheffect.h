@@ -2,7 +2,6 @@
 #ifndef STEALTHEFFECT_H
 #define STEALTHEFFECT_H
 
-
 #include "always.h"
 #include "materialeffect.h"
 #include "vector2.h"
@@ -73,6 +72,5 @@ protected:
 	MatrixMapperClass *		Mapper;
 	MaterialPassClass *		MaterialPass;
 };
-
 
 #endif //STEALTHEFFECT_H

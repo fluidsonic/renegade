@@ -1,7 +1,6 @@
 #include "systeminfolog.h"
 #include "registry.h"
 #include "timemgr.h"
-#include "debug.h"
 #include "playerdata.h"
 #include "combat.h"
 #include "cheatmgr.h"
@@ -28,8 +27,6 @@ const unsigned NUM_GAMES_LOGGED=10;
 #else
 #define	COMBAT_SUB_KEY_NAME_DEBUG				"Software\\Westwood\\Renegade\\Debug"
 #endif
-
-
 
 #define	SYSTEM_INFO_LOG_CURRENT_STATE			"SystemInfoLog_CurrentState"
 #define	SYSTEM_INFO_LOG_LATEST_GAME			"SystemInfoLog_LatestGame"
@@ -121,7 +118,7 @@ void SystemInfoLog::Get_Final_String(StringClass& string)
 	StringClass vnum(0,true);
 	StringClass ptime(0,true);
 	StringClass avgfps(0,true);
-	vnum.Format("%d.%2.2d",DebugManager::Get_Version_Number()>>16,DebugManager::Get_Version_Number()&0xffff);
+	vnum.Format("%d.%2.2d",0>>16,0&0xffff);
 	ptime.Format("%2.2d:%2.2d",TotalPlayingTime/60,TotalPlayingTime%60);
 	avgfps.Format("%d.%1.1d",AvgFPS/10,AvgFPS%10);
 	string.Format(
@@ -234,7 +231,6 @@ void SystemInfoLog::Get_Compact_Log(StringClass& string)
 
 	string.Format("%d.%d\t",fps/10,fps%10);
 }
-
 
 // This stuff should go to the playerinfolog...
 

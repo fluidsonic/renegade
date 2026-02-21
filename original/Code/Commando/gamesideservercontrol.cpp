@@ -7,19 +7,16 @@
 #include "servercontrol.h"
 #include "gamemode.h"
 #include "buildnum.h"
-#include "slavemaster.h"
 #include "consolemode.h"
 
 #include <string.h>
 #include <stdio.h>
-
 
 /*
 ** Static class data.
 */
 bool GameSideServerControlClass::Listening = false;
 StringClass GameSideServerControlClass::Response;
-
 
 /***********************************************************************************************
  * GameSideServerControlClass::Init -- Start listening for server control messages             *
@@ -36,58 +33,7 @@ StringClass GameSideServerControlClass::Response;
  *   11/16/2001 3:55PM ST : Created                                                            *
  *=============================================================================================*/
 void GameSideServerControlClass::Init(void)
-{
-	char password[64] = DEFAULT_SERVER_CONTROL_PASSWORD;
-
-	if (!Listening) {
-
-		/*
-		** Only for dedicated servers.
-		*/
-		if (SlaveMaster.Am_I_Slave() || (The_Game() && The_Game()->IsDedicated.Is_True()) || ConsoleBox.Is_Exclusive()) {
-
-			/*
-			** Get the port number from the registry.
-			*/
-			RegistryClass reg(APPLICATION_SUB_KEY_NAME_NET_SERVER_CONTROL);
-			int port = reg.Get_Int(SERVER_CONTROL_PORT_KEY, DEFAULT_SERVER_CONTROL_PORT);
-			if (port != 0) {
-
-				/*
-				** See if we should only bind to the loopback address (for slaves).
-				*/
-				int loopback = reg.Get_Int(SERVER_CONTROL_LOOPBACK_KEY, 0);
-				if (SlaveMaster.Am_I_Slave()) {
-					ServerControl.Allow_Remote_Admin((loopback == 0) ? true : false);
-				}
-
-				/*
-				** Get the bind IP from the registry.
-				*/
-				unsigned long ip = reg.Get_Int(SERVER_CONTROL_IP_KEY, 0);
-
-				/*
-				** Get the password from the registry.
-				*/
-				reg.Get_String(SERVER_CONTROL_PASSWORD_KEY, password, sizeof(password), password);
-
-				/*
-				** Start listening.
-				*/
-				ServerControl.Start_Listening(port, password, &App_Request_Callback, NULL, loopback ? true : false, ip);
-				Listening = true;
-
-				/*
-				** Update the welcome message.
-				*/
-				Set_Welcome_Message();
-			}
-		} else {
-			Listening = false;
-		}
-	}
-}
-
+{}
 
 /***********************************************************************************************
  * GameSideServerControlClass::Set_Welcome_Message -- Update the welcome message               *
@@ -114,17 +60,8 @@ void GameSideServerControlClass::Set_Welcome_Message(void)
 	*/
 	sprintf(welcome, "Welcome to Renegade %s\n", BuildInfoClass::Composite_Build_Info());
 
-	/*
-	** Get the slave info and add it into the welcome message.
-	*/
-	SlaveMaster.Get_Slave_Info(buffer, sizeof(buffer));
-	strcat(welcome, buffer);
-	welcome[499] = 0;
-
 	ServerControl.Set_Welcome_Message(welcome);
 }
-
-
 
 /***********************************************************************************************
  * GameSideServerControlClass::Shutdown -- Stop listening to server control messages           *
@@ -145,8 +82,6 @@ void GameSideServerControlClass::Shutdown(void)
 	ServerControl.Stop_Listening();
 	Listening = false;
 }
-
-
 
 /***********************************************************************************************
  * GameSideServerControlClass::App_Request_Callback -- Server control request handler          *
@@ -173,7 +108,6 @@ const char *GameSideServerControlClass::App_Request_Callback(char *request)
 	Response += "\n";
 	return(Response.Peek_Buffer());
 }
-
 
 /***********************************************************************************************
  * GameSideServerControlClass::Print -- Adds to the response packet for the current request    *
@@ -208,8 +142,6 @@ void GameSideServerControlClass::Print(char *text, ...)
 		Response += buffer;
 	}
 }
-
-
 
 /***********************************************************************************************
  * GameSideServerControlClass::Send_Message -- Send a request message to another server        *

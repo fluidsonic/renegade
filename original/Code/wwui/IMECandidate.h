@@ -7,9 +7,7 @@
 
 #pragma warning(disable : 4514)
 
-
 #include <vector>
-
 
 namespace IME {
 
@@ -69,7 +67,6 @@ class IMECandidate
 		// Multibyte -> Unicode string conversion buffer
 		wchar_t mTempString[80];
 	};
-
 
 typedef enum
 	{

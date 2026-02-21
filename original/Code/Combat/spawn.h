@@ -74,7 +74,6 @@ protected:
 	friend	class								SpawnManager;
 };
 
-
 /*
 **
 */
@@ -141,7 +140,6 @@ private:
 	friend	class				SpawnManager;
 };
 
-
 /*
 **
 */
@@ -180,12 +178,6 @@ protected:
 };
 
 #endif	//	SPAWN_H	
-
-
-
-
-
-
 
 //static	Matrix3D	Get_First_Spawn_Location( int player_type );
 	//int						SpawnNumber;				// These are used for sequenced spawns

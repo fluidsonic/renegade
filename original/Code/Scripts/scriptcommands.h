@@ -13,7 +13,6 @@
 	#include "actionparams.h"
 #endif
 
-
 /*
 ** DLL import/export macros
 */
@@ -36,11 +35,9 @@ class		ScriptClass;
 class		ScriptSaver;
 class		ScriptLoader;
 
-
 /*
 ** Script Commands
 */
-
 
 /*
 ** MISC Script ENUMS
@@ -505,7 +502,6 @@ typedef struct {
 	void	(* Set_Screen_Fade_Opacity) ( float opacity, float seconds );
 
 } ScriptCommands;
-
 
 /*
 ** Build a class to wrap the struct

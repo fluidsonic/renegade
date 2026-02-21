@@ -1,5 +1,4 @@
 #include "campaign.h"
-#include "debug.h"
 #include "gamemode.h"
 #include "gamedata.h"
 #include "singlepl.h"
@@ -87,7 +86,6 @@ void	CampaignManager::Init( void )
 
 }
 
-
 /*
 **
 */
@@ -95,8 +93,6 @@ void	CampaignManager::Shutdown( void )
 {
 	CampaignFlowDescriptions.Clear();
 }
-
-
 
 /*
 **
@@ -147,9 +143,6 @@ bool CampaignManager::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-
-
-
 
 /*
 **
@@ -250,7 +243,6 @@ void	CampaignManager::Continue( bool success )
 
 	} else if ( StringMatch( state_description, "Level " ) ) {
 
-
 		GameModeManager::Find ("Combat")->Suspend();
 		GameModeManager::Find ("Movie")->Deactivate();
 	    GameModeManager::Find ("ScoreScreen")->Deactivate ();
@@ -261,7 +253,7 @@ void	CampaignManager::Continue( bool success )
 
 		int mission = cGameData::Get_Mission_Number_From_Map_Name( state_description );
 		Select_Backdrop_Number( mission );
-		GameInitMgrClass::Start_Game ( state_description, PLAYERTYPE_RENEGADE, 0 );
+		GameInitMgrClass::Start_Game ( state_description, PLAYERTYPE_RENEGADE );
 
 		// Hack to not autosave for Mission 0 (M13)
 		if ( ::strnicmp( state_description, "M13", 3 ) != 0 ) {
@@ -296,7 +288,7 @@ void	CampaignManager::Continue( bool success )
 			//
 			//	Add this movie name to the registry (that way the user
 			// can watch it later)
-			//	
+			//
 			RegistryClass registry( APPLICATION_SUB_KEY_NAME_MOVIES );
 			if ( registry.Is_Valid() ) {
 				registry.Set_String( filename, description );
@@ -307,7 +299,7 @@ void	CampaignManager::Continue( bool success )
 
 		Debug_Say(( "Failed to Parse Campaign Description %s\n", state_description ));
 
-		State = NOT_IN_CAMPAIGN_STATE;		
+		State = NOT_IN_CAMPAIGN_STATE;
 		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_MAIN_MENU);
 	}
 
@@ -315,7 +307,7 @@ void	CampaignManager::Continue( bool success )
 
 void	CampaignManager::Reset()
 {
-	State = NOT_IN_CAMPAIGN_STATE;		
+	State = NOT_IN_CAMPAIGN_STATE;
 }
 
 /*
@@ -375,20 +367,19 @@ void	CampaignManager::Select_Backdrop_Number_By_MP_Type( int type )
 	#define	MULTIPLAY_LOAD_MENU_NUMBER_CNC2					95
 	int load_menu_number = 0;
 	if ( type == cGameData::GAME_TYPE_DEATHMATCH ) {
-		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_DEATHMATCH;	
+		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_DEATHMATCH;
 	}
 	if ( type == cGameData::GAME_TYPE_TEAM_DEATHMATCH ) {
-		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_TEAM_DEATHMATCH;	
+		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_TEAM_DEATHMATCH;
 	}
 	if ( type == cGameData::GAME_TYPE_CNC ) {
-		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_CNC1;	
+		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_CNC1;
 		if ( FreeRandom.Get_Int() & 1 ) {
-			load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_CNC2;	
+			load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_CNC2;
 		}
 	}
 	Select_Backdrop_Number( load_menu_number );
 	*/
-
 
 	#define	MULTIPLAY_LOAD_MENU_NUMBER_CNC1					94
 	#define	MULTIPLAY_LOAD_MENU_NUMBER_CNC2					95
@@ -406,28 +397,8 @@ void	CampaignManager::Select_Backdrop_Number_By_MP_Type( int type )
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/*
 	if ( type == cGameData::GAME_TYPE_CTF ) {
-		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_CTF;	
+		load_menu_number = MULTIPLAY_LOAD_MENU_NUMBER_CTF;
 	}
 	*/

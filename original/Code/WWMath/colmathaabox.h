@@ -7,7 +7,6 @@
 #include "vector3.h"
 #include "lineseg.h"
 
-
 /***********************************************************************************************
  * CollisionMath::Overlap_Test -- test overlap between an AABox and a point                    *
  *                                                                                             *

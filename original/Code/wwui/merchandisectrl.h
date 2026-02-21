@@ -5,7 +5,6 @@
 #include "dialogcontrol.h"
 #include "render2dsentence.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MerchandiseCtrlClass
@@ -63,7 +62,6 @@ protected:
 	void				Create_Text_Renderer (void);
 	void				Create_Texture_Renderer (void);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
 	////////////////////////////////////////////////////////////////
@@ -87,7 +85,6 @@ protected:
 	DynamicVectorClass<StringClass>	TextureNameList;
 	int										CurrentTextureIndex;
 };
-
 
 #endif //__MERCHANDISECTRL_H
 

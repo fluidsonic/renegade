@@ -388,6 +388,4 @@ template <> inline unsigned int HashTemplateKeyClass<StringClass>::Get_Hash_Valu
 	return hval;
 }
 
-
-
 #endif

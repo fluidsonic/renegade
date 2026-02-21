@@ -4,12 +4,10 @@
 #include "physinttest.h"
 #include "wwstring.h"
 
-
 /*
 ** Static members of PhysAABTreeCullClass
 */
 bool	PhysAABTreeCullClass::_HierarchicalVisCullingEnabled = true;
-
 
 /*
 ** PhysAABTreeCullClass is a derived AABTree which assumes it contains PhysClasses
@@ -25,8 +23,6 @@ inline PhysClass * get_next_object(PhysClass * tile)
 {
 	return (PhysClass *)(((AABTreeLinkClass *)tile->Get_Cull_Link())->NextObject);
 }
-
-
 
 /*
 ** Implementation of PhysAABTreeCullClass
@@ -44,7 +40,6 @@ bool PhysAABTreeCullClass::Verify(StringClass & error_report)
 {
 	return Verify_Recursive(RootNode,error_report);
 }
-
 
 bool PhysAABTreeCullClass::Cast_Ray_Recursive
 (
@@ -88,7 +83,6 @@ bool PhysAABTreeCullClass::Cast_Ray_Recursive
 
 	return res;
 }
-
 
 bool PhysAABTreeCullClass::Cast_AABox_Recursive
 (
@@ -238,7 +232,6 @@ bool PhysAABTreeCullClass::Intersection_Test(PhysMeshIntersectionTestClass & mes
 
 	return false;
 }
-
 
 bool PhysAABTreeCullClass::Verify_Recursive(AABTreeNodeClass * node,StringClass & error_report)
 {

@@ -2,7 +2,6 @@
 #include "chunkio.h"
 #include "gameobjmanager.h"
 #include "combat.h"
-#include "debug.h"
 #include "spawn.h"
 #include "timemgr.h"
 #include "scripts.h"
@@ -192,7 +191,6 @@ bool	CombatSaveLoadClass::Load( ChunkLoadClass &cload )
 
 	return true;
 }
-
 
 void	CombatSaveLoadClass::On_Post_Load(void) 
 {

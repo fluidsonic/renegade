@@ -54,7 +54,4 @@ private:
 	int				Get_Secondary_Missions_Stars( void );
 };
 
-
-
-
 #endif

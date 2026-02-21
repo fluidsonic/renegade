@@ -11,7 +11,6 @@
 #include "stylemgr.h"
 #include "texture.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -62,10 +61,8 @@ static const RectClass ThumbUpUVs[2] =
 	RectClass (171, 224, 193, 233)
 };
 
-
 static const float DEFAULT_WIDTH		= 10;
 static const float BUTTON_V_OFFSET	= 10;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -118,7 +115,6 @@ ScrollBarCtrlClass::ScrollBarCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ScrollBarCtrlClass
@@ -128,7 +124,6 @@ ScrollBarCtrlClass::~ScrollBarCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -192,7 +187,6 @@ ScrollBarCtrlClass::Create_Button_Renderer (void)
 	ButtonRenderer.Add_Quad (BottomButtonRect, bottom_btn_uvs);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -260,7 +254,6 @@ ScrollBarCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -275,7 +268,6 @@ ScrollBarCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ACTION);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -352,7 +344,6 @@ ScrollBarCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -387,7 +378,6 @@ ScrollBarCtrlClass::Render (void)
 	DialogControlClass::Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -432,12 +422,10 @@ ScrollBarCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	MouseClickPos = mouse_pos;
 	MouseClickSliderPos = ThumbRect.Top;
 
-
 	WasButtonPressedOnMe = true;
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -457,7 +445,6 @@ ScrollBarCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -488,7 +475,6 @@ ScrollBarCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Focus
@@ -505,7 +491,6 @@ ScrollBarCtrlClass::On_Set_Focus (void)
 	DialogControlClass::On_Set_Focus ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -527,7 +512,6 @@ ScrollBarCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -581,7 +565,6 @@ ScrollBarCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -592,7 +575,6 @@ ScrollBarCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -628,7 +610,6 @@ ScrollBarCtrlClass::Slider_Pos_From_Mouse_Pos (const Vector2 &mouse_pos)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Range
@@ -647,7 +628,6 @@ ScrollBarCtrlClass::Set_Range (int range_min, int range_max)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -672,7 +652,6 @@ ScrollBarCtrlClass::Scroll_Page (int direction, bool send_notify)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -719,7 +698,6 @@ ScrollBarCtrlClass::Set_Pos (int pos, bool send_notify)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

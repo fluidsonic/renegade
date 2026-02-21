@@ -24,7 +24,6 @@ class cDevOptions
 {
 	public:
 
-
    //
    // QuickFullExit is a quick but hopefully clean way to leave combat (via
    // a keypress), and stop execution.
@@ -45,16 +44,5 @@ class cDevOptions
 
 //-----------------------------------------------------------------------------
 #endif // DEVOPTIONS_H
-
-
-
-
-
-
-
-
-
-
-
 
 	//static cRegistryBool DoThumbnailPreInit;

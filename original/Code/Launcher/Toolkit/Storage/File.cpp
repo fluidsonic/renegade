@@ -27,7 +27,6 @@ File::File()
 	{
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -51,7 +50,6 @@ File::File(const Char* name, ERights rights)
 	{
 	SetName(name);
 	}
-
 
 /******************************************************************************
 *
@@ -77,7 +75,6 @@ File::File(const UString& name, ERights rights)
 	{
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -100,7 +97,6 @@ File::~File()
 	Close();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -121,7 +117,6 @@ const UString& File::GetName(void) const
 	{
 	return mName;
 	}
-
 
 /******************************************************************************
 *
@@ -145,7 +140,6 @@ void File::SetName(const UString& name)
 	mName = name;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -167,7 +161,6 @@ ERights File::GetRights(void) const
 	return mRights;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -188,7 +181,6 @@ void File::SetRights(ERights rights)
 	{
 	mRights = rights;
 	}
-
 
 /******************************************************************************
 *
@@ -251,7 +243,6 @@ bool File::IsAvailable(bool force)
 	return true;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -272,7 +263,6 @@ bool File::IsOpen(void) const
 	{
 	return ((mHandle != INVALID_HANDLE) ? true : false);
 	}
-
 
 /******************************************************************************
 *
@@ -366,7 +356,6 @@ File::EFileError File::Open(ERights rights)
 	return FileError_None;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -390,7 +379,6 @@ File::EFileError File::Open(const UString& name, ERights rights)
 	SetName(name);
 	return Open(rights);
 	}
-
 
 /******************************************************************************
 *
@@ -416,7 +404,6 @@ void File::Close(void)
 		mHandle = INVALID_HANDLE;
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -450,7 +437,6 @@ File::EFileError File::Create(void)
 
 	return error;
 	}
-
 
 /******************************************************************************
 *
@@ -494,7 +480,6 @@ File::EFileError File::Delete(void)
 
 	return FileError_None;
 	}
-
 
 /******************************************************************************
 *
@@ -602,7 +587,6 @@ File::EFileError File::Load(void*& outBuffer, UInt32& outSize)
 	return result;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -670,7 +654,6 @@ File::EFileError File::Save(const void* buffer, UInt32 size)
 	// Return the number of actual butes written.
 	return result;
 	}
-
 
 /******************************************************************************
 *
@@ -760,7 +743,6 @@ UInt32 File::GetLength(void)
 	return length;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -791,7 +773,6 @@ void File::SetLength(UInt32 length)
 	SetFilePointer(mHandle, position, NULL, FILE_BEGIN);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -812,7 +793,6 @@ UInt32 File::GetMarker(void)
 	{
 	return SetFilePointer(mHandle, 0, NULL, FILE_CURRENT);
 	}
-
 
 /******************************************************************************
 *
@@ -867,7 +847,6 @@ void File::SetMarker(Int32 offset, EStreamFrom from)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -888,7 +867,6 @@ bool File::AtEnd(void)
 	{
 	return (GetMarker() >= GetLength());
 	}
-
 
 /******************************************************************************
 *
@@ -958,7 +936,6 @@ UInt32 File::GetBytes(void* ptr, UInt32 bytes)
 	return totalRead;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1020,7 +997,6 @@ UInt32 File::PutBytes(const void* ptr, UInt32 bytes)
 	return totalWritten;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1054,7 +1030,6 @@ UInt32 File::PeekBytes(void* ptr, UInt32 bytes)
 
 	return bytesPeeked;
 	}
-
 
 /******************************************************************************
 *

@@ -115,5 +115,4 @@ protected:
 	static TeamPurchaseSettingsDefClass *	DefinitionArray[TEAM_COUNT];
 };
 
-
 #endif //__TEAMPURCHASESETTINGS_H

@@ -36,7 +36,6 @@ class ScriptNode
 		ScriptNode* mNext;
 };
 
-
 class ScriptList
 {
 	public:
@@ -121,7 +120,6 @@ class ScriptList
 		friend class ScriptListIter;
 		ScriptNode* mHead;
 };
-
 
 // Script list iterator: This class is used to traverse or iterate a list.
 class ScriptListIter

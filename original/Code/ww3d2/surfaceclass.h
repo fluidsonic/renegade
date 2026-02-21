@@ -116,4 +116,3 @@ class SurfaceClass : public RefCountClass
 
 #endif
 
-

@@ -42,7 +42,6 @@ static void Create_Hash_Name(StringClass& name, const StringClass& thumb_name)
 	}
 */
 
-
 ThumbnailClass::ThumbnailClass(
 	ThumbnailManagerClass* manager,
 	const char* name,
@@ -429,7 +428,6 @@ void ThumbnailManagerClass::Save(bool force)
 	thumb_file->Close();
 }
 
-
 // ----------------------------------------------------------------------------
 ThumbnailManagerClass::ThumbnailManagerClass(const char* thumbnail_filename, const char* mix_filename)
 	:
@@ -543,10 +541,9 @@ void ThumbnailManagerClass::Update_Thumbnail_File(const char* mix_file_name,bool
 	FileClass* mix_file=ff.Get_File(mix_file_name);
 	FileClass* thumb_file=ff.Get_File(thumb_file_name);
 
-
 	// If mix file isn't found but thumb file is, delete the obsolete thumb file
 	mix_file->Open(FileClass::READ);
-	thumb_file->Open(FileClass::READ);		//|FileClass::WRITE);	Changed this to READ only since we never use the handle for writing and it may cause contention amongst slave servers ST - 12/14/2001 8:26PM
+	thumb_file->Open(FileClass::READ);		//|FileClass::WRITE);
 	if (!mix_file->Is_Available()) {
 		if (thumb_file->Is_Available()) {
 			thumb_file->Delete();

@@ -3,7 +3,6 @@
 #include "plane.h"
 #include "vp.h"
 
-
 /**
 ** VisPolyClass - This class is used to clip polygons as they are
 ** sent through the vis rasterization system
@@ -17,7 +16,6 @@ public:
 
 	SimpleDynVecClass<Vector3> Verts;
 };
-
 
 void VisPolyClass::Reset(void)
 {
@@ -96,14 +94,11 @@ void VisPolyClass::Clip(const PlaneClass & plane,VisPolyClass & dest) const
 static VisPolyClass _VisPoly0;
 static VisPolyClass _VisPoly1;
 
-
-
 /*********************************************************************************************
 
   VisRasterizerClass Implementation
 
 *********************************************************************************************/
-
 
 VisRasterizerClass::VisRasterizerClass(void) :
 	ModelTransform(1),
@@ -176,7 +171,6 @@ Vector3 * VisRasterizerClass::Get_Temp_Vertex_Buffer(int count)
 	return &(TempVertexBuffer[0]);
 }
 
-
 bool VisRasterizerClass::Render_Triangles
 (
 	const Vector3 * verts,
@@ -196,7 +190,6 @@ bool VisRasterizerClass::Render_Triangles
 		return Render_Triangles_Clip(verts,vcount,tris,tcount);
 	}
 }
-
 
 bool VisRasterizerClass::Render_Triangles_No_Clip
 (
@@ -233,7 +226,6 @@ bool VisRasterizerClass::Render_Triangles_No_Clip
 	}
 	return pixel_passed;
 }
-
 
 bool VisRasterizerClass::Render_Triangles_Clip
 (
@@ -310,10 +302,6 @@ bool VisRasterizerClass::Render_Triangles_Clip
 	return pixel_passed;
 }
 
-
-
-
-
 /*********************************************************************************************
 
   IDBufferClass Implementation
@@ -333,7 +321,6 @@ IDBufferClass::IDBufferClass(void) :
 	ZBuffer(NULL)
 {
 }
-
 
 IDBufferClass::~IDBufferClass(void)
 {
@@ -392,7 +379,6 @@ void IDBufferClass::Clear(void)
 	}
 }
 
-
 /**
 ** GradientsStruct
 ** Computes the gradients for a triangle.
@@ -420,7 +406,6 @@ struct GradientsStruct
 	float DOOZ_DX;			// change in 1/z per change in x
 	float DOOZ_DY;			// change in 1/z per change in y
 };
-
 
 /**
 ** EdgeStruct
@@ -462,7 +447,6 @@ struct EdgeStruct
 	float		OOZStep;		// change in 1/z per scanline
 };
 
-
 bool IDBufferClass::Render_Triangle(const Vector3 & p0,const Vector3 & p1,const Vector3 & p2)
 {
 	if ((ZBuffer == NULL) || (IDBuffer == NULL)) {
@@ -480,8 +464,6 @@ bool IDBufferClass::Render_Triangle(const Vector3 & p0,const Vector3 & p1,const 
 	} else {
 		CurID = FrontfaceID;
 	}
-
-
 
 	/*
 	** Transform the coordinates to device coords
@@ -601,7 +583,6 @@ bool IDBufferClass::Render_Triangle(const Vector3 & p0,const Vector3 & p1,const 
 	return (pixels_passed > 0);
 }
 
-
 int IDBufferClass::Render_Occluder_Scanline(GradientsStruct & grads,EdgeStruct * left,EdgeStruct * right)
 {
 	if ((left->Y < 1) || (left->Y >= ResHeight)) {
@@ -650,7 +631,6 @@ int IDBufferClass::Render_Occluder_Scanline(GradientsStruct & grads,EdgeStruct *
 	PixelCounter += pixel_counter;
 	return pixel_counter;
 }
-
 
 int IDBufferClass::Render_Non_Occluder_Scanline(GradientsStruct & grads,EdgeStruct * left,EdgeStruct * right)
 {

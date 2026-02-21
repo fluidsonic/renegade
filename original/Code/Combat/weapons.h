@@ -47,7 +47,6 @@ typedef	enum {
 	NUM_WEAPON_HOLD_STYLES
 } WeaponHoldStyleType;
 
-
 /*
 **
 */
@@ -65,7 +64,6 @@ typedef	enum {
 	WEAPON_ANIM_FIRING_0,
 	WEAPON_ANIM_FIRING_1
 } WeaponAnimState;
-
 
 /*
 **

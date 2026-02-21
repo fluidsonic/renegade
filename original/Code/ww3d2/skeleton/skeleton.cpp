@@ -52,7 +52,6 @@ const Vector3 CAMERA_POSITION(3.0f,0.0f,1.0f);
 const Vector3 CAMERA_TARGET(0.0f,0.0f,0.90f);
 const Vector3 OBJECT_POSITION(1000.0f,0.0f,0.0f);
 
-
 static void Log_Statistics();
 static void Init_Assets();
 static void Init_3D_Scene();
@@ -589,7 +588,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
    return 0;
 }
 
-
 // Mesage handler for about box.
 LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -608,7 +606,6 @@ LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	}
     return FALSE;
 }
-
 
 void Enable_Alternate_Materials(RenderObjClass * model,bool onoff)
 {
@@ -842,7 +839,6 @@ MaterialPassClass *	Create_Bump_Material_Pass(void)
 	test_pass->Set_Texture(bump_texture,0);
 	test_pass->Set_Texture(env_texture,1);
 
-
 /*
 	Vector3 light_vector(0.0f,0.0f,1.0f);
 
@@ -875,12 +871,6 @@ MaterialPassClass *	Create_Bump_Material_Pass(void)
 	test_pass->Set_Material(mtl);
 	test_pass->Set_Texture(normal_map,0);
 */
-
-
-
-
-
-
 
 	return test_pass;
 }
@@ -1328,18 +1318,4 @@ void Init_3D_Scene()
 #endif
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

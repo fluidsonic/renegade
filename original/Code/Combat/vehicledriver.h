@@ -4,7 +4,6 @@
 
 #include "vector3.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -13,7 +12,6 @@ class SmartGameObj;
 class ChunkSaveClass;
 class ChunkLoadClass;
 class Matrix3D;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -61,7 +59,6 @@ public:
 	void					Save (ChunkSaveClass &csave);
 	void					Load (ChunkLoadClass &cload);	
 
-
 protected:
 
 	////////////////////////////////////////////////////////////////
@@ -101,7 +98,6 @@ private:
 
 	float					m_LastFrameExpectedVelocity;
 };
-
 
 #endif //__VEHICLEDRIVER_H
 

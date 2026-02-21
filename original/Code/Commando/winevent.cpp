@@ -17,7 +17,6 @@
 #include "specialbuilds.h"
 #include "modpackagemgr.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cWinEvent, NETCLASSID_WIN);
 
 //-----------------------------------------------------------------------------
@@ -58,7 +57,6 @@ cWinEvent::Act(void)
 	if (IS_MISSION || !GameModeManager::Find("Combat")->Is_Active()) {
 		return;
 	}
-
 
 	WWAudioClass::Get_Instance()->Create_Instant_Sound("Game_Over", Matrix3D(1));
 
@@ -137,7 +135,6 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	int win_type = 0;
 	DWORD duration_s = 0;
 	WideStringClass mvp_name;
@@ -189,7 +186,6 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 	ModPackageMgrClass::Get_Mod_Map_Name_From_CRC (mod_name_crc, map_name_crc, &mod_name, &map_name);
 	The_Game()->Set_Mod_Name(mod_name);
 	The_Game()->Set_Map_Name(map_name);
-
 
 #endif // MULTIPLAYERDEMO
 

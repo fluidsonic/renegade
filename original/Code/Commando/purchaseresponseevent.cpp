@@ -15,7 +15,6 @@
 #include "messagewindow.h"
 #include "wwaudio.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cPurchaseResponseEvent, NETCLASSID_PURCHASERESPONSEEVENT);
 
 //-----------------------------------------------------------------------------
@@ -52,7 +51,6 @@ cPurchaseResponseEvent::Act(void)
 	if (!GameModeManager::Find("Combat")->Is_Active()) {
 		return;
 	}
-
 
 	/*
 	if (PurchaserId != cNetwork::Get_My_Id()) {

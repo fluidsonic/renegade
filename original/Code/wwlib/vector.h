@@ -8,7 +8,6 @@
 #include <string.h>
 #include <new.h>
 
-
 class	NoInitClass;
 
 /**************************************************************************
@@ -24,7 +23,6 @@ class	NoInitClass;
 
 // Why, oh why does Visual C need this!!! It's bugged. <sigh>
 #pragma warning(disable : 4505)
-
 
 template<class T>
 class VectorClass
@@ -77,7 +75,6 @@ class VectorClass
 		bool VectorClassPad[2];
 };
 
-
 /***********************************************************************************************
  * VectorClass<T>::VectorClass -- Constructor for vector class.                                *
  *                                                                                             *
@@ -119,7 +116,6 @@ VectorClass<T>::VectorClass(int size, T const * array) :
 	}
 }
 
-
 /***********************************************************************************************
  * VectorClass<T>::~VectorClass -- Default destructor for vector class.                        *
  *                                                                                             *
@@ -140,7 +136,6 @@ VectorClass<T>::~VectorClass(void)
 {
 	VectorClass<T>::Clear();
 }
-
 
 /***********************************************************************************************
  * VectorClass<T>::VectorClass -- Copy constructor for vector object.                          *
@@ -166,7 +161,6 @@ VectorClass<T>::VectorClass(VectorClass<T> const & vector) :
 {
 	*this = vector;
 }
-
 
 /***********************************************************************************************
  * VectorClass<T>::operator = -- The assignment operator.                                      *
@@ -205,7 +199,6 @@ VectorClass<T> & VectorClass<T>::operator =(VectorClass<T> const & vector)
 	return(*this);
 }
 
-
 /***********************************************************************************************
  * VectorClass<T>::operator == -- Equality operator for vector objects.                        *
  *                                                                                             *
@@ -236,7 +229,6 @@ bool VectorClass<T>::operator == (VectorClass<T> const & vector) const
 	return(false);
 }
 
-
 /***********************************************************************************************
  * VectorClass<T>::ID -- Pointer based conversion to index number.                             *
  *                                                                                             *
@@ -261,7 +253,6 @@ inline int VectorClass<T>::ID(T const * ptr)
 	if (!IsValid) return(0);
 	return(((unsigned long)ptr - (unsigned long)&(*this)[0]) / sizeof(T));
 }
-
 
 /***********************************************************************************************
  * VectorClass<T>::ID -- Finds object ID based on value.                                       *
@@ -292,7 +283,6 @@ int VectorClass<T>::ID(T const & object)
 	return(-1);
 }
 
-
 /***********************************************************************************************
  * VectorClass<T>::Clear -- Frees and clears the vector.                                       *
  *                                                                                             *
@@ -319,7 +309,6 @@ void VectorClass<T>::Clear(void)
 	IsAllocated = false;
 	VectorMax = 0;
 }
-
 
 /***********************************************************************************************
  * VectorClass<T>::Resize -- Changes the size of the vector.                                   *
@@ -413,8 +402,6 @@ bool VectorClass<T>::Resize(int newsize, T const * array)
 	}
 	return(true);
 }
-
-
 
 /**************************************************************************
 **	This derivative vector class adds the concept of adding and deleting
@@ -515,7 +502,6 @@ class DynamicVectorClass : public VectorClass<T>
 		int GrowthStep;
 };
 
-
 /***********************************************************************************************
  * DynamicVectorClass<T>::DynamicVectorClass -- Constructor for dynamic vector.                *
  *                                                                                             *
@@ -543,7 +529,6 @@ DynamicVectorClass<T>::DynamicVectorClass(unsigned size, T const * array)
 	GrowthStep = 10;
 	ActiveCount = 0;
 }
-
 
 /***********************************************************************************************
  * DynamicVectorClass<T>::Resize -- Changes the size of a dynamic vector.                      *
@@ -574,7 +559,6 @@ bool DynamicVectorClass<T>::Resize(int newsize, T const * array)
 	return(false);
 }
 
-
 /***********************************************************************************************
  * DynamicVectorClass<T>::ID -- Find matching value in the dynamic vector.                     *
  *                                                                                             *
@@ -601,7 +585,6 @@ int DynamicVectorClass<T>::ID(T const & object)
 	}
 	return(-1);
 }
-
 
 /***********************************************************************************************
  * DynamicVectorClass<T>::Add -- Add an element to the vector.                                 *
@@ -649,7 +632,6 @@ bool DynamicVectorClass<T>::Add(T const & object)
 	(*this)[ActiveCount++] = object;
 	return(true);
 }
-
 
 /***********************************************************************************************
  * DynamicVectorClass<T>::Add_Head -- Adds element to head of the list.                        *
@@ -701,8 +683,6 @@ bool DynamicVectorClass<T>::Add_Head(T const & object)
 	return(true);
 }
 
-
-
 /***********************************************************************************************
  * DynamicVectorClass<T>::Insert -- insert an object at the desired index                      *
  *                                                                                             *
@@ -752,7 +732,6 @@ bool DynamicVectorClass<T>::Insert(int index,T const & object)
 	return(true);
 }
 
-
 /***********************************************************************************************
  * DynamicVectorClass<T>::Delete -- Remove the specified object from the vector.               *
  *                                                                                             *
@@ -778,7 +757,6 @@ bool DynamicVectorClass<T>::Delete(T const & object)
 	}
 	return(false);
 }
-
 
 /***********************************************************************************************
  * DynamicVectorClass<T>::Delete -- Deletes the specified index from the vector.               *
@@ -818,7 +796,6 @@ bool DynamicVectorClass<T>::Delete(int index)
 	return(false);
 }
 
-
 template<class T>
 void DynamicVectorClass<T>::Delete_All(void) 
 {
@@ -826,7 +803,6 @@ void DynamicVectorClass<T>::Delete_All(void)
 	Clear();		// Forces destructor call on each object.
 	Resize(len);
 }
-
 
 /***********************************************************************************************
  * DynamicVectorClass<T>::Uninitialized_Add -- Add an empty place to the vector.               *
@@ -878,12 +854,10 @@ T * DynamicVectorClass<T>::Uninitialized_Add(void)
    return &((*this)[ActiveCount++]);
 }
 
-
 void Set_Bit(void * array, int bit, int value);
 int Get_Bit(void const * array, int bit);
 int First_True_Bit(void const * array);
 int First_False_Bit(void const * array);
-
 
 /**************************************************************************
 **	This is a derivative of a vector class that supports boolean flags. Since
@@ -1005,7 +979,6 @@ class BooleanVectorClass
 		VectorClass<unsigned char> BitArray;
 };
 
-
 template<class T>
 int Pointer_Vector_Add(T * ptr, VectorClass<T *> & vec)
 {
@@ -1029,7 +1002,6 @@ int Pointer_Vector_Add(T * ptr, VectorClass<T *> & vec)
 	return(id);
 }
 
-
 template<class T>
 bool Pointer_Vector_Remove(T const * ptr, VectorClass<T *> & vec)
 {
@@ -1040,6 +1012,5 @@ bool Pointer_Vector_Remove(T const * ptr, VectorClass<T *> & vec)
 	}
 	return(false);
 }
-
 
 #endif

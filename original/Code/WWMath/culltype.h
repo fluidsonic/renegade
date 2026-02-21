@@ -18,5 +18,4 @@ typedef enum CULLTYPE
 	CULL_INSIDE					// the object is completely inside the culling volume
 };
 
-
 #endif

@@ -33,7 +33,6 @@ public:
 	Vector2 Max;
 };
 
-
 /**
 ** CameraClass
 ** This object controls how vertices are transformed from world-space to view
@@ -203,7 +202,6 @@ protected:
 	mutable Matrix3D				CameraInvTransform;
 };
 
-
 inline float CameraClass::Get_Depth(void) const 
 { 
 	return ZFar;
@@ -270,7 +268,6 @@ inline bool CameraClass::Cull_Sphere_On_Frustum_Sides(const SphereClass & sphere
 	return !is_visible;
 }
 
-
 /***********************************************************************************************
  * CameraClass::Get_Frustum -- returns the frustum of the camera                               *
  *                                                                                             *
@@ -309,7 +306,6 @@ CameraClass::Get_Frustum_Planes(void) const
 	return frustum.Planes;
 }
 
-
 /***********************************************************************************************
  * CameraClass::Get_Frustum_Corners -- returns pointer to the array of frustum corners         *
  *                                                                                             *
@@ -336,7 +332,6 @@ CameraClass::Get_Frustum_Corners(void) const
 	return frustum.Corners;
 }
 
-
 /***********************************************************************************************
  * CameraClass::Get_View_Space_Frustum -- returns the view-space frustum for this camera       *
  *                                                                                             *
@@ -355,7 +350,6 @@ inline const FrustumClass & CameraClass::Get_View_Space_Frustum(void) const
 	return ViewSpaceFrustum;
 }
 
-
 /***********************************************************************************************
  * CameraClass::Get_View_Space_Frustum_Planes -- returns the view space clip planes for this c *
  *                                                                                             *
@@ -373,7 +367,6 @@ inline const PlaneClass * CameraClass::Get_View_Space_Frustum_Planes(void) const
 	const FrustumClass & frustum = Get_View_Space_Frustum();
 	return frustum.Planes;
 }
-
 
 /***********************************************************************************************
  * CameraClass::Get_View_Space_Frustum_Corners -- returns the corners of the view space frustu *
@@ -399,6 +392,5 @@ inline const Vector3 * CameraClass::Get_View_Space_Frustum_Corners(void) const
 	const FrustumClass & frustum = Get_View_Space_Frustum();
 	return frustum.Corners;
 }
-
 
 #endif

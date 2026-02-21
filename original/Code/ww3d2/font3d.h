@@ -131,7 +131,6 @@ public:
 	void	Set_Mono_Spaced( void );
 	void	Set_Proportional( void )	{ MonoSpacing = 0;  Build_Cached_Tables(); }
 
-
 	/*
 	** Set the font scale (default to 1)
 	** This amount will be automatically applied to all Char_Screen_Width calls
@@ -145,7 +144,6 @@ public:
 	float	Char_Width( WCHAR ch ) const		{ return ScaledWidthTable[ch&0xFF]; }
 	float	Char_Spacing( WCHAR ch ) const	{ return ScaledSpacingTable[ch&0xFF]; }
 	float	Char_Height( void ) const			{ return ScaledHeight; }
-
 
 	/*
 	** The scaled pixel width of a string; useful before printing to avoid screen overflows.
@@ -180,6 +178,5 @@ private:
 
 	void					Build_Cached_Tables();
 };
-
 
 #endif 

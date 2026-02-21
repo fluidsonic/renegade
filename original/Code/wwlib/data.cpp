@@ -2,7 +2,6 @@
 #include <new.h>
 #include	"data.h"
 
-
 /***********************************************************************************************
  * Load_Alloc_Data -- Allocates a buffer and loads the file into it.                           *
  *                                                                                             *
@@ -33,7 +32,6 @@ void * Load_Alloc_Data(FileClass & file)
 	}
 	return(ptr);
 }
-
 
 /***********************************************************************************************
  * Load_Uncompress -- Loads and uncompresses data to a buffer.                                 *
@@ -135,7 +133,6 @@ long Load_Uncompress(FileClass & file, Buffer & uncomp_buff, Buffer & dest_buff,
 	return((long)size);
 }
 
-
 typedef struct SRecord {
 	int ID;						// ID number of the string resource.
 	int TimeStamp;				// 'Time' that this string was last requested.
@@ -143,7 +140,6 @@ typedef struct SRecord {
 
 	SRecord(void) : ID(-1), TimeStamp(-1) {}
 } SRecord;
-
 
 /***********************************************************************************************
  * Fetch_String -- Fetches a string resource.                                                  *
@@ -218,7 +214,6 @@ char const * Fetch_String(int id)
 #endif
 }
 
-
 void const * Fetch_Resource(LPCSTR resname, LPCSTR restype)
 {
 #ifdef _UNIX
@@ -245,12 +240,10 @@ void const * Fetch_Resource(LPCSTR resname, LPCSTR restype)
 #endif
 }
 
-
 int Load_Picture(FileClass & file, Buffer & scratchbuf, Buffer & destbuf, unsigned char * palette, PicturePlaneType )
 {
 	return(Load_Uncompress(file, scratchbuf, destbuf,  palette ) / 8000);
 }
-
 
 /***********************************************************************************************
  * Hires_Load -- Allocates memory for, and loads, a resolution dependant file.                 *
@@ -283,5 +276,4 @@ void * Hires_Load(FileClass & file)
 		return (NULL);
 	}
 }
-
 

@@ -8,19 +8,16 @@
 #include "mixfile.h"
 #include "gametype.h"
 
-
 /////////////////////////////////////////////////////////////////////
 //	Local constants
 /////////////////////////////////////////////////////////////////////
 static const char *	CURR_MOD_REG_VALUE	= "CurrModPackage";
-
 
 //////////////////////////////////////////////////////////////////////
 //	Static member initialization
 //////////////////////////////////////////////////////////////////////
 DynamicVectorClass<ModPackageClass>	ModPackageMgrClass::PackageList;
 ModPackageClass							ModPackageMgrClass::CurrentPackage;
-
 
 /////////////////////////////////////////////////////////////////////
 //
@@ -56,7 +53,6 @@ ModPackageMgrClass::Initialize (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -68,7 +64,6 @@ ModPackageMgrClass::Shutdown (void)
 	Reset_List ();
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -108,7 +103,6 @@ ModPackageMgrClass::Build_List (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Reset_List
@@ -120,7 +114,6 @@ ModPackageMgrClass::Reset_List (void)
 	PackageList.Delete_All ();
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -146,7 +139,6 @@ ModPackageMgrClass::Set_Current_Package (const char *package_filename)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Set_Current_Package
@@ -158,7 +150,6 @@ ModPackageMgrClass::Set_Current_Package (int index)
 	Set_Current_Package (PackageList[index].Get_Package_Filename ());
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -182,7 +173,6 @@ ModPackageMgrClass::Find_Package (const char *name)
 
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -232,7 +222,6 @@ ModPackageMgrClass::Get_Mod_Map_Name_From_CRC_Index
 
 	return retval;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -286,7 +275,6 @@ ModPackageMgrClass::Get_Mod_Map_Name_From_CRC
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Find_Filename_From_CRC
@@ -305,7 +293,6 @@ ModPackageMgrClass::Find_Filename_From_CRC
 	}
 
 	bool retval = false;
-
 
 	WIN32_FIND_DATA find_info	= { 0 };
 	BOOL keep_going				= TRUE;
@@ -344,7 +331,6 @@ ModPackageMgrClass::Find_Filename_From_CRC
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Find_Package_From_CRC
@@ -381,7 +367,6 @@ ModPackageMgrClass::Find_Package_From_CRC
 	return retval;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Load_Current_Mod
@@ -401,7 +386,6 @@ ModPackageMgrClass::Load_Current_Mod (void)
 	FileFactoryListClass::Get_Instance ()->Add_Temp_FileFactory (new MixFileFactoryClass (CurrentPackage.Get_Package_Filename (), _TheFileFactory));
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //

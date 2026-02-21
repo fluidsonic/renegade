@@ -215,7 +215,6 @@ void	LineGroupClass::Render(RenderInfoClass &rinfo)
 	DX8Wrapper::Set_Texture(0, Texture);
 	REF_PTR_RELEASE(linemat);
 
-
 	// Enable sorting if the primitives are translucent and alpha testing is not enabled.
 	const bool sort = (Shader.Get_Dst_Blend_Func() != ShaderClass::DSTBLEND_ZERO) && (Shader.Get_Alpha_Test() == ShaderClass::ALPHATEST_DISABLE) && (WW3D::Is_Sorting_Enabled());
 

@@ -30,7 +30,6 @@ typedef enum {
 	GAME_MODE_SUSPENDED,
 } GameModeState;
 
-
 class	GameModeClass {
 
 protected:
@@ -74,8 +73,6 @@ private:
 	static int NumActiveMajorModes;
 
 };
-
-
 
 /*
 ** GameModeManager - an object to maintain a list of all GameModes
@@ -121,6 +118,5 @@ public:
 private:
 	static	Vector3	BackgroundColor;
 };
-
 
 #endif	// GAMEMODE_H

@@ -3,7 +3,6 @@
 #include	<string.h>
 #include	<assert.h>
 
-
 /***********************************************************************************************
  * BlowPipe::Flush -- Flushes any pending data out the pipe.                                   *
  *                                                                                             *
@@ -30,7 +29,6 @@ int BlowPipe::Flush(void)
 	total += Pipe::Flush();
 	return(total);
 }
-
 
 /***********************************************************************************************
  * BlowPipe::Put -- Submit a block of data for encrypt/decrypt.                                *
@@ -123,7 +121,6 @@ int BlowPipe::Put(void const * source, int slen)
 	return(total);
 }
 
-
 /***********************************************************************************************
  * BlowPipe::Key -- Submit a key to the blowfish pipe handler.                                 *
  *                                                                                             *
@@ -157,6 +154,4 @@ void BlowPipe::Key(void const * key, int length)
 		BF->Submit_Key(key, length);
 	}
 }
-
-
 

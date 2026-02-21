@@ -121,7 +121,6 @@ public:
 	Vector3				DockEntrance;
 };
 
-
 inline ActionParamsStruct::ActionParamsStruct( void ) :
 	Priority( 0 ),
 	ActionID( 0 ),
@@ -177,7 +176,6 @@ void	inline ActionParamsStruct::Set_Face_Location( const Vector3 &obj_pos, float
 	FaceDuration	= duration;
 	return ;
 }
-
 
 void	inline ActionParamsStruct::Set_Look( const Vector3 &obj_pos, float angle,  float duration )
 {

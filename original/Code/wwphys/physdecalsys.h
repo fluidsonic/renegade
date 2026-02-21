@@ -77,7 +77,6 @@ protected:
 	void										allocate_resources(void);
 	void										release_resources(void);
 
-
 	/**
 	** LogicalDecalClass
 	** This class is used to track all of the meshes that were affected when a 
@@ -111,8 +110,6 @@ protected:
 
 	DistAlphaVPClass*							DecalDistAlphaVP;
 };
-
-
 
 #endif //PHYSDECALSYS_H
 

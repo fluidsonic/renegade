@@ -9,13 +9,11 @@
 #include "soldierobserver.h"
 #include "gameobjmanager.h"
 #include "conversationmgr.h"
-#include "debug.h"
 #include "wwaudio.h"
 #include "audiblesound.h"
 #include "translatedb.h"
 #include "translateobj.h"
 #include "combat.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -49,7 +47,6 @@ enum
 static const float RAND_STAND_DIST		= 2.0F;
 static const float MIN_AUDIENCE_DIST	= 4.0F;
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ActiveConversationClass
@@ -73,7 +70,6 @@ ActiveConversationClass::ActiveConversationClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ActiveConversationClass
@@ -86,7 +82,6 @@ ActiveConversationClass::~ActiveConversationClass (void)
 	REF_PTR_RELEASE (Conversation);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -155,7 +150,6 @@ ActiveConversationClass::Free_Orator_List (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Conversation
@@ -174,7 +168,6 @@ ActiveConversationClass::Set_Conversation (ConversationClass *conversation)
 	Free_Orator_List ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -210,7 +203,6 @@ ActiveConversationClass::Add_Orator (PhysicalGameObj *game_obj)
 	State = STATE_INITIALIZING;
 	return orator;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -360,7 +352,6 @@ ActiveConversationClass::Start_Conversation (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -424,7 +415,6 @@ ActiveConversationClass::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Say_Next_Remark
@@ -446,7 +436,6 @@ ActiveConversationClass::Say_Next_Remark (void)
 			Notify_Monitors (CUSTOM_EVENT_CONVERSATION_REMARK_ENDED, CurrentRemark - 1);
 		}
 		Notify_Monitors (CUSTOM_EVENT_CONVERSATION_REMARK_STARTED, CurrentRemark);
-
 
 		//
 		//	Lookup who says the next line
@@ -504,7 +493,6 @@ ActiveConversationClass::Say_Next_Remark (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -569,7 +557,6 @@ ActiveConversationClass::Is_Audience_In_Place (void)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Check_For_Audience
@@ -591,7 +578,6 @@ ActiveConversationClass::Check_For_Audience (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -654,7 +640,6 @@ ActiveConversationClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -703,7 +688,6 @@ ActiveConversationClass::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -754,7 +738,6 @@ ActiveConversationClass::Load_Variables (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Set_Orator_Arrived
@@ -779,7 +762,6 @@ ActiveConversationClass::Set_Orator_Arrived (PhysicalGameObj *orator, bool has_a
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -806,7 +788,6 @@ ActiveConversationClass::Get_Orator_Location (PhysicalGameObj *orator, Vector3 *
 
 	return retval;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -846,7 +827,6 @@ ActiveConversationClass::Get_Current_Orator_Location (Vector3 *position)
 	return retval;	
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Get_Current_Orator
@@ -874,7 +854,6 @@ ActiveConversationClass::Get_Current_Orator (void)
 	return current_orator;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Get_Conversation_Center
@@ -886,7 +865,6 @@ ActiveConversationClass::Get_Conversation_Center (Vector3 *position)
 	(*position) = CentralPos;
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -913,7 +891,6 @@ ActiveConversationClass::Get_Orator_Information (PhysicalGameObj *soldier)
 
 	return orator;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -954,7 +931,6 @@ ActiveConversationClass::Register_Monitor (ScriptableGameObj *game_obj)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Unregister_Monitor
@@ -976,7 +952,6 @@ ActiveConversationClass::Unregister_Monitor (ScriptableGameObj	*game_obj)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -1006,7 +981,6 @@ ActiveConversationClass::Notify_Monitors_On_End (ActionCompleteReason reason)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Notify_Monitors
@@ -1034,7 +1008,6 @@ ActiveConversationClass::Notify_Monitors (int custom_event_id, int param)
 		
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -1152,7 +1125,6 @@ ActiveConversationClass::Control_Orator (SoldierGameObj *soldier)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Stop_Conversation
@@ -1200,7 +1172,6 @@ ActiveConversationClass::Stop_Conversation (ActionCompleteReason reason)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Get_Conversation_Time
@@ -1247,7 +1218,6 @@ ActiveConversationClass::Get_Conversation_Time (void)
 
 	return (retval > 0.0F) ? retval : 2.0F;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //

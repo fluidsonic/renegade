@@ -72,7 +72,6 @@ class StaticSoundCullObjClass : public TileClass
 		mutable AABoxClass	m_AABox;
 };
 
-
 __inline const Matrix3D &
 StaticSoundCullObjClass::Get_Transform (void) const
 {
@@ -84,7 +83,6 @@ StaticSoundCullObjClass::Get_Transform (void) const
 	// Return a reference to the matrix
 	return m_Transform;
 }
-
 
 __inline void
 StaticSoundCullObjClass::Set_Transform (const Matrix3D &transform)
@@ -99,7 +97,6 @@ StaticSoundCullObjClass::Set_Transform (const Matrix3D &transform)
 	return ;
 }
 
-
 __inline Sound3DClass *		
 StaticSoundCullObjClass::Get_Sound_Obj (void) const
 {
@@ -110,7 +107,6 @@ StaticSoundCullObjClass::Get_Sound_Obj (void) const
 	// Return a pointer to the sound object
 	return m_SoundObj;
 }
-
 
 __inline void
 StaticSoundCullObjClass::Set_Sound_Obj (Sound3DClass *sound_obj)
@@ -123,7 +119,6 @@ StaticSoundCullObjClass::Set_Sound_Obj (Sound3DClass *sound_obj)
 
 	return ;
 }
-
 
 __inline const AABoxClass &
 StaticSoundCullObjClass::Get_Bounding_Box (void) const

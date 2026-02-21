@@ -16,7 +16,6 @@
 #include "bones.h"
 #include "humanstate.h"
 #include "surfaceeffects.h"
-#include "debug.h"
 #include "backgroundmgr.h"
 #include "cover.h"
 #include "spawn.h"
@@ -59,9 +58,7 @@
 #include "translatedb.h"
 #include "string_ids.h"
 
-
 const int DEFAULT_MAX_SHADOWS = 4;
-
 
 /*
 **
@@ -322,8 +319,6 @@ public:
 
 		CombatManager::Set_Load_Progress( 0 );
 
-
-
 		#ifndef PARAM_EDITING_ON
 			// Tell the datasafe to expect calls from this thread now.
 			GenericDataSafeClass::Set_Preferred_Thread(GetCurrentThreadId());
@@ -437,7 +432,6 @@ void	CombatManager::Post_Load_Level( void )
 	//
 	StaticNetworkObjectClass::Generate_Static_Network_Objects ();
 
-
 	// Debug code to create a definition
 #if 0
 	DefinitionFactoryClass * def_factory = (DefinitionFactoryClass *)DefinitionFactoryMgrClass::Find_Factory( CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE );
@@ -496,7 +490,6 @@ void	CombatManager::Unload_Level( void )
 		WW3D::End_Render();
 	}
 
-
 	SystemInfoLog::Set_State_Exiting();
 
 	// Don't log load-on-demands after the game is over
@@ -526,7 +519,6 @@ void	CombatManager::Unload_Level( void )
 	REF_PTR_RELEASE (BackgroundScene);
 
 	WW3DAssetManager::Get_Instance()->Free_Assets();	// Free all assets
-
 
 	//
 	//	Kill the background music and flush the cache
@@ -589,14 +581,12 @@ void 	CombatManager::Handle_Input()
 	}
 }
 
-
 /*
 **
 */
 void 	CombatManager::Think()
 {
 	SyncTime += (int)((TimeManager::Get_Frame_Seconds() * 1000.0f) + 0.5f);
-
 
 	IsGameplayPermitted=NetworkHandler->Is_Gameplay_Permitted();
 
@@ -1028,7 +1018,6 @@ void	CombatManager::Do_Skeleton_Slider_Demo( void )
 	}
 }
 
-
 /*
 **
 */
@@ -1190,7 +1179,6 @@ void	CombatManager::Update_Combat_Mode( void )
 		{
 			VehicleGameObj * vehicle = star->Get_Profile_Vehicle();
 
-
 			Vector3	pos;
 			vehicle->Get_Position( &pos );
 			COMBAT_CAMERA->Set_Anchor_Position( pos );
@@ -1280,8 +1268,4 @@ void	CombatManager::Register_Star_Killer( ArmedGameObj * killer )
 		StarKillerID = 0;
 	}
 }
-
-
-
-
 

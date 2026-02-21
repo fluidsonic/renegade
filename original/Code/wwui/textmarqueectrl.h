@@ -6,7 +6,6 @@
 #include "render2dsentence.h"
 #include "vector.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	TextMarqueeCtrlClass
@@ -86,6 +85,5 @@ protected:
 	
 	DynamicVectorClass<CREDIT_LINE>	CreditLines;
 };
-
 
 #endif //__TEXTMARQUEECTRL_H

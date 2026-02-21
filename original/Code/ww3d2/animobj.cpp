@@ -6,7 +6,6 @@
 #include "ww3d.h"
 #include "animatedsoundmgr.h"
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Animatable3DObjClass -- constructor                                   *
  *                                                                                             *
@@ -57,7 +56,6 @@ Animatable3DObjClass::Animatable3DObjClass(const char * htree_name) :
 	}
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Animatable3DObjClass -- copy constructor                              *
  *                                                                                             *
@@ -94,7 +92,6 @@ Animatable3DObjClass::Animatable3DObjClass(const Animatable3DObjClass & src) :
 	*this = src;
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::~Animatable3DObjClass -- destructor                                   *
  *                                                                                             *
@@ -115,7 +112,6 @@ Animatable3DObjClass::~Animatable3DObjClass(void)
 		delete HTree;
 	}
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::operator = -- assignment operator                                     *
@@ -263,7 +259,6 @@ void Animatable3DObjClass::Special_Render(SpecialRenderInfoClass & rinfo)
 	}
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Set_Transform -- sets the transform and marks sub-objects as dirty    *
  *                                                                                             *
@@ -282,7 +277,6 @@ void Animatable3DObjClass::Set_Transform(const Matrix3D &m)
 	Set_Hierarchy_Valid(false); 
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Set_Position -- Sets the position and marks sub-objects as dirty      *
  *                                                                                             *
@@ -300,7 +294,6 @@ void Animatable3DObjClass::Set_Position(const Vector3 &v)
 	CompositeRenderObjClass::Set_Position(v); 
 	Set_Hierarchy_Valid(false); 
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Get_Num_Bones -- returns number of bones in this object               *
@@ -323,7 +316,6 @@ int Animatable3DObjClass::Get_Num_Bones(void)
 	}
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Get_Bone_Name -- returns the name of the given bone                   *
  *                                                                                             *
@@ -344,7 +336,6 @@ const char * Animatable3DObjClass::Get_Bone_Name(int bone_index)
 		return "RootTransform";
 	}
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Get_Bone_Index -- returns the index of the given bone                 *
@@ -367,8 +358,6 @@ int Animatable3DObjClass::Get_Bone_Index(const char * bonename)
 	}
 }
 
-
-
 /***********************************************************************************************
  * Animatable3DObjClass::Set_Animation -- set the animation state to "none" (base pose)        *
  *                                                                                             *
@@ -387,7 +376,6 @@ void Animatable3DObjClass::Set_Animation(void)
 	CurMotionMode = BASE_POSE;
 	Set_Hierarchy_Valid(false);
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Set_Animation -- Set the animation state to the given anim/frame      *
@@ -421,7 +409,6 @@ void Animatable3DObjClass::Set_Animation(HAnimClass * motion, float frame, int m
 
 	Set_Hierarchy_Valid(false);
 }	
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Set_Animation -- set the animation state to a blend of two anims      *
@@ -465,7 +452,6 @@ void Animatable3DObjClass::Set_Animation
 	}
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Set_Animation -- Set animation state with an anim combo               *
  *                                                                                             *
@@ -490,7 +476,6 @@ void Animatable3DObjClass::Set_Animation
 	Set_Hierarchy_Valid(false);
 }						 
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Peek_Animation													                 *
  *                                                                                             *
@@ -511,7 +496,6 @@ HAnimClass *	Animatable3DObjClass::Peek_Animation( void )
 		return NULL;
 	}
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Get_Bone_Transform -- return the transform for the given bone         *
@@ -535,7 +519,6 @@ const Matrix3D &	Animatable3DObjClass::Get_Bone_Transform(const char * bonename)
 		return Get_Transform();
 	}
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Get_Bone_Transform -- return the transform for the given bone         *
@@ -568,7 +551,6 @@ const Matrix3D &	Animatable3DObjClass::Get_Bone_Transform(int boneindex)
 	}
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Capture_Bone -- capture the specified bone (override animation)       *
  *                                                                                             *
@@ -588,7 +570,6 @@ void Animatable3DObjClass::Capture_Bone(int boneindex)
 	}
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Release_Bone -- release the specified bone (allow animation)          *
  *                                                                                             *
@@ -607,7 +588,6 @@ void Animatable3DObjClass::Release_Bone(int boneindex)
 		HTree->Release_Bone(boneindex); 
 	}
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Is_Bone_Captured -- returns whether the specified bone is captured    *
@@ -629,7 +609,6 @@ bool Animatable3DObjClass::Is_Bone_Captured(int boneindex) const
 		return false;
 	}
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Control_Bone -- sets the transform for the bone                       *
@@ -739,7 +718,6 @@ void Animatable3DObjClass::Update_Sub_Object_Transforms(void)
 	Set_Hierarchy_Valid(true);
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Simple_Evaluate_Bone -- If the animation is 'single', evaluate the    *
  *																	given pivot and return its transform.		  *
@@ -781,7 +759,6 @@ bool Animatable3DObjClass::Simple_Evaluate_Bone(int boneindex, Matrix3D *tm) con
 	return retval;
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Simple_Evaluate_Bone -- If the animation is 'single', evaluate the    *
  *																	given pivot and return its transform.		  *
@@ -818,7 +795,6 @@ bool Animatable3DObjClass::Simple_Evaluate_Bone(int boneindex, float frame, Matr
 
 	return retval;
 }
-
 
 /***********************************************************************************************
  * Animatable3DObjClass::Compute_Current_Frame -- Returns the animation frame for the next rend*
@@ -911,7 +887,6 @@ void Animatable3DObjClass::Single_Anim_Progress (void)
 	}
 }
 
-
 /***********************************************************************************************
  * Animatable3DObjClass::Is_Animation_Complete -- is the current animation on the last frame?  *
  *                                                                                             *
@@ -935,7 +910,6 @@ bool	Animatable3DObjClass::Is_Animation_Complete( void ) const
 	return false;
 }
 
-
 // (gth) TESTING DYNAMICALLY SWAPPING SKELETONS!
 
 void Animatable3DObjClass::Set_HTree(HTreeClass * new_htree) 
@@ -948,6 +922,5 @@ void Animatable3DObjClass::Set_HTree(HTreeClass * new_htree)
 	}
 	HTree = new HTreeClass(*new_htree);
 }
-
 
 // EOF - animobj.cpp

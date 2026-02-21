@@ -35,7 +35,6 @@
 #include "gdsingleplayer.h"
 #include "gdcnc.h"
 #include "font3d.h"
-#include "nat.h"
 #include "csdamageevent.h"
 #include "sctextobj.h"
 #include "widestring.h"
@@ -1928,7 +1927,7 @@ cGameData::Rotate_Map(void)
 		}
 	}
 #endif //(0)
-	
+
 	//
 	// Increment it
 	//

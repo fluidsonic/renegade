@@ -37,7 +37,6 @@ enum
 	VARID_ARRIVED_DIST
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	VehicleDriverClass
@@ -102,7 +101,6 @@ VehicleDriverClass::Get_Velocity (const Matrix3D &tm, Vector3 &vel_vector)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Initialize
@@ -149,7 +147,6 @@ VehicleDriverClass::Initialize (SmartGameObj *game_obj, PathClass *path)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -204,7 +201,6 @@ Find_Tangent_Angle
 	return angle;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Drive
@@ -233,7 +229,6 @@ VehicleDriverClass::Drive (void)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -340,7 +335,6 @@ VehicleDriverClass::Drive_Wheeled (void)
 		//
 		float max_angle	= DEG_TO_RADF (10.0F) + (1.0F - curve_sharpness) * DEG_TO_RADF (30.0F);
 		float turn_accel	= turn_angle / max_angle;
-
 
 		/*PathObjectClass path_obj;
 		m_CurrentPath->Get_Path_Object (path_obj);
@@ -489,7 +483,6 @@ VehicleDriverClass::Drive_Wheeled (void)
 	return is_complete;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Calculate_Brake
@@ -529,7 +522,6 @@ VehicleDriverClass::Calculate_Brake
 
 	} else {
 
-
 		//
 		//	Start braking when the vehicle is 3 seconds away from its destination
 		//
@@ -549,7 +541,6 @@ VehicleDriverClass::Calculate_Brake
 
 	return brake_velocity;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -738,9 +729,6 @@ VehicleDriverClass::Drive_Tracked (void)
 	return is_complete;
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	Apply_Controls
@@ -769,7 +757,6 @@ VehicleDriverClass::Apply_Controls
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Force_Backup
@@ -786,7 +773,6 @@ VehicleDriverClass::Force_Backup (bool onoff)
 	m_IsBackupLocked	= onoff;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -811,7 +797,6 @@ VehicleDriverClass::Are_We_Stuck (const Vector3 &vel_vector)
 	//
 	return bool(m_BadProgressCount > 30);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -843,7 +828,6 @@ VehicleDriverClass::Save (ChunkSaveClass &csave)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -865,7 +849,6 @@ VehicleDriverClass::Load (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -914,7 +897,6 @@ VehicleDriverClass::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //

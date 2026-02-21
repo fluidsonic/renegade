@@ -51,8 +51,6 @@ private:
 
 };
 
-
-
 /*
 ** MotorcycleDefClass - Initialization Structure/Factory/Editor Integration for a MotorcycleClass
 */
@@ -85,7 +83,5 @@ protected:
 
 	friend class MotorcycleClass;
 };
-
-
 
 #endif

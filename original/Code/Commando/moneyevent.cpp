@@ -10,7 +10,6 @@
 #include "playermanager.h"
 #include "apppackettypes.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cMoneyEvent, NETCLASSID_MONEYEVENT);
 
 //-----------------------------------------------------------------------------
@@ -62,7 +61,6 @@ cMoneyEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add(Amount);
 
@@ -75,15 +73,9 @@ cMoneyEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
 	packet.Get(Amount);
 
-
 	Act();
 }
-
-
-
-
 

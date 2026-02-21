@@ -354,7 +354,6 @@ void cRemoteHost::Adjust_Flow_If_Necessary(float sample_time_ms)
 		//
 	//}
 
-
 	if (ExpectPacketFlood) {
 		BandwidthMultiplier = 0.5f;	//1.5f;
 		if (TIMEGETTIME() - FloodTimer > 8000) {
@@ -409,7 +408,6 @@ void cRemoteHost::Adjust_Flow_If_Necessary(float sample_time_ms)
 				}
 			}
 
-
 			if (BandwidthMultiplier < 20.0f) {
 
 				if (actual < (desired * 0.7f)) {
@@ -436,8 +434,6 @@ void cRemoteHost::Adjust_Flow_If_Necessary(float sample_time_ms)
 		}
 	}
 }
-
-
 
 //------------------------------------------------------------------------------------
 bool cRemoteHost::Is_Outgoing_Flooded(void)
@@ -494,7 +490,6 @@ bool cRemoteHost::Is_Outgoing_Flooded(void)
 	}
 	return(false);
 }
-
 
 //------------------------------------------------------------------------------------
 void cRemoteHost::Dam_The_Flood(void)
@@ -563,10 +558,6 @@ void cRemoteHost::Dam_The_Flood(void)
 	}
 }
 
-
-
-
-
 //------------------------------------------------------------------------------------
 void cRemoteHost::Set_Flood(bool state)
 {
@@ -576,8 +567,6 @@ void cRemoteHost::Set_Flood(bool state)
 	}
 }
 
-
-
 //------------------------------------------------------------------------------------
 void cRemoteHost::Set_Is_Loading(bool state)
 {
@@ -586,8 +575,6 @@ void cRemoteHost::Set_Is_Loading(bool state)
 	}
 	IsLoading = state;
 }
-
-
 
 //------------------------------------------------------------------------------------
 bool cRemoteHost::Was_Recently_Loading(unsigned long time)
@@ -604,10 +591,6 @@ bool cRemoteHost::Was_Recently_Loading(unsigned long time)
 	}
 	return(false);
 }
-
-
-
-
 
 //------------------------------------------------------------------------------------
 void cRemoteHost::Adjust_Resend_Timeout(void)

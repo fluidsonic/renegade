@@ -2,9 +2,7 @@
 #ifndef __DLGCONTROLS_H
 #define __DLGCONTROLS_H
 
-
 #include "menudialog.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -49,7 +47,6 @@ private:
 	//////////////////////////////////////////////////////////////
 	static ControlsMenuClass *	_TheInstance;
 };
-
 
 #endif //__DLGCONTROLS_H
 

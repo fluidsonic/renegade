@@ -31,7 +31,5 @@ protected:
 
 };
 
-
-
 #endif //MUZZLERECOIL_H
 

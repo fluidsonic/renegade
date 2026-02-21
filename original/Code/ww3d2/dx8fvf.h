@@ -169,5 +169,4 @@ public:
 	void Get_FVF_Name(StringClass& fvfname) const;	// For debug purposes
 };
 
-
 #endif

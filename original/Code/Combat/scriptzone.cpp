@@ -3,7 +3,6 @@
 #include "scripts.h"
 #include "colmath.h"
 #include "colmathinlines.h"
-#include "debug.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"

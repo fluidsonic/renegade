@@ -4,7 +4,6 @@
 
 #include "vector.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //	Forward declarations
 //////////////////////////////////////////////////////////////////////
@@ -14,7 +13,6 @@ class DX8IndexBufferClass;
 class DX8VertexBufferClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -69,6 +67,5 @@ public:
 	DX8IndexBufferClass *		IndexBuffers[PASS_COUNT];
 	DX8VertexBufferClass *		VertexBuffers[PASS_COUNT];
 };
-
 
 #endif //__RENEGADETERRAINMATERIALPASS_H

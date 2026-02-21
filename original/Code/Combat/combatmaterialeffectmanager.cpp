@@ -5,15 +5,12 @@
 #include "texture.h"
 #include "humanstate.h"
 
-
 const char * DEATH_TRANSITION_TEXTURE = "REN_death.tga";
 const char * SPAWN_TRANSITION_TEXTURE = "REN_spawn.tga";
 const char * HEALTH_TEXTURE = "REN_repair.tga";
 const char * ELECTROCUTION_TEXTURE = "REN_shock.tga";
 
 const float SPAWN_TRANSITION_TIME = 2.0f;
-
-
 
 TransitionEffectClass * 
 CombatMaterialEffectManager::Get_Spawn_Effect(void)

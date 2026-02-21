@@ -1,7 +1,6 @@
 #include "refcount.h"
 #include <windows.h>
 
-
 #ifndef NDEBUG
 
 // #define PARANOID_REFCOUNTS
@@ -11,8 +10,6 @@
 */
 int							RefCountClass::TotalRefs = 0;
 RefCountListClass			RefCountClass::ActiveRefList;
-
-
 
 /***********************************************************************************************
  * RefCountClass::Add_Active_Ref -- add a new referenced object to the list                     *
@@ -57,7 +54,6 @@ RefCountClass *	RefCountClass::Set_Ref_Owner(RefCountClass *obj,char * file,int 
 	obj->ActiveRefInfo.Line = line; 
 	return obj;
 }
-
 
 /***********************************************************************************************
  * RefCountClass::Remove_Active_Ref -- remove an object from the active refs list               *
@@ -164,8 +160,5 @@ void	RefCountClass::Dec_Total_Refs(RefCountClass * obj)
 	}
 }
 
-
-
 #endif
-
 

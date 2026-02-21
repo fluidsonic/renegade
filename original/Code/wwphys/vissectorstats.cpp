@@ -5,8 +5,6 @@
 #include "statistics.h"
 #include "matinfo.h"
 
-
-
 /***********************************************************************************************
  * Count_Textures -- counts textures used by the given object                                  *
  *                                                                                             *
@@ -45,13 +43,11 @@ static void Count_Textures(RenderObjClass * obj)
 	}
 }
 
-
 /*********************************************************************************************
 **
 ** VisSectorStatsClass Implementation
 **
 *********************************************************************************************/			
-
 
 /***********************************************************************************************
  * VisSectorStatsClass::VisSectorStatsClass -- Constructor                                     *
@@ -74,7 +70,6 @@ VisSectorStatsClass::VisSectorStatsClass(void) :
 	PhysObj(NULL)
 {
 }
-
 
 /***********************************************************************************************
  * VisSectorStatsClass::VisSectorStatsClass -- Constructor                                     *
@@ -99,7 +94,6 @@ VisSectorStatsClass::VisSectorStatsClass(const VisSectorStatsClass &src) :
 	(*this) = src;
 }
 
-
 /***********************************************************************************************
  * VisSectorStatsClass::~VisSectorStatsClass -- Destructor                                     *
  *                                                                                             *
@@ -115,7 +109,6 @@ VisSectorStatsClass::~VisSectorStatsClass(void)
 {
 	REF_PTR_RELEASE(PhysObj);
 }
-
 
 /***********************************************************************************************
  * VisSectorStatsClass::Compute_Stats -- Initializes the statistics for the given object       *
@@ -181,7 +174,6 @@ void VisSectorStatsClass::Compute_Stats(StaticPhysClass * obj,VisTableClass * vi
 	REF_PTR_SET (PhysObj, obj);
 }
 
-
 /***********************************************************************************************
  * VisSectorStatsClass::operator= -- Safely copies the member data from the source object.	  *
  *                                                                                             *
@@ -204,7 +196,6 @@ const VisSectorStatsClass &VisSectorStatsClass::operator= (const VisSectorStatsC
 	REF_PTR_SET (PhysObj, src.PhysObj);
 	return (*this);
 }
-
 
 /***********************************************************************************************
  * VisSectorStatsClass::Get_Name -- Returns the name of the model this vis sector contains	  *

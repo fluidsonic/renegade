@@ -1,6 +1,5 @@
 #include "weaponmanager.h"
 #include "weapons.h"
-#include "debug.h"
 #include "damage.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
@@ -653,7 +652,6 @@ bool	AmmoDefinitionClass::Load( ChunkLoadClass &cload )
 						READ_MICRO_CHUNK			  ( cload, 	MICROCHUNKID_AMMO_ICON_TEXTURE_UV,			IconTextureUV );
 						READ_MICRO_CHUNK			  ( cload, 	MICROCHUNKID_AMMO_ICON_OFFSET,				IconOffset );
 						READ_MICRO_CHUNK			  ( cload, 	MICROCHUNKID_AMMO_GRENADE_SAFETY_TIME, 		GrenadeSafetyTime );
-
 
 					default:
 							Debug_Say(( "Unrecognized AmmoDef Variable chunkID\n" ));

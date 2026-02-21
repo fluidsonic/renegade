@@ -1,5 +1,4 @@
 #include "damageablegameobj.h"
-#include "debug.h"
 #include "armedgameobj.h"
 #include "playertype.h"
 #include "colors.h"
@@ -133,8 +132,6 @@ DamageableGameObj::~DamageableGameObj( void )
 {
 	Remove_All_Observers();
 }
-
-
 
 /*
 **
@@ -309,7 +306,6 @@ void	DamageableGameObj::Apply_Damage( const OffenseObjectClass & damager, float 
 	}
 } */
 
-
 /*
 **
 */
@@ -322,7 +318,6 @@ void	DamageableGameObj::Export_Occasional( BitStreamClass &packet )
 	//
 	DefenseObject.Export (packet);
 }
-
 
 /*
 **
@@ -382,7 +377,6 @@ void	DamageableGameObj::Import_Occasional( BitStreamClass &packet )
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 bool DamageableGameObj::Is_Team_Player(void) 
 {
@@ -415,5 +409,4 @@ bool DamageableGameObj::Is_Enemy(DamageableGameObj * p_obj)
 {
    return ( (p_obj != this) && Player_Types_Are_Enemies( Get_Player_Type(), p_obj->Get_Player_Type() ) );
 }
-
 

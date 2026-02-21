@@ -17,7 +17,6 @@
 	#include "simplevec.h"
 #endif
 
-
 class	ChunkSaveClass;
 class	ChunkLoadClass;
 class	DamageableGameObj;
@@ -162,14 +161,6 @@ protected:
 };
 
 #endif	//	PLAYERDATA_H
-
-
-
-
-
-
-
-
 
 	//safe_int				Score;
 	//virtual	bool	Purchase_Item( int cost );

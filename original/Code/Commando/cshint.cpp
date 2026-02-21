@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "debug.h"
 #include "networkobjectfactory.h"
 #include "cnetwork.h"
 #include "networkobjectmgr.h"
@@ -24,7 +23,6 @@ cCsHint::cCsHint(void)
 void
 cCsHint::Init(int subject_id)
 {
-
 
 	SenderId		= cNetwork::Get_My_Id();
 	SubjectId	= subject_id;

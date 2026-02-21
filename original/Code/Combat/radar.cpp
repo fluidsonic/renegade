@@ -2,7 +2,6 @@
 #include "assets.h"
 #include "soldier.h"
 #include "gameobjmanager.h"
-#include "debug.h"
 #include "combat.h"
 #include "render2d.h"
 #include "texture.h"
@@ -15,7 +14,6 @@
 #include "stylemgr.h"
 #include "translatedb.h"
 #include "string_ids.h"
-
 
 DynamicVectorClass<RadarMarkerClass>	RadarManager::Markers;
 Render2DClass						*	RadarManager::Renderer;
@@ -60,7 +58,6 @@ static	const RectClass &	Scale_UV( const RectClass & uv, float texture_size )
 	return new_uv;
 }
 
-
 void	RadarManager::Set_Hidden( bool onoff )	
 { 
 	if ( IsHidden != onoff ) {
@@ -103,7 +100,6 @@ extern Vector2 RADAR_BRACKET_UV_UL;
 extern Vector2 RADAR_BRACKET_UV_LR;
 extern Vector2 RADAR_SWEEP_UV_UL;
 extern Vector2 RADAR_SWEEP_UV_LR;
-
 
 void 	RadarManager::Init()
 {
@@ -187,7 +183,6 @@ void 	RadarManager::Shutdown()
 		delete CompassRenderers[i];
 		CompassRenderers[i] = NULL;
 	}
-
 
 	Markers.Delete_All();
 
@@ -317,7 +312,6 @@ float	RadarManager::Add_Blip( const Vector3 & pos, int shape_type, int color_typ
 			if ( altitude_fade ) {
 				color_alpha *= 0.66f;
 			}
-
 
 			unsigned int color = BlipColors[ color_type ];
 			color &= 0x00FFFFFF;
@@ -462,7 +456,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 
 #endif
 
-
 	// Now build the blips
 	float star_z = 0;
 	if ( COMBAT_STAR ) {
@@ -515,7 +508,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 					continue;
 				}
 			}
-
 
 			Vector3 objpos;
 			obj->Get_Position( &objpos );
@@ -618,7 +610,6 @@ RadarMarkerClass::RadarMarkerClass( void ) :
 	Intensity( 0 )
 {
 }
-
 
 enum	{
 	CHUNKID_VARIABLES						=	630001403,

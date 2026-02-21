@@ -2,9 +2,7 @@
 #ifndef __MAIN_MENU_TRANSITION_H
 #define __MAIN_MENU_TRANSITION_H
 
-
 #include "dialogtransition.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -13,7 +11,6 @@ class RenderObjClass;
 class HAnimClass;
 class CameraClass;
 class DialogBaseClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -73,7 +70,6 @@ private:
 	float					TargetFrame;
 
 };
-
 
 #endif //__MAIN_MENU_TRANSITION_H
 

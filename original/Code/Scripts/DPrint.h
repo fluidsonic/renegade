@@ -13,7 +13,6 @@ void __cdecl DebugPrint(const char* string, ...);
 #define DebugPrint
 #endif
 
-
 #ifdef __cplusplus
 }
 #endif

@@ -19,7 +19,6 @@ MovieOptionsMenuClass::MovieOptionsMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -84,7 +83,6 @@ MovieOptionsMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -107,7 +105,6 @@ MovieOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -141,7 +138,6 @@ MovieOptionsMenuClass::On_ListCtrl_Delete_Entry
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_DblClk
@@ -162,7 +158,6 @@ MovieOptionsMenuClass::On_ListCtrl_DblClk
 	Begin_Play_Movie ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -228,7 +223,6 @@ MovieOptionsMenuClass::Begin_Play_Movie (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Play_Movie
@@ -250,7 +244,6 @@ MovieOptionsMenuClass::Play_Movie (const char *filename)
 	IsPlaying = true;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -277,7 +270,6 @@ MovieOptionsMenuClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -294,7 +286,6 @@ MovieOptionsMenuClass::On_Frame_Update (void)
 	MenuDialogClass::On_Frame_Update ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -320,7 +311,6 @@ MovieOptionsMenuClass::On_Key_Down (uint32 key_id, uint32 key_data)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

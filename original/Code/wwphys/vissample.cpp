@@ -17,7 +17,6 @@ typedef struct
 	unsigned long	reserved[4];
 } PERSISTENT_VIS_SAMPLE_INFO;
 
-
 VisSampleClass::VisSampleClass(void)
 	:	DirectionBits (0),
 		ViewTransform (1),
@@ -30,7 +29,6 @@ VisSampleClass::VisSampleClass(void)
 	}
 	return ;
 }
-
 
 VisSampleClass::VisSampleClass(const Matrix3D & viewtm,VisDirBitsType direction_bits)
 {

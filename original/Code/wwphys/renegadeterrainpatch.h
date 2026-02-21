@@ -2,7 +2,6 @@
 #ifndef __RENEGADETERRAINPATCH_H
 #define __RENEGADETERRAINPATCH_H
 
-
 #include "rendobj.h"
 #include "vector.h"
 #include "shader.h"
@@ -12,13 +11,11 @@
 #include "renegadeterrainmaterialpass.h"
 #include "terrainmaterial.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //	Forward declarations
 //////////////////////////////////////////////////////////////////////
 class VertexMaterialClass;
 class MaterialPassClass;
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -207,7 +204,6 @@ protected:
 						
 	DynamicVectorClass<RenegadeTerrainMaterialPassClass *>	MaterialPassList;
 };
-
 
 //////////////////////////////////////////////////////////////////////
 //	Collide_Quad

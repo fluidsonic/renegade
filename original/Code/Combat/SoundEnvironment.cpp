@@ -7,7 +7,6 @@
 #include "physcoltest.h"
 #include "pscene.h"
 
-
 /***********************************************************************************************
  * SoundEnvironmentClass::SoundEnvironmentClass --															  *
  *                                                                                             *
@@ -27,7 +26,6 @@ SoundEnvironmentClass::SoundEnvironmentClass()
 	AmplitudeBuffer = new float [AMPLITUDE_BUFFER_SIZE];
 	Reset();
 }
-
 
 /***********************************************************************************************
  * SoundEnvironmentClass::Reset --																				  *
@@ -51,7 +49,6 @@ void SoundEnvironmentClass::Reset()
 	}
 }
 
-
 /***********************************************************************************************
  * SoundEnvironmentClass::~SoundEnvironmentClass --														  *
  *                                                                                             *
@@ -68,7 +65,6 @@ SoundEnvironmentClass::~SoundEnvironmentClass()
 {
 	delete [] AmplitudeBuffer;
 }
-
 
 /***********************************************************************************************
  * SoundEnvironmentClass::Update --																				  *

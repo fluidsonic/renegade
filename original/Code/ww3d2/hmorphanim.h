@@ -93,7 +93,6 @@ protected:
 	
 };
 
-
 /*********************************************************************************************
 ** 
 ** TimeCodedMorphKeysClass
@@ -144,8 +143,5 @@ private:
 	friend class HMorphAnimClass;
 };
 
-
-
 #endif
-
 

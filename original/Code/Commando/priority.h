@@ -27,7 +27,6 @@ private:
 	static float			Compute_Type_Factor_2(NetworkObjectClass * p_netobject, float distance);
 	static float			Compute_Relevance_Factor_2(int client_id, NetworkObjectClass * p_netobject, SoldierGameObj *client_soldier = NULL);
 
-
 	static float			MaxDistance;
 	static const float	MAX_FACING_PENALTY;
 	static const float	TURRET_FACTOR;

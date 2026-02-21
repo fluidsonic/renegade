@@ -2,7 +2,6 @@
 #include	"palette.h"
 #include	<string.h>
 
-
 /***********************************************************************************************
  * PaletteClass::PaletteClass -- Constructor that fills palette with color specified.          *
  *                                                                                             *
@@ -50,7 +49,6 @@ int PaletteClass::operator == (PaletteClass const & palette) const
 	return(memcmp(&Palette[0], &palette.Palette[0], sizeof(Palette)) == 0);
 }
 
-
 /***********************************************************************************************
  * PaletteClass::operator = -- Assignment operator for palette objects.                        *
  *                                                                                             *
@@ -75,7 +73,6 @@ PaletteClass & PaletteClass::operator = (PaletteClass const & palette)
 	return(*this);
 }
 
-
 /***********************************************************************************************
  * PaletteClass::Adjust -- Adjusts this palette toward black.                                  *
  *                                                                                             *
@@ -99,7 +96,6 @@ void PaletteClass::Adjust(int ratio)
 		Palette[index].Adjust(ratio, BlackColor);
 	}
 }
-
 
 /***********************************************************************************************
  * PaletteClass::Adjust -- Adjusts the palette toward another palette.                         *
@@ -126,7 +122,6 @@ void PaletteClass::Adjust(int ratio, PaletteClass const & palette)
 		Palette[index].Adjust(ratio, palette[index]);
 	}
 }
-
 
 /***********************************************************************************************
  * PaletteClass::Partial_Adjust -- Adjusts the specified parts of this palette toward black.   *
@@ -156,7 +151,6 @@ void PaletteClass::Partial_Adjust(int ratio, char *lut)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * PaletteClass::Partial_Adjust -- Adjusts the palette toward another palette.                 *
@@ -190,7 +184,6 @@ void PaletteClass::Partial_Adjust(int ratio, PaletteClass const & palette, char 
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * PaletteClass::Closest_Color -- Finds closest match to color specified.                      *

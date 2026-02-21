@@ -197,7 +197,6 @@ void cGameDataSkirmish::Base_Destruction_Score_Tweaking(void)
 
 	} else {
 
-
 		gdi_score += BASE_DESTRUCTION_POINTS_REWARD;
 		if (gdi_score <= nod_score) {
 			gdi_score = nod_score + 1;
@@ -280,7 +279,6 @@ void cGameDataSkirmish::Save_To_Server_Config(void)
 
    INIClass * p_ini = Get_INI(Get_Ini_Filename());
 
-
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsFriendlyFirePermitted",	IsFriendlyFirePermitted.Get());
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsTeamChangingAllowed",	IsTeamChangingAllowed.Get());
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsClanGame",					IsClanGame.Get());
@@ -288,7 +286,6 @@ void cGameDataSkirmish::Save_To_Server_Config(void)
 	p_ini->Put_Bool(	INI_SECTION_NAME, "BaseDestructionEndsGame",	BaseDestructionEndsGame.Get());
 	p_ini->Put_Bool(	INI_SECTION_NAME, "BeaconPlacementEndsGame",	BeaconPlacementEndsGame.Get());
 	p_ini->Put_Int(   INI_SECTION_NAME, "StartingCredits",			Get_Starting_Credits());
-
 
 	Save_INI(p_ini, Get_Ini_Filename());
    Release_INI(p_ini);
@@ -364,7 +361,6 @@ void cGameDataSkirmish::Filter_Soldiers(void)
 		DynamicVectorClass<SpawnerClass*> spawner_list = SpawnManager::Get_Spawner_List();
 
 		for (int i = 0; i < spawner_list.Count(); i++) {
-
 
 			if (spawner_list[i]->Get_Definition().Get_Player_Type() == my_team) {
 				spawner_list[i]->Enable(false);

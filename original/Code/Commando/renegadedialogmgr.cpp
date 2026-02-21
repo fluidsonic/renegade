@@ -30,12 +30,10 @@
 #include "consolemode.h"
 #include "specialbuilds.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Globals
 ////////////////////////////////////////////////////////////////
 WWUIInputClass *	_TheWWUIInput = NULL;
-
 
 ////////////////////////////////////////////////////////////////
 //	Static data
@@ -77,7 +75,6 @@ DialogFactoryBaseClass *FactoryArray[FACTORY_COUNT] =
 	NULL,	//IDC_MENU_MP_LAN_JOIN_BUTTON
 	NULL,	//IDC_MENU_MP_LAN_START_BUTTON
 };
-
 
 ////////////////////////////////////////////////////////////////
 //	Local Prototypes
@@ -146,7 +143,6 @@ private:
 	mutable Vector3 MousePos;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Initialize
@@ -171,7 +167,6 @@ RenegadeDialogMgrClass::Initialize (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Do_Simple_Dialog
@@ -188,7 +183,6 @@ RenegadeDialogMgrClass::Do_Simple_Dialog (int dlg_res_id)
 	REF_PTR_RELEASE (dialog);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -254,7 +248,6 @@ RenegadeDialogMgrClass::Goto_Location (LOCATION location)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -285,7 +278,6 @@ RenegadeDialogMgrClass::Shutdown (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -348,7 +340,6 @@ Default_On_Command (DialogBaseClass *dialog, int ctrl_id, int mesage_id, DWORD p
 
 	return handled;
 }
-
 
 //
 // Called as follows: If IDS_TEST is the string you wish to load and

@@ -68,7 +68,6 @@ public:
    static bool	I_Am_Client_Server(void)	{return PClientConnection != NULL && PServerConnection != NULL;}
 	static bool I_Am_God(void);
 
-
 	// Sending Simple Client Packets
    static int Send_Object_Update(NetworkObjectClass *object, int client_id);
    static void Tell_Client_About_Dynamic_Objects(int recipient_client_id, Vector3 & dest_pos);
@@ -102,7 +101,6 @@ public:
 	static void Watch_Packet_Size_Lists(Render2DTextClass * renderer);
 	static void Simulation_Warnings(Render2DTextClass * renderer);
 	static void Connection_Status_Change_Feedback(void);
-
 
 	static void Client_Send_Packet(cPacket & packet, int mode);
 	static void Server_Send_Packet(cPacket & packet, int mode, int recipient = ALL);
@@ -150,7 +148,6 @@ public:
 
 	static void Enable_Waiting_Players(void);
 
-
 	//
 	// Hide...
 	//
@@ -159,8 +156,6 @@ public:
 
 	// Temp - going away later. ST - 10/16/2001 9:33PM
 	static bool SensibleUpdates;
-
-
 
 private:
 
@@ -219,8 +214,4 @@ private:
 };
 
 #endif
-
-
-
-
 

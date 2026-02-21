@@ -1,7 +1,6 @@
 #include "scripts.h"
 #include "MissionX0.h"
 
-
 // MX0 A02 PROTOTYPING SCRIPT SECTION
 
 DECLARE_SCRIPT (MX0_A02_Controller, "")
@@ -333,7 +332,6 @@ DECLARE_SCRIPT (MX0_A02_Controller, "")
 				}
 				sequence_active = false;
 				nod_spawn_sequence = 0;
-
 
 				// Have the Nod Officer say something.
 				Commands->Create_2D_Sound ("MX0_NODOFFICER_044");
@@ -1243,7 +1241,6 @@ DECLARE_SCRIPT (MX0_A02_Controller, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (MX0_A02_ACTOR, "ActorID=0:int")
 {
@@ -2897,7 +2894,6 @@ DECLARE_SCRIPT (MX0_A02_ACTOR, "ActorID=0:int")
 	}
 };
 
-
 // This script is for the vehicles to prevent them from taking any further damage.
 
 DECLARE_SCRIPT (MX0_A02_GDI_VEHICLE, "")
@@ -2912,7 +2908,6 @@ DECLARE_SCRIPT (MX0_A02_GDI_VEHICLE, "")
 		Commands->Set_Health (obj, 10.0f);
 	}
 };
-
 
 // This script is for the GDI Medium Tank. It is a trigger for entry that tells the controller.
 
@@ -2949,7 +2944,6 @@ DECLARE_SCRIPT (MX0_A02_GDI_MEDTANK, "")
 		}
 	}
 };
-
 
 // This script is for the GDI APC, which cannot take damage until it is to be destroyed.
 
@@ -2994,7 +2988,6 @@ DECLARE_SCRIPT (MX0_A02_GDI_APC, "")
 	}
 };
 
-
 // This script is for the trigger zone that activates the entire sequence.
 
 DECLARE_SCRIPT (MX0_A02_ZONE_STARTUP, "")
@@ -3009,7 +3002,6 @@ DECLARE_SCRIPT (MX0_A02_ZONE_STARTUP, "")
 		}
 	}
 };
-
 
 // This script is for the helicopters to send a custom to the controller when they are destroyed.
 
@@ -3054,7 +3046,6 @@ DECLARE_SCRIPT (MX0_A02_HELICOPTER, "ActorID=0:int")
 	}
 };
 
-
 // This is a default script for testing. It shuts off a unit.
 
 DECLARE_SCRIPT (MX0_A02_DEFAULT_OFF, "")
@@ -3088,7 +3079,6 @@ DECLARE_SCRIPT (MX0_A02_ZONE_DEFAULT_ON, "")
 };
 
 /////////////////////////////////////
-
 
 /* Evacuation System
 
@@ -3188,7 +3178,6 @@ DECLARE_SCRIPT (M03_A05_Evac_Zone, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (M00_Test_Sound_RAD, "")
 {

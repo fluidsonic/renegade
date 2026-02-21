@@ -7,20 +7,20 @@
 CFG=COMMANDO - WIN32 RELEASE
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "commando.mak".
-!MESSAGE 
+!MESSAGE
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
+!MESSAGE
 !MESSAGE NMAKE /f "commando.mak" CFG="COMMANDO - WIN32 RELEASE"
-!MESSAGE 
+!MESSAGE
 !MESSAGE Possible choices for configuration are:
-!MESSAGE 
+!MESSAGE
 !MESSAGE "commando - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "commando - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE "commando - Win32 Profile" (based on "Win32 (x86) Application")
-!MESSAGE 
+!MESSAGE
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -45,7 +45,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /I "..\directx" /I "..\sr\h" /I "..\sr\devs.h" /I "..\sr\sr.h" /I "..\wwmath" /I "..\ww3d" /I "..\library" /I "..\glide" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "OBSIDIAN" /YX /FD /c
-# ADD CPP /nologo /MTd /W4 /Gi /ZI /Od /I "..\DirectX\include" /I "..\\" /I "..\wwui" /I "..\wwbitpack" /I "..\combat" /I "..\wwaudio" /I "..\miles6\include" /I "..\wolapi" /I "..\wwutil" /I "..\wwlzhl" /I "..\wwnet" /I "..\wwmath" /I "..\ww3d2" /I "..\wwphys" /I "..\wwlib" /I "..\wwdebug" /I "..\wwsaveload" /I "..\wwtranslatedb" /I "..\BinkMovie" /I "..\scontrol" /I "..\GameSpy" /D "_DEBUG" /D "WWDEBUG" /D WINVER=0x400 /D "_WINDOWS" /D "DIRECTX" /D "WIN32" /Fr /FD /c
+# ADD CPP /nologo /MTd /W4 /Gi /ZI /Od /I "..\DirectX\include" /I "..\\" /I "..\wwui" /I "..\wwbitpack" /I "..\combat" /I "..\wwaudio" /I "..\miles6\include" /I "..\wwutil" /I "..\wwlzhl" /I "..\wwnet" /I "..\wwmath" /I "..\ww3d2" /I "..\wwphys" /I "..\wwlib" /I "..\wwdebug" /I "..\wwsaveload" /I "..\wwtranslatedb" /I "..\BinkMovie" /I "..\scontrol" /D "_DEBUG" /D "WWDEBUG" /D WINVER=0x400 /D "_WINDOWS" /D "DIRECTX" /D "WIN32" /Fr /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -73,7 +73,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /I "..\sr\h" /I "..\sr\devs.h" /I "..\sr\sr.h" /I "..\wwmath" /I "..\ww3d" /I "..\library" /I "..\glide" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "OBSIDIAN" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /Zi /O2 /Ob2 /I "..\wol" /I "..\network" /I "..\wwsound" /I "..\shell" /I "..\modes" /I "..\lan" /I "..\DirectX\include" /I "..\\" /I "..\wwui" /I "..\wwbitpack" /I "..\combat" /I "..\wwaudio" /I "..\miles6\include" /I "..\wolapi" /I "..\wwutil" /I "..\wwlzhl" /I "..\wwnet" /I "..\wwmath" /I "..\ww3d2" /I "..\wwphys" /I "..\wwlib" /I "..\wwdebug" /I "..\wwsaveload" /I "..\wwtranslatedb" /I "..\BinkMovie" /I "..\scontrol" /I "..\GameSpy" /D "NDEBUG" /D WINVER=0x400 /D "_WINDOWS" /D "DIRECTX" /D "WIN32" /Fr /FD /c
+# ADD CPP /nologo /MT /W4 /Zi /O2 /Ob2 /I "..\wol" /I "..\network" /I "..\wwsound" /I "..\shell" /I "..\modes" /I "..\lan" /I "..\DirectX\include" /I "..\\" /I "..\wwui" /I "..\wwbitpack" /I "..\combat" /I "..\wwaudio" /I "..\miles6\include" /I "..\wwutil" /I "..\wwlzhl" /I "..\wwnet" /I "..\wwmath" /I "..\ww3d2" /I "..\wwphys" /I "..\wwlib" /I "..\wwdebug" /I "..\wwsaveload" /I "..\wwtranslatedb" /I "..\BinkMovie" /I "..\scontrol" /D "NDEBUG" /D WINVER=0x400 /D "_WINDOWS" /D "DIRECTX" /D "WIN32" /Fr /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -105,7 +105,7 @@ PostBuild_Cmds=rebase -v -x ..\..\Run\. -a -b 400000 ..\..\Run\Renegade.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /I "..\sr\h" /I "..\sr\devs.h" /I "..\sr\sr.h" /I "..\glide" /I "..\wwmath" /I "..\ww3d" /I "..\wwphys" /I "..\library" /I "..\wwdebug" /I "..\directx\inc" /I "..\sr130\sr.h" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "DIRECTX" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /Zi /O2 /Op /Ob2 /I "..\wol" /I "..\network" /I "..\wwsound" /I "..\shell" /I "..\modes" /I "..\lan" /I "..\DirectX\include" /I "..\\" /I "..\wwui" /I "..\wwbitpack" /I "..\combat" /I "..\wwaudio" /I "..\miles6\include" /I "..\wolapi" /I "..\wwutil" /I "..\wwlzhl" /I "..\wwnet" /I "..\wwmath" /I "..\ww3d2" /I "..\wwphys" /I "..\wwlib" /I "..\wwdebug" /I "..\wwsaveload" /I "..\wwtranslatedb" /I "..\BinkMovie" /I "..\scontrol" /I "..\GameSpy" /D "NDEBUG" /D "WWDEBUG" /D WINVER=0x400 /D "_WINDOWS" /D "DIRECTX" /D "WIN32" /Fr /FD /c
+# ADD CPP /nologo /MT /W4 /Zi /O2 /Op /Ob2 /I "..\wol" /I "..\network" /I "..\wwsound" /I "..\shell" /I "..\modes" /I "..\lan" /I "..\DirectX\include" /I "..\\" /I "..\wwui" /I "..\wwbitpack" /I "..\combat" /I "..\wwaudio" /I "..\miles6\include" /I "..\wwutil" /I "..\wwlzhl" /I "..\wwnet" /I "..\wwmath" /I "..\ww3d2" /I "..\wwphys" /I "..\wwlib" /I "..\wwdebug" /I "..\wwsaveload" /I "..\wwtranslatedb" /I "..\BinkMovie" /I "..\scontrol" /D "NDEBUG" /D "WWDEBUG" /D WINVER=0x400 /D "_WINDOWS" /D "DIRECTX" /D "WIN32" /Fr /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o /win32 "NUL"
@@ -119,7 +119,7 @@ LINK32=link.exe
 # ADD LINK32 ..\DirectX\lib\d3dx8.lib dinput.lib wwui.lib wwaudio.lib ..\miles6\lib\win\mss32.lib wwsaveload.lib ww3d2.lib wwdebug.lib wwlib.lib wwmath.lib wwnet.lib wwphys.lib wwutil.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib ole32.lib oleaut32.lib uuid.lib winmm.lib dxguid.lib dsound.lib vfw32.lib wsock32.lib kernel32.lib shell32.lib combat.lib wwtranslatedb.lib version.lib binkmovie.lib binkw32.lib bandtest.lib scontrol.lib gamespy.lib /nologo /subsystem:windows /pdb:"..\..\Run\RenegadeP.pdb" /map:"..\..\Run\RenegadeP.map" /debug /machine:I386 /out:"..\..\Run\RenegadeP.exe" /libpath:"../libs/profile" /libpath:"../srsdk1x/msvc6/lib/release" /libpath:"../directx\lib" /libpath:"../umbra/lib/win32-x86"
 # SUBTRACT LINK32 /profile /pdb:none
 
-!ENDIF 
+!ENDIF
 
 # Begin Target
 
@@ -665,7 +665,7 @@ SOURCE=.\gamesideservercontrol.cpp
 
 !ELSEIF  "$(CFG)" == "commando - Win32 Profile"
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File
@@ -689,15 +689,6 @@ SOURCE=.\ServerSettings.cpp
 SOURCE=.\ServerSettings.h
 # End Source File
 # Begin Source File
-
-SOURCE=.\slavemaster.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\slavemaster.h
-# End Source File
-# End Group
-# Begin Group "Network"
 
 # PROP Default_Filter ""
 # Begin Source File
@@ -765,7 +756,7 @@ SOURCE=.\datasafe.cpp
 
 !ELSEIF  "$(CFG)" == "commando - Win32 Profile"
 
-!ENDIF 
+!ENDIF
 
 # End Source File
 # Begin Source File
@@ -1275,10 +1266,6 @@ SOURCE=.\dlgmplanhostoptions.cpp
 # Begin Source File
 
 SOURCE=.\dlgmplanhostoptions.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\dlgmpslaveservers.cpp
 # End Source File
 # Begin Source File
 

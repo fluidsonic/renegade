@@ -11,7 +11,6 @@
 
 class VertexMaterialClass;
 
-
 /**
 ** BoxRenderObjClass: base class for AABox and OBBox collision boxes
 **
@@ -90,7 +89,6 @@ inline void BoxRenderObjClass::Set_Local_Min_Max(const Vector3 & min,const Vecto
 	ObjSpaceExtent = (max - min) / 2.0f;
 	update_cached_box();
 }
-
 
 /*
 ** AABoxRenderObjClass -- RenderObject for axis-aligned collision boxes.
@@ -185,7 +183,6 @@ protected:
 
 };
 
-
 /*
 ** Loader for boxes
 */
@@ -214,9 +211,6 @@ private:
 ** Instance of the loader which the asset manager installs
 */
 extern BoxLoaderClass			_BoxLoader;
-
-
-
 
 #endif
 

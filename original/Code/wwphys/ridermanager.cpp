@@ -1,7 +1,6 @@
 #include "ridermanager.h"
 #include "phys.h"
 
-
 RiderManagerClass::RiderManagerClass(void)
 {
 }
@@ -64,6 +63,4 @@ void RiderManagerClass::Move_Riders(const Matrix3D & delta,RenderObjClass * carr
 		}
 	}
 }
-
-
 

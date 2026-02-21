@@ -5,7 +5,6 @@
 
 #include "directinput.h"
 #include "win.h"
-#include "debug.h"
 #include "timemgr.h"
 #include "sdl2_platform.h"
 

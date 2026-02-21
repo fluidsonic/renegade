@@ -31,5 +31,3 @@ private:
 
 #endif	// __CLIENTPINGMANAGER_H__
 
-
-

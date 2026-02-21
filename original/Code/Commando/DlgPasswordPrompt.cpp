@@ -36,7 +36,6 @@ bool DlgPasswordPrompt::DoDialog(Signaler<DlgPasswordPrompt>* target)
 	return (dialog != NULL);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -58,7 +57,6 @@ DlgPasswordPrompt::DlgPasswordPrompt() :
 	{
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -78,7 +76,6 @@ DlgPasswordPrompt::DlgPasswordPrompt() :
 DlgPasswordPrompt::~DlgPasswordPrompt()
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -100,7 +97,6 @@ const WCHAR* DlgPasswordPrompt::GetPassword(void) const
 	{
 	return Get_Dlg_Item_Text(IDC_PASSWORD_EDIT);
 	}
-
 
 /******************************************************************************
 *
@@ -133,7 +129,6 @@ void DlgPasswordPrompt::On_Init_Dialog(void)
 	PopupDialogClass::On_Init_Dialog();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -163,7 +158,6 @@ void DlgPasswordPrompt::On_Command(int ctrlID, int message, DWORD param)
 	PopupDialogClass::On_Command(ctrlID, message, param);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -190,7 +184,6 @@ void DlgPasswordPrompt::On_EditCtrl_Change(EditCtrlClass* edit, int id)
 		Enable_Dlg_Item(IDC_JOIN_GAME_BUTTON, enableJoin);
 		}
 	}
-
 
 /******************************************************************************
 *

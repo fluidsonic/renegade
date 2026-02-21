@@ -1,11 +1,9 @@
 #ifndef _MISSION4_H_
 #define _MISSION4_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
-
 
 // Predefined Constants
 

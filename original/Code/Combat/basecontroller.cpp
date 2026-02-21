@@ -27,12 +27,10 @@
 ////////////////////////////////////////////////////////////////
 using namespace BuildingConstants;
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 BaseControllerClass *	BaseControllerClass::CurrentBases[BuildingConstants::BASE_COUNT] = { 0 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -63,7 +61,6 @@ BaseControllerClass::BaseControllerClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~BaseControllerClass
@@ -79,7 +76,6 @@ BaseControllerClass::~BaseControllerClass (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -91,7 +87,6 @@ BaseControllerClass::Shutdown (void)
 	Reset_Building_List ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -135,7 +130,6 @@ BaseControllerClass::Initialize (int player_type)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Initialize_Building_List
@@ -147,7 +141,6 @@ BaseControllerClass::Initialize_Building_List (void)
 	Reset_Building_List ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -163,7 +156,6 @@ BaseControllerClass::Reset_Building_List (void)
 	BuildingList.Delete_All ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -205,7 +197,6 @@ void BaseControllerClass::On_Building_Damaged(BuildingGameObj* building)
 	Notify_Team(BASE_UNDER_ATTACK, def.Get_Type());
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Building_Destroyed
@@ -228,7 +219,6 @@ void BaseControllerClass::On_Building_Destroyed(BuildingGameObj* building)
 		Set_Base_Destroyed(true);
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -260,7 +250,6 @@ BaseControllerClass::On_Vehicle_Generated (VehicleGameObj *vehicle)
 	return ;
 }
 
-
 void BaseControllerClass::On_Vehicle_Delivered(VehicleGameObj *vehicle)
 {
 	SoldierGameObj* thePlayer = COMBAT_STAR;
@@ -276,7 +265,6 @@ void BaseControllerClass::On_Vehicle_Delivered(VehicleGameObj *vehicle)
 		}
 	}
 }
-
 
 void BaseControllerClass::On_Vehicle_Damaged(VehicleGameObj* vehicle)
 {
@@ -309,7 +297,6 @@ void BaseControllerClass::On_Vehicle_Damaged(VehicleGameObj* vehicle)
 	}
 }
 
-
 void BaseControllerClass::On_Vehicle_Destroyed(VehicleGameObj* vehicle)
 {
 	if (COMBAT_STAR) {
@@ -318,7 +305,6 @@ void BaseControllerClass::On_Vehicle_Destroyed(VehicleGameObj* vehicle)
 		Play_Announcement(def.Get_Destroy_Report(playersTeam));
 	}
 }
-
 
 void BaseControllerClass::On_Beacon_Armed(BeaconGameObj* beacon)
 {
@@ -341,7 +327,6 @@ void BaseControllerClass::On_Beacon_Armed(BeaconGameObj* beacon)
 	}
 }
 
-
 void BaseControllerClass::On_Beacon_Disarmed(BeaconGameObj* beacon)
 {
 	CNCModeSettingsDef* cncDef = CNCModeSettingsDef::Get_Instance();
@@ -362,7 +347,6 @@ void BaseControllerClass::On_Beacon_Disarmed(BeaconGameObj* beacon)
 	}
 }
 
-
 void BaseControllerClass::On_Beacon_Warning(BeaconGameObj* beacon)
 {
 	CNCModeSettingsDef* cncDef = CNCModeSettingsDef::Get_Instance();
@@ -382,7 +366,6 @@ void BaseControllerClass::On_Beacon_Warning(BeaconGameObj* beacon)
 		}
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -413,7 +396,6 @@ BaseControllerClass::Are_All_Buildings_Destroyed (void)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Notify_Team
@@ -424,7 +406,6 @@ BaseControllerClass::Notify_Team (Notification event, BuildingType type)
 {	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -458,7 +439,6 @@ BaseControllerClass::Check_Base_Power (void)
 	//	Change the powered state of the base
 	Power_Base(is_powered);	
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -503,7 +483,6 @@ BaseControllerClass::Power_Base (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Operation_Time_Factor
@@ -516,7 +495,6 @@ BaseControllerClass::Set_Operation_Time_Factor (float factor)
 
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -531,7 +509,6 @@ BaseControllerClass::Set_Base_Powered (bool onoff)
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Can_Generate_Soldiers
@@ -545,7 +522,6 @@ BaseControllerClass::Set_Can_Generate_Soldiers (bool onoff)
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Can_Generate_Vehicles
@@ -558,7 +534,6 @@ BaseControllerClass::Set_Can_Generate_Vehicles (bool onoff)
 
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -620,7 +595,6 @@ BaseControllerClass::Request_Harvester (int def_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Check_Radar
@@ -659,7 +633,6 @@ BaseControllerClass::Check_Radar (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -670,7 +643,6 @@ BaseControllerClass::Think (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -698,7 +670,6 @@ BaseControllerClass::Find_Building (BuildingConstants::BuildingType type)
 	
 	return building;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -745,7 +716,6 @@ BaseControllerClass::Distribute_Funds_To_Each_Teammate (int funds)
 
 	return ;
 }
-
 
 /*
 ////////////////////////////////////////////////////////////////
@@ -826,7 +796,6 @@ BaseControllerClass::Deposit_Funds (int funds)
 }
 */
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Base
@@ -850,7 +819,6 @@ BaseControllerClass::Find_Base ( int player_type )
 	return base;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Base_For_Star
@@ -867,7 +835,6 @@ BaseControllerClass::Find_Base_For_Star (void)
 	return Find_Base (player_type);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Base_Destroyed
@@ -880,7 +847,6 @@ BaseControllerClass::Set_Base_Destroyed ( bool onoff )
 
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -910,7 +876,6 @@ BaseControllerClass::Destroy_Base (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Beacon_Destroyed_Base
@@ -923,7 +888,6 @@ BaseControllerClass::Set_Beacon_Destroyed_Base ( bool onoff )
 
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -984,7 +948,6 @@ BaseControllerClass::Add_Building (BuildingGameObj *building)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Import_Occasional
@@ -1020,7 +983,6 @@ BaseControllerClass::Import_Occasional (BitStreamClass &packet)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Export_Occasional
@@ -1040,7 +1002,6 @@ BaseControllerClass::Export_Occasional (BitStreamClass &packet)
 	packet.Add (DidBeaconDestroyBase);
 	packet.Add (IsRadarEnabled);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1071,7 +1032,6 @@ BaseControllerClass::Enable_Radar (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Harvester_Vehicle
@@ -1097,7 +1057,6 @@ BaseControllerClass::Get_Harvester_Vehicle (void)
 
 	return retval;
 }
-
 
 void BaseControllerClass::Play_Announcement(int text_id)
 {

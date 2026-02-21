@@ -6,14 +6,12 @@
 #include "cardinalspline.h"
 #include "string_ids.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 int DlgConfigVideoTabClass::GammaLevel		  = GAMMA_SLIDER_DEFAULT;
 int DlgConfigVideoTabClass::BrightnessLevel = BRIGHTNESS_SLIDER_DEFAULT;
 int DlgConfigVideoTabClass::ContrastLevel	  = CONTRAST_SLIDER_DEFAULT;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -27,7 +25,6 @@ DlgConfigVideoTabClass::DlgConfigVideoTabClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~DlgConfigVideoTabClass
@@ -37,7 +34,6 @@ DlgConfigVideoTabClass::~DlgConfigVideoTabClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -117,7 +113,6 @@ DlgConfigVideoTabClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_End_Dialog
@@ -130,7 +125,6 @@ DlgConfigVideoTabClass::On_Destroy (void)
 	BrightnessLevel = ((SliderCtrlClass *)Get_Dlg_Item (IDC_BRIGHTNESS_SLIDER))->Get_Pos();
 	ContrastLevel	 = ((SliderCtrlClass *)Get_Dlg_Item (IDC_CONTRAST_SLIDER))->Get_Pos();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -183,5 +177,4 @@ DlgConfigVideoTabClass::On_SliderCtrl_Pos_Changed
 
 	return ;
 }
-
 

@@ -2,9 +2,7 @@
 #ifndef __MODPACKAGEMGR_H
 #define __MODPACKAGEMGR_H
 
-
 #include "modpackage.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -75,6 +73,5 @@ protected:
 	static DynamicVectorClass<ModPackageClass>	PackageList;
 	static ModPackageClass								CurrentPackage;
 };
-
 
 #endif //__MODPACKAGEMGR_H

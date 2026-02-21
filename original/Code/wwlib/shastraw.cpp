@@ -1,7 +1,6 @@
 #include	"always.h"
 #include	"shastraw.h"
 
-
 /***********************************************************************************************
  * SHAStraw::Get -- Fetch data from the straw and process the SHA with the data.               *
  *                                                                                             *
@@ -34,7 +33,6 @@ int SHAStraw::Get(void * source, int slen)
 	}
 	return(counter);
 }
-
 
 /***********************************************************************************************
  * SHAStraw::Result -- Fetches the current SHA digest.                                         *

@@ -13,7 +13,6 @@
 	#include "simplevec.h"
 #endif
 
-
 /*
 **
 */
@@ -39,7 +38,6 @@ public:
 	operator ChunkLoadClass	& (void) const { return CLoad; }
 	ChunkLoadClass	& CLoad;
 };
-
 
 /*
 ** Script Manager

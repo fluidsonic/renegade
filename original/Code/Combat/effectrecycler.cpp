@@ -7,7 +7,6 @@
 #include "hanim.h"
 #include "part_emt.h"
 
-
 /***********************************************************************************************
  * EffectRecyclerClass::EffectRecyclerClass -- constructor                                     *
  *                                                                                             *
@@ -22,7 +21,6 @@
 EffectRecyclerClass::EffectRecyclerClass(void)
 {
 }
-
 
 /***********************************************************************************************
  * EffectRecyclerClass::~EffectRecyclerClass -- destructor                                     *
@@ -39,7 +37,6 @@ EffectRecyclerClass::~EffectRecyclerClass(void)
 {
 	Reset();
 }
-
 
 /***********************************************************************************************
  * EffectRecyclerClass::Reset -- releases all resources                                        *
@@ -60,7 +57,6 @@ void EffectRecyclerClass::Reset(void)
 	InactiveTDecos.Reset_List();
 }
 
-
 /***********************************************************************************************
  * EffectRecyclerClass::Spawn_Effect -- Spawn a timed effect into the combat scene             *
  *                                                                                             *
@@ -77,7 +73,6 @@ void EffectRecyclerClass::Spawn_Effect(TimedDecorationPhysDefClass * def,const M
 {
 	Spawn_Effect(def->Get_Model_Name(),tm,def->Get_Lifetime());
 }
-
 
 /***********************************************************************************************
  * EffectRecyclerClass::Spawn_Effect -- spawn an effect into the combat scene                  *
@@ -122,7 +117,6 @@ void EffectRecyclerClass::Spawn_Effect(const char * robj_name,const Matrix3D & t
 	}
 }
 
-
 /***********************************************************************************************
  * EffectRecyclerClass::Object_Removed_From_Scene -- physobserver interface, reclaim our objec *
  *                                                                                             *
@@ -148,7 +142,6 @@ void EffectRecyclerClass::Object_Removed_From_Scene(PhysClass * observed_obj)
 	InactiveTDecos.Add(tdeco);
 }
 
-
 /***********************************************************************************************
  * EffectRecyclerClass::internal_get_tdeco -- internally recycle or allocate a tdeco           *
  *                                                                                             *
@@ -169,7 +162,6 @@ TimedDecorationPhysClass * EffectRecyclerClass::internal_get_tdeco(void)
 		return InactiveTDecos.Remove_Head();
 	}
 }
-
 
 /***********************************************************************************************
  * EffectRecyclerClass::internal_get_model -- recycle or allocate a render object              *

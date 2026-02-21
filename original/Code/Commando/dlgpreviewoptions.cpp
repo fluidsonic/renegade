@@ -1,7 +1,6 @@
 #include "dlgpreviewoptions.h"
 #include "listctrl.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	PreviewOptionsMenuClass
@@ -12,7 +11,6 @@ PreviewOptionsMenuClass::PreviewOptionsMenuClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -34,11 +32,9 @@ PreviewOptionsMenuClass::On_Init_Dialog (void)
 		list_ctrl->Add_Column (L"Preview Title", 1.0F, Vector3 (1, 1, 1));
 	}
 
-
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

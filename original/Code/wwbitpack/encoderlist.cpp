@@ -8,7 +8,6 @@
 
 #include "encoderlist.h"
 
-
 //
 // Class statics
 //

@@ -47,5 +47,4 @@ private:
 	static DefinitionFactoryClass *	_FactoryListHead;
 };
 
-
 #endif //__DEFINITION_FACTORY_MGR_H

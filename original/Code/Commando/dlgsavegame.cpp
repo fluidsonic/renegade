@@ -11,7 +11,6 @@
 #include "string_ids.h"
 #include "editctrl.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -27,7 +26,6 @@ static enum
 	COL_TIME,
 	COL_NAME
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -70,7 +68,6 @@ SaveGameMenuClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_Column_Click
@@ -111,7 +108,6 @@ SaveGameMenuClass::On_ListCtrl_Column_Click
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_Delete_Entry
@@ -144,7 +140,6 @@ SaveGameMenuClass::On_ListCtrl_Delete_Entry
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -195,10 +190,8 @@ SaveGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_inde
 		}
 	}
 
-
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -222,7 +215,6 @@ SaveGameMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -301,7 +293,6 @@ SaveGameMenuClass::Save_Game (bool prompt)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_DblClk
@@ -317,7 +308,6 @@ SaveGameMenuClass::On_ListCtrl_DblClk
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -346,7 +336,6 @@ SaveGameMenuClass::Get_Unique_Save_Filename (StringClass &filename)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -386,7 +375,6 @@ SaveGameMenuClass::Update_Text_Field (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_Sel_Change
@@ -405,7 +393,6 @@ SaveGameMenuClass::On_ListCtrl_Sel_Change
 	Update_Button_State ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -471,7 +458,6 @@ SaveGameMenuClass::Delete_Game (bool prompt)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -577,7 +563,6 @@ SaveGameMenuClass::Reload_List (const char *current_filename)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	HandleNotification
@@ -609,7 +594,6 @@ SaveGameMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Button_State
@@ -628,7 +612,6 @@ SaveGameMenuClass::Update_Button_State (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_EditCtrl_Change
@@ -644,7 +627,6 @@ SaveGameMenuClass::On_EditCtrl_Change (EditCtrlClass *edit_ctrl, int ctrl_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_EditCtrl_Enter_Pressed
@@ -659,7 +641,6 @@ SaveGameMenuClass::On_EditCtrl_Enter_Pressed (EditCtrlClass *edit_ctrl, int ctrl
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

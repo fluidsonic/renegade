@@ -55,7 +55,3 @@ int cGameDataSinglePlayer::Choose_Player_Type(cPlayer* player, int team_choice, 
 	return team;
 }
 
-
-
-
-

@@ -1,5 +1,4 @@
 #include "playerdata.h"
-#include "debug.h"
 #include "chunkio.h"
 #include "wwpacket.h"
 #include "persistfactory.h"
@@ -290,7 +289,6 @@ bool	PlayerDataClass::Purchase_Item( int cost )
 	return retval;
 }
 
-
 //
 //	Import_Rare
 //
@@ -307,7 +305,6 @@ void	PlayerDataClass::Import_Occasional( BitStreamClass & packet )
 	Money = money;
 }
 
-
 //
 //	Export_Rare
 //
@@ -319,7 +316,6 @@ void	PlayerDataClass::Export_Occasional( BitStreamClass & packet )
 	packet.Add ((float)Score);
 	packet.Add ((float)Money);
 }
-
 
 /*
 ** Stats
@@ -395,19 +391,6 @@ bool PlayerDataClass::Get_Weapon_Fired(int index, unsigned long& weaponID, unsig
 
 	return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 bool	PlayerDataClass::Purchase_Item( int cost )

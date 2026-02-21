@@ -17,7 +17,6 @@ class ChunkLoadClass;
 class PathfindPortalClass;
 class PathfindWaypathSectorClass;
 
-
 //////////////////////////////////////////////////////////////////////////
 //
 //	PathfindSectorClass
@@ -100,7 +99,6 @@ private:
 	bool						Load_Variables (ChunkLoadClass &cload);
 };
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Inlines
 //////////////////////////////////////////////////////////////////////////
@@ -140,7 +138,6 @@ PathfindSectorClass::Can_Access_Portal
 {
 	return (test_portal != last_portal);
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -204,7 +201,5 @@ private:
 	bool					Load_Variables (ChunkLoadClass &cload);
 };
 
-
 #endif //__PATHFIND_SECTOR_H
-
 

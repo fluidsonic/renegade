@@ -10,14 +10,10 @@
 #include "assets.h"
 #include "dlgmplanhostoptions.h"
 #include "renegadedialogmgr.h"
-#include "dlgmpslaveservers.h"
-
 
 DynamicVectorClass<ServerSettingsClass*> ServerSettingsManagerClass::ServerSettingsList;
 
-bool ServerSaveLoadMenuClass::FromSlaveConfig = false;
 const char *DEFAULT_SERVER_SETTINGS_FILE_NAME = "svrcfg_cnc_%04d.ini";
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -29,7 +25,6 @@ ServerSaveLoadMenuClass::ServerSaveLoadMenuClass (void)	:
 {
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -38,13 +33,8 @@ ServerSaveLoadMenuClass::ServerSaveLoadMenuClass (void)	:
 void
 ServerSaveLoadMenuClass::On_Init_Dialog (void)
 {
-	if (FromSlaveConfig) {
-		Get_Dlg_Item(IDC_DELETE_BUTTON)->Enable(false);
-		Get_Dlg_Item(IDC_SAVE_BUTTON)->Enable(false);
-	} else {
-		Get_Dlg_Item(IDC_DELETE_BUTTON)->Enable(true);
-		Get_Dlg_Item(IDC_SAVE_BUTTON)->Enable(true);
-	}
+	Get_Dlg_Item(IDC_DELETE_BUTTON)->Enable(true);
+	Get_Dlg_Item(IDC_SAVE_BUTTON)->Enable(true);
 
 	ListCtrlClass *list_ctrl = (ListCtrlClass *)Get_Dlg_Item (IDC_LIST_CTRL);
 	if (list_ctrl != NULL) {
@@ -85,7 +75,6 @@ ServerSaveLoadMenuClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -116,17 +105,10 @@ ServerSaveLoadMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 }
 
-
-
 void ServerSaveLoadMenuClass::Next_Dialog(void)
 {
-	if (FromSlaveConfig) {
-	} else {
 		START_DIALOG(MPLanHostOptionsMenuClass);
-	}
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -165,7 +147,6 @@ ServerSaveLoadMenuClass::Delete_Config (void)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Config
@@ -190,26 +171,13 @@ ServerSaveLoadMenuClass::Load_Config (void)
 		//
 		ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data(curr_sel, 0);
 		if (config != NULL) {
-
-			if (FromSlaveConfig) {
-				//
-				// Inform the slave settings dialog of the choice.
-				//
-				SlaveServerDialogClass::Set_Slave_Settings(&config->RawFileName);
-			} else {
-
-				//
-				//	Load this configuration
-				//
-				ServerSettingsManagerClass::Load_Settings(config);
-			}
+			ServerSettingsManagerClass::Load_Settings(config);
 
 			End_Dialog ();
 			Next_Dialog();
 		}
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -311,7 +279,6 @@ ServerSaveLoadMenuClass::Save_Config (bool prompt)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_Delete_Entry
@@ -340,7 +307,6 @@ ServerSaveLoadMenuClass::On_ListCtrl_Delete_Entry
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -377,7 +343,6 @@ ServerSaveLoadMenuClass::Insert_Configuration (ServerSettingsClass *config)
 
 	return item_index;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -427,7 +392,6 @@ ServerSaveLoadMenuClass::On_ListCtrl_Sel_Change
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListSortCallback
@@ -474,7 +438,6 @@ ServerSaveLoadMenuClass::ListSortCallback
 	return(wcsicmp(config1->ConfigName, config2->ConfigName));
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_EditCtrl_Enter_Pressed
@@ -489,7 +452,6 @@ ServerSaveLoadMenuClass::On_EditCtrl_Enter_Pressed (EditCtrlClass *edit_ctrl, in
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -506,8 +468,6 @@ ServerSaveLoadMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 		Save_Now();
 	}
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -566,14 +526,6 @@ void ServerSaveLoadMenuClass::Save_Now(void)
 	}
 }
 
-
-
-
-
-
-
-
-
 /***********************************************************************************************
  * ServerSettingsClass::ServerSettingsClass -- Class constructor                               *
  *                                                                                             *
@@ -599,7 +551,6 @@ ServerSettingsClass::ServerSettingsClass(char *filename, const WCHAR *configname
 	IsCustom = true;
 }
 
-
 /***********************************************************************************************
  * ServerSettingsClass::ServerSettingsClass -- Class copy constructor                          *
  *                                                                                             *
@@ -622,7 +573,6 @@ ServerSettingsClass::ServerSettingsClass(ServerSettingsClass *other)
 	IsCustom = other->IsCustom;
 }
 
-
 /***********************************************************************************************
  * ServerSettingsManagerClass::Get_Settings -- Get settings by index                           *
  *                                                                                             *
@@ -641,8 +591,6 @@ ServerSettingsClass *ServerSettingsManagerClass::Get_Settings(int index)
 {
 	return(ServerSettingsList[index]);
 }
-
-
 
 /***********************************************************************************************
  * ServerSettingsManagerClass::Scan -- Scan for server settings files on the disk              *
@@ -705,9 +653,6 @@ void ServerSettingsManagerClass::Scan(void)
 	}
 }
 
-
-
-
 /***********************************************************************************************
  * ServerSettingsManagerClass::Clear_Settings_List -- Reset the settings list                  *
  *                                                                                             *
@@ -729,8 +674,6 @@ void ServerSettingsManagerClass::Clear_Settings_List(void)
 	}
 	ServerSettingsList.Reset_Active();
 }
-
-
 
 /***********************************************************************************************
  * ServerSettingsManagerClass::Load_Settings -- Load settings into the game                    *
@@ -761,7 +704,6 @@ void ServerSettingsManagerClass::Load_Settings(ServerSettingsClass *settings)
 	}
 }
 
-
 /***********************************************************************************************
  * ServerSettingsManagerClass::Delete_Configuration -- Delete a settings file from disk        *
  *                                                                                             *
@@ -791,8 +733,6 @@ void ServerSettingsManagerClass::Delete_Configuration(ServerSettingsClass *setti
 		}
 	}
 }
-
-
 
 /***********************************************************************************************
  * ServerSettingsManagerClass::Save_Configuration -- Save settings from the game               *
@@ -827,7 +767,6 @@ void ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *setting
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * ServerSettingsManagerClass::Add_Configuration -- Create a new settings file entry           *

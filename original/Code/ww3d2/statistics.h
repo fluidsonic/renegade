@@ -1,7 +1,6 @@
 #ifndef WW3D_STATISTICS_H
 #define WW3D_STATISTICS_H
 
-
 #include "always.h"
 //#include "wwstring.h"
 

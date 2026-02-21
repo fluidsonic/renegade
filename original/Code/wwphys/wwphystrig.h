@@ -2,7 +2,6 @@
 #ifndef WWPHYSTRIG_H
 #define WWPHYSTRIG_H
 
-
 /*
 ** Debug triggers for WWPhys
 ** These are ID's for various debugging operations that the application can
@@ -17,6 +16,5 @@ enum
 	WWPHYS_TRIGGER_INVERT_VIS =						0x202,
 	WWPHYS_TRIGGER_DISABLE_VIS =						0x203,
 };
-
 
 #endif

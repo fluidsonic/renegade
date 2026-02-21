@@ -129,13 +129,11 @@ void FrameGrabClass::GrabRawFrame(void * /*BitmapPointer*/)
 
 }
 
-
 void FrameGrabClass::ConvertGrab(void *BitmapPointer) 
 {
 	ConvertFrame(BitmapPointer);
 	Grab( Bitmap );
 }
-
 
 void FrameGrabClass::Grab(void *BitmapPointer) 
 {
@@ -144,7 +142,6 @@ void FrameGrabClass::Grab(void *BitmapPointer)
 	else
 		GrabRawFrame(BitmapPointer);
 }
-
 
 void FrameGrabClass::ConvertFrame(void *BitmapPointer) 
 {

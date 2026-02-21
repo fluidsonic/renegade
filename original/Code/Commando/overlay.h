@@ -31,7 +31,6 @@ public:
 	static	CameraClass			* Camera;
 };
 
-
 /*
 ** Game Mode to display W3D overlay files
 */

@@ -40,7 +40,6 @@ cNicEnum::Init
 	ULONG local_addresses[MAX_NICS];
 	ULONG num_addresses = Enumerate_Nics(local_addresses, MAX_NICS);
 
-
 	USHORT index	= 0;
 	USHORT class_1	= 0;
 	USHORT class_2	= 0;
@@ -110,7 +109,6 @@ cNicEnum::Init
 		}
 	}
 
-
 	//
 	// Next, copy the Internet addressable addresses. Weed out localhost and multicast 
 	// addresses.
@@ -144,7 +142,6 @@ cNicEnum::Init
 	{
 		NicList[NumNics++] = internet_addresses[index];
 	}
-
 
 	//
 	// Initialize or update PreferredLanNic if required.
@@ -183,7 +180,6 @@ cNicEnum::Enumerate_Nics
 )
 {
 
-
 	//
 	// Get the local hostname
 	//
@@ -210,34 +206,4 @@ cNicEnum::Enumerate_Nics
 
 	return num_addresses;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

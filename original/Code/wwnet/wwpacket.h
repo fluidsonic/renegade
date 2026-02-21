@@ -100,26 +100,12 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
 		static bool		EncoderInit;
 };
 
-
-
 //-----------------------------------------------------------------------------
 
 #endif // WWPACKET_H
 
-
-
-
-
-
-
-
-
-
-
       //int ExecuteTime;
       //int ReturnCode;
-
-
 
 		//void Set_Execute_Time(int execute_time);
       //int Get_Execute_Time() const			{return ExecuteTime;}
@@ -128,8 +114,6 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
       //int Get_Return_Code() const			{return ReturnCode;}
 
       //BYTE Get_Type() const					{assert(Type != UNDEFINED_TYPE); return Type;}//NEW
-
-
 
 //
 // Maximum Transmission Unit (MTU) for LAN is 1500.

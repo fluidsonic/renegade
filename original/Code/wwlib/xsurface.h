@@ -90,5 +90,4 @@ class XSurface : public Surface
 
 bool Blit_Clip(Rect & drect, Rect const & dwindow, Rect & srect, Rect const & swindow);
 
-
 #endif

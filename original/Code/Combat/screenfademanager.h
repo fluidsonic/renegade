@@ -8,7 +8,6 @@ class Vector3;
 class	ChunkSaveClass;
 class	ChunkLoadClass;
 
-
 /**
 ** ScreenFadeManager
 ** This class renders letterbox polys and full-screen "tint" polys.  It should get to
@@ -38,7 +37,6 @@ public:
 	static	void	Set_Screen_Overlay_Opacity(float opacity,float time = 0.0f);
 
 };
-
 
 #endif //SCREENFADEMANAGER_H
 

@@ -95,7 +95,6 @@ void	MovieGameModeClass::Start_Movie( const char * filename )
 	//
 	bool force_cd = true;
 
-
 #if defined(BETACLIENT) || defined(FREEDEDICATEDSERVER) || defined(MULTIPLAYERDEMO)
 	force_cd = false;
 #endif //BETACLIENT
@@ -194,7 +193,6 @@ void	MovieGameModeClass::HandleNotification (CDVerifyEvent &event)
 	IsPending = false;
 	return ;
 }
-
 
 void	MovieGameModeClass::Startup_Movies( void )
 {

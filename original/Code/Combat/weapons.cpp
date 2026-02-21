@@ -1,6 +1,5 @@
 #include "weapons.h"
 #include "weaponmanager.h"
-#include "debug.h"
 #include "soldier.h"
 #include "combat.h"
 #include "gameobjmanager.h"
@@ -37,14 +36,12 @@
 #include "playerdata.h"
 #include "cheatmgr.h"
 
-
 /*
 **
 */
 #define	RANDOM_VECTOR( spread )		Vector3( FreeRandom.Get_Float( -(spread), (spread) ),	\
 															FreeRandom.Get_Float( -(spread), (spread) ),	\
 															FreeRandom.Get_Float( -(spread), (spread) ) )
-
 
 /**
 ** EjectCasingObserverClass
@@ -67,13 +64,7 @@ public:
 	}
 };
 
-
 static EjectCasingObserverClass _TheEjectCasingObserver;
-
-
-
-
-
 
 /*
 **
@@ -230,7 +221,6 @@ bool	WeaponClass::Save( ChunkSaveClass & csave )
 		csave.End_Chunk();
 	}
 
-
 	// Don't need to save DidFire
 	// Don't need to save ContinuousEmitters;
 	// Don't need to save ContinuousSound;
@@ -330,7 +320,6 @@ bool	WeaponClass::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 void	WeaponClass::Set_Owner( ArmedGameObj *owner )
 {
 	Owner = owner;
@@ -382,7 +371,6 @@ void	WeaponClass::Next_C4_Detonation_Mode( void )
 	}
 	Debug_Say(( "Weapon Next C4 Detonation Mode %d\n", C4DetonationMode ));
 }
-
 
 /*
 **
@@ -535,7 +523,6 @@ float	WeaponClass::Get_Range( void )
 	return ( PrimaryAmmoDefinition != NULL ) ? (float)PrimaryAmmoDefinition->Range : 0.0f;
 }
 
-
 /*
 **	Fire_C4
 */
@@ -551,7 +538,6 @@ void	WeaponClass::Fire_C4( const AmmoDefinitionClass *ammo_def )
 
 	return ;
 }
-
 
 /*
 **	Fire_Beacon
@@ -590,7 +576,6 @@ bool	WeaponClass::Fire_Beacon( const AmmoDefinitionClass *ammo_def )
 
 	return retval;
 }
-
 
 /*
 **
@@ -753,7 +738,6 @@ void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary
 
 		Vector3 velocity = muzzle.Get_X_Vector() * ammo_def->Velocity;
 
-
 #if 0
 		if ( ammo_def->SprayAngle ) {
 			// Use Spray Angle
@@ -859,7 +843,6 @@ void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary
 	TotalRoundsFired++;
 }
 
-
 bool	WeaponClass::Is_Muzzle_Clear()
 {
 	int primary = 1;
@@ -964,7 +947,6 @@ void	WeaponClass::Do_Firing_Effects( void )
 	if ( TimeManager::Get_Frame_Seconds() == 0 ) {
 		return;	// No sounds when time stops
 	}
-
 
 	Matrix3D	muzzle = Get_Muzzle();
 
@@ -1188,7 +1170,6 @@ void	WeaponClass::Make_Shell_Eject( const Matrix3D & tm )
 		PhysicalObject->Release_Ref();
 	}
 }
-
 
 /*
 **
@@ -1488,7 +1469,6 @@ void	WeaponClass::Update( void )
 		IsSecondaryTriggered = false;
 	}
 
-
 	// Update Burst logic
 	if ( (int)PrimaryAmmoDefinition->BurstMax == 0 ) {	// if not using bursts
 		BurstCount = -1;
@@ -1549,7 +1529,6 @@ void	WeaponClass::Update( void )
 	return ;
 }
 
-
 /*
 ** Simulate firing straight down the muzzle and see where in the world we hit
 */
@@ -1589,7 +1568,6 @@ bool	WeaponClass::Cast_Weapon_Down_Muzzle( Vector3 & hit_pos )
 	return retval;
 }
 
-
 /*
 ** Simulate firing from muzzle to target, see where and if we hit
 */
@@ -1624,7 +1602,6 @@ PhysicalGameObj * WeaponClass::Cast_Weapon( const Vector3 & target )
 	return hit_obj;
 }
 
-
 /*
 ** Check to see if this weapon can reload
 */
@@ -1645,7 +1622,6 @@ WeaponClass::Is_Reload_OK( void )
 	return retval;
 }
 
-
 void	WeaponClass::Stop_Firing_Sound( void )
 {
 	if ( FiringSound == NULL ) {
@@ -1660,7 +1636,6 @@ void	WeaponClass::Stop_Firing_Sound( void )
 	REF_PTR_RELEASE (FiringSound);	
 	return ;
 }
-
 
 // This function calcuates the weapon information that must be displayed for the star's
 // weapon in the hud reticle & sniper view.  This should only be called for the weapon
@@ -1770,7 +1745,6 @@ const Matrix3D & WeaponClass::Get_Muzzle( int index )
 	return Get_Owner()->Get_Muzzle( index );
 }
 
-
 void	WeaponClass::Ignore_Owner( void )
 {
 	if ( Get_Owner() != NULL ) {
@@ -1797,7 +1771,6 @@ void	WeaponClass::Unignore_Owner( void )
 		}
 	}
 }
-
 
 /*
 **

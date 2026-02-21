@@ -1,7 +1,6 @@
 #ifndef TEXTURETHUMBNAIL_H
 #define TEXTURETHUMBNAIL_H
 
-
 #include "always.h"
 #include "wwstring.h"
 #include "hashtemplate.h"

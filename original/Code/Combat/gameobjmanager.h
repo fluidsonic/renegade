@@ -42,7 +42,6 @@ enum
 	NETID_SERVER_BACKGROUND
 };
 
-
 /*
 ** GameObjManager
 **

@@ -4,7 +4,6 @@
 #include "always.h"
 #include "definition.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	CharacterClassSettingsDefClass
@@ -89,7 +88,5 @@ protected:
 
 	static CharacterClassSettingsDefClass *			GlobalInstance;
 };
-
-
 
 #endif	//	__CHARACTER_CLASS_SETTINGS_H

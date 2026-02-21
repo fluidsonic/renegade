@@ -104,6 +104,7 @@
 #define IDD_MENU_SPLASH1                255
 #define IDD_MENU_SPLASH2                256
 #define IDD_MULTIPLAY_CONNECTION_REFUSED 257
+#define IDD_MULTIPLAY_WWOL_CS_SEL        258
 #define IDC_QUIT                        1000
 #define IDC_DRIVER_LIST                 1001
 #define IDC_STEREO_CHECK                1002
@@ -748,15 +749,7 @@
 #define IDC_NICK_EDIT5                  1613
 #define IDC_NICK_EDIT6                  1614
 #define IDC_NICK_EDIT7                  1615
-#define IDC_SLAVE_ENABLE1               1616
-#define IDC_MENU_MP_LAN_SLAVE_SERVER_BUTTON 1617
 #define IDC_PASS_EDIT1                  1617
-#define IDC_SLAVE_ENABLE3               1618
-#define IDC_SLAVE_ENABLE2               1619
-#define IDC_SLAVE_ENABLE4               1620
-#define IDC_SLAVE_ENABLE5               1621
-#define IDC_SLAVE_ENABLE6               1622
-#define IDC_SLAVE_ENABLE7               1623
 #define IDC_PORT_EDIT1                  1624
 #define IDC_PORT_EDIT2                  1625
 #define IDC_PORT_EDIT3                  1626
@@ -778,18 +771,11 @@
 #define IDC_PASS_EDIT7                  1636
 #define IDC_REINFORCEMENTS_TEXT         1637
 #define IDC_BODY_ARMOR_TEXT             1638
-#define IDC_SLAVE1_SETTINGS             1640
 #define IDS_STATIC                      1642
-#define IDC_SLAVE2_SETTINGS             1643
 #define IDC_GAMMA_SETTING               1643
-#define IDC_SLAVE3_SETTINGS             1644
 #define IDC_BRIGHTNESS_SETTING          1644
-#define IDC_SLAVE4_SETTINGS             1645
 #define IDC_CONTRAST_SETTING            1645
-#define IDC_SLAVE5_SETTINGS             1646
-#define IDC_SLAVE6_SETTINGS             1647
 #define IDC_SKIN_SELECTION_BUTTON       1647
-#define IDC_SLAVE7_SETTINGS             1648
 #define IDC_MP_OPTIONS_BUTTON           1648
 #define IDC_LIGHTING_MODE               1650
 #define IDC_TEXTURE_FILTER              1651
@@ -801,7 +787,7 @@
 #define IDM_TOGGLE_FULLSCREEN           40001
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        259

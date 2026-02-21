@@ -103,5 +103,4 @@ class WWFontClass : public FontClass
 		int Raw_Height(void) const;
 };
 
-
 #endif

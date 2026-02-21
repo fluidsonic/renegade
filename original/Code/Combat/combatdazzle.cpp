@@ -7,9 +7,7 @@
 #include "combat.h"
 #include "soldier.h"
 
-
 CombatDazzleClass _TheCombatDazzleHandler;
-
 
 /***********************************************************************************************
  * CombatDazzleClass::Compute_Dazzle_Visibility -- Computes visibility of a dazzle object in t *
@@ -69,5 +67,4 @@ float CombatDazzleClass::Compute_Dazzle_Visibility
 		return 0.0f;
 	}
 }
-
 

@@ -13,7 +13,6 @@
 #ifndef WWDEBUG_H
 #endif
 
-
 class TextureClass;
 class VertexMaterialClass;
 class MeshModelClass;
@@ -75,11 +74,9 @@ protected:
 
 };
 
-
 inline TextureClass * MaterialPassClass::Peek_Texture(int stage) const
 {	
 	return Texture[stage];
 }
-
 
 #endif // MATPASS_H

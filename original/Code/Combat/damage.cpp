@@ -1,6 +1,5 @@
 #include "damage.h"
 #include "assets.h"
-#include "debug.h"
 #include "smartgameobj.h"
 #include "combat.h"
 #include "slist.h"
@@ -19,7 +18,6 @@
 #include "gametype.h"
 #include "csdamageevent.h"
 
-
 ArmorWarheadManager	ArmorManagerObject;
 
 DynamicVectorClass<StringClass>  	ArmorNames;
@@ -32,7 +30,6 @@ DynamicVectorClass<bool>				SoftArmorTable;
 DynamicVectorClass<int>					SpecialDamageTypes;
 DynamicVectorClass<float>				SpecialDamageProbability;
 DynamicVectorClass<float>				VisceroidProbability;
-
 
 // For each special damage type
 int	SpecialDamageWarhead[ArmorWarheadManager::NUM_SPECIAL_DAMAGE_TYPES];
@@ -75,7 +72,6 @@ void	ArmorWarheadManager::Init( void )
 
 	INIClass	* armorINI = Get_INI( ARMOR_INI_FILENAME );
 	if (armorINI != NULL) {
-
 
 		int count, entry;
 
@@ -134,7 +130,6 @@ void	ArmorWarheadManager::Init( void )
 			ArmorType type = Get_Armor_Type( entry_name );
 			SoftArmorTable[ type ] = true;
 		}
-
 
 		// Load Multipliers
 		Multipliers = new safe_float[ Get_Num_Armor_Types() * Get_Num_Warhead_Types() ];
@@ -253,7 +248,6 @@ void	ArmorWarheadManager::Init( void )
 //			}
 		}
 
-
 		Release_INI( armorINI );
 
 	} else {
@@ -333,7 +327,6 @@ const char *	ArmorWarheadManager::Get_Warhead_Name( WarheadType type )
 	return WarheadNames[type];
 }
 
-
 float	ArmorWarheadManager::Get_Damage_Multiplier( ArmorType armor, WarheadType warhead )
 {
 	return( Multipliers[ (unsigned int)armor * Get_Num_Warhead_Types() + (unsigned int)warhead ] );
@@ -353,7 +346,6 @@ float	ArmorWarheadManager::Get_Shield_Absorbsion( ArmorType armor, WarheadType w
 {
 	return( Absorbsion[ (unsigned int)armor * Get_Num_Warhead_Types() + (unsigned int)warhead ] );
 }
-
 
 bool				ArmorWarheadManager::Is_Armor_Soft( ArmorType armor )
 {
@@ -447,7 +439,6 @@ OffenseObjectClass::OffenseObjectClass( const OffenseObjectClass & base ) :
 	Set_Owner( base.Get_Owner() );
 }
 
-
 /*
 ** Save and Load
 */
@@ -536,7 +527,6 @@ void DefenseObjectClass::Init( const DefenseObjectDefClass & def, DamageableGame
 	Set_Owner( owner );
 }
 
-
 bool	DefenseObjectClass::Save( ChunkSaveClass & csave )
 {
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
@@ -604,9 +594,6 @@ bool	DefenseObjectClass::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
-
-
 bool	DefenseObjectClass::Is_Soft( void )
 {
 	if ( !ArmorWarheadManager::Is_Armor_Soft( Skin ) ) {
@@ -619,7 +606,6 @@ bool	DefenseObjectClass::Is_Soft( void )
 
 	return true;
 }
-
 
 /*
 **
@@ -679,7 +665,6 @@ float	DefenseObjectClass::Apply_Damage( const OffenseObjectClass & offense, floa
 #endif
 }
 
-
 /*
 **
 */
@@ -702,7 +687,6 @@ void	DefenseObjectClass::Request_Damage( const OffenseObjectClass & offense, flo
 //		Debug_Say(( "Requesting damage of %f from %d to %d\n", damage, damager_id, damagee_id ));
 	}
 }
-
 
 /*
 **
@@ -740,7 +724,6 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 		Get_Owner()->Set_Last_Object_Id_I_Got_Damaged_By(damager_id);
 	}
 
-
 	float damage = offense.Get_Damage() * scale;
 
 	// Scale damage by difficulty if star is applying
@@ -774,7 +757,6 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 			smart->Get_Player_Data()->Set_Score( 0 );
 		}
 	}
-
 
 	bool	is_repair = false;
 
@@ -850,7 +832,6 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 		if ( (float)Health < damage ) {
 			damage = Health;
 		}
-
 
 		Health = (float)Health - damage;
 		
@@ -1073,7 +1054,6 @@ bool DefenseObjectClass::Is_Defense_State_Dirty(void)
 }
 */
 
-
 /*****************************************************************************************
 **
 ** DefenseObjectDefClass Implementation
@@ -1093,7 +1073,6 @@ enum
 	DEFENSEOBJECTDEF_VARIABLE_DAMAGE_POINTS,
 	DEFENSEOBJECTDEF_VARIABLE_DEATH_POINTS,
 };
-
 
 DefenseObjectDefClass::DefenseObjectDefClass(void) :
 	Health( 100.0f ),
@@ -1164,8 +1143,6 @@ bool DefenseObjectDefClass::Load(ChunkLoadClass &cload)
 	return true;
 }
 
-
-
 void DefenseObjectClass::Set_Health(float health)
 {
 	float old_health = Health;
@@ -1195,8 +1172,6 @@ float DefenseObjectClass::Get_Health_Max(void) const
 {
 	return HealthMax;
 }
-
-
 
 void DefenseObjectClass::Set_Shield_Strength(float str)
 {
@@ -1252,7 +1227,6 @@ void	DefenseObjectClass::Mark_Owner_Dirty( void )
 	}
 }
 
-
 /*
 **
 */
@@ -1261,31 +1235,6 @@ void	DefenseObjectClass::Set_Shield_Type( ArmorType type )
 	ShieldType = type; 
 	Mark_Owner_Dirty();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 			//
 			// Do extra stuff when somebody kills somebody

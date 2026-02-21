@@ -82,5 +82,4 @@ private:
 	static	int			AveragedFPSCounter;
 };
 
-
 #endif	//	TIMEMGR_H

@@ -9,7 +9,6 @@
 #include "serversettings.h"
 #include "consolemode.h"
 
-
 //
 // Class statics
 //
@@ -163,7 +162,6 @@ cBandwidthGraph::Think
 {
 	bool bail = true;
 
-
 	if (bail)
 	{
 		return;
@@ -174,7 +172,6 @@ cBandwidthGraph::Think
 	if (PTextRenderer == NULL) {
 		return;
 	}
-
 
 	PTextRenderer->Reset();
 
@@ -266,7 +263,6 @@ cBandwidthGraph::Render
 )
 {
 	bool bail = true;
-
 
 	if (bail)
 	{

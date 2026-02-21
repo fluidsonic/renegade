@@ -6,7 +6,6 @@
 #include "matrix3d.h"
 #include "quat.h"
 
-
 /*********************************************************************
 
 	Euler Order Types 
@@ -19,7 +18,6 @@
 	      rotating frame.
 
 *********************************************************************/
-
 
 /* static axes */
 extern int	EulerOrderXYZs;
@@ -48,7 +46,6 @@ extern int	EulerOrderZXYr;
 extern int	EulerOrderZXZr;
 extern int	EulerOrderZYXr;
 extern int	EulerOrderZYZr;
-
 
 /*********************************************************************
 	
@@ -81,6 +78,5 @@ private:
 	int		Order;
 
 };
-
 
 #endif /*EULER_H*/

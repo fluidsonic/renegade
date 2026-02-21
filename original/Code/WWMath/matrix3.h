@@ -8,7 +8,6 @@
 #include "osdep.h"
 #endif
 
-
 class Matrix3D;
 class Matrix4;
 class Quaternion;
@@ -195,7 +194,6 @@ protected:
 
 };
 
-
 /*********************************************************************************************** 
  * Matrix3::Matrix3 -- Constructor, optionally initialize to Identitiy matrix                  * 
  *                                                                                             * 
@@ -266,7 +264,6 @@ WWINLINE void Matrix3::Make_Identity(void)
 	Row[1].Set(0.0f,1.0f,0.0f);
 	Row[2].Set(0.0f,0.0f,1.0f);
 }
-
 
 WWINLINE Matrix3::Matrix3
 (
@@ -405,7 +402,6 @@ WWINLINE Matrix3 Matrix3::Inverse() const    // Gauss-Jordan elimination with pa
 	}
 	return b;
 }
-
 
 /***********************************************************************************************
  * Matrix3::Determinant -- returns the determinant of the matrix                               *
@@ -675,7 +671,6 @@ WWINLINE Matrix3 operator * (const Matrix3 & a, const Matrix3 & b)
 	#undef ROWCOL
 }
 
-
 /*
 ** Multiply a Matrix3 by a Vector3. Yeilds a Vector3 result
 */
@@ -688,18 +683,15 @@ WWINLINE Vector3 operator * (const Matrix3 & a, const Vector3 & v)
 	);
 }
 
-
 WWINLINE int operator == (const Matrix3 & a, const Matrix3 & b)
 {
 	return ((a [0] == b [0]) && (a [1] == b [1]) && (a [2] == b [2]));
 }
 
-
 WWINLINE int operator != (const Matrix3 & a, const Matrix3 & b)
 {
 	return (!(a == b));
 }
-
 
 /*********************************************************************************************** 
  * Matrix3::Rotate_X -- Post-mutiplies an x rotation onto the current matrix                   * 
@@ -769,7 +761,6 @@ WWINLINE void Matrix3::Rotate_Y(float s,float c)
 	Row[2][2] = (float)(s*tmp1 + c*tmp2);
 }
 
-
 /*********************************************************************************************** 
  * Matrix3::Rotate_Z -- Post-multiplies the matrix with a rotation about Z                     * 
  *                                                                                             * 
@@ -803,7 +794,6 @@ WWINLINE void Matrix3::Rotate_Z(float s,float c)
 	Row[2][0] = (float)( c*tmp1 + s*tmp2);
 	Row[2][1] = (float)(-s*tmp1 + c*tmp2);
 }
-
 
 /*********************************************************************************************** 
  * Create_X_Rotation_Matrix3 -- creates a matrix3 which is a rotation about X                  * 

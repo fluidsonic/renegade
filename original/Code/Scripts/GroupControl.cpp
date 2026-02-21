@@ -28,7 +28,6 @@ GroupController* GroupController::Instance(void)
 	return _mInstance;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -49,7 +48,6 @@ GroupController::GroupController()
 	{
 	_mInstance = this;
 	}
-
 
 /******************************************************************************
 *
@@ -72,7 +70,6 @@ GroupController::~GroupController()
 	mGroups.Remove_All();
 	_mInstance = NULL;
 	}
-
 
 /******************************************************************************
 *
@@ -111,7 +108,6 @@ bool GroupController::AddToGroup(const char* groupName, GameObject* object)
 	return false;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -141,7 +137,6 @@ void GroupController::RemoveFromGroup(const char* groupName, GameObject* object)
 		group->RemoveMember(object);
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -183,7 +178,6 @@ Group* GroupController::FindGroup(const char* groupName)
 	return NULL;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -219,7 +213,6 @@ Group* GroupController::FindOrCreateGroup(const char* groupName)
 
 	return group;
 	}
-
 
 /******************************************************************************
 *

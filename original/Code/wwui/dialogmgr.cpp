@@ -15,7 +15,6 @@
 #include "systimer.h"
 #include "tooltip.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -42,7 +41,6 @@ bool												DialogMgrClass::IsFlushing = false;
 ToolTipClass* DialogMgrClass::mIMEMessage = NULL;
 uint32 DialogMgrClass::mIMEMessageTime = 0;
 
-
 static bool	GameWasInFocus;
 
 ////////////////////////////////////////////////////////////////
@@ -63,7 +61,6 @@ DialogMgrClass::Initialize (const char *stylemgr_ini)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -101,7 +98,6 @@ DialogMgrClass::Shutdown (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Inputs
@@ -118,7 +114,6 @@ DialogMgrClass::Reset_Inputs (void)
 	LastMouseButtonState[MB_RBUTTON] = Input->Is_Button_Down (VK_RBUTTON);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -182,7 +177,6 @@ DialogMgrClass::Register_Dialog (DialogBaseClass *dialog)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	UnRegister_Dialog
@@ -213,7 +207,6 @@ DialogMgrClass::UnRegister_Dialog (DialogBaseClass *dialog)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Dialog_Added
@@ -236,7 +229,6 @@ DialogMgrClass::On_Dialog_Added (void)
 	Set_Mouse_Pos (mouse_pos);*/
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -273,7 +265,6 @@ DialogMgrClass::On_Dialog_Removed (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -324,7 +315,6 @@ DialogMgrClass::Update_Transition (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -340,7 +330,6 @@ DialogMgrClass::On_Frame_Update (void)
 	uint32 old_time	= CurrTime;
 	CurrTime				= TIMEGETTIME ();
 	LastFrameTime		= CurrTime - old_time;
-
 
 //	DynamicVectorClass<DialogBaseClass *> test_list = DialogList;
 	if (DialogList.Count()>TestArrayMaxCount) {
@@ -390,7 +379,6 @@ DialogMgrClass::On_Frame_Update (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -487,7 +475,6 @@ DialogMgrClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Active_Dialog
@@ -572,7 +559,6 @@ DialogMgrClass::Reset (void)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Internal_Set_Active_Dialog
@@ -617,7 +603,6 @@ DialogMgrClass::Internal_Set_Active_Dialog (DialogBaseClass *dialog)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Key_Down
@@ -645,7 +630,6 @@ DialogMgrClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return false;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Key_Up
@@ -672,7 +656,6 @@ DialogMgrClass::On_Key_Up (uint32 key_id)
 
 	return false;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -721,7 +704,6 @@ DialogMgrClass::Find_Control (const Vector2 &mouse_pos)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Capture
@@ -734,7 +716,6 @@ DialogMgrClass::Set_Capture (DialogControlClass *control)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Release_Capture
@@ -746,7 +727,6 @@ DialogMgrClass::Release_Capture (void)
 	InputCapture = NULL;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -793,12 +773,10 @@ DialogMgrClass::Flush_Dialogs (void)
 	return ;
 }
 
-
 bool DialogMgrClass::Is_Flushing_Dialogs(void)
 {
 	return IsFlushing;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -827,7 +805,6 @@ DialogMgrClass::Was_Button_Down (int vk_mouse_button_id)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -868,7 +845,6 @@ DialogMgrClass::Set_Focus (DialogControlClass *control)
 	return ;
 }
 
-
 DialogBaseClass* DialogMgrClass::Find_Dialog(int dialogID)
 {
 	for (int index = 0; index < DialogList.Count(); ++index) {
@@ -879,7 +855,6 @@ DialogBaseClass* DialogMgrClass::Find_Dialog(int dialogID)
 
 	return NULL;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -908,7 +883,6 @@ DialogMgrClass::Rollback (DialogBaseClass *dialog)
 
 	return ;
 }
-
 
 void DialogMgrClass::Show_IME_Message(const wchar_t* message, uint32 duration)
 {

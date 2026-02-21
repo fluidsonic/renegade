@@ -141,7 +141,6 @@ LODHeapNode *		PredictiveLODOptimizerClass::VisibleObjArray1;
 LODHeapNode	*		PredictiveLODOptimizerClass::VisibleObjArray2;
 int					PredictiveLODOptimizerClass::VisibleObjArraySize;
 
-
 /************************************************************************** 
  * PredictiveLODOptimizerClass::Clear -- clear object list and total cost * 
  *                                                                        * 
@@ -169,7 +168,6 @@ void PredictiveLODOptimizerClass::Clear(void)
 	TotalCost = 0.0f;
 	NumObjects = 0;
 }
-
 
 /************************************************************************** 
  * PredictiveLODOptimizerClass::Add_Object -- adds object to list, cost   * 
@@ -209,7 +207,6 @@ void PredictiveLODOptimizerClass::Add_Object(RenderObjClass *robj)
 	// Some sanity checking so one object doesn't mess up the entire scene
 	TotalCost += cost;
 }
-
 
 /************************************************************************** 
  * PredictiveLODOptimizerClass::Optimize_LODs -- does LOD optimization    * 
@@ -321,7 +318,6 @@ void PredictiveLODOptimizerClass::Optimize_LODs(float max_cost)
 	// Clear optimizer:
 	Clear();
 }
-
 
 /************************************************************************** 
  * PredictiveLODOptimizerClass::Free -- releases all memory used.         * 

@@ -2,9 +2,7 @@
 #ifndef __SINGLETONINSTANCEKEEPER_H
 #define __SINGLETONINSTANCEKEEPER_H
 
-
 #include "win.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -56,6 +54,5 @@ private:
 	static bool AllowMultipleInstances;
 
 };
-
 
 #endif //__SINGLETONINSTANCEKEEPER_H

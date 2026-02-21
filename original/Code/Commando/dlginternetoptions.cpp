@@ -4,7 +4,6 @@
 #include "shortcutbarctrl.h"
 #include "translatedb.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	InternetOptionsMenuClass
@@ -15,7 +14,6 @@ InternetOptionsMenuClass::InternetOptionsMenuClass (void)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -64,7 +62,6 @@ InternetOptionsMenuClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

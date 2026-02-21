@@ -53,7 +53,6 @@ class	Vector4;
 	vrgba[2] = ((color & 0x000000FF)) / 256.0F;			\
 	vrgba[3] = ((color & 0xFF000000) >> 24) / 256.0F;
 
-
 /*
 ** Render2DClass
 */
@@ -148,7 +147,6 @@ protected:
 	void	Internal_Add_Quad_HColors( unsigned long color1, unsigned long color2 );
 	void	Internal_Add_Quad_Indicies( int start_vert_index, bool backfaced = false );
 };
-
 
 /*
 ** Render2DTextClass

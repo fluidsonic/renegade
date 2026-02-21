@@ -2,7 +2,6 @@
 #ifndef __LIST_CTRL_H
 #define __LIST_CTRL_H
 
-
 #include "dialogcontrol.h"
 #include "vector3.h"
 #include "vector.h"
@@ -12,7 +11,6 @@
 #include "render2dsentence.h"
 #include "listiconmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -21,12 +19,10 @@ class ListCtrlClass;
 class ListRowClass;
 class TextureClass;
 
-
 ////////////////////////////////////////////////////////////////
 //	Typedefs
 ////////////////////////////////////////////////////////////////
 typedef int (CALLBACK *LISTCTRL_SORT_CALLBACK) (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param);
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -178,7 +174,6 @@ protected:
 
 	static int CALLBACK	Default_Sort_Callback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected constants
 	////////////////////////////////////////////////////////////////
@@ -227,7 +222,6 @@ protected:
 	COL_LIST						ColList;
 	ROW_LIST						RowInfoList;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -294,7 +288,6 @@ private:
 	DynamicVectorClass<StringClass>	IconList;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListColumnClass
@@ -317,7 +310,6 @@ public:
 	////////////////////////////////////////////////////////////////
 	bool					operator== (const ListColumnClass &src) const	{ return false; }
 	bool					operator!= (const ListColumnClass &src) const	{ return true; }
-
 
 	////////////////////////////////////////////////////////////////
 	//	Public methods
@@ -390,7 +382,6 @@ private:
 	float					Width;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListRowClass
@@ -414,7 +405,6 @@ public:
 	////////////////////////////////////////////////////////////////
 	bool					operator== (const ListRowClass &src) const	{ return false; }
 	bool					operator!= (const ListRowClass &src) const	{ return true; }
-
 
 	////////////////////////////////////////////////////////////////
 	//	Public methods
@@ -440,7 +430,6 @@ private:
 	float			Height;
 	bool			IsSelected;
 };
-
 
 #endif //__LIST_CTRL_H
 

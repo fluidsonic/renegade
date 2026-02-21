@@ -4,7 +4,6 @@
 
 #include "always.h"
 
-
 // strip data =
 //
 // len = number of vertices in strip

@@ -20,13 +20,11 @@
 //
 // #define BETASERVER
 
-
 //
 // Uncomment the BETACLIENT define to omit single-player and
 // hosting functionality.
 //
 // #define BETACLIENT
-
 
 //
 // Uncomment the FREEDEDICATEDSERVER define to permit only dedicated
@@ -34,12 +32,10 @@
 //
 // #define FREEDEDICATEDSERVER
 
-
 //
 // Uncomment the MULTIPLAYERDEMO define to build the MP demo.
 //
 // #define MULTIPLAYERDEMO
-
 
 //-----------------------------------------------------------------------------
 // COMPILE-TIME WARNINGS
@@ -91,21 +87,6 @@
 
 #endif // SPECIALBUILDS_H
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 //
 // 11/07/01 - BETASERVER define no longer needed.
@@ -118,7 +99,6 @@
 //
 //#define BETASERVER
 */
-
 
 /*
 #ifdef BETASERVER

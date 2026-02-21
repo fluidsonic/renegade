@@ -2,7 +2,6 @@
 #ifndef __NET_CLASSIDS_H
 #define __NET_CLASSIDS_H
 
-
 ////////////////////////////////////////////////////////////////
 //	Network class IDs
 ////////////////////////////////////////////////////////////////
@@ -58,22 +57,7 @@ enum
 	NETCLASSID_DONATEEVENT,
 };	
 
-
 #endif //__NET_CLASSIDS_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	//NETCLASSID_MOBIUSCAPEVENT,
 	//NETCLASSID_LMSPLAYEROUTEVENT,

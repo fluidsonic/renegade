@@ -67,7 +67,6 @@ bit8 Wait_Process(Process &process, DWORD *exit_code)
     return(FALSE);
 }
 
-
 //
 // Get the process to run from the config object
 //

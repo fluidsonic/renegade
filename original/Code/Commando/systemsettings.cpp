@@ -14,7 +14,6 @@
 #include "dlgconfigvideotab.h"
 #include	"wwstring.h"
 
-
 /*
 **
 */
@@ -53,14 +52,12 @@ void	SystemSettings::Registry_Load( const char * sub_key )
 	}
 }
 
-
 /*
 **
 */
 void	SystemSettings::Add_Console_Functions( DynamicVectorClass<ConsoleFunctionClass *> & list )
 {
 }
-
 
 /** BOOL ENTRY *********************************************************************************/
 
@@ -114,7 +111,6 @@ void	SystemSettingEntryBool::Set_State( bool state )
 	Set_Bool( State );
 	State = Get_Bool();
 }
-
 
 /** SLIDER ENTRY *********************************************************************************/
 
@@ -237,7 +233,6 @@ void	SystemSettingEntryEnum::Set_Selection( const char * name )
 	}
 }
 
-
 /***********************************************************************************************/
 
 class	SystemSettingEntryStaticProjectors : public SystemSettingEntryBool {
@@ -298,7 +293,6 @@ protected:
 	StringClass formatstring;
 };
 
-
 /***********************************************************************************************/
 
 class	SystemSettingEntryBrightnessLevel : public SystemSettingEntrySlider {
@@ -339,7 +333,6 @@ protected:
 	StringClass formatstring;
 };
 
-
 /***********************************************************************************************/
 
 class	SystemSettingEntryTextureResolution : public SystemSettingEntrySlider {
@@ -355,7 +348,6 @@ public:
 	virtual void Set_Slider( int value )	{ if ( WW3D::Get_Texture_Reduction() != value ) { WW3D::Set_Texture_Reduction( value ); } }
 
 };
-
 
 /***********************************************************************************************/
 
@@ -607,19 +599,6 @@ void SystemSettings::Shutdown( void )
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 #if DEADMENU
 //
@@ -677,7 +656,6 @@ MenuEntryClass	*	SystemSettingEntrySlider::Create_Menu_Entry( void )
 	return new MenuEntrySettingSlider( this );
 }
 #endif // DEADMENU
-
 
 #if DEADMENU
 class	MenuEntrySettingEnum : public MenuEntryEnumClass {

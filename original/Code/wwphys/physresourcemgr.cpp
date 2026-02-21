@@ -4,7 +4,6 @@
 #include "matpass.h"
 #include "assetmgr.h"
 
-
 /**
 ** Resources that the physics resource manager can allocate-on-demand
 */
@@ -12,8 +11,6 @@ static TextureClass *			_ShadowBlobTexture = NULL;
 static MaterialPassClass *		_HighlightMaterialPass = NULL;
 static TextureClass *			_StealthTexture = NULL;		
 static TextureClass *			_GridTexture = NULL;
-
-
 
 void PhysResourceMgrClass::Init(void)
 {
@@ -100,7 +97,6 @@ TextureClass * PhysResourceMgrClass::Peek_Stealth_Texture(void)
 	}
 	return _StealthTexture;
 }
-
 
 VertexMaterialClass * PhysResourceMgrClass::Create_Emissive_Material(void)
 {

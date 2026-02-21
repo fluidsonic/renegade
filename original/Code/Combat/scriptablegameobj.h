@@ -33,7 +33,6 @@
 	#include "audioevents.h"
 #endif
 
-
 typedef	SimpleDynVecClass<GameObjObserverClass *>		GameObjObserverList;
 
 class	GameObjObserverTimerClass;
@@ -134,7 +133,5 @@ protected:
 	DynamicVectorClass<GameObjObserverTimerClass *>	ObserverTimerList;
 	DynamicVectorClass<GameObjCustomTimerClass *>	CustomTimerList;
 };
-
-
 
 #endif	//	SCRIPTABLEGAMEOBJ_H

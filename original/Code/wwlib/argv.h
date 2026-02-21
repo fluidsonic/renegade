@@ -122,5 +122,4 @@ class ArgvClass
 		static char  *Argv[MAX_ARGC];
 };
 
-
 #endif

@@ -6,7 +6,6 @@
 #include "bittype.h"
 #include "wwstring.h"
 
-
 class RenderObjClass;
 class TexProjectClass;
 class ChunkLoadClass;
@@ -47,7 +46,6 @@ protected:
 
 };
 
-
 /**
 ** ProjectorManagerDefClass
 ** This class is meant to be a component of a definition class for a physics object
@@ -84,7 +82,6 @@ public:
 
 };
 
-
 /*
 ** Use this macro to make all of the member variables in a ProjectorManagerDefClass editable.
 ** The first parameter to the macro is the type-name of your class (e.g. StaticAnimPhysDefClass) and
@@ -105,7 +102,6 @@ public:
 	NAMED_FLOAT_UNITS_PARAM( class_name , member_name.Intensity , 0.01f , 1.0f, "","Intensity" );													\
 	FILENAME_PARAM ( class_name , member_name.TextureName, "Texture files", ".tga");																	\
 	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_STRING,	member_name.BoneName, "BoneName" );
-
 
 #endif
 

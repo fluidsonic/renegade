@@ -12,7 +12,6 @@
 #include "lightsolveprogress.h"
 #include "renegadeterrainpatch.h"
 
-
 /**
 ** VertexSolveClass
 ** This class does the job of generated a vertex solve for a mesh.  
@@ -310,7 +309,6 @@ void VertexSolveClass::Light_Terrain(LightSolveContextClass & context,RenegadeTe
 	return ;
 }
 
-
 void VertexSolveClass::Add_Light_To_Vertex(LightSolveContextClass & context,int vi,LightClass * light_obj)
 {				
 	if (light_obj->Is_Within_Attenuation_Radius(Position[vi])) {
@@ -370,9 +368,6 @@ void VertexSolveClass::Grow_Arrays(int vcount)
 	MeshDiffuse.Uninitialised_Grow(vcount);
 }
 
-
-
-
 /*****************************************************************************
 **
 ** LightSolveClass Implementation
@@ -394,7 +389,6 @@ void VertexSolveClass::Grow_Arrays(int vcount)
   - iterate list, pass each to solve function for an object
 */
 
-
 void LightSolveClass::Generate_Static_Light_Solve(LightSolveContextClass & context)
 {
 	RefPhysListIterator it = PhysicsSceneClass::Get_Instance()->Get_Static_Object_Iterator();
@@ -410,7 +404,6 @@ void LightSolveClass::Generate_Static_Light_Solve(LightSolveContextClass & conte
 		}
 		it.Next();
 	}
-
 
 	/*
 	** Pass the list to the solve function
@@ -439,7 +432,6 @@ void LightSolveClass::Generate_Static_Light_Solve(LightSolveContextClass & conte
 	*/
 	Compute_Solve(context,solve_list);
 }
-
 
 void LightSolveClass::Compute_Solve(LightSolveContextClass & context,RefPhysListClass & obj_list)
 {
@@ -559,8 +551,4 @@ bool LightSolveClass::Does_Model_Get_Static_Light_Solve(RenderObjClass * model)
 
 	return true;
 }
-
-
-
-
 

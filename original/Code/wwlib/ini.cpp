@@ -26,11 +26,8 @@
 #include "widestring.h"
 #include "nstrdup.h"
 
-
-
 // Instance of the static variable.
 bool INIClass::KeepBlankEntries = false;
-
 
 INIEntry::~INIEntry(void)
 {
@@ -104,8 +101,6 @@ INIClass::INIClass(FileClass & file)
 	Load(file);
 }
 
-
-
 /***********************************************************************************************
  * INIClass::INIClass -- Constructor for INI handler.                                          *
  *                                                                                             *
@@ -130,8 +125,6 @@ INIClass::INIClass(const char *filename)
 	}
 }
 
-
-
 /***********************************************************************************************
  * INIClass::~INIClass -- Destructor for INI handler.                                          *
  *                                                                                             *
@@ -152,7 +145,6 @@ INIClass::~INIClass(void)
 	Clear();
 	Shutdown();
 }
-
 
 /***********************************************************************************************
  * INIClass::Clear -- Clears out a section (or all sections) of the INI data.                  *
@@ -211,7 +203,6 @@ bool INIClass::Clear(char const * section, char const * entry)
 	return(true);
 }
 
-
 /***********************************************************************************************
  * INIClass::Get_Filename -- Returns the name of the INI file (if available - "<unknown>"      *
  *  otherwise)                                                                                 *
@@ -229,7 +220,6 @@ const char * INIClass::Get_Filename (void) const
 {
 	return Filename;
 }
-
 
 /***********************************************************************************************
  * INIClass::Load -- Load INI data from the file specified.                                    *
@@ -252,8 +242,6 @@ int INIClass::Load(FileClass & file)
 	Filename = nstrdup(file.File_Name());
 	return(Load(fs));
 }
-
-
 
 /***********************************************************************************************
  * INIClass::Load -- Load INI data from the file specified.                                    *
@@ -278,8 +266,6 @@ int INIClass::Load(const char *filename)
 
 	return(retval);
 }
-
-
 
 /***********************************************************************************************
  * INIClass::Load -- Load the INI data from the data stream (straw).                           *
@@ -453,7 +439,6 @@ int INIClass::Load(Straw & ffile)
 						continue;
 				}
 
-
 				INIEntry * entryptr = new INIEntry(strdup(buffer), strdup(divider));
 				if (entryptr == NULL) {
 					delete secptr;
@@ -487,7 +472,6 @@ int INIClass::Load(Straw & ffile)
 	return(true);
 }
 
-
 /***********************************************************************************************
  * INIClass::Save -- Save the ini data to the file specified.                                  *
  *                                                                                             *
@@ -510,7 +494,6 @@ int INIClass::Save(FileClass & file) const
 	Filename = nstrdup(file.File_Name());
 	return(Save(fp));
 }
-
 
 /***********************************************************************************************
  * INIClass::Save -- Save the ini data to the file specified.                                  *
@@ -542,8 +525,6 @@ int INIClass::Save(const char *filename) const
 
 	return(retval);
 }
-
-
 
 /***********************************************************************************************
  * INIClass::Save -- Saves the INI data to a pipe stream.                                      *
@@ -606,7 +587,6 @@ int INIClass::Save(Pipe & pipe) const
 	return(total);
 }
 
-
 /***********************************************************************************************
  * INIClass::Find_Section -- Find the specified section within the INI data.                   *
  *                                                                                             *
@@ -639,7 +619,6 @@ INISection * INIClass::Find_Section(char const * section) const
 	return(NULL);
 }
 
-
 /***********************************************************************************************
  * INIClass::Section_Count -- Counts the number of sections in the INI data.                   *
  *                                                                                             *
@@ -660,7 +639,6 @@ int INIClass::Section_Count(void) const
 {
 	return(SectionIndex->Count());
 }
-
 
 /***********************************************************************************************
  * INIClass::Entry_Count -- Fetches the number of entries in a specified section.              *
@@ -686,7 +664,6 @@ int INIClass::Entry_Count(char const * section) const
 	}
 	return(0);
 }
-
 
 /***********************************************************************************************
  * INIClass::Find_Entry -- Find specified entry within section.                                *
@@ -714,7 +691,6 @@ INIEntry * INIClass::Find_Entry(char const * section, char const * entry) const
 	}
 	return(NULL);
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Entry -- Get the entry identifier name given ordinal number and section name. *
@@ -750,8 +726,6 @@ char const * INIClass::Get_Entry(char const * section, int index) const
 	return(NULL);
 }
 
-
-
 /***********************************************************************************************
  * Enumerate_Entries -- Count how many entries begin with a certain prefix followed by a range *
  *                      of numbers.                                                            *
@@ -783,8 +757,6 @@ unsigned INIClass::Enumerate_Entries(const char *Section, const char * Entry_Pre
 
 	return (count - StartNumber);
 }
-
-
 
 /***********************************************************************************************
  * INIClass::Put_UUBlock -- Store a binary encoded data block into the INI database.           *
@@ -834,7 +806,6 @@ bool INIClass::Put_UUBlock(char const * section, void const * block, int len)
 	return(true);
 }
 
-
 /***********************************************************************************************
  * INIClass::Get_UUBlock -- Fetch an encoded block from the section specified.                 *
  *                                                                                             *
@@ -881,10 +852,6 @@ int INIClass::Get_UUBlock(char const * section, void * block, int len) const
 	return(total);
 }
 
-
-
-
-
 /***********************************************************************************************
  * INIClass::Get_Wide_String -- Get a wide string from an .INI                                 *
  *                                                                                             *
@@ -921,9 +888,6 @@ const WideStringClass& INIClass::Get_Wide_String(WideStringClass& new_string, ch
 	}
 	return(new_string);
 }
-
-
-
 
 /***********************************************************************************************
  * INIClass::Put_Wide_String -- Put a wide string into an INI database.                        *
@@ -972,10 +936,6 @@ bool INIClass::Put_Wide_String(char const * section, char const * entry, const W
 	return(true);
 }
 
-
-
-
-
 bool INIClass::Put_UUBlock(char const * section, char const *entry, void const * block, int len)
 {
 	if (section == NULL || block == NULL || len < 1) return(false);
@@ -992,11 +952,6 @@ bool INIClass::Put_UUBlock(char const * section, char const *entry, void const *
 
 	return(true);
 }
-
-
-
-
-
 
 int INIClass::Get_UUBlock(char const * section, char const *entry, void * block, int len) const
 {
@@ -1017,13 +972,6 @@ int INIClass::Get_UUBlock(char const * section, char const *entry, void * block,
 	total += b64pipe.End();
 	return(total);
 }
-
-
-
-
-
-
-
 
 /***********************************************************************************************
  * INIClass::Put_TextBlock -- Stores a block of text into an INI section.                      *
@@ -1094,7 +1042,6 @@ bool INIClass::Put_TextBlock(char const * section, char const * text)
 	return(true);
 }
 
-
 /***********************************************************************************************
  * INIClass::Get_TextBlock -- Fetch a block of normal text.                                    *
  *                                                                                             *
@@ -1149,7 +1096,6 @@ int INIClass::Get_TextBlock(char const * section, char * buffer, int len) const
 	return(total);
 }
 
-
 /***********************************************************************************************
  * INIClass::Put_Int -- Stores a signed integer into the INI data base.                        *
  *                                                                                             *
@@ -1198,7 +1144,6 @@ bool INIClass::Put_Int(char const * section, char const * entry, int number, int
 	return(Put_String(section, entry, buffer));
 }
 
-
 /***********************************************************************************************
  * INIClass::Get_Int -- Fetch an integer entry from the specified section.                     *
  *                                                                                             *
@@ -1243,8 +1188,6 @@ int INIClass::Get_Int(char const * section, char const * entry, int defvalue) co
 	return(defvalue);
 }
 
-
-
 /***********************************************************************************************
  * INIClass::Put_Rect -- Store a rectangle  into the INI database.                             *
  *                                                                                             *
@@ -1271,7 +1214,6 @@ bool INIClass::Put_Rect(char const * section, char const * entry, Rect const & v
 	sprintf(buffer, "%d,%d,%d,%d", value.X, value.Y, value.Width, value.Height);
 	return(Put_String(section, entry, buffer));
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Rect -- Retrieve a rectangle data from the database.                          *
@@ -1306,7 +1248,6 @@ Rect const INIClass::Get_Rect(char const * section, char const * entry, Rect con
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INIClass::Put_Hex -- Store an integer into the INI database, but use a hex format.          *
  *                                                                                             *
@@ -1334,7 +1275,6 @@ bool INIClass::Put_Hex(char const * section, char const * entry, int number)
 	sprintf(buffer, "%X", number);
 	return(Put_String(section, entry, buffer));
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Hex -- Fetches integer [hex format] from the section and entry specified.     *
@@ -1370,7 +1310,6 @@ int INIClass::Get_Hex(char const * section, char const * entry, int defvalue) co
 	}
 	return(defvalue);
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Float -- Fetch a floating point number from the database.                     *
@@ -1410,7 +1349,6 @@ float INIClass::Get_Float(char const * section, char const * entry, float defval
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INIClass::Put_Float -- Store a floating point number to the database.                       *
  *                                                                                             *
@@ -1437,7 +1375,6 @@ bool INIClass::Put_Float(char const * section, char const * entry, float number)
 	sprintf(buffer, "%f", number);
 	return(Put_String(section, entry, buffer));
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Double -- Fetch a double-precision floating point number from the database.   *
@@ -1477,7 +1414,6 @@ double INIClass::Get_Double(char const * section, char const * entry, double def
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INIClass::Put_Double -- Store a double-precision floating point number to the database.     *
  *                                                                                             *
@@ -1504,7 +1440,6 @@ bool INIClass::Put_Double(char const * section, char const * entry, double numbe
 	sprintf(buffer, "%lf", number);
 	return(Put_String(section, entry, buffer));
 }
-
 
 /***********************************************************************************************
  * INIClass::Put_String -- Output a string to the section and entry specified.                 *
@@ -1572,7 +1507,6 @@ bool INIClass::Put_String(char const * section, char const * entry, char const *
 	return(true);
 }
 
-
 /***********************************************************************************************
  * INIClass::Get_String -- Fetch the value of a particular entry in a specified section.       *
  *                                                                                             *
@@ -1632,7 +1566,6 @@ int INIClass::Get_String(char const * section, char const * entry, char const * 
 	}
 }
 
-
 /*
 ** GetString
 */
@@ -1659,8 +1592,6 @@ const StringClass& INIClass::Get_String(StringClass& new_string, char const * se
 	new_string=defvalue;
 	return new_string;
 }
-
-
 
 /***********************************************************************************************
  * INIClass::Get_String -- Fetch the value of a particular entry in a specified section.       *
@@ -1823,7 +1754,6 @@ bool INIClass::Put_Bool(char const * section, char const * entry, bool value)
 	}
 }
 
-
 /***********************************************************************************************
  * INIClass::Get_Bool -- Fetch a boolean value for the section and entry specified.            *
  *                                                                                             *
@@ -1871,7 +1801,6 @@ bool INIClass::Get_Bool(char const * section, char const * entry, bool defvalue)
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INIClass::Put_Point -- Store a point value to the database.                                 *
  *                                                                                             *
@@ -1897,7 +1826,6 @@ bool INIClass::Put_Point(char const * section, char const * entry, TPoint2D<int>
 	sprintf(buffer, "%d,%d", value.X, value.Y);
 	return(Put_String(section, entry, buffer));
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Point -- Fetch a point value from the INI database.                           *
@@ -1930,7 +1858,6 @@ TPoint2D<int> const INIClass::Get_Point(char const * section, char const * entry
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INIClass::Put_Point -- Stores a 3D point to the database.                                   *
  *                                                                                             *
@@ -1956,7 +1883,6 @@ bool INIClass::Put_Point(char const * section, char const * entry, TPoint3D<int>
 	sprintf(buffer, "%d,%d,%d", value.X, value.Y, value.Z);
 	return(Put_String(section, entry, buffer));
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Point -- Fetch a 3D point from the database.                                  *
@@ -1990,7 +1916,6 @@ TPoint3D<int> const INIClass::Get_Point(char const * section, char const * entry
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INIClass::Put_Point -- Stores a 3D point to the database.                                   *
  *                                                                                             *
@@ -2016,7 +1941,6 @@ bool INIClass::Put_Point(char const * section, char const * entry, TPoint3D<floa
 	sprintf(buffer, "%f,%f,%f", (float)value.X, (float)value.Y, (float)value.Z);
 	return(Put_String(section, entry, buffer));
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_Point -- Fetch a 3D point from the database.                                  *
@@ -2050,7 +1974,6 @@ TPoint3D<float> const INIClass::Get_Point(char const * section, char const * ent
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INIClass::Get_Point -- Fetch a point value from the INI database.                           *
  *                                                                                             *
@@ -2082,7 +2005,6 @@ TPoint2D<float> const INIClass::Get_Point(char const * section, char const * ent
 	return(defvalue);
 }
 
-
 /***********************************************************************************************
  * INISection::Find_Entry -- Finds a specified entry and returns pointer to it.					  *
  *                                                                                             *
@@ -2112,7 +2034,6 @@ INIEntry * INISection::Find_Entry(char const * entry) const
 	}
 	return(NULL);
 }
-
 
 /***********************************************************************************************
  * INIClass::Put_PKey -- Stores the key to the INI database.                                   *
@@ -2145,7 +2066,6 @@ bool INIClass::Put_PKey(PKey const & key)
 	Put_UUBlock("PrivateKey", buffer, len);
 	return(true);
 }
-
 
 /***********************************************************************************************
  * INIClass::Get_PKey -- Fetch a key from the ini database.                                    *
@@ -2187,7 +2107,6 @@ PKey INIClass::Get_PKey(bool fast) const
 	return(key);
 }
 
-
 /***********************************************************************************************
  * INIClass::Strip_Comments -- Strips comments of the specified text line.                     *
  *                                                                                             *
@@ -2214,7 +2133,6 @@ void INIClass::Strip_Comments(char * buffer)
 	}
 }
 
-
 /***********************************************************************************************
  *  INIClass::CRC - returns a (hopefully) unique 32-bit value for a string                     *
  *                                                                                             *
@@ -2235,7 +2153,6 @@ int INIClass::CRC(const char *string)
 	// simply call the CRC class string evaluator.
 	return CRC::String(string);
 }
-
 
 /***********************************************************************************************
  *  -- Displays debug information when a duplicate entry is found in an INI file               *
@@ -2268,7 +2185,6 @@ void INIClass::DuplicateCRCError(const char *message, const char *section, const
 #endif
 #endif
 }
-
 
 void	INIClass::Keep_Blank_Entries (bool keep_blanks)
 {

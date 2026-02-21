@@ -10,12 +10,10 @@
 #include "networkobjectmgr.h"
 #include "apppackettypes.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 DynamicVectorClass<StaticNetworkObjectClass *> StaticNetworkObjectClass::StaticNetworkObjectList;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -44,7 +42,6 @@ StaticNetworkObjectClass::StaticNetworkObjectClass (void)	:
 	Set_App_Packet_Type(APPPACKETTYPE_STATIC);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~StaticNetworkObjectClass
@@ -64,7 +61,6 @@ StaticNetworkObjectClass::~StaticNetworkObjectClass (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -87,7 +83,6 @@ StaticNetworkObjectClass::Get_World_Position (Vector3 &pos) const
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 // Get_Vis_ID - return the vis ID for this object
@@ -102,7 +97,6 @@ StaticNetworkObjectClass::Get_Vis_ID (void)
 
 	return -1;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -137,7 +131,6 @@ StaticNetworkObjectClass::Initialize (StaticAnimPhysClass *phys_obj)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Network_Think
@@ -171,7 +164,6 @@ StaticNetworkObjectClass::Network_Think (void)
 	return ;
 }
 
-
 /*
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -195,7 +187,6 @@ StaticNetworkObjectClass::Compute_Object_Priority (int client_id, const Vector3 
 	return priority;
 }
 */
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -238,7 +229,6 @@ StaticNetworkObjectClass::Generate_Static_Network_Objects (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Free_Static_Network_Objects
@@ -264,7 +254,6 @@ StaticNetworkObjectClass::Free_Static_Network_Objects (void)
 	//
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -301,7 +290,6 @@ StaticNetworkObjectClass::Import_Rare (BitStreamClass &packet)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Export_Rare
@@ -323,7 +311,6 @@ StaticNetworkObjectClass::Export_Rare (BitStreamClass &packet)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DoorNetworkObjectClass
@@ -334,7 +321,6 @@ DoorNetworkObjectClass::DoorNetworkObjectClass (void) :
 {
 	Set_App_Packet_Type(APPPACKETTYPE_DOOR);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -363,7 +349,6 @@ DoorNetworkObjectClass::Initialize (StaticAnimPhysClass *phys_obj)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -396,7 +381,6 @@ DoorNetworkObjectClass::Network_Think (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -436,7 +420,6 @@ DoorNetworkObjectClass::Import_Rare (BitStreamClass &packet)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Export_Rare
@@ -457,7 +440,6 @@ DoorNetworkObjectClass::Export_Rare (BitStreamClass &packet)
 	packet.Add (DoorState, BITPACK_DOOR_STATE);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -504,7 +486,6 @@ DoorNetworkObjectClass::Get_Description (StringClass & description)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ElevatorNetworkObjectClass
@@ -517,7 +498,6 @@ ElevatorNetworkObjectClass::ElevatorNetworkObjectClass (void) :
 {
 	Set_App_Packet_Type(APPPACKETTYPE_ELEVATOR);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -548,7 +528,6 @@ ElevatorNetworkObjectClass::Initialize (StaticAnimPhysClass *phys_obj)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -585,7 +564,6 @@ ElevatorNetworkObjectClass::Network_Think (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -629,7 +607,6 @@ ElevatorNetworkObjectClass::Import_Rare (BitStreamClass &packet)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Export_Rare
@@ -654,7 +631,6 @@ ElevatorNetworkObjectClass::Export_Rare (BitStreamClass &packet)
 	packet.Add (DoorStateBottom);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -708,7 +684,6 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 	line.Format("DoorStateBottom:  %d (%s)\n", DoorStateBottom, state_string);
 		description += line;
 
-
 	if (PhysObj != NULL) {
 		ElevatorPhysClass *elevator = PhysObj->As_ElevatorPhysClass ();
 		if (elevator != NULL) {
@@ -733,7 +708,6 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DSAPONetworkObjectClass
@@ -744,7 +718,6 @@ DSAPONetworkObjectClass::DSAPONetworkObjectClass (void) :
 {
 	Set_App_Packet_Type(APPPACKETTYPE_DSAPO);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -772,7 +745,6 @@ DSAPONetworkObjectClass::Initialize (StaticAnimPhysClass *phys_obj)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -803,7 +775,6 @@ DSAPONetworkObjectClass::Network_Think (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -850,7 +821,6 @@ DSAPONetworkObjectClass::Import_Rare (BitStreamClass &packet)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

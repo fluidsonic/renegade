@@ -3,7 +3,6 @@
 #include "combatchunkid.h"
 #include "saveloadsubsystem.h"
 #include "persistfactory.h"
-#include "debug.h"
 #include "combat.h"
 #include "scripts.h"
 #include "soldier.h"
@@ -42,7 +41,6 @@ void GameObjManager::Shutdown(void)
 
 	PersistentGameObjObserverManager::Reset();
 }
-
 
 /*
 **
@@ -138,7 +136,6 @@ bool	GameObjManager::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 void	GameObjManager::Add( BaseGameObj *obj ) 
 { 
 	// Make sure we have no duplicate IDs
@@ -162,7 +159,6 @@ void GameObjManager::Init_All()
 	}
 #endif
 }
-
 
 /*
 **	GameObjectManager::Destroy_All
@@ -196,10 +192,8 @@ void GameObjManager::Destroy_All()		// Destroy each object in the list
 
 	NetworkObjectMgrClass::Delete_Pending ();	
 
-
 	ScriptManager::Enable_Script_Creation( true );	// turn it back on
 }
-
 
 /*
 **	GameObjectManager::Update_Control()
@@ -223,10 +217,8 @@ int	GameObjManager::Generate_Control()
 	return 0;
 }
 
-
 int _AwakeSoldiers = 0;
 int _HibernatingSoldiers = 0;
-
 
 /*
 ** This static routine allows each GameObject to think
@@ -384,7 +376,6 @@ PhysicalGameObj * GameObjManager::Find_PhysicalGameObj( int id )
 	return NULL;	// Not found
 }
 
-
 /*
 ** searches the game object list for the object with this id
 */
@@ -401,7 +392,6 @@ ScriptableGameObj * GameObjManager::Find_ScriptableGameObj( int id )
 
 	return NULL;	// Not found
 }
-
 
 /*
 ** searches the game object list for a vehicle occupied by the given soldier.
@@ -422,7 +412,6 @@ VehicleGameObj * GameObjManager::Find_Vehicle_Occupied_By( SoldierGameObj * p_so
 	return NULL;	// Not found
 }
 
-
 /*
 ** searches the smart game object list for the object with this id
 */
@@ -440,7 +429,6 @@ SmartGameObj * GameObjManager::Find_SmartGameObj( int id )
 
 	return NULL;	// Not found
 }
-
 
 /*
 ** Buildings
@@ -460,7 +448,6 @@ void	GameObjManager::Init_Buildings( void )
 
 	return ;
 }
-
 
 /*
 ** Update_Building_Collection_Spheres
@@ -518,7 +505,6 @@ void	GameObjManager::Update_Building_Collection_Spheres( void )
 	return ;
 }
 
-
 /*
 ** Debug_Set_All_Building_States
 */
@@ -531,7 +517,6 @@ void	GameObjManager::Debug_Set_All_Building_States(float health_percentage,bool 
 		building->Set_Normalized_Health(health_percentage / 100.0f);
 	}
 }
-
 
 /*
 ** Environment Zones
@@ -555,32 +540,6 @@ bool	GameObjManager::Is_In_Environment_Zone( Vector3 & pos )
 	return false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 **	GameObjectManager::Destroy_Pending
 ** This static routine destroys all objects with destroy bit set
@@ -603,5 +562,4 @@ bool	GameObjManager::Is_In_Environment_Zone( Vector3 & pos )
 		}
 	}
 }*/
-
 

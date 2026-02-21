@@ -13,9 +13,7 @@
 #include "cncmodesettings.h"
 #include "floodprotectionmgr.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(CSAnnouncement, NETCLASSID_CSANNOUNCEMENT);
-
 
 CSAnnouncement::CSAnnouncement(void) :
 		mFromID(-1),
@@ -27,11 +25,9 @@ CSAnnouncement::CSAnnouncement(void) :
 	Set_App_Packet_Type(APPPACKETTYPE_CSANNOUNCEMENT);
 	}
 
-
 CSAnnouncement::~CSAnnouncement()
 	{
 	}
-
 
 void CSAnnouncement::Init(int to_id, int announcementID, AnnouncementEnum type, int radio_cmd_id)
 	{
@@ -68,7 +64,6 @@ void CSAnnouncement::Init(int to_id, int announcementID, AnnouncementEnum type, 
 		}
 	}
 
-
 void CSAnnouncement::Act(void)
 	{
 
@@ -80,7 +75,6 @@ void CSAnnouncement::Act(void)
 
 	Set_Delete_Pending();
 	}
-
 
 void CSAnnouncement::Export_Creation(BitStreamClass& packet)
 	{
@@ -94,7 +88,6 @@ void CSAnnouncement::Export_Creation(BitStreamClass& packet)
 
 	Set_Delete_Pending();
 	}
-
 
 void CSAnnouncement::Import_Creation(BitStreamClass& packet)
 	{
@@ -112,10 +105,8 @@ void CSAnnouncement::Import_Creation(BitStreamClass& packet)
 	Act();
 	}
 
-
 //-----------------------------------------------------------------------------
 DECLARE_NETWORKOBJECT_FACTORY(SCAnnouncement, NETCLASSID_SCANNOUNCEMENT);
-
 
 SCAnnouncement::SCAnnouncement(void) :
 		mToID(-1),
@@ -127,11 +118,9 @@ SCAnnouncement::SCAnnouncement(void) :
 	Set_App_Packet_Type(APPPACKETTYPE_SCANNOUNCEMENT);
 	}
 
-
 SCAnnouncement::~SCAnnouncement()
 	{
 	}
-
 
 void SCAnnouncement::Init(int to_id, int from_id, int announcementID, AnnouncementEnum type, int radio_cmd_id)
 	{
@@ -173,7 +162,6 @@ void SCAnnouncement::Init(int to_id, int from_id, int announcementID, Announceme
 		}
 	}
 
-
 void SCAnnouncement::Set_Dirty_Bit_For_Team(DIRTY_BIT bit, int team)
 	{
 
@@ -196,7 +184,6 @@ void SCAnnouncement::Set_Dirty_Bit_For_Team(DIRTY_BIT bit, int team)
 			}
 		}
 	}
-
 
 void SCAnnouncement::Act(void)
 	{
@@ -262,10 +249,8 @@ void SCAnnouncement::Act(void)
 			}
 		}
 
-
 	Set_Delete_Pending();
 	}
-
 
 //-----------------------------------------------------------------------------
 void SCAnnouncement::Export_Creation(BitStreamClass& packet)
@@ -280,12 +265,10 @@ void SCAnnouncement::Export_Creation(BitStreamClass& packet)
 	Set_Delete_Pending();
 	}
 
-
 //-----------------------------------------------------------------------------
 void SCAnnouncement::Import_Creation(BitStreamClass& packet)
 	{
 	cNetEvent::Import_Creation(packet);
-
 
 	packet.Get(mToID);
 	packet.Get(mFromID);

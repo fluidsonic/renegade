@@ -2,12 +2,10 @@
 #ifndef __SCROLLBAR_CTRL_H
 #define __SCROLLBAR_CTRL_H
 
-
 #include "dialogcontrol.h"
 #include "vector3.h"
 #include "render2d.h"
 #include "bittype.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -68,7 +66,6 @@ protected:
 	void				Update_Thumb_Rect (void);
 	void				Scroll_Page (int direction, bool send_notify = true);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected constants
 	////////////////////////////////////////////////////////////////
@@ -108,7 +105,6 @@ protected:
 	float						ScaleX;
 	float						ScaleY;
 };
-
 
 #endif //__SCROLLBAR_CTRL_H
 

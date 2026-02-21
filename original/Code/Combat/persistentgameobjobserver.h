@@ -17,7 +17,6 @@
 	#include "vector.h"
 #endif
 
-
 /*
 ** PersistentGameObjObserverClass
 */

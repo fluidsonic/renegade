@@ -9,7 +9,6 @@
 #include "combat.h"
 #include "ccamera.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ControlsBasicMvmtTabClass
@@ -32,7 +31,6 @@ ControlsBasicMvmtTabClass::ControlsBasicMvmtTabClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ControlsAttackTabClass
@@ -51,7 +49,6 @@ ControlsAttackTabClass::ControlsAttackTabClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Init_Dialog
@@ -64,7 +61,6 @@ ControlsAttackTabClass::On_Init_Dialog (void)
 	Load_Controls ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -83,7 +79,6 @@ ControlsAttackTabClass::On_Apply (void)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Controls
@@ -95,7 +90,6 @@ ControlsAttackTabClass::Load_Controls (void)
 	Check_Dlg_Button (IDC_DAMAGE_INDICATOR_CHECK, Input::Are_Damage_Indicators_Enabled ());
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -109,7 +103,6 @@ ControlsAttackTabClass::On_Reload (void)
 	Load_Controls ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -132,7 +125,6 @@ ControlsWeaponsTabClass::ControlsWeaponsTabClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ControlsLookTabClass
@@ -145,7 +137,6 @@ ControlsLookTabClass::ControlsLookTabClass (void)	:
 	Add_Function (INPUT_FUNCTION_FIRST_PERSON_TOGGLE,	IDC_HOTKEY2, IDC_HOTKEY14);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -178,7 +169,6 @@ ControlsLookTabClass::On_Init_Dialog (void)
 	Load_Controls ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -224,7 +214,6 @@ ControlsLookTabClass::On_Apply (void)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Controls
@@ -259,7 +248,6 @@ ControlsLookTabClass::Load_Controls (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Reload
@@ -272,7 +260,6 @@ ControlsLookTabClass::On_Reload (void)
 	Load_Controls ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

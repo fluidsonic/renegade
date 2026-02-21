@@ -18,7 +18,6 @@ struct CastResultStruct;
 const int MAX_CONTACT_POINTS = 10;
 const float RBODY_SLEEP_DELAY	= 0.5f;	// if still for this many seconds, shut off simulation
 
-
 /**
 ** RigidBodyStateStruct
 ** This is the state vector for a RigidBodyClass.  
@@ -40,7 +39,6 @@ struct RigidBodyStateStruct
 	Vector3			LMomentum;
 	Vector3			AMomentum;
 };
-
 
 /** 
 ** RigidBodyClass
@@ -220,7 +218,6 @@ private:
 
 };
 
-
 inline RigidBodyStateStruct::RigidBodyStateStruct(const RigidBodyStateStruct & that)
 {
 	*this = that;
@@ -299,7 +296,6 @@ inline void RigidBodyStateStruct::Lerp
 	::Fast_Slerp(res->Orientation,s0.Orientation,s1.Orientation,fraction);
 }
 
-
 /**
 ** RigidBodyDefClass
 ** Initialization data structure for RigidBodyClass
@@ -337,6 +333,5 @@ protected:
 
 	friend class RigidBodyClass;
 };
-
 
 #endif

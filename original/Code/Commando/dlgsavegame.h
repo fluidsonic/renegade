@@ -2,11 +2,9 @@
 #ifndef __DLG_SAVE_GAME_H
 #define __DLG_SAVE_GAME_H
 
-
 #include "menudialog.h"
 #include "resource.h"
 #include "dlgmessagebox.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -24,7 +22,6 @@ public:
 		CurrSortCol (1),
 		IsSortAscending (false),
 		MenuDialogClass (IDD_MENU_SAVE_GAME)	{}
-
 
 	////////////////////////////////////////////////////////////////
 	//	Public methods
@@ -69,7 +66,6 @@ private:
 	uint16	CurrSortCol;
 	bool		IsSortAscending;
 };
-
 
 #endif //__DLG_SAVE_GAME_H
 

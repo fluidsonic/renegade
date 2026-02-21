@@ -41,8 +41,6 @@ enum ShaderShiftConstants
 		(post_det_color) << SHIFT_POSTDETAILCOLORFUNC | \
 		(post_det_alpha) << SHIFT_POSTDETAILALPHAFUNC)
 
-
-
 class ShaderClass
 {
 	friend DX8Wrapper;

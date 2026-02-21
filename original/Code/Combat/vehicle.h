@@ -27,7 +27,6 @@ class	SoldierGameObj;
 class	PersistantSurfaceEmitterClass;
 class PersistantSurfaceSoundClass;
 
-
 /*
 **
 */
@@ -48,7 +47,6 @@ enum
 
 	MAX_ENGINE_SOUND_STATES
 };
-
 
 /*
 ** VehicleGameObjDef - Defintion class for a VehicleGameObj
@@ -150,7 +148,6 @@ public:
 
    virtual int Get_Player_Type(void) const;
 
-
 	// Occupants
 	void	Add_Occupant( SoldierGameObj * occupant, int seat_id );
 	void	Add_Occupant( SoldierGameObj * occupant );
@@ -243,7 +240,6 @@ public:
 	void					Ignore_Occupants( void );
 	void					Unignore_Occupants( void );
 
-
 protected:
 
 	Sound3DClass			*Sound;
@@ -295,12 +291,10 @@ protected:
 
 	void		Create_And_Destroy_Transitions( void );
 
-
 	// Turrets
 	void		Aquire_Turret_Bones( void );
 	void		Release_Turret_Bones( void );
 	void		Update_Turret( float weapon_turn, float weapon_tilt );
-
 
 	// Sound Effects (wheels, engine)
 	void		Update_Sound_Effects( void );
@@ -308,6 +302,5 @@ protected:
 	void		Update_Engine_Sound_Pitch( void );
 
 };
-
 
 #endif	//	VEHICLE_H

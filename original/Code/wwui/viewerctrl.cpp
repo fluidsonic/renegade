@@ -17,11 +17,9 @@
 #include "meshmdl.h"
 #include "light.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -77,7 +75,6 @@ ViewerCtrlClass::ViewerCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ViewerCtrlClass
@@ -91,7 +88,6 @@ ViewerCtrlClass::~ViewerCtrlClass (void)
 	REF_PTR_RELEASE (Scene);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -115,7 +111,6 @@ ViewerCtrlClass::Create_Control_Renderer (void)
 	shader->Set_Depth_Mask (ShaderClass::DEPTH_WRITE_ENABLE);
 	shader->Set_Color_Mask (ShaderClass::COLOR_WRITE_ENABLE);
 
-
 	//
 	//	Determine which color to draw the outline in
 	//
@@ -133,7 +128,6 @@ ViewerCtrlClass::Create_Control_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -148,7 +142,6 @@ ViewerCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ROTATE);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -206,7 +199,6 @@ ViewerCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -240,7 +232,6 @@ ViewerCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -254,7 +245,6 @@ ViewerCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -265,7 +255,6 @@ ViewerCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -282,7 +271,6 @@ ViewerCtrlClass::Set_Model (const char *model_name)
 	Set_Model (new_model);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -325,7 +313,6 @@ ViewerCtrlClass::Set_Model (RenderObjClass *new_model)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -398,7 +385,6 @@ ViewerCtrlClass::Calculate_Camera_Position (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Animation
@@ -437,7 +423,6 @@ ViewerCtrlClass::Set_Animation (const char *anim_name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Free_Model
@@ -454,7 +439,6 @@ ViewerCtrlClass::Free_Model (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Interface_Mode
@@ -469,7 +453,6 @@ void ViewerCtrlClass::Set_Interface_Mode (InterfaceModeEnum mode, float rotation
 	}
 	RotationRate = DEG_TO_RADF (rotationrate);	
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -577,7 +560,6 @@ ViewerCtrlClass::On_Frame_Update (void)
 	DialogControlClass::On_Frame_Update ();
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////
 //

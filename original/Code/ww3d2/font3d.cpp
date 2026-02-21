@@ -23,7 +23,6 @@ Font3DDataClass::Font3DDataClass( const char *filename )
 	Name = strupr( Name);
 }
 
-
 /*********************************************************************************************** 
  *                                                                                             * 
  * Font3DDataClass::~Font3DDataClass -- destructor																	  * 
@@ -38,7 +37,6 @@ Font3DDataClass::~Font3DDataClass(void)
 
 	REF_PTR_RELEASE(Texture);
 }
-
 
 /*********************************************************************************************** 
  *                                                                                             * 
@@ -300,7 +298,6 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 	// return SUCCESS!
 	return true;
 }
-
 
 /*********************************************************************************************** 
  *                                                                                             * 

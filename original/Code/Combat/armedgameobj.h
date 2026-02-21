@@ -19,7 +19,6 @@
 class	WeaponClass;
 class	WeaponBagClass;
 
-
 /*
 ** ArmedGameObjDef - Defintion class for a ArmedGameObj
 */
@@ -52,7 +51,6 @@ protected:
 
 	friend	class								ArmedGameObj;
 };
-
 
 /*
 **
@@ -116,6 +114,5 @@ private:
 
 	void							Init_Muzzle_Bones( void );
 };
-
 
 #endif	//	ARMEDGAMEOBJ_H

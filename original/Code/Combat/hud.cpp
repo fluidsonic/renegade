@@ -6,7 +6,6 @@
 #include "font3d.h"
 #include "combat.h"
 #include "soldier.h"
-#include "debug.h"
 #include "ccamera.h"
 #include "vehicle.h"
 #include "weapons.h"
@@ -28,7 +27,6 @@
 #include "string_ids.h"
 #include "gametype.h"
 #include "stylemgr.h"
-
 
 static void Generate_WChar_Text_From_Number(WCHAR* text,int digits,int min_digits,int value)
 {
@@ -175,11 +173,9 @@ Vector2 TARGET_NAME_UV_UL( 1, 149 );
 Vector2 TARGET_NAME_UV_LR( 91, 164 );
 Vector2 TARGET_NAME_OFFSET( 125, 24 );
 
-
 	// Reticle
 #define	RETICLE_WIDTH	(64.0f/640.0f)
 #define	RETICLE_HEIGHT	(64.0f/480.0f)
-
 
 //
 
@@ -214,7 +210,6 @@ Render2DSentenceClass * HUDHelpTextRenderer;
 Vector2						HUDHelpTextExtents (0, 0);
 float							HUDHelpTextTimer = 0;
 int							HUDHelpTextState = HUD_HELP_TEXT_DISPLAYING;
-
 
 /*
 **
@@ -529,7 +524,6 @@ static	void	Powerup_Render( void )
 	PowerupTextRenderer->Render();
 }
 
-
 /*
 ** Weapon Display
 */
@@ -543,13 +537,11 @@ Vector2			WeaponBase;
 WeaponClass *	_LastHUDWeapon = NULL;
 int				_LastVehicleSeat = -1;
 
-
 #define		WEAPON_OFFSET			100, 110
 //#define		WEAPON_BOX_UV			0,0,95,95
 
 #define		SNIPER_UV				90,0,255,53
 #define		SNIPER_OFFSET			-80,-4
-
 
 static void HUD_Help_Text_Init( void )
 {
@@ -691,7 +683,6 @@ static	void	Weapon_Init( void )
 	_LastHUDWeapon = NULL;
 	_LastVehicleSeat = -1;
 
-
 }
 
 static	void	Weapon_Shutdown( void )
@@ -796,7 +787,6 @@ static	void	Weapon_Update( void )
 			CenterClipCountTimer -= TimeManager::Get_Frame_Seconds();
 		}
 
-
 		if ( weapon->Get_Total_Rounds() == -1 ) {
 			//text.Format( "999", weapon->Get_Total_Rounds() );
 			tmp_text[0]='9';
@@ -847,7 +837,6 @@ static	void	Weapon_Update( void )
 	} else if ( _LastHUDWeapon != weapon ) {		// Update the weapon icon
 		_LastHUDWeapon = weapon;
 		_LastVehicleSeat = -1;	// force vehicle seat to re-draw next
-
 
 		WeaponImageRenderer->Reset();
 		WeaponNameRenderer->Reset();
@@ -920,7 +909,6 @@ static	void	Weapon_Render( void )
 	WeaponClipCountRenderer->Render();
 	WeaponTotalCountRenderer->Render();
 }
-
 
 /*
 ** Weapon Chart Display
@@ -1131,7 +1119,6 @@ static	void	Weapon_Chart_Update( void )
 					color = COLOR( alpha * 0.5f, color );
 				}
 #endif
-
 
 				WeaponChartIcons[index]->Force_Color( color );
 				index++;
@@ -1348,7 +1335,6 @@ static	void	Target_Init( void )
 	InfoDebugRenderer->Set_Font( chars_font );
 //	TargetNameRenderer->Set_Coordinate_Range( Render2DClass::Get_Screen_Resolution() );
 }
-
 
 static	void	Target_Shutdown( void )
 {
@@ -2254,7 +2240,6 @@ static	void	Info_Editor_Shutdown( void )
 	}
 }
 
-
 /*
 **
 */
@@ -2572,7 +2557,6 @@ return;
 	draw += InfoBase + TARGET_NAME_OFFSET - draw.Upper_Left();
 	InfoRenderer->Add_Quad( draw, uv );
 
-
 	uv.Set( GRADIENT_BLACK_UV_UL, GRADIENT_BLACK_UV_LR );
 	uv.Scale( INFO_UV_SCALE );
 	draw.Set( TIME_BACK_UL, TIME_BACK_LR );
@@ -2672,7 +2656,6 @@ static	void	Info_Render( void )
 	InfoHealthCountRenderer->Render();
 	InfoShieldCountRenderer->Render();
 }
-
 
 /*
 ** OLD HUD STUFF
@@ -2829,7 +2812,6 @@ void 	HUDClass::Render()
 #endif
 }
 
-
 static bool	Is_HUD_Displayed( void )
 {
 	return (	_HUDEnabled &&
@@ -2964,7 +2946,6 @@ void 	HUDClass::Think()
 	} else {
 		RenderImages[RETICLE_HIT]->Set_Hidden( true );
 	}
-
 
 #if 0
 	// Display points

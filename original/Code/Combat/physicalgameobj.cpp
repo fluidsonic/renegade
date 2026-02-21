@@ -1,7 +1,6 @@
 #include "physicalgameobj.h"
 #include "damage.h"
 #include "scripts.h"
-#include "debug.h"
 #include "explosion.h"
 #include "assets.h"
 #include "combatsound.h"
@@ -32,7 +31,6 @@
 #include "transitioneffect.h"
 #include "phys3.h"
 #include "surfaceeffects.h"
-
 
 // Hibernate after 30 seconds
 #define	HIBERNATION_DELAY		30
@@ -92,7 +90,6 @@ PhysicalGameObjDef::PhysicalGameObjDef( void ) :
 																												
 	GENERIC_EDITABLE_PARAM( PhysicalGameObjDef, orator_type_param );
 
-
 #endif
 }
 
@@ -129,7 +126,6 @@ enum	{
 	MICROCHUNKID_DEF_ORATOR_TYPE,
 	MICROCHUNKID_DEF_USE_CREATION_EFFECT, 
 };
-
 
 bool	PhysicalGameObjDef::Save( ChunkSaveClass & csave )
 {
@@ -220,7 +216,6 @@ bool	PhysicalGameObjDef::Is_Valid_Config (StringClass &message)
 	return retval;
 }
 
-
 /*
 ** PhysicalGameObj
 */
@@ -280,7 +275,6 @@ void	PhysicalGameObj::Init( const PhysicalGameObjDef & definition )
 			REF_PTR_RELEASE(effect);
 		}
 	}
-
 
 	return ;
 }
@@ -343,12 +337,10 @@ void	PhysicalGameObj::Re_Init( const PhysicalGameObjDef & definition )
 	return ;
 }
 
-
 const PhysicalGameObjDef & PhysicalGameObj::Get_Definition( void ) const 
 {
 	return (const PhysicalGameObjDef &)BaseGameObj::Get_Definition();
 }
-
 
 /*
 ** PhysicalGameObj Save and Load
@@ -471,7 +463,6 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_HUD_POKABLE_INDICATOR, HUDPokableIndicatorEnabled );
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_IS_INNATE_CONVERSATIONS_ENABLED, IsInnateConversationsEnabled );
 
-
 						default:
 							Debug_Say(( "Unrecognized PhysicalGameObj Variable chunkID\n" ));
 							break;
@@ -528,7 +519,6 @@ void PhysicalGameObj::On_Post_Load (void)
 	DamageableGameObj::On_Post_Load ();
 }
 
-
 AnimControlClass *	PhysicalGameObj::Get_Anim_Control( void ) 
 {
 	return AnimControl;
@@ -559,10 +549,8 @@ void	PhysicalGameObj::Apply_Damage( const OffenseObjectClass & damager, float sc
 		return;
 	}
 
-
 	DamageableGameObj::Apply_Damage( damager, scale );
 }
-
 
 void	PhysicalGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, float scale,
 			const	Vector3 & direction, const char * collision_box_name )
@@ -572,7 +560,6 @@ void	PhysicalGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager,
 		Apply_Damage( damager, scale );
 	}
 }
-
 
 void PhysicalGameObj::Completely_Damaged( const OffenseObjectClass & damager ) 
 {
@@ -612,7 +599,6 @@ void PhysicalGameObj::Teleport_To_Host_Bone( void )
 			*/
 			bool ok = false;
 			Matrix3D new_transform = model->Get_Bone_Transform( HostGameObjBone );
-
 
 			/*
 			** If we are some kind of moveable object see if we can teleport to the desired position.
@@ -691,7 +677,6 @@ void PhysicalGameObj::Post_Think( void )
 	}
 
 	DamageableGameObj::Post_Think();		
-
 
 	if ( HibernationEnable && HibernationTimer > 0 ) {
 		HibernationTimer -= TimeManager::Get_Frame_Seconds();
@@ -797,7 +782,6 @@ void PhysicalGameObj::Increment_Server_Skips(void)
 		ServerUpdateSkips++;
 	}
 }
-
 
 //-----------------------------------------------------------------------------
 void	PhysicalGameObj::Reset_Radar_Blip_Color_Type( void )
@@ -928,7 +912,6 @@ void	PhysicalGameObj::End_Hibernation( void )
 	}
 }
 
-
 void	PhysicalGameObj::Get_Information( StringClass & string )
 {
 	StringClass temp;
@@ -948,7 +931,6 @@ void	PhysicalGameObj::Get_Information( StringClass & string )
 
 	DamageableGameObj::Get_Information( string );
 }
-
 
 void	PhysicalGameObj::Export_Creation( BitStreamClass &packet )
 {
@@ -983,7 +965,6 @@ void	PhysicalGameObj::Export_Creation( BitStreamClass &packet )
 	*/
 	return ;
 }
-
 
 void	PhysicalGameObj::Import_Creation( BitStreamClass &packet )
 {
@@ -1022,7 +1003,6 @@ void	PhysicalGameObj::Import_Creation( BitStreamClass &packet )
 
 	return ;
 }
-
 
 void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 {
@@ -1095,7 +1075,6 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 	return ;
 }
 
-
 void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 {
 	DamageableGameObj::Import_Rare( packet );
@@ -1165,7 +1144,6 @@ void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 
 	HUDPokableIndicatorEnabled = packet.Get( HUDPokableIndicatorEnabled );
 
-
 	if ( As_VehicleGameObj() != NULL ) {
 		// Get Hidden
 		bool hidden = packet.Get( hidden );
@@ -1229,7 +1207,6 @@ void	PhysicalGameObj::Hide_Muzzle_Flashes( bool hide )
 	}
 }
 
-
 /*
 **  Get_Vis_ID - return the vis id for this object
 */
@@ -1249,31 +1226,12 @@ int	PhysicalGameObj::Get_Vis_ID ()
 	return -1;
 }
 
-
 void PhysicalGameObj::Set_Player_Type(int id) 
 {
 	DamageableGameObj::Set_Player_Type(id);
 
 	Reset_Radar_Blip_Color_Type();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	/*
 	if (Is_Team_Player()) {
@@ -1325,13 +1283,11 @@ void PhysicalGameObj::Set_Tint(Vector3 color)
 }
 */
 
-
 void	PhysicalGameObj::Enable_HUD_Pokable_Indicator( bool enable )		
 { 
 	HUDPokableIndicatorEnabled = enable; 
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_RARE, true );
 }
-
 
 void PhysicalGameObj::Object_Shattered_Something
 (

@@ -1,6 +1,5 @@
 #include "init.h"
 #include <stdio.h>
-#include "debug.h"
 #include "wwmath.h"
 #include "ww3d.h"
 #include "wwphys.h"
@@ -87,9 +86,6 @@ extern const char *VALUE_NAME_TEXTURE_FILTER_MODE;
 #define IMMEDIATE_LOAD_LEVELNAME			"MDD_0803.mix"
 #endif
 
-
-
-
 /*
 ** This defines the subdirectory where the game will load all data from
 */
@@ -98,14 +94,8 @@ const char *	SAVE_SUBDIRECTORY			= "DATA\\SAVE\\";
 const char *	CONFIG_SUBDIRECTORY		= "DATA\\CONFIG\\";
 const char *	MOVIES_SUBDIRECTORY		= "DATA\\MOVIES\\";
 
-
 #define	STRINGS_FILENAME					"STRINGS.TDB"
 #define	CONV_DB_FILENAME					"CONV10.CDB"
-
-/*
-** DebugDisplayHandler
-*/
-TextDebugDisplayHandlerClass				TextDisplayHandler;
 
 /*
 ** Used to modify where game entries are kept in the registry.
@@ -135,7 +125,6 @@ static const float _ParticleLODScreenSizes[17] =
 	2.0000f,
 	NO_MAX_SCREEN_SIZE
 };
-
 
 /***********************************************************************************************
  * Append_To_Assert_History --  keeps a timestamped history of asserts.                        *
@@ -174,7 +163,7 @@ void Append_To_Assert_History(const char * message)
 	//
 	// version #
 	//
-	::sprintf(line, "Version:    %d\n", DebugManager::Get_Version_Number());
+	::sprintf(line, "Version:    %d\n", 0);
 	::fwrite(line, 1, ::strlen(line), file);
 
 	//
@@ -205,7 +194,6 @@ void Append_To_Assert_History(const char * message)
 
 	::fclose(file);
 }
-
 
 /***********************************************************************************************
  * Commando_Assert_Handler -- Commando callback function for WWASSERT's                        *
@@ -243,8 +231,6 @@ void Commando_Assert_Handler(const char * message)
 	//
 	// Hand the message off to the scrolling debug screen
 	//
-	DebugManager::Display( message );
-
 	//
 	//
 	//    IF YOU WANT TO DISABLE CERTAIN ACTIONS HERE, USE
@@ -257,7 +243,6 @@ void Commando_Assert_Handler(const char * message)
 
 	}
 
-
 }
 
 /*
@@ -268,7 +253,6 @@ void _stdcall AudioTextCallback(AudibleSoundClass *sound_obj, const StringClass 
 	Vector3 red = Vector3( 1, 0.5f, 0.5f );
 	StringClass str;
 	str.Format( "%s\n", (const char *)text );
-	DebugManager::Display_Text( str, red );
 }
 
 /*
@@ -357,7 +341,6 @@ void	Construct_Directory_Structure(void)
 	if (GetFileAttributes (config_dir) == 0xFFFFFFFF) {
 		::CreateDirectory (config_dir, NULL);
 	}
-
 
 	return ;
 }
@@ -455,7 +438,7 @@ public:
 		folder_name+=computer_name;
 		if (!Verify_Log_Directory(folder_name)) return;
 
-		Copy_Log(folder_name,DebugManager::Logfile_Name(),true);		//"_logfile.txt",true);
+		Copy_Log(folder_name,"",true);		//"_logfile.txt",true);
 		Copy_Log(folder_name,"_asserts.txt",true);
 		Copy_Log(folder_name,"_except.txt",true);
 		Copy_Log(folder_name,"sysinfo.txt",false);
@@ -492,7 +475,6 @@ void Application_Exception_Callback(void)
 
 bool RestartNeeded = true;
 
-
 /***********************************************************************************************
  * Get_Version_Number -- Collate version information.                                          *
  *                                                                                             *
@@ -512,11 +494,10 @@ bool RestartNeeded = true;
 void Get_Version_Number(DWORD *major, DWORD *minor)
 {
 	// Version info removed per Legal review requirements. LFeenanEA - 8th February 2025
-	
+
 	unsigned long version_major = 0;
 	unsigned long version_minor = 0;
 }
-
 
 /*
 **
@@ -526,7 +507,7 @@ void Get_Version_Number(DWORD *major, DWORD *minor)
 #define	LAST_CHAR	'z'
 
 #include "realcrc.h"
-int	CRC_Next( unsigned char ** p, int length ) 
+int	CRC_Next( unsigned char ** p, int length )
 {
 	int ret = 0;
 	if ( length == -1 ) {
@@ -544,7 +525,7 @@ int	CRC_Next( unsigned char ** p, int length )
 
 }
 
-void CRC_Check( void ) 
+void CRC_Check( void )
 {
 	Debug_Say(( "CRC_Check\n" ));
 	int count = 0;
@@ -555,7 +536,7 @@ void CRC_Check( void )
 	int start = timeGetTime();
 
 	unsigned char string[MAX_STRING+1];
-	for ( int length = 1; length <= MAX_STRING; length++ ) 
+	for ( int length = 1; length <= MAX_STRING; length++ )
 	{
 		unsigned char * p = &string[length-1];
 		string[length] = 0;
@@ -608,10 +589,7 @@ bool Game_Init(void)
 	//
 	//	Initialize our debugging framework
 	//
-	fprintf(stderr, "[trace] DebugManager::Init...\n");
-	DebugManager::Init();
-  	DebugManager::Load_Registry_Settings( APPLICATION_SUB_KEY_NAME_DEBUG );
-	WWDebug_Install_Assert_Handler(Commando_Assert_Handler);
+
 	BuildInfoClass::Log_Build_Info();
 
 //CRC_Check();
@@ -664,7 +642,7 @@ bool Game_Init(void)
 	_TheFileFactory = &_RenegadeFileFactory;
 
 	// Logging File Factory
-	if ( DebugManager::Is_File_Logging_Enabled() ) {
+	if ( false ) {
 		LoggingFileFactory.Set_Base_Factory( &_RenegadeFileFactory );
 		_TheFileFactory = &LoggingFileFactory;
 	}
@@ -779,7 +757,7 @@ bool Game_Init(void)
 	}
 
 	if ( cUserOptions::PermitDiagLogging.Is_True() &&
-		  DebugManager::Is_Diag_Logging_Enabled() ) {
+		  false ) {
 
 		DiagLogClass::Init();
 	}
@@ -897,8 +875,6 @@ bool Game_Init(void)
 	GameModeManager::Find( "TextDisplay" )->Activate();
 
 	// After TextDisplay is created, install the Display Handler
-	DebugManager::Set_Display_Handler(&TextDisplayHandler);
-
 	//DEADMENU MenuManager::Set_Menu( "Menu_Main" );
 
 	// Load the accelerator table and hand it off to WWLIB.
@@ -931,13 +907,10 @@ bool Game_Init(void)
 	//
 	cNicEnum::Init();
 
-
-
 	if ( registry.Is_Valid() ) {
 		registry.Set_Int( VALUE_NAME_GAME_INITIALIZATION_IN_PROGRESS, 0 );
-		registry.Set_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, DebugManager::Get_Version_Number() );
+		registry.Set_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, 0 );
 	}
-
 
 #if (IMMEDIATE_LOAD==0)
 
@@ -947,7 +920,6 @@ bool Game_Init(void)
 	//
 	RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_MAIN_MENU);
 #else
-
 
 	//
 	// Parse the server settings files if they will be used soon to make sure there are no errors.
@@ -972,20 +944,11 @@ bool Game_Init(void)
 
 #endif
 
-
 #endif
-
 
 	fprintf(stderr, "[trace] Game_Init() complete - returning true\n");
 	return true;
 }
-
-
-
-
-
-
-
 
 /***********************************************************************************************
  * Build_Registry_Location_String -- Get a complete path to a registry location                *
@@ -1006,8 +969,6 @@ bool Game_Init(void)
 char *Build_Registry_Location_String(char *base, char *modifier, char *sub)
 {
 	static char _whole_registry_string[1024];
-
-
 
 	if (modifier == NULL) {
 		modifier = DefaultRegistryModifier;

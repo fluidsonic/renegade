@@ -139,7 +139,6 @@ void cTeam::Increment_Kills(void)
 		return;
 	}
 
-
    Kills++;
 
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
@@ -152,7 +151,6 @@ void cTeam::Increment_Deaths(void)
 		return;
 	}
 
-
    Deaths++;
 
 	Set_Object_Dirty_Bit(NetworkObjectClass::BIT_RARE, true);
@@ -164,7 +162,6 @@ void cTeam::Increment_Score(float increment)
 	if (!CombatManager::Is_Gameplay_Permitted()) {
 		return;
 	}
-
 
    Score += increment;
 
@@ -224,7 +221,6 @@ void cTeam::Get_Team_String(int rank, WideStringClass & string) const
 	//substring.Format(L"%-11s", Name);
 	substring.Format(L"%-11s", Name);
    string += substring;
-
 
    //
 	// Kills
@@ -381,24 +377,6 @@ void cTeam::Export_Frequent(BitStreamClass &packet)
 void cTeam::Import_Frequent(BitStreamClass &packet)
 {
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
    //FlagCaps = 0;
    //FlagLosses = 0;

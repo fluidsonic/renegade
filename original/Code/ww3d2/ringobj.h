@@ -19,7 +19,6 @@ typedef LERPAnimationChannelClass<Vector3>	RingColorChannelClass;
 typedef LERPAnimationChannelClass<float>		RingAlphaChannelClass;
 typedef LERPAnimationChannelClass<Vector2>	RingScaleChannelClass;
 
-
 /**
 ** W3dRingStruct
 ** This structure is used to define a ring object in the W3D file format.
@@ -52,7 +51,6 @@ struct W3dRingStruct
 	// W3dRingKeyArrayStruct structures which define the
 	// variable set of keyframes for each channel
 };
-
 
 /*
 ** RingRenderObjClass: Procedurally generated render rings
@@ -171,7 +169,6 @@ protected:
 	// Initialization stuff
 	void								Init_Material (void);
 	static void						Generate_Shared_Mesh_Arrays (void);
-
 
 	// Animation Stuff
 	void								animate(void);		// animation update function
@@ -294,9 +291,7 @@ private:
 */
 extern RingLoaderClass			_RingLoader;
 
-
 #endif // RINGOBJ_H
 
 // EOF - ringobj,h
-
 

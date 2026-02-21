@@ -130,7 +130,6 @@ void RSACrypt<PRECISION>::Get_Private_Key(Integer &priv_d) const
 	priv_d=PrivateD;
 }
 
-
 //
 // Get the private numbers created during the keyset generation
 // Private as in revealing these will reveal the private key!
@@ -141,7 +140,6 @@ void RSACrypt<PRECISION>::Get_Keygen_Keys(Integer &keygen_p, Integer &keygen_q) 
 	keygen_p=KeygenP;
 	keygen_q=KeygenQ;
 }
-
 
 //
 // Load an RSA private keyset from an OpenSSH "identity" file.
@@ -245,7 +243,6 @@ void RSACrypt<PRECISION>::Decryption_Setup(void)
 	RQ = KeygenP.exp_b_mod_c(qm1, PublicN);
 }
 
-
 //
 // RSA Encryption		c = m^e mod n
 //
@@ -255,7 +252,6 @@ void RSACrypt<PRECISION>::Encrypt(const Integer &plaintext, Integer &cyphertext)
 	Integer m(plaintext);
 	cyphertext=m.exp_b_mod_c(PublicE, PublicN);
 }
-
 
 //
 // RSA Decryption		m = c^d mod n
@@ -282,7 +278,6 @@ void RSACrypt<PRECISION>::Decrypt(const Integer &cyphertext, Integer &plaintext)
 	Integer mq;
 	mq=cmq.exp_b_mod_c(DmodQm1, KeygenQ);
 
-
 	Integer	sp, sq;
 
 	//sp=mp * RP mod n;
@@ -298,7 +293,6 @@ void RSACrypt<PRECISION>::Decrypt(const Integer &cyphertext, Integer &plaintext)
 
 #endif
 }
-
 
 ////////////////////////////////// Private Methods Below ///////////////////////////////////
 
@@ -326,6 +320,5 @@ bool RSACrypt<PRECISION>::Load_Bignum(FileClass *file, Integer &num)
 
 	return(true);
 }
-
 
 #endif

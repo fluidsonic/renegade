@@ -1,6 +1,5 @@
 #include"loadbmp.h"
 
-
 LoadBmp::LoadBmp()
 {
   BitmapHandle_=NULL;
@@ -32,7 +31,6 @@ bit8 LoadBmp::init(char *filename,HWND hwnd)
   HPALETTE             select;
   UINT                 realize;
   RECT                 rect;
-
 
   // Set the member for future reference
   WindowHandle_=hwnd;
@@ -87,7 +85,6 @@ bit8 LoadBmp::init(char *filename,HWND hwnd)
     ((1<<bitmapInfoHeader.biBitCount) * sizeof(RGBQUAD)), 
     &dwRead, (LPOVERLAPPED) NULL); 
 
-
   lpLogPalette=(LPLOGPALETTE)new char[(sizeof(LOGPALETTE)+
       sizeof(PALETTEENTRY)*256)];
   lpLogPalette->palVersion=0x300;
@@ -127,7 +124,6 @@ bit8 LoadBmp::init(char *filename,HWND hwnd)
   BitmapHandle_=CreateDIBitmap(hdc, &bitmapInfoHeader, CBM_INIT, lpvBits, lpHeaderMem, DIB_RGB_COLORS); 
   ReleaseDC(hwnd,hdc);
 
-
   if (BitmapHandle_==NULL)
     return(FALSE);
  
@@ -146,7 +142,6 @@ bit8 LoadBmp::init(char *filename,HWND hwnd)
 
   return(TRUE);
 }
-
 
 bit8 LoadBmp::drawBmp(void)
 {
@@ -191,7 +186,6 @@ bit8 LoadBmp::drawBmp(void)
   SetStretchBltMode(ps.hdc,COLORONCOLOR);
   StretchBlt(ps.hdc,0,0,clientRect.right,clientRect.bottom,hdcMem,0,0,bm.bmWidth,
     bm.bmHeight,SRCCOPY);
-
 
   DeleteDC(hdcMem); 
   EndPaint(WindowHandle_,&ps);

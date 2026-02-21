@@ -18,13 +18,11 @@
 #include "dialogtests.h"
 #include "dialogmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 CNCWinScreenMenuClass *	CNCWinScreenMenuClass::_TheInstance		= NULL;
 const float					CNCWinScreenMenuClass::UpdateIntervalS	= 0.2f;
-
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -37,7 +35,6 @@ enum
 	COL_KILLS,
 	COL_LADDER,
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -74,7 +71,6 @@ CNCWinScreenMenuClass::CNCWinScreenMenuClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CNCWinScreenMenuClass
@@ -90,7 +86,6 @@ CNCWinScreenMenuClass::~CNCWinScreenMenuClass (void)
 	_TheInstance = NULL;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -245,7 +240,6 @@ CNCWinScreenMenuClass::On_Init_Dialog (void)
 
 	Set_Dlg_Item_Text (IDC_TIME_TEXT, time_string);
 
-
 	//
 	// Set the text that shows the next map to be played.
 	//
@@ -276,7 +270,6 @@ CNCWinScreenMenuClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -324,7 +317,6 @@ CNCWinScreenMenuClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroy
@@ -336,7 +328,6 @@ CNCWinScreenMenuClass::On_Destroy (void)
 	MenuDialogClass::On_Destroy ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -367,7 +358,6 @@ CNCWinScreenMenuClass::Render (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -402,7 +392,6 @@ CNCWinScreenMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Menu_Activate
@@ -431,7 +420,6 @@ CNCWinScreenMenuClass::On_Menu_Activate (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Close_Dialog
@@ -446,7 +434,6 @@ CNCWinScreenMenuClass::Close_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -554,7 +541,6 @@ CNCWinScreenMenuClass::Populate_Player_Lists (int team_id, int list_ctrl1_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListSortCallbackk
@@ -577,7 +563,6 @@ CNCWinScreenMenuClass::ListSortCallback
 	int rank2 = (int)player2->Get_Rung ();
 	return (rank1 - rank2);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

@@ -11,7 +11,6 @@
 class StaticAnimPhysDefClass;
 class MeshClass;
 
-
 /**
 ** StaticAnimPhysClass
 ** This class is a static object which needs to perform additional processing 
@@ -107,7 +106,6 @@ private:
 	StaticAnimPhysClass & operator = (const StaticPhysClass &);
 
 };
-
 
 /**
 ** StaticAnimPhysDefClass

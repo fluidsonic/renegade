@@ -6,20 +6,16 @@
 #include "colmath.h"
 #include "colmathinlines.h"
 
-
-
 /*
 ** Declare the pools
 */
 DEFINE_AUTO_POOL(AABTreeLinkClass,256);
 DEFINE_AUTO_POOL(AABTreeNodeClass,256);
 
-
 /*
 ** Current version of the file format
 */
 const uint32 AABTREE_CURRENT_VERSION = 0x00010000;
-
 
 /*
 ** Chunk Id's used by the aabtree code to save itself into a file
@@ -38,7 +34,6 @@ enum
 	AABTREE_VARIABLE_USERDATA
 };
 
-
 /*
 ** IOAABNodeStruct
 ** Data structure for the contents of a node in the AAB-Tree
@@ -52,7 +47,6 @@ struct IOAABNodeStruct
 	IOVector3Struct	Extent;
 	uint32				Attributes;
 };
-
 
 /*************************************************************************
 **
@@ -68,7 +62,6 @@ static inline CullableClass * get_next_object(CullableClass * obj)
 {
 	return ((AABTreeLinkClass *)obj->Get_Cull_Link())->NextObject;
 }
-
 
 /*************************************************************************
 **
@@ -102,7 +95,6 @@ AABTreeCullSystemClass::~AABTreeCullSystemClass(void)
 	}
 }
 
-
 void AABTreeCullSystemClass::Add_Object_Internal(CullableClass * obj,int node_index)
 {
 	assert((obj->Get_Culling_System() == NULL));
@@ -119,7 +111,6 @@ void AABTreeCullSystemClass::Add_Object_Internal(CullableClass * obj,int node_in
 
 	obj->Add_Ref();
 }
-
 
 void AABTreeCullSystemClass::Remove_Object_Internal(CullableClass * obj)
 {
@@ -401,7 +392,6 @@ void AABTreeCullSystemClass::Collect_Objects_Recursive(AABTreeNodeClass * node)
 	}
 }
 
-
 void AABTreeCullSystemClass::Collect_Objects_Recursive(AABTreeNodeClass * node,const Vector3 & point)
 {
 	/*
@@ -480,7 +470,6 @@ void AABTreeCullSystemClass::Collect_Objects_Recursive(AABTreeNodeClass * node,c
 		Collect_Objects_Recursive(node->Front,box);
 	}
 }
-
 
 void AABTreeCullSystemClass::Collect_Objects_Recursive(AABTreeNodeClass * node,const OBBoxClass & box)
 {
@@ -571,7 +560,6 @@ void AABTreeCullSystemClass::Collect_Objects_Recursive
 	}
 }
 
-
 void AABTreeCullSystemClass::Collect_Objects_Recursive(AABTreeNodeClass * node,const SphereClass & sphere)
 {
 	/*
@@ -636,7 +624,6 @@ void AABTreeCullSystemClass::Update_Bounding_Boxes_Recursive(AABTreeNodeClass * 
 
 	node->Box.Init_Min_Max(minmaxbox.MinCorner,minmaxbox.MaxCorner);
 }
-
 
 void AABTreeCullSystemClass::Load(ChunkLoadClass & cload)
 {
@@ -809,7 +796,6 @@ void AABTreeCullSystemClass::Save_Object_Linkage(ChunkSaveClass & csave,Cullable
 	csave.End_Chunk();
 }
 
-
 void AABTreeCullSystemClass::Re_Index_Nodes(void)
 {
 	if (IndexedNodes != NULL) {
@@ -822,7 +808,6 @@ void AABTreeCullSystemClass::Re_Index_Nodes(void)
 	int counter = 0;
 	Re_Index_Nodes_Recursive(RootNode,counter);
 }
-
 
 void AABTreeCullSystemClass::Re_Index_Nodes_Recursive(AABTreeNodeClass * node,int & counter)
 {
@@ -837,8 +822,6 @@ void AABTreeCullSystemClass::Re_Index_Nodes_Recursive(AABTreeNodeClass * node,in
 		Re_Index_Nodes_Recursive(node->Back,counter);
 	}
 }
-
-
 
 /*************************************************************************
 **
@@ -1014,7 +997,6 @@ CullableClass * AABTreeNodeClass::Peek_Object(int index)
 	return obj;
 }
 
-
 /******************************************************************************************
 **
 ** Partitioning code which partitions the objects in the tree and passes them into
@@ -1088,8 +1070,6 @@ void AABTreeNodeClass::Partition(void)
 	}
 }
 
-
-
 void AABTreeNodeClass::Split_Objects(const AABTreeNodeClass::SplitChoiceStruct & sc,AABTreeNodeClass * front,AABTreeNodeClass * back)
 {
 	// This function assumes that this node is a leaf
@@ -1129,9 +1109,6 @@ void AABTreeNodeClass::Split_Objects(const AABTreeNodeClass::SplitChoiceStruct &
 
 	// when we are all done, the counts should match. 
 }
-
-
-
 
 /******************************************************************************************
 **
@@ -1220,8 +1197,6 @@ void AABTreeNodeClass::Split_Boxes
 
 	// when we are all done, the counts should match. 
 }
-
-
 
 /******************************************************************************************
 **
@@ -1334,7 +1309,6 @@ void AABTreeNodeClass::Select_Splitting_Plane_Brute_Force
 	*/
 }
 
-
 void AABTreeNodeClass::Compute_Score
 (
 	AABTreeNodeClass::SplitChoiceStruct * sc,
@@ -1375,14 +1349,11 @@ void AABTreeNodeClass::Compute_Score
 	}
 }
 
-
-
 /**************************************************************************************
 
   AABTreeIterator Implemenation
 
 **************************************************************************************/
-
 
 AABTreeIterator::AABTreeIterator(AABTreeCullSystemClass * tree) :
 	Tree(tree),

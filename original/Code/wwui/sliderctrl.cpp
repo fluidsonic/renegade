@@ -10,12 +10,10 @@
 #include "dialogbase.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
 const float BAR_HEIGHT	= 8.0F;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -31,7 +29,6 @@ SliderCtrlClass::SliderCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~SliderCtrlClass
@@ -41,7 +38,6 @@ SliderCtrlClass::~SliderCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -86,7 +82,6 @@ SliderCtrlClass::Create_Control_Renderer (void)
 	rect.Top		= int(ClientRect.Top + (ClientRect.Height () / 2) - (thumb_height / 2));
 	rect.Bottom	= int(ClientRect.Top + (ClientRect.Height () / 2) + (thumb_height / 2));
 
-
 	//
 	//	Draw the thumb
 	//
@@ -125,7 +120,6 @@ SliderCtrlClass::Create_Control_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -140,7 +134,6 @@ SliderCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ACTION);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -157,7 +150,6 @@ SliderCtrlClass::Update_Client_Rect (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -183,7 +175,6 @@ SliderCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -202,7 +193,6 @@ SliderCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -215,7 +205,6 @@ SliderCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	IsDragging = false;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -232,7 +221,6 @@ SliderCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Focus
@@ -246,7 +234,6 @@ SliderCtrlClass::On_Set_Focus (void)
 	DialogControlClass::On_Set_Focus ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -262,7 +249,6 @@ SliderCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -302,7 +288,6 @@ SliderCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -313,7 +298,6 @@ SliderCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -352,7 +336,6 @@ SliderCtrlClass::Slider_Pos_From_Mouse_Pos (const Vector2 &mouse_pos)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Range
@@ -366,7 +349,6 @@ SliderCtrlClass::Set_Range (int range_min, int range_max)
 	Set_Pos (MinPos);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

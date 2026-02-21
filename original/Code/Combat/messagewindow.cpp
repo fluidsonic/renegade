@@ -23,8 +23,6 @@
 static const char *FONT_NAME						= "FONT6X8.TGA";
 static const char *HEADER_FONT_NAME				= "FONT8X8.TGA";
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	MessageWindowClass
@@ -43,7 +41,6 @@ MessageWindowClass::MessageWindowClass (void) :
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~MessageWindowClass
@@ -55,7 +52,6 @@ MessageWindowClass::~MessageWindowClass (void)
 	REF_PTR_RELEASE (Camera);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -78,7 +74,6 @@ MessageWindowClass::Shutdown (void)
 	Clear_Log ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -170,7 +165,6 @@ MessageWindowClass::Initialize (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -196,7 +190,6 @@ MessageWindowClass::Render (void)
 	WW3D::Render (Scene, Camera);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -252,7 +245,6 @@ MessageWindowClass::On_Frame_Update (void)
 	TextWindow->On_Frame_Update ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -325,7 +317,6 @@ MessageWindowClass::Add_Message
 		}
 	}
 
-
 	//
 	//	Configure the icon renderer
 	//
@@ -356,7 +347,6 @@ MessageWindowClass::Add_Message
 	//IconRenderer.Add_Quad (icon_rect, 0xFFFFFFFF);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -408,7 +398,6 @@ MessageWindowClass::Update_Window_Rectangle (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Clear
@@ -424,7 +413,6 @@ MessageWindowClass::Clear (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Force_Display
@@ -439,7 +427,6 @@ MessageWindowClass::Force_Display (bool onoff)
 
 	//IconRenderer.Set_Hidden (!onoff);
 
-
 	if (HeadModel != NULL) {
 		HeadModel->Set_Hidden (!onoff);
 	}
@@ -447,7 +434,6 @@ MessageWindowClass::Force_Display (bool onoff)
 	Reset_Current_Rect ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -459,7 +445,6 @@ MessageWindowClass::Has_Data (void) const
 {
 	return (TextWindow != NULL && TextWindow->Get_Item_Count () > 0);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

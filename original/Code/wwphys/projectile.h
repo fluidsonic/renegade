@@ -6,7 +6,6 @@
 #include "movephys.h"
 #include "ode.h"
 
-
 /*
 ** Projectile State Struct
 ** This is the state vector for a Projectile.  It has three
@@ -17,7 +16,6 @@ struct ProjectileStateStruct
 	Vector3	Position;
 	Vector3	Velocity;
 };
-
 
 class ProjectileDefClass;
 
@@ -120,9 +118,6 @@ private:
 	friend class ProjectileDefClass;
 };
 
-
-
-
 /***********************************************************************************************
  * ProjectileClass::Get_Velocity -- returns the velocity of this projectile                    *
  *                                                                                             *
@@ -139,7 +134,6 @@ inline void ProjectileClass::Get_Velocity(Vector3 * set_vel) const
 {
 	*set_vel = State.Velocity; 
 }
-
 
 /***********************************************************************************************
  * ProjectileClass::Get_Angular_Velocity -- returns the angular velocity                       *
@@ -159,7 +153,6 @@ inline void ProjectileClass::Get_Angular_Velocity(Vector3 * set_avel) const
 {
 	set_avel->Set(0,0,0);
 }
-
 
 /***********************************************************************************************
  * ProjectileClass::Set_Velocity -- Sets the velocity of this projectile                       *
@@ -184,7 +177,6 @@ inline void ProjectileClass::Set_Velocity(const Vector3 & newvel)
 	}
 }
 
-
 /***********************************************************************************************
  * ProjectileClass::Set_Angular_Velocity -- This will set the tumble rate for the projectile   *
  *                                                                                             *
@@ -204,8 +196,6 @@ inline void	ProjectileClass::Set_Angular_Velocity(const Vector3 & newavel)
 	TumbleRate = TumbleAxis.Length();
 	TumbleAxis *= (1.0f / TumbleRate);
 }
-
-
 
 /**
 ** ProjectileDefClass

@@ -4,14 +4,12 @@
 
 #include "always.h"
 
-
 class MeshClass;
 class PhysicsSceneClass;
 class RenderObjClass;
 class Vector3;
 class Matrix3D;
 class MeshMtlParamsClass;
-
 
 /**
 ** ShatterSystem
@@ -53,10 +51,7 @@ protected:
 	static void		Reset_Clip_Pools(void);
 	static void		Process_Clip_Pools(const Matrix3D &Mshatter_to_mesh,MeshClass * mesh,MeshMtlParamsClass & mtl_params);
 
-
 };
 
-
 #endif
-
 

@@ -9,7 +9,6 @@
 #define SCRIPT_DEBUG_MESSAGE( X )
 */
 
-
 #define NULL_POINTER_CHECK( X )
 
 #define DISPLAY_VECTOR3( V )
@@ -34,7 +33,6 @@
 #define M00_BROADCASTER_TERMINAL_PROMPT_SIZE_RAD	10
 #define M00_SIEGE_GROUP_MAXIMUM						10
 #define M00_SIEGE_ZONES_MAXIMUM						10
-
 
 // Innate Priority Levels
 #define INNATE_PRIORITY_IDLE						10
@@ -78,7 +76,6 @@ enum
 	M00_TIMER_TRIGGER_EXPIRED,							// 9906
 	M00_TIMER_SIEGE_ZONE								// 9907
 };
-
 
 // Toolkit Custom Enumerations
 
@@ -144,7 +141,6 @@ inline int Get_Int_Random(int min, int max)
 	return d_random;
 }
 
-
 // Vector 3 Color definitions for use with Text messages
 #define TEXT_COLOR_OBJECTIVE_PRIMARY			Vector3 ( .196f, .882f, .196f)
 #define TEXT_COLOR_OBJECTIVE_SECONDARY			Vector3 ( .196f, .588f, .980f)
@@ -155,6 +151,5 @@ inline int Get_Int_Random(int min, int max)
 #define TEXT_COLOR_PLAYERTYPE_MUTANT			Vector3 (  0.0f, .392f,  0.0f)
 #define TEXT_COLOR_WHITE						Vector3 (  1.0f,  1.0f,  1.0f)
 #define TEXT_COLOR_YELLOW						Vector3 (  1.0f,  1.0f,  0.0f)
-
 
 #endif // _TOOLKIT_H_

@@ -8,7 +8,6 @@
 #include "chunkio.h"
 #include "texture.h"
 
-
 /*************************************************************************************************
 **
 ** TransitionEffectClass Implementation
@@ -24,7 +23,6 @@ static float STEALTH_DAMAGED_FRACTION		= 0.6f;		// fraction that is jumped to wh
 
 static Vector2 MAX_STEALTH_UV_RATE(2.75f,-3.0f);
 static Vector2 MIN_STEALTH_UV_RATE(0.5f,-0.5f);
-
 
 TransitionEffectClass::TransitionEffectClass(void) :
 	CurrentParameter(0.0f),
@@ -73,7 +71,6 @@ TransitionEffectClass::~TransitionEffectClass(void)
 	REF_PTR_RELEASE(MaterialPass);
 	REF_PTR_RELEASE(Mapper);
 }
-
 
 void TransitionEffectClass::Timestep(float dt)
 {
@@ -156,7 +153,6 @@ void TransitionEffectClass::Render_Pop(RenderInfoClass & rinfo)
 	}
 }
 
-
 void TransitionEffectClass::Set_Texture(TextureClass * texture)
 {
 	if (MaterialPass != NULL) {
@@ -187,7 +183,6 @@ enum
 	TRANSITIONEFFECT_VARIABLE_UVOFFSET,
 	TRANSITIONEFFECT_VARIABLE_TEXTURENAME,
 };
-
 
 bool TransitionEffectClass::Save(ChunkSaveClass & csave)
 {

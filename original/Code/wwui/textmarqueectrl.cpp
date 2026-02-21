@@ -2,7 +2,6 @@
 #include "stylemgr.h"
 #include "dialogmgr.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	TextMarqueeCtrlClass
@@ -24,7 +23,6 @@ TextMarqueeCtrlClass::TextMarqueeCtrlClass (void)	:
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	~TextMarqueeCtrlClass
@@ -34,7 +32,6 @@ TextMarqueeCtrlClass::~TextMarqueeCtrlClass (void)
 {
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -72,7 +69,6 @@ TextMarqueeCtrlClass::Create_Control_Renderer (void)
 
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -146,7 +142,6 @@ TextMarqueeCtrlClass::Create_Text_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -174,7 +169,6 @@ TextMarqueeCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Client_Rect
@@ -196,7 +190,6 @@ TextMarqueeCtrlClass::Update_Client_Rect (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -228,7 +221,6 @@ TextMarqueeCtrlClass::Set_Text (const WCHAR *title)
 	PixelHeight += ClientRect.Height () * 2;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -313,7 +305,6 @@ TextMarqueeCtrlClass::Build_Credit_Lines (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Read_Tag
@@ -326,7 +317,6 @@ TextMarqueeCtrlClass::Read_Tag (const WCHAR *text, CREDIT_LINE &line)
 
 	const WCHAR *TAG_BOLD	= L"bold";
 	const WCHAR *TAG_COLOR	= L"color=";
-
 
 	if (text[0] == L'<') {
 		for (int index = 1; text[index] != 0; index ++) {
@@ -398,7 +388,6 @@ TextMarqueeCtrlClass::Read_Tag (const WCHAR *text, CREDIT_LINE &line)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Read_Line
@@ -458,7 +447,6 @@ TextMarqueeCtrlClass::Read_Line (const WCHAR *text, CREDIT_LINE &line)
 
 	return text[0] != 0 ? text : 0;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

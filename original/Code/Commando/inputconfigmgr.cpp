@@ -5,11 +5,8 @@
 #include "ffactory.h"
 #include "registry.h"
 #include "chunkio.h"
-#include "debug.h"
 #include "translatedb.h"
 #include "string_ids.h"
-#include "slavemaster.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -28,7 +25,6 @@ static const char *REG_CURRENT_CONFIG	= "Current Config";
 DynamicVectorClass<InputConfigClass>	InputConfigMgrClass::ConfigList;
 int												InputConfigMgrClass::CurrentConfigIndex = -1;
 
-
 ////////////////////////////////////////////////////////////////
 //	Save/load constants
 ////////////////////////////////////////////////////////////////
@@ -43,7 +39,6 @@ enum
 {
 	VARID_CURRENT_CONFIG			= 1,
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -61,7 +56,6 @@ InputConfigMgrClass::Initialize (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Shutdown
@@ -73,9 +67,7 @@ InputConfigMgrClass::Shutdown (void)
 	//
 	//	Save our current configuration list
 	//
-	if (!SlaveMaster.Am_I_Slave()) {
-		Save ();
-	}
+	Save ();
 
 	//
 	//	Reset our data
@@ -84,7 +76,6 @@ InputConfigMgrClass::Shutdown (void)
 	CurrentConfigIndex = -1;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -104,7 +95,6 @@ InputConfigMgrClass::Get_Current_Configuration (InputConfigClass &config)
 	config = ConfigList[CurrentConfigIndex];
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -132,7 +122,6 @@ InputConfigMgrClass::Load_Current_Configuration (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Save_Current_Configuration
@@ -151,7 +140,6 @@ InputConfigMgrClass::Save_Current_Configuration (void)
 	Save_Configuration (ConfigList[CurrentConfigIndex]);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -187,7 +175,6 @@ InputConfigMgrClass::Add_Configuration (const WCHAR *display_name)
 	return CurrentConfigIndex;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_Configuration
@@ -205,7 +192,7 @@ InputConfigMgrClass::Delete_Configuration (int index)
 	//
 	bool load_default = false;
 	if (index == CurrentConfigIndex) {
-		CurrentConfigIndex = -1;		
+		CurrentConfigIndex = -1;
 		load_default = true;
 	}
 
@@ -238,7 +225,6 @@ InputConfigMgrClass::Delete_Configuration (int index)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_Configuration
@@ -261,7 +247,6 @@ InputConfigMgrClass::Delete_Configuration (const char *filename)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -287,7 +272,6 @@ InputConfigMgrClass::Find_Configuration (const char *filename)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Default_Configuration
@@ -309,7 +293,6 @@ InputConfigMgrClass::Load_Default_Configuration (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -338,7 +321,6 @@ InputConfigMgrClass::Load_Configuration (const InputConfigClass &config)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -384,7 +366,6 @@ InputConfigMgrClass::Save_Configuration (const InputConfigClass &config)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Unique_Config_Filename
@@ -418,7 +399,6 @@ InputConfigMgrClass::Get_Unique_Config_Filename (StringClass &filename)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -460,7 +440,6 @@ InputConfigMgrClass::Save (void)
 	_TheFileFactory->Return_File (file);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -525,7 +504,6 @@ InputConfigMgrClass::Load (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Save_Config_List
@@ -546,7 +524,6 @@ InputConfigMgrClass::Save_Config_List (ChunkSaveClass &csave)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -588,7 +565,6 @@ InputConfigMgrClass::Load_Config_List (ChunkLoadClass &cload)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -611,7 +587,6 @@ InputConfigMgrClass::Save_Variables (ChunkSaveClass &csave)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -633,14 +608,12 @@ InputConfigMgrClass::Load_Variables (ChunkLoadClass &cload)
 		cload.Close_Micro_Chunk ();
 	}
 
-
 	//
 	//	Store the index of this configuration
 	//
 	CurrentConfigIndex = Find_Configuration (filename);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

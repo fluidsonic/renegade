@@ -1,7 +1,6 @@
 #ifndef _MISSION2_H_
 #define _MISSION2_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"

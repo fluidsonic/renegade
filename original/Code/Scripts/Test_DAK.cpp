@@ -153,7 +153,6 @@ DECLARE_SCRIPT(DAK_PCT_Pokable_DAK, "" )
 	}
 };
 
-
 DECLARE_SCRIPT( M00_BUILDING_EXPLODE_NO_DAMAGE_DAK, "" )
 {
 	void Killed( GameObject *obj, GameObject *killer )

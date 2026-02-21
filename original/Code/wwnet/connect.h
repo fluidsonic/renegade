@@ -138,9 +138,6 @@ class cConnection
 		// Need to use this. ST - 8/10/2001 11:52AM
       void Send_Packet_To_Address(cPacket & packet, LPSOCKADDR_IN p_address);
 
-
-
-
    private:
       cConnection(const cConnection& rhs); // Disallow copy (compile/link time)
       cConnection& operator=(const cConnection& rhs); // Disallow assignment (compile/link time)
@@ -213,22 +210,9 @@ class cConnection
 		Server_Packet_Handler					ServerPacketHandler;
 		Client_Packet_Handler					ClientPacketHandler;
 
-
 };
 
 #endif // CONNECT_H
-
-
-
-
-
-
-
-
-
-
-
-
 
       //void Init_As_Client(LPCSTR server_ip, USHORT server_port);
       //void Send_Packet_To_All(cPacket & packet, BYTE send_flags); // send to all rhosts

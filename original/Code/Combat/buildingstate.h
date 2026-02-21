@@ -54,7 +54,5 @@ public:
 	static const char *	Get_State_Name(int state);
 };
 
-
 #endif // BUILDINGSTATES_H
-
 

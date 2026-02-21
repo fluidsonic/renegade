@@ -182,7 +182,6 @@ public:
 	virtual void Render_Delayed_Procedural_Material_Passes(void) = 0;
 };
 
-
 /**
 ** DX8RigidFVFCategoryContainer
 ** This is an FVFCategoryContainer for rigid (non-skin) meshes
@@ -208,7 +207,6 @@ public:
 
 protected:
 
-
 	VertexBufferClass *	vertex_buffer;
 	int						used_vertices;
 
@@ -216,7 +214,6 @@ protected:
 	MatPassTaskClass *	delayed_matpass_tail;
 
 };
-
 
 /**
 ** DX8SkinFVFCategoryContainer
@@ -251,7 +248,6 @@ private:
 
 };
 
-
 /**
 ** MeshRegKeyStruct, _RegisteredMeshTable
 ** This hash table is used to map model+lighting pointer pairs back to meshes
@@ -269,7 +265,6 @@ struct MeshRegKeyStruct
 	unsigned int *		UserLighting;
 };
 
-
 template<>
 inline unsigned int HashTemplateKeyClass<MeshRegKeyStruct>::Get_Hash_Value(const MeshRegKeyStruct& key)
 {
@@ -277,9 +272,6 @@ inline unsigned int HashTemplateKeyClass<MeshRegKeyStruct>::Get_Hash_Value(const
 	hval = hval + (hval>>5) + (hval>>10) + (hval >> 20);
 	return hval;
 }
-
-
-
 
 /**
 ** DX8MeshRendererClass

@@ -2,14 +2,12 @@
 #ifndef GRIDEFFECT_H
 #define GRIDEFFECT_H
 
-
 #include "always.h"
 #include "materialeffect.h"
 #include "matrix3d.h"
 
 class MatrixMapperClass;
 class TextureClass;
-
 
 /**
 ** GridFadeEffectClass
@@ -69,6 +67,5 @@ protected:
 	MatrixMapperClass *		Stage1Mapper;
 	MaterialPassClass *		MaterialPass;
 };
-
 
 #endif //GRIDEFFECT_H

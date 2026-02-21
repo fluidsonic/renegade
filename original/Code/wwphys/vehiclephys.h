@@ -8,7 +8,6 @@ class VehiclePhysDefClass;
 class SuspensionElementClass;
 class VehicleDazzleClass;
 
-
 /**
 ** VehiclePhysClass
 ** This RigidBody-derived class adds the constants needed to define the suspension behavior
@@ -131,7 +130,6 @@ protected:
 	*/
 	virtual float						Get_Normalized_Engine_Flame(void) { return 0.0f; }
 
-
 	/*
 	** Variables
 	*/
@@ -149,7 +147,6 @@ protected:
 	static bool							_DisableVehicleRendering;
 
 };
-
 
 /**
 ** VehiclePhysDefClass
@@ -186,7 +183,6 @@ public:
 	void											Set_Lateral_Moment_Arm(float r)		{ LateralMomentArm = r; }
 	void											Set_Tractive_Moment_Arm(float r)		{ TractiveMomentArm = r; }
 
-
 	// Save/Load support from PersistClass
 	virtual const PersistFactoryClass &	Get_Factory (void) const;
 	virtual bool								Save(ChunkSaveClass &csave);
@@ -208,8 +204,6 @@ protected:
 
 	friend class VehiclePhysClass;
 };
-
-
 
 #endif
 

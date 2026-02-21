@@ -1,6 +1,5 @@
 #include "weaponbag.h"
 #include "weapons.h"
-#include "debug.h"
 #include "weaponmanager.h"
 #include "wwpacket.h"
 #include "armedgameobj.h"
@@ -97,7 +96,6 @@ bool	WeaponBagClass::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 /*
 **
 */
@@ -112,7 +110,6 @@ bool	WeaponBagClass::Is_Ammo_Full( int weapon_id )
 	WeaponClass * weapon = Find_Weapon( WeaponManager::Find_Weapon_Definition( weapon_id ) );
 	return weapon && weapon->Is_Ammo_Maxed();
 }
-
 
 /*
 **
@@ -306,7 +303,6 @@ void	WeaponBagClass::Select_Weapon_Name( const char * name )
 	}
 }
 
-
 void	WeaponBagClass::Select_Weapon( WeaponClass * weapon )
 {
 	for( int i = 1; i < WeaponList.Count(); i++ ) {
@@ -346,7 +342,6 @@ void WeaponBagClass::Deselect( void )
 	// Need to be able to tell client to put weapon away
 	Select_Index( 0 );
 }
-
 
 //-----------------------------------------------------------------------------
 void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
@@ -396,7 +391,6 @@ WeaponClass * WeaponBagClass::Find_Weapon( const WeaponDefinitionClass * def )
 	return NULL;
 }
 
-
 /*
 **
 */
@@ -438,7 +432,6 @@ bool	WeaponBagClass::Move_Contents( WeaponBagClass * source )
 
 	return moved;
 }
-
 
 /*
 **

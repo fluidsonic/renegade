@@ -5,7 +5,6 @@
 #include "menudialog.h"
 #include "dlgmessagebox.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	CnCReferenceMenuClass
@@ -29,7 +28,6 @@ public:
 	void		On_Command (int ctrl_id, int mesage_id, DWORD param);
 	void		On_Menu_Activate (bool onoff);
 	void		On_Frame_Update(void);
-
 
 	//
 	//	Singleton access
@@ -57,6 +55,5 @@ private:
 	static DWORD	LastSuicideTimeMs;
 	static DWORD	LastChangeTeamTimeMs;
 };
-
 
 #endif //__DLGCNCREFERENCE_H

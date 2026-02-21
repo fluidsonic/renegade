@@ -2,10 +2,8 @@
 #ifndef __DLGCREDITS_H
 #define __DLGCREDITS_H
 
-
 #include "menudialog.h"
 #include "resource.h"
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -37,7 +35,6 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
 
 #endif //__DLGCREDITS_H
 

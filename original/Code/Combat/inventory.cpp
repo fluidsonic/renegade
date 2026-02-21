@@ -1,5 +1,4 @@
 #include "inventory.h"
-#include "debug.h"
 #include "soldier.h"
 #include "weaponbag.h"
 #include "weapons.h"
@@ -33,7 +32,6 @@ void InventoryClass::Reset( void )
 	Health = 0.0f;
 	HealthMax = 0.0f;
 }
-
 
 /*
 **

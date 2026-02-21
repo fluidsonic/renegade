@@ -14,12 +14,10 @@
 #include "osdep.h"
 #endif
 
-
 // Forward declarations
 class ChunkLoadClass;
 class ChunkSaveClass;
 class IndirectTextureClass;
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -35,7 +33,6 @@ class IndirectTextureClass;
 }
 
 #endif //SAFE_FREE
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -144,7 +141,6 @@ class AggregateDefClass
 
 		virtual void				Build_Subobject_List (RenderObjClass &original_model, RenderObjClass &model);
 
-
 	private:
 
 		///////////////////////////////////////////////////////////
@@ -157,7 +153,6 @@ class AggregateDefClass
 		W3dAggregateMiscInfo											m_MiscInfo;
 		char * 															m_pName;
 };
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 //
@@ -193,7 +188,6 @@ class AggregatePrototypeClass : public PrototypeClass
 		AggregateDefClass	*	m_pDefinition;
 };
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	AggregateLoaderClass
@@ -206,12 +200,10 @@ class AggregateLoaderClass : public PrototypeLoaderClass
 		virtual PrototypeClass *	Load_W3D (ChunkLoadClass &chunk_load);
 };
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 //
 //	Global variables
 //
 extern AggregateLoaderClass	_AggregateLoader;
-
 
 #endif //__AGGREGATE_DEF_H

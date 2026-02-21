@@ -13,7 +13,6 @@
 #ifdef _DEBUG
 #endif	//_DEBUG
 
-
 // Jani: Intel's C++ compiler issues too many warnings in WW libraries when using warning level 4
 
 // Jani: MSVC doesn't necessarily inline code with inline keyword. Using __forceinline results better inlining
@@ -63,19 +62,15 @@ template <class T> T max(T a,T b)
 	}
 }
 
-
 /*
 **	This includes the minimum set of compiler defines and pragmas in order to bring the
 **	various compilers to a common behavior such that the C&C engine will compile without
 **	error or warning.
 */
 
-
-
 #if defined(__clang__) && !defined(_MSC_VER)
 #include	"clangcompat.h"
 #endif
-
 
 #ifndef	NULL
 	#define	NULL		0
@@ -93,5 +88,7 @@ template <class T> T max(T a,T b)
 #define size_of(typ,id) sizeof(((typ*)0)->id)
 #endif
 
+#include <cassert>
+#define Debug_Say(...) ((void)0)
 
 #endif

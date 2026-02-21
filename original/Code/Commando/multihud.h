@@ -36,7 +36,6 @@ public:
 	static void		Render_Text(WideStringClass & text, float x, float y, ULONG color = 0xFFFFFFFF);
    static void		Show_Player_Names(void);
 
-
 	static void		Set_Bottom_Text_Y_Pos(float y)				{BottomTextYPos = y;}
 	static float	Get_Bottom_Text_Y_Pos(void)					{return BottomTextYPos;}
 
@@ -63,14 +62,4 @@ private:
 //-----------------------------------------------------------------------------
 
 #endif // MULTIHUD_H
-
-
-
-
-
-
-
-
-
-
 

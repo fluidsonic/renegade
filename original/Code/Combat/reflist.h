@@ -54,7 +54,6 @@ class ReferenceableClass {
 		T							*ReferenceData;	
 };
 
-
 /*
 ** An object class that can reference an ReferencableClass
 */
@@ -83,7 +82,6 @@ class ReferencerClass : public PostLoadableClass {
 		ReferencerClass								*TargetReferencerListNext;	
 };
 
-
 /*
 ** Clears all references in objects referencing me
 */
@@ -98,7 +96,6 @@ ReferenceableClass<T>::~ReferenceableClass( void )
 	}
 }
 
-
 /*
 ** Save & Load
 */
@@ -111,7 +108,6 @@ enum	{
 	MICROCHUNKID_TARGET,
 	XXXX_MICROCHUNKID_NEXT,
 };
-
 
 template<class T>
 bool	ReferenceableClass<T>::Save( ChunkSaveClass & csave )
@@ -128,7 +124,6 @@ bool	ReferenceableClass<T>::Load( ChunkLoadClass & cload )
 {
 	void * old_ptr;
 	cload.Open_Chunk();
-
 
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
@@ -147,9 +142,6 @@ bool	ReferenceableClass<T>::Load( ChunkLoadClass & cload )
 
 	return true;
 }
-
-
-
 
 /*
 ** A refcounted version of the ReferencerClass
@@ -170,7 +162,6 @@ class RefCountedReferencerClass : public ReferencerClass, public RefCountClass {
 		}
 
 };
-
 
 #endif
 

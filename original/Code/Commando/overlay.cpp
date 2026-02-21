@@ -4,7 +4,6 @@
 #include "ww3d.h"
 #include "dx8renderer.h"
 #include "textwindow.h"
-#include "debug.h"
 #include "assets.h"
 #include "timemgr.h"
 #include "hanim.h"
@@ -53,8 +52,6 @@ void 	OverlayGameModeClass::Render()
 {
 	WW3D::Render( Scene, Camera );
 }
-
-
 
 /*
 **

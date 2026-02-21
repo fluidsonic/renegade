@@ -45,8 +45,6 @@ private:
 	friend class DynamicVectorClass;
 };
 
-
-
 template <class Object,class Key>
 HashTableClass<Object,Key>::HashTableClass
 (
@@ -85,7 +83,6 @@ Object *	HashTableClass<Object,Key>::Find(Key * key) const
 }
 
 #endif
-
 
 #endif
 

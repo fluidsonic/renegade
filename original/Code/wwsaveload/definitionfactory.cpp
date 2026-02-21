@@ -1,7 +1,6 @@
 #include "definitionfactory.h"
 #include "definitionfactorymgr.h"
 
-
 /////////////////////////////////////////////////////////
 //
 //	DefinitionFactoryClass
@@ -14,7 +13,6 @@ DefinitionFactoryClass::DefinitionFactoryClass (void)
 	DefinitionFactoryMgrClass::Register_Factory (this);
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////
 //

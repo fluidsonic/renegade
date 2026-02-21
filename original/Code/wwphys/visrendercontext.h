@@ -9,9 +9,7 @@
 #include "vissample.h"
 #include "vector.h"
 
-
 const int BACKFACE_VIS_ID	= 0x00FFFBAC;						// Vis id for backface pixels
-
 
 /*
 ** VisRenderContextClass 
@@ -57,6 +55,5 @@ private:
 	VisRenderContextClass & operator = (const VisRenderContextClass &);
 
 };
-
 
 #endif // VISRENDERCONTEXT_H

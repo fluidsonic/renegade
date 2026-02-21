@@ -10,14 +10,12 @@
 #include	"wwmouse.h"
 #include	<assert.h>
 
-
 /*
 **	Persistant mouse object pointer that is used to facilitate access to the mouse
 **	handler object outside of the context of a member function. This will be set to the
 **	mouse object most recently created.
 */
 static WWMouseClass * _MousePtr = NULL;
-
 
 /***********************************************************************************************
  * Callback_Process_Mouse -- Mouse O/S callback function.                                      *
@@ -40,7 +38,6 @@ void CALLBACK Callback_Process_Mouse( UINT, UINT, DWORD, DWORD, DWORD  )
 		_MousePtr->Process_Mouse();
 	}
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::WWMouseClass -- Constructor for mouse handler object.                         *
@@ -86,7 +83,6 @@ WWMouseClass::WWMouseClass(Surface * surfaceptr, HWND window) :
 	MouseYHot = ConfiningRect.Y + (ConfiningRect.Height/2);
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::~WWMouseClass -- Destructor for mouse handler object.                         *
  *                                                                                             *
@@ -118,7 +114,6 @@ WWMouseClass::~WWMouseClass(void)
 	SidebarAlternate = NULL;
 }
 
-
 void WWMouseClass::Calc_Confining_Rect(void)
 {
 	RECT rect;
@@ -137,7 +132,6 @@ void WWMouseClass::Calc_Confining_Rect(void)
 	ConfiningRect = Rect(point.x, point.y, lr.x-point.x, lr.y-point.y);
 //	ConfiningRect = Rect(point.x, point.y, lr.x-point.x+1, lr.y-point.y+1);
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Get_Mouse_State -- Fetch the current mouse visibility state.                  *
@@ -164,7 +158,6 @@ int WWMouseClass::Get_Mouse_State(void) const
 	}
 	return(MouseState);
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Set_Cursor -- Set the mouse cursor shape.                                     *
@@ -209,7 +202,6 @@ void WWMouseClass::Set_Cursor(int xhotspot, int yhotspot, ShapeSet const * curso
 	}
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Is_Data_Valid -- Determines if there is valid shape image data.               *
  *                                                                                             *
@@ -234,7 +226,6 @@ bool WWMouseClass::Is_Data_Valid(void) const
 	}
 	return(false);
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Validate_Copy_Buffer -- Checks for and validates the background copy buffer.  *
@@ -305,7 +296,6 @@ bool WWMouseClass::Validate_Copy_Buffer(void)
 	return(false);
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Matching_Rect -- Finds rectangle of current cursor position & size.           *
  *                                                                                             *
@@ -340,7 +330,6 @@ Rect WWMouseClass::Matching_Rect(void) const
 	}
 	return(rect);
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Save_Background -- Saves the background to a copy buffer.                     *
@@ -380,7 +369,6 @@ void WWMouseClass::Save_Background(void)
 	}
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Restore_Background -- Restores the image back where it came from.             *
  *                                                                                             *
@@ -413,7 +401,6 @@ void WWMouseClass::Restore_Background(void)
 //		SurfacePtr->Window.Set(old);
 	}
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Draw_Mouse -- Manually draw the mouse to the surface specified.               *
@@ -482,7 +469,6 @@ void WWMouseClass::Draw_Mouse(Surface * surface, bool issidebarsurface)
 	}
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Erase_Mouse -- Restores the surface after a Draw_Mouse call.                  *
  *                                                                                             *
@@ -525,7 +511,6 @@ void WWMouseClass::Erase_Mouse(Surface * surface, bool issidebarsurface)
 		Unblock_Mouse();
 	}
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Raw_Draw_Mouse -- Draws the mouse to the surface specified.                   *
@@ -573,7 +558,6 @@ void WWMouseClass::Raw_Draw_Mouse(Surface * surface, int xoffset, int yoffset)
 	}
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Low_Show_Mouse -- Shows the mouse and saves the background.                   *
  *                                                                                             *
@@ -596,7 +580,6 @@ void WWMouseClass::Low_Show_Mouse(void)
 	Unblock_Mouse();
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Low_Hide_Mouse -- Restores the surface image in order to hide the mouse.      *
  *                                                                                             *
@@ -618,7 +601,6 @@ void WWMouseClass::Low_Hide_Mouse(void)
 	Restore_Background();
 	Unblock_Mouse();
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Show_Mouse -- Shows the mouse on the visible surface.                         *
@@ -650,7 +632,6 @@ void WWMouseClass::Show_Mouse(void)
 	}
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Hide_Mouse -- Hides the mouse from the visible surface.                       *
  *                                                                                             *
@@ -679,7 +660,6 @@ void WWMouseClass::Hide_Mouse(void)
 		Unblock_Mouse();
 	}
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Capture_Mouse -- Capture the mouse into the mouse handler region.             *
@@ -710,7 +690,6 @@ void WWMouseClass::Capture_Mouse(void)
 		Unblock_Mouse();
 	}
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Release_Mouse -- Release the mouse back to the O/S.                           *
@@ -747,7 +726,6 @@ void WWMouseClass::Release_Mouse(void)
 	}
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Conditional_Hide_Mouse -- Hides the mouse if it would overlap the region spec *
  *                                                                                             *
@@ -768,7 +746,6 @@ void WWMouseClass::Conditional_Hide_Mouse(Rect )
 	Hide_Mouse();
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Conditional_Show_Mouse -- Releases the mouse hiding region tracking.          *
  *                                                                                             *
@@ -788,7 +765,6 @@ void WWMouseClass::Conditional_Show_Mouse(void)
 {
 	Show_Mouse();
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Convert_Coordinate -- Convert an O/S coordinate into a logical coordinate.    *
@@ -819,7 +795,6 @@ void WWMouseClass::Convert_Coordinate(int & x, int & y) const
 	if (y >= ConfiningRect.Height) y = ConfiningRect.Height-1;
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Get_Bounded_Position -- Fetches the mouse position from the O/S.              *
  *                                                                                             *
@@ -845,7 +820,6 @@ void WWMouseClass::Get_Bounded_Position(int & x, int & y) const
 	y = pt.y;
 	Convert_Coordinate(x, y);
 }
-
 
 /***********************************************************************************************
  * WWMouseClass::Update_Mouse_Position -- Updates the mouse position to match that specified.  *
@@ -879,7 +853,6 @@ void WWMouseClass::Update_Mouse_Position(int x, int y)
 	Unblock_Mouse();
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Process_Mouse -- Mouse processing callback routine.                           *
  *                                                                                             *
@@ -911,7 +884,6 @@ void WWMouseClass::Process_Mouse(void)
 	}
 }
 
-
 /***********************************************************************************************
  * WWMouseClass::Set_Mouse_XY -- Sets the cursor position                                      *
  *                                                                                             *
@@ -939,6 +911,4 @@ void WWMouseClass::Set_Mouse_XY( int x, int y )
 
 	SetCursorPos( x, y );			// set the current cursor position
 }
-
-
 

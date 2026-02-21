@@ -23,7 +23,6 @@
 	#define	NULL	0
 #endif
 
-
 class FileClass
 {
 	public:

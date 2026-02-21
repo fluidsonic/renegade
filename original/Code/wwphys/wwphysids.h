@@ -73,7 +73,6 @@ enum
 
 };
 
-
 /*
 ** DefinitionClass ClassID's for WWPHYS
 */
@@ -103,7 +102,5 @@ enum
 	CLASSID_DAMAGEABLESTATICPHYSDEF,
 	CLASSID_BUILDINGAGGREGATEDEF,
 };
-
-
 
 #endif

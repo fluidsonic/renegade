@@ -9,7 +9,6 @@
 #include "bittype.h"
 #include "controladvisesink.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -28,7 +27,6 @@ class ScrollBarCtrlClass;
 class SliderCtrlClass;
 class ViewerCtrlClass;
 class ShortcutBarCtrlClass;
-
 
 ////////////////////////////////////////////////////////////////
 //	Useful macros
@@ -215,6 +213,5 @@ protected:
 
 	ControlAdviseSinkClass *	AdviseSink;
 };
-
 
 #endif //__DIALOG_CONTROL_H

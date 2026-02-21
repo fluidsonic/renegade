@@ -36,4 +36,3 @@ void	CombatSoundManager::Shutdown( void )
 	WWAudioClass::Get_Instance()->Reset_Logical_Types();
 }
 
-

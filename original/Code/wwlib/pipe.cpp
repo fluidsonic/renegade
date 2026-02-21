@@ -3,7 +3,6 @@
 #include	<stddef.h>
 //#include	<string.h>
 
-
 /***********************************************************************************************
  * Pipe::~Pipe -- Destructor for pipe class object.                                            *
  *                                                                                             *
@@ -31,7 +30,6 @@ Pipe::~Pipe(void)
 	ChainFrom = NULL;
 	ChainTo = NULL;
 }
-
 
 /***********************************************************************************************
  * Pipe::Put_To -- Connect a pipe to flow data into from this pipe.                            *
@@ -68,7 +66,6 @@ void Pipe::Put_To(Pipe * pipe)
 	}
 }
 
-
 /***********************************************************************************************
  * Pipe::Put -- Feed some data through the pipe.                                               *
  *                                                                                             *
@@ -95,7 +92,6 @@ int Pipe::Put(void const * source, int length)
 	return(length);
 }
 
-
 /***********************************************************************************************
  * Pipe::Flush -- Flush all pending data out the pipe.                                         *
  *                                                                                             *
@@ -121,5 +117,4 @@ int Pipe::Flush(void)
 	}
 	return(0);
 }
-
 

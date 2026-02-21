@@ -9,7 +9,6 @@
 #include "waypath.h"
 #include "pathfindportal.h"
 
-
 ///////////////////////////////////////////////////////////////////////////
 //	Save/Load stuff
 ///////////////////////////////////////////////////////////////////////////
@@ -29,7 +28,6 @@ enum
 	VARID_WAYPATH_ID		= 1,
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////////
 //
 //	~PathfindSectorClass
@@ -40,7 +38,6 @@ PathfindSectorClass::~PathfindSectorClass (void)
 	Reset_Portal_List ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -53,7 +50,6 @@ PathfindSectorClass::Reset_Portal_List (void)
 	m_PortalList.Delete_All ();	
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -86,7 +82,6 @@ PathfindSectorClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -96,7 +91,6 @@ bool
 PathfindSectorClass::Load (ChunkLoadClass &cload)
 {
 	Reset_Portal_List ();
-
 
 	//
 	//	Read all the chunks...
@@ -117,7 +111,6 @@ PathfindSectorClass::Load (ChunkLoadClass &cload)
 	
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -166,7 +159,6 @@ PathfindSectorClass::Load_Variables (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Peek_Portal
@@ -178,7 +170,6 @@ PathfindSectorClass::Peek_Portal (int index)
 	int portal_id = m_PortalList[index];
 	return PathfindClass::Get_Instance ()->Peek_Portal (portal_id);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -202,7 +193,6 @@ PathfindSectorClass::Remove_Portal (uint32 portal_id)
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Save
@@ -221,7 +211,6 @@ PathfindWaypathSectorClass::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -255,7 +244,6 @@ PathfindWaypathSectorClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -281,7 +269,6 @@ PathfindWaypathSectorClass::Load_Variables (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -334,5 +321,4 @@ PathfindWaypathSectorClass::Can_Access_Portal
 
 	return retval;
 }
-
 

@@ -17,9 +17,12 @@
 	#include "wwstring.h"
 #endif
 
-#ifndef	DEBUG_H
-	#include "debug.h"
+#ifndef	WIDESTRING_H
+	#include "widestring.h"
 #endif
+
+#ifndef	DEBUG_H
+	#endif
 
 #ifndef VECTOR2_H
 	#include "vector2.h"
@@ -31,15 +34,6 @@
 
 class	Font3DInstanceClass;
 class	Render2DTextClass;
-
-/*
-**
-*/
-class	TextDebugDisplayHandlerClass : public DebugDisplayHandlerClass {
-public:
-	virtual	void	Display_Text( const char * string, const Vector4 & color = Vector4( 1,1,1,1 ) );
-	virtual	void	Display_Text( const WideStringClass & string, const Vector4 & color = Vector4( 1,1,1,1 ) );
-};
 
 /*
 ** TextDisplayLine
@@ -95,18 +89,18 @@ public:
 
 	void		Set_Input_Text( const char * text )
 	{
-		TextChanged|=InputText!=text; 
-		InputText = text; 
+		TextChanged|=InputText!=text;
+		InputText = text;
 	}
 	void		Set_Help_Text( const char * text )
 	{
-		TextChanged|=HelpText!=text; 
-		HelpText = text; 
+		TextChanged|=HelpText!=text;
+		HelpText = text;
 	}
 	void		Set_Verbose_Help_Text( const char * text )
 	{
-		VerboseTextChanged|=VerboseHelpText!=text; 
-		VerboseHelpText = text; 
+		VerboseTextChanged|=VerboseHelpText!=text;
+		VerboseHelpText = text;
 	}
 	void		Display_Vis_Warning( bool on )					{ DisplayVisWarning = on; }
 
@@ -140,7 +134,6 @@ private:
 	void							Load_Registry_Keys(void);
 	void							Save_Registry_Keys(void);
 };
-
 
 /*
 ** Statistics Display

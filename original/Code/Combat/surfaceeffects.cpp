@@ -3,7 +3,6 @@
 #include "part_emt.h"
 #include "assets.h"
 #include "pscene.h"
-#include "debug.h"
 #include "wwstring.h"
 #include "crandom.h"
 #include "physcon.h"
@@ -73,14 +72,12 @@ static const char * _HitterTypeName[ SurfaceEffectsManager::NUM_HITTER_TYPES ] =
 
 };
 
-
 /*
 ** Recycler for all "fire-and-forget" surface effect emitters
 */
 #if (RECYCLE_EMITTERS)
 static EffectRecyclerClass _EmitterRecycler;
 #endif
-
 
 /*
 ** Persistant Surface Effects
@@ -168,7 +165,6 @@ void	PersistantSurfaceSoundClass::Set_Sound( const char * name )
 	}
 }
 
-
 /*
 **	PersistantSurfaceEmitterClass
 */
@@ -244,7 +240,6 @@ const int HitterPhysicsTypes[SurfaceEffectsManager::NUM_HITTER_TYPES] =
 	PhysicsConstants::DYNAMIC_OBJ_TYPE_GENERIC,	//"Generic Object"
 	-1,
 };
-
 
 #define	SURFACE_EFFECTS_INI_FILENAME		"surfaceeffects.ini"
 
@@ -353,7 +348,6 @@ void	SurfaceEffectsManager::Init( void )
 				surface_effect->DecalSize = ini->Get_Float( section_name, "DecalSize", 1 );
 				surface_effect->DecalSizeRandom = ini->Get_Float( section_name, "DecalSizeRandom", 0 );
 
-
 				// save the effect
 				SurfaceEffectsDatabase[ surface ][ hitter ] = surface_effect;
 
@@ -368,7 +362,6 @@ void	SurfaceEffectsManager::Init( void )
 					float drag = ini->Get_Float(		section_name,
 																"Drag",
 																PhysicsConstants::DefaultContactDrag );
-
 
 					PhysicsConstants::Set_Contact_Friction_Coefficient(	HitterPhysicsTypes[hitter],
 																							surface,
@@ -465,7 +458,6 @@ void	SurfaceEffectsManager::Apply_Effect
 	// Create the sound
 	if ( sound_name ) {
 
-
 		// I may need to plug an owner in here
 		RefCountedGameObjReference *owner_ref = new RefCountedGameObjReference;
 		owner_ref->Set_Ptr( creator );
@@ -508,12 +500,10 @@ void	SurfaceEffectsManager::Apply_Effect
 	// Create decal, (will only apply to static physics objects)
 	if ((allow_decals) && (decal_name)) {
 
-
 		float size = surface_effect->DecalSize;
 		size += FreeRandom.Get_Float( -surface_effect->DecalSizeRandom, surface_effect->DecalSizeRandom );
 		StringClass	new_name( true );
 		Strip_Path_From_Filename( new_name, decal_name );
-
 
 		// If this is a glass decal, we enable "apply_to_translucent_meshes" and we
 		// also pass in the object that was hit so the decal is *only* applied to that
@@ -526,7 +516,6 @@ void	SurfaceEffectsManager::Apply_Effect
 		}
 	}
 }
-
 
 PersistantSurfaceSoundClass *	SurfaceEffectsManager::Create_Persistant_Sound( void )
 {
@@ -581,7 +570,6 @@ void	SurfaceEffectsManager::Update_Persistant_Sound( PersistantSurfaceSoundClass
 		effect->Sound->Set_Transform( tm );
 	}
 }
-
 
 PersistantSurfaceEmitterClass *	SurfaceEffectsManager::Create_Persistant_Emitter( void )
 {
@@ -685,5 +673,4 @@ void SurfaceEffectsManager::Set_Override_Surface_Type(int type)
 
 	PhysicsConstants::Set_Override_Surface_Type(OverrideSurfaceType);
 }
-
 

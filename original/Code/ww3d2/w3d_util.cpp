@@ -4,7 +4,6 @@
 #include "quat.h"
 #include "shader.h"
 
-
 void	W3dUtilityClass::Convert_Vector(const W3dVectorStruct & v,Vector3 * set)
 {
 	set->X = v.X;

@@ -5,13 +5,11 @@
 #include "always.h"
 #include "building.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward delcarations
 ////////////////////////////////////////////////////////////////
 class BaseControllerClass;
 class SimpleGameObj;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -60,7 +58,6 @@ protected:
 	float					RepairPerSec;
 	int					RepairingStaticAnimDefID;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -153,6 +150,5 @@ private:
 	Matrix3D					Bones[BONE_COUNT];
 	static const char *	BoneNames[BONE_COUNT];
 };
-
 
 #endif	// __REPAIRBAYGAMEOBJ_H

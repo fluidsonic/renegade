@@ -131,7 +131,6 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 			}
 		}
 
-
 		if ((type == 302 || type == 304) && Commands->Find_Object(1100003) == NULL)
 		{
 			return;
@@ -298,7 +297,6 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 				Commands->Monitor_Conversation(obj, id);
 			}
 		}
-
 
 	}
 	
@@ -703,7 +701,6 @@ DECLARE_SCRIPT(RMV_Test_Big_Gun_Turning, "")
 			{
 				Commands->Set_Health (obj, Commands->Get_Health (obj) + 1.0f);
 			}
-
 
 		}
 	}
@@ -1630,7 +1627,6 @@ DECLARE_SCRIPT(M03_CommCenter_SateliteDish_Controller_JDG, "")
 	}
 };*/
 
-
 DECLARE_SCRIPT(M03_Ambient_Birdcall_Controller_JDG, "")
 {
 	int start_birdcalls;
@@ -1728,7 +1724,6 @@ DECLARE_SCRIPT(M03_Ambient_Birdcall_Controller_JDG, "")
 
 */
 
-
 DECLARE_SCRIPT(M03_Announce_PowerPlant_Controller_JDG, "")
 {
 	int total_number_of_sounds;
@@ -1772,7 +1767,6 @@ DECLARE_SCRIPT(M03_Announce_PowerPlant_Controller_JDG, "")
 		SAVE_VARIABLE( spkr_7_spot, 17 );
 	}
 
-
 	void Created( GameObject * obj )
 	{
 		total_number_of_sounds	=	15;
@@ -1791,7 +1785,6 @@ DECLARE_SCRIPT(M03_Announce_PowerPlant_Controller_JDG, "")
 		spkr_5_spot.Set(-75.75f,28.92f,-14.77f);
 		spkr_6_spot.Set(-64.98f,20.41f,-13.62f);
 		spkr_7_spot.Set(-58.05f,7.45f,-14.20f);
-
 
 		if (obj) {
 			Commands->Send_Custom_Event( obj, obj, 0, start_announcements, 0 );
@@ -2709,7 +2702,6 @@ DECLARE_SCRIPT(M03_Announce_CommCenter_Controller_JDG, "")
 		spkr_6_spot.Set(-117.48f,45.83f,-3.87f);
 		spkr_7_spot.Set(-111.25f,43.69f,-2.27f);
 
-
 		if (obj) {
 			Commands->Send_Custom_Event( obj, obj, 0, start_announcements, 0 );
 		}
@@ -3467,7 +3459,6 @@ DECLARE_SCRIPT(M03_Chinook_Spawned_Soldier_GDI, "Area:int, Send_Type_When_Killed
 			return;
 		}
 
-
 		GameObject *target = NULL;
 		if (null_count < 3)
 		{
@@ -3771,7 +3762,6 @@ DECLARE_SCRIPT(M03_Intro_Substitute, "")
 		}
 	}
 
-
 	void Timer_Expired(GameObject * obj, int timer_id)
 	{		
 		if (timer_id == 9997)
@@ -3996,7 +3986,6 @@ DECLARE_SCRIPT(M03_Chinook_Fodder_Creator, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M03_Tailgun, "Controller_ID:int")
 {
@@ -5504,8 +5493,6 @@ DECLARE_SCRIPT(M03_Sakura_Explosion, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(DLS_Volcano_Stumble, "Debug_Mode=0:int")
 {
 	enum {FALL_FORWARD, FALL_BACK, RISE_FORWARD, RISE_BACK, 
@@ -6673,7 +6660,6 @@ DECLARE_SCRIPT(M03_Engineer_Target, "")
 		Commands->Create_Logical_Sound(obj, STOP_REPAIR, Commands->Get_Position (obj), 150.0f);
 	}
 
-
 	void Timer_Expired(GameObject * obj, int timer_id )
 	{
 		if (timer_id == HEALTH_CHECK)
@@ -6824,7 +6810,6 @@ DECLARE_SCRIPT (M10_Elevator_All_Zone, "Controller_num:int")
 		star_in_zone = false;
 	}
 
-
 	void Entered (GameObject * obj, GameObject * enterer)
 	{
 		if (enterer == STAR)
@@ -6870,7 +6855,6 @@ DECLARE_SCRIPT (M10_Elevator_All_Controller, "")
 		block5 = block6 = block7 = block8 = 0;
 
 		Commands->Static_Anim_Phys_Goto_Last_Frame ( 1300881, "cave_lift.cave_lift" );
-
 
 	}
 
@@ -6926,7 +6910,6 @@ DECLARE_SCRIPT (M10_Elevator_All_Controller, "")
 			GameObject *rub8 = Commands->Create_Object ("M08_Rubble_Stub", Vector3 (-122.458f, 78.303f, 3.906f));
 			block8 = Commands->Get_ID (rub8);
 			Commands->Set_Is_Rendered( rub8, false );
-
 
 			Commands->Static_Anim_Phys_Goto_Frame ( 1300881, 0, "cave_lift.cave_lift" );
 		}

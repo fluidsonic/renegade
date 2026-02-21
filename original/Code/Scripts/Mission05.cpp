@@ -2,7 +2,6 @@
 #include "toolkit.h"
 #include "scripts.h"
 
-
 // M05C
 
 DECLARE_SCRIPT(M05_Objective_Controller, "")  // 100001
@@ -703,7 +702,6 @@ DECLARE_SCRIPT(M05_Activate_Objective_509, "")
 			Commands->Join_Conversation(STAR, conv_id, false, true);
 			Commands->Start_Conversation (conv_id, 300509);
 			Commands->Monitor_Conversation (obj, conv_id);
-
 
 			// Buggy and Tank
 			Commands->Enable_Spawner(100164, true);
@@ -1490,7 +1488,6 @@ DECLARE_SCRIPT(M05_DEAD6_Grenadier, "")
 	
 };
 
-
 DECLARE_SCRIPT(M05_Mendoza, "")
 {
 	
@@ -2047,7 +2044,6 @@ DECLARE_SCRIPT(M05_Cache_Escort, "")
 					Commands->Join_Conversation(obj, conv_id, false, true);
 					Commands->Start_Conversation (conv_id, 1);
 					Commands->Monitor_Conversation (obj, conv_id);
-
 
 				}
 			break;
@@ -3638,7 +3634,6 @@ DECLARE_SCRIPT(M05_Entrapment_Technician, "")
 		called_mendoza = false;
 		Commands->Enable_HUD_Pokable_Indicator( obj, true );
 
-
 	}
 
 	void Timer_Expired(GameObject * obj, int timer_id )
@@ -3825,8 +3820,6 @@ DECLARE_SCRIPT(M05_Mendoza4, "")
 	}
 
 };
-
-
 
 DECLARE_SCRIPT(M05_Civ_Warn, "")
 {
@@ -4023,7 +4016,6 @@ DECLARE_SCRIPT(M05_Civ_Lead, "")
 
 						Commands->Set_Innate_Is_Stationary(obj, true);
 
-
 						hold = true;
 						poke_id = 2;
 					}
@@ -4066,7 +4058,6 @@ DECLARE_SCRIPT(M05_Civ_Lead, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(M05_Triangle_Unit, "Unit_ID=0:int")
 {
@@ -5608,7 +5599,6 @@ DECLARE_SCRIPT (M05_Apc_Drop_DME, "")
 			}
 		}
 
-
 	}
 };
 
@@ -5727,7 +5717,6 @@ DECLARE_SCRIPT(M05_Execution_Civilian, "")
 		poked = false;
 		Commands->Innate_Disable(obj);
 	}
-
 
 	void Poked(GameObject * obj, GameObject * poker)
 	{
@@ -7144,7 +7133,6 @@ DECLARE_SCRIPT(M05_Activate_ApacheStrike, "Strike_Loc_ID=0:int")
 
 };
 
-
 DECLARE_SCRIPT(M05_Activate_Truck_Spill, "")
 {
 		
@@ -7178,7 +7166,6 @@ DECLARE_SCRIPT(M05_Activate_Truck_Spill, "")
 	}
 
 };
-
 
 DECLARE_SCRIPT(M05_Activate_Triangle_Tank_Drop, "")
 {
@@ -7274,7 +7261,6 @@ DECLARE_SCRIPT(M05_Activate_Execution, "")
 	}
 
 };
-
 
 DECLARE_SCRIPT(M05_Swap_Artillery, "Artillery_ID=0:int")
 {
@@ -7499,7 +7485,6 @@ DECLARE_SCRIPT(M05_APC_Deploy, "Preset:string, Soldier_Qty=0:int, Fire_Gun=1:int
 		}
 	}
 
-
 	void Enemy_Seen(GameObject * obj, GameObject *enemy )
 	{
 		ActionParamsStruct params;
@@ -7645,7 +7630,6 @@ DECLARE_SCRIPT(M05_Inn_APC, "")
 			}
 		}
 	}
-
 
 	void Killed (GameObject * obj, GameObject * killer)
 	{

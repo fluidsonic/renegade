@@ -1,6 +1,5 @@
 #include "lightsolvecontext.h"
 
-
 LightSolveContextClass::LightSolveContextClass(void) :
 	OcclusionEnabled(true),
 	FilteringEnabled(true),

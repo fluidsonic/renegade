@@ -2,11 +2,9 @@
 #ifndef __FLOODPROTECTIONMGR_H
 #define __FLOODPROTECTIONMGR_H
 
-
 #include "widestring.h"
 #include "bittype.h"
 #include "simplevec.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -54,6 +52,5 @@ private:
 	///////////////////////////////////////////////////////////////////
 	static SimpleDynVecClass<FLOOD_ENTRY>	FloodList;
 };
-
 
 #endif //__FLOODPROTECTIONMGR_H

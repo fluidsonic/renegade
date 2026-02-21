@@ -11,8 +11,6 @@ BandwidthBalancerClass BandwidthBalancer;
 */
 #define MIN_ACCEPTABLE_BANDWIDTH	8000
 
-
-
 /***********************************************************************************************
  * BandwidthBalancerClass::BandwidthBalancerClass -- Class constructor                         *
  *                                                                                             *
@@ -37,8 +35,6 @@ BandwidthBalancerClass::BandwidthBalancerClass(void)
 	IsEnabled = true;
 }
 
-
-
 /***********************************************************************************************
  * BandwidthBalancerClass::~BandwidthBalancerClass -- Class destructor                         *
  *                                                                                             *
@@ -60,8 +56,6 @@ BandwidthBalancerClass::~BandwidthBalancerClass(void)
 	}
 	ClientInfo = NULL;
 }
-
-
 
 /***********************************************************************************************
  * BandwidthBalancerClass::Allocate_Client_Structs -- Make room to store per client info       *
@@ -92,9 +86,6 @@ void BandwidthBalancerClass::Allocate_Client_Structs(int num_structs)
 	}
 
 }
-
-
-
 
 /***********************************************************************************************
  * BandwidthBalancerClass::Adjust -- Adjust bandwidth to each client                           *
@@ -135,7 +126,6 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 			}
 		}
 
-
 		if (need_update || TIMEGETTIME() - _last_adjustment > 100) {
 			_last_adjustment = TIMEGETTIME();
 
@@ -175,7 +165,6 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 					NumClients++;
 				}
 			}
-
 
 			if (NumClients) {
 				/*
@@ -235,8 +224,6 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 		}
 	}
 }
-
-
 
 /***********************************************************************************************
  * BandwidthBalancerClass::Allocate_Bandwidth -- Split bandwidth between clients               *
@@ -313,10 +300,6 @@ unsigned long BandwidthBalancerClass::Allocate_Bandwidth(float average_priority,
 
 	return(total_bbo_allocated);
 }
-
-
-
-
 
 /***********************************************************************************************
  * BandwidthBalancerClass::Adjust_Connection_Budget -- Adjust BBO of server connection         *

@@ -4,7 +4,6 @@
 #include "dialogmgr.h"
 #include "ww3d.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -15,7 +14,6 @@ bool						ToolTipMgrClass::ToolTipDisplayed		= false;
 DialogControlClass *	ToolTipMgrClass::CurrentControl			= NULL;
 Vector2					ToolTipMgrClass::LastMousePos	(0, 0);
 int						ToolTipMgrClass::PauseTime					= -1;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -33,7 +31,6 @@ ToolTipMgrClass::Initialize (void)
 	ToolTip = new ToolTipClass;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -53,7 +50,6 @@ ToolTipMgrClass::Shutdown (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -72,7 +68,6 @@ ToolTipMgrClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset
@@ -84,7 +79,6 @@ ToolTipMgrClass::Reset (void)
 	ToolTipDisplayed = false;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

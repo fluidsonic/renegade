@@ -7,12 +7,10 @@
 #include "wwuiinput.h"
 #include "win.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Prototypes
 ////////////////////////////////////////////////////////////////
 int MyLoadStringW (UINT str_id, LPWSTR buffer, int buffer_len);
-
 
 ////////////////////////////////////////////////////////////////
 //	Macros
@@ -20,14 +18,12 @@ int MyLoadStringW (UINT str_id, LPWSTR buffer, int buffer_len);
 /*#define	LOAD_STRING(strobj, strid)	\
 	::MyLoadStringW (strid, strobj.Get_Buffer (64), 64);*/
 
-
 ////////////////////////////////////////////////////////////////
 //	Constants and globals
 ////////////////////////////////////////////////////////////////
 const int								FACTORY_COUNT	= (DIALOG_LINK_LAST - DIALOG_LINK_FIRST);
 extern DialogFactoryBaseClass *	FactoryArray[FACTORY_COUNT];
 extern WWUIInputClass *				_TheWWUIInput;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -83,7 +79,6 @@ public:
 	static void		Goto_Location (LOCATION location);
 };
 
-
 ////////////////////////////////////////////////////////////////
 //	Inlines
 ////////////////////////////////////////////////////////////////
@@ -97,7 +92,6 @@ RenegadeDialogMgrClass::Do_Dialog_By_Button_ID (int button_id)
 	FactoryArray[button_id - DIALOG_LINK_FIRST]->Do_Dialog ();
 	return ;
 }
-
 
 #endif //__RENEGADE_DIALOG_MGR_H
 

@@ -2,7 +2,6 @@
 #ifndef __DLG_MP_LAN_GAME_LIST_H
 #define __DLG_MP_LAN_GAME_LIST_H
 
-
 #include "menudialog.h"
 #include "resource.h"
 #include <Signaler.h>
@@ -72,7 +71,6 @@ protected:
 	static MPLanGameListMenuClass *	_TheInstance;
 
 };
-
 
 #endif //__DLG_MP_LAN_GAME_LIST_H
 

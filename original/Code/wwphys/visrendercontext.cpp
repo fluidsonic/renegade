@@ -5,19 +5,16 @@
 #include "rawfile.h"
 #include "visrasterizer.h"
 
-
 const int CLEAR_VIS_COLOR	= 0x00000000;						// Vis id for background/clear pixels
 const float BACKFACE_OVERFLOW_FRACTION = 0.005f;			// max percentage of backface before overflow (rejection)
 
 static VisRasterizerClass			_VisRasterizer;			// Instance of a vis rasterizer 
-
 
 /***********************************************************************************************
 **
 ** VisRenderContextClass Implementation
 **
 ***********************************************************************************************/
-
 
 /***********************************************************************************************
  * VisRenderContextClass::VisRenderContextClass -- Constructor                                 *
@@ -43,12 +40,10 @@ VisRenderContextClass::VisRenderContextClass
 	VisRasterizer->Set_Camera(&cam);
 }
 
-
 VisRenderContextClass::~VisRenderContextClass(void)
 {
 	VisRasterizer->Set_Camera(NULL);
 }
-
 
 /***********************************************************************************************
  * VisRenderContextClass::Set_Vis_ID -- set the currently active Vis ID                        *
@@ -68,7 +63,6 @@ void VisRenderContextClass::Set_Vis_ID(uint32 id)
 	_VisRasterizer.Set_Backface_ID((uint32)BACKFACE_VIS_ID);
 }
 
-
 /***********************************************************************************************
  * VisRenderContextClass::Set_Resolution -- set the vis rendering resolution                   *
  *                                                                                             *
@@ -86,7 +80,6 @@ void VisRenderContextClass::Set_Resolution(int resx,int resy)
 	_VisRasterizer.Set_Resolution(resx,resy);
 }
 
-
 /***********************************************************************************************
  * VisRenderContextClass::Get_Resolution -- get the current vis rendering resolution           *
  *                                                                                             *
@@ -103,7 +96,6 @@ void VisRenderContextClass::Get_Resolution(int * set_resx,int * set_resy)
 {
 	_VisRasterizer.Get_Resolution(set_resx,set_resy);
 }
-
 
 /***********************************************************************************************
  * VisRenderContextClass::Scan_Frame_Buffer -- scan the frame buffer for visible objects       *
@@ -129,7 +121,6 @@ void VisRenderContextClass::Scan_Frame_Buffer
 	Scan_Frame_Buffer(min_v,max_v,sample);
 }
 
-
 /***********************************************************************************************
  * VisRenderContextClass::Scan_Frame_Buffer -- scan the frame buffer for visible objects       *
  *                                                                                             *
@@ -146,7 +137,6 @@ void VisRenderContextClass::Scan_Frame_Buffer(VisSampleClass * sample)
 {
 	Scan_Frame_Buffer(Vector2(0,0),Vector2(1,1),sample);
 }
-
 
 /***********************************************************************************************
  * VisRenderContextClass::Scan_Frame_Buffer -- scan the frame buffer for visible objects       *
@@ -216,7 +206,6 @@ void VisRenderContextClass::Scan_Frame_Buffer
 		}
 	} 
 }
-
 
 /***********************************************************************************************
  * VisRenderContextClass::Compute_2D_Bounds -- compute the 2D bounds of a 3D box               *

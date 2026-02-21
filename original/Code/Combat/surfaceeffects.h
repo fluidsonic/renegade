@@ -129,4 +129,3 @@ private:
 
 #endif	// SURFACEEFFECTS_H
 
-

@@ -2,16 +2,13 @@
 #ifndef __DLG_CONTROL_SAVELOAD_H
 #define __DLG_CONTROL_SAVELOAD_H
 
-
 #include "menudialog.h"
 #include "dlgmessagebox.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class InputConfigClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -56,7 +53,6 @@ private:
 	int		Insert_Configuration (const InputConfigClass &config);
 	void		HandleNotification (DlgMsgBoxEvent &event);
 };
-
 
 #endif //__DLG_CONTROL_SAVELOAD_H
 

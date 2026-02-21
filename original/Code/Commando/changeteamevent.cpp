@@ -20,7 +20,6 @@
 #include "beacongameobj.h"
 #include "weaponview.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cChangeTeamEvent, NETCLASSID_CHANGETEAMEVENT);
 
 //-----------------------------------------------------------------------------
@@ -61,7 +60,6 @@ cChangeTeamEvent::Act(void)
 	{
 		int team = p_player->Get_Player_Type();
 
-
 		int new_team = PLAYERTYPE_NOD;
 		
 		if (team == PLAYERTYPE_NOD) 
@@ -74,7 +72,6 @@ cChangeTeamEvent::Act(void)
 		}
 
 		p_player->Set_Player_Type(new_team);
-
 
 		//
 		//	Only reset the player's cash if they've changed teams after 60 seconds
@@ -112,8 +109,6 @@ cChangeTeamEvent::Act(void)
 				}
 			}
 
-
-
 			//
 			// We have to respawn him and possibly change his model... 
 			// let's just destroy the soldier and leave the rest up to God.
@@ -142,7 +137,6 @@ cChangeTeamEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 
 	Set_Delete_Pending();
@@ -156,7 +150,6 @@ cChangeTeamEvent::Import_Creation(BitStreamClass & packet)
 	cNetEvent::Import_Creation(packet);
 
 	packet.Get(SenderId);
-
 
 	Act();
 }
@@ -173,17 +166,4 @@ cChangeTeamEvent::Is_Change_Team_Possible(void)
 		//The_Game()->Is_Team_Game() && 
 		The_Game()->IsTeamChangingAllowed.Is_True();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -39,7 +39,6 @@
 #include "buildnum.h"
 #include "messagewindow.h"
 #include "consolemode.h"
-#include "slavemaster.h"
 #include "gamedataupdateevent.h"
 #include "demosupport.h"
 #include "serversettings.h"
@@ -524,20 +523,6 @@ void cNetwork::Init_Server(void)
 	} else {
 		//assert(GameModeManager::Find("WOL")->Is_Active());
 		unsigned long bw = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
-
-		/*
-		** Only use a portion of the bandwidth based on how many slave servers there are.
-		*/
-		if (The_Game()->IsDedicated.Get() && !SlaveMaster.Am_I_Slave()) {
-			if (cUserOptions::Get_Bandwidth_Type() == BANDWIDTH_AUTO) {
-				if (ServerSettingsClass::Get_Master_Bandwidth() == 0 || ServerSettingsClass::Get_Master_Bandwidth() == 0xffffffff) {
-					int num_slaves = SlaveMaster.Get_Num_Enabled_Slaves();
-					if (num_slaves) {
-						bw = bw / (num_slaves+1);
-					}
-				}
-			}
-		}
 
 		PServerConnection->Set_Bandwidth_Budget_Out(bw);
 		//PServerConnection->Set_Bandwidth_Budget_Out(cUserOptions::BandwidthBps.Get());

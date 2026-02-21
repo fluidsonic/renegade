@@ -3,7 +3,6 @@
   #include <windows.h>
 #endif
 
-
 Streamer::Streamer() : streambuf()
 {
   int state=unbuffered();
@@ -21,7 +20,6 @@ int Streamer::setOutputDevice(OutputDevice *device)
   Output_Device=device;
   return(0);
 }
-
 
 // put n chars from string into buffer
 int Streamer::xsputn(const char* buf, int size) //implementation of sputn
@@ -98,7 +96,6 @@ int Streamer::doallocate()
   else
     return(0);
 }
-
 
 int Streamer::sync()
 {

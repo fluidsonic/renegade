@@ -19,5 +19,4 @@ enum
 	CHUNKID_STRING_TWIDDLER,
 };
 
-
 #endif //__TRANSLATE_DB_IDS_H

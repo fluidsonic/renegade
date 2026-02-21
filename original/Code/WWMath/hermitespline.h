@@ -54,7 +54,6 @@ protected:
 	DynamicVectorClass<TangentsClass>	Tangents;
 };
 
-
 /*
 ** HermiteSpline1DClass
 ** 1-Dimensional hermite spline interpolation
@@ -98,6 +97,5 @@ protected:
 	bool											TangentsDirty;
 	DynamicVectorClass<TangentsClass>	Tangents;
 };
-
 
 #endif

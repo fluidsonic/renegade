@@ -8,13 +8,11 @@
 #include "texture.h"
 #include "ww3d.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 int		MenuEntryCtrlClass::MaxDefaultRedValue		= 9;
 int		MenuEntryCtrlClass::MaxHilightRedValue		= 16;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -56,7 +54,6 @@ MenuEntryCtrlClass::MenuEntryCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~MenuEntryCtrlClass
@@ -66,7 +63,6 @@ MenuEntryCtrlClass::~MenuEntryCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -93,7 +89,6 @@ MenuEntryCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -108,7 +103,6 @@ MenuEntryCtrlClass::On_Frame_Update (void)
 	Update_State ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -154,7 +148,6 @@ MenuEntryCtrlClass::On_Create (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Client_Rect
@@ -167,7 +160,6 @@ MenuEntryCtrlClass::Update_Client_Rect (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -192,7 +184,6 @@ MenuEntryCtrlClass::On_Mouse_Wheel (int direction)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -213,7 +204,6 @@ MenuEntryCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	}
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -247,7 +237,6 @@ MenuEntryCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Move
@@ -267,7 +256,6 @@ MenuEntryCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	IsMouseOverMe = Rect.Contains (mouse_pos);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -316,7 +304,6 @@ MenuEntryCtrlClass::Set_State (int new_state)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -462,7 +449,6 @@ MenuEntryCtrlClass::Update_State (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Text_Renderer
@@ -538,7 +524,6 @@ MenuEntryCtrlClass::Create_Text_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -558,7 +543,6 @@ MenuEntryCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -586,7 +570,6 @@ MenuEntryCtrlClass::Create_Glow (int radiusx, int radiusy, int color)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Focus
@@ -612,7 +595,6 @@ MenuEntryCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -633,7 +615,6 @@ MenuEntryCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -683,10 +664,8 @@ MenuEntryCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 			break;
 	}
 
-
 	return handled;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -699,7 +678,6 @@ MenuEntryCtrlClass::On_Key_Up (uint32 key_id)
 	return false;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Pushed
@@ -711,7 +689,6 @@ MenuEntryCtrlClass::On_Pushed (void)
 	Parent->On_Command (ID, BN_CLICKED, 0);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -748,5 +725,4 @@ MenuEntryCtrlClass::Center_Mouse (void)
 	DialogMgrClass::Set_Mouse_Pos (mouse_pos);
 	return ;
 }
-
 

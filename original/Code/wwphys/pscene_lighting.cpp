@@ -9,7 +9,6 @@
 #include "light.h"
 #include "lightcull.h"
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Set_Lighting_LOD_Cutoff -- Sets the LOD cutoff for lighting              *
  *                                                                                             *
@@ -28,7 +27,6 @@ void PhysicsSceneClass::Set_Lighting_LOD_Cutoff(float intensity)
 { 
 	LightEnvironmentClass::Set_Lighting_LOD_Cutoff(intensity); 
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Get_Lighting_LOD_Cutoff -- returns the LOD cutoff for lighting           *
@@ -49,7 +47,6 @@ float PhysicsSceneClass::Get_Lighting_LOD_Cutoff(void)
 	return LightEnvironmentClass::Get_Lighting_LOD_Cutoff(); 
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Is_Sun_Light_Enabled -- Returns true if the sun-light is enabled         *
  *                                                                                             *
@@ -66,7 +63,6 @@ bool PhysicsSceneClass::Is_Sun_Light_Enabled(void)
 {
 	return UseSun;
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Enable_Sun_Light -- Enable/Disable the sun-light                         *
@@ -85,7 +81,6 @@ void PhysicsSceneClass::Enable_Sun_Light(bool onoff)
 	UseSun = onoff;
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Get_Sun_Light -- Returns pointer to the sun-light object                 *
  *                                                                                             *
@@ -103,7 +98,6 @@ LightClass * PhysicsSceneClass::Get_Sun_Light(void)
 	SunLight->Add_Ref();
 	return SunLight;
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Set_Sun_Light_Orientation -- Set the orientation of the sun-ligth        *
@@ -130,7 +124,6 @@ void PhysicsSceneClass::Set_Sun_Light_Orientation(float yaw,float pitch)
 	SunLight->Set_Transform(tm);
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Get_Sun_Light_Orientation -- returns the sun-light orientation           *
  *                                                                                             *
@@ -149,7 +142,6 @@ void PhysicsSceneClass::Get_Sun_Light_Orientation(float * set_yaw,float * set_pi
 	*set_pitch = SunPitch;
 }
 
-
 /***********************************************************************************************
  * PhysicsSceneClass::Get_Sun_Light_Vector -- returns the sun-light vector                     *
  *                                                                                             *
@@ -167,7 +159,6 @@ void PhysicsSceneClass::Get_Sun_Light_Vector(Vector3 * set_vector)
 	const Matrix3D & tm = SunLight->Get_Transform();
 	*set_vector = tm * Vector3(0,0,1);
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Reset_Sun_Light -- Resets the sun-light to default settings              *
@@ -192,7 +183,6 @@ void PhysicsSceneClass::Reset_Sun_Light(void)
 	SunLight->Set_Flag(LightClass::FAR_ATTENUATION,false);
 	Set_Sun_Light_Orientation(DEG_TO_RADF(0.0f),DEG_TO_RADF(70.0f));
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Compute_Static_Lighting -- Compute the static lighting approximation     *
@@ -240,7 +230,6 @@ void PhysicsSceneClass::Compute_Static_Lighting
 		light = StaticLightingSystem->Get_Next_Collected_Object(light);
 	}
 }
-
 
 /***********************************************************************************************
  * PhysicsSceneClass::Invalidate_Lighting_Caches -- invalidate lighting caches in the given bo *

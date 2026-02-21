@@ -6,8 +6,6 @@
 #include "wwphysids.h"
 #include "camera.h"
 
-
-
 /*
 ** Current version of the lightcull file format
 */
@@ -21,9 +19,6 @@ enum
 	STATICLIGHTCULL_CHUNK_VERSION						= 0x00050001,	// version wrapper, contains 32bit version #
 	STATICLIGHTCULL_CHUNK_PARENT_CLASS_DATA		= 0x00050104,	// wraps the parent class's save data
 };
-
-
-
 
 /*
 ** StaticLightCullClass is a derived AABTree which assumes it contains LightPhysClasses
@@ -39,8 +34,6 @@ inline LightPhysClass * get_next_object(LightPhysClass * tile)
 {
 	return (LightPhysClass *)(((AABTreeLinkClass *)tile->Get_Cull_Link())->NextObject);
 }
-
-
 
 /*
 ** Implementation of StaticLightCullClass

@@ -122,7 +122,6 @@ private:
 		BACK				= NEG,
 	};
 
-
 	/*
 	** Internal functions
 	*/
@@ -160,9 +159,6 @@ private:
 
 	friend class AABTreeClass;
 };
-
-
-
 
 #endif //AABTREEBUILDER_H
 

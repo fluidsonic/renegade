@@ -1,7 +1,6 @@
 #include "networkobjectmgr.h"
 #include "networkobject.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -38,7 +37,6 @@ NetworkObjectMgrClass::Register_Object (NetworkObjectClass *object)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Unregister_Object
@@ -66,7 +64,6 @@ NetworkObjectMgrClass::Unregister_Object (NetworkObjectClass *object)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Object
@@ -87,7 +84,6 @@ NetworkObjectMgrClass::Find_Object (int object_id)
 
 	return object;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -225,7 +221,6 @@ NetworkObjectMgrClass::Find_Object (int id_to_find, int *index)
 	return found;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Think
@@ -243,7 +238,6 @@ NetworkObjectMgrClass::Think (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -265,7 +259,6 @@ NetworkObjectMgrClass::Set_All_Delete_Pending (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -297,7 +290,6 @@ NetworkObjectMgrClass::Delete_Pending (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_Client_Objects
@@ -320,7 +312,6 @@ NetworkObjectMgrClass::Delete_Client_Objects (int client_id)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -346,7 +337,6 @@ NetworkObjectMgrClass::Restore_Dirty_Bits (int client_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Register_Object_For_Deletion
@@ -361,7 +351,6 @@ NetworkObjectMgrClass::Register_Object_For_Deletion (NetworkObjectClass *object)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -381,5 +370,4 @@ NetworkObjectMgrClass::Reset_Import_State_Counts(void)
 		p_object->Reset_Import_State_Count();
 	}
 }
-
 

@@ -36,7 +36,6 @@ ScriptFactory::ScriptFactory(const char* name, const char* param)
 	ScriptRegistrar::RegisterScript(this);
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -62,7 +61,6 @@ ScriptFactory::~ScriptFactory()
 	ParamDescription = NULL;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -83,7 +81,6 @@ ScriptFactory* ScriptFactory::GetNext(void) const
 {
 	return mNext;
 }
-
 
 /******************************************************************************
 *
@@ -111,7 +108,6 @@ void ScriptFactory::SetNext(ScriptFactory* link)
 	mNext = link;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -133,7 +129,6 @@ const char* ScriptFactory::GetName(void)
 	return ScriptName;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -154,5 +149,4 @@ const char* ScriptFactory::GetParamDescription(void)
 {
 	return ParamDescription;
 }
-
 

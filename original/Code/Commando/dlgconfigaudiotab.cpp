@@ -10,7 +10,6 @@
 #include "audiblesound.h"
 #include "dialogmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DlgConfigAudioTabClass
@@ -57,7 +56,6 @@ DlgConfigAudioTabClass::DlgConfigAudioTabClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~DlgConfigAudioTabClass
@@ -87,7 +85,6 @@ DlgConfigAudioTabClass::~DlgConfigAudioTabClass (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -174,7 +171,6 @@ DlgConfigAudioTabClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Update_Slider_Enable_State
@@ -205,7 +201,6 @@ DlgConfigAudioTabClass::Update_Slider_Enable_State (void)
 	WWAudioClass::Get_Instance ()->Allow_Cinematic_Sound (cinematic_enabled);
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -246,7 +241,6 @@ DlgConfigAudioTabClass::Configure_Rate_Combobox (void)
 
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -296,7 +290,6 @@ DlgConfigAudioTabClass::Configure_Speaker_Combobox (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Configure_Quality_Combobox
@@ -336,7 +329,6 @@ DlgConfigAudioTabClass::Configure_Quality_Combobox (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	On_Command
@@ -362,7 +354,6 @@ DlgConfigAudioTabClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	ChildDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -435,7 +426,6 @@ DlgConfigAudioTabClass::Configure_Driver_List (void)
 	InitialDeviceIndex = list_ctrl->Get_Curr_Sel ();		
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -556,7 +546,6 @@ DlgConfigAudioTabClass::On_Apply (void)
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // On_SliderCtrl_Pos_Changed
@@ -659,7 +648,6 @@ DlgConfigAudioTabClass::On_SliderCtrl_Pos_Changed
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // On_Frame_Update
@@ -701,7 +689,6 @@ DlgConfigAudioTabClass::On_Frame_Update (void)
 	ChildDialogClass::On_Frame_Update ();	
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

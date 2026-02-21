@@ -2,10 +2,8 @@
 #ifndef __MODPACKAGE_H
 #define __MODPACKAGE_H
 
-
 #include "wwstring.h"
 #include "bittype.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -67,6 +65,5 @@ protected:
 	StringClass			PackageFilename;
 	uint32				FileCRC;
 };
-
 
 #endif //__MODPACKAGE_H

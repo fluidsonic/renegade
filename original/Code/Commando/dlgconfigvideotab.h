@@ -2,11 +2,9 @@
 #ifndef __DLGCONFIGVIDEOTAB_H
 #define __DLGCONFIGVIDEOTAB_H
 
-
 // Includes.
 #include "childdialog.h"
 #include "dx8wrapper.h"
-
 
 // Defines.
 #define GAMMA_SLIDER_MIN				 60
@@ -18,7 +16,6 @@
 #define CONTRAST_SLIDER_MIN			 50
 #define CONTRAST_SLIDER_DEFAULT		130
 #define CONTRAST_SLIDER_MAX			200
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -75,23 +72,19 @@ protected:
 	static int ContrastLevel;
 };
 
-
 inline float DlgConfigVideoTabClass::Gamma_Scale (int level)
 {
 	return (level * 0.01f);
 }
-
 
 inline void	DlgConfigVideoTabClass::Update_Gamma()
 {
 	DX8Wrapper::Set_Gamma (Gamma_Scale (GammaLevel), Gamma_Scale (BrightnessLevel), Gamma_Scale (ContrastLevel), true, false);
 }
 
-
 inline void	DlgConfigVideoTabClass::Update_Gamma (int g, int b, int c)
 {
 	DX8Wrapper::Set_Gamma (Gamma_Scale (g), Gamma_Scale (b), Gamma_Scale (c), true, false);
 }
-
 
 #endif //__DLGCONFIGVIDEOTAB_H

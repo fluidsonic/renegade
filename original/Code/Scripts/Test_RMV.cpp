@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
 #include "mission3.h"
 
 DECLARE_SCRIPT(RMV_Test_Script, "")

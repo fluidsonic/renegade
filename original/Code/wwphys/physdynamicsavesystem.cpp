@@ -13,7 +13,6 @@
 */
 PhysDynamicSaveSystemClass _PhysDynamicSaveSystem;
 
-
 uint32 PhysDynamicSaveSystemClass::Chunk_ID(void) const
 {
 	return PHYSICS_CHUNKID_DYNAMIC_DATA_SUBSYSTEM;
@@ -65,10 +64,8 @@ bool PhysDynamicSaveSystemClass::Load(ChunkLoadClass &cload)
 	return true;
 }
 
-
 void PhysDynamicSaveSystemClass::On_Post_Load(void)
 {
 	PhysicsSceneClass::Get_Instance()->Post_Load_Level_Dynamic_Data();
 }
-
 

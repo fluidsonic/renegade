@@ -5,7 +5,6 @@
 #  include "lzoconf.h"
 #endif
 
-
 /***********************************************************************
 // compiler specific defines
 ************************************************************************/
@@ -22,7 +21,6 @@
 #    define __LZO_i386
 #  endif
 #endif
-
 
 /***********************************************************************
 //
@@ -49,13 +47,11 @@
    typedef long             lzo_ptrdiff_t;
 #endif
 
-
 #ifdef __cplusplus
 #  define LZO_UNUSED(parm)
 #else
 #  define LZO_UNUSED(parm)	parm
 #endif
-
 
 #if !defined(__inline__) && !defined(__GNUC__)
 #  if defined(__cplusplus)
@@ -64,7 +60,6 @@
 #    define __inline__		/* nothing */
 #  endif
 #endif
-
 
 /***********************************************************************
 // compiler and architecture specific stuff
@@ -84,13 +79,11 @@
 #  endif
 #endif
 
-
 #if defined(LZO_UNALIGNED_OK_2) || defined(LZO_UNALIGNED_OK_4)
 #  if !defined(LZO_UNALIGNED_OK)
 #    define LZO_UNALIGNED_OK
 #  endif
 #endif
-
 
 /* Definitions for byte order, according to significance of bytes, from low
  * addresses to high addresses. The value is what you get by putting '4'
@@ -123,7 +116,6 @@
 #  endif
 #endif
 
-
 /***********************************************************************
 // optimization
 ************************************************************************/
@@ -141,7 +133,6 @@
 #    endif
 #  endif
 #endif
-
 
 /***********************************************************************
 //
@@ -166,7 +157,6 @@
 #define LZO_USIZE(bits)		((lzo_uint) 1 << (bits))
 #define LZO_UMASK(bits)		(LZO_USIZE(bits) - 1)
 
-
 /***********************************************************************
 // ANSI C preprocessor macros
 ************************************************************************/
@@ -186,7 +176,6 @@
 #define _LZO_ECONCAT4(a,b,c,d)		_LZO_CONCAT4(a,b,c,d)
 #define _LZO_ECONCAT5(a,b,c,d,e)	_LZO_CONCAT5(a,b,c,d,e)
 
-
 /***********************************************************************
 //
 ************************************************************************/
@@ -199,7 +188,6 @@
  * magnitude for compression speed.
  */
 #define LZO_DETERMINISTIC
-
 
 /***********************************************************************
 //
@@ -217,7 +205,6 @@
 		(m_pos == NULL || (m_off = ip - m_pos) > max_offset)
 #endif
 
-
 /* m_pos may point anywhere...
  * This marco is probably a good candidate for architecture specific problems.
  * Try casting the pointers to lzo_ptr_t before comparing them.
@@ -225,8 +212,6 @@
 #define LZO_CHECK_MPOS_NON_DET(m_pos,m_off,in,ip,max_offset) \
 	(BOUNDS_CHECKING_OFF_IN_EXPR( \
 		(m_pos < in || (m_off = ip - m_pos) <= 0 || m_off > max_offset) ))
-
-
 
 #endif /* already included */
 

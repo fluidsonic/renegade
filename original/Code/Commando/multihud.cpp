@@ -51,7 +51,6 @@
 const float					MultiHUDClass::MAX_OVERLAY_DISTANCE_M		= 50;
 const float					MultiHUDClass::Y_INCREMENT_FACTOR			= 1.2f;
 
-
 Render2DSentenceClass* MultiHUDClass::NameRenderer					= NULL;
 float							MultiHUDClass::BottomTextYPos					= 0;
 //bool							MultiHUDClass::VerboseLists					= false;
@@ -79,7 +78,6 @@ void MultiHUDClass::Shutdown(void)
 		delete NameRenderer;
 		NameRenderer = NULL;
 	}
-
 
 	IsOn = false;
 }
@@ -307,7 +305,6 @@ void MultiHUDClass::Show_Player_Names(void)
 			WideStringClass text(0,true);
 			text += p_player->Get_Name();
 
-
 			//
 			// MVP carries over into next game
 			//
@@ -336,7 +333,6 @@ void MultiHUDClass::Show_Player_Names(void)
    }
 }
 
-
 //-----------------------------------------------------------------------------
 void MultiHUDClass::Think(void)
 {
@@ -344,8 +340,6 @@ void MultiHUDClass::Think(void)
 	if (NameRenderer == NULL) {
 		return;
 	}
-
-
 
 	NameRenderer->Reset();
 

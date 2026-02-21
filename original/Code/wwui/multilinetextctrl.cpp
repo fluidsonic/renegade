@@ -4,7 +4,6 @@
 #include "dialogbase.h"
 #include <winuser.h>
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	MultiLineTextCtrlClass
@@ -40,7 +39,6 @@ MultiLineTextCtrlClass::MultiLineTextCtrlClass (void)	:
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	~MultiLineTextCtrlClass
@@ -55,7 +53,6 @@ MultiLineTextCtrlClass::~MultiLineTextCtrlClass (void)
 	}
 	return ;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -90,7 +87,6 @@ MultiLineTextCtrlClass::Create_Control_Renderer (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Create_Text_Renderer
@@ -113,7 +109,6 @@ MultiLineTextCtrlClass::Create_Text_Renderer (void)
 				::memcpy (dest.Get_Buffer (len + 1), src_start, bytes);	\
 				dest.Peek_Buffer ()[len] = 0;										\
 			}
-
 
 	//
 	//	Determine where to start drawing the text from
@@ -177,7 +172,6 @@ MultiLineTextCtrlClass::Create_Text_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -204,7 +198,6 @@ MultiLineTextCtrlClass::Render (void)
 	DialogControlClass::Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -257,7 +250,6 @@ MultiLineTextCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Scroll_Bar_Visibility
@@ -303,7 +295,6 @@ MultiLineTextCtrlClass::Update_Scroll_Bar_Visibility (void)
 		ClientRect.Right	= int(ClientRect.Right);
 		ClientRect.Bottom	= int(ClientRect.Bottom);
 
-
 		Calculate_Row_Count ();
 
 		//
@@ -326,7 +317,6 @@ MultiLineTextCtrlClass::Update_Scroll_Bar_Visibility (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Calculate_Row_Count
@@ -344,7 +334,6 @@ MultiLineTextCtrlClass::Calculate_Row_Count (void)
 	TextRenderer.Get_Formatted_Text_Extents (Title, &RowCount);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -384,7 +373,6 @@ MultiLineTextCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_VScroll
@@ -396,7 +384,6 @@ MultiLineTextCtrlClass::On_VScroll (ScrollBarCtrlClass *, int , int new_position
 	Set_Scroll_Pos (new_position);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -411,7 +398,6 @@ MultiLineTextCtrlClass::On_Mouse_Wheel (int direction)
 	Set_Scroll_Pos (ScrollPos + lineoffset);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -431,7 +417,6 @@ MultiLineTextCtrlClass::Set_Scroll_Pos (int new_position)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

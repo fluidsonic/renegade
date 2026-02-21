@@ -6,7 +6,6 @@
 #include "resource.h"
 #include "dlgmessagebox.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	EVAEncyclopediaMenuClass
@@ -65,7 +64,6 @@ private:
 	static EVAEncyclopediaMenuClass *	_TheInstance;
 	static int									_NextTabIndex;
 };
-
 
 #endif //__DLGEVAENCYCLOPEDIA_H
 

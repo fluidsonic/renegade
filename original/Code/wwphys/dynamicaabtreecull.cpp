@@ -75,7 +75,6 @@ void DynamicAABTreeCullClass::Add_Object(PhysClass * obj)
 	Add_Object_Internal(obj,node_index);
 }
 
-
 void DynamicAABTreeCullClass::Update_Culling(CullableClass * obj)
 {
 
@@ -92,7 +91,6 @@ void DynamicAABTreeCullClass::Update_Culling(CullableClass * obj)
 	int node_index = find_insertion_node(obj);
 	IndexedNodes[node_index]->Add_Object(obj,false);
 }
-
 
 uint32 DynamicAABTreeCullClass::Get_Dynamic_Object_Vis_ID(const AABoxClass & obj_bounds,int * node_id)
 {
@@ -332,13 +330,11 @@ void DynamicAABTreeCullClass::Collect_Visible_Objects
 	}
 }
 
-
 void DynamicAABTreeCullClass::Render_Visible_Cells(RenderInfoClass & rinfo,VisTableClass * pvs,DisplayModeType mode)
 {
 	AABTreeNodeClass * start = IndexedNodes[DebugIterator.Get_Current_Node_Index()];
 	render_visible_cells_recursive(start,rinfo,pvs,mode);
 }
-
 
 void DynamicAABTreeCullClass::Assign_Vis_IDs(void)
 {
@@ -351,14 +347,12 @@ void DynamicAABTreeCullClass::Assign_Vis_IDs(void)
 	}
 }
 
-
 void DynamicAABTreeCullClass::Evaluate_Non_Occluder_Visibility(VisRenderContextClass & context)
 {
 
 	context.VisRasterizer->Set_Render_Mode(IDBufferClass::NON_OCCLUDER_MODE);
 	evaluate_non_occluder_visibility_recursive(RootNode,context);
 }
-
 
 void DynamicAABTreeCullClass::Save_Static_Data(ChunkSaveClass & csave)
 {
@@ -396,7 +390,6 @@ void DynamicAABTreeCullClass::Load_Static_Data(ChunkLoadClass & cload)
 		cload.Close_Chunk();
 	}
 }
-
 
 void DynamicAABTreeCullClass::evaluate_non_occluder_visibility_recursive
 (
@@ -502,7 +495,6 @@ AABoxRenderObjClass * DynamicAABTreeCullClass::get_render_box(void)
 	return RenderBox;
 }
 
-
 int DynamicAABTreeCullClass::find_insertion_node(CullableClass * obj)
 {	
 	int node_index = 0;
@@ -590,7 +582,6 @@ void DynamicAABTreeCullClass::find_optimal_deflated_node
 	}
 }
 
-
 void DynamicAABTreeCullClass::collect_visible_objects_recursive
 (
 	AABTreeNodeClass * node,
@@ -652,7 +643,6 @@ void DynamicAABTreeCullClass::collect_visible_objects_recursive
 	}
 }
 
-
 void DynamicAABTreeCullClass::collect_visible_objects_no_hvis_recursive
 (
 	AABTreeNodeClass * node,
@@ -703,7 +693,6 @@ void DynamicAABTreeCullClass::collect_visible_objects_no_hvis_recursive
 		collect_visible_objects_no_hvis_recursive(node->Front,context);
 	}
 }
-
 
 void DynamicAABTreeCullClass::render_visible_cells_recursive
 (
@@ -884,7 +873,6 @@ void DynamicAABTreeCullClass::prune_child
 		}
 	}
 }
-
 
 void DynamicAABTreeCullClass::Merge_Vis_Object_IDs(uint32 id0,uint32 id1)
 {

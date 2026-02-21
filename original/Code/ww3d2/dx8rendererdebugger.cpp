@@ -63,7 +63,6 @@ void DX8RendererDebugger::Update()
 //	if (!Enabled) return;
 }
 
-
 void DX8RendererDebugger::Disable_Mesh(unsigned id)
 {
 	if (!Enabled) return;

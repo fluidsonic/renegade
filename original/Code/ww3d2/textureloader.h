@@ -1,7 +1,6 @@
 #ifndef TEXTURELOADER_H
 #define TEXTURELOADER_H
 
-
 #include "always.h"
 #include "texture.h"
 
@@ -74,7 +73,6 @@ class TextureLoadTaskListNodeClass
 		TextureLoadTaskListClass *		List;
 };
 
-
 class TextureLoadTaskListClass
 {
 	// This class implements an unsynchronized, double-linked list of TextureLoadTaskClass 
@@ -106,7 +104,6 @@ class TextureLoadTaskListClass
 		TextureLoadTaskListNodeClass	Root;
 };
 
-
 class SynchronizedTextureLoadTaskListClass : public TextureLoadTaskListClass
 {
 	// This class added thread-safety to the basic TextureLoadTaskListClass.
@@ -124,7 +121,6 @@ class SynchronizedTextureLoadTaskListClass : public TextureLoadTaskListClass
 	private:
 		FastCriticalSectionClass		CriticalSection;
 };
-
 
 class TextureLoadTaskClass : public TextureLoadTaskListNodeClass
 {
@@ -149,7 +145,6 @@ class TextureLoadTaskClass : public TextureLoadTaskListNodeClass
 
 			STATE_COMPLETE,
 		};
-
 
 		TextureLoadTaskClass(void);
 		~TextureLoadTaskClass(void);
@@ -215,6 +210,5 @@ class TextureLoadTaskClass : public TextureLoadTaskListNodeClass
 		PriorityType			Priority;
 		StateType				State;
 };
-
 
 #endif

@@ -16,7 +16,6 @@ class DlgMPConnect :
 		void Connected(cGameData* theGame);
 		void Failed_To_Connect(void);
 
-
 	protected:
 		DlgMPConnect(int teamChoice);
 		virtual ~DlgMPConnect();

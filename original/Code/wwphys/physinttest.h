@@ -6,7 +6,6 @@
 #include "mesh.h"
 #include "physlist.h"
 
-
 // 
 // Derived versions of the Intersection Test Classes which contain
 // a list of intersected PhysObj's and the collision group.

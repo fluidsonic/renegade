@@ -1,11 +1,9 @@
 #ifndef _PRDEMO_H_
 #define _PRDEMO_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
-
 
 // Custom Types
 
@@ -30,7 +28,6 @@ typedef enum
 	MPR_A02_CUSTOM_DRIVEBY_HARVESTER_JDG,
 } PRCMD_EVENTS;
 
-
 // Custom Parameters
 
 typedef enum
@@ -41,7 +38,6 @@ typedef enum
 	MPR_A02_PARAM_CADETS_GOTO_INNATE_JDG,
 	MPR_A00_PARAM_HAVOC_IN_ENTER_ZONE_JDG,
 } PRCMD_PARAMS;
-
 
 // Timers
 
@@ -108,13 +104,11 @@ typedef enum
 	MPR_A05_TIMER_DIE_RMV,
 } PRTIMER_TIMERS;
 
-
 // Public Variables
 
 bool MPR_nod_dead_PMP;
 bool MPR_evacing_to_chinook_PMP;
 bool MPR_A01_startstrike_RAD;
-
 
 // Predefined Constants
 
@@ -155,7 +149,6 @@ const float MPR_A01_obelisk_firing_time_RAD		= 2.0f; // How much time delay betw
 #define		MPR_A02_CADET_3_Z_JDG					2.42f
 #define		MPR_A03_BRIDGESCENE_BRIDGE_ID_JDG		16016
 
-
 // Typedefined Enumerations
 
 typedef enum
@@ -182,7 +175,6 @@ typedef enum
 } CONSOLEState;
 
 CONSOLEState status;
-
 
 // ID Values that need permanent address in the Level Editor
 
@@ -213,6 +205,5 @@ int MPR_A05_mammoth_tank_id_RAD;
 #define		MPR_A02_HARVESTER_WAYPATH_JDG			364188
 #define		MPR_A02_HARVESTER_WAYPATH_START_JDG		364187
 #define		MPR_A02_HARVESTER_WAYPATH_STOP_JDG		364199
-
 
 #endif // _PRDEMO_H_

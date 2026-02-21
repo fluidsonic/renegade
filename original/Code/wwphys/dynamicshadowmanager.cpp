@@ -8,7 +8,6 @@
 #include "texture.h"
 #include "physresourcemgr.h"
 
-
 #define SINGLE_SHADOW_CODE 1
 
 DynamicShadowManagerClass::DynamicShadowManagerClass(PhysClass & parent) :
@@ -25,7 +24,6 @@ DynamicShadowManagerClass::~DynamicShadowManagerClass(void)
 {
 	Release_Shadow();
 }
-
 
 void DynamicShadowManagerClass::Update_Shadow(void)
 {
@@ -235,7 +233,6 @@ void DynamicShadowManagerClass::Update_Shadow(void)
 #endif
 }
 
-
 void DynamicShadowManagerClass::Allocate_Shadow(void)
 {
 	if (Shadow == NULL) {
@@ -251,7 +248,6 @@ void DynamicShadowManagerClass::Allocate_Shadow(void)
 		scene->Add_Dynamic_Texture_Projector(Shadow);
 	}
 }
-
 
 void DynamicShadowManagerClass::Release_Shadow(void)
 {

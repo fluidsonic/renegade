@@ -2,7 +2,6 @@
 #ifndef VISENUM_H
 #define VISENUM_H
 
-
 enum VisStatusType
 {
 	VIS_STATUS_OK = 0,

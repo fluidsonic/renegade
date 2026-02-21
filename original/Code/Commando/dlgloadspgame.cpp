@@ -17,7 +17,6 @@
 #include "dialogtests.h"
 #include "specialbuilds.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -37,7 +36,6 @@ static enum
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
 LoadSPGameMenuClass *	LoadSPGameMenuClass::_TheInstance	= NULL;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -69,7 +67,6 @@ LoadSPGameMenuClass::On_Init_Dialog (void)
 		StringClass file_filter;
 		file_filter = "data\\m*.mix";
 
-
 		start_index = Build_List (file_filter, start_index);
 		Build_List ("data\\save\\*.sav", start_index);
 
@@ -90,7 +87,6 @@ LoadSPGameMenuClass::On_Init_Dialog (void)
 	MenuDialogClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -121,7 +117,7 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 		int index	= search_dir - search_string;
 		path_name.Erase (index, len - index);
 	}
-	
+
 	//
 	//	Build a list of all the saved games we know about
 	//
@@ -169,7 +165,7 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 					case 13:	description = TRANSLATE( IDS_LoadScreen_MX0_Title ); break;
 				}
 			}
-			
+
 			//
 			//	Get the time this file was last written
 			//
@@ -203,7 +199,7 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 				StringClass file_path = path_name;
 				file_path += "\\";
 				file_path += find_info.cFileName;
-				
+
 				list_ctrl->Set_Entry_Data (item_index, 0, (uint32)(uintptr_t)new FILETIME(local_time));
 				list_ctrl->Set_Entry_Data (item_index, 1, (uint32)(uintptr_t)new StringClass(file_path));
 				list_ctrl->Set_Entry_Data (item_index, 2, (uint32)(uintptr_t)new StringClass(find_info.cFileName));
@@ -211,8 +207,8 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 		}
 	}
 
-	if (file_find != INVALID_HANDLE_VALUE) {			  
-		::FindClose (file_find); 
+	if (file_find != INVALID_HANDLE_VALUE) {
+		::FindClose (file_find);
 	}
 
 	return index;
@@ -223,7 +219,7 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 //	Is_Game_Allowed
 //
 ////////////////////////////////////////////////////////////////
-bool		
+bool
 LoadSPGameMenuClass::Is_Game_Allowed
 (
 	const char * filename
@@ -252,7 +248,7 @@ LoadSPGameMenuClass::Is_Game_Allowed
 //	Get_Game_Rank
 //
 ////////////////////////////////////////////////////////////////
-int	
+int
 LoadSPGameMenuClass::Get_Game_Rank
 (
 	const char * filename
@@ -272,13 +268,12 @@ LoadSPGameMenuClass::Get_Game_Rank
 	return rank;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Game_Rank
 //
 ////////////////////////////////////////////////////////////////
-void	
+void
 LoadSPGameMenuClass::Set_Game_Rank
 (
 	const char * filename,
@@ -302,7 +297,6 @@ LoadSPGameMenuClass::Set_Game_Rank
 	}
 	delete registry;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -344,7 +338,6 @@ LoadSPGameMenuClass::On_ListCtrl_Column_Click
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_Delete_Entry
@@ -359,7 +352,7 @@ LoadSPGameMenuClass::On_ListCtrl_Delete_Entry
 )
 {
 	if (ctrl_id == IDC_LOAD_GAME_LIST_CTRL) {
-		
+
 		//
 		//	Remove the data we associated with this entry
 		//
@@ -369,18 +362,18 @@ LoadSPGameMenuClass::On_ListCtrl_Delete_Entry
 		list_ctrl->Set_Entry_Data (item_index, 0, 0);
 		list_ctrl->Set_Entry_Data (item_index, 1, 0);
 		list_ctrl->Set_Entry_Data (item_index, 2, 0);
-		
+
 		//
 		//	Free the data
 		//
 		if (file_time != NULL) {
 			delete file_time;
 		}
-		
+
 		if (path != NULL) {
 			delete path;
 		}
-				
+
 		if (filename != NULL) {
 			delete filename;
 		}
@@ -388,7 +381,6 @@ LoadSPGameMenuClass::On_ListCtrl_Delete_Entry
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -407,7 +399,7 @@ LoadSPGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_in
 	BOOL	sort_ascending	= HIWORD (user_param);
 
 	if (sort_col_index == 0 || sort_col_index == 1) {
-		
+
 		//
 		//	Sort by time
 		//
@@ -416,7 +408,7 @@ LoadSPGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_in
 		retval = ::CompareFileTime (file_time1, file_time2);
 
 	} else {
-		
+
 		//
 		//	Sort by name
 		//
@@ -434,7 +426,6 @@ LoadSPGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_in
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -459,7 +450,6 @@ LoadSPGameMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -530,7 +520,7 @@ LoadSPGameMenuClass::Load_Game (void)
 			//	Load the map
 			//
 			GameInitMgrClass::Initialize_SP ();
-			GameInitMgrClass::Start_Game (save_name, -1, 0);
+			GameInitMgrClass::Start_Game (save_name, -1);
 		}
 	}
 
@@ -540,7 +530,6 @@ LoadSPGameMenuClass::Load_Game (void)
 
 #endif // !MULTIPLAYERDEMO
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -559,7 +548,6 @@ LoadSPGameMenuClass::On_ListCtrl_Sel_Change
 	Update_Button_State ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -587,10 +575,10 @@ LoadSPGameMenuClass::Update_Button_State (void)
 
 		//
 		//	Get the filename associated with this entry
-		//		
+		//
 		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
 			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 1))->Peek_Buffer ();
-			
+
 			//
 			//	Check to see if this is a saved game or a level file.
 			//
@@ -603,12 +591,11 @@ LoadSPGameMenuClass::Update_Button_State (void)
 		//
 		//	Change the enable state of the button
 		//
-		Get_Dlg_Item (IDC_DELETE_GAME_BUTTON)->Enable (enable);	
+		Get_Dlg_Item (IDC_DELETE_GAME_BUTTON)->Enable (enable);
 	}
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -626,7 +613,6 @@ LoadSPGameMenuClass::On_ListCtrl_DblClk
 	Load_Game ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -652,7 +638,7 @@ LoadSPGameMenuClass::Delete_Game (bool prompt)
 
 		//
 		//	Determine what filename this entry refers to
-		//		
+		//
 		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
 			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 1))->Peek_Buffer ();
 
@@ -691,7 +677,6 @@ LoadSPGameMenuClass::Delete_Game (bool prompt)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	HandleNotification
@@ -701,7 +686,7 @@ void
 LoadSPGameMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 {
 	if (event.Get_User_Data () == MBEVENT_DELETE_PROMPT) {
-		
+
 		//
 		//	The user has confirmed the delete, so delete the file
 		//
@@ -712,7 +697,6 @@ LoadSPGameMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -739,7 +723,6 @@ LoadSPGameMenuClass::Display (void)
 
 #endif // !MULTIPLAYERDEMO
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

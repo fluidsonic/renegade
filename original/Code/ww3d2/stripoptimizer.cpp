@@ -34,7 +34,6 @@ template <class T> inline void Insertion_Sort (T* a, int N)
 	}
 }
 
-
 template <class T> inline void Quick_Sort (T* a, int l, int r)
 {
 	if (r-l <= 16)
@@ -267,8 +266,6 @@ void StripOptimizerClass::Optimize_Triangle_Order (int *tris, int triangle_count
 		t[bestIndex] = NULL;
 	}
 
-
-
 	for (i = 0; i < triangle_count; i++)
 	{
 		Tri* d = (Tri*)(tris)+i;
@@ -279,7 +276,6 @@ void StripOptimizerClass::Optimize_Triangle_Order (int *tris, int triangle_count
 	delete[] out;
 
 }
-
 
 /*****************************************************************************
  *
@@ -462,7 +458,6 @@ private:
 int Stripify::s_mod[6] = {0,1,2,0,1,2};
 } // Strip
 
-
 template <> inline unsigned int HashTemplateKeyClass<Strip::Edge>::Get_Hash_Value(const Strip::Edge& s)
 {
 	return (s.v[0]*139) + (s.v[1]*7);
@@ -642,7 +637,6 @@ inline TriangleQueue::TriangleQueue	(Triangle* tris, int N)
 	for (i = 0; i < m_vertexCount; i++)
 		m_nodeConnectivity[i]  = 0;
 
-
 	for (i = 0; i < N; i++)
 	{
 		Triangle* t = tris+i;
@@ -657,7 +651,6 @@ inline TriangleQueue::TriangleQueue	(Triangle* tris, int N)
 			m_nodeConnectivity[t->m_vertices[j]]++;
 	}
 }
-
 
 /*****************************************************************************
  *
@@ -903,7 +896,6 @@ int* Stripify::stripify  (const Vector3i* inTris, int N)
 
 				Triangle* n = next->m_neighbors[i];						// get pointer to neighbor
 				int       w = n->getConnectivity();
-
 
 				w += nodeWeights[i];									// add vertex weight
 				w += nodeWeights[getMod3(i+1)];							// add vertex weight

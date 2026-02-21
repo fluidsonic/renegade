@@ -4,7 +4,6 @@
 #include "ww3d.h"
 #include "WWAudio.H"
 #include "wwphys.h"
-#include "debug.h"
 #include "assets.h"
 #include "ffactorylist.h"
 #include "input.h"
@@ -273,9 +272,6 @@ static void Log_System_Information()
 	string+=tmp;
 	string+="\r\n";
 
-
-
-
 	Get_Detail_String(tmp);
 	string+=tmp;
 	string+="\r\n";
@@ -287,7 +283,6 @@ static void Log_System_Information()
 	DWORD written;
 	HANDLE file;
 
-
 	// Write log to local work folder
 	file = CreateFile("sysinfo.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 			FILE_ATTRIBUTE_NORMAL, NULL);
@@ -296,7 +291,6 @@ static void Log_System_Information()
 		CloseHandle(file);
 	}
 }
-
 
 /*
 **
@@ -327,8 +321,6 @@ void Game_Shutdown(void)
 	cTeamManager::Onetime_Shutdown();
 	cGameData::Onetime_Shutdown();
 	cBandwidthGraph::Onetime_Shutdown();
-
-	DebugManager::Set_Display_Handler( NULL );
 
 	GameModeManager::Destroy_All();
   EncyclopediaMgrClass::Shutdown();
@@ -377,9 +369,6 @@ void Game_Shutdown(void)
 //	WW3DAssetManager::Get_Instance()->Free_Assets();
 	Debug_Refs();
 
-	DebugManager::Save_Registry_Settings( APPLICATION_SUB_KEY_NAME_DEBUG );
-	DebugManager::Shutdown();
-
 	WSA_CHECK(WSACleanup());
 
 	/*
@@ -397,14 +386,13 @@ void Game_Shutdown(void)
 		}
 	}
 
-
 	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
 	if ( registry.Is_Valid() ) {
 		registry.Set_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, 0 );
 	}
 
 #ifdef FREEDEDICATEDSERVER
-	Copy_Logs(DebugManager::Get_Version_Number());
+	Copy_Logs(0);
 #endif //FREEDEDICATEDSERVER
 
 	return ;

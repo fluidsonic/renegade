@@ -8,13 +8,11 @@
 #include "stylemgr.h"
 #include <commctrl.h>
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
 const float	PULSE_RATE		= 2.0F;
 const int	ROW_SPACING		= 4;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -63,7 +61,6 @@ ListCtrlClass::ListCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ListCtrlClass
@@ -80,12 +77,10 @@ ListCtrlClass::~ListCtrlClass (void)
 	return ;
 }
 
-
 void ListCtrlClass::Set_Tabstop(float stop)
 {
 	TextRenderer.Set_Tabstop(stop);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -162,7 +157,6 @@ ListCtrlClass::Create_Control_Renderer (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -341,7 +335,6 @@ ListCtrlClass::Create_Text_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render_Entry
@@ -385,7 +378,6 @@ ListCtrlClass::Render_Entry (const RectClass &clip_rect, int col_index, int row_
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -404,7 +396,6 @@ ListCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Sort_Designator
@@ -419,7 +410,6 @@ ListCtrlClass::Set_Sort_Designator (int col_index, SORT_TYPE type)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -440,7 +430,6 @@ ListCtrlClass::Sort_Alphabetically (int col_index, SORT_TYPE type)
 	Set_Sort_Designator (col_index, type);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -479,7 +468,6 @@ ListCtrlClass::Default_Sort_Callback (ListCtrlClass *list_ctrl, int item_index1,
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -540,7 +528,6 @@ ListCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Top_Of_Page
@@ -571,7 +558,6 @@ ListCtrlClass::Find_Top_Of_Page (int bottom_index)
 	
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -604,7 +590,6 @@ ListCtrlClass::Find_End_Of_Page (void)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Last_Page_Top_Entry
@@ -632,7 +617,6 @@ ListCtrlClass::Find_Last_Page_Top_Entry (void)
 	
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -718,7 +702,6 @@ ListCtrlClass::Update_Scroll_Bar_Visibility (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -759,7 +742,6 @@ ListCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_First_Selected
@@ -787,7 +769,6 @@ ListCtrlClass::Get_First_Selected (void) const
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -817,7 +798,6 @@ ListCtrlClass::Get_Next_Selected (int index) const
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Select_All
@@ -837,7 +817,6 @@ ListCtrlClass::Select_All (bool select)
 	Set_Dirty();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -861,7 +840,6 @@ ListCtrlClass::Toggle_Entry_Selection (int index)
 	return false;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_DblClk
@@ -881,7 +859,6 @@ ListCtrlClass::On_LButton_DblClk (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -920,7 +897,6 @@ ListCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -931,7 +907,6 @@ ListCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -945,7 +920,6 @@ ListCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	ADVISE_NOTIFY(On_ListCtrl_Mouse_Over(this, Get_ID(), sel_entry));
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -961,7 +935,6 @@ ListCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -975,7 +948,6 @@ ListCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1045,7 +1017,6 @@ ListCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Sort
@@ -1068,7 +1039,6 @@ ListCtrlClass::Sort (LISTCTRL_SORT_CALLBACK sort_callback, uint32 user_param)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1232,7 +1202,6 @@ ListCtrlClass::Quick_Sort
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -1243,7 +1212,6 @@ ListCtrlClass::On_Create (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1257,7 +1225,6 @@ ListCtrlClass::On_Destroy (void)
 	Delete_All_Columns ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1302,7 +1269,6 @@ ListCtrlClass::Auto_Size_Columns_Include_Contents (float col_spacing)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Auto_Size_Columns
@@ -1326,7 +1292,6 @@ ListCtrlClass::Auto_Size_Columns (float col_spacing)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Icon
@@ -1347,7 +1312,6 @@ ListCtrlClass::Add_Icon (int index, int col_index, const char *texture_name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Icons
@@ -1366,7 +1330,6 @@ ListCtrlClass::Reset_Icons (int index, int col_index)
 	ColList[col_index]->Reset_Icons (index);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1388,7 +1351,6 @@ ListCtrlClass::Add_Column (const WCHAR *column_name, float width, const Vector3 
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Column_Color
@@ -1405,7 +1367,6 @@ ListCtrlClass::Set_Column_Color (int col_index, const Vector3 &color)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1433,7 +1394,6 @@ ListCtrlClass::Remove_Column (int index)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_All_Columns
@@ -1452,7 +1412,6 @@ ListCtrlClass::Delete_All_Columns (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Column_Count
@@ -1464,7 +1423,6 @@ ListCtrlClass::Get_Column_Count (void) const
 	return ColList.Count ();
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Entry_Count
@@ -1475,7 +1433,6 @@ ListCtrlClass::Get_Entry_Count (void) const
 {
 	return RowInfoList.Count ();
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1532,7 +1489,6 @@ ListCtrlClass::Delete_Entry (int index)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Entry
@@ -1557,7 +1513,6 @@ int ListCtrlClass::Find_Entry(int col_index, const WCHAR* text)
 
 	return -1;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1618,7 +1573,6 @@ ListCtrlClass::Insert_Entry (int index, const WCHAR *text)
 	return index;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Row_Height
@@ -1677,7 +1631,6 @@ ListCtrlClass::Update_Row_Height (int row_index)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Icon_Size
@@ -1694,7 +1647,6 @@ ListCtrlClass::Set_Icon_Size (float width, float height)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1717,7 +1669,6 @@ ListCtrlClass::Set_Min_Row_Height (int height)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Select_Entry
@@ -1739,7 +1690,6 @@ ListCtrlClass::Select_Entry (int index, bool onoff)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Is_Entry_Selected
@@ -1760,7 +1710,6 @@ ListCtrlClass::Is_Entry_Selected (int index)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1792,7 +1741,6 @@ ListCtrlClass::Set_Entry_Text (int index, int col_index, const WCHAR *text)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Entry_Int
@@ -1819,7 +1767,6 @@ ListCtrlClass::Set_Entry_Int (int index, int col_index, int value)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Entry_Color
@@ -1840,7 +1787,6 @@ ListCtrlClass::Set_Entry_Color (int index, int col_index, const Vector3 &color)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Entry_Data
@@ -1855,7 +1801,6 @@ ListCtrlClass::Set_Entry_Data (int index, int col_index, uint32 user_data)
 	ColList[col_index]->Set_Entry_Data (index, user_data);
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1877,7 +1822,6 @@ ListCtrlClass::Get_Entry_Data (int index, int col_index)
 	return user_data;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Entry_Text
@@ -1891,7 +1835,6 @@ ListCtrlClass::Get_Entry_Text (int index, int col_index)
 	//
 	return ColList[col_index]->Get_Entry_Text (index);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1936,7 +1879,6 @@ ListCtrlClass::Delete_All_Entries (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Scroll_To_End
@@ -1965,7 +1907,6 @@ ListCtrlClass::Scroll_To_End (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Curr_Sel
@@ -1983,7 +1924,6 @@ ListCtrlClass::Set_Curr_Sel (int new_sel)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2041,7 +1981,6 @@ ListCtrlClass::Set_Sel (int new_sel, bool notify)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Scroll_Pos
@@ -2084,7 +2023,6 @@ ListCtrlClass::Update_Scroll_Pos (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Entry_Rect
@@ -2121,7 +2059,6 @@ ListCtrlClass::Get_Entry_Rect (int index, RectClass &rect)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Col_From_Pos
@@ -2151,7 +2088,6 @@ ListCtrlClass::Col_From_Pos (const Vector2 &mouse_pos)
 			col_width = HeaderRect.Right - x_pos;
 		}
 
-
 		//
 		//	Is the coordinate inside this col?
 		//
@@ -2168,7 +2104,6 @@ ListCtrlClass::Col_From_Pos (const Vector2 &mouse_pos)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2215,7 +2150,6 @@ ListCtrlClass::Entry_From_Pos (const Vector2 &mouse_pos)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2269,7 +2203,6 @@ ListCtrlClass::Scroll_Page (int direction)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_VScroll_Page
@@ -2281,7 +2214,6 @@ ListCtrlClass::On_VScroll_Page (ScrollBarCtrlClass *scrollbar, int ctrl_id, int 
 	Scroll_Page (direction);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2297,7 +2229,6 @@ ListCtrlClass::On_VScroll (ScrollBarCtrlClass *, int , int new_position)
 	}
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2324,13 +2255,11 @@ ListCtrlClass::On_Mouse_Wheel (int direction)
 	return ;
 }
 
-
 //********************************************************************************//
 //
 //	Start of ListColumnClass
 //
 //********************************************************************************//
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2343,7 +2272,6 @@ ListColumnClass::Free_Data (void)
 	Delete_All_Entries ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2359,7 +2287,6 @@ ListColumnClass::Reset_Contents (void)
 	Free_Data ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2384,7 +2311,6 @@ ListColumnClass::Insert_Entry (int index, const WCHAR *entry_name)
 	return index;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_Entry
@@ -2406,7 +2332,6 @@ ListColumnClass::Delete_Entry (int index)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_All_Entries
@@ -2425,7 +2350,6 @@ ListColumnClass::Delete_All_Entries (void)
 	EntryList.Delete_All ();	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -2449,7 +2373,6 @@ ListColumnClass::Move_Entry (int old_index, int new_index)
 	EntryList.Delete (old_index);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

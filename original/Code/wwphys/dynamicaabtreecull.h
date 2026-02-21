@@ -2,7 +2,6 @@
 #ifndef DYNAMICAABTREECULL_H
 #define DYNAMICAABTREECULL_H
 
-
 #include "always.h"
 #include "physaabtreecull.h"
 #include "physlist.h"

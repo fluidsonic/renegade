@@ -1,7 +1,6 @@
 #include	"always.h"
 #include	"crc.h"
 
-
 /***********************************************************************************************
  * CRCEngine::operator() -- Submits one byte of data to the CRC engine.                        *
  *                                                                                             *
@@ -30,7 +29,6 @@ void CRCEngine::operator() (char datum)
 		Index = 0;
 	}
 }
-
 
 /***********************************************************************************************
  * CRCEngine::operator() -- Submits an arbitrary data block to the CRC engine.                 *

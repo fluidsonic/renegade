@@ -6,7 +6,6 @@
 #include "lightphys.h"
 #include "ww3d.h"
 
-
 /*
 ** LightCullClass
 ** This is a derived axis-aligned bounding box tree for spatially subdividing the
@@ -45,7 +44,6 @@ public:
 	void					Load_Static_Data(ChunkLoadClass & cload);
 
 };
-
 
 #endif //LIGHTCULL_H
 

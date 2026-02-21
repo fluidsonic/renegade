@@ -92,12 +92,6 @@ WCHAR *BandwidthCheckerClass::BandwidthNames [NUM_BANDS+1] = {
 	L"> 4M"
 };
 
-
-
-
-
-
-
 /***********************************************************************************************
  * Start the bandwidth detection thread                                                        *
  *                                                                                             *
@@ -132,8 +126,6 @@ void BandwidthCheckerClass::Check_Now(HANDLE event)
 	}
 	Thread.Execute();
 }
-
-
 
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Ping_Server_Name -- Get the name of a server to ping             *
@@ -223,12 +215,6 @@ const char *BandwidthCheckerClass::Get_Ping_Server_Name(void)
 	return(server_name);
 }
 
-
-
-
-
-
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Check -- Check bandwidth. This is called from bandwidth thread.      *
  *                                                                                             *
@@ -248,7 +234,6 @@ void BandwidthCheckerClass::Check(void)
 	struct hostent *host;
 	struct sockaddr_in address;
 	int failure_code;
-
 
 	ConsoleBox.Print("Detecting bandwidth...\n");
 
@@ -411,8 +396,6 @@ void BandwidthCheckerClass::Check(void)
 	SetEvent(EventNotify);
 }
 
-
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Force_Upstream_Bandwidth -- Set actual upstream bandwidth              *
  *                                                                                             *
@@ -433,7 +416,6 @@ void BandwidthCheckerClass::Force_Upstream_Bandwidth(unsigned int up)
 	UpstreamBandwidth = up;
 }
 
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Upstream_Bandwidth -- Get actual upstream bandwidth              *
  *                                                                                             *
@@ -452,7 +434,6 @@ unsigned long BandwidthCheckerClass::Get_Upstream_Bandwidth(void)
 {
 	return(UpstreamBandwidth);
 }
-
 
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Reported_Upstream_Bandwidth -- Get reported up bandwidth         *
@@ -473,7 +454,6 @@ unsigned long BandwidthCheckerClass::Get_Reported_Upstream_Bandwidth(void)
 	return(ReportedUpstreamBandwidth);
 }
 
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Upstream_Bandwidth_As_String -- Human readable upsream bw        *
  *                                                                                             *
@@ -492,7 +472,6 @@ WCHAR *BandwidthCheckerClass::Get_Upstream_Bandwidth_As_String(void)
 {
 	return(UpstreamBandwidthString);
 }
-
 
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Downstream_Bandwidth -- Get actual downstream bandwidth          *
@@ -513,7 +492,6 @@ unsigned long BandwidthCheckerClass::Get_Downstream_Bandwidth(void)
 	return(DownstreamBandwidth);
 }
 
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Reported_Downstream_Bandwidth -- Get reported down bw            *
  *                                                                                             *
@@ -533,7 +511,6 @@ unsigned long BandwidthCheckerClass::Get_Reported_Downstream_Bandwidth(void)
 	return(ReportedDownstreamBandwidth);
 }
 
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Downstream_Bandwidth_As_String -- Get down bw as a string        *
  *                                                                                             *
@@ -552,7 +529,6 @@ WCHAR *BandwidthCheckerClass::Get_Downstream_Bandwidth_As_String(void)
 {
 	return(DownstreamBandwidthString);
 }
-
 
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Bandwidth_As_String -- Get bandwidth description string          *
@@ -581,7 +557,6 @@ WCHAR *BandwidthCheckerClass::Get_Bandwidth_As_String(void)
 	}
 }
 
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Bandwidth_As_String -- Get bandwidth description string          *
  *                                                                                             *
@@ -606,7 +581,6 @@ WCHAR *BandwidthCheckerClass::Get_Bandwidth_As_String(PackedBandwidthType bandwi
 	swprintf(_build_string, 256, L"%s,%s", BandwidthNames[bandwidth.Bandwidth.Down], BandwidthNames[bandwidth.Bandwidth.Up]);
 	return(_build_string);
 }
-
 
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Packed_Bandwidth -- Get bandwidth packed into a byte             *
@@ -660,11 +634,6 @@ BandwidthCheckerClass::PackedBandwidthType BandwidthCheckerClass::Get_Packed_Ban
 	return(bandwidth);
 }
 
-
-
-
-
-
 /***********************************************************************************************
  * BandwidthCheckerClass::Get_Compact_Log -- Get basic log information to send to server       *
  *                                                                                             *
@@ -685,8 +654,4 @@ void BandwidthCheckerClass::Get_Compact_Log(StringClass &log_string)
 	sprintf(temp, "%d\t%d\t%d\t", UpstreamBandwidth, DownstreamBandwidth, cUserOptions::Get_Bandwidth_Type());
 	log_string = temp;
 }
-
-
-
-
 

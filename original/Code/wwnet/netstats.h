@@ -146,17 +146,4 @@ class cNetStats
 
 #endif // NETSTATS_H
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 		//static const USHORT SAMPLE_TIME; // stats gathering period in ms

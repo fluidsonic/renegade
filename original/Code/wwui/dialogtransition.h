@@ -2,9 +2,7 @@
 #ifndef __DIALOG_TRANSITION_H
 #define __DIALOG_TRANSITION_H
 
-
 #include "refcount.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -67,7 +65,6 @@ protected:
 	//int				MaxTime;
 	//int				Timer;
 };
-
 
 #endif //__DIALOG_TRANSITION_H
 

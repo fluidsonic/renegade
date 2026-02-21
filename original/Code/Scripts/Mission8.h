@@ -1,11 +1,9 @@
 #ifndef _MISSION8_H_
 #define _MISSION8_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
-
 
 // Predefined Constants
 
@@ -79,7 +77,6 @@
 #define M08_PETRA_A_LOGICAL			18007
 #define	M08_PETRA_B_LOGICAL			18008
 #define	M08_PETRA_C_LOGICAL			18009
-
 
 // Timer Enumerations
 #define M08_DEAD_HAVOC			28001

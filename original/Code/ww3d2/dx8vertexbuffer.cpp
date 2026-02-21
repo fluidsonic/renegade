@@ -77,7 +77,6 @@ unsigned VertexBufferClass::Get_Total_Allocated_Memory()
 	return _VertexBufferTotalSize;
 }
 
-
 // ----------------------------------------------------------------------------
 
 void VertexBufferClass::Add_Engine_Ref() const
@@ -222,7 +221,6 @@ SortingVertexBufferClass::~SortingVertexBufferClass()
 	delete[] VertexBuffer;
 }
 
-
 // ----------------------------------------------------------------------------
 //
 //
@@ -351,7 +349,6 @@ void DX8VertexBufferClass::Create_Vertex_Buffer(UsageType usage)
 	if (SUCCEEDED(ret)) {
 		return;
 	}
-
 
 	// Vertex buffer creation failed, so try releasing least used textures and flushing the mesh cache.
 

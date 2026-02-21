@@ -31,6 +31,3 @@ private:
 
 #endif // __NICENUM_H__
 
-
-
-

@@ -10,8 +10,6 @@
 #include "persistfactory.h"
 #include "statistics.h"
 
-
-
 /*
 ** PersistFactory for LightClasses - lights have custom save-load support
 */
@@ -27,8 +25,6 @@ enum
 
 	LIGHT_VARIABLE_TRANSFORM				= 0x00,					// transform for the light
 };
-
-
 
 /***********************************************************************************************
  * LightClass::LightClass -- Constructor                                                       *
@@ -65,7 +61,6 @@ LightClass::LightClass(LightType type) :
 	}
 }
 
-
 /***********************************************************************************************
  * LightClass::LightClass -- copy constructor                                                  *
  *                                                                                             *
@@ -96,7 +91,6 @@ LightClass::LightClass(const LightClass & src) :
 	SpotDirection(src.SpotDirection)
 {
 }
-
 
 /***********************************************************************************************
  * LightClass::operator == -- assignment operator                                              *
@@ -134,7 +128,6 @@ LightClass & LightClass::operator = (const LightClass & that)
 	return * this;
 }
 
-
 /***********************************************************************************************
  * LightClass::~LightClass -- destructor                                                       *
  *                                                                                             *
@@ -150,7 +143,6 @@ LightClass & LightClass::operator = (const LightClass & that)
 LightClass::~LightClass(void)
 {
 }
-
 
 /***********************************************************************************************
  * LightClass::Clone -- virtual copy constructor                                               *
@@ -168,7 +160,6 @@ RenderObjClass * LightClass::Clone(void) const
 {
 	return new LightClass(*this);
 }
-
 
 /***********************************************************************************************
  * LightClass::Notify_Added -- lights add themselves to the VP list when added                 *
@@ -188,7 +179,6 @@ void LightClass::Notify_Added(SceneClass * scene)
 	scene->Register(this,SceneClass::LIGHT);
 }
 
-
 /***********************************************************************************************
  * LightClass::Notify_Removed -- lights remove themselves from the VP list when removed        *
  *                                                                                             *
@@ -206,8 +196,6 @@ void LightClass::Notify_Removed(SceneClass * scene)
 	scene->Unregister(this,SceneClass::LIGHT);
 	RenderObjClass::Notify_Removed(scene);
 }
-
-
 
 /***********************************************************************************************
  * LightClass::Get_Obj_Space_Bounding_Sphere -- returns the object space bounding sphere       *
@@ -227,7 +215,6 @@ void LightClass::Get_Obj_Space_Bounding_Sphere(SphereClass & sphere) const
 	sphere.Radius = Get_Attenuation_Range();
 }
 
-
 /***********************************************************************************************
  * LightClass::Get_Obj_Space_Bounding_Box -- returns the object space bounding box             *
  *                                                                                             *
@@ -246,7 +233,6 @@ void LightClass::Get_Obj_Space_Bounding_Box(AABoxClass & box) const
 	box.Center.Set(0,0,0);
 	box.Extent.Set(r,r,r);
 }
-
 
 /***********************************************************************************************
  * LightClass::Is_Within_Attenuation_Radius -- is the point within the atten radius of this li *
@@ -347,7 +333,6 @@ void LightClass::Compute_Lighting(const Vector3 & pos,const Vector3 & norm, Vect
 	set_diffuse->Z = WWMath::Clamp(set_diffuse->Z);
 }
 
-
 /***********************************************************************************************
  * LightClass::Load_W3D -- Initialize this light from a W3D file                               *
  *                                                                                             *
@@ -424,7 +409,6 @@ WW3DErrorType LightClass::Load_W3D(ChunkLoadClass & cload)
 
 	return WW3D_ERROR_OK;
 }
-
 
 /***********************************************************************************************
  * LightClass::Save_W3D -- Save this light's settings into a W3D file                          *
@@ -527,7 +511,6 @@ WW3DErrorType LightClass::Save_W3D(ChunkSaveClass & csave)
 	return WW3D_ERROR_OK;
 }
 
-
 /***********************************************************************************************
  * LightClass::Get_Factory -- get the PersistFactory for LightClass                            *
  *                                                                                             *
@@ -544,7 +527,6 @@ const PersistFactoryClass & LightClass::Get_Factory (void) const
 {
 	return _LightFactory;	
 }
-
 
 /***********************************************************************************************
  * LightClass::Save -- persistant object support                                               *
@@ -571,7 +553,6 @@ bool LightClass::Save (ChunkSaveClass &csave)
 
 	return true;
 }
-
 
 /***********************************************************************************************
  * LightClass::Load -- persistant object support                                               *

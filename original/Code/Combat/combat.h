@@ -17,7 +17,6 @@
 	#include "wwstring.h"
 #endif
 
-
 /*
 **
 */
@@ -34,7 +33,6 @@ class SoldierGameObj;
 class DazzleLayerClass;
 class MessageWindowClass;
 class SoundEnvironmentClass;
-
 
 /*
 **
@@ -70,7 +68,6 @@ public:
 	virtual	void	On_Soldier_Death(SoldierGameObj * p_soldier)						= 0;
 	virtual	bool	Is_Gameplay_Permitted(void)											= 0;
 };
-
 
 /*
 **
@@ -206,7 +203,6 @@ public:
 
 	static	int	Get_Sync_Time( void )									{ return SyncTime; }
 	static	bool	Is_Game_Paused( void )									{ return IsGamePaused; }
-
 
 	static	void	Register_Star_Killer( ArmedGameObj * killer );
 

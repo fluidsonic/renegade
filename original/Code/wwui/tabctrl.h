@@ -8,12 +8,10 @@
 #include "render2dsentence.h"
 #include "bittype.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class ChildDialogClass;
-
 
 ////////////////////////////////////////////////////////////////
 //	Useful macros
@@ -22,7 +20,6 @@ class ChildDialogClass;
 	ChildDialogClass *new_tab = new class_name;		\
 	tab_ctrl->Add_Tab (new_tab);							\
 	REF_PTR_RELEASE (new_tab); }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -118,7 +115,6 @@ protected:
 
 	DynamicVectorClass<ChildDialogClass *>	TabList;
 };
-
 
 #endif //__TAB_CTRL_H
 

@@ -6,7 +6,6 @@
 #include "definition.h"
 #include "widestring.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	PurchaseSettingsDefClass
@@ -122,6 +121,5 @@ protected:
 	
 	static PurchaseSettingsDefClass *	DefinitionArray[TYPE_COUNT][TEAM_COUNT];
 };
-
 
 #endif //__PURCHASESETTINGS_H

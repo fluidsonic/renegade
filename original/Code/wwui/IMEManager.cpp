@@ -3,10 +3,8 @@
 #include <locale.h>
 #include <mbctype.h>
 
-
 #include <algorithm>
 #include <memory>
-
 
 #pragma comment(lib, "imm32.lib")
 
@@ -48,7 +46,6 @@ IMEManager* IMEManager::Create(HWND hwnd)
 	return NULL;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -85,7 +82,6 @@ IMEManager::IMEManager() :
 	mResultString[0] = 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -113,7 +109,6 @@ IMEManager::~IMEManager()
 
 	mCandidateColl.clear();
 	}
-
 
 /******************************************************************************
 *
@@ -168,7 +163,6 @@ bool IMEManager::FinalizeCreate(HWND hwnd)
 	return true;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -204,7 +198,6 @@ void IMEManager::Activate(void)
 		ImmReleaseContext(mHWND, imc);
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -244,7 +237,6 @@ void IMEManager::Deactivate(void)
 	ResetComposition();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -277,7 +269,6 @@ bool IMEManager::IsActive(void) const
 	return isActive;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -306,7 +297,6 @@ void IMEManager::Disable(void)
 		NotifyObservers(action);
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -341,7 +331,6 @@ void IMEManager::Enable(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -362,7 +351,6 @@ bool IMEManager::IsDisabled(void) const
 	{
 	return (mDisableCount > 0);
 	}
-
 
 /******************************************************************************
 *
@@ -535,7 +523,6 @@ bool IMEManager::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 	return handled;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -647,7 +634,6 @@ LRESULT IMEManager::IMENotify(WPARAM wParam, LPARAM lParam)
 	return TRUE;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -704,7 +690,6 @@ HKL IMEManager::InputLanguageChangeRequest(HKL hkl)
 
 	return NULL;
 	}
-
 
 /******************************************************************************
 *
@@ -769,12 +754,9 @@ void IMEManager::InputLanguageChanged(HKL hkl)
 		}
 	#endif
 
-
-
 	IMEEvent action(IME_LANGUAGECHANGED, this);
 	NotifyObservers(action);
 	}
-
 
 /******************************************************************************
 *
@@ -806,7 +788,6 @@ void IMEManager::ResetComposition(void)
 	mReadingString[0] = 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -829,7 +810,6 @@ void IMEManager::StartComposition(void)
 	CompositionEvent event(COMPOSITION_START, this);
 	NotifyObservers(event);
 	}
-
 
 /******************************************************************************
 *
@@ -864,7 +844,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 		{CS_NOMOVECARET, " CS_NOMOVECARET"},
 		{0, ""}
 		};
-
 
 	int flgidx = 0;
 
@@ -921,7 +900,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 					}
 				}
 
-
 			// Update composition string.
 			if (compFlags & GCS_COMPSTR)
 				{
@@ -961,7 +939,6 @@ void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -990,7 +967,6 @@ void IMEManager::EndComposition(void)
 	CompositionEvent event(COMPOSITION_END, this);
 	NotifyObservers(event);
 	}
-
 
 /******************************************************************************
 *
@@ -1042,7 +1018,6 @@ bool IMEManager::ReadCompositionString(HIMC imc, unsigned long flag, wchar_t* bu
 	return true;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1085,7 +1060,6 @@ long IMEManager::ReadReadingAttr(HIMC imc, unsigned char* attr, int length)
 
 	return ConvertAttrForUnicode(string, attr);
 	}
-
 
 /******************************************************************************
 *
@@ -1130,7 +1104,6 @@ long IMEManager::ReadReadingClause(HIMC imc, unsigned long* clause, int length)
 	return ConvertClauseForUnicode(string, size, clause);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1172,7 +1145,6 @@ long IMEManager::ReadCompositionAttr(HIMC imc, unsigned char* attr, int length)
 
 	return ConvertAttrForUnicode(string, attr);
 	}
-
 
 /******************************************************************************
 *
@@ -1216,7 +1188,6 @@ long IMEManager::ReadCompositionClause(HIMC imc, unsigned long* clause, int leng
 	return ConvertClauseForUnicode(string, size, clause);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1257,7 +1228,6 @@ long IMEManager::ReadCursorPos(HIMC imc)
 	return _mbsnccnt((unsigned char*)string, cursorPos);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1296,7 +1266,6 @@ void IMEManager::GetTargetClause(unsigned long& start, unsigned long& end)
 	end = 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1323,7 +1292,6 @@ bool IMEManager::GetCompositionFont(LPLOGFONT lpFont)
 
 	return (success == TRUE);
 	}
-
 
 /******************************************************************************
 *
@@ -1354,7 +1322,6 @@ void IMEManager::OpenCandidate(unsigned long candList)
 			}
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -1416,7 +1383,6 @@ void IMEManager::CloseCandidate(unsigned long candList)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1464,7 +1430,6 @@ unsigned long IMEManager::GetGuideline(wchar_t* outString, int length)
 	return level;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1499,7 +1464,6 @@ bool IMEManager::IMECharHandler(unsigned short dbcs)
 
 	return true;
 	}
-
 
 /******************************************************************************
 *
@@ -1552,7 +1516,6 @@ bool IMEManager::CharHandler(unsigned short ch)
 	return true;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1581,7 +1544,6 @@ long IMEManager::ConvertAttrForUnicode(unsigned char* mbcs, unsigned char* attr)
 
 	return (attrPtr - attr);
 	}
-
 
 /******************************************************************************
 *

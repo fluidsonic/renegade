@@ -7,7 +7,6 @@
 */
 ServerControlClass ServerControl;
 
-
 /***********************************************************************************************
  * ServerControlClass::ServerControlClass -- Class constructor                                 *
  *                                                                                             *
@@ -33,7 +32,6 @@ ServerControlClass::ServerControlClass(void)
 	RemoteAdminAllowed = false;
 }
 
-
 /***********************************************************************************************
  * ServerControlClass::ServerControlClass -- Class destructor                                  *
  *                                                                                             *
@@ -52,8 +50,6 @@ ServerControlClass::~ServerControlClass(void)
 {
 	Stop_Listening();
 }
-
-
 
 /***********************************************************************************************
  * ServerControlClass::Start_Listening -- Start listening for server control messages          *
@@ -88,7 +84,6 @@ bool ServerControlClass::Start_Listening(unsigned short port, char *password, co
 	}
 	return(false);
 }
-
 
 /***********************************************************************************************
  * ServerControlClass::Stop_Listening -- Stop listening to control messages                    *
@@ -129,8 +124,6 @@ void ServerControlClass::Stop_Listening(void)
 	}
 }
 
-
-
 /***********************************************************************************************
  * ServerControlClass::Service -- Service control messages                                     *
  *                                                                                             *
@@ -165,7 +158,6 @@ void ServerControlClass::Service(void)
 			Parse_Message(buffer, bytes, address, port);
 		}
 
-
 		/*
 		** See if anyone timed out.
 		*/
@@ -182,10 +174,6 @@ void ServerControlClass::Service(void)
 		}
 	}
 }
-
-
-
-
 
 /***********************************************************************************************
  * ServerControlClass::Parse_Message -- Parse server control message                           *
@@ -287,10 +275,6 @@ void ServerControlClass::Parse_Message(void *buffer, int len, unsigned long addr
 	}
 }
 
-
-
-
-
 /***********************************************************************************************
  * ServerControlClass::Add_Remote_Control -- Add a new remote controller                       *
  *                                                                                             *
@@ -321,8 +305,6 @@ void ServerControlClass::Add_Remote_Control(unsigned long ip, unsigned short por
 	control->Port = port;
 }
 
-
-
 /***********************************************************************************************
  * ServerControlClass::Remove_Remote_Control -- Remove a remote controller from our list       *
  *                                                                                             *
@@ -351,8 +333,6 @@ void ServerControlClass::Remove_Remote_Control(unsigned long ip, unsigned short 
 	}
 }
 
-
-
 /***********************************************************************************************
  * ServerControlClass::Is_Authenticated -- Has this controller presented a valid password?     *
  *                                                                                             *
@@ -376,7 +356,6 @@ bool ServerControlClass::Is_Authenticated(unsigned long ip, unsigned short port)
 
 	return(false);
 }
-
 
 /***********************************************************************************************
  * ServerControlClass::Get_Controller -- Find remote controller info based on ip and port      *
@@ -404,7 +383,6 @@ ServerControlClass::RemoteControlStruct *ServerControlClass::Get_Controller(unsi
 	return(NULL);
 }
 
-
 /***********************************************************************************************
  * ServerControlClass::Reset_Timeout -- Reset idle timeout for remote controller               *
  *                                                                                             *
@@ -426,8 +404,6 @@ void ServerControlClass::Reset_Timeout(unsigned long ip, unsigned short port)
 		control->Time = TIMEGETTIME();
 	}
 }
-
-
 
 /***********************************************************************************************
  * ServerControlClass::Send_Message -- Send control message to remote server                   *
@@ -453,9 +429,6 @@ void ServerControlClass::Send_Message(char *text, unsigned long ip, unsigned sho
 	Comms.Write(&message, sizeof(message.Type) + strlen(text) + 1, &ip, port);
 	Comms.Service();
 }
-
-
-
 
 /***********************************************************************************************
  * ServerControlClass::Respond -- Send a control request response to a remote controller       *
@@ -493,13 +466,10 @@ void ServerControlClass::Respond(const char *text, unsigned long ip, unsigned sh
 			outmsg += outlen;
 		}
 
-
 		Comms.Write(&message, sizeof(message.Type) + outlen + 1, &ip, port);
 		Comms.Service();
 	}
 }
-
-
 
 /***********************************************************************************************
  * ServerControlClass::Set_Welcome_Message -- Set the new connection welcome message           *

@@ -20,7 +20,6 @@ namespace Umbra
 	class Model;
 }
 
-
 /**
 ** UmbraSupport
 ** This is a collection of support functions for Umbra, Hybrid's occlusion
@@ -55,7 +54,6 @@ protected:
 	bool								UmbraEnabled;
 
 };
-
 
 #endif //UMBRASUPPORT
 

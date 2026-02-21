@@ -8,10 +8,8 @@
 #include "resource.h"
 #include <Notify.h>
 
-
 class WheeledVehicleDefClass;
 class TrackedVehicleDefClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -48,7 +46,6 @@ private:
 	static bool		IsComplete;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	SplashOutroMenuDialogClass
@@ -77,7 +74,6 @@ private:
 	////////////////////////////////////////////////////////////////
 	float		Timer;
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -115,7 +111,6 @@ private:
 	static InternetMainDialogClass *	_TheInstance;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	StartSPGameDialogClass
@@ -135,7 +130,6 @@ public:
 
 	//void	On_TreeCtrl_Needs_Children (TreeCtrlClass *list_ctrl, int ctrl_id, TreeItemClass *parent_item);
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -165,7 +159,6 @@ private:
 	int						CurrSel;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MultiplayOptionsMainMenuClass
@@ -184,8 +177,6 @@ public:
 	void			On_Command (int ctrl_id, int mesage_id, DWORD param);
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	CampaignScoreTabClass
@@ -197,7 +188,6 @@ public:
 	CampaignScoreTabClass (void)	:
 		ChildDialogClass (IDD_SCORE_CAMPAIGN_TAB)	{}
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -211,8 +201,6 @@ public:
 		ChildDialogClass (IDD_SCORE_MISSIONS_TAB)	{}
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 //
 //	OptionsMenuClass
@@ -224,7 +212,6 @@ public:
 	OptionsMenuClass (void)	:
 		MenuDialogClass (IDD_MENU_OPTIONS)	{}
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -254,7 +241,6 @@ private:
 	static QuitVerificationDialogClass *	_TheInstance;
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPMainMenuClass
@@ -268,7 +254,6 @@ public:
 
 	void	On_Init_Dialog (void);
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -286,7 +271,6 @@ public:
 	void	On_Destroy (void);
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPInternetCSMenuClass
@@ -298,7 +282,6 @@ public:
 	MPInternetCSMenuClass (void)	:
 		MenuDialogClass (IDD_MULTIPLAY_WWOL_CS_SEL)	{}
 };
-
 
 /*
 ////////////////////////////////////////////////////////////////
@@ -315,7 +298,6 @@ public:
 	void	On_Command (int ctrl_id, int mesage_id, DWORD param);
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPServerConfigClass
@@ -330,7 +312,6 @@ public:
 	void	On_Init_Dialog (void);
 	void	On_Command (int ctrl_id, int mesage_id, DWORD param);
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -353,7 +334,6 @@ public:
 };
 */
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPJoinMenuClass
@@ -370,7 +350,6 @@ public:
 	void	Update_Game_List (void);
 	void	On_Frame_Update (void);
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -409,7 +388,6 @@ public:
 	void	On_Init_Dialog (void);
 	void	On_Command (int ctrl_id, int mesage_id, DWORD param);
 };
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -457,7 +435,5 @@ protected:
 	float								WheelRadius;
 
 };
-
-
 
 #endif //__DIALOG_TESTS_H

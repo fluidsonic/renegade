@@ -1,6 +1,5 @@
 #include "objectives.h"
 #include "gameobjref.h"
-#include "debug.h"
 #include "radar.h"
 #include "scriptablegameobj.h"
 #include "translatedb.h"
@@ -13,7 +12,6 @@
 #include "hud.h"
 #include "string_ids.h"
 
-
 /*
 **	Static member initialization
 */
@@ -22,7 +20,6 @@ ObjectivesViewerClass			ObjectiveManager::Viewer;
 bool									ObjectiveManager::DebugMode = false;
 bool									ObjectiveManager::HUDUpdate = true;
 int									ObjectiveManager::NumSpecifiedTertiaryObjectives;
-
 
 /*
 **
@@ -45,13 +42,11 @@ const Vector3 & Objective::Type_To_Base_Color( void )
 				color = HUDGlobalSettingsDef::Get_Instance()->Get_Tertiary_Objective_Color();
 				break;
 
-
 		}
 	}
 
 	return color;
 }
-
 
 /*
 **
@@ -206,7 +201,6 @@ bool	Objective::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, 	MICROCHUNKID_HUD_PRIORITY, HUDPriority );
 		WRITE_MICRO_CHUNK( csave, 	MICROCHUNKID_HUD_AGE, Age );
 	csave.End_Chunk();
-
 
 	if ( Object.Get_Ptr() != NULL ) {
 		csave.Begin_Chunk( CHUNKID_OBJECT );
@@ -394,7 +388,6 @@ void	ObjectiveManager::Add_Objective( int id, int type, int status, int short_de
 	objective->LongDescriptionID = long_description_id;
 	objective->DescriptionSoundFilename = description_sound_filename;
 
-
 #if 01
 	//
 	//	Update our EVA message window
@@ -507,8 +500,7 @@ void	ObjectiveManager::Change_Objective_Type( int id, int type )
 	if ( objective != NULL ) {
 		objective->Type = type;
 		objective->Update_Object_Blip();
-		//DebugManager::Display_Text( "Mission objective priority changed\n", objective->Type_To_Color () );		
-	} else {
+		//	} else {
 		Debug_Say(( "Objective not found to change type\n" ));
 	}
 

@@ -7,7 +7,6 @@
 #include "camera.h"
 #include "chunkio.h"
 
-
 /*************************************************************************************************
 **
 ** StealthEffectClass Implementation
@@ -23,7 +22,6 @@ static float STEALTH_DAMAGED_FRACTION		= 0.6f;		// fraction that is jumped to wh
 
 static Vector2 MAX_STEALTH_UV_RATE(2.75f,-3.0f);
 static Vector2 MIN_STEALTH_UV_RATE(0.5f,-0.5f);
-
 
 StealthEffectClass::StealthEffectClass(void) :
 	IsStealthEnabled(false),
@@ -224,7 +222,6 @@ enum
 	STEALTHEFFECT_VARIABLE_UVRATE,
 	STEALTHEFFECT_VARIABLE_FADEDISTANCE,
 };
-
 
 bool StealthEffectClass::Save(ChunkSaveClass & csave)
 {

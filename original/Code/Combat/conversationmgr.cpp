@@ -14,7 +14,6 @@
 #include "string_ids.h"
 #include "oratortypes.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Constants
 ////////////////////////////////////////////////////////////////
@@ -42,7 +41,6 @@ static const int		ACTIVE_CONVERSATION_START_ID	= 1000;
 static const int		LEVEL_CONVERSATION_START_ID	= 1;
 static const int		GLOBAL_CONVERSATION_START_ID	= 100000;
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -54,12 +52,10 @@ int										ConversationMgrClass::NextLevelConversationID	= LEVEL_CONVERSATION_
 ConversationMgrClass::CATEGORY	ConversationMgrClass::SaveCategoryID				= CATEGORY_GLOBAL;
 bool										ConversationMgrClass::DisplayEmotIcons				= false;
 
-
 ////////////////////////////////////////////////////////////////
 //	Singleton instance
 ////////////////////////////////////////////////////////////////
 ConversationMgrClass	_ConversationMgrSaveLoad;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -71,7 +67,6 @@ ConversationMgrClass::ConversationMgrClass (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ConversationMgrClass
@@ -82,7 +77,6 @@ ConversationMgrClass::~ConversationMgrClass (void)
 	Reset ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -109,7 +103,6 @@ ConversationMgrClass::Reset_Conversations (int category_index, bool reset_start_
 	ConversationList[category_index].Delete_All ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -142,7 +135,6 @@ ConversationMgrClass::Reset_All_Other_Conversations (ActiveConversationClass *ac
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Active_Conversations
@@ -168,7 +160,6 @@ ConversationMgrClass::Reset_Active_Conversations (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset
@@ -192,7 +183,6 @@ ConversationMgrClass::Reset (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Chunk_ID
@@ -203,7 +193,6 @@ ConversationMgrClass::Chunk_ID (void) const
 {
 	return CHUNKID_CONVERSATION_MGR;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -265,7 +254,6 @@ ConversationMgrClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Load_Conversations
@@ -304,7 +292,6 @@ ConversationMgrClass::Load_Conversations (ChunkLoadClass &cload, int category_id
 
 	return true;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -393,7 +380,6 @@ ConversationMgrClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -417,7 +403,6 @@ ConversationMgrClass::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -485,7 +470,6 @@ ConversationMgrClass::Build_Buddy_List
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Active_Conversation
@@ -515,7 +499,6 @@ ConversationMgrClass::Find_Active_Conversation (int id)
 
 	return conversation;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -556,7 +539,6 @@ ConversationMgrClass::Find_Conversation (const char *conversation_name)
 	return conversation;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Find_Conversation
@@ -596,7 +578,6 @@ ConversationMgrClass::Find_Conversation (int conversation_id)
 	return conversation;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Start_Conversation
@@ -627,7 +608,6 @@ ConversationMgrClass::Start_Conversation (PhysicalGameObj *orator, int conversat
 	//
 	return active_conversation;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -660,7 +640,6 @@ ConversationMgrClass::Start_Conversation (PhysicalGameObj *orator, const char *c
 	return active_conversation;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Start_Conversation
@@ -691,7 +670,6 @@ ConversationMgrClass::Start_Conversation (PhysicalGameObj *orator, ConversationC
 	//
 	return active_conversation;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -737,7 +715,6 @@ ConversationMgrClass::Create_New_Conversation
 	return active_conversation;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Start_Conversation
@@ -764,7 +741,6 @@ ConversationMgrClass::Start_Conversation (PhysicalGameObj *orator)
 	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -859,7 +835,6 @@ ConversationMgrClass::Test_Conversation
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Test_Orator
@@ -894,7 +869,6 @@ ConversationMgrClass::Test_Orator
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -972,7 +946,6 @@ ConversationMgrClass::Pick_Conversation
 	return conversation;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Is_Key_Conversation_Playing
@@ -1001,7 +974,6 @@ ConversationMgrClass::Is_Key_Conversation_Playing (void)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1069,7 +1041,6 @@ ConversationMgrClass::Think (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Conversation
@@ -1101,7 +1072,6 @@ ConversationMgrClass::Add_Conversation (ConversationClass *conversation)
 	ConversationList[conversation->Get_Category_ID ()].Add (conversation);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1136,7 +1106,6 @@ ConversationMgrClass::Create_New_Conversation (ConversationClass *conversation)
 	//	
 	return active_conversation;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

@@ -10,7 +10,6 @@
 
 #include <string.h>	// for memset
 
-
 //-----------------------------------------------------------------------------
 //cBitPacker::cBitPacker(UINT buffer_size) :
 cBitPacker::cBitPacker() :
@@ -167,15 +166,6 @@ void cBitPacker::Set_Bit_Write_Position(UINT position)
 	BitWritePosition = position;
 }
 
-
-
-
-
-
-
-
-
-
 /*
 //-----------------------------------------------------------------------------
 void cBitPacker::Increment_Bit_Position(int num_bits)
@@ -207,5 +197,4 @@ inline void cBitPacker::Advance_Bit_Position()
 }
 
 */
-
 

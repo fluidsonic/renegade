@@ -3,14 +3,12 @@
 #ifndef WIDGETUSER_H
 #define WIDGETUSER_H
 
-
 class Vector3;
 class Matrix3D;
 class AABoxClass;
 class OBBoxClass;
 class RenderInfoClass;
 class WidgetRenderOpClass;
-
 
 /**
 ** WidgetUserClass
@@ -58,8 +56,5 @@ protected:
 	*/
 
 };
-
-
-
 
 #endif

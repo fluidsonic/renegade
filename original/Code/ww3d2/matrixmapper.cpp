@@ -1,7 +1,6 @@
 #include "matrixmapper.h"
 #include "dx8wrapper.h"
 
-
 /***********************************************************************************************
  * MatrixMapperClass::MatrixMapperClass -- Constructor                                         *
  *                                                                                             *
@@ -62,7 +61,6 @@ void	MatrixMapperClass::Set_Texture_Transform(const Matrix4 & view_to_texture,fl
 
 	Update_View_To_Pixel_Transform(texsize);
 }
-
 
 /***********************************************************************************************
  * MatrixMapperClass::Update_View_To_Pixel_Transform -- recomputes ViewToPixel                 *
@@ -138,7 +136,6 @@ void MatrixMapperClass::Update_View_To_Pixel_Transform(float tex_size)
 
 }
 
-
 /***********************************************************************************************
  * MatrixMapperClass::Compute_Texture_Coordinate -- compute a single texture coord             *
  *                                                                                             *
@@ -212,6 +209,5 @@ void MatrixMapperClass::Apply(int uv_array_index)
 		DX8Wrapper::Set_DX8_Texture_Stage_State(uv_array_index,D3DTSS_TEXTURETRANSFORMFLAGS,D3DTTFF_COUNT2);
 		break;
 	}
-
 
 }

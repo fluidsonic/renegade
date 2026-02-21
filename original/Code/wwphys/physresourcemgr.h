@@ -8,7 +8,6 @@ class TextureClass;
 class VertexMaterialClass;
 class MaterialPassClass;
 
-
 /**
 ** PhysResourceMgrClass
 ** This class is just a collection of resources that I've ended up needed at one time or another
@@ -35,7 +34,6 @@ public:
 	static TextureClass *				Get_Grid_Texture(void);
 	static TextureClass *				Peek_Grid_Texture(void);
 };
-
 
 #endif
 

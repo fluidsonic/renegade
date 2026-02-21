@@ -3,7 +3,6 @@
 #include "texture.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ChildDialogClass
@@ -16,7 +15,6 @@ ChildDialogClass::ChildDialogClass (int res_id)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ChildDialogClass
@@ -26,7 +24,6 @@ ChildDialogClass::~ChildDialogClass (void)
 {	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -39,7 +36,6 @@ ChildDialogClass::On_Init_Dialog (void)
 	DialogBaseClass::On_Init_Dialog ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -56,7 +52,6 @@ ChildDialogClass::Render (void)
 	DialogBaseClass::Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

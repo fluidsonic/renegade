@@ -11,7 +11,6 @@
 ////////////////////////////////////////////////////////////////
 bool		NetworkObjectClass::IsServer		= false;
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	NetworkObjectClass
@@ -56,7 +55,6 @@ NetworkObjectClass::NetworkObjectClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~NetworkObjectClass
@@ -92,7 +90,6 @@ NetworkObjectClass::Set_Network_ID (int id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Object_Dirty_Bits
@@ -103,7 +100,6 @@ NetworkObjectClass::Get_Object_Dirty_Bits (int client_id)
 {
 	return ClientStatus[client_id];
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -116,7 +112,6 @@ NetworkObjectClass::Set_Object_Dirty_Bits (int client_id, BYTE bits)
 	ClientStatus[client_id] = bits;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Object_Dirty_Bit
@@ -127,7 +122,6 @@ NetworkObjectClass::Get_Object_Dirty_Bit (int client_id, DIRTY_BIT dirty_bit)
 {
 	return ((ClientStatus[client_id] & dirty_bit) == dirty_bit);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -150,7 +144,6 @@ NetworkObjectClass::Clear_Object_Dirty_Bits (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Object_Dirty_Bit
@@ -167,7 +160,6 @@ NetworkObjectClass::Set_Object_Dirty_Bit (int client_id, DIRTY_BIT dirty_bit, bo
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -198,7 +190,6 @@ NetworkObjectClass::Set_Object_Dirty_Bit (DIRTY_BIT dirty_bit, bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Is_Client_Dirty
@@ -209,7 +200,6 @@ NetworkObjectClass::Is_Client_Dirty (int client_id)
 {
 	return ClientStatus[client_id] != 0;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -224,7 +214,6 @@ NetworkObjectClass::Set_Delete_Pending (void)
 	return;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Reset_Client_Hint_Count
@@ -236,7 +225,6 @@ NetworkObjectClass::Reset_Client_Hint_Count(int client_id)
 
 	UpdateInfo[client_id].ClientHintCount = 0;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -251,7 +239,6 @@ NetworkObjectClass::Increment_Client_Hint_Count(int client_id)
 		UpdateInfo[client_id].ClientHintCount++;
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -269,7 +256,6 @@ NetworkObjectClass::Hint_To_All_Clients(void)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Client_Hint_Count
@@ -281,7 +267,6 @@ NetworkObjectClass::Get_Client_Hint_Count(int client_id)
 
 	return UpdateInfo[client_id].ClientHintCount;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -297,8 +282,6 @@ NetworkObjectClass::Belongs_To_Client (int client_id)
 
 	return (NetworkID >= id_min) && (NetworkID <= id_max);
 }
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -316,7 +299,6 @@ NetworkObjectClass::Get_Last_Update_Time(int client_id)
 	return(UpdateInfo[client_id].LastUpdateTime);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Update_Rate - Returns delay in ms between updates for this object to the given client
@@ -332,7 +314,6 @@ NetworkObjectClass::Get_Update_Rate(int client_id)
 	// Is this assert right? ST - 10/16/2001 2:44PM
 	return(UpdateInfo[client_id].UpdateRate);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -350,7 +331,6 @@ NetworkObjectClass::Set_Last_Update_Time(int client_id, unsigned long time)
 	UpdateInfo[client_id].LastUpdateTime = time;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Update_Rate - Sets the ms delay between updates for this client
@@ -367,27 +347,6 @@ NetworkObjectClass::Set_Update_Rate(int client_id, unsigned short rate)
 	UpdateInfo[client_id].UpdateRate = rate;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 ////////////////////////////////////////////////////////////////
 //
@@ -401,7 +360,6 @@ NetworkObjectClass::Clear_Object_Dirty_Bits (int client_id)
 	return ;
 }
 */
-
 
 //float		NetworkObjectClass::RandomFloat	= 0.0F;
 		//TSS2001d float perturbation = RandomFloat * 2 * distance - distance;
@@ -502,9 +460,6 @@ NetworkObjectClass::Set_Cached_Priority (float priority)
 	CachedPriority = priority;
 }
 
-
-
-
 /*
 ////////////////////////////////////////////////////////////////
 //
@@ -536,8 +491,6 @@ NetworkObjectClass::Get_Object_Distance (const Vector3 &client_pos)
 }
 */
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Reset_Last_Clientside_Update_Time -- Reset the time this client object last got an update for the server
@@ -554,9 +507,6 @@ void NetworkObjectClass::Reset_Last_Clientside_Update_Time(void)
 	ClientsideUpdateFrequencySampleCount = 0;
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Set_Last_Clientside_Update_Time -- Set the time this client object last got an update for the server
@@ -571,8 +521,6 @@ void NetworkObjectClass::Set_Last_Clientside_Update_Time (ULONG time)
 	LastClientsideUpdateTime = time;
 	ClientsideUpdateFrequencySampleCount++;
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -600,5 +548,4 @@ int NetworkObjectClass::Get_Clientside_Update_Frequency(void)
 
 	return(ClientsideUpdateRate);
 }
-
 

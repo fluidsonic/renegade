@@ -6,8 +6,6 @@
 #include "streamer.h"
 #include <time.h>
 
-
-
 // Print an information message
 #define INFMSG(X)\
 {\
@@ -40,7 +38,6 @@
     (*(MsgManager::errorStream())) << "ERR " << timebuf << " [" << \
         __FILE__ <<  " " << __LINE__ << "] " << X << endl; \
 }
-
 
 // Just get a stream to the information device, no extra junk
 #define INFSTREAM(X)\
@@ -89,7 +86,6 @@
        "]: " << ##V << " = " << V << endl; \
 }
 
-
 #define DBGMSG(X)\
 {\
   if (MsgManager::debugStream()) \
@@ -113,7 +109,6 @@
 }
 
 #endif  // DEBUG
-
 
 class MsgManager
 {

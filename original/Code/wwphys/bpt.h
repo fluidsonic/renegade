@@ -12,14 +12,12 @@
 #include "physcoltest.h"
 #include "rendobj.h"
 
-
 class srScene;
 class BptImpClass;
 class MeshClass;
 class CameraClass;
 class ChunkLoadClass;
 class ChunkSaveClass;
-
 
 /*
 ** BptClass - Mesh with an auxiliary binary partition tree.

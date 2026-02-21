@@ -41,7 +41,6 @@ const	ULONG		cNetUtil::CLIENT_CONNECTION_LOSS_TIMEOUT							= 15000;		// Millise
 const	ULONG		cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT							= 15000;		// Milliseconds til server gives up on client
 const	ULONG		cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE	= 45000;		// Milliseconds extra allowed til server gives up on loading client.
 
-
 //int cNetUtil::DefaultMultiSends							= INVALID_VALUE;
 //int cNetUtil::DefaultMaxResends							= INVALID_VALUE;
 //int cNetUtil::DefaultKeepaliveTimeoutMs				= INVALID_VALUE;
@@ -69,7 +68,6 @@ char cNetUtil::WorkingAddressBuffer[]					= "";
 void cNetUtil::Wsa_Error(LPCSTR sFile, unsigned uLine)
 {
 }
-
 
 //-----------------------------------------------------------------------------
 //
@@ -147,8 +145,6 @@ const char * cNetUtil::Winsock_Error_Text(int error_code)
 
 	return(error_msg);
 }
-
-
 
 /*
 int g_c_wouldblock = 0;
@@ -244,7 +240,6 @@ bool cNetUtil::Is_Same_Address(LPSOCKADDR_IN p_address1, const SOCKADDR_IN* p_ad
 	//
 	// C disallows comparison of structs...
 	//
-
 
    return
       p_address1->sin_addr.s_addr	== p_address2->sin_addr.s_addr &&
@@ -402,22 +397,6 @@ void cNetUtil::Set_Socket_Buffer_Sizes(SOCKET sock, int new_size)
    //
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 //-------------------------------------------------------------------------------
 void cNetUtil::Onetime_Init()
@@ -427,7 +406,6 @@ void cNetUtil::Onetime_Init()
 	if (p_ini_file != NULL) {
 
 		INIClass netparams_ini(*p_ini_file);
-
 
 		const LPCSTR SECTION_NAME = "Settings";
 

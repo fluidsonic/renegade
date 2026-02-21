@@ -20,10 +20,8 @@
 #include "dx8vertexbuffer.h"
 #include "dx8indexbuffer.h"
 
-
 const float DEBUG_RENDER_DIST2 = (50.0f*50.0f);
 const float SUN_CHECK_DISTANCE = 50.0f;	//If a ray this long doesn't intersect, you can see the sun...
-
 
 /*
 ** create_render_obj_from_filename
@@ -41,7 +39,6 @@ RenderObjClass * create_render_obj_from_filename( const char * filename )
 	}
 	return model;
 }
-
 
 /***********************************************************************************************
 **
@@ -66,9 +63,6 @@ enum
 	PHYS_VARIABLE_DEFID,
 	PHYS_VARIABLE_INSTANCEID,
 };
-
-
-
 
 PhysClass::PhysClass(void) :
 	Flags(DEFAULT_FLAGS),
@@ -414,7 +408,6 @@ void PhysClass::Pop_Effects(RenderInfoClass & rinfo)
 	}
 }
 
-
 bool PhysClass::Save (ChunkSaveClass &csave)
 {
 	CullableClass * cullable_ptr = (CullableClass *)this;
@@ -559,12 +552,6 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
-
-
-
-
-
 bool PhysClass::Is_Debug_Display_Enabled(void) const					
 { 
 	PhysicsSceneClass * the_scene = PhysicsSceneClass::Get_Instance();
@@ -643,7 +630,6 @@ enum
 	PHYSDEF_VARIABLE_ISPRELIT,
 
 };
-
 
 PhysDefClass::PhysDefClass(void) : 
 	ModelName ("NULL"),

@@ -7,7 +7,6 @@
 #include "pscene.h"
 #include "playermanager.h"
 #include "ccamera.h"
-#include "debug.h"
 #include "level.h"
 #include "weaponmanager.h"
 #include "cnetwork.h"
@@ -111,7 +110,6 @@
 #include "changeteamevent.h"
 #include "gamesideservercontrol.h"
 #include "except.h"
-#include "slavemaster.h"
 #include "donateevent.h"
 #include "consolemode.h"
 #include "dlgcncpurchasemainmenu.h"
@@ -119,8 +117,6 @@
 #include "specialbuilds.h"
 #include "lightsolve.h"
 #include "lightsolvecontext.h"
-
-
 
 void	ConsoleFunctionClass::Print( const char *format, ... )
 {
@@ -142,7 +138,6 @@ void	ConsoleFunctionClass::Print( const char *format, ... )
 //
 //----------------------------------------------------------------------------
 
-
 class ScreenUVBiasConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "screen_uv_bias"; }
@@ -153,7 +148,6 @@ public:
       Print( "Screen UV Bias Switched\n" );
 	}
 };
-
 
 class SetBandwidthBudgetOutConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -196,8 +190,6 @@ public:
 	}
 };
 
-
-
 class GameOverConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "gameover"; }
@@ -225,7 +217,6 @@ public:
 		}
 	}
 };
-
 
 class ToggleSortingConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -294,25 +285,18 @@ public:
 		char str[128];
 		sprintf(str,"ERROR (%s)\n", input );
 		if (stricmp(input,"screen") == 0) {
-			DebugManager::Toggle_Device_Enabled( DebugManager::DEBUG_DEVICE_SCREEN );
-			sprintf(str, "Screen Debug %s\n", DebugManager::Is_Device_Enabled( DebugManager::DEBUG_DEVICE_SCREEN ) ? "Enabled" : "Disabled" );
+			sprintf(str, "Screen Debug %s\n", false ? "Enabled" : "Disabled" );
 		} else if (stricmp(input,"mono") == 0) {
-			DebugManager::Toggle_Device_Enabled( DebugManager::DEBUG_DEVICE_MONO );
-			sprintf(str, "Mono Debug %s\n", DebugManager::Is_Device_Enabled( DebugManager::DEBUG_DEVICE_MONO ) ? "Enabled" : "Disabled" );
+			sprintf(str, "Mono Debug %s\n", false ? "Enabled" : "Disabled" );
 		} else if (stricmp(input,"dbwin32") == 0) {
-			DebugManager::Toggle_Device_Enabled( DebugManager::DEBUG_DEVICE_DBWIN32 );
-			sprintf(str, "DBWin32 Debug %s\n", DebugManager::Is_Device_Enabled( DebugManager::DEBUG_DEVICE_DBWIN32 ) ? "Enabled" : "Disabled" );
+			sprintf(str, "DBWin32 Debug %s\n", false ? "Enabled" : "Disabled" );
 		} else if (stricmp(input,"log") == 0) {
-			DebugManager::Toggle_Device_Enabled( DebugManager::DEBUG_DEVICE_LOG );
-			sprintf(str, "Log File Debug %s\n", DebugManager::Is_Device_Enabled( DebugManager::DEBUG_DEVICE_LOG ) ? "Enabled" : "Disabled" );
+			sprintf(str, "Log File Debug %s\n", false ? "Enabled" : "Disabled" );
 		} else if (stricmp(input,"windows") == 0) {
-			DebugManager::Toggle_Device_Enabled( DebugManager::DEBUG_DEVICE_WINDOWS );
-			sprintf(str, "Windows Debug %s\n", DebugManager::Is_Device_Enabled( DebugManager::DEBUG_DEVICE_WINDOWS ) ? "Enabled" : "Disabled" );
+			sprintf(str, "Windows Debug %s\n", false ? "Enabled" : "Disabled" );
 		} else if (stricmp(input,"on") == 0) {
-			DebugManager::Enable_Device( (DebugManager::DebugDevice)-1 );
 			sprintf(str, "All Debug Devices Enabled\n" );
 		} else if (stricmp(input,"off") == 0) {
-			DebugManager::Disable_Device( (DebugManager::DebugDevice)-1 );
 			sprintf(str, "All Debug Devices Disabled\n" );
 		}
 		Print(str);
@@ -338,9 +322,6 @@ public:
 	}
 };
 
-
-
-
 class MessageConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "message"; }
@@ -356,7 +337,6 @@ public:
 		}
 	}
 };
-
 
 #ifndef FREEDEDICATEDSERVER
 class FPSConsoleFunctionClass : public ConsoleFunctionClass {
@@ -465,7 +445,6 @@ public:
 	}
 };
 
-
 class ToggleSurfaceEffectsConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "toggle_surface_effects"; }
@@ -475,7 +454,6 @@ public:
       Print( SurfaceEffectsManager::Are_Effects_Enabled() ? "Surface Effects Enabled\n" : "Surface Effects Disabled\n" );
 	}
 };
-
 
 //----------------------------------------------------------------------------
 //
@@ -492,7 +470,6 @@ public:
 		Toggle_Display_Findpaths();
 	}
 };
-
 
 class DonateConsoleFunctionClass : public ConsoleFunctionClass {
 	StringClass HelpText;
@@ -527,7 +504,6 @@ public:
 		}
 	}
 };
-
 
 class DoStuffConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -581,7 +557,6 @@ public:
 	}
 };
 
-
 //
 // REQUIRED for shipping dedicated server.
 //
@@ -589,23 +564,13 @@ class QuitConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "quit"; }
 	virtual	const char * Get_Help( void )	{
-		if (!SlaveMaster.Am_I_Slave()) {
-			return ("QUIT - End game and quit to desktop (dedicated server only).\n");
-		} else {
-			return ("QUIT - End game and restart slave server.\nTo exit without restarting use 'QUIT_SLAVE' on master server\n");
-		}
+		return ("QUIT - End game and quit to desktop (dedicated server only).\n");
 	}
 	virtual	void Activate( const char * input ) {
 
 		if (!IS_MISSION) {
 			if (cNetwork::I_Am_Server()) {
 				if (The_Game() && The_Game()->IsDedicated.Is_True()) {
-
-					if (!SlaveMaster.Am_I_Slave()) {
-         				Print("Terminating slaves on demand...\n");
-						SlaveMaster.Shutdown_Slaves();
-					}
-
          			Print("Terminating game on demand...\n");
 					Set_Exit_On_Exception(true);
          			cGameData::Set_Manual_Exit(true);
@@ -627,42 +592,6 @@ public:
 	}
 };
 
-
-
-
-//
-// REQUIRED for shipping dedicated server.
-//
-class QuitSlaveConsoleFunctionClass : public ConsoleFunctionClass {
-public:
-	virtual	const char * Get_Name( void )	{ return "quit_slave"; }
-	virtual	const char * Get_Help( void )	{ return "QUIT_SLAVE slavename - Shutdown a slave server (dedicated master server only)."; }
-	virtual	void Activate( const char * input ) {
-
-		if (!IS_MISSION) {
-			if (cNetwork::I_Am_Server()) {
-				if (The_Game() && The_Game()->IsDedicated.Is_True()) {
-
-					if (!SlaveMaster.Am_I_Slave()) {
-         			Print("Terminating slave %s on demand...\n", input);
-						if (SlaveMaster.Shutdown_Slave((char*)input)) {
-         				Print("Slave %s terminated\n", input);
-						} else {
-         				Print("Slave %s not found\n", input);
-						}
-						return;
-					}
-				}
-			}
-		}
-      Print("QUIT_SLAVE is for dedicated master server only.\n");
-	}
-};
-
-
-
-
-
 class NetUpdateRateConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "net_update_rate"; }
@@ -678,9 +607,6 @@ public:
 		}
 	}
 };
-
-
-
 
 class GameInfoConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -730,7 +656,6 @@ public:
 					unsigned long minutes = (time / 60) % 60;
 					unsigned long hours = (time / (60*60));
 
-
 					if (The_Game()->Is_Gameplay_Permitted()) {
 						ConsoleBox.Print("Gameplay in progress\n");
 					} else {
@@ -765,13 +690,6 @@ public:
 		}
 	}
 };
-
-
-
-
-
-
-
 
 class PlayerInfoConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -872,7 +790,6 @@ public:
 	}
 };
 
-
 class AllowConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "allow"; }
@@ -883,7 +800,6 @@ public:
 	}
 };
 
-
 class PageConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "page"; }
@@ -893,10 +809,6 @@ public:
 		(void)input;
 	}
 };
-
-
-
-
 
 //
 // REQUIRED for shipping dedicated server.
@@ -910,12 +822,6 @@ public:
 		if (!IS_MISSION) {
 			if (cNetwork::I_Am_Server()) {
 				if (The_Game() && The_Game()->IsDedicated.Is_True()) {
-
-					if (SlaveMaster.Am_I_Slave() == false) {
-         				Print("Terminating slaves on demand...\n");
-						SlaveMaster.Shutdown_Slaves();
-					}
-
          			Print("Restarting game on demand...\n");
 					Set_Exit_On_Exception(true);
          			cGameData::Set_Manual_Exit(true);
@@ -928,9 +834,6 @@ public:
       }
 	}
 };
-
-
-
 
 class LogMeshStatsConsoleFunctionClass : public ConsoleFunctionClass
 {
@@ -963,7 +866,6 @@ public:
 	}
 };
 
-
 //
 // TEMP DEBUG CODE
 //
@@ -976,7 +878,6 @@ public:
       Print(is_new_tcado ? "Using new TCADO.\n" : "Using old TCADO.\n" );
 	}
 };
-
 
 class TimeOfDayConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1001,7 +902,6 @@ public:
 		}
 	}
 };
-
 
 class CloudsConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1034,7 +934,6 @@ public:
 	}
 };
 
-
 class CopyLogsConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name (void)	{return ("copy_logs");}
@@ -1063,7 +962,6 @@ public:
 		}
 	}
 };
-
 
 class SkyTintConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1095,7 +993,6 @@ public:
 		if (success) Print (feedbackstring);
 	}
 };
-
 
 class InfoDebugToggle : public ConsoleFunctionClass {
 public:
@@ -1210,7 +1107,6 @@ public:
 	}
 };
 
-
 class LightningConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name (void)	{return ("lightning");}
@@ -1245,7 +1141,6 @@ public:
 		if (success) Print (feedbackstring);
 	}
 };
-
 
 class WarBlitzConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1282,7 +1177,6 @@ public:
 	}
 };
 
-
 class WarpConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name (void)	{return ("warp");}
@@ -1301,7 +1195,6 @@ public:
 		}
 	}
 };
-
 
 class WhoIsConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1326,7 +1219,6 @@ public:
 		}
 	}
 };
-
 
 class WindConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1359,7 +1251,6 @@ public:
 	}
 };
 
-
 class RainConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name (void)	{return ("rain");}
@@ -1390,7 +1281,6 @@ public:
 		if (success) Print (feedbackstring);
 	}
 };
-
 
 class SnowConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1423,7 +1313,6 @@ public:
 	}
 };
 
-
 class AppPacketTypesResetConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "app_packet_types_reset"; }
@@ -1433,7 +1322,6 @@ public:
 		cAppPacketStats::Reset();
 	}
 };
-
 
 class AshConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1479,8 +1367,6 @@ public:
 			GameObjManager::Is_Cinematic_Freeze_Active() ? "ON" : "OFF" );
 	}
 };
-
-
 
 class EditVehicleConsoleFunctionClass : public ConsoleFunctionClass {
 public:
@@ -1535,7 +1421,6 @@ public:
 	}
 };
 
-
 /*
 **
 */
@@ -1564,7 +1449,6 @@ public:
 	}
 };
 
-
 //------------------------------------------------------------------------------------
 /*
 ** Console Function Manager
@@ -1573,7 +1457,6 @@ DynamicVectorClass<ConsoleFunctionClass *>	ConsoleFunctionManager::FunctionList;
 
 void	ConsoleFunctionManager::Init( void )
 {
-
 
    //
    // SHIPPING CONSOLE FUNCTIONS ONLY
@@ -1589,7 +1472,6 @@ void	ConsoleFunctionManager::Init( void )
    FunctionList.Add( new MessageConsoleFunctionClass() );
 	FunctionList.Add( new PlayerInfoConsoleFunctionClass() );
 	FunctionList.Add( new QuitConsoleFunctionClass() );
-	FunctionList.Add( new QuitSlaveConsoleFunctionClass() );
 	FunctionList.Add( new RestartConsoleFunctionClass() );
 	FunctionList.Add( new ScreenUVBiasConsoleFunctionClass() );
 	FunctionList.Add( new SetBandwidthBudgetOutConsoleFunctionClass() );
@@ -1604,7 +1486,6 @@ void	ConsoleFunctionManager::Init( void )
 #ifdef FREEDEDICATEDSERVER
 	FunctionList.Add( new PageConsoleFunctionClass() );
 #endif //FREEDEDICATEDSERVER
-
 
 	SystemSettings::Add_Console_Functions( FunctionList );
 
@@ -1714,7 +1595,6 @@ void ConsoleFunctionManager::Verbose_Help_File(void)
 			strcat(buffer, "\n");
 			fwrite(buffer, 1, strlen(buffer), file);
 		}
-
 
 		fclose(file);
 	}

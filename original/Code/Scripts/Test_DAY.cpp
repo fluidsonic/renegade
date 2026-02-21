@@ -1,6 +1,5 @@
 #include "toolkit.h"
 
-
 DECLARE_SCRIPT(M00_Screenshot_Poser_DAY, "Anim_Name:string" )
 {
 	
@@ -31,7 +30,6 @@ DECLARE_SCRIPT(M00_Screenshot_Poser_DAY, "Anim_Name:string" )
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (DAY_TestScriptOne, "")
 {
@@ -159,7 +157,6 @@ DECLARE_SCRIPT (DAY_VTOL_CircleAttack, "")
 
 };
 
-
 DECLARE_SCRIPT (M00_GrantPowerup_Created, "WeaponDef:string")
 {
 
@@ -170,7 +167,6 @@ DECLARE_SCRIPT (M00_GrantPowerup_Created, "WeaponDef:string")
 	}
 
 };
-
 
 DECLARE_SCRIPT (M00_VisceroidInnate_DAY, "")
 {
@@ -187,7 +183,6 @@ DECLARE_SCRIPT (M00_VisceroidInnate_DAY, "")
 
 };
 
-
 // Generic script to replace destroyed models (Turrets, etc)
 
 DECLARE_SCRIPT (M00_DestroyedStateObject_DAY, "OriginalModelFacing:float,DestroyedModelPreset:string")
@@ -202,7 +197,6 @@ DECLARE_SCRIPT (M00_DestroyedStateObject_DAY, "OriginalModelFacing:float,Destroy
 	}
 
 };
-
 
 // For playing ambient sounds on characters - DAY
 DECLARE_SCRIPT(M00_Play_Sound_Object_Bone_DAY, "Sound_Preset:string, Frequency_Min=-1.0:float, Frequency_Max:float")
@@ -247,7 +241,6 @@ DECLARE_SCRIPT(M00_Play_Sound_Object_Bone_DAY, "Sound_Preset:string, Frequency_M
 	}
 };
 
-
 DECLARE_SCRIPT (M00_PlayAnimation_DestroyObject_DAY, "AnimationName:string")
 {
 
@@ -263,7 +256,6 @@ DECLARE_SCRIPT (M00_PlayAnimation_DestroyObject_DAY, "AnimationName:string")
 	}
 
 };
-
 
 DECLARE_SCRIPT (M00_Disable_Loiter_DAY, "")
 {

@@ -15,7 +15,6 @@
 // Class statics
 //
 
-
 //-----------------------------------------------------------------------------
 void
 cClientHintManager::Think
@@ -34,7 +33,6 @@ cClientHintManager::Think
 		//
 		return;
 	}
-
 
    SoldierGameObj * p_my_soldier = GameObjManager::Find_Soldier_Of_Client_ID(cNetwork::Get_My_Id());
 
@@ -142,7 +140,6 @@ cClientHintManager::Think
 	//
 	qsort(object_list, num_objects, sizeof(unsigned long), (int (__cdecl *)(const void *,const void *)) &Priority_Compare);
 
-
 	//
 	// Look for an object that has a higher priority than it's neighbor but is getting updated much less frequently
 	//
@@ -176,7 +173,6 @@ cClientHintManager::Think
 		}
 	}
 
-
 	//
 	// Calculate the average delay for this set of soldiers and vehicles
 	//
@@ -205,15 +201,6 @@ cClientHintManager::Think
 		//
 	}
 }
-
-
-
-
-
-
-
-
-
 
 //
 // Qsort compare function for array of object pointers.

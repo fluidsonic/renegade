@@ -24,7 +24,6 @@ enum
 	STATE_MAX
 };
 
-
 /*
 ** DoorPhysDefClass
 */
@@ -46,7 +45,6 @@ public:
 	const OBBoxClass &						Get_Trigger_Zone1 (void) const { return TriggerZone1; }
 	const OBBoxClass &						Get_Trigger_Zone2 (void) const { return TriggerZone2; }
 
-
 	bool											Is_Vehicle_Door (void) const	{ return DoorOpensForVehicles; }
 
 protected:
@@ -63,7 +61,6 @@ protected:
 
 	friend	class								DoorPhysClass;
 };
-
 
 /*
 ** DoorPhysClass

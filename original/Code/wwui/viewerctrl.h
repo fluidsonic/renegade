@@ -7,7 +7,6 @@
 #include "render2d.h"
 #include "aabox.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
@@ -15,7 +14,6 @@ class SimpleSceneClass;
 class CameraClass;
 class RenderObjClass;
 class LightClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -83,7 +81,6 @@ protected:
 	void				Get_Visible_Bounding_Box (AABoxClass *box, RenderObjClass *render_obj, bool &is_first);
 	void				Calculate_Camera_Position (void);
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
 	////////////////////////////////////////////////////////////////
@@ -102,6 +99,5 @@ protected:
 	InterfaceModeEnum		InterfaceMode;
 	Vector3					LastMousePosition;
 };
-
 
 #endif //__VIEWER_CTRL_H

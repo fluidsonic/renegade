@@ -35,12 +35,10 @@ class BasicTimerClass {
 		int Started;	// Time started.
 };
 
-
 template<class T>
 inline BasicTimerClass<T>::BasicTimerClass(NoInitClass const & )
 {
 };
-
 
 /***********************************************************************************************
  * BasicTimerClass<T>::BasicTimerClass -- Constructor for basic timer class.                   *
@@ -66,7 +64,6 @@ inline BasicTimerClass<T>::BasicTimerClass(int set) :
 {
 }
 
-
 /***********************************************************************************************
  * BasicTimerClass<T>::~BasicTimerClass -- Destructor for basic timer object.                  *
  *                                                                                             *
@@ -86,13 +83,11 @@ inline BasicTimerClass<T>::~BasicTimerClass(void)
 {
 }
 
-
 //template<class T>
 //inline unsigned long BasicTimerClass<T>::Value(void) const
 //{
 //	return(Timer()-Started);
 //}
-
 
 /***********************************************************************************************
  * BasicTimerClass<T>::operator long -- Conversion to long operator.                           *
@@ -116,7 +111,6 @@ inline BasicTimerClass<T>::operator int(void) const
 	return(Timer()-Started);
 }
 
-
 /***********************************************************************************************
  * BasicTimerClass<T>::operator () -- Function operator for timer object.                      *
  *                                                                                             *
@@ -138,7 +132,6 @@ inline int BasicTimerClass<T>::operator () (void) const
 {
 	return(Timer()-Started);
 }
-
 
 /*
 **	This timer class functions similarly to the basic timer class. In addition to the
@@ -182,13 +175,11 @@ class TTimerClass : public BasicTimerClass<T> {
 #endif
 };
 
-
 template<class T>
 inline TTimerClass<T>::TTimerClass(NoInitClass const & x) :
 	BasicTimerClass<T>(x)
 {
 }
-
 
 /***********************************************************************************************
  * TTimerClass<T>::TTimerClass -- Constructor for timer class object.                          *
@@ -212,7 +203,6 @@ inline TTimerClass<T>::TTimerClass(int set) :
 	Accumulated(0)
 {
 }
-
 
 /***********************************************************************************************
  * TTimerClass<T>::Value -- Returns with the current value of the timer.                       *
@@ -239,7 +229,6 @@ inline int TTimerClass<T>::Value(void) const
 	}
 	return(value);
 }
-
 
 /***********************************************************************************************
  * TTimerClass<T>::operator long -- Conversion operator for timer object.                      *
@@ -268,7 +257,6 @@ inline TTimerClass<T>::operator int(void) const
 	return(value);
 }
 
-
 /***********************************************************************************************
  * TTimerClass<T>::operator () -- Function operator for timer object.                          *
  *                                                                                             *
@@ -296,7 +284,6 @@ inline int TTimerClass<T>::operator () (void) const
 	return(value);
 }
 
-
 /***********************************************************************************************
  * TTimerClass<T>::Stop -- Stops the current timer from incrementing.                          *
  *                                                                                             *
@@ -322,7 +309,6 @@ void TTimerClass<T>::Stop(void)
 	}
 }
 
-
 /***********************************************************************************************
  * TTimerClass<T>::Start -- Starts (resumes) a stopped timer.                                  *
  *                                                                                             *
@@ -345,7 +331,6 @@ void TTimerClass<T>::Start(void)
 	}
 }
 
-
 /***********************************************************************************************
  * TTimerClass<T>::Is_Active -- Checks to see if the timer is counting.                        *
  *                                                                                             *
@@ -367,7 +352,6 @@ inline bool TTimerClass<T>::Is_Active(void) const
 {
 	return(Started != -1);
 }
-
 
 /*
 **	This timer counts down from the specified (or constructed) value down towards zero.
@@ -412,13 +396,11 @@ class CDTimerClass : public BasicTimerClass<T> {
 #endif
 };
 
-
 template<class T>
 inline CDTimerClass<T>::CDTimerClass(NoInitClass const & x) :
 	BasicTimerClass<T>(x)
 {
 }
-
 
 /***********************************************************************************************
  * CDTimerClass<T>::CDTimerClass -- Constructor for count down timer.                          *
@@ -443,7 +425,6 @@ inline CDTimerClass<T>::CDTimerClass(int set) :
 {
 }
 
-
 /***********************************************************************************************
  * CDTimerClass<T>::~CDTimerClass -- Destructor for the count down timer object.               *
  *                                                                                             *
@@ -462,7 +443,6 @@ template<class T>
 inline CDTimerClass<T>::~CDTimerClass(void)
 {
 }
-
 
 /***********************************************************************************************
  * CDTimerClass<T>::Value -- Fetches the current value of the countdown timer.                 *
@@ -495,7 +475,6 @@ inline int CDTimerClass<T>::Value(void) const
 	return(remain);
 }
 
-
 /***********************************************************************************************
  * CDTimerClass<T>::operator long -- Conversion to long operator function.                     *
  *                                                                                             *
@@ -526,7 +505,6 @@ inline CDTimerClass<T>::operator int(void) const
 	}
 	return(remain);
 }
-
 
 /***********************************************************************************************
  * CDTimerClass<T>::operator () -- Function operator for the count down timer.                 *
@@ -559,7 +537,6 @@ inline int CDTimerClass<T>::operator () (void) const
 	return(remain);
 }
 
-
 /***********************************************************************************************
  * CDTimerClass<T>::Stop -- Stops (pauses) the count down timer.                               *
  *                                                                                             *
@@ -585,7 +562,6 @@ void CDTimerClass<T>::Stop(void)
 	}
 }
 
-
 /***********************************************************************************************
  * CDTimerClass<T>::Start -- Starts (resumes) the count down timer.                            *
  *                                                                                             *
@@ -609,7 +585,6 @@ void CDTimerClass<T>::Start(void)
 	}
 }
 
-
 /***********************************************************************************************
  * CDTimerClass<T>::Is_Active -- Checks to see if the timer object is active.                  *
  *                                                                                             *
@@ -631,6 +606,5 @@ inline bool CDTimerClass<T>::Is_Active(void) const
 {
 	return(Started != -1);
 }
-
 
 #endif

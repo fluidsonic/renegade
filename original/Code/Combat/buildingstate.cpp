@@ -48,9 +48,6 @@ static const char * _StateNames[] =
 	"Building State: Destroyed, Power OFF",
 };
 
-
-
-
 int BuildingStateClass::Get_Health_State(int building_state)
 {
 	int state = building_state;
@@ -105,9 +102,5 @@ const char * BuildingStateClass::Get_State_Name(int state)
 
 	return _StateNames[state];
 }
-
-
-
-
 
  

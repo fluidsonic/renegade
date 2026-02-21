@@ -7,7 +7,6 @@
 #include "damage.h"
 #include "wwpacket.h"
 #include "assets.h"
-#include "debug.h"
 #include "scripts.h"
 #include "pscene.h"
 #include "physcoltest.h"
@@ -32,9 +31,7 @@
 #include "stealtheffect.h"
 #include "hud.h"
 
-
 const float STEALTH_FIRING_TIME = 5.0f;  // amount of time an object stays un-stealthed after firing
-
 
 /*
 ** SmartGameObjDef
@@ -116,7 +113,6 @@ bool	SmartGameObjDef::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 float		SmartGameObj::GlobalSightRangeScale = 1.0f;
 
 /*
@@ -140,7 +136,6 @@ SmartGameObj::SmartGameObj( void ) :
 
 	Listener->Register_Callback( AudioCallbackClass::EVENT_LOGICAL_HEARD, this );
 }
-
 
 SmartGameObj::~SmartGameObj( void )
 {
@@ -213,7 +208,6 @@ const SmartGameObjDef & SmartGameObj::Get_Definition( void ) const
 {
 	return (const SmartGameObjDef &)BaseGameObj::Get_Definition();
 }
-
 
 /*
 ** SmartGameObj Save and Load
@@ -378,7 +372,6 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-
 void SmartGameObj::On_Post_Load(void)
 {
 	ArmedGameObj::On_Post_Load();
@@ -403,7 +396,6 @@ void SmartGameObj::Set_Player_Data( PlayerDataClass * player_data )
 		PlayerData->Set_GameObj( this );
 	}
 }
-
 
 //-----------------------------------------------------------------------------
 void SmartGameObj::Import_Frequent(BitStreamClass & packet)
@@ -435,7 +427,6 @@ void SmartGameObj::Import_Frequent(BitStreamClass & packet)
 
 	return ;
 }
-
 
 //-----------------------------------------------------------------------------
 void SmartGameObj::Export_Frequent(BitStreamClass & packet)
@@ -740,7 +731,6 @@ void	SmartGameObj::Post_Think( void )
 {
 	ArmedGameObj::Post_Think();
 
-
 	if ( Is_Delete_Pending() ) {				// don't update if destroying... (so we don't create a new laser!)
 		return;
 	}
@@ -748,7 +738,6 @@ void	SmartGameObj::Post_Think( void )
 	// Reset the one time booleans
 	Control.Clear_One_Time_Boolean();
 }
-
 
 void	SmartGameObj::Apply_Damage(const OffenseObjectClass & damager, float scale, int alternate_skin)
 {
@@ -834,7 +823,6 @@ void	SmartGameObj::On_Logical_Heard (LogicalListenerClass *listener, LogicalSoun
 	}
 }
 
-
 void SmartGameObj::Register_Listener(void)
 {
 	if (Listener != NULL) {
@@ -885,7 +873,6 @@ void	SmartGameObj::End_Hibernation( void )
 	return ;
 }
 
-
 //------------------------------------------------------------------------------------
 void	SmartGameObj::Get_Information( StringClass & string )
 {
@@ -903,7 +890,6 @@ void	SmartGameObj::Get_Information( StringClass & string )
 	}
 }
 
-
 /*
 **
 */
@@ -918,7 +904,6 @@ void	SmartGameObj::Export_Creation( BitStreamClass &packet )
 	packet.Add( control_owner );
 	return ;
 }
-
 
 /*
 **
@@ -945,7 +930,6 @@ void	SmartGameObj::Import_Creation( BitStreamClass &packet )
 
 	return ;
 }
-
 
 void SmartGameObj::Enable_Stealth(bool onoff)
 {

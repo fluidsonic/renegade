@@ -22,7 +22,6 @@ struct HmdlNodeDefStruct
 	int	PivotID;
 };
 
-
 /*
 **	HModelDefClass
 **

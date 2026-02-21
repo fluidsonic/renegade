@@ -1,5 +1,4 @@
 #include "c4.h"
-#include "debug.h"
 #include "phys.h"
 #include "combat.h"
 #include "explosion.h"

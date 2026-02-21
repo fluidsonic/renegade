@@ -2,11 +2,9 @@
 #ifndef __PATHMGR_H
 #define __PATHMGR_H
 
-
 #include "vector.h"
 #include "vector3.h"
 #include "bittype.h"
-
 
 /////////////////////////////////////////////////////////////////////////
 // Forward declarations
@@ -14,7 +12,6 @@
 class PathSolveClass;
 class ChunkSaveClass;
 class ChunkLoadClass;
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -70,6 +67,5 @@ private:
 	static PathSolveClass *								ActivePath;
 	static __int64											TicksPerMilliSec;
 };
-
 
 #endif //__PATHMGR_H

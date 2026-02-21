@@ -60,8 +60,5 @@ private:
 
 };
 
-
 #endif
-
-
 

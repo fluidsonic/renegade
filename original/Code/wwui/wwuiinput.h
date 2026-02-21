@@ -72,5 +72,4 @@ public:
 		IME::IMEManager* mIMEManager;
 };
 
-
 #endif //__WWUIINPUT_H

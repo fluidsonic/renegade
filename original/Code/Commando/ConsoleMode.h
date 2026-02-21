@@ -38,20 +38,9 @@ class ConsoleModeClass
 		static void Static_Print_Maybe(char const * string, ...);
 		void Add_Message(WideStringClass *formatted_text, Vector3 *text_color, bool forced = false);
 
-		/*
-		** Profiling support.
-		*/
-		void Update_Profile(StringClass profile_string);
-		void Set_Profile_Mode(bool set) {ProfileMode = set; LastProfileCRC = 0; LastProfilePrint = 0;}
-		void Handle_Profile_Key(int key);
-
-		/*
-		** Master/Slave console window settings/support.
-		*/
 		void Set_Exclusive(bool set) {IsExclusive = set;}
 		bool Is_Exclusive(void) {return(IsExclusive);}
-		HWND Get_Slave_Window_By_Title(char *name, char *settings);
-		StringClass Compose_Window_Title(char *name, char *settings, bool slave);
+		StringClass Compose_Window_Title(char *name, char *settings);
 		void cprintf(char const * string, ...);
 
 		/*

@@ -5,7 +5,6 @@
 #include "playerterminal.h"
 #include "purchasesettings.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	RenegadePlayerTerminalClass
@@ -38,7 +37,6 @@ private:
 	////////////////////////////////////////////////////////////////
 	void				Show_Terminal_Dialog (PurchaseSettingsDefClass::TEAM team);
 };
-
 
 #endif //__RENEGADEPLAYERTERMINAL_H
 

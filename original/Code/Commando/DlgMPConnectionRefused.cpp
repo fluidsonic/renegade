@@ -1,7 +1,6 @@
 #include "DlgMPConnectionRefused.h"
 #include "cnetwork.h"
 #include "resource.h"
-#include <wwdebug/wwdebug.h>
 #include "dlgmainmenu.h"
 #include "specialbuilds.h"
 #include "dialogtests.h"
@@ -36,7 +35,6 @@ bool DlgMPConnectionRefused::DoDialog(const WCHAR * text, bool show_splash_scree
 	return (popup != NULL);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -62,7 +60,6 @@ DlgMPConnectionRefused::DlgMPConnectionRefused(const WCHAR * text, bool show_spl
 	ShowSplashScreen = show_splash_screen;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -82,7 +79,6 @@ DlgMPConnectionRefused::DlgMPConnectionRefused(const WCHAR * text, bool show_spl
 DlgMPConnectionRefused::~DlgMPConnectionRefused()
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -105,7 +101,6 @@ void DlgMPConnectionRefused::On_Init_Dialog(void)
 
 	PopupDialogClass::On_Init_Dialog();
 	}
-
 
 /******************************************************************************
 *

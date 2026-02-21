@@ -7,7 +7,6 @@
 #include "chunkio.h"
 #include "animatedsoundmgr.h"
 
-
 /*********************************************************************************************** 
  * HAnimManagerClass::HAnimManagerClass -- constructor                                         * 
  *                                                                                             * 
@@ -26,7 +25,6 @@ HAnimManagerClass::HAnimManagerClass(void)
 	AnimPtrTable = new HashTableClass( 2048 );
 	MissingAnimTable = new HashTableClass( 2048 );
 }
-
 
 /*********************************************************************************************** 
  * HAnimManagerClass::~HAnimManagerClass -- destructor                                         * 
@@ -51,7 +49,6 @@ HAnimManagerClass::~HAnimManagerClass(void)
 	delete MissingAnimTable;
 	MissingAnimTable = NULL;
 }
-
 
 /*********************************************************************************************** 
  * HAnimManagerClass::Load_Anim -- loads a set of motion data from a file                      * 
@@ -85,7 +82,6 @@ int HAnimManagerClass::Load_Anim(ChunkLoadClass & cload)
 
 	return 0;
 }
-
 
 /***********************************************************************************************
  * HAnimManagerClass::Load_Morph_Anim -- Load a HMorphAnimClass										  *
@@ -129,7 +125,6 @@ Error:
 	return 1;
 }
 
-
 /***********************************************************************************************
  * HAnimManagerClass::Load_Raw_Anim -- Load a raw anim                                         *
  *                                                                                             *
@@ -171,7 +166,6 @@ Error:
 
 	return 1;
 }
-
 
 /***********************************************************************************************
  * HAnimManagerClass::Load_Compressed_Anim -- load a compressed animation                      *
@@ -232,7 +226,6 @@ HAnimClass * HAnimManagerClass::Peek_Anim(const char * name)
 	return (HAnimClass*)AnimPtrTable->Find( name );
 }
 
-
 /*********************************************************************************************** 
  * HAnimManagerClass::Get_Anim -- returns a pointer to the specified animation data            * 
  *                                                                                             * 
@@ -253,7 +246,6 @@ HAnimClass * HAnimManagerClass::Get_Anim(const char * name)
 	}
 	return anim;
 }
-
 
 /*********************************************************************************************** 
  * HAnimManagerClass::Free_All_Anims -- de-allocate all currently loaded animations            * 
@@ -310,7 +302,6 @@ bool HAnimManagerClass::Add_Anim(HAnimClass *new_anim)
 	return true;
 }
 
-
 /*
 ** Missing Anims
 **
@@ -340,7 +331,6 @@ void	HAnimManagerClass::Reset_Missing( void )
 	// Then clear the table
 	MissingAnimTable->Reset();
 }
-
 
 /*
 ** Iterator converter from HashableClass to HAnimClass

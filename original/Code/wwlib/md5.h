@@ -9,7 +9,6 @@
 #define MDUpdate MD5Update
 #define MDFinal MD5Final
 
-
 /* MD5 context. */
 typedef struct {
   UINT4 state[4];                                   /* state (ABCD) */

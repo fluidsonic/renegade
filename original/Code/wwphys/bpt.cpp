@@ -13,7 +13,6 @@
 #include "camera.h"
 #include "sr.hpp"
 
-
 #define BPT_FRONT						0x01
 #define BPT_BACK						0x02
 #define BPT_ON							0x04
@@ -28,8 +27,6 @@ class BptBuilderClass;
 class BptImpNodeClass;
 class BptImpClass;
 class BptImpBuilderClass;
-
-
 
 /*
 ** NormalHasherClass, used by the code which builds the
@@ -71,7 +68,6 @@ private:
 
 };
 
-
 /*
 ** DistanceHasherClass, used by the code which builds the
 ** table of unique distance values.
@@ -110,8 +106,6 @@ private:
 
 };
 
-
-
  
 /*
 ** BPT Notes
@@ -134,7 +128,6 @@ private:
 **   probably share the same normal but different distances.  This probably should be a
 **   very late optimization.
 */
-
 
 /*
 ** BptVertexClass
@@ -160,7 +153,6 @@ public:
 	static BptVertexClass Intersect_Plane(const BptVertexClass & v0,const BptVertexClass & v1,const PlaneClass & plane);
 
 };
-
 
 /*
 ** BptPolyClass
@@ -193,7 +185,6 @@ public:
 	PlaneClass					Plane;
 };
 
-
 /*
 ** BptNodeClass
 ** This is the node representation used in building the BPT
@@ -218,7 +209,6 @@ public:
 	void				Submit_Nodes(BptImpBuilderClass & impbuilder) const;
 
 private:
-
 
 	PlaneClass					Plane;		// splitting plane
 	uint32						NumPolys;	// num polys on plane
@@ -276,7 +266,6 @@ private:
 	friend class BptImpBuilderClass;
 };
 
-
 /*
 ** BptBuilderClass
 ** This class builds the initial straightforward binary tree representation of
@@ -308,7 +297,6 @@ private:
 	int						MaxDepth;
 };
 
-
 /*
 ** BptImpNodeClass
 ** This is the node representation in the final BPT implementation.
@@ -333,7 +321,6 @@ public:
 	bool							Is_Visible(const CameraClass & camera);
 	bool							Cast_AABox_To_Polys(PhysAABoxCollisionTestClass & coltest);
 };
-
 
 /*
 ** BptImpClass
@@ -410,7 +397,6 @@ private:
 
 };
 
-
 /*
 ** BptImpBuilderClass
 ** This guy takes a completed bpt tree (given as a pointer to the root node)
@@ -449,13 +435,6 @@ private:
 
 };
 
-
-
-
-
-
-
-
 /***********************************************************************************************
  * BptClass::BptClass -- constructor                                                           *
  *                                                                                             *
@@ -474,7 +453,6 @@ BptClass::BptClass(void) :
 
 }
 
-
 /***********************************************************************************************
  * BptClass::~BptClass -- destructor                                                           *
  *                                                                                             *
@@ -491,7 +469,6 @@ BptClass::~BptClass(void)
 {
 	Free();
 }
-
 
 /***********************************************************************************************
  * BptClass::Free -- releases all assets in use                                                *
@@ -512,7 +489,6 @@ void BptClass::Free(void)
 		BptImp = NULL;
 	}
 }
-
 
 /***********************************************************************************************
  * BptClass::Build -- build a bpt from the given mesh (generates a new mesh)                   *
@@ -545,7 +521,6 @@ void BptClass::Build(MeshClass * mesh)
 	BptImp = builder.Build(mesh);
 }
 
-
 /***********************************************************************************************
  * BptClass::Load -- Initialize this Bpt object from contents of a W3D file                    *
  *                                                                                             *
@@ -564,7 +539,6 @@ int BptClass::Load(ChunkLoadClass & cload)
 	return 0;
 }
 
-
 /***********************************************************************************************
  * BptClass::Save -- Save this Bpt object into a W3D file                                      *
  *                                                                                             *
@@ -582,7 +556,6 @@ int BptClass::Save(ChunkSaveClass & csave)
 	assert(0);
 	return 0;
 }
-
 
 /***********************************************************************************************
  * BptClass::Render -- submit this object for rendering                                        *
@@ -651,7 +624,6 @@ bool BptClass::Cast_Ray(PhysRayCollisionTestClass & raytest) const
 	return BptImp->Cast_Ray(raytest);
 }
 
-
 /***********************************************************************************************
  * BptClass::Cast_AABox -- Intersect a swept axis-aligned box.                                 *
  *                                                                                             *
@@ -670,7 +642,6 @@ bool BptClass::Cast_AABox(PhysAABoxCollisionTestClass & aaboxtest) const
 	return BptImp->Cast_AABox(aaboxtest);
 }
 
-
 /***********************************************************************************************
  * BptClass::Cast_OBBox -- Intersect a swept oriented box with this bpt object                 *
  *                                                                                             *
@@ -688,7 +659,6 @@ bool BptClass::Cast_OBBox(PhysOBBoxCollisionTestClass & obboxtest) const
 	assert(BptImp);
 	return BptImp->Cast_OBBox(obboxtest);
 }
-
 
 /**************************************************************
 
@@ -1004,8 +974,6 @@ void BptPolyClass::Split(const PlaneClass & plane,BptPolyClass & front,BptPolyCl
 	}
 }
 
-
-
 bool BptPolyClass::Is_Degenerate(void)
 {
 	int i,j;
@@ -1120,7 +1088,6 @@ BptImpClass * BptBuilderClass::Build(int numpolys,BptPolyClass * polys,MaterialI
 	*/
 	MatInfo = (MaterialInfoClass *)matinfo->Clone();
 
-
 	/*
 	** Store the input counts
 	*/
@@ -1129,7 +1096,6 @@ BptImpClass * BptBuilderClass::Build(int numpolys,BptPolyClass * polys,MaterialI
 	for (int i=0; i<numpolys; i++) {
 		InputTriCount += polys[i].NumVerts-2;
 	}
-
 
 	/*
 	** Build the fat tree
@@ -1145,7 +1111,6 @@ BptImpClass * BptBuilderClass::Build(int numpolys,BptPolyClass * polys,MaterialI
 	OutputTriCount = Root->Num_Tris();
 	NodeCount = Root->Num_Nodes();
 	MaxDepth = Root->Max_Depth();
-
 
 	/*
 	** Build the optimized BptImp and return it.
@@ -1235,14 +1200,11 @@ BptImpClass * BptBuilderClass::build_imp(void)
 	return imp;
 }
 
-
 /**************************************************************
 
 	BptNodeClass Implementation
 
 **************************************************************/
-
-
 
 int BptNodeClass::Num_Polys(void) const
 { 
@@ -1347,7 +1309,6 @@ void BptNodeClass::Build(int numpolys,BptPolyClass * polys)
 	}
 }
 
-
 BptNodeClass::SplitChoiceStruct 
 BptNodeClass::Compute_Plane_Score(int numpolys,BptPolyClass * polys,const PlaneClass & plane)
 {
@@ -1419,7 +1380,6 @@ BptNodeClass::Compute_Plane_Score(int numpolys,BptPolyClass * polys,const PlaneC
 
 	return sc;
 }
-
 
 BptNodeClass::SplitChoiceStruct
 BptNodeClass::Select_Splitting_Plane(int numpolys,BptPolyClass * polys)
@@ -1568,7 +1528,6 @@ void BptNodeClass::Split_Polys
 	}
 }
 
-
 void BptNodeClass::Submit_Polys(MeshBuilderClass & builder) const
 {
 	/*
@@ -1713,7 +1672,6 @@ int BptNodeClass::Assign_Array_Indices(int index)
 	return index;
 }
 
-
 void BptNodeClass::Submit_Nodes(BptImpBuilderClass & imp_builder) const
 {
 	imp_builder.Add_Bpt_Node(this);
@@ -1726,7 +1684,6 @@ void BptNodeClass::Submit_Nodes(BptImpBuilderClass & imp_builder) const
 		Back->Submit_Nodes(imp_builder);
 	}
 }
-
 
 /**************************************************************
 
@@ -1763,7 +1720,6 @@ BptImpClass::~BptImpClass(void)
 {
 	Free();
 }
-
 
 void BptImpClass::Free(void) 
 {
@@ -1921,8 +1877,6 @@ void BptImpClass::Build_Apt_Recursive(BptImpNodeClass * node,const CameraClass &
 	}
 }
 
-
-
 bool BptImpClass::Cast_Ray(PhysRayCollisionTestClass & raytest) const
 {
 	return Cast_Ray_Recursive(&(Nodes[0]),raytest);
@@ -1983,7 +1937,6 @@ bool BptImpClass::Cast_AABox_Recursive
 
 	return false;
 }
-
 
 bool BptImpClass::Cast_OBBox_Recursive
 (
@@ -2214,10 +2167,8 @@ BptImpClass * BptImpBuilderClass::Build_Bpt_Imp(BptNodeClass * root,MaterialInfo
 
 	Free();
 
-
 	return bptimp;
 }
-
 
 void BptImpBuilderClass::Add_Bpt_Node(const BptNodeClass * node)
 {

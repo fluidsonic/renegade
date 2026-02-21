@@ -2,10 +2,8 @@
 #ifndef __IMAGECTRL_H
 #define __IMAGECTRL_H
 
-
 #include "render2d.h"
 #include "dialogcontrol.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -50,6 +48,5 @@ protected:
 	Render2DClass			ControlRenderer;
 	Render2DClass			TextureRenderer;
 };
-
 
 #endif //__IMAGECTRL_H

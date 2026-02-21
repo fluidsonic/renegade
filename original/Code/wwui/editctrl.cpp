@@ -8,7 +8,6 @@
 #include "stylemgr.h"
 #include "dialogbase.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	EditCtrlClass
@@ -44,7 +43,6 @@ EditCtrlClass::EditCtrlClass (void)	:
 	mIME = DialogMgrClass::Get_IME();
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~EditCtrlClass
@@ -58,7 +56,6 @@ EditCtrlClass::~EditCtrlClass (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -151,7 +148,6 @@ EditCtrlClass::Create_Text_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Control_Renderers
@@ -192,7 +188,6 @@ EditCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -210,7 +205,6 @@ EditCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -234,7 +228,6 @@ EditCtrlClass::Update_Client_Rect (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -278,7 +271,6 @@ EditCtrlClass::Render (void)
 	DialogControlClass::Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //	Get_Display_Text
@@ -361,7 +353,6 @@ EditCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -382,7 +373,6 @@ EditCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	WasButtonPressedOnMe	= false;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -423,7 +413,6 @@ EditCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Caret
@@ -444,7 +433,6 @@ EditCtrlClass::Update_Caret (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -493,7 +481,6 @@ EditCtrlClass::Create_Caret_Renderer (void)
 	//
 	CaretRenderer.Add_Quad(rect, StyleMgrClass::Get_Text_Color());
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -551,7 +538,6 @@ EditCtrlClass::Character_From_Pos (const Vector2 &mouse_pos)
 	return char_index;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Pos_From_Character
@@ -581,7 +567,6 @@ EditCtrlClass::Pos_From_Character (int char_index)
 	float position = min (ClientRect.Left + width, ClientRect.Right);
 	return position;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -614,7 +599,6 @@ EditCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -646,7 +630,6 @@ EditCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -802,7 +785,6 @@ EditCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 void EditCtrlClass::On_Unicode_Char(WCHAR unicode)
 {
 	if (unicode >= 32) {
@@ -835,7 +817,6 @@ void EditCtrlClass::On_Unicode_Char(WCHAR unicode)
 		}
 	}
 }
-
 
 void EditCtrlClass::Insert_String(const WCHAR* string)
 {
@@ -877,7 +858,6 @@ void EditCtrlClass::Insert_String(const WCHAR* string)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Delete_Selection
@@ -914,7 +894,6 @@ EditCtrlClass::Delete_Selection (void)
 	return false;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -927,7 +906,6 @@ EditCtrlClass::On_Create (void)
 	//Set_Text (L"This is a test...");	
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -968,7 +946,6 @@ EditCtrlClass::Set_Caret_Pos (int new_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Hilight
@@ -982,7 +959,6 @@ EditCtrlClass::Update_Hilight (int new_pos, int anchor_pos)
 	HilightEndPos		= max (new_pos, HilightAnchorPos);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1025,7 +1001,6 @@ EditCtrlClass::Find_Word_Start (int pos, int increment)
 
 	return retval;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1089,7 +1064,6 @@ EditCtrlClass::Update_Scroll_Pos (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Int
@@ -1100,7 +1074,6 @@ EditCtrlClass::Get_Int (void)
 {
 	return _wtoi (Get_Text ());
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1115,7 +1088,6 @@ EditCtrlClass::Set_Int (int value)
 	Set_Text (text);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1148,7 +1120,6 @@ EditCtrlClass::Set_Text (const WCHAR *title)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Text_Length
@@ -1158,7 +1129,6 @@ int EditCtrlClass::Get_Text_Length(void) const
 {
 	return NumChars;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1177,7 +1147,6 @@ EditCtrlClass::Set_Text_Limit (int numChars)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Text_Limit
@@ -1188,9 +1157,6 @@ EditCtrlClass::Get_Text_Limit (void) const
 {
 	return TextLimit;
 }
-
-
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1207,7 +1173,6 @@ EditCtrlClass::Get_Caret_Pos (void) const
 	return CaretPos;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Sel
@@ -1223,7 +1188,6 @@ EditCtrlClass::Set_Sel (int start_index, int end_index)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Sel
@@ -1236,7 +1200,6 @@ EditCtrlClass::Get_Sel (int &start_index, int &end_index) const
 	end_index	= HilightEndPos;
 	return ;
 }
-
 
 /******************************************************************************
 *
@@ -1257,7 +1220,6 @@ bool EditCtrlClass::IsIMEAllowed(void) const
 	// resource editor.
 	return ((Style & (ES_NUMBER|ES_OEMCONVERT)) == 0);
 }
-
 
 #ifdef SHOW_IME_TYPING
 /******************************************************************************
@@ -1284,7 +1246,6 @@ void EditCtrlClass::Set_IME_Typing_Text_Pos(void)
 	mIMETypingTip.Set_Position(pos);
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -1309,7 +1270,6 @@ void EditCtrlClass::Show_IME_Typing_Text(const wchar_t* text)
 	}
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -1328,7 +1288,6 @@ void EditCtrlClass::Hide_IME_Typing_Text(void)
 	mIMETypingTip.Set_Text(L"");
 }
 #endif
-
 
 /******************************************************************************
 *
@@ -1383,7 +1342,6 @@ void EditCtrlClass::PositionCandidateList(void)
 		}
 	}
 }
-
 
 /******************************************************************************
 *
@@ -1450,7 +1408,6 @@ void EditCtrlClass::HandleNotification(IME::CompositionEvent& imeEvent)
 			break;
 	}
 }
-
 
 /******************************************************************************
 *

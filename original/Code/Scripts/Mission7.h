@@ -1,7 +1,6 @@
 #ifndef _MISSION7_H_
 #define _MISSION7_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
@@ -71,8 +70,6 @@
 #define DEADEYE (Commands->Find_Object(100660))
 #define SYDNEY (Commands->Find_Object(100662))
 #define HOTWIRE (Commands->Find_Object(100658))
-
-
 
 typedef enum
 {

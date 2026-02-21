@@ -1,7 +1,6 @@
 #include "scripts.h"
 #include "missionX0.h"
 
-
 DECLARE_SCRIPT(MX0_MissionStart_DME, "") //1200001
 {
 	int engineer1, engineer2, eng_num, count, sniper_1, sniper_2, curr_conv7;
@@ -201,7 +200,6 @@ DECLARE_SCRIPT(MX0_MissionStart_DME, "") //1200001
 //			GameObject * chinook = Commands->Create_Object ( "Invisible_Object", drop_loc);
 //			Commands->Set_Facing(chinook, chin_face);
 //			Commands->Attach_Script(chinook, "Test_Cinematic", "MX0_TroopDrop_2X.txt");
-
 
 			GameObject * block1 = Commands->Create_Object ( "Large_Blocker", Vector3 (-148.071f,-31.267f,-0.306f));
 			Commands->Set_Facing(block1, -30.000f);
@@ -943,7 +941,6 @@ DECLARE_SCRIPT(MX0_Engineer_Return, "")
 	}
 };
 
-
 DECLARE_SCRIPT(MX0_Engineer_Goto, "GotoDest1:int, GotoDest2:int, Count:int")
 {
 	bool already_entered;
@@ -1086,7 +1083,6 @@ DECLARE_SCRIPT(MX0_Kill_Sniper, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(MX0_NOD_TroopDrop, "")
 {
@@ -1264,7 +1260,6 @@ DECLARE_SCRIPT (MX0_KillNotify, "")
 		}
 	}
 
-
 	void Custom (GameObject *obj, int type, int param, GameObject *sender)
 	{
 		if(type == START_SNIPER)
@@ -1328,7 +1323,6 @@ DECLARE_SCRIPT (MX0_KillNotify, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT(DAK_MX0_Sec_3_Humvee, "" )
 {
@@ -1872,7 +1866,6 @@ DECLARE_SCRIPT (MX0_A03_CONTROLLER_DAK, "" )
 			}
 		}
 
-
 		if ( type == MX0_A03_CUSTOM_TYPE_START_ZONE )
 		{
 			Commands->Scale_AI_Awareness( 2, 1 );
@@ -2069,7 +2062,6 @@ DECLARE_SCRIPT ( MX0_A03_HUMVEE, "" ) // moves humvee
 		// set targets
 		Target_Id[1] = MX0_A03_NOD_BUGGIE_ID;
 		Target_Id[2] = MX0_A03_NOD_HARVESTER_ID;
-
 
 		// send id to controller.
 		Commands->Attach_Script( obj, "M00_Send_Object_ID", "1400041,1,0"); // sending humvee id to A03 Controller.

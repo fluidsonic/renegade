@@ -39,7 +39,6 @@
 #define PHYSICS_KILOGRAMS(x)		((x))
 #define PHYSICS_NEWTONS(x)			((x))
 
-
 class PhysicsUnits
 {
 	// Distance Units:

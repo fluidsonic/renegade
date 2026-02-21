@@ -481,7 +481,6 @@ April 2001
 
 */
 
-
 /**
 ** PhysicsSceneClass
 ** Drop all of the objects into the world in here, represented by physics objects, then
@@ -782,7 +781,6 @@ public:
 
 	void							Optimize_Visibility_Data(VisOptProgressClass & progress_status);
 
-
 	/*
 	** Texture Projection System.
 	*/
@@ -873,7 +871,6 @@ public:
 	bool							Is_Vis_Reset_Needed (void) const	{ return VisResetNeeded; }
 	void							Vis_Reset_Needed(bool needed)		{ VisResetNeeded = needed; }
 
-
 	/*
 	** Save-Load system.  There are three save-load sub-systems in the physics library.  
 	** PhysStaticDataSaveSystem - saves static data like pathfind, vis, and static culling data.
@@ -892,13 +889,11 @@ public:
 	void							Load_Level_Dynamic_Data(ChunkLoadClass & cload);
 	void							Post_Load_Level_Dynamic_Data(void);
 
-
 	/*
 	** Control over the polygon budget
 	*/
 	void							Set_Polygon_Budgets(int static_count,int dynamic_count);
 	void							Get_Polygon_Budgets(int * static_count,int * dynamic_count);
-
 
 	void							Set_Update_Only_Visible_Objects(bool b) { UpdateOnlyVisibleObjects=b; }
 	bool							Get_Update_Only_Visible_Objects() { return UpdateOnlyVisibleObjects; }
@@ -920,7 +915,6 @@ public:
 	virtual void				Destroy_Iterator(SceneIterator * /*it*/)			{ assert(0); }
 	virtual void				Register(RenderObjClass * obj,RegType for_what);
 	virtual void				Unregister(RenderObjClass * obj,RegType for_what);	
-
 
 	/*
 	**	Accessors
@@ -1130,7 +1124,6 @@ protected:
 	*/
 	MaterialPassClass *		HighlightMaterialPass;
 
-
 	//- Level Static Data ---------------------------------------------------------------------------------
 	// 
 	// This data is constant throughout the course of a level and therefore is stored in the 
@@ -1234,8 +1227,6 @@ private:
 	friend class VisOptimizationContextClass;
 
 };
-
-
 
 	
 

@@ -28,7 +28,6 @@
 #include "dx8rendererdebugger.h"
 #include "consolemode.h"
 
-
 /*
 ** The gamemode list
 */
@@ -71,7 +70,6 @@ void	GameModeManager::Destroy( GameModeClass *mode )
 	Remove( mode );
 	delete mode;
 }
-
 
 /*
 **
@@ -120,8 +118,6 @@ void GameModeManager::List_Active_Game_Modes(void)
 		}
 	}
 }
-
-
 
 /*
 ** let all non inactive game modes think
@@ -246,7 +242,6 @@ void	GameModeManager::Render( void )
 		{
 			WW3D::End_Render();
 		}
-
 
 		if (do_pscene) {
 			COMBAT_SCENE->Post_Render_Processing();

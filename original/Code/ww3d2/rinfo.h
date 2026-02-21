@@ -2,7 +2,6 @@
 #ifndef RINFO_H
 #define RINFO_H
 
-
 #include "always.h"
 #include "bittype.h"
 #include "ww3d.h"
@@ -10,7 +9,6 @@
 #include "vector.h"
 #include "matrix3d.h"
 #include "matrix4.h"
-
 
 class MaterialPassClass;
 class LightEnvironmentClass;
@@ -113,7 +111,5 @@ private:
 	SpecialRenderInfoClass & operator = (const RenderInfoClass &);
 
 };
-
-
 
 #endif

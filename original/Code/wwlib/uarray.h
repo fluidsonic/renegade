@@ -10,7 +10,6 @@
 #include "vector.h"
 #endif
 
-
 /*
 ** UniqueArrayClass
 ** This template class can be used to generate an array of unique objects
@@ -64,8 +63,6 @@ private:
 	friend class DynamicVectorClass<T>;
 };
 
-
-
 /***********************************************************************************************
  * UniqueArrayClass<T>::UniqueArrayClass -- constructor                                        *
  *                                                                                             *
@@ -98,7 +95,6 @@ UniqueArrayClass<T>::UniqueArrayClass(int initial_size,int growth_rate,HashCalcu
 	}
 }
 
-
 /***********************************************************************************************
  * UniqueArrayClass<T>::~UniqueArrayClass -- destructor                                        *
  *                                                                                             *
@@ -119,7 +115,6 @@ UniqueArrayClass<T>::~UniqueArrayClass(void)
 		HashTable = NULL;
 	}
 }
-
 
 /***********************************************************************************************
  * UniqueArrayClass<T>::Add -- Add an item to the array                                        *
@@ -181,7 +176,6 @@ inline int UniqueArrayClass<T>::Add(const T & new_item)
 
 	return index;
 }
-
 
 #endif // UARRAY_H
 

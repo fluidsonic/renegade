@@ -12,7 +12,6 @@
 #include "encodertypeentry.h"
 #include "miscutil.h"
 
-
 const int MAX_ENCODERTYPES = 100;
 
 class cEncoderList
@@ -35,7 +34,6 @@ class cEncoderList
 				static_cast<double>(min), 
 				static_cast<double>(max), 
 				static_cast<double>(resolution));
-
 
 			//
 			// Return maximum representation error

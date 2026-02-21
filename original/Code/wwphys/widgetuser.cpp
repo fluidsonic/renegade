@@ -6,7 +6,6 @@
 #include "boxrobj.h"
 #include "ww3d.h"
 
-
 /*
 ** WidgetRenderOpClass
 ** This class encapsulates the instructions from a physics object to render
@@ -60,7 +59,6 @@ protected:
 ** declare the instance of the pool object for all WidgetRenderOpClass's
 */
 DEFINE_AUTO_POOL(WidgetRenderOpClass,256);
-
 
 /*******************************************
 **
@@ -161,7 +159,6 @@ void WidgetRenderOpClass::render_axes(RenderInfoClass & rinfo)
 {
 }
 
-
 /*******************************************
 **
 ** WidgetUserClass Implementation
@@ -175,14 +172,4 @@ WidgetUserClass::~WidgetUserClass(void)
 {
 	Reset_Debug_Widget_List();
 }
-
-
-
-
-
-
-
-
-
-
 

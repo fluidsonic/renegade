@@ -1,9 +1,7 @@
 #include "pointerremap.h"
 #include "refcount.h"
 
-
 const int POINTER_TABLES_GROWTH_STEP = 4096;
-
 
 PointerRemapClass::PointerRemapClass(void)
 {
@@ -85,7 +83,6 @@ void PointerRemapClass::Register_Pointer (void *old_pointer, void *new_pointer)
 	PointerPairTable.Add(PtrPairStruct(old_pointer,new_pointer));
 }
 
-
 void PointerRemapClass::Request_Pointer_Remap (void **pointer_to_convert)
 {
 	PtrRemapStruct remap;
@@ -99,7 +96,6 @@ void PointerRemapClass::Request_Ref_Counted_Pointer_Remap (RefCountClass **point
 	remap.PointerToRemap = (void**)pointer_to_convert;
 	RefCountRequestTable.Add(remap);
 }
-
 
 /*
 ** sort compare function for pointer pair structures
@@ -139,5 +135,4 @@ int __cdecl PointerRemapClass::ptr_request_compare_function(void const * ptr1, v
 	}
 	return(1);
 }
-
 

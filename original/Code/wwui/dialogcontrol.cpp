@@ -5,7 +5,6 @@
 #include "render2d.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	DialogControlClass
@@ -32,7 +31,6 @@ DialogControlClass::DialogControlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~DialogControlClass
@@ -50,7 +48,6 @@ DialogControlClass::~DialogControlClass (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Focus
@@ -62,7 +59,6 @@ DialogControlClass::Set_Focus (void)
 	DialogMgrClass::Set_Focus (this);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -76,7 +72,6 @@ DialogControlClass::On_Set_Cursor (const Vector2 & /*mouse_pos*/)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Capture
@@ -89,7 +84,6 @@ DialogControlClass::Set_Capture (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Release_Capture
@@ -101,7 +95,6 @@ DialogControlClass::Release_Capture (void)
 	DialogMgrClass::Release_Capture ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -129,7 +122,6 @@ DialogControlClass::Set_Window_Pos (const Vector2 &pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Center_Mouse
@@ -147,7 +139,6 @@ DialogControlClass::Center_Mouse (void)
 	DialogMgrClass::Set_Mouse_Pos (mouse_pos);*/
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

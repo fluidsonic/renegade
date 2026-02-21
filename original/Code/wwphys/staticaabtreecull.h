@@ -6,14 +6,12 @@
 #include "physaabtreecull.h"
 #include "physlist.h"
 
-
 class VisTableClass;
 class CameraClass;
 class VisRenderContextClass;
 class VisSampleClass;
 class ChunkLoadClass;
 class ChunkSaveClass;
-
 
 /*
 ** StaticAABTreeCullClass

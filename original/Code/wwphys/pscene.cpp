@@ -1932,4 +1932,3 @@ void PhysicsSceneClass::StatsStruct::Reset(void)
 	CullNodesRejected = 0;
 }
 
-

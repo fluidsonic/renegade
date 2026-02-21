@@ -23,7 +23,6 @@ void ScriptImpClass::Set_Request_Destroy_Func(void (*function)(ScriptClass*))
 	Request_Destroy_Script = function;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -47,7 +46,6 @@ ScriptImpClass::ScriptImpClass()
 		AutoVariableList( NULL )
 {
 }
-
 
 /******************************************************************************
 *
@@ -84,7 +82,6 @@ ScriptImpClass::~ScriptImpClass()
 	}
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -105,7 +102,6 @@ const char* ScriptImpClass::Get_Name(void)
 {
 	return mFactory->GetName();
 }
-
 
 /******************************************************************************
 *
@@ -129,7 +125,6 @@ void ScriptImpClass::Destroy_Script(void)
 		Request_Destroy_Script(this);
 	}
 }
-
 
 /******************************************************************************
 *
@@ -159,7 +154,6 @@ void ScriptImpClass::Attach(GameObject* obj)
 	mOwner = obj;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -181,7 +175,6 @@ void ScriptImpClass::Detach(GameObject* obj)
 	mOwner = NULL;
 	Destroy_Script();
 }
-
 
 /******************************************************************************
 *
@@ -259,7 +252,6 @@ void ScriptImpClass::Set_Parameters_String(const char* params)
 	free(working);
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -304,7 +296,6 @@ void ScriptImpClass::Get_Parameters_String(char* buffer, unsigned int size)
 	}
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -337,7 +328,6 @@ void ScriptImpClass::Clear_Parameters(void)
 	mArgV = NULL;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -366,7 +356,6 @@ void ScriptImpClass::Set_Parameter(int index, const char* str)
 	assert(mArgV[index] != NULL);
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -388,7 +377,6 @@ const char* ScriptImpClass::Get_Parameter(const char* name)
 	int index = Get_Parameter_Index(name);
 	return Get_Parameter(index);
 }
-
 
 /******************************************************************************
 *
@@ -415,7 +403,6 @@ const char* ScriptImpClass::Get_Parameter(int index)
 	return mArgV[index];
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -437,7 +424,6 @@ int ScriptImpClass::Get_Int_Parameter(const char* parameterName)
 	int index = Get_Parameter_Index(parameterName);
 	return Get_Int_Parameter(index);
 }
-
 
 /******************************************************************************
 *
@@ -461,7 +447,6 @@ float ScriptImpClass::Get_Float_Parameter(const char* parameterName)
 	return Get_Float_Parameter(index);
 }
 
-
 /******************************************************************************
 **
 ******************************************************************************/
@@ -472,14 +457,11 @@ Vector3 ScriptImpClass::Get_Vector3_Parameter( int index )
 	return Vector3( x,y,z );
 }
 
-
 Vector3 ScriptImpClass::Get_Vector3_Parameter(const char* parameterName)
 {
 	int index = Get_Parameter_Index(parameterName);
 	return Get_Vector3_Parameter(index);
 }
-
-
 
 /******************************************************************************
 *
@@ -538,7 +520,6 @@ int ScriptImpClass::Get_Parameter_Index(const char* parameterName)
 	return -1;
 }
 
-
 /******************************************************************************
 *
 * NAME
@@ -573,7 +554,6 @@ void ScriptImpClass::Save(ScriptSaver& saver)
 	}
 
 }
-
 
 /******************************************************************************
 *
@@ -631,7 +611,6 @@ void ScriptImpClass::Load(ScriptLoader& loader)
 	}
 }
 
-
 /*
 **
 */
@@ -657,7 +636,6 @@ void	ScriptImpClass::Auto_Save_Variable( void * data_ptr, int data_size, int id 
 		DebugPrint("***** ScriptImpClass::Too Much Save Data on ID %d\n", id );
 		return;
 	}
-
 
 	// Then create and add the variable;
 	AutoVariableList = new ScriptVariableClass( data_ptr, data_size, id, AutoVariableList );

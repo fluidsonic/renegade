@@ -163,5 +163,4 @@ inline void _makepath(char* path, const char* drive, const char* dir, const char
     if (ext) strcat(path, ext);
 }
 
-
 #endif // OSDEP_H_COMPAT

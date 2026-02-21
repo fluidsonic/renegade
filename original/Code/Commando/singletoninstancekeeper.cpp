@@ -1,17 +1,14 @@
 #include "singletoninstancekeeper.h"
 
-
 //
 // Disable 'unreferenced inline function has been removed'
 //
 #pragma warning(disable : 4514)
 
-
 //////////////////////////////////////////////////////////////////////
 //	Local constants
 //////////////////////////////////////////////////////////////////////
 static const char *	AUTOPLAY_GUID = "01AF9993-3492-11d3-8F6F-0060089C05B1";
-
 
 //////////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -19,7 +16,6 @@ static const char *	AUTOPLAY_GUID = "01AF9993-3492-11d3-8F6F-0060089C05B1";
 const char *	SingletonInstanceKeeperClass::APP_GUID = "C6D925A3-7A9B-4ca3-866D-8B4D506C3665";
 
 bool SingletonInstanceKeeperClass::AllowMultipleInstances = false;
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -32,7 +28,6 @@ SingletonInstanceKeeperClass::SingletonInstanceKeeperClass (void)	:
 {
 	return;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -51,7 +46,6 @@ SingletonInstanceKeeperClass::~SingletonInstanceKeeperClass (void)
 
 	return;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -90,7 +84,6 @@ SingletonInstanceKeeperClass::Verify_Safe_To_Execute (void)
 
 		}
 	} else {
-
 
 		//
 		// Obtain the mutex unique to the Renegade AutoPlay application.
@@ -137,10 +130,6 @@ SingletonInstanceKeeperClass::Verify_Safe_To_Execute (void)
 
 	return retval;
 }
-
-
-
-
 
 //////////////////////////////////////////////////////////////////////
 //

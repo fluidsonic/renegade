@@ -6,7 +6,6 @@
 #include	"wwfile.h"
 #include	<string.h>
 
-
 struct RGB {
 	unsigned char	red;
 	unsigned char	green;
@@ -32,7 +31,6 @@ struct PCX_HEADER
 	short	palette_type;
 	char	filler[58];
 };
-
 
 Surface * Read_PCX_File(FileClass & file_handle, PaletteClass * palette= NULL, void * buff=NULL, long size=0);
 //Surface * Read_PCX_File (char * name, Buffer & Buff, PaletteClass * palette= NULL) ;

@@ -1,5 +1,4 @@
 #include "objlibrary.h"
-#include "debug.h"
 #include "definition.h"
 #include "definitionfactory.h"
 #include "definitionmgr.h"
@@ -37,5 +36,4 @@ PhysicalGameObj	*ObjectLibraryManager::Create_Object( const char *name )
 
 	return NULL;
 }
-
 

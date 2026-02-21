@@ -2,18 +2,15 @@
 #ifndef _DLG_SERVER_SAVELOAD_H
 #define _DLG_SERVER_SAVELOAD_H
 
-
 #include "menudialog.h"
 #include "dlgmessagebox.h"
 #include "translatedb.h"
 #include "string_ids.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class ServerSettingsClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -43,7 +40,6 @@ public:
 	void		On_EditCtrl_Enter_Pressed (EditCtrlClass *edit_ctrl, int ctrl_id);
 	void		Save_Now(void);
 
-	static void Set_From_Slave_Config(bool set) {FromSlaveConfig = set;}
 	static void Next_Dialog(void);
 
 private:
@@ -62,18 +58,10 @@ private:
 	int		Insert_Configuration (ServerSettingsClass *config);
 	void		HandleNotification (DlgMsgBoxEvent &event);
 
-	static	bool FromSlaveConfig;
-
 	bool		YesNo;
 };
 
-
-
-
-
 #define MAX_SETTINGS_FILES 500
-
-
 
 class ServerSettingsClass
 {
@@ -87,11 +75,9 @@ class ServerSettingsClass
 		StringClass			RawFileName;
 		WideStringClass	ConfigName;
 
-
 		int			FileNumber;
 		bool			IsCustom;
 };
-
 
 class ServerSettingsManagerClass
 {
@@ -104,12 +90,10 @@ class ServerSettingsManagerClass
 		static void Save_Configuration(ServerSettingsClass *settings);
 		static ServerSettingsClass *Add_Configuration(WideStringClass *display_name);
 
-
 	private:
 		static DynamicVectorClass<ServerSettingsClass*> ServerSettingsList;
 		static void Clear_Settings_List(void);
 
 };
-
 
 #endif //_DLG_CONTROL_SAVELOAD_H

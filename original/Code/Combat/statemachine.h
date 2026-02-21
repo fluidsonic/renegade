@@ -2,11 +2,9 @@
 #ifndef __STATEMACHINE_H
 #define __STATEMACHINE_H
 
-
 #include "simplevec.h"
 #include "chunkio.h"
 #include <type_traits>
-
 
 //////////////////////////////////////////////////////////////////////
 //	Macros
@@ -21,7 +19,6 @@
 				&_this_t::On_##state##_Begin, \
 				&_this_t::On_##state##_End); \
 		} while(0)
-
 
 		//machine.Add_State (On_##state_Think, On_##state_Request_End, On_##state_Begin, On_##state_End);
 
@@ -39,7 +36,6 @@
 
 //#define ADD_STATE_TO_MACHINE(machine, state)		\
 		//machine.Add_State (On_##state_Think, On_##state_Request_End, On_##state_Begin, On_##state_End);
-
 
 /*#define DECLARE_STATE_HANDLER(state)						\
 		void On_##state##_Begin (void);						\
@@ -85,8 +81,6 @@
 
 #define STATE_IMPL_REQUEST_END(state)	\
 		On_##state##_Request_End
-
-
 
 /*#define DECLARE_STATE_HANDLER_BEGIN(state)		\
 		void On_##state_Begin (void);
@@ -137,7 +131,6 @@ public:
 	BEGIN_PTR			Begin;
 	END_PTR				End;
 };
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -403,6 +396,5 @@ protected:
 	int									CurrState;
 	bool									IsHalted;
 };
-
 
 #endif //__STATEMACHINE_H

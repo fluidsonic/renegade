@@ -35,7 +35,5 @@ protected:
 	static bool IsInitted;
 };
 
-
-
 #endif //HUMANRECOIL_H
 

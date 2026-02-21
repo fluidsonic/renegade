@@ -27,7 +27,6 @@
 
 #define FILE_HEADER_NAME	"Texture File Cache Header"
 
-
 char  *TextureFileCache::_FileNamePtr = NULL;
 static int Instances=0;
 
@@ -137,7 +136,6 @@ char *TextureFileCache::_Create_File_Name(const char *fileprefix)
 	return(_FileNamePtr);
 }	
 
-
 /*********************************************************************************************** 
  * ~TextureFileCache::TextureFileCache -- Shut down texture cache system.            * 
  *                                                                                             * 
@@ -157,7 +155,6 @@ TextureFileCache::~TextureFileCache()
 
 	Instances--;
 }	
-
 
 /************************************************************************** 
  * TextureFileCache::Reset_File -- virtual function to reset file and wri * 
@@ -263,7 +260,6 @@ bool TextureFileCache::Save_Texture(const char *texturename, srTextureIFace::Mul
 														(lzo_uint) 		  		surface->getDataSize(), 
 														(lzo_byte *) 			Get_Compression_Buffer(buf_size),
 														(unsigned *)			&compsize);
-
 
 		// Lots-o-test to make sure that the compression did what we want.
 		assert(lzocode == LZO_E_OK);
@@ -748,7 +744,6 @@ void TextureFileCache::Add_Cached_Surface(srColorSurface *surface)
 	CachedSurfaces[surface_idx] = surface;
 	surface->addReference();
 }	
-
 
 bool TextureFileCache::Validate_Texture(const char* FileName)
 {

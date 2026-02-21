@@ -25,7 +25,6 @@ IMECandidate::IMECandidate() :
 	Close();
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -49,7 +48,6 @@ IMECandidate::~IMECandidate()
 		delete[] mCandidates;
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -78,7 +76,6 @@ void IMECandidate::Open(int id, HWND hwnd, UINT codepage, bool unicode, bool sta
 	mUseUnicode = unicode;
 	mStartFrom1 = startFrom1;
 	}
-
 
 /******************************************************************************
 *
@@ -145,7 +142,6 @@ void IMECandidate::Read(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -176,7 +172,6 @@ void IMECandidate::Close(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -197,7 +192,6 @@ bool IMECandidate::IsValid(void) const
 	{
 	return ((-1 != mIndex) && (mCandidates != NULL));
 	}
-
 
 /******************************************************************************
 *
@@ -220,7 +214,6 @@ int IMECandidate::GetIndex(void) const
 	return mIndex;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -240,7 +233,6 @@ unsigned long IMECandidate::GetStyle(void) const
 	return mCandidates->dwStyle;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -258,7 +250,6 @@ unsigned long IMECandidate::GetPageStart(void) const
 	{
 	return mCandidates->dwPageStart;
 	}
-
 
 /******************************************************************************
 *
@@ -292,7 +283,6 @@ void IMECandidate::SetPageStart(unsigned long start)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -312,7 +302,6 @@ unsigned long IMECandidate::GetPageSize(void) const
 	{
 	return mCandidates->dwPageSize;
 	}
-
 
 /******************************************************************************
 *
@@ -340,7 +329,6 @@ unsigned long IMECandidate::GetCount(void) const
 	return 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -361,7 +349,6 @@ unsigned long IMECandidate::GetSelection(void) const
 	return mCandidates->dwSelection;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -381,7 +368,6 @@ bool IMECandidate::IsStartFrom1(void) const
 	{
 	return mStartFrom1;
 	}
-
 
 /******************************************************************************
 *
@@ -443,7 +429,6 @@ const wchar_t* IMECandidate::GetCandidate(unsigned long index)
 	return NULL;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -471,7 +456,6 @@ void IMECandidate::SelectCandidate(unsigned long selection)
 		ImmReleaseContext(mHWND, imc);
 		}
 	}
-
 
 /******************************************************************************
 *

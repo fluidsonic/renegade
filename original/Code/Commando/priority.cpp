@@ -248,37 +248,8 @@ cPriority::Compute_Relevance_Factor
 		factor -= cUserOptions::IrrelevancePenalty.Get();
 	}
 
-
 	return factor;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 float
 cPriority::Compute_Object_Priority_2
@@ -506,7 +477,6 @@ cPriority::Compute_Relevance_Factor_2
 	if (!is_relevant) {
 		factor -= cUserOptions::IrrelevancePenalty.Get();
 	}
-
 
 	return factor;
 }

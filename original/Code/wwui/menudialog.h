@@ -2,16 +2,13 @@
 #ifndef __MENU_DIALOG_H
 #define __MENU_DIALOG_H
 
-
 #include "dialogbase.h"
 #include "wwstring.h"
-
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
 ////////////////////////////////////////////////////////////////
 class MenuBackDropClass;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -78,7 +75,6 @@ protected:
 	virtual void			On_Menu_Activate (bool onoff);
 	virtual void			On_Last_Menu_Ending (void) {}
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected member data
 	////////////////////////////////////////////////////////////////	
@@ -86,7 +82,6 @@ protected:
 	static MenuBackDropClass *								BackDrop;
 	static DynamicVectorClass<MenuDialogClass *>		MenuStack;
 };
-
 
 #endif //__MENU_DIALOG_H
 

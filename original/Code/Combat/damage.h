@@ -28,7 +28,6 @@ class		BitStreamClass;
 class		ChunkSaveClass;
 class		ChunkLoadClass;
 
-
 /*
 **
 */
@@ -92,7 +91,6 @@ private:
 	static	safe_float			*Absorbsion;
 };
 
-
 /*
 **
 */
@@ -134,7 +132,6 @@ private:
 	float								Damage;
 	WarheadType						Warhead;
 	GameObjReference				Owner;
-
 
 };
 
@@ -217,7 +214,6 @@ public:
 	float			Get_Damage_Points(void) const			{ return DamagePoints; }
 	float			Get_Death_Points(void) const			{ return DeathPoints; }
 
-
 private:
 	safe_float		Health;
 	safe_float		HealthMax;
@@ -234,7 +230,6 @@ private:
 	void				Mark_Owner_Dirty( void );
 
 };
-
 
 /**
 ** DefenseObjectDefClass
@@ -300,8 +295,5 @@ public:
 #define	DEFENSEOBJECTDEF_EDITABLE_PARAMS( class_name, member_name )
 
 #endif
-
-
-
 
 #endif	//	DAMAGE_H

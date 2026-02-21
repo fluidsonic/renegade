@@ -3,12 +3,10 @@
 #include	"wwfont.h"
 //#include	<stdlib.h>
 
-
 #define FONTINFOMAXHEIGHT		4
 #define FONTINFOMAXWIDTH		5
 
 #define	FUDGEDIV		16
-
 
 /*********************************************************************************************** 
  * WWFontClass::WWFontClass -- Constructor for a font class object.                            * 
@@ -64,7 +62,6 @@ void *WWFontClass::Set_Font_Data(void const * fontdata)
 	return(old);
 }
 
-
 /*********************************************************************************************** 
  * WWFontClass::Char_Pixel_Width -- Fetch the pixel width of the character specified.          * 
  *                                                                                             * 
@@ -87,7 +84,6 @@ int WWFontClass::Char_Pixel_Width(char c) const
 	raw += FontXSpacing;
 	return(raw);
 }
-
 
 /*********************************************************************************************** 
  * WWFontClass::String_Pixel_Width -- Determines the width of the string in pixels.            * 
@@ -124,7 +120,6 @@ int WWFontClass::String_Pixel_Width(char const * string) const
 	return(largest);
 }
 
-
 /*********************************************************************************************** 
  * WWFontClass::Raw_Width -- Fetch the raw width of a character.                               * 
  *                                                                                             * 
@@ -144,7 +139,6 @@ int WWFontClass::Raw_Width(void) const
 {
 	return(*(((unsigned char *)FontData) + FontData->InfoBlockOffset + FONTINFOMAXWIDTH));
 }
-
 
 /*********************************************************************************************** 
  * WWFontClass::Raw_Height -- Fetch the height of the font.                                    * 
@@ -166,7 +160,6 @@ int WWFontClass::Raw_Height(void) const
 	return(*(((unsigned char *)FontData) + FontData->InfoBlockOffset + FONTINFOMAXHEIGHT));
 }
 
-
 /*********************************************************************************************** 
  * WWFontClass::Get_Width -- Get normalized width of the nominal font character.               * 
  *                                                                                             * 
@@ -187,7 +180,6 @@ int WWFontClass::Get_Width(void) const
 	return(Raw_Width() + ((FontXSpacing > 0) ? FontXSpacing : 0));
 }
 
-
 /*********************************************************************************************** 
  * WWFontClass::Get_Height -- Fetch the normalized height of the nominal font character.       * 
  *                                                                                             * 
@@ -207,7 +199,6 @@ int WWFontClass::Get_Height(void) const
 {
 	return(Raw_Height() + ((FontYSpacing > 0) ? FontYSpacing : 0));
 }
-
 
 /*********************************************************************************************** 
  * WWFontClass::Set_XSpacing -- Set the X spacing override value.                              * 
@@ -247,7 +238,6 @@ int WWFontClass::Set_XSpacing(int x)
 	FontXSpacing += Get_Width() / FUDGEDIV;
 	return(old);
 }
-
 
 /*********************************************************************************************** 
  * WWFontClass::Set_YSpacing -- Set the vertical (Y) spacing override value.                   * 

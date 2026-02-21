@@ -17,5 +17,4 @@ class NoInitClass {
 };
 #endif
 
-
 #endif

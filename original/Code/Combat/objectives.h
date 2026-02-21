@@ -15,7 +15,6 @@
 #include "objectivesviewer.h"
 #include "gameobjref.h"
 
-
 class	ChunkSaveClass;
 class	ChunkLoadClass;
 class	ScriptableGameObj;

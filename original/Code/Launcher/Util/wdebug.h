@@ -50,7 +50,6 @@ extern Sem4 DebugLibSemaphore;
   DebugLibSemaphore.Post(); \
 }
 
-
 // Just get a stream to the information device, no extra junk
 #define INFSTREAM(X)\
 {\
@@ -106,7 +105,6 @@ extern Sem4 DebugLibSemaphore;
   DebugLibSemaphore.Post(); \
 }
 
-
 #define DBGMSG(X)\
 {\
   DebugLibSemaphore.Wait(); \
@@ -136,7 +134,6 @@ extern Sem4 DebugLibSemaphore;
 }
 
 #endif  // DEBUG
-
 
 class MsgManager
 {

@@ -1,8 +1,6 @@
 #include "scripts.h"
 #include "dprint.h"
 
-
-
 DECLARE_SCRIPT(PDS_Generic_Test, "")
 {
 	void Created (GameObject *game_obj)
@@ -10,7 +8,6 @@ DECLARE_SCRIPT(PDS_Generic_Test, "")
 		Commands->Start_Timer(game_obj, this, 3.0F, 777);
 		return ;
 	}
-
 
 	void Timer_Expired (GameObject *game_obj, int timer_id)
 	{
@@ -28,8 +25,6 @@ DECLARE_SCRIPT(PDS_Generic_Test, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(PDS_Test_Modify_Attack, "WaypathID=:int")
 {
 	void Created (GameObject *game_obj)
@@ -37,7 +32,6 @@ DECLARE_SCRIPT(PDS_Test_Modify_Attack, "WaypathID=:int")
 		Commands->Start_Timer(game_obj, this, 3.0F, 777);
 		return ;
 	}
-
 
 	void Timer_Expired (GameObject *game_obj, int timer_id)
 	{
@@ -96,9 +90,6 @@ DECLARE_SCRIPT(PDS_Test_Modify_Attack, "WaypathID=:int")
 	}
 };
 
-
-
-
 DECLARE_SCRIPT(PDS_Test_Dock, "DockDestObjID=:int,DockEntranceObjID=:int")
 {
 	void Created (GameObject *game_obj)
@@ -106,7 +97,6 @@ DECLARE_SCRIPT(PDS_Test_Dock, "DockDestObjID=:int,DockEntranceObjID=:int")
 		Commands->Start_Timer (game_obj, this, 3.0F, 777);
 		return ;
 	}
-
 
 	void Timer_Expired (GameObject *game_obj, int timer_id)
 	{
@@ -146,8 +136,6 @@ DECLARE_SCRIPT(PDS_Test_Dock, "DockDestObjID=:int,DockEntranceObjID=:int")
 		return ;
 	}
 };
-
-
 
 DECLARE_SCRIPT(PDS_Test_Conversation, "Conversation Name=:string,Soldier1_ID=0:int,Soldier2_ID=0:int,Soldier3_ID=0:int")
 {
@@ -257,9 +245,6 @@ DECLARE_SCRIPT(PDS_Test_Conversation, "Conversation Name=:string,Soldier1_ID=0:i
 	}
 };
 
-
-
-
 DECLARE_SCRIPT(PDS_Get_In_Vehicle_Do_Waypath, "VehicleID=:int,WaypathID=:int,V3Test=1.3 44.543 0:vector3")
 {
 	bool m_StartedWaypath;
@@ -316,7 +301,6 @@ DECLARE_SCRIPT(PDS_Get_In_Vehicle_Do_Waypath, "VehicleID=:int,WaypathID=:int,V3T
 
 };
 
-
 DECLARE_SCRIPT(PDS_Test_Goto_Player, "")
 {
 
@@ -355,7 +339,6 @@ DECLARE_SCRIPT(PDS_Test_Goto_Player, "")
 	}
 };
 
-
 DECLARE_SCRIPT(PDS_Test_Goto_Loc, "ObjDestID=:int")
 {
 	////////////////////////////////////////////////////////////////////
@@ -366,7 +349,6 @@ DECLARE_SCRIPT(PDS_Test_Goto_Loc, "ObjDestID=:int")
 		Commands->Start_Timer(game_obj, this, 3.0F, 777);
 		return ;
 	}
-
 
 	////////////////////////////////////////////////////////////////////
 	//	Timer_Expired
@@ -399,7 +381,6 @@ DECLARE_SCRIPT(PDS_Test_Goto_Loc, "ObjDestID=:int")
 		return ;
 	}
 };
-
 
 DECLARE_SCRIPT(PDS_Test_Follow_Player, "")
 {
@@ -444,7 +425,6 @@ DECLARE_SCRIPT(PDS_Test_Follow_Player, "")
 	}
 };
 
-
 DECLARE_SCRIPT(PDS_Test_Follow_Waypath, "WaypathID=:int,WaypointStartID=:int,WaypointEndID=:int")
 {
 	void Created (GameObject *game_obj)
@@ -474,7 +454,6 @@ DECLARE_SCRIPT(PDS_Test_Follow_Waypath, "WaypathID=:int,WaypointStartID=:int,Way
 
 		return ;
 	}
-
 
 	void Timer_Expired (GameObject *game_obj, int timer_id)
 	{
@@ -516,7 +495,6 @@ DECLARE_SCRIPT(PDS_Test_Follow_Waypath, "WaypathID=:int,WaypointStartID=:int,Way
 	}
 
 };
-
 
 DECLARE_SCRIPT(PDS_Test_Harvester, "TiberiumID=:int,DriveToID=:int,EntranceID=:int,DockID=:int")
 {
@@ -671,7 +649,6 @@ DECLARE_SCRIPT(PDS_Test_Harvester, "TiberiumID=:int,DriveToID=:int,EntranceID=:i
 	}
 };
 
-
 ////////////////////////////////////////////////////////////////////
 //	Constants
 ////////////////////////////////////////////////////////////////////
@@ -686,7 +663,6 @@ enum
 	CUSTOM_HAS_MEDKIT		= 0,
 	CUSTOM_GOT_OBJECT,
 };
-
 
 DECLARE_SCRIPT(PDS_Test_Inventory, "")
 {
@@ -756,7 +732,6 @@ DECLARE_SCRIPT(PDS_Test_Inventory, "")
 
 };
 
-
 DECLARE_SCRIPT(PDS_Test_Bubba, "")
 {
 	////////////////////////////////////////////////////////////////////
@@ -793,9 +768,6 @@ DECLARE_SCRIPT(PDS_Test_Bubba, "")
 	}
 };
 
-
-
-
 DECLARE_SCRIPT(PDS_Test_Controller, "")
 {
 	////////////////////////////////////////////////////////////////////
@@ -823,8 +795,6 @@ DECLARE_SCRIPT(PDS_Test_Controller, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(PDS_Test_Gunboat, "")
 {
 	////////////////////////////////////////////////////////////////////
@@ -832,7 +802,6 @@ DECLARE_SCRIPT(PDS_Test_Gunboat, "")
 	////////////////////////////////////////////////////////////////////
 	GameObject *GameObj;
 	int State;
-
 
 	////////////////////////////////////////////////////////////////////
 	//	Constants
@@ -936,7 +905,6 @@ DECLARE_SCRIPT(PDS_Test_Gunboat, "")
 		return ;
 	}
 };
-
 
 DECLARE_SCRIPT(PDS_Test_Sound, "")
 {

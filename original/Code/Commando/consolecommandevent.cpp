@@ -9,7 +9,6 @@
 #include "consolefunction.h"
 #include "apppackettypes.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cConsoleCommandEvent, NETCLASSID_CONSOLECOMMANDEVENT);
 
 //-----------------------------------------------------------------------------
@@ -24,7 +23,6 @@ cConsoleCommandEvent::cConsoleCommandEvent(void)
 void
 cConsoleCommandEvent::Init(LPCSTR command)
 {
-
 
 	::strcpy(Command, command);
 

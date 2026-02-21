@@ -18,4 +18,3 @@ protected:
 	static int DialogCount;
 };
 
-

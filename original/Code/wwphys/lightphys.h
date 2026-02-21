@@ -5,7 +5,6 @@
 #include "decophys.h"
 #include "rendobj.h"
 
-
 /**
 ** LightPhysClass
 ** Just a class that is used by the light culling system.  Its main purposes
@@ -60,7 +59,5 @@ private:
 	LightPhysClass(const LightPhysClass &);
 	LightPhysClass & operator = (const LightPhysClass &);
 };
-
-
 
 #endif

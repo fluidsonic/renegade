@@ -60,7 +60,6 @@ protected:
 	friend	class								SmartGameObj;
 };
 
-
 /*
 **
 */
@@ -143,7 +142,6 @@ public:
 	virtual	void	Export_Creation( BitStreamClass & packet );
 	virtual	void	Import_Creation( BitStreamClass & packet );
 
-
    bool Is_Control_Data_Dirty(cPacket & packet);
 
 	bool	Is_Obj_Visible( PhysicalGameObj *obj );
@@ -213,19 +211,6 @@ private:
 	static	float			GlobalSightRangeScale;
 };
 
-
 #endif	//	SMARTGAMEOBJ_H
-
-
-
-
-
-
-
-
-
-
-
-
 
 		//MOBIUS_CONTROL_OWNER		= -1

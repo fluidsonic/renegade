@@ -27,7 +27,6 @@ template<typename T> T CharToUpper(const T ch)
 	return ch;
 	}
 
-
 // Check if character is one of the specified characters
 template<typename T>bool IsCharacter(WChar ch, const T* oneOf)
 	{
@@ -51,7 +50,6 @@ template<typename T>bool IsCharacter(WChar ch, const T* oneOf)
 	return false;
 	}
 
-
 // Strip all left side characters that are trim chars
 template<typename T> bool StripLeft(WChar* string, const T* trimChars)
 	{
@@ -70,7 +68,6 @@ template<typename T> bool StripLeft(WChar* string, const T* trimChars)
 
 	return true;
 	}
-
 
 // Strip all right side characters that are trim chars
 template<typename T> bool StripRight(WChar* string, const T* trimChars)
@@ -91,7 +88,6 @@ template<typename T> bool StripRight(WChar* string, const T* trimChars)
 
 	return (index != length);
 	}
-
 
 /******************************************************************************
 *
@@ -114,7 +110,6 @@ UString::UString()
 	  mCapacity(0)
 	{
 	}
-
 
 /******************************************************************************
 *
@@ -139,7 +134,6 @@ UString::UString(UInt capacity)
 	AllocString(capacity);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -162,7 +156,6 @@ UString::UString(const Char* s)
 	{
 	Copy(s);
 	}
-
 
 /******************************************************************************
 *
@@ -187,7 +180,6 @@ UString::UString(const WChar* ws)
 	Copy(ws);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -210,7 +202,6 @@ UString::UString(const UString& s)
 	{
 	Copy(s);
 	}
-
 
 /******************************************************************************
 *
@@ -235,7 +226,6 @@ UString::~UString()
 		delete mData;
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -262,7 +252,6 @@ UInt UString::Length(void) const
 
 	return wcslen(mData);
 	}
-
 
 /******************************************************************************
 *
@@ -308,7 +297,6 @@ void UString::Copy(const Char* s)
 	*wsPtr = 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -344,7 +332,6 @@ void UString::Copy(const WChar* ws)
 	wcscpy(mData, ws);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -365,7 +352,6 @@ void UString::Copy(const UString& s)
 	{
 	Copy(s.Get());
 	}
-
 
 /******************************************************************************
 *
@@ -410,7 +396,6 @@ void UString::Concat(const Char* s)
 	*wsPtr = 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -440,7 +425,6 @@ void UString::Concat(const WChar* ws)
 	wcscat(mData, ws);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -461,7 +445,6 @@ void UString::Concat(const UString& s)
 	{
 	Concat(s.Get());
 	}
-
 
 /******************************************************************************
 *
@@ -529,7 +512,6 @@ Int UString::Compare(const Char* s) const
 	return 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -553,7 +535,6 @@ Int UString::Compare(const WChar* ws) const
 	return wcscmp(ws, Get());
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -576,7 +557,6 @@ Int UString::Compare(const UString& s) const
 	{
 	return Compare(s.Get());
 	}
-
 
 /******************************************************************************
 *
@@ -649,7 +629,6 @@ Int UString::CompareNoCase(const Char* s) const
 	return 0;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -673,7 +652,6 @@ Int UString::CompareNoCase(const WChar* ws) const
 	{
 	return wcsicmp(ws, Get());
 	}
-
 
 /******************************************************************************
 *
@@ -699,7 +677,6 @@ Int UString::CompareNoCase(const UString& s) const
 	return CompareNoCase(s.Get());
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -720,7 +697,6 @@ Int UString::Find(Char c) const
 	{
 	return Find((WChar)c);
 	}
-
 
 /******************************************************************************
 *
@@ -751,7 +727,6 @@ Int UString::Find(WChar c) const
 	return ((ptr - mData) / sizeof(WChar));
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -772,7 +747,6 @@ Int UString::FindLast(Char c) const
 	{
 	return FindLast((WChar)c);
 	}
-
 
 /******************************************************************************
 *
@@ -804,7 +778,6 @@ Int UString::FindLast(WChar c) const
 	return ((ptr - mData) / sizeof(WChar));
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -828,7 +801,6 @@ UString UString::SubString(const Char* s)
 	return UString("");
 	}
 
-
 UString UString::SubString(const WChar* ws)
 	{
 	assert(false);
@@ -836,13 +808,11 @@ UString UString::SubString(const WChar* ws)
 	return UString("");
 	}
 
-
 UString UString::SubString(const UString& s)
 	{
 	assert(false);
 	return SubString(s.mData);
 	}
-
 
 /******************************************************************************
 *
@@ -872,7 +842,6 @@ UString UString::Left(UInt count)
 
 	return UString("");
 	}
-
 
 /******************************************************************************
 *
@@ -904,7 +873,6 @@ UString UString::Middle(UInt first, UInt count)
 
 	return UString("");
 	}
-
 
 /******************************************************************************
 *
@@ -938,7 +906,6 @@ UString UString::Right(UInt count)
 	return UString(ptr[pos]);
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -962,7 +929,6 @@ void UString::ToUpper(void)
 		wcsupr(mData);
 		}
 	}
-
 
 /******************************************************************************
 *
@@ -988,7 +954,6 @@ void UString::ToLower(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1013,7 +978,6 @@ void UString::Reverse(void)
 		}
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1037,7 +1001,6 @@ bool UString::Trim(const Char* trimChars)
 	return (leftRemoved || rightRemoved);
 	}
 
-
 bool UString::Trim(const WChar* trimChars)
 	{
 	bool leftRemoved = TrimLeft(trimChars);
@@ -1045,14 +1008,12 @@ bool UString::Trim(const WChar* trimChars)
 	return (leftRemoved || rightRemoved);
 	}
 
-
 bool UString::Trim(const UString& trimChars)
 	{
 	bool leftRemoved = TrimLeft(trimChars);
 	bool rightRemoved = TrimRight(trimChars);
 	return (leftRemoved || rightRemoved);
 	}
-
 
 /******************************************************************************
 *
@@ -1080,7 +1041,6 @@ bool UString::TrimLeft(const Char* trimChars)
 	return StripLeft<Char>(mData, trimChars);
 	}
 
-
 bool UString::TrimLeft(const WChar* trimChars)
 	{
 	if ((trimChars == NULL) || (wcslen(trimChars) == 0))
@@ -1091,12 +1051,10 @@ bool UString::TrimLeft(const WChar* trimChars)
 	return StripLeft<WChar>(mData, trimChars);
 	}
 
-
 bool UString::TrimLeft(const UString& trimChars)
 	{
 	return TrimLeft(trimChars.Get());
 	}
-
 
 /******************************************************************************
 *
@@ -1124,7 +1082,6 @@ bool UString::TrimRight(const Char* trimChars)
 	return StripRight<Char>(mData, trimChars);
 	}
 
-
 bool UString::TrimRight(const WChar* trimChars)
 	{
 	if ((trimChars == NULL) || (wcslen(trimChars) == 0))
@@ -1135,12 +1092,10 @@ bool UString::TrimRight(const WChar* trimChars)
 	return StripRight<WChar>(mData, trimChars);
 	}
 
-
 bool UString::TrimRight(const UString& trimChars)
 	{
 	return TrimRight(trimChars.mData);
 	}
-
 
 /******************************************************************************
 *
@@ -1163,7 +1118,6 @@ void UString::ConvertToANSI(Char* buffer, UInt bufferLength) const
 	{
 	UStringToANSI(*this, buffer, bufferLength);
 	}
-
 
 /******************************************************************************
 *
@@ -1191,7 +1145,6 @@ UInt UString::Size(void) const
 	return ((Length() + 1) * sizeof(WChar));
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -1212,7 +1165,6 @@ UInt UString::Capacity(void) const
 	{
 	return mCapacity;
 	}
-
 
 /******************************************************************************
 *
@@ -1257,7 +1209,6 @@ bool UString::Resize(UInt size)
 
 	return true;
 	}
-
 
 /******************************************************************************
 *

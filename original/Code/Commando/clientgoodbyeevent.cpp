@@ -25,7 +25,6 @@ void
 cClientGoodbyeEvent::Init(void)
 {
 
-
 	SenderId	= cNetwork::Get_My_Id();
 
 	Set_Network_ID(NetworkObjectMgrClass::Get_New_Client_ID());
@@ -41,8 +40,6 @@ cClientGoodbyeEvent::Init(void)
 void
 cClientGoodbyeEvent::Act(void)
 {
-
-
 
 	Set_Delete_Pending();
 
@@ -61,9 +58,7 @@ void
 cClientGoodbyeEvent::Export_Creation(BitStreamClass & packet)
 {
 
-
 	cNetEvent::Export_Creation(packet);
-
 
 	packet.Add(SenderId);
 
@@ -75,11 +70,9 @@ void
 cClientGoodbyeEvent::Import_Creation(BitStreamClass & packet)
 {
 
-
 	cNetEvent::Import_Creation(packet);
 
 	packet.Get(SenderId);
-
 
 	Act();
 }

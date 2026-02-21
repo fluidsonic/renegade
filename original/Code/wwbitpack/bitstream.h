@@ -1,7 +1,6 @@
 #ifndef BITSTREAM_H
 #define BITSTREAM_H
 
-
 #include "bitpacker.h"
 #include "encoderlist.h"
 #include "mathutil.h"
@@ -10,7 +9,6 @@
 
 #define BYTE_DEPTH(x)		(sizeof(x))
 #define BIT_DEPTH(x)			(8 * sizeof(x))
-
 
 /**
 ** BitStreamClass
@@ -159,7 +157,6 @@ class BitStreamClass : public cBitPacker
 				} else {
 					value = static_cast<T>(cMathUtil::Round(f_value));
 				}
-
 
 			} else {
 				ULONG u_value;

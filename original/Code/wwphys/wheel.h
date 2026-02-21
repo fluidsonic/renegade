@@ -7,7 +7,6 @@
 class VehiclePhysClass;
 class RenderObjClass;
 
-
 /*
 ** Some default suspension constants
 */
@@ -52,7 +51,6 @@ const float		DEFAULT_SPRING_LENGTH					= 1.0f;
 ** - 'R' Right Track: this wheel is part of the right track of a tracked vehicle
 ** - 'F' Fake: just move, don't compute any forces
 */
-
 
 /**
 ** SuspensionElementClass
@@ -132,7 +130,6 @@ protected:
 	void				Translate_Wheel(RenderObjClass * model);
 	void				Translate_Wheel_On_Axis(RenderObjClass * model);
 	void				Rotate_Fork(RenderObjClass * model);
-
 
 	/*
 	** Properties
@@ -266,7 +263,6 @@ private:
 
 };
 
-
 /**
 ** WVWheelClass (Wheeled-Vehicle-Wheel)
 ** This wheel class is used by things like Humvees and Buggys.   
@@ -285,7 +281,6 @@ protected:
 	virtual void	Compute_Traction_Forces(const Vector3 & local_pdot,float normal_force,float * set_lateral_force,float * set_tractive_force);
 	void				Roll_Wheel(void);
 };
-
 
 /**
 ** TrackWheelClass
@@ -310,7 +305,6 @@ protected:
 
 };
 
-
 /**
 ** VTOLWheelClass
 ** This wheel type is used by the VTOL vehicles.  It simply resists movement in
@@ -332,8 +326,5 @@ protected:
 
 };
 
-
-
 #endif //WHEEL_H
-
 

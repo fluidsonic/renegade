@@ -1,6 +1,5 @@
 #include "assets.h"
 #include "wwfile.h"
-#include "debug.h"
 #include "ffactory.h"
 
 /*
@@ -81,8 +80,6 @@ TextureClass * Get_Texture_From_Filename
 	Strip_Path_From_Filename( tex_name, filename );
 	return WW3DAssetManager::Get_Instance()->Get_Texture( tex_name, mip_level_count );
 }
-
-
 
 /*
 ** Filenames

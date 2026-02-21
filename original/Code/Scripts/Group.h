@@ -4,7 +4,6 @@
 #include "scripts.h"
 #include "vector.h"
 
-
 // Group event identifiers
 typedef enum
 	{
@@ -13,7 +12,6 @@ typedef enum
 	GROUP_MEMBER_HEARD,
 	GROUP_MEMBER_SAW,
 	} GroupEvent;
-
 
 // Group event information.
 //
@@ -30,7 +28,6 @@ typedef struct GroupEventInfoTag
 		const CombatSound* Sound;
 		};
 	} GroupEventInfo;
-
 
 class GroupController;
 

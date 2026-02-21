@@ -2,7 +2,6 @@
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
 #include "wwphysids.h"
-#include "debug.h"
 #include "hanim.h"
 #include "combat.h"
 #include "smartgameobj.h"

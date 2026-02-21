@@ -10,7 +10,6 @@ SimplePersistFactoryClass	<AccessiblePhysClass,		PHYSICS_CHUNKID_ACCESSIBLEPHYS>
 SimplePersistFactoryClass	<AccessiblePhysDefClass,	PHYSICS_CHUNKID_ACCESSIBLEPHYSDEF>				_AccessiblePhysDefFactory;
 DECLARE_DEFINITION_FACTORY	(AccessiblePhysDefClass,	CLASSID_ACCESSIBLEPHYSDEF, "AccessiblePhys")	_AccessiblePhysDefDefFactory;
 
-
 /////////////////////////////////////////////////////////////////////////
 //	Save/load constants
 /////////////////////////////////////////////////////////////////////////
@@ -22,7 +21,6 @@ enum
 	VARID_LOCKCODE				= 1,
 };										
 
-
 enum
 {
 	CHUNKID_DEF_PARENT		= 0x10311249,
@@ -30,7 +28,6 @@ enum
 	
 	VARID_DEF_LOCKCODE		= 1,
 };										
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -43,7 +40,6 @@ AccessiblePhysClass::AccessiblePhysClass (void) :
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 //	~AccessiblePhysClass
@@ -53,7 +49,6 @@ AccessiblePhysClass::~AccessiblePhysClass (void)
 {
 	return ;
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -68,7 +63,6 @@ AccessiblePhysClass::Init (const AccessiblePhysDefClass &definition)
 	return ;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -79,7 +73,6 @@ AccessiblePhysClass::Get_Factory (void) const
 {
 	return _AccessiblePhysClassFactory;
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -99,7 +92,6 @@ AccessiblePhysClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -111,7 +103,6 @@ AccessiblePhysClass::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK (csave, VARID_LOCKCODE, LockCode);
 	return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -143,7 +134,6 @@ AccessiblePhysClass::Load (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Load_Variables
@@ -167,7 +157,6 @@ AccessiblePhysClass::Load_Variables (ChunkLoadClass &cload)
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	AccessiblePhysDefClass
@@ -180,7 +169,6 @@ AccessiblePhysDefClass::AccessiblePhysDefClass (void) :
 	return ;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Get_Class_ID
@@ -191,7 +179,6 @@ AccessiblePhysDefClass::Get_Class_ID (void) const
 { 
 	return CLASSID_ACCESSIBLEPHYSDEF; 
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -206,7 +193,6 @@ AccessiblePhysDefClass::Create (void) const
 	return obj;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //
 //	Get_Factory
@@ -218,7 +204,6 @@ AccessiblePhysDefClass::Get_Factory (void) const
 {
 	return _AccessiblePhysDefFactory;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -239,7 +224,6 @@ AccessiblePhysDefClass::Is_Type (const char *type_name)
 	return retval;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 //	Save
@@ -258,7 +242,6 @@ AccessiblePhysDefClass::Save (ChunkSaveClass &csave)
 	return true;
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 //
 //	Save_Variables
@@ -270,7 +253,6 @@ AccessiblePhysDefClass::Save_Variables (ChunkSaveClass &csave)
 	WRITE_MICRO_CHUNK (csave, VARID_DEF_LOCKCODE, LockCode);
 	return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 //
@@ -301,7 +283,6 @@ AccessiblePhysDefClass::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //

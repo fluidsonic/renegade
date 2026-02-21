@@ -6,9 +6,6 @@
 #include "physdecalsys.h"
 #include "phys.h"
 
-
-
-
 /*
 ** PhysicsSceneClass Decal Methods 
 */
@@ -42,5 +39,4 @@ bool PhysicsSceneClass::Remove_Decal(uint32 id)
 {
 	return DecalSystem->Remove_Decal(id);
 }
-
 

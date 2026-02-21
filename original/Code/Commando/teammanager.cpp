@@ -312,7 +312,6 @@ int cTeamManager::Team_Compare(const void * elem1, const void * elem2)
    // Used by qsort
    //
 
-
    cTeam * p_team1 = *((cTeam **)elem1);
    cTeam * p_team2 = *((cTeam **)elem2);
 
@@ -336,7 +335,6 @@ void cTeamManager::List_Print(WideStringClass & text, Vector3 color)
 	if (PTextRenderer == NULL) {
 		return;
 	}
-
 
 	PTextRenderer->Set_Location(Vector2(cMathUtil::Round(XPos), cMathUtil::Round(YPos)));
 
@@ -557,20 +555,4 @@ void cTeamManager::Render_Team_List(void)
    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

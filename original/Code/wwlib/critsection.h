@@ -1,7 +1,6 @@
 #ifndef CRIT_SECTION
 #define CRIT_SECTION
 
-
 #include "always.h"
 #include <windows.h>
 
@@ -30,6 +29,5 @@ private:
 	void Enter();
 	void Exit();
 };
-
 
 #endif

@@ -51,7 +51,6 @@ CameraShakeSystemClass::CameraShakerClass::~CameraShakerClass(void)
 {
 }
 
-
 void CameraShakeSystemClass::CameraShakerClass::Compute_Rotations(const Vector3 & camera_position, Vector3 * set_angles)
 {
 
@@ -80,7 +79,6 @@ void CameraShakeSystemClass::CameraShakerClass::Compute_Rotations(const Vector3 
 		(*set_angles)[i] += AXIS_ROTATION[i] * intensity * WWMath::Sin(omega * ElapsedTime + Phi[i]);
 	}
 }
-
 
 /************************************************************************************************
 **
@@ -178,5 +176,4 @@ void CameraShakeSystemClass::Update_Camera(CameraClass & camera)
 	camera_transform.Rotate_Z(angles.Z);
 	camera.Set_Transform(camera_transform);
 }
-
 

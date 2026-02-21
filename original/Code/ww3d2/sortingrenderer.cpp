@@ -267,7 +267,6 @@ static ShortVectorIStruct* Get_Polygon_Index_Array(unsigned count)
 	return polygon_index_array;
 }
 
-
 // ----------------------------------------------------------------------------
 //
 // Insert triangles to the sorting system.
@@ -291,7 +290,6 @@ void SortingRendererClass::Insert_Triangles(
 	SortingNodeStruct* state=Get_Sorting_Struct();
 
 	DX8Wrapper::Get_Render_State(state->sorting_state);
-
 
 	state->bounding_sphere=bounding_sphere;
 	state->start_index=start_index;
@@ -626,7 +624,6 @@ void SortingRendererClass::Flush()
 
 	DynamicIBAccessClass::_Reset(false);
 	DynamicVBAccessClass::_Reset(false);
-
 
 	DX8Wrapper::Set_Transform(D3DTS_VIEW,old_view);
 	DX8Wrapper::Set_Transform(D3DTS_WORLD,old_world);

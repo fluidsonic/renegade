@@ -2,15 +2,12 @@
 #ifndef __SKINPACKAGEMGR_H
 #define __SKINPACKAGEMGR_H
 
-
 #include "vector.h"
 #include "skinpackage.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //	Forward declarations
 //////////////////////////////////////////////////////////////////////
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -62,6 +59,5 @@ protected:
 	static DynamicVectorClass<SkinPackageClass>	PackageList;
 	static SkinPackageClass								CurrentPackage;
 };
-
 
 #endif //__SKINPACKAGEMGR_H

@@ -15,8 +15,5 @@ public:
 	static TransitionEffectClass * Get_Electrocution_Effect(void);
 };
 
-
-
 #endif
-
 

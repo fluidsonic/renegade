@@ -9,9 +9,6 @@
 #include "vehicle.h"
 #include "soldier.h"
 #include "heightdb.h"
-#include "debug.h"
-
-
 ////////////////////////////////////////////////////////////////
 //	Save/Load constants
 ////////////////////////////////////////////////////////////////
@@ -47,7 +44,6 @@ enum
 	VARID_ISEXACT_Z_IMPORT,
 	VARID_PATH_PTR
 };
-
 
 ////////////////////////////////////////////////////////////////
 //	Constants
@@ -105,7 +101,6 @@ Clamp_Angle (float angle, float min_angle, float max_angle)
 	return result;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	PilotClass
@@ -137,7 +132,6 @@ PilotClass::PilotClass (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Object_Space_Velocity
@@ -163,7 +157,6 @@ PilotClass::Get_Object_Space_Velocity (Vector3 &vel_vector) const
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Target
@@ -185,7 +178,6 @@ PilotClass::Set_Target (const Vector3 *target)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -232,7 +224,6 @@ PilotClass::Initialize (SmartGameObj *game_obj)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Calculate_Desired_Relative_Facing
@@ -275,7 +266,6 @@ PilotClass::Calculate_Desired_Relative_Facing (void)
 	//
 	return WWMath::Wrap (base_angle, -WWMATH_PI, WWMATH_PI);
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -322,7 +312,6 @@ PilotClass::Think (void)
 	return Has_Arrived ();
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Calculate_Strafe_Speed
@@ -342,7 +331,6 @@ PilotClass::Calculate_Strafe_Speed (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Calculate_Forward_Speed
@@ -360,7 +348,6 @@ PilotClass::Calculate_Forward_Speed (float distance)
 	m_ForwardSpeed	= WWMath::Clamp (m_ForwardSpeed, -1.0F, 1.0F);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -431,7 +418,6 @@ PilotClass::Calculate_Lift_Speed (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Calculate_Turn_Sharpness
@@ -458,7 +444,6 @@ PilotClass::Calculate_Turn_Sharpness (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -502,7 +487,6 @@ PilotClass::Process_Hover (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -560,7 +544,6 @@ PilotClass::Process_Circle_Point (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -628,7 +611,6 @@ PilotClass::Process_Fly_To_Point (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Check_Completion
@@ -655,7 +637,6 @@ PilotClass::Check_Completion (void)
 	} else {
 		dist_to_goal = m_ObjSpaceDest.Length ();
 	}
-
 
 	//
 	//	Take into account the 'arrived distance' setting.  We basically fly towards the
@@ -693,7 +674,6 @@ PilotClass::Check_Completion (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update_Transform
@@ -728,7 +708,6 @@ PilotClass::Update_Transform (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -824,7 +803,6 @@ PilotClass::Determine_Preferred_Height (void)
 	return height;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Apply_Controls
@@ -899,7 +877,6 @@ PilotClass::Apply_Controls (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Mode
@@ -943,7 +920,6 @@ PilotClass::Set_Mode (PilotClass::MODE mode)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Circle_Pos
@@ -959,7 +935,6 @@ PilotClass::Set_Circle_Pos (const Vector3 &pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Circle_Angle
@@ -972,7 +947,6 @@ PilotClass::Set_Circle_Angle (float angle)
 	m_CircleAngle = ::Clamp_Angle (m_CircleAngle, m_MinCircleAngle, m_MaxCircleAngle);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -987,7 +961,6 @@ PilotClass::Set_Circle_Bounds (float min_angle, float max_angle)
 	m_CircleAngle		= ::Clamp_Angle (m_CircleAngle, m_MinCircleAngle, m_MaxCircleAngle);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -1019,7 +992,6 @@ PilotClass::Has_Arrived (void) const
 	return has_arrived;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Current_Circle_Angle
@@ -1034,7 +1006,6 @@ PilotClass::Get_Current_Circle_Angle (void) const
 
 	return WWMath::Atan2 (delta.Y, delta.X);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1079,7 +1050,6 @@ PilotClass::Save (ChunkSaveClass &csave)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 //
 //	Load
@@ -1101,7 +1071,6 @@ PilotClass::Load (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -1162,7 +1131,6 @@ PilotClass::Load_Variables (ChunkLoadClass &cload)
 
 	return ;
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 //

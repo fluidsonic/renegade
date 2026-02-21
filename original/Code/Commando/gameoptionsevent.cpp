@@ -63,7 +63,6 @@ cGameOptionsEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	//GAMESPY
 	//
 	// Due to gamespy support, we can no longer assume that the client exe
@@ -81,7 +80,6 @@ cGameOptionsEvent::Export_Creation(BitStreamClass & packet)
 	packet.Add((uint32)CRC_Stringi(The_Game()->Get_Map_Name()));
 #endif // MULTIPLAYERDEMO
 
-
 	Set_Delete_Pending();
 }
 
@@ -90,8 +88,6 @@ void
 cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
-
-
 
 	The_Game()->Import_Tier_1_Data((cPacket &) packet);
 
@@ -133,15 +129,10 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 
 #endif // MULTIPLAYERDEMO
 
-
 	if (act) {
 		Act();
 	}
 
 	Set_Delete_Pending();
 }
-
-
-
-
 

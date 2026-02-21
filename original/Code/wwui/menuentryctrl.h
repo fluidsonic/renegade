@@ -6,7 +6,6 @@
 #include "vector3.h"
 #include "render2dsentence.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MenuEntryCtrlClass
@@ -62,7 +61,6 @@ protected:
 	void					Create_Glow (int radiusx, int radiusy, int color);
 	void					On_Pushed (void);	
 
-
 	////////////////////////////////////////////////////////////////
 	//	Protected constants
 	////////////////////////////////////////////////////////////////
@@ -94,6 +92,5 @@ protected:
 	static int				MaxDefaultRedValue;
 	static int				MaxHilightRedValue;
 };
-
 
 #endif //__MENU_ENTRY_CTRL_H

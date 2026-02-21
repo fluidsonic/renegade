@@ -5,7 +5,6 @@
 #include "definition.h"
 #include "definitionclassids.h"
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 //	TwiddlerClass
@@ -65,7 +64,6 @@ private:
 	DynamicVectorClass<int>		m_DefinitionList;
 };
 
-
 /////////////////////////////////////////////////////////////////////
 //	Get_Indirect_Class_ID
 /////////////////////////////////////////////////////////////////////
@@ -74,7 +72,6 @@ TwiddlerClass::Get_Indirect_Class_ID (void) const
 {
 	return m_IndirectClassID;
 }
-
 
 /////////////////////////////////////////////////////////////////////
 //	Set_Indirect_Class_ID
@@ -85,7 +82,6 @@ TwiddlerClass::Set_Indirect_Class_ID (uint32 class_id)
 	m_IndirectClassID = class_id;
 	return ;
 }
-
 
 #endif //__TWIDDLER_H
 

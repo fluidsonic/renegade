@@ -12,7 +12,6 @@
 
 class RefCountClass;
 
-
 class PointerRemapClass 
 {
 	public:
@@ -61,6 +60,5 @@ class PointerRemapClass
 		DynamicVectorClass<PtrRemapStruct>	PointerRequestTable;
 		DynamicVectorClass<PtrRemapStruct>	RefCountRequestTable;
 };
-
 
 #endif

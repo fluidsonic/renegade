@@ -36,9 +36,6 @@ unsigned long BuildInfoClass::Get_Build_Number(void)
 	return (*(unsigned long*)(&BuildNumber[28]));
 }
 
-
-
-
 /***********************************************************************************************
  * BuildInfoClass::Get_Build_Number_String -- Gets the build number as a human readable string.*
  *                                                                                             *
@@ -60,9 +57,6 @@ char *BuildInfoClass::Get_Build_Number_String(void)
 	return (_buffer);
 }
 
-
-
-
 /***********************************************************************************************
  * BuildInfoClass::Get_Builder_Name -- Gets the name of the person who built this executable.  *
  *                                                                                             *
@@ -81,8 +75,6 @@ char *BuildInfoClass::Get_Builder_Name(void)
 {
 	return(&BuildNumber[32]);
 }
-
-
 
 /***********************************************************************************************
  * BuildInfoClass::Get_Build_Date_String -- Gets the date this executable was built on.        *
@@ -111,8 +103,6 @@ char *BuildInfoClass::Get_Build_Date_String(void)
 
 	return(_buffer);
 }
-
-
 
 /***********************************************************************************************
  * BuildInfoClass::Get_Builder_Initials -- Gets the initials of the builder                    *
@@ -164,9 +154,6 @@ char *BuildInfoClass::Get_Build_Version_String(void)
 	return(_buffer);
 }
 
-
-
-
 /***********************************************************************************************
  * BuildInfoClass::Get_Build_Type -- Get the type of build this is                             *
  *                                                                                             *
@@ -189,8 +176,6 @@ BuildInfoClass::BuildType BuildInfoClass::Get_Build_Type(void)
 		return(BUILD_DEBUG);
 	#endif //_DEBUG
 }
-
-
 
 /***********************************************************************************************
  * BuildInfoClass::Get_Build_Type_String -- Get the build type as a string.                    *
@@ -223,10 +208,6 @@ char *BuildInfoClass::Get_Build_Type_String(void)
 	}
 }
 
-
-
-
-
 /***********************************************************************************************
  * BuildInfoClass::Composite_Build_Info -- Get lots of build info                              *
  *                                                                                             *
@@ -248,8 +229,6 @@ char *BuildInfoClass::Composite_Build_Info(void)
 	return(_buffer);
 }
 
-
-
 /***********************************************************************************************
  * BuildInfoClass::Log_Build_Info -- Dump build info to the logfile.                           *
  *                                                                                             *
@@ -267,7 +246,4 @@ char *BuildInfoClass::Composite_Build_Info(void)
 void BuildInfoClass::Log_Build_Info(void)
 {
 }
-
-
-
 

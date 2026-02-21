@@ -14,10 +14,8 @@
 #include "colmathplane.h"
 #include "colmathaabox.h"
 
-
 #define LOG_HIERARCHICAL_CULLING				0
 #define VIS_SAMPLE_DISTANCE					20.0f
-
 
 /*
 ** Static variables
@@ -32,7 +30,6 @@ enum
 	STATICAABTREE_CHUNK_VERSION					= 0x00000001,	// OBSOLETE version wrapper, contains 32bit version #
 	STATICAABTREE_CHUNK_AABTREE_CLASS_DATA		= 0x00000104,	// wraps the AABTreeCullSystemClass's save data
 };
-
 
 /*
 ** StaticAABTreeCullClass is a derived AABTree which assumes it contains StaticPhysClasses
@@ -112,7 +109,6 @@ void StaticAABTreeCullClass::Collect_Visible_Objects
 			}
 #endif
 		}
-
 
 	} else {
 
@@ -202,8 +198,6 @@ void StaticAABTreeCullClass::Collect_Visible_Objects_Recursive
 	}
 }
 
-
-
 void StaticAABTreeCullClass::Collect_Visible_Objects_No_HVis_Recursive
 (
 	AABTreeNodeClass *				node,
@@ -254,7 +248,6 @@ void StaticAABTreeCullClass::Collect_Visible_Objects_No_HVis_Recursive
 		Collect_Visible_Objects_No_HVis_Recursive(node->Front,context);
 	}
 }
-
 
 void StaticAABTreeCullClass::Assign_Vis_IDs(void)
 {
@@ -317,7 +310,6 @@ void StaticAABTreeCullClass::Evaluate_Non_Occluder_Visibility
 	RefPhysListClass non_occluders;
 	Collect_Non_Occluders(RootNode,context,non_occluders);
 
-
 	if (context.Is_Vis_Quick_And_Dirty()) {
 		
 		RefPhysListIterator it(&non_occluders);
@@ -373,7 +365,6 @@ void StaticAABTreeCullClass::Evaluate_Non_Occluder_Visibility
 		}
 	}
 }
-
 
 void StaticAABTreeCullClass::Render_Occluders(AABTreeNodeClass * node,VisRenderContextClass & context)
 {
@@ -521,7 +512,6 @@ void StaticAABTreeCullClass::Propogate_Hierarchical_Visibility_Recursive
 	}
 }
 
-
 bool StaticAABTreeCullClass::Is_Child_Visible
 (
 	AABTreeNodeClass * node,
@@ -612,7 +602,6 @@ void StaticAABTreeCullClass::Merge_Vis_Sector_IDs(uint32 id0,uint32 id1)
 		}
 	}
 }
-
 
 void StaticAABTreeCullClass::Load_Static_Data(ChunkLoadClass & cload)
 {

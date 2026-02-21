@@ -1,6 +1,5 @@
 #include "sbbomanager.h"
 
-#include "debug.h"
 #include "cnetwork.h"
 
 //
@@ -44,7 +43,6 @@ cSbboManager::Think
 	{
 		return;
 	}
-
 
 	float total_time = AccumTimeSNetUpdate + AccumTimeSCombatThink;
 

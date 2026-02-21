@@ -6,7 +6,6 @@
 #include "rect.h"
 #include "render2d.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //	EvaSettingsDefClass
@@ -84,7 +83,6 @@ protected:
 	static EvaSettingsDefClass *			EvaSettings;
 };
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Get_Objectives_Screen_Rect
 //////////////////////////////////////////////////////////////////////////
@@ -104,7 +102,6 @@ EvaSettingsDefClass::Get_Objectives_Screen_Rect (void) const
 	adjusted_rect.Bottom	= float (int(adjusted_rect.Bottom + 0.5F));
 	return adjusted_rect;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Get_Objectives_Text_Rect
@@ -126,7 +123,6 @@ EvaSettingsDefClass::Get_Objectives_Text_Rect (void) const
 	return adjusted_rect;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Get_Messages_Screen_Rect
 //////////////////////////////////////////////////////////////////////////
@@ -146,7 +142,6 @@ EvaSettingsDefClass::Get_Messages_Screen_Rect (void) const
 	adjusted_rect.Bottom	= float (int(adjusted_rect.Bottom + 0.5F));
 	return adjusted_rect;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //	Get_Messages_Text_Rect
@@ -168,7 +163,6 @@ EvaSettingsDefClass::Get_Messages_Text_Rect (void) const
 	return adjusted_rect;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //	Get_Messages_Icon_Position
 //////////////////////////////////////////////////////////////////////////
@@ -184,6 +178,5 @@ EvaSettingsDefClass::Get_Messages_Icon_Position (void) const
 	adjusted_point.Y *= Render2DClass::Get_Screen_Resolution ().Height ();
 	return adjusted_point;
 }
-
 
 #endif	//	EVASETTINGS_H

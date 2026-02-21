@@ -5,7 +5,6 @@
 #include "netclassids.h"
 #include "vendor.h"
 
-
 //-----------------------------------------------------------------------------
 //
 // A C->S mirrored object for C&C mode purchase requests

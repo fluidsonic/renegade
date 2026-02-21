@@ -3,7 +3,6 @@
 #ifndef COLTYPE_H
 #define COLTYPE_H
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 // Collision 'Types'
@@ -44,8 +43,6 @@ enum
 	COLLISION_TYPE_CAMERA =			COLLISION_TYPE_3,		// camera collision (99% should match physical setting)
 	COLLISION_TYPE_VEHICLE =		COLLISION_TYPE_4,		// vehicles will collide with physical and this.
 };
-
-
 
 #endif
 

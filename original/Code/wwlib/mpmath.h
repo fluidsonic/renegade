@@ -2,10 +2,8 @@
 #ifndef MPMATH_H
 #define MPMATH_H
 
-
 //lint -e740 -e534 -e537 -e760
 //lint -d_LINT=1
-
 
 #include	"straw.h"
 #include	<stdlib.h>
@@ -20,7 +18,6 @@
 typedef unsigned long digit;
 
 #define MPEXPORT
-
 
 extern "C" {
 extern int MPEXPORT XMP_Fetch_Prime_Size(void);
@@ -83,18 +80,15 @@ int MPEXPORT XMP_DER_Encode(digit const * from, unsigned char * output, int prec
 void MPEXPORT XMP_DER_Decode(digit * result, unsigned char const * input, int precision);
 }
 
-
 inline int MPEXPORT XMP_Digits_To_Bits(int digits)
 {
 	return(digits << LOG_UNITSIZE);
 }
 
-
 inline int MPEXPORT XMP_Bits_To_Digits(int bits)
 {
 	return ((bits + (UNITSIZE-1)) / UNITSIZE);
 }
-
 
 inline digit MPEXPORT XMP_Bits_To_Mask(int bits)
 {
@@ -102,12 +96,10 @@ inline digit MPEXPORT XMP_Bits_To_Mask(int bits)
 	return(1 << ((bits-1) % UNITSIZE));
 }
 
-
 inline bool MPEXPORT XMP_Is_Negative(const digit * r, int precision)
 {
 	return((signeddigit) *(r + (precision-1)) < 0);
 }
-
 
 inline void MPEXPORT XMP_Set_Bit(digit * r, unsigned bit)
 {
@@ -118,6 +110,5 @@ inline bool MPEXPORT XMP_Test_Bit(const digit * r, unsigned bit)
 {
 	return ((r[bit >> LOG_UNITSIZE] & ((digit)1 << (bit & (UNITSIZE-1)))) != 0);
 }
-
 
 #endif

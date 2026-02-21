@@ -267,9 +267,6 @@ DECLARE_SCRIPT(DLS_Camera_Test, "Pan_Loc1_ID=0:int, Pan_Loc2_ID=0:int, Debug_Mod
 	
 };
 
-
-
-
 DECLARE_SCRIPT(DLS_Gun_Test, "Debug_Mode=0:int")
 {
 		
@@ -624,8 +621,6 @@ DECLARE_SCRIPT(DLS_Waypath_Test, "Debug_Mode=0:int")
 	
 
 };
-
-
 
 DECLARE_SCRIPT(M06_Camera_Behavior, "Angle:float")
 {
@@ -1362,7 +1357,6 @@ DECLARE_SCRIPT (DLS_No_Innate, "")
 DECLARE_SCRIPT(DLS_ActionComplete_Test, "")
 {
 
-
 	void Created (GameObject * obj)
 	{
 		ActionParamsStruct params;
@@ -1400,7 +1394,6 @@ DECLARE_SCRIPT(DLS_Artillery_Test, "")
 		Commands->Start_Timer(game_obj, this, 10.0F, ARTILLERY_DROP);
 	}
 
-
 	void Timer_Expired (GameObject *game_obj, int timer_id)
 	{
 		if (timer_id == ARTILLERY_DROP) 
@@ -1421,7 +1414,6 @@ DECLARE_SCRIPT(DLS_Cinematic_Test, "")
 		Commands->Create_Object ( "XG_TransprtBone", Vector3(0.0f, 0.0f, 0.0f));*/
 	}
 
-
 	void Damaged( GameObject * obj, GameObject * damager, float amount ) 
 	{
 	/*	GameObject * chinook_obj0 = Commands->Create_Object ( "Invisible_Object", Vector3(0.0f, 0.0f, 0.0f));
@@ -1438,7 +1430,6 @@ DECLARE_SCRIPT(DLS_Cinematic_Test, "")
 
 	/*	GameObject * nukebits = Commands->Create_Object("M07_Nukebits", Vector3(0.0f, 0.0f, 0.0f));
 		Commands->Set_Facing( nukebits, -10.000f );*/
-
 
 	//	GameObject * napc = Commands->Create_Object("Invisible_Object", Vector3(0.0f, 0.0f, 0.0f));
 	//	Commands->Set_Model(napc, "e_chopperdust1");
@@ -1472,10 +1463,6 @@ DECLARE_SCRIPT(DLS_SSM_Test, "")
 	}
 };
 
-
-
-
-
 DECLARE_SCRIPT(DLS_Cinematic_Test2, "")
 {
 	void Created (GameObject * obj)
@@ -1484,7 +1471,6 @@ DECLARE_SCRIPT(DLS_Cinematic_Test2, "")
 		Commands->Set_Player_Type(obj, PLAYERTYPE_NEUTRAL );
 		Commands->Create_Object ( "XG_TransprtBone", Vector3(0.0f, 0.0f, 0.0f));*/
 	}
-
 
 	void Damaged( GameObject * obj, GameObject * damager, float amount ) 
 	{
@@ -1619,7 +1605,6 @@ DECLARE_SCRIPT(DLS_Test_Hand_Over_Head, "")
 		Commands->Action_Play_Animation(obj, params);
 	}
 
-
 };
 
 DECLARE_SCRIPT(DLS_Created_Too_Early, "")
@@ -1630,7 +1615,6 @@ DECLARE_SCRIPT(DLS_Created_Too_Early, "")
 	//	Commands->Set_Player_Type(obj, PLAYERTYPE_NEUTRAL );
 	//	Commands->Create_Object ( "XG_TransprtBone", Vector3(0.0f, 0.0f, 0.0f));
 	}
-
 
 	void Damaged( GameObject * obj, GameObject * damager, float amount ) 
 	{
@@ -1648,7 +1632,6 @@ DECLARE_SCRIPT(DLS_Blink, "")
 	//	Commands->Set_Player_Type(obj, PLAYERTYPE_NEUTRAL );
 	//	Commands->Create_Object ( "XG_TransprtBone", Vector3(0.0f, 0.0f, 0.0f));
 	}
-
 
 	void Damaged( GameObject * obj, GameObject * damager, float amount ) 
 	{
@@ -1715,8 +1698,6 @@ DECLARE_SCRIPT(DLS_Innate_Disable, "")  // Deadeye2
 
 };
 
-
-
 /**********************************************************************************************
 /*
 /*
@@ -1726,8 +1707,6 @@ DECLARE_SCRIPT(DLS_Innate_Disable, "")  // Deadeye2
 /*
 /*
 /**********************************************************************************************/
-
-
 
 // MX0 Custom Enumerations
 
@@ -3087,7 +3066,6 @@ DECLARE_SCRIPT (MX0_Nod_RocketSoldier_DLS, "Stationary_Point=0:int")
 		params.Set_Movement( Commands->Find_Object(Get_Int_Parameter("Stationary_Point")), RUN, 0.0f );
 		Commands->Action_Goto(obj, params);
 
-
 	}
 
 	void Custom (GameObject * obj, int type, int param, GameObject * sender)
@@ -3273,6 +3251,4 @@ DECLARE_SCRIPT (MX0_Explosive_Barrels_DLS, "Logical_Sound=0:int, Radius:float")
 		Commands->Create_Logical_Sound(obj, Get_Int_Parameter("Logical_Sound"), Commands->Get_Position(obj), radius);
 	}
 };
-
-
 

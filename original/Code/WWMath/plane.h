@@ -94,7 +94,6 @@ inline void PlaneClass::Set(const Vector3 & normal,const Vector3 & point)
 	D = Vector3::Dot_Product(normal , point);
 }
 
-
 inline void PlaneClass::Set(const Vector3 & point1, const Vector3 & point2, const Vector3 & point3) 
 {
 	N = Vector3::Cross_Product((point2 - point1), (point3 - point1));

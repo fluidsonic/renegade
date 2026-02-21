@@ -6,7 +6,6 @@
 #include "vector3.h"
 #include "matrix3d.h"
 
-
 /////////////////////////////////////////////////////////////////////
 // SphereClass
 //
@@ -34,7 +33,6 @@ public:
 	Vector3	Center;
 	float		Radius;
 };
-
 
 /***********************************************************************************************
  * SphereClass::SphereClass -- constructor                                                     *
@@ -70,7 +68,6 @@ inline SphereClass::SphereClass(const Vector3 *Position,const int VertCount)
 	Vector3 ymax(Position[0].X,Position[0].Y,Position[0].Z);
 	Vector3 zmin(Position[0].X,Position[0].Y,Position[0].Z);
 	Vector3 zmax(Position[0].X,Position[0].Y,Position[0].Z);
-
 
 	// FIRST PASS:
 	// finding the 6 minima and maxima points
@@ -111,7 +108,6 @@ inline SphereClass::SphereClass(const Vector3 *Position,const int VertCount)
 	dy = zmax.Y - zmin.Y;
 	dz = zmax.Z - zmin.Z;
 	double zspan = dx*dx + dy*dy + dz*dz;
-
 
 	// Set points dia1 and dia2 to the maximally separated pair
 	// This will be the diameter of the initial sphere
@@ -176,7 +172,6 @@ inline SphereClass::SphereClass(const Vector3 *Position,const int VertCount)
 	Radius = radius;
 }
 
-
 /***********************************************************************************************
  * SphereClass::Init -- assign a new center and radius to this sphere                          *
  *                                                                                             *
@@ -194,7 +189,6 @@ inline void SphereClass::Init(const Vector3 & pos,float radius)
 	Center = pos;
 	Radius = radius;
 }
-
 
 /***********************************************************************************************
  * SphereClass::Re_Center -- move the center, update radius to enclose old sphere              *
@@ -214,7 +208,6 @@ inline void SphereClass::Re_Center(const Vector3 & center)
 	Center = center;
 	Radius += dist;
 }
-
 
 /***********************************************************************************************
  * SphereClass::Add_Sphere -- expands 'this' sphere to enclose the given sphere                *
@@ -279,7 +272,6 @@ inline void SphereClass::Transform(const Matrix3D & tm)
 	Center = tm * Center;
 }
 
-
 /***********************************************************************************************
  * SphereClass::Volume -- returns the volume of this sphere                                    *
  *                                                                                             *
@@ -317,7 +309,6 @@ inline SphereClass & SphereClass::operator += (const SphereClass & s)
 	return *this;
 }
 
-
 /***********************************************************************************************
  * SphereClass::operator *= -- transform this sphere by the given radius                       *
  *                                                                                             *
@@ -335,7 +326,6 @@ inline SphereClass & SphereClass::operator *= (const Matrix3D & m)
 	Init(m * Center, Radius);
 	return *this;
 }
-
 
 /***********************************************************************************************
  * Spheres_Intersect -- test whether two spheres intersect                                     *
@@ -361,7 +351,6 @@ inline bool Spheres_Intersect(const SphereClass & s0,const SphereClass & s1)
 	}
 }
 
-
 /***********************************************************************************************
  * Add_Spheres -- Add two spheres together, creating sphere which encloses both                *
  *                                                                                             *
@@ -385,7 +374,6 @@ inline SphereClass Add_Spheres(const SphereClass & s0, const SphereClass & s1)
 	}
 }
 
-
 /***********************************************************************************************
  * operator + -- Add two spheres together, creating a sphere which encloses both               *
  *                                                                                             *
@@ -402,7 +390,6 @@ inline SphereClass operator + (const SphereClass & s0,const SphereClass & s1)
 {
 	return Add_Spheres(s0,s1);
 }
-
 
 /***********************************************************************************************
  * Transform Sphere -- transform a sphere                                                      *
@@ -421,7 +408,6 @@ inline SphereClass Transform_Sphere(const Matrix3D & m, const SphereClass & s)
 	// Warning, assumes Orthogonal matrix
 	return SphereClass(m*s.Center,s.Radius);
 }
-
 
 /***********************************************************************************************
  * Transform_Sphere -- transform a sphere                                                      *
@@ -442,7 +428,6 @@ inline void Transform_Sphere(const Matrix3D & m, const SphereClass & s,SphereCla
 	res.Radius = s.Radius;
 }
 
-
 /***********************************************************************************************
  * operator * -- Transform a sphere                                                            *
  *                                                                                             *
@@ -459,8 +444,6 @@ inline SphereClass operator * (const Matrix3D & m, const SphereClass & s)
 {
 	return Transform_Sphere(m,s);
 }
-
-
 
 #endif
 

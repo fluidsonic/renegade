@@ -50,7 +50,5 @@ private:
 
 };
 
-
 #endif //EFFECTRECYCLER_H
-
 

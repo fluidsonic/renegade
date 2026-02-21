@@ -18,7 +18,6 @@ class HTreeClass;
 class ChunkLoadClass;
 class ChunkSaveClass;
 
-
 /**********************************************************************************
 
 	Hierarchy Compressed Animation Class
@@ -87,12 +86,10 @@ private:
 	void add_channel(TimeCodedMotionChannelClass * newchan);
 	void add_channel(AdaptiveDeltaMotionChannelClass * newchan);
 
-
 	bool read_bit_channel(ChunkLoadClass & cload,TimeCodedBitChannelClass * * newchan);
 	void add_bit_channel(TimeCodedBitChannelClass * newchan);
 
 };
-
 
 #endif // hcanim.h
  

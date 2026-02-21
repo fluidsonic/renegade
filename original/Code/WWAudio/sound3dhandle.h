@@ -4,7 +4,6 @@
 
 #include "soundhandle.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Sound3DHandleClass
@@ -33,7 +32,6 @@ public:
 	//	Handle access
 	//
 	H3DSAMPLE					Get_H3DSAMPLE (void)		{ return SampleHandle; }
-
 
 	//
 	//	Inherited
@@ -68,6 +66,5 @@ protected:
 	///////////////////////////////////////////////////////////////////
 	H3DSAMPLE	SampleHandle;
 };
-
 
 #endif //__SOUND3DHANDLE_H

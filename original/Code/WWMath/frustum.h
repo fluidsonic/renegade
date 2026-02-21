@@ -5,7 +5,6 @@
 #include "vector3.h"
 #include "plane.h"
 
-
 class FrustumClass
 {
 public:
@@ -26,8 +25,6 @@ public:
 	Vector3				BoundMin;
 	Vector3				BoundMax;
 };
-
-
 
 #endif
 

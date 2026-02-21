@@ -9,7 +9,6 @@
 #include "gameobjmanager.h"
 #include "apppackettypes.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cClientBboEvent, NETCLASSID_CLIENTBBOEVENT);
 
 //-----------------------------------------------------------------------------
@@ -59,7 +58,6 @@ cClientBboEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add(Bbo);
 
@@ -75,7 +73,6 @@ cClientBboEvent::Import_Creation(BitStreamClass & packet)
 
 	packet.Get(SenderId);
 	packet.Get(Bbo);
-
 
 	Act();
 }

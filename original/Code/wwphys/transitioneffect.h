@@ -1,7 +1,6 @@
 #ifndef TRANSITIONEFFECT_H
 #define TRANSITIONEFFECT_H
 
-
 #include "always.h"
 #include "materialeffect.h"
 #include "vector2.h"

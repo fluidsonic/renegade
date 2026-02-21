@@ -75,40 +75,15 @@ void cNetInterface::Set_Random_Nickname(void)
    Set_Nickname(widename);
 }
 
-
 void cNetInterface::Set_Side_Preference(int side)
 {
 	mSidePreference = side;
 }
 
-
 int cNetInterface::Get_Side_Preference(void)
 {
 	return mSidePreference;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //WideStringClass & cNetInterface::Get_Nickname(void)
 	/*
@@ -121,7 +96,6 @@ int cNetInterface::Get_Side_Preference(void)
 		Nickname[9] = 0;
 	}
 	*/
-
 
    //return Nickname;
 

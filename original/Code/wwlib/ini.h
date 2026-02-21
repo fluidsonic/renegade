@@ -122,8 +122,6 @@ class INIClass {
 		TPoint3D<float> const Get_Point(char const * section, char const * entry, TPoint3D<float> const & defvalue) const;
 		TPoint2D<float> const Get_Point(char const * section, char const * entry, TPoint2D<float> const & defvalue) const;
 
-
-
 		/*
 		**	Put a data type to the section and entry specified.
 		*/
@@ -152,7 +150,6 @@ class INIClass {
 		List<INISection *> & Get_Section_List() { return * SectionList; }
 
 		IndexClass<int, INISection *> & Get_Section_Index() { return * SectionIndex; }
-
 
 		/*
 		**	Utility routines to help find the appropriate section and entry objects.

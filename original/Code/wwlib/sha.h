@@ -1,12 +1,10 @@
 #ifndef SHA_H
 #define SHA_H
 
-
 #include	<new.h>
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
-
 
 /*
 **	This implements the Secure Hash Algorithm. It is a cryptographically
@@ -135,11 +133,9 @@ class SHAEngine
 		char Partial[SRC_BLOCK_SIZE];
 };
 
-
 #define	SHA_SOURCE1		"abc"
 #define	SHA_DIGEST1a	"\xA9\x99\x3E\x36\x47\x06\x81\x6A\xBA\x3E\x25\x71\x78\x50\xC2\x6C\x9C\xD0\xD8\x9D"
 #define	SHA_DIGEST1b	"\x01\x64\xB8\xA9\x14\xCD\x2A\x5E\x74\xC4\xF7\xFF\x08\x2C\x4D\x97\xF1\xED\xF8\x80"
-
 
 #define	SHA_SOURCE2		"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
 #define	SHA_DIGEST2a	"\x84\x98\x3E\x44\x1C\x3B\xD2\x6E\xBA\xAE\x4A\xA1\xF9\x51\x29\xE5\xE5\x46\x70\xF1"

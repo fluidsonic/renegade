@@ -3,19 +3,16 @@
 #include "camera.h"
 #include "light.h"
 
-
 /*
 ** Constants
 */
 const float DIFFUSE_TO_AMBIENT_FRACTION = 1.0f;
-
 
 /*
 ** Static variables
 */
 static float _LightingLODCutoff			= 0.5f;
 static float _LightingLODCutoff2			= 0.5f * 0.5f;
-
 
 /************************************************************************************************
 **
@@ -100,7 +97,6 @@ void LightEnvironmentClass::InputLightStruct::Init_From_Point_Or_Spot_Light
 	}
 }
 
-
 void LightEnvironmentClass::InputLightStruct::Init_From_Directional_Light
 (
 	const LightClass & light,
@@ -113,7 +109,6 @@ void LightEnvironmentClass::InputLightStruct::Init_From_Directional_Light
 	light.Get_Ambient(&Ambient);
 	light.Get_Diffuse(&Diffuse);
 }
-
 
 float LightEnvironmentClass::InputLightStruct::Contribution(void)
 {
@@ -137,8 +132,6 @@ void LightEnvironmentClass::OutputLightStruct::Init
 	Matrix3D::Inverse_Rotate_Vector(camera_tm,input.Direction,&Direction);
 }	
 
-
-
 /************************************************************************************************
 **
 ** LightEnvironmentClass Implementation
@@ -152,11 +145,9 @@ LightEnvironmentClass::LightEnvironmentClass(void) :
 {
 }
 
-
 LightEnvironmentClass::~LightEnvironmentClass(void)
 {
 }
-
 
 void LightEnvironmentClass::Reset(const Vector3 & object_center,const Vector3 & ambient)
 {
@@ -164,7 +155,6 @@ void LightEnvironmentClass::Reset(const Vector3 & object_center,const Vector3 & 
 	ObjectCenter = object_center;
 	OutputAmbient = ambient;
 }
-
 
 void LightEnvironmentClass::Add_Light(const LightClass & light)
 {
@@ -196,7 +186,6 @@ void LightEnvironmentClass::Add_Light(const LightClass & light)
 		}
 	}
 }
-
 
 void LightEnvironmentClass::Pre_Render_Update(const Matrix3D & camera_tm)
 {

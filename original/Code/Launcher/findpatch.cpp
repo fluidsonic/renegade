@@ -26,7 +26,6 @@ int Find_Patch(OUT char *filename,int maxlen, ConfigFile &config)
   char                gamePath[MAX_PATH];
   bit8                ok;
 
-
   while(1)
   {
     //
@@ -58,7 +57,6 @@ int Find_Patch(OUT char *filename,int maxlen, ConfigFile &config)
   return(FALSE);
 }
 
-
 //
 // Get the directory for the N'th application in the config file
 //
@@ -72,7 +70,6 @@ bit8 Get_App_Dir(OUT char *filename,int maxlen, ConfigFile &config,int index)
   Wstring             sku;
   int                 temp;
   char                gamePath[MAX_PATH];
-
 
   sprintf(string,"SKU%d",index);
 
@@ -89,7 +86,6 @@ bit8 Get_App_Dir(OUT char *filename,int maxlen, ConfigFile &config,int index)
   path.remove(0,temp);
   while((*(path.get()))==' ')  // remove leading spaces
     path.remove(0,1);
-
 
   DBGMSG("CONFIG:   SKU = "<<sku.get()<<"  PATH = '"<<path.get()<<"'");
   HKEY   regKey;
@@ -127,10 +123,6 @@ bit8 Get_App_Dir(OUT char *filename,int maxlen, ConfigFile &config,int index)
 
   return(TRUE);
 }
-
-
-
-
 
 //
 // Delete any patch files

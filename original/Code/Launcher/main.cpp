@@ -44,15 +44,12 @@
 #define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\Renegade\\"
 #endif
 
-
-
-#define APPLICATION_SUB_KEY_NAME_WOLSETTINGS "WOLSettings\\"
+#define APPLICATION_SUB_KEY_NAME_MP_SETTINGS "WOLSettings\\"
 #define APPLICATION_SUB_KEY_NAME_AUTOSTART 	"AutoRestartFlag"
-
 
 void CreatePrimaryWin(char *prefix);
 void myChdir(char *path);
-bool Get_Restart_Flag(Process &proc, bool &slave);
+bool Get_Restart_Flag(Process &proc);
 
 void RunGame(char *thePath, ConfigFile &config, Process &proc)
 {
@@ -71,19 +68,11 @@ void RunGame(char *thePath, ConfigFile &config, Process &proc)
 
 		while ((skuIndex = Find_Patch(patchFile, MAX_PATH, config)) != 0)
 		{
-			//
-			// If there is a patch and we are a slave server then we need to exit quick so the master server can apply it.
-			//
-			bool slave = false;
-			bool restart = Get_Restart_Flag(proc, slave);
+			bool restart = Get_Restart_Flag(proc);
 
-			if (!restart || !slave) {
-				// Pass in the restart flag so that the patch code knows not to bring up the changes dialog.
-				Apply_Patch(patchFile, config, skuIndex, !restart);
-				launchgame = true;
-			} else {
-				launchgame = false;
-			}
+			// Pass in the restart flag so that the patch code knows not to bring up the changes dialog.
+			Apply_Patch(patchFile, config, skuIndex, !restart);
+			launchgame = true;
 		}
 
 		// launch the game if first pass, or found a patch
@@ -114,8 +103,7 @@ void RunGame(char *thePath, ConfigFile &config, Process &proc)
 			Wait_Process(proc, &exit_code);
 
 			// Relaunch if the game crashed unexpectedly (the auto restart flag is set).
-			bool slave = false;
-			if (Get_Restart_Flag(proc, slave)) {
+			if (Get_Restart_Flag(proc)) {
 				launchgame = true;
 			} else {
 
@@ -143,12 +131,8 @@ void RunGame(char *thePath, ConfigFile &config, Process &proc)
 		}
 		else
 		{
-			// Don't delete patches if we are a slave server. That's the master servers job.
-			bool slave = false;
-			bool restart = Get_Restart_Flag(proc, slave);
-			if (!slave) {
-				Delete_Patches(config);  // delete all patches
-			}
+			bool restart = Get_Restart_Flag(proc);
+			Delete_Patches(config);  // delete all patches
 			break;
 		}
 	}
@@ -325,7 +309,6 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-
 //
 // Create a primary window
 //
@@ -369,14 +352,11 @@ void CreatePrimaryWin(char *prefix)
 	}
 }
 
-
 //void DestroyPrimaryWin(void)
 //{
 //  DestroyWindow(PrimaryWin);
 //  UnregisterClass(classname);
 //}
-
-
 
 //
 // If given a file, it'll goto it's directory.  If on a diff drive,
@@ -406,9 +386,6 @@ void myChdir(char *path)
 	// should be in proper folder now....
 }
 
-
-
-
 /***********************************************************************************************
  * Get_Restart_Flag -- Get AutoRestartFlag from the registry                                   *
  *                                                                                             *
@@ -423,21 +400,12 @@ void myChdir(char *path)
  * HISTORY:                                                                                    *
  *   11/5/2001 7:14PM ST : Created                                                             *
  *=============================================================================================*/
-bool Get_Restart_Flag(Process &proc, bool &slave)
+bool Get_Restart_Flag(Process &proc)
 {
 	HKEY key;
 	char args[1024];
 	strcpy(args, proc.args);
 	strupr(args);
-
-	/*
-	** Is this a slave server according to the command line?
-	*/
-	if (strstr(args, "SLAVE")) {
-		slave = true;
-	} else {
-		slave = false;
-	}
 
 	char registry_modifier[256];
 
@@ -455,7 +423,7 @@ bool Get_Restart_Flag(Process &proc, bool &slave)
 		strcat(regpath, registry_modifier);
 		strcat(regpath, "\\");
 	}
-	strcat(regpath, APPLICATION_SUB_KEY_NAME_WOLSETTINGS);
+	strcat(regpath, APPLICATION_SUB_KEY_NAME_MP_SETTINGS);
 
 	int result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, regpath, 0, KEY_ALL_ACCESS, &key);
 

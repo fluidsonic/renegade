@@ -40,8 +40,6 @@ STDMETHODIMP Dispatch_GetProperty(IDispatch* object, const OLECHAR* propName,
 	return hr;
 	}
 
-
-
 /******************************************************************************
 *
 * NAME
@@ -85,7 +83,6 @@ STDMETHODIMP Dispatch_PutProperty(IDispatch* object, const OLECHAR* propName,
 	return hr;
 	}
 
-
 /******************************************************************************
 *
 * NAME
@@ -122,7 +119,6 @@ STDMETHODIMP Dispatch_InvokeMethod(IDispatch* object, const OLECHAR* methodName,
 
 	return hr;
 	}
-
 
 /******************************************************************************
 *
@@ -161,7 +157,6 @@ bool RegisterCOMServer(const char* dllName)
 
 	return success;
 	}
-
 
 /******************************************************************************
 *

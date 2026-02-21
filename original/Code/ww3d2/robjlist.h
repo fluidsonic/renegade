@@ -23,4 +23,3 @@ typedef MultiListIterator<RenderObjClass>		NonRefRenderObjListIterator;
 
 #endif
 
-

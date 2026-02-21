@@ -2,7 +2,6 @@
 
 class StringClass;
 
-
 class ServerSettingsClass
 {
 
@@ -37,7 +36,4 @@ class ServerSettingsClass
 		static int DiskLogSize;
 
 };
-
-
-
 

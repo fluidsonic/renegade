@@ -6,9 +6,7 @@
 #include "staticanimphys.h"
 #include "buildingstate.h"
 
-
 class BuildingAggregateDefClass;
-
 
 /**
 ** BuildingAggregateClass (BAG)
@@ -49,8 +47,6 @@ protected:
 	int				CurrentState;
 
 };
-
-
 
 /**
 ** BuildingAggregateDefClass (BAGDef!)
@@ -110,8 +106,6 @@ protected:
 
 	friend class BuildingAggregateClass;
 };
-
-
 
 #endif //BUILDINGAGGREGATE_H
 

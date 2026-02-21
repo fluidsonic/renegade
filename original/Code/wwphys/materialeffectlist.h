@@ -13,8 +13,5 @@ typedef MultiListIterator<MaterialEffectClass>		NonRefMaterialEffectListIterator
 typedef RefMultiListClass<MaterialEffectClass>		RefMaterialEffectListClass;
 typedef RefMultiListIterator<MaterialEffectClass>	RefMaterialEffectListIterator;
 
-
 #endif //MATERIALEFFECTLIST_H
-
-
 

@@ -24,7 +24,6 @@ class PriorityVectorClass : public DynamicVectorClass<T>
 		}*/
 };
 
-
 ////////////////////////////////////////////////////////////////////
 //
 //	Process_Head
@@ -54,7 +53,6 @@ __inline bool PriorityVectorClass<T>::Process_Head (T &object)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////////
 //
 //	Add_Low 
@@ -65,7 +63,6 @@ __inline bool PriorityVectorClass<T>::Add_Low (T const &object)
 {
 	return DynamicVectorClass<T>::Add (object);
 }
-
 
 ////////////////////////////////////////////////////////////////////
 //

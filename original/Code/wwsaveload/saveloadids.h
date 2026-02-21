@@ -27,5 +27,4 @@ enum
 	CHUNKID_WWTRANSLATEDB_BEGIN		= 0x00090000
 };
 
-
 #endif

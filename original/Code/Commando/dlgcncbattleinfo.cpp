@@ -21,7 +21,6 @@
 #include "mousemgr.h"
 #include "directinput.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -36,7 +35,6 @@ enum
 static const int BUILDING_COUNT		= 5;
 static const int BUILDING_SLOT_COUNT	= 6;
 
-
 ////////////////////////////////////////////////////////////////
 //	Local typedefs
 ////////////////////////////////////////////////////////////////
@@ -45,7 +43,6 @@ typedef struct
 	const char *							texture_name;
 	BuildingConstants::BuildingType	type;
 } BUILDING_INSTANCE_INFO;
-
 
 static const BUILDING_INSTANCE_INFO GDI_BUILDINGS[BUILDING_COUNT] =
 {
@@ -64,7 +61,6 @@ static const BUILDING_INSTANCE_INFO NOD_BUILDINGS[BUILDING_COUNT] =
 	{ "HUD_C&C_N_HANDOF.TGA",		BuildingConstants::TYPE_SOLDIER_FACTORY },
 	{ "HUD_C&C_N_AIRSTRIP.TGA",	BuildingConstants::TYPE_VEHICLE_FACTORY },
 };
-
 
 typedef struct
 {
@@ -92,7 +88,6 @@ static const BUILDING_INFO NOD_BUILDING_CTRLS[BUILDING_SLOT_COUNT] =
 	{ IDC_NOD_BUILDING06_ICON, IDC_NOD_BUILDING06_HEALTHBAR },
 };
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	CNCBattleInfoDialogClass
@@ -104,7 +99,6 @@ CNCBattleInfoDialogClass::CNCBattleInfoDialogClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~CNCBattleInfoDialogClass
@@ -115,7 +109,6 @@ CNCBattleInfoDialogClass::~CNCBattleInfoDialogClass (void)
 	GameInitMgrClass::Continue_Game ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -175,7 +168,6 @@ CNCBattleInfoDialogClass::On_Init_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -290,7 +282,6 @@ CNCBattleInfoDialogClass::Configure_Icons (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Populate_Player_List
@@ -370,7 +361,6 @@ CNCBattleInfoDialogClass::Populate_Player_List (ListCtrlClass *list_ctrl, int te
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ListSortCallback
@@ -390,7 +380,6 @@ CNCBattleInfoDialogClass::ListSortCallback
 	return (rank1 - rank2);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Frame_Update
@@ -409,7 +398,6 @@ CNCBattleInfoDialogClass::On_Frame_Update (void)
 
 	return ;
 }
-
 
 void CNCBattleInfoDialogClass::Build_Player_Display_Name(const cPlayer* player, WideStringClass& outName)
 {

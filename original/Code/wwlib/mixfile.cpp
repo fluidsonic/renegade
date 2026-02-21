@@ -23,7 +23,6 @@ typedef struct
 
 } MIXFILE_DATA_HEADER;
 
-
 /*
 **
 */					
@@ -219,7 +218,6 @@ void	MixFileFactoryClass::Return_File( FileClass * file )
 	}
 }
 
-
 /*
 **
 */
@@ -233,7 +231,6 @@ MixFileFactoryClass::Add_File (const char *full_path, const char *filename)
 	IsModified = true;
 	return ;
 }
-
 
 /*
 **
@@ -254,7 +251,6 @@ MixFileFactoryClass::Delete_File (const char *filename)
 
 	return ;
 }
-
 
 /*
 **
@@ -334,7 +330,6 @@ MixFileFactoryClass::Flush_Changes (void)
 	return ;
 }
 
-
 /*
 **
 */
@@ -359,7 +354,6 @@ MixFileFactoryClass::Get_Temp_Filename (const char *path, StringClass &full_path
 
 	return retval;
 }
-
 
 /*
 **
@@ -471,7 +465,6 @@ void	MixFileCreator::Add_File( const char * source_filename, const char * saved_
 			FileInfo.Add( info );
 			FileInfo[ FileInfo.Count()-1 ].Filename = saved_filename;
 
-
 			int size = file->Size();
 			while ( size ) {
 				char buffer[ 4096 ];
@@ -499,7 +492,6 @@ void	MixFileCreator::Add_File( const char * source_filename, const char * saved_
 	}
 }
 
-
 void	MixFileCreator::Add_File( const char * filename, FileClass *file )
 {
 	if ( MixFile != NULL ) {
@@ -510,7 +502,6 @@ void	MixFileCreator::Add_File( const char * filename, FileClass *file )
 		info.Size		= file->Size();
 		FileInfo.Add( info );
 		FileInfo[ FileInfo.Count()-1 ].Filename = filename;
-
 
 		int size = file->Size();
 		while ( size ) {
@@ -534,7 +525,6 @@ void	MixFileCreator::Add_File( const char * filename, FileClass *file )
 
 	return ;
 }
-
 
 /*
 **
@@ -571,7 +561,6 @@ void	Setup_Mix_File( void )
 {
 	_SimpleFileFactory.Set_Sub_Directory( "DATA\\" );
 //	_SimpleFileFactory.Set_Strip_Path( true );
-
 
 	{
 		MixFileCreator mix( "MAKEMIX.MIX" );

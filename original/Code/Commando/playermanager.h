@@ -95,7 +95,3 @@ private:
 
 #endif // PLAYERMANAGER_H
 
-
-
-
-

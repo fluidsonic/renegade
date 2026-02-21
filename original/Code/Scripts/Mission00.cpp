@@ -1,7 +1,6 @@
 #include "scripts.h"
 #include "mission00.h"
 
-
 // MTU_Tutorial_Controller - This script handles all mission objectives and state switches for Tutorial.
 
 DECLARE_SCRIPT (MTU_Tutorial_Controller, "")
@@ -1173,7 +1172,6 @@ DECLARE_SCRIPT (MTU_Tutorial_Controller, "")
 		}
 	}
 };
-
 
 // MTU_Tutorial_Instructor - This script is used for all instructors throughout the tutorial mission.
 
@@ -2714,7 +2712,6 @@ DECLARE_SCRIPT (MTU_Tutorial_Instructor, "")
 	}
 };
 
-
 // MTU_Trigger_Zone - This script is used for all trigger zones throughout the tutorial mission.
 
 DECLARE_SCRIPT (MTU_Trigger_Zone, "")
@@ -3184,7 +3181,6 @@ DECLARE_SCRIPT (MTU_Trigger_Zone, "")
 	}
 };
 
-
 // MTU_GDI_Solder - This script is used for all GDI soldiers in the tutorial mission.
 
 DECLARE_SCRIPT (MTU_GDI_Soldier, "")
@@ -3302,7 +3298,6 @@ DECLARE_SCRIPT (MTU_GDI_Soldier, "")
 	}
 };
 
-
 // MTU_Commando - This script is attached to the commando by the Level Editor function.
 
 DECLARE_SCRIPT (MTU_Commando, "")
@@ -3414,7 +3409,6 @@ DECLARE_SCRIPT (MTU_Commando, "")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_Commando_Startup, "")
 {
 	void Created (GameObject * obj)
@@ -3422,7 +3416,6 @@ DECLARE_SCRIPT (MTU_Commando_Startup, "")
 		Commands->Attach_Script (obj, "MTU_Commando", "");
 	}
 };
-
 
 DECLARE_SCRIPT (MTU_PowerUp_Health, "")
 {
@@ -3444,7 +3437,6 @@ DECLARE_SCRIPT (MTU_PowerUp_Health, "")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_PowerUp_Armor, "")
 {
 	void Custom (GameObject * obj, int type, int param, GameObject * sender)
@@ -3464,7 +3456,6 @@ DECLARE_SCRIPT (MTU_PowerUp_Armor, "")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (MTU_Nod_Apache, "Apache_ID:int")
 {
@@ -3502,7 +3493,6 @@ DECLARE_SCRIPT (MTU_Nod_Apache, "Apache_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_Range_Target, "Target_ID:int")
 {
 	void Created (GameObject * obj)
@@ -3523,7 +3513,6 @@ DECLARE_SCRIPT (MTU_Range_Target, "Target_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_Range_Target_Path_Mid, "")
 {
 	void Created (GameObject * obj)
@@ -3535,7 +3524,6 @@ DECLARE_SCRIPT (MTU_Range_Target_Path_Mid, "")
 		Commands->Action_Goto(obj, params);
 	}
 };
-
 
 DECLARE_SCRIPT (MTU_Range_Target_Path_Right, "")
 {
@@ -3549,7 +3537,6 @@ DECLARE_SCRIPT (MTU_Range_Target_Path_Right, "")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_Range_Target_Path_Left, "")
 {
 	void Created (GameObject * obj)
@@ -3561,7 +3548,6 @@ DECLARE_SCRIPT (MTU_Range_Target_Path_Left, "")
 		Commands->Action_Goto(obj, params);
 	}
 };
-
 
 DECLARE_SCRIPT (MTU_Range_Target_Miss_Commando, "")
 {
@@ -3582,7 +3568,6 @@ DECLARE_SCRIPT (MTU_Range_Target_Miss_Commando, "")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_Range_Powerup, "Powerup_ID:int")
 {
 	void Custom (GameObject * obj, int type, int param, GameObject * sender)
@@ -3598,7 +3583,6 @@ DECLARE_SCRIPT (MTU_Range_Powerup, "Powerup_ID:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (MTU_GDI_Vehicle, "Vehicle_ID:int")
 {
@@ -3686,7 +3670,6 @@ DECLARE_SCRIPT (MTU_GDI_Vehicle, "Vehicle_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_Building_Controller, "Building_ID:int")
 {
 	bool can_be_damaged;
@@ -3730,7 +3713,6 @@ DECLARE_SCRIPT (MTU_Building_Controller, "Building_ID:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (MTU_Nod_Soldier, "Soldier_ID:int")
 {
@@ -3795,7 +3777,6 @@ DECLARE_SCRIPT (MTU_Nod_Soldier, "Soldier_ID:int")
 	}
 };
 
-
 DECLARE_SCRIPT (MTU_Flyover, "Vehicle_ID:int")
 {
 	void Created (GameObject * obj)
@@ -3821,12 +3802,10 @@ DECLARE_SCRIPT (MTU_Flyover, "Vehicle_ID:int")
 	}
 };
 
-
 // This is a controller script for the multiplayer skirmish tutorial.
 
 // On created, force all the bots to appear.
 // If a bot sends a custom saying it has just died, recreate the bot by triggering the spawner.
-
 
 DECLARE_SCRIPT (MSK_Controller, "")
 {
@@ -3881,9 +3860,7 @@ DECLARE_SCRIPT (MSK_Controller, "")
 	}
 };
 
-
 // This is a script for the innate soldiers in the multiplayer skirmish tutorial.
-
 
 DECLARE_SCRIPT (MSK_Soldier, "Spawner_ID:int")
 {
@@ -4112,7 +4089,6 @@ DECLARE_SCRIPT (MSK_Soldier, "Spawner_ID:int")
 		}
 	}
 };
-
 
 DECLARE_SCRIPT (MSK_Info_Zone, "")
 {

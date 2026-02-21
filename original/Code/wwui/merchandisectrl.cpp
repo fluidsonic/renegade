@@ -6,13 +6,11 @@
 #include "dialogbase.h"
 #include "vector4.h"
 
-
 //////////////////////////////////////////////////////////////////////
 //	Local constants
 //////////////////////////////////////////////////////////////////////
 static const float BUTTON_WIDTH	= 16.0F;
 static const float BUTTON_HEIGHT	= 16.0F;
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -48,7 +46,6 @@ MerchandiseCtrlClass::MerchandiseCtrlClass (void)	:
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	~MerchandiseCtrlClass
@@ -58,7 +55,6 @@ MerchandiseCtrlClass::~MerchandiseCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -99,7 +95,6 @@ MerchandiseCtrlClass::Create_Text_Renderer (void)
 	return ;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -131,7 +126,6 @@ MerchandiseCtrlClass::Render (void)
 	DialogControlClass::Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -177,7 +171,6 @@ MerchandiseCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -192,7 +185,6 @@ MerchandiseCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ACTION);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -283,7 +275,6 @@ MerchandiseCtrlClass::Create_Control_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Texture_Renderer
@@ -316,7 +307,6 @@ MerchandiseCtrlClass::Create_Texture_Renderer (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Texture
@@ -342,7 +332,6 @@ MerchandiseCtrlClass::Set_Texture (const char *texture_name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Add_Alternate_Texture
@@ -355,7 +344,6 @@ MerchandiseCtrlClass::Add_Alternate_Texture (const char *texture_name)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -404,7 +392,6 @@ MerchandiseCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	}
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

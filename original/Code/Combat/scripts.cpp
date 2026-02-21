@@ -1,5 +1,4 @@
 #include "scripts.h"
-#include "debug.h"
 #include "scriptcommands.h"
 #include "physicalgameobj.h"
 #include "wwstring.h"
@@ -12,13 +11,8 @@
 
 ScriptCommands* EngineCommands = NULL;
 
-#if 1
-#define	SCRIPT_PROFILE_START( x )	WWProfileManager::Profile_Start( "Scripts" );
-#define	SCRIPT_PROFILE_STOP( x )	WWProfileManager::Profile_Stop( ); 
-#else
 #define	SCRIPT_PROFILE_START( x )
-#define	SCRIPT_PROFILE_STOP( x ) 
-#endif
+#define	SCRIPT_PROFILE_STOP( x )
 
 /*
 **
@@ -29,8 +23,6 @@ LPFN_DESTROY_SCRIPT ScriptManager::ScriptDestroyFunct = NULL;
 SimpleDynVecClass<ScriptClass *> ScriptManager::ActiveScriptList;
 SimpleDynVecClass<ScriptClass *> ScriptManager::PendingDestroyList;
 bool	ScriptManager::EnableScriptCreation = true;
-
-
 
 /*
 **
@@ -46,7 +38,6 @@ void ScriptManager::Init(void)
 		Load_Scripts("SCRIPTS.DLL");		// RELEASE
 #endif
 }
-
 
 /*
 **
@@ -70,7 +61,6 @@ void ScriptManager::Shutdown(void)
 	}
 }
 
-
 void ScriptManager::Destroy_Pending(void)
 {
 	// Destroy all the scripts in the pending destroy list.
@@ -93,14 +83,12 @@ void ScriptManager::Destroy_Pending(void)
 	}
 }
 
-
 /*
 **
 */
 void ScriptManager::Load_Scripts(const char* dll_filename)
 {
 	Debug_Say(("Script Manager Loading Script File %s\n", dll_filename));
-
 
 	// If we're in multiplay and not the server, just bail
    if (!IS_SOLOPLAY && CombatManager::I_Am_Only_Client())
@@ -135,7 +123,6 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 					unpacked_scripts.Write(buffer,read_count);
 					cur_pos += read_count;
 				}
-
 
 				// change 'dll_filename' so that we load the newly created dll
 				if (cur_pos == scripts_size) {
@@ -208,7 +195,6 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 	}
 }
 
-
 /*
 **
 */
@@ -228,7 +214,6 @@ ScriptClass* ScriptManager::Create_Script(const char* script_name)
 	return script;
 }
 
-
 /*
 **
 */
@@ -245,7 +230,6 @@ void ScriptManager::Request_Destroy_Script(ScriptClass* script)
 
 	PendingDestroyList.Add(script);
 }
-
 
 /*
 ** Script Manager Save and Load
@@ -266,7 +250,6 @@ enum	{
 	MICROCHUNKID_OWNER_PTR,
 	MICROCHUNKID_ID,
 };
-
 
 /*
 **
@@ -314,7 +297,6 @@ bool ScriptManager::Save(ChunkSaveClass& csave)
 	return true;
 }
 
-
 bool	ScriptManager::Load( ChunkLoadClass & cload )
 {
 
@@ -322,7 +304,6 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 
 		GameObjObserverClass * game_obj_observer_ptr = NULL;
 		PhysicalGameObj * owner_ptr = NULL;
-
 
 		ScriptClass *script = NULL;
 
@@ -397,11 +378,9 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 			SaveLoadSystemClass::Register_Pointer(game_obj_observer_ptr, (GameObjObserverClass *)NULL);
 		}
 
-
 		cload.Close_Chunk();
 	}
 	return true;
 }
-
 
  

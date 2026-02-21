@@ -1,12 +1,9 @@
 #ifndef _MISSION5_H_
 #define _MISSION5_H_
 
-
 // Defines and Includes
 
 #include "toolkit.h"
-
-
 
 #define M05_CUSTOM_ACTIVATE			5001
 #define	M05_PARK_ENGINEER_KILLED	5003
@@ -43,7 +40,6 @@
 // Logical Sound Types
 #define M05_PARK_ALERT			15500
 #define	M05_CATHEDRAL_FREE		15501
-
 
 // Public Variables
 

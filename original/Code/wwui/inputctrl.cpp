@@ -8,7 +8,6 @@
 #include "dialogbase.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	InputCtrlClass
@@ -28,7 +27,6 @@ InputCtrlClass::InputCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~InputCtrlClass
@@ -38,7 +36,6 @@ InputCtrlClass::~InputCtrlClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -72,7 +69,6 @@ InputCtrlClass::Create_Text_Renderers (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -115,7 +111,6 @@ InputCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -130,7 +125,6 @@ InputCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 	MouseMgrClass::Set_Cursor (MouseMgrClass::CURSOR_ACTION);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -148,7 +142,6 @@ InputCtrlClass::Update_Client_Rect (void)
 	Set_Dirty ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -189,7 +182,6 @@ InputCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -205,7 +197,6 @@ InputCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_RButton_Down
@@ -220,7 +211,6 @@ InputCtrlClass::On_RButton_Down (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -248,7 +238,6 @@ InputCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Focus
@@ -267,7 +256,6 @@ InputCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -281,7 +269,6 @@ InputCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -310,7 +297,6 @@ InputCtrlClass::On_New_Key (int vkey_id)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Key_Assignment
@@ -325,7 +311,6 @@ InputCtrlClass::Set_Key_Assignment (int game_key_id, const WideStringClass &key_
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Key_Down
@@ -338,7 +323,6 @@ InputCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return false;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -350,7 +334,6 @@ InputCtrlClass::On_Create (void)
 	Title = L"";
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

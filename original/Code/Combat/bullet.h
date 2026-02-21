@@ -29,7 +29,5 @@ public:
 					const Vector3 & velocity, const ArmedGameObj * owner, float progress_time, const Vector3 & target, DamageableGameObj * target_object = NULL );
 };
 
-
 #endif	// BULLET_H
-
 

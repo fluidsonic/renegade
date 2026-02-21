@@ -8,7 +8,6 @@
 #include "dialogbase.h"
 #include "stylemgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	ComboBoxCtrlClass
@@ -45,7 +44,6 @@ ComboBoxCtrlClass::ComboBoxCtrlClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ComboBoxCtrlClass
@@ -55,7 +53,6 @@ ComboBoxCtrlClass::~ComboBoxCtrlClass (void)
 {
 	return ;
 }
-
 
 void ComboBoxCtrlClass::Set_Style(DWORD style)
 {
@@ -67,7 +64,6 @@ void ComboBoxCtrlClass::Set_Style(DWORD style)
 		EditControl.Set_Style(0);
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -112,7 +108,6 @@ ComboBoxCtrlClass::Create_Text_Renderers (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -169,7 +164,6 @@ ComboBoxCtrlClass::Create_Control_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -187,7 +181,6 @@ ComboBoxCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -214,7 +207,6 @@ ComboBoxCtrlClass::Set_Window_Pos (const Vector2 &pos)
 	DialogControlClass::Set_Window_Pos (pos);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -313,7 +305,6 @@ ComboBoxCtrlClass::Update_Client_Rect (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -346,7 +337,6 @@ ComboBoxCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Down
@@ -364,7 +354,6 @@ ComboBoxCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_LButton_Up
@@ -380,7 +369,6 @@ ComboBoxCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Move
@@ -391,7 +379,6 @@ ComboBoxCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -414,7 +401,6 @@ ComboBoxCtrlClass::On_Set_Focus (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -428,7 +414,6 @@ ComboBoxCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -474,7 +459,6 @@ ComboBoxCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 	return handled;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -492,7 +476,6 @@ ComboBoxCtrlClass::On_Create (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroy
@@ -505,7 +488,6 @@ ComboBoxCtrlClass::On_Destroy (void)
 	Parent->Remove_Control(&EditControl);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -532,7 +514,6 @@ ComboBoxCtrlClass::On_Drop_Down_End (int curr_sel)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -579,7 +560,6 @@ ComboBoxCtrlClass::Display_Drop_Down (bool onoff)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Wheel
@@ -598,7 +578,6 @@ ComboBoxCtrlClass::On_Mouse_Wheel (int direction)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Select_String
@@ -615,7 +594,6 @@ ComboBoxCtrlClass::Select_String (const WCHAR* string)
 	return index;
 }
 
-
 void ComboBoxCtrlClass::Delete_String(int index)
 {
 	if (index >= 0 && index < DropDownCtrl.Get_Count()) {
@@ -627,7 +605,6 @@ void ComboBoxCtrlClass::Delete_String(int index)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Curr_Sel
@@ -638,7 +615,6 @@ ComboBoxCtrlClass::Set_Curr_Sel (int index)
 {
 	Set_Sel(index, false);
 }
-
 
 void
 ComboBoxCtrlClass::Set_Sel (int index, bool notify)
@@ -672,7 +648,6 @@ ComboBoxCtrlClass::Set_Sel (int index, bool notify)
 	}
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Get_Text
@@ -687,7 +662,6 @@ ComboBoxCtrlClass::Get_Text(void) const
 
 	return DropDownCtrl.Get_String(Get_Curr_Sel());
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -705,7 +679,6 @@ ComboBoxCtrlClass::Set_Text (const WCHAR *title)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_EditCtrl_Key_Down
@@ -718,7 +691,6 @@ ComboBoxCtrlClass::On_EditCtrl_Change(EditCtrlClass* edit, int)
 		ADVISE_NOTIFY(On_ComboBoxCtrl_Edit_Change(this, Get_ID()));
 	}
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

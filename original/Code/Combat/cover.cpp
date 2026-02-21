@@ -1,5 +1,4 @@
 #include "cover.h"
-#include "debug.h"
 #include "chunkio.h"
 #include "saveload.h"
 #include "crandom.h"
@@ -63,7 +62,6 @@ bool	CoverManager::Load( ChunkLoadClass & cload )
 	}
 	return true;
 }
-
 
 /*
 **

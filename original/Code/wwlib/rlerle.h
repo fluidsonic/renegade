@@ -11,7 +11,6 @@
 #include	<assert.h>
 #include	<string.h>
 
-
 /*
 **	This is a helper function that will skip N pixels in the RLE compressed source. This is
 **	necessary for clipping purposes. The return value represents the number of transparent
@@ -37,7 +36,6 @@ inline int Skip_Leading_Pixels(unsigned char const * & sptr, int skipper)
 	*/
 	return(-skipper);
 }
-
 
 /*
 **	Blits with transparency checking and translation to destination pixel format.
@@ -81,7 +79,6 @@ class RLEBlitTransXlat : public RLEBlitter {
 	private:
 		T const * TranslateTable;
 };
-
 
 /*
 **	This blits RLE compressed pixels by first remapping through a 256 byte table and then
@@ -127,7 +124,6 @@ class RLEBlitTransRemapXlat : public RLEBlitter {
 		unsigned char const * RemapTable;
 		T const * TranslateTable;
 };
-
 
 /*
 **	This blits RLE compressed pixels by first remapping through a 256 byte table and then
@@ -177,7 +173,6 @@ class RLEBlitTransZRemapXlat : public RLEBlitter {
 		T const * TranslateTable;
 };
 
-
 /*
 **	This will remap the destination pixels but under the control of the source pixels.
 **	Where the source pixel is not transparent, the dest pixel is remapped. This algorithm
@@ -223,7 +218,6 @@ class RLEBlitTransRemapDest : public RLEBlitter {
 	private:
 		T const * RemapTable;
 };
-
 
 /*
 **	Algorithmic darkening of hicolor pixels controlled by the source pixels. The source
@@ -272,7 +266,6 @@ class RLEBlitTransDarken : public RLEBlitter {
 		T Mask;
 };
 
-
 /*
 **	This blitter performs 50% translucency as it draws. It is commonly used for animation
 **	effects and other stealth like images. It only works with hicolor pixels but is a good
@@ -319,7 +312,6 @@ class RLEBlitTransLucent50 : public RLEBlitter {
 		T const * TranslateTable;
 		T Mask;
 };
-
 
 /*
 **	This blitter performs 25% translucency as it draws. This effect is less than spectacular,
@@ -368,7 +360,6 @@ class RLEBlitTransLucent25 : public RLEBlitter {
 		T Mask;
 };
 
-
 /*
 **	This blitter performs 75% translucency as it draws. This is quite useful for explosions and
 **	other gas animation effects. It only works with hicolor pixels and is a good candidate
@@ -416,8 +407,5 @@ class RLEBlitTransLucent75 : public RLEBlitter {
 		T const * TranslateTable;
 		T Mask;
 };
-
-
-
 
 #endif

@@ -2,7 +2,6 @@
 #include "assetmgr.h"
 #include "crandom.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Static member initialization
 ////////////////////////////////////////////////////////////////
@@ -38,7 +37,6 @@ typedef enum
 	EYEBROWS_DOWN_EYELIDS_DOWN
 
 }	EYEBROW_POSE_INDICES;
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -99,7 +97,6 @@ DynamicSpeechAnimClass::DynamicSpeechAnimClass (const char *skeleton_name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~DynamicSpeechAnimClass
@@ -110,7 +107,6 @@ DynamicSpeechAnimClass::~DynamicSpeechAnimClass (void)
 	Free_Morph ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -173,7 +169,6 @@ DynamicSpeechAnimClass::Generate_Animation (const char *text, float duration)
 	return retval;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Generate_Eyebrows
@@ -231,7 +226,6 @@ DynamicSpeechAnimClass::Generate_Eyebrows (float duration, float frequency)
 			float delay = WWMath::Random_Float (0.2F, 0.4F);
 			current_frame += int(delay * Get_Frame_Rate ());
 
-
 			//
 			//	Choose a random eyebrow pose
 			//			
@@ -246,7 +240,6 @@ DynamicSpeechAnimClass::Generate_Eyebrows (float duration, float frequency)
 	Insert_Morph_Key (CHANNEL1, max_frames, 0);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -276,7 +269,6 @@ DynamicSpeechAnimClass::Generate_Idle_Animation (float duration, float frequency
 	Generate_Eyebrows (duration, frequency);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

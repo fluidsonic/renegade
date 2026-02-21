@@ -2,7 +2,6 @@
 #include "persistfactory.h"
 #include "combatchunkid.h"
 #include "simpledefinitionfactory.h"
-#include "debug.h"
 #include "gameobjmanager.h"
 #include "smartgameobj.h"
 #include "colmath.h"

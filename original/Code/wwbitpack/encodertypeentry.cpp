@@ -50,7 +50,6 @@ bool cEncoderTypeEntry::Is_Value_In_Range(double value) const
 void cEncoderTypeEntry::Init(double min, double max, double resolution)
 {
 
-
 	Min = min;
 	Max = max;
 
@@ -61,7 +60,6 @@ void cEncoderTypeEntry::Init(double min, double max, double resolution)
 //-----------------------------------------------------------------------------
 void cEncoderTypeEntry::Init(int num_bits)
 {
-
 
 	Min = 0;
 	BitPrecision = num_bits;
@@ -98,7 +96,6 @@ double cEncoderTypeEntry::Unscale(ULONG u_value)
 
 	double value = Min + u_value * Resolution;
 
-
 	return value;
 }
 
@@ -125,7 +122,6 @@ void cEncoderTypeEntry::Calc_Bit_Precision(double resolution)
 	// the specified resolution.
 	//
 
-
 	double f_units = (double) ceil((Max - Min) / resolution - MISCUTIL_EPSILON) + 1;
 	UINT units = (UINT) f_units;
 
@@ -138,7 +134,6 @@ void cEncoderTypeEntry::Calc_Bit_Precision(double resolution)
 			max_units++;
 		}
 	}	
-
 
 	Resolution = (Max - Min) / (double) (max_units - 1);
 

@@ -9,7 +9,6 @@
 class MultiListNodeClass;
 class GenericMultiListClass;
 
-
 /******************************************************************************
 	
 	MultiLists
@@ -22,7 +21,6 @@ class GenericMultiListClass;
 	different lists that the object in question currently occupies.
 
 ******************************************************************************/
-
 
 /**
 ** MultiListObjectClass
@@ -46,7 +44,6 @@ private:
 	MultiListNodeClass *		ListNode;
 };
 
-
 /**
 ** MultiListNodeClass
 ** These nodes allow objects to be linked in multiple lists.  It is
@@ -65,7 +62,6 @@ public:
 	MultiListObjectClass		*Object;					// pointer back to the object
 	GenericMultiListClass	*List;					// pointer to list for this node
 };
-
 
 /**
 ** GenericMultiListClass
@@ -124,8 +120,6 @@ inline MultiListObjectClass * GenericMultiListClass::Internal_Get_List_Head(void
 	}
 }
 
-
-
 /**
 ** GenericMultiListIterator
 ** This is the internal implementation of an iterator for a MultiList.  The user should
@@ -151,8 +145,6 @@ protected:
 	MultiListNodeClass *			CurNode;			// node we're currently at.
 
 };
-
-
 
 /**************************************************************************************
 
@@ -273,7 +265,6 @@ public:
 	}
 
 };
-
 
 /**************************************************************************************
 
@@ -428,8 +419,6 @@ public:
 	}
 };
 
-
-
 /**************************************************************************************
 
   PriorityMultiListIterator
@@ -462,7 +451,6 @@ public:
 			OriginalHead		= (OriginalHead == NULL) ? CurNode : OriginalHead;
 			(*object)			= (ObjectType *)CurNode->Object;
 
-
 			// Remove the node from the head of the list and
 			// add it to the tail of the list
 			Remove_Current_Object();
@@ -478,7 +466,6 @@ protected:
 	
 	MultiListNodeClass *		OriginalHead;
 };
-
 
 #endif //LIST_CLASS_H
 

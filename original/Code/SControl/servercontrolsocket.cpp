@@ -44,7 +44,6 @@ ServerControlSocketClass::ServerControlSocketClass(void)
 	strcpy(Key, "LAGORAMA");
 }
 
-
 /***********************************************************************************************
  * ServerControlSocketClass::~ServerControlSocketClass -- Class destrctor                      *
  *                                                                                             *
@@ -63,8 +62,6 @@ ServerControlSocketClass::~ServerControlSocketClass(void)
 {
 	Close();
 }
-
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Open -- Opens a socket and binds it to the given port.            *
@@ -157,8 +154,6 @@ bool ServerControlSocketClass::Open(int port, bool loopback, unsigned long ip)
 	return (true);
 }
 
-
-
 /***********************************************************************************************
  * ServerControlSocketClass::Close -- Closes the socket if it's open. Shuts down the class.    *
  *                                                                                             *
@@ -183,8 +178,6 @@ void ServerControlSocketClass::Close(void)
 		Socket = INVALID_SOCKET;
 	}
 }
-
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Discard_In_Buffers -- Discard any packets in our incoming buffers *
@@ -218,7 +211,6 @@ void ServerControlSocketClass::Discard_In_Buffers(void)
 	InBufferArrayPos = 0;
 }
 
-
 /***********************************************************************************************
  * ServerControlSocketClass::Discard_Out_Buffers -- Discard any packets in our outgoing buffers*
  *                                                                                             *
@@ -251,9 +243,6 @@ void ServerControlSocketClass::Discard_Out_Buffers(void)
 	OutBufferArrayPos = 0;
 }
 
-
-
-
 /***********************************************************************************************
  * ServerControlSocketClass::Clear_Socket_Error -- Clear any outstanding erros on the socket   *
  *                                                                                             *
@@ -279,8 +268,6 @@ void ServerControlSocketClass::Clear_Socket_Error(void)
 		setsockopt (Socket, SOL_SOCKET, SO_ERROR, (char*)&error_code, length);
 	}
 }
-
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Write -- Add packet into the outgoing queue                       *
@@ -328,8 +315,6 @@ void ServerControlSocketClass::Write(void *buffer, int buffer_len, void *address
 	*/
 	Service();
 }
-
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Read -- Get the next pending incoming packet                      *
@@ -406,9 +391,6 @@ int ServerControlSocketClass::Read(void *buffer, int buffer_len, void *address, 
 	return (bytes);
 }
 
-
-
-
 /***********************************************************************************************
  * ServerControlSocketClass::Peek -- Get a copy of the specified packet                        *
  *                                                                                             *
@@ -472,9 +454,6 @@ int ServerControlSocketClass::Peek(void *buffer, int buffer_len, void *address, 
 	return (bytes);
 }
 
-
-
-
 /***********************************************************************************************
  * ServerControlSocketClass::Build_Packet_CRC -- Create a CRC value for a packet.              *
  *                                                                                             *
@@ -510,7 +489,6 @@ void ServerControlSocketClass::Build_Packet_CRC(WinsockBufferType *packet)
 		Add_CRC (crc_ptr, val);
 	}
 }
-
 
 /***********************************************************************************************
  * WIC::Passes_CRC_Check -- Checks the CRC for a packet                                        *
@@ -559,10 +537,6 @@ bool ServerControlSocketClass::Passes_CRC_Check(WinsockBufferType *packet)
 	DebugString(("ServerControlSocketClass - Error in Winsock packet CRC\n"));
 	return (false);
 }
-
-
-
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Get_New_Out_Buffer -- Get a holding buffer for an outgoing packet       *
@@ -616,7 +590,6 @@ void *ServerControlSocketClass::Get_New_Out_Buffer(void)
 	return (buffer);
 }
 
-
 /***********************************************************************************************
  * ServerControlSocketClass::Get_New_In_Buffer -- Get a holding buffer for an incoming packet        *
  *                                                                                             *
@@ -668,8 +641,6 @@ void *ServerControlSocketClass::Get_New_In_Buffer(void)
 	fw_assert (buffer != NULL);
 	return (buffer);
 }
-
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Service -- Service the connection - do all reads and writes             *
@@ -800,7 +771,6 @@ void ServerControlSocketClass::Service(void)
 		}
 	}
 
-
 	//DebugString(("ServerControlSocketClass - SocketHandler service\n"));
 	timeout_check = TIMEGETTIME();
 	times = 0;
@@ -874,7 +844,6 @@ void ServerControlSocketClass::Service(void)
 	}
 }
 
-
 /***********************************************************************************************
  * Add_CRC -- Adds a value to a CRC                                                            *
  *                                                                                             *
@@ -904,8 +873,6 @@ void ServerControlSocketClass::Add_CRC(unsigned long *crc, unsigned long val)
 	(*crc) += hibit;
 }
 
-
-
 /***********************************************************************************************
  * ServerControlSocketClass::Set_Encryption_Key -- Sets the key for encryption                 *
  *                                                                                             *
@@ -924,7 +891,6 @@ void ServerControlSocketClass::Set_Encryption_Key(char *key)
 {
 	strncpy(Key, key, 8);
 }
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Encrypt -- Encrypt packet                                         *
@@ -968,8 +934,6 @@ void ServerControlSocketClass::Encrypt(unsigned char *packet, int size)
 		key[i & 7] ^= a;
 	}
 }
-
-
 
 /***********************************************************************************************
  * ServerControlSocketClass::Decrypt -- Decrypt packet                                         *

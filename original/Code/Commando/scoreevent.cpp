@@ -10,7 +10,6 @@
 #include "playermanager.h"
 #include "apppackettypes.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cScoreEvent, NETCLASSID_SCOREEVENT);
 
 //-----------------------------------------------------------------------------
@@ -65,7 +64,6 @@ cScoreEvent::Export_Creation(BitStreamClass & packet)
 
 	cNetEvent::Export_Creation(packet);
 
-
 	packet.Add(SenderId);
 	packet.Add(Amount);
 
@@ -78,12 +76,9 @@ cScoreEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
 
-
 	packet.Get(SenderId);
 	packet.Get(Amount);
 
-
 	Act();
 }
-
 

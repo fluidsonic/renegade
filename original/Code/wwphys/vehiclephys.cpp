@@ -46,10 +46,8 @@ const char		WHEEL_FLAG_FAKE							= 'F';			// wheel is fake!
 **
 ***********************************************************************************************/
 
-
 bool VehiclePhysClass::_DisableVehicleSimulation = false;
 bool VehiclePhysClass::_DisableVehicleRendering = false;
-
 
 /*
 ** Chunk Ids used by VehiclePhysClass
@@ -61,7 +59,6 @@ enum
 
 	VEHICLEPHYS_VARIABLE_ISENGINEON			= 0,
 };
-
 
 VehiclePhysClass::VehiclePhysClass(void) :
 	IsEngineOn(false),
@@ -105,7 +102,6 @@ VehiclePhysClass::~VehiclePhysClass(void)
 	Release_Dazzles();
 }
 
-
 void VehiclePhysClass::Update_Wheels (void)
 {
 	/*
@@ -130,7 +126,6 @@ void VehiclePhysClass::Non_Physical_Wheel_Update(float suspension_fraction,float
 		Wheels[i]->Non_Physical_Update(suspension_fraction,rotation);
 	}
 }
-
 
 void VehiclePhysClass::Render(RenderInfoClass & rinfo)
 {
@@ -260,7 +255,6 @@ SuspensionElementClass * VehiclePhysClass::Peek_Wheel(int wheel_index)
 	return Wheels[wheel_index];
 }
 
-
 void VehiclePhysClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 {
 	{
@@ -343,7 +337,6 @@ bool VehiclePhysClass::Can_Go_To_Sleep(float dt)
 
 	return false;
 }
-
 
 void VehiclePhysClass::Update_Cached_Model_Parameters(void)
 {
@@ -564,7 +557,6 @@ void VehiclePhysClass::Capture_Auxiliary_Bones(void)
 	}
 }
 
-
 void VehiclePhysClass::Release_Dazzles(void)
 {
 	// delete the dazzle controllers
@@ -622,7 +614,6 @@ void VehiclePhysClass::Capture_Dazzles(void)
 	}
 }
 
-
 VehicleDazzleClass * VehiclePhysClass::Create_Dazzle_Controller(RenderObjClass * obj)
 {
 	VehicleDazzleClass * controller = new VehicleDazzleClass();
@@ -634,7 +625,6 @@ void VehiclePhysClass::Teleport_To_Last_Good_Position(void)
 {
 	Set_Transform(LastGoodPosition);
 }
-
 
 bool	VehiclePhysClass::Is_In_Contact(void)
 {
@@ -656,7 +646,6 @@ bool	VehiclePhysClass::Is_In_Contact(void)
 
 	return retval;
 }
-
 
 bool VehiclePhysClass::Save(ChunkSaveClass &csave)
 {

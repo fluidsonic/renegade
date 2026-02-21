@@ -1,8 +1,6 @@
 #include "tri.h"
 #include "vector2.h"
 
-
-
 static inline void find_dominant_plane(const TriClass & tri, int * axis1,int * axis2,int * axis3)
 {
 	/*
@@ -48,8 +46,6 @@ static inline void find_dominant_plane(const TriClass & tri, int * axis1,int * a
 		break;
 	}
 }
-
-
 
 /***********************************************************************************************
  * TriClass::Find_Dominant_Plane -- returns indices of the axes of the dominant plane          *
@@ -105,7 +101,6 @@ void TriClass::Find_Dominant_Plane(int * axis1,int * axis2) const
 		break;
 	}
 }
-
 
 /***********************************************************************************************
  * TriClass::Contains_Point -- performs 2D point-in-triangle test.                             *
@@ -206,7 +201,6 @@ bool TriClass::Contains_Point(const Vector3 & ipoint) const
 	return my_intersect;
 #endif
 
-
 /*
 ** "Optimized" version
 */
@@ -248,6 +242,5 @@ bool TriClass::Contains_Point(const Vector3 & ipoint) const
 	bool my_intersect = (side_mask != (POS | NEG));
 	return my_intersect;
 #endif
-
 
 }

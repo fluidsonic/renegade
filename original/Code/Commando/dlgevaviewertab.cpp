@@ -18,7 +18,6 @@
 #include "wheelvehicle.h"
 #include "string_ids.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	EvaViewerTabClass
@@ -34,7 +33,6 @@ EvaViewerTabClass::EvaViewerTabClass (int resource_id)	:
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -111,7 +109,6 @@ EvaViewerTabClass::On_Init_Dialog (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Destroy_Dialog
@@ -126,7 +123,6 @@ EvaViewerTabClass::On_Destroy_Dialog (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -214,7 +210,6 @@ EvaViewerTabClass::Build_Object_List (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ListCtrl_Sel_Change
@@ -232,7 +227,6 @@ EvaViewerTabClass::On_ListCtrl_Sel_Change
 	View_Entry (new_index);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -341,7 +335,6 @@ EvaViewerTabClass::View_Entry (int entry_index)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_ViewerCtrl_Model_Loaded
@@ -366,7 +359,6 @@ EvaViewerTabClass::On_ViewerCtrl_Model_Loaded
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -402,7 +394,6 @@ EvaViewerTabClass::Prepare_Model (RenderObjClass *model)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

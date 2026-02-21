@@ -7,7 +7,6 @@
 #include "light.h"
 #include "hanim.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MenuBackDropClass
@@ -72,7 +71,6 @@ MenuBackDropClass::MenuBackDropClass (void)	:
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~MenuBackDropClass
@@ -85,7 +83,6 @@ MenuBackDropClass::~MenuBackDropClass (void)
 	REF_PTR_RELEASE (Scene);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -101,7 +98,6 @@ MenuBackDropClass::Render (void)
 	WW3D::Render (Scene, Camera, ClearScreen, ClearScreen);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -152,7 +148,6 @@ MenuBackDropClass::Set_Model (const char *name)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Remove_Model
@@ -168,7 +163,6 @@ MenuBackDropClass::Remove_Model (void)
 	REF_PTR_RELEASE (Anim);
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Set_Animation
@@ -182,7 +176,6 @@ MenuBackDropClass::Set_Animation (const char *anim_name)
 	Play_Animation ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -198,7 +191,6 @@ MenuBackDropClass::Set_Animation_Percentage (float percent)
 	}
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

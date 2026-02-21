@@ -8,7 +8,6 @@
 #include "networkobjectmgr.h"
 #include "apppackettypes.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cRequestKillEvent, NETCLASSID_REQUESTKILLEVENT);
 
 //-----------------------------------------------------------------------------
@@ -65,7 +64,6 @@ void
 cRequestKillEvent::Import_Creation(BitStreamClass & packet)
 {
 	cNetEvent::Import_Creation(packet);
-
 
 	packet.Get(ObjectId);
 

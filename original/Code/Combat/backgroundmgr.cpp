@@ -20,10 +20,8 @@
 #include "seglinerenderer.h"
 #include "textureloader.h"
 
-
 // Singletons.
 BackgroundMgrClass _TheBackgroundMgr;
-
 
 // Static data.
 unsigned											  BackgroundMgrClass::_Hours;
@@ -42,7 +40,6 @@ SkyClass											 *BackgroundMgrClass::_Sky		= NULL;
 DazzleRenderObjClass							 *BackgroundMgrClass::_Dazzle	= NULL;
 
 static Random2Class _RandomNumber (0x1f855092);
-
 
 /***********************************************************************************************
  * HazeClass::HazeClass -- Constructor																			  *
@@ -132,7 +129,6 @@ HazeClass::HazeClass (float radius)
 	Configure (white, white, 1.0f);
 }
 
-
 /***********************************************************************************************
  * HazeClass::~HazeClass -- Destructor																			  *
  *                                                                                             *
@@ -154,7 +150,6 @@ HazeClass::~HazeClass()
 	delete [] VertexArray;
 }
 
-
 /***********************************************************************************************
  * HazeClass::Configure --																							  *
  *                                                                                             *
@@ -175,7 +170,6 @@ void HazeClass::Configure (const Vector3 &blendcolor, const Vector3 &horizoncolo
 	Configure();
 }
 
-
 /***********************************************************************************************
  * HazeClass::Configure --																							  *
  *                                                                                             *
@@ -194,7 +188,6 @@ void HazeClass::Configure (const Vector3 &blendcolor, const Vector3 &horizoncolo
 	HorizonColor = horizoncolor;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * HazeClass::Configure --																							  *
@@ -215,7 +208,6 @@ void HazeClass::Configure (const Vector3 &blendcolor, float intensity)
 	Configure();
 }
 
-
 /***********************************************************************************************
  * HazeClass::Configure --																							  *
  *                                                                                             *
@@ -233,7 +225,6 @@ void HazeClass::Configure (const Vector3 &blendcolor)
 	BlendColor = blendcolor;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * HazeClass::Configure --																							  *
@@ -269,7 +260,6 @@ void HazeClass::Configure()
 	// Haze is always visible.
 	Set_Visibility (true);
 }
-
 
 /***********************************************************************************************
  * HazeClass::Render --																								  *
@@ -310,7 +300,6 @@ void HazeClass::Render()
 		DX8Wrapper::Draw_Triangles (0, TriangleCount, 0, VertexCount);
 	}
 }
-
 
 /***********************************************************************************************
  * StarfieldClass::StarfieldClass --																			  *
@@ -363,7 +352,6 @@ StarfieldClass::StarfieldClass (float extent, unsigned starcount)
 	Configure (Vector3 (1.0f, 0.0f, 0.0f), 1.0f, 1.0f, white, white, 0.0f);
 }
 
-
 /***********************************************************************************************
  * StarfieldClass::~StarfieldClass -- Destructor															  *
  *                                                                                             *
@@ -385,7 +373,6 @@ StarfieldClass::~StarfieldClass()
 	REF_PTR_RELEASE (IndexBuffer);
 	delete [] VertexArray;
 }
-
 
 /***********************************************************************************************
  * StarfieldClass::Configure --																					  *
@@ -410,7 +397,6 @@ void StarfieldClass::Configure (const Vector3 &orientation, float length, float 
 	Configure();
 }
 
-
 /***********************************************************************************************
  * StarfieldClass::Configure --																					  *
  *                                                                                             *
@@ -431,7 +417,6 @@ void StarfieldClass::Configure (const Vector3 &orientation, float length, float 
 	Configure();
 }
 
-
 /***********************************************************************************************
  * StarfieldClass::Configure --																					  *
  *                                                                                             *
@@ -451,7 +436,6 @@ void StarfieldClass::Configure (const Vector3 &color0, const Vector3 &color1, fl
 	Alpha			= alpha;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * StarfieldClass::Configure --																					  *
@@ -540,7 +524,6 @@ void StarfieldClass::Configure()
 	Set_Visibility (Alpha > 0.0f);
 }
 
-
 /***********************************************************************************************
  * StarfieldClass::Render --																						  *
  *                                                                                             *
@@ -627,7 +610,6 @@ void StarfieldClass::Render()
 	}
 }
 
-
 /***********************************************************************************************
  * SkyObjectClass::SkyObjectClass -- Constructor															  *
  *                                                                                             *
@@ -680,7 +662,6 @@ SkyObjectClass::SkyObjectClass (ShaderClass shader)
 	Configure (Vector3 (1.0f, 0.0f, 0.0f), 1.0f, 1.0f, white);
 }
 
-
 /***********************************************************************************************
  * SkyObjectClass::~SkyObjectClass -- Destructor															  *
  *                                                                                             *
@@ -704,7 +685,6 @@ SkyObjectClass::~SkyObjectClass()
 	delete [] VertexArray;
 }
 
-
 /***********************************************************************************************
  * SkyObjectClass::Configure --																					  *
  *                                                                                             *
@@ -727,7 +707,6 @@ void SkyObjectClass::Configure (const Vector3 &direction, float length, float ra
 	Configure();
 }
 
-
 /***********************************************************************************************
  * SkyObjectClass::Configure --																					  *
  *                                                                                             *
@@ -748,7 +727,6 @@ void SkyObjectClass::Configure (const Vector3 &direction, float length, float wi
 	Height	 = height;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * SkyObjectClass::Configure --																					  *
@@ -771,7 +749,6 @@ void SkyObjectClass::Configure (const Vector3 &direction, float length, float ra
 	Configure();
 }
 
-
 /***********************************************************************************************
  * SkyObjectClass::Configure --																					  *
  *                                                                                             *
@@ -789,7 +766,6 @@ void SkyObjectClass::Configure (const Vector3 &color)
 	Color	= color;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * SkyObjectClass::Configure --																					  *
@@ -866,7 +842,6 @@ void SkyObjectClass::Configure()
 	Set_Visibility (visible);
 }
 
-
 /***********************************************************************************************
  * SkyObjectClass::Set_Texture --																				  *
  *                                                                                             *
@@ -884,7 +859,6 @@ void SkyObjectClass::Set_Texture (const char *texturename)
 	REF_PTR_RELEASE (Texture);
 	Texture = WW3DAssetManager::Get_Instance()->Get_Texture (texturename);
 }
-
 
 /***********************************************************************************************
  * SkyObjectClass::Render --																						  *
@@ -928,7 +902,6 @@ void SkyObjectClass::Render()
 		DX8Wrapper::Draw_Triangles (0, TriangleCount, 0, VertexCount);
 	}
 }
-
 
 /***********************************************************************************************
  * CloudLayerClass::CloudLayerClass --																			  *
@@ -1058,7 +1031,6 @@ CloudLayerClass::CloudLayerClass (float maxdistance, const char *texturename, co
 	Configure();
 }
 
-
 /***********************************************************************************************
  * CloudLayerClass::~CloudLayerClass --																		  *
  *                                                                                             *
@@ -1081,7 +1053,6 @@ CloudLayerClass::~CloudLayerClass()
 	delete [] VertexArray;
 }
 
-
 /***********************************************************************************************
  * CloudLayerClass::Configure --																					  *
  *                                                                                             *
@@ -1101,7 +1072,6 @@ void CloudLayerClass::Configure (const Vector3 &warmcolor, const Vector3 &coldco
 	Configure();
 }
 
-
 /***********************************************************************************************
  * CloudLayerClass::Configure --																					  *
  *                                                                                             *
@@ -1119,7 +1089,6 @@ void CloudLayerClass::Configure (const Vector3 &warmdirection)
 	WarmDirection = warmdirection;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * CloudLayerClass::Configure --																					  *
@@ -1141,7 +1110,6 @@ void CloudLayerClass::Configure (const Vector3 &warmcolor, const Vector3 &coldco
 	Configure();
 }
 
-
 /***********************************************************************************************
  * CloudLayerClass::Configure --																					  *
  *                                                                                             *
@@ -1161,7 +1129,6 @@ void CloudLayerClass::Configure (float alpha, float cloudintensity, float horizo
 	HorizonIntensity = horizonintensity;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * CloudLayerClass::Configure --																					  *
@@ -1207,7 +1174,6 @@ void CloudLayerClass::Configure()
 	// Optimization: If alpha is zero then cloud layer is invisible.
 	Set_Visibility (Alpha > 0.0f);
 }
-
 
 /***********************************************************************************************
  * CloudLayerClass::Render --																						  *
@@ -1279,7 +1245,6 @@ void CloudLayerClass::Render()
 		DX8Wrapper::Draw_Triangles (0, TriangleCount, 0, VertexCount);
 	}
 }
-
 
 /***********************************************************************************************
  * SkyGlowClass::SkyGlowClass -- Constructor																	  *
@@ -1373,7 +1338,6 @@ SkyGlowClass::SkyGlowClass (float radius)
 	Configure (Vector2 (1.0f, 0.0f), white, 1.0f);
 }
 
-
 /***********************************************************************************************
  * SkyGlowClass::~SkyGlowClass -- Destructor																	  *
  *                                                                                             *
@@ -1395,7 +1359,6 @@ SkyGlowClass::~SkyGlowClass()
 	delete [] VertexArray;
 }
 
-
 /***********************************************************************************************
  * SkyGlowClass::Configure --																						  *
  *                                                                                             *
@@ -1415,7 +1378,6 @@ void SkyGlowClass::Configure (const Vector2 &hotdirection, const Vector3 &horizo
 	ColdIntensity = coldintensity;
 	Configure();
 }
-
 
 /***********************************************************************************************
  * SkyGlowClass::Configure --																						  *
@@ -1458,7 +1420,6 @@ void SkyGlowClass::Configure()
 	Set_Visibility (true);
 }
 
-
 /***********************************************************************************************
  * SkyGlowClass::Render --																							  *
  *                                                                                             *
@@ -1498,7 +1459,6 @@ void SkyGlowClass::Render()
 		DX8Wrapper::Draw_Triangles (0, TriangleCount, 0, VertexCount);
 	}
 }
-
 
 /***********************************************************************************************
  * LightningBoltClass::LightningBoltClass -- Constructor													  *
@@ -1611,7 +1571,6 @@ LightningBoltClass::LightningBoltClass (int branchcount, Matrix3D &m, float leng
 	delete [] worldvertex;
 }
 
-
 /***********************************************************************************************
  * LightningBoltClass::~LightningBoltClass -- Destructor													  *
  *                                                                                             *
@@ -1634,7 +1593,6 @@ LightningBoltClass::~LightningBoltClass()
 		delete Branches;
 	}
 }
-
 
 /***********************************************************************************************
  * LightningBoltClass::Set_Visibility --																		  *
@@ -1660,7 +1618,6 @@ void LightningBoltClass::Set_Visibility (bool visible, bool recurse)
 	}
 }
 
-
 /***********************************************************************************************
  * LightningBoltClass::Configure --																				  *
  *                                                                                             *
@@ -1683,7 +1640,6 @@ void LightningBoltClass::Configure (Vector3 &color)
 	}
 }
 
-
 /***********************************************************************************************
  * LightningBoltClass::Set_Transform --																		  *
  *                                                                                             *
@@ -1705,7 +1661,6 @@ void LightningBoltClass::Set_Transform (Matrix3D &t)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * LightningBoltClass::Render --																					  *
@@ -1739,7 +1694,6 @@ void LightningBoltClass::Render (RenderInfoClass &rinfo)
 		}
 	}
 }
-
 
 /***********************************************************************************************
  * LightningClass::LightningClass -- Constructor															  *
@@ -1826,7 +1780,6 @@ LightningClass::LightningClass (float extent, float startdistance, float enddist
 	ThunderSampleName = _thundersamplename [majorsampleindex][minorsampleindex];
 }
 
-
 /***********************************************************************************************
  * LightningClass::~LightningClass -- Destructor															  *
  *                                                                                             *
@@ -1845,7 +1798,6 @@ LightningClass::~LightningClass()
 	REF_PTR_RELEASE (LightningBolt);
 	delete LightningGlow;
 }
-
 
 /***********************************************************************************************
  * LightningClass::Update --																						  *
@@ -1945,7 +1897,6 @@ bool LightningClass::Update (Matrix3D &t, Vector3 &additivecolor, SoundEnvironme
 	return (notfinished);
 }
 
-
 /***********************************************************************************************
  * LightningClass::Render --																						  *
  *                                                                                             *
@@ -1964,7 +1915,6 @@ void LightningClass::Render (RenderInfoClass &rinfo)
 	LightningBolt->Render (rinfo);
 	LightningSource->Render();
 }
-
 
 /***********************************************************************************************
  * WarBlitzClass::WarBlitzClass -- Constructor																  *
@@ -2004,7 +1954,6 @@ WarBlitzClass::WarBlitzClass (float extent, float startdistance, float enddistan
 	WarBlitzGlow = new SkyGlowClass (extent);
 }
 
-
 /***********************************************************************************************
  * WarBlitzClass::~WarBlitzClass -- Destructor																  *
  *                                                                                             *
@@ -2021,7 +1970,6 @@ WarBlitzClass::~WarBlitzClass()
 {
 	delete WarBlitzGlow;
 }
-
 
 /***********************************************************************************************
  * WarBlitzClass::Update --																						  *
@@ -2090,7 +2038,6 @@ bool WarBlitzClass::Update (Matrix3D &t, Vector3 &additivecolor)
 	return (notfinished);
 }
 
-
 /***********************************************************************************************
  * WarBlitzClass::Render --																						  *
  *                                                                                             *
@@ -2107,7 +2054,6 @@ void WarBlitzClass::Render (RenderInfoClass &rinfo)
 {
 	WarBlitzGlow->Render();
 }
-
 
 /***********************************************************************************************
  * SkyClass::SkyClass -- Constructor																			  *
@@ -2174,7 +2120,6 @@ SkyClass::SkyClass (SoundEnvironmentClass *soundenvironment)
 	WarBlitzCountdown = War_Blitz_Delay();
 }
 
-
 /***********************************************************************************************
  * SkyClass::~SkyClass -- Destructor																			  *
  *                                                                                             *
@@ -2207,7 +2152,6 @@ SkyClass::~SkyClass()
 	REF_PTR_RELEASE (SoundEnvironment);
 }
 
-
 /***********************************************************************************************
  * SkyClass::Set_Light_Direction --																				  *
  *                                                                                             *
@@ -2235,7 +2179,6 @@ void SkyClass::Set_Light_Direction (const Vector3 &sundirection, const Vector3 &
 	CloudLayer0->Configure (sundirection);
 	CloudLayer1->Configure (sundirection);
 }
-
 
 /***********************************************************************************************
  * SkyClass::Set_Time_Of_Day --																					  *
@@ -2446,7 +2389,6 @@ void SkyClass::Set_Time_Of_Day (unsigned hours, unsigned minutes)
 	CloudLayer1->Configure (warmskycolor, coldskycolor);
 }
 
-
 /***********************************************************************************************
  * SkyClass::Set_Clouds --																							  *
  *                                                                                             *
@@ -2467,7 +2409,6 @@ void SkyClass::Set_Clouds (float cloudcover, float gloominess)
 	const float layer1maxintensity = 0.90f;
 
 	float layer0alpha, layer1alpha, layer0intensity, layer1intensity;
-
 
 	Gloominess = gloominess;
 	Set_Color();
@@ -2490,7 +2431,6 @@ void SkyClass::Set_Clouds (float cloudcover, float gloominess)
 	CloudLayer1->Configure (layer1alpha, layer1intensity, layer0intensity);
 }
 
-
 /***********************************************************************************************
  * SkyClass::Set_Tint_Factor --																					  *
  *                                                                                             *
@@ -2509,7 +2449,6 @@ void SkyClass::Set_Tint_Factor (float tintfactor)
 	Set_Color();
 	Haze->Configure (Get_Color());
 }
-
 
 /***********************************************************************************************
  * SkyClass::Set_Color --																							  *
@@ -2591,7 +2530,6 @@ void SkyClass::Set_Color()
 	Vector3::Lerp (color, tintcolor, TintFactor, &Color);
 }
 
-
 /***********************************************************************************************
  * SkyClass::Set_Moon_Type --																						  *
  *                                                                                             *
@@ -2611,7 +2549,6 @@ void SkyClass::Set_Moon_Type (MoonTypeEnum moontype)
 
 	Moon->Set_Texture (moontextures [moontype]);
 }
-
 
 /***********************************************************************************************
  * SkyClass::Interpolate_Color --																				  *
@@ -2649,7 +2586,6 @@ Vector3 SkyClass::Interpolate_Color (const unsigned char colortable [][3], unsig
 	return (color);
 }
 
-
 /***********************************************************************************************
  * SkyClass::Interpolate_Scalar --																				  *
  *                                                                                             *
@@ -2683,7 +2619,6 @@ float SkyClass::Interpolate_Scalar (const unsigned char scalartable [], unsigned
 	return (lowervalue + ((uppervalue - lowervalue) * alpha));
 }
 
-
 /***********************************************************************************************
  * SkyClass::Lightning_Delay --																					  *
  *                                                                                             *
@@ -2703,7 +2638,6 @@ unsigned SkyClass::Lightning_Delay()
 	return (_RandomNumber (1, maxdelay));
 }
 
-
 /***********************************************************************************************
  * SkyClass::War_Blitz_Delay --																					  *
  *                                                                                             *
@@ -2722,7 +2656,6 @@ unsigned SkyClass::War_Blitz_Delay()
 
 	return (_RandomNumber (1, maxdelay));
 }
-
 
 /***********************************************************************************************
  * SkyClass::Update --																								  *
@@ -2822,7 +2755,6 @@ void SkyClass::Update (SceneClass *mainscene, const Vector3 &cameraposition)
 	mainscene->Set_Fog_Color (fogcolor);
 }
 
-
 /***********************************************************************************************
  * SkyClass::Render --																								  *
  *                                                                                             *
@@ -2854,7 +2786,6 @@ void SkyClass::Render (RenderInfoClass &rinfo)
 	if (WarBlitz != NULL) WarBlitz->Render (rinfo);
 }
 
-
 /***********************************************************************************************
  * SkyClass::Get_Obj_Space_Bounding_Sphere --																  *
  *                                                                                             *
@@ -2874,7 +2805,6 @@ void SkyClass::Get_Obj_Space_Bounding_Sphere (SphereClass &sphere) const
 
 	sphere.Init (position, extent.Length());
 }
-
 
 /***********************************************************************************************
  * SkyClass::Get_Obj_Space_Bounding_Box --																	  *
@@ -2896,7 +2826,6 @@ void SkyClass::Get_Obj_Space_Bounding_Box (AABoxClass &box) const
 	box.Init (position, extent);
 }
 
-
 /***********************************************************************************************
  * BackgroundParameterClass::Initialize --																	  *
  *                                                                                             *
@@ -2917,7 +2846,6 @@ void BackgroundParameterClass::Initialize()
 	OverrideTarget	  = 0.0f;
 	OverrideDuration = 0.0f;
 }
-
 
 /***********************************************************************************************
  * BackgroundParameterClass::Set --																				  *
@@ -2941,7 +2869,6 @@ void BackgroundParameterClass::Set (float target, float ramptime, bool override)
 		OverrideDuration = ramptime;
 	}
 }
-
 
 /***********************************************************************************************
  * BackgroundParameterClass::Update --																			  *
@@ -2975,7 +2902,6 @@ bool BackgroundParameterClass::Update (float time, bool override)
 
 	return (CurrentValue != previouscurrentvalue);
 }
-
 
 /***********************************************************************************************
  * BackgroundParameterClass::Update --																			  *
@@ -3019,7 +2945,6 @@ void BackgroundParameterClass::Update (float &value, float &target, float &durat
 	}
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::BackgroundMgrClass --																	  *
  *                                                                                             *
@@ -3037,7 +2962,6 @@ BackgroundMgrClass::BackgroundMgrClass()
 	Set_Network_ID (NETID_SERVER_BACKGROUND);
 	Set_App_Packet_Type (APPPACKETTYPE_NETBACKGROUND);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Init --																					  *
@@ -3063,7 +2987,6 @@ void BackgroundMgrClass::Init (SimpleSceneClass *renderscene, SoundEnvironmentCl
 	}
 	Reset();
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Reset --																					  *
@@ -3102,7 +3025,6 @@ void BackgroundMgrClass::Reset()
 	Set_Dirty();
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Shutdown -- Deallocate resources.													  *
  *                                                                                             *
@@ -3129,7 +3051,6 @@ void BackgroundMgrClass::Shutdown()
 	}
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Clouds --																			  *
  *                                                                                             *
@@ -3152,7 +3073,6 @@ bool BackgroundMgrClass::Set_Clouds (float cloudcover, float cloudgloominess, fl
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Override_Clouds --																		  *
@@ -3178,7 +3098,6 @@ bool BackgroundMgrClass::Override_Clouds (float cloudcover, float cloudgloomines
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Get_Clouds --																			  *
  *                                                                                             *
@@ -3196,7 +3115,6 @@ void BackgroundMgrClass::Get_Clouds (float &cloudcover, float &gloominess)
 	cloudcover = _Parameters [PARAMETER_CLOUD_COVER].Value();
 	gloominess = _Parameters [PARAMETER_CLOUD_GLOOMINESS].Value();
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Clouds --																			  *
@@ -3223,7 +3141,6 @@ bool BackgroundMgrClass::Set_Clouds (float cloudcover, float cloudgloominess, fl
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Restore_Clouds --																		  *
  *                                                                                             *
@@ -3240,14 +3157,12 @@ void BackgroundMgrClass::Restore_Clouds (float ramptime)
 {
 	if (CombatManager::I_Am_Server()) {
 
-
 		_Parameters [PARAMETER_CLOUD_COVER].Set (ramptime);
 		_Parameters [PARAMETER_CLOUD_GLOOMINESS].Set (ramptime);
 		_CloudOverrideCount--;
 		_TheBackgroundMgr.Set_Object_Dirty_Bit (NetworkObjectClass::BIT_RARE, true);
 	}
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Sky_Tint --																			  *
@@ -3271,7 +3186,6 @@ bool BackgroundMgrClass::Set_Sky_Tint (float skytintfactor, float ramptime)
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Override_Sky_Tint --																	  *
@@ -3297,7 +3211,6 @@ bool BackgroundMgrClass::Override_Sky_Tint (float skytintfactor, float ramptime)
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Restore_Sky_Tint --																	  *
  *                                                                                             *
@@ -3314,13 +3227,11 @@ void BackgroundMgrClass::Restore_Sky_Tint (float ramptime)
 {
 	if (CombatManager::I_Am_Server()) {
 
-
 		_Parameters [PARAMETER_SKY_TINT_FACTOR].Set (ramptime);
 		_SkyTintOverrideCount--;
 		_TheBackgroundMgr.Set_Object_Dirty_Bit (NetworkObjectClass::BIT_RARE, true);
 	}
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Sky_Tint --																			  *
@@ -3346,7 +3257,6 @@ bool BackgroundMgrClass::Set_Sky_Tint (float skytintfactor, float ramptime, bool
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Lightning_Intensity --															  *
  *                                                                                             *
@@ -3370,7 +3280,6 @@ bool BackgroundMgrClass::Set_Lightning_Intensity (float intensity, float ramptim
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Lightning --																		  *
  *                                                                                             *
@@ -3393,7 +3302,6 @@ bool BackgroundMgrClass::Set_Lightning (float intensity, float startdistance, fl
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Override_Lightning --																	  *
@@ -3419,7 +3327,6 @@ bool BackgroundMgrClass::Override_Lightning (float intensity, float startdistanc
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Lightning_Intensity --															  *
  *                                                                                             *
@@ -3443,7 +3350,6 @@ bool BackgroundMgrClass::Set_Lightning_Intensity (float intensity, float ramptim
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Set_Lightning --																		  *
@@ -3475,7 +3381,6 @@ bool BackgroundMgrClass::Set_Lightning (float intensity, float startdistance, fl
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Get_Lightning --																		  *
  *                                                                                             *
@@ -3496,7 +3401,6 @@ void BackgroundMgrClass::Get_Lightning (float &intensity, float &startdistance, 
 	heading		  = _Parameters [PARAMETER_LIGHTNING_HEADING].Value();
 	distribution  = _Parameters [PARAMETER_LIGHTNING_DISTRIBUTION].Value();
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Restore_Lightning --																	  *
@@ -3523,7 +3427,6 @@ void BackgroundMgrClass::Restore_Lightning (float ramptime)
 	}
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Set_War_Blitz --																		  *
  *                                                                                             *
@@ -3544,7 +3447,6 @@ bool BackgroundMgrClass::Set_War_Blitz (float intensity, float ramptime)
 	}
 	return (false);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Set_War_Blitz --																		  *
@@ -3574,7 +3476,6 @@ bool BackgroundMgrClass::Set_War_Blitz (float intensity, float startdistance, fl
 	return (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Get_War_Blitz --																		  *
  *                                                                                             *
@@ -3595,7 +3496,6 @@ void BackgroundMgrClass::Get_War_Blitz (float &intensity, float &startdistance, 
 	heading		  = _Parameters [PARAMETER_WAR_BLITZ_HEADING].Value();
 	distribution  = _Parameters [PARAMETER_WAR_BLITZ_DISTRIBUTION].Value();
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Update --								                                         *
@@ -3623,7 +3523,6 @@ void BackgroundMgrClass::Update (PhysicsSceneClass *mainscene, CameraClass *came
 	float	  intensity, dazzleintensity, lensflareintensity;
 
 	if (_Sky == NULL) return;
-
 
 	if (Is_Dirty()) {
 		_Sky->Set_Time_Of_Day (_Hours, _Minutes);
@@ -3703,7 +3602,6 @@ void BackgroundMgrClass::Update (PhysicsSceneClass *mainscene, CameraClass *came
 	Set_Dirty (false);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Save --								                                         *
  *                                                                                             *
@@ -3736,7 +3634,6 @@ bool BackgroundMgrClass::Save (ChunkSaveClass &csave)
 	Save_Dynamic (csave);
 	return (true);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Save Dynamic --																			  *
@@ -3773,7 +3670,6 @@ bool BackgroundMgrClass::Save_Dynamic (ChunkSaveClass &csave)
 	return (true);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Load --								                                         *
  *                                                                                             *
@@ -3808,7 +3704,6 @@ bool BackgroundMgrClass::Load (ChunkLoadClass &cload)
 
 	return (retval);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Load_Micro_Chunks --																	  *
@@ -3846,7 +3741,6 @@ bool BackgroundMgrClass::Load_Micro_Chunks (ChunkLoadClass &cload)
 	return (true);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Load Dynamic --																			  *
  *                                                                                             *
@@ -3875,7 +3769,6 @@ bool BackgroundMgrClass::Load_Dynamic (ChunkLoadClass &cload)
 	}
 	return (retval);
 }
-
 
 /***********************************************************************************************
  * BackgroundMgrClass::Load_Dynamic_Micro_Chunks --														  *
@@ -3917,7 +3810,6 @@ bool BackgroundMgrClass::Load_Dynamic_Micro_Chunks (ChunkLoadClass &cload)
 	return (true);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Export_Rare --																			  *
  *                                                                                             *
@@ -3952,7 +3844,6 @@ void BackgroundMgrClass::Export_Rare (BitStreamClass &packet)
 	packet.Add (_SkyTintOverrideCount);
 }
 
-
 /***********************************************************************************************
  * BackgroundMgrClass::Import_Rare --																			  *
  *                                                                                             *
@@ -3986,7 +3877,6 @@ void BackgroundMgrClass::Import_Rare (BitStreamClass &packet)
 	packet.Get (_LightningOverrideCount);
 	packet.Get (_SkyTintOverrideCount);
 }
-
 
 #undef EXPORT_PARAMETER
 #undef IMPORT_PARAMETER

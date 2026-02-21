@@ -12,13 +12,10 @@
 #include "multilist.h"
 #include "projector.h"
 
-
 class SpecialRenderInfoClass;
 class RenderObjClass;
 class MaterialPassClass;
 class SurfaceClass;
-
-
 
 /**
 ** TexProjectClass
@@ -186,13 +183,11 @@ protected:
 	float							ZNear,ZFar;		// z clip planes (for both modes)
 };
 
-
 /*
 ** Texture Projector Lists
 */
 typedef RefMultiListClass<TexProjectClass>		TexProjListClass;
 typedef RefMultiListIterator<TexProjectClass>	TexProjListIterator;
-
 
 #endif
 

@@ -1,10 +1,8 @@
 #ifdef NEVER
 
-
 #include	"always.h"
 #include	"point.h"
 #include	"rect.h"
-
 
 /*********************************************************************************************** 
  * Point2D::Bias_To -- Bias a point into a rectangle.                                          * 

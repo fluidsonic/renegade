@@ -74,7 +74,6 @@ void						WWAssert_Callback(const char * message);
 void						Debug_Refs(void);
 void						LoadAssets();
 
-
 // ----------------------------------------------------------------------------
 //
 // FPS counter class counts how many times Update() has been called during the
@@ -129,7 +128,6 @@ unsigned FPSCounterClass::Get_FPS()
 {
 	return frame_time_count;
 }
-
 
 // ----------------------------------------------------------------------------
 //
@@ -398,7 +396,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
    }
    return 0;
 }
-
 
 // Mesage handler for about box.
 LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)

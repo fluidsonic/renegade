@@ -30,7 +30,6 @@ protected:
 	CullSystemClass * System;
 };
 
-
 /*
 ** CullableClass
 ** This is the base class for any object that can be inserted into a culling system
@@ -99,9 +98,6 @@ private:
 	friend class CullSystemClass;
 };
 
-
-
-
 /*
 ** CullSystemClass
 ** Base class of any culling system.  This interface exists so that things can
@@ -155,6 +151,5 @@ protected:
 
 	friend class CullableClass;
 };
-
 
 #endif

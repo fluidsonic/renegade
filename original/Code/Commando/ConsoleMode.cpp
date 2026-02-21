@@ -1,7 +1,6 @@
 #include "consolemode.h"
 #include "consolefunction.h"
 #include "conio.h"
-#include "slavemaster.h"
 #include <stdio.h>
 #include "systimer.h"
 #include "widestring.h"
@@ -25,10 +24,8 @@ ConsoleModeClass ConsoleBox;
 ** Console title bar text
 */
 #define MASTER_TITLE_BASE "Renegade Master Server"
-#define SLAVE_TITLE_BASE "Renegade Slave Server"
 
 #define MASTER_COLORS (FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY | BACKGROUND_BLUE)
-#define SLAVE_COLORS	 (BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_BLUE)
 
 /***********************************************************************************************
  * ConsoleModeClass::ConsoleModeClass -- Class constructor                                     *
@@ -56,7 +53,6 @@ ConsoleModeClass::ConsoleModeClass(void)
 	ProfileMode = false;
 }
 
-
 /***********************************************************************************************
  * ConsoleModeClass::~ConsoleModeClass -- Class destructor                                     *
  *                                                                                             *
@@ -78,7 +74,6 @@ ConsoleModeClass::~ConsoleModeClass(void)
 		ConsoleOutputHandle = INVALID_HANDLE_VALUE;
 	}
 }
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Init -- Enable console mode - start up a console                          *
@@ -110,7 +105,6 @@ void ConsoleModeClass::Init(void)
 
 			ConsoleInputHandle = GetStdHandle(STD_INPUT_HANDLE);
 
-
 			/*
 			** Set the size of the console buffer.
 			*/
@@ -122,16 +116,8 @@ void ConsoleModeClass::Init(void)
 			coord.X=0;
 			coord.Y=0;
 
-			/*
-			** Use different colors for master and slaves.
-			*/
-			if (!SlaveMaster.Am_I_Slave()) {
-				FillConsoleOutputAttribute(ConsoleOutputHandle, MASTER_COLORS, 4192*50, coord, &written);
-				SetConsoleTextAttribute(ConsoleOutputHandle, MASTER_COLORS);
-			} else {
-				FillConsoleOutputAttribute(ConsoleOutputHandle, SLAVE_COLORS, 4192*50, coord, &written);
-				SetConsoleTextAttribute(ConsoleOutputHandle, SLAVE_COLORS);
-			}
+			FillConsoleOutputAttribute(ConsoleOutputHandle, MASTER_COLORS, 4192*50, coord, &written);
+			SetConsoleTextAttribute(ConsoleOutputHandle, MASTER_COLORS);
 
 			/*
 			** Set the text in the console title bar.
@@ -167,33 +153,6 @@ void ConsoleModeClass::Init(void)
 	}
 }
 
-
-
-
-
-/***********************************************************************************************
- * ConsoleModeClass::Get_Slave_Window_By_Title -- Look for a slave window                      *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Login name of slave                                                               *
- *           Settings file name of slave                                                       *
- *                                                                                             *
- * OUTPUT:   HWND of slave window                                                              *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   2/4/2002 1:21PM ST : Created                                                              *
- *=============================================================================================*/
-HWND ConsoleModeClass::Get_Slave_Window_By_Title(char *name, char *settings)
-{
-	StringClass title = Compose_Window_Title(name, settings, true);
-	HWND window = FindWindow("ConsoleWindowClass", title.Peek_Buffer());
-	return(window);
-}
-
-
 /***********************************************************************************************
  * ConsoleModeClass::Compose_Window_Title -- Build a window title string from name and settings*
  *                                                                                             *
@@ -209,15 +168,12 @@ HWND ConsoleModeClass::Get_Slave_Window_By_Title(char *name, char *settings)
  * HISTORY:                                                                                    *
  *   2/4/2002 1:19PM ST : Created                                                              *
  *=============================================================================================*/
-StringClass ConsoleModeClass::Compose_Window_Title(char *name, char *settings, bool slave)
+StringClass ConsoleModeClass::Compose_Window_Title(char *name, char *settings)
 {
 	char title[256];
 
-	if (!slave) {
-		strcpy(title, MASTER_TITLE_BASE);
-	} else {
-		strcpy(title, SLAVE_TITLE_BASE);
-	}
+	strcpy(title, MASTER_TITLE_BASE);
+
 	if (name) {
 		strcat(title, " - ");
 		strcat(title, name);
@@ -229,8 +185,6 @@ StringClass ConsoleModeClass::Compose_Window_Title(char *name, char *settings, b
 	}
 	return(StringClass(title));
 }
-
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Set_Title -- Sets the text in the console title bar                       *
@@ -250,14 +204,11 @@ StringClass ConsoleModeClass::Compose_Window_Title(char *name, char *settings, b
 void ConsoleModeClass::Set_Title(char *name, char *settings)
 {
 	if (ConsoleOutputHandle) {
-		StringClass title = Compose_Window_Title(name, settings, SlaveMaster.Am_I_Slave());
+		StringClass title = Compose_Window_Title(name, settings);
 		strcpy(Title, title.Peek_Buffer());
 		SetConsoleTitle(Title);
 	}
 }
-
-
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Print -- Formatted print to console box                                   *
@@ -294,7 +245,6 @@ void ConsoleModeClass::Print(char const * string, ...)
 		Apply_Attributes();
 	}
 }
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Print_Maybe -- Formatted print to console box if not busy                 *
@@ -334,7 +284,6 @@ void ConsoleModeClass::Print_Maybe(char const * string, ...)
 	}
 }
 
-
 /***********************************************************************************************
  * ConsoleModeClass::Static_Print_Maybe -- Static version of Print_Maybe                       *
  *                                                                                             *
@@ -352,9 +301,7 @@ void ConsoleModeClass::Print_Maybe(char const * string, ...)
 void ConsoleModeClass::Static_Print_Maybe(char const * string, ...)
 {
 	ConsoleBox.Print_Maybe(string);
-}			  
-
-
+}
 
 /***********************************************************************************************
  * ConsoleModeClass::cprintf -- let's get all the prints going through one place again         *
@@ -390,8 +337,6 @@ void ConsoleModeClass::cprintf(char const * string, ...)
 		GameSideServerControlClass::Print("%s", buffer);
 	}
 }
-
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Get_Log_File_Nmae -- Get name of log file                                 *
@@ -447,8 +392,6 @@ const char *ConsoleModeClass::Get_Log_File_Name(void)
 	return(_log_file_name);
 }
 
-
-
 /***********************************************************************************************
  * ConsoleModeClass::Log_To_Disk -- Log console output to disk                                 *
  *                                                                                             *
@@ -478,9 +421,6 @@ void ConsoleModeClass::Log_To_Disk(const char *string)
 		}
 	}
 }
-
-
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Think -- Handles input to the console box                                 *
@@ -624,18 +564,13 @@ void ConsoleModeClass::Think(void)
 					string[1] = 0;
 					break;
 
-
 				/*
 				** Anything else gets put into the command buffer.
 				*/
 				default:
-					if (ProfileMode) {
-						Handle_Profile_Key(key);
-					} else {
-						if (key == 32 || isgraph(key)) {
-							string[Pos++] = key;
-							last_suggestion[0] = 0;
-						}
+					if (key == 32 || isgraph(key)) {
+						string[Pos++] = key;
+						last_suggestion[0] = 0;
 					}
 					break;
 			}
@@ -691,9 +626,6 @@ void ConsoleModeClass::Think(void)
 	}
 }
 
-
-
-
 /***********************************************************************************************
  * ConsoleModeClass::Add_Message -- Print colored text to the console                          *
  *                                                                                             *
@@ -741,22 +673,14 @@ void ConsoleModeClass::Add_Message(WideStringClass *formatted_text, Vector3 *tex
 			}
 		}
 
-		if (!SlaveMaster.Am_I_Slave()) {
-			SetConsoleTextAttribute(ConsoleOutputHandle, color | BACKGROUND_BLUE);
-		} else {
-			SetConsoleTextAttribute(ConsoleOutputHandle, color | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_BLUE);
-		}
+		SetConsoleTextAttribute(ConsoleOutputHandle, color | BACKGROUND_BLUE);
 
 		StringClass string(128, true);
 		formatted_text->Convert_To(string);
 		cprintf("%s", string.Peek_Buffer());
 		Log_To_Disk(string.Peek_Buffer());
 
-		if (!SlaveMaster.Am_I_Slave()) {
-			SetConsoleTextAttribute(ConsoleOutputHandle, MASTER_COLORS);
-		} else {
-			SetConsoleTextAttribute(ConsoleOutputHandle, SLAVE_COLORS);
-		}
+		SetConsoleTextAttribute(ConsoleOutputHandle, MASTER_COLORS);
 
 		/*
 		** Reprint the prompt.
@@ -766,9 +690,6 @@ void ConsoleModeClass::Add_Message(WideStringClass *formatted_text, Vector3 *tex
 		Apply_Attributes();
 	}
 }
-
-
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Apply_Attributes -- Reapply the console colors.                           *
@@ -794,159 +715,12 @@ void ConsoleModeClass::Apply_Attributes(void)
 		COORD pos = info.dwCursorPosition;
 		unsigned long written = 0;
 
-		if (!SlaveMaster.Am_I_Slave()) {
-			FillConsoleOutputAttribute(ConsoleOutputHandle, MASTER_COLORS, 5*80, pos, &written);
-		} else {
-			FillConsoleOutputAttribute(ConsoleOutputHandle, SLAVE_COLORS, 5*80, pos, &written);
-		}
+		FillConsoleOutputAttribute(ConsoleOutputHandle, MASTER_COLORS, 5*80, pos, &written);
 	}
 }
-
-
 
 // unrecognized character escape sequence
 #pragma warning(disable : 4129)
-
-
-/***********************************************************************************************
- * ConsoleModeClass::Update_Profile -- Print the profile text                                  *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Profile text                                                                      *
- *                                                                                             *
- * OUTPUT:   Nothing                                                                           *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   1/13/2002 12:56PM ST : Created                                                            *
- *=============================================================================================*/
-void ConsoleModeClass::Update_Profile(StringClass profile_string)
-{
-
-	if (profile_string.Get_Length() && ProfileMode && TIMEGETTIME() - LastProfilePrint > 1500) {
-
-		LastProfilePrint = TIMEGETTIME();
-
-		/*
-		** Get a checksum of the profile string.
-		*/
-		unsigned long crc = CRC::Memory((unsigned char*)profile_string.Peek_Buffer(), profile_string.Get_Length());
-		if (crc != LastProfileCRC) {
-
-
-			/*
-			** Create a copy of the string and scan it for '%'.
-			*/
-			int len = profile_string.Get_Length();
-			char *str = (char*) alloca(len * 2);
-			char *src = profile_string.Peek_Buffer();
-			char *dst = str;
-			char c;
-
-			for (int i=0 ; i<len ; i++) {
-				c = *src++;
-				/*
-				** % = 37. Double up % sign so it prints literally.
-				*/
-				if (c == 37) {
-					*dst++ = 37;
-				}
-				*dst++ = c;
-			}
-			*dst = 0;
-
-			/*
-			** Save the cursor position.
-			*/
-			CONSOLE_SCREEN_BUFFER_INFO info;
-			int ok = GetConsoleScreenBufferInfo(ConsoleOutputHandle, &info);
-			COORD pos = info.dwCursorPosition;
-
-			/*
-			** Fill the console with spaces.
-			*/
-			if (ok) {
-				unsigned long num_written = 0;
-				FillConsoleOutputCharacter(ConsoleOutputHandle, ' ', 206*80, pos, &num_written);
-
-				/*
-				** Fill the attributes too, the first time.
-				*/
-				if (LastProfileCRC == 0) {
-					if (!SlaveMaster.Am_I_Slave()) {
-						FillConsoleOutputAttribute(ConsoleOutputHandle, MASTER_COLORS, 20*80, pos, &num_written);
-					} else {
-						FillConsoleOutputAttribute(ConsoleOutputHandle, SLAVE_COLORS, 20*80, pos, &num_written);
-					}
-				}
-			}
-
-			/*
-			** Print out the profile info.
-			*/
-			Print(str);
-
-			/*
-			** Move the cursor back up to the original position.
-			*/
-			if (ok) {
-				SetConsoleCursorPosition(ConsoleOutputHandle, pos);
-			}
-
-			LastProfileCRC = crc;
-		}
-	}
-}
-
-
-/***********************************************************************************************
- * ConsoleModeClass::Handle_Profile_Key -- Handle keyboard input in profile mode               *
- *                                                                                             *
- *                                                                                             *
- *                                                                                             *
- * INPUT:    Key pressed                                                                       *
- *                                                                                             *
- * OUTPUT:   Nothing                                                                           *
- *                                                                                             *
- * WARNINGS: None                                                                              *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   1/13/2002 1:09PM ST : Created                                                             *
- *=============================================================================================*/
-void ConsoleModeClass::Handle_Profile_Key(int key)
-{
-	if (Get_Console()) {
-		if (key >= '0' && key <= '9') {
-			char profile_text[4];
-			profile_text[0] = (char)key;
-			profile_text[1] = 0;
-			Get_Console()->Profile_Command(profile_text);
-			cprintf("\r");
-			LastProfilePrint = 0;
-		} else {
-			if (key >= 'a' && key <= 'z') {
-				char profile_text[4];
-				profile_text[0] = '1';
-				profile_text[1] = (char)(key - 'a') + '0';
-				profile_text[2] = 0;
-				Get_Console()->Profile_Command(profile_text);
-				cprintf("\r");
-				LastProfilePrint = 0;
-			} else {
-				if (key == '.') {
-					Get_Console()->Profile_Command("up");
-					cprintf("\r");
-					LastProfilePrint = 0;
-				}
-			}
-		}
-	}
-}
-
-
-
 
 /***********************************************************************************************
  * ConsoleModeClass::Wait_For_Keypress -- Wait for user to press a key                         *

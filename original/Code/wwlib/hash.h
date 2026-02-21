@@ -6,7 +6,6 @@
 
 class HashTableIteratorClass;
 
-
 /*
 ** HashableClass
 */
@@ -23,7 +22,6 @@ private:
 	friend	class		HashTableClass;
 	friend	class		HashTableIteratorClass;
 };
-
 
 /*
 ** HashTableClass
@@ -51,7 +49,6 @@ private:
 	friend	class		HashTableIteratorClass;
 };
 
-
 /*
 **
 */
@@ -74,6 +71,5 @@ private:
 
 	void					Advance_Next( void );
 };
-
 
 #endif	// HASH_H

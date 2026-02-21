@@ -174,14 +174,12 @@ BYTE cPacket::Peek_Message_Type() const
 }
 */
 
-
 void cPacket::Init_Encoder(void)
 {
 	EncoderInit = false;
 	cEncoderList::Set_Precision(BITPACK_PACKET_ID, PACKET_ID_BITS);
 	cEncoderList::Set_Precision(BITPACK_PACKET_TYPE, PACKET_TYPE_BITS);
 }
-
 
 //------------------------------------------------------------------------------------
 void cPacket::Construct_Full_Packet(cPacket & full_packet, cPacket & src_packet)
@@ -283,18 +281,6 @@ void cPacket::Construct_App_Packet(cPacket & packet, cPacket & full_packet)
 #endif //WRAPPER_CRC
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 	//ExecuteTime(0),
 	//ReturnCode(0),
    //ExecuteTime				= source.ExecuteTime;
@@ -307,7 +293,6 @@ void cPacket::Set_Execute_Time(int execute_time)
    ExecuteTime = execute_time;
 }
 */
-
 
    /*
    if (!Is_Flushed()) {

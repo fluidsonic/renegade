@@ -5,7 +5,6 @@
 #include "always.h"
 #include "vector.h"
 
-
 /*
 ** StateVectorClass
 ** The state vector for a system of ordinary differential equations will be 
@@ -20,7 +19,6 @@ public:
 	void Reset(void) { ActiveCount = 0; }
 	void Resize(int size) { if (size > VectorMax) { DynamicVectorClass<float>::Resize(size); } }
 };
-
 
 /*
 ** ODESystemClass
@@ -60,7 +58,6 @@ public:
 	virtual int		Compute_Derivatives(float t,StateVectorClass * test_state,StateVectorClass * dydt,int start_index = 0) = 0;
 
 };
-
 
 /*
 ** IntegrationSystem

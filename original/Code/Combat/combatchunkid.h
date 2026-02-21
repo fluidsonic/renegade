@@ -13,8 +13,6 @@
 	#include "definitionclassids.h"
 #endif
 
-
-
 /*
 ** CHUNKIDs
 */
@@ -183,7 +181,6 @@ enum {
 	CHUNKID_PLAYER_DATA_CPLAYER,
 };
 
-
 /*
 ** Game Object CLASSIDs
 */
@@ -219,7 +216,6 @@ enum {
 
 	// MISC DEFINITIONS
 };
-
 
 /*
 ** Munitions CLASSIDs
@@ -262,7 +258,5 @@ enum {
 	CLASSID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE,
 	CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE,
 };
-
-
 
 #endif	//	COMBATCHUNKID_H

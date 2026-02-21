@@ -7,9 +7,7 @@
 #include "pscene.h"
 #include "physcoltest.h"
 
-
 class DecorationPhysDefClass;
-
 
 /**
 ** DecorationPhysClass
@@ -55,7 +53,6 @@ private:
 	AABoxClass							ObjSpaceWorldBox;
 };
 
-
 /**
 ** DecorationPhysDefClass
 ** Definition data structure for DecorationPhysClass
@@ -86,6 +83,5 @@ protected:
 	
 	friend class StaticPhysClass;
 };
-
 
 #endif

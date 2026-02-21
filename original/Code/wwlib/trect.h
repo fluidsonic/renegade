@@ -4,7 +4,6 @@
 
 #include	"point.h"
 
-
 /*
 **	This class manages a rectangle.
 */
@@ -78,7 +77,6 @@ class TRect
 		T Height;
 };
 
-
 template<class T>
 TRect<T> const TRect<T>::Intersect(TRect<T> const & rectangle, T * x, T * y) const
 {
@@ -139,7 +137,6 @@ TRect<T> const TRect<T>::Intersect(TRect<T> const & rectangle, T * x, T * y) con
 	return(r);
 }
 
-
 template<class T>
 TRect<T> const TRect<T>::Union(TRect<T> const & rect2) const
 {
@@ -168,20 +165,17 @@ TRect<T> const TRect<T>::Union(TRect<T> const & rect2) const
 	return(rect2);
 }
 
-
 template<class T>
 TPoint2D<T> const TPoint2D<T>::Bias_To(TRect<T> const & rect) const 
 {
 	return(TPoint2D<T>(X + rect.X, Y + rect.Y));
 }
 
-
 /*
 **	This typedef provides an uncluttered type name for a rectangle that
 **	is composed of integers.
 */
 typedef TRect<int> Rect;
-
 
 #endif
 

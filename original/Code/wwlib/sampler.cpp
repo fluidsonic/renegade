@@ -57,7 +57,6 @@ RegularSamplingClass::~RegularSamplingClass()
 	delete [] index;
 }
 
-
 /***********************************************************************************************
  * RegularSamplingClass::Sample -- Samples over a regular hypergrid                            *
  *                                                                                             *
@@ -192,7 +191,6 @@ QMCSamplingClass::QMCSamplingClass(unsigned int dimensions,unsigned char divisio
 {	
 	assert(Dimensions<100);
 }
-
 
 /***********************************************************************************************
  * QMCSamplingClass::Sample -- Samples using the Halton sequence                               *

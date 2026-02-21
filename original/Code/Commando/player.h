@@ -175,17 +175,5 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 
 #endif	//	PLAYER_H
 
-
-
-
-
-
-
-
-
-
-
-
-
 		//virtual void	On_Kill(int victim_id);
 		//virtual void On_Kill(int victim_id, int victim_team);

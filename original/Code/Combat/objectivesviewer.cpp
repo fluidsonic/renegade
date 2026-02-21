@@ -11,7 +11,6 @@
 #include "rendobj.h"
 #include "string_ids.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Constants
 ////////////////////////////////////////////////////////////////
@@ -21,7 +20,6 @@ static const char *HEADER_FONT_NAME				= "FONT8X8.TGA";
 static const char *BACKGROUND_MODEL_NAME		= "FRAME_1BIG";
 static const char *UPPER_LEFT_BONE_NAME		= "BONE00";
 static const char *LOWER_RIGHT_BONE_NAME		= "BONE01";
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -35,7 +33,6 @@ ObjectivesViewerClass::ObjectivesViewerClass (void) :
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	~ObjectivesViewerClass
@@ -45,7 +42,6 @@ ObjectivesViewerClass::~ObjectivesViewerClass (void)
 {
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -63,7 +59,6 @@ ObjectivesViewerClass::Shutdown (void)
 	IsDisplayed		= false;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -115,7 +110,6 @@ ObjectivesViewerClass::Initialize (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Update
@@ -156,7 +150,6 @@ ObjectivesViewerClass::Update (void)
 		::qsort (&sorted_list[0], objective_count, sizeof (Objective *), fnCompareObjectivesCallback);
 	}
 
-
 	//
 	//	Start fresh
 	//
@@ -189,7 +182,6 @@ ObjectivesViewerClass::Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Display
@@ -213,7 +205,6 @@ ObjectivesViewerClass::Display (bool onoff)
 	
 	return ;	
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -242,7 +233,6 @@ ObjectivesViewerClass::Page_Down (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Render
@@ -258,7 +248,6 @@ ObjectivesViewerClass::Render (void)
 	TextWindow->Render ();
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

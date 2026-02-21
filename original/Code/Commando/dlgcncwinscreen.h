@@ -2,13 +2,11 @@
 #ifndef __DLGCNCWINSCREEN_H
 #define __DLGCNCWINSCREEN_H
 
-
 #include "menudialog.h"
 #include "player.h"
 #include "widestring.h"
 #include "render2d.h"
 #include "menubackdrop.h"
-
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -68,6 +66,5 @@ private:
 	static CNCWinScreenMenuClass *	_TheInstance;
 	static const float					UpdateIntervalS;
 };
-
 
 #endif //__DLGCNCWINSCREEN_H

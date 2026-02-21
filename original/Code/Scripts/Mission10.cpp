@@ -554,7 +554,6 @@ DECLARE_SCRIPT(M10_Objective_Controller, "")
 			Commands->Monitor_Conversation(obj, id);
 		}
 
-
 		if(timer_id == MISSION_COMPLETE)
 		{
 			Commands->Mission_Complete(true);
@@ -1000,8 +999,6 @@ DECLARE_SCRIPT(M10_Silo_Controller, "")
 	}
 };
 
-
-
 DECLARE_SCRIPT(M10_Obelisk, "")
 {
 	bool objective_completed, inside_obelisk, conyard_destroyed;
@@ -1064,7 +1061,6 @@ DECLARE_SCRIPT(M10_Obelisk, "")
 			Commands->Set_Health(obj, curr_health);
 		}
 	}
-
 
 	void Custom(GameObject * obj, int type, int param, GameObject * sender)
 	{
@@ -2370,7 +2366,6 @@ DECLARE_SCRIPT (M10_Mammoth_Attack, "")
 	void Timer_Expired (GameObject* obj, int timer_id)
 	{
 
-
 		if (timer_id == ATTACK_OVER)
 		{
 
@@ -2406,7 +2401,6 @@ DECLARE_SCRIPT (M10_Mammoth_Target_Destruction, "Target_Number:int")
 		Commands->Send_Custom_Event (obj, Commands->Find_Object(2000787), TARGET, Get_Int_Parameter("Target_Number"), 0.0f);
 	}
 };
-
 
 DECLARE_SCRIPT (M10_Mammoth_Activate_Zone, "")
 {
@@ -2481,7 +2475,6 @@ DECLARE_SCRIPT(M10_TestStealth, "")
 			Commands->Debug_Message ( "***************************going to stealth\n" );
 		}
 
-
 		Commands->Start_Timer(obj, this, delayTimer, 5);
 	}
 };
@@ -2534,7 +2527,6 @@ DECLARE_SCRIPT (M10_GDI_Reinforcement, "")
 			Commands->Enable_Spawner (2000850, true);
 			Commands->Enable_Spawner (2000849, true);
 			Commands->Enable_Spawner (2000851, true);
-
 
 			GameObject *drop_obj = Commands->Find_Object (2000861);
 			GameObject *drop_obj2 = Commands->Find_Object (1203588);
@@ -2729,7 +2721,6 @@ DECLARE_SCRIPT (M10_Spacecraft_Check, "")
 DECLARE_SCRIPT (M10_Mammoth_Grant_Controller, "") //2001634
 {
 	bool hon_alive;
-
 
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -3322,7 +3313,6 @@ DECLARE_SCRIPT(M10_Refinery_Keycard, "")
 	}
 };
 
-
 DECLARE_SCRIPT(M10_Playertype_Nod, "")
 {
 	void Created (GameObject *obj)
@@ -3338,7 +3328,6 @@ DECLARE_SCRIPT (M10_Flyover_Controller, "")
 	int last3;
 	int count;
 	bool already_entered;
-
 
 	REGISTER_VARIABLES()
 	{
@@ -3534,7 +3523,6 @@ DECLARE_SCRIPT (M10_Conversation_Zone, "Conv_Num:int")
 			Commands->Send_Custom_Event(obj, obj_con, 1019, 3);
 		}
 	}
-
 
 	void Entered (GameObject * obj, GameObject * enterer)
 	{
@@ -4225,7 +4213,6 @@ DECLARE_SCRIPT(M10_Con_Yard_Repair, "RepairSpeed=1:float")
 			Commands->Set_Health(obj, curr_health);
 		}
 	}
-
 
 	void Custom(GameObject * obj, int type, int param, GameObject * sender)
 	{

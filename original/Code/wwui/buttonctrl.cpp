@@ -9,7 +9,6 @@
 #include "stylemgr.h"
 #include "dialogmgr.h"
 
-
 ////////////////////////////////////////////////////////////////
 //	Local constants
 ////////////////////////////////////////////////////////////////
@@ -40,7 +39,6 @@ ButtonCtrlClass::ButtonCtrlClass (void)	:
 	StyleMgrClass::Configure_Renderer (&ButtonRenderers[1]);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -98,7 +96,6 @@ ButtonCtrlClass::Render (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Create
@@ -110,7 +107,6 @@ ButtonCtrlClass::On_Create (void)
 	GlowRenderer.Build_Sentence (Title);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -129,7 +125,6 @@ ButtonCtrlClass::On_LButton_Down (const Vector2 &mouse_pos)
 	StyleMgrClass::Play_Sound (StyleMgrClass::EVENT_MOUSE_CLICK);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -154,7 +149,6 @@ ButtonCtrlClass::On_LButton_Up (const Vector2 &mouse_pos)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Mouse_Move
@@ -166,7 +160,6 @@ ButtonCtrlClass::On_Mouse_Move (const Vector2 &mouse_pos)
 	IsMouseOverMe = Rect.Contains (mouse_pos);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -210,7 +203,6 @@ ButtonCtrlClass::Create_Vector_Button (void)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -261,7 +253,6 @@ ButtonCtrlClass::Create_Bitmap_Button (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Blit_Section
@@ -289,7 +280,6 @@ Blit_Section
 	renderer.Add_Quad (screen_rect, uv_rect);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -349,7 +339,6 @@ ButtonCtrlClass::Create_Component_Button (void)
 	::Blit_Section (ButtonRenderers[0], Vector2 (Rect.Right - edge_width, Rect.Bottom - height), Vector2 (right - edge_width, bottom - height),
 		Vector2 (edge_width, height), texture_dimensions);
 
-
 	Vector2 horz_top_pos (left + ((right-left) / 2) - 5, top);	
 	Vector2 horz_bottom_pos (left + ((right-left) / 2) - 5, bottom - height);
 	Vector2 horz_size (10, height);
@@ -372,7 +361,6 @@ ButtonCtrlClass::Create_Component_Button (void)
 		x_pos += horz_size.X;
 		remaining_width -= horz_size.X;
 	}
-
 
 	Vector2 vert_left_pos (left, top + ((bottom - top)/ 2) - 5);
 	Vector2 vert_right_pos (right - edge_width, top + ((bottom - top)/ 2) - 5);
@@ -444,7 +432,6 @@ ButtonCtrlClass::Create_Component_Button (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Component_Button2
@@ -506,7 +493,6 @@ ButtonCtrlClass::Create_Component_Button2 (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	Create_Text_Renderers
@@ -531,7 +517,6 @@ ButtonCtrlClass::Create_Text_Renderers (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Set_Cursor
@@ -549,7 +534,6 @@ ButtonCtrlClass::On_Set_Cursor (const Vector2 &mouse_pos)
 
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -581,7 +565,6 @@ ButtonCtrlClass::On_Frame_Update (void)
 	return ;
 }
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	On_Kill_Focus
@@ -596,7 +579,6 @@ ButtonCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 	DialogControlClass::On_Kill_Focus (focus);
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -622,7 +604,6 @@ ButtonCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
 
 	return false;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //
@@ -657,7 +638,6 @@ ButtonCtrlClass::Set_Bitmap (const char *texture_up_name, const char *texture_dn
 	Style |= BS_BITMAP;
 	return ;
 }
-
 
 ////////////////////////////////////////////////////////////////
 //

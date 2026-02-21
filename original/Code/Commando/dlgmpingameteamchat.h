@@ -5,7 +5,6 @@
 #include "popupdialog.h"
 #include "resource.h"
 
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPIngameTeamChatPopupClass
@@ -22,6 +21,5 @@ public:
 
 private:
 };
-
 
 #endif //__DLGMPINGAMETEAMCHAT_H__

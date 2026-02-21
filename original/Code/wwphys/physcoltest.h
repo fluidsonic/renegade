@@ -7,7 +7,6 @@
 
 class PhysClass;
 
-
 ///////////////////////////////////////////////////////////////////////////
 // 
 // Derived versions of the Collision Test Classes which contain
@@ -47,7 +46,6 @@ private:
 
 };
 
-
 class PhysAABoxCollisionTestClass : public AABoxCollisionTestClass
 {
 public:
@@ -81,7 +79,6 @@ private:
 
 };
 
-
 class PhysOBBoxCollisionTestClass : public OBBoxCollisionTestClass
 {
 public:
@@ -114,6 +111,5 @@ private:
 	PhysOBBoxCollisionTestClass & operator = (const PhysOBBoxCollisionTestClass & );
 
 };
-
 
 #endif

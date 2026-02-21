@@ -3,7 +3,6 @@
 #include "wwmath.h"
 #include "wwpacket.h"
 #include "chunkio.h"
-#include "debug.h"
 #include <memory.h>
 
 #include "combat.h"
@@ -48,7 +47,6 @@ bool 	ControlClass::Save( ChunkSaveClass & csave )
 		csave.Begin_Micro_Chunk(MICROCHUNKID_ANALOG);
 		csave.Write(&AnalogValues[0],sizeof(AnalogValues));
 		csave.End_Micro_Chunk();
-
 
 	csave.End_Chunk();
 
@@ -97,7 +95,6 @@ void	ControlClass::Clear_Boolean( void )
 	OneTimeBooleanBits	= 0;
 	ContinuousBooleanBits	= 0;
 }
-
 
 void	ControlClass::Clear_Control( void )	
 { 
@@ -417,7 +414,6 @@ void ControlClass::Set_Precision(void)
 	// DEBUG_RAPID_MOVE...
 	//
 	cEncoderList::Set_Precision(BITPACK_ANALOG_VALUES,	-1.0, 1.0, 0.01);
-
 
 	/*
 	//

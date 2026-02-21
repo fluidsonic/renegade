@@ -13,7 +13,6 @@
 #include "apppackettypes.h"
 #include "realcrc.h"
 
-
 DECLARE_NETWORKOBJECT_FACTORY(cGodModeEvent, NETCLASSID_GODMODEEVENT);
 
 //-----------------------------------------------------------------------------
@@ -46,7 +45,6 @@ void
 cGodModeEvent::Act(void)
 {
 
-
 	Set_Delete_Pending();
 }
 
@@ -56,7 +54,6 @@ cGodModeEvent::Export_Creation(BitStreamClass & packet)
 {
 
 	cNetEvent::Export_Creation(packet);
-
 
 	packet.Add(SenderId);
 	packet.Add_Terminated_String((LPCSTR) Password, true);
@@ -73,7 +70,6 @@ cGodModeEvent::Import_Creation(BitStreamClass & packet)
 
 	packet.Get(SenderId);
 	packet.Get_Terminated_String(Password.Get_Buffer(256), 256, true);
-
 
 	Act();
 }
