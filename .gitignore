@@ -1,6 +1,6 @@
 .DS_Store
 .tmp/
-client/
 client-orig/
+client/
 data/
-original-port/build/
+original/build/
