@@ -58,7 +58,6 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
 		void				Clear_Resend_Count()					{ResendCount = 0;}
 		void				Increment_Resend_Count()			{ResendCount++;}
       int				Get_Resend_Count() const			{return ResendCount;}
-		bool				Is_Crc_Correct() const				{return IsCrcCorrect;}
 		void				Set_Num_Sends(int num_sends);
 		int				Get_Num_Sends() const				{return NumSends;}
 		unsigned long	Get_First_Send_Time(void) const	{return FirstSendTime;}
@@ -73,9 +72,6 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
 	private:
       cPacket(const cPacket& source); // Disallow
 
-		void				Set_Is_Crc_Correct(bool flag)		{IsCrcCorrect = flag;}
-
-		static const int		CRC_PLACEHOLDER;
 		static const USHORT	PACKET_HEADER_SIZE;
 		static const unsigned long DefSendTime;
 
@@ -86,7 +82,6 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
       unsigned long	SendTime;
 		unsigned long	FirstSendTime;
       int				ResendCount;
-		bool				IsCrcCorrect;
 		int				NumSends;
 		static int		RefCount;
 		static bool		EncoderInit;

@@ -12,8 +12,6 @@
 #pragma pack(push)
 #pragma pack(1)
 
-#define WRAPPER_CRC
-
 /*
 ** Header used at the beginning of a packet to identify the number of packets packed in this packet IYSWIM.
 */
@@ -55,7 +53,7 @@ struct PacketDeltaHeaderStruct {
 ** Minimum MTU allowable on the internet is 576. IP Header is 20 bytes. UDP header is 8 bytes
 ** So our max packet size is 576 - 28 = 548
 */
-#define PACKET_MANAGER_MTU 544
+#define PACKET_MANAGER_MTU 540
 #define PACKET_MANAGER_BUFFERS 256
 #define PACKET_MANAGER_BUFFERS_WHEN_SERVER (32 * 32)
 #define PACKET_MANAGER_RECEIVE_BUFFERS 128

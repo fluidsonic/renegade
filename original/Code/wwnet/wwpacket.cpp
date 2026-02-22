@@ -25,8 +25,7 @@ DEFINE_AUTO_POOL(cPacket, 256)
 //
 // Class statics
 //
-const int		cPacket::CRC_PLACEHOLDER		= 99999;
-const USHORT	cPacket::PACKET_HEADER_SIZE	= 11;
+const USHORT	cPacket::PACKET_HEADER_SIZE	= 7;
 int				cPacket::RefCount					= 0;
 bool				cPacket::EncoderInit				= true;
 const unsigned long cPacket::DefSendTime		= 0xffffffff;
@@ -69,7 +68,6 @@ cPacket& cPacket::operator=(const cPacket& source)
 	SendTime					= source.SendTime;
 	FirstSendTime			= source.FirstSendTime;
    ResendCount				= source.ResendCount;
-   IsCrcCorrect			= source.IsCrcCorrect;
 
 	BitStreamClass::operator=(source);
 
@@ -180,7 +178,6 @@ void cPacket::Init_Encoder(void)
 void cPacket::Construct_Full_Packet(cPacket & full_packet, cPacket & src_packet)
 {
 
-	full_packet.Add(CRC_PLACEHOLDER);
 	full_packet.Add(src_packet.Get_Type(), BITPACK_PACKET_TYPE);
    full_packet.Add(src_packet.Get_Id(), BITPACK_PACKET_ID);
    full_packet.Add((BYTE)src_packet.Get_Sender_Id());
@@ -195,67 +192,27 @@ void cPacket::Construct_Full_Packet(cPacket & full_packet, cPacket & src_packet)
 	unsigned int whole_bit_length = header_bit_length + src_packet.Get_Bit_Length();
 	full_packet.Set_Bit_Length(whole_bit_length);
 
-	//
-	// Compute a CRC for all the data following the CRC placeholder
-	//
-	//uint32_t crc = CRC::Memory(
-	//	(BYTE *) (full_packet.Get_Data() + sizeof(CRC_PLACEHOLDER)),
-	//	full_packet.Get_Max_Size() - sizeof(CRC_PLACEHOLDER));
-
-	// Only CRC the meaningful data in the buffer - not the other 1300ish bytes as well. ST - 9/19/2001 11:18PM
-	uint32_t crc = static_cast<uint32_t>(CRC::Memory((BYTE *) (full_packet.Get_Data() + sizeof(CRC_PLACEHOLDER)), (whole_bit_length / 8) - sizeof(CRC_PLACEHOLDER)));
-
-	//
-	// Overwrite the crc placeholder with the computed crc.
-	//
-	cPacket temp_packet;
-	temp_packet.Add(crc);
-
-	memcpy(
-		full_packet.Get_Data(),
-		temp_packet.Get_Data(),
-		temp_packet.Get_Compressed_Size_Bytes());
 }
 
 //------------------------------------------------------------------------------------
 void cPacket::Construct_App_Packet(cPacket & packet, cPacket & full_packet)
 {
-   int remote_crc;
 	BYTE type;
 	int packet_id;
 	char sender_id;
 	USHORT bit_size;
 
-	full_packet.Get(remote_crc);
 	full_packet.Get(type, BITPACK_PACKET_TYPE);
 	full_packet.Get(packet_id, BITPACK_PACKET_ID);
 	full_packet.Get(sender_id);
 	full_packet.Get(bit_size);
 
-
-	if (((bit_size / 8) + PACKET_HEADER_SIZE) < MAX_BUFFER_SIZE) {
-
-		//
-		// Only CRC the meaningful data in the buffer - not the other 1300ish bytes as well. ST - 9/19/2001 11:29PM
-		//
-		int local_crc = static_cast<int32_t>(CRC::Memory((BYTE *) (full_packet.Get_Data() + sizeof(CRC_PLACEHOLDER)), ((bit_size / 8) + PACKET_HEADER_SIZE) - sizeof(CRC_PLACEHOLDER)));
-
-		if (local_crc == remote_crc) {
-			packet.Set_Is_Crc_Correct(true);
-			packet.Set_Type(type);
-			packet.Set_Id(packet_id);
-			packet.Set_Sender_Id(sender_id);
-			packet.Set_Bit_Length(bit_size);
-			packet.PFromAddressWrapper = full_packet.PFromAddressWrapper;
-
-			memcpy(packet.Get_Data(), full_packet.Get_Data() + PACKET_HEADER_SIZE, packet.Get_Compressed_Size_Bytes());
-		} else {
-			packet.Set_Is_Crc_Correct(false);
-		}
-	} else {
-		packet.Set_Is_Crc_Correct(false);
-	}
-
+	packet.Set_Type(type);
+	packet.Set_Id(packet_id);
+	packet.Set_Sender_Id(sender_id);
+	packet.Set_Bit_Length(bit_size);
+	packet.PFromAddressWrapper = full_packet.PFromAddressWrapper;
+	memcpy(packet.Get_Data(), full_packet.Get_Data() + PACKET_HEADER_SIZE, packet.Get_Compressed_Size_Bytes());
 }
 
 	//ExecuteTime(0),

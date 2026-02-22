@@ -515,10 +515,6 @@ bool cConnection::Receive_Packet()
 			return(false);
 		}
 
-   	if (!packet.Is_Crc_Correct()) {
-      	packet.Flush();
-      	return true;
-   	}
 
 	}
 
@@ -1075,14 +1071,12 @@ int cConnection::Receive_Wrapper(cPacket & packet)
 
 		cPacket::Construct_App_Packet(packet, full_packet);
 
-		if (packet.Is_Crc_Correct()) {
-			//
-			// Update receive stats
-			//
-			BYTE packet_type = packet.Get_Type();
-			PStatList->Increment_Num_Msg_Recd(packet_type);
-			PStatList->Increment_Num_Byte_Recd(packet_type, ret_code);
-		}
+		//
+		// Update receive stats
+		//
+		BYTE packet_type = packet.Get_Type();
+		PStatList->Increment_Num_Msg_Recd(packet_type);
+		PStatList->Increment_Num_Byte_Recd(packet_type, ret_code);
 	}
 
 	return ret_code;

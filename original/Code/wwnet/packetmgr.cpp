@@ -798,8 +798,14 @@ void PacketManagerClass::Flush(bool forced)
 			socket = SendBuffers[i].PacketSendSocket;
 
 
-			Register_Packet_Out(&SendBuffers[i].IPAddress[0], SendBuffers[i].Port, SendBuffers[i].PacketSendLength + UDP_HEADER_SIZE, 0);
-			int result = static_cast<int32_t>(sendto(socket, (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength, 0, (LPSOCKADDR) &addr, sizeof(SOCKADDR_IN)));
+			uint32_t crc = static_cast<uint32_t>(CRC::Memory((uint8_t*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength));
+			crc = __builtin_bswap32(crc);
+			uint8_t *crc_and_buffer = (uint8_t*)alloca(SendBuffers[i].PacketSendLength + sizeof(crc));
+			*((uint32_t*)crc_and_buffer) = crc;
+			memcpy(crc_and_buffer + sizeof(crc), (const uint8_t*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
+
+			Register_Packet_Out(&SendBuffers[i].IPAddress[0], SendBuffers[i].Port, SendBuffers[i].PacketSendLength + UDP_HEADER_SIZE + static_cast<int32_t>(sizeof(crc)), 0);
+			int result = static_cast<int32_t>(sendto(socket, (const char*)crc_and_buffer, SendBuffers[i].PacketSendLength + static_cast<int32_t>(sizeof(crc)), 0, (LPSOCKADDR) &addr, sizeof(SOCKADDR_IN)));
 
 
 			if (result == SOCKET_ERROR){
@@ -1021,8 +1027,14 @@ int PacketManagerClass::Get_Packet(SOCKET socket, unsigned char *packet_buffer, 
 
 			bytes = recvfrom(socket, (char*)packet_buffer, packet_buffer_size, 0, (LPSOCKADDR) &addr, &address_size);
 			if (bytes > 0) {
-				Register_Packet_In((unsigned char*) &addr.sin_addr.s_addr, addr.sin_port, bytes + UDP_HEADER_SIZE, 0);
-
+				uint32_t recv_crc = static_cast<uint32_t>(CRC::Memory((uint8_t*)packet_buffer + sizeof(uint32_t), bytes - static_cast<int32_t>(sizeof(uint32_t))));
+				recv_crc = __builtin_bswap32(recv_crc);
+				if (recv_crc != *((uint32_t*)packet_buffer)) {
+					NumReceivePackets = 0;
+				} else {
+					Register_Packet_In((unsigned char*) &addr.sin_addr.s_addr, addr.sin_port, bytes + UDP_HEADER_SIZE, 0);
+					bytes -= static_cast<int32_t>(sizeof(uint32_t));
+					memmove(packet_buffer, packet_buffer + sizeof(uint32_t), bytes);
 
 					//
 					ReceiveSocket = socket;
@@ -1034,6 +1046,7 @@ int PacketManagerClass::Get_Packet(SOCKET socket, unsigned char *packet_buffer, 
 						//
 					}
 					CurrentPacket = 0;
+				}
 			} else {
 				if (bytes == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK) {
 					int error_code = 0;
