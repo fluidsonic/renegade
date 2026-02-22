@@ -74,6 +74,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
 import java.net.InetSocketAddress
@@ -86,6 +87,7 @@ import java.net.InetSocketAddress
  * [gameThread] (single-thread dispatcher). UdpTransport communicates via
  * its own channels. RconServer and LanBroadcastResponder own their sockets.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class GameServer(internal val config: ServerConfig) {
 
     private val gameThread = newSingleThreadContext("game-thread")
