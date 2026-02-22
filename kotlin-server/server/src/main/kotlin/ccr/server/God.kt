@@ -6,6 +6,7 @@ import ccr.net.replication.NetworkObjectManager
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
+import ccr.server.defs.PhysDefClass
 import ccr.server.defs.SoldierGameObjDefWrapper
 import ccr.server.defs.VehicleGameObjDefWrapper
 import ccr.server.defs.WeaponDefinitionClass
@@ -346,6 +347,14 @@ open class God(private val server: GameServer) {
 
     // ---- Vehicle spawning ----
 
+    private fun resolveModelName(wrapper: VehicleGameObjDefWrapper?): String {
+        if (wrapper == null) return ""
+        val physDefId = wrapper.vehicleDef.physical.physDefId
+        if (physDefId == 0) return ""
+        val physDef = server.loadedLevel?.definitions?.findById(physDefId.toUInt()) as? PhysDefClass
+        return physDef?.modelName ?: ""
+    }
+
     /**
      * Spawns a VehicleGameObj when a vehicle factory completes generation.
      * Registers it with NetworkObjectManager and dirty-bit replication.
@@ -366,6 +375,7 @@ open class God(private val server: GameServer) {
 
         val vehicle = VehicleGameObj(
             definitionId     = defId,
+            modelName        = resolveModelName(wrapper),
             position         = spawnPosition,
             vehicleType      = vehicleType,
             seatCount        = seatCount,
@@ -394,6 +404,7 @@ open class God(private val server: GameServer) {
         val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
         val vehicle = VehicleGameObj(
             definitionId     = defId,
+            modelName        = resolveModelName(wrapper),
             position         = spawnPosition,
             vehicleType      = vehicleType,
             seatCount        = seatCount,
