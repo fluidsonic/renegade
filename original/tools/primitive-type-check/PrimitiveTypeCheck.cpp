@@ -51,7 +51,7 @@ static bool isInCodeDir(SourceLocation Loc, const SourceManager &SM) {
 }
 
 void PrimitiveTypeCheck::checkType(QualType QT, SourceLocation Loc,
-                                   const ASTContext &Ctx) const {
+                                   const ASTContext &Ctx) {
     if (!isInCodeDir(Loc, Ctx.getSourceManager()))
         return;
     if (!isForbiddenRawBuiltin(QT))

@@ -25,7 +25,7 @@ private:
 
     /// Reports a diagnostic if QT is forbidden and Loc is in Code/.
     void checkType(clang::QualType QT, clang::SourceLocation Loc,
-                   const clang::ASTContext &Ctx) const;
+                   const clang::ASTContext &Ctx);
 };
 
 } // namespace ccr
