@@ -6,7 +6,9 @@ import ccr.net.replication.NetworkObjectManager
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
+import ccr.server.defs.SoldierGameObjDefWrapper
 import ccr.server.defs.VehicleGameObjDefWrapper
+import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.combat.BeaconGameObjDef
 import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
@@ -200,10 +202,7 @@ open class God(private val server: GameServer) {
             "pos=(${position.x}, ${position.y}, ${position.z})")
 
         val modelName = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
-        val weapons = buildList {
-            if (server.pistolWeaponDefId != 0) add(WeaponEntry(server.pistolWeaponDefId, 100))
-            if (server.timedC4WeaponDefId != 0) add(WeaponEntry(server.timedC4WeaponDefId, 1))
-        }.toMutableList()
+        val weapons = buildWeaponsForSoldier(defId)
 
         val soldier = SoldierGameObj(
             definitionId = defId,
@@ -257,10 +256,7 @@ open class God(private val server: GameServer) {
         println("[GOD] spawned purchased soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
             "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z})")
 
-        val weapons = buildList {
-            if (server.pistolWeaponDefId != 0) add(WeaponEntry(server.pistolWeaponDefId, 100))
-            if (server.timedC4WeaponDefId != 0) add(WeaponEntry(server.timedC4WeaponDefId, 1))
-        }.toMutableList()
+        val weapons = buildWeaponsForSoldier(defId)
 
         val soldier = SoldierGameObj(
             definitionId = defId,
@@ -283,6 +279,69 @@ open class God(private val server: GameServer) {
         // No starting credits — purchase already costs money
 
         return soldier
+    }
+
+    // ---- Weapon list builder ----
+
+    /**
+     * Builds the weapon list for a newly spawned soldier from its definition.
+     *
+     * Mirrors C++ ArmedGameObj::Copy_Settings(): reads WeaponDefID and
+     * SecondaryWeaponDefID from the preset definition and inserts them in
+     * ascending keyNumber order (WeaponBagClass::Add_Weapon sorted insertion).
+     *
+     * Timed C4 is always appended if not already present, since scripts that
+     * normally grant it are not yet executed server-side.
+     *
+     * Falls back to pistol + C4 when the definition cannot be found.
+     */
+    private fun buildWeaponsForSoldier(defId: Int): MutableList<WeaponEntry> {
+        val registry = server.loadedLevel?.definitions
+        val wrapper = registry?.findById(defId.toUInt()) as? SoldierGameObjDefWrapper
+
+        val weapons = mutableListOf<WeaponEntry>()
+
+        if (wrapper != null) {
+            val armed = wrapper.soldierDef.armed
+
+            // Primary weapon
+            if (armed.weaponDefId != 0) {
+                val rounds = if (armed.weaponRounds >= 0) {
+                    armed.weaponRounds
+                } else {
+                    (registry.findById(armed.weaponDefId.toUInt()) as? WeaponDefinitionClass)
+                        ?.maxInventoryRounds ?: 100
+                }
+                weapons.add(WeaponEntry(armed.weaponDefId, rounds))
+            }
+
+            // Secondary weapon
+            if (armed.secondaryWeaponDefId != 0) {
+                val rounds = (registry.findById(armed.secondaryWeaponDefId.toUInt()) as? WeaponDefinitionClass)
+                    ?.maxInventoryRounds ?: 100
+                weapons.add(WeaponEntry(armed.secondaryWeaponDefId, rounds))
+            }
+        } else {
+            // Fallback when def not found: give pistol
+            if (server.pistolWeaponDefId != 0) {
+                weapons.add(WeaponEntry(server.pistolWeaponDefId, 100))
+            }
+        }
+
+        // Timed C4 is granted by scripts in C++; hardcode it here until scripts are executed
+        if (server.timedC4WeaponDefId != 0 && weapons.none { it.definitionId == server.timedC4WeaponDefId }) {
+            weapons.add(WeaponEntry(server.timedC4WeaponDefId, 1))
+        }
+
+        // Sort by keyNumber ascending — matches C++ WeaponBagClass::Add_Weapon sorted insertion
+        if (registry != null) {
+            weapons.sortBy { entry ->
+                (registry.findById(entry.definitionId.toUInt()) as? WeaponDefinitionClass)?.keyNumber
+                    ?: Float.MAX_VALUE
+            }
+        }
+
+        return weapons
     }
 
     // ---- Vehicle spawning ----
