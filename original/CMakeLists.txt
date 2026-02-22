@@ -106,6 +106,14 @@ find_program(RUN_CLANG_TIDY NAMES run-clang-tidy
 if(CLANG_TIDY_EXE AND RUN_CLANG_TIDY)
     add_subdirectory(tools/primitive-type-check)
 
+    # LLVM clang-tidy doesn't inherit Apple Clang's implicit sysroot —
+    # pass it explicitly so system headers (string.h, etc.) resolve correctly.
+    execute_process(
+        COMMAND xcrun --show-sdk-path
+        OUTPUT_VARIABLE MACOS_SDK_PATH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+
     add_custom_target(lint
         COMMAND "${RUN_CLANG_TIDY}"
                 -clang-tidy-binary "${CLANG_TIDY_EXE}"
@@ -113,6 +121,7 @@ if(CLANG_TIDY_EXE AND RUN_CLANG_TIDY)
                 -checks=-*,ccr-primitive-type
                 -header-filter=".*/Code/.*"
                 -p "${CMAKE_BINARY_DIR}"
+                --extra-arg="-isysroot ${MACOS_SDK_PATH}"
                 -j8
         WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
         DEPENDS PrimitiveTypeCheck

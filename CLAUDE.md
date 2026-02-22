@@ -4,14 +4,15 @@
 
 ### Kotlin Server
 - NEVER set JAVA_HOME or GRADLE_USER_HOME — user's shell has these configured
-- Run: `/Users/marc/Documents/ccr/kotlin-server/gradlew -p /Users/marc/Documents/ccr/kotlin-server <task>`
+- Run: `kotlin-server/gradlew -p kotlin-server <task>`
 
 ### C++ Port (original/)
-- Source root: `/Users/marc/Documents/ccr/original/`
-- Build dir: `/Users/marc/Documents/ccr/original/build/`
-- Build: `cmake --build /Users/marc/Documents/ccr/original/build --target Commando -j8`
-- Configure (if build.ninja missing/stale or files deleted): `cmake -S /Users/marc/Documents/ccr/original -B /Users/marc/Documents/ccr/original/build -G Ninja`
-- Run: `MallocNanoZone=0 /Users/marc/Documents/ccr/original/build/Code/Commando/Commando.app/Contents/MacOS/Commando`
+- Source root: `original/`
+- Original untouched Windows/DirectX source for reference: `original-untouched/` — use this to understand original GDI/D3D8/Win32 behavior
+- Build dir: `original/build/`
+- Build: `cmake --build original/build --target Commando -j8`
+- Configure (if build.ninja missing/stale or files deleted): `cmake -S original -B original/build -G Ninja`
+- Run: `MallocNanoZone=0 original/build/Code/Commando/Commando.app/Contents/MacOS/Commando`
 - Build type: Debug with ASan (`-fsanitize=address` in root CMakeLists.txt); `MallocNanoZone=0` required on macOS
 
 ## C++ Port — Workflow Rules
@@ -30,7 +31,7 @@
 - **Required replacements**: use `(u)intN_t` (e.g. `int32_t`, `uint8_t`) for integers; `float`/`double` are fine as-is
 - Typedefs like `int32_t`, `size_t`, `ptrdiff_t` are fine — the check only fires on raw un-typedef'd built-ins
 - `float` and `double` sizes are guaranteed by `static_assert` in `original/global.h` (4 and 8 bytes)
-- Run lint: `cmake --build /Users/marc/Documents/ccr/original/build --target lint`
+- Run lint: `cmake --build original/build --target lint`
 - Narrowing/conversion warnings: `-Wconversion`, `-Wsign-conversion`, `-Wdouble-promotion` (warnings, not errors, until each module is clean)
 
 ### global.h — project-wide preamble
@@ -82,6 +83,9 @@
 
 ### Building to find all issues
 - Use `cmake --build ... -- -k 0` (Ninja keep-going) to see ALL errors, not just the first one
+- After merging a worktree feature branch, reconfigure: `cmake -S original -B original/build -G Ninja` — regenerates `compile_commands.json` with updated flags/includes so clangd stays accurate
+- Batch find-and-replace across source files: use Python3 `re` module, not Perl — Perl `(?!_t)` negative lookaheads are mangled by zsh on macOS (`!` triggers history expansion)
+- Case-insensitive `#include` search: use `grep -ril '"header.h"'` — include paths can have mixed case (e.g. `"BitType.H"`)
 - Running the game from a background bash subprocess fails with "SDL_Init: no displays" — always run interactively
 
 ## Kotlin Server — Known Patterns & Pitfalls
