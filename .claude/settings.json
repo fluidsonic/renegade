@@ -29,7 +29,10 @@
 			"Edit(~/Library/Application Support/CrossOver/Bottles/**)",
 			"Write(~/Library/Application Support/CrossOver/Bottles/**)"
 		],
-		"deny": []
+		"deny": [
+			"Edit(/.claude/worktrees/**)",
+			"Write(/.claude/worktrees/**)"
+		]
 	},
 	"sandbox": {
 		"allowUnsandboxedCommands": false,
