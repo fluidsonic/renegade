@@ -141,9 +141,14 @@ class GameServer(internal val config: ServerConfig) {
         // Register team singletons with static IDs. These persist for the lifetime of the server.
         NetworkObjectManager.registerObject(teamNod, NET_ID_NOD_TEAM)
         NetworkObjectManager.registerObject(teamGdi, NET_ID_GDI_TEAM)
+        // Mark teams dirty for all clients so replicationTick() sends them when a client first joins
+        teamNod.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
+        teamGdi.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
 
         // Register ServerFps singleton (C++: cServerFps uses a static network ID)
         NetworkObjectManager.registerObject(serverFps, NET_ID_SERVER_FPS)
+        // ServerFps uses BIT_FREQUENT (classId=0, no factory — frequent-only updates)
+        serverFps.setObjectDirtyBit(NetworkObject.BIT_FREQUENT, true)
 
         connectionManager.applicationAcceptanceHandler = ::checkApplication
         connectionManager.connHandler = { id, host ->
@@ -444,7 +449,9 @@ class GameServer(internal val config: ServerConfig) {
     // ---- Connection objects ----
 
     // C++: cNetwork::Connection_Handler — sends initial game state to a newly connected client.
-    // Sends Teams and GameOptionsEvent. Player creation is deferred to BIOEVENT handler.
+    // Sends ONLY Teams and GameOptionsEvent (matching C++ Connection_Handler).
+    // All other objects (buildings, base controllers, ServerFps, players) are sent by
+    // replicationTick() after the client sends BIOEVENT and enters the game.
     private fun sendConnectionObjects(rhostId: Int, host: RemoteHost) {
         // Auto-assign team to balance NOD/GDI. CHANGETEAMEVENT toggles NOD↔GDI.
         val assignedTeam = god.choosePlayerType()
@@ -456,6 +463,11 @@ class GameServer(internal val config: ServerConfig) {
         sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, teamNod, NET_ID_NOD_TEAM) }
         sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, teamGdi, NET_ID_GDI_TEAM) }
 
+        // Clear team dirty bits for this client — already sent manually above;
+        // restoreDirtyBits() in BIOEVENT would otherwise re-mark them.
+        teamNod.setObjectDirtyBits(rhostId, 0)
+        teamGdi.setObjectDirtyBits(rhostId, 0)
+
         // GameOptionsEvent — one-time creation event; tells the client what game/map is running.
         // C++: gameoptionsevent.cpp Export_Creation calls Export_Tier_1_Data + Export_Tier_2_Data.
         // cNetEvent subclass has no RARE/OCCASIONAL/FREQUENT state, so those tiers write nothing.
@@ -463,14 +475,9 @@ class GameServer(internal val config: ServerConfig) {
         val gameOptionsEvent = GameOptionsEvent(gameData)
         sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, gameOptionsEvent, NetworkObjectManager.getNewDynamicId()) }
 
-        // Send ServerFps singleton to new client
-        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, serverFps, NET_ID_SERVER_FPS) }
-
-        // Send buildings and base controllers to new client
-        buildingManager?.sendToClient(host)
-
         // Player creation is NOT sent here. C++ sends it in cBioEvent::Act() after the client
-        // finishes loading. See BIOEVENT handler (networkClassId=1026) which sends Player + GameDataUpdateEvent.
+        // finishes loading. See BIOEVENT handler (networkClassId=1026).
+        // Buildings, base controllers, and ServerFps are sent by replicationTick() after BIOEVENT.
     }
 
     // ---- Game event handlers ----
@@ -529,35 +536,23 @@ class GameServer(internal val config: ServerConfig) {
                     println("[GAME] BIOEVENT from rhostId=$rhostId → entering game (post-load)")
                     god.playerInGame.add(rhostId)
 
-                    // C++: cBioEvent::Act() loops cPlayerManager::Get_Player_Object_List() and calls
-                    // Send_Object_Update for every existing player before creating the new one.
-                    // Send all existing players and soldiers to the new joiner first.
-                    for ((existingId, existingPlayer) in god.playersByHost) {
-                        val existingNetId = god.playerNetIds[existingId] ?: continue
-                        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, existingPlayer, existingNetId) }
-                    }
-                    for ((_, existingSoldier) in god.soldiersByHost) {
-                        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, existingSoldier, existingSoldier.networkId) }
-                    }
+                    // Mark all registered objects dirty for this new client.
+                    // C++: Tell_Client_About_Dynamic_Objects sets per-client dirty bits for all objects.
+                    // replicationTick() will send everything on the next tick.
+                    NetworkObjectManager.restoreDirtyBits(rhostId)
 
-                    // C++: cBioEvent::Act() creates the cPlayer object. Send BIT_CREATION here.
+                    // Teams were already sent in sendConnectionObjects — clear their dirty bits
+                    teamNod.setObjectDirtyBits(rhostId, 0)
+                    teamGdi.setObjectDirtyBits(rhostId, 0)
+
+                    // Create player — sets BIT_CREATION for all clients via setObjectDirtyBit
                     val nickname = playerNicknames.remove(host.address) ?: "Player$rhostId"
-                    val player = god.createPlayer(rhostId, nickname)
-                    val playerNetId = god.playerNetIds[rhostId]!!
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, player, playerNetId) }
+                    god.createPlayer(rhostId, nickname)
 
-                    // Broadcast new player creation to all other already-in-game hosts.
-                    for (otherId in god.playerInGame) {
-                        if (otherId == rhostId) continue
-                        val otherHost = connectionManager.getHost(otherId) ?: continue
-                        sendGameNetObj(otherHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, player, playerNetId) }
-                    }
-
-                    // Send ServerFps singleton to new joiner
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, serverFps, NET_ID_SERVER_FPS) }
-
+                    // One-shot event to signal the client that gameplay can proceed
                     sendGameDataUpdateEvent(host)
-                    // Note: soldier spawning happens via god.think() on the next tick
+                    // Soldier spawning happens via god.think() on the next tick
+                    // All object creation packets sent by replicationTick() on the next tick
                 }
             }
             1027 -> {  // NETCLASSID_LOADINGEVENT (loadingevent.cpp Import_Creation)

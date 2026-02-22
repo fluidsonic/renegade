@@ -1,8 +1,8 @@
 package ccr.server
 
 import ccr.math.Vector3
+import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
-import ccr.server.net.NetworkObjectPacketWriter
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
 import ccr.server.net.WeaponEntry
@@ -99,6 +99,12 @@ class God(private val server: GameServer) {
                     playerTeams[rhostId] = playerTeams.remove(existingRhostId) ?: choosePlayerType()
                 }
             }
+            // Re-register with NetworkObjectManager (setDeletePending on disconnect caused unregistration)
+            val reconnectNetId = playerNetIds[rhostId]
+            if (reconnectNetId != null) {
+                NetworkObjectManager.registerObject(existing, reconnectNetId)
+                existing.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
+            }
             existing.isActive = true
             existing.isInGame = true
             playersByHost[rhostId] = existing
@@ -112,6 +118,7 @@ class God(private val server: GameServer) {
         val playerNetId = NetworkObjectManager.getNewDynamicId()
         playerNetIds[rhostId] = playerNetId
         NetworkObjectManager.registerObject(player, playerNetId)
+        player.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
         playersByHost[rhostId] = player
         return player
     }
@@ -169,20 +176,7 @@ class God(private val server: GameServer) {
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(soldier, netId)
         soldiersByHost[rhostId] = soldier
-
-        // Send creation to the controlling host
-        val host = server.connectionManager.getHost(rhostId)
-        if (host != null) {
-            server.sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, soldier, netId) }
-        }
-
-        // Broadcast to all other in-game hosts
-        for (otherId in playerInGame) {
-            if (otherId == rhostId) continue
-            val otherHost = server.connectionManager.getHost(otherId) ?: continue
-            server.sendGameNetObj(otherHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, soldier, netId) }
-            println("[GOD] sent soldier spawn (broadcast) to host $otherId: netId=$netId")
-        }
+        soldier.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
 
         // Give starting credits on first spawn if configured
         if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5) {
@@ -200,13 +194,8 @@ class God(private val server: GameServer) {
      */
     fun deleteSoldier(rhostId: Int) {
         val soldier = soldiersByHost.remove(rhostId) ?: return
-        for (otherId in playerInGame) {
-            if (otherId == rhostId) continue
-            val otherHost = server.connectionManager.getHost(otherId) ?: continue
-            server.sendGameNetObj(otherHost) { bs -> NetworkObjectPacketWriter.writeDeletion(bs, soldier.networkId) }
-        }
-        NetworkObjectManager.unregisterObject(soldier)
-        println("[GOD] deleted soldier for host $rhostId netId=${soldier.networkId}")
+        soldier.setDeletePending()
+        println("[GOD] marked soldier delete-pending for host $rhostId netId=${soldier.networkId}")
     }
 
     /**
@@ -218,20 +207,12 @@ class God(private val server: GameServer) {
     fun removePlayer(rhostId: Int) {
         deleteSoldier(rhostId)
 
-        val disconnectedPlayer = playersByHost[rhostId]
-        val netId = playerNetIds[rhostId]
-        if (disconnectedPlayer != null && netId != null) {
-            for (otherId in playerInGame) {
-                if (otherId == rhostId) continue
-                val otherHost = server.connectionManager.getHost(otherId) ?: continue
-                server.sendGameNetObj(otherHost) { bs -> NetworkObjectPacketWriter.writeDeletion(bs, netId) }
-            }
-        }
-
-        // Mark player as inactive (preserves stats for reconnect) rather than fully removing
-        disconnectedPlayer?.let {
-            it.isActive = false
-            it.isInGame = false
+        // Mark player inactive and delete-pending; centralized loop broadcasts deletion and unregisters
+        val player = playersByHost[rhostId]
+        if (player != null) {
+            player.isActive = false
+            player.isInGame = false
+            player.setDeletePending()
         }
         playerInGame.remove(rhostId)
     }

@@ -1,7 +1,7 @@
 package ccr.server
 
 import ccr.math.Vector3
-import ccr.net.connection.RemoteHost
+import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.level.ChunkIds
 import ccr.server.level.LoadedLevel
@@ -30,6 +30,8 @@ class BuildingManager(private val server: GameServer, level: LoadedLevel) {
     init {
         NetworkObjectManager.registerObject(baseControllerNod, GameServer.NET_ID_BASE_CONTROLLER_NOD)
         NetworkObjectManager.registerObject(baseControllerGdi, GameServer.NET_ID_BASE_CONTROLLER_GDI)
+        baseControllerNod.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+        baseControllerGdi.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
 
         val loadedBuildings = level.dynamicData.gameObjects.filterIsInstance<LoadedBuildingGameObj>()
         println("[BUILDING] found ${loadedBuildings.size} buildings in LDD")
@@ -37,26 +39,13 @@ class BuildingManager(private val server: GameServer, level: LoadedLevel) {
         for (lb in loadedBuildings) {
             val building = createBuilding(lb) ?: continue
             NetworkObjectManager.registerObject(building, lb.networkId)
+            building.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
             buildings.add(building)
             buildingTeams[building] = lb.playerType
             println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
         }
 
         println("[BUILDING] registered ${buildings.size} buildings, 2 base controllers")
-    }
-
-    fun sendToClient(host: RemoteHost) {
-        server.sendGameNetObj(host) { bs ->
-            NetworkObjectPacketWriter.writeCreation(bs, baseControllerNod, GameServer.NET_ID_BASE_CONTROLLER_NOD)
-        }
-        server.sendGameNetObj(host) { bs ->
-            NetworkObjectPacketWriter.writeCreation(bs, baseControllerGdi, GameServer.NET_ID_BASE_CONTROLLER_GDI)
-        }
-        for (building in buildings) {
-            server.sendGameNetObj(host) { bs ->
-                NetworkObjectPacketWriter.writeCreation(bs, building, building.networkId)
-            }
-        }
     }
 
     fun isBaseDestroyed(teamNumber: Int): Boolean {

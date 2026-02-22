@@ -29,6 +29,12 @@ abstract class NetworkObject {
         const val MAX_CLIENT_COUNT = 128
     }
 
+    // The highest dirty bit level this object should be sent with on first
+    // replication to a new client. Matches C++ pattern where BaseGameObj sets
+    // BIT_CREATION, but NetworkObjectClass-only singletons (BaseControllerClass,
+    // ServerFps) never get BIT_CREATION because they have no factory (classId=0).
+    open val creationDirtyBit: Int = BIT_CREATION
+
     // C++: NetworkID
     var networkId: Int = 0
         internal set

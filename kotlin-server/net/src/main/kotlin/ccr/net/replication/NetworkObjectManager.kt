@@ -92,7 +92,7 @@ object NetworkObjectManager {
     // C++: Restore_Dirty_Bits — marks all objects as fully dirty for a reconnecting client
     fun restoreDirtyBits(clientId: Int) {
         for (obj in objectList) {
-            obj.setObjectDirtyBit(clientId, NetworkObject.BIT_CREATION, true)
+            obj.setObjectDirtyBit(clientId, obj.creationDirtyBit, true)
         }
     }
 

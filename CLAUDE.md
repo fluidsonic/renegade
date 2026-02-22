@@ -130,14 +130,19 @@
 ### NetworkObject module boundary — registering with networkId
 - `NetworkObject.networkId` has `internal set` (net module only); server module cannot set it directly
 - Use `NetworkObjectManager.registerObject(obj, networkId)` overload to assign ID at registration time
-- Objects start with all dirty bits = 0 after creation; only set dirty bits for future state changes
 - `UnreliableChannel.nextOutgoingId()` allocates the next unreliable packet ID (do NOT read `nextSendId` directly)
 
-### Replication loop rules
+### Replication architecture — dirty-bit-driven, matching C++ Tell_Client_About_Dynamic_Objects
+- **Single replication path**: `replicationTick()` iterates ALL registered NetworkObjects, checks per-client dirty bits, sends appropriate update, clears bits. No manual `writeCreation`/`writeDeletion` calls for persistent objects.
+- **Objects set dirty bits at registration**: `BaseGameObj`-derived objects (buildings, soldiers, players) set `BIT_CREATION` for all clients at construction. Singletons (BaseControllerClass, ServerFps) set their appropriate level (`BIT_OCCASIONAL`, `BIT_FREQUENT`).
+- **New clients**: call `NetworkObjectManager.restoreDirtyBits(clientId)` in BIOEVENT handler — sets each object's `creationDirtyBit` for the new client. Next `replicationTick()` sends everything.
+- **classId=0 objects MUST NEVER be sent with writeCreation**: BaseControllerClass, ServerFps, and all StaticNetworkObjects have classId=0. The client has no factory for classId=0 — `Create_Network_Object` → `Find_Factory(0)` → NULL → crash. These objects are created locally by the client during level load and only need state updates (occasional/frequent).
+- **`creationDirtyBit` property**: each NetworkObject subclass declares its max dirty level for new-client replication. Default is `BIT_CREATION`; classId=0 singletons override to `BIT_OCCASIONAL` or `BIT_FREQUENT`.
+- **Connection_Handler sends ONLY Teams + GameOptionsEvent**: matches C++ `cNetwork::Connection_Handler`. Everything else (buildings, base controllers, ServerFps, players) goes through `replicationTick()` after BIOEVENT.
+- **Deletion via `setDeletePending()`**: centralized delete-pending loop in `networkTickLoop` broadcasts deletion to all in-game clients and unregisters. Don't manually send `writeDeletion` packets.
 - Reliable: BIT_CREATION / BIT_RARE / BIT_OCCASIONAL updates → `sendGameNetObj` (reliable channel)
 - Unreliable: BIT_FREQUENT-only updates → `sendUnreliable` (no ACK, no retry)
 - Never send a soldier's BIT_FREQUENT update to its own `controlOwner` — client is authoritative for its own position
-- On disconnect: send `writeDeletion` to other in-game hosts BEFORE calling `NetworkObjectManager.unregisterObject`
 
 ### CClientControl frequent update wire format (C→S, UNRELIABLE)
 - Header: networkId(32) + dirtyBits(8) + isDeletePending(1); no classId when BIT_CREATION not set
@@ -179,9 +184,9 @@
 - `GameServer.god` — initialized after `loadLevel()`, accessed as `god.*` throughout
 - Player/soldier state maps live in God: `playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`
 - `god.think()` — called each network tick; spawns soldiers for soldierless in-game players
-- `god.createPlayer(rhostId, name)` — creates/registers Player object; caller sends the creation packet
-- `god.createCommando(rhostId, playerType)` — creates/registers/sends SoldierGameObj to all in-game hosts
-- `god.deleteSoldier(rhostId)` — sends deletion to peers, unregisters; use for suicide/team-change/disconnect
+- `god.createPlayer(rhostId, name)` — creates/registers Player object, sets `BIT_CREATION` dirty; `replicationTick()` handles sending
+- `god.createCommando(rhostId, playerType)` — creates/registers SoldierGameObj, sets `BIT_CREATION` dirty; `replicationTick()` handles sending to all in-game hosts
+- `god.deleteSoldier(rhostId)` — calls `setDeletePending()`; centralized delete-pending loop broadcasts deletion
 - `god.removePlayer(rhostId)` — full disconnect cleanup: deleteSoldier + player object removal
 - `god.choosePlayerType()` — auto-balance team assignment (0=NOD, 1=GDI)
 
@@ -216,5 +221,5 @@
 - `BuildingManager(server, level)` instantiates building subtypes from `LoadedBuildingGameObj`, registers `BaseControllerClass` singletons at `NET_ID_BASE_CONTROLLER_NOD/GDI`
 - `GameServer.config` is `internal`; `GameServer.sendGameNetObj()` is `internal` — God and BuildingManager access these directly
 - Player reconnect: `God.createPlayer()` checks for existing inactive player by same name, reactivates instead of creating new
-- `ServerFps` registered with `NET_ID_SERVER_FPS = 2_100_000_006`; sent in `sendConnectionObjects()` and BIOEVENT handler
+- `ServerFps` registered with `NET_ID_SERVER_FPS = 2_100_000_006`; sent via `replicationTick()` dirty bits (BIT_FREQUENT), never manually
 - `Player.replaceMoney()` named that way (not `setMoney`) because Kotlin generates a `setMoney` JVM setter that clashes with the `var money` property

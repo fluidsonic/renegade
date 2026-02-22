@@ -55,8 +55,19 @@ Client                               Server
   │                                     │
   │    (client finishes loading)        │
   │──── RELIABLE: BIOEVENT ───────────▶│  classId=1026
-  │◀─── RELIABLE: PLAYER (creation) ───│  classId=1011, name + team + stats
-  │◀─── RELIABLE: GAMEDATAUPDATEEVENT ─│  classId=1012
+  │                                     │  server: restoreDirtyBits(clientId)
+  │                                     │  server: createPlayer() → BIT_CREATION dirty
+  │◀─── RELIABLE: GAMEDATAUPDATEEVENT ─│  classId=1012 (one-shot, sent immediately)
+  │                                     │
+  │  ┌─ next replicationTick() ────┐    │
+  │◀─│─ RELIABLE: BUILDING×N ──────│───│  classId=1000, writeCreation for each building
+  │◀─│─ RELIABLE: BASE_CTRL(NOD) ──│───│  classId=0, writeOccasionalUpdate (no creation)
+  │◀─│─ RELIABLE: BASE_CTRL(GDI) ──│───│  classId=0, writeOccasionalUpdate (no creation)
+  │◀─│─ UNRELIABLE: SERVERFPS ─────│───│  classId=0, writeFrequentUpdate (no creation)
+  │◀─│─ RELIABLE: PLAYER (new) ────│───│  classId=1011, writeCreation
+  │◀─│─ RELIABLE: PLAYER×N ────────│───│  existing players — writeCreation each
+  │◀─│─ RELIABLE: SOLDIER×N ───────│───│  existing soldiers — writeCreation each
+  │  └─────────────────────────────┘    │
   │──── ACK ──────────────────────────▶│
   │                                     │
   │◀───────── game stream ────────────▶│  RELIABLE + UNRELIABLE game objects
@@ -64,7 +75,9 @@ Client                               Server
 
 **Critical ordering**: ACCEPT_SC must be sent before any game objects. Player creation
 is deferred to the BIOEVENT handler (after client finishes loading), not sent in
-Connection_Handler. See [network.md](network.md) for full protocol reference.
+Connection_Handler. Buildings, base controllers, and ServerFps are NOT sent manually
+at connection time — they are sent by the next `replicationTick()` after dirty bits are
+restored. See [network.md](network.md) for full protocol reference.
 
 ## CONNECT_CS Payload (C→S)
 
@@ -229,8 +242,8 @@ BIT_CREATION:
 ## cPlayer Object (classId=1011)
 
 Sent per connected player. In the original engine these are sent via Server_Think (the object
-update loop). Our server sends them in the connection handler for simplicity until Server_Think
-is implemented.
+update loop). The Kotlin server sends them via `replicationTick()` after dirty bits are marked
+by `restoreDirtyBits()` in the BIOEVENT handler — matching C++ `Tell_Client_About_Dynamic_Objects`.
 
 ```
 BIT_CREATION:
@@ -275,15 +288,36 @@ After receiving the GameOptionsEvent, the client:
 4. TEAM GDI (reliable id=2) — networkId=100002, teamNumber=1
 5. GAMEOPTIONSEVENT (reliable id=3) — networkId=100003, game rules + real CRC values
 
-### After BIOEVENT (post-load):
-6. PLAYER (BIT_CREATION) — networkId=rhostId, name + team + isInGame=true
-7. GAMEDATAUPDATEEVENT — timeRemaining + hostedGameNumber
+### After BIOEVENT (post-load, immediate):
+6. GAMEDATAUPDATEEVENT — timeRemaining + hostedGameNumber (one-shot, sent directly)
+
+Internal state changes (not wire packets):
+- Client added to `playerInGame`
+- `NetworkObjectManager.restoreDirtyBits(clientId)` called — marks every registered
+  NetworkObject dirty at its appropriate level for the new client
+- Team dirty bits cleared (Teams already sent in Connection_Handler)
+- `createPlayer()` called — registers new Player object with BIT_CREATION dirty for all clients
+
+### Next replicationTick() (dirty-bit-driven):
+7. BUILDING×N (BIT_CREATION, RELIABLE) — one writeCreation packet per building
+8. BASE_CTRL NOD (BIT_OCCASIONAL, RELIABLE) — writeOccasionalUpdate only; classId=0, no creation packet
+9. BASE_CTRL GDI (BIT_OCCASIONAL, RELIABLE) — same
+10. SERVERFPS (BIT_FREQUENT, UNRELIABLE) — writeFrequentUpdate only; classId=0, no creation packet
+11. PLAYER for new client (BIT_CREATION, RELIABLE) — name + team + isInGame=true
+12. PLAYER×N for existing players (BIT_CREATION, RELIABLE) — one per already-connected player
+13. SOLDIER×N for existing soldiers (BIT_CREATION, RELIABLE) — one per spawned soldier
+
+The replication tick iterates ALL registered NetworkObjects and, for each one, sends
+the highest dirty-bit tier set for that client. After sending, that client's dirty bits
+are cleared. This matches C++ `Tell_Client_About_Dynamic_Objects`.
+
+### Why classId=0 objects have no creation packet:
+`BaseControllerClass` and `ServerFps` have `classId=0`. The client has no factory for
+classId=0 — `Create_Network_Object(0)` returns null, causing a crash. These objects are
+instantiated locally by the client during level load and only need state updates. Their
+`creationDirtyBit` is set to `BIT_OCCASIONAL` / `BIT_FREQUENT` respectively so
+`replicationTick()` never sends BIT_CREATION for them.
 
 MapNameCRC and ModNameCRC are computed using `crcStringi(mapName)` — C++ `CRC_Stringi` —
 which is standard CRC32 over the uppercase bytes of the filename (e.g., `"C&C_Under.mix"`).
 Known value: `crcStringi("C&C_Under.mix") == 0x2AFE0E38`.
-
-**Known gaps:**
-- Other connected players' PLAYER objects are not broadcast to new clients
-- Server_Think object update loop not implemented (buildings, vehicles, etc. not streamed)
-- SoldierGameObj spawn disabled while debugging encoding issues
