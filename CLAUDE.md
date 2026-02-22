@@ -144,6 +144,9 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - Running the game from a background bash subprocess fails with "SDL_Init: no displays" — always run interactively
 - **Keep diagnostic `fprintf` logging until visual confirmation** — remove only after the user confirms the fix works; removing before confirmation means a rebuild just to re-add it
 
+## Kotlin Server — Design Philosophy
+- **Stay close to the C++ code** — class names, function names, field names, and code structure should mirror the C++ original as closely as possible; Kotlin idioms are fine but don't invent abstractions that don't exist in C++
+
 ## Kotlin Server — Known Patterns & Pitfalls
 
 ### Test framework is kotlin.test (not AssertJ)

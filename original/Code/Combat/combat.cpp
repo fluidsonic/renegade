@@ -171,6 +171,7 @@ void	CombatManager::Shutdown( void )
 
 	if ( GameScene != NULL ) {
 		// Debug_Say(( "Releasing the PScene with %d Refs\n", GameScene->Num_Refs() ));
+		GameScene->Remove_All();
 		GameScene->Release_Ref();
 		GameScene = NULL;
 	}

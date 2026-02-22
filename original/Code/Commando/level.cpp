@@ -36,6 +36,10 @@ void		LevelManager::Release_Level( void )
 
 	TransitionManager::Reset();
 
+	if (COMBAT_SCENE != NULL) {
+		COMBAT_SCENE->Remove_All();
+	}
+
 {
 	// Clear the menu backdrop model before freeing assets —
 	// Free_Assets() destroys all textures/anims, leaving the model
