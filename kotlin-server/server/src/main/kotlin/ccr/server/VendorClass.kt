@@ -124,9 +124,9 @@ class VendorClass(private val server: GameServer) {
 
         val isEquipmentPurchase = purchaseType == PURCHASE_EQUIPMENT
         return PurchaseResult(
-            responseId          = RESPONSE_SUCCESS,
-            purchasedDefId      = defId,
-            isVehiclePurchase   = isVehiclePurchase,
+            responseId = RESPONSE_SUCCESS,
+            purchasedDefId = defId,
+            isVehiclePurchase = isVehiclePurchase,
             isEquipmentPurchase = isEquipmentPurchase,
         )
     }
