@@ -419,7 +419,11 @@ AudibleSoundClass::Play (bool alloc_handle)
 	//
 	//	Check to ensure this sound should really be playing...
 	//
-	if (Verify_Playability () == false) {
+	bool playable = Verify_Playability();
+	fprintf(stderr, "[audio] AudibleSound::Play: \"%s\" playable=%s handle=%p state=%d\n",
+		m_Buffer ? m_Buffer->Get_Filename() : "(no buffer)",
+		playable ? "true" : "false", (void*)m_SoundHandle, (int32_t)m_State);
+	if (playable == false) {
 		return false;
 	}
 
@@ -708,6 +712,11 @@ AudibleSoundClass::Initialize_Miles_Handle (void)
 {
 	MMSLockClass lock;
 
+	const char* fname = m_Buffer ? m_Buffer->Get_Filename() : "(no buffer)";
+	uint32_t buflen = m_Buffer ? (uint32_t)m_Buffer->Get_Raw_Length() : 0u;
+	fprintf(stderr, "[audio] Initialize_Miles_Handle: \"%s\" buflen=%u handle=%p state=%d\n",
+		fname, buflen, (void*)m_SoundHandle, (int32_t)m_State);
+
 	// If this sound is already playing, then update its
 	// playing position to make sure we really should
 	// be playing it... (it will free the miles handle if not)
@@ -727,6 +736,7 @@ AudibleSoundClass::Initialize_Miles_Handle (void)
 		// Record the total length of the sample in milliseconds...
 		//
 		m_SoundHandle->Get_Sample_MS_Position ((S32 *)&m_Length, NULL);
+		fprintf(stderr, "[audio] Initialize_Miles_Handle: \"%s\" length=%ums\n", fname, (uint32_t)m_Length);
 
 		//
 		// Pass our cached settings onto miles
@@ -745,6 +755,7 @@ AudibleSoundClass::Initialize_Miles_Handle (void)
 		// If this sound is already playing (and just now got a handle)
 		// then make sure we start it.
 		if (m_State == STATE_PLAYING) {
+			fprintf(stderr, "[audio] Initialize_Miles_Handle: \"%s\" starting sample (STATE_PLAYING)\n", fname);
 			m_SoundHandle->Start_Sample ();
 
 			// Update the loop count based on the number of loops left
@@ -761,12 +772,14 @@ AudibleSoundClass::Initialize_Miles_Handle (void)
 		// Pass the 'real' volume onto miles
 		//
 		float real_volume = Determine_Real_Volume ();
+		fprintf(stderr, "[audio] Initialize_Miles_Handle: \"%s\" real_volume=%.3f (miles=%d)\n",
+			fname, real_volume, (int32_t)(real_volume * 127.0F));
 		m_SoundHandle->Set_Sample_Volume (int(real_volume * 127.0F));
 
 		//
 		// Associate this object instance with the handle
 		//
-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (S32)(intptr_t)this);
+		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (void*)this);
 	}
 
 	return ;
@@ -788,7 +801,7 @@ AudibleSoundClass::Free_Miles_Handle (void)
 		//
 		// Release our hold on this handle
 		//
-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, NULL);
+		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, nullptr);
 		m_SoundHandle->End_Sample ();
 
 		//

@@ -44,7 +44,7 @@ Listener3DClass::Initialize_Miles_Handle (void)
 				0.0F, 1.0F, 0.0F);
 
 		// Associate this object instance with the handle
-		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (S32)(intptr_t)this);
+		m_SoundHandle->Set_Sample_User_Data (INFO_OBJECT_PTR, (void*)this);
 	}
 		
 	return ;

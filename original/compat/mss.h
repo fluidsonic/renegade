@@ -152,8 +152,8 @@ INT32       AIL_WAV_info(const void* data, AILSOUNDINFO* info);
 void        AIL_set_named_sample_file(HSAMPLE s, const char* name, const void* data, UINT32 len, INT32 flags);
 void        AIL_set_sample_ms_position(HSAMPLE s, UINT32 ms);
 void        AIL_sample_ms_position(HSAMPLE s, INT32* len, INT32* pos);
-void        AIL_set_sample_user_data(HSAMPLE s, INT32 index, UINT32 val);
-UINT32      AIL_sample_user_data(HSAMPLE s, INT32 index);
+void        AIL_set_sample_user_data(HSAMPLE s, INT32 index, void* val);
+void*       AIL_sample_user_data(HSAMPLE s, INT32 index);
 void        AIL_set_sample_processor(HSAMPLE s, INT32 proc_type, HPROVIDER hp);
 void        AIL_set_filter_sample_preference(HSAMPLE s, const char* name, void* val);
 
@@ -243,12 +243,17 @@ void        AIL_stream_ms_position(HSTREAM s, INT32* len, INT32* pos);
 #define AIL_FILE_SEEK_CURRENT   1
 #define AIL_FILE_SEEK_END       2
 
-// File I/O callbacks for MSS streaming
+// File I/O callbacks for MSS streaming.
+// open_cb:  returns file size (0 = failure), writes opaque file handle into *file_handle
+// close_cb: releases the handle
+// seek_cb:  seeks to offset/type; returns new position
+// read_cb:  reads bytes; returns bytes actually read
+// All handles are uintptr_t so that FileClass* can be stored without truncation on 64-bit.
 void AIL_set_file_callbacks(
-    U32  (*open_cb)(char const*, U32*),
-    void (*close_cb)(U32),
-    S32  (*seek_cb)(U32, S32, U32),
-    U32  (*read_cb)(U32, void*, U32));
+    U32  (*open_cb)(char const*, uintptr_t*),
+    void (*close_cb)(uintptr_t),
+    S32  (*seek_cb)(uintptr_t, S32, U32),
+    U32  (*read_cb)(uintptr_t, void*, U32));
 
 // Error
 char*       AIL_last_error();
