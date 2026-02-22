@@ -1674,6 +1674,7 @@ void DX8Wrapper::Draw_Strip(
 void DX8Wrapper::Apply_Render_State_Changes()
 {
 	if (!render_state_changed) return;
+
 	if (render_state_changed&SHADER_CHANGED) {
 		SNAPSHOT_SAY(("DX8 - apply shader\n"));
 		render_state.shader.Apply();

@@ -697,6 +697,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     // Transform matrices (D3D row-major)
     D3DMATRIX worldMatrix, viewMatrix, projMatrix;
+    D3DMATRIX texMatrix[8];  // per-stage texture transforms (D3DTS_TEXTURE0..7)
 
     // Lighting state
     D3DLIGHT8    lights[8]       = {};
@@ -713,6 +714,10 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         worldMatrix._11 = worldMatrix._22 = worldMatrix._33 = worldMatrix._44 = 1.0f;
         viewMatrix._11  = viewMatrix._22  = viewMatrix._33  = viewMatrix._44  = 1.0f;
         projMatrix._11  = projMatrix._22  = projMatrix._33  = projMatrix._44  = 1.0f;
+        for (int32_t s = 0; s < 8; s++) {
+            memset(&texMatrix[s], 0, sizeof(D3DMATRIX));
+            texMatrix[s]._11 = texMatrix[s]._22 = texMatrix[s]._33 = texMatrix[s]._44 = 1.0f;
+        }
         // D3D render state defaults
         rs[7]  = 1;  // D3DRS_ZENABLE = TRUE
         rs[14] = 1;  // D3DRS_ZWRITEENABLE = TRUE
@@ -753,28 +758,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             return;
         }
         s_stats.applyGLFull++;
-
-        // Log all alpha-blended 3D draw calls (first 30) to diagnose transparency issues
-        static int _state_log_n = 0;
-        if (_state_log_n < 30 && !(currentFVF & D3DFVF_XYZRHW) && rs[27]) {  // alphaBlend=1
-            _state_log_n++;
-            fprintf(stderr, "[GLState] #%d fvf=0x%X lighting=%u srcBlend=%u dstBlend=%u alphaTest=%u\n",
-                _state_log_n, (unsigned)currentFVF,
-                (unsigned)rs[137],  // D3DRS_LIGHTING
-                (unsigned)rs[19],   // D3DRS_SRCBLEND
-                (unsigned)rs[20],   // D3DRS_DESTBLEND
-                (unsigned)rs[15]);  // D3DRS_ALPHATESTENABLE
-            fprintf(stderr, "[GLState] #%d diffMtlSrc=%u tss0: cOp=%u cA1=%u cA2=%u aOp=%u aA1=%u aA2=%u tex=%p\n",
-                _state_log_n,
-                (unsigned)rs[145],  // D3DRS_DIFFUSEMATERIALSOURCE
-                (unsigned)tss[0][1], (unsigned)tss[0][2], (unsigned)tss[0][3],
-                (unsigned)tss[0][4], (unsigned)tss[0][5], (unsigned)tss[0][6],
-                (void*)currentTextures[0]);
-            fprintf(stderr, "[GLState] #%d mat: diff=(%.2f,%.2f,%.2f,%.2f) emis=(%.2f,%.2f,%.2f,%.2f)\n",
-                _state_log_n,
-                material.Diffuse.r, material.Diffuse.g, material.Diffuse.b, material.Diffuse.a,
-                material.Emissive.r, material.Emissive.g, material.Emissive.b, material.Emissive.a);
-        }
 
         // -- Alpha blending + blend op --
         if (dirty & DIRTY_BLEND) {
@@ -932,9 +915,15 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             // Stop pipeline at DISABLE or unset stage
             if (colorOp == 1 || (stage > 0 && colorOp == 0)) {
                 glDisable(GL_TEXTURE_2D);
+                glDisable(GL_TEXTURE_GEN_S);
+                glDisable(GL_TEXTURE_GEN_T);
+                glMatrixMode(GL_TEXTURE); glLoadIdentity(); glMatrixMode(GL_MODELVIEW);
                 for (int s = stage + 1; s < 8; s++) {
-                    glActiveTexture(GL_TEXTURE0 + s);
+                    glActiveTexture(GL_TEXTURE0 + (GLenum)s);
                     glDisable(GL_TEXTURE_2D);
+                    glDisable(GL_TEXTURE_GEN_S);
+                    glDisable(GL_TEXTURE_GEN_T);
+                    glMatrixMode(GL_TEXTURE); glLoadIdentity(); glMatrixMode(GL_MODELVIEW);
                 }
                 break;
             }
@@ -1101,6 +1090,36 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                 break;
             }
             glTexEnvf(GL_TEXTURE_ENV, GL_ALPHA_SCALE, aScale);
+
+            // -- Texture coordinate generation (D3DTSS_TEXCOORDINDEX = tss[stage][11]) --
+            // D3DTSS_TCI_CAMERASPACENORMAL (0x00010000): generate UV from eye-space normals.
+            // This is used by ClassicEnvironmentMapperClass for environment-mapped meshes
+            // that have no UV coords in their vertex buffer (e.g. IF_EVAGIZMO.IF_EVALOGO).
+            {
+                DWORD tci_mode = tss[stage][11] & 0xFFFF0000u;
+                if (tci_mode == D3DTSS_TCI_CAMERASPACENORMAL) {
+                    glEnable(GL_TEXTURE_GEN_S);
+                    glEnable(GL_TEXTURE_GEN_T);
+                    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+                    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_NORMAL_MAP);
+                } else {
+                    glDisable(GL_TEXTURE_GEN_S);
+                    glDisable(GL_TEXTURE_GEN_T);
+                }
+                // -- Texture transform matrix (D3DTSS_TEXTURETRANSFORMFLAGS = tss[stage][24]) --
+                // When non-zero, apply the per-stage texture matrix (set via D3DTS_TEXTURE0+stage).
+                // ClassicEnvironmentMapperClass sets this to scale+bias the generated normal UVs
+                // from [-1,1] to [0,1]: u = Nx*0.5 + 0.5, v = Ny*0.5 + 0.5.
+                glMatrixMode(GL_TEXTURE);
+                if (tss[stage][24] != 0) {  // D3DTTFF_DISABLE = 0
+                    float tmat[16];
+                    d3d_to_gl_matrix(&texMatrix[stage], tmat);
+                    glLoadMatrixf(tmat);
+                } else {
+                    glLoadIdentity();
+                }
+                glMatrixMode(GL_MODELVIEW);
+            }
         }
         glActiveTexture(GL_TEXTURE0);  // restore default active unit
         }  // dirty & DIRTY_TEXTURES
@@ -1121,49 +1140,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         }
 
         float mat[16];
-
-        // Log matrices once for first 3D DIP call
-        static int _mat_log_n = 0;
-        if (_mat_log_n == 0 && !(currentFVF & D3DFVF_XYZRHW)) {
-            _mat_log_n++;
-            // Query current GL viewport
-            GLint glvp[4]; glGetIntegerv(GL_VIEWPORT, glvp);
-            GLdouble gldr[2]; glGetDoublev(GL_DEPTH_RANGE, gldr);
-            fprintf(stderr, "[MTX] GL viewport: x=%d y=%d w=%d h=%d depthRange=[%.3f,%.3f] (device %dx%d)\n",
-                glvp[0], glvp[1], glvp[2], glvp[3], gldr[0], gldr[1], width, height);
-            float pm[16], vm[16], wm[16];
-            d3d_to_gl_matrix(&projMatrix, pm);
-            d3d_to_gl_matrix(&viewMatrix, vm);
-            d3d_to_gl_matrix(&worldMatrix, wm);
-            fprintf(stderr, "[MTX] proj: [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f]\n",
-                pm[0],pm[4],pm[8],pm[12], pm[1],pm[5],pm[9],pm[13], pm[2],pm[6],pm[10],pm[14], pm[3],pm[7],pm[11],pm[15]);
-            fprintf(stderr, "[MTX] view: [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f]\n",
-                vm[0],vm[4],vm[8],vm[12], vm[1],vm[5],vm[9],vm[13], vm[2],vm[6],vm[10],vm[14], vm[3],vm[7],vm[11],vm[15]);
-            fprintf(stderr, "[MTX] world: [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f] [%.3f %.3f %.3f %.3f]\n",
-                wm[0],wm[4],wm[8],wm[12], wm[1],wm[5],wm[9],wm[13], wm[2],wm[6],wm[10],wm[14], wm[3],wm[7],wm[11],wm[15]);
-            // Manually transform v0=(1280,-960,0,1) through world,view,proj to get clip coords
-            float vw[4] = {
-                wm[0]*1280+wm[4]*(-960)+wm[8]*0+wm[12],
-                wm[1]*1280+wm[5]*(-960)+wm[9]*0+wm[13],
-                wm[2]*1280+wm[6]*(-960)+wm[10]*0+wm[14],
-                wm[3]*1280+wm[7]*(-960)+wm[11]*0+wm[15]
-            };
-            float ve[4] = {
-                vm[0]*vw[0]+vm[4]*vw[1]+vm[8]*vw[2]+vm[12]*vw[3],
-                vm[1]*vw[0]+vm[5]*vw[1]+vm[9]*vw[2]+vm[13]*vw[3],
-                vm[2]*vw[0]+vm[6]*vw[1]+vm[10]*vw[2]+vm[14]*vw[3],
-                vm[3]*vw[0]+vm[7]*vw[1]+vm[11]*vw[2]+vm[15]*vw[3]
-            };
-            float vc[4] = {
-                pm[0]*ve[0]+pm[4]*ve[1]+pm[8]*ve[2]+pm[12]*ve[3],
-                pm[1]*ve[0]+pm[5]*ve[1]+pm[9]*ve[2]+pm[13]*ve[3],
-                pm[2]*ve[0]+pm[6]*ve[1]+pm[10]*ve[2]+pm[14]*ve[3],
-                pm[3]*ve[0]+pm[7]*ve[1]+pm[11]*ve[2]+pm[15]*ve[3]
-            };
-            fprintf(stderr, "[MTX] v0(1280,-960,0): world=(%.2f,%.2f,%.2f,%.2f) eye=(%.2f,%.2f,%.2f,%.2f) clip=(%.2f,%.2f,%.2f,%.2f) ndc=(%.3f,%.3f,%.3f)\n",
-                vw[0],vw[1],vw[2],vw[3], ve[0],ve[1],ve[2],ve[3], vc[0],vc[1],vc[2],vc[3],
-                vc[3]!=0?vc[0]/vc[3]:0, vc[3]!=0?vc[1]/vc[3]:0, vc[3]!=0?vc[2]/vc[3]:0);
-        }
 
         if (currentFVF & D3DFVF_XYZRHW) {
             // Pre-transformed (screen-space) vertices: ortho projection, identity
@@ -1408,6 +1384,11 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     HRESULT SetTransform(D3DTRANSFORMSTATETYPE type, const D3DMATRIX* m) override {
         s_stats.setTransform++;
         if (!m) return S_OK;
+        if (type >= D3DTS_TEXTURE0 && type <= D3DTS_TEXTURE7) {
+            texMatrix[type - D3DTS_TEXTURE0] = *m;
+            dirty |= DIRTY_TEXTURES;
+            return S_OK;
+        }
         switch (type) {
         case D3DTS_WORLD:      worldMatrix = *m; break;
         case D3DTS_VIEW:       viewMatrix  = *m; break;
@@ -1823,11 +1804,18 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             glNormal3f(nx, ny, nz);
         }
         glColor4ub(r, g, b, a);
-        for (int t = 0; t < L.uv_count; t++) {
-            if (L.off_uv[t] >= 0) {
-                float tu = *(const float*)(vp + L.off_uv[t] + 0);
-                float tv = *(const float*)(vp + L.off_uv[t] + 4);
-                glMultiTexCoord2f(GL_TEXTURE0 + t, tu, tv);
+        if (L.uv_count == 0) {
+            // D3D8 default: when FVF has no texture coordinates, D3D8 uses (0,0) for all
+            // texture stages.  OpenGL would otherwise reuse the last submitted coordinate
+            // from the previous draw call, producing garbage sampling.
+            glMultiTexCoord2f(GL_TEXTURE0, 0.0f, 0.0f);
+        } else {
+            for (int t = 0; t < L.uv_count; t++) {
+                if (L.off_uv[t] >= 0) {
+                    float tu = *(const float*)(vp + L.off_uv[t] + 0);
+                    float tv = *(const float*)(vp + L.off_uv[t] + 4);
+                    glMultiTexCoord2f(GL_TEXTURE0 + t, tu, tv);
+                }
             }
         }
         glVertex3f(x, y, z);
@@ -1872,56 +1860,15 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                                   UINT startIdx, UINT primCount) override {
         s_stats.drawCalls++;
         if (!currentVB || !currentVB->data || !currentIB || !currentIB->data) return S_OK;
-
-        // Log first 3 draw calls: vertex positions, color, and GL state
-        static unsigned s_dip_count = 0;
-        if (++s_dip_count <= 8) {
-            const unsigned short* dbg_idx = (const unsigned short*)currentIB->data + startIdx;
-            const BYTE* v0 = currentVB->data + ((UINT)dbg_idx[0] + currentIBBaseVertex) * currentVBStride;
-            FVFLayout dbgL = Compute_FVF_Layout(currentFVF);
-            float x = 0, y = 0, z = 0;
-            if (dbgL.off_xyz >= 0) { x = *(const float*)(v0+dbgL.off_xyz); y = *(const float*)(v0+dbgL.off_xyz+4); z = *(const float*)(v0+dbgL.off_xyz+8); }
-            DWORD d = (dbgL.off_diffuse >= 0) ? *(const DWORD*)(v0+dbgL.off_diffuse) : 0xFFFFFFFF;
-            float u = 0, vt = 0;
-            if (dbgL.uv_count > 0 && dbgL.off_uv[0] >= 0) { u = *(const float*)(v0+dbgL.off_uv[0]); vt = *(const float*)(v0+dbgL.off_uv[0]+4); }
-            GLboolean blendOn=0; glGetBooleanv(GL_BLEND, &blendOn);
-            GLint texBound=0; glGetIntegerv(GL_TEXTURE_BINDING_2D, &texBound);
-            D3D8Texture_GL* tex = currentTextures[0];
-            fprintf(stderr, "[DIP] #%u: fvf=0x%X stride=%u startIdx=%u primCount=%u baseVtx=%u\n"
-                            "       v0=(%.3f,%.3f,%.3f) diffuse=0x%08X uv=(%.3f,%.3f)\n"
-                            "       blend=%d texBound=%d texPtr=%p glTexId=%u blendSrc=%u blendDst=%u\n",
-                s_dip_count, (unsigned)currentFVF, currentVBStride, startIdx, primCount, currentIBBaseVertex,
-                x, y, z, (unsigned)d, u, vt,
-                (int)blendOn, texBound, (void*)tex, tex ? tex->glTexId : 0,
-                rs[19], rs[20]);
-            GLenum err = glGetError();
-            if (err) fprintf(stderr, "[DIP] GL error before draw: 0x%x\n", err);
-        }
-
         const unsigned short* indices = (const unsigned short*)currentIB->data + startIdx;
         GL_Draw_Prim_Indexed(type, currentVB->data, currentVBStride,
                              indices, primCount, currentIBBaseVertex);
-
-        if (s_dip_count <= 8) {
-            GLenum err = glGetError();
-            if (err) fprintf(stderr, "[DIP] GL error after draw: 0x%x\n", err);
-        }
         return S_OK;
     }
 
     HRESULT DrawPrimitiveUP(D3DPRIMITIVETYPE type, UINT primCount,
                              const void* pVtx, UINT stride) override {
         s_stats.drawUPCalls++;
-        static unsigned s_dpup_count = 0;
-        if (++s_dpup_count <= 8) {
-            D3D8Texture_GL* tex = currentTextures[0];
-            GLboolean blendOn = 0; glGetBooleanv(GL_BLEND, &blendOn);
-            fprintf(stderr, "[DPUP] #%u: type=%u primCount=%u stride=%u fvf=0x%X"
-                            " blend=%d(rs=%u) src=%u dst=%u tex=%p glId=%u\n",
-                s_dpup_count, (unsigned)type, primCount, stride, (unsigned)currentFVF,
-                (int)blendOn, rs[27], rs[19], rs[20],
-                (void*)tex, tex ? tex->glTexId : 0);
-        }
         if (!pVtx) return S_OK;
         UINT vertCount = prim_vertex_count(type, primCount);
         FVFLayout L = Compute_FVF_Layout(currentFVF);
@@ -1940,16 +1887,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                                     UINT primCount, const void* pIdxData, D3DFORMAT idxFmt,
                                     const void* pVtxData, UINT stride) override {
         s_stats.drawUPCalls++;
-        static unsigned s_dipup_count = 0;
-        if (++s_dipup_count <= 8) {
-            D3D8Texture_GL* tex = currentTextures[0];
-            GLboolean blendOn = 0; glGetBooleanv(GL_BLEND, &blendOn);
-            fprintf(stderr, "[DIPUP] #%u: type=%u minVtx=%u vtxCount=%u primCount=%u stride=%u fvf=0x%X"
-                            " blend=%d(rs=%u) src=%u dst=%u tex=%p glId=%u\n",
-                s_dipup_count, (unsigned)type, minVtxIdx, vtxCount, primCount, stride, (unsigned)currentFVF,
-                (int)blendOn, rs[27], rs[19], rs[20],
-                (void*)tex, tex ? tex->glTexId : 0);
-        }
         if (!pIdxData || !pVtxData) return S_OK;
         const unsigned short* indices = (const unsigned short*)pIdxData;
         // minVtxIdx is the minimum index value (a range hint), not a vertex offset.
