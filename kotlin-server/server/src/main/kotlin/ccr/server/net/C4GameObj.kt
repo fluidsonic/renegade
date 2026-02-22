@@ -7,6 +7,7 @@ import ccr.server.GameServer
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.defs.ExplosionDefinitionClass
 
 // C++: C4GameObj (c4gameobj.cpp) — extends SimpleGameObj.
@@ -84,8 +85,12 @@ class C4GameObj(
             val explosionDef = server.loadedLevel?.definitions?.findById(explosionDefId.toUInt())
                 as? ExplosionDefinitionClass
             if (explosionDef != null) {
-                val damage = explosionDef.damageStrength * if (stuckMct) 2f else 1f
-                stuckBuilding!!.applyDamage(damage)
+                val warheadSaveId = ammoDefinition?.warhead ?: 0
+                val building = stuckBuilding!!
+                val effectiveArmorSaveId = if (stuckMct) building.mctSkinSaveId else building.shieldType
+                val damage = ArmorWarheadManager.scaleDamage(
+                    explosionDef.damageStrength, warheadSaveId, effectiveArmorSaveId)
+                building.applyDamage(damage)
             }
         }
 
