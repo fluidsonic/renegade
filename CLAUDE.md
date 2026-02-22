@@ -14,6 +14,9 @@
 - Run: `MallocNanoZone=0 /Users/marc/Documents/ccr/original/build/Code/Commando/Commando.app/Contents/MacOS/Commando`
 - Build type: Debug with ASan (`-fsanitize=address` in root CMakeLists.txt); `MallocNanoZone=0` required on macOS
 
+## C++ Port — Workflow Rules
+- **All compiler AND linker errors are your problem to fix** — never leave a build broken; fix them before moving on
+
 ## C++ Port — Known Patterns & Pitfalls
 
 ### Primitive type rules (enforced by `ccr-primitive-type` clang-tidy plugin)
