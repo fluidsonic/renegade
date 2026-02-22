@@ -296,6 +296,21 @@ typedef struct tagSIZE {
 
 #define INVALID_HANDLE_VALUE ((HANDLE)(intptr_t)(-1))
 
+// GetTickCount (milliseconds since some epoch)
+#ifndef GETTICKCOUNT_DEFINED
+#define GETTICKCOUNT_DEFINED
+#include <sys/time.h>
+inline DWORD GetTickCount() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (DWORD)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+#endif
+// GetCurrentTime - Windows macro for GetTickCount (deprecated in modern SDK)
+#ifndef GetCurrentTime
+#define GetCurrentTime() GetTickCount()
+#endif
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 12: char16_t string functions (c16slen, c16scpy, etc.)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -513,6 +528,13 @@ inline const char16_t* wcspbrk(const char16_t* s, const char16_t* a) { return c1
 inline char16_t* wcspbrk(char16_t* s, const char16_t* a)             { return c16spbrk(s, a); }
 inline unsigned long wcstoul(const char16_t* s, char16_t** e, int b) { return c16stoul(s, e, b); }
 inline long      wcstol (const char16_t* s, char16_t** e, int b)     { return c16stol(s, e, b); }
+#ifndef WCSICMP_COMPAT_DEFINED
+#define WCSICMP_COMPAT_DEFINED
+inline int wcsicmp (const char16_t* a, const char16_t* b)           { return c16sicmp(a, b); }
+inline int wcsnicmp(const char16_t* a, const char16_t* b, size_t n) { return c16snicmp(a, b, n); }
+inline int _wcsicmp (const char16_t* a, const char16_t* b)          { return c16sicmp(a, b); }
+inline int _wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16snicmp(a, b, n); }
+#endif
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 14: IEEE 754 float size guarantees

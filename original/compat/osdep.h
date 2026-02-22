@@ -3,46 +3,14 @@
 #ifndef OSDEP_H_COMPAT
 #define OSDEP_H_COMPAT
 
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <ctype.h>
 #include <unistd.h>
 
 // _strdup (for code that doesn't include always.h)
 #ifndef _strdup
 #define _strdup strdup
-#endif
-
-// Case-insensitive string compare
-#ifndef stricmp
-#define stricmp  strcasecmp
-#endif
-#ifndef strcmpi
-#define strcmpi  strcasecmp
-#endif
-#ifndef strnicmp
-#define strnicmp strncasecmp
-#endif
-#ifndef _stricmp
-#define _stricmp strcasecmp
-#endif
-#ifndef _strcmpi
-#define _strcmpi strcasecmp
-#endif
-#ifndef _strnicmp
-#define _strnicmp strncasecmp
-#endif
-
-// Wide string case-insensitive comparison — char16_t versions via c16s* functions
-#include "c16string.h"
-#ifndef WCSICMP_COMPAT_DEFINED
-#define WCSICMP_COMPAT_DEFINED
-inline int wcsicmp (const char16_t* a, const char16_t* b)         { return c16sicmp(a, b); }
-inline int wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16snicmp(a, b, n); }
-inline int _wcsicmp (const char16_t* a, const char16_t* b)        { return c16sicmp(a, b); }
-inline int _wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16snicmp(a, b, n); }
 #endif
 
 // snprintf (available on macOS but sometimes used with _snprintf)
@@ -51,23 +19,6 @@ inline int _wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16
 #endif
 #ifndef _vsnprintf
 #define _vsnprintf vsnprintf
-#endif
-
-// strupr / strlwr (not in POSIX) - also defined in windef.h with _STRUPR_DEFINED guard
-#ifndef _STRUPR_DEFINED
-#define _STRUPR_DEFINED
-inline char* strupr(char* s) {
-    char* p = s;
-    while (*p) { *p = (char)toupper((unsigned char)*p); p++; }
-    return s;
-}
-inline char* strlwr(char* s) {
-    char* p = s;
-    while (*p) { *p = (char)tolower((unsigned char)*p); p++; }
-    return s;
-}
-#define _strupr strupr
-#define _strlwr strlwr
 #endif
 
 // itoa / _itoa
@@ -80,6 +31,7 @@ inline char* _itoa(int value, char* str, int radix) {
 inline char* itoa(int value, char* str, int radix) { return _itoa(value, str, radix); }
 
 // strrev (not in POSIX)
+// strlen is available via global.h (force-included before osdep.h)
 inline char* strrev(char* s) {
     char* start = s;
     char* end = s + strlen(s) - 1;
@@ -90,28 +42,6 @@ inline char* strrev(char* s) {
     return s;
 }
 #define _strrev strrev
-
-// GetTickCount - milliseconds since epoch (for _UNIX code paths that skip win.h)
-#ifndef GETTICKCOUNT_DEFINED
-#define GETTICKCOUNT_DEFINED
-#include <stdint.h>
-#include <sys/time.h>
-inline unsigned int GetTickCount() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (unsigned int)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-#endif
-
-// min/max (already defined in always.h via template, but ensure macros work)
-#ifndef min
-#define min(a,b) ((a)<(b)?(a):(b))
-#endif
-#ifndef max
-#define max(a,b) ((a)>(b)?(a):(b))
-#endif
-
-// Sleep is provided by winbase.h as an inline function; don't redefine as macro here
 
 // _alloca - stack allocation
 #include <alloca.h>
