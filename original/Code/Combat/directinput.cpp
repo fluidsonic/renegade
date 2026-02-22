@@ -26,10 +26,6 @@ int     DirectInput::LastKeyPressed     = 0;
 // Previous-frame keyboard state (for HIT/RELEASED transition detection)
 static Uint8 s_prevKeyState[SDL_NUM_SCANCODES];
 
-// Set by Acquire(); cleared on the first ReadMouse() call to skip button
-// transitions from the capture click itself.
-static bool s_firstCapturedFrame = false;
-
 // ---------------------------------------------------------------------------
 // SDL_SCANCODE → DIK translation table
 // Index = SDL_Scancode value (0..511), value = DIK code (0 = unmapped).
@@ -161,8 +157,11 @@ void DirectInput::Init(void)
     }
 
     // SDL is already initialised by SDL2_Platform_Init (called from CreateWindowEx).
-    // Cursor visibility is owned by sdl2_platform.cpp — do not call SDL_ShowCursor here.
+    // Do NOT enable relative mouse mode here — the game starts in menu mode where
+    // absolute mouse coordinates are needed.  Relative mode is enabled by Acquire()
+    // when gameplay starts (Input::MenuMode == false).
     SDL_SetRelativeMouseMode(SDL_FALSE);
+    SDL_ShowCursor(SDL_ENABLE);
 
     Captured = false;
 }
@@ -171,6 +170,7 @@ void DirectInput::Init(void)
 void DirectInput::Shutdown(void)
 {
     SDL_SetRelativeMouseMode(SDL_FALSE);
+    SDL_ShowCursor(SDL_ENABLE);
     Captured = false;
 }
 
@@ -188,7 +188,9 @@ void DirectInput::Acquire(void)
 {
     if (!Captured) {
         Flush();
-        s_firstCapturedFrame = true;  // skip button transitions for the capture click
+        // Relative mouse mode (cursor capture) is only appropriate during gameplay.
+        // The menu phase uses absolute mouse coords; relative mode is enabled by
+        // the gameplay path explicitly rather than here on every focus restore.
         Captured = true;
     }
 }
@@ -198,7 +200,7 @@ void DirectInput::Unacquire(void)
 {
     if (Captured) {
         SDL_SetRelativeMouseMode(SDL_FALSE);
-        SDL2_MouseCaptured = 0;
+        SDL_ShowCursor(SDL_ENABLE);
         Captured = false;
     }
 }
@@ -273,16 +275,6 @@ void DirectInput::ReadMouse(void)
 
     // Button transitions (SDL uses mask bits: SDL_BUTTON_LMASK, RMASK, MMASK)
     static Uint32 prevButtons = 0;
-
-    // On the first captured frame, seed prevButtons from the current state and
-    // return without generating any transitions.  This prevents the click that
-    // triggered capture from being reported as a game action regardless of
-    // whether the button is already released by the time ReadMouse runs.
-    if (s_firstCapturedFrame) {
-        prevButtons = sdlButtons;
-        s_firstCapturedFrame = false;
-        return;
-    }
 
     struct { Uint32 mask; int idx; } btns[] = {
         { SDL_BUTTON_LMASK, 0 },  // BUTTON_MOUSE_LEFT

@@ -23,9 +23,6 @@ extern int SDL2_QuitRequested;
 // Focus state — updated by window focus events
 extern int SDL2_HasFocus;
 
-// Mouse capture state — set by MOUSEBUTTONDOWN on success, cleared by Unacquire
-extern int SDL2_MouseCaptured;
-
 // Initialise SDL2, create window (800x600) and OpenGL 2.1 context.
 // Returns 0 on success, -1 on failure.
 int  SDL2_Platform_Init(const char* title, int w, int h);

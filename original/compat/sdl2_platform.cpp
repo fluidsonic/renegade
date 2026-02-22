@@ -12,7 +12,6 @@ static SDL_GLContext  s_glcontext = NULL;
 int SDL2_MouseWheelDelta = 0;
 int SDL2_QuitRequested   = 0;
 int SDL2_HasFocus        = 1;   // window starts focused
-int SDL2_MouseCaptured   = 0;   // relative mouse mode active
 
 int SDL2_Platform_Init(const char* title, int w, int h)
 {
@@ -68,9 +67,6 @@ int SDL2_Platform_Init(const char* title, int w, int h)
 
     fprintf(stderr, "[SDL2] Window created %dx%d, GL context ready\n", w, h);
     GameInFocus = true;   // window starts with focus; DialogMgrClass::Render guards on this
-
-    // Hide OS cursor immediately — cursor visibility is owned by this layer.
-    SDL_ShowCursor(SDL_DISABLE);
     return 0;
 }
 
@@ -119,7 +115,6 @@ void SDL2_Platform_PollEvents(void)
                 if (!SDL2_HasFocus) {
                     SDL2_HasFocus = 1;
                     GameInFocus = true;
-                    SDL_ShowCursor(SDL_DISABLE);
                     On_Focus_Restore();
                 }
                 break;
@@ -127,24 +122,11 @@ void SDL2_Platform_PollEvents(void)
                 if (SDL2_HasFocus) {
                     SDL2_HasFocus = 0;
                     GameInFocus = false;
-                    SDL_ShowCursor(SDL_ENABLE);
                     On_Focus_Loss();
                 }
                 break;
             default:
                 break;
-            }
-            break;
-
-        case SDL_MOUSEBUTTONDOWN:
-            // Track that the window has received its first click.
-            // SDL_SetRelativeMouseMode(SDL_TRUE) is intentionally NOT called here:
-            // on macOS, SDL's relative mode uses CGAssociateMouseAndMouseCursorPosition
-            // which can silently break SDL_GetRelativeMouseState (returns 0,0 forever).
-            // Cursor hiding is handled by SDL_ShowCursor; motion deltas from
-            // SDL_GetRelativeMouseState work correctly in non-relative (absolute-delta) mode.
-            if (!SDL2_MouseCaptured) {
-                SDL2_MouseCaptured = 1;
             }
             break;
 
