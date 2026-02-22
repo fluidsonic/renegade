@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.math.Vector3
+import ccr.net.bitstream.BitStream
 
 // C++: RefineryGameObj (refinery.cpp) — extends BuildingGameObj.
 // Manages passive credit trickle to teammates.
@@ -63,6 +64,12 @@ class RefineryGameObj(
             }
         }
         super.think(deltaSeconds)
+    }
+
+    // C++: RefineryGameObj::Export_Rare — writes IsHarvesterDocked after base class
+    override fun exportRare(packet: BitStream) {
+        super.exportRare(packet)
+        packet.addBool(harvesterVehicle != null)  // C++: IsHarvesterDocked
     }
 
     // C++: RefineryGameObj::On_Destroyed — kill harvester when refinery goes down
