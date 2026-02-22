@@ -120,7 +120,7 @@ target_link_libraries(Commando PRIVATE
     "-framework AudioToolbox"
     # FFmpeg for Bink video playback
     "-L${FFMPEG_ROOT}/lib"
-    "-lavformat" "-lavcodec" "-lswscale" "-lavutil"
+    "-lavformat" "-lavcodec" "-lswscale" "-lswresample" "-lavutil"
     # Export all global symbols so Scripts.dylib (loaded via dlopen) can find them.
     "-Wl,-export_dynamic"
 )
