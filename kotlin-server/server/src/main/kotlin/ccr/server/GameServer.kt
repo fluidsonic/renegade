@@ -1530,14 +1530,14 @@ class GameServer(internal val config: ServerConfig) {
 
     // Reads the map .mix file and extracts world extents from the embedded .lsd file.
     // Returns null only if no MapName is configured. Throws if the map file cannot be loaded.
-    private fun loadWorldExtents(): WorldExtents? {
-        if (config.mapName.isEmpty()) {
+    private fun loadWorldExtents(mapName: String = currentMapName): WorldExtents? {
+        if (mapName.isEmpty()) {
             println("[SERVER] no MapName configured, skipping LSD load")
             return null
         }
         // Strip .mix extension if already present (config may include it or not)
-        val baseName = if (config.mapName.endsWith(".mix", ignoreCase = true))
-            config.mapName.dropLast(4) else config.mapName
+        val baseName = if (mapName.endsWith(".mix", ignoreCase = true))
+            mapName.dropLast(4) else mapName
         val mixName = "$baseName.mix"
         val lsdName = "$baseName.lsd"
         val dataDir = if (config.dataPath.isNotEmpty()) File(config.dataPath) else File(".")
@@ -1612,7 +1612,7 @@ class GameServer(internal val config: ServerConfig) {
 
             "status" -> """
                 Server: ${config.serverName}
-                Map: ${config.mapName}
+                Map: $currentMapName
                 Players: ${connectionManager.getConnectedCount()} / ${config.maxPlayers}
                 Port: ${config.gamePort}
                 Objects: ${NetworkObjectManager.getObjectCount()}
