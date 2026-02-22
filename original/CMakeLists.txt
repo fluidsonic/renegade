@@ -4,6 +4,9 @@ project(CnCRenegade CXX C)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Export compile commands so clang-tidy / lint targets can find all sources
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Debug build: no optimizations, full debug symbols, AddressSanitizer
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type" FORCE)
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -fno-omit-frame-pointer -fsanitize=address" CACHE STRING "" FORCE)
@@ -104,8 +107,6 @@ add_subdirectory(Code/Combat)
 add_subdirectory(Code/Commando)
 
 # ── Primitive-type lint (requires brew install llvm) ──────────────────────────
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 find_program(CLANG_TIDY_EXE NAMES clang-tidy
     HINTS /opt/homebrew/opt/llvm/bin NO_DEFAULT_PATH)
 find_program(RUN_CLANG_TIDY NAMES run-clang-tidy
