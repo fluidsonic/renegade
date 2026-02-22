@@ -61,7 +61,7 @@ data class ServerConfig(
     val gdiSoldierDefId: Int = 81930243,   // 0x04e22803  CnC_GDI_MiniGunner_0
     val intermissionTimeSeconds: Int = 30,
     val mapList: List<String> = emptyList(),
-    val mapCycleLoops: Boolean = false,
+    val mapCycleLoops: Boolean = false,   // C++: cGameData::DoMapsLoop
 ) {
     // C++: gamedata.cpp Export_Tier_1_Data calls CRC_Stringi(MapName) / CRC_Stringi(ModName).
     // Empty name → CRC is 0 (loop never executes → crc = 0 ^ 0xFFFFFFFF ^ 0xFFFFFFFF = 0).
@@ -72,7 +72,7 @@ data class ServerConfig(
      * a single-item list containing mapName (or empty if mapName is also empty).
      */
     val effectiveMapList: List<String> get() = when {
-        mapList.isNotEmpty() -> mapList
+        mapList.isNotEmpty() -> mapList.filter { it.isNotEmpty() }
         mapName.isNotEmpty() -> listOf(mapName)
         else -> emptyList()
     }

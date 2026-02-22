@@ -74,8 +74,11 @@ class MapRotationTest {
         assertEquals("A", r.nextName())
     }
 
-    @Test fun `multi loop - isMapCycleOver is always false`() {
+    @Test fun `multi loop - isMapCycleOver false at first map`() {
         assertFalse(MapRotation(listOf("A", "B"), loops = true, currentIndex = 0).isMapCycleOver)
+    }
+
+    @Test fun `multi loop - isMapCycleOver false at last map`() {
         assertFalse(MapRotation(listOf("A", "B"), loops = true, currentIndex = 1).isMapCycleOver)
     }
 
