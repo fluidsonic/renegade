@@ -120,7 +120,11 @@ SDL2_GLContext SDL2_Platform_GetGLContext(void)
 void SDL2_Platform_SwapWindow(void)
 {
     if (s_window) {
-        SDL_GL_SwapWindow(s_window);
+        if (SDL2_ShouldRender) {
+            SDL_GL_SwapWindow(s_window);
+        } else {
+            SDL_Delay(16); // ~60fps throttle when not rendering
+        }
     }
 }
 
