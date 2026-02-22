@@ -121,8 +121,6 @@ void _Game_Main_Loop_Loop(void)
 	// Give the sound manager a chance to think
   // PROFILE(	"Audio", WWAudioClass::Get_Instance ()->On_Frame_Update (0) );
 
-   Windows_Message_Handler();
-
 
 	/*
 	** Sleep for a while if we are hogging the CPU.
@@ -161,6 +159,7 @@ int Game_Main_Loop(void)
 		while ( RunMainLoop ) {
 			// Check SDL2 quit request (window close, Cmd-Q, etc.)
 			if (SDL2_QuitRequested) {
+				fprintf(stderr, "[mainloop] SDL2_QuitRequested — breaking main loop\n");
 				Stop_Main_Loop(0);
 				break;
 			}

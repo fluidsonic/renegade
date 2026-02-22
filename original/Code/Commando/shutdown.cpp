@@ -33,6 +33,7 @@
 #include "except.h"
 #include "skinpackagemgr.h"
 #include "modpackagemgr.h"
+#include "sdl2_platform.h"
 
 #include "dx8wrapper.h"
 #include "pscene.h"
@@ -224,6 +225,7 @@ void Debug_Refs(void);
 */
 void Game_Shutdown(void)
 {
+	fprintf(stderr, "[shutdown] Game_Shutdown — begin\n");
 	BINKMovie::Shutdown();
 
 	CampaignManager::Shutdown();
@@ -285,6 +287,10 @@ void Game_Shutdown(void)
 	WWSaveLoad::Shutdown();
 	WW3D::Shutdown();
 	WWPhys::Shutdown();
+
+	fprintf(stderr, "[shutdown] Calling SDL2_Platform_Shutdown...\n");
+	SDL2_Platform_Shutdown();
+	fprintf(stderr, "[shutdown] SDL2_Platform_Shutdown complete\n");
 
 //	WW3DAssetManager::Get_Instance()->Free_Assets();
 	Debug_Refs();
