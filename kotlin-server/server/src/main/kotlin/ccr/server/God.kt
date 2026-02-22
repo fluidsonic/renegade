@@ -150,7 +150,7 @@ class God(private val server: GameServer) {
             return null
         }
 
-        val (position, _facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType)
+        val (position, facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType)
             ?: Pair(Vector3(0f, 0f, 5f), 0f).also {
                 println("[GOD] WARNING: spawnManager is null, spawning at fallback origin (0, 0, 5)")
             }
@@ -170,6 +170,7 @@ class God(private val server: GameServer) {
             modelName    = modelName,
             animName     = "S_A_HUMAN.H_A_AINM",
             position     = position,
+            facing       = facing,
             weapons      = weapons,
         )
         val netId = NetworkObjectManager.getNewDynamicId()
