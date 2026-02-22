@@ -148,7 +148,7 @@ void        AIL_set_sample_type(HSAMPLE s, INT32 format, UINT32 flags);
 void        AIL_set_sample_playback_rate(HSAMPLE s, INT32 rate);
 INT32       AIL_sample_playback_rate(HSAMPLE s);
 UINT32      AIL_sample_position(HSAMPLE s);
-INT32       AIL_WAV_info(const void* data, AILSOUNDINFO* info);
+INT32       AIL_WAV_info(const void* data, AILSOUNDINFO* info, size_t buf_size);
 void        AIL_set_named_sample_file(HSAMPLE s, const char* name, const void* data, UINT32 len, INT32 flags);
 void        AIL_set_sample_ms_position(HSAMPLE s, UINT32 ms);
 void        AIL_sample_ms_position(HSAMPLE s, INT32* len, INT32* pos);

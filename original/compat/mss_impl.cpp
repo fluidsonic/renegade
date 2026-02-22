@@ -368,14 +368,15 @@ void AIL_init_sample(HSAMPLE s) {
     smp->current_rate = smp->native_rate;
 }
 
-INT32 AIL_WAV_info(const void* data, AILSOUNDINFO* info) {
-    if (!data || !info) return 0;
+INT32 AIL_WAV_info(const void* data, AILSOUNDINFO* info, size_t buf_size) {
+    if (!data || !info || buf_size < 12u) return 0;
     const uint8_t* buf = (const uint8_t*)data;
     if (buf[0] != 'R' || buf[1] != 'I' || buf[2] != 'F' || buf[3] != 'F') return 0;
     if (buf[8] != 'W' || buf[9] != 'A' || buf[10] != 'V' || buf[11] != 'E') return 0;
     uint32_t file_size;
     memcpy(&file_size, buf + 4, 4u);
-    uint32_t limit = file_size + 8u;
+    // Clamp to actual buffer size — callers may pass a partial read (e.g. 4096-byte stack buffer)
+    uint32_t limit = (uint32_t)MIN(file_size + 8u, (uint32_t)buf_size);
     memset(info, 0, sizeof(*info));
     uint32_t off = 12u;
     while (off + 8u <= limit) {
