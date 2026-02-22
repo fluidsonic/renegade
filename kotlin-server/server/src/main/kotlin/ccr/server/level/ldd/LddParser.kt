@@ -1,8 +1,11 @@
 package ccr.server.level.ldd
 
+import ccr.server.defs.readMicroInt
 import ccr.server.level.ChunkIds
 import ccr.server.level.LevelDynamicData
 import ccr.server.mix.ChunkReader
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 object LddParser {
 
@@ -10,6 +13,7 @@ object LddParser {
     private const val CHUNKID_SCRIPT_ENTRY = 131001134u
     private const val CHUNKID_SCRIPT_HEADER = 131001135u  // CHUNKID_SCRIPT_ENTRY + 1
     private const val MICRO_SCRIPT_NAME = 1               // MICROCHUNKID_NAME
+    private const val MICRO_SCRIPT_PARAM = 2              // MICROCHUNKID_PARAM
 
     fun parse(lddData: ByteArray): LevelDynamicData {
         if (lddData.isEmpty()) return LevelDynamicData()
@@ -19,7 +23,8 @@ object LddParser {
         var levelInfo: LevelInfo? = null
         val gameObjects = mutableListOf<LoadedGameObject>()
         val spawners = mutableListOf<LoadedSpawner>()
-        val scripts = mutableListOf<String>()
+        val scripts = mutableListOf<ScriptAttachment>()
+        var nextDynamicId = 0
 
         reader.forEachChunk { chunkId, isContainer, chunkReader ->
             when (chunkId) {
@@ -33,7 +38,16 @@ object LddParser {
                         if (subId == ChunkIds.CHUNKID_COMBAT_BEGIN) {
                             subReader.forEachChunk { combatId, _, combatReader ->
                                 when (combatId) {
-                                    ChunkIds.CHUNKID_GAMEOBJMANAGER -> parseGameObjects(combatReader, gameObjects)
+                                    ChunkIds.CHUNKID_GAMEOBJMANAGER -> {
+                                        parseGameObjects(combatReader, gameObjects)
+                                        // CHUNKID_GAMEOBJ_VARIABLES has the same numeric value as
+                                        // CHUNKID_GAMEOBJMANAGER — it is a sub-chunk inside the manager
+                                        // container that stores nextDynamicId (micro 1).
+                                        val varsChunk = combatReader.findChunk(ChunkIds.CHUNKID_GAMEOBJ_VARIABLES)
+                                        if (varsChunk != null) {
+                                            nextDynamicId = varsChunk.readMicroInt(1) ?: 0
+                                        }
+                                    }
                                     ChunkIds.CHUNKID_SPAWNERS -> spawners.addAll(SpawnerLoader.load(combatReader))
                                     ChunkIds.CHUNKID_SCRIPTS -> parseScripts(combatReader, scripts)
                                 }
@@ -51,6 +65,7 @@ object LddParser {
             gameObjects = gameObjects,
             spawners = spawners,
             levelScripts = scripts,
+            nextDynamicNetworkId = nextDynamicId,
         )
     }
 
@@ -76,14 +91,20 @@ object LddParser {
      *     [CHUNKID_SCRIPT_HEADER] — micro 1 = name string, micro 2 = params string
      *     [CHUNKID_SCRIPT_DATA]   — optional script-specific data
      */
-    private fun parseScripts(scriptsReader: ChunkReader, out: MutableList<String>) {
+    private fun parseScripts(scriptsReader: ChunkReader, out: MutableList<ScriptAttachment>) {
         scriptsReader.forEachChunk { chunkId, _, entryReader ->
             if (chunkId != CHUNKID_SCRIPT_ENTRY) return@forEachChunk
             val headerChunk = entryReader.findChunk(CHUNKID_SCRIPT_HEADER) ?: return@forEachChunk
             val nameBytes = headerChunk.findMicroChunk(MICRO_SCRIPT_NAME) ?: return@forEachChunk
             val nullIdx = nameBytes.indexOfFirst { it == 0.toByte() }
             val name = String(nameBytes, 0, if (nullIdx < 0) nameBytes.size else nullIdx, Charsets.ISO_8859_1)
-            if (name.isNotEmpty()) out.add(name)
+            if (name.isEmpty()) return@forEachChunk
+            val paramBytes = headerChunk.findMicroChunk(MICRO_SCRIPT_PARAM)
+            val params = if (paramBytes != null) {
+                val pNull = paramBytes.indexOfFirst { it == 0.toByte() }
+                String(paramBytes, 0, if (pNull < 0) paramBytes.size else pNull, Charsets.ISO_8859_1)
+            } else ""
+            out.add(ScriptAttachment(name, params))
         }
     }
 }

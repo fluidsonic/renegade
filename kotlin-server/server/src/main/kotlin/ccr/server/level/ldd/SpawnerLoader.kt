@@ -2,6 +2,7 @@ package ccr.server.level.ldd
 
 import ccr.server.level.ChunkIds
 import ccr.server.level.Matrix3D
+import ccr.server.level.toFloat32
 import ccr.server.level.toInt32
 import ccr.server.level.toMatrix3D
 import ccr.server.mix.ChunkReader
@@ -30,6 +31,7 @@ object SpawnerLoader {
             var definitionId = 0
             var spawnCount = 0
             var enabled = true
+            var spawnDelayTimer = 0f
             val spawnPoints = mutableListOf<Matrix3D>()
             val scriptNames = mutableListOf<String>()
             val scriptParams = mutableListOf<String>()
@@ -40,6 +42,7 @@ object SpawnerLoader {
                     2 -> transform = data.toMatrix3D()
                     3 -> definitionId = data.toInt32()
                     4 -> spawnCount = data.toInt32()
+                    5 -> spawnDelayTimer = data.toFloat32()
                     6 -> enabled = data.isNotEmpty() && data[0] != 0.toByte()
                     7 -> spawnPoints.add(data.toMatrix3D())
                     9 -> spawnTransform = data.toMatrix3D()
@@ -60,6 +63,7 @@ object SpawnerLoader {
                     enabled = enabled,
                     spawnPoints = spawnPoints,
                     scripts = scripts,
+                    spawnDelayTimer = spawnDelayTimer,
                 )
             )
         }

@@ -947,6 +947,14 @@ class GameServer(internal val config: ServerConfig) {
             println("[SERVER] Using pistol: ${it.name} defId=0x${pistolWeaponDefId.toUInt().toString(16)}")
         }
 
+        // Restore nextDynamicId so dynamically created objects (soldiers, vehicles)
+        // get IDs that don't collide with pre-placed LDD objects.
+        val nextDynId = level.dynamicData.nextDynamicNetworkId
+        if (nextDynId > 0) {
+            NetworkObjectManager.setNewDynamicId(nextDynId)
+            println("[SERVER] restored nextDynamicId=$nextDynId from LDD")
+        }
+
         val spawnerCount = level.dynamicData.spawners.size
         val objectCount = level.dynamicData.gameObjects.size
         println("[SERVER] level '$baseName': ${spawnerCount} spawners, ${objectCount} game objects, " +

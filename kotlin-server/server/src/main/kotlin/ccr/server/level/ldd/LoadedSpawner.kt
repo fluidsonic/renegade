@@ -13,4 +13,5 @@ data class LoadedSpawner(
     val enabled: Boolean,
     val spawnPoints: List<Matrix3D>,
     val scripts: List<ScriptAttachment>,
+    val spawnDelayTimer: Float = 0f,
 )
