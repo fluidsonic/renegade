@@ -118,6 +118,8 @@ class SpawnManager(level: LoadedLevel) {
 
         for (state in powerUpSpawners) {
             state.timer -= deltaSeconds
+            // Matches C++ Check_Auto_Spawn (spawn.cpp:591-604): fires at most once per tick.
+            // Uses if (not while) to prevent burst spawning during lag spikes.
             if (state.timer <= 0f) {
                 // Reset timer first, then fire
                 state.timer = state.spawnDelay
