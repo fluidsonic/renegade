@@ -43,6 +43,7 @@ add_executable(Commando MACOSX_BUNDLE
     "${COMPAT_DIR}/winres.cpp"
     "${COMPAT_DIR}/wingdi_coretext.cpp"
     "${COMPAT_DIR}/winfile.cpp"
+    "${COMPAT_DIR}/mss_impl.cpp"
     "${CHAT_RES}"
 )
 
@@ -86,6 +87,7 @@ target_precompile_headers(Commando PRIVATE "${CMAKE_SOURCE_DIR}/global.h")
 
 # macos_fix.mm is Objective-C++ — exclude it from the C++ PCH
 set_source_files_properties("${COMPAT_DIR}/macos_fix.mm" PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+set_source_files_properties("${COMPAT_DIR}/mss_impl.cpp" PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 
 target_link_libraries(Commando PRIVATE
     Combat
@@ -109,6 +111,8 @@ target_link_libraries(Commando PRIVATE
     "-framework Foundation"
     "-framework CoreText"
     "-framework CoreGraphics"
+    "-framework CoreAudio"
+    "-framework AudioToolbox"
     # Export all global symbols so Scripts.dylib (loaded via dlopen) can find them.
     "-Wl,-export_dynamic"
     # Allow dlopen("SCRIPTS.dylib") to find the dylib next to the executable.
