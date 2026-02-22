@@ -287,7 +287,7 @@ public:
 	static	int	Find_First_Function_By_Secondary_Key (int key_id);
 	static	int	Find_Next_Function_By_Secondary_Key (int function_id, int key_id);
 
-	static	void	Load_Configuration (const char *filename);
+	static	bool	Load_Configuration (const char *filename);
 	static	void	Save_Configuration (const char *filename);
 
 	//

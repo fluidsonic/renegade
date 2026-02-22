@@ -310,9 +310,14 @@ InputConfigMgrClass::Load_Configuration (const InputConfigClass &config)
 	CurrentConfigIndex = Find_Configuration (config.Get_Filename ());
 
 	//
-	//	Load the configuration into memory
+	//	Load the configuration into memory; fall back to default bindings if the
+	//	named file can't be found (e.g. stale reference in CONFIG.DAT)
 	//
-	Input::Load_Configuration (config.Get_Filename ());
+	if (!Input::Load_Configuration (config.Get_Filename ())) {
+		fprintf(stderr, "[InputConfigMgr] '%s' not found, falling back to DEFAULT_INPUT.CFG\n",
+			config.Get_Filename ());
+		Input::Load_Configuration (DEFAULT_INPUT_FILENAME);
+	}
 
 	//
 	//	Reload the UI (if necessary)

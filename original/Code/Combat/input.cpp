@@ -1396,7 +1396,7 @@ const int KEYNAME_MAP_COUNT	= sizeof (DIK_KEY_NAME_ARRAY) / sizeof (KEY_NAME_MAP
 /*
 **
 */
-void
+bool
 Input::Load_Configuration (const char *filename)
 {
 	Free_Mappings ();
@@ -1407,8 +1407,10 @@ Input::Load_Configuration (const char *filename)
 	INIClass	*input_ini = Get_INI (filename);
 	if (input_ini == NULL) {
 		Debug_Say(("Input::Load_Configuration - Unable to load %s\n", filename));
-		return ;
+		fprintf(stderr, "[Input] Load_Configuration: FAILED to load '%s'\n", filename);
+		return false;
 	}
+	fprintf(stderr, "[Input] Load_Configuration: loaded '%s' OK\n", filename);
 
 	//
 	//	Loop over each function and try to read data about it from the INI
@@ -1457,7 +1459,7 @@ Input::Load_Configuration (const char *filename)
 	//	Reset the mouse sensitivity to ensure its clamped properly
 	//
 	Input::Set_Mouse_Sensitivity (MouseSensitivity);
-	return ;
+	return true;
 }
 
 /*
