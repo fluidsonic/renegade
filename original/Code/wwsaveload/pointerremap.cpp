@@ -53,11 +53,11 @@ void PointerRemapClass::Process_Request_Table(DynamicVectorClass<PtrRemapStruct>
 
 		// Find the pair which contains the pointer we are looking for as its "old" pointer
 		while (	(pair_index < PointerPairTable.Count()) &&
-					(PointerPairTable[pair_index].OldPointer < pointer_to_remap)  ) 
+					(PointerPairTable[pair_index].OldPointer < pointer_to_remap)  )
 		{
 			pair_index++;
 		}
-	
+
 		if ((pair_index < PointerPairTable.Count()) && (PointerPairTable[pair_index].OldPointer == pointer_to_remap)) {
 
 			// we found the match, plug in the new pointer and add a ref if needed.
@@ -69,7 +69,7 @@ void PointerRemapClass::Process_Request_Table(DynamicVectorClass<PtrRemapStruct>
 			}
 
 		} else {
-			
+
 			// Failed to re-map the pointer.
 			// warn the user, set pointer to NULL, reset index to the pre_search_index.
 			// If this happens, things could be going very wrong.  (find out why its happening!)
@@ -81,6 +81,12 @@ void PointerRemapClass::Process_Request_Table(DynamicVectorClass<PtrRemapStruct>
 
 void PointerRemapClass::Register_Pointer (void *old_pointer, void *new_pointer)
 {
+	if (old_pointer == nullptr)
+		return;
+
+	if (reinterpret_cast<uintptr_t>(old_pointer) & 0xFFFFFFFF00000000 != 0)
+		throw std::runtime_error("PointerRemapClass::Register_Pointer: Unexpected high bit set in pointer address.");
+
 	PointerPairTable.Add(PtrPairStruct(old_pointer,new_pointer));
 }
 
@@ -124,7 +130,7 @@ int __cdecl PointerRemapClass::ptr_request_compare_function(void const * ptr1, v
 {
 	PtrRemapStruct * remap1 = (PtrRemapStruct *)ptr1;
 	PtrRemapStruct * remap2 = (PtrRemapStruct *)ptr2;
-	
+
 	void * old1 = *(remap1->PointerToRemap);
 	void * old2 = *(remap2->PointerToRemap);
 

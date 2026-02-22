@@ -34,9 +34,9 @@ bool	ReferencerClass::Load( ChunkLoadClass & cload )
 	return true;
 }
 
-void	ReferencerClass::On_Post_Load(void)	
+void	ReferencerClass::On_Post_Load(void)
 {
-	// if we found our target, re-link to it.  
+	// if we found our target, re-link to it.
 	if ( ReferenceTarget ) {
 		ScriptableGameObj* data = ReferenceTarget->Get_Data();
 		ReferenceTarget = NULL;

@@ -36,12 +36,12 @@ class ReferenceableClass {
 		bool	Load( ChunkLoadClass & cload );
 
 	protected:
-		ReferencerClass	*ReferencerListHead;	
+		ReferencerClass	*ReferencerListHead;
 
 		T * Get_Data( void ) const	{ return ReferenceData; }
 
 	private:
-		T							*ReferenceData;	
+		T							*ReferenceData;
 };
 
 /*
@@ -68,15 +68,15 @@ class ReferencerClass : public PostLoadableClass {
 		operator	ScriptableGameObj * (void) const { return Get_Ptr(); }
 
 	protected:
-		ReferenceableClass<ScriptableGameObj>	*ReferenceTarget;	
-		ReferencerClass								*TargetReferencerListNext;	
+		ReferenceableClass<ScriptableGameObj>	*ReferenceTarget;
+		ReferencerClass								*TargetReferencerListNext;
 };
 
 /*
 ** Clears all references in objects referencing me
 */
 template<class T>
-ReferenceableClass<T>::~ReferenceableClass( void )	
+ReferenceableClass<T>::~ReferenceableClass( void )
 {
 	while ( ReferencerListHead != NULL ) {	// clear each reference to me
 		ReferencerClass *referencer = ReferencerListHead;
@@ -118,7 +118,7 @@ bool	ReferenceableClass<T>::Load( ChunkLoadClass & cload )
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
 			case MICROCHUNKID_PTR:
-				cload.Read(&old_ptr,sizeof(void*));
+				LOAD_MICRO_CHUNK(cload, old_ptr);
 				SaveLoadSystemClass::Register_Pointer(old_ptr, this);
 				break;
 

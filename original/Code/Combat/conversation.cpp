@@ -113,15 +113,15 @@ ConversationClass::operator= (const ConversationClass &src)
 	//
 	//	Copy the remark list
 	//
-	for (int index = 0; index < src.RemarkList.Count (); index ++) {		
+	for (int index = 0; index < src.RemarkList.Count (); index ++) {
 		const ConversationRemarkClass &remark = src.RemarkList[index];
 		Add_Remark (remark);
 	}
 
 	//
 	//	Copy the orator list
-	//	
-	for (int index = 0; index < src.OratorList.Count (); index ++) {		
+	//
+	for (int index = 0; index < src.OratorList.Count (); index ++) {
 		const OratorClass &orator = src.OratorList[index];
 		Add_Orator (orator);
 	}
@@ -228,10 +228,10 @@ ConversationClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, VARID_AI_STATE,			AIState);
 		WRITE_MICRO_CHUNK (csave, VARID_CATEGORY_ID,		CategoryID);
 		WRITE_MICRO_CHUNK (csave, VARID_LOOKAT_OBJID,	LookAtObjID);
-		WRITE_MICRO_CHUNK (csave, VARID_PRIORITY,			Priority);		
+		WRITE_MICRO_CHUNK (csave, VARID_PRIORITY,			Priority);
 		WRITE_MICRO_CHUNK (csave, VARID_MAXDIST,			MaxDist);
 		WRITE_MICRO_CHUNK (csave, VARID_IS_INTERRUPTABLE,	IsInterruptable);
-						
+
 		//
 		//	Save our current pointer so we can remap it on load
 		//
@@ -251,7 +251,7 @@ ConversationClass::Save (ChunkSaveClass &csave)
 		//
 		csave.Begin_Chunk (CHUNKID_ORATOR);
 			orator.Save (csave);
-		csave.End_Chunk ();		
+		csave.End_Chunk ();
 	}
 
 	//
@@ -265,7 +265,7 @@ ConversationClass::Save (ChunkSaveClass &csave)
 		//
 		csave.Begin_Chunk (CHUNKID_REMARK);
 			remark.Save (csave);
-		csave.End_Chunk ();		
+		csave.End_Chunk ();
 	}
 
 	return true;
@@ -281,7 +281,7 @@ ConversationClass::Load (ChunkLoadClass &cload)
 {
 	OratorList.Resize (10);
 
-	while (cload.Open_Chunk ()) {		
+	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_VARIABLES:
@@ -291,7 +291,7 @@ ConversationClass::Load (ChunkLoadClass &cload)
 			case CHUNKID_ORATOR:
 			{
 				OratorList.Add (OratorClass ());
-				OratorList[OratorList.Count () - 1].Load (cload);				
+				OratorList[OratorList.Count () - 1].Load (cload);
 			}
 			break;
 
@@ -299,7 +299,7 @@ ConversationClass::Load (ChunkLoadClass &cload)
 			{
 				ConversationRemarkClass remark;
 				remark.Load (cload);
-				RemarkList.Add (remark);				
+				RemarkList.Add (remark);
 			}
 			break;
 		}
@@ -329,7 +329,7 @@ ConversationClass::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK_WWSTRING (cload, VARID_NAME,		Name);
 			READ_MICRO_CHUNK (cload, VARID_ID,						ID);
 			READ_MICRO_CHUNK (cload, VARID_OLD_PTR,				old_ptr);
-			READ_MICRO_CHUNK (cload, VARID_ISINNATE,				IsInnate);		
+			READ_MICRO_CHUNK (cload, VARID_ISINNATE,				IsInnate);
 			READ_MICRO_CHUNK (cload, VARID_ISKEY,					IsKey);
 			READ_MICRO_CHUNK (cload, VARID_PROBABILITY,			Probability);
 			READ_MICRO_CHUNK (cload, VARID_AI_STATE,				AIState);
@@ -409,7 +409,7 @@ ConversationClass::Find_Orator (int orator_id)
 
 	for (int index = 0; index < OratorList.Count (); index ++) {
 		OratorClass *curr_orator = &OratorList[index];
-		
+
 		//
 		//	Is this the orator we are looking for?
 		//

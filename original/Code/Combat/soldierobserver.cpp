@@ -25,26 +25,26 @@
 /*
 **
 */
-const char * SoldierAIStateNames[SoldierObserverClass::NUM_SOLDIER_AI_STATES] = 
+const char * SoldierAIStateNames[SoldierObserverClass::NUM_SOLDIER_AI_STATES] =
 {
 	"Relaxed Idle",		//SOLDIER_AI_RELAXED_IDLE = 0,
-	"Alert Idle",			//SOLDIER_AI_ALERT_IDLE,	    
-	"Footsteps Heard",	//SOLDIER_AI_FOOTSTEPS_HEARD, 
-	"Bullet Heard",		//SOLDIER_AI_BULLET_HEARD,    
-	"Gunshot Heard",		//SOLDIER_AI_GUNSHOT_HEARD,   
-	"Enemy Seen"			//SOLDIER_AI_ENEMY_SEEN,      
+	"Alert Idle",			//SOLDIER_AI_ALERT_IDLE,
+	"Footsteps Heard",	//SOLDIER_AI_FOOTSTEPS_HEARD,
+	"Bullet Heard",		//SOLDIER_AI_BULLET_HEARD,
+	"Gunshot Heard",		//SOLDIER_AI_GUNSHOT_HEARD,
+	"Enemy Seen"			//SOLDIER_AI_ENEMY_SEEN,
 };
 
-int	StatePriorities[ SoldierObserverClass::NUM_SOLDIER_AI_STATES ] = 
+int	StatePriorities[ SoldierObserverClass::NUM_SOLDIER_AI_STATES ] =
 {
-	10,	//	SOLDIER_AI_RELAXED_IDLE = 0,	
-	20,	//	SOLDIER_AI_ALERTED_IDLE,	
+	10,	//	SOLDIER_AI_RELAXED_IDLE = 0,
+	20,	//	SOLDIER_AI_ALERTED_IDLE,
 	50,	// SOLDIER_AI_FOOTSTEPS_HEARD,
 	50,	// SOLDIER_AI_BULLET_HEARD,
 	70,	//	SOLDIER_AI_GUNSHOT_HEARD,
 	90,	// SOLDIER_AI_ENEMY_SEEN,
 };
- 
+
 
 typedef struct {
 	float	StateDuration;		// How long we should stay in this state
@@ -63,7 +63,7 @@ SoldierAIStateData	StateData[SoldierObserverClass::NUM_SOLDIER_AI_STATES] = {
 /*
 ** Speech
 */
-const char* _SpeakEnemySeen[] = 
+const char* _SpeakEnemySeen[] =
 {
 	"ThereHeIs02",
 	"KillHim02",
@@ -78,7 +78,7 @@ const char* Pick_Speak_EnemySeen(void)
 	return _SpeakEnemySeen[index];
 }
 
-Vector3	Random_Vector(float size) 
+Vector3	Random_Vector(float size)
 {
 	Vector3 vect(	FreeRandom.Get_Float( -size, size ),
 						FreeRandom.Get_Float( -size, size ), 0 );
@@ -88,7 +88,7 @@ Vector3	Random_Vector(float size)
 /*
 **
 */
-SoldierObserverClass::SoldierObserverClass( void ) : 
+SoldierObserverClass::SoldierObserverClass( void ) :
 	State( SOLDIER_AI_RELAXED_IDLE ),
 	StateTimer( 0 ),
 	HomeRadius( 9999999 ),
@@ -199,7 +199,7 @@ bool	SoldierObserverClass::Load (ChunkLoadClass &cload)
 			case CHUNKID_PARENT:
 				PersistentGameObjObserverClass::Load( cload );
 				break;
-								
+
 			case CHUNKID_VARIABLES:
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
@@ -288,15 +288,15 @@ void SoldierObserverClass::Created( GameObject* obj )
 
 	// Modify aggressiveness based on difficulty
 	switch ( CombatManager::Get_Difficulty_Level() ) {
-		case 0:	
+		case 0:
 			if ( Aggressiveness > 0.25f ) {
-				Aggressiveness -= 0.25f;	
+				Aggressiveness -= 0.25f;
 			}
 			break;
-		case 1:	
+		case 1:
 			// no change
 			break;
-		case 2:	
+		case 2:
 			Aggressiveness += 0.25f;
 			if ( Aggressiveness > 1 ) {
 				Aggressiveness = 1;
@@ -402,7 +402,7 @@ void SoldierObserverClass::Sound_Heard(GameObject* obj, const CombatSound& sound
 	bool state_changed = false;
 
 	switch (sound.Type) {
-		case SOUND_TYPE_BULLET_HIT: 
+		case SOUND_TYPE_BULLET_HIT:
 		{
 			if (soldier->Is_Innate_Enabled(SOLDIER_INNATE_EVENT_BULLET_HEARD)) {
 				Vector3 pos;
@@ -526,10 +526,10 @@ void SoldierObserverClass::Action_Complete( GameObject * obj, int action_id, Act
 		{
 			if ( complete_reason == ACTION_COMPLETE_PATH_BAD_DEST ) {
 				// Pick a new action within 1 to 2 seconds
-				ActionTimer = MIN( ActionTimer, WWMath::Random_Float( 1.0F, 2.0F ) ); 
+				ActionTimer = MIN( ActionTimer, WWMath::Random_Float( 1.0F, 2.0F ) );
 			} else {
 				// Pick a new action within 2 to 3 seconds
-				ActionTimer = MIN( ActionTimer, WWMath::Random_Float( 2.0F, 3.0F ) ); 
+				ActionTimer = MIN( ActionTimer, WWMath::Random_Float( 2.0F, 3.0F ) );
 			}
 
 			if ( State > SOLDIER_AI_ALERT_IDLE ) {
@@ -542,7 +542,7 @@ void SoldierObserverClass::Action_Complete( GameObject * obj, int action_id, Act
 /*
 **
 */
-void SoldierObserverClass::State_Changed( SoldierGameObj * soldier ) 
+void SoldierObserverClass::State_Changed( SoldierGameObj * soldier )
 {
 	switch ( State ) {
 		case SOLDIER_AI_RELAXED_IDLE:
@@ -580,7 +580,7 @@ void SoldierObserverClass::State_Changed( SoldierGameObj * soldier )
 /*
 **
 */
-bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const Vector3& location, GameObject* enemy) 
+bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const Vector3& location, GameObject* enemy)
 {
 //	assert( soldier != enemy );
 
@@ -635,7 +635,7 @@ bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const
 		soldier->Get_Position(&my_pos);
 		Vector3 old_pos = AlertPosition - my_pos;
 		Vector3 new_pos = location - my_pos;
-		if ( old_pos.Length2() > new_pos.Length2() ) 
+		if ( old_pos.Length2() > new_pos.Length2() )
 		{
 			AlertPosition = location;
 		}
@@ -646,24 +646,24 @@ bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const
 			EnemyObject = NULL;
 		}
 		Think(soldier, (State != old_state) );
-	}	
+	}
 
 	//
 	//	Reset the conversation timer if the state has changed
 	//
-	if ( old_state != State ) {		
+	if ( old_state != State ) {
 		if ( State == SOLDIER_AI_ENEMY_SEEN ) {
 			ConversationTimer = WWMath::Random_Float( 5.0F, 30.0F );
 		} else {
 			ConversationTimer = WWMath::Random_Float( 20.0F, 60.0F );
-		}		
+		}
 	}
 
 	//
 	//	Decide which (if any) dialogue the soldier should say
 	//
 	if ( ( old_state == SOLDIER_AI_RELAXED_IDLE ) || ( old_state == SOLDIER_AI_ALERT_IDLE ) ) {
-		
+
 		if (	State == SOLDIER_AI_FOOTSTEPS_HEARD ||
 				State == SOLDIER_AI_BULLET_HEARD ||
 				State == SOLDIER_AI_GUNSHOT_HEARD)
@@ -674,7 +674,7 @@ bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const
 		}
 
 	} else if ( old_state == SOLDIER_AI_ENEMY_SEEN ) {
-		
+
 		if (	State == SOLDIER_AI_FOOTSTEPS_HEARD ||
 				State == SOLDIER_AI_BULLET_HEARD ||
 				State == SOLDIER_AI_GUNSHOT_HEARD)
@@ -690,7 +690,7 @@ bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const
 			soldier->Say_Dialogue( DIALOG_STATE_FROM_SEARCH_TO_COMBAT );
 		} else if ( ( old_state == SOLDIER_AI_RELAXED_IDLE ) || ( old_state == SOLDIER_AI_ALERT_IDLE ) ) {
 			soldier->Say_Dialogue( DIALOG_STATE_FROM_SEARCH_TO_IDLE );
-		}		
+		}
 	}
 
 	return (old_state != State);
@@ -718,7 +718,7 @@ void SoldierObserverClass::Notify_Neighbors_Sound( SoldierGameObj * soldier, con
 				const GameObjObserverList & observer_list = obj->Get_Observers();
 				for( int index = 0; index < observer_list.Count(); index++ ) {
 					observer_list[ index ]->Sound_Heard( obj, sound );
-				}		
+				}
 			}
 		}
 	}
@@ -746,7 +746,7 @@ void SoldierObserverClass::Notify_Neighbors_Enemy( SoldierGameObj * soldier, Gam
 				const GameObjObserverList & observer_list = obj->Get_Observers();
 				for( int index = 0; index < observer_list.Count(); index++ ) {
 					observer_list[ index ]->Enemy_Seen( obj, enemy );
-				}		
+				}
 			}
 		}
 	}
@@ -759,7 +759,7 @@ void SoldierObserverClass::Poked( GameObject * obj, GameObject * poker )
 		if ( physical_obj->As_SoldierGameObj() != NULL ) {
 
 			bool face_poker = false;
-			
+
 			//
 			//	Get the soldier to say one of its pre-canned remarks
 			//
@@ -808,7 +808,7 @@ void SoldierObserverClass::Poked( GameObject * obj, GameObject * poker )
 					parameters.Set_Face_Location( poker_pos, duration );
 					soldier->Get_Action()->Face_Location( parameters );
 				}
-					
+
 				//
 				//	Turn the soldier's head to look at the speaker
 				//
@@ -835,7 +835,7 @@ void SoldierObserverClass::Think( SoldierGameObj * soldier, bool is_new_state )
 	StateTimer += 1;
 	if (StateTimer >= StateData[State].StateDuration) {
 //		Debug_Say(("Soldier relaxing from state %d to %d\n", State, StateData[State].NextState));
-		
+
 		Action_Reset( soldier );		// reset the old state
 		State = StateData[State].NextState;
 
@@ -870,7 +870,7 @@ void SoldierObserverClass::Think( SoldierGameObj * soldier, bool is_new_state )
 		//
 		ConversationTimer -= 1.0F;
 		if (ConversationTimer <= 0) {
-			
+
 			//
 			//	Don't start an innate conversation if there are already
 			// conversations taking place
@@ -912,7 +912,7 @@ void	SoldierObserverClass::Reset_Conversation_Timer( void )
 	ConversationTimer = WWMath::Random_Float( 20.0F, 60.0F );
 }
 
-/*********************************************************************************************** 
+/***********************************************************************************************
 **													Innate AI State Actions
 ***********************************************************************************************/
 void SoldierObserverClass::State_Act( SoldierGameObj * soldier, bool is_new_state )
@@ -924,11 +924,11 @@ void SoldierObserverClass::State_Act( SoldierGameObj * soldier, bool is_new_stat
 			State_Act_Idle( soldier );
 			break;
 
-		case SOLDIER_AI_FOOTSTEPS_HEARD: 
+		case SOLDIER_AI_FOOTSTEPS_HEARD:
 			State_Act_Footsteps_Heard( soldier );
 			break;
 
-		case SOLDIER_AI_ALERT_IDLE: 
+		case SOLDIER_AI_ALERT_IDLE:
 		case SOLDIER_AI_BULLET_HEARD:
 			State_Act_Bullet_Heard( soldier, is_new_state );
 			break;
@@ -937,7 +937,7 @@ void SoldierObserverClass::State_Act( SoldierGameObj * soldier, bool is_new_stat
 			State_Act_Gunshot_Heard( soldier );
 			break;
 
-		case SOLDIER_AI_ENEMY_SEEN: 
+		case SOLDIER_AI_ENEMY_SEEN:
 			State_Act_Attack( soldier );
 			break;
 	}
@@ -946,7 +946,7 @@ void SoldierObserverClass::State_Act( SoldierGameObj * soldier, bool is_new_stat
 #define	IDLE_WALK_DISTANCE		6
 #define	IDLE_WALK_SPEED			0.3f	// was 0.2f
 
-#define	ALERTED_RUN_DISTANCE		6	
+#define	ALERTED_RUN_DISTANCE		6
 #define	ALERTED_RUN_SPEED			0.9f
 #define	ALERTED_RUN_RANGE			2
 
@@ -998,7 +998,7 @@ void SoldierObserverClass::State_Act_Footsteps_Heard( SoldierGameObj * soldier )
 		if ( pathfind->Find_Random_Spot( AlertPosition, 2, &position ) ) {
 			Action_Goto_Location( soldier, position, AI_STATE_IDLE, IDLE_WALK_SPEED, 0.5f );
 			walking = true;
-		}					
+		}
 	}
 	if ( !walking ) {
 		SubStateString = "Face Footsteps";
@@ -1024,7 +1024,7 @@ void SoldierObserverClass::State_Act_Bullet_Heard( SoldierGameObj * soldier, boo
 
 	#define	RANGE		10		// Dive with probability tied to bullet distance; 100% at 10m, 0 percent at 20m
 	float range = (current_position - AlertPosition).Length();
-	float percent = WWMath::Clamp( (1 - ((range-RANGE)/RANGE)), 0, 1 ); 
+	float percent = WWMath::Clamp( (1 - ((range-RANGE)/RANGE)), 0, 1 );
 	bool dive = is_new_state && (FreeRandom.Get_Float() < percent) && !IsStationary;
 
 	if ( dive ) {
@@ -1077,15 +1077,15 @@ void SoldierObserverClass::State_Act_Gunshot_Heard( SoldierGameObj * soldier )
 		if ( !done ) {
 			SubStateString = "Run To Random";
 			PathfindClass *pathfind = PathfindClass::Get_Instance();
-			
+
 			//
 			//	Lookup a safe random position to run to
 			//
-			Vector3 position = AlertPosition;			
+			Vector3 position = AlertPosition;
 			if (pathfind->Find_Random_Spot( AlertPosition, ALERTED_RUN_DISTANCE, &position )) {
 				Action_Goto_Location_Facing(soldier, position, AI_STATE_SEARCH, AlertPosition, ALERTED_RUN_SPEED, ALERTED_RUN_RANGE);
 			} else {
-				
+
 				//
 				//	Wasn't possible to run to a random location near the alert position,
 				// so simply move around your local area a little bit and look at the alert position
@@ -1112,7 +1112,7 @@ void SoldierObserverClass::State_Act_Gunshot_Heard( SoldierGameObj * soldier )
 /*
 **
 */
-void	SoldierObserverClass::State_Act_Attack( SoldierGameObj * soldier ) 
+void	SoldierObserverClass::State_Act_Attack( SoldierGameObj * soldier )
 {
 
 	soldier->Get_Human_State()->Raise_Weapon();		// Keep the gun up
@@ -1242,7 +1242,7 @@ void	SoldierObserverClass::State_Act_Attack( SoldierGameObj * soldier )
 	}
 }
 
-/*********************************************************************************************** 
+/***********************************************************************************************
 **													Innate AI Actions
 ***********************************************************************************************/
 void SoldierObserverClass::Action_Reset( SoldierGameObj * soldier )
@@ -1281,7 +1281,7 @@ void SoldierObserverClass::Action_Goto_Location_Facing( SoldierGameObj * soldier
    soldier->Get_Action()->Goto( parameters );
 }
 
-void SoldierObserverClass::Action_Attack_Object( SoldierGameObj * soldier, PhysicalGameObj * enemy, float range, 
+void SoldierObserverClass::Action_Attack_Object( SoldierGameObj * soldier, PhysicalGameObj * enemy, float range,
 																	bool kneel, const Vector3 & move_location, float arrived_distance )
 {
 	Vector3	move_position = move_location;
@@ -1340,7 +1340,7 @@ bool SoldierObserverClass::Take_Cover( SoldierGameObj * soldier, bool force_face
 	}
 
 	// Possibily take a cover spot
-	if ( FreeRandom.Get_Float() < TakeCoverProbability ) { 
+	if ( FreeRandom.Get_Float() < TakeCoverProbability ) {
 		Release_Cover_Position();		// Give us the option of selecting our current spot
 		float cover_range = 20;
 		Vector3 current_position;
@@ -1363,7 +1363,7 @@ bool SoldierObserverClass::Take_Cover( SoldierGameObj * soldier, bool force_face
 	return false;
 }
 
-void	SoldierObserverClass::Look_Random( SoldierGameObj * soldier, float duration ) 
+void	SoldierObserverClass::Look_Random( SoldierGameObj * soldier, float duration )
 {
 	soldier->Look_Random( duration );
 }

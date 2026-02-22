@@ -51,7 +51,7 @@ WaypathClass::WaypathClass (const WaypathPositionClass &start, const WaypathPosi
 	//
 	int waypath_id = start.Get_Waypath_ID ();
 	if (waypath_id == end.Get_Waypath_ID ()) {
-		
+
 		//
 		//	Lookup the path we will use as our reference
 		//
@@ -62,7 +62,7 @@ WaypathClass::WaypathClass (const WaypathPositionClass &start, const WaypathPosi
 			//	Copy the flags from the complete path
 			//
 			m_Flags = whole_path->Get_Flags ();
-			
+
 			//
 			//	Find the world-space positions of the endpoints of our path segment
 			//
@@ -88,7 +88,7 @@ WaypathClass::WaypathClass (const WaypathPositionClass &start, const WaypathPosi
 				m_Waypoints.Add (new WaypointClass (*waypoint));
 			}*/
 
-			
+
 			//
 			// Get the start and end indices from the path
 			//
@@ -99,7 +99,7 @@ WaypathClass::WaypathClass (const WaypathPositionClass &start, const WaypathPosi
 			//	Are we moving forwards or backwards along the path?
 			//
 			if (end_index > start_index) {
-				
+
 				//
 				// Add all the points between the start and end point to the path
 				//
@@ -109,7 +109,7 @@ WaypathClass::WaypathClass (const WaypathPositionClass &start, const WaypathPosi
 				}
 
 			} else {
-				
+
 				//
 				// Add all the points between the start and end point to the path
 				//
@@ -117,7 +117,7 @@ WaypathClass::WaypathClass (const WaypathPositionClass &start, const WaypathPosi
 					WaypointClass *waypoint = whole_path->Get_Point (index);
 					m_Waypoints.Add (new WaypointClass (*waypoint));
 				}
-			}			
+			}
 
 			//
 			//	Add the ending point to our waypath
@@ -160,11 +160,11 @@ bool
 WaypathClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
-				
+
 		WaypathClass *this_ptr = this;
 		WRITE_MICRO_CHUNK (csave, VARID_OLD_PTR,	this_ptr);
 		WRITE_MICRO_CHUNK (csave, VARID_FLAGS,		m_Flags);
-		WRITE_MICRO_CHUNK (csave, VARID_ID,			m_ID);		
+		WRITE_MICRO_CHUNK (csave, VARID_ID,			m_ID);
 
 		//
 		//	Write out each waypoint pointer so we can remap them
@@ -187,9 +187,9 @@ WaypathClass::Save (ChunkSaveClass &csave)
 bool
 WaypathClass::Load (ChunkLoadClass &cload)
 {
-	while (cload.Open_Chunk ()) {		
+	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
-		
+
 			case CHUNKID_VARIABLES:
 				Load_Variables (cload);
 				break;
@@ -224,10 +224,10 @@ WaypathClass::Load_Variables (ChunkLoadClass &cload)
 				//
 				//	Read the old waypoint ptr from the chunk and add it to our
 				// list.  We will remap it later.
-				//				
+				//
 				WaypointClass *waypoint = NULL;
-				cload.Read (&waypoint, sizeof (waypoint));				
-				m_Waypoints.Add (waypoint);				
+				LOAD_MICRO_CHUNK (cload, waypoint);
+				m_Waypoints.Add (waypoint);
 			}
 			break;
 
@@ -236,9 +236,9 @@ WaypathClass::Load_Variables (ChunkLoadClass &cload)
 				//
 				//	Read the old pointer from the chunk and submit it
 				// to the remapping system.
-				//				
+				//
 				WaypathClass *old_ptr = NULL;
-				cload.Read (&old_ptr, sizeof (old_ptr));
+				LOAD_MICRO_CHUNK (cload, old_ptr);
 				SaveLoadSystemClass::Register_Pointer (old_ptr, this);
 			}
 			break;
@@ -359,11 +359,11 @@ WaypathClass::Evaluate_Position (const WaypathPositionClass &pos, Vector3 *posit
 	//	Check to ensure this is the right waypath
 	//
 	if (pos.Get_Waypath_ID () == m_ID) {
-		
+
 		//
 		//	Lookup the start point of the segment
 		//
-		int index = pos.Get_Waypoint_Index ();		
+		int index = pos.Get_Waypoint_Index ();
 		WaypointClass *seg_pt1 = Get_Point (index);
 		if (seg_pt1 != NULL) {
 
@@ -371,7 +371,7 @@ WaypathClass::Evaluate_Position (const WaypathPositionClass &pos, Vector3 *posit
 			//	Get the world-space position of the start point of the segment
 			//
 			const Vector3 &pt1 = seg_pt1->Get_Position ();
-			
+
 			//
 			//	Do a quick check to see if we should just return the
 			// start point
@@ -386,10 +386,10 @@ WaypathClass::Evaluate_Position (const WaypathPositionClass &pos, Vector3 *posit
 				//
 				WaypointClass *seg_pt2 = Get_Point (index + 1);
 				if (seg_pt2 != NULL) {
-					
+
 					//
 					//	Get the world-space position of the end point of the segment
-					//					
+					//
 					const Vector3 &pt2 = seg_pt2->Get_Position ();
 
 					//
@@ -401,6 +401,6 @@ WaypathClass::Evaluate_Position (const WaypathPositionClass &pos, Vector3 *posit
 			}
 		}
 	}
-		
+
 	return retval;
 }

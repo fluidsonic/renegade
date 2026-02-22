@@ -433,7 +433,7 @@ bool	ScriptableGameObj::Load( ChunkLoadClass &cload )
 
 						case MICROCHUNKID_GAME_OBJ_OBSERVER_PTR:
 							GameObjObserverClass * ptr;
-							cload.Read(&ptr,sizeof(ptr));
+							LOAD_MICRO_CHUNK(cload, ptr);
 							Observers.Add( ptr );
 							break;
 

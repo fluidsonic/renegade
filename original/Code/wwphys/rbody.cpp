@@ -25,16 +25,16 @@ float RigidBodyClass::_CorrectionTime = 1.0f;
 ** RBodyHistoryClass Implementation
 **
 ***********************************************************************************************/
-																						
+
 /*
 ** RBodyHistoryClass Parameters
-** Control the implementation of the phys3 history tracking system with the following 
+** Control the implementation of the phys3 history tracking system with the following
 ** parameters.
 */
 const int		RBODY_SNAPSHOT_COUNT = 16;					// must be power of 2!
 const float		RBODY_HISTORY_MIN_TIME = 0.75f;			// seconds of history to store
 
-const int		RBODY_SNAPSHOT_MASK = RBODY_SNAPSHOT_COUNT - 1; 
+const int		RBODY_SNAPSHOT_MASK = RBODY_SNAPSHOT_COUNT - 1;
 const float		RBODY_SNAPSHOT_INTERVAL = RBODY_HISTORY_MIN_TIME / RBODY_SNAPSHOT_COUNT;
 
 #define RBODYHISTORY_NO_CORRECTION			0
@@ -44,7 +44,7 @@ const float		RBODY_SNAPSHOT_INTERVAL = RBODY_HISTORY_MIN_TIME / RBODY_SNAPSHOT_C
 ** RBodyHistoryClass
 ** This class is used to store a history of the state of a RBody object.  The network
 ** update code uses this history to intelligently update the state of the object when
-** a packet is received.  
+** a packet is received.
 */
 class RBodyHistoryClass
 {
@@ -66,7 +66,7 @@ public:
 private:
 
 	int		Wrap_Index(int index) { return (index + RBODY_SNAPSHOT_COUNT) & RBODY_SNAPSHOT_MASK; }
-	
+
 	struct StateSnapshotStruct : public RigidBodyStateStruct
 	{
 	public:
@@ -138,11 +138,11 @@ void RBodyHistoryClass::Compute_Old_State(float t,RigidBodyStateStruct * set_sta
 {
 	int index = HeadIndex;
 	bool done = false;
-	
+
 	while (!done) {
 		if (SnapshotArray[index].Age <= t) {
 			index = Wrap_Index(index + 1);
-			
+
 			/*
 			** past the end of our history, just return the oldest known state
 			*/
@@ -151,12 +151,12 @@ void RBodyHistoryClass::Compute_Old_State(float t,RigidBodyStateStruct * set_sta
 				*set_state = SnapshotArray[tail_index];
 				return;
 			}
-		
+
 		} else {
 			done = true;
 		}
 	}
-	
+
 	int prev_index = Wrap_Index(index - 1);
 	int next_index = index;
 
@@ -209,7 +209,7 @@ void RBodyHistoryClass::Find_Nearest_State(const RigidBodyStateStruct & input,Ri
 			fraction = (point - segment.Get_P0()).Length() / segment.Get_Length();
 		}
 
-		
+
 		if ((dist < min_dist) /*&& (vdot >= 0.0f)*/) {
 			min_dist = dist;
 			result_fraction = fraction;
@@ -217,7 +217,7 @@ void RBodyHistoryClass::Find_Nearest_State(const RigidBodyStateStruct & input,Ri
 			result_index1 = index1;
 		}
 	}
-	
+
 	RigidBodyStateStruct::Lerp(SnapshotArray[result_index0],SnapshotArray[result_index1],result_fraction,output);
 }
 
@@ -226,11 +226,11 @@ void RBodyHistoryClass::StateSnapshotStruct::Lerp(const StateSnapshotStruct & a,
 	RigidBodyStateStruct::Lerp(a,b,fraction,this);
 	Age = WWMath::Lerp(a.Age,b.Age,fraction);
 }
-																						
-																						
-																						
 
-				
+
+
+
+
 /***********************************************************************************************
 **
 ** RigidBodyClass Implementation
@@ -242,7 +242,7 @@ float DEFAULT_CONTACT_THICKNESS	= 0.2f;
 #define LMOMENTUM_COLOR		Vector3(0,1,0)
 #define AMOMENTUM_COLOR		Vector3(0,0,1)
 
-												
+
 /*
 ** Declare a PersistFactory for RigidBodyClasses
 */
@@ -266,17 +266,17 @@ enum
 	RBODY_VARIABLE_CONTACT_STIFFNESS,		// OBSOLETE!
 	RBODY_VARIABLE_CONTACT_DAMPING,			// OBSOLETE!
 	RBODY_VARIABLE_CONTACT_LENGTH,
-};										
-						
+};
+
 
 /*
-** Rigid Body Dynamics 
-** 
+** Rigid Body Dynamics
+**
 ** NOTES:
-** - No matter what numerical integration technique I use, it seems that the 
-**   orientation drifts.  I have to re-normalize frequently so the higher order 
-**   integrators are not very attractive (more frequent calls to Compute_Forces...).  
-** - Clamping angular velocity to an artificial maximum seems to cause problems 
+** - No matter what numerical integration technique I use, it seems that the
+**   orientation drifts.  I have to re-normalize frequently so the higher order
+**   integrators are not very attractive (more frequent calls to Compute_Forces...).
+** - Clamping angular velocity to an artificial maximum seems to cause problems
 **   as well.  I'm not sure why but in the test app, it causes "jumpiness" in
 **   the simulation.
 ** - Impact/Contact plan:  Integrate a new state, ignoring collision but computing
@@ -305,15 +305,15 @@ enum
 **   just adjust over time.  Maybe penalty forces are the way after all...  Going to have
 **   to try the two-layer box idea...
 ** - Updating the integrator to a scheme that can handle multiple systems being combined
-**   into a single coupled system.  
+**   into a single coupled system.
 **
 ** August 16, 1999
-** New Idea: Two-layer box with TOC searching and penalty based contact forces.  General 
+** New Idea: Two-layer box with TOC searching and penalty based contact forces.  General
 ** idea is that we let things interpenetrate their outer boxes but not their inner ones.
 **
 **   pseudo-code:
 **   - collect all rigid bodies into a list (later on, we'll break into multiple lists)
-**   - integrate them all, computing penalty or real contact forces at each active contact 
+**   - integrate them all, computing penalty or real contact forces at each active contact
 **	  - if interpenetration occurs:
 **     - search for TOC
 **     - rewind (interpolate) all objects to TOC
@@ -341,7 +341,7 @@ enum
 ** Sept 23, 1999
 ** Another new idea: Padded boxes.
 ** - The collision box for an object has four pads on each face (for a total of 24 pads).  Each
-**   of these pads can have one contact point.  
+**   of these pads can have one contact point.
 ** - During each timestep (and sub-timestep) each pad will push out from its face until it hits something
 **   or reaches the edge of the outer box.  If it hits something, a contact will be set up which records
 **   the position, normal, velocity, and surface parameters.
@@ -353,7 +353,7 @@ enum
 **
 ** Oct 14, 1999
 ** YAHPI	- Yet Another Hacky Physics Idea: Octant Boxes
-** - Divide our collision box into 8 octants and detect one contact per octant.  
+** - Divide our collision box into 8 octants and detect one contact per octant.
 ** - Contact detection will be achieved by using the box-sweeping code on each octant.
 ** - Octants start out inside the box and sweep along a diagonal some distance
 ** - At their starting positions these "octant boxes" need to overlap so that when at their
@@ -364,17 +364,17 @@ enum
 **
 ** Oct 19, 1999
 ** Octant boxes are flawed because the contact point for each octant jitters around on the
-** object when you're on flat ground.  Since the boxes overlap, the points can all jitter 
+** object when you're on flat ground.  Since the boxes overlap, the points can all jitter
 ** to one side of the CM and then to another side.  This is not good :-)
-** Solution: Add contact "hairs" to the corners of the box and "prefer" them whenever the 
-** contact "compression" is close to that of its octant box. 
+** Solution: Add contact "hairs" to the corners of the box and "prefer" them whenever the
+** contact "compression" is close to that of its octant box.
 ** Remaining/New Problems:
 ** - Need to compute parameters for these "oct-boxes" automatically which handle any combination
 **   of OBBox + Mass
 ** - Objects can now "tunnel" need to do an extra collision check to prevent this.
 ** - Need to test the simulation code at the "worst-case" simulation framerate to see if it still
 **   stabilizes...
-** - Need to handle object-object collisions.  
+** - Need to handle object-object collisions.
 **
 ** Oct 26,1999
 ** - Good success with the octbox + corner contacts idea.  Use both the corner contact and
@@ -386,9 +386,9 @@ enum
 **   springs (0.33*critical) to keep everything numerically stable.
 ** - Had to re-normalize the orientation on every sub-timestep.  It would be nice if we
 **   didn't have to do this.  If the guts of the integrator was rotating the orientation
-**   instead of adding to it we probably could avoid this.  
-** - A first pass at (fake) friction is implemented but commented out.  I'm currently getting 
-**   instability if I turn it on and it also never stops the object on slopes, etc.  
+**   instead of adding to it we probably could avoid this.
+** - A first pass at (fake) friction is implemented but commented out.  I'm currently getting
+**   instability if I turn it on and it also never stops the object on slopes, etc.
 ** TODO: write a custom integrator which rotates the orientation rather than doing the normal
 ** state += derivatives*dt...  Is this possible?  It is for Euler integration but we need
 ** at least MidPoint to keep the simulation stable.
@@ -399,7 +399,7 @@ enum
 ** TODO: handle obj-obj interaction :-)
 **
 ** Oct 11, 2001
-** - Latency handling network code.  Each packet causes us to compute an error between the 
+** - Latency handling network code.  Each packet causes us to compute an error between the
 ** nearest point in their history; then in the timestep function we try to correct that error.
 */
 
@@ -415,7 +415,7 @@ enum
  * HISTORY:                                                                                    *
  *   10/15/99   gth : Created.                                                                 *
  *=============================================================================================*/
-RigidBodyClass::RigidBodyClass(void) : 
+RigidBodyClass::RigidBodyClass(void) :
 	Box(NULL),
 	ContactBox(NULL),
 	IBody(1),
@@ -434,7 +434,7 @@ RigidBodyClass::RigidBodyClass(void) :
 	State.Orientation.Make_Identity();
 	State.LMomentum.Set(0,0,0);
 	State.AMomentum.Set(0,0,0);
-	
+
 	LatencyError.Position.Set(0,0,0);
 	LatencyError.Orientation.Make_Identity();
 	LatencyError.LMomentum.Set(0,0,0);
@@ -545,7 +545,7 @@ bool RigidBodyClass::Intersection_Test(PhysAABoxIntersectionTestClass & test)
 	if (CollisionMath::Intersection_Test(ContactBox->Get_World_Inner_Box(),test.Box)) {
 		test.Add_Intersected_Object(this);
 		return true;
-	} 
+	}
 	return false;
 }
 
@@ -603,7 +603,7 @@ void RigidBodyClass::Update_Cached_Model_Parameters(void)
 
 	// cache a pointer to the collision box...
 	REF_PTR_RELEASE(Box);
-	
+
 	// Try to get the "WorldBox" from the model
 	if (Model) {
 		RenderObjClass * obj = Model->Get_Sub_Object_By_Name("WorldBox");
@@ -612,12 +612,12 @@ void RigidBodyClass::Update_Cached_Model_Parameters(void)
 		}
 		REF_PTR_RELEASE(obj);
 
-		// If we didn't finde WorldBox, try to find the LOD named "WorldBox" 
+		// If we didn't finde WorldBox, try to find the LOD named "WorldBox"
 		// The LOD code generates a unique name for the mesh by appending A,B,C, etc to the name.
 		// A is the lowest LOD, B is the next, and so on.  Our worldbox is specified in the highest
 		// LOD so we have to construct the name by appending 'A'+LodCount to the name... icky
 		if ((Box == NULL) && (Model->Class_ID() == RenderObjClass::CLASSID_HLOD)) {
-			
+
 			char namebuffer[64];
 			sprintf(namebuffer,"WorldBox%c",'A' + ((HLodClass *)Model)->Get_Lod_Count() - 1);
 
@@ -628,7 +628,7 @@ void RigidBodyClass::Update_Cached_Model_Parameters(void)
 			REF_PTR_RELEASE(obj);
 		}
 	}
-	
+
 	// Otherwise just create one
 	if (Box == NULL) {
 		Box = new OBBoxRenderObjClass(OBBoxClass(Vector3(0,0,0),Vector3(1,1,1)));
@@ -709,7 +709,7 @@ void RigidBodyClass::Network_Interpolate_State_Update
 	// interpolate a new state
 	Vector3::Lerp(State.Position,new_pos,fraction,&(State.Position));
 	::Fast_Slerp(State.Orientation,State.Orientation,new_orientation,fraction);
-	
+
 	Vector3 vel,avel;
 	Vector3::Lerp(Velocity,new_vel,fraction,&vel);
 	Vector3::Lerp(AngularVelocity,new_avel,fraction,&avel);
@@ -720,7 +720,7 @@ void RigidBodyClass::Network_Interpolate_State_Update
 
 	// clear the latency error since we are not using it
 	LatencyError.Reset();
-	
+
 	// each time the state changes, update the derived values
 	Update_Auxiliary_State();
 	Model->Set_Transform(Matrix3D(Rotation,State.Position));
@@ -729,7 +729,7 @@ void RigidBodyClass::Network_Interpolate_State_Update
 }
 
 void RigidBodyClass::Network_Latency_State_Update
-(			
+(
 	const Vector3 & new_pos,
 	const Quaternion & new_orientation,
 	const Vector3 & new_vel,
@@ -746,7 +746,7 @@ void RigidBodyClass::Network_Latency_State_Update
 	LastKnownState.Position = new_pos;
 	LastKnownState.Orientation = new_orientation;
 	LastKnownState.LMomentum = new_vel * Mass;
-	
+
 	Matrix3 I = IInv.Inverse();
 	LastKnownState.AMomentum = I * new_avel;
 
@@ -793,7 +793,7 @@ void RigidBodyClass::Network_Latency_Error_Correction(float dt)
 
 		/*
 		** Decide whether to do the normal smooth correction or to pop
-		** We'll pop whenever the position error is large and the 
+		** We'll pop whenever the position error is large and the
 		** velocity sent from the server is small.
 		*/
 		const float POP_POSITION_ERROR2 = 3.0f * 3.0f;
@@ -806,7 +806,7 @@ void RigidBodyClass::Network_Latency_Error_Correction(float dt)
 		float cos_half_theta = LatencyError.Orientation.W;
 
 		if (WWMath::Fabs(cos_half_theta) < POP_ANGLE_ERROR) {
-			pop = true;			
+			pop = true;
 		}
 
 		if (pop == true) {
@@ -881,7 +881,7 @@ void RigidBodyClass::Apply_Impulse(const Vector3 & imp, const Vector3 & wpos)
 	// adds to the torque.
 	Vector3 aimp;
 	Vector3::Cross_Product((wpos - State.Position),imp,&aimp);
-	
+
 	State.LMomentum += imp;
 	State.AMomentum += aimp;
 
@@ -997,7 +997,7 @@ int RigidBodyClass::Compute_Derivatives
 	Vector3 torque(0,0,0);
 	Compute_Force_And_Torque(&force,&torque);
 
-	
+
 	(*dydt)[index++] = force[0];
 	(*dydt)[index++] = force[1];
 	(*dydt)[index++] = force[2];
@@ -1005,7 +1005,7 @@ int RigidBodyClass::Compute_Derivatives
 	(*dydt)[index++] = torque[0];
 	(*dydt)[index++] = torque[1];
 	(*dydt)[index++] = torque[2];
-	
+
 	return index;
 }
 
@@ -1045,7 +1045,7 @@ void RigidBodyClass::Integrate(float time)
 void RigidBodyClass::Compute_Inertia(void)
 {
 	// I'm assuming that the CM is at the origin and the principal axes of inertia
-	// are aligned with the coordinate system.  So I'm approximating I by using the 
+	// are aligned with the coordinate system.  So I'm approximating I by using the
 	// formula for a box which extends both direction in the maximum that the actual
 	// box entends in either...
 	IBody.Make_Identity();
@@ -1087,7 +1087,7 @@ void RigidBodyClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 	// NOTE: derived classes should perform their force calculations first and
 	// then call us so because contact forces are computed at the end of
 	// this routine.
-	
+
 	// NOTE: need to optimize this routine!
 
 	// add in gravity
@@ -1097,11 +1097,11 @@ void RigidBodyClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 	Vector3 vel_dir = Velocity;
 	if (vel_dir.Length2() > WWMATH_EPSILON) {
 		vel_dir.Normalize();
-		
+
 // DEBUG DEBUG
 const float MAX_VEL = 500.0f;
 const float MAX_ACCEL = 100.0f;
-if (	(Velocity.Is_Valid() == false) || 
+if (	(Velocity.Is_Valid() == false) ||
 		(force->Is_Valid() == false) ||
 		(Velocity.Length2() > MAX_VEL * MAX_VEL) ||
 		(force->Length() * MassInv > MAX_ACCEL) )
@@ -1144,7 +1144,7 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 	if (Get_RigidBodyDef()->CollisionDisabled == false) {
 
 		ContactBox->Compute_Contacts(false);
-		
+
 		for (int i=0; i<ContactBox->Get_Contact_Count(); i++) {
 
 			const CastResultStruct & contact = ContactBox->Get_Contact(i);
@@ -1158,15 +1158,15 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 			Compute_Point_Velocity(contact.ContactPoint,&pdot);
 
 			float dx = 1.0f - contact.Fraction;
-			float dv = Vector3::Dot_Product(pdot,contact.Normal);			
-			
+			float dv = Vector3::Dot_Product(pdot,contact.Normal);
+
 			float force_magnitude = ContactBox->Get_Stiffness()*dx - ContactBox->Get_Damping()*dv;
 			Vector3 contact_force = force_magnitude * contact.Normal;
-			
+
 			Vector3 contact_torque;
 			Vector3::Cross_Product(r,contact_force,&contact_torque);
 
-	
+
 			/*
 			** If we are contacting a phys3 object, push it away from us.  If we
 			** can't push it away, then exert a contact force.
@@ -1187,9 +1187,9 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 			int contact_count = ContactBox->Get_Contact_Count();
 			float contact_weight = Get_Weight() / contact_count;
 			Vector3 gravity(0.0f,0.0f,-contact_weight);
-			
+
 			if (Get_Flag(FRICTION_DISABLED) == false) {
-			
+
 				Vector3 tan_vel = pdot - Vector3::Dot_Product(pdot,contact.Normal)*contact.Normal;
 				float tan_vel_magnitude = tan_vel.Length2();
 
@@ -1198,13 +1198,13 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 														contact.SurfaceType	);
 
 				if (tan_vel_magnitude > WWMATH_EPSILON * WWMATH_EPSILON) {
-					
+
 					/*
 					** Friction force points opposite the point's tangential motion
 					*/
 					tan_vel_magnitude = WWMath::Sqrt(tan_vel_magnitude);
 					Vector3 tan_vel_dir = tan_vel / tan_vel_magnitude;
-					
+
 					/*
 					** The magnitude is the friction coefficient times the portion of the weight supported
 					** by this contact.  As the velocity approaches zero, this force approaches zero
@@ -1223,7 +1223,7 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 					** Finally, clamp the force to the friction circle
 					*/
 					float max_friction_force = friction_coefficient * contact_weight;
-					if (friction_force.Length2() > max_friction_force * max_friction_force) {  
+					if (friction_force.Length2() > max_friction_force * max_friction_force) {
 						float flen = friction_force.Length();
 						friction_force /= flen;
 						friction_force *= 0.5f * max_friction_force;
@@ -1260,7 +1260,7 @@ void RigidBodyClass::Compute_Point_Velocity(const Vector3 & p,Vector3 * pdot)
 	// REMEMBER: p is assumed to be in world coordinates!  pdot is as well.
 	// pdot = velocity + CROSS(angular_velocity , r)
 	Vector3 r;
-	
+
 	Vector3::Subtract(p,State.Position,&r);
 	Vector3::Cross_Product(AngularVelocity,r,pdot);
 	Vector3::Add(*pdot,Velocity,pdot);
@@ -1309,7 +1309,7 @@ bool RigidBodyClass::Can_Go_To_Sleep(float dt)
 		GoToSleepTimer = RBODY_SLEEP_DELAY;
 		return false;
 	}
-	
+
 	const float VEL_THRESHHOLD = 0.05f;
 	const float AVEL_THRESHHOLD = 0.05f;
 
@@ -1318,15 +1318,15 @@ bool RigidBodyClass::Can_Go_To_Sleep(float dt)
 	bool tried_to_sleep = false;
 
 	if ((ContactBox->ContactCount >= 3) || (Get_RigidBodyDef()->CollisionDisabled)) {
-		
-		if ((State.LMomentum.Length2() < max_lmomentum2) && 
-			(State.AMomentum.Length2() < max_amomentum2) ) 
+
+		if ((State.LMomentum.Length2() < max_lmomentum2) &&
+			(State.AMomentum.Length2() < max_amomentum2) )
 		{
 			tried_to_sleep = true;
 			if (GoToSleepTimer < 0.0f) {
 				return true;
 			}
-		} 
+		}
 	}
 
 	if (tried_to_sleep) {
@@ -1340,7 +1340,7 @@ bool RigidBodyClass::Can_Go_To_Sleep(float dt)
 
 void RigidBodyClass::Compute_Impact(const CastResultStruct & result,Vector3 * impulse)
 {
-	Compute_Impact(result.ContactPoint,result.Normal,impulse);	
+	Compute_Impact(result.ContactPoint,result.Normal,impulse);
 }
 
 void RigidBodyClass::Compute_Impact(const Vector3 & point,const Vector3 & normal,Vector3 * impulse)
@@ -1350,29 +1350,29 @@ void RigidBodyClass::Compute_Impact(const Vector3 & point,const Vector3 & normal
 	Vector3 padot;
 	Compute_Point_Velocity(point,&padot);
 	float vrel = Vector3::Dot_Product(normal,padot);
-	
+
 	if (vrel > 0.0f) {
-	
+
 		// moving away
-		impulse->Set(0,0,0);	
+		impulse->Set(0,0,0);
 
 	} else {
-		
+
 		// collision
 		float num = -(1.0f + Elasticity) * vrel;
 		Vector3 ra = point - State.Position;
-		
+
 		Vector3 tmp1,tmp2;
 		Vector3::Cross_Product(ra,normal,&tmp1);
 		Matrix3::Rotate_Vector(IInv,tmp1,&tmp2);
 		Vector3::Cross_Product(tmp2,ra,&tmp1);
 		float den = MassInv + Vector3::Dot_Product(normal,tmp1);
-		
+
 		if (WWMath::Fabs(den) > WWMATH_EPSILON) {
 			float mag = num / den;
 			*impulse = mag * normal;
 		} else {
-			impulse->Set(0,0,0);	
+			impulse->Set(0,0,0);
 		}
 	}
 
@@ -1387,7 +1387,7 @@ inline void RigidBodyClass::Dump_State(void) const
 }
 
 void RigidBodyClass::Timestep(float dt)
-{	
+{
 	LastTimestep = dt;
 
 // DEBUG DEBUG
@@ -1405,7 +1405,7 @@ Vector3 avel0 = AngularVelocity;
 		*/
 		OBBoxClass box;
 		for (int i=1; i<History->History_Count(); i++) {
-		
+
 			const RigidBodyStateStruct & state = History->Get_Historical_State(i);
 			ContactBox->Get_Inner_Box(&box,state.Orientation,state.Position);
 			DEBUG_RENDER_OBBOX(box,Vector3(0,1.0f,0),0.05f);
@@ -1451,7 +1451,7 @@ Vector3 avel0 = AngularVelocity;
 	int collisions = 0;
 	float remaining_time = dt;
 	float timestep;
-	
+
 	while ((remaining_time > 0.0f) && (collisions < MAX_COLLISIONS)) {
 
 		Assert_State_Valid();
@@ -1467,7 +1467,7 @@ Vector3 avel0 = AngularVelocity;
 		** Check the final state of the object for collision.
 		*/
 		if (!ContactBox->Is_Intersecting()) {
-		
+
 			/*
 			** Not intersecting so we're accepting the entire move
 			*/
@@ -1491,13 +1491,13 @@ Vector3 avel0 = AngularVelocity;
 
 			if (found) {
 				ContactBox->Compute_Contacts();
-				
+
 				if (ContactBox->Get_Contact_Count() > 0) {
 
 					Vector3 contact_centroid(0,0,0);
-					
+
 					for (int ci=0; ci<ContactBox->Get_Contact_Count(); ci++) {
-			
+
 						const CastResultStruct & contact = ContactBox->Get_Contact(ci);
 
 						/*
@@ -1505,7 +1505,7 @@ Vector3 avel0 = AngularVelocity;
 						*/
 						float dot = Vector3::Dot_Product(State.LMomentum,contact.Normal);
 						if (dot < 0.0f) {
-							
+
 							Vector3 impulse = -1.01f * dot * contact.Normal;
 
 							/*
@@ -1515,15 +1515,15 @@ Vector3 avel0 = AngularVelocity;
 							PhysClass * other_obj = ContactBox->Peek_Contacted_Object(ci);
 
 							if ((other_obj != NULL) && (other_obj->As_RigidBodyClass() != NULL)) {
-							
+
 								RigidBodyClass * other_rbody = other_obj->As_RigidBodyClass();
 								float fraction = Mass / (Mass + other_rbody->Get_Mass());
-									
+
 								State.LMomentum += fraction * impulse;
 								other_rbody->Apply_Impulse(-(1.0f - fraction) * impulse, contact.ContactPoint);
 
 							} else if ((other_obj != NULL) && (other_obj->As_Phys3Class() != NULL)) {
-								
+
 								if (!Push_Phys3_Object_Away(other_obj->As_Phys3Class(),contact)) {
 									State.LMomentum += impulse;
 								}
@@ -1545,13 +1545,13 @@ Vector3 avel0 = AngularVelocity;
 
 					/*
 					** Apply an instantaneous change to the angular momentum to make the physics
-					** feel more realistic.  Compute the impluse that was applied to the linear 
-					** momentum and apply a fraction of it to the angular momentum at the contact 
+					** feel more realistic.  Compute the impluse that was applied to the linear
+					** momentum and apply a fraction of it to the angular momentum at the contact
 					** centroid.  (of course, this is all "ad-hoc", not true rigid-body dynamics...)
 					*/
 					Vector3 impulse = 0.3f * (State.LMomentum - oldstate.LMomentum);
 					contact_centroid /= ContactBox->Get_Contact_Count();
-					
+
 					Vector3 r = contact_centroid - State.Position;
 					Vector3 a_impulse;
 					Vector3::Cross_Product(r,impulse,&a_impulse);
@@ -1566,9 +1566,9 @@ Vector3 avel0 = AngularVelocity;
 				}
 
 			} else {
-				
+
 				/*
-				** If all else fails: 
+				** If all else fails:
 				** Fall back to the old, kill the momentum and try to let the
 				** contact spring forces sort it out.
 				*/
@@ -1589,7 +1589,7 @@ Vector3 avel0 = AngularVelocity;
 
 
 	DEBUG_RENDER_VECTOR(State.Position,Velocity,LMOMENTUM_COLOR);
-	DEBUG_RENDER_VECTOR(State.Position,AngularVelocity,AMOMENTUM_COLOR);	
+	DEBUG_RENDER_VECTOR(State.Position,AngularVelocity,AMOMENTUM_COLOR);
 
 	Dec_Ignore_Counter();
 	Model->Set_Transform(Matrix3D(Rotation,State.Position));
@@ -1608,7 +1608,7 @@ Vector3 avel0 = AngularVelocity;
 		Set_Flag(ASLEEP,true);
 	}
 
-// DEBUG DEBUG	
+// DEBUG DEBUG
 	Vector3 vel_change = Velocity - vel0;
 	Vector3 avel_change = AngularVelocity - avel0;
 	const float VEL_CHANGE_SPIKE = 10.0f;
@@ -1647,12 +1647,12 @@ bool RigidBodyClass::Push_Phys3_Object_Away(Phys3Class * p3obj,const CastResultS
 	}
 
 	move *= ContactBox->Get_Thickness() * ((1.0f - contact.Fraction) + pvel_relative);
-	
+
 	Dec_Ignore_Counter();
 	p3obj->Collide(move);
 	Inc_Ignore_Counter();
 
-	
+
 	/*
 	** Check if the object is now out of collision with us.  If the external game
 	** logic kills the phys3 object, its collision group will be changed so we check
@@ -1684,7 +1684,7 @@ void RigidBodyClass::Assert_Not_Intersecting(void)
 													Get_Collision_Group(),
 													COLLISION_TYPE_PHYSICAL);
 	PhysicsSceneClass::Get_Instance()->Cast_OBBox(test);
-//	assert(result.StartBad != true);			
+//	assert(result.StartBad != true);
 	if (result.StartBad) {
 	} else {
 	}
@@ -1709,21 +1709,21 @@ bool RigidBodyClass::Find_State_In_Contact_Zone
 	RigidBodyStateStruct state0 = oldstate;
 	RigidBodyStateStruct state1 = State;
 	RigidBodyStateStruct teststate;
-	
+
 	bool done = false;
 	bool success = false;
 	int iteration_count = 0;
 	const int MAX_ITERATIONS = 5;
 
 	/*
-	** Binary search for a state where the box is close enough to 
+	** Binary search for a state where the box is close enough to
 	** the terrain to generate contacts but the inner box is not
 	** intersecting.
 	*/
 	while (!done) {
 		RigidBodyStateStruct::Lerp(state0,state1,0.5f,&teststate);
 		Set_State(teststate);
-		
+
 		if (ContactBox->Is_In_Contact_Zone()) {
 			if (ContactBox->Is_Intersecting()) {
 				state1 = teststate;
@@ -1739,7 +1739,7 @@ bool RigidBodyClass::Find_State_In_Contact_Zone
 			done = true;
 		}
 	}
-	
+
 	return success;
 }
 
@@ -1757,7 +1757,7 @@ bool RigidBodyClass::Push(const Vector3 & move)
 													&result,
 													Get_Collision_Group(),
 													COLLISION_TYPE_PHYSICAL );
-		
+
  	/*
 	** Sweep the box
 	*/
@@ -1769,7 +1769,7 @@ bool RigidBodyClass::Push(const Vector3 & move)
 	** Move as far as we were allowed
 	*/
 	if (!result.StartBad) {
-		
+
 		if (result.Fraction > 0.0f) {
 			State.Position += result.Fraction * move;
 		}
@@ -1788,9 +1788,9 @@ bool RigidBodyClass::Push(const Vector3 & move)
 		}
 
 		return (result.Fraction == 1.0f);
-	
+
 	} else {
-	
+
 		return false;
 
 	}
@@ -1811,7 +1811,7 @@ bool RigidBodyClass::Save (ChunkSaveClass &csave)
 	csave.Begin_Chunk(RBODY_CHUNK_MOVEABLE);
 	MoveablePhysClass::Save(csave);
 	csave.End_Chunk();
-	
+
 	ODESystemClass * ode_ptr = (ODESystemClass *)this;
 	csave.Begin_Chunk(RBODY_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,RBODY_VARIABLE_ODESYSTEM_PTR,ode_ptr);
@@ -1831,15 +1831,15 @@ bool RigidBodyClass::Load (ChunkLoadClass &cload)
 	ODESystemClass * odesys = NULL;
 
 	while (cload.Open_Chunk()) {
-		
-		switch(cload.Cur_Chunk_ID()) 
+
+		switch(cload.Cur_Chunk_ID())
 		{
 			case RBODY_CHUNK_MOVEABLE:
 				MoveablePhysClass::Load(cload);
 				break;
 
 			case RBODY_CHUNK_VARIABLES:
-			
+
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK(cload,RBODY_VARIABLE_ODESYSTEM_PTR,odesys);
@@ -1852,18 +1852,18 @@ bool RigidBodyClass::Load (ChunkLoadClass &cload)
 						READ_MICRO_CHUNK(cload,RBODY_VARIABLE_CONTACT_LENGTH,ContactThickness);
 
 					}
-					cload.Close_Micro_Chunk();	
+					cload.Close_Micro_Chunk();
 				}
 				break;
 
 			default:
 				break;
 		}
-		
+
 		cload.Close_Chunk();
 	}
 
-	
+
 	if (odesys != NULL) {
 		SaveLoadSystemClass::Register_Pointer(odesys,(ODESystemClass *)this);
 	}
@@ -1898,7 +1898,7 @@ DECLARE_DEFINITION_FACTORY(RigidBodyDefClass, CLASSID_RIGIDBODYDEF, "RigidBody")
 /*
 ** Chunk ID's used by RigidBodyDefClass
 */
-enum 
+enum
 {
 	RIGIDBODYDEF_CHUNK_MOVEABLEPHYSDEF						= 0x01106650,			// (parent class)
 	RIGIDBODYDEF_CHUNK_VARIABLES,
@@ -1915,9 +1915,9 @@ RigidBodyDefClass::RigidBodyDefClass(void) :
 	FLOAT_EDITABLE_PARAM(RigidBodyDefClass, AerodynamicDragCoefficient, 0.0f, 100.0f);
 }
 
-uint32_t RigidBodyDefClass::Get_Class_ID (void) const	
-{ 
-	return CLASSID_RIGIDBODYDEF; 
+uint32_t RigidBodyDefClass::Get_Class_ID (void) const
+{
+	return CLASSID_RIGIDBODYDEF;
 }
 
 PersistClass * RigidBodyDefClass::Create(void) const
@@ -1937,7 +1937,7 @@ bool RigidBodyDefClass::Save(ChunkSaveClass &csave)
 	csave.Begin_Chunk(RIGIDBODYDEF_CHUNK_MOVEABLEPHYSDEF);
 	MoveablePhysDefClass::Save(csave);
 	csave.End_Chunk();
-	
+
 	csave.Begin_Chunk(RIGIDBODYDEF_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,RIGIDBODYDEF_VARIABLE_AERODYNAMICDRAGCOEFFICIENT,AerodynamicDragCoefficient);
 	WRITE_MICRO_CHUNK(csave,RIGIDBODYDEF_VARIABLE_COLLISIONDISABLED,CollisionDisabled);

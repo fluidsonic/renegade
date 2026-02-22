@@ -158,7 +158,7 @@ AudibleSoundClass::AudibleSoundClass (const AudibleSoundClass &src)
 		m_LoopsLeft (0),
 		m_Type (TYPE_SOUND_EFFECT),
 		m_FadeType (FADE_NONE),
-		m_FadeTimer (0),		
+		m_FadeTimer (0),
 		m_FadeTime (0),
 		m_VirtualChannel (0),
 		m_bDirty (true),
@@ -1933,7 +1933,7 @@ AudibleSoundClass::Load (ChunkLoadClass &cload)
 						case VARID_THIS_PTR:
 						{
 							AudibleSoundClass *old_ptr = NULL;
-							cload.Read(&old_ptr, sizeof (old_ptr));
+							LOAD_MICRO_CHUNK(cload, old_ptr);
 							SaveLoadSystemClass::Register_Pointer (old_ptr, this);
 						}
 						break;

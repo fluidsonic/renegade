@@ -17,7 +17,7 @@
 /*
 **
 */
-enum {	
+enum {
 	WEAPON_STATE_IDLE,
 	WEAPON_STATE_FIRE,
 	WEAPON_STATE_RELOAD,
@@ -76,7 +76,7 @@ void 	WeaponViewClass::Init()
 	WeaponAnimControl.Set_Model( NULL );
 
 	ClipModel = NULL;
-	
+
 	for ( int i = 0; i < NUM_WEAPON_STATES; i++ ) {
 		WeaponAnims[i] = NULL;
 		HandsAnims[i] = NULL;
@@ -227,7 +227,7 @@ void 	WeaponViewClass::Think()
 	}
 
 	if ( weapon != NULL ) {
-		if ( ( weapon->Get_Style() == WEAPON_HOLD_STYLE_C4 ) || 
+		if ( ( weapon->Get_Style() == WEAPON_HOLD_STYLE_C4 ) ||
 			  ( weapon->Get_Style() == WEAPON_HOLD_STYLE_BEACON ) ) {
 			if ( weapon->Get_Total_Rounds() == 0 ) {
 				if ( WeaponModel == NULL || WeaponState == WEAPON_STATE_IDLE ) {
@@ -331,8 +331,8 @@ void 	WeaponViewClass::Think()
 		if ( WeaponModel == NULL ) {
 			WeaponState = WEAPON_STATE_EXIT;
 			is_current_complete = true;
-		} 
-			
+		}
+
 		if ( WeaponState != WEAPON_STATE_EXIT ) {	// If we have a current weapon, exit it
 			new_weapon_state = WEAPON_STATE_EXIT;
 		} else {
@@ -378,8 +378,8 @@ void 	WeaponViewClass::Think()
 		}
 
 		// When stopping, go to spin down
-		if ( is_current_complete && 
-				WeaponState == WEAPON_STATE_FIRE && 
+		if ( is_current_complete &&
+				WeaponState == WEAPON_STATE_FIRE &&
 				new_weapon_state == WEAPON_STATE_IDLE ) {
 			// if the anims exist...
 //			new_weapon_state = WEAPON_STATE_SPIN_DOWN;
@@ -394,7 +394,7 @@ void 	WeaponViewClass::Think()
 					// Keep it by restarting the fire anim
 
 					RenderObjClass * hands_model = HandsPhysObj->Peek_Model();
-					if ( hands_model != NULL ) {										
+					if ( hands_model != NULL ) {
 //						hands_model->Set_Animation( HandsAnims[ WeaponState ], 0, RenderObjClass::ANIM_MODE_ONCE );
 						HandAnimControl.Set_Animation( HandsAnims[ WeaponState ] );
 						HandAnimControl.Set_Mode( ANIM_MODE_ONCE, 0 );
@@ -480,7 +480,7 @@ void 	WeaponViewClass::Think()
 			Vector3	camera_space_target;
 			Vector3	camera_space_source;
 			Vector3	target_pos = COMBAT_STAR->Get_Targeting_Pos();
-			
+
 			// Always look at a point a constant distance ahead, to avoid the gun poping around
 			target_pos = COMBAT_CAMERA->Get_Transform() * Vector3( 0,0,-100 );
 			Matrix3D::Inverse_Transform_Vector( obj_convention_camera, target_pos, &camera_space_target );
@@ -508,7 +508,7 @@ void 	WeaponViewClass::Think()
 			CastResultStruct result;
 			PhysRayCollisionTestClass raytest(ray, &result, BULLET_COLLISION_GROUP, COLLISION_TYPE_PROJECTILE);
 
-			{ 
+			{
 				if (COMBAT_STAR != NULL && COMBAT_STAR->Peek_Physical_Object()!=NULL) {
 					COMBAT_STAR->Peek_Physical_Object()->Inc_Ignore_Counter();
 				}
@@ -550,7 +550,7 @@ Vector3	WeaponViewClass::Get_Muzzle_Pos()
 {
 	if ( WeaponModel ) {
 		return WeaponModel->Get_Bone_Transform( "muzzlea0" ).Get_Translation();
-	} 
+	}
 
 	return COMBAT_CAMERA->Get_Transform().Get_Translation();
 }
@@ -766,7 +766,7 @@ static void	Set_Bob( int bob_state )
 	}
 }
 
-static void	Set_Bob_Recoil( float amount )		
-{ 
-	BobRecoil = amount; 
+static void	Set_Bob_Recoil( float amount )
+{
+	BobRecoil = amount;
 }

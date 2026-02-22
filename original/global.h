@@ -17,6 +17,8 @@
 #include <string.h>   // strlen, strcpy, strcmp, memcpy, etc.
 #include <strings.h>  // strcasecmp, strncasecmp
 #include <ctype.h>
+#include <stdexcept>
+#include <type_traits>
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 3: MSVC compiler compat (Clang/macOS only)

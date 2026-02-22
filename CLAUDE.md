@@ -49,8 +49,8 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 ## C++ Port — Known Patterns & Pitfalls
 
 ### Primitive type rules (enforced by `ccr-primitive-type` clang-tidy plugin)
-- **Forbidden** raw built-ins: `char`, `signed char`, `unsigned char`, `short`, `unsigned short`, `int`, `unsigned int`, `long`, `unsigned long`, `long long`, `unsigned long long`, `long double`, `wchar_t`
-- **Allowed** raw built-ins: `bool`, `void`, `nullptr_t`, `char8_t`, `char16_t`, `char32_t`, `float`, `double`
+- **Forbidden** raw built-ins: `char`, `signed char`, `unsigned char`, `short`, `unsigned short`, `int`, `signed`, `unsigned int`, `unsigned`, `long`, `unsigned long`, `long long`, `unsigned long long`, `long double`, `char32_t`, `wchar_t` (use `char16_t` instead) — naked `signed`/`unsigned` are just aliases for `signed int`/`unsigned int` and equally forbidden
+- **Allowed** raw built-ins: `bool`, `void`, `nullptr_t`, `char8_t`, `char16_t`, `float`, `double`
 - **Required replacements**: use `(u)intN_t` (e.g. `int32_t`, `uint8_t`) for integers; `float`/`double` are fine as-is
 - Typedefs like `int32_t`, `size_t`, `ptrdiff_t` are fine — the check only fires on raw un-typedef'd built-ins
 - `float` and `double` sizes are guaranteed by `static_assert` in `original/global.h` (4 and 8 bytes)
@@ -71,7 +71,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - PCH enabled: `target_precompile_headers(Commando PRIVATE "global.h")` in Code/Commando/CMakeLists.txt
 - `compat/macos_fix.mm` is excluded from PCH (Objective-C++ — `SKIP_PRECOMPILE_HEADERS ON`); **no other file should use `SKIP_PRECOMPILE_HEADERS ON`** — the PCH only pre-compiles `global.h`, so defining implementation macros (e.g. `MINIAUDIO_IMPLEMENTATION`) before a `#include` in a `.cpp` works correctly without it
 - Source root `original/` is in the include path so `#include "global.h"` resolves from any TU
-- Exclusions (no `#include "global.h"` added): `compat/typesizes.h` (mid-file include in winnt.h), `tools/primitive-type-check/PrimitiveTypeCheck.h` (clang-tidy plugin), resource compiler headers (`resource.h`, `dialogresource.h`, `afxres.h` — processed by llvm-rc which lacks the include path)
+- Exclusions (no `#include "global.h"` added): `compat/typesizes.h` (mid-file include in winnt.h), `tools/primitive-type-check/PrimitiveTypeCheck.h`, `tools/primitive-type-check/PrimitiveTypeCheck.cpp` (clang-tidy plugin — LLVM-API-only code, not part of the game codebase), resource compiler headers (`resource.h`, `dialogresource.h`, `afxres.h` — processed by llvm-rc which lacks the include path)
 
 ### wchar_t → char16_t convention
 - All `wchar_t` in Code/ and compat/ converted to `char16_t` (macOS wchar_t=4 bytes; protocol needs 2-byte UTF-16)

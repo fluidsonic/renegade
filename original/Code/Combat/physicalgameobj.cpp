@@ -84,7 +84,7 @@ enum	{
 	MICROCHUNKID_DEF_DEFAULT_HIBERNATION_ENABLE,
 	MICROCHUNKID_DEF_ALLOW_INNATE_CONVERSATIONS,
 	MICROCHUNKID_DEF_ORATOR_TYPE,
-	MICROCHUNKID_DEF_USE_CREATION_EFFECT, 
+	MICROCHUNKID_DEF_USE_CREATION_EFFECT,
 };
 
 bool	PhysicalGameObjDef::Save( ChunkSaveClass & csave )
@@ -118,11 +118,11 @@ bool	PhysicalGameObjDef::Load( ChunkLoadClass &cload )
 			case LEGACY_CHUNKID_DEF_PARENT_OLD:
 				ScriptableGameObjDef::Load( cload );
 				break;
-								
+
 			case CHUNKID_DEF_PARENT:
 				DamageableGameObjDef::Load( cload );
 				break;
-								
+
 			case CHUNKID_DEF_VARIABLES:
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
@@ -146,7 +146,7 @@ bool	PhysicalGameObjDef::Load( ChunkLoadClass &cload )
 					cload.Close_Micro_Chunk();
 				}
 				break;
-			
+
 			case LEGACY_CHUNKID_DEF_DEFENSEOBJECTDEF:
 				DefenseObjectDef.Load(cload);
 				break;
@@ -297,7 +297,7 @@ void	PhysicalGameObj::Re_Init( const PhysicalGameObjDef & definition )
 	return ;
 }
 
-const PhysicalGameObjDef & PhysicalGameObj::Get_Definition( void ) const 
+const PhysicalGameObjDef & PhysicalGameObj::Get_Definition( void ) const
 {
 	return (const PhysicalGameObjDef &)BaseGameObj::Get_Definition();
 }
@@ -333,8 +333,8 @@ enum	{
 	MICROCHUNKID_HIBERNATION_ENABLE,
 	MICROCHUNKID_HOST_GAME_OBJ_BONE,
 
-	MICROCHUNKID_RADAR_BLIP_SHAPE_TYPE, 
-	MICROCHUNKID_RADAR_BLIP_COLOR_TYPE, 
+	MICROCHUNKID_RADAR_BLIP_SHAPE_TYPE,
+	MICROCHUNKID_RADAR_BLIP_COLOR_TYPE,
 	MICROCHUNKID_RADAR_BLIP_INTENSITY,
 	MICROCHUNKID_ACTIVE_CONVERSATION,
 	MICROCHUNKID_HUD_POKABLE_INDICATOR,
@@ -431,11 +431,11 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 				}
 
 				break;
-								
+
 			case LEGACY_CHUNKID_DEFENSE:
 				DefenseObject.Load( cload );
 				break;
-								
+
 			case CHUNKID_ANIM_CONTROL:
 				Set_Animation( NULL );  // Build AnimControl
 				AnimControl->Load( cload );
@@ -469,8 +469,8 @@ bool	PhysicalGameObj::Load( ChunkLoadClass &cload )
 	return true;
 }
 
-void PhysicalGameObj::On_Post_Load (void)					
-{ 
+void PhysicalGameObj::On_Post_Load (void)
+{
 	// Plug ourselves back into the physics object as an observer
 	PhysObj->Set_Observer(this);
 
@@ -478,7 +478,7 @@ void PhysicalGameObj::On_Post_Load (void)
 	DamageableGameObj::On_Post_Load ();
 }
 
-AnimControlClass *	PhysicalGameObj::Get_Anim_Control( void ) 
+AnimControlClass *	PhysicalGameObj::Get_Anim_Control( void )
 {
 	return AnimControl;
 }
@@ -489,8 +489,8 @@ void	PhysicalGameObj::Set_Anim_Control( AnimControlClass * anim_control )
 }
 
 bool	PhysicalGameObj::Is_Soft( void )
-{ 
-	return DefenseObject.Is_Soft(); 
+{
+	return DefenseObject.Is_Soft();
 }
 
 Vector3	PhysicalGameObj::Get_Bullseye_Position( void )
@@ -520,10 +520,10 @@ void	PhysicalGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager,
 	}
 }
 
-void PhysicalGameObj::Completely_Damaged( const OffenseObjectClass & damager ) 
+void PhysicalGameObj::Completely_Damaged( const OffenseObjectClass & damager )
 {
 	if ( Get_Definition().KilledExplosion != 0 ) {
-		
+
 		Vector3 pos;
 		Get_Position(&pos);
 
@@ -577,7 +577,7 @@ void PhysicalGameObj::Teleport_To_Host_Bone( void )
 				** Try to teleport to the new location while pushing any blocking dynamic
 				** objects out of the way
 				*/
-				MoveablePhysClass * movephys = Peek_Physical_Object()->As_MoveablePhysClass();			
+				MoveablePhysClass * movephys = Peek_Physical_Object()->As_MoveablePhysClass();
 				movephys->Set_Velocity(Vector3(0,0,0));
 				movephys->Cinematic_Move_To(new_transform);
 
@@ -594,7 +594,7 @@ void PhysicalGameObj::Teleport_To_Host_Bone( void )
 			*/
 			if (Peek_Physical_Object()->As_MoveablePhysClass() == NULL) {
 				Set_Transform(new_transform);
-				ok = true;			
+				ok = true;
 			}
 
 			/*
@@ -635,7 +635,7 @@ void PhysicalGameObj::Post_Think( void )
 		Teleport_To_Host_Bone();
 	}
 
-	DamageableGameObj::Post_Think();		
+	DamageableGameObj::Post_Think();
 
 	if ( HibernationEnable && HibernationTimer > 0 ) {
 		HibernationTimer -= TimeManager::Get_Frame_Seconds();
@@ -676,9 +676,9 @@ void PhysicalGameObj::Post_Think( void )
 
 }
 
-void PhysicalGameObj::Set_Collision_Group( int group )		
-{	
-	Peek_Physical_Object()->Set_Collision_Group( group ); 
+void PhysicalGameObj::Set_Collision_Group( int group )
+{
+	Peek_Physical_Object()->Set_Collision_Group( group );
 }
 
 void	PhysicalGameObj::Attach_To_Object_Bone( PhysicalGameObj * host, const char * bone_name )
@@ -687,13 +687,13 @@ void	PhysicalGameObj::Attach_To_Object_Bone( PhysicalGameObj * host, const char 
 	Teleport_To_Host_Bone();
 
 	//
-	//	Zero the velocity of the object if we are detaching it from 
+	//	Zero the velocity of the object if we are detaching it from
 	// the bone...  (This makes physics behave better)
 	//
 	if (HostGameObj != host && host == NULL) {
 		RigidBodyClass *rigid_body = Peek_Physical_Object()->As_RigidBodyClass();
-		if (rigid_body != NULL) {			
-			
+		if (rigid_body != NULL) {
+
 			Vector3 velocity;
 			rigid_body->Get_Velocity (&velocity);
 
@@ -701,7 +701,7 @@ void	PhysicalGameObj::Attach_To_Object_Bone( PhysicalGameObj * host, const char 
 			float heading = curr_tm.Get_Z_Rotation ();
 			Matrix3D new_tm (1);
 			new_tm.Rotate_Z (heading);
-			new_tm.Set_Translation (curr_tm.Get_Translation ());			
+			new_tm.Set_Translation (curr_tm.Get_Translation ());
 			rigid_body->Set_Transform (new_tm);
 
 			velocity.X = 0;
@@ -727,12 +727,12 @@ void	PhysicalGameObj::Attach_To_Object_Bone( PhysicalGameObj * host, const char 
 	return ;
 }
 
-void PhysicalGameObj::Reset_Server_Skips(BYTE value) 
+void PhysicalGameObj::Reset_Server_Skips(BYTE value)
 {
 	ServerUpdateSkips = value;
 }
 
-void PhysicalGameObj::Increment_Server_Skips(void) 
+void PhysicalGameObj::Increment_Server_Skips(void)
 {
 	if (ServerUpdateSkips < 254) {
 		ServerUpdateSkips++;
@@ -817,29 +817,29 @@ void	PhysicalGameObj::Set_Animation_Frame ( const char *animation_name, int fram
 /*
 **
 */
-void	PhysicalGameObj::Set_Transform(const Matrix3D & tm) 
-{ 
-	Peek_Physical_Object()->Set_Transform(tm); 
+void	PhysicalGameObj::Set_Transform(const Matrix3D & tm)
+{
+	Peek_Physical_Object()->Set_Transform(tm);
 }
 
-const Matrix3D &	PhysicalGameObj::Get_Transform(void) const 
-{ 
-	return Peek_Physical_Object()->Get_Transform(); 
+const Matrix3D &	PhysicalGameObj::Get_Transform(void) const
+{
+	return Peek_Physical_Object()->Get_Transform();
 }
 
-void	PhysicalGameObj::Get_Position(Vector3 * set_pos) const 
-{ 
-	Peek_Physical_Object()->Get_Position(set_pos); 
+void	PhysicalGameObj::Get_Position(Vector3 * set_pos) const
+{
+	Peek_Physical_Object()->Get_Position(set_pos);
 }
 
-void	PhysicalGameObj::Set_Position(const Vector3 & pos) 
-{ 
-	Peek_Physical_Object()->Set_Position(pos); 
+void	PhysicalGameObj::Set_Position(const Vector3 & pos)
+{
+	Peek_Physical_Object()->Set_Position(pos);
 }
 
 float	PhysicalGameObj::Get_Facing(void) const
-{ 
-	return Peek_Physical_Object()->Get_Facing(); 
+{
+	return Peek_Physical_Object()->Get_Facing();
 }
 
 void	PhysicalGameObj::Reset_Hibernating( void )
@@ -854,14 +854,14 @@ void	PhysicalGameObj::Reset_Hibernating( void )
 	HibernationTimer = MIN( HIBERNATION_DELAY, HibernationTimer + TimeManager::Get_Frame_Seconds() * 2 );
 }
 
-void	PhysicalGameObj::Begin_Hibernation( void )		
+void	PhysicalGameObj::Begin_Hibernation( void )
 {
 	if (_DisplayHibernating) {
 		Debug_Say(( "Object %d Hibernating\n", Get_ID() ));
 	}
 }
 
-void	PhysicalGameObj::End_Hibernation( void )			
+void	PhysicalGameObj::End_Hibernation( void )
 {
 	if (_DisplayHibernating) {
 		Debug_Say(( "Object %d De-Hibernating\n", Get_ID() ));
@@ -925,7 +925,7 @@ void	PhysicalGameObj::Export_Creation( BitStreamClass &packet )
 void	PhysicalGameObj::Import_Creation( BitStreamClass &packet )
 {
 	DamageableGameObj::Import_Creation( packet );
- 
+
 	//
 	//	Read the object's position
 	//
@@ -942,7 +942,7 @@ void	PhysicalGameObj::Import_Creation( BitStreamClass &packet )
 
 	//
 	//	Build a matrix from the position and facing, then set it
-	//	
+	//
 	Matrix3D tm (1);
 	tm.Translate (position);
 	tm.Rotate_Z (facing);
@@ -969,7 +969,7 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 	//
 
 	//assert(Peek_Physical_Object()->Peek_Model()->Get_Name());
-	
+
 	const char *model_name = Peek_Physical_Object()->Peek_Model()->Get_Name();
 	packet.Add_Terminated_String( model_name, true );
 
@@ -1008,7 +1008,7 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 	//
 	packet.Add( host_model_id );
 	packet.Add( HostGameObjBone );
-	
+
 	//
 	//	Send the player type
 	//
@@ -1024,7 +1024,7 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 		bool hidden = false;
 		if ( Peek_Model() ) {
 			hidden = !!(Peek_Model()->Is_Hidden());
-		}		
+		}
 		packet.Add( hidden );
 	}
 
@@ -1091,7 +1091,7 @@ void	PhysicalGameObj::Import_Rare( BitStreamClass &packet )
 	} else {
 		HostGameObj = NULL;
 	}
-	
+
 	//
 	//	Get the player type from the packet
 	//
@@ -1128,9 +1128,9 @@ void PhysicalGameObj::Import_Frequent( BitStreamClass &packet )
 	bool on_host_bone;
 	packet.Get(on_host_bone);
 
-	if (	(on_host_bone) && 
-			(Peek_Physical_Object()) && 
-			(Peek_Physical_Object()->As_MoveablePhysClass()) ) 
+	if (	(on_host_bone) &&
+			(Peek_Physical_Object()) &&
+			(Peek_Physical_Object()->As_MoveablePhysClass()) )
 	{
 		MoveablePhysClass * movephys = Peek_Physical_Object()->As_MoveablePhysClass();
 		movephys->Set_Velocity(Vector3(0,0,0));
@@ -1182,7 +1182,7 @@ int	PhysicalGameObj::Get_Vis_ID ()
 	return -1;
 }
 
-void PhysicalGameObj::Set_Player_Type(int id) 
+void PhysicalGameObj::Set_Player_Type(int id)
 {
 	DamageableGameObj::Set_Player_Type(id);
 
@@ -1191,7 +1191,7 @@ void PhysicalGameObj::Set_Player_Type(int id)
 
 	/*
 	if (Is_Team_Player()) {
-		
+
 		//
 		// Handle tinting for soldiers, pedestals, flags
 		//
@@ -1205,7 +1205,7 @@ void PhysicalGameObj::Set_Player_Type(int id)
 
 //-----------------------------------------------------------------------------
 /*
-void Tint(RenderObjClass *robj, const Vector3 & color) 
+void Tint(RenderObjClass *robj, const Vector3 & color)
 {
 //	Debug_Say(( "%s has %d sub objs\n", robj->Get_Name(), robj->Get_Num_Sub_Objects() ));
 	for( int so = 0; so < robj->Get_Num_Sub_Objects(); so++ ) {
@@ -1230,34 +1230,34 @@ void Tint(RenderObjClass *robj, const Vector3 & color)
 }
 
 //-----------------------------------------------------------------------------
-void PhysicalGameObj::Set_Tint(Vector3 color)	
-{ 
+void PhysicalGameObj::Set_Tint(Vector3 color)
+{
    if (TintColor != color && Peek_Model() != NULL) {
 		Tint(Peek_Model(), color);
-		TintColor = color; 
+		TintColor = color;
    }
 }
 */
 
-void	PhysicalGameObj::Enable_HUD_Pokable_Indicator( bool enable )		
-{ 
-	HUDPokableIndicatorEnabled = enable; 
+void	PhysicalGameObj::Enable_HUD_Pokable_Indicator( bool enable )
+{
+	HUDPokableIndicatorEnabled = enable;
 	Set_Object_Dirty_Bit( NetworkObjectClass::BIT_RARE, true );
 }
 
 void PhysicalGameObj::Object_Shattered_Something
 (
-	PhysClass * observed_obj, 
-	PhysClass * shattered_obj, 
+	PhysClass * observed_obj,
+	PhysClass * shattered_obj,
 	int surface_type
 )
 {
 	const Matrix3D & tm = observed_obj->Get_Transform();
 
-	SurfaceEffectsManager::Apply_Effect(	surface_type, 
-														SurfaceEffectsManager::HITTER_TYPE_BULLET, 
-														tm, 
-														NULL,		
+	SurfaceEffectsManager::Apply_Effect(	surface_type,
+														SurfaceEffectsManager::HITTER_TYPE_BULLET,
+														tm,
+														NULL,
 														NULL,
 														false,	// no decals
 														false		// no emitter

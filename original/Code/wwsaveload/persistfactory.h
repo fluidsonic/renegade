@@ -48,21 +48,21 @@ public:
 	/*
 	** Internal chunk id's
 	*/
-	enum 
+	enum
 	{
 		SIMPLEFACTORY_CHUNKID_OBJPOINTER		=	 0x00100100,
 		SIMPLEFACTORY_CHUNKID_OBJDATA
 	};
 };
 
-template<class T, int CHUNKID> PersistClass * 
-SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const 
+template<class T, int CHUNKID> PersistClass *
+SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const
 {
 	T * new_obj = new T;
 	T * old_obj = NULL;
 
 	cload.Open_Chunk();
-	cload.Read(&old_obj,sizeof(T *));
+	LOAD_MICRO_CHUNK(cload, old_obj);
 	cload.Close_Chunk();
 
 	cload.Open_Chunk();
@@ -74,7 +74,7 @@ SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const
 }
 
 template<class T, int CHUNKID> void
-SimplePersistFactoryClass<T,CHUNKID>::Save(ChunkSaveClass & csave,PersistClass * obj) const 
+SimplePersistFactoryClass<T,CHUNKID>::Save(ChunkSaveClass & csave,PersistClass * obj) const
 {
 	uint32_t objptr = (uint32_t)(uintptr_t)obj;
 	csave.Begin_Chunk(SIMPLEFACTORY_CHUNKID_OBJPOINTER);

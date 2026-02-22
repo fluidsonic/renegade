@@ -48,7 +48,7 @@ void ScriptManager::Shutdown(void)
 
 		assert(ScriptDestroyFunct != NULL);
 		ScriptDestroyFunct(script);
-		
+
 		ActiveScriptList.Delete(0);
 	}
 
@@ -106,7 +106,7 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 			RawFileClass unpacked_scripts(_TMP_SCRIPTS_DLL_FILENAME);
 
 			if (unpacked_scripts.Create()) {
-		
+
 				unpacked_scripts.Open(FileClass::WRITE);
 
 				// Copy the dll from the PKG (mix) file into our temporary _scripts directory
@@ -156,7 +156,7 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 	}
 
 	// Initialize request script destroy function
-	LPFN_SET_REQUEST_DESTROY_FUNC set_request_destroy_func = 
+	LPFN_SET_REQUEST_DESTROY_FUNC set_request_destroy_func =
 		(LPFN_SET_REQUEST_DESTROY_FUNC)GetProcAddress(hDLL, LPSTR_SET_REQUEST_DESTROY_FUNC);
 	assert(set_request_destroy_func != NULL);
 
@@ -378,4 +378,4 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 	return true;
 }
 
- 
+

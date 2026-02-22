@@ -45,16 +45,16 @@ enum
  *                                                                                             *
  * HISTORY:                                                                                    *
  *=============================================================================================*/
-MoveablePhysClass::MoveablePhysClass(void) : 
-	Mass(1.0f), 
-	MassInv(1.0f), 
-	GravScale(1.0f), 
-	Elasticity(0.5f), 
+MoveablePhysClass::MoveablePhysClass(void) :
+	Mass(1.0f),
+	MassInv(1.0f),
+	GravScale(1.0f),
+	Elasticity(0.5f),
 	Controller(NULL),
 	Carrier(NULL),
 	CarrierSubObject(NULL),
 	ShadowManager(*this)
-{ 
+{
 }
 
 /***********************************************************************************************
@@ -85,7 +85,7 @@ MoveablePhysClass::~MoveablePhysClass(void)
  *                                                                                             *
  * HISTORY:                                                                                    *
  *=============================================================================================*/
-void MoveablePhysClass::Init(const MoveablePhysDefClass & def) 
+void MoveablePhysClass::Init(const MoveablePhysDefClass & def)
 {
 	Mass = def.Mass;
 	MassInv = 1.0f / Mass;
@@ -181,7 +181,7 @@ void MoveablePhysClass::Link_To_Carrier(PhysClass * carrier,RenderObjClass * car
 {
 	// If this is the same carrier we already have, just return
 	if ((Carrier == carrier) && (CarrierSubObject == carrier_sub_obj)) return;
-	
+
 	// If we had a different carrier, unlink from it
 	if (Carrier != NULL) {
 		Carrier->Internal_Unlink_Rider(this);
@@ -249,24 +249,24 @@ RenderObjClass * MoveablePhysClass::Peek_Carrier_Sub_Object(void)
  *=============================================================================================*/
 bool MoveablePhysClass::Cinematic_Move_To(const Matrix3D &new_tm)
 {
-	
+
 	int cinematic_move_mode = MoveablePhysDefClass::CINEMATIC_COLLISION_PUSH;
 	if (Get_MoveablePhysDef() != NULL) {
 		cinematic_move_mode = Get_MoveablePhysDef()->CinematicCollisionMode;
 	}
 
-	// 
+	//
 	// Check if we can teleport to the desired location.
-	// 
+	//
 	NonRefPhysListClass intersection_list;
 	bool ok = false;
-	
+
 	if (cinematic_move_mode == MoveablePhysDefClass::CINEMATIC_COLLISION_NONE) {
 		ok = true;
 	} else {
 		ok = Can_Teleport(new_tm, true, &intersection_list);
 	}
-	
+
 	//
 	// Handle the intersection if needed
 	//
@@ -288,15 +288,15 @@ bool MoveablePhysClass::Cinematic_Move_To(const Matrix3D &new_tm)
 				it.Peek_Obj()->Push(move);
 				it.Next();
 			}
-		
+
 		} else if (cinematic_move_mode == MoveablePhysDefClass::CINEMATIC_COLLISION_KILL ) {
 
-			// 
+			//
 			// Try to kill all objects intersecting us at the destination point
 			//
 			NonRefPhysListIterator it(&intersection_list);
 			while (!it.Is_Done()) {
-				
+
 				//
 				// (gth) rbody objects are currently including static objects in
 				// the list of intersected objects.  Don't kill them please.
@@ -308,21 +308,21 @@ bool MoveablePhysClass::Cinematic_Move_To(const Matrix3D &new_tm)
 			}
 		}
 
-		// 
+		//
 		// check one more time unless we are in "stop" mode
-		// 
+		//
 		if (cinematic_move_mode != MoveablePhysDefClass::CINEMATIC_COLLISION_STOP) {
 			ok = Can_Teleport(new_tm, true);
 		}
 	}
-	
+
 	//
 	// If the position is clear, teleport there
 	//
 	if (ok) {
 		Set_Transform(new_tm);
 	}
-	
+
 	return ok;
 }
 
@@ -377,8 +377,8 @@ bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 	Carrier = NULL;
 
 	while (cload.Open_Chunk()) {
-		
-		switch(cload.Cur_Chunk_ID()) 
+
+		switch(cload.Cur_Chunk_ID())
 		{
 			case MOVEABLE_CHUNK_PHYS:
 				PhysClass::Load(cload);
@@ -397,14 +397,14 @@ bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_CONTROLLER,Controller);
 						READ_MICRO_CHUNK(cload,MOVEABLE_VARIABLE_CARRIER,Carrier);
 					}
-					cload.Close_Micro_Chunk();	
+					cload.Close_Micro_Chunk();
 				}
 				break;
 
 			default:
 				break;
 		}
-		
+
 		cload.Close_Chunk();
 	}
 
@@ -440,7 +440,7 @@ bool MoveablePhysClass::Load(ChunkLoadClass &cload)
 void MoveablePhysClass::On_Post_Load(void)
 {
 	DynamicPhysClass::On_Post_Load();
-	
+
 	// Force our carrier to get correctly linked up, the way I do this
 	// is to just clear it out and call the Set_Carrier function again.
 	PhysClass * tmp_carrier = Carrier;
@@ -457,7 +457,7 @@ void MoveablePhysClass::On_Post_Load(void)
 /*
 ** Chunk ID's used by MoveablePhysDefClass
 */
-enum 
+enum
 {
 	MOVEABLEPHYSDEF_CHUNK_PHYSDEF				= 0x04486000,			// obsolete parent class
 	MOVEABLEPHYSDEF_CHUNK_VARIABLES,
@@ -478,7 +478,7 @@ MoveablePhysDefClass::MoveablePhysDefClass(void) :
 	// make our parameters editable!
 	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, Mass, 0.01f, 100000.0f);
 	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, GravScale, 0.0f, 10.0f);
-	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, Elasticity, 0.0f, 1.0f);	
+	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, Elasticity, 0.0f, 1.0f);
 
 }
 

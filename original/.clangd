@@ -1,2 +1,20 @@
 CompileFlags:
   CompilationDatabase: build/
+
+---
+If:
+  PathMatch: tools/primitive-type-check/.*
+CompileFlags:
+  Compiler: /opt/homebrew/opt/llvm/bin/clang++
+  Add:
+    - -I/opt/homebrew/opt/llvm/include
+  Remove:
+    - -fsanitize=address
+    - -fno-sanitize=address
+    - -Wno-.*
+    - -Werror=.*
+    - -Wconversion
+    - -Wsign-conversion
+    - -Wdouble-promotion
+Diagnostics:
+  Suppress: '*'

@@ -97,7 +97,9 @@ public:
 	bool					End_Micro_Chunk();
 
 	// Write data into the file
+	uint32_t				Write(uint32_t value);
 	uint32_t				Write(const void *buf, uint32_t nbytes);
+	uint32_t				Write(const void **buf, uint32_t nbytes) = delete; // Do not write pointers directly. 32/64 bits mismatch.
 	uint32_t				Write(const IOVector2Struct & v);
 	uint32_t				Write(const IOVector3Struct & v);
 	uint32_t				Write(const IOVector4Struct & v);
@@ -148,7 +150,8 @@ public:
 	uint32_t				Cur_Micro_Chunk_Length();
 
 	// Read a block of bytes from the output stream.
-	uint32_t				Read(void *buf, uint32_t nbytes);
+	uint32_t				Read(void* buf, uint32_t nbytes);
+	uint32_t				Read(void** buf, uint32_t nbytes) = delete; // Do not read pointers directly. 32/64 bits mismatch.
 	uint32_t				Read(IOVector2Struct * v);
 	uint32_t				Read(IOVector3Struct * v);
 	uint32_t				Read(IOVector4Struct * v);
@@ -250,10 +253,25 @@ private:
 **	WRITE_MICRO_CHUNK(csave,PHYSGRID_VARIABLE_BASEVISID,BaseVisId);
 **	csave.End_Chunk();
 */
+
+template<typename T>
+inline void write_micro_chunk_value(ChunkSaveClass& csave, const T* var) {
+	auto pointer = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(var));
+	auto value = static_cast<uint32_t>((pointer >> 32) ^ (pointer & 0xFFFFFFFF));
+
+    csave.Write(value);
+}
+
+template<typename T>
+inline void write_micro_chunk_value(ChunkSaveClass& csave, const T& var) {
+    csave.Write(&var, sizeof(var));
+}
+
 #define WRITE_MICRO_CHUNK(csave,id,var) { \
 	csave.Begin_Micro_Chunk(id); \
-	csave.Write(&var,sizeof(var)); \
-	csave.End_Micro_Chunk(); }
+    write_micro_chunk_value(csave, var); \
+	csave.End_Micro_Chunk(); \
+}
 
 #define WRITE_SAFE_MICRO_CHUNK(csave,id,var,type) { \
 	csave.Begin_Micro_Chunk(id);		\
@@ -294,8 +312,21 @@ private:
 **		cload.Close_Micro_Chunk();
 **	}
 */
+template<typename T>
+inline void read_micro_chunk_value(ChunkLoadClass& cload, T** var) {
+	uint32_t pointer32 = 0;
+    cload.Read(&pointer32, sizeof(pointer32));
+    *var = reinterpret_cast<T*>(static_cast<uintptr_t>(pointer32));
+}
+
+template<typename T>
+inline void read_micro_chunk_value(ChunkLoadClass& cload, T* var) {
+    cload.Read(var, sizeof(*var));
+}
+
 #define READ_MICRO_CHUNK(cload,id,var)						\
-	case (id):	cload.Read(&var,sizeof(var)); break;	\
+	case (id): read_micro_chunk_value(cload, &var); break;
+
 
 /*
 ** Like READ_MICRO_CHUNK but reads items straight into the data safe.
@@ -326,8 +357,8 @@ private:
 /*
 ** These load macros make it easier to add extra code to a specifc case
 */
-#define LOAD_MICRO_CHUNK(cload,var)						\
-	cload.Read(&var,sizeof(var)); \
+#define LOAD_MICRO_CHUNK(cload,var) \
+	read_micro_chunk_value(cload, &var);
 
 #define LOAD_MICRO_CHUNK_WWSTRING(cload,var)		\
 	cload.Read(var.Get_Buffer(cload.Cur_Micro_Chunk_Length()),cload.Cur_Micro_Chunk_Length());	\

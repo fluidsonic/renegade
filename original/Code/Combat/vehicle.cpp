@@ -561,7 +561,11 @@ bool	VehicleGameObj::Load( ChunkLoadClass &cload )
 				}
 
 				SeatOccupants.Resize( num_seats );
-				cload.Read( &SeatOccupants[0], num_seats * sizeof( SeatOccupants[0] ) );
+				for (uint i = 0; i < num_seats; i++) {
+					SoldierGameObj* soldier = nullptr;
+					LOAD_MICRO_CHUNK(cload, soldier);
+					SeatOccupants[i] = soldier;
+				}
 				for ( int i = 0; i < num_seats; i++ ) {
 					if ( SeatOccupants[i] != NULL ) {
 						REQUEST_POINTER_REMAP( (void **)&SeatOccupants[i] );
@@ -869,7 +873,7 @@ void VehicleGameObj::Import_Frequent(BitStreamClass & packet)
 				packet.Get(vel.X, BITPACK_VEHICLE_VELOCITY);
 				packet.Get(vel.Y, BITPACK_VEHICLE_VELOCITY);
 				packet.Get(vel.Z, BITPACK_VEHICLE_VELOCITY);
-				
+
 				packet.Get(ang_vel.X, BITPACK_VEHICLE_ANGULAR_VELOCITY);
 				packet.Get(ang_vel.Y, BITPACK_VEHICLE_ANGULAR_VELOCITY);
 				packet.Get(ang_vel.Z, BITPACK_VEHICLE_ANGULAR_VELOCITY);
@@ -1291,14 +1295,14 @@ static char * _profile_name = "Vehicle Think";
 
 void	VehicleGameObj::Think( void )
 {
-{	
+{
 
 	Apply_Control();	// ????
 
 	Update_Transitions();
 }
 	SmartGameObj::Think(); 										// Perform smart object thinking
-{	
+{
 
 	Update_Sound_Effects();
 
@@ -1324,7 +1328,7 @@ static char * _post_profile_name = "Vehicle PostThink";
 
 void	VehicleGameObj::Post_Think( void )
 {
-{	
+{
 	RenderObjClass * model = Peek_Model();
 
 	for ( int i = 0; i < SeatOccupants.Length(); i++ ) {
@@ -1345,7 +1349,7 @@ void	VehicleGameObj::Post_Think( void )
 }
 	SmartGameObj::Post_Think();
 
-{	
+{
 	if ( Get_Weapon() && !Get_Definition().Fire0Anim.Is_Empty() ) {
 		Get_Weapon()->Reset_Anim_Update();
 		int state = Get_Weapon()->Get_Anim_State();

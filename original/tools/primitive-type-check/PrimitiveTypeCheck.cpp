@@ -1,4 +1,3 @@
-#include "global.h"
 #include "PrimitiveTypeCheck.h"
 #include "clang-tidy/ClangTidyModule.h"
 #include "clang-tidy/ClangTidyModuleRegistry.h"
@@ -26,7 +25,6 @@ bool PrimitiveTypeCheck::isForbiddenRawBuiltin(QualType QT) {
         case BuiltinType::NullPtr:  // nullptr_t
         case BuiltinType::Char8:    // char8_t  (C++20)
         case BuiltinType::Char16:   // char16_t (C++11)
-        case BuiltinType::Char32:   // char32_t (C++11)
         case BuiltinType::Float:    // float  (size asserted == 4 in floattypes.h)
         case BuiltinType::Double:   // double (size asserted == 8 in floattypes.h)
             return false;
@@ -34,10 +32,11 @@ bool PrimitiveTypeCheck::isForbiddenRawBuiltin(QualType QT) {
         // ── Everything else is forbidden ───────────────────────────────────
         // char, signed char, unsigned char
         // short, unsigned short
-        // int, unsigned int
+        // int, signed, unsigned int, unsigned  (naked 'signed'/'unsigned' are int/unsigned int)
         // long, unsigned long
         // long long, unsigned long long
-        // long double, wchar_t
+        // long double, char32_t
+        // wchar_t (use char16_t for 2-byte UTF-16; wchar_t is 4 bytes on macOS)
         // __int128, __float128, etc.
         default:
             return true;
@@ -59,13 +58,84 @@ void PrimitiveTypeCheck::checkType(QualType QT, SourceLocation Loc,
         return;
 
     const auto *BT = QT.getTypePtr()->castAs<BuiltinType>();
-    PrintingPolicy PP = Ctx.getPrintingPolicy();
-    PP.SuppressTagKeyword = false;
 
-    diag(Loc,
-         "use a fixed-width type instead of %0; "
-         "prefer (u)intN_t or charN_t")
-        << BT->getName(PP);
+    switch (BT->getKind()) {
+        // char family
+        case BuiltinType::Char_S:   // char (signed)
+        case BuiltinType::Char_U:   // char (unsigned, platform-dependent)
+            diag(Loc, "use int8_t, uint8_t, or char8_t instead of 'char'; "
+                      "'char' signedness is implementation-defined");
+            break;
+        case BuiltinType::SChar:    // signed char
+            diag(Loc, "use int8_t instead of 'signed char'");
+            break;
+        case BuiltinType::UChar:    // unsigned char
+            diag(Loc, "use uint8_t instead of 'unsigned char'");
+            break;
+
+        // short family
+        case BuiltinType::Short:
+            diag(Loc, "use int16_t instead of 'short'");
+            break;
+        case BuiltinType::UShort:
+            diag(Loc, "use uint16_t instead of 'unsigned short'");
+            break;
+
+        // int family (including naked signed/unsigned)
+        case BuiltinType::Int:
+            diag(Loc, "use int32_t instead of 'int' or 'signed'");
+            break;
+        case BuiltinType::UInt:
+            diag(Loc, "use uint32_t instead of 'unsigned int' or 'unsigned'");
+            break;
+
+        // long family
+        case BuiltinType::Long:
+            diag(Loc, "use int32_t or int64_t instead of 'long' "
+                      "(width is 4 bytes on Windows, 8 bytes on macOS/Linux)");
+            break;
+        case BuiltinType::ULong:
+            diag(Loc, "use uint32_t or uint64_t instead of 'unsigned long' "
+                      "(width is 4 bytes on Windows, 8 bytes on macOS/Linux)");
+            break;
+
+        // long long family
+        case BuiltinType::LongLong:
+            diag(Loc, "use int64_t instead of 'long long'");
+            break;
+        case BuiltinType::ULongLong:
+            diag(Loc, "use uint64_t instead of 'unsigned long long'");
+            break;
+
+        // wchar_t — most important: must use char16_t
+        case BuiltinType::WChar_S:
+        case BuiltinType::WChar_U:
+            diag(Loc, "use char16_t instead of 'wchar_t'; "
+                      "wchar_t is 4 bytes on macOS but the protocol requires 2-byte UTF-16");
+            break;
+
+        // long double
+        case BuiltinType::LongDouble:
+            diag(Loc, "use double instead of 'long double'");
+            break;
+
+        // char32_t
+        case BuiltinType::Char32:
+            diag(Loc, "use char16_t or uint32_t instead of 'char32_t'; "
+                      "char32_t is not used in this codebase");
+            break;
+
+        // fallback for __int128, __float128, etc.
+        default: {
+            PrintingPolicy PP = Ctx.getPrintingPolicy();
+            PP.SuppressTagKeyword = false;
+            diag(Loc,
+                 "use a fixed-width type instead of %0; "
+                 "prefer (u)intN_t")
+                << BT->getName(PP);
+            break;
+        }
+    }
 }
 
 void PrimitiveTypeCheck::registerMatchers(MatchFinder *Finder) {

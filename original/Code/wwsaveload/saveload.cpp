@@ -8,6 +8,8 @@
 
 #include <windows.h>
 #include "systimer.h"
+#include <typeinfo>
+#include <cstdio>
 
 SaveLoadSubSystemClass *		SaveLoadSystemClass::SubSystemListHead = NULL;
 PersistFactoryClass *			SaveLoadSystemClass::FactoryListHead = NULL;
@@ -74,6 +76,8 @@ bool SaveLoadSystemClass::Post_Load_Processing (void(*network_callback)(void))
 	PostLoadableClass * obj = PostLoadList.Remove_Head();
 	while (obj) {
 		UPDATE_NETWORK;
+		fprintf(stderr, "PostLoad: calling On_Post_Load %p vptr=%p\n", obj, *(void**)obj);
+		fflush(stderr);
 		obj->On_Post_Load();
 		obj->Set_Post_Load_Registered(false);
 		obj = PostLoadList.Remove_Head();
@@ -145,6 +149,7 @@ bool SaveLoadSystemClass::Is_Post_Load_Callback_Registered(PostLoadableClass * o
 void SaveLoadSystemClass::Register_Post_Load_Callback(PostLoadableClass * obj)
 {
 	if (!obj->Is_Post_Load_Registered()) {
+		fprintf(stderr, "PostLoad: register %p (%s)\n", obj, typeid(*obj).name());
 		obj->Set_Post_Load_Registered(true);
 		PostLoadList.Add_Head(obj);
 	}

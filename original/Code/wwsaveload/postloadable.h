@@ -1,6 +1,8 @@
 #pragma once
 
 #include "global.h"
+#include <typeinfo>
+#include <cstdio>
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -15,7 +17,12 @@ class PostLoadableClass
 {
 public:
 	PostLoadableClass(void) : IsPostLoadRegistered(false)						{ }
-	virtual ~PostLoadableClass(void)													{ }
+	virtual ~PostLoadableClass(void) {
+		if (IsPostLoadRegistered) {
+			fprintf(stderr, "*** PostLoad UAF: %p (%s) destroyed while still in PostLoadList!\n",
+				this, typeid(*this).name());
+		}
+	}
 
 	virtual void						On_Post_Load (void)							{ }
 

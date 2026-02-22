@@ -49,7 +49,7 @@ bool	PersistentGameObjObserverClass::Load( ChunkLoadClass &cload )
 			case CHUNKID_PARENT:
 				PersistClass::Load( cload );
 				break;
-								
+
 			case CHUNKID_VARIABLES:
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {

@@ -66,10 +66,10 @@ bool	SmartGameObjDef::Save( ChunkSaveClass & csave )
 	csave.End_Chunk();
 
 	csave.Begin_Chunk( CHUNKID_DEF_VARIABLES );
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_SIGHT_RANGE,      SightRange );				
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_SIGHT_ARC,        SightArc );				
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_LISTENER_SCALE,   ListenerScale );				
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_IS_STEALTH_UNIT,  IsStealthUnit );				
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_SIGHT_RANGE,      SightRange );
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_SIGHT_ARC,        SightArc );
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_LISTENER_SCALE,   ListenerScale );
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_IS_STEALTH_UNIT,  IsStealthUnit );
 	csave.End_Chunk();
 
 	return true;
@@ -83,15 +83,15 @@ bool	SmartGameObjDef::Load( ChunkLoadClass &cload )
 			case CHUNKID_DEF_ARMEDGAMEOBJ_PARENT:
 				ArmedGameObjDef::Load( cload );
 				break;
-								
+
 			case CHUNKID_DEF_VARIABLES:
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_SIGHT_RANGE,      SightRange );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_SIGHT_ARC,        SightArc );				
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_LISTENER_SCALE,   ListenerScale );				
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_SIGHT_ARC,        SightArc );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_LISTENER_SCALE,   ListenerScale );
 						READ_MICRO_CHUNK_WWSTRING( cload, LEGACY_MICROCHUNKID_DEF_INFO_ICON_TEXTURE_FILENAME, InfoIconTextureFilename );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_IS_STEALTH_UNIT,  IsStealthUnit );				
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_IS_STEALTH_UNIT,  IsStealthUnit );
 
 						default:
 							Debug_Say(( "Unrecognized SmartDef Variable chunkID %d\n", cload.Cur_Micro_Chunk_ID() ));
@@ -257,12 +257,12 @@ bool	SmartGameObj::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_IS_ENEMY_SEEN_ENABLED, IsEnemySeenEnabled );
 		void * ptr = &Controller;
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_CONTROLLER_PTR, ptr );
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_MOVING_SOUND_TIMER, MovingSoundTimer ); 
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PLAYER_DATA, PlayerData ); 
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_MOVING_SOUND_TIMER, MovingSoundTimer );
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_PLAYER_DATA, PlayerData );
 
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_STEALTH_ENABLED, StealthEnabled ); 
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_STEALTH_POWERUP_TIMER, StealthPowerupTimer ); 
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_STEALTH_FIRING_TIMER, StealthFiringTimer ); 
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_STEALTH_ENABLED, StealthEnabled );
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_STEALTH_POWERUP_TIMER, StealthPowerupTimer );
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_STEALTH_FIRING_TIMER, StealthFiringTimer );
 
 	csave.End_Chunk();
 
@@ -301,11 +301,11 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 				Debug_Say(( "Loading old SmartGameObj format\n" ));
 				PhysicalGameObj::Load( cload );
 				break;
-								
+
 			case CHUNKID_ARMEDGAMEOBJ_PARENT:
 				ArmedGameObj::Load( cload );
 				break;
-								
+
 			case CHUNKID_VARIABLES:
 				void * old_controller_ptr;
 				old_controller_ptr = NULL;
@@ -315,14 +315,14 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_CONTROL_ENABLED, ControlEnabled );
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_CONTROL_OWNER, new_control_owner );
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_IS_ENEMY_SEEN_ENABLED, IsEnemySeenEnabled );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_CONTROLLER_PTR,        old_controller_ptr );				
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_MOVING_SOUND_TIMER, MovingSoundTimer ); 
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_PLAYER_DATA, PlayerData ); 
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_CONTROLLER_PTR,        old_controller_ptr );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_MOVING_SOUND_TIMER, MovingSoundTimer );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_PLAYER_DATA, PlayerData );
 
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STEALTH_ENABLED, StealthEnabled ); 
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STEALTH_POWERUP_TIMER, StealthPowerupTimer ); 
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_STEALTH_FIRING_TIMER, StealthFiringTimer ); 
-					
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_STEALTH_ENABLED, StealthEnabled );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_STEALTH_POWERUP_TIMER, StealthPowerupTimer );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_STEALTH_FIRING_TIMER, StealthFiringTimer );
+
 					default:
 							Debug_Say(( "Unrecognized SmartGameObj Variable chunkID\n" ));
 							break;
@@ -340,20 +340,20 @@ bool	SmartGameObj::Load( ChunkLoadClass &cload )
 			case CHUNKID_CONTROL:
 				Control.Load( cload );
 				break;
-								
+
 			case CHUNKID_CONTROLLER:
 				Controller.Load( cload );
 				break;
-								
+
 			case CHUNKID_ACTION:
 				Action.Load( cload );
 				break;
-								
+
 			case CHUNKID_STEALTH_EFFECT:
 				Alloc_Stealth_Effect();
 				StealthEffect->Load(cload);
 				break;
-			
+
 			default:
 				Debug_Say(( "Unrecognized SoldierGameObj chunkID\n" ));
 				break;
@@ -400,7 +400,7 @@ void SmartGameObj::Set_Player_Data( PlayerDataClass * player_data )
 //-----------------------------------------------------------------------------
 void SmartGameObj::Import_Frequent(BitStreamClass & packet)
 {
-	
+
 	/*TSS091301
 	//
 	//	Update the player data structure from the server
@@ -463,19 +463,19 @@ void SmartGameObj::Import_State_Cs(BitStreamClass & packet)
 //-----------------------------------------------------------------------------
 void SmartGameObj::Generate_Control(void)
 {
-	if (CombatManager::I_Am_Server() && 
+	if (CombatManager::I_Am_Server() &&
 		 (ControlOwner == SERVER_CONTROL_OWNER || !Is_Human_Controlled())) {
-		
-		Action.Act(); 
+
+		Action.Act();
 	}
 
-	if (CombatManager::I_Am_Client() && 
+	if (CombatManager::I_Am_Client() &&
 		 ControlOwner == CombatManager::Get_My_Id()) {
-		
-		Action.Act(); 
-	
-		// 
-		// Notify server 
+
+		Action.Act();
+
+		//
+		// Notify server
 		//
 		/*
 		if (PClientControl != NULL && !Is_Delete_Pending()) {
@@ -496,7 +496,7 @@ void SmartGameObj::Generate_Control(void)
 
 //-----------------------------------------------------------------------------
 bool SmartGameObj::Is_Control_Data_Dirty(cPacket & packet)
-{	
+{
 	//
 	// future optimization
 	//
@@ -536,7 +536,7 @@ bool SmartGameObj::Is_Controlled_By_Me(void)
 			game_obj = driver;
 		}
 	}
-   
+
 	return game_obj->Is_Human_Controlled() && (game_obj->ControlOwner == CombatManager::Get_My_Id());
 }
 
@@ -581,11 +581,11 @@ void SmartGameObj::Apply_Control( void )
 				COMBAT_CAMERA->Reset_First_Person_Offset_Tweak();
 			}
 
-			WeaponBag->Select_Key_Number( weapon_key_num );	
+			WeaponBag->Select_Key_Number( weapon_key_num );
 			switched = true;
 			change_type = "Key";
 
-		}		
+		}
 	}
 
 	if ( this == COMBAT_STAR && change_type != NULL ) {
@@ -632,7 +632,7 @@ void SmartGameObj::Apply_Control( void )
 
 			// If we fire a weapon, we de-cloak for a certain amount of time
 			if (	Control.Get_Boolean( ControlClass::BOOLEAN_WEAPON_FIRE_PRIMARY ) ||
-					Control.Get_Boolean( ControlClass::BOOLEAN_WEAPON_FIRE_SECONDARY )) 
+					Control.Get_Boolean( ControlClass::BOOLEAN_WEAPON_FIRE_SECONDARY ))
 			{
 				StealthFiringTimer = STEALTH_FIRING_TIME;
 			}
@@ -645,7 +645,7 @@ void SmartGameObj::Apply_Control( void )
 
 void SmartGameObj::Think()
 {
-	{	
+	{
 
 		// React to the controls
 		{
@@ -683,7 +683,7 @@ void SmartGameObj::Think()
 							const GameObjObserverList & observer_list = Get_Observers();
 							for( int index = 0; index < observer_list.Count(); index++ ) {
 								observer_list[ index ]->Enemy_Seen( this, obj );
-							}		
+							}
 						}
 					}
 				}
@@ -704,7 +704,7 @@ void SmartGameObj::Think()
 		}
 
 		if (((StealthPowerupTimer > 0.0f) || (StealthEnabled)) && (StealthFiringTimer <= 0.0f)) {
-			
+
 			Alloc_Stealth_Effect();
 			Peek_Physical_Object()->Add_Effect_To_Me(StealthEffect);
 
@@ -715,7 +715,7 @@ void SmartGameObj::Think()
 			if (defobj != NULL) {
 				StealthEffect->Set_Broken((defobj->Get_Health() / defobj->Get_Health_Max()) < STEALTH_BROKEN_FRACTION);
 			}
-			
+
 		} else {
 			if (StealthEffect != NULL) {
 				StealthEffect->Enable_Stealth(false);
@@ -727,7 +727,7 @@ void SmartGameObj::Think()
 	}
 }
 
-void	SmartGameObj::Post_Think( void ) 
+void	SmartGameObj::Post_Think( void )
 {
 	ArmedGameObj::Post_Think();
 
@@ -749,7 +749,7 @@ void	SmartGameObj::Apply_Damage(const OffenseObjectClass & damager, float scale,
 	PhysicalGameObj::Apply_Damage(damager,scale,alternate_skin);
 }
 
-bool	SmartGameObj::Is_Obj_Visible( PhysicalGameObj *obj ) 
+bool	SmartGameObj::Is_Obj_Visible( PhysicalGameObj *obj )
 {
 	Vector3 diff = obj->Get_Bullseye_Position();
 
@@ -774,7 +774,7 @@ bool	SmartGameObj::Is_Obj_Visible( PhysicalGameObj *obj )
 			CastResultStruct res;
 			LineSegClass ray( me, him );
 			PhysRayCollisionTestClass raytest(ray, &res, BULLET_COLLISION_GROUP);
-{ 
+{
 			PhysicsSceneClass::Get_Instance()->Cast_Ray(raytest);
 }
 
@@ -790,7 +790,7 @@ bool	SmartGameObj::Is_Obj_Visible( PhysicalGameObj *obj )
 /*
 **
 */
-void	SmartGameObj::On_Logical_Heard (LogicalListenerClass *listener, LogicalSoundClass *sound_obj) 
+void	SmartGameObj::On_Logical_Heard (LogicalListenerClass *listener, LogicalSoundClass *sound_obj)
 {
 	CombatSound sound;
 	sound.Type = (CombatSoundType)sound_obj->Get_Type_Mask();

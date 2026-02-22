@@ -10,9 +10,9 @@
 #include "light.h"
 #include "persistfactory.h"
 
- 
+
 /*
-** This module contains the save-load related methods of PhysicsSceneClass.  
+** This module contains the save-load related methods of PhysicsSceneClass.
 */
 
 /*
@@ -20,12 +20,12 @@
 **
 ** LOAD-SAVE NOTES:
 ** The data in the physics scene will be broken into two different files, the LSD (Level Static Data)
-** file and the LDD (Level Dynamic Data) file.  The primary reason for this is simply so that 
+** file and the LDD (Level Dynamic Data) file.  The primary reason for this is simply so that
 ** save-games can simply be a new export of the LDD file and not contain the data which is completely
 ** static throughout the run of the level.
 **
 */
-enum 
+enum
 {
 	// Chunk ID's used by the physics scene when saving the 'Static Data' (PhysStaticDataSaveSystem)
 	PSCENE_SD_CHUNK_STATIC_OBJECT_AABTREE					= 0x00004500,
@@ -66,7 +66,7 @@ enum
 	// Micro Chunk ID's used by dynamic data variables
 	PSCENE_DD_VARIABLE_DYNAMICPOLYBUDGET					= 0x00,
 	PSCENE_DD_VARIABLE_STATICPOLYBUDGET						= 0x01,
-	
+
 };
 
 /*
@@ -124,7 +124,7 @@ void PhysicsSceneClass::Save_Level_Static_Data(ChunkSaveClass & csave)
 //	csave.Begin_Chunk(PSCENE_SD_CHUNK_DYNAMIC_OBJECT_GRID);
 //	DynamicCullingSystem->Save_Static_Data(csave);
 //	csave.End_Chunk();
-	
+
 	csave.Begin_Chunk(PSCENE_SD_CHUNK_DYNAMIC_OBJECT_VIS_AABTREE);
 	DynamicObjVisSystem->Save_Static_Data(csave);
 	csave.End_Chunk();
@@ -134,7 +134,7 @@ void PhysicsSceneClass::Save_Level_Static_Data(ChunkSaveClass & csave)
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(PSCENE_SD_CHUNK_SUNLIGHT);
-	Save_Sun_Light(csave);	
+	Save_Sun_Light(csave);
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(PSCENE_SD_CHUNK_VARIABLES);
@@ -191,7 +191,7 @@ void PhysicsSceneClass::Load_Level_Static_Data(ChunkLoadClass & cload)
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK(cload,PSCENE_SD_VARIABLE_AMBIENT,SceneAmbientLight);
 					}
-					cload.Close_Micro_Chunk();	
+					cload.Close_Micro_Chunk();
 				}
 				break;
 		}
@@ -220,7 +220,7 @@ void PhysicsSceneClass::Save_Level_Static_Objects(ChunkSaveClass & csave)
 		Save_Static_Objects(csave);
 		csave.End_Chunk();
 	}
-	
+
 	if (!StaticLightList.Is_Empty()) {
 		csave.Begin_Chunk(PSCENE_SO_CHUNK_STATIC_LIGHTS);
 		Save_Static_Lights(csave);
@@ -236,7 +236,7 @@ void PhysicsSceneClass::Load_Level_Static_Objects(ChunkLoadClass & cload)
 	*/
 
 	while (cload.Open_Chunk()) {
-		switch (cload.Cur_Chunk_ID()) 
+		switch (cload.Cur_Chunk_ID())
 		{
 			case PSCENE_SO_CHUNK_STATIC_OBJECTS:
 				Load_Static_Objects(cload);
@@ -303,7 +303,7 @@ void PhysicsSceneClass::Load_Level_Dynamic_Data(ChunkLoadClass & cload)
 				Load_Static_Object_States(cload);
 				break;
 
-				
+
 			default:
 				break;
 		}
@@ -334,12 +334,12 @@ void PhysicsSceneClass::Save_Static_Objects(ChunkSaveClass & csave)
 	*/
 	RefPhysListIterator it(&StaticObjList);
 	for (it.First(); !it.Is_Done(); it.Next()) {
-		
+
 		PhysClass * obj = it.Peek_Obj();
-		
-		if ((obj) && (obj->Is_Dont_Save_Enabled() == false)) {		
+
+		if ((obj) && (obj->Is_Dont_Save_Enabled() == false)) {
 			StaticPhysClass * staticobj = obj->As_StaticPhysClass();
-			
+
 			if (staticobj) {
 				/*
 				** Wrap the factory defined chunk with our own so that it's in its own
@@ -370,7 +370,7 @@ void PhysicsSceneClass::Load_Static_Objects(ChunkLoadClass & cload)
 
 			/*
 			** Load the object
-			*/ 
+			*/
 			cload.Open_Chunk();
 			StaticPhysClass * obj = NULL;
 			PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
@@ -380,14 +380,14 @@ void PhysicsSceneClass::Load_Static_Objects(ChunkLoadClass & cload)
 			cload.Close_Chunk();
 
 			cload.Close_Chunk();
-			
+
 			/*
 			** Load the object's linkage into the Static Culling System
 			*/
 			cload.Open_Chunk();
 			if ((cload.Cur_Chunk_ID() == PSCENE_SO_CHUNK_STATIC_OBJECT_AABLINK) && (obj)) {
 				StaticCullingSystem->Load_Object_Linkage(cload,obj);
-			} 
+			}
 			cload.Close_Chunk();
 
 			/*
@@ -412,19 +412,19 @@ void PhysicsSceneClass::Save_Static_Lights(ChunkSaveClass & csave)
 	*/
 	RefPhysListIterator it(&StaticLightList);
 	for (it.First(); !it.Is_Done(); it.Next()) {
-		
+
 		PhysClass * obj = it.Peek_Obj();
-		
-		if (obj) {		
+
+		if (obj) {
 			LightPhysClass * lightobj = obj->As_LightPhysClass();
-			
+
 			if (lightobj) {
 				csave.Begin_Chunk(PSCENE_SO_CHUNK_STATIC_LIGHT);
 				csave.Begin_Chunk(lightobj->Get_Factory().Chunk_ID());
 				lightobj->Get_Factory().Save(csave,lightobj);
 				csave.End_Chunk();
 				csave.End_Chunk();
-				
+
 				csave.Begin_Chunk(PSCENE_SO_CHUNK_STATIC_LIGHT_AABLINK);
 				StaticLightingSystem->Save_Object_Linkage(csave,lightobj);
 				csave.End_Chunk();
@@ -441,7 +441,7 @@ void PhysicsSceneClass::Load_Static_Lights(ChunkLoadClass & cload)
 
 			/*
 			** Load the object
-			*/ 
+			*/
 			cload.Open_Chunk();
 			LightPhysClass * obj = NULL;
 			PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
@@ -450,14 +450,14 @@ void PhysicsSceneClass::Load_Static_Lights(ChunkLoadClass & cload)
 			}
 			cload.Close_Chunk();
 			cload.Close_Chunk();
-			
+
 			/*
 			** Load the object's linkage into the static light culling system
 			*/
 			cload.Open_Chunk();
 			if ((cload.Cur_Chunk_ID() == PSCENE_SO_CHUNK_STATIC_LIGHT_AABLINK) && (obj)) {
 				StaticLightingSystem->Load_Object_Linkage(cload,obj);
-			} 
+			}
 			cload.Close_Chunk();
 
 			/*
@@ -491,7 +491,7 @@ void PhysicsSceneClass::Save_Sun_Light(ChunkSaveClass & csave)
 {
 	IOSunLightStruct sun;
 	memset(&sun,0,sizeof(sun));
-	
+
 	sun.Enabled = (UseSun ? 1 : 0);
 	sun.Yaw = SunYaw;
 	sun.Pitch = SunPitch;
@@ -502,9 +502,9 @@ void PhysicsSceneClass::Save_Sun_Light(ChunkSaveClass & csave)
 	sun.Color.X = c.X;
 	sun.Color.Y = c.Y;
 	sun.Color.Z = c.Z;
-	
-	csave.Write(&sun,sizeof(sun));	
-}	
+
+	csave.Write(&sun,sizeof(sun));
+}
 
 void PhysicsSceneClass::Save_Dynamic_Objects(ChunkSaveClass & csave)
 {
@@ -513,10 +513,10 @@ void PhysicsSceneClass::Save_Dynamic_Objects(ChunkSaveClass & csave)
 	*/
 	RefPhysListIterator it(&ObjList);
 	for (it.First(); !it.Is_Done(); it.Next()) {
-		
+
 		PhysClass * obj = it.Peek_Obj();
-		
-		if ((obj) && (obj->Is_Dont_Save_Enabled() == false)) {		
+
+		if ((obj) && (obj->Is_Dont_Save_Enabled() == false)) {
 			csave.Begin_Chunk(PSCENE_DD_CHUNK_DYNAMIC_OBJECT);
 			csave.Begin_Chunk(obj->Get_Factory().Chunk_ID());
 			obj->Get_Factory().Save(csave,obj);
@@ -534,7 +534,7 @@ void PhysicsSceneClass::Load_Dynamic_Objects(ChunkLoadClass & cload)
 
 			/*
 			** Load the object
-			*/ 
+			*/
 			cload.Open_Chunk();
 			PhysClass * obj = NULL;
 			PersistFactoryClass * fact = SaveLoadSystemClass::Find_Persist_Factory(cload.Cur_Chunk_ID());
@@ -543,9 +543,9 @@ void PhysicsSceneClass::Load_Dynamic_Objects(ChunkLoadClass & cload)
 			}
 			cload.Close_Chunk();
 			cload.Close_Chunk();
-			
-			
-			/* 
+
+
+			/*
 			** Add the object to the dynamic culling system
 			*/
 			DynamicCullingSystem->Add_Object(obj);
@@ -601,7 +601,7 @@ void PhysicsSceneClass::Load_Static_Object_States(ChunkLoadClass & cload)
 
 		cload.Open_Chunk();
 		void * old_ptr;
-		cload.Read(&old_ptr,sizeof(void *));
+		LOAD_MICRO_CHUNK(cload, old_ptr);
 		SaveLoadSystemClass::Register_Pointer(old_ptr, sphys);
 		cload.Close_Chunk();
 
@@ -611,7 +611,7 @@ void PhysicsSceneClass::Load_Static_Object_States(ChunkLoadClass & cload)
 			sphys->Release_Ref();
 		} else {
 		}
-		
+
 		cload.Close_Chunk();
 	}
 }
@@ -619,7 +619,7 @@ void PhysicsSceneClass::Load_Static_Object_States(ChunkLoadClass & cload)
 void PhysicsSceneClass::Post_Load_Level_Dynamic_Data(void)
 {
 	/*
-	** Possible TODO List: 
+	** Possible TODO List:
 	** - Rebuild the dirty cull list?
 	** - Rebuild the lists of vertex processors?  (tell each model that its been added?)
 	*/

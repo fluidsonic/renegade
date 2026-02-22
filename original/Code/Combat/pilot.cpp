@@ -69,18 +69,18 @@ Clamp_Angle (float angle, float min_angle, float max_angle)
 	float result = angle;
 
 	if (min_angle <= max_angle) {
-		
+
 		//
 		//	Handle the 'typical' case where there is no 360-mark wrap-around
 		//
 		if (angle < min_angle) {
 			result = min_angle;
-		} else if (angle > max_angle) {		
+		} else if (angle > max_angle) {
 			result = max_angle;
 		}
 
 	} else {
-		
+
 		//
 		//	Handle the 360-mark wrap-around case
 		//
@@ -154,7 +154,7 @@ PilotClass::Get_Object_Space_Velocity (Vector3 &vel_vector) const
 	//
 	Vector3 vel_vector_world;
 	phys_obj->Get_Velocity (&vel_vector_world);
-	Matrix3D::Inverse_Rotate_Vector (m_GameObj->Get_Transform (), vel_vector_world, &vel_vector);			
+	Matrix3D::Inverse_Rotate_Vector (m_GameObj->Get_Transform (), vel_vector_world, &vel_vector);
 	return ;
 }
 
@@ -168,7 +168,7 @@ PilotClass::Set_Target (const Vector3 *target)
 {
 	if (target != NULL) {
 		m_TargetLocation = *target;
-		
+
 		if (m_Mode != MODE_CIRCLE_POINT) {
 			m_FaceTarget = true;
 		}
@@ -206,14 +206,14 @@ PilotClass::Initialize (SmartGameObj *game_obj)
 	//	By default assume our final destination is our current location
 	//
 	game_obj->Get_Position (&m_FinalDest);
-	game_obj->Get_Position (&m_NextPoint);	
+	game_obj->Get_Position (&m_NextPoint);
 
 	//
 	//	Determine if this game object is a vehicle or not (it better be...)
 	//
 	VehicleGameObj *vehicle = m_GameObj->As_VehicleGameObj ();
 	if (vehicle != NULL) {
-		
+
 		//
 		//	Start this vehicle's engine's running
 		//
@@ -221,7 +221,7 @@ PilotClass::Initialize (SmartGameObj *game_obj)
 			vehicle->Enable_Engine (true);
 		}
 	}
-	
+
 	return ;
 }
 
@@ -234,7 +234,7 @@ float
 PilotClass::Calculate_Desired_Relative_Facing (void)
 {
 	float base_angle	= 0;
-	
+
 	//
 	//	Should we be facing the destination or the current target?
 	//
@@ -245,7 +245,7 @@ PilotClass::Calculate_Desired_Relative_Facing (void)
 		//
 		Vector3 target_pos;
 		Matrix3D::Inverse_Transform_Vector (m_CurrentTM, m_TargetLocation, &target_pos);
-		
+
 		//
 		//	Calculate the absolute turn angle
 		//
@@ -259,9 +259,9 @@ PilotClass::Calculate_Desired_Relative_Facing (void)
 		//
 		base_angle	= WWMath::Atan2 (m_ObjSpaceWaypoint.Y, m_ObjSpaceWaypoint.X);
 		base_angle	= WWMath::Wrap (base_angle, 0, WWMATH_PI * 2);
-	
-	} 
-	
+
+	}
+
 	//
 	//	Convert the angle from [0, 360] to [-180, 180]
 	//
@@ -305,7 +305,7 @@ PilotClass::Think (void)
 	//
 	//	Pass the current controls onto the game object
 	//
-	Apply_Controls ();	
+	Apply_Controls ();
 
 	//
 	//	Return true when we've arrived at the destination
@@ -345,7 +345,7 @@ PilotClass::Calculate_Forward_Speed (float distance)
 	//
 	//	Pick a speed based on our distance from the destination
 	//
-	m_ForwardSpeed	= distance / MAX_FORWARD_DELTA;		
+	m_ForwardSpeed	= distance / MAX_FORWARD_DELTA;
 	m_ForwardSpeed	= WWMath::Clamp (m_ForwardSpeed, -1.0F, 1.0F);
 	return ;
 }
@@ -454,24 +454,24 @@ PilotClass::Calculate_Turn_Sharpness (void)
 void
 PilotClass::Process_Hover (void)
 {
-	// 
+	//
 	// Update the "simplified" transform
 	//
 	Update_Transform ();
 
-	// 
+	//
 	// When hovering, we want to maintain a zero horizontal velocity
 	// while moving towards our desired altitude
 	//
 	m_ForwardSpeed	= 0.0f;
 	m_StrafeSpeed	= 0.0f;
 
-	// 
+	//
 	// Update the "simplified" transform
 	//
 	Update_Transform ();
 
-	// 
+	//
 	// When hovering, we want to maintain a zero horizontal velocity
 	// while moving towards our desired altitude
 	//
@@ -570,7 +570,7 @@ PilotClass::Process_Fly_To_Point (void)
 	//	Calculate how fast the vehicle needs to move in each direction
 	//
 	Calculate_Strafe_Speed ();
-	
+
 	//
 	//	If we are on a path then we need to calculate the forward speed
 	// as if we are going full speed the whole way there
@@ -590,7 +590,7 @@ PilotClass::Process_Fly_To_Point (void)
 			m_ForwardSpeed = 0.0F;
 		}
 
-		// 
+		//
 		// Reduce forward/back speed if we are mostly strafing.
 		//
 		if (WWMath::Fabs (m_StrafeSpeed) > 0.25f) {
@@ -602,7 +602,7 @@ PilotClass::Process_Fly_To_Point (void)
 		//
 		if (WWMath::Fabs (m_TurnSharpness) > 0.65F) {
 			m_ForwardSpeed = m_ForwardSpeed * (1.25F - WWMath::Fabs (m_TurnSharpness));
-		}		
+		}
 
 	} else {
 		Calculate_Forward_Speed (m_ObjSpaceDest.X);
@@ -634,7 +634,7 @@ PilotClass::Check_Completion (void)
 	float dist_to_goal = 0;
 	if (m_CurrentPath != NULL) {
 		float dist_on_path = m_CurrentPath->Get_Remaining_Path_Length ();
-		dist_to_goal = (m_ObjSpaceWaypoint.Length () + dist_on_path);		
+		dist_to_goal = (m_ObjSpaceWaypoint.Length () + dist_on_path);
 	} else {
 		dist_to_goal = m_ObjSpaceDest.Length ();
 	}
@@ -652,7 +652,7 @@ PilotClass::Check_Completion (void)
 		m_ObjSpaceDest += bounding_box.Center;
 	}
 
-	// 
+	//
 	// Once we come within m_HoverDist of the desired position we switch into "hover" mode.
 	//
 	if (dist_to_goal < m_HoverDist && m_NextPoint == m_FinalDest) {
@@ -684,7 +684,7 @@ void
 PilotClass::Update_Transform (void)
 {
 	Matrix3D obj_tm = m_GameObj->Get_Transform ();
-	
+
 	//
 	//	Build a transform that only uses the facing and position
 	// of the vehicle.
@@ -738,7 +738,7 @@ PilotClass::Determine_Preferred_Height (void)
 	//
 	//	Try to determine where the aircraft will be in 1 and 2 seconds
 	// from now.
-	//	
+	//
 	Vector3 curr_pos;
 	m_GameObj->Get_Position (&curr_pos);
 
@@ -774,7 +774,7 @@ PilotClass::Determine_Preferred_Height (void)
 	future_pos9.Z = curr_pos.Z;
 	future_pos10.Z = curr_pos.Z;
 
-	
+
 	//
 	//	Now, lookup the preferred height for these future positions
 	//
@@ -853,7 +853,7 @@ PilotClass::Apply_Controls (void)
 	} else {
 		forward_accel	= WWMath::Clamp (5.0f * (m_ForwardSpeed - curr_forward_speed), -1.0F, 1.0F);
 		strafe_accel	= WWMath::Clamp (1.0f * (m_StrafeSpeed - curr_strafe_speed), -1.0F, 1.0F);
-		lift_accel		= WWMath::Clamp (3.0f * (m_LiftSpeed - curr_lift_speed), -1.0F, 1.0F);	
+		lift_accel		= WWMath::Clamp (3.0f * (m_LiftSpeed - curr_lift_speed), -1.0F, 1.0F);
 	}
 
 	//
@@ -899,7 +899,7 @@ PilotClass::Set_Mode (PilotClass::MODE mode)
 			case MODE_CIRCLE_POINT:
 			{
 				m_FaceTarget = false;
-				
+
 				//
 				//	Initialize the circling distance
 				//
@@ -910,7 +910,7 @@ PilotClass::Set_Mode (PilotClass::MODE mode)
 			break;
 		}
 
-		// 
+		//
 		// When we change modes, we reset the target in case we had
 		// a fake target from hover mode
 		//
@@ -975,11 +975,11 @@ PilotClass::Has_Arrived (void) const
 
 	if (m_Mode == MODE_HOVER) {
 
-		/*bool 
+		/*bool
 		if (m_CurrentPath != NULL) {
 			m_ObjSpaceDest.Length ()
 		}*/
-		
+
 		//
 		//	In hovering mode, we have 'arrived' if we have mostly finished moving
 		//
@@ -1020,15 +1020,15 @@ PilotClass::Save (ChunkSaveClass &csave)
 
 		//
 		//	Save each variable to its own microchunk
-		//		
-		
+		//
+
 		WRITE_MICRO_CHUNK (csave, VARID_FINAL_DEST,			m_FinalDest);
 		WRITE_MICRO_CHUNK (csave, VARID_NEXT_POINT,			m_NextPoint);
 		WRITE_MICRO_CHUNK (csave, VARID_CURRENT_TM,			m_CurrentTM);
 		WRITE_MICRO_CHUNK (csave, VARID_OBJ_SPACE_DEST,		m_ObjSpaceDest);
-		WRITE_MICRO_CHUNK (csave, VARID_OBJ_SPACE_WPOINT,	m_ObjSpaceWaypoint);		
-		WRITE_MICRO_CHUNK (csave, VARID_PATH_PTR,				m_CurrentPath);	
-		WRITE_MICRO_CHUNK (csave, VARID_GAMEOBJ_PTR,			m_GameObj);	
+		WRITE_MICRO_CHUNK (csave, VARID_OBJ_SPACE_WPOINT,	m_ObjSpaceWaypoint);
+		WRITE_MICRO_CHUNK (csave, VARID_PATH_PTR,				m_CurrentPath);
+		WRITE_MICRO_CHUNK (csave, VARID_GAMEOBJ_PTR,			m_GameObj);
 		WRITE_MICRO_CHUNK (csave, VARID_MAX_SPEED,			m_MaxSpeed);
 		WRITE_MICRO_CHUNK (csave, VARID_SPEED_FACTOR,		m_SpeedFactor);
 		WRITE_MICRO_CHUNK (csave, VARID_AGGRESSIVENESS,		m_Aggressiveness);
@@ -1045,7 +1045,7 @@ PilotClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, VARID_CIRCLE_ANGLE,		m_CircleAngle);
 		WRITE_MICRO_CHUNK (csave, VARID_CIRCLE_DIST,			m_CircleDist);
 		WRITE_MICRO_CHUNK (csave, VARID_MIN_CIRCLE_ANGLE,	m_MinCircleAngle);
-		WRITE_MICRO_CHUNK (csave, VARID_MAX_CIRCLE_ANGLE,	m_MaxCircleAngle); 
+		WRITE_MICRO_CHUNK (csave, VARID_MAX_CIRCLE_ANGLE,	m_MaxCircleAngle);
 
 	csave.End_Chunk ();
 	return ;
@@ -1059,7 +1059,7 @@ PilotClass::Save (ChunkSaveClass &csave)
 void
 PilotClass::Load (ChunkLoadClass &cload)
 {
-	while (cload.Open_Chunk ()) {		
+	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			case CHUNKID_VARIABLES:
@@ -1092,8 +1092,8 @@ PilotClass::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK (cload, VARID_CURRENT_TM,			m_CurrentTM);
 			READ_MICRO_CHUNK (cload, VARID_OBJ_SPACE_DEST,		m_ObjSpaceDest);
 			READ_MICRO_CHUNK (cload, VARID_OBJ_SPACE_WPOINT,	m_ObjSpaceWaypoint);
-			READ_MICRO_CHUNK (cload, VARID_PATH_PTR,				m_CurrentPath);	
-			READ_MICRO_CHUNK (cload, VARID_GAMEOBJ_PTR,			m_GameObj);	
+			READ_MICRO_CHUNK (cload, VARID_PATH_PTR,				m_CurrentPath);
+			READ_MICRO_CHUNK (cload, VARID_GAMEOBJ_PTR,			m_GameObj);
 			READ_MICRO_CHUNK (cload, VARID_MAX_SPEED,				m_MaxSpeed);
 			READ_MICRO_CHUNK (cload, VARID_SPEED_FACTOR,			m_SpeedFactor);
 			READ_MICRO_CHUNK (cload, VARID_AGGRESSIVENESS,		m_Aggressiveness);
@@ -1110,7 +1110,7 @@ PilotClass::Load_Variables (ChunkLoadClass &cload)
 			READ_MICRO_CHUNK (cload, VARID_CIRCLE_ANGLE,			m_CircleAngle);
 			READ_MICRO_CHUNK (cload, VARID_CIRCLE_DIST,			m_CircleDist);
 			READ_MICRO_CHUNK (cload, VARID_MIN_CIRCLE_ANGLE,	m_MinCircleAngle);
-			READ_MICRO_CHUNK (cload, VARID_MAX_CIRCLE_ANGLE,	m_MaxCircleAngle); 
+			READ_MICRO_CHUNK (cload, VARID_MAX_CIRCLE_ANGLE,	m_MaxCircleAngle);
 		}
 
 		cload.Close_Micro_Chunk ();
@@ -1128,7 +1128,7 @@ PilotClass::Load_Variables (ChunkLoadClass &cload)
 	//
 	if (m_CurrentPath != NULL) {
 		REQUEST_POINTER_REMAP ((void **)&m_CurrentPath);
-	}	
+	}
 
 	return ;
 }

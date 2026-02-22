@@ -1517,7 +1517,7 @@ void	Load_Data( ScriptLoader & loader, int size, void * data )
 void Load_Pointer(ScriptLoader& loader, void** pointer)
 {
 	SCRIPT_PTR_CHECK(pointer);
-	Load_Data(loader, sizeof(void*), pointer);
+	LOAD_MICRO_CHUNK(loader.CLoad, pointer);
 	REQUEST_POINTER_REMAP(pointer);
 }
 
