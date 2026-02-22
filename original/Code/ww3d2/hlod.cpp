@@ -1918,10 +1918,13 @@ void HLodClass::Render(RenderInfoClass & rinfo)
 	int i;
 
 	static int _hlod_log_n = 0;
-	if (_hlod_log_n < 5 && strstr(Get_Name(), "IF_B") != nullptr) {
+	if (_hlod_log_n < 5 && (strstr(Get_Name(), "IF_B") != nullptr || strstr(Get_Name(), "IF_TITLE") != nullptr)) {
 		_hlod_log_n++;
 		fprintf(stderr, "[hlod] Render(%s) not_hidden=%d lod=%d subobjs=%d\n",
 			Get_Name(), (int)Is_Not_Hidden_At_All(), CurLod, Lod[CurLod].Count());
+		for (int dbg_i = 0; dbg_i < Lod[CurLod].Count(); dbg_i++) {
+			fprintf(stderr, "  [hlod]   sub[%d]=%s\n", dbg_i, Lod[CurLod][dbg_i].Model->Get_Name());
+		}
 	}
 
 	if (Is_Not_Hidden_At_All() == false) {

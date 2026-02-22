@@ -403,7 +403,7 @@ void ThumbnailManagerClass::Save(bool force)
 		WW3DFormat original_format=thumb->Get_Original_Texture_Format();
 		uint32_t date_time=thumb->Get_Date_Time();
 
-		thumb_file->Write(&date_time,sizeof(unsigned long));
+		thumb_file->Write(&date_time,sizeof(uint32_t));  // must match Read(&date_time,sizeof(uint32_t)) at load time; sizeof(unsigned long)==8 on 64-bit
 		thumb_file->Write(&offset,sizeof(int));
 		thumb_file->Write(&width,sizeof(int));
 		thumb_file->Write(&height,sizeof(int));

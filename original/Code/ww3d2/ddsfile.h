@@ -113,7 +113,7 @@ struct LegacyDDSURFACEDESC2 {
 	};
 	unsigned AlphaBitDepth;
 	unsigned Reserved;
-	void* Surface;
+	uint32_t Surface;  // DDS on-disk format stores a 32-bit Win32 pointer; must NOT be void* (would be 8 bytes on 64-bit, breaking sizeof == 124)
 	union
 	{
 		LegacyDDCOLORKEY CKDestOverlay;
@@ -126,6 +126,7 @@ struct LegacyDDSURFACEDESC2 {
 	LegacyDDSCAPS2 Caps;
 	unsigned TextureStage;
 };
+static_assert(sizeof(LegacyDDSURFACEDESC2) == 124, "LegacyDDSURFACEDESC2 must be exactly 124 bytes to match the DDS on-disk format");
 
 // ----------------------------------------------------------------------------
 //

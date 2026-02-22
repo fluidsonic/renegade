@@ -35,9 +35,19 @@ enum FakeGDITag : int {
 
 // ---- Font object ----
 struct FakeFont {
-    FakeGDITag tag;      // must be first field = TAG_FONT
+    FakeGDITag tag;       // must be first field = TAG_FONT
     CTFontRef  ctfont;
     int        height;
+    // GDI ascent: abs(cHeight) when cHeight<0, matching Windows tmAscent convention.
+    // Windows tmAscent = |cHeight| when CreateFont is called with negative height.
+    // CoreText ascent is smaller (no internal leading), so we use gdi_ascent for
+    // baseline placement and metrics reporting to match Windows layout exactly.
+    int        gdi_ascent;
+    // Maximum safe char_size.cy / tmHeight value: the GDI bitmap is PointSize*2 tall,
+    // where PointSize = MulDiv(gdi_ascent, 72, 96).  If CoreText descent is large
+    // (e.g. Regatta Condensed LET), gdi_ascent+ceil(descent) can exceed this limit,
+    // causing a heap-buffer-overflow in Store_GDI_Char.  Cap tmHeight and size->cy here.
+    int        bmp_height;
 };
 
 // ---- Bitmap object (24-bit BGR buffer for game, 32-bit BGRA for CG) ----
@@ -117,6 +127,14 @@ HFONT CreateFontA(int cHeight, int /*cWidth*/, int /*cEsc*/, int /*cOri*/,
     f->tag    = TAG_FONT;
     f->height = abs(cHeight);
 
+    // Windows CreateFont convention:
+    //   cHeight < 0  → |cHeight| = tmAscent (baseline to top of cell, incl. internal leading)
+    //   cHeight > 0  → cHeight  = tmHeight  (total cell height)
+    //   cHeight == 0 → use default (will be filled after ctfont is created)
+    // Store raw cHeight sign so GetTextMetrics/ExtTextOut can apply the right formula.
+    // gdi_ascent is set below after the ctfont is created (needs ascent for cHeight==0 case).
+    int raw_cheight = cHeight;
+
     // Build a font descriptor matching the requested face + weight
     const char* name = (pszFaceName && pszFaceName[0]) ? pszFaceName : "Helvetica";
 
@@ -168,6 +186,24 @@ HFONT CreateFontA(int cHeight, int /*cWidth*/, int /*cEsc*/, int /*cOri*/,
         f->ctfont = CTFontCreateWithName(cf_name, pt_size, nullptr);
     }
     CFRelease(cf_name);
+
+    // Compute gdi_ascent to match Windows tmAscent convention:
+    //   cHeight < 0 → Windows treats |cHeight| as tmAscent (baseline-to-cell-top distance)
+    //   cHeight > 0 → Windows treats cHeight as tmHeight; set gdi_ascent = ceil(ctascent)
+    //   cHeight == 0 → default; use ceil(ctascent)
+    {
+        int ct_ascent_ceil = (int)ceil(CTFontGetAscent(f->ctfont));
+        if (raw_cheight < 0) {
+            // |cHeight| = tmAscent; the difference vs CoreText ascent is internal leading
+            f->gdi_ascent = -raw_cheight;  // = abs(cHeight)
+        } else {
+            f->gdi_ascent = ct_ascent_ceil;
+        }
+    }
+    // The game allocates a GDI bitmap of PointSize*2 rows (Create_GDI_Font).
+    // PointSize = MulDiv(gdi_ascent, 72, 96).  Store the cap so metrics never exceed it.
+    f->bmp_height = MulDiv(f->gdi_ascent, 72, 96) * 2;
+    if (f->bmp_height < f->gdi_ascent) f->bmp_height = f->gdi_ascent;  // safety for large DPI
 
     return (HFONT)f;
 }
@@ -268,12 +304,26 @@ BOOL GetTextMetricsA(HDC hdc, TEXTMETRIC* tm) {
     CTFontRef font = (dc && dc->font) ? dc->font->ctfont : nullptr;
 
     if (font) {
-        CGFloat ascent  = CTFontGetAscent(font);
+        FakeFont* ff = (dc && dc->font) ? dc->font : nullptr;
+        int gdi_ascent = ff ? ff->gdi_ascent : (int)ceil(CTFontGetAscent(font));
         CGFloat descent = CTFontGetDescent(font);
-        CGFloat leading = CTFontGetLeading(font);
-        tm->tmAscent  = (LONG)ceil(ascent);
-        tm->tmDescent = (LONG)ceil(descent);
-        tm->tmHeight  = (LONG)(ceil(ascent) + ceil(descent) + (LONG)ceil(leading));
+        int ceil_descent = (int)ceil(descent);
+        // Match Windows GDI convention exactly:
+        //   tmAscent = gdi_ascent (= |cHeight| when cHeight<0, i.e. baseline-to-cell-top)
+        //   tmDescent = ceil(CTFontGetDescent)
+        //   tmHeight = tmAscent + tmDescent
+        //   tmInternalLeading = gdi_ascent - ceil(CTFontGetAscent) (blank rows at top of cell)
+        tm->tmAscent          = gdi_ascent;
+        // Cap total height to the bitmap height (PointSize*2) to avoid buffer overflows
+        // in Store_GDI_Char.  If CoreText descent is large (e.g. Regatta Condensed LET),
+        // gdi_ascent+ceil_descent can exceed the bitmap, causing a heap-buffer-overflow.
+        int bmp_h = ff ? ff->bmp_height : (gdi_ascent * 3 / 2);
+        int capped_height = gdi_ascent + ceil_descent;
+        if (capped_height > bmp_h) capped_height = bmp_h;
+        tm->tmHeight          = capped_height;
+        tm->tmDescent         = capped_height - gdi_ascent;
+        tm->tmInternalLeading = gdi_ascent - (int)ceil(CTFontGetAscent(font));
+        if (tm->tmInternalLeading < 0) tm->tmInternalLeading = 0;
         CGFloat cap_h = CTFontGetCapHeight(font);
         tm->tmAveCharWidth = (LONG)(cap_h * 0.5);
         tm->tmMaxCharWidth = (LONG)cap_h;
@@ -298,8 +348,17 @@ BOOL GetTextExtentPoint32W(HDC hdc, const WCHAR* str, int c, SIZE* size) {
         return TRUE;
     }
 
+    FakeFont* ff = (dc && dc->font) ? dc->font : nullptr;
+    int gdi_ascent = ff ? ff->gdi_ascent : (int)ceil(CTFontGetAscent(font));
+    int ceil_descent = (int)ceil(CTFontGetDescent(font));
+    // Match Windows: GetTextExtentPoint32W.cy == tmHeight == tmAscent + tmDescent.
+    // Cap to bitmap height (PointSize*2) to prevent heap-buffer-overflow in Store_GDI_Char
+    // when CoreText descent exceeds the budget for large or decorative fonts.
+    int bmp_h = ff ? ff->bmp_height : (gdi_ascent * 3 / 2);
+    int cy = gdi_ascent + ceil_descent;
+    size->cy = (cy > bmp_h) ? bmp_h : cy;
+
     CGFloat total_adv = 0.0;
-    CGFloat height = CTFontGetAscent(font) + CTFontGetDescent(font);
     for (int i = 0; i < c; i++) {
         UniChar ch = (UniChar)str[i];
         CGGlyph glyph = 0;
@@ -308,11 +367,10 @@ BOOL GetTextExtentPoint32W(HDC hdc, const WCHAR* str, int c, SIZE* size) {
             CTFontGetAdvancesForGlyphs(font, kCTFontOrientationDefault, &glyph, &adv, 1);
             total_adv += adv.width;
         } else {
-            total_adv += height * 0.5;  // fallback
+            total_adv += CTFontGetAscent(font) * 0.5;  // fallback
         }
     }
     size->cx = (LONG)ceil(total_adv);
-    size->cy = (LONG)ceil(height);
     return TRUE;
 }
 
@@ -366,6 +424,11 @@ BOOL ExtTextOutW(HDC hdc, int x, int y, UINT options,
         CGFloat g = ((fg >>  8) & 0xFF) / 255.0;
         CGFloat b = ((fg >> 16) & 0xFF) / 255.0;
 
+        // Disable sub-pixel (ClearType) font smoothing so all RGB channels are equal.
+        // Store_GDI_Char reads only the B channel as alpha; sub-pixel rendering produces
+        // R≠G≠B color fringes which cause incorrect/blurry alpha values.
+        CGContextSetShouldSmoothFonts(ctx, false);
+
         // Build attributed string
         CFStringRef cf_str = CFStringCreateWithBytes(kCFAllocatorDefault,
                                  (const UInt8*)str, (CFIndex)(c * sizeof(UniChar)),
@@ -391,13 +454,17 @@ BOOL ExtTextOutW(HDC hdc, int x, int y, UINT options,
             CTLineRef line = CTLineCreateWithAttributedString(as);
             CFRelease(as);
 
-            // GDI y=0 is top; CoreText y is from bottom of bitmap.
-            // Baseline = (bitmap_height - y) - ascent
-            CGFloat ascent = CTFontGetAscent(font);
+            // GDI y=0 is the top of the character cell. The baseline is at y + tmAscent.
+            // Windows convention: tmAscent = gdi_ascent = |cHeight| (for negative CreateFont height).
+            // This may be larger than CTFontGetAscent(), leaving internal leading blank rows at top.
+            // CoreText origin is bottom-left, so:
+            //   cg_baseline = (bitmap_height - y) - gdi_ascent
+            // This places the glyph starting at row (gdi_ascent - ctAscent) = tmInternalLeading,
+            // matching the Windows glyph position within the cell.
+            int gdi_ascent = dc->font->gdi_ascent;
             CGFloat cg_x   = (CGFloat)x;
-            CGFloat cg_y   = (CGFloat)(bmp->height - y) - ascent;
+            CGFloat cg_y   = (CGFloat)(bmp->height - y) - (CGFloat)gdi_ascent;
 
-            // CGBitmapContext stores row 0 at the top of the visual image, but
             CGContextSetTextMatrix(ctx, CGAffineTransformIdentity);
             CGContextSetTextPosition(ctx, cg_x, cg_y);
             CTLineDraw(line, ctx);

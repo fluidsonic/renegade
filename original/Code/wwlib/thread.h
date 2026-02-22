@@ -1,10 +1,6 @@
 #ifndef THREAD_H
 #define THREAD_H
 
-#ifdef _UNIX
-#include "osdep.h"
-#endif
-
 #include "always.h"
 #include "vector.h"
 
@@ -76,7 +72,7 @@ protected:
 	ExceptionHandlerType ExceptionHandler;
 
 private:
-	static void __cdecl Internal_Thread_Function(void*);
+	static void* Internal_Thread_Function(void*);
 	volatile unsigned long handle;
 	int thread_priority;
 };

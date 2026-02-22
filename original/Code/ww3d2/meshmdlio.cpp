@@ -1676,6 +1676,11 @@ void MeshModelClass::install_materials(MeshLoadContextClass * context)
 	if (Get_Flag(MeshGeometryClass::PRELIT_VERTEX)) {
 		lighting_enabled=false;
 	}
+	fprintf(stderr,"[meshload] mesh=%s prelitVertex=%d lightingEnabled=%d attrs=0x%08X\n",
+		Get_Name(),
+		(int)Get_Flag(MeshGeometryClass::PRELIT_VERTEX),
+		(int)lighting_enabled,
+		(unsigned)context->Header.Attributes);
 	DefMatDesc->Post_Load_Process (lighting_enabled,this);
 	if (AlternateMatDesc != NULL) {
 		AlternateMatDesc->Post_Load_Process (lighting_enabled,this);
