@@ -511,10 +511,11 @@ class GameServer(internal val config: ServerConfig) {
     }
 
     private fun flushOutbox() {
+        bytesSentThisTick.clear()
         for ((rhostId, packets) in pendingOutbox) {
             val datagrams = PacketCombiner.combine(packets)
             enqueueWithCrc(datagrams)
-            bytesSentThisTick[rhostId] = (bytesSentThisTick[rhostId] ?: 0) + datagrams.sumOf { it.data.size }
+            bytesSentThisTick[rhostId] = datagrams.sumOf { it.data.size }
         }
         pendingOutbox.clear()
     }
