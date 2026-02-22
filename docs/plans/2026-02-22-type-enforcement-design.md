@@ -39,12 +39,15 @@ Changes to `original/CMakeLists.txt`:
 set(CMAKE_CXX_STANDARD 23)
 ```
 
-This unlocks `<stdfloat>` which provides `std::float32_t` and `std::float64_t`.
+**Float types:** `float` and `double` are kept as-is — `float32_t`/`float64_t` from `<stdfloat>` are distinct types (not just aliases) and are not available in the current toolchain anyway. Instead, their sizes are guaranteed at compile time via:
 
-**Risk:** Apple Clang on macOS 15 / Xcode 16 may not ship `<stdfloat>` — it was added to libc++ in LLVM 18. Since `brew install llvm` is required for the plugin anyway, verify during implementation:
+```cpp
+// original/compat/floattypes.h
+static_assert(sizeof(float)  == 4, "float must be 32-bit IEEE 754");
+static_assert(sizeof(double) == 8, "double must be 64-bit IEEE 754");
+```
 
-- Try with Apple Clang first (`#include <stdfloat>` in a test file)
-- If unavailable, point the build at LLVM clang: `set(CMAKE_CXX_COMPILER "/opt/homebrew/opt/llvm/bin/clang++")`
+`float` and `double` are whitelisted in the plugin (not flagged).
 
 ---
 
@@ -73,10 +76,12 @@ original/tools/primitive-type-check/
 | `char8_t` | C++ Unicode type — built-in, not a typedef |
 | `char16_t` | C++ Unicode type — built-in, not a typedef |
 | `char32_t` | C++ Unicode type — built-in, not a typedef |
+| `float` | Allowed — size guaranteed 4 bytes by `static_assert` in floattypes.h |
+| `double` | Allowed — size guaranteed 8 bytes by `static_assert` in floattypes.h |
 
 ### Flagged raw built-ins
 
-`char`, `signed char`, `unsigned char`, `short`, `unsigned short`, `int`, `unsigned int`, `long`, `unsigned long`, `long long`, `unsigned long long`, `float`, `double`, `long double`, `wchar_t`
+`char`, `signed char`, `unsigned char`, `short`, `unsigned short`, `int`, `unsigned int`, `long`, `unsigned long`, `long long`, `unsigned long long`, `long double`, `wchar_t`
 
 ### Scope
 

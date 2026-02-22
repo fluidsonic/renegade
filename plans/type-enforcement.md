@@ -2,9 +2,9 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Enforce fixed-width types (`(u)intN_t`, `charN_t`, `float32_t`, `float64_t`) project-wide via a custom clang-tidy plugin, and enable narrowing/conversion warnings.
+**Goal:** Enforce fixed-width types (`(u)intN_t`, `charN_t`) and size-guaranteed float/double project-wide via a custom clang-tidy plugin, and enable narrowing/conversion warnings.
 
-**Architecture:** A `MODULE` library (`PrimitiveTypeCheck.dylib`) registers a `ClangTidyCheck` subclass that walks AST declarations and flags any raw `BuiltinType` that isn't `bool`, `void`, `char8_t`, `char16_t`, or `char32_t`. A CMake `lint` target runs `run-clang-tidy` with this plugin across all files in `original/Code/`. Narrowing and conversion warnings are separate flag-level changes in the root `CMakeLists.txt`.
+**Architecture:** A `MODULE` library (`PrimitiveTypeCheck.dylib`) registers a `ClangTidyCheck` subclass that walks AST declarations and flags any raw `BuiltinType` that isn't in the allowed set: `bool`, `void`, `char8_t`, `char16_t`, `char32_t`, `float`, `double`. `float` and `double` are kept as-is (their sizes are guaranteed by static_asserts in `floattypes.h`). A CMake `lint` target runs `run-clang-tidy` with this plugin across all files in `original/Code/`. Narrowing and conversion warnings are separate flag-level changes in the root `CMakeLists.txt`.
 
 **Tech Stack:** Clang-tidy plugin API (LLVM 21, `/opt/homebrew/opt/llvm`), CMake 3.20, Ninja, C++23.
 
@@ -13,7 +13,7 @@
 ## Status
 
 - [x] C++23 already bumped (`CMAKE_CXX_STANDARD 23` in `original/CMakeLists.txt`)
-- [ ] `<stdfloat>` not available in Apple Clang or LLVM 21 libc++ → provide `float32_t`/`float64_t` via `original/compat/floattypes.h`
+- [ ] `float`/`double` size guarantees via `static_assert` in `original/compat/floattypes.h` (no type aliases — `float`/`double` are kept and whitelisted in the plugin)
 - [ ] Narrowing/conversion warnings not yet enabled
 - [ ] Plugin not yet written
 - [ ] `lint` CMake target not yet wired
@@ -50,9 +50,9 @@ git commit -m "build: bump to C++23, remove deprecated -fdelayed-template-parsin
 
 ---
 
-## Task 2: Add `float32_t` / `float64_t` type aliases
+## Task 2: Add float/double size guarantees
 
-`<stdfloat>` is not available in the current toolchain (`LLVM 21 + Apple libc++`). Provide the aliases via a new compat header force-included from `windef.h`.
+`float` and `double` are kept as-is (they are whitelisted in the plugin). Guarantee their sizes via `static_assert` in a new compat header force-included from `windef.h`.
 
 **Files:**
 - Create: `original/compat/floattypes.h`
@@ -62,38 +62,32 @@ git commit -m "build: bump to C++23, remove deprecated -fdelayed-template-parsin
 
 ```cpp
 #pragma once
-// Portable fixed-width float types.
-// Replace with <stdfloat> when toolchain support is available.
-#include <cstdint>
+// Guarantee IEEE 754 float sizes at compile time.
+// float and double are used directly (no aliases).
 
 static_assert(sizeof(float)  == 4, "float must be 32-bit IEEE 754");
 static_assert(sizeof(double) == 8, "double must be 64-bit IEEE 754");
-
-using float32_t = float;
-using float64_t = double;
 ```
 
 **Step 2: Add include to `original/compat/windef.h`**
 
-Find the bottom of the existing `#pragma once` block (before any other content, or at the very end). Add:
+At the end of `windef.h`, add:
 ```cpp
 #include "floattypes.h"
 ```
 
-Place it near the other type-providing includes (after `<cstdint>` is already included).
-
 **Step 3: Build to confirm no conflicts**
 
 ```bash
-cmake --build /Users/marc/Documents/ccr/original/build --target Commando -j8 2>&1 | grep -i "error\|float32\|float64" | head -20
+cmake --build /Users/marc/Documents/ccr/original/build --target Commando -j8 2>&1 | grep -i "error:" | head -20
 ```
-Expected: no errors mentioning `float32_t` or `float64_t`.
+Expected: no errors.
 
 **Step 4: Commit**
 
 ```bash
 git add original/compat/floattypes.h original/compat/windef.h
-git commit -m "compat: add float32_t/float64_t aliases (C++23 stdfloat fallback)"
+git commit -m "compat: assert float==4 and double==8 (IEEE 754 size guarantees)"
 ```
 
 ---
@@ -199,11 +193,12 @@ No step to build yet — source files come in the next task.
 namespace ccr {
 
 /// Warns when a declaration uses a raw C++ built-in type instead of a
-/// fixed-width alias ((u)intN_t, charN_t, float32_t, float64_t).
+/// fixed-width alias ((u)intN_t, charN_t).
 ///
-/// Allowed raw built-ins: bool, void, nullptr_t, char8_t, char16_t, char32_t.
-/// Everything else (int, float, double, char, long, short, …) is flagged.
-/// Typedefs are NOT flagged — int32_t, float32_t, size_t all pass through.
+/// Allowed raw built-ins: bool, void, nullptr_t, char8_t, char16_t, char32_t,
+/// float (size guaranteed 4 bytes), double (size guaranteed 8 bytes).
+/// Everything else (int, char, long, short, …) is flagged.
+/// Typedefs are NOT flagged — int32_t, size_t all pass through.
 class PrimitiveTypeCheck : public clang::tidy::ClangTidyCheck {
 public:
     PrimitiveTypeCheck(llvm::StringRef Name, clang::tidy::ClangTidyContext *Context)
@@ -265,6 +260,8 @@ bool PrimitiveTypeCheck::isForbiddenRawBuiltin(QualType QT) {
         case BuiltinType::Char8:    // char8_t  (C++20)
         case BuiltinType::Char16:   // char16_t (C++11)
         case BuiltinType::Char32:   // char32_t (C++11)
+        case BuiltinType::Float:    // float  (size asserted == 4 in floattypes.h)
+        case BuiltinType::Double:   // double (size asserted == 8 in floattypes.h)
             return false;
 
         // ── Everything else is forbidden ───────────────────────────────────
@@ -273,8 +270,7 @@ bool PrimitiveTypeCheck::isForbiddenRawBuiltin(QualType QT) {
         // int, unsigned int
         // long, unsigned long
         // long long, unsigned long long
-        // float, double, long double
-        // wchar_t
+        // long double, wchar_t
         // __int128, __float128, etc.
         default:
             return true;
