@@ -73,6 +73,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import java.io.File
+import java.net.InetSocketAddress
 
 /**
  * Main server orchestrator. Wires together UdpTransport, ConnectionManager,
@@ -168,6 +169,10 @@ class GameServer(internal val config: ServerConfig) {
 
     // Periodic GameDataUpdateEvent resend (once per second) to keep clients' timer in sync.
     private var lastGameDataUpdateMs: Long = 0L
+
+    // Per-tick outbox: packets buffered during tick, flushed together at end of tick
+    private val pendingOutbox = mutableMapOf<Int, MutableList<Pair<InetSocketAddress, ByteArray>>>()
+    private val bytesSentThisTick = mutableMapOf<Int, Int>()
 
     // Tracks rhostIds of clients currently in a loading state (LOADINGEVENT).
     private val loadingHosts = mutableSetOf<Int>()
@@ -445,6 +450,9 @@ class GameServer(internal val config: ServerConfig) {
             god.c4Objects.removeAll { it.isDeletePending }
             god.beaconObjects.removeAll { it.isDeletePending }
 
+            // Flush per-tick packet outbox: combines buffered packets into fewer datagrams per host
+            flushOutbox()
+
             delay(tickIntervalMs)
         }
     }
@@ -499,7 +507,16 @@ class GameServer(internal val config: ServerConfig) {
         p.senderId = 0
         writePayload(p.payload)
         val wireData = Packet.buildWirePacket(p)
-        enqueueWithCrc(PacketCombiner.combine(listOf(host.address to wireData)))
+        pendingOutbox.getOrPut(host.id) { mutableListOf() }.add(host.address to wireData)
+    }
+
+    private fun flushOutbox() {
+        for ((rhostId, packets) in pendingOutbox) {
+            val datagrams = PacketCombiner.combine(packets)
+            enqueueWithCrc(datagrams)
+            bytesSentThisTick[rhostId] = (bytesSentThisTick[rhostId] ?: 0) + datagrams.sumOf { it.data.size }
+        }
+        pendingOutbox.clear()
     }
 
     // ---- Physics tick (stub) ----
@@ -1080,7 +1097,7 @@ class GameServer(internal val config: ServerConfig) {
         val hexDump = wireData.joinToString(" ") { "%02x".format(it) }
         println("[GAME] → RELIABLE id=${p.id} to host ${host.id} (${wireData.size}B wire, ${payloadBits}b payload): $hexDump")
         host.reliable.enqueue(p, wireData)
-        enqueueWithCrc(PacketCombiner.combine(listOf(host.address to wireData)))
+        pendingOutbox.getOrPut(host.id) { mutableListOf() }.add(host.address to wireData)
     }
 
     // ---- Game-over / intermission ----
