@@ -538,7 +538,7 @@ class GameServer(internal val config: ServerConfig) {
         pendingOutbox.clear()
     }
 
-    // ---- Physics tick (stub) ----
+    // ---- Physics tick ----
 
     // C++: wwphys PhysicsSceneClass runs at ~30 Hz
     private suspend fun physicsTickLoop() {
