@@ -16,6 +16,24 @@
 
 ## C++ Port — Known Patterns & Pitfalls
 
+### Primitive type rules (enforced by `ccr-primitive-type` clang-tidy plugin)
+- **Forbidden** raw built-ins: `char`, `signed char`, `unsigned char`, `short`, `unsigned short`, `int`, `unsigned int`, `long`, `unsigned long`, `long long`, `unsigned long long`, `long double`, `wchar_t`
+- **Allowed** raw built-ins: `bool`, `void`, `nullptr_t`, `char8_t`, `char16_t`, `char32_t`, `float`, `double`
+- **Required replacements**: use `(u)intN_t` (e.g. `int32_t`, `uint8_t`) for integers; `float`/`double` are fine as-is
+- Typedefs like `int32_t`, `size_t`, `ptrdiff_t` are fine — the check only fires on raw un-typedef'd built-ins
+- `float` and `double` sizes are guaranteed by `static_assert` in `original/compat/floattypes.h` (4 and 8 bytes)
+- Run lint: `cmake --build /Users/marc/Documents/ccr/original/build --target lint`
+- Narrowing/conversion warnings: `-Wconversion`, `-Wsign-conversion`, `-Wdouble-promotion` (warnings, not errors, until each module is clean)
+
+### wchar_t → char16_t conversion (COMPLETE)
+- All `wchar_t` in Code/ and compat/ converted to `char16_t` (macOS wchar_t=4 bytes; protocol needs 2-byte UTF-16)
+- `WCHAR` typedef is `char16_t`; all derived types (LPWSTR, LPCWSTR, etc.) auto-update
+- Use `u"..."` and `u'...'` string/char literals (not `L"..."` / `L'...'`)
+- `compat/c16string.h` provides char16_t equivalents of all `wcs*` functions (`c16slen`, `c16scpy`, etc.)
+- `compat/windef.h` re-exports them as inline `wcslen(char16_t*)`, `wcscpy(char16_t*)`, etc. overloads
+- Two intentional `wchar_t` exceptions: `winbase.h` internal `_vsnwprintf` bridge buffer; `LOGFONTW` struct in wingdi.h
+- `const WCHAR*` (not `WCHAR*`) for string-literal arrays — `u"..."` is `const char16_t[]`
+
 ### Non-POD varargs (`-Werror=non-pod-varargs`)
 - `StringClass` and `WideStringClass` are non-trivially-copyable; passing them through `...` is UB
 - Clang inserts `__builtin_trap()` at the call site even when the warning is suppressed with `-Wno-non-pod-varargs`
@@ -52,7 +70,9 @@
 ### NETCLASSID source
 - Authoritative source: `Code/Combat/netclassids.h` — sequential enum starting at 1000
 - S→C IDs: 1000–1016 (no 1017 GameSpy — removed); C→S IDs: 1017–1038
-- CLIENTCONTROL=1017, BIOEVENT=1025, CLIENTFPS=1031 (old docs/code had off-by-one +1 errors — corrected)
+- CLIENTCONTROL=1017, BIOEVENT=1025, CLIENTFPS=1031 — these are the header values
+- **GameServer.kt handlers use +1 from the header for ALL C→S events** (e.g. BIOEVENT handled at 1026, not 1025)
+- This is intentional — the actual Renegade binary sends IDs at +1 offset; don't "fix" GameServer.kt to match the header
 - Many singletons have classId=0 (no `Get_Network_Class_ID()` override): ServerFps, BaseControllerClass, all StaticNetworkObject subclasses, BackgroundMgr, WeatherMgr
 - These are identified by well-known `networkId` values at runtime, not classId
 - `NetClassIds.kt` at `server/src/main/kotlin/ccr/server/NetClassIds.kt` — maps ID→name for logging
@@ -90,7 +110,8 @@
   onHostBone(bool), targeting(3×float BITPACK_WORLD), continuousBoolBits(BITPACK_CONTINUOUS), 4×analog(BITPACK_ANALOG)
 
 ### SpawnerClass save format
-- SpawnerClass CHUNKID_PARENT=1014991053, CHUNKID_VARIABLES=1014991054; micro 1=ID, 2=TM(48b), 3=defId, 6=enabled, 7=spawnPoint(repeats)
+- SpawnManager::Save wraps each SpawnerClass in CHUNKID_SPAWNER_DATA=1014991133 (inside CHUNKID_SPAWNERS); SpawnManager's own timer is CHUNKID_SPAWNER_VARIABLES=1014991134 (skipped)
+- SpawnerClass writes CHUNKID_PARENT=1014991053 + CHUNKID_VARIABLES=1014991054 inside the wrapper; micro 1=ID, 2=TM(48b), 3=defId, 6=enabled, 7=spawnPoint(repeats)
 - Position = TM column[3]: bytes 12–15(X), 28–31(Y), 44–47(Z) within 48-byte Matrix3D
 - SpawnerLoader now handles this: `ccr.server.level.ldd.SpawnerLoader.load(chunk)`
 
@@ -110,6 +131,33 @@
 - WWAudio subsystem in LSD: `CHUNKID_STATIC_SAVELOAD = 0x00030005` (NOT 0x00030000 which is just the range start)
 - BackgroundMgr: `CHUNKID_BACKGROUND_MGR = 0x00040126u`; WeatherMgr: `CHUNKID_WEATHER_MGR = 0x00040800u`
 - Pathfind corrected: HEIGHTDB=0x0106063Du, ACTION_PORTAL=0x0106063Eu, WAYPATH_PORTAL=0x0106063Fu
+
+### Spawning — SpawnManager
+- `SpawnManager(level)` resolves spawners at init; call `getMultiplayerSpawnLocation(team)` to get a team-filtered spawn position
+- Multiplayer soldier filter: `!isPrimary && isSoldierStartup && playerType == team`
+- PLAYERTYPE_NEUTRAL (-2) is remapped to PLAYERTYPE_RENEGADE (-1) before filtering
+- **Spawn position uses spawner TM** (`spawner.transform.position`) — NOT `spawnPoints` which are relative/empty in most MP maps (C++ uses `SpawnerList[i]->Get_TM()`)
+
+### Spawning — God (cGod port)
+- `God(server)` owns the player/soldier lifecycle — port of `cGod` (god.cpp)
+- `GameServer.god` — initialized after `loadLevel()`, accessed as `god.*` throughout
+- Player/soldier state maps live in God: `playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`
+- `god.think()` — called each network tick; spawns soldiers for soldierless in-game players
+- `god.createPlayer(rhostId, name)` — creates/registers Player object; caller sends the creation packet
+- `god.createCommando(rhostId, playerType)` — creates/registers/sends SoldierGameObj to all in-game hosts
+- `god.deleteSoldier(rhostId)` — sends deletion to peers, unregisters; use for suicide/team-change/disconnect
+- `god.removePlayer(rhostId)` — full disconnect cleanup: deleteSoldier + player object removal
+- `god.choosePlayerType()` — auto-balance team assignment (0=NOD, 1=GDI)
+
+### Physics module (ccr.physics)
+- Gradle module: `kotlin-server/physics/`, depends on `:math`. Added to `settings.gradle.kts` and `server/build.gradle.kts`
+- Package layout mirrors C++ wwphys: `ode/` (integrators), `collision/` (CollisionMath, CastResult, CollisionGroupMatrix), `spatial/` (StaticAABTree, PhysGrid), `scene/` (PhysicsScene), `static/`, `dynamic/`, `moveable/`, `rigidbody/`, `vehicle/`
+- `PhysClass.scene: PhysicsScene?` — set automatically by `PhysicsScene.addDynamicObject()`; used by `timestep()` implementations for collision queries
+- `PhysicsScene.update(dt)` sub-steps at MAX_TIMESTEP=1/15f; `castRay/castAABox` query both static tree and dynamic grid
+- `CollisionMath` object — all geometry algorithms: Möller-Trumbore (ray/tri), slab method (ray/AABB), SAT (OBB/OBB, OBB/tri), swept AABB/OBB collide methods
+- `Integrator.midpointIntegrate(sys, 0f, dt)` — default for `RigidBodyClass`; all 4 methods (Euler/Midpoint/RK4/RK5) in `ccr.physics.ode.Integrator` object
+- `Vector3` is a data class with `var` fields — direct mutation works: `force.x += gravX`
+- `ccr.physics.static` package — `static` is a Java reserved word but valid Kotlin package name
 
 ### Live proxy (diagnostic tool)
 - `gradlew :server:liveProxy -PlocalPort=4849 -PremoteHost=127.0.0.1 -PremotePort=4848 -PlogFile=.tmp/proxy_log.txt`
