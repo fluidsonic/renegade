@@ -21,6 +21,9 @@ class BuildingManager(private val server: GameServer, level: LoadedLevel) {
 
     val buildings = mutableListOf<BuildingGameObj>()
 
+    // Maps each BuildingGameObj to the playerType from its LDD data.
+    private val buildingTeams = mutableMapOf<BuildingGameObj, Int>()
+
     val baseControllerNod = BaseControllerClass(playerType = 0)
     val baseControllerGdi = BaseControllerClass(playerType = 1)
 
@@ -35,7 +38,8 @@ class BuildingManager(private val server: GameServer, level: LoadedLevel) {
             val building = createBuilding(lb) ?: continue
             NetworkObjectManager.registerObject(building, lb.networkId)
             buildings.add(building)
-            println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId}")
+            buildingTeams[building] = lb.playerType
+            println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
         }
 
         println("[BUILDING] registered ${buildings.size} buildings, 2 base controllers")
@@ -62,13 +66,13 @@ class BuildingManager(private val server: GameServer, level: LoadedLevel) {
     }
 
     private fun getTeamForBuilding(building: BuildingGameObj): Int {
-        return 0  // TODO: refine when ChunkIds exposes team info
+        return buildingTeams[building] ?: 0
     }
 
     private fun createBuilding(lb: LoadedBuildingGameObj): BuildingGameObj? {
         val pos = Vector3(lb.transform.position.x, lb.transform.position.y, lb.transform.position.z)
-        val sphereCenter = Vector3(lb.sphereCenter.x, lb.sphereCenter.y, lb.sphereCenter.z)
-        val radius = lb.sphereRadius
+        val sphereCenter = Vector3(lb.collectionSphere.center.x, lb.collectionSphere.center.y, lb.collectionSphere.center.z)
+        val radius = lb.collectionSphere.radius
 
         if (!ChunkIds.isBuilding(lb.factoryChunkId)) return null
 

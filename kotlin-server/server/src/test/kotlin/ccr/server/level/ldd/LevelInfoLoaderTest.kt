@@ -13,6 +13,12 @@ class LevelInfoLoaderTest {
         return byteArrayOf(id.toByte(), bytes.size.toByte()) + bytes
     }
 
+    private fun microWideString(id: Int, value: String): ByteArray {
+        // C++ writes WRITE_MICRO_CHUNK_WIDESTRING as UTF-16LE with null terminator (0x00 0x00)
+        val chars = (value + "\u0000").toByteArray(Charsets.UTF_16LE)
+        return byteArrayOf(id.toByte(), chars.size.toByte()) + chars
+    }
+
     private fun microInt(id: Int, value: Int): ByteArray {
         val data = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).also { it.putInt(value) }.array()
         return byteArrayOf(id.toByte(), 4) + data
@@ -20,7 +26,8 @@ class LevelInfoLoaderTest {
 
     @Test
     fun `parse level info micro-chunks`() {
-        val payload = microString(1, "C&C_Field") + microInt(2, 42) + microString(3, "Test level")
+        // Description (micro 3) is written as UTF-16LE wide string by C++ WRITE_MICRO_CHUNK_WIDESTRING
+        val payload = microString(1, "C&C_Field") + microInt(2, 42) + microWideString(3, "Test level")
         val reader = ChunkReader(payload)
         val info = LevelInfoLoader.load(reader)
         assertEquals("C&C_Field", info.mapFilename)

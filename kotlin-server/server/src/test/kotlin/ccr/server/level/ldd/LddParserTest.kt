@@ -29,10 +29,10 @@ class LddParserTest {
         assertEquals(100, soldier.definitionId)
         assertEquals(5, soldier.networkId)
 
-        val building = LoadedBuildingGameObj(200, transform, 10, teamId = 1)
+        val building = LoadedBuildingGameObj(200, transform, 10, playerType = 1)
         assertTrue(building is LoadedGameObject)
         assertEquals(200, building.definitionId)
-        assertEquals(1, building.teamId)
+        assertEquals(1, building.playerType)
     }
 
     @Test

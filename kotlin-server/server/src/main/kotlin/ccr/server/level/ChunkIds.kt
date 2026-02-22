@@ -101,6 +101,14 @@ object ChunkIds {
     const val GAMEOBJ_BUILDING_WARFACTORY      = 0x00040141u
     const val GAMEOBJ_BUILDING_COMCENTER       = 0x00040143u
     const val GAMEOBJ_BUILDING_REPAIRBAY       = 0x00040145u
+    const val GAMEOBJ_SAMSITE                  = 0x00040108u
+    const val GAMEOBJ_SAKURA_BOSS              = 0x00040131u
+    const val GAMEOBJ_MENDOZA_BOSS             = 0x00040149u
+    const val GAMEOBJ_RAVESHAW_BOSS            = 0x0004014Bu
+
+    // ─── GameObjManager variables (gameobjmanager.cpp) ─────────────────────────
+    // CHUNKID_VARIABLES is a sub-chunk of CHUNKID_GAMEOBJMANAGER with the same numeric value.
+    const val CHUNKID_GAMEOBJ_VARIABLES        = 916991654u   // same value as CHUNKID_GAMEOBJMANAGER
 
     // ─── BackgroundMgr / WeatherMgr (combatchunkid.h) ──────────────────────────
     const val CHUNKID_BACKGROUND_MGR = 0x00040126u
