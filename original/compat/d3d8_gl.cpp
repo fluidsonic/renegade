@@ -2004,3 +2004,65 @@ IDirect3D8* Direct3DCreate8(UINT sdk_version)
     fprintf(stderr, "[D3D8_GL] Direct3DCreate8(%u) -> IDirect3D8_GL\n", sdk_version);
     return new IDirect3D8_GL();
 }
+
+// ---------------------------------------------------------------------------
+// D3D8_GL_Reset_Device_State — reset internal state shadow to D3D8 defaults
+//
+// Called by DX8Wrapper::Invalidate_Cached_Render_States() when returning from
+// game to menu on macOS.  On Windows, Device::Reset() does this automatically;
+// on macOS there is no device reset, so stale rs[]/tss[][]/dirty values from
+// the game would persist into the menu render.
+//
+// Mirrors the IDirect3DDevice8_GL constructor exactly, then forces dirty=DIRTY_ALL
+// so the next Apply_GL_State() re-applies every state group to OpenGL.
+// ---------------------------------------------------------------------------
+void D3D8_GL_Reset_Device_State(IDirect3DDevice8* dev)
+{
+    IDirect3DDevice8_GL* d = static_cast<IDirect3DDevice8_GL*>(dev);
+    if (!d) return;
+
+    // Reset rs[] to D3D8 defaults (mirrors IDirect3DDevice8_GL constructor)
+    memset(d->rs, 0, sizeof(d->rs));
+    d->rs[7]   = 1;    // D3DRS_ZENABLE          = TRUE
+    d->rs[14]  = 1;    // D3DRS_ZWRITEENABLE     = TRUE
+    d->rs[19]  = 2;    // D3DRS_SRCBLEND         = D3DBLEND_ONE
+    d->rs[20]  = 1;    // D3DRS_DESTBLEND        = D3DBLEND_ZERO
+    d->rs[8]   = 3;    // D3DRS_FILLMODE         = D3DFILL_SOLID
+    d->rs[9]   = 2;    // D3DRS_SHADEMODE        = D3DSHADE_GOURAUD
+    d->rs[22]  = 3;    // D3DRS_CULLMODE         = D3DCULL_CCW
+    d->rs[23]  = 4;    // D3DRS_ZFUNC            = D3DCMP_LESSEQUAL
+    d->rs[25]  = 8;    // D3DRS_ALPHAFUNC        = D3DCMP_ALWAYS
+    d->rs[137] = 1;    // D3DRS_LIGHTING         = TRUE
+    d->rs[168] = 0xF;  // D3DRS_COLORWRITEENABLE = all channels (R|G|B|A)
+    d->rs[171] = 1;    // D3DRS_BLENDOP          = D3DBLENDOP_ADD
+
+    // Reset texture stage state (stage 0 defaults; stages 1-7 stay zero = disabled)
+    memset(d->tss, 0, sizeof(d->tss));
+    d->tss[0][1] = 4;  // COLOROP  = D3DTOP_MODULATE
+    d->tss[0][2] = 2;  // COLORARG1 = D3DTA_TEXTURE
+    d->tss[0][3] = 0;  // COLORARG2 = D3DTA_DIFFUSE
+    d->tss[0][4] = 2;  // ALPHAOP  = D3DTOP_SELECTARG1
+    d->tss[0][5] = 2;  // ALPHAARG1 = D3DTA_TEXTURE
+    d->tss[0][6] = 0;  // ALPHAARG2 = D3DTA_DIFFUSE
+
+    // Clear bound textures — currentTextures[] are non-owning pointers (SetTexture
+    // does not AddRef), so just zero without Release.
+    memset(d->currentTextures, 0, sizeof(d->currentTextures));
+
+    // Mark everything dirty — next Apply_GL_State() will re-apply all state to GL
+    d->dirty = DIRTY_ALL;
+
+    // Immediately restore the GL write masks so that the next glClear() works correctly.
+    // Apply_GL_State() is only called during draw calls, but glClear() can be called
+    // before any draw (e.g., the backdrop clears the screen before rendering).
+    // If the game left glDepthMask=GL_FALSE (typical for 2D/UI passes that disable
+    // depth writes) or glColorMask=(0,0,0,0), glClear would silently skip clearing
+    // those buffers — leaving stale game depth values that cause backdrop geometry to
+    // fail the depth test, producing a black screen.
+    //
+    // These calls mirror the shadow values set above (rs[14]=1, rs[168]=0xF), keeping
+    // the shadow and actual GL state in sync.
+    glDepthMask(GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glStencilMask(0xFFFFFFFF);
+}

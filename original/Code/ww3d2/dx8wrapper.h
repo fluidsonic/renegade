@@ -378,6 +378,11 @@ public:
 	static const char* Get_DX8_Debug_Monitor_Token_Name(unsigned value);
 	static const char* Get_DX8_Blend_Op_Name(unsigned value);
 
+	// Clear all cached render/texture states, forcing them to be re-applied on the next draw.
+	// On Windows this is triggered automatically by device reset; on macOS callers must invoke
+	// this explicitly (e.g. when returning from game to menu).
+	static void Invalidate_Cached_Render_States(void);
+
 protected:
 
 	static bool	Create_Device(void);
@@ -387,7 +392,6 @@ protected:
 	static void Reset_Statistics();
 	static void Enumerate_Devices();
 	static void Set_Default_Global_Render_States(void);
-	static void Invalidate_Cached_Render_States(void);
 
 	/*
 	** Device Selection Code.

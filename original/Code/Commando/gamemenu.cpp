@@ -155,10 +155,14 @@ MenuGameModeClass2::Render (void)
 //	Activate
 //
 ////////////////////////////////////////////////////////////////////
-void 
+void
 MenuGameModeClass2::Activate (void)
 {
 	GameModeClass::Activate();
+
+	// Force DX8Wrapper to re-apply all render states after returning from game.
+	// On Windows, a device reset does this automatically; on macOS we must do it manually.
+	DX8Wrapper::Invalidate_Cached_Render_States();
 
 	//
 	//	Pause game sounds and activate menu sounds

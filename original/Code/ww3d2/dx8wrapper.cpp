@@ -300,6 +300,12 @@ void DX8Wrapper::Set_Default_Global_Render_States(void)
 	// Set dither mode here?
 }
 
+// Resets IDirect3DDevice8_GL's internal state shadow (rs[], tss[][], currentTextures[])
+// to D3D8 defaults and marks dirty=DIRTY_ALL.  Defined in compat/d3d8_gl.cpp.
+// Must be called alongside Invalidate_Cached_Render_States() on macOS so that
+// OpenGL state left over from the game is not carried into the menu render.
+extern void D3D8_GL_Reset_Device_State(IDirect3DDevice8* dev);
+
 void DX8Wrapper::Invalidate_Cached_Render_States(void)
 {
 	int a;
@@ -310,9 +316,13 @@ void DX8Wrapper::Invalidate_Cached_Render_States(void)
 		for (int b=0; b<32;b++) {
 			TextureStageStates[a][b]=0x12345678;
 		}
+		if (Textures[a]) Textures[a]->Release();
 		Textures[a]=NULL;
 	}
 	ShaderClass::Invalidate();
+	// Reset the GL-layer's internal state shadow so all render states are
+	// re-applied to OpenGL on the next draw — not just those DX8Wrapper tracks.
+	if (D3DDevice) D3D8_GL_Reset_Device_State(D3DDevice);
 }
 
 void DX8Wrapper::Do_Onetime_Device_Dependent_Shutdowns(void)
