@@ -1,7 +1,10 @@
 package ccr.server.level.lsd
 
 import ccr.server.level.ChunkIds
+import ccr.server.level.Matrix3D
 import ccr.server.mix.ChunkReader
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 /**
  * Parses the PHYSICS_CHUNKID_STATIC_OBJECTS_SUBSYSTEM chunk.
@@ -71,11 +74,54 @@ object StaticObjectLoader {
     }
 
     private fun parseStaticObject(objectWrapperChunk: ChunkReader): StaticPhysObject? {
-        // Inside the wrapper is a factory chunk (keyed by factory chunk ID).
-        // Inside that: OBJPOINTER + OBJDATA.
-        // TODO: parse OBJDATA once we know the StaticPhysClass binary format.
-        // For now, return null (skip) — objects will be populated in a later step.
-        return null
+        // Inside the wrapper is a factory chunk (keyed by factory chunk ID, e.g. 0x00020109).
+        // Inside that: OBJPOINTER (skip) + OBJDATA (StaticPhysClass::Save output).
+        //
+        // OBJDATA structure (staticphyssaveload.cpp, physclass.cpp, renderobj.cpp):
+        //   STATICPHYS_CHUNK_PHYS (0x00DC2F94)
+        //     PHYS_CHUNK_VARIABLES (0x00660055)  -- micro: 0x03=flags, 0x04=name, 0x06=definitionId
+        //     PHYS_CHUNK_MODEL (0x00660056)
+        //       WW3D_PERSIST_CHUNKID_RENDEROBJ (0x00010000)
+        //         RENDOBJFACTORY_CHUNKID_VARIABLES (0x00555040)
+        //           micro 0x01 = modelName (string)
+        //           micro 0x02 = transform (48 bytes = Matrix3D row-major)
+        var modelName = ""
+        var transform = Matrix3D.IDENTITY
+        var definitionId = 0
+
+        objectWrapperChunk.forEachChunk { _, _, factoryChunk ->
+            val objData = factoryChunk.findChunk(ChunkIds.SIMPLEFACTORY_CHUNKID_OBJDATA)
+                ?: return@forEachChunk
+            val physChunk = objData.findChunk(ChunkIds.STATICPHYS_CHUNK_PHYS)
+                ?: return@forEachChunk
+
+            physChunk.findChunk(ChunkIds.PHYS_CHUNK_VARIABLES)?.forEachMicroChunk { microId, bytes ->
+                if (microId == 0x06 && bytes.size >= 4) {
+                    definitionId = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getInt()
+                }
+            }
+
+            physChunk.findChunk(ChunkIds.PHYS_CHUNK_MODEL)
+                ?.findChunk(ChunkIds.WW3D_PERSIST_CHUNKID_RENDEROBJ)
+                ?.findChunk(ChunkIds.RENDOBJFACTORY_CHUNKID_VARIABLES)
+                ?.forEachMicroChunk { microId, bytes ->
+                    when (microId) {
+                        0x01 -> {
+                            val nullIdx = bytes.indexOfFirst { it == 0.toByte() }
+                            modelName = String(bytes, 0, if (nullIdx < 0) bytes.size else nullIdx, Charsets.ISO_8859_1)
+                        }
+                        0x02 -> {
+                            if (bytes.size >= 48) {
+                                val bb = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
+                                transform = Matrix3D(FloatArray(12) { bb.getFloat(it * 4) })
+                            }
+                        }
+                    }
+                }
+        }
+
+        if (modelName.isEmpty()) return null
+        return StaticPhysObject(definitionId, transform, modelName)
     }
 
     private fun parseStaticLight(lightWrapperChunk: ChunkReader): StaticLight? {

@@ -54,6 +54,8 @@ import ccr.server.net.RefineryGameObj
 import ccr.server.net.SoldierFactoryGameObj
 import ccr.server.net.VehicleFactoryGameObj
 import ccr.server.net.WarFactoryGameObj
+import ccr.physics.scene.PhysicsScene
+import ccr.server.level.PhysicsSceneBuilder
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
@@ -112,6 +114,9 @@ class GameServer(internal val config: ServerConfig) {
 
     // Loaded level data (definitions, static/dynamic data, spawners).
     internal var loadedLevel: LoadedLevel? = null
+
+    // Physics scene built from static collision geometry during level load.
+    var physicsScene: PhysicsScene? = null
 
     // Map rotation state (advanced at each round end)
     private var mapRotation: MapRotation = MapRotation(
@@ -1388,6 +1393,8 @@ class GameServer(internal val config: ServerConfig) {
 
         val level = LevelLoader(alwaysMix, mapMix, baseName).load()
         loadedLevel = level
+
+        physicsScene = PhysicsSceneBuilder.build(level.staticData.staticObjects, mapMix, alwaysMix)
 
         // Extract soldier/weapon definition IDs from the loaded registry
         val defs = level.definitions

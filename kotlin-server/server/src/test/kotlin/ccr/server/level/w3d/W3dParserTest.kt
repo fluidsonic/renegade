@@ -32,7 +32,7 @@ class W3dParserTest {
 
     @Test
     fun `W3dMesh data class works`() {
-        val mesh = W3dMesh("test", "container", 3, 1, emptyList(), emptyList(), emptyList(), emptyList())
+        val mesh = W3dMesh("test", "container", 0u, 3, 1, emptyList(), emptyList(), emptyList(), emptyList())
         assertEquals("test", mesh.name)
         assertEquals(3, mesh.vertexCount)
         assertEquals(1, mesh.faceCount)

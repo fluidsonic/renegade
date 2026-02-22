@@ -76,6 +76,18 @@ object ChunkIds {
     const val PATHFIND_CHUNK_WAYPATH_PORTAL         = 0x0106063Fu
     const val PATHFIND_CHUNK_PATHFIND_SECTOR_OBJECT = 0x01060640u
 
+    // ─── StaticPhysClass save/load (staticphyssaveload.cpp, wwphysids.h) ───────────
+    const val STATICPHYS_CHUNK_PHYS              = 0x00DC2F94u
+    const val STATICPHYS_CHUNK_VARIABLES         = 0x00DC2F95u
+
+    // ─── PhysClass save/load (physclass.cpp, wwphysids.h) ───────────────────────
+    const val PHYS_CHUNK_VARIABLES               = 0x00660055u
+    const val PHYS_CHUNK_MODEL                   = 0x00660056u
+
+    // ─── WW3D render object persist (renderobj.cpp) ──────────────────────────────
+    const val WW3D_PERSIST_CHUNKID_RENDEROBJ     = 0x00010000u
+    const val RENDOBJFACTORY_CHUNKID_VARIABLES   = 0x00555040u
+
     // ─── Physics persist chunk IDs (wwphysids.h, CHUNKID_WWPHYS_BEGIN=0x00020000) ─
     const val PHYSICS_CHUNKID_WAYPATH  = 0x00020110u
     const val PHYSICS_CHUNKID_WAYPOINT = 0x00020111u

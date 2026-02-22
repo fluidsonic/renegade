@@ -10,6 +10,7 @@ object W3dMeshParser {
     fun parse(meshChunk: ChunkReader): W3dMesh? {
         var name = ""
         var containerName = ""
+        var attributes = 0u
         var numVertices = 0
         var numTris = 0
         val vertices = mutableListOf<Vector3>()
@@ -25,6 +26,7 @@ object W3dMeshParser {
                     val bytes = reader.readBytes()
                     if (bytes.size >= 48) {
                         val bb = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
+                        attributes = bb.getInt(4).toUInt()
                         name = readNullTerminated(bytes, 8, 16)
                         containerName = readNullTerminated(bytes, 24, 16)
                         numTris = bb.getInt(40)
@@ -76,7 +78,7 @@ object W3dMeshParser {
             }
         }
 
-        return W3dMesh(name, containerName, numVertices, numTris, vertices, normals, triangles, textureNames)
+        return W3dMesh(name, containerName, attributes, numVertices, numTris, vertices, normals, triangles, textureNames)
     }
 
     private fun readNullTerminated(bytes: ByteArray, offset: Int, maxLen: Int): String {

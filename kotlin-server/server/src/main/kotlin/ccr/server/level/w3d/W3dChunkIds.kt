@@ -35,4 +35,8 @@ object W3dChunkIds {
     // Compressed animation sub-chunks
     const val COMPRESSED_ANIMATION_HEADER = 0x00000281u
     const val COMPRESSED_ANIMATION_CHANNEL = 0x00000282u
+
+    // Mesh attribute/collision flags (w3d_file.h W3D_MESH_FLAG_*)
+    const val W3D_MESH_FLAG_COLLISION_TYPE_PHYSICAL = 0x00000010u
+    const val W3D_MESH_FLAG_COLLISION_TYPE_VEHICLE  = 0x00000100u
 }

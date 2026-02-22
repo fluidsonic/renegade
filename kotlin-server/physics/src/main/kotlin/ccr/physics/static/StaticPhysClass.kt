@@ -8,7 +8,7 @@ import ccr.physics.collision.CollisionMath
 import ccr.physics.collision.OBBoxCollisionTest
 import ccr.physics.collision.RayCollisionTest
 
-abstract class StaticPhysClass : PhysClass() {
+open class StaticPhysClass : PhysClass() {
     var triangles: List<Triangle> = emptyList()
     private var _transform: Matrix3D = Matrix3D.IDENTITY
     override var transform: Matrix3D

@@ -14,6 +14,7 @@ data class W3dTriangle(
 data class W3dMesh(
     val name: String,
     val containerName: String,
+    val attributes: UInt,
     val vertexCount: Int,
     val faceCount: Int,
     val vertices: List<Vector3>,
