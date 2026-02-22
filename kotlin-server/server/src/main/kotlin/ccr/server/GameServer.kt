@@ -48,6 +48,7 @@ import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.level.ChunkIds
 import ccr.server.level.ldd.LoadedBuildingGameObj
+import ccr.server.level.ldd.LoadedVehicleGameObj
 import ccr.server.net.BaseControllerClass
 import ccr.server.net.BuildingGameObj
 import ccr.server.net.ComCenterGameObj
@@ -1265,6 +1266,14 @@ class GameServer(internal val config: ServerConfig) {
                 }
                 println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
             }
+
+            // Instantiate pre-placed vehicles from LDD (harvesters, decorative vehicles, etc.)
+            // C++: cGod loads all VehicleGameObj save-data entries during level init
+            val loadedVehicles = level.dynamicData.gameObjects.filterIsInstance<LoadedVehicleGameObj>()
+            for (lv in loadedVehicles) {
+                god.createLevelVehicle(lv)
+            }
+            println("[LEVEL] ${loadedVehicles.size} level vehicles instantiated")
         }
 
         // Register doors from LSD static objects
