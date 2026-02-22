@@ -1,7 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
 #ifndef	CNETWORK_H
 #define	CNETWORK_H
 

@@ -104,14 +104,9 @@ private:
 ** Macro to declare the allocator for your class.  Put this in the cpp file for
 ** the class.
 */
-#if defined(__clang__) && !defined(_MSC_VER)
 // template<> with no initializer is only a declaration in clang; use = T() to force definition
 #define DEFINE_AUTO_POOL(T,BLOCKSIZE) \
 template<> ObjectPoolClass<T,BLOCKSIZE> AutoPoolClass<T,BLOCKSIZE>::Allocator = ObjectPoolClass<T,BLOCKSIZE>();
-#else
-#define DEFINE_AUTO_POOL(T,BLOCKSIZE) \
-ObjectPoolClass<T,BLOCKSIZE> AutoPoolClass<T,BLOCKSIZE>::Allocator;
-#endif
 
 /***********************************************************************************************
  * ObjectPoolClass::ObjectPoolClass -- constructor for ObjectPoolClass                         *

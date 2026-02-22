@@ -23,7 +23,6 @@
 #include "cheatmgr.h"
 #include "dialogmgr.h"
 #include "encyclopediamgr.h"
-#include "specialbuilds.h"
 #include "demosupport.h"
 
 /*
@@ -245,7 +244,6 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 
 	if (IS_MISSION) {
 
-#ifndef MULTIPLAYERDEMO
 		SpawnerClass * p_spawner = SpawnManager::Get_Primary_Spawner();
 		if (p_spawner != NULL) {
 			const DynamicVectorClass<int>	& def_list = p_spawner->Get_Definition().Get_Spawn_Definition_ID_List();
@@ -254,7 +252,6 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 				preset_name.Format("%s", p_def->Get_Name());
 			}
 		}
-#endif // !MULTIPLAYERDEMO
 
 	} else if (The_Game()->Is_Cnc() || The_Game()->Is_Skirmish()) {
 		if (player_type == PLAYERTYPE_NOD) {

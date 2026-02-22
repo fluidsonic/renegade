@@ -421,27 +421,6 @@ BuildingAggregateDefClass::BuildingAggregateDefClass( void ) :
 		AnimationEnabled[i] = true;
 	}
 
-#ifdef PARAM_EDITING_ON
-	PARAM_SEPARATOR(BuildingAggregateDefClass, "Building Behavior Settings");
-
-	EnumParameterClass * anim_logic_param = new EnumParameterClass(&AnimLogicMode);		
-	anim_logic_param->Set_Name ("AnimLogicMode");
-	anim_logic_param->Add_Value("ANIM_LOGIC_LINEAR",ANIM_LOGIC_LINEAR);
-	anim_logic_param->Add_Value("ANIM_LOGIC_LOOP",ANIM_LOGIC_LOOP);
-	anim_logic_param->Add_Value("ANIM_LOGIC_SEQUENCE",ANIM_LOGIC_SEQUENCE);
-	GENERIC_EDITABLE_PARAM( BuildingAggregateDefClass, anim_logic_param);
-
-	EDITABLE_PARAM(BuildingAggregateDefClass, ParameterClass::TYPE_BOOL, IsMCT);
-
-	for (i=0; i<BuildingStateClass::STATE_COUNT; i++) {
-		
-		PARAM_SEPARATOR(BuildingAggregateDefClass, BuildingStateClass::Get_State_Name(i))
-		NAMED_EDITABLE_PARAM(BuildingAggregateDefClass, ParameterClass::TYPE_INT, Frame0[i], "Frame0");
-		NAMED_EDITABLE_PARAM(BuildingAggregateDefClass, ParameterClass::TYPE_INT, Frame1[i], "Frame1");
-		NAMED_EDITABLE_PARAM(BuildingAggregateDefClass, ParameterClass::TYPE_BOOL, AnimationEnabled[i], "AnimationEnabled");
-		
-	}
-#endif
 }
 
 /***********************************************************************************************

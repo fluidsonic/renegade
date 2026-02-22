@@ -1,9 +1,7 @@
 #include "definitionfactorymgr.h"
 #include "definitionfactory.h"
 #include <string.h>
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 ////////////////////////////////////////////////////////////////////////////
 //	Static member initialization

@@ -261,11 +261,6 @@ void AnimChannelClass::Update( float dtime )
 				break;
 		}
 
-#if 0
-if ( dtime != 0 ) {
-	Debug_Say(( "Anim %s frame %1.3f\n", Animation->Get_Name(), Frame ));
-}
-#endif
 
 	}
 
@@ -375,12 +370,6 @@ void	BlendableAnimChannelClass::Set_Animation( const char *name, float blendtime
 		OldChannel = NewChannel;	
 		BlendTimer = 0.0f;
 		BlendTotal = blendtime;
-#if 0
-	} else if ( OldChannel.Peek_Animation() == new_anim.Peek_Animation() ) {	// if old anim is the new one
-		OldChannel.Copy_From( NewChannel );	
-		BlendTimer = (1.0f - (BlendTimer / BlendTotal)) * blendtime;
-		BlendTotal = blendtime;
-#endif
 	} else if ( (BlendTimer / BlendTotal) > 0.5 ) {	// if more than halfway through the old blend
 		OldChannel = NewChannel;	
 		BlendTimer = (1.0f - (BlendTimer / BlendTotal)) * blendtime;
@@ -419,12 +408,6 @@ void	BlendableAnimChannelClass::Set_Animation( const HAnimClass * anim, float bl
 		OldChannel = NewChannel;	
 		BlendTimer = 0.0f;
 		BlendTotal = blendtime;
-#if 0
-	} else if ( OldChannel.Peek_Animation() == new_anim.Peek_Animation() ) {	// if old anim is the new one
-		OldChannel.Copy_From( NewChannel );	
-		BlendTimer = (1.0f - (BlendTimer / BlendTotal)) * blendtime;
-		BlendTotal = blendtime;
-#endif
 	} else if ( (BlendTimer / BlendTotal) > 0.5 ) {	// if more than halfway through the old blend
 		OldChannel = NewChannel;	
 		BlendTimer = (1.0f - (BlendTimer / BlendTotal)) * blendtime;

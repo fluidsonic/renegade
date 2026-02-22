@@ -177,20 +177,6 @@ WeaponClass * 	WeaponBagClass::Add_Weapon( const WeaponDefinitionClass * def, in
 
 			IsChanged = true;
 			HUDIsChanged = true;
-#if 0			// Don't auto select
-			bool use = true;
-			for ( int i = 1; i < WeaponList.Count(); i++ ) {
-				if ( i != index && WeaponList[ i ]->Does_Weapon_Exist() ) {
-					use = false;
-				}
-			}
-
-			// If no current weapon, make this weapon current
-			if ( give_weapon && use ) {
-				//	Debug_Say(( "Commando selecting first weapon %s\n", weapon->Get_Name() ));
-				Select_Index( index );
-			}
-#endif
 			Mark_Owner_Dirty();
 		}
 	} else {

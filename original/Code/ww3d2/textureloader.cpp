@@ -180,11 +180,7 @@ static TextureLoadTaskListClass					_FreeList;
 static class LoaderThreadClass : public ThreadClass
 {
 public:
-#ifdef Exception_Handler
-	LoaderThreadClass(const char *thread_name = "Texture loader thread") : ThreadClass(thread_name, &Exception_Handler) {}
-#else
 	LoaderThreadClass(const char *thread_name = "Texture loader thread") : ThreadClass(thread_name) {}
-#endif
 
 	void Thread_Function();
 } _TextureLoadThread;
@@ -354,11 +350,7 @@ IDirect3DTexture8* TextureLoader::Load_Thumbnail(const StringClass& filename)//,
 		thumb->Get_Height(),
 		dest_format,
 		TextureClass::MIP_LEVELS_ALL,
-#ifdef USE_MANAGED_TEXTURES
-		D3DPOOL_MANAGED);
-#else
 		D3DPOOL_SYSTEMMEM);
-#endif
 
 	unsigned level=0;
 	D3DLOCKED_RECT locked_rects[12];
@@ -402,9 +394,6 @@ IDirect3DTexture8* TextureLoader::Load_Thumbnail(const StringClass& filename)//,
 	for (level=0;level<sysmem_texture->GetLevelCount();++level) {
 		DX8_ErrorCode(sysmem_texture->UnlockRect(level));
 	}
-#ifdef USE_MANAGED_TEXTURES
-	return sysmem_texture;
-#else
 	IDirect3DTexture8* d3d_texture = DX8Wrapper::_Create_DX8_Texture(
 		thumb->Get_Width(),
 		thumb->Get_Height(),
@@ -415,7 +404,6 @@ IDirect3DTexture8* TextureLoader::Load_Thumbnail(const StringClass& filename)//,
 	sysmem_texture->Release();
 
 	return d3d_texture;
-#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -727,7 +715,6 @@ void TextureLoader::Flush_Pending_Load_Tasks(void)
 }
 
 // Nework update macro for texture loader.
-#pragma warning(disable:4201) // warning C4201: nonstandard extension used : nameless struct/union
 #include <mmsystem.h>
 #define UPDATE_NETWORK 											\
 	if (network_callback) {                            \
@@ -1242,11 +1229,7 @@ bool TextureLoadTaskClass::Begin_Compressed_Load(void)
 		Height, 
 		Format, 
 		(TextureClass::MipCountType)mip_level_count,
-#ifdef USE_MANAGED_TEXTURES
-		D3DPOOL_MANAGED);
-#else
 		D3DPOOL_SYSTEMMEM);
-#endif
 	MipLevelCount = mip_level_count;
 	return true;
 }
@@ -1289,11 +1272,7 @@ bool TextureLoadTaskClass::Begin_Uncompressed_Load(void)
 		Height, 
 		Format, 
 		Texture->MipLevelCount,
-#ifdef USE_MANAGED_TEXTURES
-		D3DPOOL_MANAGED);
-#else
 		D3DPOOL_SYSTEMMEM);
-#endif
 	return true;
 }
 
@@ -1322,12 +1301,10 @@ void TextureLoadTaskClass::Unlock_Surfaces(void)
 		LockedSurfacePtr[i] = NULL;
 	}
 
-#ifndef USE_MANAGED_TEXTURES
 	IDirect3DTexture8* tex = DX8Wrapper::_Create_DX8_Texture(Width, Height, Format, Texture->MipLevelCount,D3DPOOL_DEFAULT);
 	DX8CALL(UpdateTexture(D3DTexture,tex));
 	D3DTexture->Release();
 	D3DTexture=tex;
-#endif
 
 }
 

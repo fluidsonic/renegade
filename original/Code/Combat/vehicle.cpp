@@ -35,7 +35,6 @@
 #include "globalsettings.h"
 #include "basecontroller.h"
 #include "string_ids.h"
-#include "specialbuilds.h"
 
 /*
 ** Local prototypes
@@ -116,18 +115,6 @@ VehicleGameObjDef::VehicleGameObjDef( void ) :
 	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_FLOAT, 	SquishVelocity );
 	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_BOOL,		Aim2D );
 
-#ifdef	PARAM_EDITING_ON
-	EnumParameterClass *param;
-	param = new EnumParameterClass( (int*)&Type );
-	param->Set_Name ("Type");
-	param->Add_Value ( "Car",		VEHICLE_TYPE_CAR );
-	param->Add_Value ( "Tank", 	VEHICLE_TYPE_TANK );
-	param->Add_Value ( "Bike", 	VEHICLE_TYPE_BIKE );
-	param->Add_Value ( "Flying", 	VEHICLE_TYPE_FLYING );
-	param->Add_Value ( "Turret", 	VEHICLE_TYPE_TURRET );
-
-	GENERIC_EDITABLE_PARAM(VehicleGameObjDef,param)
-#endif
 
 	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_BOOL, 	OccupantsVisible );
 
@@ -618,29 +605,6 @@ void	VehicleGameObj::On_Post_Load( void )
 	}
 }
 
-#if 0
-void	VehicleGameObj::Create_Transitions( void )
-{
-	Destroy_Transitions();
-
-	const TRANSITION_DATA_LIST & trans_data_list = Get_Definition().Get_Transition_List();
-
-	if ( trans_data_list.Count() != 0 ) {		// new style
-
-		if ( Seats[0] == NULL ) {
-			Create_New_Transitions( TransitionDataClass::VEHICLE_ENTER_0 );
-		} else {
-			Create_New_Transitions( TransitionDataClass::VEHICLE_EXIT_0 );
-		}
-
-		if ( Seats[1] == NULL ) {
-			Create_New_Transitions( TransitionDataClass::VEHICLE_ENTER_1 );
-		} else {
-			Create_New_Transitions( TransitionDataClass::VEHICLE_EXIT_1 );
-		}
-	}
-}
-#endif
 
 void	VehicleGameObj::Destroy_Transitions( void )
 {
@@ -901,18 +865,9 @@ void VehicleGameObj::Import_Frequent(BitStreamClass & packet)
 				packet.Get(q.W, BITPACK_VEHICLE_QUATERNION);
 				q.Normalize();
 
-#ifdef MULTIPLAYERDEMO
-				//
-				// Mix up the packet order to make demo/non-demo code more incompatible.
-				//
-				packet.Get(vel.Y, BITPACK_VEHICLE_VELOCITY);
-				packet.Get(vel.Z, BITPACK_VEHICLE_VELOCITY);
-				packet.Get(vel.X, BITPACK_VEHICLE_VELOCITY);
-#else
 				packet.Get(vel.X, BITPACK_VEHICLE_VELOCITY);
 				packet.Get(vel.Y, BITPACK_VEHICLE_VELOCITY);
 				packet.Get(vel.Z, BITPACK_VEHICLE_VELOCITY);
-#endif
 				
 				packet.Get(ang_vel.X, BITPACK_VEHICLE_ANGULAR_VELOCITY);
 				packet.Get(ang_vel.Y, BITPACK_VEHICLE_ANGULAR_VELOCITY);
@@ -999,18 +954,9 @@ void VehicleGameObj::Export_Frequent(BitStreamClass & packet)
 				packet.Add(q.Z, BITPACK_VEHICLE_QUATERNION);
 				packet.Add(q.W, BITPACK_VEHICLE_QUATERNION);
 
-#ifdef MULTIPLAYERDEMO
-				//
-				// Mix up the packet order to make demo/non-demo code more incompatible.
-				//
-				packet.Add(vel.Y, BITPACK_VEHICLE_VELOCITY);
-				packet.Add(vel.Z, BITPACK_VEHICLE_VELOCITY);
-				packet.Add(vel.X, BITPACK_VEHICLE_VELOCITY);
-#else
 				packet.Add(vel.X, BITPACK_VEHICLE_VELOCITY);
 				packet.Add(vel.Y, BITPACK_VEHICLE_VELOCITY);
 				packet.Add(vel.Z, BITPACK_VEHICLE_VELOCITY);
-#endif
 
 				packet.Add(ang_vel.X, BITPACK_VEHICLE_ANGULAR_VELOCITY);
 				packet.Add(ang_vel.Y, BITPACK_VEHICLE_ANGULAR_VELOCITY);
@@ -1427,12 +1373,6 @@ int VehicleGameObj::Get_Player_Type(void) const
 		}
 	}
 
-#if 0	// Do this at exit time
-	// in MP, empty vehicles are neutral
-	if ( !IS_MISSION ) {
-		return PLAYERTYPE_NEUTRAL;
-	}
-#endif
 
 	return SmartGameObj::Get_Player_Type();
 }

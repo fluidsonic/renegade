@@ -12,13 +12,8 @@
 /*
 ** Set this if you want verbose logging.  It will be un-set if debugging is not enabled...
 */
-#define VERBOSE_LOGGING 0
 
-#if VERBOSE_LOGGING
-#define VERBOSE_LOG(x) /*if (strstr(Parent.Peek_Model()->Get_Name(),"HND_ELEV03"))*/ 
-#else
 #define VERBOSE_LOG(x)
-#endif
 
 /**
 ** PushRecordClass
@@ -242,9 +237,6 @@ AnimCollisionManagerClass::CollideableObjClass::Intersect_Scene
 	if (CollisionMesh == NULL) return;
 	PhysicsSceneClass * scene = PhysicsSceneClass::Get_Instance();
 
-#if VERBOSE_LOGGING
-	Vector3 pos = CollisionMesh->Get_Transform().Get_Translation();
-#endif
 
 	switch (CollisionMesh->Class_ID()) {
 	case RenderObjClass::CLASSID_MESH:
@@ -638,8 +630,6 @@ void AnimCollisionManagerClass::Set_Current_Frame(float frame)
 	CurFrame = frame;
 	Parent.Enable_Is_State_Dirty(true);
 	
-#if VERBOSE_LOGGING
-#endif
 }
 
 /***********************************************************************************************
@@ -904,12 +894,6 @@ bool AnimCollisionManagerClass::Timestep(float dt)
 		}
 	}
 	
-#if VERBOSE_LOGGING
-	bool started_intersecting = false;
-	if (CollisionMode != COLLIDE_NONE) {
-		started_intersecting = Is_Intersecting();
-	}
-#endif
 
 	/*
 	** move animation forward
@@ -998,11 +982,6 @@ bool AnimCollisionManagerClass::Timestep(float dt)
 				object_animated = false;
 			} 
 
-#if VERBOSE_LOGGING	
-			bool is_now_intersecting = Is_Intersecting();
-			if ( (started_intersecting == false) && (is_now_intersecting == true)) {
-			}
-#endif
 		}
 	}
 	
@@ -1169,7 +1148,6 @@ bool AnimCollisionManagerClass::Check_Collision(CollideableObjClass & collisiono
 			*/
 			//obj->Notify_Squished(this);
 			revert = true;
-#pragma message ("(gth) commenting out rider squishing code for critical review!")
 			VERBOSE_LOG(("Squishing a rider!\r\n"));
 		
 		} else {

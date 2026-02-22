@@ -180,12 +180,6 @@ bool	WeaponClass::Save( ChunkSaveClass & csave )
 	csave.Begin_Chunk( CHUNKID_VARIABLES );
 
 		if ( Model ) {
-#if 0
-			csave.Begin_Micro_Chunk( MICROCHUNKID_MODEL_NAME );
-			const char * model_name = Model->Get_Name();
-			csave.Write( model_name, strlen( model_name ) + 1 );
-			csave.End_Micro_Chunk();
-#endif
 			WRITE_MICRO_CHUNK( csave, MICROCHUNKID_MODEL_PTR, Model );
 		}
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_STATE, State );
@@ -259,24 +253,6 @@ bool	WeaponClass::Load( ChunkLoadClass &cload )
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_WEAPON_EXISTS, WeaponExists );
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_SAFETY_SET, SafetySet );
 
-#if 0
-						case XXX_MICROCHUNKID_MODEL_NAME:
-						{
-							char	model_name[80];
-							cload.Read( model_name, cload.Cur_Micro_Chunk_Length() );
-							RenderObjClass * robj = WW3DAssetManager::Get_Instance()->Create_Render_Obj( model_name );
-
-							Set_Model( robj );
-
-							cload.Close_Micro_Chunk();
-							cload.Open_Micro_Chunk();
-							void * old_ptr = NULL;
-							cload.Read( &old_ptr, sizeof( old_ptr ) );
-							SaveLoadSystemClass::Register_Pointer( old_ptr, robj );
-							REF_PTR_RELEASE( robj );
-							break;
-						}
-#endif
 
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_MODEL_PTR, Model );
 
@@ -738,25 +714,6 @@ void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary
 
 		Vector3 velocity = muzzle.Get_X_Vector() * ammo_def->Velocity;
 
-#if 0
-		if ( ammo_def->SprayAngle ) {
-			// Use Spray Angle
-			Vector3	spray_adjust = RANDOM_VECTOR( 1.0 );
-			spray_adjust.Normalize();
-			spray_adjust = spray_adjust * ammo_def->Velocity;
-			spray_adjust *= ammo_def->SprayAngle / (float)(2*WWMATH_PI);
-
-			velocity += spray_adjust;
-			velocity.Normalize();
-			velocity = velocity * ammo_def->Velocity;
-		}
-
-		if ( DynamicErrorAngle ) {
-			velocity += RANDOM_VECTOR( DynamicErrorAngle / 2 );
-			velocity.Normalize();
-			velocity = velocity * ammo_def->Velocity;
-		}
-#else
 		Matrix3D	VelTM;
 		// Look at backwards with random roll
 		VelTM.Look_At( velocity, Vector3( 0,0,0 ), FreeRandom.Get_Float( DEG_TO_RADF( 360.0f ) ) );
@@ -771,7 +728,6 @@ void	WeaponClass::Fire_Bullet( const AmmoDefinitionClass *ammo_def, bool primary
 		velocity = VelTM.Get_Z_Vector();
 		velocity.Normalize();
 		velocity *= ammo_def->Velocity;
-#endif
 
 		//Vector3 position = muzzle.Get_Translation();
 		Vector3 position;
@@ -953,7 +909,6 @@ void	WeaponClass::Do_Firing_Effects( void )
 	// Don't do these two if fired by the star in First Person Mode
 	if ( (Get_Owner() != COMBAT_STAR) || !CombatManager::Is_First_Person() ) {
 
-#if 01
 		// create muzzle flash
 		if ( Definition->MuzzleFlashPhysDefID != 0 ) {
 
@@ -982,7 +937,6 @@ void	WeaponClass::Do_Firing_Effects( void )
 				//Debug_Say(( "Couldn't find muzzle flash def for %s\n", Definition->Get_Name() ));
 			}
 		}
-#endif
 
 		// if this gun is fired by the STAR and they have an eject bone, eject a shell.
 		if ((Get_Owner() == COMBAT_STAR) && (Model != NULL)) {
@@ -1327,13 +1281,6 @@ void	WeaponClass::Update_State( float pending_time )
 						Set_State( STATE_CHARGE );
 					} else {
 						// We are not loaded, play the empty sound
-#if 0
-						AudibleSoundClass * sound = WWAudioClass::Get_Instance()->Create_Sound( "Pistol_Empty_Click" );
-						if ( sound ) {
-							sound->Play();
-							sound->Release_Ref();
-						}
-#else
 						if ( Definition->EmptySoundDefID != 0 ) {
 							EmptySoundTimer -= TimeManager::Get_Frame_Seconds();
 							if ( EmptySoundTimer <= 0 ) {
@@ -1354,7 +1301,6 @@ void	WeaponClass::Update_State( float pending_time )
 								REF_PTR_RELEASE( owner_ref );
 							}
 						}
-#endif
 					}
 				}
 			}
@@ -1706,31 +1652,6 @@ void	WeaponClass::Display_Targeting( void )
 
 }
 
-#if 0
-	// Aquire
-	if ( AmmoDefinition->AquireTime != 0.0f ) {
-		SmartGameObj *target = weapon->Pointing_At_Target();
-
-		if ( target ) {
-			if ( AquireTarget != target ) {	// locking onto someone new
-				AquireTarget = target;
-				AquireTimer = 0.0f;
-			}
-			AquireTimer += TimeManager::Get_Frame_Seconds();		// Bump the timer forward in seconds
-			if (AquireTimer >= AmmoDefinition->AquireTime) {
-				AquireTimer = AmmoDefinition->AquireTime;
-			}
-		} else {
-			AquireTimer -= TimeManager::Get_Frame_Seconds();		// Bump the timer backwards in seconds
-			if ( AquireTimer < 0.0f ) {
-				AquireTimer = 0.0f;
-			}
-		}
-
-		IsAquired = (target != NULL) &&
-						(AquireTimer >= AmmoDefinition->AquireTime);
-	}
-#endif
 
 const Matrix3D & WeaponClass::Get_Muzzle( int index )
 {
@@ -1821,14 +1742,6 @@ void	MuzzleFlashClass::Update( bool flashA0, bool flashA1 )
 	if ( Model != NULL ) {
 		if (( MuzzleA0Bone > 0 ) && (LastFlashA0 != flashA0)) {
 			LastFlashA0 = flashA0;
-	#if 0
-			if ( flash ) {
-				Rotation += TimeManager::Get_Frame_Seconds() * 10;
-				Matrix3D tm(1);
-				tm.Rotate_X( Rotation );
-				Model->Control_Bone( MuzzleA0Bone, tm );
-			}
-	#endif
 
 			for (int i=0; i<Model->Get_Num_Sub_Objects_On_Bone( MuzzleA0Bone ); i++) {
 				RenderObjClass * robj = Model->Get_Sub_Object_On_Bone(i, MuzzleA0Bone );
@@ -1845,14 +1758,6 @@ void	MuzzleFlashClass::Update( bool flashA0, bool flashA1 )
 		if (( MuzzleA1Bone > 0 ) && (LastFlashA1 != flashA1)) {
 			
 			LastFlashA1 = flashA1;
-	#if 0
-			if ( flash ) {
-				Rotation += TimeManager::Get_Frame_Seconds() * 10;
-				Matrix3D tm(1);
-				tm.Rotate_X( Rotation );
-				Model->Control_Bone( MuzzleA1Bone, tm );
-			}
-	#endif
 
 			for (int i=0; i<Model->Get_Num_Sub_Objects_On_Bone( MuzzleA1Bone ); i++) {
 				RenderObjClass * robj = Model->Get_Sub_Object_On_Bone(i, MuzzleA1Bone );

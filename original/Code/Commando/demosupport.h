@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <wwlib/realcrc.h>
 #include "gamedata.h"
-#include "specialbuilds.h"
 
 #define DEMO_SECURITY_CHECK	cDemoSupport::Security_Check();
 
@@ -36,28 +35,6 @@ cDemoSupport::Security_Check
 	void
 )
 {
-#ifdef MULTIPLAYERDEMO
-
-	//
-	// Make sure it's the UNDER map, 
-	// If not, bail randomly within a few minutes.
-	// Crc of "C&C_Under.mix" = 721292856.
-	//
-	if (The_Game() != NULL && 
-		 (CRC_Stringi(The_Game()->Get_Map_Name()) != 721292856) &&
-		 (::rand() % 5000 == 2273)) {
-
-		//
-		// Hacked. Bail. Don't care how cleanly it exits.
-		//
-		extern bool g_client_quit;
-		g_client_quit = TRUE;
-
-		extern void Stop_Main_Loop(int exitcode);
-		Stop_Main_Loop(EXIT_SUCCESS);
-	}
-
-#endif // MULTIPLAYERDEMO
 }
 
 //-----------------------------------------------------------------------------

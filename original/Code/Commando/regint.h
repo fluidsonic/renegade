@@ -5,9 +5,6 @@
 // Description:  
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef REGINT_H
 #define REGINT_H

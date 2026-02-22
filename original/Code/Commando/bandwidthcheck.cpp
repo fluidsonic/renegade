@@ -1,4 +1,3 @@
-#pragma warning(disable : 4530)
 
 #include	"always.h"
 #include	<windows.h>
@@ -12,7 +11,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "consolemode.h"
-#include "specialbuilds.h"
 
 /*
 ** Class statics.
@@ -49,11 +47,8 @@ char *BandwidthCheckerClass::ErrorList[13] = {
 };
 
 #define NUM_BANDS 12
-#ifdef FREEDEDICATEDSERVER
-#define DEFAULT_BAND 9
-#else  //FREEDEDICATEDSERVER
+// FDS: bandwidth defaulted to 1 Mbps and showed server-mode UI
 #define DEFAULT_BAND 3
-#endif //FREEDEDICATEDSERVER
 
 /*
 ** Lower and upper limits for each level of bandwidth.
@@ -250,17 +245,11 @@ void BandwidthCheckerClass::Check(void)
 		** No DNS or no connection at all. Either way we are in trouble.
 		*/
 		ConsoleBox.Print("Unable to resolve host name for bandwidth check\n");
-#ifdef FREEDEDICATEDSERVER
-		UpstreamBandwidth = 1000000;
-		DownstreamBandwidth = 1000000;
-		ReportedUpstreamBandwidth = 1000000;
-		ReportedDownstreamBandwidth = 1000000;
-#else  //FREEDEDICATEDSERVER
+// FDS: bandwidth defaulted to 1 Mbps and showed server-mode UI
 		UpstreamBandwidth = 55000;
 		DownstreamBandwidth = 55000;
 		ReportedUpstreamBandwidth = 57600;
 		ReportedDownstreamBandwidth = 57600;
-#endif //FREEDEDICATEDSERVER
 		UpstreamBandwidthString = BandwidthNames[DEFAULT_BAND];
 		DownstreamBandwidthString = BandwidthNames[DEFAULT_BAND];
 		FailureCode = BANDTEST_NO_IP_DETECT;
@@ -311,14 +300,9 @@ void BandwidthCheckerClass::Check(void)
 			/*
 			** Default to 57600.
 			*/
-#ifdef FREEDEDICATEDSERVER
-			ConsoleBox.Print("Failed to get bandwidth - error code %s, Setting 1Mbps bandwidth\n", ErrorList[failure_code]);
-			UpstreamBandwidth = 1000000;
-			DownstreamBandwidth = 1000000;
-#else  //FREEDEDICATEDSERVER
+// FDS: bandwidth defaulted to 1 Mbps and showed server-mode UI
 			UpstreamBandwidth = 55000;
 			DownstreamBandwidth = 55000;
-#endif //FREEDEDICATEDSERVER
 			FailureCode = failure_code;
 			GotBandwidth = true;	//false;
 		} else {
@@ -388,9 +372,6 @@ void BandwidthCheckerClass::Check(void)
 		/*
 		** Testy.
 		*/
-#ifdef _DEBUG
-		PackedBandwidthType packed = Get_Packed_Bandwidth();
-#endif //_DEBUG
 
 	}
 	SetEvent(EventNotify);

@@ -1,7 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
 #ifndef BINKMOVIE_H
 #define BINKMOVIE_H
 

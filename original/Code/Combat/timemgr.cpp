@@ -27,8 +27,6 @@ int			TimeManager::AveragedFPSCounter = 0;
 float			TimeManager::FrameSeconds = 0.0f;
 float			TimeManager::RealFrameSeconds = 0.0f;
 
-#define		TIME_STABILIZING_TECHNOLOGY_ENABLED			0
-#define		TIME_DESTABILIZING_TECHNOLOGY_ENABLED		0
 #define		SLOWEST_FPS									      5
 
 FrameTimeHistogramClass::FrameTimeHistogramClass(unsigned slot_count, float step)
@@ -137,17 +135,7 @@ void	TimeManager::Update_Frame_Time()
 		FrameTicks = TICKS_PER_SECOND / WW3D::Get_Movie_Capture_Frame_Rate();
 	}
 
-#if	TIME_STABILIZING_TECHNOLOGY_ENABLED
-	FrameTicks = TICKS_PER_SECOND / 30;
-#endif
 
-#if	TIME_DESTABILIZING_TECHNOLOGY_ENABLED
-	static int state = 0;
-	FrameTicks = TICKS_PER_SECOND / 15;
-	if ( ++state & 0x2 ) {
-	   FrameTicks = TICKS_PER_SECOND / 30;
-	}
-#endif
 
 	// Single Step
 	static bool single_step = false;
@@ -167,41 +155,8 @@ void	TimeManager::Update_Frame_Time()
 	WW3D::Sync( WW3D::Get_Sync_Time() + FrameTicks );
 
 /*
-#if 0
-	// testing animation smoothing
-	if (!WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0) ) {
-		static int rlticks = 0;
 
-		if (rlticks == 0) {
-			rlticks = ticks;
-		}
-		int rtime = ticks - rlticks;
 
-		//float amount = (float)rtime / (3.0f*1000.0f);
-//Debug_Say(( "Time  %d %f\n", rtime, amount ));
-		if (rtime < 200) {
-//			Wait_Seconds( amount );
-		}
-		rlticks = SystemTicks();
-	}
-#endif
-
-#if 0
-	//if ( IS_SOLOPLAY && Input::Get_State( INPUT_FUNCTION_DEBUG_RAPID_MOVE ) ) {
-	if ( Input::Get_State( INPUT_FUNCTION_DEBUG_RAPID_MOVE ) ) {
-		if ( COMBAT_CAMERA->Is_Using_Host_Model() ) {
-			FrameTicks *= 10;
-//			FrameTicks /= 5;
-		}
-	}
-#endif
-
-#if 0
-	if (FrameTicks == 0) {
-//		
-		FrameTicks = 1;
-	}
-#endif
 */
 	TotalSeconds += Get_Frame_Seconds();
 

@@ -8,9 +8,7 @@
 #include "w3d_file.h"
 #include "vp.h"
 
-#if (OPTIMIZE_PLANEEQ_RAM)
 static SimpleVecClass<Vector4> _PlaneEQArray(1024);
-#endif
 
 #if (OPTIMIZE_VNORM_RAM)
 static SimpleVecClass<Vector3> _VNormArray(1024);
@@ -912,9 +910,7 @@ bool MeshGeometryClass::intersect_obbox_brute_force(OBBoxIntersectionTestClass &
 	TriClass tri;
 	const Vector3 * loc = Get_Vertex_Array();
 	const TriIndex * polyverts = Get_Polygon_Array();
-#ifndef COMPUTE_NORMALS
 	const Vector4 * norms = Get_Plane_Array();
-#endif
 
 	/*
 	** Loop over each polygon
@@ -925,13 +921,7 @@ bool MeshGeometryClass::intersect_obbox_brute_force(OBBoxIntersectionTestClass &
 		tri.V[1] = &(loc[ polyverts[srtri][1] ]);
 		tri.V[2] = &(loc[ polyverts[srtri][2] ]);
 
-#ifdef COMPUTE_NORMALS					
-		static Vector3 _normal;
-		tri.N = &_normal;
-		tri.Compute_Normal();
-#else
 		tri.N = (Vector3 *)&(norms[srtri]);
-#endif
 		
 		if (CollisionMath::Intersection_Test(localtest.Box, tri)) {
 			return true;
@@ -960,9 +950,7 @@ bool MeshGeometryClass::cast_ray_brute_force(RayCollisionTestClass & raytest)
 	TriClass tri;
 	const Vector3 * loc = Get_Vertex_Array();
 	const TriIndex * polyverts = Get_Polygon_Array();
-#ifndef COMPUTE_NORMALS
 	const Vector4 * norms = Get_Plane_Array();
-#endif
 
 	/*
 	** Loop over each polygon
@@ -975,13 +963,7 @@ bool MeshGeometryClass::cast_ray_brute_force(RayCollisionTestClass & raytest)
 		tri.V[1] = &(loc[ polyverts[srtri][1] ]);
 		tri.V[2] = &(loc[ polyverts[srtri][2] ]);
 
-#ifdef COMPUTE_NORMALS					
-		static Vector3 _normal;
-		tri.N = &_normal;
-		tri.Compute_Normal();
-#else
 		tri.N = (Vector3 *)&(norms[srtri]);
-#endif
 		
 		hit = hit | CollisionMath::Collide(raytest.Ray, tri, raytest.Result);
 		if (hit) {
@@ -1018,9 +1000,7 @@ bool MeshGeometryClass::cast_aabox_brute_force(AABoxCollisionTestClass & boxtest
 
 	const Vector3 * loc = Get_Vertex_Array();
 	const TriIndex * polyverts = Get_Polygon_Array();
-#ifndef COMPUTE_NORMALS
 	const Vector4 * norms = Get_Plane_Array();
-#endif
 
 	for (int srtri = 0; srtri < Get_Polygon_Count(); srtri++) {
 
@@ -1028,13 +1008,7 @@ bool MeshGeometryClass::cast_aabox_brute_force(AABoxCollisionTestClass & boxtest
 		tri.V[1] = &(loc[ polyverts[srtri][1] ]);
 		tri.V[2] = &(loc[ polyverts[srtri][2] ]);
 
-#ifdef COMPUTE_NORMALS					
-		static Vector3 _normal;
-		tri.N = &_normal;
-		tri.Compute_Normal();
-#else
 		tri.N = (Vector3 *)&(norms[srtri]);
-#endif
 
 		if (CollisionMath::Collide(boxtest.Box, boxtest.Move, tri, boxtest.Result)) {
 			polyhit = srtri;
@@ -1075,9 +1049,7 @@ bool MeshGeometryClass::cast_obbox_brute_force(OBBoxCollisionTestClass & boxtest
 
 	const Vector3 * loc = Get_Vertex_Array();
 	const TriIndex * polyverts = Get_Polygon_Array();
-#ifndef COMPUTE_NORMALS
 	const Vector4 * norms = Get_Plane_Array();
-#endif
 
 	for (int srtri = 0; srtri < Get_Polygon_Count(); srtri++) {
 
@@ -1085,13 +1057,7 @@ bool MeshGeometryClass::cast_obbox_brute_force(OBBoxCollisionTestClass & boxtest
 		tri.V[1] = &(loc[ polyverts[srtri][1] ]);
 		tri.V[2] = &(loc[ polyverts[srtri][2] ]);
 
-#ifdef COMPUTE_NORMALS					
-		static Vector3 _normal;
-		tri.N = &_normal;
-		tri.Compute_Normal();
-#else
 		tri.N = (Vector3 *)&(norms[srtri]);
-#endif
 
 		if (CollisionMath::Collide(boxtest.Box, boxtest.Move, tri, Vector3(0,0,0), boxtest.Result)) {
 			polyhit = srtri;
@@ -1322,18 +1288,8 @@ const Vector3 * MeshGeometryClass::Get_Vertex_Normal_Array(void)
  *=============================================================================================*/
 Vector4 * MeshGeometryClass::get_planes(bool create)
 {
-#if (OPTIMIZE_PLANEEQ_RAM)
 	_PlaneEQArray.Uninitialised_Grow(PolyCount);
 	return &(_PlaneEQArray[0]);
-#else
-	if (create && !PlaneEq) {
-		PlaneEq = NEW_REF(ShareBufferClass<Vector4>,(PolyCount));
-	}
-	if (PlaneEq) {
-		return PlaneEq->Get_Array();
-	}
-	return NULL;
-#endif
 }
 
 /***********************************************************************************************
@@ -1350,17 +1306,9 @@ Vector4 * MeshGeometryClass::get_planes(bool create)
  *=============================================================================================*/
 const Vector4 * MeshGeometryClass::Get_Plane_Array(bool create)
 { 
-#if (OPTIMIZE_PLANEEQ_RAM)
 	Vector4 * planes = get_planes(create);
 	Compute_Plane_Equations(planes);
 	return planes;
-#else
-	Vector4 * planes = get_planes(create);
-	if (planes && Get_Flag(DIRTY_PLANES)) {
-		Compute_Plane_Equations(planes);
-	}
-	return planes;
-#endif
 }
 
 /***********************************************************************************************

@@ -227,23 +227,6 @@ void DX8Wrapper::Shutdown(void)
 
 		// If in full screen, reset device to windowed mode before releasing it. This is an attempt to
 		// fix some random bugs and crashes on some devices.
-#if (0)
-		if (!IsWindowed) {
-			IsWindowed=true;
-			ResolutionWidth=DEFAULT_RESOLUTION_WIDTH;
-			ResolutionHeight=DEFAULT_RESOLUTION_HEIGHT;
-			_PresentParameters.BackBufferWidth = ResolutionWidth;
-			_PresentParameters.BackBufferHeight = ResolutionHeight;
-			_PresentParameters.BackBufferCount = 1;
-			_PresentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;
-			_PresentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-			_PresentParameters.Windowed = IsWindowed;
-			_PresentParameters.EnableAutoDepthStencil = FALSE;
-			_PresentParameters.Flags=0;
-			_PresentParameters.BackBufferFormat = DesktopMode.Format;
-			Reset_Device();
-		}
-#endif //(0)
 		Release_Device();
 	}
 
@@ -381,16 +364,8 @@ bool DX8Wrapper::Create_Device(void)
 		vertex_processing_type=D3DCREATE_MIXED_VERTEXPROCESSING;
 	}
 
-#ifdef CREATE_DX8_MULTI_THREADED
-	vertex_processing_type|=D3DCREATE_MULTITHREADED;
-	_DX8SingleThreaded=false;
-#else
 	_DX8SingleThreaded=true;
-#endif
 
-#ifdef CREATE_DX8_FPU_PRESERVE
-	vertex_processing_type|=D3DCREATE_FPU_PRESERVE;
-#endif
 
 	// JANI HACK! Some objects flicker on ATI Radeons. This can be fixed by locking the back buffer before flipping.
 	// For this to work the back buffers need to be created as lockable!
@@ -756,58 +731,6 @@ bool DX8Wrapper::Set_Render_Device(int dev, int width, int height, int bits, int
 
 	}
 
-#ifdef _WINDOWS
-	// PWG 4/13/2000 - changed so that if you say to resize the window it resizes
-	// regardless of whether its windowed or not as OpenGL resizes its self around
-	// the caption and edges of the window type you provide, so its important to
-	// push the client area to be the size you really want.
-	// if ( resize_window && windowed ) {
-	if (resize_window) {
-
-		// Get the current dimensions of the 'render area' of the window
-		RECT rect = { 0 };
-		::GetClientRect (_Hwnd, &rect);
-
-#if(0) // Denzil - DX Window initialization
-		// Is the window the correct size for this resolution?
-		if ((rect.right-rect.left) != ResolutionWidth ||
-			 (rect.bottom-rect.top) != ResolutionHeight) {
-
-			// Calculate what the main window's bounding rectangle should be to
-			// accomodate this resolution
-			rect.left = 0;
-			rect.top = 0;
-			rect.right = ResolutionWidth;
-			rect.bottom = ResolutionHeight;
-			DWORD dwstyle = ::GetWindowLong (_Hwnd, GWL_STYLE);
-
-			AdjustWindowRect (&rect, dwstyle, FALSE);
-
-			// Resize the window to fit this resolution
-			::SetWindowPos (_Hwnd,
-								 NULL,
-								 0,
-								 0,
-								 rect.right-rect.left,
-								 rect.bottom-rect.top,
-								 SWP_NOZORDER | SWP_NOMOVE);
-		}
-#else
-		// Adjust the main window's client area to accomodate the resolution
-		DWORD dwstyle = ::GetWindowLong(_Hwnd, GWL_STYLE);
-		DWORD dwexstyle = ::GetWindowLong(_Hwnd, GWL_EXSTYLE);
-
-		rect.right = ResolutionWidth;
-		rect.bottom = ResolutionHeight;
-
-		::AdjustWindowRectEx(&rect, dwstyle, (::GetMenu(_Hwnd) != NULL), dwexstyle);
-
-		::SetWindowPos(_Hwnd, HWND_TOP, 0, 0,
-				(rect.right - rect.left), (rect.bottom - rect.top),
-				SWP_SHOWWINDOW|SWP_NOCOPYBITS);
-#endif
-	}
-#endif
 
 	/*
 	** Time to actually create the device.
@@ -831,47 +754,6 @@ bool DX8Wrapper::Set_Next_Render_Device(void)
 
 bool DX8Wrapper::Toggle_Windowed(void)
 {
-#ifdef WW3D_DX8
-	// State OK?
-	assert (IsInitted);
-	if (IsInitted) {
-
-		// Get information about the current render device's resolutions
-		const RenderDeviceDescClass &render_device = Get_Render_Device_Desc ();
-		const DynamicVectorClass<ResolutionDescClass> &resolutions = render_device.Enumerate_Resolutions ();
-
-		// Loop through all the resolutions supported by the current device.
-		// If we aren't currently running under one of these resolutions,
-		// then we should probably		 to the closest resolution before
-		// toggling the windowed state.
-		int curr_res = -1;
-		for (int res = 0;
-		     (res < resolutions.Count ()) && (curr_res == -1);
-			  res ++) {
-
-			// Is this the resolution we are looking for?
-			if ((resolutions[res].Width == ResolutionWidth) &&
-				 (resolutions[res].Height == ResolutionHeight) &&
-				 (resolutions[res].BitDepth == BitDepth)) {
-				curr_res = res;
-			}
-		}
-
-		if (curr_res == -1) {
-
-			// We don't match any of the standard resolutions,
-			// so set the first resolution and toggle the windowed state.
-			return Set_Device_Resolution (resolutions[0].Width,
-								 resolutions[0].Height,
-								 resolutions[0].BitDepth,
-								 !IsWindowed, true);
-		} else {
-
-			// Toggle the windowed state
-			return Set_Device_Resolution (-1, -1, -1, !IsWindowed, true);
-		}
-	}
-#endif //WW3D_DX8
 
 	return false;
 }
@@ -938,7 +820,6 @@ bool DX8Wrapper::Set_Device_Resolution(int width,int height,int bits,int windowe
 		if (height != -1) {
 			_PresentParameters.BackBufferHeight = ResolutionHeight = height;
 		}
-#pragma message("TODO: support changing windowed status and changing the bit depth")
 		return Reset_Device();
 	} else {
 		return false;
@@ -1671,55 +1552,6 @@ void DX8Wrapper::Draw(
 	// Debug feature to disable triangle drawing...
 	if (!_Is_Triangle_Draw_Enabled()) return;
 
-#ifdef MESH_RENDER_SNAPSHOT_ENABLED
-	if (WW3D::Is_Snapshot_Activated()) {
-		DWORD passes=0;
-		SNAPSHOT_SAY(("ValidateDevice: "));
-		HRESULT res=D3DDevice->ValidateDevice(&passes);
-		switch (res) {
-		case D3D_OK:
-			SNAPSHOT_SAY(("OK\n"));
-			break;
-
-		case D3DERR_CONFLICTINGTEXTUREFILTER:
-			SNAPSHOT_SAY(("D3DERR_CONFLICTINGTEXTUREFILTER\n"));
-			break;
-		case D3DERR_CONFLICTINGTEXTUREPALETTE:
-			SNAPSHOT_SAY(("D3DERR_CONFLICTINGTEXTUREPALETTE\n"));
-			break;
-		case D3DERR_DEVICELOST:
-			SNAPSHOT_SAY(("D3DERR_DEVICELOST\n"));
-			break;
-		case D3DERR_TOOMANYOPERATIONS:
-			SNAPSHOT_SAY(("D3DERR_TOOMANYOPERATIONS\n"));
-			break;
-		case D3DERR_UNSUPPORTEDALPHAARG:
-			SNAPSHOT_SAY(("D3DERR_UNSUPPORTEDALPHAARG\n"));
-			break;
-		case D3DERR_UNSUPPORTEDALPHAOPERATION:
-			SNAPSHOT_SAY(("D3DERR_UNSUPPORTEDALPHAOPERATION\n"));
-			break;
-		case D3DERR_UNSUPPORTEDCOLORARG:
-			SNAPSHOT_SAY(("D3DERR_UNSUPPORTEDCOLORARG\n"));
-			break;
-		case D3DERR_UNSUPPORTEDCOLOROPERATION:
-			SNAPSHOT_SAY(("D3DERR_UNSUPPORTEDCOLOROPERATION\n"));
-			break;
-		case D3DERR_UNSUPPORTEDFACTORVALUE:
-			SNAPSHOT_SAY(("D3DERR_UNSUPPORTEDFACTORVALUE\n"));
-			break;
-		case D3DERR_UNSUPPORTEDTEXTUREFILTER:
-			SNAPSHOT_SAY(("D3DERR_UNSUPPORTEDTEXTUREFILTER\n"));
-			break;
-		case D3DERR_WRONGTEXTUREFORMAT:
-			SNAPSHOT_SAY(("D3DERR_WRONGTEXTUREFORMAT\n"));
-			break;
-		default:
-			SNAPSHOT_SAY(("UNKNOWN Error\n"));
-			break;
-		}
-	}
-#endif	// MESH_RENDER_SHAPSHOT_ENABLED
 
 	SNAPSHOT_SAY(("DX8 - draw %d polygons (%d vertices)\n",polygon_count,vertex_count));
 

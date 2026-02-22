@@ -14,12 +14,7 @@
 /*
 ** Debug logging for the shatter system
 */
-#define SHATTER_DEBUG_LOG_ENABLED	0
-#if (SHATTER_DEBUG_LOG_ENABLED)
-#define SHATTER_DEBUG_SAY(x)			
-#else
 #define SHATTER_DEBUG_SAY(x)
-#endif
 
 #define SHATTER_PATTERN_FORMAT	"ShatterPlanes%d"
 

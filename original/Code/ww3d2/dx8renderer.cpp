@@ -283,48 +283,6 @@ void DX8RigidFVFCategoryContainer::Render_Delayed_Procedural_Material_Passes(voi
 
 void DX8TextureCategoryClass::Log(bool only_visible)
 {
-#ifdef ENABLE_CATEGORY_LOG
-	StringClass work(255,true);
-	work.Format("	DX8TextureCategoryClass\n");
-
-	StringClass work2(255,true);
-	for (int stage=0;stage<MAX_TEXTURE_STAGES;++stage) {
-		work2.Format("	texture[%d]: %x (%s)\n", stage, textures[stage], textures[stage] ? textures[stage]->Get_Name() : "-");
-		work+=work2;
-	}
-	work2.Format("	material: %x (%s)\n	shader: %x\n", material, material ? material->Get_Name() : "-", shader);
-	work+=work2;
-
-	work.Format("	%8s %8s %6s %6s %6s %5s %s\n",
-		"idx_cnt",
-		"poly_cnt",
-		"i_offs",
-		"min_vi",
-		"vi_rng",
-		"ident",
-		"name");
-
-	DX8PolygonRendererListIterator it(&PolygonRendererList);
-	while (!it.Is_Done()) {
-	
-		DX8PolygonRendererClass* p_renderer = it.Peek_Obj();
-
-		PolyRenderTaskClass * prtc=render_task_head;
-		while (prtc) {
-			if (prtc->Peek_Polygon_Renderer()==p_renderer) break;
-			prtc = prtc->Get_Next_Visible();
-		}
-
-		if (prtc != NULL) {
-			p_renderer->Log();
-		} else {
-			if (!only_visible) {
-				p_renderer->Log();
-			}
-		}
-		it.Next();
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -668,31 +626,6 @@ DX8RigidFVFCategoryContainer::~DX8RigidFVFCategoryContainer()
 
 void DX8RigidFVFCategoryContainer::Log(bool only_visible)
 {
-#ifdef ENABLE_CATEGORY_LOG
-	StringClass work(255,true);
-	work.Format("DX8RigidFVFCategoryContainer --------------\n");
-	if (vertex_buffer) {
-		StringClass fvfname(255,true);
-		vertex_buffer->FVF_Info().Get_FVF_Name(fvfname);
-		work.Format("VB size (used/total): %d/%d FVF: %s\n",used_vertices,vertex_buffer->Get_Vertex_Count(),fvfname);
-	}
-	else {
-	}
-	if (index_buffer) {
-		work.Format("IB size (used/total): %d/%d\n",used_indices,index_buffer->Get_Index_Count());
-	}
-	else {
-	}
-
-	for (unsigned p=0;p<passes;++p) {
-
-		TextureCategoryListIterator it(&texture_category_list[p]);
-		while (!it.Is_Done()) {
-			it.Peek_Obj()->Log(only_visible);
-			it.Next();
-		}
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -1170,24 +1103,6 @@ DX8SkinFVFCategoryContainer::~DX8SkinFVFCategoryContainer()
 
 void DX8SkinFVFCategoryContainer::Log(bool only_visible)
 {
-#ifdef ENABLE_CATEGORY_LOG
-	StringClass work(255,true);
-	work.Format("DX8SkinFVFCategoryContainer --------------\n");
-
-	if (index_buffer) {
-		work.Format("IB size (used/total): %d/%d\n",used_indices,index_buffer->Get_Index_Count());
-	}
-	else {
-	}
-
-	for (unsigned pass=0;pass<passes;++pass) {
-		TextureCategoryListIterator it(&texture_category_list[pass]);
-		while (!it.Is_Done()) {
-			it.Peek_Obj()->Log(only_visible);
-			it.Next();
-		}
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -1383,14 +1298,7 @@ unsigned DX8TextureCategoryClass::Add_Mesh(
 	if (polygons) {
 
 		index_count=polygons*3;
-#ifndef ENABLE_STRIPING
 		bool stripify=false;
-#else
-		bool stripify=true;
-		if (index_buffer->Type()==BUFFER_TYPE_SORTING || index_buffer->Type()==BUFFER_TYPE_DYNAMIC_SORTING) {
-			stripify=false;
-		}
-#endif;
 		const TriIndex* src_indices=(const TriIndex*)split_table.Get_Polygon_Array(pass);//mmc->Get_Polygon_Array();
 
 		if (stripify) {
@@ -1717,8 +1625,6 @@ void DX8MeshRendererClass::Unregister_Mesh_Type(MeshClass* mesh)
 void DX8MeshRendererClass::Register_Mesh_Type(MeshClass* mesh)
 {
 	MeshModelClass * mmc = mesh->Peek_Model();
-#ifdef ENABLE_CATEGORY_LOG
-#endif
 	bool skin=(mmc->Get_Flag(MeshModelClass::SKIN) && mmc->VertexBoneLink);
 	bool sorting=((!!mmc->Get_Flag(MeshModelClass::SORT)) && WW3D::Is_Sorting_Enabled() && (mmc->Get_Sort_Level() == SORT_LEVEL_NONE));
 

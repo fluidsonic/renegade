@@ -904,51 +904,6 @@ TexProjectClass *	Create_Texture_Projector(void)
 
 void Debug_Refs(void)
 {
-#ifdef _DEBUG
-	RefCountNodeClass * first = RefCountClass::ActiveRefList.First();
-	RefCountNodeClass * node = first;
-	while (node->Is_Valid())
-	{
-		RefCountClass * obj = node->Get();
-		ActiveRefStruct * ref = &(obj->ActiveRefInfo);
-
-		bool display = true;
-		int	count = 0;
-		RefCountNodeClass * search = first;
-		while (search->Is_Valid()) {
-
-			if (search == node) {	// if this is not the first one
-				if (count != 0) {
-					display = false;
-					break;
-				}
-			}
-
-			RefCountClass * search_obj = search->Get();
-			ActiveRefStruct * search_ref = &(search_obj->ActiveRefInfo);
-
-			if ( ref->File && search_ref->File &&
-				  !strcmp(search_ref->File, ref->File) &&
-				  (search_ref->Line == ref->Line) ) {
-				count++;
-			} else if ( (ref->File == NULL) &&  (search_ref->File == NULL) ) {
-				count++;
-			}
-
-			search = search->Next();
-		}
-
-		if ( display ) {
-
-			static int num_printed = 0;
-			if (++num_printed > 20) {
-				break;
-			}
-		}
-
-		node = node->Next();
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------
@@ -1107,38 +1062,12 @@ void Init_2D_Scene()
 	mytext=new Render2DTextClass(my_font_b);
 	mytext->Set_Coordinate_Range( Render2DClass::Get_Screen_Resolution() );
 
-#if 0
-	// Display a 2D bitmap on the screen ---------------------------------------
-#ifdef DRAWBITMAP
-	RenderObjClass *bm = Create_bitmap2d();		
-	my_2d_scene->Add_Render_Object(bm);
-	REF_PTR_RELEASE(bm);	
-#else
-	RenderObjClass *my_object = AssetManager->Create_Render_Obj("TSI08A");
-	if (my_object != NULL) {
-		my_2d_scene->Add_Render_Object(my_object);
-		REF_PTR_RELEASE(my_object);	
-	}
-
-	my_object = AssetManager->Create_Render_Obj("TSI01A");
-	if (my_object != NULL) {
-		my_2d_scene->Add_Render_Object(my_object);
-		REF_PTR_RELEASE(my_object);	
-	}
-#endif	
-
-#endif
 
 	// Scene needs camera to be rendered with ----------------------------------
 
 	my_2d_camera = NEW_REF(CameraClass,());   
-#ifdef DRAWBITMAP
-	my_2d_camera->Set_Position(Vector3(0,0,1));	
-	my_2d_camera->Set_Clip_Planes(0.995,2);
-#else
 	my_2d_camera->Set_Position(Vector3(0,0,320));
 	my_2d_camera->Set_Clip_Planes(300,1000);
-#endif
 	Vector2 min = Vector2(-1, -0.75f);
 	Vector2 max = Vector2(+1, +0.75f);
 	my_2d_camera->Set_View_Plane(min, max);			
@@ -1261,16 +1190,8 @@ void Init_3D_Scene()
 	my_anim = AssetManager->Get_HAnim("S_A_HUMAN.H_A_A0A1");
 
 	if (my_object != NULL) {
-#if 0
-		Enable_Alternate_Materials(my_object,true);
-#endif
 
 		// Decal System
-#if 0
-		Matrix3D decal_tm;
-		decal_tm.Look_At(Vector3(30,5,10),Vector3(0,0,10),DEG_TO_RADF(65.5f));
-		Create_Decal(my_object,decal_tm,13.7f,"decal.tga");
-#endif
 
 //		PredictiveLODOptimizerClass::Add_Object(my_object);		
 		my_object->Set_Position(Vector3(0,0,0));
@@ -1284,38 +1205,13 @@ void Init_3D_Scene()
 		}
 	}	
 
-#if 0
-	add_duplicate();
-#endif
 
 	// 3D line object ----------------------------------------------------------
-#if 0
-	Line3DClass *line = NULL;
-	line = NEW_REF(Line3DClass,(Vector3(0,0,0),Vector3(100,100,0), 10,1,1,1,1));
-	my_scene->Add_Render_Object(line);
-  	REF_PTR_RELEASE(line);	// Obejct can be freed after adding scene so that it gets killed when scene dies
-#endif
 
 	// Create texture projector material pass ----------------------------------
-#if 0
-	my_texture_projector = Create_Texture_Projector();
-	my_scene->Set_Material_Pass(my_texture_projector->Peek_Material_Pass());
-//	REF_PTR_RELEASE(my_texture_projector);
-#endif
 
 	// Create material pass ----------------------------------------------------
-#if 0
-	my_material_pass = Create_Material_Pass();
-	my_scene->Set_Material_Pass(my_material_pass);
-	REF_PTR_RELEASE(my_material_pass);
-#endif
 
-#if 0
-	my_material_pass = Create_Bump_Material_Pass();
-	my_scene->Set_Material_Pass(my_material_pass);
-	using_mat_pass=true;
-//	REF_PTR_RELEASE(my_material_pass);
-#endif
 
 }
 

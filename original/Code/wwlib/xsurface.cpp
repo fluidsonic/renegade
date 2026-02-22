@@ -633,51 +633,6 @@ bool Blit_Clip(Rect & drect, Rect const & dwindow, Rect & srect, Rect const & sw
 bool XSurface::Prep_For_Blit(Surface & dest, Rect & drect, Surface const & source, Rect & srect, bool & overlapped, void * & dbuffer, void * & sbuffer)
 {
 	return(XSurface::Prep_For_Blit(dest, dest.Get_Rect(), drect, source, source.Get_Rect(), srect, overlapped, dbuffer, sbuffer));
-#ifdef NEVER
-	overlapped = false;
-	dbuffer = NULL;
-	sbuffer = NULL;
-
-	if (!drect.Is_Valid() || !srect.Is_Valid()) return(false);
-
-	/*
-	**	Perform the clipping of the desired blit rectangles against the surface clipping
-	**	rectangles. If it happens that the blit is clipped into oblivion, then bail
-	**	immediately -- there is nothing left to do.
-	*/
-	Rect swindow = source.Get_Rect();
-	Rect dwindow = dest.Get_Rect();
-	if (!Blit_Clip(drect, dwindow, srect, swindow)) {
-		return(false);
-	}
-
-	/*
-	**	Determine if the rectangles overlap such that a forward blit would
-	**	be prohibited. This only occurs if the source and destination refer to the
-	**	same surface and the rectangles overlap.
-	*/
-	overlapped = false;
-	if (&source == &dest && srect.Is_Overlapping(drect)) {
-		if (srect.Y < drect.Y || (srect.Y == drect.Y && srect.X < drect.X)) {
-			overlapped = true;
-		}
-	}
-
-	/*
-	**	Fetch pointers to the source and dest upper left pixel. That is, the upper
-	**	left pixel of the source and dest sub-rectangles within each surface
-	**	respectively.
-	*/
-	dbuffer = dest.Lock(drect.Point());
-	if (dbuffer == NULL) return(false);
-	sbuffer = ((Surface &)source).Lock(srect.Point());
-	if (sbuffer == NULL) {
-		dest.Unlock();
-		return(false);
-	}
-
-	return(true);
-#endif
 }
 
 /*********************************************************************************************** 

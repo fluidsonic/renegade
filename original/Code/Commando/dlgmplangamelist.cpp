@@ -11,7 +11,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 #include "dialogcontrol.h"
-#include "specialbuilds.h"
 #include "editctrl.h"
 #include "dlgpasswordprompt.h"
 #include "registry.h"
@@ -62,14 +61,9 @@ void
 MPLanGameListMenuClass::On_Init_Dialog (void)
 {
 /*
-#ifdef BETACLIENT
-	Get_Dlg_Item(IDC_MENU_MP_LAN_HOST_BUTTON)->Enable(false);
-#endif // BETACLIENT
 */
 
-#ifdef FREEDEDICATEDSERVER
-	Get_Dlg_Item(IDC_JOIN_GAME_BUTTON)->Enable(false);
-#endif // FREEDEDICATEDSERVER
+// FDS: game list UI was replaced with text-mode server listing
 
 	//
 	//	Get a pointer to the list control

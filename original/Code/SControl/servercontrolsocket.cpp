@@ -300,9 +300,6 @@ void ServerControlSocketClass::Write(void *buffer, int buffer_len, void *address
 	packet->IsBroadcast = false;
 	memcpy (packet->Address, address, 4);
 	packet->Port = port;
-#ifdef PACKET_ENCRYPTION
-	Encrypt(packet->Buffer, buffer_len);
-#endif //PACKET_ENCRYPTION
 	Build_Packet_CRC(packet);
 
 	/*
@@ -756,9 +753,6 @@ void ServerControlSocketClass::Service(void)
 						packet->Port = ntohs(addr.sin_port);
 						//DebugString(("ServerControlSocketClass - recvfrom %s ; %d\n", IPAddressClass(packet->Address).As_String(), (unsigned int)((unsigned short)ntohs(addr.sin_port))));
 
-#ifdef PACKET_ENCRYPTION
-						Decrypt(packet->Buffer, packet->BufferLen);
-#endif //PACKET_ENCRYPTION
 
 						/*
 						** Add the holding buffer to the packet list.

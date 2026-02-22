@@ -50,15 +50,9 @@
 
 //#include "dlgmpingamechat.h"
 
-#if (_MSC_VER >= 1200)
-#pragma warning(push,1)
-#endif
 
 #include <sstream>
 
-#if (_MSC_VER >= 1200)
-#pragma warning(pop)
-#endif
 
 
 //
@@ -162,7 +156,6 @@ void 	ConsoleGameModeClass::Think()
    if ( !InputActive ) {
       bool enable_console = false;
 
-#pragma message("TODO: relocate and provide UI for player communication.")
 
 // HACK: Disable console in ATI demo
 //#ifndef ATI_DEMO_HACK
@@ -357,17 +350,6 @@ void 	ConsoleGameModeClass::Think()
 			working_string.Format("%2.0f fps\n",FPS);
 			message += working_string;
 
-#ifdef ATI_DEMO_HACK
-			if (WW3D::Get_NPatches_Level()>1) {
-				working_string.Format(
-					"\nNPATCH level: %d\n",
-					WW3D::Get_NPatches_Level());
-			}
-			else {
-				working_string.Format("\nNPATCH OFF\n");
-			}
-			message += working_string;
-#endif
 			working_string.Format(
 				"\npolys/frame: %7d\npolys/second %4dk\n",
 				WW3D::Get_Last_Frame_Poly_Count(),
@@ -394,12 +376,10 @@ void 	ConsoleGameModeClass::Think()
 				count);
 			message += working_string;
 
-#ifndef ATI_DEMO_HACK
 			working_string.Format("verts/frame: %7d v/p ratio: %2.2f\n",
 					WW3D::Get_Last_Frame_Vertex_Count(),
 					float(WW3D::Get_Last_Frame_Vertex_Count())/float(WW3D::Get_Last_Frame_Poly_Count()));
 			message += working_string;
-#endif
 
 			int texture_reduction = WW3D::Get_Texture_Reduction();
 			if (texture_reduction > 0) {

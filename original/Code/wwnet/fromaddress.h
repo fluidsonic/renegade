@@ -6,9 +6,6 @@
 // Description:  
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef FROMADDRESS_H
 #define FROMADDRESS_H

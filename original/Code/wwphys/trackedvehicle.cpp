@@ -235,8 +235,6 @@ void TrackedVehicleClass::Add_Track_Mappers(MeshClass * mesh,int track_type)
 						ts.TrackType = track_type;
 						TrackMappers.Add(ts);
 
-#if 0 //Paranoid debug logging
-#endif
 					}
 					REF_PTR_RELEASE(mapper);
 				}
@@ -267,20 +265,8 @@ void TrackedVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * tor
 			}
 
 			float turn_scale = 1.0f - WWMath::Fabs(left) * (1.0f - def->TurnTorqueScaleFactor);
-#if 0
-			if (forward != 0.0f) {
-				turn_scale = 1.0f;
-			}
-
-			LeftTrackTorque = WWMath::Clamp((2.12f * forward - left),-1.0f,1.0f);
-			RightTrackTorque = WWMath::Clamp((2.12f * forward + left),-1.0f,1.0f);
-
-			LeftTrackTorque *= def->MaxEngineTorque * turn_scale;
-			RightTrackTorque *= def->MaxEngineTorque * turn_scale;
-#else
 			LeftTrackTorque = (forward - left) * def->MaxEngineTorque * turn_scale;
 			RightTrackTorque = (forward + left) * def->MaxEngineTorque * turn_scale;
-#endif
 
 		}
 		

@@ -211,35 +211,6 @@ Matrix3 operator * (const Matrix3 & a, const Matrix3D & b)
 	#undef ROWCOL
 }
 
-#if 0
-
-void Matrix3::Compute_Jacobi_Rotation(int i,int j,Matrix3 * r,Matrix3 * rinv)
-{
-
-}
-
-void Matrix3::Symmetric_Eigen_Solve(void)
-{
-	Matrix3 eigen_vals = *this;
-	Matrix3 eigen_vecs(1);
-
-	Matrix3 jr,jrinv;
-
-	while (!done) {
-		eigen_vals.Compute_Jacobi_Rotation(i,j,&jr,&jrinv);
-		eigen_vals = jr * (eigenvals) * jrinv;
-		eigen_vecs = eigen_vecs * jr;
-	}
-
-	/*
-	** Done!  Eigen values are the diagonals of
-	** the eigen_vals matrix and the eigen vectors
-	** are the columns of the eigen_vecs matrix
-	*/
-
-}
-
-#endif
 
 void Matrix3::Multiply(const Matrix3 & A,const Matrix3 & B,Matrix3 * set_res)
 {

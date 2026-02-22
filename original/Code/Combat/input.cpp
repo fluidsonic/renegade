@@ -975,16 +975,6 @@ float	Input::Get_Value( int function_index, int input, float clamp )
 
 //
 // ignore the dead zone
-#if 0
-		if ( slider < SLIDER_DEAD_ZONE ) {
-			slider = 0;
-		}
-
-// Ignore the clamp
-		if ( slider > clamp ) {
-			slider = clamp;
-		}
-#endif
 
 //		if ( input == SLIDER_MOUSE_LEFT ) 	Debug_Say(( "Slider %f\n", slider ));
 

@@ -32,9 +32,6 @@ SimplePersistFactoryClass<ShakeableStaticPhysDefClass, PHYSICS_CHUNKID_SHAKEABLE
 //who they collide with!)  Also, maybe the feature provided by this class could be rolled into
 //StaticAnim instead of requiring a whole new class...
 
-#if 0
-DECLARE_DEFINITION_FACTORY(ShakeableStaticPhysDefClass, CLASSID_SHAKEABLESTATICPHYSDEF, "ShakeableStaticPhys") _ShakeableStaticPhysDefDefFactory;
-#endif
 
 ShakeableStaticPhysDefClass::ShakeableStaticPhysDefClass(void)
 {

@@ -441,7 +441,6 @@ static inline void aabtri_compute_contact_normal
 	Vector3 &						set_norm
 )
 {
-#if 1
 	switch(CollisionContext.AxisId) 
 	{
 		case INTERSECTION:
@@ -499,13 +498,6 @@ static inline void aabtri_compute_contact_normal
 			break;
 	}
 
-#else
-	set_norm = *CollisionContext.N;
-	set_norm.Normalize();
-	if (Vector3::Dot_Product(set_norm,CollisionContext.Move) > 0.0f) {
-		set_norm = -(set_norm);
-	}
-#endif
 }
 
 inline void VERIFY_CROSS(const Vector3 & a, const Vector3 & b,const Vector3 & cross)

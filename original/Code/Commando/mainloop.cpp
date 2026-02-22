@@ -118,15 +118,6 @@ void _Game_Main_Loop_Loop(void)
 
    Windows_Message_Handler();
 
-#if 0
-{	
-	// spin the Random Generator, a little
-	int count = FreeRandom.Get_Int( 5 );
-	while ( count-- > 0 ) {
-		FreeRandom.Get_Int();
-	}
-}
-#endif
 
 	/*
 	** Sleep for a while if we are hogging the CPU.

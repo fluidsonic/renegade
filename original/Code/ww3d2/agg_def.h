@@ -9,9 +9,7 @@
 #include "vector.h"
 #include <string.h>
 
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 // Forward declarations
 class ChunkLoadClass;

@@ -9,7 +9,6 @@
 #include "robjlist.h"
 #include "texture.h"
 
-#define DEBUG_DECALS 0
 
 const float DECAL_BACKFACE_THRESHHOLD	= 0.4f;		// backface rejection threshhold
 const float DECAL_HALF_SLAB_THICKNESS	= 0.2f;		// thickness of the bounding volume for decals
@@ -71,11 +70,6 @@ int PhysDecalSysClass::Create_Decal
 	gen->Set_Backface_Threshhold(DECAL_BACKFACE_THRESHHOLD);
 	gen->Apply_To_Translucent_Meshes(apply_to_translucent_meshes);
 
-#if DEBUG_DECALS
-	ParentScene->Add_Debug_OBBox(gen->Get_Bounding_Volume(),Vector3(0,0,1));
-	ParentScene->Add_Debug_Axes(tm,Vector3(1,1,1));
-	ParentScene->Add_Debug_Axes(transform,Vector3(1,1,1));
-#endif
 
 	/*
 	** Set up the material settings.  Just plug in the standard alpha shader and the

@@ -1,9 +1,7 @@
 #ifndef __UTILS_H
 #define __UTILS_H
 
-#pragma warning (push, 3)
 #include "Mss.H"
-#pragma warning (pop)
 
 /////////////////////////////////////////////////////////////////////////////
 //

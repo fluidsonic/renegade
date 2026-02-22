@@ -43,7 +43,6 @@
 #include "wwmath.h"
 #include "clienthintmanager.h"
 #include "packetmgr.h"
-#include "specialbuilds.h"
 #include "gameinitmgr.h"
 #include "dlgcncwinscreen.h"
 #include "consolemode.h"
@@ -66,7 +65,6 @@ void cNetwork::Tell_Client_About_Dynamic_Objects
 	Vector3 &	dest_pos
 )
 {
-#ifndef BETACLIENT
 
 if (cDevOptions::UseNewTCADO.Is_False()) {
 
@@ -747,7 +745,6 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 
 }
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------
@@ -756,7 +753,6 @@ void cNetwork::Tell_Server_About_Dynamic_Objects
 	void
 )
 {
-#ifndef FREEDEDICATEDSERVER
 
 	//
 	//	Loop over each network object
@@ -784,13 +780,11 @@ void cNetwork::Tell_Server_About_Dynamic_Objects
 	//unsigned long time = TIMEGETTIME() / 1000;
 	//
 
-#endif // !FREEDEDICATEDSERVER
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
 {
-#ifndef BETACLIENT
 
 	if (Get_Server_Rhost (client_id) == NULL) {
 		return;
@@ -830,7 +824,6 @@ void cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
 
 	return ;
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------
@@ -1048,7 +1041,6 @@ void cNetwork::Intermission_Over_Processing(void)
 //-----------------------------------------------------------------------------
 void cNetwork::End_Game_Test(void)
 {
-#ifndef BETACLIENT
 
 	if (IS_MISSION || !GameModeManager::Find("Combat")->Is_Active()) {
 		return;
@@ -1086,7 +1078,6 @@ void cNetwork::End_Game_Test(void)
 		}
 	}
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------
@@ -1103,7 +1094,6 @@ bool cNetwork::Client_Think(void)
 {
 	bool ret_code = false;
 
-#ifndef FREEDEDICATEDSERVER
 
 	if (PClientConnection->Is_Destroy()) {
 		Cleanup_Client();
@@ -1185,7 +1175,6 @@ bool cNetwork::Client_Think(void)
 		}
 	}
 
-#endif // !FREEDEDICATEDSERVER
 
 	return(ret_code);
 }

@@ -32,11 +32,7 @@ void ScriptManager::Init(void)
 	hDLL = NULL;
 	EngineCommands = Get_Script_Commands();
 
-#ifdef	PARAM_EDITING_ON	// Editor build
-	Load_Scripts("SCRIPTS.DLu");
-#else
 		Load_Scripts("SCRIPTS.DLu");		// RELEASE
-#endif
 }
 
 /*
@@ -96,7 +92,6 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 		return;
 	}
 
-#ifndef	PARAM_EDITING_ON	// Only do this in the *game*
 
 	// Check if we have a mod, if so, un-pack the scripts from the PKG (if present)
 	FileFactoryClass * mod_pkg = FileFactoryListClass::Get_Instance()->Peek_Temp_FileFactory();
@@ -135,7 +130,6 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 			mod_pkg->Return_File(scripts_dll);
 		}
 	}
-#endif
 
 	hDLL = LoadLibrary(dll_filename);
 

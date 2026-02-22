@@ -11,13 +11,7 @@
 #define DebugString(...) ((void)0)
 #endif
 
-#ifdef WWASSERT
-#ifndef fw_assert
-#define fw_assert WWASSERT
-#endif //fw_assert
-#else //WWASSERT
 #define fw_assert assert
-#endif //WWASSERT
 
 /*
 ** Max size of packet this class can handle.

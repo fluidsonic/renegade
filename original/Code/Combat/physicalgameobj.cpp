@@ -50,47 +50,6 @@ PhysicalGameObjDef::PhysicalGameObjDef( void ) :
 	AllowInnateConversations( false ),
 	UseCreationEffect( false )
 {
-#ifdef	PARAM_EDITING_ON
-	int i;
-	EnumParameterClass *param;
-
-	EDITABLE_PARAM( PhysicalGameObjDef, ParameterClass::TYPE_FLOAT,	BullseyeOffsetZ );
-
-	param = new EnumParameterClass( &RadarBlipType );
-	param->Set_Name("Radar Blip Type");
-	for ( i = 0; i < RadarManager::Get_Num_Blip_Shape_Types(); i++ ) {
-		param->Add_Value ( RadarManager::Get_Blip_Shape_Type_Name( i ), i );
-	}
-	GENERIC_EDITABLE_PARAM(PhysicalGameObjDef,param)
-
-	EDITABLE_PARAM( PhysicalGameObjDef, ParameterClass::TYPE_STRING,	Animation );
-
-	EDITABLE_PARAM( PhysicalGameObjDef, ParameterClass::TYPE_EXPLOSIONDEFINITIONID,	KilledExplosion);
-
-	EDITABLE_PARAM( PhysicalGameObjDef, ParameterClass::TYPE_BOOL,	DefaultHibernationEnable );
-
-	EDITABLE_PARAM( PhysicalGameObjDef, ParameterClass::TYPE_BOOL,	AllowInnateConversations );	
-
-	EDITABLE_PARAM( PhysicalGameObjDef, ParameterClass::TYPE_BOOL,	UseCreationEffect );
-
-	//
-	//	Configure the orator types parameter
-	//
-	EnumParameterClass *orator_type_param = new EnumParameterClass (&OratorType);
-	orator_type_param->Set_Name ("Orator Type");
-	
-	//
-	//	Add all the orator types to the list
-	//
-	int count = OratorTypeClass::Get_Count ();
-	for (int index = 0; index < count; index ++) {
-		orator_type_param->Add_Value (OratorTypeClass::Get_Description (index),
-									OratorTypeClass::Get_ID (index));
-	}
-																												
-	GENERIC_EDITABLE_PARAM( PhysicalGameObjDef, orator_type_param );
-
-#endif
 }
 
 enum	{
@@ -416,7 +375,6 @@ bool	PhysicalGameObj::Save( ChunkSaveClass & csave )
 	}
 
 /*
-#pragma message( "Tom, do these need to be saved?" )
 	int						ImportStateCount;
    float						DistancePriority;
 	float						TimePriority;
@@ -703,8 +661,6 @@ void PhysicalGameObj::Post_Think( void )
 		}
 	}
 
-#pragma message ("Going to hell on a client is problematic.")
-#ifndef PARAM_EDITING_ON  //(gth) don't go to hell in the editor cause it will cause a crash!
 	if (CombatManager::I_Am_Only_Client () == false && COMBAT_SCENE != NULL) {
 		Vector3 pos;
 		Get_Position(&pos);
@@ -716,7 +672,6 @@ void PhysicalGameObj::Post_Think( void )
 			Set_Delete_Pending();
 		}
 	}
-#endif
 
 }
 

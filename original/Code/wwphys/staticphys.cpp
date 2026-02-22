@@ -15,10 +15,6 @@
 #include "part_emt.h"
 #include "renegadeterrainpatch.h"
 
-#if UMBRASUPPORT
-#include <umbra.hpp>
-#include "umbrasupport.h"
-#endif
 
  
 /***********************************************************************************************
@@ -173,26 +169,6 @@ void StaticPhysClass::Update_Cached_Model_Parameters(void)
 		Enable_Is_World_Space_Mesh(false);
 	}
 
-#if (UMBRASUPPORT)
-	// update the umbra model(s)
-	Umbra::Model * test_model = NULL;
-	
-	if (Model->Class_ID() == RenderObjClass::CLASSID_MESH) {
-		MeshClass & mesh = *((MeshClass *)Model);
-		test_model = UmbraSupport::Create_Mesh_Model(mesh);		
-	} else {
-		AABoxClass obj_box;
-		Model->Get_Obj_Space_Bounding_Box(obj_box);
-		test_model = UmbraSupport::Create_Box_Model(obj_box);
-	}
-
-	UmbraObject->setTestModel(test_model);
-	if ((Model->Class_ID() == RenderObjClass::CLASSID_MESH) && (Is_Occluder())) {
-		test_model->set(Umbra::Model::WRITABLE,true);
-		UmbraObject->setWriteModel(test_model);
-	}
-	//UmbraObject->setCost(100000,100000,5);
-#endif //UMBRASUPPORT
 
 }
 

@@ -7,9 +7,7 @@
 #include "vertmaterial.h"
 #include "texture.h"
 #include "shader.h"
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 class MeshModelClass;
 class MeshMatDescClass;

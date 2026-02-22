@@ -584,57 +584,6 @@ int DoorPhysClass::Check_Door_Trigger( const OBBoxClass &trigger_zone )
 {
 	int result = DOOR_OPEN_NOONE;
 
-#if 0
-	//
-	//	Get the list of all the players in the world
-	//
-	SList<SoldierGameObj> *player_list = GameObjManager::Get_Star_Game_Obj_List();
-
-	//
-	//	Loop over each player
-	//
-	SLNode<SoldierGameObj> *objnode;
-	for (	objnode = player_list->Head(); objnode; objnode = objnode->Next()) {
-		SoldierGameObj *soldier = objnode->Data();
-		if ( soldier != NULL ) {
-
-			//
-			//	Is this player inside the trigger zone?
-			//
-			Vector3 pos;
-			soldier->Get_Position( &pos );
-			if ( CollisionMath::Overlap_Test( trigger_zone, pos ) == CollisionMath::INSIDE ) {
-
-				//
-				//	Is the door locked?
-				//
-				if ( Get_DoorPhysDef()->LockCode != 0 ) {
-
-					if ( soldier == COMBAT_STAR ) {
-						Vector3 pos;
-						soldier->Get_Position( &pos );
-						const char * desc = soldier->Has_Key( Get_DoorPhysDef()->LockCode ) ? "KEUS" : "KEDE";
-						DIAG_LOG(( desc, "%1.2f; %1.2f; %1.2f; %d; %d", pos.X, pos.Y, pos.Z, Get_ID(), Get_DoorPhysDef()->LockCode ));
-					}
-
-					//
-					//	Can the soldier unlock this door?
-					//
-					if ( soldier->Has_Key( Get_DoorPhysDef()->LockCode ) ) {
-						result = DOOR_OPEN_OK;
-						break;
-					} else {
-						result = DOOR_OPEN_LOCKED;
-					}
-				} else {
-					result = DOOR_OPEN_OK;
-					break;
-				}
-			}
-		}
-	}
-
-#else
 
 	NonRefPhysListClass obj_list;
 	PhysicsSceneClass::Get_Instance()->Collect_Objects(trigger_zone,false,true,&obj_list);
@@ -696,7 +645,6 @@ int DoorPhysClass::Check_Door_Trigger( const OBBoxClass &trigger_zone )
 		it.Next();
 	}
 
-#endif
 
 	return result;
 }

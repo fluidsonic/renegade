@@ -28,7 +28,6 @@
 #include "dlghelpscreen.h"
 #include "dlgcncreference.h"
 #include "consolemode.h"
-#include "specialbuilds.h"
 
 ////////////////////////////////////////////////////////////////
 //	Globals
@@ -317,20 +316,7 @@ Default_On_Command (DialogBaseClass *dialog, int ctrl_id, int mesage_id, DWORD p
 			break;
 
 		case IDC_QUIT:
-#ifdef MULTIPLAYERDEMO
-				DialogMgrClass::Flush_Dialogs ();
-
-				START_DIALOG (SplashOutroMenuDialogClass);
-				/*dialog->End_Dialog ();
-				{
-					MainMenuDialogClass *main_menu = MainMenuDialogClass::Get_Instance ();
-					if (main_menu != NULL) {
-						main_menu->End_Dialog ();
-					}
-				}*/
-#else
 				Stop_Main_Loop (EXIT_SUCCESS);
-#endif //MULTIPLAYERDEMO
 			break ;
 
 		default:

@@ -3,9 +3,7 @@
 #define CRC_H
 
 #include	<stdlib.h>
-#ifdef _UNIX
 	#include "osdep.h"
-#endif
 
 /*
 **	This is a CRC engine class. It will process submitted data and generate a CRC from it.

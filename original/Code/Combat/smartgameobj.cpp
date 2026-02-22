@@ -779,16 +779,8 @@ bool	SmartGameObj::Is_Obj_Visible( PhysicalGameObj *obj )
 
 			Peek_Physical_Object()->Dec_Ignore_Counter();
 
-#if 0
-			if (raytest.Result->StartBad) {
-//				Debug_Say(( "Is_Vis Start Bad\n" ));
-			} else if ( raytest.CollidedPhysObj == obj->Peek_Physical_Object() ) {
-				return true;
-	  		}
-#else
 			return ((raytest.Result->Fraction == 1.0f ) ||
 					 ( raytest.CollidedPhysObj == obj->Peek_Physical_Object() ));
-#endif
 		}
 	}
 	return false;

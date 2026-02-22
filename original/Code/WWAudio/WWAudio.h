@@ -3,9 +3,7 @@
 #define __WWAUDIO_H
 
 #include "always.h"
-#pragma warning (push, 3)
 #include "Mss.H"
-#pragma warning (pop)
 
 #include "Vector.H"
 #include "SoundBuffer.H"

@@ -1,5 +1,4 @@
 // Disable warning about exception handling not being enabled. It's used as part of STL - in a part of STL we don't use.
-#pragma warning(disable : 4530)
 
 #include "screencursor.h"
 #include "ww3d.h"

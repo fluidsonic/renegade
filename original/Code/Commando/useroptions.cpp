@@ -21,7 +21,6 @@
 #include "rawfile.h"
 #include "serversettings.h"
 #include "consolemode.h"
-#include "specialbuilds.h"
 #include "useroptions.h"
 
 char DefaultRegistryModifier[1024] = {};
@@ -124,7 +123,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 
 	free(command_line);
 
-#ifndef BETACLIENT
 
 	//GAMESPY
 	//
@@ -238,7 +236,6 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 
 	free(tmpstr);
 
-#endif // !BETACLIENT
 
 	// Return true if command line options scanned OK.
 	return(retcode);

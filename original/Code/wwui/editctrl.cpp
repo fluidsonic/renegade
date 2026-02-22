@@ -27,9 +27,6 @@ EditCtrlClass::EditCtrlClass (void)	:
 	IsCaretDisplayed (false),
 	mInComposition(false)
 
-#ifdef SHOW_IME_TYPING
-	, mShowIMETypingText(false)
-#endif
 {	
 	//
 	//	Set the font for the text renderers
@@ -262,11 +259,6 @@ EditCtrlClass::Render (void)
 		CaretRenderer.Render ();
 	}
 
-	#ifdef SHOW_IME_TYPING
-	if (mShowIMETypingText) {
-		mIMETypingTip.Render();
-	}
-	#endif
 
 	DialogControlClass::Render ();
 	return ;
@@ -1221,73 +1213,6 @@ bool EditCtrlClass::IsIMEAllowed(void) const
 	return ((Style & (ES_NUMBER|ES_OEMCONVERT)) == 0);
 }
 
-#ifdef SHOW_IME_TYPING
-/******************************************************************************
-*
-* NAME
-*
-* DESCRIPTION
-*
-* INPUTS
-*
-* RESULT
-*
-******************************************************************************/
-
-void EditCtrlClass::Set_IME_Typing_Text_Pos(void)
-{
-	Vector2 charExtent = TextRenderer.Get_Text_Extents(u"W");
-	int caretPos = Get_Caret_Pos();
-
-	Vector2 pos;
-	pos.X = (Pos_From_Character(caretPos) + (charExtent.X * 0.25f));
-	pos.Y = (ClientRect.Top + ((ClientRect.Bottom - ClientRect.Top) * 0.25f));
-
-	mIMETypingTip.Set_Position(pos);
-}
-
-/******************************************************************************
-*
-* NAME
-*
-* DESCRIPTION
-*
-* INPUTS
-*
-* RESULT
-*
-******************************************************************************/
-
-void EditCtrlClass::Show_IME_Typing_Text(const char16_t* text)
-{
-	mShowIMETypingText = (text && wcslen(text) > 0);
-
-	if (mShowIMETypingText) {
-		Set_IME_Typing_Text_Pos();
-		mIMETypingTip.Set_Text(text);
-	} else {
-		mIMETypingTip.Set_Text(u"");
-	}
-}
-
-/******************************************************************************
-*
-* NAME
-*
-* DESCRIPTION
-*
-* INPUTS
-*
-* RESULT
-*
-******************************************************************************/
-
-void EditCtrlClass::Hide_IME_Typing_Text(void)
-{
-	mShowIMETypingText = false;
-	mIMETypingTip.Set_Text(u"");
-}
-#endif
 
 /******************************************************************************
 *
@@ -1358,19 +1283,11 @@ void EditCtrlClass::PositionCandidateList(void)
 void EditCtrlClass::HandleNotification(IME::CompositionEvent& imeEvent)
 {
 	switch (imeEvent.GetAction()) {
-		#ifdef SHOW_IME_TYPING
-		case IME::COMPOSITION_TYPING:
-			Show_IME_Typing_Text(imeEvent.Subject()->GetTypingString());
-			break;
-		#endif
 
 		case IME::COMPOSITION_START:
 			mInComposition = true;
 			Delete_Selection();
 
-			#ifdef SHOW_IME_TYPING
-			Show_IME_Typing_Text(imeEvent.Subject()->GetTypingString());
-			#endif
 
 			Set_Dirty(true);
 			break;
@@ -1384,9 +1301,6 @@ void EditCtrlClass::HandleNotification(IME::CompositionEvent& imeEvent)
 		case IME::COMPOSITION_END:
 			mInComposition = false;
 
-			#ifdef SHOW_IME_TYPING
-			Hide_IME_Typing_Text();
-			#endif
 
 			// Remove hilight
 			HilightStartPos = -1;
@@ -1425,9 +1339,6 @@ void EditCtrlClass::HandleNotification(IME::CandidateEvent& imeEvent)
 {
 	switch (imeEvent.GetAction()) {
 		case IME::CANDIDATE_OPEN: {
-			#ifdef SHOW_IME_TYPING
-			Hide_IME_Typing_Text();
-			#endif
 
 			mCandidateList.Init(imeEvent.Subject());
 			PositionCandidateList();

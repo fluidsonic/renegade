@@ -7,7 +7,6 @@
 #include "renegadedialogmgr.h"
 #include "gameinitmgr.h"
 #include "wwaudio.h"
-#include "specialbuilds.h"
 #include "stylemgr.h"
 #include "render2dsentence.h"
 
@@ -95,9 +94,6 @@ void	MovieGameModeClass::Start_Movie( const char * filename )
 	//
 	bool force_cd = true;
 
-#if defined(BETACLIENT) || defined(FREEDEDICATEDSERVER) || defined(MULTIPLAYERDEMO)
-	force_cd = false;
-#endif //BETACLIENT
 
 	//
 	//	Play the movie (if it exists locally)
@@ -220,11 +216,7 @@ void	MovieGameModeClass::Movie_Done( void )
 		MovieStartupMode = STARTUP_MOVIE_OFF;
 		// Goto main menu
 		
-#ifdef MULTIPLAYERDEMO
-		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_SPLASH_IN);
-#else
 		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_MAIN_MENU);
-#endif //MULTIPLAYERDEMO
 
 		IntroMovieSkipAllowed = true;
 

@@ -1,6 +1,3 @@
-#ifndef PROTOTYPES
-#define PROTOTYPES 1
-#endif
 
 /* POINTER defines a generic pointer type */
 typedef unsigned char *POINTER;
@@ -15,8 +12,4 @@ typedef unsigned long int UINT4;
 If using PROTOTYPES, then PROTO_LIST returns the list, otherwise it
   returns an empty list.
  */
-#if PROTOTYPES
 #define PROTO_LIST(list) list
-#else
-#define PROTO_LIST(list) ()
-#endif

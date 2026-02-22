@@ -1,9 +1,6 @@
 #ifndef	GAMEDATA_H
 #define	GAMEDATA_H
 
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #include "teammanager.h"
 #include "boolean.h"

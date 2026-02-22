@@ -612,7 +612,6 @@ bool	DefenseObjectClass::Is_Soft( void )
 */
 float	DefenseObjectClass::Apply_Damage( const OffenseObjectClass & offense, float scale, int alternate_skin )
 {
-#if 1
 	// If singleplay or non trusted clients, just apply damage normally, if server
 	bool normal = IS_SOLOPLAY || !cCsDamageEvent::Get_Are_Clients_Trusted();
 	DamageableGameObj * owner = Get_Owner();
@@ -655,14 +654,6 @@ float	DefenseObjectClass::Apply_Damage( const OffenseObjectClass & offense, floa
 		Request_Damage( offense, scale );
 	}
 	return Health;	// Don't apply the damage
-#else
-	// Client Authorative damage is no longer done here.
-	if ( CombatManager::I_Am_Server() ) {
-		return Do_Damage( offense, scale, alternate_skin );
-	} else {
-		return Health;
-	}
-#endif
 }
 
 /*

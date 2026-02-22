@@ -16,12 +16,10 @@
 #include "gamemode.h"
 #include "campaign.h"
 #include "mpsettingsmgr.h"
-#include "specialbuilds.h"
 #include "dlgserversaveload.h"
 #include "modpackagemgr.h"
 #include "modpackage.h"
 
-#include "specialbuilds.h"
 
 ////////////////////////////////////////////////////////////////
 //
@@ -51,9 +49,6 @@ MPLanHostOptionsMenuClass::~MPLanHostOptionsMenuClass (void)
 void
 MPLanHostOptionsMenuClass::On_Init_Dialog (void)
 {
-#ifdef BETACLIENT
-	Get_Dlg_Item(IDC_MENU_MP_LAN_START_BUTTON)->Enable(false);
-#endif // BETACLIENT
 
 	Set_Dlg_Item_Text(IDC_GAME_TYPE_TITLE, TRANSLATE(IDS_MP_GAME_CNC));
 
@@ -467,10 +462,7 @@ MPLanHostAdvancedOptionsTabClass::On_Init_Dialog (void)
 		basicTab->Release_Ref();
 	}
 
-#ifdef FREEDEDICATEDSERVER
-	The_Game ()->IsDedicated.Set(true);
-	Enable_Dlg_Item (IDC_DEDICATED_SERVER_CHECK,		false);
-#endif // FREEDEDICATEDSERVER
+// FDS: host options used command-line args instead of UI
 
 //	if (cGameSpyAdmin::Is_Gamespy_Game()) {
 //		assert(PTheGameData != NULL);

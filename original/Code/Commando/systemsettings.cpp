@@ -600,89 +600,11 @@ void SystemSettings::Shutdown( void )
 }
 
 /*
-#if DEADMENU
-//
-//
-//
-MenuEntryClass	* SystemSettings::Create_Menu_Entry( const char * setting_name )
-{
-	for ( int index = 0; index < SettingList.Count(); index++ ) {
-		if ( !stricmp( SettingList[ index ]->Get_Name(), setting_name ) ) {
-			MenuEntryClass	* entry = SettingList[ index ]->Create_Menu_Entry();
-			if ( entry ) {
-				entry->Set_Name( setting_name );
-			}
-			return entry;
-		}
-	}
-	return NULL;
-}
-#endif //DEADMENU
 
-#if DEADMENU
-class	MenuEntrySettingBool : public MenuEntryToggleClass {
-public:
-	MenuEntrySettingBool( SystemSettingEntryBool	* entry ) : Entry( entry ) {}
-	virtual	bool	Get_State( void )	{ return Entry->Get_State(); }
-	virtual	void	Toggle( void )		{ Entry->Set_State( !Entry->Get_State() ); }
-private:
-	SystemSettingEntryBool	* Entry;
-};
-#endif // DEADMENU
 
-#if DEADMENU
-MenuEntryClass	*	SystemSettingEntryBool::Create_Menu_Entry( void )
-{
-	return new MenuEntrySettingBool( this );
-}
-#endif // DEADMENU
 
-#if DEADMENU
-class	MenuEntrySettingSlider : public MenuEntryIntSliderClass {
-public:
-	MenuEntrySettingSlider( SystemSettingEntrySlider	* entry ) : Entry( entry ) {}
-	virtual	int	Get_Value( void )			{ return Entry->Get_Value(); }
-	virtual	void	Set_Value( int value )	{ Entry->Set_Value( value ); }
-	virtual	int	Get_Step_Size( void )	{ return Entry->Get_Step_Size(); }
 
-private:
-	SystemSettingEntrySlider	* Entry;
-};
-#endif // DEADMENU
 
-#if DEADMENU
-MenuEntryClass	*	SystemSettingEntrySlider::Create_Menu_Entry( void )
-{
-	return new MenuEntrySettingSlider( this );
-}
-#endif // DEADMENU
 
-#if DEADMENU
-class	MenuEntrySettingEnum : public MenuEntryEnumClass {
-public:
-	MenuEntrySettingEnum( SystemSettingEntryEnum	* entry ) : Entry( entry ) {}
-	virtual	const char * Get_Selection_Name( void )
-	{
-		return Entry->Get_Enum_Name( Entry->Get_Selection() );
-	}
-	virtual	void	Activate( void )
-	{
-		int selection = Entry->Get_Selection() + 1;
-		if ( selection == Entry->Get_Enum_Count() ) {
-			selection = 0;
-		}
-		Entry->Set_Selection( selection );
-	}
-private:
-	SystemSettingEntryEnum	* Entry;
-};
-#endif // DEADMENU
-
-#if DEADMENU
-MenuEntryClass	*	SystemSettingEntryEnum::Create_Menu_Entry( void )
-{
-	return new MenuEntrySettingEnum( this );
-}
-#endif // DEADMENU
 
 */

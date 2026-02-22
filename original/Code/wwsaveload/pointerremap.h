@@ -3,9 +3,7 @@
 #ifndef POINTERREMAP_H
 #define POINTERREMAP_H
 
-#ifdef _UNIX
 #include "osdep/osdep.h"
-#endif
 
 #include "always.h"
 #include "vector.h"

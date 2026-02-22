@@ -9,9 +9,7 @@
 #include <stdarg.h>
 #include <tchar.h>
 #include "trim.h"
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 //////////////////////////////////////////////////////////////////////
 //

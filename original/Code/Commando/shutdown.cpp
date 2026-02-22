@@ -38,7 +38,6 @@
 #include "systeminfolog.h"
 #include "dx8caps.h"
 #include "registry.h"
-#include "specialbuilds.h"
 #include <windows.h>
 #include <lmcons.h>	// UNLEN
 extern SimpleFileFactoryClass RenegadeBaseFileFactory;

@@ -17,7 +17,6 @@
 #include "effectrecycler.h"
 #include "timeddecophys.h"
 
-#define RECYCLE_EMITTERS	1
 
 const float _MAX_SURFACE_EFFECT_DISTANCE2	= 50.0f * 50.0f;	// no surface effects created farther than this from camera
 const float _SURFACE_EFFECT_NEAR_DISTANCE2 = 10.0f * 10.0f;	// force surface effects within this distance
@@ -75,9 +74,7 @@ static const char * _HitterTypeName[ SurfaceEffectsManager::NUM_HITTER_TYPES ] =
 /*
 ** Recycler for all "fire-and-forget" surface effect emitters
 */
-#if (RECYCLE_EMITTERS)
 static EffectRecyclerClass _EmitterRecycler;
-#endif
 
 /*
 ** Persistant Surface Effects
@@ -385,9 +382,7 @@ void	SurfaceEffectsManager::Init( void )
 
 void	SurfaceEffectsManager::Shutdown( void )
 {
-#if (RECYCLE_EMITTERS)
 	_EmitterRecycler.Reset();
-#endif
 
 	for ( int surface = 0; surface < SURFACE_TYPE_MAX; surface++ ) {
 		for ( int hitter = 0; hitter < NUM_HITTER_TYPES; hitter++ ) {
@@ -482,19 +477,7 @@ void	SurfaceEffectsManager::Apply_Effect
 	// Create the emitter
 	if ((allow_emitters) && (emitter_name) && (Mode != MODE_NO_EMITTERS)) {
 
-#if (RECYCLE_EMITTERS)
 		_EmitterRecycler.Spawn_Effect(emitter_name,tm);
-#else
-		ParticleEmitterClass * emitter = (ParticleEmitterClass *)WW3DAssetManager::Get_Instance()->Create_Render_Obj( emitter_name );
-		if ( emitter ) {
-			SET_REF_OWNER( emitter );
-			emitter->Set_Transform( tm );
-			emitter->Start();
-			emitter->Enable_Remove_On_Complete(true);
-			PhysicsSceneClass::Get_Instance()->Add_Render_Object( emitter );
-			emitter->Release_Ref();
-		}
-#endif
 	}
 
 	// Create decal, (will only apply to static physics objects)
@@ -632,7 +615,6 @@ bool	SurfaceEffectsManager::Does_Surface_Stop_Bullets( int surface_type )
 void	SurfaceEffectsManager::Apply_Damage( int surface_type, PhysicalGameObj * obj )
 {
 
-#ifndef PARAM_EDITING_ON
 
 	// If the user has specified an override type, use it.
 	if (OverrideSurfaceType != -1) { surface_type = OverrideSurfaceType; }
@@ -642,7 +624,6 @@ void	SurfaceEffectsManager::Apply_Damage( int surface_type, PhysicalGameObj * ob
 		obj->Apply_Damage_Extended( offense_obj, TimeManager::Get_Frame_Seconds() );
 	}
 
-#endif //PARAM_EDITING_ON
 
 }
 

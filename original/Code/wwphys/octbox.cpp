@@ -4,7 +4,6 @@
 #include "physinttest.h"
 #include "physcon.h"
 
-#define SHOW_CONTACT_DETECTORS 0
 
 const float DEFAULT_STIFFNESS = 5.0f;
 const float DEFAULT_DAMPING = 0.1f;

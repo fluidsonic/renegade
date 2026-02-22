@@ -63,14 +63,6 @@ public:
 	static void				Set_Auto_Password (const char *);
 	static const char *	Get_Auto_Password (void);
 
-#ifdef OBSOLETE
-	//
-	// Quickmatch preferences
-	//
-	static void		Set_QuickMatch_Mode_Preference (const char *mode, int preference);
-	static int		Get_QuickMatch_Mode_Preference (const char *mode);
-	static void		Save_QuickMatch_Mode_Preferences (void);
-#endif
 
 	//
 	//	Sidebar help
@@ -122,10 +114,6 @@ private:
 	static bool								AreSkinsUnlocked;
 	static int								OptionFlags;
 
-#ifdef OBSOLETE
-	typedef std::map<const char*, int> GameModeMap;
-	static GameModeMap _mModePrefs;
-#endif
 };
 
 #endif //__DLG_MP_SETTINGS_MGR_H

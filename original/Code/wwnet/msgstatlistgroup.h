@@ -7,9 +7,6 @@
 //               of these to sum send and receive data to multiple clients.
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef MSGSTATLISTGROUP_H
 #define MSGSTATLISTGROUP_H

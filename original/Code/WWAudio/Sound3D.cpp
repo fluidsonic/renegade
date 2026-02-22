@@ -141,38 +141,6 @@ Sound3DClass::On_Frame_Update (unsigned int milliseconds)
 	}
 
 // Disabling auto-velocity because hardware doppler is poor...
-#if 0
-
-	//
-	// Update the current velocity if we are 'auto-calcing'.
-	//
-	if (m_bAutoCalcVel && Get_Class_ID () != CLASSID_LISTENER) {
-		Vector3 last_pos = prev_tm.Get_Translation ();
-		Vector3 curr_pos = m_Transform.Get_Translation ();
-
-		//
-		//	Don't update the velocity if we haven't moved (optimization -- Miles calls
-		// can be really slow)
-		//
-		if (last_pos != curr_pos) {
-			Vector3 curr_vel;
-
-			//
-			//	Extrapolate our current velocity given the last time slice and the distance
-			// we moved.
-			//
-			float secs_since_last_update = (TIMEGETTIME () - m_LastUpdate);
-			if (secs_since_last_update > 0) {
-				curr_vel = ((curr_pos - last_pos) / secs_since_last_update);
-			} else {
-				curr_vel.Set (0, 0, 0);
-			}
-
-			Set_Velocity (curr_vel);
-		}
-	}
-
-#endif // doppler disable
 
 	//
 	// Remember when the last time we updated our 'auto-calc'

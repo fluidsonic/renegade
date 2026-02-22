@@ -9,8 +9,6 @@
 	#include "vector3.h"
 #endif
 
-#ifndef	WWDEBUG_H
-#endif
 
 /*
 ** Game modes are objects to manage each of the game's modes and

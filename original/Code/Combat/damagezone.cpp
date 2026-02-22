@@ -18,19 +18,6 @@ DamageZoneGameObjDef::DamageZoneGameObjDef( void ) :
 	DamageWarhead( 1 ),
 	Color( 0.7F, 0, 0 )
 {
-#ifdef PARAM_EDITING_ON
-	EDITABLE_PARAM( DamageZoneGameObjDef, ParameterClass::TYPE_FLOAT, DamageRate );
-
-	EnumParameterClass *param;
-	param = new EnumParameterClass( &DamageWarhead );
-	param->Set_Name ( "Damage Warhead" );
-	for ( int i = 0; i < ArmorWarheadManager::Get_Num_Warhead_Types(); i++ ) {
-		param->Add_Value ( ArmorWarheadManager::Get_Warhead_Name( i ), i );
-	}
-	GENERIC_EDITABLE_PARAM(DamageZoneGameObjDef,param)
-
-	EDITABLE_PARAM( DamageZoneGameObjDef, ParameterClass::TYPE_COLOR, Color );
-#endif	//PARAM_EDITING_ON
 }
 
 uint32_t	DamageZoneGameObjDef::Get_Class_ID (void) const

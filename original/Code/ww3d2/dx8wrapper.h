@@ -594,15 +594,6 @@ WWINLINE void DX8Wrapper::Set_DX8_Render_State(D3DRENDERSTATETYPE state, unsigne
 	// Can't monitor state changes because setShader call to GERD may change the states!
 	if (RenderStates[state]==value) return;
 
-#ifdef MESH_RENDER_SNAPSHOT_ENABLED
-	if (WW3D::Is_Snapshot_Activated()) {
-		StringClass value_name(0,true);
-		Get_DX8_Render_State_Value_Name(value_name,state,value);
-		SNAPSHOT_SAY(("DX8 - SetRenderState(state: %s, value: %s)\n",
-			Get_DX8_Render_State_Name(state),
-			value_name));
-	}
-#endif
 
 	RenderStates[state]=value;
 	DX8CALL(SetRenderState( state, value ));
@@ -613,16 +604,6 @@ WWINLINE void DX8Wrapper::Set_DX8_Texture_Stage_State(unsigned stage, D3DTEXTURE
 {
 	// Can't monitor state changes because setShader call to GERD may change the states!
 	if (TextureStageStates[stage][(unsigned int)state]==value) return;
-#ifdef MESH_RENDER_SNAPSHOT_ENABLED
-	if (WW3D::Is_Snapshot_Activated()) {
-		StringClass value_name(0,true);
-		Get_DX8_Texture_Stage_State_Value_Name(value_name,state,value);
-		SNAPSHOT_SAY(("DX8 - SetTextureStageState(stage: %d, state: %s, value: %s)\n",
-			stage,
-			Get_DX8_Texture_Stage_State_Name(state),
-			value_name));
-	}
-#endif
 
 	TextureStageStates[stage][(unsigned int)state]=value;
 	DX8CALL(SetTextureStageState( stage, state, value ));
@@ -669,18 +650,6 @@ WWINLINE Vector4 DX8Wrapper::Convert_Color(unsigned color)
 	return col;
 }
 
-#if 0
-WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector3& color, const float alpha)
-{
-
-	return D3DCOLOR_COLORVALUE(color.X,color.Y,color.Z,alpha);
-}
-WWINLINE unsigned int DX8Wrapper::Convert_Color(const Vector4& color)
-{
-
-	return D3DCOLOR_COLORVALUE(color.X,color.Y,color.Z,color.W);
-}
-#else
 
 // ----------------------------------------------------------------------------
 //
@@ -736,7 +705,6 @@ WWINLINE unsigned int DX8Wrapper::Convert_Color_Clamp(const Vector4& color)
 	return Convert_Color(reinterpret_cast<const Vector3&>(clamped_color),clamped_color[3]);
 }
 
-#endif
 
 WWINLINE void DX8Wrapper::Set_Alpha (const float alpha, unsigned int &color)
 {

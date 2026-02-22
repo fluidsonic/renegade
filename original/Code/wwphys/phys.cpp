@@ -12,9 +12,6 @@
 #include "physcoltest.h"
 #include "lightenvironment.h"
 #include "umbrasupport.h"
-#if (UMBRASUPPORT)
-#include <umbra.hpp>
-#endif
 
 #include "dx8wrapper.h"
 #include "dx8vertexbuffer.h"
@@ -74,15 +71,7 @@ PhysClass::PhysClass(void) :
 	LastVisibleFrame(0),	// JANI TEMP TEST
 	SunStatusLastUpdated(0),
 	StaticLightingCache(NULL)
-#if (UMBRASUPPORT)
-	,UmbraObject(NULL)
-#endif
 {
-#if (UMBRASUPPORT)
-	UmbraObject = new Umbra::Object(UmbraSupport::Peek_Dummy_Sphere());
-	UmbraObject->setUserPointer(this);
-	UmbraSupport::Install_Umbra_Object(this);
-#endif
 }
 
 PhysClass::~PhysClass(void)
@@ -94,13 +83,6 @@ PhysClass::~PhysClass(void)
 	if (StaticLightingCache) {
 		delete StaticLightingCache;
 	}
-#if (UMBRASUPPORT)
-	if (UmbraObject) {
-		UmbraSupport::Remove_Umbra_Object(this);
-		UmbraObject->release();
-		UmbraObject = NULL;
-	}
-#endif
 }
 
 void PhysClass::Init(const PhysDefClass & def)
@@ -265,7 +247,6 @@ void PhysClass::Update_Sun_Status(void)
 	scene->Get_Sun_Light_Vector(&sunlight);
 	Vector3 center = Model->Get_Bounding_Sphere().Center; 
 
-#pragma message ("(gth) Need a collision group for sun-rays")
 	CastResultStruct sunresult;
 	LineSegClass sunray(center,center - sunlight * SUN_CHECK_DISTANCE);
 	PhysRayCollisionTestClass sunraytest(sunray,&sunresult,0,COLLISION_TYPE_PROJECTILE);
@@ -302,90 +283,6 @@ void PhysClass::Push_Effects(RenderInfoClass & rinfo)
 		}
 	}
 
-#if 0
-	if (!ProjectionsOnMe.Is_Empty()) {
-
-		ShaderClass shader = ShaderClass::_PresetOpaqueShader;
-		VertexMaterialClass * vmtl = VertexMaterialClass::Get_Preset(VertexMaterialClass::PRELIT_NODIFFUSE);
-		
-		DX8Wrapper::Set_Shader(shader);
-		DX8Wrapper::Set_Material(vmtl);
-
-		Matrix4 view,proj;
-		Matrix4 identity(true);
-
-		DX8Wrapper::Get_Transform(D3DTS_VIEW,view);
-		DX8Wrapper::Get_Transform(D3DTS_PROJECTION,proj);
-
-		DX8Wrapper::Set_Transform(D3DTS_WORLD,identity);
-		DX8Wrapper::Set_Transform(D3DTS_VIEW,identity);
-		DX8Wrapper::Set_Transform(D3DTS_PROJECTION,identity);
-
-		
-		TexProjListIterator iterator(&ProjectionsOnMe);
-		for ( ; !iterator.Is_Done() ; iterator.Next()) {
-			TextureClass * tex = iterator.Peek_Obj()->Peek_Material_Pass()->Peek_Texture(0);
-			if (tex != NULL) {
-				DX8Wrapper::Set_Texture(0,tex);
-
-				DynamicVBAccessClass vbaccess(BUFFER_TYPE_DYNAMIC_DX8,4);
-				{
-					DynamicVBAccessClass::WriteLockClass lock(&vbaccess);
-					VertexFormatXYZNDUV2 * verts = lock.Get_Formatted_Vertex_Array();
-					verts[0].x = -1.0f;
-					verts[0].y = 0.8f;
-					verts[0].z = 0.0;
-					verts[0].u1 = 0.0f;
-					verts[0].v1 = 0.0f;
-					verts[0].diffuse = 0xFFFFFFFF;
-
-					verts[1].x = -1.0f;
-					verts[1].y = 0.3f;
-					verts[1].z = 0.0;
-					verts[1].u1 = 0.0f;
-					verts[1].v1 = 1.0f;
-					verts[1].diffuse = 0xFFFFFFFF;
-
-					verts[2].x = -0.5f;
-					verts[2].y = 0.3f;
-					verts[2].z = 0.0;
-					verts[2].u1 = 1.0f;
-					verts[2].v1 = 1.0f;
-					verts[2].diffuse = 0xFFFFFFFF;
-
-					verts[3].x = -0.5f;
-					verts[3].y = 0.8f;
-					verts[3].z = 0.0;
-					verts[3].u1 = 1.0f;
-					verts[3].v1 = 0.0f;
-					verts[3].diffuse = 0xFFFFFFFF;
-				}
-
-				DynamicIBAccessClass ibaccess(BUFFER_TYPE_DYNAMIC_DX8,2*3);
-				{
-					DynamicIBAccessClass::WriteLockClass lock(&ibaccess);
-					unsigned short * indices = lock.Get_Index_Array();
-
-					indices[0] = 0;
-					indices[1] = 1;
-					indices[2] = 2;
-					indices[3] = 0;
-					indices[4] = 2;
-					indices[5] = 3;
-				}
-
-				DX8Wrapper::Set_Vertex_Buffer(vbaccess);
-				DX8Wrapper::Set_Index_Buffer(ibaccess,0);
-				DX8Wrapper::Draw_Triangles(0,2,0,4);
-			}
-		}
-
-		DX8Wrapper::Set_Transform(D3DTS_VIEW,view);
-		DX8Wrapper::Set_Transform(D3DTS_PROJECTION,proj);
-
-		REF_PTR_RELEASE(vmtl);
-	}
-#endif
 
 }
 
@@ -545,9 +442,6 @@ bool PhysClass::Load (ChunkLoadClass &cload)
 	/*
 	** Update our Umbra object
 	*/
-#if (UMBRASUPPORT)
-	UmbraSupport::Update_Umbra_Object(this);
-#endif
 
 	return true;
 }

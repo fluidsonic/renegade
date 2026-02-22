@@ -6,8 +6,6 @@
 #include "always.h"
 #endif
 
-#ifndef BITTYPE_H
-#endif
 
 #ifndef WWFILE_H
 #include "wwfile.h"

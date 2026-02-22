@@ -283,13 +283,6 @@ void PhysicsSceneClass::Save_Level_Dynamic_Data(ChunkSaveClass & csave)
 		csave.End_Chunk();
 	}
 
-#if 0 // Do I need to do this?
-	if (!DirtyCullList.Is_Empty()) {
-		csave.Begin_Chunk(PSCENE_LDD_CHUNK_DIRTY_CULL_LIST);
-		Save_LDD_Dirty_Cull_List();
-		csave.End_Chunk();
-	}
-#endif
 }
 
 void PhysicsSceneClass::Load_Level_Dynamic_Data(ChunkLoadClass & cload)
@@ -309,11 +302,6 @@ void PhysicsSceneClass::Load_Level_Dynamic_Data(ChunkLoadClass & cload)
 				Load_Static_Object_States(cload);
 				break;
 
-#if 0 // Do I need to do this?
-			case PSCENE_LDD_CHUNK_DIRTY_CULL_LIST:
-				Load_LDD_Dirty_Cull_List(cload);
-				break;
-#endif
 				
 			default:
 				break;

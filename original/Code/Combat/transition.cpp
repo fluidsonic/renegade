@@ -240,11 +240,6 @@ bool	TransitionInstanceClass::Check( SoldierGameObj *obj, bool action_trigger )
 	if ( !action_trigger && 
 		  ( Get_Type() != TransitionDataClass::LADDER_EXIT_TOP ) && 
 		  ( Get_Type() != TransitionDataClass::LADDER_EXIT_BOTTOM ) ) {
-#if 0
-		// no auto transitions or not human controlled
-		if ( !CombatManager::Are_Transitions_Automatic() ||
-			  !obj->Is_Human_Controlled() ) 
-#endif
 		{
 			return false;
 		}
@@ -459,18 +454,8 @@ void	TransitionInstanceClass::Start( SoldierGameObj *obj )
 	// if this is the camera's target...
 	if ( COMBAT_STAR == obj ) {
 		// Get duration
-#if 0
-		HAnimClass * animation = WW3DAssetManager::Get_Instance()->Get_HAnim( Data.Get_Animation_Name() );
-		if ( animation ) {
-			float anim_duration = animation->Get_Num_Frames() / animation->Get_Frame_Rate();
-			animation->Release_Ref();
-//			COMBAT_CAMERA->Set_Lerp_Time( anim_duration * 1.3f );
-			COMBAT_CAMERA->Set_Lerp_Time( anim_duration );
-		}
-#else
 		COMBAT_CAMERA->Set_Lerp_Time( 1.0f );
 
-#endif
 	}
 
 	// set the object ending position & orientation
@@ -517,35 +502,7 @@ void	TransitionInstanceClass::Start( SoldierGameObj *obj )
 		}
 	}
 
-#if 0
-	obj->Start_Transition_Animation( Data.Get_Animation_Name(), completion_data );
-
-	VehicleGameObj * vehicle = Get_Vehicle();
-
-	// If vehicle entry/exit, allow it to animate as well
-	switch ( Get_Type() ) {
-
-		case TransitionDataClass::VEHICLE_ENTER:
-		{
-			if ( vehicle ) {
-				vehicle->Passenger_Entering();
-			}
-			break;
-		}
-
-		case TransitionDataClass::VEHICLE_EXIT:
-		{
-//			obj->Set_Vehicle_State( SoldierGameObj::EXITING_VEHICLE, vehicle );
-			vehicle->Passenger_Exiting();
-			break;
-		}
-
-		default:
-			break;
-	}
-#else
 	End( obj, completion_data );
-#endif
 
 }
 

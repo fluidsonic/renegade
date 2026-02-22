@@ -129,10 +129,6 @@ protected:
 	IME::IMEManager* mIME;
 	bool mInComposition;
 
-#ifdef SHOW_IME_TYPING
-	bool mShowIMETypingText;
-	ToolTipClass mIMETypingTip;
-#endif
 
 	IMECandidateCtrl mCandidateList;
 };

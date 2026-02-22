@@ -10,9 +10,7 @@
 #include	"xstraw.h"
 #include	<stdio.h>
 #include <malloc.h>
-#ifdef _UNIX
 #include <ctype.h>
-#endif
 #include "rawfile.h"
 #include "ffactory.h"
 
@@ -544,11 +542,7 @@ int INIClass::Save(Pipe & pipe) const
 {
 	int total = 0;
 
-	#ifdef _UNIX
 		const char *EOL="\n";
-	#else
-		const char *EOL="\r\n";
-	#endif
 
 	INISection * secptr = SectionList->First();
 	while (secptr && secptr->Is_Valid()) {
@@ -2179,11 +2173,6 @@ void INIClass::DuplicateCRCError(const char *message, const char *section, const
 	OutputDebugString(buffer);
 	assert(0);
 
-#ifdef NDEBUG
-#ifdef _WINDOWS
-	MessageBox(0, buffer, "Duplicate CRC in INI file.", MB_ICONSTOP | MB_OK);
-#endif
-#endif
 }
 
 void	INIClass::Keep_Blank_Entries (bool keep_blanks)

@@ -1,8 +1,5 @@
 
 
-#ifdef _WINDOWS
-#include	<winioctl.h>
-#endif
 
 /*
 **	This is the identifier for the Monochrome Display Driver.

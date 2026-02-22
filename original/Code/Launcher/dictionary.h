@@ -255,17 +255,9 @@ bit8 Dictionary<K,V>::add(IN K &key,IN V &value)
   item=(DNode<K,V> *)new DNode<K,V>;
   assert(item!=NULL);
 
-  #ifdef KEY_MEM_OPS
-    memcpy(&(item->key),&key,sizeof(K));
-  #else
     item->key=key;
-  #endif
 
-  #ifdef VALUE_MEM_OPS
-    memcpy(&(item->value),&value,sizeof(V));
-  #else
     item->value=value;
-  #endif
 
   item->hashNext=NULL;
 
@@ -315,17 +307,9 @@ bit8 Dictionary<K,V>::remove(IN K &key,OUT V &value)
 
   //special case table points to thing to delete
 
-  #ifdef KEY_MEM_OPS
-  if (0==memcmp(&(node->key),&key,sizeof(K)))
-  #else
   if ((node->key)==key)
-  #endif
   {
-    #ifdef VALUE_MEM_OPS
-      memcpy(&value,&(node->value),sizeof(V));
-    #else
       value=node->value;
-    #endif
     temp=table[offset]->hashNext;
     delete(table[offset]);
     table[offset]=temp;
@@ -339,17 +323,9 @@ bit8 Dictionary<K,V>::remove(IN K &key,OUT V &value)
   //Now the case if the thing to delete is not the first
   while (node!=NULL)
   {
-    #ifdef KEY_MEM_OPS
-      if (0==memcmp(&(node->key),&key,sizeof(K)))
-    #else
       if (node->key==key)
-    #endif
     {
-      #ifdef VALUE_MEM_OPS
-        memcpy(&value,&(node->value),sizeof(V));
-      #else
         value=node->value;
-      #endif 
       last->hashNext=node->hashNext;
       entries--;
       delete(node);
@@ -400,16 +376,8 @@ bit8 Dictionary<K,V>::removeAny(OUT K &key,OUT V &value)
   node=table[offset];
   last=node;
 
-  #ifdef KEY_MEM_OPS
-    memcpy(&key,&(node->key),sizeof(K));
-  #else
     key=node->key;
-  #endif
-  #ifdef VALUE_MEM_OPS
-    memcpy(&value,&(node->value),sizeof(V));     
-  #else
     value=node->value;
-  #endif
 
   temp=table[offset]->hashNext;
   delete(table[offset]);
@@ -432,21 +400,13 @@ bit8 Dictionary<K,V>::getValue(IN K &key,OUT V &value)
 
   if (node==NULL) return(FALSE);
 
-  #ifdef KEY_MEM_OPS
-    while ((node!=NULL)&&(memcmp(&(node->key),&key,sizeof(K))))
-  #else
     while ((node!=NULL)&&( ! ((node->key)==key)) )  // odd syntax so you don't
-  #endif                                            // have to do oper !=
   { node=node->hashNext; }
 
   if (node==NULL)
   { return(FALSE); }
 
-  #ifdef VALUE_MEM_OPS
-    memcpy(&value,&(node->value),sizeof(V));
-  #else
     value=(node->value);
-  #endif
   return(TRUE);
 }
 

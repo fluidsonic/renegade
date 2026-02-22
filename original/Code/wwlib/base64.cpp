@@ -48,29 +48,16 @@ int const PacketChars = 4;
 */
 typedef union {
 	struct {
-#ifdef BIG_ENDIAN
-		unsigned char C1;
-		unsigned char C2;
-		unsigned char C3;
-#else
 		unsigned char C3;
 		unsigned char C2;
 		unsigned char C1;
-#endif
 		unsigned char pad;
 	} Char;
 	struct {
-#ifdef BIG_ENDIAN
-		unsigned O1:6;
-		unsigned O2:6;
-		unsigned O3:6;
-		unsigned O4:6;
-#else
 		unsigned O4:6;
 		unsigned O3:6;
 		unsigned O2:6;
 		unsigned O1:6;
-#endif
 		unsigned pad:8;
 	} SubCode;
 	unsigned int Raw;

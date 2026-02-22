@@ -8,13 +8,7 @@
 
 #include <winsock.h> // for SOCKET
 
-#ifdef WWASSERT
-#ifndef pm_assert
-#define pm_assert WWASSERT
-#endif //pm_assert
-#else //WWASSERT
 #define pm_assert assert
-#endif //WWASSERT
 
 #pragma pack(push)
 #pragma pack(1)
@@ -62,11 +56,7 @@ struct PacketDeltaHeaderStruct {
 ** Minimum MTU allowable on the internet is 576. IP Header is 20 bytes. UDP header is 8 bytes
 ** So our max packet size is 576 - 28 = 548
 */
-#ifdef WRAPPER_CRC
-#define PACKET_MANAGER_MTU 540
-#else
 #define PACKET_MANAGER_MTU 544
-#endif //WRAPPER_CRC
 #define PACKET_MANAGER_BUFFERS 256
 #define PACKET_MANAGER_BUFFERS_WHEN_SERVER (32 * 32)
 #define PACKET_MANAGER_RECEIVE_BUFFERS 128

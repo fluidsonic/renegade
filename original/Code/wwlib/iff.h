@@ -2,9 +2,7 @@
 #ifndef IFF_H
 #define IFF_H
 
-#ifndef _WINDOWS
 #define __cdecl
-#endif
 
 #include	"buff.h"
 #include	<stddef.h>

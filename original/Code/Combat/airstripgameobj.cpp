@@ -69,12 +69,6 @@ AirStripGameObjDef::AirStripGameObjDef (void)	:
 	EDITABLE_PARAM (AirStripGameObjDef, ParameterClass::TYPE_INT,			CinematicSlotIndex);
 	EDITABLE_PARAM (AirStripGameObjDef, ParameterClass::TYPE_FLOAT,		CinematicLengthToVehicleDisplay);	
 
-	#ifdef PARAM_EDITING_ON
-		GenericDefParameterClass *param = new GenericDefParameterClass (&CinematicDefID);
-		param->Set_Class_ID (CLASSID_GAME_OBJECT_DEF_SIMPLE);
-		param->Set_Name ("Drop-Off Cinematic");
-		GENERIC_EDITABLE_PARAM (AirStripGameObjDef, param)
-	#endif //PARAM_EDITING_ON
 
 	return ;
 }

@@ -168,11 +168,9 @@ class TTimerClass : public BasicTimerClass<T> {
 
 	private:
 		int Accumulated;				//	Total accumulated ticks.
-#if defined(__clang__) && !defined(_MSC_VER)
 	protected:
 		using BasicTimerClass<T>::Started;
 		using BasicTimerClass<T>::Timer;
-#endif
 };
 
 template<class T>
@@ -389,11 +387,9 @@ class CDTimerClass : public BasicTimerClass<T> {
 
 	private:
 		int DelayTime;			// Ticks remaining before countdown timer expires.
-#if defined(__clang__) && !defined(_MSC_VER)
 	protected:
 		using BasicTimerClass<T>::Started;
 		using BasicTimerClass<T>::Timer;
-#endif
 };
 
 template<class T>

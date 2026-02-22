@@ -259,10 +259,6 @@ void RSACrypt<PRECISION>::Encrypt(const Integer &plaintext, Integer &cyphertext)
 template <int PRECISION>
 void RSACrypt<PRECISION>::Decrypt(const Integer &cyphertext, Integer &plaintext) const 
 {
-#ifdef SIMPLE_AND_SLOW_RSA
-	Integer c(cyphertext);
-	plaintext=c.exp_b_mod_c(PrivateD, PublicN);
-#else
 	Integer temp;
 
 	// Get a version of the cyphertext mod q & p
@@ -291,7 +287,6 @@ void RSACrypt<PRECISION>::Decrypt(const Integer &cyphertext, Integer &plaintext)
 	if (plaintext >= PublicN)
 		plaintext-=PublicN;
 
-#endif
 }
 
 ////////////////////////////////// Private Methods Below ///////////////////////////////////

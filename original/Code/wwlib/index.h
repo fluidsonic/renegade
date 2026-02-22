@@ -4,9 +4,7 @@
 
 #include	"bsearch.h"
 
-#if !defined(__BORLANDC__) || !defined(_USERENTRY)
 #define	_USERENTRY
-#endif
 
 /*
 **	This class is used to create and maintain an index. It does this by assigning a unique
@@ -475,15 +473,6 @@ void IndexClass<INDEX, T>::Set_Archive(NodeElement const * node) const
 template<class INDEX, class T>
 bool IndexClass<INDEX, T>::Add_Index(INDEX const & id, T const & data)
 {
-#ifdef _DEBUG
-	/*
-	**	Ensure that two elements with the same index are not added to the 
-	**	array.
-	*/
-	for (int index = 0; index < IndexCount; index++) {
-		assert(IndexTable[index].ID != id);
-	}
-#endif
 
 	/*
 	**	Ensure that there is enough room to add this index. If not, then increase the

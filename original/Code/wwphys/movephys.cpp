@@ -9,7 +9,6 @@
 #include "physcoltest.h"
 #include "light.h"
 
-#define SINGLE_SHADOW_CODE				1
 #define TRUE_PERSPECTIVE_SHADOWS		0
 
 /***********************************************************************************************
@@ -480,15 +479,6 @@ MoveablePhysDefClass::MoveablePhysDefClass(void) :
 	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, GravScale, 0.0f, 10.0f);
 	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, Elasticity, 0.0f, 1.0f);	
 
-#ifdef PARAM_EDITING_ON
-	EnumParameterClass *cinematic_param = new EnumParameterClass(&CinematicCollisionMode);
-	cinematic_param->Set_Name ("CinematicCollisionMode");
-	cinematic_param->Add_Value("NONE",CINEMATIC_COLLISION_NONE);
-	cinematic_param->Add_Value("STOP",CINEMATIC_COLLISION_STOP);
-	cinematic_param->Add_Value("PUSH",CINEMATIC_COLLISION_PUSH);
-	cinematic_param->Add_Value("KILu",CINEMATIC_COLLISION_KILL);
-	GENERIC_EDITABLE_PARAM( MoveablePhysDefClass, cinematic_param);
-#endif
 }
 
 bool MoveablePhysDefClass::Save(ChunkSaveClass &csave)

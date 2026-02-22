@@ -9,21 +9,13 @@
 #include "configfile.h"
 #include <windows.h>
 
-#ifdef COPY_PROTECT
-#include "Protect.h"
-#include <Debug\DebugPrint.h>
-#endif
 
 #define UPDATE_RETVAL 123456789  // if a program returns this it means it wants to check for patches
 
 #include "..\combat\specialbuilds.h"
 
 /*
-#ifdef FREEDEDICATEDSERVER
-
-#define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\RenegadeFDS\\"
-
-#else  //FREEDEDICATEDSERVER
+// FDS: launcher entry point ran dedicated server loop
 
 #ifdef MULTIPLAYERDEMO
 #define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\RenegadeMPDemo\\"
@@ -31,18 +23,9 @@
 #define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\Renegade\\"
 #endif //MULTIPLAYERDEMO
 
-#endif //FREEDEDICATEDSERVER
 */
 
-#if	defined(FREEDEDICATEDSERVER)
-#define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\RenegadeFDS\\"
-#elif defined(MULTIPLAYERDEMO)
-#define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\RenegadeMPDemo\\"
-#elif defined(BETACLIENT)
-#define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\RenegadeBeta\\"
-#else
 #define APPLICATION_SUB_KEY_NAME 				"Software\\Westwood\\Renegade\\"
-#endif
 
 #define APPLICATION_SUB_KEY_NAME_MP_SETTINGS "WOLSettings\\"
 #define APPLICATION_SUB_KEY_NAME_AUTOSTART 	"AutoRestartFlag"
@@ -82,22 +65,7 @@ void RunGame(char *thePath, ConfigFile &config, Process &proc)
 			launchgame = false;
 			myChdir(thePath);
 
-#ifndef COPY_PROTECT
 			Create_Process(proc);
-#else // COPY_PROTECT
-
-#ifdef OLDWAY
-			Protect protect;
-			Create_Process(proc);
-			protect.SendMappedFileHandle(proc.hProcess, proc.dwThreadID);
-#else
-
-			InitializeProtect();
-			Create_Process(proc);
-			SendProtectMessage(proc.hProcess, proc.dwThreadID);
-
-#endif
-#endif // COPY_PROTECT
 
 			DWORD exit_code;
 			Wait_Process(proc, &exit_code);
@@ -107,7 +75,6 @@ void RunGame(char *thePath, ConfigFile &config, Process &proc)
 				launchgame = true;
 			} else {
 
-#ifndef MULTIPLAYERDEMO
 				if (exit_code == UPDATE_RETVAL)
 				{
 					// They just want to check for patches
@@ -121,13 +88,7 @@ void RunGame(char *thePath, ConfigFile &config, Process &proc)
 					Create_Process(patchgrab);
 					Wait_Process(patchgrab);  // wait for completion
 				}
-#endif //MULTIPLAYERDEMO
 			}
-#ifdef COPY_PROTECT
-#ifndef OLDWAY
-			ShutdownProtect();
-#endif
-#endif
 		}
 		else
 		{

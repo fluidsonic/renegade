@@ -152,12 +152,6 @@ void	GameObjManager::Add( BaseGameObj *obj )
 
 void GameObjManager::Init_All()
 {
-#if 0
-	SLNode<BaseGameObj> *objnode;
-	for (	objnode = GameObjList.Head(); objnode; objnode = objnode->Next()) {
-		objnode->Data()->Init();
-	}
-#endif
 }
 
 /*
@@ -173,11 +167,6 @@ void GameObjManager::Destroy_All()		// Destroy each object in the list
 		objnode->Data()->Set_Delete_Pending();
 	}
 
-#pragma message ("Disabling Think and Post_Think in GameObjManager::Destroy_All()")
-#if 0
-	Think();	
-	Post_Think();
-#endif
 	
 	NetworkObjectMgrClass::Delete_Pending ();	
 
@@ -185,10 +174,6 @@ void GameObjManager::Destroy_All()		// Destroy each object in the list
 	for (	objnode = GameObjList.Head(); objnode; objnode = objnode->Next()) {
 		objnode->Data()->Set_Delete_Pending();
 	}
-#if 0 	
-	Think();	
-	Post_Think();
-#endif
 
 	NetworkObjectMgrClass::Delete_Pending ();	
 

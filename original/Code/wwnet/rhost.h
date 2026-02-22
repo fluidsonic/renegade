@@ -6,9 +6,6 @@
 // Description:
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef RHOST_H
 #define RHOST_H

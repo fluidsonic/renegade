@@ -319,10 +319,8 @@ public:
 
 		CombatManager::Set_Load_Progress( 0 );
 
-		#ifndef PARAM_EDITING_ON
 			// Tell the datasafe to expect calls from this thread now.
 			GenericDataSafeClass::Set_Preferred_Thread(GetCurrentThreadId());
-		#endif // PARAM_EDITING_ON
 
 		CombatManager::Inc_Load_Progress();
 
@@ -419,13 +417,6 @@ void	CombatManager::Post_Load_Level( void )
 
 	Clear_Star_Damage_Direction();
 
-#if 0
-	// Re-init all objects loaded from editor
-	if ( CombatManager::Is_First_Load() ) {
-		Debug_Say(( "Re-Initing all game objects\n" ));
-		GameObjManager::Init_All();
-	}
-#endif
 
 	//
 	//	Build network wrappers for every static anim object in the level
@@ -433,19 +424,6 @@ void	CombatManager::Post_Load_Level( void )
 	StaticNetworkObjectClass::Generate_Static_Network_Objects ();
 
 	// Debug code to create a definition
-#if 0
-	DefinitionFactoryClass * def_factory = (DefinitionFactoryClass *)DefinitionFactoryMgrClass::Find_Factory( CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE );
-	if ( def_factory != NULL ) {
-		HumanAnimOverrideDef * def = (HumanAnimOverrideDef *)def_factory->Create();
-		if ( def != NULL ) {
-			def->Set_Name( "HAO Test" );
-			def->Set_ID (DefinitionMgrClass::Get_New_ID (def->Get_Class_ID ()));
-			def->WalkEmptyHands = "H_A_432A";
-			def->RunEmptyHands = "H_A_J43B";
-			DefinitionMgrClass::Register_Definition( def );
-		}
-	}
-#endif
 
 	if (IsLevelInitialized == false && TheStar != NULL) {
 		IsLevelInitialized = true;
@@ -750,10 +728,8 @@ bool	CombatManager::Save( ChunkSaveClass &csave )
 		WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_RESPAWN_SCRIPT, RespawnScript );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_RELOAD_COUNT, ReloadCount );
 
-	#ifndef PARAM_EDITING_ON
 		int cheat_history = CheatMgrClass::Get_Instance()->Get_History();
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_CHEAT_HISTORY, cheat_history );
-	#endif //PARAM_EDITING_ON
 
 	csave.End_Chunk();
 
@@ -1025,7 +1001,6 @@ void	Vehicle_Panic( VehicleGameObj * vehicle )
 {
 	VehiclePhysClass * rbody = vehicle->Peek_Vehicle_Phys();
 	if (rbody != NULL) {
-#if 1
 		// Try to put the vehicle up-right in its current position
 		Matrix3D tm = rbody->Get_Transform();
 		Vector3 position;
@@ -1043,7 +1018,6 @@ void	Vehicle_Panic( VehicleGameObj * vehicle )
 		new_tm.Obj_Look_At(position,position+forward,0.0f);
 
 		rbody->Set_Transform(new_tm);
-#endif
 	}
 }
 

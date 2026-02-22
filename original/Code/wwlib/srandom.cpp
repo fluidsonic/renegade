@@ -2,17 +2,11 @@
 // SecureRandomClass - Generate random values
 //
 
-#pragma warning(disable : 4514)	// unreferenced inline function removed....
 
 #include "srandom.h"
 #include <stdlib.h>
 #include <stdio.h>
-#ifdef _UNIX
 #include "osdep.h"
-#else
-#include "win.h"
-#include <process.h>
-#endif
 #include <time.h>
 #include <assert.h>
 #include "sha.h"
@@ -116,7 +110,6 @@ void SecureRandomClass::Generate_Seed(void)
 	unsigned int *int_seeds=(unsigned int *)Seeds;
 	int int_seed_length=SeedLength/sizeof(unsigned int);
 
-#ifdef _UNIX
 	//
 	// On UNIX we've already got a great random number souce.
 	// This should be used only for a seed since it's slow.
@@ -130,36 +123,6 @@ void SecureRandomClass::Generate_Seed(void)
 	}
 	else
 		assert(0);
-#else
-
-	//
-	// Get free drive space
-	//
-	DWORD spc, bps, nfc, tnc;	// various drive attributes (we don't care what they mean)
-	GetDiskFreeSpace(NULL, &spc, &bps, &nfc, &tnc);
-	int_seeds[0]^=spc;
-	int_seeds[1 % int_seed_length]^=bps;
-	int_seeds[2 % int_seed_length]^=nfc;
-	int_seeds[3 % int_seed_length]^=tnc;
-
-	//
-	// Get computer & user name
-	//
-	char	comp_name[128];
-	char	user_name[128];
-	DWORD	comp_len=128;
-	DWORD	name_len=128;
-
-	GetComputerName(comp_name, &comp_len);
-	GetUserName(user_name, &name_len);
-	for (i=0; i<128; i++)
-	{
-		// Offset in case user_name == comp_name
-		Seeds[(i+0) % SeedLength]^=comp_name[i];
-		Seeds[(i+2) % SeedLength]^=user_name[i];
-	}
-
-#endif
 
 	for (i=0; i<int_seed_length; i++)
 	{

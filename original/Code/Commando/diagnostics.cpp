@@ -35,7 +35,6 @@
 #include "connect.h"
 #include "vehicle.h"
 #include "csdamageevent.h"
-#include "specialbuilds.h"
 #include "consolemode.h"
 #include "gametype.h"
 
@@ -133,29 +132,9 @@ void cDiagnostics::Render(void)
 		return;
 	}
 
-#ifdef BETACLIENT
-	PRenderer->Reset();
-	RectClass rect = Render2DClass::Get_Screen_Resolution();
-	PRenderer->Set_Location(Vector2(rect.Left + 5, rect.Bottom - 10));
-	PRenderer->Draw_Text("BETACLIENT");
-	PRenderer->Render();
-#endif // BETACLIENT
 
-#ifdef FREEDEDICATEDSERVER
-	PRenderer->Reset();
-	RectClass rect = Render2DClass::Get_Screen_Resolution();
-	PRenderer->Set_Location(Vector2(rect.Left + 5, rect.Bottom - 10));
-	PRenderer->Draw_Text("FREEDEDICATEDSERVER");
-	PRenderer->Render();
-#endif // FREEDEDICATEDSERVER
+// FDS: diagnostics were redirected to stdout/file (no display)
 
-#ifdef MULTIPLAYERDEMO
-	PRenderer->Reset();
-	RectClass rect = Render2DClass::Get_Screen_Resolution();
-	PRenderer->Set_Location(Vector2(rect.Left + 5, rect.Bottom - 10));
-	PRenderer->Draw_Text("MULTIPLAYER DEMO");
-	PRenderer->Render();
-#endif // MULTIPLAYERDEMO
 
 	bool changed=false;
 

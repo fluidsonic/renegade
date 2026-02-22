@@ -629,14 +629,12 @@ bool SoldierObserverClass::Set_State( SoldierGameObj * soldier, int state, const
 
 //		ActionTimer = 0;  no
 
-#if 01
 		// Only take the new pos if closer
 		Vector3 my_pos;
 		soldier->Get_Position(&my_pos);
 		Vector3 old_pos = AlertPosition - my_pos;
 		Vector3 new_pos = location - my_pos;
 		if ( old_pos.Length2() > new_pos.Length2() ) 
-#endif
 		{
 			AlertPosition = location;
 		}
@@ -876,11 +874,6 @@ void SoldierObserverClass::Think( SoldierGameObj * soldier, bool is_new_state )
 			//	Don't start an innate conversation if there are already
 			// conversations taking place
 			//
-#ifdef ENABLE_INNATE_CONVERSATIONS
-			if ( ConversationMgrClass::Get_Active_Conversation_Count () == 0 ) {
-				ConversationMgrClass::Start_Conversation( soldier );
-			}
-#endif //ENABLE_INNATE_CONVERSATIONS
 
 			Reset_Conversation_Timer();
 		}

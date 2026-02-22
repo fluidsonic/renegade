@@ -611,14 +611,9 @@ void HTreeClass::Combo_Update
 		
 		if (piv_idx < num_anim_pivots) {
 
-#define	ASSUME_NORMALIZED_ANIM_COMBO_WEIGHTS
-
 			Vector3 trans(0,0,0);
 			Quaternion q0;
 			Quaternion q1;
-#ifndef ASSUME_NORMALIZED_ANIM_COMBO_WEIGHTS
-			float	last_weight = 0;
-#endif
 			float	weight_total = 0;
 			int wcount = 0;
 
@@ -651,18 +646,12 @@ void HTreeClass::Combo_Update
 						trans += weight * ScaleFactor * temp_trans;
 						weight_total += weight;
 
-#ifdef ASSUME_NORMALIZED_ANIM_COMBO_WEIGHTS
 						motion->Get_Orientation(q1,piv_idx, frame_num );
 						if ( wcount == 1 ) {
 							q0 = q1;
 						} else {
 							Fast_Slerp(q0, q0, q1, weight / weight_total );
 						}
-#else
-						q0 = q1;	
-						motion->Get_Orientation(q1, piv_idx, frame_num );
-						last_weight = weight;
-#endif
 					}
 
 					motion->Release_Ref();
@@ -670,7 +659,6 @@ void HTreeClass::Combo_Update
 				}
 			}
 
-#ifdef ASSUME_NORMALIZED_ANIM_COMBO_WEIGHTS
 
 			if (weight_total != 0.0f ) {
 				// SKB: Removed assert because I have a case where I don't want normalization.
@@ -680,19 +668,6 @@ void HTreeClass::Combo_Update
 				pivot->Transform.Translate(trans);
 				pivot->Transform = pivot->Transform * Build_Matrix3D(q0);
 			}
-#else
-			if (( weight_total != 0.0f ) && (wcount >= 2)) {
-			
-				pivot->Transform.Translate( trans / weight_total );
-				Quaternion q = Slerp_( q0, q1, last_weight / weight_total );
-				pivot->Transform = pivot->Transform * Build_Matrix3D(q);
-
-			} else if (weight_total != 0.0f) {
-
-				pivot->Transform.Translate( trans / weight_total );
-				pivot->Transform = pivot->Transform * Build_Matrix3D(q1);
-			}
-#endif
 
 			pivot->IsVisible = false;
 

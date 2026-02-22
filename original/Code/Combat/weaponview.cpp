@@ -271,19 +271,9 @@ void 	WeaponViewClass::Think()
 
 	// is the current (non-looping) animation completed
 	bool	is_current_complete = true;
-#if 0
-	if ( HandsPhysObj != NULL && (WeaponState != WEAPON_STATE_IDLE) ) {
-		RenderObjClass * hands_model = HandsPhysObj->Peek_Model();
-		if ( hands_model != NULL && ( hands_model->Peek_Animation() != NULL ) &&
-			  ((Animatable3DObjClass*)hands_model)->Is_Animation_Complete() == false ) {
-			is_current_complete = false;
-		}
-	}
-#else
 	if ( HandsPhysObj != NULL && (WeaponState != WEAPON_STATE_IDLE) ) {
 		is_current_complete = HandAnimControl.Is_Complete();
 	}
-#endif
 
 	bool	muzzle_flash_on = false;
 
@@ -461,16 +451,6 @@ void 	WeaponViewClass::Think()
 			if ( BobFrame > BobHAnim->Get_Num_Frames()-1 ) {
 				BobFrame -= BobHAnim->Get_Num_Frames()-1;
 			}
-#if 0 // no more programatic recoil
-			tm.Translate( 0, 0, BobRecoil );
-
-			if ( BobRecoil > 0 ) {
-				BobRecoil -= TimeManager::Get_Frame_Real_Seconds() * 2;
-				if ( BobRecoil < 0 ) {
-					BobRecoil = 0;
-				}
-			}
-#endif
 
 			BobHTree->Anim_Update( tm, BobHAnim, BobFrame );
 

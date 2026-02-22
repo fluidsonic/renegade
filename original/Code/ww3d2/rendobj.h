@@ -39,7 +39,6 @@ class StringClass;
 template<class T> class DynamicVectorClass;
 
 // "unreferenced formal parameter" 
-#pragma warning(disable : 4100)
 
 //////////////////////////////////////////////////////////////////////////////////
 // RenderObjClass

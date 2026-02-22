@@ -83,10 +83,6 @@ class IMEManager :
 		const char16_t* GetReadingString(void) const
 			{return mReadingString;}
 
-		#ifdef SHOW_IME_TYPING
-		const char16_t* GetTypingString(void) const
-			{return mTypingString;}
-		#endif
 
 		void GetTargetClause(unsigned long& start, unsigned long& end);
 
@@ -160,10 +156,6 @@ class IMEManager :
 		bool mUseUnicode;
 		bool mInComposition;
 
-		#ifdef SHOW_IME_TYPING
-		char16_t mTypingString[IME_MAX_TYPING_LEN];
-		long mTypingCursorPos;
-		#endif
 		
 		char16_t mCompositionString[IME_MAX_STRING_LEN];
 		unsigned char mCompositionAttr[IME_MAX_STRING_LEN];

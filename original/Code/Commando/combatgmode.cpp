@@ -65,7 +65,6 @@
 #include "string_ids.h"
 #include "radiocommanddisplay.h"
 #include "consolemode.h"
-#include "specialbuilds.h"
 #include <wwlib/realcrc.h>
 #include "demosupport.h"
 #include "dialogtests.h"
@@ -148,31 +147,6 @@ static void Start_In_Game_Help(void)
 void	CombatGameModeClass::Combat_Keyboard( void )
 {
 
-#ifdef ATI_DEMO_HACK
-	// HACK: Make double-ESC exit back to desktop
-	static unsigned esc_pressed_time=0x7ffff;
-	if ( Input::Get_State( INPUT_FUNCTION_MENU_TOGGLE ) ) {
-		unsigned current_time=WW3D::Get_Sync_Time();
-		if ((current_time-esc_pressed_time)<5000) {
-			cDevOptions::QuickFullExit.Set(true);
-			esc_pressed_time=0x7ffff;
-		}
-		else {
-			Get_Text_Display()->Print_System( "Press ESC again to exit to desktop...\n" );
-		}
-		esc_pressed_time=current_time;
-	}
-
-	// HACK: In ATI demo toggle the statistics display using TAB
-	if ( Input::Get_State( INPUT_FUNCTION_EVA_MISSION_OBJECTIVES_TOGGLE ) ) {
-		if (StatisticsDisplayManager::Is_Current_Display( "fps" )) {
-			StatisticsDisplayManager::Set_Display( "off" );
-		}
-		else {
-			StatisticsDisplayManager::Set_Display( "fps" );
-		}
-	}
-#else
 	bool to_menu=Input::Get_State( INPUT_FUNCTION_MENU_TOGGLE );
 	// If game doesn't have a focus and combat is active, suspend combat by entering menu
 	if (!GameInFocus) {
@@ -194,7 +168,6 @@ void	CombatGameModeClass::Combat_Keyboard( void )
 			ObjectiveManager::Display_Viewer( true );
 		}
    }
-#endif
 
 	if ( Input::Get_State( INPUT_FUNCTION_HELP_SCREEN ) ) {
 		Start_In_Game_Help();
@@ -529,10 +502,6 @@ public:
 			ConsoleBox.Print("Load %d%% complete\r", (int)(LoadPercentageDrawn * 100.0f));
 		}
 
-#if 0
-		StringClass txt=SaveLoadStatus::Get_Status_Text(0);
-		txt=SaveLoadStatus::Get_Status_Text(1);
-#endif
 
 		WW3D::End_Render();
 	}
@@ -1014,7 +983,6 @@ void CombatGameModeClass::Core_Restart(void)
 	INIT_STATUS("Reloading...");
 
 	if ( IS_MISSION ) {
-#ifndef MULTIPLAYERDEMO
 		StringClass new_name;
 
 		new_name = CombatManager::Get_Last_LSD_Name();
@@ -1027,7 +995,6 @@ void CombatGameModeClass::Core_Restart(void)
 		}
 
 		The_Game()->Set_Map_Name( new_name );
-#endif // !MULTIPLAYERDEMO
 	} else {
 
 		//
@@ -1061,9 +1028,6 @@ void CombatGameModeClass::Core_Restart(void)
 
 	Load_Level();
 
-#ifdef WW3D_COMPILE_WITH_DX8__
-	DX8MeshRendererContainerClass::Invalidate_All();
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1162,19 +1126,6 @@ void 	CombatGameModeClass::Think()
 		CampaignManager::Continue();
 	}
 
-#ifdef MULTIPLAYERDEMO
-	//
-	// Security check. Randomly every few minutes, check to see if a special
-	// MP demo object (id 100277) exists. If it doesn't, assume someone has hacked in
-	// a different map. Bail.
-	//
-	if ((::rand() % 10131 == 939) && (NetworkObjectMgrClass::Find_Object(100277) == NULL)) {
-		Suspend();
-		GameInitMgrClass::End_Game();
-		extern void Stop_Main_Loop (int);
-		Stop_Main_Loop(EXIT_SUCCESS);
-	}
-#endif // MULTIPLAYERDEMO
 
 	if (g_b_core_restart)	{
 
@@ -1289,16 +1240,6 @@ void	CombatGameMiscHandlerClass::Mission_Complete( bool success )
 		} else {
 			cGod::Mission_Failed();
 		}
-#if 0
-		GameModeManager::Find("Combat")->Suspend();
-//		GameModeManager::Find("Combat")->Deactivate();
-//		GameModeManager::Find("ScoreScreen")->Activate();
-//		((ScoreScreenGameModeClass*)GameModeManager::Find("ScoreScreen"))->Set_Success( success );
-
-		if ( GameModeManager::Find( "Overlay3D" ) ) {
-		   ((Overlay3DGameModeClass*)GameModeManager::Find( "Overlay3D" ))->Start_End_Screen();
-		}
-#endif
 	}
 }
 

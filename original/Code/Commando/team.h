@@ -1,7 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
 #ifndef TEAM_H
 #define TEAM_H
 

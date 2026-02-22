@@ -1,6 +1,5 @@
 #include "gdcnc.h"
 
-#include "specialbuilds.h"
 #include "cnetwork.h"
 #include "translatedb.h"
 #include "string_ids.h"
@@ -393,15 +392,7 @@ bool cGameDataCnc::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_serv
 		return(false);
 	}
 
-#ifdef FREEDEDICATEDSERVER
-	if (BaseDestructionEndsGame.Is_False() && BeaconPlacementEndsGame.Is_True()) {
-		//cHelpText::Set(TRANSLATION(IDS_MP_GAMEMODE_NEEDS_LIMIT));
-		PRINT_CONFIG_ERROR;
-		ConsoleBox.Print("Cannot allow beacons to end game without base destruction ending game.\n\n");
-		outMsg = TRANSLATE(IDS_HOPTERR_NO_GAMEEND);
-		return false;
-	}
-#endif
+// FDS: GDI/NOD CNC logic ran in headless mode
 
 	return(true);
 }

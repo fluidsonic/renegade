@@ -65,12 +65,6 @@ ScriptImpClass::ScriptImpClass()
 
 ScriptImpClass::~ScriptImpClass()
 {
-	#ifdef _DEBUG
-	if (Commands != NULL) {
-		DebugPrint("Script '%s' for object '%d' deleted.\n",
-			Get_Name(), ((mOwner != NULL) ? Commands->Get_ID(mOwner) : 0 ));
-	}
-	#endif
 
 	Clear_Parameters();
 
@@ -144,12 +138,6 @@ void ScriptImpClass::Destroy_Script(void)
 
 void ScriptImpClass::Attach(GameObject* obj)
 {
-	#ifdef _DEBUG
-	if (Commands != NULL) {
-		DebugPrint("Attaching script '%s' to object %d\n",
-			Get_Name(), Commands->Get_ID(obj));
-	}
-	#endif
 
 	mOwner = obj;
 }

@@ -45,13 +45,6 @@ Render2DClass::~Render2DClass()
 void	Render2DClass::Set_Screen_Resolution( const RectClass & screen )	
 { 
 	ScreenResolution = screen; 
-#if 0
-	// Fool into pixel doubling  - Byon..
-	if ( screen.Width() >= 1280 ) {
-		ScreenResolution.Scale( 0.5f );
-	}
-//	ScreenResolution = RectClass( 0, 0, 800, 600 );
-#endif
 }
 
 ShaderClass
@@ -156,36 +149,6 @@ void	  Render2DClass::Update_Bias( void )
 	}
 }
 
-#if 0
-Vector2 Render2DClass::Convert_Vert( const Vector2 & v ) 
-{
-	Vector2 out;
-
-	// Convert to (-1,1)-(1,-1)
-	out.X = v.X * CoordinateScale.X + CoordinateOffset.X;
-	out.Y = v.Y * CoordinateScale.Y + CoordinateOffset.Y;
-
-	// Convert to pixels 
-	out.X = (out.X + 1.0f) * (Get_Screen_Resolution().Width() * 0.5f);
-	out.Y = (out.Y - 1.0f) * (Get_Screen_Resolution().Height() * -0.5f);
-
-	// Round to nearest pixel
-	out.X = WWMath::Floor( out.X + 0.5f );
-	out.Y = WWMath::Floor( out.Y + 0.5f );
-
-	// Bias
-	if ( WW3D::Is_Screen_UV_Biased() ) {	// Global bais setting
-		out.X -= 0.5f;
-		out.Y -= 0.5f;
-	}
-
-	// Convert back to (-1,1)-(1,-1)
-	out.X = out.X / (Get_Screen_Resolution().Width() * 0.5f) - 1.0f;
-	out.Y = out.Y / (Get_Screen_Resolution().Height() * -0.5f) + 1.0f;	
-
-	return out;
-}
-#else
 /*
 ** Convert Vert must convert from the convention defined by Set_Coordinate_Range
 ** into the convention (-1,1)-(1,-1), which is needed by the renderer.
@@ -206,7 +169,6 @@ void Render2DClass::Convert_Vert( Vector2 & vert_out, float x_in, float y_in )
 	vert_out.Y = y_in * CoordinateScale.Y + BiasedCoordinateOffset.Y;
 }
 
-#endif
 
 void	Render2DClass::Move( const Vector2 & move )	// Move all verts 
 {
@@ -413,16 +375,10 @@ void	Render2DClass::Add_Tri( const Vector2 & v0, const Vector2 & v1, const Vecto
 	int old_vert_count = Vertices.Count();
 
 	// Add the verticies (translated to new coordinates)
-#if 0
-	Vertices.Add( Convert_Vert( v0 ), new_vert_count );
-	Vertices.Add( Convert_Vert( v1 ), new_vert_count );
-	Vertices.Add( Convert_Vert( v2 ), new_vert_count );
-#else
 	Convert_Vert( *Vertices.Uninitialized_Add(), v0 );
 	Convert_Vert( *Vertices.Uninitialized_Add(), v1 );
 	Convert_Vert( *Vertices.Uninitialized_Add(), v2 );
 	
-#endif
 
 	// Add the uv coordinates
 

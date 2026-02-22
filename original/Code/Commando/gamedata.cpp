@@ -51,9 +51,7 @@
 #include "bandwidthcheck.h"
 #include "serversettings.h"
 
-#include "specialbuilds.h"
 #include "demosupport.h"
-#include "specialbuilds.h"
 
 const int cGameData::MAX_TIME_LIMIT       = 999;
 
@@ -159,9 +157,6 @@ cGameData::cGameData(void)	:
 
 	MvpCount = 0;
 
-#ifdef MULTIPLAYERDEMO
-	MapName.Format("C&C_Under.mix");
-#endif // MULTIPLAYERDEMO
 }
 
 //-----------------------------------------------------------------------------
@@ -191,12 +186,8 @@ cGameData& cGameData::operator=(const cGameData& rhs)
 	GameTitle							= rhs.GameTitle;
 	Motd									= rhs.Motd;
 
-#ifdef MULTIPLAYERDEMO
-	MapName.Format("C&C_Under.mix");
-#else
    MapName								= rhs.MapName;
 	ModName								= rhs.ModName;
-#endif
 
 	Owner									= rhs.Owner;
 
@@ -492,11 +483,7 @@ void cGameData::Set_Mod_Name(const StringClass &mod_name)
 //-----------------------------------------------------------------------------
 void cGameData::Set_Map_Name(const StringClass & map_name)
 {
-#ifdef MULTIPLAYERDEMO
-	MapName.Format("C&C_Under.mix");
-#else
 	MapName = map_name;
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -584,9 +571,7 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 		return false;
 	}
 
-#ifndef FREEDEDICATEDSERVER
 	if (GameModeManager::Find("WOu")->Is_Active()) {
-#endif //FREEDEDICATEDSERVER
 		if (IsPassworded.Is_True() && Is_QuickMatch_Server()) {
 			Debug_Say(("cGameData::Is_Valid_Settings: Quickmatch can not have passwords.\n" ));
 			PRINT_CONFIG_ERROR;
@@ -624,9 +609,7 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 			outMsg = "Team changing or Team Remix not allowed on a clan game server."; //TRANSLATE(IDS_HOPTERR_NO_TEAMCHANGE);
 			return false;
 		}
-#ifndef FREEDEDICATEDSERVER
 	}
-#endif //FREEDEDICATEDSERVER
 
 	if (Get_Max_Players() == 0) {
 		PRINT_CONFIG_ERROR;
@@ -735,10 +718,8 @@ void cGameData::Export_Tier_1_Data(cPacket & packet)
 	packet.Add(IsLaddered.Get());
 	packet.Add(IsClanGame.Get());
 
-#ifndef MULTIPLAYERDEMO
 	packet.Add((uint32_t)::CRC_Stringi(MapName));
 	packet.Add((uint32_t)::CRC_Stringi(ModName));
-#endif // MULTIPLAYERDEMO
 }
 
 //-----------------------------------------------------------------------------
@@ -775,7 +756,6 @@ void cGameData::Import_Tier_1_Data(cPacket & packet)
 	IsLaddered.Set(				packet.Get(b_placeholder));
 	IsClanGame.Set(				packet.Get(b_placeholder));
 
-#ifndef MULTIPLAYERDEMO
 	//
 	//	Get the CRC of the map and the mod
 	//
@@ -795,7 +775,6 @@ void cGameData::Import_Tier_1_Data(cPacket & packet)
 		MapName = u"";
 	}
 
-#endif // MULTIPLAYERDEMO
 
 	return ;
 }
@@ -912,15 +891,11 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 
    //i = p_ini->Get_Int(	INI_SECTION_NAME, "IntermissionTimeSeconds",	Get_Intermission_Time_Seconds());
 	//Set_Intermission_Time_Seconds(i);
-#ifndef FREEDEDICATEDSERVER
 	i = p_ini->Get_Int(	INI_SECTION_NAME, "Port",							Get_Port());
 	Set_Port(i);
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsDedicated",					IsDedicated.Get());
 	IsDedicated.Set(b);
-#else ////FREEDEDICATEDSERVER
-	IsDedicated.Set(true);
-#endif //FREEDEDICATEDSERVER
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsPassworded",				IsPassworded.Get());
 	IsPassworded.Set(b);
@@ -929,15 +904,11 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 	IsQuickMatchServer.Set(b);
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsLaddered",					IsLaddered.Get());
-#ifndef FREEDEDICATEDSERVER
 	b = ((IsQuickMatchServer.Get() == true) ? true : b);
-#endif //FREEDEDICATEDSERVER
 	IsLaddered.Set(b);
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsClanGame",					IsClanGame.Get());
-#ifndef FREEDEDICATEDSERVER
 	b = ((IsQuickMatchServer.Get() == true) ? false : b);
-#endif /FREEDEDICATEDSERVER
 	IsClanGame.Set(b);
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "RemixTeams",					RemixTeams.Get());
@@ -1886,9 +1857,6 @@ int	cGameData::Get_Mission_Number_From_Map_Name( const char * map_name )
 const StringClass& cGameData::Get_Map_Cycle(int map)
 {
 
-#ifdef MULTIPLAYERDEMO
-	MapCycle[map].Format("C&C_Under.mix");
-#endif // MULTIPLAYERDEMO
 
 	return MapCycle[map];
 }
@@ -1951,11 +1919,7 @@ cGameData::Rotate_Map(void)
 	//
 	// Set the map name
 	//
-#ifdef MULTIPLAYERDEMO
-	MapName.Format("C&C_Under.mix");
-#else
 	MapName = MapCycle[current_map];
-#endif
 
 	MapCycleIndex = current_map;
 

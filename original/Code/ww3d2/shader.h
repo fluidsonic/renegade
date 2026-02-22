@@ -4,9 +4,7 @@
 
 #include "always.h"
 
-#if defined (SR_OS_SOLARIS) || defined(__clang__) || defined(__APPLE__)
 #undef PASS_MAX
-#endif
 
 class DX8Wrapper;
 struct W3dMaterial3Struct;

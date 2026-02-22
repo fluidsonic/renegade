@@ -486,10 +486,3 @@ void CompressedVisTableClass::Decompress(uint8_t * decomp_buffer,int decomp_size
 	LZOCompressor::Decompress(Buffer,BufferSize,decomp_buffer, &size);
 }
 
-#if 0
-void CompressedVisTableClass::Compare_Compression(void)
-{
-	delete[] tmp_buffer;
-}
-
-#endif

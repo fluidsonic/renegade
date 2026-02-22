@@ -70,12 +70,6 @@ RefineryGameObjDef::RefineryGameObjDef (void)	:
 	EDITABLE_PARAM (RefineryGameObjDef, ParameterClass::TYPE_FLOAT,	FundsGathered);
 	EDITABLE_PARAM (RefineryGameObjDef, ParameterClass::TYPE_FLOAT,	FundsDistributedPerSec);	
 
-	#ifdef PARAM_EDITING_ON
-		GenericDefParameterClass *param = new GenericDefParameterClass (&HarvesterDefID);
-		param->Set_Class_ID (CLASSID_GAME_OBJECT_DEF_VEHICLE);
-		param->Set_Name ("Harvester");
-		GENERIC_EDITABLE_PARAM (RefineryGameObjDef, param)
-	#endif //PARAM_EDITING_ON
 
 	return ;
 }

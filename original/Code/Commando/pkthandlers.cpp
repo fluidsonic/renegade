@@ -5,7 +5,6 @@
 #include "networkobjectfactorymgr.h"
 #include "playermanager.h"
 #include "apppacketstats.h"
-#include "specialbuilds.h"
 
 extern char * Addr_As_String(sockaddr_in *addr);
 extern bool g_is_loading;
@@ -33,7 +32,6 @@ Create_Network_Object (cPacket &packet, int class_id, int network_obj_id)
 //-----------------------------------------------------------------------------
 void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 {
-#ifndef BETACLIENT
 
 	/*TSS082801
 	// TSS - hack
@@ -184,13 +182,11 @@ void cNetwork::Server_Packet_Handler(cPacket & packet, int rhost_id)
 	{
 	}
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Client_Packet_Handler(cPacket & packet)
 {
-#ifndef FREEDEDICATEDSERVER
 
 	// TSS - hack
 	if (g_is_loading) {
@@ -316,7 +312,6 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 		//DIE;
 	}
 
-#endif // !FREEDEDICATEDSERVER
 }
 
 	//BYTE app_packet_type		= packet.Get (app_packet_type);

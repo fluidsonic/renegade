@@ -20,7 +20,6 @@
 #include "texturethumbnail.h"
 #include "systeminfolog.h"
 #include <stdlib.h>
-#include "specialbuilds.h"
 
 /*
 **

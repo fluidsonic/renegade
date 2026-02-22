@@ -5,7 +5,6 @@
 #include "win.h"
 #include <imm.h>
 
-#pragma warning(disable : 4514)
 
 #include <vector>
 

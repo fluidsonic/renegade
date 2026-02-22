@@ -10,8 +10,6 @@
 #include "shader.h"
 #endif
 
-#ifndef WWDEBUG_H
-#endif
 
 class TextureClass;
 class VertexMaterialClass;

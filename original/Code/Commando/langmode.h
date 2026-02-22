@@ -1,7 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
 #ifndef LANGMODE_H
 #define LANGMODE_H
 

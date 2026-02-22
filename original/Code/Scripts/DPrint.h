@@ -6,12 +6,7 @@ extern "C"
 {
 #endif
 
-#ifdef _DEBUG
-//! Ouput debug print messages to the debugger and log file.
-void __cdecl DebugPrint(const char* string, ...);
-#else
 #define DebugPrint
-#endif
 
 #ifdef __cplusplus
 }

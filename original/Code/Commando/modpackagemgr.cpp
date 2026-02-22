@@ -30,25 +30,6 @@ ModPackageMgrClass::Initialize (void)
 	Shutdown ();
 
 // (gth) Day 120 patch, don't re-load the package name from the registry
-#if 0
-	//
-	//	Get the currently selected package name from the registry
-	//
-	RegistryClass registry (APPLICATION_SUB_KEY_NAME_OPTIONS);
-	if (registry.Is_Valid ()) {
-
-		//
-		//	Get the current package name from the registry
-		//
-		StringClass package_filename;
-		registry.Get_String (CURR_MOD_REG_VALUE, package_filename, "");
-
-		//
-		//	Initialize the current package
-		//
-		CurrentPackage.Set_Package_Filename (package_filename);
-	}
-#endif
 
 	return ;
 }

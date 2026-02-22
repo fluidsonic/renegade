@@ -562,64 +562,6 @@ void	CCameraClass::Use_Host_Model( void )
 	}
 	Set_View_Plane( CurrentProfile->FOV );
 
-#ifdef ATI_DEMO_HACK
-	static GameObjReference DemoFocusObject;
-
-	/*
-	** Focus change key pressed:
-	*/
-	if (Input::Get_State(INPUT_FUNCTION_PROFILE_RESET)) {
-		if (DemoFocusObject.Get_Ptr() == NULL) {
-
-			/*
-			** Count the soldiers in the level (ignoring the human controlled commando)
-			*/
-			int soldier_count = 0;
-			SLNode<SmartGameObj> * smart_objnode;
-			for (smart_objnode = GameObjManager::Get_Smart_Game_Obj_List()->Head(); smart_objnode; smart_objnode = smart_objnode->Next()) {
-				SmartGameObj * obj = smart_objnode->Data();
-				if ((obj->As_SoldierGameObj() != NULL) && (obj->Is_Human_Controlled() == false)) {
-					soldier_count++;
-				}
-			}
-
-			/*
-			** Pick a random soldier to watch
-			*/
-			int random_soldier = rand() % soldier_count;
-			soldier_count = 0;
-
-			for (smart_objnode = GameObjManager::Get_Smart_Game_Obj_List()->Head(); smart_objnode; smart_objnode = smart_objnode->Next()) {
-				SmartGameObj * obj = smart_objnode->Data();
-				if ((obj->As_SoldierGameObj() != NULL) && (obj->Is_Human_Controlled() == false)) {
-					if (soldier_count == random_soldier) {
-						DemoFocusObject = obj;
-						break;
-					}
-					soldier_count++;
-				}
-			}
-		} else {
-
-			/*
-			** Toggle out of demo focus mode
-			*/
-			DemoFocusObject = NULL;
-
-		}
-	}
-
-	/*
-	** Position the camera on this soldier
-	*/
-	if (DemoFocusObject.Get_Ptr() != NULL) {
-		Vector3 position;
-		DemoFocusObject.Get_Ptr()->Get_Position(&position);
-		Matrix3D camera_tm;
-		camera_tm.Look_At(position + Vector3(2.0f,0.0f,1.75f),position + Vector3(0.0f,0.0f,1.0f),0.0f);
-		Set_Transform(camera_tm);
-	}
-#endif
 }
 
 /*
@@ -895,18 +837,6 @@ void CCameraClass::Update()
 	bool is_star_determining_target = CombatManager::Is_Star_Determining_Target();
 	if ( COMBAT_STAR && is_star_determining_target ) {			// and tell the star what we are looking at...
 
-#if 0
-		// This didn't work with X key....
-		// Make sure it is forward in star space
-		Matrix3D star_tm = COMBAT_STAR->Get_Transform();
-		Vector3	star_space_pos;
-		Matrix3D::Inverse_Transform_Vector( star_tm, StarTargetingPosition, &star_space_pos );
-		if ( star_space_pos.X <= 0 ) {
-			star_space_pos.X = MAX( star_space_pos.X, 1 );
-		}
-		Debug_Say(( "SSP %f %f %f\n", star_space_pos.X, star_space_pos.Y, star_space_pos.Z ));
-		Matrix3D::Transform_Vector( star_tm, star_space_pos, &StarTargetingPosition );
-#endif
 
 		COMBAT_STAR->Set_Targeting( StarTargetingPosition ); 
 	}
@@ -1149,12 +1079,6 @@ void	CCameraClass::Apply_Weapon_Help( void )
 						LineSegClass ray;
 						ray.Set( cast_start, cast_end );			
 
-	#if 0
-						// trim off Near Clip from Beginning
-						float start_fraction = NearClipPlane / ray.Get_Length();
-						ray.Compute_Point( start_fraction, &cast_start );
-						ray.Set( cast_start, cast_end );
-	#endif
 
 						CastResultStruct result;
 						PhysRayCollisionTestClass raytest(ray, &result, 

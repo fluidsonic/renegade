@@ -80,27 +80,10 @@ BuildingGameObjDef::BuildingGameObjDef (void)	:
 {
 	EDITABLE_PARAM( BuildingGameObjDef, ParameterClass::TYPE_STRING,	MeshPrefix );
 
-#ifdef PARAM_EDITING_ON
-	int skin_type_counter;
-	EnumParameterClass * mct_skin_param = new EnumParameterClass( (int*)&MCTSkin );												
-	mct_skin_param->Set_Name("MCTSkin");																																
-	for ( skin_type_counter = 0; skin_type_counter < ArmorWarheadManager::Get_Num_Armor_Types(); skin_type_counter++ ) {																			
-		mct_skin_param->Add_Value(ArmorWarheadManager::Get_Armor_Name(skin_type_counter), skin_type_counter);
-	}																																									
-	GENERIC_EDITABLE_PARAM(BuildingGameObjDef,mct_skin_param);
-#endif
 
 //
 //	Configure the building type parameter
 //
-#ifdef PARAM_EDITING_ON
-	EnumParameterClass *building_type_param = new EnumParameterClass( (int*)&Type );
-	building_type_param->Set_Name("Building Type");
-	for ( int index = TYPE_NONE; index < TYPE_COUNT; index++ ) {																			
-		building_type_param->Add_Value(BULDING_TYPE_NAMES[index+1], index);
-	}																																									
-	GENERIC_EDITABLE_PARAM(BuildingGameObjDef,building_type_param);
-#endif
 
 	EDITABLE_PARAM(BuildingGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, GDIDamageReportID);
 	EDITABLE_PARAM(BuildingGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, NodDamageReportID);
@@ -568,16 +551,7 @@ bool
 BuildingGameObj::Is_Interior_Mesh_Name (const char * name)
 {
 // (gth) Renegade day 120 patch, accept tiles as building "parts"
-#if 0
-	char * meshname = strchr(name,'.');
-	if (meshname != NULL) {
-		return strchr(meshname,'#') != NULL;
-	} else {
-		return false;
-	}
-#else
 	return strchr(name,'#') != NULL;
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -589,16 +563,7 @@ bool
 BuildingGameObj::Is_Exterior_Mesh_Name (const char * name)
 {
 // (gth) Renegade day 120 patch, accept tiles as building "parts"
-#if 0
-	char * meshname = strchr(name,'.');
-	if (meshname != NULL) {
-		return strchr(meshname,'^') != NULL;
-	} else {
-		return false;
-	}
-#else
 	return strchr(name,'^') != NULL;
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////

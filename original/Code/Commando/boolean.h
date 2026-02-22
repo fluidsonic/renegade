@@ -5,9 +5,6 @@
 // Description:  
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef BOOLEAN_H
 #define BOOLEAN_H

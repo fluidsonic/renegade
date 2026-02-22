@@ -927,9 +927,6 @@ RaveshawBossGameObjClass::Think (void)
 //
 //	Don't do this in the editor
 //
-#ifdef PARAM_EDITING_ON
-	ok_to_think = false;
-#endif
 
 	if (COMBAT_STAR == NULL || COMBAT_STAR->Is_Dead () || COMBAT_STAR->Is_Destroyed ()) {
 		ok_to_think = false;

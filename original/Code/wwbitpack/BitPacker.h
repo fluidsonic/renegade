@@ -11,7 +11,6 @@
 
 #include "always.h"
 
-#pragma warning(disable:4514)
 
 static const int MAX_BITS = 32;
 

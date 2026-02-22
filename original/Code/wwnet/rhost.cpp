@@ -249,14 +249,6 @@ void cRemoteHost::Remove_Packet(int packet_id, BYTE list_type)
 					}
 					if (ping_time > MaxInternalPingtimeMs) {
 						MaxInternalPingtimeMs = ping_time;
-#if (0)
-						int candidate_resend_timeout_ms = (int) (MaxInternalPingtimeMs
-							* 1.1);
-						if (candidate_resend_timeout_ms > ResendTimeoutMs) {
-							ResendTimeoutMs = candidate_resend_timeout_ms;
-							//
-						}
-#endif //(0)
 					}
 				}
 			}
@@ -295,55 +287,6 @@ void cRemoteHost::Adjust_Flow_If_Necessary(float sample_time_ms)
       return;
    }
 
-#ifdef OBSOLETE
-	float sample_target_bits = sample_time_ms / 1000.0f * TargetBps;
-
-	//TSS101401
-	//float ratio = Stats.StatSnapshot[STAT_BitsSent] / sample_target_bits;
-	float ratio = PacketManager.Get_Compressed_Bandwidth_Out(&Get_Address()) / sample_target_bits;
-
-	if (ratio > MISCUTIL_EPSILON) {
-
-		double last_tp = TPIncrement;
-		if (ratio > 1)
-		{
-			TPIncrement = ::fabs(TPIncrement);
-		}
-		else
-		{
-			TPIncrement = -::fabs(TPIncrement);
-		}
-
-		if ((TPIncrement > 0 && last_tp > 0) ||
-			 (TPIncrement < 0 && last_tp < 0))	{
-			if (::fabs(TPIncrement) < 0.025) {
-				TPIncrement *= 1.5;
-			}
-		} else {
-			if (::fabs(TPIncrement) > 0.0001) {
-				TPIncrement *= 0.5;
-			}
-		}
-
-		double new_tp = ThresholdPriority + TPIncrement;
-
-		if (new_tp < 0)
-		{
-			new_tp = 0;
-		}
-		else if (new_tp > 1)
-		{
-			new_tp = 1;
-		}
-
-		ThresholdPriority = new_tp;
-
-		/*
-		if (Id == 1) {
-		}
-		/**/
-	}
-#endif //OBSOLETE
 
 	//
 	// Do a similar calculation for the new bandwidth per object per client distribution method.

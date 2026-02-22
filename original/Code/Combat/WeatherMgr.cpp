@@ -244,11 +244,7 @@ WeatherSystemClass::WeatherSystemClass	(PhysicsSceneClass *scene,
 	SceneMax.Z += 1.0f;
 
 	// Initialize an index buffer.
-	#if WEATHER_PARTICLE_SORT
-	IndexBuffer = NEW_REF (SortingIndexBufferClass, (MAX_IB_PARTICLE_COUNT * VERTICES_PER_TRIANGLE));
-	#else
 	IndexBuffer = NEW_REF (DX8IndexBufferClass, (MAX_IB_PARTICLE_COUNT * VERTICES_PER_TRIANGLE));
-	#endif
 	{
 		SortingIndexBufferClass::WriteLockClass lock (IndexBuffer);
 		unsigned short *indices = lock.Get_Index_Array();
@@ -986,10 +982,7 @@ void WeatherSystemClass::Render (RenderInfoClass &rinfo)
 
 		DX8Wrapper::Set_Index_Buffer (IndexBuffer, 0);
 
-		#if WEATHER_PARTICLE_SORT
-		#else
 		DX8Wrapper::Set_DX8_Render_State (D3DRS_ZBIAS, 12);
-		#endif
 
  		camerafocus = rinfo.Camera.Get_Transform().Get_Z_Vector();
 		particleptr = ParticleHead;
@@ -999,11 +992,7 @@ void WeatherSystemClass::Render (RenderInfoClass &rinfo)
 
 			unsigned particlecount, submittedparticlecount;
 
-			#if WEATHER_PARTICLE_SORT
-			DynamicVBAccessClass dynamicvb (BUFFER_TYPE_DYNAMIC_SORTING, dynamic_fvf_type, bufferparticlecount * VERTICES_PER_TRIANGLE);
-			#else
 			DynamicVBAccessClass dynamicvb (BUFFER_TYPE_DYNAMIC_DX8, dynamic_fvf_type, bufferparticlecount * VERTICES_PER_TRIANGLE);
-			#endif
 
 			// Copy the data into the sorting vertex buffer.
 			particlecount = MIN (ParticleCount - processedparticlecount, MAX_IB_PARTICLE_COUNT);
@@ -1138,20 +1127,13 @@ void WeatherSystemClass::Render (RenderInfoClass &rinfo)
 
 				DX8Wrapper::Set_Vertex_Buffer (dynamicvb);
 
-				#if WEATHER_PARTICLE_SORT
-				SortingRendererClass::Insert_Triangles (0, submittedparticlecount, 0, submittedparticlecount * VERTICES_PER_TRIANGLE);
-				#else
 				DX8Wrapper::Draw_Triangles (0, submittedparticlecount, 0, submittedparticlecount * VERTICES_PER_TRIANGLE);
-				#endif
 			}
 
 			processedparticlecount += particlecount;
 		}
 
-		#if WEATHER_PARTICLE_SORT
-		#else
 		DX8Wrapper::Set_DX8_Render_State (D3DRS_ZBIAS, 0);
-		#endif
 	}
 }
 

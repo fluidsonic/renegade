@@ -128,9 +128,6 @@ PhysicsSceneClass::PhysicsSceneClass(void) :
 	/*
 	** Initialize Umbra
 	*/
-#if (UMBRASUPPORT)
-	UmbraSupport::Init();
-#endif
 
 	/*
 	** Clear the collision flags
@@ -212,9 +209,6 @@ PhysicsSceneClass::~PhysicsSceneClass(void)
 	/*
 	** Shutdown UMBRA
 	*/
-#if (UMBRASUPPORT)
-	UmbraSupport::Shutdown();
-#endif
 }
 
 /***********************************************************************************************
@@ -971,9 +965,6 @@ void PhysicsSceneClass::Pre_Render_Processing(CameraClass & camera)
 
 	// Collect the visible objects
 	bool use_umbra = false;
-#if (UMBRASUPPORT)
-	use_umbra = UmbraSupport::Is_Umbra_Enabled();
-#endif
 
 	if (!use_umbra) {
 		// Get the lists of visible objects
@@ -993,12 +984,6 @@ void PhysicsSceneClass::Pre_Render_Processing(CameraClass & camera)
 		Apply_Projectors(camera);
 
 	} else {
-#if (UMBRASUPPORT)
-		RefPhysListClass vis_obj_list;
-		{
-			UmbraSupport::Collect_Visible_Objects(camera,VisibleDynamicObjectList);
-		}
-#endif
 	}
 
 	// release the visibility table

@@ -36,12 +36,6 @@ MonoClass * MonoClass::Current;
 MonoClass::MonoClass(void) :
 	Handle(INVALID_HANDLE_VALUE)
 {
-#ifdef _WINDOWS
-	Handle = CreateFile("\\\\.\\MONO", GENERIC_READ|GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (Current == NULL) {
-		Current = this;
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -61,15 +55,6 @@ MonoClass::MonoClass(void) :
  *=============================================================================================*/
 MonoClass::~MonoClass(void)
 {
-#ifdef _WINDOWS
-	if (Handle != INVALID_HANDLE_VALUE)  {
-		CloseHandle(Handle);
-		Handle = INVALID_HANDLE_VALUE;
-	}
-	if (Current == this) {
-		Current = NULL;
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -91,12 +76,6 @@ MonoClass::~MonoClass(void)
  *=============================================================================================*/
 void MonoClass::Pan(int )
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_PAN, NULL, 0, NULL, 0, &retval, 0);
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -120,20 +99,6 @@ void MonoClass::Pan(int )
  *=============================================================================================*/
 void MonoClass::Sub_Window(int x, int y, int w, int h)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		struct subwindow {
-			int X,Y,W,H;
-		} subwindow;
-		unsigned long retval;
-
-		subwindow.X = x;
-		subwindow.Y = y;
-		subwindow.W = w;
-		subwindow.H = h;
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_SET_WINDOW, &subwindow, sizeof(subwindow), NULL, 0, &retval, 0);
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -156,18 +121,6 @@ void MonoClass::Sub_Window(int x, int y, int w, int h)
  *=============================================================================================*/
 void MonoClass::Set_Cursor(int x, int y)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		struct  {
-			int X,Y;
-		} cursor;
-		unsigned long retval;
-
-		cursor.X = x;
-		cursor.Y = y;
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_SET_CURSOR, &cursor, sizeof(cursor), NULL, 0, &retval, 0);
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -189,13 +142,6 @@ void MonoClass::Set_Cursor(int x, int y)
  *=============================================================================================*/
 void MonoClass::Clear(void)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_CLEAR_SCREEN, NULL, 0, NULL, 0, &retval, 0);
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -221,21 +167,6 @@ void MonoClass::Clear(void)
  *=============================================================================================*/
 void MonoClass::Fill_Attrib(int x, int y, int w, int h, MonoAttribute attrib)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-		struct fillcontrol  {
-			int X,Y,W,H,A;
-		} fillcontrol;
-
-		fillcontrol.X = x;
-		fillcontrol.Y = y;
-		fillcontrol.W = w;
-		fillcontrol.H = h;
-		fillcontrol.A = attrib;
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_FILL_ATTRIB, &fillcontrol, sizeof(fillcontrol), NULL, 0, &retval, 0);
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -258,12 +189,6 @@ void MonoClass::Fill_Attrib(int x, int y, int w, int h, MonoAttribute attrib)
  *=============================================================================================*/
 void MonoClass::Scroll(int )
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_SCROLL, NULL, 0, NULL, 0, &retval, 0);
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -285,25 +210,6 @@ void MonoClass::Scroll(int )
  *=============================================================================================*/
 void MonoClass::Printf(char const *text, ...)
 {
-#ifdef _WINDOWS
-	va_list	va;
-	/*
-	**	The buffer object is placed at the end of the local variable list
-	**	so that if the sprintf happens to spill past the end, it isn't likely
-	**	to trash anything (important). The buffer is then manually truncated
-	**	to maximum allowed size before being printed.
-	*/
-	char buffer[256];
-
-	if ( !Enabled || (Handle == INVALID_HANDLE_VALUE) ) return;
-
-	va_start(va, text);
-	vsprintf(buffer, text, va);
-	buffer[sizeof(buffer)-1] = '\0';
-
-	Print(buffer);
-	va_end(va);
-#endif
 }
 
 /***********************************************************************************************
@@ -325,26 +231,6 @@ void MonoClass::Printf(char const *text, ...)
  *=============================================================================================*/
 void MonoClass::Printf(int text, ...)
 {
-#ifdef _WINDOWS
-	va_list	va;
-
-	/*
-	**	The buffer object is placed at the end of the local variable list
-	**	so that if the sprintf happens to spill past the end, it isn't likely
-	**	to trash anything (important). The buffer is then manually truncated
-	**	to maximum allowed size before being printed.
-	*/
-	char buffer[256];
-
-	if ( !Enabled || (Handle == INVALID_HANDLE_VALUE) ) return;
-
-	va_start(va, text);
-	vsprintf(buffer, Fetch_String(text), va);
-	buffer[sizeof(buffer)-1] = '\0';
-
-	Print(buffer);
-	va_end(va);
-#endif
 }
 
 /***********************************************************************************************
@@ -365,12 +251,6 @@ void MonoClass::Printf(int text, ...)
  *=============================================================================================*/
 void MonoClass::Print(char const * ptr)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-		WriteFile(Handle, ptr, strlen(ptr), &retval, NULL);
-	}
-#endif
 }
 
 /*********************************************************************************************** 
@@ -390,12 +270,6 @@ void MonoClass::Print(char const * ptr)
  *=============================================================================================*/
 void MonoClass::Set_Default_Attribute(MonoAttribute attrib)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_SET_ATTRIBUTE, &attrib, 1, NULL, 0, &retval, 0);
-	}
-#endif
 }	
 
 /***********************************************************************************************
@@ -420,15 +294,6 @@ void MonoClass::Set_Default_Attribute(MonoAttribute attrib)
  *=============================================================================================*/
 void MonoClass::Text_Print(char const *text, int x, int y, MonoAttribute attrib)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-
-		Set_Cursor(x, y);
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_SET_ATTRIBUTE, &attrib, 1, NULL, 0, &retval, 0);
-		Print(text);
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -496,12 +361,5 @@ void MonoClass::Print(int text)
  *=============================================================================================*/
 void MonoClass::View(void)
 {
-#ifdef _WINDOWS
-	if ( Enabled && (Handle != INVALID_HANDLE_VALUE) ) {
-		unsigned long retval;
-		DeviceIoControl(Handle, (DWORD)IOCTL_MONO_BRING_TO_TOP, NULL, 0, NULL, 0, &retval, 0);
-		Current = this;
-	}
-#endif
 }
 

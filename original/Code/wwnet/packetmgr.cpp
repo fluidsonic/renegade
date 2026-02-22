@@ -799,28 +799,10 @@ void PacketManagerClass::Flush(bool forced)
 			memcpy (&addr.sin_addr.s_addr, &SendBuffers[i].IPAddress[0], 4);
 			socket = SendBuffers[i].PacketSendSocket;
 
-#ifdef WRAPPER_CRC
-
-			unsigned long crc = CRC::Memory((unsigned char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
-#if (1)
-			/*
-			** Reverse byte order to prevent the demo from having the same CRC as the game.
-			*/
-			crc = __builtin_bswap32((unsigned int)crc);
-#endif //(0)
-			char *crc_and_buffer = (char*)_alloca(SendBuffers[i].PacketSendLength + sizeof(crc));
-			*((unsigned long*) crc_and_buffer) = crc;
-			memcpy(crc_and_buffer + sizeof(crc), (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength);
-
-			Register_Packet_Out(&SendBuffers[i].IPAddress[0], SendBuffers[i].Port, SendBuffers[i].PacketSendLength + UDP_HEADER_SIZE + sizeof(crc), 0);
-			int result = sendto(socket, crc_and_buffer, SendBuffers[i].PacketSendLength + sizeof(crc), 0, (LPSOCKADDR) &addr, sizeof(SOCKADDR_IN));
-
-#else //WRAPPER_CRC
 
 			Register_Packet_Out(&SendBuffers[i].IPAddress[0], SendBuffers[i].Port, SendBuffers[i].PacketSendLength + UDP_HEADER_SIZE, 0);
 			int result = sendto(socket, (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength, 0, (LPSOCKADDR) &addr, sizeof(SOCKADDR_IN));
 
-#endif //WRAPPER_CRC
 
 			if (result == SOCKET_ERROR){
 				if (WSAGetLastError() != WSAEWOULDBLOCK) {
@@ -1041,25 +1023,8 @@ int PacketManagerClass::Get_Packet(SOCKET socket, unsigned char *packet_buffer, 
 
 			bytes = recvfrom(socket, (char*)packet_buffer, packet_buffer_size, 0, (LPSOCKADDR) &addr, &address_size);
 			if (bytes > 0) {
-#ifndef WRAPPER_CRC
 				Register_Packet_In((unsigned char*) &addr.sin_addr.s_addr, addr.sin_port, bytes + UDP_HEADER_SIZE, 0);
-#endif //WRAPPER_CRC
 
-#ifdef WRAPPER_CRC
-				unsigned long crc = CRC::Memory((unsigned char*)packet_buffer + 4, bytes - sizeof(crc));
-#if (1)
-				/*
-				** Reverse byte order to prevent the demo from having the same CRC as the game.
-				*/
-				crc = __builtin_bswap32((unsigned int)crc);
-#endif //(0)
-				if (crc != *((unsigned long*)packet_buffer)) {
-					NumReceivePackets = 0;
-				} else {
-					Register_Packet_In((unsigned char*) &addr.sin_addr.s_addr, addr.sin_port, bytes + UDP_HEADER_SIZE, 0);
-					bytes -= sizeof(crc);
-					memmove(packet_buffer, packet_buffer + sizeof(crc), bytes);
-#endif //WRAPPER_CRC
 
 					//
 					ReceiveSocket = socket;
@@ -1071,9 +1036,6 @@ int PacketManagerClass::Get_Packet(SOCKET socket, unsigned char *packet_buffer, 
 						//
 					}
 					CurrentPacket = 0;
-#ifdef WRAPPER_CRC
-				}
-#endif //WRAPPER_CRC
 			} else {
 				if (bytes == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK) {
 					int error_code = 0;

@@ -21,8 +21,6 @@
 	#include "widestring.h"
 #endif
 
-#ifndef	DEBUG_H
-	#endif
 
 #ifndef VECTOR2_H
 	#include "vector2.h"

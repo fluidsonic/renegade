@@ -1,7 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
 #ifndef	COMNETRCV_H
 #define	COMNETRCV_H
 

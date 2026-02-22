@@ -18,9 +18,6 @@
 #include "definitionclassids.h"
 #include "Ini.h"
 
-#ifdef G_CODE_BASE
-#include "argv.h"
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -2225,15 +2222,6 @@ WWAudioClass::Is_Disabled (void) const
 	if (_firsttime) {
 		_firsttime = false;
 
-		#ifdef G_CODE_BASE
-		//
-		// Use command line arguement.
-		//
-		ArgvClass	argv;
-		if (argv.Find("-NOAUDIO")) {
-			_disabled = true;
-		}
-		#endif
 
 		//
 		//	Read the disabled key from the registry

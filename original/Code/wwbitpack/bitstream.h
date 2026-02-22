@@ -80,18 +80,12 @@ class BitStreamClass : public cBitPacker
 		void		Add(USHORT val,int type = NO_ENCODER)						{ Internal_Add(val,type); }
 		void		Add(char16_t val,int type = NO_ENCODER)						{ Internal_Add((USHORT)val,type); }
 		void		Add(UINT val,int type = NO_ENCODER)							{ Internal_Add(val,type); }
-#if !(defined(__clang__) && !defined(_MSC_VER))  // skip on macOS: uint32_t == UINT
-		void		Add(uint32_t val,int type = NO_ENCODER)						{ Internal_Add(val,type); }
-#endif
 		void		Add(char val,int type = NO_ENCODER)							{ Internal_Add(val,type); }
 		void		Add(int val,int type = NO_ENCODER)							{ Internal_Add(val,type); }
 		void		Add(float val,int type = NO_ENCODER)						{ Internal_Add(val,type); }
 
 		BYTE		Get(BYTE & set_val,int type = NO_ENCODER)					{ return Internal_Get(set_val,type); }
 		USHORT	Get(USHORT & set_val,int type = NO_ENCODER)				{ return Internal_Get(set_val,type); }
-#if !(defined(__clang__) && !defined(_MSC_VER))  // skip on macOS: uint32_t == UINT
-		uint32_t		Get(uint32_t & set_val,int type = NO_ENCODER)				{ return Internal_Get(set_val,type); }
-#endif
 		UINT		Get(UINT & set_val,int type = NO_ENCODER)					{ return Internal_Get(set_val,type); }
 		char		Get(char & set_val,int type = NO_ENCODER)					{ return Internal_Get(set_val,type); }
 		int		Get(int & set_val,int type = NO_ENCODER)					{ return Internal_Get(set_val,type); }
@@ -105,7 +99,6 @@ class BitStreamClass : public cBitPacker
 		// the compiler won't accept this. Hopefully the pragma and MSVC
 		// will prevent inlining.
 		//
-#pragma auto_inline(off)
       //------------------------------------------------------------------------------------
 		template<class T> void Internal_Add(T value, int type = NO_ENCODER) {
 			if (cEncoderList::Is_Compression_Enabled() && type != NO_ENCODER) {
@@ -169,7 +162,6 @@ class BitStreamClass : public cBitPacker
 		}
 
 		//------------------------------------------------------------------------------------
-#pragma auto_inline(on)
 
 		UINT UncompressedSizeBytes; // for statistics only
 };

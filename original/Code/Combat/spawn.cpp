@@ -53,16 +53,6 @@ SpawnerDefClass::SpawnerDefClass( void ) :
 {
 	DEFIDLIST_PARAM( SpawnerDefClass, SpawnDefinitionIDList, CLASSID_GAME_OBJECTS );
 
-#ifdef	PARAM_EDITING_ON
-	EnumParameterClass *param;
-	param = new EnumParameterClass( (int*)&PlayerType );
-	param->Set_Name ("PlayerType");
-	param->Add_Value ( "Unteamed",	PLAYERTYPE_RENEGADE );
-	param->Add_Value ( "Nod",			PLAYERTYPE_NOD );
-	param->Add_Value ( "GDI",			PLAYERTYPE_GDI );
-
-	GENERIC_EDITABLE_PARAM(SpawnerDefClass,param)
-#endif
 
 	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_INT, SpawnMax );
 	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_FLOAT, SpawnDelay );
@@ -545,13 +535,6 @@ void	SpawnerClass::Check_Auto_Spawn( float dtime )
 			SpawnCount--;
 			SpawnDelayTimer = 0;		// no delay to bring him back
 
-#if 0
-			if ( Enabled ) {
-				Debug_Say(( "Killing Hibernating Spawn from an Enabled spawner (id %d)\n", Get_ID() ));
-			} else {
-				Debug_Say(( "Killing Hibernating Spawn (spawner id %d)\n", Get_ID() ));
-			}
-#endif
 		}
 	}
 }

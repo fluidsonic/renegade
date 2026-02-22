@@ -1498,20 +1498,6 @@ AudibleSoundDefinitionClass::AudibleSoundDefinitionClass (void)
 	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_FLOAT, m_LogicalDropOffRadius, "Logical Drop-off Radius");
 	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_FLOAT, m_LogicalNotifyDelay, "Logical Notif Delay");
 
-#ifdef	PARAM_EDITING_ON
-	//
-	//	Configure the logical type mask enumeration
-	//
-	EnumParameterClass *param = new EnumParameterClass (&m_LogicalTypeMask);
-	param->Set_Name ("Logical Type");
-	int count = WWAudioClass::Get_Instance ()->Get_Logical_Type_Count ();
-	for (int index = 0; index < count; index ++) {
-		StringClass display_name(0,true);
-		int id = WWAudioClass::Get_Instance ()->Get_Logical_Type (index, display_name);
-		param->Add_Value (display_name, id);
-	}
-	GENERIC_EDITABLE_PARAM(AudibleSoundDefinitionClass, param);
-#endif
 
 	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_COLOR, m_AttenuationSphereColor, "Sphere Color");
 

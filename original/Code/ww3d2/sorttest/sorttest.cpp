@@ -456,51 +456,6 @@ void WWAssert_Callback(const char * message)
 
 void Debug_Refs(void)
 {
-#ifdef _DEBUG
-	RefBaseNodeClass * first = RefBaseClass::ActiveRefList.First();
-	RefBaseNodeClass * node = first;
-	while (node->Is_Valid())
-	{
-		RefBaseClass * obj = node->Get();
-		ActiveRefStruct * ref = &(obj->ActiveRefInfo);
-
-		bool display = true;
-		int	count = 0;
-		RefBaseNodeClass * search = first;
-		while (search->Is_Valid()) {
-
-			if (search == node) {	// if this is not the first one
-				if (count != 0) {
-					display = false;
-					break;
-				}
-			}
-
-			RefBaseClass * search_obj = search->Get();
-			ActiveRefStruct * search_ref = &(search_obj->ActiveRefInfo);
-
-			if ( ref->File && search_ref->File &&
-				  !strcmp(search_ref->File, ref->File) &&
-				  (search_ref->Line == ref->Line) ) {
-				count++;
-			} else if ( (ref->File == NULL) &&  (search_ref->File == NULL) ) {
-				count++;
-			}
-
-			search = search->Next();
-		}
-
-		if ( display ) {
-
-			static int num_printed = 0;
-			if (++num_printed > 20) {
-				break;
-			}
-		}
-
-		node = node->Next();
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------

@@ -2,7 +2,6 @@
 #include "cnetwork.h"
 #include "resource.h"
 #include "dlgmainmenu.h"
-#include "specialbuilds.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
 #include "gameinitmgr.h"

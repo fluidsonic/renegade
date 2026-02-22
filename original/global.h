@@ -8,9 +8,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 1: Platform defines
 // ─────────────────────────────────────────────────────────────────────────────
-#ifndef _UNIX
-#define _UNIX
-#endif
 #define NOMINMAX
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -539,7 +536,6 @@ static_assert(sizeof(double) == 8, "double must be 64-bit IEEE 754");
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Disable warning about exception handling not being enabled (MSVC 4530)
-#pragma warning(disable : 4530)
 
 #define WWINLINE inline
 

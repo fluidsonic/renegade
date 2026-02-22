@@ -76,19 +76,7 @@ cCsDamageEvent::Act
 				// We need to use apply damage extended in order to allow things to die.
 				offense.ForceServerDamage = true;
 
-#if 0
-				// guess at the damage direction
-				Vector3 direction;
-				Vector3 pos;
-				damager->Get_Position( &pos );
-				obj->Get_Position( &direction );
-				direction -= pos;
-				direction.Normalize();
-
-				obj->Apply_Damage_Extended( offense, 1.0f, direction );
-#else
 				obj->Apply_Damage_Extended( offense );
-#endif
 
 //				Debug_Say(( "Applying Client damage of %f from %d to %d\n", Damage, DamagerGOID, DamageeGOID ));
 			} else {

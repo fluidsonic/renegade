@@ -57,47 +57,6 @@ RenegadeCheatMgrClass::~RenegadeCheatMgrClass (void)
 void
 RenegadeCheatMgrClass::Enable_Cheat (int cheat, bool onoff)
 {
-#if 0
-
-	CheatMgrClass::Enable_Cheat (cheat, onoff);
-
-	//
-	//	Save the values to the registry
-	//
-	RegistryClass registry (APPLICATION_SUB_KEY_NAME_OPTIONS);
-	if (registry.Is_Valid ()) {
-		registry.Set_Int (VALUE_NAME_CHEATS, Flags);
-	}
-
-	if (cheat == CHEAT_INVULNERABILITY) {
-
-		//
-		//	This may seem strange, but we only want to allow cheating in single
-		// player and we need to be a client (which means we are a player).
-		//
-		if (IS_SOLOPLAY && CombatManager::I_Am_Client ()) {
-			
-			//
-			//	Make the current player invulnerable or not
-			//
-			cPlayer *player = cPlayerManager::Find_Player (cNetwork::Get_My_Id ());
-			if (player != NULL) {
-				player->Invulnerable.Set (onoff);
-				player->Mark_As_Modified();
-			}
-		}
-
-	} else if (cheat == CHEAT_ALL_WEAPONS) {
-
-		//
-		// Grant all weapons to the player
-		//
-		if (onoff && IS_SOLOPLAY && COMBAT_STAR != NULL) {
-			COMBAT_STAR->Give_All_Weapons ();
-		}
-	}
-
-#endif //0
 
 	return ;
 }
@@ -111,16 +70,6 @@ void
 RenegadeCheatMgrClass::Apply_Cheats (void)
 {
 
-#if 0
-	CheatMgrClass::Apply_Cheats ();
-
-	//
-	//	Just force the options to be re-enabled
-	//
-	Enable_Cheat (CHEAT_INVULNERABILITY,	Is_Cheat_Set (CHEAT_INVULNERABILITY));
-	Enable_Cheat (CHEAT_INFINITE_AMMO,		Is_Cheat_Set (CHEAT_INFINITE_AMMO));
-	Enable_Cheat (CHEAT_ALL_WEAPONS,			Is_Cheat_Set (CHEAT_ALL_WEAPONS));
-#endif //0
 
 	return ;
 }

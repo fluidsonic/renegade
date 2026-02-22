@@ -57,14 +57,6 @@ ScriptZoneGameObjDef::ScriptZoneGameObjDef( void ) :
 	//
 	//	Configure the zone type parameter
 	//
-#ifdef PARAM_EDITING_ON
-	EnumParameterClass *zone_type_param = new EnumParameterClass( (int*)&ZoneType );
-	zone_type_param->Set_Name( "Zone Type" );
-	for ( int index = 0; index < TYPE_COUNT; index++ ) {																			
-		zone_type_param->Add_Value( ZONE_TYPE_NAMES[index], index );
-	}																																									
-	GENERIC_EDITABLE_PARAM(ScriptZoneGameObjDef,zone_type_param);
-#endif
 
 }
 

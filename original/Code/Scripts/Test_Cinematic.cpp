@@ -1001,49 +1001,4 @@ public:
 
 };
 
-#if 0
-;_________________________________________
-;
-; Available Cinematic Script Commands
-;
-; time/frame	Create_Object,	id (slot), preset_name, x, y, z, facing, animation
-; id can be -1 to mean do not store this object, and do not destroy
-; 0 Create_Object, 0, .44 Magnum, 0, 0, 0, 180, "Human.jump"
-;
-; time/frame	Destroy_Object, id (slot)
-; 0 Destroy_Object, 0
-;
-; time/frame	Play_Animation, id (slot), animation_name, looping, sub_obj_name
-; 0 Play_Animation, 0, "Human.Jump", false
-;
-; time/frame	Control_Camera,	id ( slot )
-; use id -1 for disabling control;
-; note this will also disable star control and disbale the hud
-; 0 Control_Camera,	0
-;
-
-TIME	Create_Object					SLOT	MODEL_NAME
-TIME	Create_Real_Object			SLOT	PRESET_NAME	HOST_SLOT	HOST_BONE_NAME
-TIME	Destroy_Object					SLOT
-TIME	Play_Animation					SLOT	ANIMATION_NAME	LOOPING	SUB_OBJ_NAME	IS_BLENDED
-TIME	Play_Audio						PRESET_NAME	HOST_SLOT	HOST_BONE_NAME
-TIME	Control_Camera					SLOT
-TIME	Send_Custon						[TO_ID/#TO_SLOT]	TYPE	[PARAM/#SLOT_PARAM]	
-TIME	Attach_To_Bone					SLOT	HOST_SLOT	HOST_BONE_NAME
-TIME	Attach_Script					SLOT	SCRIPT_NAME	"SCRIPT_PARAMETERS"
-TIME	Move_Slot						New_Slot, Old_Slot
-TIME	Sniper_Control					ENABLED, ZOOM
-TIME	Shake_Camera					SLOT, INTENSITY, DURATION
-TIME	Enable_Shadow					SLOT, [1/0]
-TIME	Enable_Letterbox				[1/0], TIME_TO_ANIMATE_IN
-TIME	Set_Screen_Fade_Color		RED,GREEN,BLUE,TIME_TO_FADE (all colors floating point 0.0-1.0)
-TIME	Set_Screen_Fade_Opacity		OPACITY,TIME_TO_FADE 
-	
-
-To fill a slot, Send_Custom to the controller with 
-type = M00_CUSTOM_CINEMATIC_SET_SLOT + SLOT_NUMBER
-parameter = OBJECT_ID
-
-;_________________________________________
-#endif
 

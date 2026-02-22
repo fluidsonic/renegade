@@ -33,7 +33,6 @@ typedef Vector3i16 TriIndex;
 ** I suspect this is due to the way Dynamesh uses (abuses) MeshGeometryClass and haven't had
 ** time to track it down yet.
 */
-#define OPTIMIZE_PLANEEQ_RAM			1
 #define OPTIMIZE_VNORM_RAM				0
 
 /**

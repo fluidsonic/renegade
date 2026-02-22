@@ -58,34 +58,6 @@ PowerUpGameObjDef::PowerUpGameObjDef( void ) :
 	IdleSoundID( 0 ),
 	AlwaysAllowGrant( false )
 {
-#ifdef PARAM_EDITING_ON
-//	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_INT,	GrantShieldType );
-	EnumParameterClass *param;
-	param = new EnumParameterClass( &GrantShieldType );
-	param->Set_Name ( "GrantShieldType" );
-	for ( int param_counter = 0; param_counter < ArmorWarheadManager::Get_Num_Armor_Types(); param_counter++ ) {
-		param->Add_Value(ArmorWarheadManager::Get_Armor_Name(param_counter), param_counter);
-	}
-	GENERIC_EDITABLE_PARAM( PowerUpGameObjDef, param )
-
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_FLOAT, GrantShieldStrength );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_FLOAT, GrantShieldStrengthMax );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_FLOAT, GrantHealth );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_FLOAT, GrantHealthMax );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_WEAPONOBJDEFINITIONID,	GrantWeaponID );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_BOOL,	GrantWeapon );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_BOOL,	GrantWeaponClips );	
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_INT,	GrantWeaponRounds );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_BOOL,	Persistent );
-	//EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_BOOL,	false );//IsCaptureTheFlag );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_INT,	GrantKey );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_BOOL,	AlwaysAllowGrant );
-
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_STRING, GrantAnimationName );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_STRING, IdleAnimationName );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID, GrantSoundID );
-	EDITABLE_PARAM( PowerUpGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID, IdleSoundID );
-#endif	//PARAM_EDITING_ON
 }
 
 uint32_t	PowerUpGameObjDef::Get_Class_ID (void) const

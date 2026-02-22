@@ -33,9 +33,6 @@
 #include "formconv.h"
 #include "animatedsoundmgr.h"
 
-#ifndef _UNIX
-#include "framgrab.h"
-#endif
 
 const char* DAZZLE_INI_FILENAME="DAZZLE.INI";
 
@@ -230,11 +227,6 @@ WW3DErrorType WW3D::Shutdown(void)
 	assert(Lite || IsInitted == true);
 //	
 
-#ifdef WW3D_DX8
-	if (IsCapturing) {
-		Stop_Movie_Capture();
-	}
-#endif //WW3D_DX8
 
 	/*
 	** Free memory in predictive LOD optimizer
@@ -676,9 +668,6 @@ WW3DErrorType WW3D::Begin_Render(bool clear,bool clearz,const Vector3 & color, v
 //	TextureClass::_Reset_Time_Stamp();
 	DynamicVBAccessClass::_Reset(true);
 	DynamicIBAccessClass::_Reset(true);
-#ifdef WW3D_DX8
-	TextureFileClass::Update_Texture_Flash();
-#endif //WW3D_DX8
 	Debug_Statistics::Begin_Statistics();
 
 	if (IsCapturing && (!PauseRecord || RecordNextFrame)) {
@@ -1218,28 +1207,6 @@ void WW3D::Make_Screen_Shot( const char * filename_base )
  *=============================================================================================*/
 void WW3D::Start_Movie_Capture( const char * filename_base, float frame_rate )
 {
-#ifdef _WINDOWS
-	if (IsCapturing) {
-		Stop_Movie_Capture();
-	}
-	IsCapturing = true;
-
-	RECT bounds;
-	GetWindowRect(_Hwnd,&bounds);
-	int height=bounds.bottom-bounds.top;
-	int width=bounds.right-bounds.left;
-	int depth=24;
-
-	if (frame_rate == 0.0f) {
-		frame_rate = 1.0f;
-		PauseRecord = true;
-	} else {
-		PauseRecord = false;
-	}
-
-	Movie = new FrameGrabClass( filename_base, FrameGrabClass::AVI, width, height, depth, frame_rate);
-
-#endif
 }
 
 /***********************************************************************************************
@@ -1256,14 +1223,6 @@ void WW3D::Start_Movie_Capture( const char * filename_base, float frame_rate )
  *=============================================================================================*/
 void WW3D::Stop_Movie_Capture( void )
 {
-#ifdef _WINDOWS
-	if (IsCapturing) {
-		IsCapturing = false;
-
-		delete Movie;
-		Movie = NULL;
-	}
-#endif
 }
 
 /***********************************************************************************************
@@ -1404,48 +1363,6 @@ bool WW3D::Is_Movie_Ready()
  *=============================================================================================*/
 void WW3D::Update_Movie_Capture( void )
 {
-#ifdef _WINDOWS
-
-		// Lock front buffer and copy
-
-	IDirect3DSurface8 *fb;
-	fb=DX8Wrapper::_Get_DX8_Front_Buffer();
-	D3DSURFACE_DESC desc;
-	fb->GetDesc(&desc);
-
-	RECT bounds;
-	GetWindowRect(_Hwnd,&bounds);
-
-	D3DLOCKED_RECT lrect;
-
-	DX8_ErrorCode(fb->LockRect(&lrect,&bounds,D3DLOCK_READONLY));
-
-	unsigned int x,y,index,index2,width,height;
-
-	width=bounds.right-bounds.left;
-	height=bounds.bottom-bounds.top;
-
-	char *image=(char *)Movie->GetBuffer();
-
-	for (y=0; y<height; y++)
-	{
-		for (x=0; x<width; x++)
-		{
-			// index for image
-			index=3*(x+(height-y-1)*width);
-			// index for fb
-			index2=y*lrect.Pitch+4*x;
-
-			image[index]=*((char *) lrect.pBits + index2+0);
-			image[index+1]=*((char *) lrect.pBits + index2+1);
-			image[index+2]=*((char *) lrect.pBits + index2+2);
-		}
-	}
-
-	fb->Release();
-
-	Movie->Grab(image);
-#endif
 }
 
 /***********************************************************************************************
@@ -1462,11 +1379,6 @@ void WW3D::Update_Movie_Capture( void )
  *=============================================================================================*/
 float	WW3D::Get_Movie_Capture_Frame_Rate( void )
 {
-#ifdef _WINDOWS
-	if (IsCapturing) {
-		return Movie->GetFrameRate();
-	}
-#endif
 	return 0;
 }
 
@@ -1599,41 +1511,11 @@ void WW3D::Release_Debug_Resources(void)
 
 WW3DErrorType WW3D::On_Deactivate_App(void)
 {
-#ifdef WW3D_DX8
-	assert(!IsRendering);
-
-	if ( Gerd == NULL )
-		return WW3D_ERROR_OK;
-
-	if ( IsWindowed )
-		return WW3D_ERROR_OK;
-
-	if ( !Gerd->isWindowOpen() )
-		return WW3D_ERROR_OK;
-
-	Gerd->closeWindow();
-#endif //WW3D_DX8
 	return WW3D_ERROR_OK;
 }
 
 WW3DErrorType WW3D::On_Activate_App(void)
 {
-#ifdef WW3D_DX8
-	if ( Gerd == NULL)
-		return WW3D_ERROR_OK;
-
-	if ( IsWindowed )
-		return WW3D_ERROR_OK;
-
-	assert( !Gerd->isWindowOpen() );
-
-	srGERD::DisplayMode disp_mode;
-	disp_mode = Gerd->getDisplayMode(ResolutionWidth,ResolutionHeight,BitDepth);
-	if (Gerd->openWindow(disp_mode) != srGERD::ERROR_NONE) {
-		return WW3D_ERROR_WINDOW_NOT_OPEN;
-	}
-
-#endif //WW3D_DX8
 	return WW3D_ERROR_OK;
 }
 
@@ -1644,23 +1526,6 @@ void WW3D::Get_Pixel_Center(float &x, float &y)
 
 void WW3D::Update_Pixel_Center(void)
 {
-#ifdef WW3D_DX8
-	const char *name = _RenderDeviceShortNameTable.getString(CurRenderDevice);
-	if ( strstr(name, "OpenGu") ) {
-		PixelCenterX = 0.0f; PixelCenterY = 0.0f;
-	} else if ( strstr(name, "Glide") ) {
-		PixelCenterX = 0.0f; PixelCenterY = 0.0f;
-	} else if ( strstr(name, "DirectX") ) {
-		PixelCenterX = 0.5f; PixelCenterY = 0.5f;
-	} else if ( strstr(name, "Software") ) {
-		PixelCenterX = 0.0f; PixelCenterY = 0.0f;
-	} else if ( strstr(name, "Null") ) {
-		PixelCenterX = 0.0f; PixelCenterY = 0.0f;
-	} else {
-		// unknown device
-		PixelCenterX = 0.0f; PixelCenterY = 0.0f;
-	}
-#endif //WW3D_DX8
 }
 
 void WW3D::Set_Texture_Bitdepth(int bitdepth)

@@ -671,26 +671,9 @@ File::EFileError File::Save(const void* buffer, UInt32 size)
 *     Retry - Retry flag.
 *
 ******************************************************************************/
-#pragma warning(disable:4100)
 
 bool File::OnFileError(EFileError error, bool)
 	{
-	#ifdef _DEBUG
-	const char* _errorNames[] = 
-		{
-		"FileError_None",
-		"FileError_FNF",
-		"FileError_Access",
-		"FileError_Open",
-		"FileError_Read",
-		"FileError_Write",
-		"FileError_Seek",
-		"FileError_Nomem",
-		"FileError_Fault",
-		};
-
-	DebugPrint("File::OnFileError(%S) - %s\n", mName.Get(), _errorNames[error]);
-	#endif
 
 	return false;
 	}

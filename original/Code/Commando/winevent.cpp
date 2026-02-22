@@ -14,7 +14,6 @@
 #include "string_ids.h"
 #include "realcrc.h"
 #include "apppackettypes.h"
-#include "specialbuilds.h"
 #include "modpackagemgr.h"
 
 DECLARE_NETWORKOBJECT_FACTORY(cWinEvent, NETCLASSID_WIN);
@@ -121,10 +120,8 @@ cWinEvent::Export_Creation(BitStreamClass & packet)
    packet.Add_Wide_Terminated_String(The_Game()->Get_Mvp_Name(), true);
 	packet.Add(The_Game()->Get_Mvp_Count());
 
-#ifndef MULTIPLAYERDEMO
 	packet.Add((uint32_t)::CRC_Stringi(The_Game()->Get_Mod_Name()));
 	packet.Add((uint32_t)::CRC_Stringi(The_Game()->Get_Map_Name()));
-#endif // MULTIPLAYERDEMO
 
 	Set_Delete_Pending();
 }
@@ -155,7 +152,6 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 	// This is just causing no end of trouble so I'm going to simplify it.
 	// The host has no business sending win events to people not in the same game anyway. ST - 1/18/2002 2:33PM
 	//
-#pragma message("(TSS) Could this be causing problems?")
 	The_Game()->Set_Hosted_Game_Number(HostedGameNumber + 1);
 #if (0)
 	if (HostedGameNumber != The_Game()->Get_Hosted_Game_Number())
@@ -174,7 +170,6 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 	The_Game()->Set_Mvp_Name(mvp_name);
 	The_Game()->Set_Mvp_Count(mvp_count);
 
-#ifndef MULTIPLAYERDEMO
 	uint32_t mod_name_crc = packet.Get(mod_name_crc);
 	uint32_t map_name_crc = packet.Get(map_name_crc);
 
@@ -187,7 +182,6 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 	The_Game()->Set_Mod_Name(mod_name);
 	The_Game()->Set_Map_Name(map_name);
 
-#endif // MULTIPLAYERDEMO
 
 	The_Game()->Begin_Intermission();
 

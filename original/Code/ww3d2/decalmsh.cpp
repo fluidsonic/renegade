@@ -12,7 +12,6 @@
 #include "dx8wrapper.h"
 #include "dx8caps.h"
 
-#define DISABLE_CLIPPING	0
 
 /**
 ** DecalPolyClass - This class is used to clip polygons as they are
@@ -69,16 +68,10 @@ void DecalPolyClass::Clip(const PlaneClass & plane,DecalPolyClass & dest) const
 
 	// perform clipping
 	prev_point_in_front = plane.In_Front(Verts[iprev]);
-#if DISABLE_CLIPPING
-	prev_point_in_front = true;
-#endif
 
 	for (int j=0; j<Verts.Count(); j++) { 
 		
 		cur_point_in_front = plane.In_Front(Verts[i]);
-#if DISABLE_CLIPPING
-		cur_point_in_front = true;		
-#endif
 
 		if (prev_point_in_front) {
 

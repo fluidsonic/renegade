@@ -31,7 +31,6 @@
 #include "dinput.h"
 #include "hud.h"
 #include "gamedata.h"
-#include "specialbuilds.h"
 
 bool CNCPurchaseMainMenuClass::SecretsEnabled = false;
 
@@ -267,27 +266,19 @@ CNCPurchaseMainMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			break;
 
 		case IDC_CHARACTERS_BUTTON:
-#ifdef MULTIPLAYERDEMO
-				Do_Purchase_Screen (PurchaseSettingsDefClass::TYPE_CLASSES);
-#else
 			if ((SecretsEnabled) && (Input::Is_Button_Down(DIK_LMENU))) {
 				Do_Purchase_Screen (PurchaseSettingsDefClass::TYPE_SECRET_CLASSES);
 			} else {
 				Do_Purchase_Screen (PurchaseSettingsDefClass::TYPE_CLASSES);
 			}
-#endif
 			break;
 
 		case IDC_VEHICLES_BUTTON:
-#ifdef MULTIPLAYERDEMO
-				Do_Purchase_Screen (PurchaseSettingsDefClass::TYPE_VEHICLES);
-#else
 			if ((SecretsEnabled) && (Input::Is_Button_Down(DIK_LMENU))) {
 				Do_Purchase_Screen (PurchaseSettingsDefClass::TYPE_SECRET_VEHICLES);
 			} else {
 				Do_Purchase_Screen (PurchaseSettingsDefClass::TYPE_VEHICLES);
 			}
-#endif
 			break;
 
 		default:

@@ -6,14 +6,10 @@
 // Description:  Send and receive stats for a single type of message.
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef MSGSTAT_H
 #define MSGSTAT_H
 
-#pragma warning(disable:4514)
 #include "global.h"
 
 #ifndef NULL

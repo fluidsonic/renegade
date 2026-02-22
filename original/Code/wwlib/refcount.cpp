@@ -69,9 +69,6 @@ RefCountClass *	RefCountClass::Set_Ref_Owner(RefCountClass *obj,char * file,int 
  *=============================================================================================*/
 void RefCountClass::Remove_Active_Ref(RefCountClass * obj) 
 { 
-#ifdef PARANOID_REFCOUNTS
-	assert(Validate_Active_Ref(obj));
-#endif
 	obj->ActiveRefNode.Unlink(); 
 }
 
@@ -111,9 +108,6 @@ bool RefCountClass::Validate_Active_Ref(RefCountClass * obj)
  *=============================================================================================*/
 void	RefCountClass::Inc_Total_Refs(RefCountClass * obj)
 {
-#ifdef PARANOID_REFCOUNTS
-	assert(Validate_Active_Ref(obj));
-#endif
 	TotalRefs++;
 
 }
@@ -149,9 +143,6 @@ void RefCountClass::Add_Ref(void)
  *=============================================================================================*/
 void	RefCountClass::Dec_Total_Refs(RefCountClass * obj)
 {
-#ifdef PARANOID_REFCOUNTS
-	assert(Validate_Active_Ref(obj));
-#endif
 	TotalRefs--;
 
 	// See if programmer set break on for a specific address.

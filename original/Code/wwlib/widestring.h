@@ -8,9 +8,7 @@
 #include "win.h"
 #include "wwstring.h"
 #include "trim.h"
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 //////////////////////////////////////////////////////////////////////
 //

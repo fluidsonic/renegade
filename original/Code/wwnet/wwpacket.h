@@ -6,9 +6,6 @@
 // Description:
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef WWPACKET_H
 #define WWPACKET_H
@@ -59,9 +56,7 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
 		void				Clear_Resend_Count()					{ResendCount = 0;}
 		void				Increment_Resend_Count()			{ResendCount++;}
       int				Get_Resend_Count() const			{return ResendCount;}
-#ifndef WRAPPER_CRC
 		bool				Is_Crc_Correct() const				{return IsCrcCorrect;}
-#endif //WRAPPER_CRC
 		void				Set_Num_Sends(int num_sends);
 		int				Get_Num_Sends() const				{return NumSends;}
 		unsigned long	Get_First_Send_Time(void) const	{return FirstSendTime;}
@@ -76,11 +71,9 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
 	private:
       cPacket(const cPacket& source); // Disallow
 
-#ifndef WRAPPER_CRC
 		void				Set_Is_Crc_Correct(bool flag)		{IsCrcCorrect = flag;}
 
 		static const int		CRC_PLACEHOLDER;
-#endif //WRAPPER_CRC
 		static const USHORT	PACKET_HEADER_SIZE;
 		static const unsigned long DefSendTime;
 
@@ -91,9 +84,7 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
       unsigned long	SendTime;
 		unsigned long	FirstSendTime;
       int				ResendCount;
-#ifndef WRAPPER_CRC
 		bool				IsCrcCorrect;
-#endif //WRAPPER_CRC
 		int				NumSends;
 		static int		RefCount;
 		static bool		EncoderInit;

@@ -20,7 +20,6 @@
 #include "useroptions.h"
 #include "dialogtests.h"
 #include "dialogmgr.h"
-#include "specialbuilds.h"
 
 ////////////////////////////////////////////////////////////////
 //	Static member initialization

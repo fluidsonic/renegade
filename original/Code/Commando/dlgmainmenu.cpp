@@ -12,7 +12,6 @@
 #include "dialogmgr.h"
 #include "gameinitmgr.h"
 #include "dialogcontrol.h"
-#include "specialbuilds.h"
 #include "buildnum.h"
 #include "campaign.h"
 #include "gamedata.h"
@@ -150,16 +149,10 @@ MainMenuDialogClass::On_Init_Dialog (void)
 {
 	Update_Version_Number ();
 
-#if defined(BETACLIENT) || defined(FREEDEDICATEDSERVER) || defined(MULTIPLAYERDEMO)
-	Get_Dlg_Item(IDC_MENU_START_SP_GAME_BUTTON)->Enable(false);
-	Get_Dlg_Item(IDC_MENU_START_PRACTICE_GAME_BUTTON)->Enable(false);
-#endif
 
-#ifndef BETACLIENT
 	if (Get_Dlg_Item (IDC_BETA_TEST_TEXT) != NULL) {
 		Get_Dlg_Item (IDC_BETA_TEST_TEXT)->Show (false);
 	}
-#endif
 
 	ImageCtrlClass *image_ctrl = (ImageCtrlClass *)Get_Dlg_Item (IDC_IMAGE);
 	if (image_ctrl != NULL) {
@@ -454,9 +447,5 @@ MainMenuDialogClass::Update_Version_Number (void)
 				//DlgMsgBox::DoDialog(title, text);
 
 /*
-#ifdef MULTIPLAYERDEMO
-			START_DIALOG (GameSpyMainDialogClass);
-#else
 			START_DIALOG (InternetMainDialogClass);
-#endif
 */

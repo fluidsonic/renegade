@@ -12,9 +12,6 @@
 */
 
 // When including windows, lets just bump the warning level back to 3...
-#if (_MSC_VER >= 1200)
-#pragma warning(push, 3)
-#endif
 
 // this define should also be in the DSP just in case someone includes windows stuff directly
 #ifndef WIN32_LEAN_AND_MEAN
@@ -27,31 +24,11 @@
 //#include	<winnt.h>
 //#include	<winuser.h>
 
-#if (_MSC_VER >= 1200)
-#pragma warning(pop)
-#endif
 
-#ifdef _WINDOWS
-extern HINSTANCE	ProgramInstance;
-extern HWND			MainWindow;
-extern bool GameInFocus;
-
-#ifdef _DEBUG
-
-void __cdecl Print_Win32Error(unsigned long win32Error);
-
-#else // _DEBUG
-
-#define Print_Win32Error
-
-#endif // _DEBUG
-
-#else // _WINDOWS
 //#include <unistd.h>
 // On non-Windows builds still provide these globals (defined in win.cpp)
 extern HINSTANCE ProgramInstance;
 extern HWND      MainWindow;
 extern bool      GameInFocus;
-#endif // _WINDOWS
 
 #endif // WIN_H

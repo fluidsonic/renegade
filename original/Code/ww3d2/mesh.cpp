@@ -43,9 +43,7 @@ static SimpleDynVecClass<uint32_t> temp_apt;
 ** TODO: ensure that the models have unit normals and start re-using them again or write
 ** collision code to handle non-unit normals!
 */
-#if (OPTIMIZE_PLANEEQ_RAM)
 #define COMPUTE_NORMALS
-#endif
 
 /*
 ** Temporary storage used during decal creation

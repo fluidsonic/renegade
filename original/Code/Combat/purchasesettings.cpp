@@ -62,24 +62,6 @@ PurchaseSettingsDefClass::PurchaseSettingsDefClass (void)	:
 	//
 	//	Configure the enum parameters for the editable system
 	//
-	#ifdef PARAM_EDITING_ON
-		EnumParameterClass *param1 = new EnumParameterClass ((int *)&Team);
-		param1->Set_Name ("Team");
-		param1->Add_Value ("GDI",			TEAM_GDI);
-		param1->Add_Value ("NOD",			TEAM_NOD);
-		param1->Add_Value ("Mutant GDI",	TEAM_MUTANT_GDI);
-		param1->Add_Value ("Mutant NOD",	TEAM_MUTANT_NOD);
-		GENERIC_EDITABLE_PARAM (PurchaseSettingsDefClass, param1)
-
-		EnumParameterClass *param2 = new EnumParameterClass ((int *)&Type);
-		param2->Set_Name ("Team");
-		param2->Add_Value ("Character Classes",	TYPE_CLASSES);
-		param2->Add_Value ("Vehicles",				TYPE_VEHICLES);
-		param2->Add_Value ("Equipment",				TYPE_EQUIPMENT);
-		param2->Add_Value ("Secret Classes",		TYPE_SECRET_CLASSES);
-		param2->Add_Value ("Secret Vehicles",		TYPE_SECRET_VEHICLES);
-		GENERIC_EDITABLE_PARAM (PurchaseSettingsDefClass, param2)
-	#endif //PARAM_EDITING_ON
 
 	//
 	//	Configure the editable system
@@ -100,28 +82,6 @@ PurchaseSettingsDefClass::PurchaseSettingsDefClass (void)	:
 		NAMED_EDITABLE_PARAM (PurchaseSettingsDefClass, ParameterClass::TYPE_INT,				CostList[index], "Cost");
 		NAMED_EDITABLE_PARAM (PurchaseSettingsDefClass, ParameterClass::TYPE_STRING,			TextureList[index], "Texture");
 
-		#ifdef PARAM_EDITING_ON
-			GenericDefParameterClass *param = new GenericDefParameterClass (&(DefinitionList[index]));
-			param->Set_Class_ID (CLASSID_GAME_OBJECTS);
-			param->Set_Name ("Object");
-			GENERIC_EDITABLE_PARAM(PurchaseSettingsDefClass, param)
-
-			//
-			//	Insert the alternate textures and definitions
-			//
-			for (int alt_index = 0; alt_index < MAX_ALTERNATES; alt_index ++) {
-				
-				name.Format ("Alt Texture %d", alt_index + 1);
-				NAMED_EDITABLE_PARAM (PurchaseSettingsDefClass, ParameterClass::TYPE_STRING, AlternateTextureList[index][alt_index], name);
-
-				name.Format ("Alt Object %d", alt_index + 1);		
-				GenericDefParameterClass *param = new GenericDefParameterClass (&(AlternateDefinitionList[index][alt_index]));
-				param->Set_Class_ID (CLASSID_GAME_OBJECTS);
-				param->Set_Name (name);
-				GENERIC_EDITABLE_PARAM (PurchaseSettingsDefClass, param)
-			}
-
-		#endif //PARAM_EDITING_ON
 
 	}
 

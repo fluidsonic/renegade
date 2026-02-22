@@ -14,13 +14,8 @@
 
 const float STEP_HEIGHT = 0.25f;
 
-#define VERBOSE_LOGGING 0
 
-#if VERBOSE_LOGGING
-#define VERBOSE_LOG(x) if (/*WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0) &&*/ (strstr(Model->Get_Name(),"lt"))) {  }
-#else
 #define VERBOSE_LOG(x)
-#endif
 
 /*
 ** Phys3 Networking constants:
@@ -42,7 +37,6 @@ const float		PHYS3_SNAPSHOT_INTERVAL = PHYS3_HISTORY_MIN_TIME / PHYS3_SNAPSHOT_C
 
 #define PHYS3HISTORY_NO_CORRECTION			0
 #define PHYS3HISTORY_ABSOLUTE_CORRECTION	0
-#define PHYS3HISTORY_LERP_CORRECTION		1
 
 /**
 ** Phys3HistoryClass
@@ -202,7 +196,6 @@ void Phys3HistoryClass::Apply_Correction(const Vector3 & pos_correction)
 		SnapshotArray[index].Position += pos_correction;
 	}
 #endif
-#if PHYS3HISTORY_LERP_CORRECTION
 	for (int counter=0; counter<PHYS3_SNAPSHOT_COUNT; counter++) {
 		int index = Wrap_Index(HeadIndex + counter);
 		
@@ -211,7 +204,6 @@ void Phys3HistoryClass::Apply_Correction(const Vector3 & pos_correction)
 			SnapshotArray[index].Position += fraction * pos_correction;
 		}
 	}
-#endif
 }
 
 float Phys3HistoryClass::Find_Time_Of_Nearest_Point(const Vector3 & pos)
@@ -1698,29 +1690,7 @@ bool Phys3Class::Apply_Move
  *=============================================================================================*/
 inline bool Phys3Class::Debug_Verify_Position(void)
 {
-#ifdef VERBOSE_LOGGING
-	PhysicsSceneClass * scene = PhysicsSceneClass::Get_Instance();
-
-	AABoxClass box;
-	Compute_WS_Collision_Box(State,&box);
-
-	NonRefPhysListClass list;
-
-	PhysAABoxIntersectionTestClass test(box,Get_Collision_Group(),COLLISION_TYPE_PHYSICAL,&list);
-
-	Inc_Ignore_Counter();
-	bool intersecting = scene->Intersection_Test(test);
-	Dec_Ignore_Counter();
-
-	if (intersecting) {
-		VERBOSE_LOG(("		%s is intersecting %s!\r\n",Model->Get_Name(),list.Peek_Head()->Peek_Model()->Get_Name()));
-	} else {
-		VERBOSE_LOG(("    %s not intersecting\r\n",Model->Get_Name()));
-	}
-	return intersecting;
-#else
 	return true;
-#endif	
 }
 
 /***********************************************************************************************
@@ -1943,11 +1913,6 @@ bool Phys3Class::Push(const Vector3 & move)
 
 	Vector3 error = (State.Position - old_pos) - move;
 
-#if VERBOSE_LOGGING
-	Vector3 actual_move = State.Position - old_pos;
-	bool success = (State.Position - old_pos) == move;
-	VERBOSE_LOG((" Phys3::Push. Apparent success: %d Error: %f %f %f\r\n",success, error.X,error.Y,error.Z));
-#endif
 
  	return (error.Length2() < WWMATH_EPSILON * WWMATH_EPSILON);
 }
@@ -2191,11 +2156,6 @@ void Phys3Class::Assert_State_Valid(void)
 	PhysicsSceneClass::Get_Instance()->Cast_AABox(test);
 	Dec_Ignore_Counter();
 	
-#if VERBOSE_LOGGING
-	if (result.StartBad) {
-		VERBOSE_LOG(("Phys3 Intersection! ModelName = %s\r\n",Model->Get_Name()));
-	}
-#endif
 
 }
 
@@ -2237,11 +2197,7 @@ void Phys3Class::Network_Teleport_Correction(void)
 
 	Set_Position(new_pos);
 	Set_Velocity(LastKnownVelocity);
-#if 0
-	History->Apply_Correction(correction);
-#else
 	History->Init(LastKnownPosition,LastKnownVelocity);
-#endif
 	LatencyError.Set(0,0,0);
 }
 

@@ -8,7 +8,6 @@
 #include "texture.h"
 #include "physresourcemgr.h"
 
-#define SINGLE_SHADOW_CODE 1
 
 DynamicShadowManagerClass::DynamicShadowManagerClass(PhysClass & parent) :
 	Parent(parent),
@@ -27,7 +26,6 @@ DynamicShadowManagerClass::~DynamicShadowManagerClass(void)
 
 void DynamicShadowManagerClass::Update_Shadow(void)
 {
-#if SINGLE_SHADOW_CODE	
 	/*
 	** Shadow Update
 	** - if shadows are off, release projector and RETURN
@@ -127,53 +125,6 @@ void DynamicShadowManagerClass::Update_Shadow(void)
 
 	} else {
 
-#pragma message ("(gth) Disabling local shadows")
-#if 0
-		/*
-		** We couldn't use the sunlight so now we look for the nearest
-		** local light source which casts shadows.  If we find one, initialize
-		** our shadow projector with it.
-		*/
-		NonRefPhysListClass lightlist;
-		scene->Collect_Lights(position,true,false,&lightlist);
-	
-		if (!lightlist.Is_Empty()) {
-
-			/*
-			** Ensure that a shadow is allocated!
-			*/
-			Allocate_Shadow();
-
-			LightClass * best_light = NULL;
-			NonRefPhysListIterator it(&lightlist);
-			for (it.First(); !it.Is_Done(); it.Next()) {
-				best_light = (LightClass *)(it.Peek_Obj()->Peek_Model());
-				break;				
-			}
-
-			if (best_light) {
-
-#if TRUE_PERSPECTIVE_SHADOWS		// This code uses true perspective projection for local light sources
-				Shadow->Enable_Perspective(true);
-				Shadow->Set_Light_Source_ID((uint32_t)best_light);
-				Shadow->Set_Light_Vector(best_light->Get_Position());
-
-#else			// This code uses an orthographic approximation 
-				Shadow->Enable_Perspective(false);
-				Shadow->Set_Light_Source_ID((uint32_t)best_light);
-				
-				Vector3 direction;
-				Get_Position(&direction);
-				direction -= best_light->Get_Position();
-				direction.Normalize();
-				Shadow->Set_Light_Vector(direction);
-#endif
-				found_light = true;
-
-				DEBUG_RENDER_VECTOR(position,best_light->Get_Position()-position,Vector3(1,1,1));
-			}
-		} 
-#endif //0
 	}
 
 	if (found_light) {
@@ -211,26 +162,6 @@ void DynamicShadowManagerClass::Update_Shadow(void)
 	
 	}
 
-#else
-
-	/*
-	** - Collect all lights that want to and can cast a shadow with this object (raytest, etc)
-	** - Reduce number of lights in list to MaxShadowsPerObject
-	** - Create new empty shadow object list
-	** - For each light
-	**   - Try to find shadow which used this light from prev-frame's shadow list, if found
-	**     remove it from prev-frame's list and put in current frame's shadow list
-	**     Else create a new shadow object, immediately set its intensity to zero (since it is turning on)
-	**   - Initialize projector with light parameters
-	** - For each shadow still in prev-frame's list
-	**   - If intensity is zero, destroy it.
-	**     Else
-	**     - Set target intensity to zero
-	**     - Update projection parameters, move into this frame's shadow list
-	*/
-	
-
-#endif
 }
 
 void DynamicShadowManagerClass::Allocate_Shadow(void)

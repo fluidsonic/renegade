@@ -68,7 +68,6 @@
 #include "skinpackagemgr.h"
 #include "modpackagemgr.h"
 #include "shutdown.h"
-#include "specialbuilds.h"
 
 extern const char *VALUE_NAME_TEXTURE_FILTER_MODE;
 
@@ -78,13 +77,8 @@ extern const char *VALUE_NAME_TEXTURE_FILTER_MODE;
 */
 
 // HACK: ATI demo loads the demo level bypassing the mainmenu
-#ifdef ATI_DEMO_HACK
-#define IMMEDIATE_LOAD						1
-#define IMMEDIATE_LOAD_LEVELNAME			"MDD_0807.mix"
-#else
 #define IMMEDIATE_LOAD						0
 #define IMMEDIATE_LOAD_LEVELNAME			"MDD_0803.mix"
-#endif
 
 /*
 ** This defines the subdirectory where the game will load all data from
@@ -445,69 +439,6 @@ void Get_Version_Number(DWORD *major, DWORD *minor)
 /*
 **
 */
-#if 0
-#define	FIRST_CHAR	'a'
-#define	LAST_CHAR	'z'
-
-#include "realcrc.h"
-int	CRC_Next( unsigned char ** p, int length )
-{
-	int ret = 0;
-	if ( length == -1 ) {
-		return 1;
-	}
-	if ( **p == LAST_CHAR ) {
-		*p = *p-1;
-		ret |= CRC_Next( p, length-1 );
-		*p = *p+1;
-		**p = FIRST_CHAR;
-	} else {
-		**p = **p+1;
-	}
-	return ret;
-
-}
-
-void CRC_Check( void )
-{
-	Debug_Say(( "CRC_Check\n" ));
-	int count = 0;
-
-#define	MAX_STRING	10
-#define	GOAL_CRC		65729409
-
-	int start = timeGetTime();
-
-	unsigned char string[MAX_STRING+1];
-	for ( int length = 1; length <= MAX_STRING; length++ )
-	{
-		unsigned char * p = &string[length-1];
-		string[length] = 0;
-		for ( int i = 0; i < length; i++ ) {
-			string[i] = FIRST_CHAR;
-		}
-
-		while ( 1 ) {
-/*			if ( (count & 0x0FFFF) == 0 ) {
-				Debug_Say(( "Checking %d \"%s\"\n", count, string ));
-			}*/
-			int crc = CRC_String( (char *)string );
-			if ( crc == GOAL_CRC ) {
-				Debug_Say(( "CRC MATCH \"%s\" (count %d) at %d\n\n", string, count, timeGetTime()-start ));
-			}
-			count++;
-			if ( CRC_Next( &p, length-1 ) != 0 ) {
-				break;
-			}
-		}
-Debug_Say(( "End length %d (count %d) at %d\n", length, count, timeGetTime()-start ));
-	}
-
-//	strcpy( string, "miketheheadlesschickenisgod" );
-//	Debug_Say(( "CRC %d\n", crc ));
-	return;
-}
-#endif
 /*
 **
 */
@@ -857,12 +788,6 @@ bool Game_Init(void)
 
 #if (IMMEDIATE_LOAD==0)
 
-#if 0	// Not anymore
-	//
-	//	Start the main menu
-	//
-	RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_MAIN_MENU);
-#else
 
 	//
 	// Parse the server settings files if they will be used soon to make sure there are no errors.
@@ -885,7 +810,6 @@ bool Game_Init(void)
 		mode->Startup_Movies( );
 	}
 
-#endif
 
 #endif
 

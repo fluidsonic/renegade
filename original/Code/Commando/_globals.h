@@ -1,12 +1,9 @@
 #ifndef _GLOBALS_H
 #define _GLOBALS_H
 
-#include "specialbuilds.h"
 
 /*
-#ifdef FREEDEDICATEDSERVER
-#define APP_SUB_KEY "Software\\Westwood\\RenegadeFDS"
-#else  //FREEDEDICATEDSERVER
+// FDS: IsDedicatedServer() returned true for dedicated server builds
 
 #ifdef MULTIPLAYERDEMO
 #define APP_SUB_KEY "Software\\Westwood\\RenegadeMPDemo"
@@ -14,20 +11,9 @@
 #define APP_SUB_KEY "Software\\Westwood\\Renegade"
 #endif //MULTIPLAYERDEMO
 
-#endif //FREEDEDICATEDSERVER
 */
 
-#if	defined(FREEDEDICATEDSERVER)
-#define APP_SUB_KEY "Software\\Westwood\\RenegadeFDS"
-#elif defined(MULTIPLAYERDEMO)
-#define APP_SUB_KEY "Software\\Westwood\\RenegadeMPDemo"
-#elif defined(BETACLIENT)
-#define APP_SUB_KEY "Software\\Westwood\\RenegadeBeta"
-#elif defined(BETASERVER)
-#define APP_SUB_KEY "Software\\Westwood\\RenegadeBeta"
-#else
 #define APP_SUB_KEY "Software\\Westwood\\Renegade"
-#endif
 
 extern char *Build_Registry_Location_String(char *base, char *modifier, char *sub);
 

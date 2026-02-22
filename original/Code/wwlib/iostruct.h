@@ -3,8 +3,6 @@
 #ifndef IOSTRUCT_H
 #define IOSTRUCT_H
 
-#ifndef BITTYPE_H
-#endif
 
 /*
 ** Some useful structures for writing/writing (safe from changes).

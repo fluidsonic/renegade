@@ -17,25 +17,6 @@ DamageableGameObjDef::DamageableGameObjDef( void ) :
 	EDITABLE_PARAM( DamageableGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,	TranslatedNameID );
 	FILENAME_PARAM( DamageableGameObjDef, InfoIconTextureFilename, "InfoIconTextureFilename", ".TGA" );
 
-#ifdef	PARAM_EDITING_ON
-	EnumParameterClass *param = new EnumParameterClass( (int *)&EncyclopediaType );
-	param->Set_Name( "Encyclopedia Type" );
-	param->Add_Value( "<NA>",			0 );
-	param->Add_Value( "Character",	EncyclopediaMgrClass::TYPE_CHARACTER );
-	param->Add_Value( "Weapon",		EncyclopediaMgrClass::TYPE_WEAPON );
-	param->Add_Value( "Vehicle",		EncyclopediaMgrClass::TYPE_VEHICLE );
-	param->Add_Value( "Building",		EncyclopediaMgrClass::TYPE_BUILDING );
-	GENERIC_EDITABLE_PARAM( DamageableGameObjDef, param )
-
-	param = new EnumParameterClass( &DefaultPlayerType );
-	param->Set_Name ("PlayerType");
-	param->Add_Value ( "Mutant",		PLAYERTYPE_MUTANT );
-	param->Add_Value ( "Unteamed",	PLAYERTYPE_NEUTRAL );
-	param->Add_Value ( "Renegade",	PLAYERTYPE_RENEGADE );
-	param->Add_Value ( "Nod",			PLAYERTYPE_NOD );
-	param->Add_Value ( "GDI",			PLAYERTYPE_GDI );
-	GENERIC_EDITABLE_PARAM(DamageableGameObjDef,param)
-#endif
 
 	EDITABLE_PARAM( DamageableGameObjDef, ParameterClass::TYPE_INT,	EncyclopediaID );
 	EDITABLE_PARAM( DamageableGameObjDef, ParameterClass::TYPE_BOOL,	NotTargetable );

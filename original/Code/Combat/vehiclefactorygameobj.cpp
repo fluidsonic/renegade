@@ -68,14 +68,6 @@ VehicleFactoryGameObjDef::VehicleFactoryGameObjDef (void) :
 	PadClearingWarhead(25),		// default to "DEATH"
 	TotalBuildingTime(12.0f)
 {
-#ifdef PARAM_EDITING_ON
-	EnumParameterClass *param = new EnumParameterClass( &PadClearingWarhead );
-	param->Set_Name ( "Pad Clearing Warhead" );
-	for (int i = 0; i < ArmorWarheadManager::Get_Num_Warhead_Types(); i++) {
-		param->Add_Value ( ArmorWarheadManager::Get_Warhead_Name( i ), i );
-	}
-	GENERIC_EDITABLE_PARAM(VehicleFactoryGameObjDef,param)
-#endif
 	
 	return ;
 }

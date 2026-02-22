@@ -4,9 +4,6 @@
 #include <stdio.h>
 #include "Mission3.h"
 
-#ifdef _XBOX
-
-#endif
 
 DECLARE_SCRIPT(MS04_Gunboat_Waypath_Movement, "")
 {

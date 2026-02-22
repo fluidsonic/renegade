@@ -6,9 +6,6 @@
 // Description:
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef CONNECT_H
 #define CONNECT_H

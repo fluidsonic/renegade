@@ -226,14 +226,7 @@ public:
 			left_amount /= length;
 		}
 
-#if 0
-		if ( Input::Get_State( INPUT_FUNCTION_WALK_MODE ) ) {
-			forward_amount /= 4;
-			left_amount /= 4;
-		}
-#else
 		obj->Set_Boolean_Control( ControlClass::BOOLEAN_WALK,					Input::Get_State( INPUT_FUNCTION_WALK_MODE ) );
-#endif
 		obj->Set_Analog_Control( ControlClass::ANALOG_MOVE_FORWARD, forward_amount );
 		obj->Set_Analog_Control( ControlClass::ANALOG_MOVE_LEFT, left_amount );
 		obj->Set_Analog_Control( ControlClass::ANALOG_MOVE_UP, up_amount );
@@ -1491,17 +1484,10 @@ Clip_Point (Vector3 *point, const AABoxClass &box)
 			FirstCall = false;
 		}
 
-#if 0
-		//	Make the soldier crouch (if necessary)
-		if ( soldier && (soldier->Is_Crouched() != Action->Get_Parameters().MoveCrouched) ) {
-			soldier->Set_Boolean_Control( ControlClass::BOOLEAN_CROUCH );
-		}
-#else
 		//	Make the soldier crouch (if necessary)
 		if ( soldier ) {
 			soldier->Set_Boolean_Control( ControlClass::BOOLEAN_CROUCH, Action->Get_Parameters().MoveCrouched );
 		}
-#endif
 
 		ActResult result = ACTION_IN_PROGRESS;
 
@@ -1635,13 +1621,7 @@ public:
 			obj->Set_Boolean_Control( rel_pos.Y > 0 ? ControlClass::BOOLEAN_DIVE_LEFT : ControlClass::BOOLEAN_DIVE_RIGHT );
 		}
 
-#if 0
-		if ( !obj->Is_Crouched() ) {
-			obj->Set_Boolean_Control( ControlClass::BOOLEAN_CROUCH );
-		}
-#else
 		obj->Set_Boolean_Control( ControlClass::BOOLEAN_CROUCH );
-#endif
 
 		Action->Done( ACTION_COMPLETE_NORMAL );
 		return ACTION_DONE;
@@ -1781,25 +1761,6 @@ public:
 		float error_angle = WWMath::Fabs(Action->Get_Parameters().AttackError) + 
 									WWMath::Fabs(obj->Get_Weapon_Error());
 
-#if 0		
-		// Modify error angle based on difficulty
-		switch ( CombatManager::Get_Difficulty_Level() ) {
-			case 0:	
-				error_angle += 20;
-				break;
-			case 1:	
-				// no change
-				break;
-			case 2:	
-				error_angle -= 20;
-				break;
-		};
-
-		if ( error_angle < 0 ) {
-			error_angle = 0;
-		}
-
-#endif
 
 		// If AttackErrorOverride, only use AttackError
 		if ( Action->Get_Parameters().AttackErrorOverride ) {
@@ -1994,57 +1955,12 @@ public:
 		if ( !IsMoving ) {
 			SoldierGameObj	* soldier = Action->Get_Action_Obj()->As_SoldierGameObj();
 			if ( soldier != NULL ) {
-#if 0
-				if ( soldier->Is_Crouched() != Action->Get_Parameters().AttackCrouched ) {
-					soldier->Set_Boolean_Control( ControlClass::BOOLEAN_CROUCH );
-				}
-#else
 				soldier->Set_Boolean_Control( ControlClass::BOOLEAN_CROUCH, Action->Get_Parameters().AttackCrouched );
-#endif
 			}
 		}
 
 		Attack_Absolute( target_pos );
 
-#if 0
-		// Elie Wander!
-		// Always wander if attacking!
-		WanderTimer -= TimeManager::Get_Frame_Seconds();
-		SoldierGameObj	* soldier = Action->Get_Action_Obj()->As_SoldierGameObj();
-
-		if ( !IsMoving && WanderTimer <= 0 && soldier != NULL && Action->Get_Parameters().AttackWanderAllowed ) {
-
-			Vector3 rel_pos;
-			Matrix3D::Inverse_Transform_Vector( obj->Get_Transform(), WanderPos, &rel_pos );
-//			Debug_Say(( "Wander Pos %f %f %f\n", WanderPos.X, WanderPos.Y, WanderPos.Z ));
-//			Debug_Say(( "Rel Pos %f %f %f\n", rel_pos.X, rel_pos.Y, rel_pos.Z ));
-
-			// If he is near the wander position, or very far from it, pick a new wander pos
-			float dist = rel_pos.Length();
-			if ( dist < 0.5 || dist > 8 ) {
-				WanderTimer = FreeRandom.Get_Float( 0.4f, 1.2f );	// random pause
-				// If near the move loc, wander away, else wander back
-				Vector3	dif = WanderPos - Action->Get_Parameters().MoveLocation;
-				WanderPos = Action->Get_Parameters().MoveLocation;
-				if ( dif.Length() < 2 ) {
-#if 1
-					PathfindClass *pathfind = PathfindClass::Get_Instance();		//	Lookup a safe random position to walk to
-					pathfind->Find_Random_Spot( Action->Get_Parameters().MoveLocation, 5, &WanderPos );
-#else
-					float angle = FreeRandom.Get_Float( 0, DEG_TO_RADF( 360.0f ) );
-					Vector3 move( ::sinf(angle), ::cosf(angle), 0 );
-//					Debug_Say(( " Move to %f %f %f\n", move.X, move.Y, move.Z ));
-					WanderPos += move * FreeRandom.Get_Float( 3, 5 );
-#endif
-
-					soldier->Look_At( WanderPos + Vector3( 0,0,1 ), FreeRandom.Get_Float( 0.2f, 0.6f ) );
-
-				}
-			}
-
-			Human_Move_To_Relative( rel_pos );
-		}
-#endif
 		*set_target = target_pos;
 		return ACTION_IN_PROGRESS;
 	}
@@ -3135,12 +3051,6 @@ bool	ActionClass::Stand( const ActionParamsStruct & parameters )
 
 bool	ActionClass::Play_Animation( const ActionParamsStruct & parameters )
 {
-#if 0		// This is difficult, because huamns play default anims
-	// Try to confirm we are not playing a non-action anim
-	if ( !Is_Animating() && ActionObj->Get_Anim_Control()->Get_Animation_Name()[0] != 0 ) {
-		Debug_Say(( "Can't Action_Play_Animation when playing a non-action anim\n" ));
-	}
-#endif
 
 	return Request_Action( new PlayAnimationActionCodeClass(), parameters );
 }

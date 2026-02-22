@@ -3,9 +3,6 @@
 #include "pscene.h"
 #include "physcoltest.h"
 
-#if (UMBRASUPPORT)
-#include <umbra.hpp>
-#endif
 
 #include "umbrasupport.h"
 
@@ -49,21 +46,6 @@ void DynamicPhysClass::Set_Model(RenderObjClass * model)
 {
 	PhysClass::Set_Model(model);
 
-#if (UMBRASUPPORT)
-	if (model != NULL) {
-		/*
-		** Create a new test-model for the bounding box of this object
-		*/
-		AABoxClass obj_box;
-		model->Get_Obj_Space_Bounding_Box(obj_box);
-		
-		/*
-		** Insert it into our Umbra object
-		*/
-		UmbraObject->setTestModel(UmbraSupport::Create_Box_Model(obj_box));
-		UmbraObject->setCost(100000,100000,5);
-	}
-#endif
 }
 
 void DynamicPhysClass::Update_Visibility_Status(void)
@@ -118,9 +100,6 @@ void DynamicPhysClass::Internal_Update_Visibility_Status(void)
 	/*
 	** Update our Umbra Object
 	*/
-#if (UMBRASUPPORT)
-	UmbraSupport::Update_Umbra_Object(this);
-#endif
 
 }
 

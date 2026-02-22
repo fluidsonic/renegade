@@ -22,7 +22,6 @@ class	NoInitClass;
 */
 
 // Why, oh why does Visual C need this!!! It's bugged. <sigh>
-#pragma warning(disable : 4505)
 
 template<class T>
 class VectorClass

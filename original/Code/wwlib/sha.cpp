@@ -2,7 +2,7 @@
 #include	<iostream.h>
 #include	<stdlib.h>
 
-#if !defined(__BORLANDC__) && !defined(min)
+#if !defined(min)
 #define	min(a, b)		((a)<(b))?(a):(b)
 #endif
 

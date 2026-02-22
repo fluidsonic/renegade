@@ -118,93 +118,13 @@ void TriClass::Find_Dominant_Plane(int * axis1,int * axis2) const
  *=============================================================================================*/
 bool TriClass::Contains_Point(const Vector3 & ipoint) const
 {
-#if 0
-	/*
-	** Perform the test in 2d on the plane which the normal
-	** is most perpendicular to. (copied from E.Cosky's intersection code)
-	*/
-	int axis1 = 0;
-	int axis2 = 0;
-	Find_Dominant_Plane(&axis1,&axis2);
-
-#if 1
-	unsigned char flags;	// dummy variable passed into function and not used here
-	return Point_In_Triangle_2D(*V[0], *V[1], *V[2], ipoint, axis1, axis2, flags);
-#else
-	float u0 = ipoint[axis1] - (*V[0])[axis1];
-	float v0 = ipoint[axis2] - (*V[0])[axis2];
-
-	/*
-	** determine the 2d vectors on the dominant plane from the first vertex to the other two
-	*/
-	float u1 = (*V[1])[axis1] - (*V[0])[axis1]; 
-	float v1 = (*V[1])[axis2] - (*V[0])[axis2];
-	float	u2 = (*V[2])[axis1] - (*V[0])[axis1]; 
-	float	v2 = (*V[2])[axis2] - (*V[0])[axis2];
-
-	float alpha, beta;
-	bool intersect = false; 
-
-	// calculate alpha and beta as normalized (0..1) percentages across the 2d projected triangle
-	// and do bounds checking (sum <= 1)  to determine whether or not the triangle intersection occurs.
-	if (u1 == 0)    {
-	  beta = u0 / u2;
-	  if ((beta >= 0) && (beta <= 1)) {
-			alpha = (v0 - beta * v2) / v1;
-			intersect = ((alpha >= 0) && ((alpha + beta) <= 1 + WWMATH_EPSILON));
-	  }
-	} else {
-	  beta = (v0 * u1 - u0 * v1) / (v2 * u1 - u2 * v1);
-	  if ((beta >= 0) && (beta <= 1)) {
-			alpha = (u0 - beta * u2) / u1;
-			intersect = ((alpha >= 0) && ((alpha + beta) <= 1 + WWMATH_EPSILON));
-	  }
-	}
-
-	return intersect;
-#endif
-#endif
 /*
 ** New cross-product based point-containment
 */
-#if 0
-	int vi;
-	int axis3 = 0;
-
-	for (vi=0; vi<3; vi++) {
-		if ((axis1 != vi) && (axis2 != vi))	axis3 = vi;
-	}
-
-	Vector3 test_point = ipoint;
-	test_point[axis3] = 0.0f;
-
-	Vector3 points[3];
-	for (vi=0; vi<3; vi++) {
-		points[vi] = *(V[vi]);
-		points[vi][axis3] = 0.0f;
-	}
-	
-	bool side[3];
-	Vector3 edge;
-	Vector3 cross;
-	Vector3 dp;
-
-	for (vi=0; vi<3; vi++) {
-		edge = points[(vi+1)%3] - points[vi];
-		dp = test_point - points[vi];
-	
-		Vector3::Cross_Product(dp,edge,&cross);
-		side[vi] = (cross[axis3] > 0.0f);
-	}
-
-	bool my_intersect = ((side[0] == side[1]) && (side[1] == side[2]));
-	return my_intersect;
-#endif
 
 /*
 ** "Optimized" version
 */
-#if 1
 	int vi;
 	int axis1 = 0;
 	int axis2 = 0;
@@ -241,6 +161,5 @@ bool TriClass::Contains_Point(const Vector3 & ipoint) const
 	
 	bool my_intersect = (side_mask != (POS | NEG));
 	return my_intersect;
-#endif
 
 }

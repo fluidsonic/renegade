@@ -345,86 +345,6 @@ RenegadeTerrainPatchClass::Render (RenderInfoClass &rinfo)
 void
 RenegadeTerrainPatchClass::Render_Procedural_Material_Pass(MaterialPassClass * matpass)
 {
-#if 0
-	if ((pass->Get_Cull_Volume() != NULL) && (MaterialPassClass::Is_Per_Polygon_Culling_Enabled())) {
-		
-		/*
-		** Generate the APT 
-		*/
-		temp_apt.Delete_All(false);
-			
-		Matrix3D modeltminv;
-		Get_Transform().Get_Orthogonal_Inverse(modeltminv);
-		
-		OBBoxClass localbox;
-		OBBoxClass::Transform(modeltminv,*(pass->Get_Cull_Volume()),&localbox);
-
-		Vector3 view_dir;
-		localbox.Basis.Get_Z_Vector(&view_dir);
-		view_dir = -view_dir;
-			
-		if (Model->Has_Cull_Tree()) {
-			Model->Generate_Rigid_APT(localbox,view_dir,temp_apt);
-		} else {
-			Model->Generate_Rigid_APT(view_dir,temp_apt);
-		}
-	
-		if (temp_apt.Count() > 0) {
-
-			int buftype = BUFFER_TYPE_DYNAMIC_DX8;
-			if (Model->Get_Flag(MeshGeometryClass::SORT) && WW3D::Is_Sorting_Enabled()) {
-				buftype = BUFFER_TYPE_DYNAMIC_SORTING;
-			}
-
-			/*
-			** Spew triangles in the APT into the dynamic index buffer
-			*/
-			int min_v = Model->Get_Vertex_Count();
-			int max_v = 0;
-
-			DynamicIBAccessClass dynamic_ib(buftype,temp_apt.Count() * 3);
-			{
-				DynamicIBAccessClass::WriteLockClass lock(&dynamic_ib);
-				unsigned short * indices = lock.Get_Index_Array();
-				const TriIndex * polys = Model->Get_Polygon_Array();
-
-				for (int i=0; i < temp_apt.Count(); i++)
-				{
-					unsigned v0 = polys[temp_apt[i]].I;
-					unsigned v1 = polys[temp_apt[i]].J;
-					unsigned v2 = polys[temp_apt[i]].K;
-
-					indices[i*3 + 0] = (unsigned short)v0;
-					indices[i*3 + 1] = (unsigned short)v1;
-					indices[i*3 + 2] = (unsigned short)v2;
-
-					min_v = WWMath::Min(v0,min_v);
-					min_v = WWMath::Min(v1,min_v);
-					min_v = WWMath::Min(v2,min_v);
-
-					max_v = WWMath::Max(v0,max_v);
-					max_v = WWMath::Max(v1,max_v);
-					max_v = WWMath::Max(v2,max_v);
-				}
-			}
-
-			/*
-			** Render
-			*/
-			int vertex_offset = PolygonRendererList.Peek_Head()->Get_Vertex_Offset();
-			pass->Install_Materials();
-			
-			DX8Wrapper::Set_Transform(D3DTS_WORLD,Get_Transform());
-			DX8Wrapper::Set_Index_Buffer(dynamic_ib,vertex_offset);
-
-			DX8Wrapper::Draw_Triangles(
-				0,
-				temp_apt.Count(),
-				min_v,
-				max_v-min_v+1);
-		}
-	} else {		
-#endif		
 		/*
 		** Normal mesh case, render polys with this mesh's transform
 		*/
@@ -1313,29 +1233,9 @@ RenegadeTerrainPatchClass::Cast_Ray (RayCollisionTestClass &raytest)
 	bool retval = false;
 
 	
-#if 0
-	CastResultStruct temp_result = (*raytest.Result);
-
-	retval = Brute_Force_Cast_Ray (raytest);
-	
-	static bool do_it = false;
-	if (do_it) {
-
-do_it_start:
-
-		CastResultStruct brute_result = (*raytest.Result);
-		(*raytest.Result) = temp_result;
-		bool retval2 = Cast_Non_Vertical_Ray (raytest);
-		if (do_it && (retval != retval2 || brute_result.Fraction != raytest.Result->Fraction)) {
-			(*raytest.Result) = temp_result;
-			goto do_it_start;
-		}
-	}
-#else
 
 	retval = Cast_Non_Vertical_Ray (raytest);
 
-#endif
 
 	//
 	//	Test for completely vertical ray

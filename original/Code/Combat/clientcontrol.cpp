@@ -10,7 +10,6 @@ CClientControl *		PClientControl = NULL;
 
 DECLARE_NETWORKOBJECT_FACTORY(CClientControl, NETCLASSID_CLIENTCONTROL);
 
-#pragma message("(TSS) high priority for me to fix this CClientControl bug...")
 //
 // TSS2001 problem: destruction of this object on the server. Quitting and rejoining 
 // a game will crash the server.

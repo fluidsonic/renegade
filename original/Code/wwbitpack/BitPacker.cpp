@@ -60,24 +60,6 @@ void cBitPacker::Add_Bits(uint32_t value, UINT num_bits)
 	// than 4 bytes, such as a double. Hopefully you would be using a float
 	// instead anyway.
 	//
-#if 0	// Old version
-
-	uint32_t mask = 1 << (num_bits - 1);
-	while (mask > 0) {
-
-		//assert(BitWritePosition < BufferSize * 8);
-
-		UINT byte_num = BitWritePosition / 8;
-		UINT bit_offset = BitWritePosition % 8;
-		bool bit_value = (value & mask) != 0;
-		Buffer[byte_num] |= bit_value << bit_offset;
-
-		BitWritePosition++;
-
-		mask >>= 1;
-	}
-
-#else	// New faster version
 
 	// Verify that we're not writing over buffer
 
@@ -109,7 +91,6 @@ void cBitPacker::Add_Bits(uint32_t value, UINT num_bits)
 	else {
 		Buffer[byte_num]=(unsigned char)(value>>24);
 	}
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -119,21 +100,6 @@ void cBitPacker::Add_Bits(uint32_t value, UINT num_bits)
 //
 void cBitPacker::Get_Bits(uint32_t & value, UINT num_bits)
 {
-#if 0	// Old version
-
-	value = 0;
-	for (int bit = num_bits - 1; bit >= 0; bit--) {
-
-		//assert(BitReadPosition < BufferSize * 8);
-		UINT byte_num = BitReadPosition / 8;
-		UINT bit_offset = BitReadPosition % 8;
-		bool b = (Buffer[byte_num] & (1 << bit_offset)) != 0;
-
-		value += (b << bit);
-
-		BitReadPosition++;
-	}
-#else // New faster version
 
 	// Verify that we're not reading over buffer or write pointer
 
@@ -152,7 +118,6 @@ void cBitPacker::Get_Bits(uint32_t & value, UINT num_bits)
 	if (num_bits>0) value|=Buffer[byte_num++]>>(-shift);
 
 	value >>= 32-read_len;
-#endif
 }
 
 //-----------------------------------------------------------------------------

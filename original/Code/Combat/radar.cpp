@@ -27,10 +27,6 @@ Render2DSentenceClass *				RadarManager::CompassRenderers[8];
 int										RadarManager::CurrentCompassRendererIndex;
 
 static		Matrix3D					RadarTM;
-#if 0
-static		float						RadarSweep					= 0;
-static		float						RadarSweepMove;
-#endif
 
 DynamicVectorClass<Render2DClass *>		Blips;
 
@@ -126,18 +122,6 @@ void 	RadarManager::Init()
 		BlipColors[ BLIP_COLOR_TYPE_TERTIARY_OBJECTIVE ] =		HUDGlobalSettingsDef::Get_Instance()->Get_Tertiary_Objective_Color().Convert_To_ARGB(); 
 	}
 
-#if 0
-	const HUDGlobalSettingsDef * settings = HUDGlobalSettingsDef::Get_Instance();
-	float radar_texture_size = settings->RadarTextureSize;
-
-	BlipUV[ BLIP_SHAPE_TYPE_NONE ] =			RectClass( 0,0,0,0 );
-	BlipUV[ BLIP_SHAPE_TYPE_HUMAN ] =		Scale_UV( settings->RadarHumanBlipUV, radar_texture_size );
-	BlipUV[ BLIP_SHAPE_TYPE_VEHICLE ] =		Scale_UV( settings->RadarVehicleBlipUV, radar_texture_size );
-	BlipUV[ BLIP_SHAPE_TYPE_STATIONARY ] =	Scale_UV( settings->RadarStationaryBlipUV, radar_texture_size );
-	BlipUV[ BLIP_SHAPE_TYPE_OBJECTIVE ] =	Scale_UV( settings->RadarObjectiveBlipUV, radar_texture_size );
-	BlipUV[ BLIP_BRACKET ] =					Scale_UV( settings->RadarBlipBracketUV, radar_texture_size );
-	BlipUV[ BLIP_SWEEP ] =						Scale_UV( settings->RadarSweepUV, radar_texture_size );
-#else
 	BlipUV[ BLIP_SHAPE_TYPE_NONE ] =		RectClass( 0,0,0,0 );
 	BlipUV[ BLIP_SHAPE_TYPE_HUMAN ] =		RectClass( RADAR_CIRCLE_UV_UL, RADAR_CIRCLE_UV_LR );
 	BlipUV[ BLIP_SHAPE_TYPE_VEHICLE ] =		RectClass( RADAR_TRIANGLE_UV_UL, RADAR_TRIANGLE_UV_LR );
@@ -151,7 +135,6 @@ void 	RadarManager::Init()
 	BlipUV[ BLIP_SHAPE_TYPE_OBJECTIVE ].Scale( INFO_UV_SCALE );
 	BlipUV[ BLIP_BRACKET ].Scale( INFO_UV_SCALE );
 	BlipUV[ BLIP_SWEEP ].Scale( INFO_UV_SCALE );
-#endif
 
 	// Clear radar renderer pointers, these are initialized on demand
 	for (i=0;i<8;++i) {
@@ -291,17 +274,7 @@ float	RadarManager::Add_Blip( const Vector3 & pos, int shape_type, int color_typ
 
 		if ( dist <= RADAR_FADE_STOP ) 
 		{
-#if 0
-			// Find blip bearing
-			float bearing = WWMath::Atan2( screen.Y, screen.X );
-			// find the bering relative to sweep
-			bearing = WWMath::Wrap( bearing - RadarSweep, -DEG_TO_RADF( 360 ), 0 );
-			if ( bearing > -RadarSweepMove*2 ) {
-				intensity = 1.0;		// Ping
-			}
-#else
 			intensity = 1.0;		// Always Ping
-#endif
 
 			float alpha = 1.0f - ((dist - RADAR_FADE_START) / (RADAR_FADE_STOP - RADAR_FADE_START) );
 			alpha = WWMath::Clamp( alpha, 0, 1 );
@@ -351,13 +324,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 	RadarTM = player_tm;
 	RadarTM.Pre_Rotate_Z( DEG_TO_RAD( -90 ) );
 
-#if 0
-	RadarSweepMove = TimeManager::Get_Frame_Seconds() * 2;
-	RadarSweep -= RadarSweepMove;
-	if ( RadarSweep < 0 ) {
-		RadarSweep += DEG_TO_RAD( 360 );
-	}
-#endif
 
 	HiddenTimer += TimeManager::Get_Frame_Seconds() * (IsHidden ? 1 : -1);
 	HiddenTimer = WWMath::Clamp( HiddenTimer, 0, 1 );
@@ -384,39 +350,7 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 	draw += center + RADAR_RINGS_R_OFFSET - draw.Upper_Left();
 	Renderer->Add_Quad_Backfaced( draw.Lower_Right(), draw.Lower_Left(), draw.Upper_Right(), draw.Upper_Left(), uv, RadarColor );
 
-#if 0
-{
-	// Draw sweep Line
-	Vector2 edge = Vector2( -WWMath::Cos( RadarSweep ), WWMath::Sin( RadarSweep ) ) * RADAR_FADE_STOP + center;
-	float width = 20;
-	Vector2	corner_offset = center - edge;  	// get line relative to edge
-	float temp = corner_offset.X;					// Rotate 90
-	corner_offset.X = corner_offset.Y;
-	corner_offset.Y = -temp;
-	corner_offset.Normalize();						// scale to length width/2
-	corner_offset *= width;
-	RectClass uv = BlipUV[ BLIP_SWEEP ];
-	Renderer->Add_Tri( edge - corner_offset, center, edge,  
-		uv.Lower_Left(),	uv.Upper_Right(), uv.Upper_Left(),	0xFF00FF00 & RadarColor );
-}
-#endif
 
-#if 0
-{
-	// Draw the compass
-	const HUDGlobalSettingsDef * settings = HUDGlobalSettingsDef::Get_Instance();
-	float radar_texture_size = settings->RadarTextureSize;
-	float	bering = WWMath::Wrap( (player_tm.Get_Z_Rotation() / DEG_TO_RAD( 360.0f )) + 0.25f, 0, 1 );
-	int frame = (int)((bering * 8.0f) + 0.5f);
-	RectClass compass( Vector2( 0, 0 ), settings->RadarCompassSize );
-//	compass += Render2DClass::Get_Screen_Resolution().Lower_Left() + settings->RadarCompassOffset;
-	compass += center + COMPASS_OFFSET;
-	RectClass compass_uv = Scale_UV( settings->RadarCompassBaseUV, radar_texture_size );
-	compass_uv += (settings->RadarCompassUVOffset/radar_texture_size) * (frame & 7);
-	Renderer->Add_Quad( compass, compass_uv, RadarColor );
-}
-
-#else
 	float	bering = WWMath::Wrap( (player_tm.Get_Z_Rotation() / DEG_TO_RAD( 360.0f )) + 0.25f, 0, 1 );
 	CurrentCompassRendererIndex = (int)((bering * 8.0f) + 0.5f);
 	CurrentCompassRendererIndex&=7;
@@ -454,7 +388,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 		}
 	}
 
-#endif
 
 	// Now build the blips
 	float star_z = 0;
@@ -522,9 +455,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 				float intensity = obj->Get_Radar_Blip_Intensity();
 				bool bracket = obj == BracketObj;
 				intensity = Add_Blip( objpos, obj->Get_Radar_Blip_Shape_Type(), obj->Get_Radar_Blip_Color_Type(), intensity, bracket, altitude_fade );
-	#if 0
-				intensity -= RadarSweepMove / DEG_TO_RAD( 360 ) * 0.666f;				// Drop Blip intensity
-	#endif
 				obj->Set_Radar_Blip_Intensity( WWMath::Clamp( intensity, 0, 1 ) );
 //			}
 		}
@@ -541,9 +471,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 		if ( objective->DrawBlip && objective->Status == ObjectiveManager::STATUS_IS_PENDING ) {
 			float intensity = objective->BlipIntensity;
 			intensity = Add_Blip( objective->Position, BLIP_SHAPE_TYPE_OBJECTIVE, objective->Radar_Blip_Color_Type(), intensity, false );
-#if 0
-			intensity -= RadarSweepMove / DEG_TO_RAD( 360 ) * 0.666f;				// Drop Blip intensity
-#endif
 			objective->BlipIntensity = WWMath::Clamp( intensity, 0, 1 );
 		}
 	}
@@ -554,9 +481,6 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 	for ( i = 0; i < Markers.Count(); i++ ) {
 		float intensity = Markers[i].Intensity;
 		intensity = Add_Blip( Markers[i].Position, Markers[i].Type, Markers[i].Color, intensity, false );
-#if 0
-		intensity -= RadarSweepMove / DEG_TO_RAD( 360 ) * 0.666f;				// Drop Blip intensity
-#endif
 		Markers[i].Intensity = WWMath::Clamp( intensity, 0, 1 );
 	}
 }

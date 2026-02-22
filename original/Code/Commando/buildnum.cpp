@@ -15,7 +15,6 @@ char BuildInfoClass::BuildDate   [64] = {"Insert1Build2Date3Here4     xxxx      
 /*
 ** Unreachable code warning.
 */
-#pragma warning(disable : 4702)
 
 /***********************************************************************************************
  * BuildInfoClass::Get_Build_Number -- Gets the 32 bit build number.                           *
@@ -170,11 +169,7 @@ char *BuildInfoClass::Get_Build_Version_String(void)
  *=============================================================================================*/
 BuildInfoClass::BuildType BuildInfoClass::Get_Build_Type(void)
 {
-	#ifndef _DEBUG
 			return(BUILD_RELEASE);
-	#else //_DEBUG
-		return(BUILD_DEBUG);
-	#endif //_DEBUG
 }
 
 /***********************************************************************************************

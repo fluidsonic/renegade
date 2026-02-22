@@ -9,69 +9,9 @@
 #include "win.h"
 #include	<limits.h>
 #include	<errno.h>
-#ifdef _UNIX
 #include <sys/types.h>
 #include <sys/stat.h>
-#endif
 
-#if 0		//#ifdef NEVER    (gth) the MAX sdk must #define NEVER! yikes :-)
-	/*
-	**	This is a duplicate of the error numbers. The error handler for the RawFileClass handles
-	**	these errors. If the error routine is overridden and additional errors are defined, then
-	**	use numbers starting with 100. Note that these errors here are listed in numerical order.
-	**	These errors are defined in the standard header file "ERRNO.H".
-	*/
-	EZERO,				// Non-error.
-	EINVFNC,				// Invalid function number.
-	ENOFILE,				// File not found.
-	ENOENT=ENOFILE,	// No such file or directory.
-	ENOPATH,				// Path not found.
-	EMFILE,				// Too many open files.
-	EACCES,				// Permission denied.
-	EBADF,				// Bad file number.
-	ECONTR,				// Memory blocks destroyed.
-	ENOMEM,				// Not enough core memory.
-	EINVMEM,				// Invalid memory block address.
-	EINVENV,				// Invalid environment.
-	EINVFMT,				// Invalid format.
-	EINVACC,				// Invalid access code.
-	EINVDAT,				// Invalid data.
-	EFAULT,				// Unknown error.
-	EINVDRV,				// Invalid drive specified.
-	ENODEV=EINVDRV,	// No such device.
-	ECURDIR,				// Attempt to remove CurDir.
-	ENOTSAM,				// Not same device.
-	ENMFILE,				// No more files.
-	EINVAL,				// Invalid argument.
-	E2BIG,				// Argument list too long.
-	ENOEXEC,				// exec format error.
-	EXDEV,				// Cross-device link.
-	ENFILE,				// Too many open files.
-	ECHILD,				// No child process.
-	ENOTTY,				// not used
-	ETXTBSY,				// not used
-	EFBIG,				// not used
-	ENOSPC,				// No space left on device.
-	ESPIPE,				// Illegal seek.
-	EROFS,				// Read-only file system.
-	EMLINK,				// not used
-	EPIPE,				// Broken pipe.
-	EDOM,					// Math argument.
-	ERANGE,				// Result too large.
-	EEXIST,				// File already exists.
-	EDEADLOCK,			// Locking violation.
-	EPERM,				// Operation not permitted.
-	ESRCH,				// not used
-	EINTR,				// Interrupted function call.
-	EIO,					// Input/output error.
-	ENXIO,				// No such device or address.
-	EAGAIN,				// Resource temporarily unavailable.
-	ENOTBLK,				// not used
-	EBUSY,				// Resource busy.
-	ENOTDIR,				// not used
-	EISDIR,				// not used
-	EUCLEAN,				// not used
-#endif
 
 /***********************************************************************************************
  * RawFileClass::RawFileClass -- Default constructor for a file object.                        *
@@ -261,14 +201,12 @@ char const * RawFileClass::Set_Name(char const * filename)
 	/*
 	** If this is a UNIX build, fix the filename from the DOS-like name passed in
 	*/
-	#ifdef _UNIX
 		for (int i=0; i<Filename.Get_Length(); i++)
 		{
 			if (Filename[i]=='\\')
 				Filename[i]='/';
 			Filename[i]=tolower(Filename[i]);  // don't preserve case
 		}
-	#endif
 
 	return(Filename);
 }
@@ -355,32 +293,15 @@ int RawFileClass::Open(int rights)
 				break;
 
 			case READ:
-				#ifdef _UNIX
 					Handle = fopen(Filename, "r");
-				#else
-					Handle = CreateFileA(Filename, GENERIC_READ, FILE_SHARE_READ,
-												NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-				#endif
 				break;
 
 			case WRITE:
-				#ifdef _UNIX
 					Handle = fopen(Filename, "w");
-				#else
-					Handle = CreateFileA(Filename, GENERIC_WRITE, 0,
-												NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-				#endif
 				break;
 
 			case READ|WRITE:
-				#ifdef _UNIX
 					Handle = fopen(Filename, "w");
-				#else
-					// SKB 5/13/99 use OPEN_ALWAYS instead of CREATE_ALWAYS so that files
-					//					does not get destroyed.
-					Handle = CreateFileA(Filename, GENERIC_READ | GENERIC_WRITE, 0,
-												NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-				#endif
 				break;
 		}
 
@@ -452,12 +373,7 @@ bool RawFileClass::Is_Available(int forced)
 	*/
 	for (;;) {
 
-		#ifdef _UNIX
 			Handle=fopen(Filename,"r");
-		#else
-			Handle = CreateFileA(Filename, GENERIC_READ, FILE_SHARE_READ,
-											NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		#endif
 
 		if (Handle == NULL_HANDLE) {
 			return(false);
@@ -469,11 +385,7 @@ bool RawFileClass::Is_Available(int forced)
 	**	Since the file could be opened, then close it and return that the file exists.
 	*/
 	int closeok;
-	#ifdef _UNIX
 		closeok=((fclose(Handle)==0)?TRUE:FALSE);
-	#else
-		closeok=CloseHandle(Handle);
-	#endif
 	if (! closeok) {
 		Error(GetLastError(), false, Filename);
 	}
@@ -509,11 +421,7 @@ void RawFileClass::Close(void)
 		**	call the error routine.
 		*/
 		int closeok;
-		#ifdef _UNIX
 			closeok=(fclose(Handle)==0)?TRUE:FALSE;
-		#else
-			closeok=CloseHandle(Handle);
-		#endif
 
 		if (!closeok) {
 			Error(GetLastError(), false, Filename);
@@ -583,14 +491,10 @@ int RawFileClass::Read(void * buffer, int size)
 
 		int readok=TRUE;
 
-		#ifdef _UNIX
 			readok=TRUE;
 			bytesread=fread(buffer,1,size,Handle);
 			if ((bytesread == 0)&&( ! feof(Handle)))
 				readok=ferror(Handle);
-		#else
-			readok=ReadFile(Handle, buffer, size, &(unsigned long&)bytesread, NULL);
-		#endif
 
 
 		if (! readok) {
@@ -649,13 +553,9 @@ int RawFileClass::Write(void const * buffer, int size)
 	}
 
    int writeok=TRUE;
-   #ifdef _UNIX
 		byteswritten = fwrite(buffer, 1, size, Handle);
 		if (byteswritten != size)
 			writeok = FALSE;
-	#else
-		writeok=WriteFile(Handle, buffer, size, &(unsigned long&)byteswritten, NULL);
-	#endif
 
 	if (! writeok) {
 		Error(GetLastError(), false, Filename);
@@ -789,7 +689,6 @@ int RawFileClass::Size(void)
 	*/
 	if (Is_Open()) {
 
-      #ifdef _UNIX
 			fpos_t curpos,startpos,endpos;
 			fgetpos(Handle,&curpos);
 
@@ -801,9 +700,6 @@ int RawFileClass::Size(void)
 
 			size=endpos-startpos;
 			fsetpos(Handle,&curpos);
-		#else
-			size = GetFileSize(Handle, NULL);
-		#endif
 
 		/*
 		**	If there was in internal error, then call the error function.
@@ -918,11 +814,7 @@ int RawFileClass::Delete(void)
 		}
 
 		int deleteok;
-		#ifdef _UNIX
 			deleteok=(unlink(Filename)==0)?TRUE:FALSE;
-		#else
-			deleteok=DeleteFile(Filename);
-		#endif
 
 		if (! deleteok) {
 			Error(GetLastError(), false, Filename);
@@ -955,21 +847,9 @@ int RawFileClass::Delete(void)
  *=============================================================================================*/
 unsigned long RawFileClass::Get_Date_Time(void)
 {
-#ifdef _UNIX
 	struct stat statbuf;
 	lstat(Filename, &statbuf);
 	return(statbuf.st_mtime);
-#else
-	BY_HANDLE_FILE_INFORMATION info;
-
-	if (GetFileInformationByHandle(Handle, &info)) {
-		WORD dosdate;
-		WORD dostime;
-		FileTimeToDosDateTime(&info.ftLastWriteTime, &dosdate, &dostime);
-		return((dosdate << 16) | dostime);
-	}
-	return(0);
-#endif
 }
 
 /***********************************************************************************************
@@ -1106,11 +986,7 @@ void RawFileClass::Attach (void *handle, int rights)
 	Date = 0;
 	Time = 0;
 
-	#ifdef _UNIX
 	  Handle = (FILE *)handle;
-	#else
-	  Handle = handle;
-	#endif
 }
 
 /***********************************************************************************************

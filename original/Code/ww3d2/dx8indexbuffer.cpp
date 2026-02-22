@@ -38,8 +38,6 @@ IndexBufferClass::IndexBufferClass(unsigned type_, unsigned short index_count_)
 	_IndexBufferCount++;
 	_IndexBufferTotalIndices+=index_count;
 	_IndexBufferTotalSize+=index_count*sizeof(unsigned short);
-#ifdef VERTEX_BUFFER_LOG
-#endif
 }
 
 IndexBufferClass::~IndexBufferClass()
@@ -47,8 +45,6 @@ IndexBufferClass::~IndexBufferClass()
 	_IndexBufferCount--;
 	_IndexBufferTotalIndices-=index_count;
 	_IndexBufferTotalSize-=index_count*sizeof(unsigned short);
-#ifdef VERTEX_BUFFER_LOG
-#endif
 }
 
 unsigned IndexBufferClass::Get_Total_Buffer_Count()

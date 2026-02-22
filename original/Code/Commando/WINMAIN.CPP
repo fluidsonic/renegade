@@ -78,8 +78,6 @@
 #include "dx8wrapper.h"
 #include "formconv.h"
 #include "consolemode.h"
-#include "specialbuilds.h"
-
 #include "serversettings.h"
 
 #ifdef _DEBUG

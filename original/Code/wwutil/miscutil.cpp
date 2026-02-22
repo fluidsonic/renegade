@@ -64,25 +64,12 @@ bool cMiscUtil::Is_String_Different(LPCSTR str1, LPCSTR str2)
 //-----------------------------------------------------------------------------
 bool cMiscUtil::File_Exists(LPCSTR filename)
 {
-#if 0
-
-	WIN32_FIND_DATA find_info;
-   HANDLE file_handle = ::FindFirstFile(filename, &find_info);
-	
-	if (file_handle != INVALID_HANDLE_VALUE) {
-		::FindClose(file_handle);
-		return true;
-	} else {
-		return false;
-	}
-#else
 	FileClass * file = _TheFileFactory->Get_File( filename );
 	if ( file && file->Is_Available() ) {
 		return true;
 	}
 	_TheFileFactory->Return_File( file );
 	return false;
-#endif
 }
 
 //-----------------------------------------------------------------------------

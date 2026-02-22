@@ -40,30 +40,6 @@ ExplosionDefinitionClass::ExplosionDefinitionClass( void ) :
 	CameraShakeRadius( 25.0f ),
 	CameraShakeDuration( 1.5f )
 {
-#ifdef PARAM_EDITING_ON
-	MODEL_DEF_PARAM( ExplosionDefinitionClass, PhysDefID, "TimedDecorationPhysDef" );
-	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	SoundDefID );
-	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_FLOAT,					DamageRadius );
-	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_FLOAT,					DamageStrength );
-
-//	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_INT,						DamageWarhead );
-	EnumParameterClass *param;
-	param = new EnumParameterClass( &DamageWarhead );
-	param->Set_Name ( "Warhead" );
-	for ( int i = 0; i < ArmorWarheadManager::Get_Num_Warhead_Types(); i++ ) {
-		param->Add_Value ( ArmorWarheadManager::Get_Warhead_Name( i ), i );
-	}
-	GENERIC_EDITABLE_PARAM(ExplosionDefinitionClass,param)
-
-	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_BOOL,						DamageIsScaled );
-	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_FILENAME, 				DecalFilename );
-	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_FLOAT,					DecalSize );
-	EDITABLE_PARAM( ExplosionDefinitionClass, ParameterClass::TYPE_BOOL, 					AnimatedExplosion );
-
-	FLOAT_EDITABLE_PARAM( ExplosionDefinitionClass, CameraShakeIntensity, 0.0f, 1.0f);
-	FLOAT_UNITS_PARAM( ExplosionDefinitionClass, CameraShakeRadius, 0.01f, 1000.0f, "meters");
-	FLOAT_UNITS_PARAM( ExplosionDefinitionClass, CameraShakeDuration, 0.01f, 60.0f, "seconds");
-#endif	//PARAM_EDITING_ON
 }
 
 /*

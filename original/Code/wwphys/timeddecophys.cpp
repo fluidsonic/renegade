@@ -148,10 +148,6 @@ TimedDecorationPhysDefClass::TimedDecorationPhysDefClass(void) :
 	DecorationPhysDefClass(),
 	Lifetime(2.0f)
 {
-#ifdef PARAM_EDITING_ON
-	// make our parameters editable!
-	FLOAT_EDITABLE_PARAM(TimedDecorationPhysDefClass, Lifetime, 0.01f, 100.0f);	
-#endif
 }
 
 uint32_t TimedDecorationPhysDefClass::Get_Class_ID (void) const

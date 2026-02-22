@@ -475,12 +475,6 @@ void SuspensionElementClass::Rotate_Fork(RenderObjClass * model)
 	fork_sin = -(p1.X * ooforklen - ForkA * p1.Z * ooforklen) / ForkB;
 	fork_cos = (p1.Z * ooforklen) / ForkSin0 + ForkA * fork_sin;
 
-#if 0
-	float angle1 = atan2(p1.Z,p1.X);
-	float angledelta = angle1 - atan2(ForkSin0,ForkCos0);
-	fork_sin = -WWMath::Sin(angledelta);
-	fork_cos = WWMath::Cos(angledelta);
-#endif
 	
 	Matrix3D fork_rotation(1);
 	fork_rotation.Rotate_Y(fork_sin,fork_cos);
@@ -659,17 +653,6 @@ void WheelClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 	float lateral_force = -local_gravity.Y * GRAVITATION_CANCELLATION_FACTOR;
 
 // testing:
-#if 0
-Vector3 fs,ft,fn;
-Matrix3D::Rotate_Vector(WheelTM,Vector3(0,0,-local_gravity.Z),&fs);
-Matrix3D::Rotate_Vector(WheelTM,Vector3(tractive_force,0,0),&ft);
-Matrix3D::Rotate_Vector(WheelTM,Vector3(0,lateral_force,0),&fn);
-Vector3 sum = fs+ft+fn-gravity;
-
-if (sum.Length2() < 0.001f) {
-	int test=0;
-}
-#endif
 
 	Compute_Traction_Forces(local_pdot,wheel_normal_force,&lateral_force,&tractive_force);
 
@@ -982,18 +965,8 @@ void TrackWheelClass::Compute_Traction_Forces
 	// Friction "penalty" force, proportional to the velocity, tuned so that the force
 	// will be small when the velocity is small.  The lateral and tractive friction forces
 	// will be set to the MIN between this proportional force and the maximum friction force.
-#if 0
-	float tractive_force = WWMath::Min (
-		(TRACKWHEEL_FRICTION_PENALTY_CONSTANT * wheel_normal_force * WWMath::Fabs(local_pdot.X)),
-		(wheel_normal_force * tractive_friction_coefficient) );
-
-	float lateral_force = WWMath::Min (
-		(TRACKWHEEL_FRICTION_PENALTY_CONSTANT * wheel_normal_force * WWMath::Fabs(local_pdot.Y)),
-		(wheel_normal_force * lateral_friction_coefficient) );
-#else
 	float tractive_force = TRACKWHEEL_FRICTION_PENALTY_CONSTANT * wheel_normal_force * WWMath::Fabs(local_pdot.X);
 	float lateral_force = TRACKWHEEL_FRICTION_PENALTY_CONSTANT * wheel_normal_force * WWMath::Fabs(local_pdot.Y);
-#endif
 
 	tractive_force *= -WWMath::Sign(local_pdot.X);
 	tractive_force += AxleTorque / Radius; 

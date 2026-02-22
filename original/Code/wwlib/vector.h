@@ -22,7 +22,6 @@ class	NoInitClass;
 */
 
 // Why, oh why does Visual C need this!!! It's bugged. <sigh>
-#pragma warning(disable : 4505)
 
 template<class T>
 class VectorClass
@@ -473,18 +472,14 @@ class DynamicVectorClass : public VectorClass<T>
       T * Uninitialized_Add(void);
 
 	public:
-#if defined(__clang__) && !defined(_MSC_VER)
 		// Bring Length into public scope (two-phase name lookup)
 		using VectorClass<T>::Length;
-#endif
 
 	protected:
-#if defined(__clang__) && !defined(_MSC_VER)
 		// Bring base class template members into protected scope for two-phase name lookup
 		using VectorClass<T>::Vector;
 		using VectorClass<T>::VectorMax;
 		using VectorClass<T>::IsAllocated;
-#endif
 
 		/*
 		**	This is a count of the number of active objects in this

@@ -9,8 +9,6 @@
 	#include "wwmath.h"
 #endif
 
-#ifndef	WWDEBUG_H
-#endif
 
 #include "widestring.h"
 

@@ -6,9 +6,6 @@
 // Description:  Collection of message stats for all message types
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef MSGSTATLIST_H
 #define MSGSTATLIST_H

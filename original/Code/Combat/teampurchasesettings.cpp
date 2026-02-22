@@ -62,13 +62,6 @@ TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
 	//
 	//	Configure the enum parameters for the editable system
 	//
-	#ifdef PARAM_EDITING_ON
-		EnumParameterClass *param1 = new EnumParameterClass ((int *)&Team);
-		param1->Set_Name ("Team");
-		param1->Add_Value ("GDI",			TEAM_GDI);
-		param1->Add_Value ("NOD",			TEAM_NOD);
-		GENERIC_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, param1)
-	#endif //PARAM_EDITING_ON
 
 	//
 	//	Add the beacon parameters
@@ -77,12 +70,6 @@ TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
 	NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRING,			BeaconTextureName, "Beacon Texture");
 	NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_INT,				BeaconCost, "Beacon Cost");	
 
-	#ifdef PARAM_EDITING_ON
-		GenericDefParameterClass *param = new GenericDefParameterClass (&BeaconDefinitionID);
-		param->Set_Class_ID (CLASSID_GAME_OBJECTS);
-		param->Set_Name ("Beacon Object");
-		GENERIC_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, param)
-	#endif //PARAM_EDITING_ON
 
 	//
 	//	Add the supply parameters
@@ -108,12 +95,6 @@ TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
 		NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRINGSDB_ID,	NameList[index], "Name");
 		NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRING,			TextureList[index], "Texture");
 
-		#ifdef PARAM_EDITING_ON
-			GenericDefParameterClass *param = new GenericDefParameterClass (&(DefinitionList[index]));
-			param->Set_Class_ID (CLASSID_GAME_OBJECTS);
-			param->Set_Name ("Object");
-			GENERIC_EDITABLE_PARAM(TeamPurchaseSettingsDefClass, param)
-		#endif //PARAM_EDITING_ON
 
 	}
 

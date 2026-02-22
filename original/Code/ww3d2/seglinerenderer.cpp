@@ -1,4 +1,3 @@
-#if 1
 
 #include "seglinerenderer.h"
 #include "ww3d.h"
@@ -813,14 +812,6 @@ void SegLineRendererClass::Render
 						write_int->Fold				= curr_int->Fold;
 					}
 
-#ifdef ENABLE_WWDEBUGGING
-					// Testing code - ensure total PointCount fits the number of points
-					unsigned int total_cnt = 0;
-					for (unsigned int nidx = 0; nidx <= num_intersections[edge]; nidx++) {
-						total_cnt += intersection[nidx][edge].PointCount;
-					}
-					assert(total_cnt == point_cnt);
-#endif
 
 				}	// for edge
 			}	// while (merged)
@@ -1166,4 +1157,3 @@ void SegLineRendererClass::subdivision_util(unsigned int point_cnt, const Vector
 	*p_sub_point_cnt = sub_pidx;
 }
 
-#endif //0

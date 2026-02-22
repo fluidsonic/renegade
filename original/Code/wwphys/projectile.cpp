@@ -487,24 +487,6 @@ ProjectileDefClass::ProjectileDefClass(void) :
 	Lifetime(2.0f),
 	BounceCount(0)
 {
-#ifdef PARAM_EDITING_ON
-	// make our parameters editable!
-	EDITABLE_PARAM(ProjectileDefClass, ParameterClass::TYPE_BOOL, CollidesOnMove);
-
-	EnumParameterClass *param = new EnumParameterClass(&OrientationMode);
-	param->Set_Name ("OrientationMode");
-	param->Add_Value("ALIGNED",ProjectileClass::ORIENTATION_ALIGNED);
-	param->Add_Value("FIXED",ProjectileClass::ORIENTATION_FIXED);
-	param->Add_Value("TUMBLE",ProjectileClass::ORIENTATION_TUMBLING);
-	GENERIC_EDITABLE_PARAM(ProjectileDefClass,param)
-
-	FLOAT_EDITABLE_PARAM(ProjectileDefClass, TumbleAxis.X, 0.0f, 10.0f);	
-	FLOAT_EDITABLE_PARAM(ProjectileDefClass, TumbleAxis.Y, 0.0f, 10.0f);	
-	FLOAT_EDITABLE_PARAM(ProjectileDefClass, TumbleAxis.Z, 0.0f, 10.0f);	
-	ANGLE_EDITABLE_PARAM(ProjectileDefClass, TumbleRate, DEG_TO_RADF(0.1f), DEG_TO_RADF(90.0f));
-	FLOAT_EDITABLE_PARAM(ProjectileDefClass, Lifetime, 0.01f, 100.0f);	
-	INT_EDITABLE_PARAM(ProjectileDefClass, BounceCount, 0, 32);
-#endif
 }
 
 const PersistFactoryClass & ProjectileDefClass::Get_Factory (void) const

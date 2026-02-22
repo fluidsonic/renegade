@@ -165,13 +165,8 @@ class fixed
 	private:
 		union {
 			struct {
-#ifdef BIG_ENDIAN
-				unsigned char Whole;
-				unsigned char Fraction;
-#else
 				unsigned char Fraction;
 				unsigned char Whole;
-#endif
 			} Composite;
 			unsigned short Raw;
 		} Data;

@@ -243,14 +243,6 @@ void VisOptimizationContextClass::Combine_Sector_Tables(int sector_id_0,int sect
 	SectorTables[id0].Table->Merge(*(SectorTables[id1].Table));
 	SectorTables.Delete(id1);
 
-#if 0
-	/*
-	** Remove the id1'th bit from each object_table
-	*/
-	for (int i=0; i<ObjectTables.Count(); i++) {
-		ObjectTables[i].Table->Delete_Bit(id1);
-	}
-#endif
 
 	/*
 	** Tell the physics scene to merge any sector with id1 into id0
@@ -277,14 +269,6 @@ void VisOptimizationContextClass::Combine_Object_Tables(int object_id_0,int obje
 	ObjectTables[id0].Table->Merge(*(ObjectTables[id1].Table));
 	ObjectTables.Delete(id1);
 
-#if 0
-	/*
-	** Remove the id1'th bit from each sector table
-	*/
-	for (int i=0; i<SectorTables.Count(); i++) {
-		SectorTables[i].Table->Delete_Bit(id1);
-	}
-#endif
 
 	/*
 	** Tell the physics scene to merge any object with id1 into id0

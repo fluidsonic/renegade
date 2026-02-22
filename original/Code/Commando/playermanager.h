@@ -1,7 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
 #ifndef PLAYERMANAGER_H
 #define PLAYERMANAGER_H
 

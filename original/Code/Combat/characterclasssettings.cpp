@@ -189,12 +189,6 @@ CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void)
 
 				name.Format ("%s Object", CHAR_RANK_NAMES[rank_index]);
 
-				#ifdef PARAM_EDITING_ON
-					GenericDefParameterClass *param = new GenericDefParameterClass (&(DefinitionTable[class_index][rank_index][team_index]));
-					param->Set_Class_ID (CLASSID_GAME_OBJECT_DEF_SOLDIER);
-					param->Set_Name (name);
-					GENERIC_EDITABLE_PARAM(CharacterClassSettingsDefClass, param)
-				#endif //PARAM_EDITING_ON
 			}
 		}
 	}

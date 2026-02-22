@@ -343,9 +343,6 @@ StarfieldClass::StarfieldClass (float extent, unsigned starcount)
 	Texture->Set_U_Addr_Mode (TextureClass::TEXTURE_ADDRESS_CLAMP);
 	Texture->Set_V_Addr_Mode (TextureClass::TEXTURE_ADDRESS_CLAMP);
 
-	#ifdef WW3D_DX8
-	Set_Texture_Hint (Texture, srTextureIFace::HINT_ALPHA_ONLY);
-	#endif
 
 	DiffuseArray = new unsigned [VertexCount];
 
@@ -996,9 +993,6 @@ CloudLayerClass::CloudLayerClass (float maxdistance, const char *texturename, co
 	Texture->Set_U_Addr_Mode (TextureClass::TEXTURE_ADDRESS_REPEAT);
 	Texture->Set_V_Addr_Mode (TextureClass::TEXTURE_ADDRESS_REPEAT);
 
-	#if WW3D_DX8
-	Set_Texture_Hint (Texture, srTextureIFace::HINT_ALPHA_ONLY);
-	#endif
 
 	// Define texture UV's.
 	TexCoordArray = new Vector2 [VertexCount];

@@ -1,9 +1,7 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 
-#if !defined(__BORLANDC__) || !defined(_USERENTRY)
 #define	_USERENTRY
-#endif
 
 /*
 **	This class is used to create and maintain an index. It does this by assigning a unique

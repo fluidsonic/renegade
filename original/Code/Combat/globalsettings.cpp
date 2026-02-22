@@ -48,16 +48,6 @@ GlobalSettingsDef::GlobalSettingsDef( void ) :
 	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, FallingDamageMaxDistance );
 
 //	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_INT, FallingDamageWarhead );
-#ifdef PARAM_EDITING_ON
-	int i;
-	EnumParameterClass *param;
-	param = new EnumParameterClass( &FallingDamageWarhead );
-	param->Set_Name ( "Falling Damage Warhead" );
-	for ( i = 0; i < ArmorWarheadManager::Get_Num_Warhead_Types(); i++ ) {
-		param->Add_Value ( ArmorWarheadManager::Get_Warhead_Name( i ), i );
-	}
-	GENERIC_EDITABLE_PARAM(GlobalSettingsDef,param)
-#endif //PARAM_EDITING_ON
 
 	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDICharactersTexture );
 	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDIVehiclesTexture );

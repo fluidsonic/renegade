@@ -10,9 +10,6 @@
 //
 //
 //-----------------------------------------------------------------------------
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #ifndef SINGLEPL_H
 #define SINGLEPL_H

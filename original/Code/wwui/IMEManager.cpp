@@ -472,37 +472,6 @@ bool IMEManager::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 		case WM_KEYUP:
 			if (mInComposition)
 				{
-				#ifdef SHOW_IME_TYPING
-
-				bool typingChanged = false;
-				UINT virtualKey = wParam;
-
-				if (VK_BACK == virtualKey)
-					{
-					if (mTypingCursorPos > 0)
-						{
-						--mTypingCursorPos;
-						mTypingString[mTypingCursorPos] = 0;
-						typingChanged = true;
-						}
-					}
-				else if ((0x30 <= virtualKey && 0x39 >= virtualKey) || (0x41 <= virtualKey && 0x5A >= virtualKey))
-					{
-					if (mTypingCursorPos < IME_MAX_TYPING_LEN)
-						{
-						mTypingString[mTypingCursorPos] = (char16_t)virtualKey;
-						++mTypingCursorPos;
-						mTypingString[mTypingCursorPos] = 0;
-						typingChanged = true;
-						}
-					}
-
-				if (typingChanged)
-					{
-					CompositionEvent event(COMPOSITION_TYPING, this);
-					NotifyObservers(event);
-					}
-				#endif
 
 				outResult = DefWindowProc(hwnd, msg, wParam, lParam);
 				}
@@ -775,10 +744,6 @@ void IMEManager::ResetComposition(void)
 	{
 	mInComposition = false;
 
-#ifdef SHOW_IME_TYPING
-	mTypingString[0] = 0;
-	mTypingCursorPos = 0;
-#endif
 
 	mCompositionString[0] = 0;
 	memset(mCompositionAttr, 0, sizeof(mCompositionAttr));
@@ -828,44 +793,7 @@ void IMEManager::StartComposition(void)
 void IMEManager::DoComposition(unsigned int dbcs, long compFlags)
 	{
 
-#if(0)
-	#ifdef _DEBUG
-	static struct flagstruct {long flag; const char* desc;} _gcsFlags[] = 
-		{
-		{GCS_COMPATTR, "GCS_COMPATTR"},
-		{GCS_COMPCLAUSE, " GCS_COMPCLAUSE"},
-		{GCS_COMPREADATTR, " GCS_COMPREADATTR"},
-		{GCS_COMPREADCLAUSE, " GCS_COMPREADCLAUSE"},
-		{GCS_DELTASTART, " GCS_DELTASTART"},
-		{GCS_RESULTCLAUSE, " GCS_RESULTCLAUSE"},
-		{GCS_RESULTREADCLAUSE, " GCS_RESULTREADCLAUSE"},
-		{GCS_RESULTREADSTR, " GCS_RESULTREADSTR"},
-		{CS_INSERTCHAR, " CS_INSERTCHAR"},
-		{CS_NOMOVECARET, " CS_NOMOVECARET"},
-		{0, ""}
-		};
 
-	int flgidx = 0;
-
-	while (_gcsFlags[flgidx].flag)
-		{
-		if (compFlags & _gcsFlags[flgidx].flag)
-			{
-			}
-
-		flgidx++;
-		}
-
-	#endif
-#endif
-
-#ifdef SHOW_IME_TYPING
-	// Reset the typing string
-	mTypingString[0] = 0;
-	mTypingCursorPos = 0;
-	CompositionEvent event(COMPOSITION_TYPING, this);
-	NotifyObservers(event);
-#endif
 
 	HIMC imc = ImmGetContext(mHWND);
 

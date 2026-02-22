@@ -1,9 +1,6 @@
 #ifndef	MULTIHUD_H
 #define	MULTIHUD_H
 
-#if defined(_MSV_VER)
-#pragma once
-#endif
 
 #include "always.h"
 #include "gamemode.h"

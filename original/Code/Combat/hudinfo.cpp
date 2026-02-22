@@ -82,28 +82,10 @@ void	HUDInfo::Update_Info_Object( void )
 			info = NULL;
 		} else {
 			// Forget him if we fall off target
-#if 0
-			if ( info->As_PhysicalGameObj() != NULL ) {
-				Vector3 obj_pos = info->As_PhysicalGameObj()->Get_Bullseye_Position();
-				Vector3 screen_pos;
-				if (COMBAT_CAMERA->Project(screen_pos, obj_pos) == CameraClass::INSIDE_FRUSTUM) {
-#else
 			if ( info->As_PhysicalGameObj() != NULL && info->As_PhysicalGameObj()->Peek_Physical_Object() != NULL ) {
 				AABoxClass bounds = info->As_PhysicalGameObj()->Peek_Physical_Object()->Get_Cull_Box();
 				if ( !COMBAT_CAMERA->Cull_Box( bounds ) ) {
-#endif
 
-#if 0
-					Vector2	reticle_offset = COMBAT_CAMERA->Get_Camera_Target_2D_Offset();
-					screen_pos.X -= reticle_offset.X;
-					screen_pos.Y -= reticle_offset.Y;
-					screen_pos.Z = 0;
-					if ( screen_pos.Length() > 0.25f ) {
-						if ( HUDInfo::InfoObjectTimer > 0.5f ) {
-							InfoObject = NULL;
-						}
-					}
-#endif
 				} else {
 					InfoObject = NULL;
 				}

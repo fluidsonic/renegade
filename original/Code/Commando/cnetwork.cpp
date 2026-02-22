@@ -3,7 +3,6 @@
 #include <shellapi.h>
 #include <stdio.h>
 
-#include "specialbuilds.h"
 
 #include "DlgMPConnect.h"
 #include "playermanager.h"
@@ -86,7 +85,6 @@ bool												cNetwork::SensibleUpdates					= true;
 void cNetwork::Init_Client(unsigned short my_port)
 {
 
-#ifndef FREEDEDICATEDSERVER
 
 	if (PClientConnection != NULL) {
 		Cleanup_Client();
@@ -172,14 +170,12 @@ void cNetwork::Init_Client(unsigned short my_port)
 
 	cClientPingManager::Init();
 
-#endif // !FREEDEDICATEDSERVER
 
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Cleanup_Client(void)
 {
-#ifndef FREEDEDICATEDSERVER
 
    if (I_Am_Client()) {
 
@@ -205,13 +201,11 @@ void cNetwork::Cleanup_Client(void)
 	delete PClientFps;
 	PClientFps = NULL;
 
-#endif // !FREEDEDICATEDSERVER
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Accept_Handler(void)
 {
-#ifndef FREEDEDICATEDSERVER
 
 	CombatManager::Set_My_Id(Get_My_Id());
 
@@ -236,13 +230,11 @@ void cNetwork::Accept_Handler(void)
       DlgMPConnect::DoDialog(cNetInterface::Get_Side_Preference());
    }
 
-#endif // !FREEDEDICATEDSERVER
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 {
-#ifndef FREEDEDICATEDSERVER
 
 	// Close connecting dialog as neccessary.
 	DialogBaseClass* dialog = DialogMgrClass::Find_Dialog(IDD_MULTIPLAY_CONNECTING);
@@ -276,7 +268,6 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 	// N.B. We cannot destroy the connection from inside this callback.
 	//
 
-#endif // !FREEDEDICATEDSERVER
 }
 
 //-----------------------------------------------------------------------------
@@ -460,19 +451,7 @@ void cNetwork::Onetime_Shutdown(void)
    Set_Receiver(NULL);
 	delete NetworkReceiver;
 
-#if 0
-	UINT comp_bytes	= cConnection::Get_Total_Compressed_Bytes_Sent();
-	UINT uncomp_bytes = cConnection::Get_Total_Uncompressed_Bytes_Sent();
-	Debug_Say(("\n"));
-	Debug_Say(("TotalCompressedBytesSent   = %d\n", comp_bytes));
-	Debug_Say(("Without compression        = %d\n", uncomp_bytes));
-	if (uncomp_bytes > 0) {
-		Debug_Say(("Compressed/Uncompressed    = %-5.2f\n\n",
-			comp_bytes / (float) uncomp_bytes));
-	}
-#endif // 0
 
-#pragma message("(TSS) This packet ref count assert very occasionally fails.")
    //assert(cPacket::Get_Ref_Count() == 0);
 
 	REF_PTR_RELEASE(VisTable);
@@ -487,7 +466,6 @@ void cNetwork::Onetime_Shutdown(void)
 void cNetwork::Init_Server(void)
 {
 
-#ifndef BETACLIENT
 
 	NetworkObjectClass::Set_Is_Server(true);
 
@@ -557,7 +535,6 @@ void cNetwork::Init_Server(void)
 
 	cAppPacketStats::Reset();
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------
@@ -792,7 +769,6 @@ void cNetwork::Update(void)
 //-----------------------------------------------------------------------------
 void cNetwork::Client_Send_Packet(cPacket & packet, int mode)
 {
-#ifndef FREEDEDICATEDSERVER
 
 	if (cNetwork::PClientConnection->Is_Established()) {
 
@@ -808,13 +784,11 @@ void cNetwork::Client_Send_Packet(cPacket & packet, int mode)
 		//TSS2001 XXX DIE;
 	}
 
-#endif // !FREEDEDICATEDSERVER
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Server_Send_Packet(cPacket & packet, int mode, int recipient)
 {
-#ifndef BETACLIENT
 
 	if (recipient == ALL) {
 		//
@@ -858,13 +832,11 @@ void cNetwork::Server_Send_Packet(cPacket & packet, int mode, int recipient)
 		*/
 	}
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------
 void cNetwork::Server_Send_Packet_To_All_Connected(cPacket & packet, int mode)
 {
-#ifndef BETACLIENT
 
 	//
 	// Traverse the rhost list here in the application level, so that
@@ -884,7 +856,6 @@ void cNetwork::Server_Send_Packet_To_All_Connected(cPacket & packet, int mode)
 		}
 	}
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------
@@ -1157,7 +1128,6 @@ void cNetwork::Shell_Command(LPCSTR command)
 //-----------------------------------------------------------------------------
 REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 {
-#ifndef BETACLIENT
 
 	//
 	// Get player name
@@ -1201,7 +1171,6 @@ REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 		return REFUSAL_PLAYER_EXISTS;
 	}
 
-#endif // not BETACLIENT
 
 	return REFUSAL_CLIENT_ACCEPTED;
 }
@@ -1209,7 +1178,6 @@ REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cNetwork::Connection_Handler(int new_rhost_id)
 {
-#ifndef BETACLIENT
 
    /*
 	//
@@ -1250,7 +1218,6 @@ void cNetwork::Connection_Handler(int new_rhost_id)
 	p_event->Init(new_rhost_id);
 	Send_Object_Update(p_event, new_rhost_id);
 
-#endif // not BETACLIENT
 }
 
 //-----------------------------------------------------------------------------

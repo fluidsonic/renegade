@@ -5,7 +5,6 @@
  */
 
 // 'function selected for automatic inlining'
-#pragma warning(disable : 4711)
 
 #define S11 7
 #define S12 12

@@ -14,10 +14,8 @@
 #include "phys3.h"
 #include <stdio.h>
 
-#define RBODY_DEBUGGING					0
 #define RBODY_DEBUG_FILTER				(stricmp(Model->Get_Name(),"V_GDI_ORCA_M") == 0) && (PhysicsSceneClass::Get_Instance()->Is_Debug_Display_Enabled())
 
-#define JITTER_ELIMINATION_CODE		0
 
 float RigidBodyClass::_CorrectionTime = 1.0f;
 
@@ -40,7 +38,6 @@ const float		RBODY_SNAPSHOT_INTERVAL = RBODY_HISTORY_MIN_TIME / RBODY_SNAPSHOT_C
 
 #define RBODYHISTORY_NO_CORRECTION			0
 #define RBODYHISTORY_ABSOLUTE_CORRECTION	0
-#define RBODYHISTORY_LERP_CORRECTION		1
 
 /**
 ** RBodyHistoryClass
@@ -182,9 +179,7 @@ void RBodyHistoryClass::Apply_Correction(const RigidBodyStateStruct & error,floa
 #if RBODYHISTORY_ABSOLUTE_CORRECTION
 		lerp_fraction = fraction;
 #endif
-#if RBODYHISTORY_LERP_CORRECTION
 		lerp_fraction = fraction * (RBODY_HISTORY_MIN_TIME - SnapshotArray[index].Age) / RBODY_HISTORY_MIN_TIME;
-#endif
 		RigidBodyStateStruct::Lerp(SnapshotArray[index],ideal_state,lerp_fraction,&(SnapshotArray[index]));
 	}
 #endif
@@ -213,15 +208,6 @@ void RBodyHistoryClass::Find_Nearest_State(const RigidBodyStateStruct & input,Ri
 			fraction = (point - segment.Get_P0()).Length() / segment.Get_Length();
 		}
 
-#if 0
-		/*
-		** Ignore points with velocity more than 90 deg away from server vel
-		*/
-		float vdot = 0.0f;
-		Vector3 history_vel;
-		Vector3::Lerp(SnapshotArray[index0].Velocity,SnapshotArray[index1].Velocity,fraction,&history_vel);
-		vdot = Vector3::Dot_Product(vel,history_vel); 
-#endif
 		
 		if ((dist < min_dist) /*&& (vdot >= 0.0f)*/) {
 			min_dist = dist;
@@ -803,8 +789,6 @@ void RigidBodyClass::Network_Latency_Error_Correction(float dt)
 		ideal_state.LMomentum += LatencyError.LMomentum;
 		ideal_state.AMomentum += LatencyError.AMomentum;
 
-#if 0
-#endif
 
 		/*
 		** Decide whether to do the normal smooth correction or to pop
@@ -908,11 +892,6 @@ void RigidBodyClass::Apply_Impulse(const Vector3 & imp, const Vector3 & wpos)
 	}
 
 	Assert_State_Valid();
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-		DEBUG_RENDER_VECTOR(wpos,imp,IMPULSE_COLOR);
-	}
-#endif
 }
 
 void RigidBodyClass::Set_Mass(float mass)
@@ -998,11 +977,6 @@ int RigidBodyClass::Compute_Derivatives
 		Set_State(*test_state,index);
 	}
 
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-		Dump_State();
-	}
-#endif
 
 	// time derivitive of position
 	(*dydt)[index++] = Velocity[0];
@@ -1022,10 +996,6 @@ int RigidBodyClass::Compute_Derivatives
 	Vector3 torque(0,0,0);
 	Compute_Force_And_Torque(&force,&torque);
 
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-	}
-#endif
 	
 	(*dydt)[index++] = force[0];
 	(*dydt)[index++] = force[1];
@@ -1035,10 +1005,6 @@ int RigidBodyClass::Compute_Derivatives
 	(*dydt)[index++] = torque[1];
 	(*dydt)[index++] = torque[2];
 	
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-	}
-#endif
 	return index;
 }
 
@@ -1132,7 +1098,6 @@ void RigidBodyClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * torque)
 		vel_dir.Normalize();
 		
 // DEBUG DEBUG
-#pragma message ("(gth) HACK! zeroing bad velocities.")
 const float MAX_VEL = 500.0f;
 const float MAX_ACCEL = 100.0f;
 if (	(Velocity.Is_Valid() == false) || 
@@ -1157,7 +1122,6 @@ if (	(Velocity.Is_Valid() == false) ||
 	Vector3 a_dir = AngularVelocity;
 
 // DEBUG DEBUG
-#pragma message ("(gth) HACK! zeroing bad angular velocities.")
 const float MAX_AVEL = 5.0f * 2.0f * WWMATH_PI;
 if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 	Velocity.Set(0,0,0);
@@ -1287,28 +1251,6 @@ if (a_dir.Length2() > MAX_AVEL * MAX_AVEL) {
 	** NOTE: this doesn't work, I'm just leaving it here in case I get a new idea
 	** which will make it work...
 	*/
-#if JITTER_ELIMINATION_CODE
-	Vector3 max_delta_lmomentum = - 1.0f * State.LMomentum / LastTimestep;
-	Vector3 max_delta_amomentum = - 1.0f * State.AMomentum / LastTimestep;
-	
-	Vector3 old_force = *force;
-	Vector3 old_torque = *torque;
-
-	if ((max_delta_lmomentum.X < 0) && (force->X < max_delta_lmomentum.X)) force->X = max_delta_lmomentum.X;
-	if ((max_delta_lmomentum.X > 0) && (force->X > max_delta_lmomentum.X)) force->X = max_delta_lmomentum.X;
-	if ((max_delta_lmomentum.Y < 0) && (force->Y < max_delta_lmomentum.Y)) force->Y = max_delta_lmomentum.Y;
-	if ((max_delta_lmomentum.Y > 0) && (force->Y > max_delta_lmomentum.Y)) force->Y = max_delta_lmomentum.Y;
-	if ((max_delta_lmomentum.Z < 0) && (force->Z < max_delta_lmomentum.Z)) force->Z = max_delta_lmomentum.Z;
-	if ((max_delta_lmomentum.Z > 0) && (force->Z > max_delta_lmomentum.Z)) force->Z = max_delta_lmomentum.Z;
-	
-	if ((max_delta_amomentum.X < 0) && (torque->X < max_delta_amomentum.X)) torque->X = max_delta_amomentum.X;
-	if ((max_delta_amomentum.X > 0) && (torque->X > max_delta_amomentum.X)) torque->X = max_delta_amomentum.X;
-	if ((max_delta_amomentum.Y < 0) && (torque->Y < max_delta_amomentum.Y)) torque->Y = max_delta_amomentum.Y;
-	if ((max_delta_amomentum.Y > 0) && (torque->Y > max_delta_amomentum.Y)) torque->Y = max_delta_amomentum.Y;
-	if ((max_delta_amomentum.Z < 0) && (torque->Z < max_delta_amomentum.Z)) torque->Z = max_delta_amomentum.Z;
-	if ((max_delta_amomentum.Z > 0) && (torque->Z > max_delta_amomentum.Z)) torque->Z = max_delta_amomentum.Z;
-
-#endif
 
 }
 
@@ -1495,11 +1437,6 @@ Vector3 avel0 = AngularVelocity;
 
 	Inc_Ignore_Counter();
 
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-		Dump_State();
-	}
-#endif
 
 	/*
 	** Set our active collision region
@@ -1625,11 +1562,6 @@ Vector3 avel0 = AngularVelocity;
 					*/
 					Update_Auxiliary_State();
 
-#if RBODY_DEBUGGING
-				if (RBODY_DEBUG_FILTER) {
-					Dump_State();
-				}
-#endif
 				}
 
 			} else {
@@ -1639,10 +1571,6 @@ Vector3 avel0 = AngularVelocity;
 				** Fall back to the old, kill the momentum and try to let the
 				** contact spring forces sort it out.
 				*/
-#if RBODY_DEBUGGING
-				if (RBODY_DEBUG_FILTER) {
-				}
-#endif
 
 				State.LMomentum /= (float)(StickCount + 1);
 				State.Position = oldstate.Position;
@@ -1652,23 +1580,12 @@ Vector3 avel0 = AngularVelocity;
 
 				// We've reverted the state, now display the total force and torque that is causing us to "stick"
 
-#if RBODY_DEBUGGING
-				if (RBODY_DEBUG_FILTER) {
-					Dump_State();
-				}
-#endif
 
 			}
 		}
 		collisions++;
 	}
 
-#if 0 // DEBUG DEBUG DEBUG
-	if (ContactBox->Is_Intersecting()) {
-		State = BackupState;
-		goto doitagain;
-	}
-#endif
 
 	DEBUG_RENDER_VECTOR(State.Position,Velocity,LMOMENTUM_COLOR);
 	DEBUG_RENDER_VECTOR(State.Position,AngularVelocity,AMOMENTUM_COLOR);	
@@ -1734,10 +1651,6 @@ bool RigidBodyClass::Push_Phys3_Object_Away(Phys3Class * p3obj,const CastResultS
 	p3obj->Collide(move);
 	Inc_Ignore_Counter();
 
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-	}
-#endif
 	
 	/*
 	** Check if the object is now out of collision with us.  If the external game
@@ -1750,18 +1663,10 @@ bool RigidBodyClass::Push_Phys3_Object_Away(Phys3Class * p3obj,const CastResultS
 		OBBoxClass rbox;
 		ContactBox->Get_Outer_Box(&rbox);
 
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-	}
-#endif
 		return (CollisionMath::Overlap_Test(rbox,p3box) == CollisionMath::OUTSIDE);
 
 	} else {
 
-#if RBODY_DEBUGGING
-	if (RBODY_DEBUG_FILTER) {
-	}
-#endif
 		return true;
 	}
 }

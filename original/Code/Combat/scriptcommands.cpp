@@ -1659,19 +1659,6 @@ void	Clear_Radar_Marker( int id )
 	RadarManager::Clear_Marker( id );
 }
 
-#if 0
-void	Add_Radar_Marker( int id, const Vector3& position, const Vector3& color, bool flash )
-{
-	SCRIPT_TRACE((	"ST>Add_Radar_Marker( %d, (%f,%f,%f), (%f,%f,%f), %d)\n",
-			id, position.X, position.Y, position.Z, color.X, color.Y, color.Z, flash ));
-/*	RadarMarkerClass marker;
-	marker.ID = id;
-	marker.Position = position;
-	marker.Color = color;
-	marker.Flash = flash;
-	RadarManager::Add_Marker( marker );*/
-}
-#else
 void	Add_Radar_Marker( int id, const Vector3& position, int shape_type, int color_type )
 {
 	SCRIPT_TRACE((	"ST>Add_Radar_Marker( %d, (%f,%f,%f), %d, %d)\n",
@@ -1684,30 +1671,7 @@ void	Add_Radar_Marker( int id, const Vector3& position, int shape_type, int colo
 	marker.Color = color_type;
 	RadarManager::Add_Marker( marker );
 }
-#endif
 
-#if 0
-void	Add_Obj_Radar_Marker( int id, GameObject * obj, Vector3 color, bool flash )
-{
-	SCRIPT_PTR_CHECK( obj );
-	SCRIPT_TRACE((	"ST>Add_Radar_Marker( %d, %d, (%f,%f,%f), %d)\n",
-			id, obj->Get_ID(), color.X, color.Y, color.Z, flash ));
-	SCRIPT_PTR_CHECK( obj );
-/*	RadarMarkerClass marker;
-	marker.ID = id;*/
-
-	PhysicalGameObj * pgobj = obj->As_PhysicalGameObj();
-	if ( pgobj == NULL ) {
-		Debug_Say(( "Not a PhysicalGameObj at %s %d\n", __FILE__, __LINE__ ));
-		return;
-	}
-
-/*	marker.Set_Game_Object( pgobj );
-	marker.Color = color;
-	marker.Flash = flash;
-	RadarManager::Add_Marker( marker );*/
-}
-#endif
 
 void	Set_Obj_Radar_Blip_Shape( GameObject * obj, int shape_type )
 {

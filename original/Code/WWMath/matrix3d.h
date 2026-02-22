@@ -2,18 +2,14 @@
 #ifndef MATRIX3D_H
 #define MATRIX3D_H
 
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 #include "always.h"
 #include <assert.h>
 #include "vector2.h"
 #include "vector3.h"
 #include "vector4.h"
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 class Matrix3;
 class Matrix4;
@@ -1392,21 +1388,12 @@ WWINLINE Matrix3D operator * (const Matrix3D &A,const Matrix3D &B)
  *=============================================================================================*/
 WWINLINE Vector3 operator * (const Matrix3D &A,const Vector3 &a)
 {
-#if 0
-	return Vector3
-	(
-		(A[0][0]*a[0] + A[0][1]*a[1] + A[0][2]*a[2] + A[0][3]),
-		(A[1][0]*a[0] + A[1][1]*a[1] + A[1][2]*a[2] + A[1][3]),
-		(A[2][0]*a[0] + A[2][1]*a[1] + A[2][2]*a[2] + A[2][3])
-	);
-#else
 	return Vector3
 	(
 		(A.Row[0].X*a.X + A.Row[0].Y*a.Y + A.Row[0].Z*a.Z + A.Row[0].W),
 		(A.Row[1].X*a.X + A.Row[1].Y*a.Y + A.Row[1].Z*a.Z + A.Row[1].W),
 		(A.Row[2].X*a.X + A.Row[2].Y*a.Y + A.Row[2].Z*a.Z + A.Row[2].W)
 	);
-#endif
 }
 
 /*********************************************************************************************** 

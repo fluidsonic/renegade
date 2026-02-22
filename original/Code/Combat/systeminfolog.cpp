@@ -10,23 +10,12 @@
 //#pragma warning (disable : 4201) // nonstandard extension - nameless struct
 //#include "systimer.h"
 #include "systimer.h"
-#include "specialbuilds.h"
 
 const unsigned NUM_GAMES_LOGGED=10;
 
 //#define	COMBAT_SUB_KEY_NAME_DEBUG				"Software\\Westwood\\Renegade\\Debug"
 
-#if	defined(FREEDEDICATEDSERVER)
-#define	COMBAT_SUB_KEY_NAME_DEBUG				"Software\\Westwood\\RenegadeFDS\\Debug"
-#elif defined(MULTIPLAYERDEMO)
-#define	COMBAT_SUB_KEY_NAME_DEBUG				"Software\\Westwood\\RenegadeMPDemo\\Debug"
-#elif defined(BETACLIENT)
-#define	COMBAT_SUB_KEY_NAME_DEBUG				"Software\\Westwood\\RenegadeBeta\\Debug"
-#elif defined(BETASERVER)
-#define	COMBAT_SUB_KEY_NAME_DEBUG				"Software\\Westwood\\RenegadeBeta\\Debug"
-#else
 #define	COMBAT_SUB_KEY_NAME_DEBUG				"Software\\Westwood\\Renegade\\Debug"
-#endif
 
 #define	SYSTEM_INFO_LOG_CURRENT_STATE			"SystemInfoLog_CurrentState"
 #define	SYSTEM_INFO_LOG_LATEST_GAME			"SystemInfoLog_LatestGame"

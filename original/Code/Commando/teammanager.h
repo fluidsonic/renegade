@@ -1,7 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
 #ifndef	TEAMMANAGER_H
 #define	TEAMMANAGER_H
 

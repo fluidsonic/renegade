@@ -14,7 +14,6 @@
 #include "resource.h"
 #include "apppackettypes.h"
 #include "modpackagemgr.h"
-#include "specialbuilds.h"
 #include "dlgmpconnectionrefused.h"
 #include "translatedb.h"
 #include "string_ids.h"
@@ -75,10 +74,8 @@ cGameOptionsEvent::Export_Creation(BitStreamClass & packet)
 
 	packet.Add(HostedGameNumber);
 
-#ifndef MULTIPLAYERDEMO
 	packet.Add((uint32_t)CRC_Stringi(The_Game()->Get_Mod_Name()));
 	packet.Add((uint32_t)CRC_Stringi(The_Game()->Get_Map_Name()));
-#endif // MULTIPLAYERDEMO
 
 	Set_Delete_Pending();
 }
@@ -98,7 +95,6 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 	packet.Get(HostedGameNumber);
 	bool act = true;
 
-#ifndef MULTIPLAYERDEMO
 	//
 	// TSS103001...n.b. need test that Find_Map_Name succeeds...
 	//
@@ -127,7 +123,6 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 		}
 	}
 
-#endif // MULTIPLAYERDEMO
 
 	if (act) {
 		Act();

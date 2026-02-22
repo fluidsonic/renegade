@@ -58,12 +58,6 @@ int PASCAL WinMain( HINSTANCE instance, HINSTANCE, char *command_line, int comma
 
     } while ( command_char != 0 && command_char != 13 && argc<20 );
 
-#ifdef MULTIPLAYERDEMO
-	/*
-	** Add the 'NODX' flag. If it's already there, well, it's there twice now.
-	*/
-	argv[argc++] = "/NODX";
-#endif //MULTIPLAYERDEMO
 
     return(main(argc,argv));
 

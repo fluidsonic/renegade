@@ -7,14 +7,8 @@
 **	and disables certian warnings
 */
 
-#if (_MSC_VER >= 1200)
-#pragma warning(push,3)
-#endif
 
 #include <map>
 
-#if (_MSC_VER >= 1200)
-#pragma warning(pop)
-#endif
 
 #endif

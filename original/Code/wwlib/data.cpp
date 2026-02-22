@@ -157,87 +157,12 @@ typedef struct SRecord {
  *=============================================================================================*/
 char const * Fetch_String(int id)
 {
-#ifdef _UNIX
 	return("");
-#else
-	static SRecord _buffers[64];
-	static int _time = 0;
-
-	/*
-	**	Determine if the string ID requested is valid. If not then return an empty string pointer.
-	*/
-	if (id == -1 || id == TXT_NONE) return("");
-
-	/*
-	**	Adjust the 'time stamp' tracking value. This is an artificial value used merely to track
-	**	the relative age of the strings requested.
-	*/
-	_time = _time+1;
-
-	/*
-	**	Check to see if the requested string has already been fetched into a buffer. If so, then
-	**	return a pointer to that string (update the time stamp as well).
-	*/
-	for (int index = 0; index < ARRAY_SIZE(_buffers); index++) {
-		if (_buffers[index].ID == id) {
-			_buffers[index].TimeStamp = _time;
-			return(_buffers[index].String);
-		}
-	}
-
-	/*
-	**	Find a suitable buffer to hold the string to be fetched. The buffer should either be
-	**	empty or have the oldest fetched string.
-	*/
-	int oldest = -1;
-	int oldtime = -1;
-	for (int text = 0; text < ARRAY_SIZE(_buffers); text++) {
-		if (oldest == -1 || oldtime > _buffers[text].TimeStamp) {
-			oldest = text;
-			oldtime = _buffers[text].TimeStamp;
-			if (oldtime == -1 || _buffers[text].ID == -1) break;
-		}
-	}
-
-	/*
-	**	A suitable buffer has been found so fetch the string resource and then return a pointer
-	**	to the string.
-	*/
-	char * stringptr = _buffers[oldest].String;
-	_buffers[oldest].ID = id;
-	_buffers[oldest].TimeStamp = _time;
-	if (LoadString(ProgramInstance, id, stringptr, sizeof(_buffers[oldest].String)) == 0) {
-		return("");
-	}
-	stringptr[sizeof(_buffers[oldest].String)-1] = '\0';
-	return(stringptr);
-#endif
 }
 
 void const * Fetch_Resource(LPCSTR resname, LPCSTR restype)
 {
-#ifdef _UNIX
 	return(NULL);
-#else
-	/*
-	**	Fetch the program instance if it hasn't already been recorded.
-	*/
-//	if (ProgramInstance == 0) {
-//		ProgramInstance = GetModuleHandle("LANGUAGE");
-//	}
-
-	HRSRC handle = FindResource(ProgramInstance, resname, restype);
-	if (handle == NULL) {
-		return(NULL);
-	}
-
-	HGLOBAL rhandle = LoadResource(ProgramInstance, handle);
-	if (rhandle == NULL) {
-		return(NULL);
-	}
-
-	return(LockResource(rhandle));
-#endif
 }
 
 int Load_Picture(FileClass & file, Buffer & scratchbuf, Buffer & destbuf, unsigned char * palette, PicturePlaneType )

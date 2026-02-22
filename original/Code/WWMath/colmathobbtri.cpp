@@ -992,13 +992,9 @@ bool CollisionMath::Collide
 
 exit:
 
-#pragma message ("(gth) disabling an assert in obb->tri collision, investigate later\n")
-#if 0
-#else
 	if (context.AxisId == INTERSECTION) {
 		context.StartBad = true;
 	}
-#endif
 
 	/*
 	** If the triangle and box are intersecting before the move, return that 

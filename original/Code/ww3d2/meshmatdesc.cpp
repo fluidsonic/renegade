@@ -892,7 +892,6 @@ void MeshMatDescClass::Post_Load_Process(bool lighting_enabled,MeshModelClass * 
 	// - there will be a single vertex material, shader, and texture for the first pass
 	// - the texture will be named razorw.tga
 	// - the mesh name will contain b_wire
-#pragma message("(gth) Renegade-specific hack, forcing b_wire mesh to use alpha-test...")
 	if (	(parent != NULL) &&
 			(PassCount == 1) &&
 			(Has_Shader_Array(0) == false) && 

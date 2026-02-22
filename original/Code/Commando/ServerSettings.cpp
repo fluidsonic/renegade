@@ -5,7 +5,6 @@
 #include "registry.h"
 #include "rawfile.h"
 #include "consolemode.h"
-#include "specialbuilds.h"
 #include "_globals.h"
 #include "bandwidth.h"
 #include "mpsettingsmgr.h"
@@ -151,47 +150,19 @@ bool ServerSettingsClass::Parse(bool apply)
 		** Nickname.
 		*/
 		ini.Get_String(MasterServerSection, "Nickname", "", master_nick, sizeof(master_nick));
-#ifdef FREEDEDICATEDSERVER
-		/*
-		** We only need to validate this for the FDS. The regular game can allow the login name to be specified in the registry.
-		*/
-		if (strlen(master_nick) == 0) {
-			ConsoleBox.Print("Error - No login nickname specified for master server - aborting\n");
-			ConsoleBox.Wait_For_Keypress();;
-			return(false);
-		}
-#endif //FREEDEDICATEDSERVER
+// FDS: server settings were auto-applied without UI prompts
 
 		/*
 		** Password.
 		*/
 		ini.Get_String(MasterServerSection, "Password", "", master_pass, sizeof(master_pass));
-#ifdef FREEDEDICATEDSERVER
-		/*
-		** We only need to validate this for the FDS. The regular game can allow the login name to be specified in the registry.
-		*/
-		if (strlen(master_pass) == 0) {
-			ConsoleBox.Print("Error - No login password specified for master server - aborting\n");
-			ConsoleBox.Wait_For_Keypress();;
-			return(false);
-		}
-#endif //FREEDEDICATEDSERVER
+// FDS: server settings were auto-applied without UI prompts
 
 		/*
 		** Serial number.
 		*/
 		ini.Get_String(MasterServerSection, "Serial", "", master_serial, sizeof(master_serial));
-#ifdef FREEDEDICATEDSERVER
-		/*
-		** We only need to validate the serial number if we are the FDS. For the regular game, the master serial will be stored
-		** in the registry.
-		*/
-		if (strlen(master_serial) == 0) {
-			ConsoleBox.Print("Error - No serial number specified for master server - aborting\n");
-			ConsoleBox.Wait_For_Keypress();;
-			return(false);
-		}
-#endif //FREEDEDICATEDSERVER
+// FDS: server settings were auto-applied without UI prompts
 
 		/*
 		** Get the port number.

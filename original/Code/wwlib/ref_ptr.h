@@ -200,15 +200,6 @@ class RefCountPtr
 		{
 		}
 
-#ifdef ALLOW_AUTOMATIC_REF_COUNT_PTR_CONSTRUCTION
-		RefCountPtr(T * referent)
-			: Referent(referent)
-		{
-			if (Referent) {
-				Referent->Add_Ref();
-			}
-		}
-#else
 		// This allows construction of the smart pointer from 0 (null)
 		// Without allows unwanted conversions from T * (and related types, including void *)
 		RefCountPtr(DummyPtrType * dummy)
@@ -216,7 +207,6 @@ class RefCountPtr
 		{
 			G_ASSERT(dummy == 0);
 		}
-#endif
 
 		template <class RHS>
 			RefCountPtr(const RefCountPtr<RHS> & rhs)
@@ -235,22 +225,6 @@ class RefCountPtr
 			}
 		}
 
-#ifdef ALLOW_AUTOMATIC_REF_COUNT_PTR_CONSTRUCTION
-		const RefCountPtr<T> & operator =(T * object)
-		{
-			if (Referent == object) {
-				return *this;
-			}
-
-			Referent = object;
-
-			if (Referent) {
-				Referent->Add_Ref();
-			}
-
-			return *this;
-		}
-#else
 		const RefCountPtr<T> & operator =(DummyPtrType * dummy_ptr)
 		{
 			if (Referent) {
@@ -261,7 +235,6 @@ class RefCountPtr
 
 			return *this;
 		}
-#endif
 
 		template <class RHS>
 		const RefCountPtr<T> & operator =(const RefCountPtr<RHS> & rhs)

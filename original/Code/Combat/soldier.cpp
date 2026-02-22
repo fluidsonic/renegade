@@ -55,7 +55,6 @@
 #include "apppackettypes.h"
 #include "hud.h"
 #include "unitcoordinationzonemgr.h"
-#include "specialbuilds.h"
 #include "weaponview.h"
 #include "ffactory.h"
 #include "realcrc.h"
@@ -943,15 +942,6 @@ void	SoldierGameObj::Export_Occasional( BitStreamClass &packet )
 	//
 	// What weapon is being held?
 	//
-#if 0 //(gth) moving this back to Frequent to fix the game, re-optimize later...
-	WeaponClass * p_weapon = Get_Weapon();
-   bool has_weapon = (p_weapon != NULL);
-   packet.Add(has_weapon);
-   if (has_weapon) {
-		packet.Add(p_weapon->Get_ID());
-		packet.Add(p_weapon->Get_Total_Rounds());
-   }
-#endif
 
 	WeaponBag->Export_Weapon_List(packet);
 
@@ -969,30 +959,6 @@ void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 	//
 	// Held weapon
 	//
-#if 0 // (gth) moving back to "Frequent" to fix the game, re-optimize later?
-	bool has_weapon = packet.Get(has_weapon);
-   if (has_weapon) {
-	
-		int weapon_id = packet.Get(weapon_id);
-		int rounds = packet.Get(rounds);
-		if ((Get_Weapon() == NULL) || (weapon_id != Get_Weapon()->Get_ID())) {
-			WeaponBag->Select_Weapon_ID(weapon_id);
-		}
-
-		if (Get_Weapon() != NULL) {
-			// If this weapon is currently being fired, ignore the server rounds count packet
-			// This should help the jittery rounds count
-			if ( !Get_Weapon()->Is_Triggered() ) {
-				Get_Weapon()->Set_Total_Rounds( rounds );
-			}
-		}
-
-   } else {
-		if (Get_Weapon() != NULL) {
-			Get_Weapon_Bag()->Deselect();
-		}
-	}
-#endif
 
 	//
 	// Weapon list
@@ -1045,18 +1011,9 @@ void SoldierGameObj::Export_Frequent(BitStreamClass & packet)
 	Vector3 position;
 	Get_Position(&position);
 
-#ifdef MULTIPLAYERDEMO
-	//
-	// Mix up the packet order to make demo/non-demo code more incompatible.
-	//
-	packet.Add(position.Y, BITPACK_WORLD_POSITION_Y);
-	packet.Add(position.Z, BITPACK_WORLD_POSITION_Z);
-	packet.Add(position.X, BITPACK_WORLD_POSITION_X);
-#else
 	packet.Add(position.X, BITPACK_WORLD_POSITION_X);
 	packet.Add(position.Y, BITPACK_WORLD_POSITION_Y);
 	packet.Add(position.Z, BITPACK_WORLD_POSITION_Z);
-#endif
 
 	
 	packet.Add((int) HumanState.Get_State(), BITPACK_HUMAN_STATE);
@@ -1136,18 +1093,9 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	//
 	Vector3 sc_position;
 
-#ifdef MULTIPLAYERDEMO
-	//
-	// Mix up the packet order to make demo/non-demo code more incompatible.
-	//
-	packet.Get(sc_position.Y, BITPACK_WORLD_POSITION_Y);
-	packet.Get(sc_position.Z, BITPACK_WORLD_POSITION_Z);
-	packet.Get(sc_position.X, BITPACK_WORLD_POSITION_X);
-#else
 	packet.Get(sc_position.X, BITPACK_WORLD_POSITION_X);
 	packet.Get(sc_position.Y, BITPACK_WORLD_POSITION_Y);
 	packet.Get(sc_position.Z, BITPACK_WORLD_POSITION_Z);
-#endif
 
 	// Bump Z up to the top of the possible values due to packing
 	// we assume the max error is half of the resolution
@@ -1179,13 +1127,6 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 		return;
 	}
 
-#if 0
-	if ( Get_State() == HumanStateClass::TRANSITION ) {
-		Debug_Say(( "Ignoring Transitioning!\n" ));
-      packet.Flush();
-		return;
-	}
-#endif
 
 	char trans_name[80] = "";
 	if ( ( state == HumanStateClass::TRANSITION ) || 
@@ -1645,24 +1586,6 @@ void SoldierGameObj::Apply_Control( void )
 		}
 	}
 
-#if 0
-	if ( Control.Get_Boolean( ControlClass::BOOLEAN_CROUCH ) ) {
-		if ( HumanState.Is_Sub_State_Adjustable() ) {
-//			HumanState.Set_Sub_State( Get_Sub_State() ^ HumanStateClass::CROUCHED );
-			HumanState.Toggle_State_Flag( HumanStateClass::CROUCHED_FLAG );
-
-			if ( this == COMBAT_STAR ) {
-				Vector3 pos;
-				Get_Position( &pos );
-				if ( Is_Crouched() ) {
-					DIAG_LOG(( "COEN", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
-				} else {
-					DIAG_LOG(( "COEX", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
-				}
-			}
-		}
-	}
-#else
 	if ( HumanState.Is_Sub_State_Adjustable() ) {
 
 		bool new_state = Control.Get_Boolean( ControlClass::BOOLEAN_CROUCH );
@@ -1683,7 +1606,6 @@ void SoldierGameObj::Apply_Control( void )
 			}
 		}
 	}
-#endif
 
 	/*
 	if (	CombatManager::I_Am_Server() && 
@@ -1705,24 +1627,6 @@ void SoldierGameObj::Apply_Control( void )
 		}
 	}
 
-#if 0
-	if ( Is_Sniping() ) {
-
-		// No motion for snipers (I don't know if this should be in Soldier.cpp)
-		// (But then, Sniper mode means nothing for plain soldiers, only for players)
-		//	Don't clear the move forward, just don't allow the controller to have
-		//	any move forward.  This was not alowing sniper zoom
-//		Control.Set_Analog( ControlClass::ANALOG_MOVE_FORWARD, 0 );	 
-		Control.Set_Analog( ControlClass::ANALOG_MOVE_LEFT, 0 );
-		Control.Set_Boolean( ControlClass::BOOLEAN_JUMP, 0 );
-		Control.Set_Boolean( ControlClass::BOOLEAN_CROUCH, 0 );
-		Control.Set_Boolean( ControlClass::BOOLEAN_DIVE_FORWARD, 0 );
-		Control.Set_Boolean( ControlClass::BOOLEAN_DIVE_BACKWARD, 0 );
-		Control.Set_Boolean( ControlClass::BOOLEAN_DIVE_LEFT, 0 );
-		Control.Set_Boolean( ControlClass::BOOLEAN_DIVE_RIGHT, 0 );
-		Control.Set_Boolean( ControlClass::BOOLEAN_ACTION, 0 );		// stop ladder
-	}
-#endif
 
 	if ( Is_Sniping() || Is_On_Ladder() ) {
 		// No diving for snipers or on ladders
@@ -1789,7 +1693,6 @@ void SoldierGameObj::Apply_Control( void )
 	// Let parent class handle the rest
 	SmartGameObj::Apply_Control();
 
-#if 01
 	// Have to Move_Up after after Apply control, but BOOLEAN_JUMP is cleared
 	if ( Control.Get_Boolean( ControlClass::BOOLEAN_JUMP ) ) {
 		if ( Get_State() != HumanStateClass::AIRBORNE ) {
@@ -1809,34 +1712,7 @@ void SoldierGameObj::Apply_Control( void )
 			DIAG_LOG(( "JUUS", "%1.2f; %1.2f; %1.2f; %1.2f; %1.2f; %s; %d", pos.X, pos.Y, pos.Z, defense->Get_Shield_Strength(), defense->Get_Health(), weapon_name, ammo ));
 		}
 	}
-#else
-	static float jump_timer = 0;
 
-	// Have to Move_Up after after Apply control, but BOOLEAN_JUMP is cleared
-	if ( Control.Get_Boolean( ControlClass::BOOLEAN_JUMP ) ) {
-		if ( Get_State() != HumanStateClass::AIRBORNE ) {
-			HumanState.Set_State( HumanStateClass::AIRBORNE, HumanState.Get_Sub_State() );
-			jump_timer = 0.2f;
-		}
-	}
-
-	if ( jump_timer > 0 ) {
-		jump_timer -= TimeManager::Get_Frame_Seconds();
-		if ( jump_timer <= 0 ) {
-			Controller.Set_Move_Up( Get_Definition().JumpVelocity );
-		}
-	}
-
-#endif
-
-#if 0
-	if ( Is_Sniping() ) {
-		// Dont allow move forward.  It may have been requested by the
-		// Control, because we can't clear it if it must persist for
-		// network sniper zoom.  So just clear it here.
-		Controller.Set_Move_Forward( 0 );	
-	}
-#else
 	if ( Is_Sniping() ) {
 		// Dont allow move forward.  It may have been requested by the
 		// Control, because we can't clear it if it must persist for
@@ -1844,7 +1720,6 @@ void SoldierGameObj::Apply_Control( void )
 		Controller.Set_Move_Forward( WWMath::Clamp( Controller.Get_Move_Forward(), -0.25f, 0.25f ) );	
 		Controller.Set_Move_Left( WWMath::Clamp( Controller.Get_Move_Left(), -0.25f, 0.25f ) );	
 	}
-#endif
 
 	if ( Get_State() == HumanStateClass::LADDER ) {
 		// When on ladder, you can't move forward
@@ -1976,163 +1851,8 @@ void SoldierGameObj::Apply_Control( void )
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Handle_Legs( void )
 {
-#if 0
-	if ( Get_State() != HumanStateClass::UPRIGHT ) {
-		LegFacing = Get_Facing();
-		SyncLegs = false;
-	}
 
-	// If Moving, clear LegFacing
-	if ((Control.Get_Analog( ControlClass::ANALOG_MOVE_FORWARD ) != 0.0f ) ||
-		 (Control.Get_Analog( ControlClass::ANALOG_MOVE_LEFT ) != 0.0f )) {
 
-		LegFacing = Get_Facing();
-		SyncLegs = false;
-
-	} else {
-
-#define	CLAMP_DEGREES	60
-#define	SYNC_DEGREES	35
-#define	SYNC_RATE		75
-#define	FLIP_RATE		720
-
-		// find the leg difference;
-		LegFacing = WWMath::Wrap( LegFacing, DEG_TO_RADF( -180 ), DEG_TO_RADF( 180 ) );
-
-		float	legs_rotation = Get_Facing() - LegFacing;
-
-		legs_rotation = WWMath::Wrap( legs_rotation, DEG_TO_RADF( -180 ), DEG_TO_RADF( 180 ) );
-
-		// Clamp to with 90
-		legs_rotation = WWMath::Clamp( legs_rotation, DEG_TO_RADF( -CLAMP_DEGREES ), DEG_TO_RADF( CLAMP_DEGREES ) );
-		LegFacing = Get_Facing() - legs_rotation; 		
-		LegFacing = WWMath::Wrap( LegFacing, DEG_TO_RADF( -180 ), DEG_TO_RADF( 180 ) );
-
-		// if legs are more than 30 degrees off, start correcting
-		if ( WWMath::Fabs( legs_rotation ) > DEG_TO_RAD( SYNC_DEGREES ) ) {
-			SyncLegs = true;
-		}
-
-SyncLegs = true;
-
-		// if syncing, start moving legs to match rotation
-		if ( SyncLegs ) {
-			float move = DEG_TO_RAD( SYNC_RATE ) * TimeManager::Get_Frame_Seconds() * 
-								WWMath::Sign( legs_rotation );
-			if ( WWMath::Fabs( move ) >= WWMath::Fabs( legs_rotation ) ) {
-				move = legs_rotation;	// Complete syncing
-				SyncLegs = false;
-			} else {
-				LegFacing += move;
-				if ( !Is_Human_Controlled() ) {	// human players don't use turn anims
-					HumanState.Set_Turn_Velocity( move );	// Also, play the leg turning anim
-				}
-			}
-		}
-	}
-
-	if ( !SyncLegs ) {
-		HumanState.Set_Turn_Velocity( 0 );
-	}
-
-	// I'm making this staic for now, because all human
-	// skeletons have the bone at the same index
-	static int  root_bone = -1;
-	if ( root_bone == -1 ) {			// Get root bone index
-		root_bone = Peek_Model()->Get_Bone_Index( "root" );
-	}
-
-	static int  torso_bone = -1;
-	if ( torso_bone == -1 ) {			// Get torso bone index
-		torso_bone = Peek_Model()->Get_Bone_Index( "thorax" );
-	}
-	// Update the model
-	float	legs_rotation = Get_Facing() - LegFacing;
-	if ( legs_rotation ) {
-
-		if ( !Peek_Model()->Is_Bone_Captured( root_bone ) ) {
-			Peek_Model()->Capture_Bone( root_bone );
-		}
-		if ( !Peek_Model()->Is_Bone_Captured( torso_bone ) ) {
-			Peek_Model()->Capture_Bone( torso_bone );
-		}
-
-		// LOOK INTO RELATIVE_CONTROL_BONE
-		Matrix3D	root_adjust(1);				// adjust it
-		root_adjust.Rotate_Z( -legs_rotation );
-		Peek_Model()->Control_Bone( root_bone, root_adjust );
-
-		Matrix3D	legs_adjust(1);				// adjust it
-		legs_adjust.Rotate_Z( legs_rotation );
-		Peek_Model()->Control_Bone( torso_bone, legs_adjust );
-	} else {	// no adjustment, release
-
-	 	if ( Peek_Model()->Is_Bone_Captured( root_bone ) ) {
-			Peek_Model()->Release_Bone( root_bone );
-		}
-	 	if ( Peek_Model()->Is_Bone_Captured( torso_bone ) ) {
-			Peek_Model()->Release_Bone( torso_bone );
-		}
-	}
-
-#else
-
-#if 0
-	float	legs_rotation = 0;
-
-	// Compare the facing to the motion, set leg_racing to the difference
-	Vector3 move( Control.Get_Analog( ControlClass::ANALOG_MOVE_FORWARD ), Control.Get_Analog( ControlClass::ANALOG_MOVE_LEFT ), 0 );
-	if ( move.Length() > 0 ) {
-		float move_direction = ::WWMath::Atan2( -move.Y, move.X );
-		float diff = move_direction;
-		diff += 2*DEG_TO_RADF( 360 ) + DEG_TO_RADF( 45 );
-		diff -= WWMath::Floor( diff / DEG_TO_RADF( 90 ) ) * DEG_TO_RADF( 90 );
-		diff -= DEG_TO_RADF( 45 );
-		legs_rotation = diff;
-		Debug_Say(( "Move (%1.1f)  %1.1f %1.1f %1.1f   %1.1f\n", RAD_TO_DEG(diff), move.X, move.Y, move.Z, RAD_TO_DEG( move_direction ) ));
-	}
-
-	// I'm making this staic for now, because all human
-	// skeletons have the bone at the same index
-	static int  root_bone = -1;
-	if ( root_bone == -1 ) {			// Get root bone index
-		root_bone = Peek_Model()->Get_Bone_Index( "c spine" );
-	}
-
-	static int  torso_bone = -1;
-	if ( torso_bone == -1 ) {			// Get torso bone index
-		torso_bone = Peek_Model()->Get_Bone_Index( "c spine1" );
-	}
-
-	if ( legs_rotation ) {
-
-		if ( !Peek_Model()->Is_Bone_Captured( root_bone ) ) {
-			Peek_Model()->Capture_Bone( root_bone );
-		}
-		if ( !Peek_Model()->Is_Bone_Captured( torso_bone ) ) {
-			Peek_Model()->Capture_Bone( torso_bone );
-		}
-
-		Matrix3D	root_adjust(1);				// adjust it
-		root_adjust.Rotate_X( legs_rotation );
-		Peek_Model()->Control_Bone( root_bone, root_adjust );
-
-		Matrix3D	legs_adjust(1);				// adjust it
-		legs_adjust.Rotate_X( -legs_rotation );
-		Peek_Model()->Control_Bone( torso_bone, legs_adjust );
-	} else {	// no adjustment, release
-
-	 	if ( Peek_Model()->Is_Bone_Captured( root_bone ) ) {
-			Peek_Model()->Release_Bone( root_bone );
-		}
-	 	if ( Peek_Model()->Is_Bone_Captured( torso_bone ) ) {
-			Peek_Model()->Release_Bone( torso_bone );
-		}
-	}
-
-#endif
-
-#endif
 
 	bool do_steps = false;
 	if ( Is_On_Ladder() ) {

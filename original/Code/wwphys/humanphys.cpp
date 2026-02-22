@@ -7,13 +7,8 @@
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 
-#define VERBOSE_LOGGING 0
 
-#if VERBOSE_LOGGING
-#define VERBOSE_LOG(x) if (WWDEBUG_TRIGGER(WWDEBUG_TRIGGER_GENERIC0)) {  }
-#else
 #define VERBOSE_LOG(x)
-#endif
 
 bool HumanPhysClass::_DisableHumanSimulation = false;
 bool HumanPhysClass::_DisableHumanRendering = false;
@@ -220,9 +215,6 @@ bool HumanPhysClass::Ballistic_Move(float dt)
 	// more negative one is the one to keep.  What this does is use the 
 	// analytical velocity unless the character hits a roof.
 	State.Velocity.Z = start_vel.Z + accel * dt;
-#if 0
-	State.Velocity.Z = min((State.Position.Z - start_pos.Z) / dt,start_vel.Z + accel * dt);
-#endif
 	
 	// Now let the user adjust the movement a little
 	if (Controller && !IsAIControlledJump) {

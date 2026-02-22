@@ -203,18 +203,6 @@ void VehiclePhysClass::Timestep(float dt)
 	/*
 	** If the vehicle is not in use and it is on the ground, dampen the hell out of it
 	*/
-#if 0
-	int contact_count=0;
-	for (i=0; i<Wheels.Length(); i++) {
-		if ((Wheels[i] != NULL) && (Wheels[i]->Get_Flag(SuspensionElementClass::INCONTACT) == true)) {
-			contact_count++;
-		}
-	}
-	if ((contact_count >= 3) && (Is_Engine_Enabled() == false)) {
-		State.LMomentum *= PARKING_BRAKE_DAMPING;
-		State.AMomentum *= PARKING_BRAKE_DAMPING;
-	}
-#endif
 
 	/*
 	** If there are wheels contacting the ground, turn off friction for the body of the vehicle

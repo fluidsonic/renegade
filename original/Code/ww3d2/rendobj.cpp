@@ -678,7 +678,6 @@ void RenderObjClass::Remove(void)
 {
 	// All render objects have their scene pointers set.  To check if this is a "top level"
 	// object, (i.e. directly in the scene) you see if its Container pointer is NULL.
-#if 1
 	if (Container == NULL) {
 		if (Scene != NULL) {
 			Scene->Remove_Render_Object(this);
@@ -688,11 +687,6 @@ void RenderObjClass::Remove(void)
 		Container->Remove_Sub_Object(this);
 		return;
 	}
-#else
-	if (!Scene) return;
-	Scene->Remove_Render_Object(this);
-	Scene = NULL;
-#endif
 }
 
 /***********************************************************************************************

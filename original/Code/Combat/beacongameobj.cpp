@@ -127,23 +127,6 @@ BeaconGameObjDef::BeaconGameObjDef (void)	:
 	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,			DisarmedTextID);
 	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_BOOL,					IsNuke);
 
-	#ifdef PARAM_EDITING_ON
-		GenericDefParameterClass *param = new GenericDefParameterClass (&PreDetonateCinematicDefID);
-		param->Set_Class_ID (CLASSID_GAME_OBJECT_DEF_CINEMATIC);
-		param->Set_Name ("Pre-Detonate Cinematic Obj");
-		GENERIC_EDITABLE_PARAM (BeaconGameObjDef, param)
-
-		param = new GenericDefParameterClass (&PostDetonateCinematicDefID);
-		param->Set_Class_ID (CLASSID_GAME_OBJECT_DEF_CINEMATIC);
-		param->Set_Name ("Post-Detonate Cinematic Obj");
-		GENERIC_EDITABLE_PARAM (BeaconGameObjDef, param)
-
-		param = new GenericDefParameterClass (&ExplosionDefID);
-		param->Set_Class_ID (CLASSID_DEF_EXPLOSION);
-		param->Set_Name ("Explosion Obj");
-		GENERIC_EDITABLE_PARAM (BeaconGameObjDef, param)
-
-	#endif //PARAM_EDITING_ON
 
 	return ;
 }

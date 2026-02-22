@@ -235,20 +235,6 @@ inline CollisionMath::OverlapType CollisionMath::eval_overlap_collision(const Ca
 /*
 ** Stat tracking Macros
 */
-#ifdef COLMATH_STAT_TRACKING
-#define TRACK_COLLISION_RAY_TRI				Stats.CollisionRayTriCount++; Stats.TotalCollisionCount++;
-#define TRACK_COLLISION_RAY_TRI_HIT			Stats.CollisionRayTriHitCount++; Stats.TotalCollisionHitCount;
-#define TRACK_COLLISION_AABOX_TRI			Stats.CollisionAABoxTriCount++; Stats.TotalCollisionCount++;
-#define TRACK_COLLISION_AABOX_TRI_HIT		Stats.CollisionAABoxTriHitCount++; Stats.TotalCollisionHitCount++;
-#define TRACK_COLLISION_AABOX_AABOX			Stats.CollisionAABoxAABoxCount++; Stats.TotalCollisionCount++;
-#define TRACK_COLLISION_AABOX_AABOX_HIT	Stats.CollisionAABoxAABoxHitCount++; Stats.TotalCollisionHitCount++;
-#define TRACK_COLLISION_OBBOX_TRI			Stats.CollisionOBBoxTriCount++; Stats.TotalCollisionCount++;
-#define TRACK_COLLISION_OBBOX_TRI_HIT		Stats.CollisionOBBoxTriHitCount++; Stats.TotalCollisionHitCount++;
-#define TRACK_COLLISION_OBBOX_AABOX			Stats.CollisionOBBoxAABoxCount++; Stats.TotalCollisionCount++;
-#define TRACK_COLLISION_OBBOX_AABOX_HIT	Stats.CollisionOBBoxAABoxHitCount++; Stats.TotalCollisionHitCount++;
-#define TRACK_COLLISION_OBBOX_OBBOX			Stats.CollisionOBBoxOBBoxCount++; Stats.TotalCollisionCount++;
-#define TRACK_COLLISION_OBBOX_OBBOX_HIT	Stats.CollisionOBBoxOBBoxHitCount++; Stats.TotalCollisionHitCount++;
-#else
 #define TRACK_COLLISION_RAY_TRI				
 #define TRACK_COLLISION_RAY_TRI_HIT			
 #define TRACK_COLLISION_AABOX_TRI			
@@ -261,6 +247,5 @@ inline CollisionMath::OverlapType CollisionMath::eval_overlap_collision(const Ca
 #define TRACK_COLLISION_OBBOX_AABOX_HIT	
 #define TRACK_COLLISION_OBBOX_OBBOX			
 #define TRACK_COLLISION_OBBOX_OBBOX_HIT	
-#endif
 
 #endif // COLMATH_H

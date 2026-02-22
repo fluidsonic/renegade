@@ -67,12 +67,10 @@ TerrainMaterialClass::Set_Texture (const char *texture_name)
 	//
 	TextureName = texture_name;
 
-#ifndef PARAM_EDITING_ON
 	const char *dir_delim = ::strrchr (texture_name, '\\');
 	if (dir_delim != NULL) {
 		TextureName = dir_delim + 1;
 	}
-#endif
 
 	Texture = WW3DAssetManager::Get_Instance ()->Get_Texture (TextureName);
 	return ;

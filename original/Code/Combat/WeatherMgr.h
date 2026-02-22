@@ -2,7 +2,6 @@
 #define WEATHERMGR_H
 
 // Code controlling defines.
-#define WEATHER_PARTICLE_SORT 0
 
 // Includes.
 #include "combatchunkid.h"
@@ -23,11 +22,7 @@ class ChunkLoadClass;
 class ChunkSaveClass;
 class PhysicsSceneClass;
 
-#if WEATHER_PARTICLE_SORT
-class SortingIndexBufferClass;
-#else
 class	DX8IndexBufferClass;
-#endif
 
 class AudibleSoundClass;
 
@@ -175,11 +170,7 @@ class WeatherSystemClass : public RenderObjClass
 		ParticleStruct							*ParticleHead;				// Head of list of particles in system.
 		unsigned									 ParticleCount;			// No. of particles in system.
 
-		#if WEATHER_PARTICLE_SORT
-		SortingIndexBufferClass				*IndexBuffer;
-		#else
 		DX8IndexBufferClass					*IndexBuffer;
-		#endif
 
 		VertexMaterialClass					*Material;
 		ShaderClass								 Shader;

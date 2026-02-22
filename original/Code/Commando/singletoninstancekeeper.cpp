@@ -3,7 +3,6 @@
 //
 // Disable 'unreferenced inline function has been removed'
 //
-#pragma warning(disable : 4514)
 
 //////////////////////////////////////////////////////////////////////
 //	Local constants

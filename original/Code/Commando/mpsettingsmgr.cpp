@@ -15,9 +15,6 @@ bool										MPSettingsMgrClass::DisplaySidebarHelp				= true;
 bool										MPSettingsMgrClass::IsAutoLoginPromptEnabled		= true;
 bool										MPSettingsMgrClass::AreSkinsUnlocked				= false;
 
-#ifdef OBSOLETE
-MPSettingsMgrClass::GameModeMap	MPSettingsMgrClass::_mModePrefs;
-#endif
 
 int										MPSettingsMgrClass::OptionFlags	= OPTION_DEFAULTS;
 
@@ -160,62 +157,6 @@ MPSettingsMgrClass::Get_Auto_Password(void)
 	return (const char*)AutoPassword;
 }
 
-#ifdef OBSOLETE
-////////////////////////////////////////////////////////////////
-//
-//	Get_QuickMatch_Mode_Preference
-//
-////////////////////////////////////////////////////////////////
-int
-MPSettingsMgrClass::Get_QuickMatch_Mode_Preference (const char *mode)
-{
-	GameModeMap::iterator modePref = _mModePrefs.find(mode);
-
-	if (modePref == _mModePrefs.end()) {
-		RegistryClass registry(APPLICATION_SUB_KEY_NAME_QUICKMATCH);
-
-		if (registry.Is_Valid()) {
-			int pref = registry.Get_Int(mode, 10);
-			_mModePrefs[mode] = pref;
-			return pref;
-		}
-	}
-
-	return (*modePref).second;
-}
-
-////////////////////////////////////////////////////////////////
-//
-//	Set_QuickMatch_Mode_Preference
-//
-////////////////////////////////////////////////////////////////
-void
-MPSettingsMgrClass::Set_QuickMatch_Mode_Preference (const char *mode, int preference)
-{
-	_mModePrefs[mode] = preference;
-	return ;
-}
-
-////////////////////////////////////////////////////////////////
-//
-//	Save_QuickMatch_Mode_Preferences
-//
-////////////////////////////////////////////////////////////////
-void
-MPSettingsMgrClass::Save_QuickMatch_Mode_Preferences (void)
-{
-	RegistryClass registry(APPLICATION_SUB_KEY_NAME_QUICKMATCH);
-
-	if (registry.Is_Valid()) {
-		GameModeMap::iterator iter = _mModePrefs.begin();
-
-		while (iter != _mModePrefs.end()) {
-			registry.Set_Int((*iter).first, (*iter).second);
-			iter++;
-		}
-	}
-}
-#endif // OBSOLETE
 
 ////////////////////////////////////////////////////////////////
 //

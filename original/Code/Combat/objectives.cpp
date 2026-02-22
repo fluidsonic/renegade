@@ -388,7 +388,6 @@ void	ObjectiveManager::Add_Objective( int id, int type, int status, int short_de
 	objective->LongDescriptionID = long_description_id;
 	objective->DescriptionSoundFilename = description_sound_filename;
 
-#if 01
 	//
 	//	Update our EVA message window
 	//
@@ -410,7 +409,6 @@ void	ObjectiveManager::Add_Objective( int id, int type, int status, int short_de
 //		WWAudioClass::Get_Instance()->Create_Instant_Sound( preset_name, Matrix3D(1) );
 	}
 
-#endif
 
 	Viewer.Update ();
 	HUDUpdate = true;
@@ -422,13 +420,11 @@ void	ObjectiveManager::Remove_Objective( int id )
 	Objective * objective = Find_Objective( id );
 	if ( objective != NULL ) {
 
-#if 01
 		WideStringClass message;
 		message.Format( TRANSLATE (IDS_OBJ_CANCELLED), objective->Type_To_Name () );
 		CombatManager::Get_Message_Window ()->Add_Message( message, objective->Type_To_Base_Color() );
 
 //		WWAudioClass::Get_Instance()->Create_Instant_Sound( "EVA_Complete", Matrix3D(1) );
-#endif
 
 		ObjectiveList.Delete( objective );
 		delete objective;
@@ -465,7 +461,6 @@ void	ObjectiveManager::Set_Objective_Status( int id, int status )
 			objective->Age = 0;		// Reset age
 		}
 
-#if 01
 		//
 		// Special case changing an objective from hidden to pending... (Note:  for
 		// a completed objective, we display the normal message even if it was hidden).
@@ -482,7 +477,6 @@ void	ObjectiveManager::Set_Objective_Status( int id, int status )
 			}
 		}
 		CombatManager::Get_Message_Window ()->Add_Message( message, objective->Type_To_Base_Color() );
-#endif
 
 	} else {
 		Debug_Say(( "Objective not found to set status\n" ));

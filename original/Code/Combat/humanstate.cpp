@@ -382,14 +382,6 @@ void	HumanStateClass::Set_State( HumanStateType state, int sub_state )
 	}
 
 	// Turn off shadows in vehicles
-#pragma message ("(gth) shadow review hacking")
-#if 0
-	if ( State == IN_VEHICLE )  {
-		HumanPhys->Enable_Shadow_Generation( false );
-	} else {
-		HumanPhys->Enable_Shadow_Generation( true );
-	}
-#endif
 
 	if ( ( State == IN_VEHICLE ) || ( State == TRANSITION ) || ( State == TRANSITION_COMPLETE ) ) {
 		HumanPhys->Set_Collision_Group( BULLET_ONLY_COLLISION_GROUP );
@@ -481,12 +473,6 @@ void	HumanStateClass::Start_Transition_Animation( const char * anim_name, bool b
 
 void	HumanStateClass::Start_Scripted_Animation( const char * anim_name, bool blend, bool looping )
 {
-#if 0
-	if ( StateLocked ) {
-		Debug_Say(( "State is Locked.  Can't Start Transition Anim %s\n", anim_name ));
-		return;
-	}
-#endif
 
 	//Debug_Say(("Start_Scripted_Animation %s\n", anim_name));
 
@@ -757,12 +743,6 @@ void	HumanStateClass::Update_Animation( void )
 	} else if ( State == DIVE ) {
 
 		const char * anim_name = NULL;
-#if 0
-		if ( SubState & SUB_STATE_LEFT ) 				anim_name = "S_A_HUMAN.H_A_DIV3";
-		if ( SubState & SUB_STATE_RIGHT )				anim_name = "S_A_HUMAN.H_A_DIV4";
-		if ( SubState & SUB_STATE_FORWARD ) 			anim_name = "S_A_HUMAN.H_A_DIV1";
-		if ( SubState & SUB_STATE_BACKWARD )			anim_name = "S_A_HUMAN.H_A_DIV2";
-#else
 		int offset = FreeRandom.Get_Int( 2 );
 		if ( !IS_SOLOPLAY ) {
 			offset = 0;
@@ -772,7 +752,6 @@ void	HumanStateClass::Update_Animation( void )
 		if ( SubState & SUB_STATE_LEFT ) 				offset += 4;
 		if ( SubState & SUB_STATE_RIGHT )				offset += 6;
 		anim_name = _dive_anims[offset];
-#endif
 
 		AnimControl->Set_Animation( anim_name, 0.2f );
 		AnimControl->Set_Mode( ANIM_MODE_ONCE );
@@ -882,14 +861,6 @@ void	HumanStateClass::Update_State( void )
 			loiter_def = HumanLoiterGlobalSettingsDef::Get_Default_Loiters();
 		}
 
-#if 0
-		// loiter based on holding a weapon
-		if ( WeaponHoldStyle == WEAPON_HOLD_STYLE_EMPTY_HANDS ) {
-			loiter_def = HumanLoiterGlobalSettingsDef::Get_Weaponless_Loiters();
-		} else {
-			loiter_def = HumanLoiterGlobalSettingsDef::Get_Weapon_Loiters();
-		}
-#endif
 
 		if ( loiter_def != NULL ) {
 			if ( LoiterDelay > loiter_def->Get_Activation_Delay() ) {
@@ -1033,12 +1004,6 @@ void	HumanStateClass::Post_Think( void )
 			//Debug_Say(( "%f %f\n", move_vector.Length(), WALKING_THRESHHOLD ));
 		}																		
 
-#if 0	// No turn anims!!!
-		// Get our current turn vector
-		if ( TurnVelocity > 0 )				new_sub_state |= SUB_STATE_TURN_LEFT;
-		else if ( TurnVelocity < 0 ) 		new_sub_state |= SUB_STATE_TURN_RIGHT;
-		TurnVelocity = 0;
-#endif
 
 		// Get him out of WOUNDED, LAND, LOITER states if moving or shooting
 		if ( Is_State_Interruptable() && Get_State() != UPRIGHT ) {
@@ -1060,84 +1025,6 @@ void	HumanStateClass::Post_Think( void )
 				Set_Sub_State( (HumanSubStateType)new_sub_state );
 			}
 
-#if 0		// Disable all leg twisting
-
-// ===================================================================			// LEG TWIST!!!!!
-
-			// Don't leg twist for crouched
-			if ( Get_State() == UPRIGHT && !Get_State_Flag( CROUCHED_FLAG ) ) {
-
-				float	legs_rotation = 0;
-
-				// Compare the facing to the motion, set leg_racing to the difference
-				if ( move_vector.Length() > 0 ) {
-					float move_direction = WWMath::Atan2( -move_vector.Y, move_vector.X );
-
-					if ( new_sub_state & SUB_STATE_FORWARD ) {
-						legs_rotation = -move_direction;
-					} else if ( new_sub_state & SUB_STATE_BACKWARD ) {
-						legs_rotation = -move_direction + DEG_TO_RAD( 180 );
-					} else if ( new_sub_state & SUB_STATE_LEFT ) {
-						legs_rotation = -move_direction + DEG_TO_RAD( 270 );
-					} else if ( new_sub_state & SUB_STATE_RIGHT ) {
-						legs_rotation = -move_direction + DEG_TO_RAD( 90 );
-					}
-
-					legs_rotation = WWMath::Wrap( legs_rotation, DEG_TO_RADF( -180 ), DEG_TO_RADF( 180 ) );
-//					legs_rotation = WWMath::Clamp( legs_rotation, DEG_TO_RADF( -45 ), DEG_TO_RADF( 45 ) );
-					legs_rotation = WWMath::Clamp( legs_rotation, DEG_TO_RADF( -30 ), DEG_TO_RADF( 30 ) );
-
-					if ( WWMath::Fabs( legs_rotation ) < DEG_TO_RAD( 25 ) ) {
-						legs_rotation = 0;
-					}
-				}
-
-				// Move LegRotation toward leg_rotation
-				float rot_diff = legs_rotation - LegRotation;
-				float max_mov = DEG_TO_RAD( 180 ) * TimeManager::Get_Frame_Seconds();
-//				float max_mov = DEG_TO_RAD( 90 ) * TimeManager::Get_Frame_Seconds();
-				rot_diff = WWMath::Clamp( rot_diff, -max_mov, max_mov );
-				LegRotation += rot_diff;
-				legs_rotation = LegRotation;
-
-				// I'm making this staic for now, because all human
-				// skeletons have the bone at the same index
-				static int  root_bone = -1;
-				if ( root_bone == -1 ) {			// Get root bone index
-					root_bone = HumanPhys->Peek_Model()->Get_Bone_Index( "c spine" );
-				}
-
-				static int  torso_bone = -1;
-				if ( torso_bone == -1 ) {			// Get torso bone index
-					torso_bone = HumanPhys->Peek_Model()->Get_Bone_Index( "c spine1" );
-				}
-
-				if ( legs_rotation != 0 ) {
-
-					if ( !HumanPhys->Peek_Model()->Is_Bone_Captured( root_bone ) ) {
-						HumanPhys->Peek_Model()->Capture_Bone( root_bone );
-					}
-					if ( !HumanPhys->Peek_Model()->Is_Bone_Captured( torso_bone ) ) {
-						HumanPhys->Peek_Model()->Capture_Bone( torso_bone );
-					}
-
-					Matrix3D	root_adjust(1);				// adjust it
-					root_adjust.Rotate_X( legs_rotation );
-					HumanPhys->Peek_Model()->Control_Bone( root_bone, root_adjust );
-
-					Matrix3D	legs_adjust(1);				// adjust it
-					legs_adjust.Rotate_X( -legs_rotation );
-					HumanPhys->Peek_Model()->Control_Bone( torso_bone, legs_adjust );
-				} else {	// no adjustment, release
-	 				if ( HumanPhys->Peek_Model()->Is_Bone_Captured( root_bone ) ) {
-						HumanPhys->Peek_Model()->Release_Bone( root_bone );
-					}
-	 				if ( HumanPhys->Peek_Model()->Is_Bone_Captured( torso_bone ) ) {
-						HumanPhys->Peek_Model()->Release_Bone( torso_bone );
-					}
-				}
-			}
-#endif
 		}
 
 		// Scale animation speed
@@ -1370,7 +1257,6 @@ void	HumanStateClass::Complete_Jump( void )
 //
 //	Don't do this in the level editor
 //
-#ifndef PARAM_EDITING_ON
 
 	if ( fall.Z > settings->Get_Falling_Damage_Min_Distance() ) {
 		add_portal = false;
@@ -1409,7 +1295,6 @@ void	HumanStateClass::Complete_Jump( void )
 		}
 	}
 
-#endif // PARAM_EDITING_ON
 
 	//	Find the sector the human jumped from and the sector the human jumped to.
 	/*Vector3 curr_pos							= HumanPhys->Get_Position ();

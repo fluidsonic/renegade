@@ -287,9 +287,6 @@ void AABTreeClass::Generate_OBBox_APT_Recursive(CullNodeStruct * node,OBBoxAPTCo
 			TriClass tri;
 			const Vector3 * loc = Mesh->Get_Vertex_Array();
 			const TriIndex * polys = Mesh->Get_Polygon_Array();
-#if (!OPTIMIZE_PLANEEQ_RAM)
-			const Vector4 * norms = Mesh->Get_Plane_Array();
-#endif
 			for (int poly_counter=0; poly_counter<polycount; poly_counter++) {
 
 				int poly_index = PolyIndices[poly0 + poly_counter];
@@ -297,13 +294,9 @@ void AABTreeClass::Generate_OBBox_APT_Recursive(CullNodeStruct * node,OBBoxAPTCo
 				tri.V[0] = &(loc[ polys[poly_index][0] ]);
 				tri.V[1] = &(loc[ polys[poly_index][1] ]);
 				tri.V[2] = &(loc[ polys[poly_index][2] ]);
-#if (!OPTIMIZE_PLANEEQ_RAM)
-				tri.N = (Vector3*)&(norms[poly_index]);
-#else
 				Vector3 normal;
 				tri.N = &normal;
 				tri.Compute_Normal();
-#endif
 				if (CollisionMath::Intersection_Test(context.Box,tri)) {;
 					context.APT.Add(poly_index);
 				} 
@@ -380,9 +373,6 @@ void AABTreeClass::Generate_OBBox_APT_Recursive(CullNodeStruct * node, OBBoxRayA
 			TriClass tri;
 			const Vector3 * loc = Mesh->Get_Vertex_Array();
 			const TriIndex * polys = Mesh->Get_Polygon_Array();
-#if (!OPTIMIZE_PLANEEQ_RAM)
-			const Vector4 * norms = Mesh->Get_Plane_Array();
-#endif
 
 			for (int poly_counter=0; poly_counter<polycount; poly_counter++) {
 
@@ -391,13 +381,9 @@ void AABTreeClass::Generate_OBBox_APT_Recursive(CullNodeStruct * node, OBBoxRayA
 				tri.V[0] = &(loc[ polys[poly_index][0] ]);
 				tri.V[1] = &(loc[ polys[poly_index][1] ]);
 				tri.V[2] = &(loc[ polys[poly_index][2] ]);
-#if (!OPTIMIZE_PLANEEQ_RAM)
-				tri.N = (Vector3*)&(norms[poly_index]);
-#else
 				Vector3 normal;
 				tri.N = &normal;
 				tri.Compute_Normal();
-#endif
 				if (Vector3::Dot_Product(*tri.N,context.ViewVector) < 0.0f) {
 					if (CollisionMath::Intersection_Test(context.Box,tri)) {
 						context.APT.Add(poly_index);
@@ -649,9 +635,6 @@ bool AABTreeClass::Cast_Ray_To_Polys(CullNodeStruct * node,RayCollisionTestClass
 
 		const Vector3 * loc = Mesh->Get_Vertex_Array();
 		const TriIndex * polyverts = Mesh->Get_Polygon_Array();
-#if (!OPTIMIZE_PLANEEQ_RAM)
-		const Vector4 * norms = Mesh->Get_Plane_Array();
-#endif
 
 		int polyhit = -1;
 		int poly0 = node->Get_Poly0();
@@ -664,13 +647,9 @@ bool AABTreeClass::Cast_Ray_To_Polys(CullNodeStruct * node,RayCollisionTestClass
 			tri.V[0] = &(loc[ polyverts[poly_index][0] ]);
 			tri.V[1] = &(loc[ polyverts[poly_index][1] ]);
 			tri.V[2] = &(loc[ polyverts[poly_index][2] ]);
-#if (!OPTIMIZE_PLANEEQ_RAM)
-			tri.N = (Vector3*)&(norms[poly_index]);
-#else
 			Vector3 normal;
 			tri.N = &normal;
 			tri.Compute_Normal();
-#endif
 			if (CollisionMath::Collide(raytest.Ray,tri,raytest.Result)) {;
 				polyhit = poly_index;
 			}
@@ -763,9 +742,6 @@ bool AABTreeClass::Cast_AABox_To_Polys(CullNodeStruct * node,AABoxCollisionTestC
 
 		const Vector3 * loc = Mesh->Get_Vertex_Array();
 		const TriIndex * polyverts = Mesh->Get_Polygon_Array();
-#if (!OPTIMIZE_PLANEEQ_RAM)
-		const Vector4 * norms = Mesh->Get_Plane_Array();
-#endif
 
 		int polyhit = -1;
 		int poly0 = node->Get_Poly0();
@@ -778,13 +754,9 @@ bool AABTreeClass::Cast_AABox_To_Polys(CullNodeStruct * node,AABoxCollisionTestC
 			tri.V[0] = &(loc[ polyverts[poly_index][0] ]);
 			tri.V[1] = &(loc[ polyverts[poly_index][1] ]);
 			tri.V[2] = &(loc[ polyverts[poly_index][2] ]);
-#if (!OPTIMIZE_PLANEEQ_RAM)
-			tri.N = (Vector3*)&(norms[poly_index]);
-#else
 			Vector3 normal;
 			tri.N = &normal;
 			tri.Compute_Normal();
-#endif
 			if (CollisionMath::Collide(boxtest.Box,boxtest.Move,tri,boxtest.Result)) {
 				polyhit = poly_index;
 			}
@@ -826,9 +798,6 @@ bool AABTreeClass::Cast_OBBox_To_Polys(CullNodeStruct * node,OBBoxCollisionTestC
 
 		const Vector3 * loc = Mesh->Get_Vertex_Array();
 		const TriIndex * polyverts = Mesh->Get_Polygon_Array();
-#if (!OPTIMIZE_PLANEEQ_RAM)
-		const Vector4 * norms = Mesh->Get_Plane_Array();
-#endif
 
 		int polyhit = -1;
 
@@ -839,13 +808,9 @@ bool AABTreeClass::Cast_OBBox_To_Polys(CullNodeStruct * node,OBBoxCollisionTestC
 			tri.V[0] = &(loc[ polyverts[poly_index][0] ]);
 			tri.V[1] = &(loc[ polyverts[poly_index][1] ]);
 			tri.V[2] = &(loc[ polyverts[poly_index][2] ]);
-#if (!OPTIMIZE_PLANEEQ_RAM)
-			tri.N = (Vector3*)&(norms[poly_index]);
-#else
 			Vector3 normal;
 			tri.N = &normal;
 			tri.Compute_Normal();
-#endif
 
 			if (CollisionMath::Collide(boxtest.Box,boxtest.Move,tri,Vector3(0,0,0),boxtest.Result)) {
 				polyhit = poly_index;
@@ -893,9 +858,6 @@ bool AABTreeClass::Intersect_OBBox_With_Polys
 
 		const Vector3 * loc = Mesh->Get_Vertex_Array();
 		const TriIndex * polyverts = Mesh->Get_Polygon_Array();
-#if (!OPTIMIZE_PLANEEQ_RAM)
-		const Vector4 * norms = Mesh->Get_Plane_Array();
-#endif
 
 		for (int poly_counter=0; poly_counter<polycount; poly_counter++) {
 
@@ -904,13 +866,9 @@ bool AABTreeClass::Intersect_OBBox_With_Polys
 			tri.V[0] = &(loc[ polyverts[poly_index][0] ]);
 			tri.V[1] = &(loc[ polyverts[poly_index][1] ]);
 			tri.V[2] = &(loc[ polyverts[poly_index][2] ]);
-#if (!OPTIMIZE_PLANEEQ_RAM)
-			tri.N = (Vector3*)&(norms[poly_index]);
-#else
 			Vector3 normal;
 			tri.N = &normal;
 			tri.Compute_Normal();
-#endif
 
 			if (CollisionMath::Intersection_Test(test.Box,tri)) {
 				return true;

@@ -103,39 +103,6 @@ uint32_t DynamicAABTreeCullClass::Get_Dynamic_Object_Vis_ID(const AABoxClass & o
 	*/
 	AABTreeNodeClass * start_node = RootNode;
 
-#if 0 // Disabling coherency because characters are getting stuck in local minima in the tree...
-	if ((node_id != NULL) && (*node_id >= 0) && (*node_id < NodeCount)) {
-		start_node = IndexedNodes[*node_id];
-	}
-
-	/*
-	** Step 1: Walk towards the root of the tree until we find a node that still
-	** contains this object (hopefully the starting node does!)
-	*/
-	if (is_big_obj) {
-
-		/*
-		** For "big" objects, we check the entire box against the node's box
-		*/
-		while (	(CollisionMath::Overlap_Test(start_node->Box,obj_bounds) != CollisionMath::INSIDE) && 
-					(start_node != RootNode)	) 
-		{
-			start_node = start_node->Parent;
-		}
-
-	} else {
-	
-		/*
-		** For "normal" objects, we check the center point against the "deflated" boxes.  This
-		** is more correct for the way that VIS was generated.
-		*/
-		while (	(deflated_box_contains_point(start_node->Box,obj_bounds.Center) == false) && 
-					(start_node != RootNode)	) 
-		{
-			start_node = start_node->Parent;		
-		}
-	}
-#endif
 
 	/*
 	** Step 2: Now recurse down the tree to find the node this object should derive its visibility

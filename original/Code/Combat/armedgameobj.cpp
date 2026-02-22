@@ -335,24 +335,17 @@ void ArmedGameObj::Export_Frequent(BitStreamClass & packet)
 //-----------------------------------------------------------------------------
 void ArmedGameObj::Export_State_Cs(BitStreamClass & packet)
 {
-#if 1
 	Vector3	my_pos;
 	Get_Position( &my_pos );
 	Vector3 rel_target = TargetingPos - my_pos;
 	packet.Add(rel_target.X, BITPACK_WORLD_POSITION_X);
 	packet.Add(rel_target.Y, BITPACK_WORLD_POSITION_Y);
 	packet.Add(rel_target.Z, BITPACK_WORLD_POSITION_Z);
-#else
-	packet.Add(TargetingPos.X, BITPACK_WORLD_POSITION_X);
-	packet.Add(TargetingPos.Y, BITPACK_WORLD_POSITION_Y);
-	packet.Add(TargetingPos.Z, BITPACK_WORLD_POSITION_Z);
-#endif
 }
 
 //-----------------------------------------------------------------------------
 void ArmedGameObj::Import_State_Cs(BitStreamClass & packet)
 {
-#if 1
 	Vector3 rel_target;
 	packet.Get(rel_target.X, BITPACK_WORLD_POSITION_X);
 	packet.Get(rel_target.Y, BITPACK_WORLD_POSITION_Y);
@@ -362,14 +355,6 @@ void ArmedGameObj::Import_State_Cs(BitStreamClass & packet)
 	Vector3 targeting_pos = rel_target + my_pos;
 
 	Set_Targeting(targeting_pos);
-#else
-	Vector3 targeting_pos;
-	packet.Get(targeting_pos.X, BITPACK_WORLD_POSITION_X);
-	packet.Get(targeting_pos.Y, BITPACK_WORLD_POSITION_Y);
-	packet.Get(targeting_pos.Z, BITPACK_WORLD_POSITION_Z);
-
-	Set_Targeting(targeting_pos);
-#endif
 }
 
 void	ArmedGameObj::Post_Think( void )

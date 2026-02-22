@@ -10,11 +10,7 @@
 
 template<class T> struct RemainderTable;
 template<class T> T Gcd(const T & a, const T & n);
-#ifdef _UNIX
  #define FN_TEMPLATE <>
-#else
- #define FN_TEMPLATE
-#endif
 
 template<int PRECISION>
 class Int {

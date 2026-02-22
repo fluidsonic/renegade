@@ -620,22 +620,6 @@ void RingRenderObjClass::Render(RenderInfoClass & rinfo)
 		//
 
 		if (Flags & USE_CAMERA_ALIGN) {
-	#ifdef WW3D_DX8
-			srMatrix4 srtm;
-			rinfo.Gerd.matrixMode (srGERD::MODELVIEW);
-			rinfo.Gerd.pushMatrix ();
-			rinfo.Gerd.getMatrix (srGERD::MODELVIEW, srtm);
-
-			srVector3 wpos(Transform[0][3],Transform[1][3],Transform[2][3]);
-			srVector4 cpos = srtm.transform (wpos);
-
-			Matrix3D tm(1.0f, 0.0f, 0.0f, cpos.x,
-							0.0f, 1.0f, 0.0f, cpos.y,
-							0.0f, 0.0f, 1.0f, cpos.z);
-
-			Convert_Westwood_Matrix (tm, &srtm);
-			rinfo.Gerd.loadMatrix (srtm);	 
-	#endif //WW3D_DX8
 		} else {
 			DX8Wrapper::Set_Transform(D3DTS_WORLD,temp);	
 		}

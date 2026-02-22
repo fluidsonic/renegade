@@ -93,47 +93,4 @@ DECLARE_SCRIPT(MXX_Group_Member_DEL, "GroupName:string")
 		group->SendCustomEvent(owner, SCMD_GROUP_EVENT, (int)&info);
 		}
 
-	#ifdef _DEBUG
-	void Custom(GameObject* owner, int event, int data, GameObject* sender)
-		{
-		if (SCMD_GROUP_EVENT == event)
-			{
-			GroupEventInfo* info = (GroupEventInfo*)data;
-			assert(info != NULL);
-
-			int senderID = Commands->Get_ID(sender);
-			int objectID = Commands->Get_ID(info->Object);
-
-			switch (info->Event)
-				{
-				case GROUP_MEMBER_DAMAGED:
-					DebugPrint("Group %s member %d damaged by object %d\n",
-						info->GroupName, senderID, objectID);
-				break;
-
-				case GROUP_MEMBER_KILLED:
-					DebugPrint("Group %s member %d killed by object %d\n",
-						info->GroupName, senderID, objectID);
-				break;
-
-				case GROUP_MEMBER_HEARD:
-					{
-					const CombatSound* sound = info->Sound;
-					objectID = Commands->Get_ID(sound->Creator);
-					DebugPrint("Group %s member %d heard a sound from object %d\n",
-						info->GroupName, senderID, objectID);
-					}
-				break;
-
-				case GROUP_MEMBER_SAW:
-					DebugPrint("Group %s member %d saw object %d\n",
-						info->GroupName, senderID, objectID);
-				break;
-
-				default:
-				break;
-				}
-			}
-		}
-	#endif
 	};

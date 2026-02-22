@@ -4,7 +4,6 @@
 #include <memory.h>
 #include "wwfile.h"
 
-#pragma warning(disable : 4514)
 
 int FileClass::Printf(char *str, ...)
 {

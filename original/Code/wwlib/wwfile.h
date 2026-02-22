@@ -2,9 +2,7 @@
 #ifndef WWFILE_Hx
 #define WWFILE_Hx
 
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 #define YEAR(dt)	(((dt & 0xFE000000) >> (9 + 16)) + 1980)
 #define MONTH(dt)	 ((dt & 0x01E00000) >> (5 + 16))

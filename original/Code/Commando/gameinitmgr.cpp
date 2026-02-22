@@ -30,7 +30,6 @@
 #include "gamesideservercontrol.h"
 #include "hud.h"
 #include "serversettings.h"
-#include "specialbuilds.h"
 #include "modpackagemgr.h"
 
 #include "translatedb.h"
@@ -220,11 +219,9 @@ GameInitMgrClass::End_Game (void)
 		}
 	}
 
-#ifndef MULTIPLAYERDEMO
 	if ( IS_MISSION && COMBAT_STAR ) {
 		cGod::Store_Inventory( COMBAT_STAR );
 	}
-#endif // !MULTIPLAYERDEMO
 
 	//
 	// A dedicated server will disable sfx & music. Restore them here.
@@ -284,7 +281,6 @@ GameInitMgrClass::End_Game (void)
 
 		bool is_quick_full_exit_requested = false;
 
-#pragma message("(TSS) ***** Memory leak here - please fix (ST - 6/14/2001 2:06PM) *****")
 		cSvrGoodbyeEvent * p_event = new cSvrGoodbyeEvent;
 		p_event->Init(is_quick_full_exit_requested);
 	}
@@ -498,7 +494,6 @@ GameInitMgrClass::End_Client_Server (void)
 void
 GameInitMgrClass::Initialize_SP (void)
 {
-#ifndef MULTIPLAYERDEMO
 
 	if (Mode != MODE_UNKNOWN) {
 		Shutdown ();
@@ -532,7 +527,6 @@ GameInitMgrClass::Initialize_SP (void)
 	Mode					= MODE_SP;
 	return ;
 
-#endif // !MULTIPLAYERDEMO
 }
 
 ////////////////////////////////////////////////////////////////
@@ -543,14 +537,12 @@ GameInitMgrClass::Initialize_SP (void)
 void
 GameInitMgrClass::Shutdown_SP (void)
 {
-#ifndef MULTIPLAYERDEMO
 
 //#pragma message ("TSS Fix memory leak here")
 
 	//cSingleData::Set_Is_Single_Player(false);
 	cGameType::Set_Game_Type(GAMETYPE_NONE);
 
-#endif // !MULTIPLAYERDEMO
 }
 
 ////////////////////////////////////////////////////////////////
@@ -561,7 +553,6 @@ GameInitMgrClass::Shutdown_SP (void)
 void
 GameInitMgrClass::Initialize_Skirmish(void)
 {
-#ifndef MULTIPLAYERDEMO
 
 	if (Mode != MODE_UNKNOWN) {
 		Shutdown ();
@@ -594,7 +585,6 @@ GameInitMgrClass::Initialize_Skirmish(void)
 	IsServerRequired	= true;
 	Mode					= MODE_SKIRMISH;
 
-#endif // !MULTIPLAYERDEMO
 }
 
 ////////////////////////////////////////////////////////////////
@@ -605,12 +595,10 @@ GameInitMgrClass::Initialize_Skirmish(void)
 void
 GameInitMgrClass::Shutdown_Skirmish(void)
 {
-#ifndef MULTIPLAYERDEMO
 
 	//cSingleData::Set_Is_Single_Player(false);
 	cGameType::Set_Game_Type(GAMETYPE_NONE);
 
-#endif // !MULTIPLAYERDEMO
 }
 
 ////////////////////////////////////////////////////////////////
@@ -754,9 +742,6 @@ void _reload_game_configuration_files(void)
 	BonesManager::Init();
 	SurfaceEffectsManager::Init();
 
-#if 0 // re-initting cameras seems to cause problems...
-	CCameraClass::Init();
-#endif
 
 	// Reload dazzles
 	FileClass * dazzle_ini_file = _TheFileFactory->Get_File("DAZZLE.INI");

@@ -9,7 +9,6 @@
 #include	"always.h"
 
 // Disable warning about exception handling not being enabled. It's used as part of STL - in a part of STL we don't use.
-#pragma warning(disable : 4530)
 
 #include "connect.h" // I WANNA BE FIRST!
 
@@ -516,12 +515,10 @@ bool cConnection::Receive_Packet()
 			return(false);
 		}
 
-#ifndef WRAPPER_CRC
    	if (!packet.Is_Crc_Correct()) {
       	packet.Flush();
       	return true;
    	}
-#endif //WRAPPER_CRC
 
 	}
 
@@ -908,21 +905,6 @@ int cConnection::Low_Level_Send_Wrapper(cPacket & packet, LPSOCKADDR_IN p_addres
 
    int ret_code = 0;
 
-#if (0)
-if (last_packet_len == (int)packet.Get_Compressed_Size_Bytes()) {
-	int delta_size = PacketManagerClass::Build_Delta_Packet_Patch(last_packet, (unsigned char*)packet.Get_Data(), delta_packet, last_packet_len, last_packet_len);
-	if (delta_size != -1) {
-	}
-
-	int bytes = PacketManagerClass::Reconstruct_From_Delta(last_packet, fixed_packet, delta_packet, last_packet_len);
-
-	assert(bytes == last_packet_len);
-	assert(memcmp(packet.Get_Data(), fixed_packet, last_packet_len) == 0);
-
-}
-last_packet_len = (int)packet.Get_Compressed_Size_Bytes();
-memcpy(last_packet, packet.Get_Data(), last_packet_len);
-#endif (0)
 
    if (cSinglePlayerData::Is_Single_Player()) {
 	   ret_code = Single_Player_sendto(packet);
@@ -1063,16 +1045,6 @@ int cConnection::Low_Level_Receive_Wrapper(cPacket & packet)
 		}
 		ret_code = bytes;
 
-#if (0)
-   	int address_size = sizeof(SOCKADDR_IN);
-		ret_code = recvfrom(Sock, packet.Get_Data(),
-			packet.Get_Max_Size(), 0,
-	   	(LPSOCKADDR) &packet.Get_From_Address_Wrapper()->FromAddress, &address_size);
-
-		if (ret_code > 0) {
-			//
-		}
-#endif //(0)
 
 		/*
 		//
@@ -1103,18 +1075,14 @@ int cConnection::Receive_Wrapper(cPacket & packet)
 
 		cPacket::Construct_App_Packet(packet, full_packet);
 
-#ifndef WRAPPER_CRC
 		if (packet.Is_Crc_Correct()) {
-#endif //WRAPPER_CRC
 			//
 			// Update receive stats
 			//
 			BYTE packet_type = packet.Get_Type();
 			PStatList->Increment_Num_Msg_Recd(packet_type);
 			PStatList->Increment_Num_Byte_Recd(packet_type, ret_code);
-#ifndef WRAPPER_CRC
 		}
-#endif //WRAPPER_CRC
 	}
 
 	return ret_code;

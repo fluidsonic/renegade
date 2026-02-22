@@ -17,7 +17,6 @@
 #include "string_ids.h"
 #include "dlgcncwinscreen.h"
 #include "dlgmpconnectionrefused.h"
-#include "specialbuilds.h"
 
 // 
 // TSS2001 Problem - we have lost the unreliable multiblast effect for this message

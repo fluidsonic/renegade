@@ -1,8 +1,3 @@
-#if defined(_MSV_VER)
-#pragma once
-#endif
-
-
 //
 // This is a storing house for ingame tga's relating to networking
 // and multiplayer. 

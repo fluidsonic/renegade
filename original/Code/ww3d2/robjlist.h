@@ -10,8 +10,6 @@
 #include "multilist.h"
 #endif
 
-#ifndef WWDEBUG_H
-#endif
 
 class RenderObjClass;
 

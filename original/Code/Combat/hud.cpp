@@ -410,27 +410,12 @@ static	void	Powerup_Update( void )
 			white = COLOR( WWMath::Clamp( 1.0f - (LeftAnimateTimer/ANIMATE_TIME), 0, 1 ), white ) ;
 		}
 
-#if 0		// No boxes
-		// The box is drawn additive, so his color is green alpha
-		int box_color = (white & 0xFF000000) | ((white >> 16) & 0x0000FF00);
-		PowerupBoxRenderer->Add_Quad( draw_box, box_uv, box_color );
-#endif
 
 		// Draw powerup name
 		PowerupTextRenderer->Build_Sentence( LeftPowerupIconList[i]->Name );
 		PowerupTextRenderer->Set_Location( Vector2( draw_box.Left + 1, draw_box.Top + POWERUP_BOX_HEIGHT - 15 ) );
 		PowerupTextRenderer->Draw_Sentence( white );
 
-#if 0
-		// Draw powerup count
-		if ( LeftPowerupIconList[i]->Number != 0 ) {
-			WideStringClass num(0,true);
-			num.Format( u"%d", LeftPowerupIconList[i]->Number );
-			PowerupTextRenderer->Build_Sentence( num );
-			PowerupTextRenderer->Set_Location( Vector2( draw_box.Right - 12, draw_box.Top + 1 ) );
-			PowerupTextRenderer->Draw_Sentence( white );
-		}
-#endif
 
 		RectClass	icon_box = LeftPowerupIconList[i]->IconBox;
 		icon_box += draw_box.Upper_Left();
@@ -466,11 +451,6 @@ static	void	Powerup_Update( void )
 			white = COLOR( WWMath::Clamp( 1.0f - (RightAnimateTimer/ANIMATE_TIME), 0, 1 ), white ) ;
 		}
 
-#if 0		// No boxes
-		// The box is drawn additive, so his color is green alpha
-		int box_color = (white & 0xFF000000) | ((white >> 16) & 0x0000FF00);
-		PowerupBoxRenderer->Add_Quad( draw_box, box_uv, box_color );
-#endif
 
 		// Draw powerup name
 		PowerupTextRenderer->Build_Sentence( RightPowerupIconList[i]->Name );
@@ -509,9 +489,6 @@ static	void	Powerup_Update( void )
 
 static	void	Powerup_Render( void )
 {
-#if 0		// No boxes
-	PowerupBoxRenderer->Render();
-#endif
 
 	int i;
 	for ( i = 0; i < MAX_ICONS && i < LeftPowerupIconList.Count(); i++ ) {
@@ -853,18 +830,6 @@ static	void	Weapon_Update( void )
 				uv = def->IconTextureUV;
 				offset = def->IconOffset;
 
-#if 0		// Used to find offsets
-				static	Vector2	tweak_add(0,0);
-				Vector2 add(0,0);
-				add.X += Input::Get_Amount( INPUT_FUNCTION_MOVE_LEFT ) - Input::Get_Amount( INPUT_FUNCTION_MOVE_RIGHT );
-				add.Y += Input::Get_Amount( INPUT_FUNCTION_MOVE_FORWARD ) - Input::Get_Amount( INPUT_FUNCTION_MOVE_BACKWARD );
-				tweak_add -= add;
-				offset += tweak_add;
-				_LastHUDWeapon = NULL;
-				if ( add.Length() != 0 ) {
-					Debug_Say(( "%s offset %f %f\n", def->Get_Name(), offset.X, offset.Y ));
-				}
-#endif
 			}
 
 			RectClass icon_box = uv;
@@ -1112,13 +1077,11 @@ static	void	Weapon_Chart_Update( void )
 					}
 				}
 
-#if 01
 				if ( weapon_bag->Get_Index() == i ) {
 					color = COLOR( alpha, color );
 				} else {
 					color = COLOR( alpha * 0.5f, color );
 				}
-#endif
 
 				WeaponChartIcons[index]->Force_Color( color );
 				index++;
@@ -1267,19 +1230,6 @@ static	void	Damage_Update( void )
 
 	// Redraw the indicators
 
-#if 0
-	const float HORIZ_WIDTH		=	 58.0f/640.0f;
-	const float HORIZ_HEIGHT	=	 20.0f/480.0f;
-	const float VERT_WIDTH		=	 20.0f/640.0f;
-	const float VERT_HEIGHT		=	 58.0f/480.0f;
-	const float OFFSET_X		=	220.0f/640.0f;
-	const float OFFSET_Y		=	190.0f/480.0f;
-
-	const float DIAG_WIDTH		=	 46.0f/640.0f;
-	const float DIAG_HEIGHT		=	 46.0f/480.0f;
-	const float DIAG_OFFSET_X	=	160.0f/640.0f;
-	const float DIAG_OFFSET_Y	=	130.0f/480.0f;
-#else
 	float HORIZ_WIDTH		=	HORIZ_DAMAGE_SIZE.U/640.0f;
 	float HORIZ_HEIGHT		=	HORIZ_DAMAGE_SIZE.V/480.0f;
 	float VERT_WIDTH		=	VERT_DAMAGE_SIZE.U/640.0f;
@@ -1291,7 +1241,6 @@ static	void	Damage_Update( void )
 	float DIAG_HEIGHT		=	DIAG_DAMAGE_SIZE.V/480.0f;
 	float DIAG_OFFSET_X		=	DIAG_DAMAGE_OFFSET.U/640.0f;
 	float DIAG_OFFSET_Y		=	DIAG_DAMAGE_OFFSET.V/480.0f;
-#endif
 
 	Damage_Add_Indicator( 0,	-HORIZ_WIDTH/2,					-OFFSET_Y-HORIZ_HEIGHT/2,		HORIZ_WIDTH/2,					-OFFSET_Y+HORIZ_HEIGHT/2		);
 	Damage_Add_Indicator( 2,	OFFSET_X-VERT_WIDTH/2,			-VERT_HEIGHT/2,					OFFSET_X+VERT_WIDTH/2,			VERT_HEIGHT/2					);
@@ -1510,25 +1459,6 @@ static	void	Target_Update( void )
 
 				uv.Set( TARGET_HEALTH_L_UV_UL, TARGET_HEALTH_L_UV_LR );
 				draw2 = uv;
-	#if 0
-				uv.Scale( INFO_UV_SCALE );
-				draw2 += draw.Upper_Left() - draw2.Upper_Right();
-				TargetRenderer->Add_Quad( draw2, uv, health_color );
-
-				WideStringClass num(0,true);
-				if ( health < 1 && health > 0 ) {
-					health = 1;
-				}
-				num.Format( u"%d", (int)health );
-				TargetNameRenderer->Build_Sentence( num );
-				Vector2 text_size = TargetNameRenderer->Get_Text_Extents( num );
-				text_size.U -= 1;
-				text_size.V = -1;
-				draw -= text_size;
-				draw.Snap_To_Units( Vector2( 1, 1 ) );
-				TargetNameRenderer->Set_Location( draw.Upper_Left() );
-				TargetNameRenderer->Draw_Sentence( health_color );
-	#endif
 			}
 
 			// Draw Name
@@ -1862,14 +1792,6 @@ static	void	Objective_Update( void )
 		if ( CurrentObjective != ObjectiveManager::Get_Objective( CurrentObjectiveIndex ) ) {
 			CurrentObjectiveIndex = 0;
 			rebuild = true;
-#if 0 // no, just go for the first
-			// Try to find the last objective
-			for ( int i = 0; i < objective_count; i++ ) {
-				if ( CurrentObjective == ObjectiveManager::Get_Objective( i ) ) {
-					CurrentObjectiveIndex = i;
-				}
-			}
-#endif
 		}
 
 		if ( IS_MISSION && Input::Get_State( INPUT_FUNCTION_CYCLE_POG ) ) {
@@ -2063,126 +1985,6 @@ static	DynamicVectorClass<InfoEditorField>	InfoEditorFieldList;
 
 static	void	Info_Editor_Init( void )
 {
-#if 0
-	InfoEditorField field;
-
-	INFO_EDITOR_ADD( INFO_OFFSET );
-	INFO_EDITOR_ADD( FRAME_1_UV_UL );
-	INFO_EDITOR_ADD( FRAME_1_UV_LR );
-	INFO_EDITOR_ADD( FRAME_1_OFFSET );
-	INFO_EDITOR_ADD( FRAME_2_UV_UL );
-	INFO_EDITOR_ADD( FRAME_2_UV_LR );
-	INFO_EDITOR_ADD( FRAME_2_OFFSET );
-	INFO_EDITOR_ADD( FRAME_3_UV_UL );
-	INFO_EDITOR_ADD( FRAME_3_UV_LR );
-	INFO_EDITOR_ADD( FRAME_3_OFFSET );
-	INFO_EDITOR_ADD( FRAME_4_UV_UL );
-	INFO_EDITOR_ADD( FRAME_4_UV_LR );
-	INFO_EDITOR_ADD( FRAME_4_OFFSET );
-	INFO_EDITOR_ADD( FRAME_5_UV_UL );
-	INFO_EDITOR_ADD( FRAME_5_UV_LR );
-	INFO_EDITOR_ADD( FRAME_5_OFFSET );
-	INFO_EDITOR_ADD( FRAME_6_UV_UL );
-	INFO_EDITOR_ADD( FRAME_6_UV_LR );
-	INFO_EDITOR_ADD( FRAME_6_OFFSET );
-	INFO_EDITOR_ADD( HEALTH_BACK_UV_UL );
-	INFO_EDITOR_ADD( HEALTH_BACK_UV_LR );
-	INFO_EDITOR_ADD( HEALTH_BACK_UL );
-	INFO_EDITOR_ADD( HEALTH_BACK_LR );
-	INFO_EDITOR_ADD( GRADIENT_BLACK_UV_UL );
-	INFO_EDITOR_ADD( GRADIENT_BLACK_UV_LR );
-	INFO_EDITOR_ADD( HEALTH_TEXT_BACK_UL );
-	INFO_EDITOR_ADD( HEALTH_TEXT_BACK_LR );
-	INFO_EDITOR_ADD( HEALTH_UV_UL );
-	INFO_EDITOR_ADD( HEALTH_UV_LR );
-	INFO_EDITOR_ADD( HEALTH_OFFSET );
-	INFO_EDITOR_ADD( SHIELD_UV_UL );
-	INFO_EDITOR_ADD( SHIELD_UV_LR );
-	INFO_EDITOR_ADD( SHIELD_OFFSET );
-	INFO_EDITOR_ADD( KEY_1_UV_UL );
-	INFO_EDITOR_ADD( KEY_1_UV_LR );
-	INFO_EDITOR_ADD( KEY_1_OFFSET );
-	INFO_EDITOR_ADD( KEY_2_UV_UL );
-	INFO_EDITOR_ADD( KEY_2_UV_LR );
-	INFO_EDITOR_ADD( KEY_2_OFFSET );
-	INFO_EDITOR_ADD( KEY_3_UV_UL );
-	INFO_EDITOR_ADD( KEY_3_UV_LR );
-	INFO_EDITOR_ADD( KEY_3_OFFSET );
-	INFO_EDITOR_ADD( HEALTH_CROSS_1_UV_UL );
-	INFO_EDITOR_ADD( HEALTH_CROSS_1_UV_LR );
-	INFO_EDITOR_ADD( HEALTH_CROSS_1_OFFSET );
-	INFO_EDITOR_ADD( HEALTH_CROSS_2_UV_UL );
-	INFO_EDITOR_ADD( HEALTH_CROSS_2_UV_LR );
-	INFO_EDITOR_ADD( HEALTH_CROSS_2_OFFSET );
-	INFO_EDITOR_ADD( TIME_BACK_UL );
-	INFO_EDITOR_ADD( TIME_BACK_LR );
-	INFO_EDITOR_ADD( TIME_CLOCK_UV_UL );
-	INFO_EDITOR_ADD( TIME_CLOCK_UV_LR );
-	INFO_EDITOR_ADD( TIME_CLOCK_OFFSET );
-	INFO_EDITOR_ADD( WEAPON_BOX_UV_UL );
-	INFO_EDITOR_ADD( WEAPON_BOX_UV_LR );
-	INFO_EDITOR_ADD( WEAPON_BOX_OFFSET );
-	INFO_EDITOR_ADD( POWER_OUT_ICON_UV_UL );
-	INFO_EDITOR_ADD( POWER_OUT_ICON_UV_LR );
-	INFO_EDITOR_ADD( POWER_OUT_ICON_OFFSET );
-	INFO_EDITOR_ADD( REPAIR_ICON_UV_UL );
-	INFO_EDITOR_ADD( REPAIR_ICON_UV_LR );
-	INFO_EDITOR_ADD( REPAIR_ICON_OFFSET );
-	INFO_EDITOR_ADD( GDI_ICON_UV_UL );
-	INFO_EDITOR_ADD( GDI_ICON_UV_LR );
-	INFO_EDITOR_ADD( GDI_ICON_OFFSET );
-	INFO_EDITOR_ADD( NOD_ICON_UV_UL );
-	INFO_EDITOR_ADD( NOD_ICON_UV_LR );
-	INFO_EDITOR_ADD( NOD_ICON_OFFSET );
-	INFO_EDITOR_ADD( NEUTRAL_ICON_UV_UL );
-	INFO_EDITOR_ADD( NEUTRAL_ICON_UV_LR );
-	INFO_EDITOR_ADD( NEUTRAL_ICON_OFFSET );
-	INFO_EDITOR_ADD( BULLET_ICON_UV_UL );
-	INFO_EDITOR_ADD( BULLET_ICON_UV_LR );
-	INFO_EDITOR_ADD( BULLET_ICON_OFFSET );
-	INFO_EDITOR_ADD( RADAR_CENTER_OFFSET );
-	INFO_EDITOR_ADD( DAMAGE_1_UV_UL );
-	INFO_EDITOR_ADD( DAMAGE_1_UV_LR );
-	INFO_EDITOR_ADD( DAMAGE_2_UV_UL );
-	INFO_EDITOR_ADD( DAMAGE_2_UV_LR );
-	INFO_EDITOR_ADD( HORIZ_DAMAGE_SIZE );
-	INFO_EDITOR_ADD( VERT_DAMAGE_SIZE );
-	INFO_EDITOR_ADD( DIAG_DAMAGE_SIZE );
-	INFO_EDITOR_ADD( HV_DAMAGE_OFFSET );
-	INFO_EDITOR_ADD( DIAG_DAMAGE_OFFSET );
-	INFO_EDITOR_ADD( POWERUP_BOX_UV_UL );
-	INFO_EDITOR_ADD( POWERUP_BOX_UV_LR );
-	INFO_EDITOR_ADD( RADAR_RINGS_UV_UL );
-	INFO_EDITOR_ADD( RADAR_RINGS_UV_LR );
-	INFO_EDITOR_ADD( RADAR_RINGS_L_OFFSET );
-	INFO_EDITOR_ADD( RADAR_RINGS_R_OFFSET );
-	INFO_EDITOR_ADD( RADAR_STAR_UV_UL );
-	INFO_EDITOR_ADD( RADAR_STAR_UV_LR );
-	INFO_EDITOR_ADD( RADAR_STAR_OFFSET );
-	INFO_EDITOR_ADD( RADAR_SQUARE_UV_UL );
-	INFO_EDITOR_ADD( RADAR_SQUARE_UV_LR );
-	INFO_EDITOR_ADD( RADAR_SQUARE_OFFSET);
-	INFO_EDITOR_ADD( RADAR_TRIANGLE_UV_UL);
-	INFO_EDITOR_ADD( RADAR_TRIANGLE_UV_LR);
-	INFO_EDITOR_ADD( RADAR_TRIANGLE_OFFSET );
-	INFO_EDITOR_ADD( RADAR_CIRCLE_UV_UL );
-	INFO_EDITOR_ADD( RADAR_CIRCLE_UV_LR );
-	INFO_EDITOR_ADD( RADAR_CIRCLE_OFFSET );
-	INFO_EDITOR_ADD( RADAR_BRACKET_UV_UL );
-	INFO_EDITOR_ADD( RADAR_BRACKET_UV_LR );
-	INFO_EDITOR_ADD( RADAR_BRACKET_OFFSET );
-	INFO_EDITOR_ADD( RADAR_SWEEP_UV_UL );
-	INFO_EDITOR_ADD( RADAR_SWEEP_UV_LR );
-	INFO_EDITOR_ADD( RADAR_SWEEP_OFFSET );
-	INFO_EDITOR_ADD( TARGET_HEALTH_L_UV_UL );
-	INFO_EDITOR_ADD( TARGET_HEALTH_L_UV_LR );
-	INFO_EDITOR_ADD( TARGET_HEALTH_R_UV_UL );
-	INFO_EDITOR_ADD( TARGET_HEALTH_R_UV_LR );
-	INFO_EDITOR_ADD( TARGET_HEALTH_OFFSET );
-	INFO_EDITOR_ADD( TARGET_NAME_UV_UL );
-	INFO_EDITOR_ADD( TARGET_NAME_UV_LR );
-	INFO_EDITOR_ADD( TARGET_NAME_OFFSET );
-#endif
 }
 
 static	void	Info_Editor_Update( void )
@@ -2536,118 +2338,6 @@ static	void	Info_Update( void )
 		}
 	}
 
-#if 0
-return;
-
-	uv.Set( TARGET_HEALTH_L_UV_UL, TARGET_HEALTH_L_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + TARGET_HEALTH_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( TARGET_HEALTH_R_UV_UL, TARGET_HEALTH_R_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + TARGET_HEALTH_OFFSET - draw.Upper_Left() + Vector2( 0, 20 );
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( TARGET_NAME_UV_UL, TARGET_NAME_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + TARGET_NAME_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( GRADIENT_BLACK_UV_UL, GRADIENT_BLACK_UV_LR );
-	uv.Scale( INFO_UV_SCALE );
-	draw.Set( TIME_BACK_UL, TIME_BACK_LR );
-	draw += InfoBase;
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( TIME_CLOCK_UV_UL, TIME_CLOCK_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + TIME_CLOCK_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( WEAPON_BOX_UV_UL, WEAPON_BOX_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + WEAPON_BOX_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( POWER_OUT_ICON_UV_UL, POWER_OUT_ICON_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + POWER_OUT_ICON_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( REPAIR_ICON_UV_UL, REPAIR_ICON_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + REPAIR_ICON_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( GDI_ICON_UV_UL, GDI_ICON_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + GDI_ICON_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( NOD_ICON_UV_UL, NOD_ICON_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + NOD_ICON_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( NEUTRAL_ICON_UV_UL, NEUTRAL_ICON_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + NEUTRAL_ICON_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	// Radar
-	uv.Set( RADAR_STAR_UV_UL, RADAR_STAR_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + RADAR_STAR_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( RADAR_STAR_UV_UL, RADAR_STAR_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + RADAR_STAR_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( RADAR_SQUARE_UV_UL, RADAR_SQUARE_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + RADAR_SQUARE_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( RADAR_TRIANGLE_UV_UL, RADAR_TRIANGLE_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + RADAR_TRIANGLE_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( RADAR_CIRCLE_UV_UL, RADAR_CIRCLE_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + RADAR_CIRCLE_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( RADAR_BRACKET_UV_UL, RADAR_BRACKET_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + RADAR_BRACKET_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-
-	uv.Set( RADAR_SWEEP_UV_UL, RADAR_SWEEP_UV_LR );
-	draw = uv;
-	uv.Scale( INFO_UV_SCALE );
-	draw += InfoBase + RADAR_SWEEP_OFFSET - draw.Upper_Left();
-	InfoRenderer->Add_Quad( draw, uv );
-#endif
 }
 
 static	void	Info_Render( void )
@@ -2663,13 +2353,6 @@ static	void	Info_Render( void )
 static bool		_HUDEnabled = true;
 static bool		_HUDInited = false;
 
-#ifdef ATI_DEMO_HACK
-typedef enum {
-	DEMO_HUD_IMAGE=0,
-	DEMO_HUD_IMAGE2,
-	NUM_RENDER_IMAGES,
-};
-#else
 typedef enum {
 	RETICLE	= 0,
 	RETICLE_HIT,
@@ -2678,7 +2361,6 @@ typedef enum {
 	DEMO_HUD_IMAGE2,
 	NUM_RENDER_IMAGES,
 };
-#endif
 Render2DClass		*	RenderImages[ NUM_RENDER_IMAGES ];
 
 /*
@@ -2696,7 +2378,6 @@ void 	HUDClass::Init(bool render_available)
 	}
 
 	// Reticles
-#ifndef ATI_DEMO_HACK
 	RenderImages[RETICLE] = new Render2DClass();
 	RenderImages[RETICLE]->Set_Texture( "HD_reticle.tga" );
 	RenderImages[RETICLE]->Set_Hidden( true );
@@ -2706,22 +2387,6 @@ void 	HUDClass::Init(bool render_available)
 	// Action Status Bar (arming/disarming explosives, etc)
 	RenderImages[ACTION_STATUSBAR_RENDERER] = new Render2DClass();
 	RenderImages[ACTION_STATUSBAR_RENDERER]->Set_Coordinate_Range( Render2DClass::Get_Screen_Resolution() );
-#else
-	RectClass rect=Render2DClass::Get_Screen_Resolution();
-
-	RenderImages[DEMO_HUD_IMAGE] = new Render2DClass();
-	RenderImages[DEMO_HUD_IMAGE]->Reset();
-	RenderImages[DEMO_HUD_IMAGE]->Set_Texture( "renegade_demo.tga" );
-	RenderImages[DEMO_HUD_IMAGE]->Set_Hidden( false );
-	RenderImages[DEMO_HUD_IMAGE]->Set_Coordinate_Range( Render2DClass::Get_Screen_Resolution() );
-	RenderImages[DEMO_HUD_IMAGE]->Add_Quad( RectClass( float(8),float(-8),float(256+8),float(128-8)), RectClass(0.0f,0.0f,1.0f,0.5f),0xffffffff);
-	RenderImages[DEMO_HUD_IMAGE2] = new Render2DClass();
-	RenderImages[DEMO_HUD_IMAGE2]->Reset();
-	RenderImages[DEMO_HUD_IMAGE2]->Set_Texture( "renegade_demo.tga" );
-	RenderImages[DEMO_HUD_IMAGE2]->Set_Hidden( false );
-	RenderImages[DEMO_HUD_IMAGE2]->Set_Coordinate_Range( Render2DClass::Get_Screen_Resolution() );
-	RenderImages[DEMO_HUD_IMAGE2]->Add_Quad( RectClass( rect.Right+float(-256-8),rect.Bottom+float(-128+8),rect.Right+float(-8),rect.Bottom+float(8)), RectClass(0.0f,0.5f,1.0f,1.0f),0xffffffff);
-#endif
 
 	if (render_available) {
 		_HUDEnabled = true;
@@ -2781,10 +2446,6 @@ void 	HUDClass::Reset( void )
 void 	HUDClass::Render()
 {
 
-#ifdef ATI_DEMO_HACK
-	RenderImages[DEMO_HUD_IMAGE]->Render();
-	RenderImages[DEMO_HUD_IMAGE2]->Render();
-#else
 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Draw_Sniper() ) {
 		SniperHUDClass::Render();
 	}
@@ -2809,7 +2470,6 @@ void 	HUDClass::Render()
 			}
 		}
 	}
-#endif
 }
 
 static bool	Is_HUD_Displayed( void )
@@ -2826,7 +2486,6 @@ static bool	Is_HUD_Displayed( void )
 void 	HUDClass::Think()
 {
 
-#ifndef ATI_DEMO_HACK
 	if ( COMBAT_CAMERA && COMBAT_CAMERA->Draw_Sniper() ) {
 		SniperHUDClass::Update();
 	}
@@ -2947,34 +2606,6 @@ void 	HUDClass::Think()
 		RenderImages[RETICLE_HIT]->Set_Hidden( true );
 	}
 
-#if 0
-	// Display points
-	if ( _HUDTimer > 0 ) {
-		_HUDTimer -= TimeManager::Get_Frame_Seconds();
-
-		StringClass	pointstring;
-		int points = _HUDPoints;
-		if ( points ) {
-			Vector2 position = Render2DClass::Get_Screen_Resolution().Lower_Right();
-			position /= 2;
-			float scale = WWMath::Clamp( 2 * _HUDTimer / HUD_POINTS_TIME, 0, 1 );
-			position.Y *= 0.3f + (scale/2);
-			pointstring.Format( "%d", points );
-			((Render2DTextClass *)RenderImages[TEXT_RENDERER])->Set_Location( position );
-
-			Font3DInstanceClass * font = ((Render2DTextClass *)RenderImages[TEXT_RENDERER])->Peek_Font();
-			if ( font ) {
-				font->Set_Scale( 2 + (scale * 3) );
-				position.X -= font->String_Width( pointstring ) / 2;
-				position.Y -= font->Char_Height() / 2;
-				((Render2DTextClass *)RenderImages[TEXT_RENDERER])->Set_Location( position );
-				((Render2DTextClass *)RenderImages[TEXT_RENDERER])->Draw_Text( pointstring, COLOR( scale ) );
-				font->Set_Scale( 1 );
-			}
-		}
-	}
-#endif
-#endif // ATI_DEMO_HACK
 }
 
 void	HUDClass::Toggle_Hide_Points( void )
@@ -3021,18 +2652,6 @@ void	HUDClass::Add_Powerup_Weapon( int id, int rounds )
 void	HUDClass::Add_Powerup_Ammo( int id, int rounds )
 {
 	Add_Powerup_Weapon( id, rounds );
-#if 0
-	const WeaponDefinitionClass	* wdef = WeaponManager::Find_Weapon_Definition( id );
-	if ( wdef ) {
-		const AmmoDefinitionClass	* def = WeaponManager::Find_Ammo_Definition( wdef->PrimaryAmmoDefID );
-		if ( def ) {
-			if ( !def->IconTextureName.Is_Empty() ) {
-				Powerup_Add( TranslateDBClass::Get_String( def->IconNameID ), rounds,
-						def->IconTextureName, def->IconTextureUV, def->IconOffset );
-			}
-		}
-	}
-#endif
 }
 
 void	HUDClass::Add_Shield_Grant( float strength )

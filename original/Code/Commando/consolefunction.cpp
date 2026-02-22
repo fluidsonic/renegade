@@ -114,7 +114,6 @@
 #include "consolemode.h"
 #include "dlgcncpurchasemainmenu.h"
 #include "realcrc.h"
-#include "specialbuilds.h"
 #include "lightsolve.h"
 #include "lightsolvecontext.h"
 
@@ -234,30 +233,6 @@ public:
 	virtual	const char * Get_Help( void )	{ return "EXTRAS <key>"; }
 	virtual	void Activate( const char * input ) {
 
-#if 0
-		//int crc = CRC_String("quantifigon");//not any more, pw changed...
-
-		//
-
-		//bool onoff = (CRC_String(input) == 0xa8452331);
-
-		CNCPurchaseMainMenuClass::Enable_Secrets(false);  // Just to scramble code
-		CNCPurchaseMainMenuClass::Enable_Secrets(false);  // Just to scramble code
-		bool onoff = (CRC_String(input) == 65729409);
-		CNCPurchaseMainMenuClass::Enable_Secrets(onoff);  // Just to scramble code
-
-		if (The_Game()->IsLaddered.Is_True()) {
-			onoff = false;
-			CNCPurchaseMainMenuClass::Enable_Secrets(onoff);  // Just to scramble code
-			Print("Not allowed in laddered games\r\n");
-		}
-
-		CNCPurchaseMainMenuClass::Enable_Secrets(onoff);
-		if (CNCPurchaseMainMenuClass::Are_Secrets_Enabled()) {
-			Print("extras ENABLED!\r\n");
-		}
-		CNCPurchaseMainMenuClass::Enable_Secrets(onoff);  // Just to scramble code
-#else
 		// (gth) secrets don't need a password any more...
 		if (The_Game()->IsLaddered.Is_True()) {
 
@@ -271,7 +246,6 @@ public:
 				Print("extras ENABLED!\r\n");
 			}
 		}
-#endif
 	}
 };
 
@@ -338,7 +312,6 @@ public:
 	}
 };
 
-#ifndef FREEDEDICATEDSERVER
 class FPSConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "fps"; }
@@ -350,9 +323,7 @@ public:
 //		}
 	}
 };
-#endif //FREEDEDICATEDSERVER
 
-#if 1
 class ClientPhysicsOptimizationConsoleFunctionClass : public ConsoleFunctionClass {
 public:
 	virtual	const char * Get_Name( void )	{ return "client_physics_optimization"; }
@@ -374,7 +345,6 @@ public:
 		}
 	}
 };
-#endif
 
 class StatsConsoleFunctionClass : public ConsoleFunctionClass
 {
@@ -535,17 +505,6 @@ public:
 
 		//::Sleep(::atoi(input));
 /*
-#if 0
-		if (cNetwork::I_Am_Server()) {
-			float x, y, z;
-			::sscanf(input, "%f, %f, %f", &x, &y, &z);
-			Vector3 position;
-			position.Set(Vector3(x, y, z));
-
-			cScExplosionEvent * p_event = new cScExplosionEvent;
-			p_event->Init(1, position);
-		}
-#endif
 */
 
 		cPlayer * p_player = cPlayerManager::Find_Player(input);
@@ -1019,12 +978,7 @@ public:
 	virtual  const char * Get_Name(void) { return "umbra_toggle"; }
 	virtual	const char * Get_Help(void) { return "UMBRA_TOGGLE - toggles umbra culling (if compiled into this build)."; }
 	virtual  void Activate(const char * input) {
-#if (UMBRASUPPORT)
-		UmbraSupport::Enable_Umbra(!UmbraSupport::Is_Umbra_Enabled());
-		Print("Umbra %s\n",(UmbraSupport::Is_Umbra_Enabled() ? "enabled." : "disabled."));
-#else
 		Print("Umbra support not compiled into this build.\n");
-#endif
 
 	}
 };
@@ -1480,12 +1434,8 @@ void	ConsoleFunctionManager::Init( void )
 	FunctionList.Add( new EditVehicleConsoleFunctionClass() );
 	FunctionList.Add( new NetUpdateRateConsoleFunctionClass() );
 	FunctionList.Add( new ClientPhysicsOptimizationConsoleFunctionClass() );
-#ifndef FREEDEDICATEDSERVER
 	FunctionList.Add( new FPSConsoleFunctionClass() );		// Steve W wanted this.
-#endif //FREEDEDICATEDSERVER
-#ifdef FREEDEDICATEDSERVER
-	FunctionList.Add( new PageConsoleFunctionClass() );
-#endif //FREEDEDICATEDSERVER
+// FDS: some console commands were restricted or modified
 
 	SystemSettings::Add_Console_Functions( FunctionList );
 

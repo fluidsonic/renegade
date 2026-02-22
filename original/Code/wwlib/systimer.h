@@ -88,9 +88,4 @@ __forceinline unsigned long SysTimeClass::Get(void)
 	return(time + WrapAdd);
 }
 
-#ifdef timeGetTime
-#undef timeGetTime
-#define timeGetTime SystemTime.Get
-#endif //timeGetTime
-
 #endif //_SYSTIMER_H

@@ -15,7 +15,6 @@
 #include "registry.h"
 #include "_globals.h"
 #include "dialogtests.h"
-#include "specialbuilds.h"
 
 ////////////////////////////////////////////////////////////////
 //	Local constants
@@ -459,7 +458,6 @@ LoadSPGameMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 void
 LoadSPGameMenuClass::Load_Game (void)
 {
-#ifndef MULTIPLAYERDEMO
 
 	//
 	//	Get a pointer to the list control
@@ -469,15 +467,6 @@ LoadSPGameMenuClass::Load_Game (void)
 		return ;
 	}
 
-#if 0 // MOVED BELOW AND TO DIFFICULTY SELECTION
-	//
-	//	End the current game before we load the new one
-	//
-	if (GameModeManager::Find ("Combat")->Is_Suspended ()) {
-		GameInitMgrClass::End_Game();
-		GameModeManager::Safely_Deactivate ();
-	}
-#endif
 	//
 	//	Get the currently selected entry
 	//
@@ -528,7 +517,6 @@ LoadSPGameMenuClass::Load_Game (void)
 
 	return ;
 
-#endif // !MULTIPLAYERDEMO
 }
 
 ////////////////////////////////////////////////////////////////
@@ -706,7 +694,6 @@ LoadSPGameMenuClass::HandleNotification (DlgMsgBoxEvent &event)
 void
 LoadSPGameMenuClass::Display (void)
 {
-#ifndef MULTIPLAYERDEMO
 
 	//
 	//	Create the dialog if necessary, otherwise simply bring it to the front
@@ -721,7 +708,6 @@ LoadSPGameMenuClass::Display (void)
 
 	return ;
 
-#endif // !MULTIPLAYERDEMO
 }
 
 ////////////////////////////////////////////////////////////////

@@ -4,9 +4,7 @@
 
 #include "always.h"
 #include "vector3.h"
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 class Matrix3D;
 class Matrix4;

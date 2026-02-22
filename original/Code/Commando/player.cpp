@@ -393,7 +393,6 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
    //
    // Compose a string description of a player's stats for display
    //
-#pragma message("TODO: (TSS) Examine all wide string %s formatting for errors...")
 
 	string.Format(u"");
 

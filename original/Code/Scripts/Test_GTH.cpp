@@ -4,13 +4,8 @@
 
 #define GTH_DEBUG	0
 
-#if (GTH_DEBUG)
-#define GTH_DEBUG_INT( x , format )			Commands->Display_Int( x, format )
-#define GTH_DEBUG_FLOAT( x , format )		Commands->Display_Float( x, format )
-#else
 #define GTH_DEBUG_INT( x , format )			
 #define GTH_DEBUG_FLOAT( x , format )		
-#endif
 
 /*
 ** GTH_Drop_Object_On_Death  (verified)
@@ -239,113 +234,6 @@ protected:
 
 };
 
-#if 0
-/*
-** GTH_Speed_Controlled_Anim
-** NOTE: THIS PROBABLY WON'T WORK IN A NET GAME ANYWAY....  DELETE ME
-** Stop_Speed - float, maximum speed where the object is considered "stopped"
-** Stop_Anim - name of the anim to play when the unit is "stopped"
-** Walk_Speed - float, max speed where the object is considered "walking"
-** Walk_Anim - name of the anim to play when the unit is "walking"
-** Run_Anim - name of anim to play when the unit is moving faster than "walking"
-** Update_Delay - delay between re-evaluating the state of the object (0.1 = 10 times a second)
-*/
-DECLARE_SCRIPT(GTH_Speed_Controlled_Anim,"Stop_Speed=0.1:float,StopAnim=none:string,Walk_Speed=5.0:float,Walk_Anim=none:string,Run_Anim=none:string,Update_Rate=0.1:float")
-{
-	enum { STOPPED = 0, WALKING, RUNNING };
-	enum { TIMER_ID_TICK = 0xbeef };
-
-	int cur_state;
-	Vector3 last_pos;
-
-	REGISTER_VARIABLES()
-	{
-		SAVE_VARIABLE(cur_state, 1);
-		SAVE_VARIABLE(last_pos, 2);
-	}
-
-	void Created( GameObject * obj ) 
-	{
-		// initialize the state
-		cur_state = -1;
-		last_pos = Commands->Get_Position( obj );
-		update_state(obj,eval_speed(obj));
-		
-		// start up our update timer
-		Commands->Start_Timer(obj, this, Get_Float_Parameter("Update_Rate"), TIMER_ID_TICK);
-	}
-
-		
-	void	( * Set_Animation )( GameObject * obj, const char * anim_name, bool looping, const char * sub_obj_name = NULL, float start_frame = 0.0F, float end_frame = -1.0F, bool is_blended = false );
-
-	void Timer_Expired( GameObject * obj, int timer_id ) 
-	{
-		if (timer_id == TIMER_ID_TICK) {
-			update_state(obj,eval_speed(obj));
-			Commands->Start_Timer(obj, this, get_update_rate(), TIMER_ID_TICK);
-		}
-	}
-
-	float get_update_rate( void ) 
-	{
-		float update_rate = Get_Float_Parameter("Update_Rate");
-		if (update_rate <= 0.01f) {
-			update_rate = 0.01f;
-		}
-		return update_rate;
-	}
-
-	int	eval_speed( GameObject * obj )
-	{
-		// This function evaluates the object's current speed and returns the state
-		Vector3 cur_pos = Commands->Get_Position(obj);
-		Vector3 vel = (cur_pos - last_pos) / get_update_rate();
-		last_pos = cur_pos;
-
-		float speed = vel.Length();
-		if (speed <= Get_Float_Parameter("Stop_Speed")) {
-			return STOPPED;
-		}
-
-		if (speed <= Get_Float_Parameter("Walk_Speed")) {
-			return WALKING;
-		}
-
-		return RUNNING;
-	}
-	
-	void update_state( GameObject * obj, int new_state )
-	{
-		// This function plugs in the animation depending on the current state
-		if (new_state != cur_state) {
-			cur_state = new_state;
-			const char * anim = NULL;
-			switch( cur_state )
-			{
-			case STOPPED:
-				{
-					anim = Get_Parameter("Stop_Anim");
-				}
-				break;
-			case WALKING:
-				{ 
-					anim = Get_Parameter("Walk_Anim");
-				}
-				break;
-			case RUNNING:
-				{
-					anim = Get_Parameter("Run_Anim");
-				}
-				break;
-			};
-
-			if (anim != NULL) {
-				Commands->Set_Animation( obj, anim, true );
-			}
-		}
-	}
-};
-#endif
 
 /*
 ** GTH_On_Enter_Mission_Complete (verified)

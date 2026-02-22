@@ -75,16 +75,7 @@ void WheeledVehicleClass::Compute_Force_And_Torque(Vector3 * force,Vector3 * tor
 		** Compute the steering angle for "leaning" vehicles (motorcycles)
 		** (gth) Tilt steering isn't working out very well, changing to normal steering
 		*/
-#if 0
-		const float STEER_ANGLE_PER_ROLL = DEG_TO_RADF(30.0f) / DEG_TO_RADF(60.0f);
-		Vector3 yvec;
-		Get_Transform().Get_Y_Vector(&yvec);
-		float roll = atan2(yvec.Z,sqrt(yvec.X * yvec.X + yvec.Y * yvec.Y));
-
-		float tilt_steer_angle = - roll / STEER_ANGLE_PER_ROLL;
-#else
 		float tilt_steer_angle = SteeringAngle;
-#endif
 
 		/*
 		** Compute forces and torques for each wheel.

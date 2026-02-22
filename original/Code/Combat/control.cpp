@@ -124,45 +124,10 @@ void	ControlClass::Import_Cs( BitStreamClass & packet )
 
 	packet.Get(ContinuousBooleanBits, BITPACK_CONTINUOUS_BOOLEAN_BITS);
 
-#if 01
 	packet.Get(AnalogValues[ANALOG_MOVE_FORWARD],	BITPACK_ANALOG_VALUES);
    packet.Get(AnalogValues[ANALOG_MOVE_LEFT],		BITPACK_ANALOG_VALUES);
    packet.Get(AnalogValues[ANALOG_MOVE_UP],			BITPACK_ANALOG_VALUES);
    packet.Get(AnalogValues[ANALOG_TURN_LEFT],		BITPACK_ANALOG_VALUES);
-#else
-	int	control_move;
-	packet.Get( control_move,								BITPACK_CONTROL_MOVES_CS);
-
-	AnalogValues[ANALOG_MOVE_FORWARD]	= 0.0f;
-	AnalogValues[ANALOG_MOVE_LEFT]		= 0.0f;
-	AnalogValues[ANALOG_MOVE_UP]			= 0.0f;
-	AnalogValues[ANALOG_TURN_LEFT]		= 0.0f;
-
-	if ( control_move & (1<<CONTROL_MOVE_FORWARD) ) {
-		AnalogValues[ANALOG_MOVE_FORWARD] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_BACKWARD) ) {
-		AnalogValues[ANALOG_MOVE_FORWARD] = -1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_LEFT) ) {
-		AnalogValues[ANALOG_MOVE_LEFT] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_RIGHT) ) {
-		AnalogValues[ANALOG_MOVE_LEFT] = -1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_UP) ) {
-		AnalogValues[ANALOG_MOVE_UP] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_DOWN) ) {
-		AnalogValues[ANALOG_MOVE_UP] = -1.0f;
-	}
-	if ( control_move & (1<<CONTROL_TURN_LEFT) ) {
-		AnalogValues[ANALOG_TURN_LEFT] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_TURN_RIGHT) ) {
-		AnalogValues[ANALOG_TURN_LEFT] = -1.0f;
-	}
-#endif
 
 	for (int i = 0; i < ANALOG_CONTROL_COUNT; i++) {
 		if (fabs(AnalogValues[i]) < 0.005) {
@@ -185,39 +150,10 @@ void ControlClass::Export_Cs( BitStreamClass & packet )
 	packet.Add(PendingContinuousBooleanBits,	BITPACK_CONTINUOUS_BOOLEAN_BITS);
 	PendingContinuousBooleanBits = 0;
 
-#if 01
 	packet.Add(AnalogValues[ANALOG_MOVE_FORWARD],	BITPACK_ANALOG_VALUES);
    packet.Add(AnalogValues[ANALOG_MOVE_LEFT],		BITPACK_ANALOG_VALUES);
    packet.Add(AnalogValues[ANALOG_MOVE_UP],			BITPACK_ANALOG_VALUES);
    packet.Add(AnalogValues[ANALOG_TURN_LEFT],		BITPACK_ANALOG_VALUES);
-#else
-	int	control_move = 0;
-	if ( AnalogValues[ANALOG_MOVE_FORWARD] > 0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_FORWARD;
-	}
-	if ( AnalogValues[ANALOG_MOVE_FORWARD] < -0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_BACKWARD;
-	}
-	if ( AnalogValues[ANALOG_MOVE_LEFT] > 0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_LEFT;
-	}
-	if ( AnalogValues[ANALOG_MOVE_LEFT] < -0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_RIGHT;
-	}
-	if ( AnalogValues[ANALOG_MOVE_UP] > 0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_UP;
-	}
-	if ( AnalogValues[ANALOG_MOVE_UP] < -0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_DOWN;
-	}
-	if ( AnalogValues[ANALOG_TURN_LEFT] > 0.5f ) {
-		control_move |= 1<<CONTROL_TURN_LEFT;
-	}
-	if ( AnalogValues[ANALOG_TURN_LEFT] < -0.5f ) {
-		control_move |= 1<<CONTROL_TURN_RIGHT;
-	}
-   packet.Add( control_move,  							BITPACK_CONTROL_MOVES_CS);
-#endif
 
 }
 
@@ -226,44 +162,10 @@ void ControlClass::Import_Sc(BitStreamClass & packet)
 {
 	packet.Get(ContinuousBooleanBits, BITPACK_CONTINUOUS_BOOLEAN_BITS);
 
-#if 01
 	packet.Get(AnalogValues[ANALOG_MOVE_FORWARD],	BITPACK_ANALOG_VALUES);
 	packet.Get(AnalogValues[ANALOG_MOVE_LEFT],		BITPACK_ANALOG_VALUES);
 	packet.Get(AnalogValues[ANALOG_MOVE_UP],			BITPACK_ANALOG_VALUES);
 	packet.Get(AnalogValues[ANALOG_TURN_LEFT],		BITPACK_ANALOG_VALUES);
-#else
-	int	control_move;
-	packet.Get( control_move,								BITPACK_CONTROL_MOVES_SC);
-
-	AnalogValues[ANALOG_MOVE_FORWARD]	= 0.0f;
-	AnalogValues[ANALOG_MOVE_LEFT]		= 0.0f;
-	AnalogValues[ANALOG_MOVE_UP]			= 0.0f;
-
-	if ( control_move & (1<<CONTROL_MOVE_FORWARD) ) {
-		AnalogValues[ANALOG_MOVE_FORWARD] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_BACKWARD) ) {
-		AnalogValues[ANALOG_MOVE_FORWARD] = -1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_LEFT) ) {
-		AnalogValues[ANALOG_MOVE_LEFT] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_RIGHT) ) {
-		AnalogValues[ANALOG_MOVE_LEFT] = -1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_UP) ) {
-		AnalogValues[ANALOG_MOVE_UP] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_MOVE_DOWN) ) {
-		AnalogValues[ANALOG_MOVE_UP] = -1.0f;
-	}
-/*	if ( control_move & (1<<CONTROL_TURN_LEFT) ) {
-		AnalogValues[ANALOG_TURN_LEFT] = 1.0f;
-	}
-	if ( control_move & (1<<CONTROL_TURN_RIGHT) ) {
-		AnalogValues[ANALOG_TURN_LEFT] = -1.0f;
-	}*/
-#endif
 
 	for (int i = 0; i < ANALOG_CONTROL_COUNT; i++) {
 		if (fabs(AnalogValues[i]) < 0.005) {
@@ -281,39 +183,10 @@ void ControlClass::Export_Sc(BitStreamClass & packet)
 {
 	packet.Add(ContinuousBooleanBits,	BITPACK_CONTINUOUS_BOOLEAN_BITS);
 
-#if 01
 	packet.Add(AnalogValues[ANALOG_MOVE_FORWARD],	BITPACK_ANALOG_VALUES);
    packet.Add(AnalogValues[ANALOG_MOVE_LEFT],		BITPACK_ANALOG_VALUES);
    packet.Add(AnalogValues[ANALOG_MOVE_UP],			BITPACK_ANALOG_VALUES);
    packet.Add(AnalogValues[ANALOG_TURN_LEFT],		BITPACK_ANALOG_VALUES);
-#else
-	int	control_move = 0;
-	if ( AnalogValues[ANALOG_MOVE_FORWARD] > 0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_FORWARD;
-	}
-	if ( AnalogValues[ANALOG_MOVE_FORWARD] < -0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_BACKWARD;
-	}
-	if ( AnalogValues[ANALOG_MOVE_LEFT] > 0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_LEFT;
-	}
-	if ( AnalogValues[ANALOG_MOVE_LEFT] < -0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_RIGHT;
-	}
-	if ( AnalogValues[ANALOG_MOVE_UP] > 0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_UP;
-	}
-	if ( AnalogValues[ANALOG_MOVE_UP] < -0.5f ) {
-		control_move |= 1<<CONTROL_MOVE_DOWN;
-	}
-/*	if ( AnalogValues[ANALOG_TURN_LEFT] > 0.5f ) {
-		control_move |= 1<<CONTROL_TURN_LEFT;
-	}
-	if ( AnalogValues[ANALOG_TURN_LEFT] < -0.5f ) {
-		control_move |= 1<<CONTROL_TURN_RIGHT;
-	}*/
-   packet.Add( control_move,  							BITPACK_CONTROL_MOVES_SC);
-#endif
 
 }
 

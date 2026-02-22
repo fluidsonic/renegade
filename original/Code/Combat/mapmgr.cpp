@@ -207,9 +207,6 @@ MapMgrClass::Load_Variables (ChunkLoadClass &cload)
 	// the game with this line of code removed and the mod people can make them 
 	// too.
 	//
-#ifdef FORCE_DISABLE_VTOL
-	EnableVTOL = false;
-#endif
 
 	SaveLoadSystemClass::Register_Post_Load_Callback (this);	
 	return ;

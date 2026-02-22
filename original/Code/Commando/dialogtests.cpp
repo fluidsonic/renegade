@@ -46,7 +46,6 @@
 #include "WWAudio.h"
 #include "dlgmplanhostoptions.h"
 #include "shellapi.h"
-#include "specialbuilds.h"
 #include <ImageCtrl.h>
 #include "bandwidthcheck.h"
 
@@ -332,9 +331,6 @@ InternetMainDialogClass::On_Last_Menu_Ending (void)
 void
 InternetMainDialogClass::On_Init_Dialog (void)
 {
-#ifdef BETACLIENT
-	Get_Dlg_Item(IDC_MENU_MP_INTERNET_GAMESPY)->Enable(false);
-#endif // BETACLIENT
 
 	MenuDialogClass::On_Init_Dialog ();
 }
@@ -921,7 +917,6 @@ DeathOptionsPopupClass::On_Init_Dialog ( void )
 
 	PopupDialogClass::On_Init_Dialog ();
 
-#if 01
 
 	//
 	//	Activate the menu game mode (if necessary)
@@ -931,7 +926,6 @@ DeathOptionsPopupClass::On_Init_Dialog ( void )
 		menu_game_mode->Activate ();
 	}
 	GameModeManager::Find ("Combat")->Suspend();
-#endif
 	return ;
 }
 
@@ -989,7 +983,6 @@ FailedOptionsPopupClass::On_Init_Dialog ( void )
 
 	PopupDialogClass::On_Init_Dialog ();
 
-#if 01
 	//
 	//	Activate the menu game mode (if necessary)
 	//
@@ -998,7 +991,6 @@ FailedOptionsPopupClass::On_Init_Dialog ( void )
 		menu_game_mode->Activate ();
 	}
 	GameModeManager::Find ("Combat")->Suspend();
-#endif
 	return ;
 }
 

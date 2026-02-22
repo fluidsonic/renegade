@@ -6,10 +6,6 @@
 #include <assert.h>
 #include <string.h>		// for memmove
 
-#if (_MSC_VER >= 1200)
-#pragma warning (push)
-#pragma warning (disable:4702)	// disabling the "unreachable code" warning.
-#endif
 
 /** 
 ** SimpleVecClass
@@ -225,12 +221,10 @@ public:
 	void				Delete_All(bool allow_shrink = true);
 
 protected:
-#if defined(__clang__) && !defined(_MSC_VER)
 	// Bring base class template members into scope for two-phase name lookup
 	using SimpleVecClass<T>::Vector;
 	using SimpleVecClass<T>::VectorMax;
 	using SimpleVecClass<T>::Length;
-#endif
 
 	bool				Grow(int new_size_hint);
 	bool				Shrink(void);
@@ -585,9 +579,6 @@ inline int SimpleDynVecClass<T>::Find_Index(T const & object)
 	return(-1);
 }
 
-#if (_MSC_VER >= 1200)
-#pragma warning (pop)
-#endif
 
 #endif // SIMPLEVEC_H
 

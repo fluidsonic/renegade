@@ -24,7 +24,6 @@ class cEncoderList
 
 		static cEncoderTypeEntry & Get_Encoder_Type_Entry(int index);
 
-#pragma auto_inline(off)
 		//------------------------------------------------------------------------------------
 		template<class T> static T Set_Precision(int type, T min, T max, 
 			T resolution = 1)
@@ -57,7 +56,6 @@ class cEncoderList
 
 		}
 		//------------------------------------------------------------------------------------
-#pragma auto_inline(on)
 
 	private:
 		static cEncoderTypeEntry EncoderTypes[MAX_ENCODERTYPES];

@@ -20,9 +20,6 @@ CameraClass			* OverlayGameModeClass::Camera;
 void	OverlayGameModeClass::Init()
 {
 	Scene = new SimpleSceneClass;
-#ifdef WW3D_COMPILE_WITH_DX8__
-	Scene->Get_DX8_Renderer_Container()->Enable_Lighting(false);
-#endif
 	Scene->Set_Ambient_Light(Vector3(1,1,1));
 
 	Camera = new CameraClass();

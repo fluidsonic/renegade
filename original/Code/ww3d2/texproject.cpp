@@ -13,7 +13,6 @@
 // DEBUG DEBUG
 #include "mpu.h"
 
-#define DEBUG_SHADOW_RENDERING					0
 //#define DEFAULT_TEXTURE_SIZE						64
 
 const float INTENSITY_RATE_OF_CHANGE			= 1.0f;			// change in intensity per second
@@ -493,11 +492,6 @@ void TexProjectClass::Init_Multiplicative(void)
 		MaterialPass->Set_Texture(NULL,1);
 	}
 
-#if (DEBUG_SHADOW_RENDERING)
-	// invert the shader so we can see what polygons it is hitting
-	mult_shader.Set_Dst_Blend_Func(ShaderClass::DSTBLEND_ONE);
-	mult_shader.Set_Src_Blend_Func(ShaderClass::SRCBLEND_ONE);
-#endif
 
 	MaterialPass->Set_Shader(mult_shader);
 
@@ -580,11 +574,6 @@ void TexProjectClass::Init_Additive(void)
 	} else {
 	}
 
-#if (DEBUG_SHADOW_RENDERING)
-	// invert the shader so we can see what polygons it is hitting
-	add_shader.Set_Dst_Blend_Func(ShaderClass::DSTBLEND_SRC_COLOR);
-	add_shader.Set_Src_Blend_Func(ShaderClass::SRCBLEND_ZERO);
-#endif
 	
 	MaterialPass->Set_Shader(add_shader);
 
@@ -1031,17 +1020,6 @@ bool TexProjectClass::Compute_Texture(RenderObjClass * model,SpecialRenderInfoCl
 
 	}
 
-#if 0
-
-	/*
-	** Render the object with the BW Renderer into our color surface
-	*/
-	BWRenderClass bwr((unsigned char*)shadow_surface->getDataPtr(),tex_size);
-	bwr.Fill(0xff);
-	context->BWRenderer = &bwr;
-	model->Special_Render(*context);
-	context->BWRenderer = NULL;
-#endif
 	return true;
 }
 

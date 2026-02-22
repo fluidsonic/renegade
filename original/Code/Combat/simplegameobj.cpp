@@ -25,19 +25,6 @@ SimpleGameObjDef::SimpleGameObjDef( void ) :
 	EDITABLE_PARAM( SimpleGameObjDef, ParameterClass::TYPE_BOOL, IsEditorObject );
 	EDITABLE_PARAM( SimpleGameObjDef, ParameterClass::TYPE_BOOL, IsHiddenObject );
 
-#ifdef	PARAM_EDITING_ON
-
-	//
-	//	Configure the orator types parameter
-	//
-	EnumParameterClass *pt_type_param = new EnumParameterClass( (int *)&PlayerTerminalType );
-	pt_type_param->Set_Name( "Player Terminal Type" );
-	pt_type_param->Add_Value( "<None>", PlayerTerminalClass::TYPE_NONE );
-	pt_type_param->Add_Value( "GDI",		PlayerTerminalClass::TYPE_GDI );
-	pt_type_param->Add_Value( "NOD",		PlayerTerminalClass::TYPE_NOD );
-	pt_type_param->Add_Value( "Mutant", PlayerTerminalClass::TYPE_MUTANT );
-	GENERIC_EDITABLE_PARAM( SimpleGameObjDef, pt_type_param );
-#endif
 
 	return ;
 }

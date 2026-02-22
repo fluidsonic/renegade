@@ -5,8 +5,6 @@
 	#include "always.h"
 #endif
 
-#ifndef	WWDEBUG_H
-#endif
 
 #ifndef	CHUNKIO_H
 	#include "chunkio.h"

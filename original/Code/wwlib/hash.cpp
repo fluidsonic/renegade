@@ -1,8 +1,6 @@
 #include "hash.h"
 #include "realcrc.h"
-#ifdef _UNIX
 #include "osdep.h"
-#endif
 
 #include <string.h>
 

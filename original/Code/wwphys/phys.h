@@ -69,9 +69,6 @@ class AccessiblePhysClass;
 
 class PhysDefClass;
 
-#if (UMBRASUPPORT)
-namespace Umbra { class Object; }
-#endif
 
 /*
 ** Macros for rendering debug widgets.  In the release build, these will automatically
@@ -543,9 +540,6 @@ public:
 	/*
 	** Umbra Testing
 	*/
-#if (UMBRASUPPORT)
-	Umbra::Object *					Peek_Umbra_Object(void)						{ return UmbraObject; }
-#endif
 
 	unsigned Get_Last_Visible_Frame() const { return LastVisibleFrame; }
 	void Set_Last_Visible_Frame(unsigned frame) { LastVisibleFrame=frame; }
@@ -644,9 +638,6 @@ protected:
 	/*
 	** UMBRA Testing
 	*/
-#if (UMBRASUPPORT)
-	Umbra::Object *				UmbraObject;
-#endif
 
 private:
 

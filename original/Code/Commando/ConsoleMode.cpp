@@ -12,7 +12,6 @@
 #include "buildnum.h"
 #include "init.h"
 #include "gamesideservercontrol.h"
-#include "specialbuilds.h"
 #include "serversettings.h"
 
 /*
@@ -140,11 +139,8 @@ void ConsoleModeClass::Init(void)
 			DWORD version_major = 1;
 			DWORD version_minor = 0;
 			Get_Version_Number(&version_major, &version_minor);
-#ifdef FREEDEDICATEDSERVER
-			Print("Renegade Free Dedicated Server ");
-#else  //FREEDEDICATEDSERVER
+// FDS: console mode was enabled by default (no graphical UI)
 			Print("Renegade ");
-#endif //FREEDEDICATEDSERVER
 			Print("v%d.%.3d %s-%s %s\n", (version_major >> 16), (version_major & 0xFFFF), BuildInfoClass::Get_Builder_Initials(), BuildInfoClass::Get_Build_Number_String(), BuildInfoClass::Get_Build_Date_String());
 			Print("Console mode active\n");
 
@@ -720,7 +716,6 @@ void ConsoleModeClass::Apply_Attributes(void)
 }
 
 // unrecognized character escape sequence
-#pragma warning(disable : 4129)
 
 /***********************************************************************************************
  * ConsoleModeClass::Wait_For_Keypress -- Wait for user to press a key                         *

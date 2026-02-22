@@ -9,8 +9,6 @@
 	#include "random.h"
 #endif
 
-#ifndef	WWDEBUG_H
-#endif
 
 #define	CRANDOM_FLOAT_RANGE			0x1000
 
