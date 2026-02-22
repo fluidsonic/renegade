@@ -32,11 +32,24 @@ abstract class StaticNetworkObject(
 // C++: DoorNetworkObjectClass — does NOT call super.Export_Rare; state-based only.
 // Uses BITPACK_DOOR_STATE for encoding (0=CLOSED, 1=OPENED, 2=OPENING, 3=CLOSING, 4=ACCESS_DENIED).
 class DoorNetworkObject(
-    val doorState: Int = 0,
+    val door: ccr.physics.static.DoorPhysClass,
 ) : StaticNetworkObject() {
+    private var lastSentState: Int = door.state
+
+    override val creationDirtyBit: Int = NetworkObject.BIT_RARE
+
     // C++: DoorNetworkObjectClass::Export_Rare — skips animation fields (state-based optimization)
     override fun exportRare(packet: BitStream) {
-        packet.addInt(doorState, BITPACK_DOOR_STATE)
+        packet.addInt(door.state, BITPACK_DOOR_STATE)
+    }
+
+    /** Called each tick; sets BIT_RARE dirty if state has changed since last send. */
+    override fun networkThink() {
+        val current = door.state
+        if (current != lastSentState) {
+            lastSentState = current
+            setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+        }
     }
 }
 

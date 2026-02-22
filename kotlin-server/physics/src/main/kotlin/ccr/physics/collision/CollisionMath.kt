@@ -107,6 +107,17 @@ object CollisionMath {
         return true
     }
 
+    fun pointInOBBox(point: Vector3, box: OBBox): Boolean {
+        val d = point - box.center
+        val r0 = Vector3(box.basis.m00, box.basis.m01, box.basis.m02)
+        val r1 = Vector3(box.basis.m10, box.basis.m11, box.basis.m12)
+        val r2 = Vector3(box.basis.m20, box.basis.m21, box.basis.m22)
+        if (abs(d.dot(r0)) > box.extent.x) return false
+        if (abs(d.dot(r1)) > box.extent.y) return false
+        if (abs(d.dot(r2)) > box.extent.z) return false
+        return true
+    }
+
     // ======================== COLLISION (SWEPT) ========================
 
     /** Moller-Trumbore ray-triangle intersection. */

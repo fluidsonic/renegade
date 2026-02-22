@@ -6,6 +6,7 @@ import ccr.net.bitstream.BITPACK_HEALTH
 import ccr.net.bitstream.BITPACK_SHIELD_STRENGTH
 import ccr.net.bitstream.BITPACK_SHIELD_TYPE
 import ccr.net.bitstream.EncoderRegistry
+import ccr.physics.static.DoorPhysClass
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import kotlin.math.abs
@@ -24,20 +25,29 @@ class StaticNetworkObjectTest {
             EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)
             EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE, 0.0, 8.0, 1.0)
         }
+
+        private fun makeDoor(): DoorPhysClass = DoorPhysClass(
+            definitionId = 1,
+            closeDelay = 2f,
+            triggerZone1 = null,
+            triggerZone2 = null,
+            lockCode = 0,
+            doorOpensForVehicles = false,
+        )
     }
 
     @Test fun `door rare - closed state`() {
         val bs = BitStream()
-        DoorNetworkObject(doorState = 0).exportRare(bs)
-        assertEquals(0, bs.getInt(BITPACK_DOOR_STATE))
+        DoorNetworkObject(makeDoor()).exportRare(bs)
+        assertEquals(DoorPhysClass.STATE_CLOSED_DOOR, bs.getInt(BITPACK_DOOR_STATE))
     }
 
-    @Test fun `door rare - all door states`() {
-        for (state in 0..4) {
-            val bs = BitStream()
-            DoorNetworkObject(doorState = state).exportRare(bs)
-            assertEquals(state, bs.getInt(BITPACK_DOOR_STATE))
-        }
+    @Test fun `door rare - opening state`() {
+        val door = makeDoor()
+        door.open() // transitions CLOSED -> OPENING
+        val bs = BitStream()
+        DoorNetworkObject(door).exportRare(bs)
+        assertEquals(DoorPhysClass.STATE_OPENING_DOOR, bs.getInt(BITPACK_DOOR_STATE))
     }
 
     @Test fun `elevator rare - three state fields in order`() {
@@ -80,7 +90,7 @@ class StaticNetworkObjectTest {
     }
 
     @Test fun `setDeletePending is no-op for static types`() {
-        val door = DoorNetworkObject(0)
+        val door = DoorNetworkObject(makeDoor())
         val elev = ElevatorNetworkObject(0, 0, 0)
         door.setDeletePending(); elev.setDeletePending()
         assertFalse(door.isDeletePending)
@@ -88,7 +98,7 @@ class StaticNetworkObjectTest {
     }
 
     @Test fun `networkClassId is 0 for all static types`() {
-        assertEquals(0, DoorNetworkObject(0).networkClassId)
+        assertEquals(0, DoorNetworkObject(makeDoor()).networkClassId)
         assertEquals(0, ElevatorNetworkObject(0, 0, 0).networkClassId)
         assertEquals(0, DsapoNetworkObject().networkClassId)
     }

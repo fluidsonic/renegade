@@ -1,10 +1,9 @@
 package ccr.server.level.lsd
 
 import ccr.server.level.ChunkIds
-import ccr.server.level.Matrix3D
+import ccr.server.level.toInt32
+import ccr.server.level.toMatrix3D
 import ccr.server.mix.ChunkReader
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 /**
  * Parses the PHYSICS_CHUNKID_STATIC_OBJECTS_SUBSYSTEM chunk.
@@ -73,55 +72,70 @@ object StaticObjectLoader {
         return result
     }
 
+    /** Known factory chunk IDs we can parse. */
+    private val KNOWN_FACTORY_IDS = setOf(
+        ChunkIds.PHYSICS_CHUNKID_DOORPHYS,
+        ChunkIds.PHYSICS_CHUNKID_ELEVATORPHYS,
+    )
+
     private fun parseStaticObject(objectWrapperChunk: ChunkReader): StaticPhysObject? {
-        // Inside the wrapper is a factory chunk (keyed by factory chunk ID, e.g. 0x00020109).
-        // Inside that: OBJPOINTER (skip) + OBJDATA (StaticPhysClass::Save output).
-        //
-        // OBJDATA structure (staticphyssaveload.cpp, physclass.cpp, renderobj.cpp):
-        //   STATICPHYS_CHUNK_PHYS (0x00DC2F94)
-        //     PHYS_CHUNK_VARIABLES (0x00660055)  -- micro: 0x03=flags, 0x04=name, 0x06=definitionId
-        //     PHYS_CHUNK_MODEL (0x00660056)
-        //       WW3D_PERSIST_CHUNKID_RENDEROBJ (0x00010000)
-        //         RENDOBJFACTORY_CHUNKID_VARIABLES (0x00555040)
-        //           micro 0x01 = modelName (string)
-        //           micro 0x02 = transform (48 bytes = Matrix3D row-major)
-        var modelName = ""
-        var transform = Matrix3D.IDENTITY
-        var definitionId = 0
+        // The wrapper contains a single factory chunk whose ID identifies the physics type.
+        // Inside: OBJPOINTER (skip) + OBJDATA (the object's Save() output).
+        var factoryChunkId: UInt? = null
+        var objDataReader: ChunkReader? = null
 
-        objectWrapperChunk.forEachChunk { _, _, factoryChunk ->
-            val objData = factoryChunk.findChunk(ChunkIds.SIMPLEFACTORY_CHUNKID_OBJDATA)
-                ?: return@forEachChunk
-            val physChunk = objData.findChunk(ChunkIds.STATICPHYS_CHUNK_PHYS)
-                ?: return@forEachChunk
-
-            physChunk.findChunk(ChunkIds.PHYS_CHUNK_VARIABLES)?.forEachMicroChunk { microId, bytes ->
-                if (microId == 0x06 && bytes.size >= 4) {
-                    definitionId = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).getInt()
-                }
-            }
-
-            physChunk.findChunk(ChunkIds.PHYS_CHUNK_MODEL)
-                ?.findChunk(ChunkIds.WW3D_PERSIST_CHUNKID_RENDEROBJ)
-                ?.findChunk(ChunkIds.RENDOBJFACTORY_CHUNKID_VARIABLES)
-                ?.forEachMicroChunk { microId, bytes ->
-                    when (microId) {
-                        0x01 -> {
-                            val nullIdx = bytes.indexOfFirst { it == 0.toByte() }
-                            modelName = String(bytes, 0, if (nullIdx < 0) bytes.size else nullIdx, Charsets.ISO_8859_1)
-                        }
-                        0x02 -> {
-                            if (bytes.size >= 48) {
-                                val bb = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
-                                transform = Matrix3D(FloatArray(12) { bb.getFloat(it * 4) })
-                            }
-                        }
+        objectWrapperChunk.forEachChunk { chunkId, _, chunkReader ->
+            // The first (and only) chunk is the factory chunk.
+            if (factoryChunkId == null) {
+                factoryChunkId = chunkId
+                // Inside the factory chunk, find OBJDATA.
+                chunkReader.forEachChunk { innerId, _, innerReader ->
+                    if (innerId == ChunkIds.SIMPLEFACTORY_CHUNKID_OBJDATA && objDataReader == null) {
+                        objDataReader = innerReader
                     }
                 }
+            }
         }
 
-        if (modelName.isEmpty()) return null
-        return StaticPhysObject(definitionId, transform, modelName)
+        val fid = factoryChunkId ?: return null
+        if (fid !in KNOWN_FACTORY_IDS) return null
+        val objData = objDataReader ?: return null
+
+        // Recursively search OBJDATA for the two chunks we need.
+        val physVars = objData.findChunkRecursive(ChunkIds.PHYS_CHUNK_VARIABLES)
+        val rendObjVars = objData.findChunkRecursive(ChunkIds.RENDOBJFACTORY_CHUNKID_VARIABLES)
+
+        // Parse PHYS_CHUNK_VARIABLES micro-chunks: 0x06=DefID, 0x07=InstanceID
+        var definitionId = 0
+        var instanceId = 0
+        physVars?.let { vars ->
+            vars.findMicroChunk(0x06)?.let { definitionId = it.toInt32() }
+            vars.findMicroChunk(0x07)?.let { instanceId = it.toInt32() }
+        }
+
+        // Parse RENDOBJFACTORY_CHUNKID_VARIABLES micro-chunks: 0x01=NAME, 0x02=TRANSFORM
+        var modelName = ""
+        var transform = ccr.server.level.Matrix3D.IDENTITY
+        rendObjVars?.let { vars ->
+            vars.findMicroChunk(0x01)?.let { modelName = it.toNullTerminatedString() }
+            vars.findMicroChunk(0x02)?.let { transform = it.toMatrix3D() }
+        }
+
+        println("[STATICOBJ] parsed factoryChunkId=0x${fid.toString(16)} instanceId=$instanceId defId=$definitionId model=$modelName")
+
+        return StaticPhysObject(
+            factoryChunkId = fid,
+            instanceId = instanceId,
+            definitionId = definitionId,
+            transform = transform,
+            modelName = modelName,
+        )
+    }
+
+    private fun ByteArray.toNullTerminatedString(): String {
+        val nullIndex = indexOfFirst { it == 0.toByte() }
+        val len = if (nullIndex < 0) size else nullIndex
+        return String(this, 0, len, Charsets.ISO_8859_1)
     }
 
     private fun parseStaticLight(lightWrapperChunk: ChunkReader): StaticLight? {

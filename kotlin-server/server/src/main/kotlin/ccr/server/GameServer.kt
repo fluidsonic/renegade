@@ -59,8 +59,13 @@ import ccr.server.level.PhysicsSceneBuilder
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
+import ccr.server.defs.combat.DoorPhysDefClass
 import ccr.server.defs.combat.PowerUpGameObjDef
 import ccr.server.defs.combat.RefineryGameObjDef
+import ccr.math.OBBox
+import ccr.math.Matrix3D as MathMatrix3D
+import ccr.physics.static.DoorPhysClass
+import ccr.server.net.DoorNetworkObject
 import ccr.server.net.PowerUpGameObj
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -143,6 +148,9 @@ class GameServer(internal val config: ServerConfig) {
     // Base controllers for NOD (playerType=0) and GDI (playerType=1) teams.
     internal var baseControllerNod: BaseControllerClass? = null
     internal var baseControllerGdi: BaseControllerClass? = null
+
+    // Door physics + network objects from LSD static data.
+    private val doorObjects = mutableListOf<Pair<DoorPhysClass, DoorNetworkObject>>()
 
     // God owns the player/soldier lifecycle (port of C++ cGod).
     internal val god = God(this)
@@ -399,6 +407,15 @@ class GameServer(internal val config: ServerConfig) {
 
             // God.think() — handles respawn loop (creates soldiers for soldierless in-game players)
             god.think(frameDeltaSeconds)
+
+            // Tick door state machines and detect state changes for network replication
+            if (doorObjects.isNotEmpty()) {
+                val soldierPositions = god.soldiersByHost.values.map { it.position }
+                for ((door, doorNet) in doorObjects) {
+                    door.updateState(frameDeltaSeconds, soldierPositions)
+                    doorNet.networkThink()
+                }
+            }
 
             // Mark driven vehicles BIT_FREQUENT dirty — gameObjManager.think() already advanced
             // their position via VehicleGameObj.think(). All clients need the updated position.
@@ -1205,10 +1222,50 @@ class GameServer(internal val config: ServerConfig) {
                 println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
             }
         }
+
+        // Register doors from LSD static objects
+        loadedLevel?.also { level ->
+            val doors = level.staticData.staticObjects.filter { it.factoryChunkId == ChunkIds.PHYSICS_CHUNKID_DOORPHYS }
+            if (doors.isNotEmpty()) {
+                println("[DOOR] found ${doors.size} doors in LSD")
+                for (obj in doors) {
+                    val def = level.definitions.findById(obj.definitionId.toUInt()) as? DoorPhysDefClass ?: continue
+                    val zone1 = def.triggerZone1?.let { OBBox.fromFloatArray(it) }
+                    val zone2 = def.triggerZone2?.let { OBBox.fromFloatArray(it) }
+                    val doorPhys = DoorPhysClass(
+                        definitionId = obj.definitionId,
+                        closeDelay = def.closeDelay,
+                        triggerZone1 = zone1,
+                        triggerZone2 = zone2,
+                        lockCode = def.lockCode,
+                        doorOpensForVehicles = def.doorOpensForVehicles,
+                    )
+                    doorPhys.transform = obj.transform.let { tm ->
+                        val e = tm.elements
+                        ccr.math.Matrix3D(
+                            m00 = e[0], m01 = e[1], m02 = e[2], m03 = e[3],
+                            m10 = e[4], m11 = e[5], m12 = e[6], m13 = e[7],
+                            m20 = e[8], m21 = e[9], m22 = e[10], m23 = e[11],
+                        )
+                    }
+                    val doorNet = DoorNetworkObject(doorPhys)
+                    NetworkObjectManager.registerObject(doorNet, obj.instanceId)
+                    doorNet.setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+                    doorObjects.add(Pair(doorPhys, doorNet))
+                    println("[DOOR] registered door instanceId=${obj.instanceId} defId=${obj.definitionId} name=${def.name}")
+                }
+            }
+        }
     }
 
     private fun unloadLevel() {
         println("[SERVER] unloading level '$currentMapName'")
+
+        // Unregister door network objects
+        for ((_, doorNet) in doorObjects) {
+            NetworkObjectManager.unregisterObject(doorNet)
+        }
+        doorObjects.clear()
 
         // Unregister buildings from NetworkObjectManager
         for (building in gameObjManager.getBuildingList().toList()) {

@@ -89,8 +89,10 @@ object ChunkIds {
     const val RENDOBJFACTORY_CHUNKID_VARIABLES   = 0x00555040u
 
     // ─── Physics persist chunk IDs (wwphysids.h, CHUNKID_WWPHYS_BEGIN=0x00020000) ─
-    const val PHYSICS_CHUNKID_WAYPATH  = 0x00020110u
-    const val PHYSICS_CHUNKID_WAYPOINT = 0x00020111u
+    const val PHYSICS_CHUNKID_WAYPATH      = 0x00020110u
+    const val PHYSICS_CHUNKID_WAYPOINT     = 0x00020111u
+    const val PHYSICS_CHUNKID_DOORPHYS     = 0x00020A00u
+    const val PHYSICS_CHUNKID_ELEVATORPHYS = 0x00020A01u
 
     // ─── Game object persist factory IDs (combatchunkid.h) ─────────────────────
     const val GAMEOBJ_C4               = 0x00040102u
