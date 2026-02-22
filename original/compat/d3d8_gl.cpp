@@ -500,6 +500,10 @@ struct FrameStats {
     unsigned setRenderState = 0;  // SetRenderState
     unsigned createTexture  = 0;  // CreateTexture (lifetime, not per-frame)
     unsigned frames         = 0;
+    unsigned setMaterial    = 0;  // SetMaterial calls arriving from DX8Wrapper
+    unsigned matSkipped     = 0;  // SetMaterial calls skipped by content dedup
+    unsigned applyGLFull    = 0;  // Apply_GL_State calls where dirty != 0
+    unsigned applyGLSkip    = 0;  // Apply_GL_State calls where dirty == 0 (fully skipped)
 };
 static FrameStats s_stats;
 static FrameStats s_reported;       // stats as of last report
@@ -512,10 +516,12 @@ static void report_frame_stats(void)
     // Print once per 300 frames (~5s) — but only if something changed
     if (s_report_frame % 300 == 0) {
         fprintf(stderr,
-            "[d3d8] frame %u: draw=%u drawUP=%u setTex=%u setXform=%u setRS=%u (createTex=%u total)\n",
+            "[d3d8] frame %u: draw=%u drawUP=%u setTex=%u setXform=%u setRS=%u setMat=%u(skip=%u) applyGL=%u(skip=%u) (createTex=%u total)\n",
             s_stats.frames,
             s_stats.drawCalls, s_stats.drawUPCalls,
             s_stats.setTexture, s_stats.setTransform, s_stats.setRenderState,
+            s_stats.setMaterial, s_stats.matSkipped,
+            s_stats.applyGLFull, s_stats.applyGLSkip,
             s_stats.createTexture);
         // Reset per-frame counters; keep createTexture (lifetime)
         unsigned saved_create = s_stats.createTexture;
@@ -625,6 +631,42 @@ static void d3d_to_gl_matrix(const D3DMATRIX* m, float out[16]) {
 }
 
 // ---------------------------------------------------------------------------
+// Dirty flags — set by state setters, cleared by Apply_GL_State/Transforms
+// ---------------------------------------------------------------------------
+enum DirtyFlags : uint32_t {
+    DIRTY_BLEND       = 1u << 0,   // rs[19,20,27,171]
+    DIRTY_DEPTH       = 1u << 1,   // rs[7,14,23]
+    DIRTY_ALPHA_TEST  = 1u << 2,   // rs[15,24,25]
+    DIRTY_FILL_SHADE  = 1u << 3,   // rs[8,9]
+    DIRTY_COLOR_WRITE = 1u << 4,   // rs[168]
+    DIRTY_STENCIL     = 1u << 5,   // rs[52..59]
+    DIRTY_FOG         = 1u << 6,   // rs[28,34..38,140]
+    DIRTY_LIGHTING    = 1u << 7,   // rs[137,139,145], material
+    DIRTY_TEXTURES    = 1u << 8,   // tss[][], currentTextures[], rs[60]
+    DIRTY_TRANSFORMS  = 1u << 9,   // worldMatrix, viewMatrix, projMatrix
+    DIRTY_LIGHTS      = 1u << 10,  // lights[], lightEnabled[]
+    DIRTY_ALL         = 0xFFFFFFFFu
+};
+
+// Map a D3DRENDERSTATETYPE index to its dirty-flag group
+static uint32_t rs_dirty_flag(uint32_t state) {
+    switch (state) {
+    case 19: case 20: case 27: case 171:                    return DIRTY_BLEND;
+    case 7:  case 14: case 23:                              return DIRTY_DEPTH;
+    case 15: case 24: case 25:                              return DIRTY_ALPHA_TEST;
+    case 8:  case 9:                                        return DIRTY_FILL_SHADE;
+    case 168:                                               return DIRTY_COLOR_WRITE;
+    case 52: case 53: case 54: case 55:
+    case 56: case 57: case 58: case 59:                     return DIRTY_STENCIL;
+    case 28: case 34: case 35: case 36:
+    case 37: case 38: case 140:                             return DIRTY_FOG;
+    case 137: case 139: case 145:                           return DIRTY_LIGHTING;
+    case 60:                                                return DIRTY_TEXTURES;
+    default:                                                return 0;
+    }
+}
+
+// ---------------------------------------------------------------------------
 // IDirect3DDevice8_GL — Phase A/B implementation
 // ---------------------------------------------------------------------------
 struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
@@ -660,6 +702,8 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     D3DLIGHT8    lights[8]       = {};
     BOOL         lightEnabled[8] = {};
     D3DMATERIAL8 material        = {};
+
+    uint32_t dirty = DIRTY_ALL;  // start fully dirty; cleared per-group by Apply_GL_*
 
     IDirect3DDevice8_GL() {
         // Identity matrices
@@ -702,7 +746,13 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     // Apply current render states and texture to GL before a draw call
     void Apply_GL_State() {
-        // Log full state for first few 3D draw calls
+        if (dirty == 0) {
+            s_stats.applyGLSkip++;
+            return;
+        }
+        s_stats.applyGLFull++;
+
+        // Log full state for first few 3D draw calls (outside guards — diagnostic)
         static int _state_log_n = 0;
         if (_state_log_n < 3 && !(currentFVF & D3DFVF_XYZRHW)) {
             _state_log_n++;
@@ -730,52 +780,59 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         }
 
         // -- Alpha blending + blend op --
-        if (rs[27]) {   // D3DRS_ALPHABLENDENABLE
-            glEnable(GL_BLEND);
-            glBlendFunc(d3dblend_to_gl(rs[19]), d3dblend_to_gl(rs[20]));
-            // D3DRS_BLENDOP=171: 1=ADD, 2=SUBTRACT, 3=REVSUBTRACT
-            switch (rs[171]) {
-            case 2: glBlendEquation(GL_FUNC_SUBTRACT);         break;
-            case 3: glBlendEquation(GL_FUNC_REVERSE_SUBTRACT); break;
-            default: glBlendEquation(GL_FUNC_ADD);             break;
+        if (dirty & DIRTY_BLEND) {
+            if (rs[27]) {   // D3DRS_ALPHABLENDENABLE
+                glEnable(GL_BLEND);
+                glBlendFunc(d3dblend_to_gl(rs[19]), d3dblend_to_gl(rs[20]));
+                // D3DRS_BLENDOP=171: 1=ADD, 2=SUBTRACT, 3=REVSUBTRACT
+                switch (rs[171]) {
+                case 2: glBlendEquation(GL_FUNC_SUBTRACT);         break;
+                case 3: glBlendEquation(GL_FUNC_REVERSE_SUBTRACT); break;
+                default: glBlendEquation(GL_FUNC_ADD);             break;
+                }
+            } else {
+                glDisable(GL_BLEND);
             }
-        } else {
-            glDisable(GL_BLEND);
         }
 
         // -- Depth test + func + write --
-        if (rs[7]) {    // D3DRS_ZENABLE
-            glEnable(GL_DEPTH_TEST);
-            glDepthFunc(d3dcmp_to_gl(rs[23]));  // D3DRS_ZFUNC=23
-        } else {
-            glDisable(GL_DEPTH_TEST);
+        if (dirty & DIRTY_DEPTH) {
+            if (rs[7]) {    // D3DRS_ZENABLE
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(d3dcmp_to_gl(rs[23]));  // D3DRS_ZFUNC=23
+            } else {
+                glDisable(GL_DEPTH_TEST);
+            }
+            glDepthMask(rs[14] ? GL_TRUE : GL_FALSE);  // D3DRS_ZWRITEENABLE
         }
-        glDepthMask(rs[14] ? GL_TRUE : GL_FALSE);  // D3DRS_ZWRITEENABLE
 
         // -- Cull mode -- DIAGNOSTIC: disable all culling to test geometry
         glDisable(GL_CULL_FACE);
 
         // -- Alpha test --
-        if (rs[15]) {   // D3DRS_ALPHATESTENABLE
-            glEnable(GL_ALPHA_TEST);
-            glAlphaFunc(d3dcmp_to_gl(rs[25] ? rs[25] : 8),        // D3DRS_ALPHAFUNC=25
-                        (float)(rs[24] & 0xFF) / 255.0f);          // D3DRS_ALPHAREF=24
-        } else {
-            glDisable(GL_ALPHA_TEST);
+        if (dirty & DIRTY_ALPHA_TEST) {
+            if (rs[15]) {   // D3DRS_ALPHATESTENABLE
+                glEnable(GL_ALPHA_TEST);
+                glAlphaFunc(d3dcmp_to_gl(rs[25] ? rs[25] : 8),        // D3DRS_ALPHAFUNC=25
+                            (float)(rs[24] & 0xFF) / 255.0f);          // D3DRS_ALPHAREF=24
+            } else {
+                glDisable(GL_ALPHA_TEST);
+            }
         }
 
         // -- Fill mode (D3DRS_FILLMODE=8): 1=POINT, 2=WIRE, 3=SOLID --
-        switch (rs[8]) {
-        case 1: glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); break;
-        case 2: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  break;
-        default: glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); break;
+        // -- Shade mode (D3DRS_SHADEMODE=9): 1=FLAT, 2=GOURAUD --
+        if (dirty & DIRTY_FILL_SHADE) {
+            switch (rs[8]) {
+            case 1: glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); break;
+            case 2: glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  break;
+            default: glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); break;
+            }
+            glShadeModel((rs[9] == 1) ? GL_FLAT : GL_SMOOTH);
         }
 
-        // -- Shade mode (D3DRS_SHADEMODE=9): 1=FLAT, 2=GOURAUD --
-        glShadeModel((rs[9] == 1) ? GL_FLAT : GL_SMOOTH);
-
         // -- Color write mask (D3DRS_COLORWRITEENABLE=168): bits R=1,G=2,B=4,A=8 --
-        {
+        if (dirty & DIRTY_COLOR_WRITE) {
             DWORD cw = rs[168];
             glColorMask((cw & 1) ? GL_TRUE : GL_FALSE,
                         (cw & 2) ? GL_TRUE : GL_FALSE,
@@ -784,70 +841,77 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         }
 
         // -- Stencil (D3DRS_STENCILENABLE=52) --
-        if (rs[52]) {
-            glEnable(GL_STENCIL_TEST);
-            glStencilFunc(d3dcmp_to_gl(rs[56] ? rs[56] : 8),
-                          (GLint)rs[57], rs[58]);              // FUNC, REF, MASK
-            glStencilOp(d3dstencilop_to_gl(rs[53]),            // D3DRS_STENCILFAIL
-                        d3dstencilop_to_gl(rs[54]),            // D3DRS_STENCILZFAIL
-                        d3dstencilop_to_gl(rs[55]));           // D3DRS_STENCILPASS
-            glStencilMask(rs[59]);                             // D3DRS_STENCILWRITEMASK
-        } else {
-            glDisable(GL_STENCIL_TEST);
+        if (dirty & DIRTY_STENCIL) {
+            if (rs[52]) {
+                glEnable(GL_STENCIL_TEST);
+                glStencilFunc(d3dcmp_to_gl(rs[56] ? rs[56] : 8),
+                              (GLint)rs[57], rs[58]);              // FUNC, REF, MASK
+                glStencilOp(d3dstencilop_to_gl(rs[53]),            // D3DRS_STENCILFAIL
+                            d3dstencilop_to_gl(rs[54]),            // D3DRS_STENCILZFAIL
+                            d3dstencilop_to_gl(rs[55]));           // D3DRS_STENCILPASS
+                glStencilMask(rs[59]);                             // D3DRS_STENCILWRITEMASK
+            } else {
+                glDisable(GL_STENCIL_TEST);
+            }
         }
 
         // -- Fog (D3DRS_FOGENABLE=28) --
-        if (rs[28]) {
-            glEnable(GL_FOG);
-            D3DCOLOR fc = (D3DCOLOR)rs[34];  // D3DRS_FOGCOLOR
-            GLfloat fogC[4] = { ColorComponent(fc,16), ColorComponent(fc,8), ColorComponent(fc,0), 1.0f };
-            glFogfv(GL_FOG_COLOR, fogC);
-            // Float values are stored as DWORD bits in rs[]
-            float fogStart   = *reinterpret_cast<const float*>(&rs[36]);
-            float fogEnd     = *reinterpret_cast<const float*>(&rs[37]);
-            float fogDensity = *reinterpret_cast<const float*>(&rs[38]);
-            DWORD fogMode    = rs[35] ? rs[35] : rs[140];  // table fog overrides vertex fog
-            switch (fogMode) {
-            case 1: glFogi(GL_FOG_MODE, GL_EXP);    glFogf(GL_FOG_DENSITY, fogDensity); break;
-            case 2: glFogi(GL_FOG_MODE, GL_EXP2);   glFogf(GL_FOG_DENSITY, fogDensity); break;
-            default: glFogi(GL_FOG_MODE, GL_LINEAR); glFogf(GL_FOG_START, fogStart); glFogf(GL_FOG_END, fogEnd); break;
+        if (dirty & DIRTY_FOG) {
+            if (rs[28]) {
+                glEnable(GL_FOG);
+                D3DCOLOR fc = (D3DCOLOR)rs[34];  // D3DRS_FOGCOLOR
+                GLfloat fogC[4] = { ColorComponent(fc,16), ColorComponent(fc,8), ColorComponent(fc,0), 1.0f };
+                glFogfv(GL_FOG_COLOR, fogC);
+                // Float values are stored as DWORD bits in rs[]
+                float fogStart   = *reinterpret_cast<const float*>(&rs[36]);
+                float fogEnd     = *reinterpret_cast<const float*>(&rs[37]);
+                float fogDensity = *reinterpret_cast<const float*>(&rs[38]);
+                DWORD fogMode    = rs[35] ? rs[35] : rs[140];  // table fog overrides vertex fog
+                switch (fogMode) {
+                case 1: glFogi(GL_FOG_MODE, GL_EXP);    glFogf(GL_FOG_DENSITY, fogDensity); break;
+                case 2: glFogi(GL_FOG_MODE, GL_EXP2);   glFogf(GL_FOG_DENSITY, fogDensity); break;
+                default: glFogi(GL_FOG_MODE, GL_LINEAR); glFogf(GL_FOG_START, fogStart); glFogf(GL_FOG_END, fogEnd); break;
+                }
+            } else {
+                glDisable(GL_FOG);
             }
-        } else {
-            glDisable(GL_FOG);
         }
 
         // -- Lighting + material --
-        if (rs[137]) {   // D3DRS_LIGHTING
-            glEnable(GL_LIGHTING);
-            glEnable(GL_NORMALIZE);
-            D3DCOLOR ambColor = (D3DCOLOR)rs[139];  // D3DRS_AMBIENT
-            GLfloat sceneAmb[4] = { ColorComponent(ambColor,16), ColorComponent(ambColor,8),
-                                    ColorComponent(ambColor,0),  1.0f };
-            glLightModelfv(GL_LIGHT_MODEL_AMBIENT,     sceneAmb);
-            glLightModeli (GL_LIGHT_MODEL_TWO_SIDE,     GL_FALSE);
-            glLightModeli (GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
-            GLfloat mdiff[4] = { material.Diffuse.r,  material.Diffuse.g,  material.Diffuse.b,  material.Diffuse.a  };
-            GLfloat mambi[4] = { material.Ambient.r,  material.Ambient.g,  material.Ambient.b,  material.Ambient.a  };
-            GLfloat memis[4] = { material.Emissive.r, material.Emissive.g, material.Emissive.b, material.Emissive.a };
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,  mdiff);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,  mambi);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, memis);
-            if (material.Power == 0.0f) {
-                GLfloat nospec[4] = {0,0,0,0};
-                glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  nospec);
-                glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, 0.0f);
+        if (dirty & DIRTY_LIGHTING) {
+            if (rs[137]) {   // D3DRS_LIGHTING
+                glEnable(GL_LIGHTING);
+                glEnable(GL_NORMALIZE);
+                D3DCOLOR ambColor = (D3DCOLOR)rs[139];  // D3DRS_AMBIENT
+                GLfloat sceneAmb[4] = { ColorComponent(ambColor,16), ColorComponent(ambColor,8),
+                                        ColorComponent(ambColor,0),  1.0f };
+                glLightModelfv(GL_LIGHT_MODEL_AMBIENT,     sceneAmb);
+                glLightModeli (GL_LIGHT_MODEL_TWO_SIDE,     GL_FALSE);
+                glLightModeli (GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
+                GLfloat mdiff[4] = { material.Diffuse.r,  material.Diffuse.g,  material.Diffuse.b,  material.Diffuse.a  };
+                GLfloat mambi[4] = { material.Ambient.r,  material.Ambient.g,  material.Ambient.b,  material.Ambient.a  };
+                GLfloat memis[4] = { material.Emissive.r, material.Emissive.g, material.Emissive.b, material.Emissive.a };
+                glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,  mdiff);
+                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,  mambi);
+                glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, memis);
+                if (material.Power == 0.0f) {
+                    GLfloat nospec[4] = {0,0,0,0};
+                    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  nospec);
+                    glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, 0.0f);
+                } else {
+                    GLfloat mspec[4] = { material.Specular.r, material.Specular.g, material.Specular.b, material.Specular.a };
+                    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mspec);
+                    float shine = material.Power < 128.0f ? material.Power : 128.0f;
+                    glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, shine);
+                }
             } else {
-                GLfloat mspec[4] = { material.Specular.r, material.Specular.g, material.Specular.b, material.Specular.a };
-                glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mspec);
-                float shine = material.Power < 128.0f ? material.Power : 128.0f;
-                glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, shine);
+                glDisable(GL_LIGHTING);
+                glDisable(GL_NORMALIZE);
             }
-        } else {
-            glDisable(GL_LIGHTING);
-            glDisable(GL_NORMALIZE);
         }
 
         // -- Texture stages 0..7 --
+        if (dirty & DIRTY_TEXTURES) {
         // D3DTSS indices: 1=COLOROP,2=COLORARG1,3=COLORARG2,4=ALPHAOP,5=ALPHAARG1,6=ALPHAARG2
         //   13=ADDRESSU,14=ADDRESSV,16=MAGFILTER,17=MINFILTER,18=MIPFILTER
         // D3DTOP: 1=DISABLE,2=SEL1,3=SEL2,4=MOD,5=MOD2X,6=MOD4X,7=ADD,8=ADDSIGNED,
@@ -1032,10 +1096,19 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             glTexEnvf(GL_TEXTURE_ENV, GL_ALPHA_SCALE, aScale);
         }
         glActiveTexture(GL_TEXTURE0);  // restore default active unit
+        }  // dirty & DIRTY_TEXTURES
+
+        dirty = 0;  // clear all flags after apply
     }
 
     // Apply D3D world/view/proj matrices to GL
     void Apply_GL_Transforms() {
+        // Skip if neither transforms nor lights changed — but XYZRHW always
+        // needs the ortho setup in case it follows a 3D draw.
+        if (!(dirty & (DIRTY_TRANSFORMS | DIRTY_LIGHTS))) {
+            if (!(currentFVF & D3DFVF_XYZRHW)) return;
+        }
+
         float mat[16];
 
         // Log matrices once for first 3D DIP call
@@ -1146,6 +1219,8 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         float wmat[16];
         d3d_to_gl_matrix(&worldMatrix, wmat);
         glMultMatrixf(wmat);
+
+        dirty &= ~(uint32_t)(DIRTY_TRANSFORMS | DIRTY_LIGHTS);
     }
 
     // IUnknown
@@ -1301,14 +1376,18 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     // State store — track for Apply_GL_State()
     HRESULT SetRenderState(D3DRENDERSTATETYPE state, DWORD value) override {
         s_stats.setRenderState++;
-        // Log alpha-blend state changes
-        if (state == 27 /*D3DRS_ALPHABLENDENABLE*/) {
-            static unsigned s_ab_count = 0;
-            if (++s_ab_count <= 12)
-                fprintf(stderr, "[RS] #%u ALPHABLENDENABLE=%u (was %u)\n",
-                        s_ab_count, (unsigned)value, (unsigned)rs[27]);
+        if ((uint32_t)state < 256) {
+            // Log alpha-blend state changes (before dedup, so we see all calls)
+            if (state == 27 /*D3DRS_ALPHABLENDENABLE*/) {
+                static unsigned s_ab_count = 0;
+                if (++s_ab_count <= 12)
+                    fprintf(stderr, "[RS] #%u ALPHABLENDENABLE=%u (was %u)\n",
+                            s_ab_count, (unsigned)value, (unsigned)rs[27]);
+            }
+            if (rs[state] == value) return S_OK;  // content dedup
+            rs[state] = value;
+            dirty |= rs_dirty_flag((uint32_t)state);
         }
-        if ((unsigned)state < 256) rs[state] = value;
         return S_OK;
     }
     HRESULT GetRenderState(D3DRENDERSTATETYPE state, DWORD* pVal) override {
@@ -1324,6 +1403,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         case D3DTS_PROJECTION: projMatrix  = *m; break;
         default: break;
         }
+        dirty |= DIRTY_TRANSFORMS;
         return S_OK;
     }
     HRESULT GetTransform(D3DTRANSFORMSTATETYPE type, D3DMATRIX* m) override {
@@ -1338,8 +1418,14 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     }
     HRESULT MultiplyTransform(D3DTRANSFORMSTATETYPE, const D3DMATRIX*) override { return S_OK; }
     HRESULT SetMaterial(const D3DMATERIAL8* mat) override {
+        s_stats.setMaterial++;
         if (mat) {
+            if (memcmp(&material, mat, sizeof(D3DMATERIAL8)) == 0) {
+                s_stats.matSkipped++;
+                return S_OK;
+            }
             material = *mat;
+            dirty |= DIRTY_LIGHTING;
             static unsigned s_mat_count = 0;
             fprintf(stderr, "[tex] SetMaterial #%u: diff=(%.2f,%.2f,%.2f,%.2f) amb=(%.2f,%.2f,%.2f,%.2f) emis=(%.2f,%.2f,%.2f,%.2f)\n",
                     ++s_mat_count,
@@ -1354,7 +1440,10 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         return S_OK;
     }
     HRESULT SetLight(DWORD index, const D3DLIGHT8* light) override {
-        if (index < 8 && light) lights[index] = *light;
+        if (index < 8 && light) {
+            lights[index] = *light;
+            dirty |= DIRTY_LIGHTS;
+        }
         return S_OK;
     }
     HRESULT GetLight(DWORD index, D3DLIGHT8* l) override {
@@ -1362,7 +1451,10 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         return S_OK;
     }
     HRESULT LightEnable(DWORD index, BOOL enable) override {
-        if (index < 8) lightEnabled[index] = enable;
+        if (index < 8) {
+            lightEnabled[index] = enable;
+            dirty |= DIRTY_LIGHTS;
+        }
         return S_OK;
     }
     HRESULT GetLightEnable(DWORD index, BOOL* e) override {
@@ -1373,17 +1465,21 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     HRESULT GetClipPlane(DWORD, float* p)     override { if(p) memset(p,0,16); return S_OK; }
     HRESULT SetTexture(DWORD stage, IDirect3DBaseTexture8* tex) override {
         s_stats.setTexture++;
+        D3D8Texture_GL* t = static_cast<D3D8Texture_GL*>(tex);
         if (stage == 0) {
             static unsigned s_st_count = 0;
             if (++s_st_count <= 20) {
-                D3D8Texture_GL* t = static_cast<D3D8Texture_GL*>(tex);
                 fprintf(stderr, "[ST0] #%u ptr=%p glId=%u %ux%u fmt=%u\n",
                         s_st_count, (void*)t,
                         t ? t->glTexId : 0, t ? t->width : 0, t ? t->height : 0,
                         t ? (unsigned)t->fmt : 0);
             }
         }
-        if (stage < 8) currentTextures[stage] = static_cast<D3D8Texture_GL*>(tex);
+        if (stage < 8) {
+            if (currentTextures[stage] == t) return S_OK;  // content dedup
+            currentTextures[stage] = t;
+            dirty |= DIRTY_TEXTURES;
+        }
         return S_OK;
     }
     HRESULT GetTexture(DWORD stage, IDirect3DBaseTexture8** pp) override {
@@ -1391,7 +1487,11 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         return S_OK;
     }
     HRESULT SetTextureStageState(DWORD stage, D3DTEXTURESTAGESTATETYPE type, DWORD value) override {
-        if (stage < 8 && (unsigned)type < 32) tss[stage][type] = value;
+        if (stage < 8 && (uint32_t)type < 32) {
+            if (tss[stage][type] == value) return S_OK;  // content dedup
+            tss[stage][type] = value;
+            dirty |= DIRTY_TEXTURES;
+        }
         return S_OK;
     }
     HRESULT GetTextureStageState(DWORD stage, D3DTEXTURESTAGESTATETYPE type, DWORD* v) override {
