@@ -91,16 +91,4 @@ class BeaconGameObjTest {
         assertEquals(29f, beacon.detonateTimer)
     }
 
-    @Test
-    fun `exportRare serialises state and ownerId`() {
-        val beacon = BeaconGameObj(
-            definitionId = 1,
-            position = Vector3(0f, 0f, 0f),
-            initialState = BeaconGameObj.STATE_ARMED,
-        )
-        beacon.ownerId = 42
-        val bs = BitStream()
-        beacon.exportRare(bs)
-        assertTrue(bs.bitWritePosition > 0)
-    }
 }

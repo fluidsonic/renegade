@@ -506,7 +506,6 @@ open class God(private val server: GameServer) {
         )
 
         // Set runtime fields
-        beacon.ownerId       = soldier.networkId
         beacon.beaconDef     = beaconDef
         beacon.serverRef     = server
         beacon.ownerRhostId  = rhostId

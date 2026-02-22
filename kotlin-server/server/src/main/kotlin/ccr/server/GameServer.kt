@@ -120,7 +120,7 @@ class GameServer(internal val config: ServerConfig) {
     // C4 weapon and object definition IDs (populated by loadLevel / loadDefinitions).
     internal var timedC4WeaponDefId: Int = 0
     internal var tossedC4DefId: Int = 0
-    internal var beaconWeaponDefId: Int = 0  // first weapon whose primary ammo has beaconDefId != 0
+    internal var beaconWeaponDefId: Int = 0  // used to give soldiers beacon weapons in createCommando (like timedC4WeaponDefId)
 
     // SpawnManager resolves multiplayer spawn locations from loaded spawners.
     internal var spawnManager: SpawnManager? = null
