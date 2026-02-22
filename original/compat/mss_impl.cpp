@@ -476,9 +476,8 @@ void AIL_resume_sample(HSAMPLE s) {
 void AIL_end_sample(HSAMPLE s) {
     fprintf(stderr, "[audio] end_sample: handle=%u\n", (uint32_t)s);
     Sample2D* smp = get_sample(s);
-    if (!smp || !smp->sound_initialized) return;
-    ma_sound_stop(&smp->sound);
-    ma_sound_seek_to_pcm_frame(&smp->sound, 0u);
+    if (!smp) return;
+    uninit_sample2d(smp);
     smp->loop_remaining = 0;
 }
 
@@ -768,9 +767,8 @@ void AIL_resume_3D_sample(H3DSAMPLE s) {
 
 void AIL_end_3D_sample(H3DSAMPLE s) {
     Sample3D* smp = get_sample3d(s);
-    if (!smp || !smp->sound_initialized) return;
-    ma_sound_stop(&smp->sound);
-    ma_sound_seek_to_pcm_frame(&smp->sound, 0u);
+    if (!smp) return;
+    uninit_sample3d(smp);
     smp->loop_remaining = 0;
 }
 
