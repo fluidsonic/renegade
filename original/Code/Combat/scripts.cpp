@@ -100,7 +100,7 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 		FileClass * scripts_dll = mod_pkg->Get_File( dll_filename );
 		if ((scripts_dll != NULL) && (scripts_dll->Is_Available())) {
 
-			const char * _TMP_SCRIPTS_DLL_FILENAME = "_MOD_SCRIPTS.DLu";
+			const char * _TMP_SCRIPTS_DLL_FILENAME = "_MOD_SCRIPTS.DLL";
 
 			scripts_dll->Open(FileClass::READ);
 			RawFileClass unpacked_scripts(_TMP_SCRIPTS_DLL_FILENAME);

@@ -29,13 +29,13 @@
 //////////////////////////////////////////////////////////////////////////
 //	General constants
 //////////////////////////////////////////////////////////////////////////
-static const char *	LEFT_ROCKET_BONE			= "BN_MISSILE_WNGu";
+static const char *	LEFT_ROCKET_BONE			= "BN_MISSILE_WNGL";
 static const char *	RIGHT_ROCKET_BONE			= "BN_MISSILE_WNGR";
-static const char *	ROCKET_DOOR_ANIMATION	= "V_COMMANCHE.A_COMM_MISu";
+static const char *	ROCKET_DOOR_ANIMATION	= "V_COMMANCHE.A_COMM_MISL";
 static const char *	GATLING_MUZZLE				= "MUZZLEA0";
 static const char *	LEFT_ROCKET_MUZZLE		= "MUZZLEB01";
 static const char *	RIGHT_ROCKET_MUZZLE		= "MUZZLEB0";
-static const char *	LEFT_ROCKET_MESH			= "V_COM_MISSILEu";
+static const char *	LEFT_ROCKET_MESH			= "V_COM_MISSILEL";
 static const char *	RIGHT_ROCKET_MESH			= "V_COM_MISSILER";
 static float			ROCKETS_IN_FRAME_NUM		= 0.0F;
 static float			ROCKETS_OUT_FRAME_NUM	= 10.0F;

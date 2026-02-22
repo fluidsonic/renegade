@@ -570,7 +570,7 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 		return false;
 	}
 
-	if (GameModeManager::Find("WOu")->Is_Active()) {
+	if (GameModeManager::Find("WOL")->Is_Active()) {
 		if (IsPassworded.Is_True() && Is_QuickMatch_Server()) {
 			Debug_Say(("cGameData::Is_Valid_Settings: Quickmatch can not have passwords.\n" ));
 			PRINT_CONFIG_ERROR;

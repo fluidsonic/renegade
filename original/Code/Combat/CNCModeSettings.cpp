@@ -70,7 +70,7 @@ CNCModeSettingsDef::CNCModeSettingsDef(void) :
 	NAMED_EDITABLE_PARAM(CNCModeSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, mRadioCmds[5], "Radio Command 6  (CTRL)");
 	NAMED_EDITABLE_PARAM(CNCModeSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, mRadioCmds[6], "Radio Command 7  (CTRL)");
 	NAMED_EDITABLE_PARAM(CNCModeSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, mRadioCmds[7], "Radio Command 8  (CTRL)");
-	NAMED_EDITABLE_PARAM(CNCModeSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, mRadioCmds[8], "Radio Command 9  (CTRu");
+	NAMED_EDITABLE_PARAM(CNCModeSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, mRadioCmds[8], "Radio Command 9  (CTRL");
 	NAMED_EDITABLE_PARAM(CNCModeSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, mRadioCmds[9], "Radio Command 10 (CTRL)");
 
 	NAMED_EDITABLE_PARAM(CNCModeSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, mRadioCmds[10], "Radio Command 11 (ALT)");

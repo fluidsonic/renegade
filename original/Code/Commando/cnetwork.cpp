@@ -123,7 +123,7 @@ void cNetwork::Init_Client(unsigned short my_port)
 
 		HaveDoneTeamChangeDialog = false;
 	} else {
-		//assert(GameModeManager::Find("WOu")->Is_Active());
+		//assert(GameModeManager::Find("WOL")->Is_Active());
 		bbo = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 		//bbo = cUserOptions::BandwidthBps.Get();
 
@@ -499,7 +499,7 @@ void cNetwork::Init_Server(void)
 		PServerConnection->Set_Bandwidth_Budget_Out(bbo);
 		cBandwidthGraph::Set_Scale(200000);
 	} else {
-		//assert(GameModeManager::Find("WOu")->Is_Active());
+		//assert(GameModeManager::Find("WOL")->Is_Active());
 		unsigned long bw = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 
 		PServerConnection->Set_Bandwidth_Budget_Out(static_cast<uint32_t>(bw));

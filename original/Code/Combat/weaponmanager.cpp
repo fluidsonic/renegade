@@ -525,7 +525,7 @@ bool	AmmoDefinitionClass::Load( ChunkLoadClass &cload )
 	::Get_Render_Obj_Name_From_Filename( ModelName, ModelFilename );
 
 	if ( ModelName.Is_Empty() ) {
-		ModelName = "NULu";
+		ModelName = "NULL";
 	}
 
 	return true;

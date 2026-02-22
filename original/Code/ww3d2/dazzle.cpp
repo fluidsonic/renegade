@@ -1414,7 +1414,7 @@ PersistClass *	DazzlePersistFactoryClass::Load(ChunkLoadClass & cload) const
 		static int count = 0;
 		if ( ++count < 10 ) {
 		}
-		new_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj("NULu");
+		new_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj("NULL");
 	}
 
 	if (new_obj) {

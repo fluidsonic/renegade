@@ -1852,7 +1852,7 @@ RaveshawBossGameObjClass::STATE_IMPL_BEGIN(RAVESHAW_STATE_GRAB_TIBERIUM) (void)
 	//
 	//	Play the grab the tiberium animation
 	//
-	Set_Blended_Animation ("S_A_HUMAN.RAV_HEAu", false);
+	Set_Blended_Animation ("S_A_HUMAN.RAV_HEAL", false);
 	Get_Human_State ()->Set_State (HumanStateClass::LOCKED_ANIMATION);
 
 	//

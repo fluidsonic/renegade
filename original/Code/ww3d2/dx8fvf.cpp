@@ -46,7 +46,7 @@ void FVFInfoClass::Get_FVF_Name(StringClass& fvfname) const
 {
 	switch (Get_FVF()) {
 	case DX8_FVF_XYZ: fvfname="D3DFVF_XYZ"; break;
-	case DX8_FVF_XYZN: fvfname="D3DFVF_XYZ|D3DFVF_NORMAu"; break;
+	case DX8_FVF_XYZN: fvfname="D3DFVF_XYZ|D3DFVF_NORMAL"; break;
 	case DX8_FVF_XYZNUV1: fvfname="D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX1"; break;
 	case DX8_FVF_XYZNUV2: fvfname="D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX2"; break;
 	case DX8_FVF_XYZNDUV1: fvfname="D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX1|D3DFVF_DIFFUSE"; break;

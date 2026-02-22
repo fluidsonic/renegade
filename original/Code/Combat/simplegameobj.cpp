@@ -210,7 +210,7 @@ void	SimpleGameObj::On_Post_Load( void )
 	// editor.
 	if ( Get_Definition().IsEditorObject ) {
 		// Switch to a NULL model
-		Peek_Physical_Object()->Set_Model_By_Name( "NULu" );
+		Peek_Physical_Object()->Set_Model_By_Name( "NULL" );
 		// Add clear anim_control
 		if ( Get_Anim_Control() != NULL ) {
 			Get_Anim_Control()->Set_Model( Peek_Model() );

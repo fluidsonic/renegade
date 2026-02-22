@@ -457,7 +457,7 @@ DECLARE_SCRIPT(M07_Dead6_Minigunner, "")  // Deadeye
 		{
 			if(nuke_blast)
 			{
-				Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+				Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 			}
 		}
 	}
@@ -578,7 +578,7 @@ DECLARE_SCRIPT(M07_Dead6_Rocket_Soldier, "")  // Gunner
 		{
 			if(nuke_blast)
 			{
-				Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+				Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 			}
 		}
 	}
@@ -707,7 +707,7 @@ DECLARE_SCRIPT(M07_Dead6_Grenadier, "")  // Patch
 		{
 			if(nuke_blast)
 			{
-				Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+				Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 			}
 		}
 	}
@@ -1200,7 +1200,7 @@ DECLARE_SCRIPT(M07_Dead6_Engineer, "")  // Hotwire
 		{
 			if(nuke_blast)
 			{
-				Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+				Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 			}
 		}
 	}
@@ -1311,7 +1311,7 @@ DECLARE_SCRIPT(M07_Sydney, "")
 		{
 			if(nuke_blast)
 			{
-				Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+				Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 			}
 		}
 	}
@@ -3165,7 +3165,7 @@ DECLARE_SCRIPT(M07_Stockpile_Object, "")
 	{
 		if (sound.Type == M07_EXPLODE_BARRELS)
 		{
-			Commands->Apply_Damage( obj, 100000.0f, "STEEu");
+			Commands->Apply_Damage( obj, 100000.0f, "STEEL");
 		}
 	}
 
@@ -3676,7 +3676,7 @@ DECLARE_SCRIPT(M07_Encounter_Unit, "Waypath_ID=0:int, Priority=0:int, Suicide=0:
 		
 		if(timer_id == DIE_SURPRISE)
 		{
-			Commands->Apply_Damage( obj, 100000, "STEEu", NULL );
+			Commands->Apply_Damage( obj, 100000, "STEEL", NULL );
 			Vector3 obj_pos = Commands->Get_Position(obj);
 			Vector3 shot_pos;
 			shot_pos.X = obj_pos.X + 4.0f;
@@ -4908,13 +4908,13 @@ DECLARE_SCRIPT(M07_Hostage_Controller, "")
 		{
 			destroy_stockpile = true;
 			
-			Commands->Apply_Damage( Commands->Find_Object(101060), 10000.0f, "STEEu");
-			Commands->Apply_Damage( Commands->Find_Object(101061), 10000.0f, "STEEu");
-			Commands->Apply_Damage( Commands->Find_Object(101062), 10000.0f, "STEEu");
-			Commands->Apply_Damage( Commands->Find_Object(101063), 10000.0f, "STEEu");
-			Commands->Apply_Damage( Commands->Find_Object(101064), 10000.0f, "STEEu");
-			Commands->Apply_Damage( Commands->Find_Object(101065), 10000.0f, "STEEu");
-			Commands->Apply_Damage( Commands->Find_Object(101084), 10000.0f, "STEEu");
+			Commands->Apply_Damage( Commands->Find_Object(101060), 10000.0f, "STEEL");
+			Commands->Apply_Damage( Commands->Find_Object(101061), 10000.0f, "STEEL");
+			Commands->Apply_Damage( Commands->Find_Object(101062), 10000.0f, "STEEL");
+			Commands->Apply_Damage( Commands->Find_Object(101063), 10000.0f, "STEEL");
+			Commands->Apply_Damage( Commands->Find_Object(101064), 10000.0f, "STEEL");
+			Commands->Apply_Damage( Commands->Find_Object(101065), 10000.0f, "STEEL");
+			Commands->Apply_Damage( Commands->Find_Object(101084), 10000.0f, "STEEL");
 			
 			
 		}
@@ -5811,7 +5811,7 @@ DECLARE_SCRIPT(M07_Player_Rocket_Emplacement, "")
 			}
 			if(Commands->Get_Health(obj) < (.3 * Commands->Get_Max_Health(obj)))
 			{
-				Commands->Apply_Damage( obj, -10000.0f, "STEEu", NULL );
+				Commands->Apply_Damage( obj, -10000.0f, "STEEL", NULL );
 			}
 		}
 
@@ -6049,7 +6049,7 @@ DECLARE_SCRIPT(M07_Inn_Evac_Rope, "")
 	{
 		if (stricmp(anim, "XG_EV5_rope.XG_EV5_ropeA") == 0)
 		{
-			Commands->Set_Animation ( obj, "XG_EV5_rope.XG_EV5_ropeu", true );
+			Commands->Set_Animation ( obj, "XG_EV5_rope.XG_EV5_ropeL", true );
 		}
 
 		else if (stricmp(anim, "XG_EV5_rope.XG_EV5_ropeZ") == 0)
@@ -6077,7 +6077,7 @@ DECLARE_SCRIPT(M07_Inn_Evac_Trajectory, "")
 	{
 		if (stricmp(anim, "XG_EV5_Path.XG_EV5_PathA") == 0)
 		{
-			Commands->Set_Animation ( obj, "XG_EV5_Path.XG_EV5_Pathu", true );
+			Commands->Set_Animation ( obj, "XG_EV5_Path.XG_EV5_PathL", true );
 		}
 
 		else if (stricmp(anim, "XG_EV5_Path.XG_EV5_PathZ") == 0)
@@ -6112,7 +6112,7 @@ DECLARE_SCRIPT(M07_Inn_Evac_Helicopter, "")
 	{
 		if (stricmp(anim, "v_GDI_trnspt.XG_EV5_trnsA") == 0)
 		{
-			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsu", true );
+			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsL", true );
 			Commands->Enable_Collisions ( obj );
 
 			
@@ -6152,7 +6152,7 @@ DECLARE_SCRIPT(M07_Inn_Evac_Helicopter, "")
 		}
 		if(Commands->Get_Health(obj) < (.3 * Commands->Get_Max_Health(obj)))
 		{
-			Commands->Apply_Damage( obj, -10000.0f, "STEEu", NULL );
+			Commands->Apply_Damage( obj, -10000.0f, "STEEL", NULL );
 		}
 
 	}
@@ -6181,7 +6181,7 @@ DECLARE_SCRIPT(M07_Deadeye_Nod_Chinook, "")
 		}
 		if(Commands->Get_Health(obj) < (.3 * Commands->Get_Max_Health(obj)))
 		{
-			Commands->Apply_Damage( obj, -10000.0f, "STEEu", NULL );
+			Commands->Apply_Damage( obj, -10000.0f, "STEEL", NULL );
 		}
 
 	}

@@ -2814,7 +2814,7 @@ DECLARE_SCRIPT(M06_Apply_Damage, "")
 		
 		if(timer_id == APPLY_DAMAGE)
 		{
-			Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+			Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 		}
 	}
 };
@@ -3431,7 +3431,7 @@ DECLARE_SCRIPT(M06_Resistance_Raider_DLS, "")
 
 		Commands->Set_Animation(obj, "S_A_HUMAN.H_A_601A", true);
 
-		Commands->Apply_Damage( obj, 25.0f, "STEEu");
+		Commands->Apply_Damage( obj, 25.0f, "STEEL");
 		talking = false;
 		Commands->Enable_HUD_Pokable_Indicator( obj, true );
 		
@@ -3460,7 +3460,7 @@ DECLARE_SCRIPT(M06_Resistance_Raider_DLS, "")
 	{
 		if(action_id == 100823 && reason == ACTION_COMPLETE_CONVERSATION_ENDED)
 		{
-			Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+			Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);

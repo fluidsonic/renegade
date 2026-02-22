@@ -761,7 +761,7 @@ DECLARE_SCRIPT(M08_Initial_Prisoner, "Reinforcment_ID=0:int")
 		}
 		if((action_id == PUNCH_ENEMY) && (reason == ACTION_COMPLETE_NORMAL))
 		{
-			Commands->Apply_Damage( Commands->Find_Object(enemy_id), 10000.0f, "STEEu");
+			Commands->Apply_Damage( Commands->Find_Object(enemy_id), 10000.0f, "STEEL");
 			Commands->Give_PowerUp(obj, "MG Weapon 1 Clip PowerUp");
 			Commands->Give_PowerUp(obj, "MiniGun 2 Clips PU");
 		}
@@ -2978,7 +2978,7 @@ DECLARE_SCRIPT(M08_Encounter_Unit, "Waypath_ID=0:int, Priority=0:int, Suicide=0:
 		
 		if(timer_id == DIE_SURPRISE)
 		{
-			Commands->Apply_Damage( obj, 100000, "STEEu", NULL );
+			Commands->Apply_Damage( obj, 100000, "STEEL", NULL );
 			Vector3 obj_pos = Commands->Get_Position(obj);
 			Vector3 shot_pos;
 			shot_pos.X = obj_pos.X + 4.0f;
@@ -3598,7 +3598,7 @@ DECLARE_SCRIPT(M08_Petra_A_Unit, "Unit_ID=0:int")
 
 		if(action_id == GO_PETRA_A && reason == ACTION_COMPLETE_NORMAL)
 		{
-			Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+			Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 		}
 		
 		
@@ -3986,7 +3986,7 @@ DECLARE_SCRIPT(M08_Petra_B_Unit, "Unit_ID=0:int")
 
 		if(action_id == GO_PETRA_B && reason == ACTION_COMPLETE_NORMAL)
 		{
-			Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+			Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 		}
 		
 		
@@ -4363,7 +4363,7 @@ DECLARE_SCRIPT(M08_Petra_C_Unit, "Unit_ID=0:int")
 
 		if(action_id == GO_PETRA_C && reason == ACTION_COMPLETE_NORMAL)
 		{
-			Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+			Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 		}
 		
 		
@@ -4899,7 +4899,7 @@ DECLARE_SCRIPT(M08_Cavern_Entrance_Truck, "")
 		
 		if(action_id == WAYPATH && reason == ACTION_COMPLETE_NORMAL)
 		{
-			Commands->Apply_Damage( obj, 10000.0f, "STEEu");
+			Commands->Apply_Damage( obj, 10000.0f, "STEEL");
 		}
 	}
 

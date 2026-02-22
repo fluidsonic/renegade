@@ -530,7 +530,7 @@ enum
 };
 
 PhysDefClass::PhysDefClass(void) :
-	ModelName ("NULu"),
+	ModelName ("NULL"),
 	IsPreLit(false)
 {
 	FILENAME_PARAM(PhysDefClass,ModelName, "Westwood 3D Files", ".w3d");

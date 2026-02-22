@@ -4858,7 +4858,7 @@ DECLARE_SCRIPT(M11_End_Mission_Switch_JDG, "")//this guys ID is M11_END_MISSION_
 	{
 		if (param == M01_START_ACTING_JDG)
 		{
-			Commands->Set_Animation ( obj, "DSP_MINICONSEL.DSP_MINICONSEu", false, NULL, 0, 13 );
+			Commands->Set_Animation ( obj, "DSP_MINICONSEL.DSP_MINICONSEL", false, NULL, 0, 13 );
 		}
 	}
 };
