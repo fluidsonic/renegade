@@ -61,6 +61,7 @@ import ccr.physics.scene.PhysicsScene
 import ccr.server.level.PhysicsSceneBuilder
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.BuildingGameObjDef
+import ccr.server.defs.PhysDefClass
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.combat.DoorPhysDefClass
 import ccr.server.defs.combat.PowerUpGameObjDef
@@ -1677,10 +1678,14 @@ class GameServer(internal val config: ServerConfig) {
      * @param def       the PowerUpGameObjDef describing what to grant
      */
     internal fun createPowerUp(position: Vector3, def: PowerUpGameObjDef) {
+        val modelName = if (def.physDefId != 0)
+            (loadedLevel?.definitions?.findById(def.physDefId.toUInt()) as? PhysDefClass)?.modelName ?: ""
+        else ""
+
         val powerUp = PowerUpGameObj(
             definitionId  = def.id.toInt(),
             position      = position,
-            modelName     = "",   // C++: model comes from physics def; stub for Phase 6
+            modelName     = modelName,
         )
         powerUp.powerUpDef = def
         powerUp.serverRef  = this
