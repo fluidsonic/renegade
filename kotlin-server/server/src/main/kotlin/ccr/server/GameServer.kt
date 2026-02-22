@@ -1245,6 +1245,8 @@ class GameServer(internal val config: ServerConfig) {
         val mapMix = MixReader(mixFile.readBytes())
         println("[SERVER] opened $baseName.mix (${mapMix.fileCount()} files in archive)")
 
+        alwaysMix?.readFile("armor.ini")?.also { ArmorWarheadManager.init(it) }
+
         val level = LevelLoader(alwaysMix, mapMix, baseName).load()
         loadedLevel = level
 
@@ -1318,6 +1320,13 @@ class GameServer(internal val config: ServerConfig) {
         }
         val definitions = readDefinitions(ddbData)
         println("[SERVER] loaded ${definitions.size} definitions from always.dat/objects.ddb")
+
+        // Also load armor multiplier table if not already loaded via loadLevel()
+        candidates.firstNotNullOfOrNull { fileName ->
+            val file = File(dataDir, fileName)
+            if (!file.exists()) return@firstNotNullOfOrNull null
+            try { MixReader(file.readBytes()).readFile("armor.ini") } catch (e: Exception) { null }
+        }?.also { ArmorWarheadManager.init(it) }
 
         val nodDef = definitions.find { it.name.equals("CnC_Nod_Minigunner_0", ignoreCase = true) }
         val gdiDef = definitions.find { it.name.equals("CnC_GDI_MiniGunner_0", ignoreCase = true) }
