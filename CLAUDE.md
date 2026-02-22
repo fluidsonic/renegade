@@ -27,6 +27,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 ### Tests
 - Run all Kotlin tests: `kotlin-server/gradlew -p kotlin-server test`
 - Individual modules: `:server:test`, `:net:test`, `:math:test`, `:physics:test`
+- **Do NOT run Kotlin tests when working on C++ changes** — they are unrelated; C++ verification is build + visual run only
 
 ## C++ Port — Workflow Rules
 - **All compiler AND linker errors are your problem to fix** — never leave a build broken; fix them before moving on
