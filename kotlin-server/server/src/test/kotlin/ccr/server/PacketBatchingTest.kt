@@ -19,8 +19,8 @@ class PacketBatchingTest {
         val datagrams = PacketCombiner.combine(listOf(addr to pkt1, addr to pkt2, addr to pkt3))
 
         assertEquals(1, datagrams.size, "three small same-size packets should fit in one datagram")
-        // 2-byte group header + 3 × 20 bytes = 62 bytes
-        assertEquals(62, datagrams[0].data.size)
+        // 2-byte group header + 20 (first) + (1+20) × 2 (delta-header + data for packets 2,3) = 64 bytes
+        assertEquals(64, datagrams[0].data.size)
     }
 
     @Test

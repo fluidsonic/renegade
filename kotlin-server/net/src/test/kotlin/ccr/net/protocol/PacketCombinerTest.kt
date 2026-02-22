@@ -29,8 +29,8 @@ class PacketCombinerTest {
         val datagrams = PacketCombiner.combine(listOf(Pair(addr1, p1), Pair(addr1, p2)))
         assertEquals(1, datagrams.size)
 
-        // Datagram: [header:2][p1:7][p2:7] = 16 bytes
-        assertEquals(2 + 7 + 7, datagrams[0].data.size)
+        // Datagram: [header:2][p1:7][delta-hdr:1][p2:7] = 17 bytes
+        assertEquals(2 + 7 + 1 + 7, datagrams[0].data.size)
 
         val packets = PacketCombiner.split(datagrams[0].data, datagrams[0].data.size)
         assertEquals(2, packets.size)
@@ -87,6 +87,33 @@ class PacketCombinerTest {
         val header1 = (datagrams[0].data[0].toInt() and 0xFF) or ((datagrams[0].data[1].toInt() and 0xFF) shl 8)
         val morePackets = (header1 shr 15) and 1
         assertEquals(1, morePackets, "MorePackets bit should be set when multiple groups follow")
+    }
+
+    @Test
+    fun `combine writes 0x00 delta header before secondary packets`() {
+        // The C++ Break_Packet reads a 1-byte PacketDeltaHeaderStruct before packets 2..N.
+        // combine() must write 0x00 (ChunkPack=0, BytePack=0) before each secondary packet.
+        val p1 = ByteArray(7) { 0xAA.toByte() }
+        val p2 = ByteArray(7) { 0xBB.toByte() }
+        val p3 = ByteArray(7) { 0xCC.toByte() }
+
+        val datagrams = PacketCombiner.combine(listOf(Pair(addr1, p1), Pair(addr1, p2), Pair(addr1, p3)))
+        assertEquals(1, datagrams.size)
+        // Wire: [header:2][p1:7][0x00:1][p2:7][0x00:1][p3:7] = 25 bytes
+        assertEquals(2 + 7 + 1 + 7 + 1 + 7, datagrams[0].data.size)
+
+        val d = datagrams[0].data
+        // Delta header before p2 is at offset 2+7=9
+        assertEquals(0x00.toByte(), d[9], "Delta header before p2 must be 0x00")
+        // Delta header before p3 is at offset 2+7+1+7=17
+        assertEquals(0x00.toByte(), d[17], "Delta header before p3 must be 0x00")
+
+        // Round-trip must recover all three packets intact
+        val packets = PacketCombiner.split(d, d.size)
+        assertEquals(3, packets.size)
+        assertTrue(p1.contentEquals(packets[0].data))
+        assertTrue(p2.contentEquals(packets[1].data))
+        assertTrue(p3.contentEquals(packets[2].data))
     }
 
     // --- Delta format tests (C++ client wire format) ---

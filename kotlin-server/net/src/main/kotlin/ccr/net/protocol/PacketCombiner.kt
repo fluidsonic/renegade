@@ -5,13 +5,17 @@ import java.net.InetSocketAddress
 // C++: PacketManagerClass in wwnet/packetmgr.h/.cpp
 // Combines multiple small packets destined for the same address into a single UDP datagram.
 //
-// Wire format for a combined datagram:
-//   [GroupHeader1: 2 bytes][Packet1][Packet2]...[GroupHeader2: 2 bytes][Packet3]...
+// Wire format for a combined datagram (matches C++ PacketManagerClass::Take_Packet):
+//   [GroupHeader1: 2 bytes][Packet1][0x00][Packet2][0x00][Packet3]...[GroupHeader2: 2 bytes][Packet4]...
 //
 // GroupHeader (16-bit little-endian C bitfield, #pragma pack(1)):
 //   [NumPackets : 5 bits]   — number of packets in this group (1..31)
 //   [PacketSize : 10 bits]  — size of each packet in bytes (all same size in a group)
 //   [MorePackets : 1 bit]   — 1 if another group follows in this datagram
+//
+// The first packet in each group is written raw (no prefix). Every subsequent packet is
+// preceded by a 1-byte PacketDeltaHeaderStruct (value 0x00: ChunkPack=0, BytePack=0),
+// which the C++ receiver (Break_Packet) always reads for packets 2..N.
 
 // MTU for the packet manager (with WRAPPER_CRC defined): 540 bytes
 const val PACKET_MANAGER_MTU = 540
@@ -62,9 +66,14 @@ object PacketCombiner {
                 var i = 0
                 while (i < sizePackets.size) {
                     // How many packets can fit in the remaining space?
+                    // First packet costs packetSize; each subsequent costs packetSize+1 (data + 1-byte delta header).
                     val headerSize = 2
                     val remaining = PACKET_MANAGER_MTU - pos - headerSize
-                    val maxFit = minOf(remaining / packetSize, PACKET_MANAGER_MAX_PACKETS)
+                    val maxFit = if (remaining >= packetSize) {
+                        1 + (remaining - packetSize) / (packetSize + 1)
+                    } else {
+                        0
+                    }
 
                     if (maxFit <= 0) {
                         // Flush current buffer and start new datagram
@@ -73,7 +82,7 @@ object PacketCombiner {
                         continue
                     }
 
-                    val count = minOf(maxFit, sizePackets.size - i)
+                    val count = minOf(maxFit, PACKET_MANAGER_MAX_PACKETS, sizePackets.size - i)
                     val isLast = (i + count >= sizePackets.size) && !moreGroupsAfter
                     val morePackets = !isLast
 
@@ -82,8 +91,11 @@ object PacketCombiner {
                     buf[pos++] = header.toByte()
                     buf[pos++] = (header shr 8).toByte()
 
-                    // Write packets
+                    // Write packets: first is raw; each subsequent is prefixed with 0x00 delta header.
                     for (j in 0 until count) {
+                        if (j > 0) {
+                            buf[pos++] = 0  // PacketDeltaHeaderStruct: ChunkPack=0, BytePack=0
+                        }
                         val pData = sizePackets[i + j].second
                         System.arraycopy(pData, 0, buf, pos, pData.size)
                         pos += pData.size
@@ -105,12 +117,12 @@ object PacketCombiner {
     // Splits a received combined datagram into individual packets.
     // offset: number of bytes to skip at the start (e.g. 4 for WRAPPER_CRC header).
     //
-    // deltaFormat=true: C++ client wire format — the first packet in each group is the
-    //   full base packet; each subsequent packet is preceded by a 1-byte PacketDeltaHeaderStruct
-    //   (ChunkPack:1, BytePack:1) followed by delta or full packet data.
-    // deltaFormat=false (default): our own combine() output — every packet is full-size with
-    //   no delta headers (used for server→client traffic and round-trip tests).
-    fun split(data: ByteArray, length: Int, offset: Int = 0, deltaFormat: Boolean = false): List<IncomingPacket> {
+    // deltaFormat=true (default): wire format produced by combine() and used by the C++ client —
+    //   the first packet in each group is the full base packet; each subsequent packet is preceded
+    //   by a 1-byte PacketDeltaHeaderStruct (ChunkPack:1, BytePack:1) followed by delta or full data.
+    // deltaFormat=false: simple non-delta format — every packet is a full packetSize-byte block with
+    //   no delta headers (used only for single-packet groups or unit tests of isolated group parsing).
+    fun split(data: ByteArray, length: Int, offset: Int = 0, deltaFormat: Boolean = true): List<IncomingPacket> {
         val result = mutableListOf<IncomingPacket>()
         var pos = offset
 
