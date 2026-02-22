@@ -50,8 +50,8 @@ public:
 	virtual ~StaticShadowTexMgrClass(void);
 	void						Reset(void);
 
-	TextureClass *			Peek_Shadow_Texture(uint32 obj_type_id,const Quaternion & orientation);
-	void						Add_Shadow_Texture(uint32 obj_type_id,const Quaternion & orientation,TextureClass * tex);
+	TextureClass *			Peek_Shadow_Texture(uint32_t obj_type_id,const Quaternion & orientation);
+	void						Add_Shadow_Texture(uint32_t obj_type_id,const Quaternion & orientation,TextureClass * tex);
 	void						Remove_Shadow_Texture(TextureClass * tex);
 
 private:
@@ -60,14 +60,14 @@ private:
 	{
 	public:
 		ShadowTexClass(void);
-		ShadowTexClass(uint32 obj_type_id,const Quaternion & orientation,TextureClass * tex);
+		ShadowTexClass(uint32_t obj_type_id,const Quaternion & orientation,TextureClass * tex);
 		ShadowTexClass(const ShadowTexClass & that);
 		~ShadowTexClass(void);
 		const ShadowTexClass & operator = (const ShadowTexClass &);
 
 		bool					operator == (const ShadowTexClass &)						{ return false; }
 		bool					operator != (const ShadowTexClass & that)					{ return true; }
-		uint32				ObjectTypeID;			// use the Definition ID to uniquely identify object types
+		uint32_t				ObjectTypeID;			// use the Definition ID to uniquely identify object types
 		Quaternion			ObjectOrientation;	// orientation of the object when this shadow was generated
 		TextureClass *		Texture;					// texture
 
@@ -152,7 +152,7 @@ StaticShadowTexMgrClass::ShadowTexClass::ShadowTexClass(void) :
 
 StaticShadowTexMgrClass::ShadowTexClass::ShadowTexClass
 (
-	uint32 obj_type_id,
+	uint32_t obj_type_id,
 	const Quaternion & orientation,
 	TextureClass * tex
 ) :
@@ -205,7 +205,7 @@ void StaticShadowTexMgrClass::Reset(void)
 
 TextureClass * StaticShadowTexMgrClass::Peek_Shadow_Texture
 (
-	uint32					obj_type_id,
+	uint32_t					obj_type_id,
 	const Quaternion &	orientation
 )
 {
@@ -222,7 +222,7 @@ TextureClass * StaticShadowTexMgrClass::Peek_Shadow_Texture
 
 void StaticShadowTexMgrClass::Add_Shadow_Texture
 (
-	uint32					obj_type_id,
+	uint32_t					obj_type_id,
 	const Quaternion &	orientation,
 	TextureClass *			tex
 )

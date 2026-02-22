@@ -92,7 +92,7 @@ void SaveLoadSystemClass::Unregister_Sub_System (SaveLoadSubSystemClass * sys)
 	Unlink_Sub_System(sys);
 }
 
-SaveLoadSubSystemClass * SaveLoadSystemClass::Find_Sub_System (uint32 chunk_id)
+SaveLoadSubSystemClass * SaveLoadSystemClass::Find_Sub_System (uint32_t chunk_id)
 {
 	// TODO: need a d-s that gives fast searching based on chunk_id!!
 	SaveLoadSubSystemClass * sys;
@@ -114,7 +114,7 @@ void SaveLoadSystemClass::Unregister_Persist_Factory(PersistFactoryClass * facto
 	Unlink_Factory(factory);
 }
 
-PersistFactoryClass * SaveLoadSystemClass::Find_Persist_Factory(uint32 chunk_id)
+PersistFactoryClass * SaveLoadSystemClass::Find_Persist_Factory(uint32_t chunk_id)
 {
 	// TODO: need a d-s that gives fast searching based on chunk_id!!
 	PersistFactoryClass * fact;

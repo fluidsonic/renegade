@@ -1042,7 +1042,7 @@ void RenderObjClass::Add_Dependencies_To_List
 
 class RenderObjPersistFactoryClass : public PersistFactoryClass
 {
-	virtual uint32				Chunk_ID(void) const;
+	virtual uint32_t				Chunk_ID(void) const;
 	virtual PersistClass *	Load(ChunkLoadClass & cload) const;
 	virtual void				Save(ChunkSaveClass & csave,PersistClass * obj)	const;
 
@@ -1059,7 +1059,7 @@ class RenderObjPersistFactoryClass : public PersistFactoryClass
 
 static RenderObjPersistFactoryClass _RenderObjPersistFactory;
 
-uint32 RenderObjPersistFactoryClass::Chunk_ID(void) const
+uint32_t RenderObjPersistFactoryClass::Chunk_ID(void) const
 {
 	return WW3D_PERSIST_CHUNKID_RENDEROBJ;
 }

@@ -29,12 +29,12 @@
 #define INOUT
 
 typedef char               bit8;
-typedef char               sint8;
-typedef unsigned char      uint8;
-typedef signed short int   sint16;
-typedef unsigned short int uint16;
-typedef signed int         sint32;
-typedef unsigned int       uint32;
+typedef char               int8_t;
+typedef unsigned char      uint8_t;
+typedef signed short int   int16_t;
+typedef unsigned short int uint16_t;
+typedef signed int         int32_t;
+typedef unsigned int       uint32_t;
 
 #define MAX_BIT8    0x1
 #define MAX_UINT32  0xFFFFFFFF

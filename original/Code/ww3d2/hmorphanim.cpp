@@ -26,10 +26,10 @@ void TimeCodedMorphKeysClass::Free(void)
 bool TimeCodedMorphKeysClass::Load_W3D(ChunkLoadClass & cload)
 {
 	Free();
-	uint32 key_count = cload.Cur_Chunk_Length() / sizeof(W3dMorphAnimKeyStruct);
+	uint32_t key_count = cload.Cur_Chunk_Length() / sizeof(W3dMorphAnimKeyStruct);
 
 	W3dMorphAnimKeyStruct w3dkey;
-	for (uint32 i=0; i<key_count; i++) {
+	for (uint32_t i=0; i<key_count; i++) {
 		cload.Read(&w3dkey,sizeof(w3dkey));
 		Keys.Add (MorphKeyStruct (w3dkey.MorphFrame, w3dkey.PoseFrame));
 	}
@@ -48,7 +48,7 @@ bool TimeCodedMorphKeysClass::Save_W3D(ChunkSaveClass & csave)
 	return true;
 }
 
-void TimeCodedMorphKeysClass::Add_Key (uint32 morph_frame, uint32 pose_frame)
+void TimeCodedMorphKeysClass::Add_Key (uint32_t morph_frame, uint32_t pose_frame)
 {
 	Keys.Add (MorphKeyStruct (morph_frame, pose_frame));
 	return ;
@@ -75,9 +75,9 @@ void TimeCodedMorphKeysClass::Get_Morph_Info(float morph_frame,int * pose_frame0
 	*fraction = (morph_frame - Keys[key_index].MorphFrame) / (Keys[key_index+1].MorphFrame - Keys[key_index].MorphFrame);
 }
 
-uint32 TimeCodedMorphKeysClass::get_index(float frame)
+uint32_t TimeCodedMorphKeysClass::get_index(float frame)
 {
-	assert(CachedIdx <= (uint32)Keys.Count ()-1);
+	assert(CachedIdx <= (uint32_t)Keys.Count ()-1);
 
 	float	cached_frame = Keys[CachedIdx].MorphFrame;
 
@@ -85,7 +85,7 @@ uint32 TimeCodedMorphKeysClass::get_index(float frame)
 	if (frame >= cached_frame) {
 
 		// special case for end packets
-		if (CachedIdx == (uint32)Keys.Count ()-1) return(CachedIdx);
+		if (CachedIdx == (uint32_t)Keys.Count ()-1) return(CachedIdx);
 		
 		// check if the requested time is still in the cached interval
 		if (frame < Keys[CachedIdx + 1].MorphFrame) return(CachedIdx);
@@ -94,7 +94,7 @@ uint32 TimeCodedMorphKeysClass::get_index(float frame)
 		CachedIdx++;
 	
 		// again, special case the end interval
-		if (CachedIdx == (uint32)Keys.Count ()-1) return(CachedIdx);
+		if (CachedIdx == (uint32_t)Keys.Count ()-1) return(CachedIdx);
 
 		// check if requested time is in this interval
 		if (frame < Keys[CachedIdx + 1].MorphFrame) return(CachedIdx);
@@ -106,7 +106,7 @@ uint32 TimeCodedMorphKeysClass::get_index(float frame)
 	return(CachedIdx);
 }
 
-uint32 TimeCodedMorphKeysClass::binary_search_index(float req_frame)
+uint32_t TimeCodedMorphKeysClass::binary_search_index(float req_frame)
 {
 	// special case first and last packet
 	if (req_frame < Keys[0].MorphFrame) return 0;
@@ -387,7 +387,7 @@ bool HMorphAnimClass::Import(const char *hierarchy_name, TextFileClass &text_des
 			//
 			// Allocate the pivot channel list
 			//
-			PivotChannel = new uint32[NumNodes];
+			PivotChannel = new uint32_t[NumNodes];
 			Resolve_Pivot_Channels ();
 		}
 
@@ -483,10 +483,10 @@ int HMorphAnimClass::Create_New_Morph(const int channels, HAnimClass *anim[])
 
 	// Create a timecodekey array for each channel and initialize the pivot channels
 	MorphKeyData = new TimeCodedMorphKeysClass[ChannelCount];
-	PivotChannel = new uint32[NumNodes];
+	PivotChannel = new uint32_t[NumNodes];
 
 	// Resolve the pivots so that they correspond to the proper morphing channels
-	memset(PivotChannel,0,NumNodes * sizeof(uint32));
+	memset(PivotChannel,0,NumNodes * sizeof(uint32_t));
 	Resolve_Pivot_Channels();
 	
 	// Signal successful process
@@ -521,8 +521,8 @@ int HMorphAnimClass::Load_W3D(ChunkLoadClass & cload)
 
 	PoseData = new HAnimClass * [ChannelCount];
 	MorphKeyData = new TimeCodedMorphKeysClass[ChannelCount];
-	PivotChannel = new uint32[NumNodes];
-	memset(PivotChannel,0,NumNodes * sizeof(uint32));
+	PivotChannel = new uint32_t[NumNodes];
+	memset(PivotChannel,0,NumNodes * sizeof(uint32_t));
 
 	// read in the rest of the chunks
 	int cur_channel = 0;
@@ -590,7 +590,7 @@ int HMorphAnimClass::Save_W3D(ChunkSaveClass & csave)
 
 	// write out the pivot attachments
 	csave.Begin_Chunk(W3D_CHUNK_MORPHANIM_PIVOTCHANNELDATA);
-	csave.Write(PivotChannel,NumNodes * sizeof(uint32));
+	csave.Write(PivotChannel,NumNodes * sizeof(uint32_t));
 	csave.End_Chunk();
 
 	csave.End_Chunk();
@@ -661,7 +661,7 @@ void HMorphAnimClass::Get_Transform(Matrix3D& mtx,int pividx,float frame) const
 	mtx.Set_Translation(trans);
 }
 
-void HMorphAnimClass::Insert_Morph_Key(const int channel, uint32 morph_frame, uint32 pose_frame)
+void HMorphAnimClass::Insert_Morph_Key(const int channel, uint32_t morph_frame, uint32_t pose_frame)
 {
 	assert(channel<ChannelCount);
 	MorphKeyData[channel].Add_Key(morph_frame,pose_frame);

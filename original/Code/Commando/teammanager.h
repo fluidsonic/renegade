@@ -6,7 +6,6 @@
 #define	TEAMMANAGER_H
 
 #include "vector3.h"
-#include "bittype.h"
 #include "slist.h"
 #include "team.h"
 #include "wwstring.h"

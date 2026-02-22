@@ -17,7 +17,6 @@
 	#include "always.h"
 #endif
 
-#include	"bittype.h"
 #include	"wwstring.h"
 
 const float MISCUTIL_EPSILON = 0.0001f;

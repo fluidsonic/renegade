@@ -22,7 +22,7 @@ enum
 	COL_SCORE
 	};
 
-static int CALLBACK ListSortCallback(ListCtrlClass* list, int index1, int index2, uint32 param)
+static int CALLBACK ListSortCallback(ListCtrlClass* list, int index1, int index2, uint32_t param)
 	{
 	int rank1 = (int)list->Get_Entry_Data(index1, COL_RANK);
 	int rank2 = (int)list->Get_Entry_Data(index2, COL_RANK);

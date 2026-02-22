@@ -359,11 +359,11 @@ class ParticleBufferClass : public RenderObjClass
 		ShareBufferClass<Vector3> *	Color;			
 		ShareBufferClass<float> *		Alpha;
 		ShareBufferClass<float> *		Size;
-		ShareBufferClass<uint8> *		Frame;
+		ShareBufferClass<uint8_t> *		Frame;
 		ShareBufferClass<float> *		UCoord;			// Only used for line groups, uses Frame keyframes
 		ShareBufferClass<Vector3> *	TailPosition;	// Only used for line groups
 		ShareBufferClass<Vector4> *	TailDiffuse;	// Only used for line groups
-		ShareBufferClass<uint8> *		Orientation;
+		ShareBufferClass<uint8_t> *		Orientation;
 		ShareBufferClass<unsigned int> *	APT;
 
 		// Do we keep two ping-pong position buffers (for collision and possibly other effects

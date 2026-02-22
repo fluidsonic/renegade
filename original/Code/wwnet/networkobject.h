@@ -66,7 +66,7 @@ public:
 	//
 	//	Class ID support
 	//
-	virtual uint32		Get_Network_Class_ID (void) const						{ return 0; }
+	virtual uint32_t		Get_Network_Class_ID (void) const						{ return 0; }
 
 	//
 	//	Server-to-client data importing/exporting

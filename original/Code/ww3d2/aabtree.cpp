@@ -50,7 +50,7 @@ AABTreeClass::AABTreeClass(AABTreeBuilderClass * builder)
 	Nodes = new AABTreeClass::CullNodeStruct[NodeCount];
 
 	PolyCount = builder->Poly_Count();
-	PolyIndices = new uint32[PolyCount];
+	PolyIndices = new uint32_t[PolyCount];
 
 	int curpolyindex = 0;
 	Build_Tree_Recursive(builder->Root,curpolyindex);
@@ -119,8 +119,8 @@ AABTreeClass & AABTreeClass::operator = (const AABTreeClass & that)
 
 	PolyCount = that.PolyCount;
 	if (PolyCount > 0) {
-		PolyIndices = new uint32[PolyCount];
-		memcpy(PolyIndices,that.PolyIndices,PolyCount * sizeof(uint32));
+		PolyIndices = new uint32_t[PolyCount];
+		memcpy(PolyIndices,that.PolyIndices,PolyCount * sizeof(uint32_t));
 	}
 
 	Mesh = that.Mesh;
@@ -242,7 +242,7 @@ void AABTreeClass::Set_Mesh(MeshGeometryClass * mesh)
  *                                                                                             *
  * HISTORY:                                                                                    *
  *=============================================================================================*/
-void AABTreeClass::Generate_APT(const OBBoxClass & box,SimpleDynVecClass<uint32> & apt)
+void AABTreeClass::Generate_APT(const OBBoxClass & box,SimpleDynVecClass<uint32_t> & apt)
 {
 	OBBoxAPTContextStruct context(box,apt);
 	Generate_OBBox_APT_Recursive(&(Nodes[0]),context);
@@ -336,7 +336,7 @@ void AABTreeClass::Generate_APT
 (
 	const OBBoxClass & box,
 	const Vector3 & viewdir,
-	SimpleDynVecClass<uint32> & apt
+	SimpleDynVecClass<uint32_t> & apt
 )
 {
 	OBBoxRayAPTContextStruct context(box,viewdir,apt);
@@ -1042,7 +1042,7 @@ void AABTreeClass::Load_W3D(ChunkLoadClass & cload)
 	NodeCount = header.NodeCount;
 	PolyCount = header.PolyCount;
 	Nodes = new CullNodeStruct[NodeCount];
-	PolyIndices = new uint32[PolyCount];
+	PolyIndices = new uint32_t[PolyCount];
 
 	while (cload.Open_Chunk()) {
 		switch (cload.Cur_Chunk_ID()) 
@@ -1073,7 +1073,7 @@ void AABTreeClass::Load_W3D(ChunkLoadClass & cload)
  *=============================================================================================*/
 void AABTreeClass::Read_Poly_Indices(ChunkLoadClass & cload)
 {
-	cload.Read(PolyIndices,sizeof(uint32) * PolyCount);
+	cload.Read(PolyIndices,sizeof(uint32_t) * PolyCount);
 }
 
 /***********************************************************************************************

@@ -745,7 +745,7 @@ VehiclePhysDefClass::~VehiclePhysDefClass(void)
 {
 }
 
-uint32 VehiclePhysDefClass::Get_Class_ID (void) const	
+uint32_t VehiclePhysDefClass::Get_Class_ID (void) const	
 { 
 	return CLASSID_VEHICLEPHYSDEF; 
 }

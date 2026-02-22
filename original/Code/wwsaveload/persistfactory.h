@@ -4,7 +4,6 @@
 #define PERSISTFACTORY_H
 
 #include "always.h"
-#include "bittype.h"
 #include "chunkio.h"
 #include "saveload.h"
 #include "persist.h"
@@ -24,7 +23,7 @@ public:
 	PersistFactoryClass(void);
 	virtual ~PersistFactoryClass(void);
 
-	virtual uint32				Chunk_ID(void) const												= 0;
+	virtual uint32_t				Chunk_ID(void) const												= 0;
 	virtual PersistClass *	Load(ChunkLoadClass & cload) const	 						= 0;
 	virtual void				Save(ChunkSaveClass & csave,PersistClass * obj)	const	= 0;
 
@@ -44,7 +43,7 @@ template <class T,int CHUNKID> class SimplePersistFactoryClass : public PersistF
 {
 public:
 
-	virtual uint32				Chunk_ID(void) const										{ return CHUNKID; }
+	virtual uint32_t				Chunk_ID(void) const										{ return CHUNKID; }
 	virtual PersistClass *	Load(ChunkLoadClass & cload) const;
 	virtual void				Save(ChunkSaveClass & csave,PersistClass * obj) const;
 
@@ -79,9 +78,9 @@ SimplePersistFactoryClass<T,CHUNKID>::Load(ChunkLoadClass & cload) const
 template<class T, int CHUNKID> void
 SimplePersistFactoryClass<T,CHUNKID>::Save(ChunkSaveClass & csave,PersistClass * obj) const 
 {
-	uint32 objptr = (uint32)(uintptr_t)obj;
+	uint32_t objptr = (uint32_t)(uintptr_t)obj;
 	csave.Begin_Chunk(SIMPLEFACTORY_CHUNKID_OBJPOINTER);
-	csave.Write(&objptr,sizeof(uint32));
+	csave.Write(&objptr,sizeof(uint32_t));
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(SIMPLEFACTORY_CHUNKID_OBJDATA);

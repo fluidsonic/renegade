@@ -4,7 +4,6 @@
 
 #include "Refcount.H"
 #include "WWAudio.H"
-#include "BitType.H"
 #include "persist.h"
 #include "multilist.h"
 #include "mutex.h"
@@ -28,8 +27,8 @@ class AudibleSoundClass;
 /////////////////////////////////////////////////////////////////////////////////
 //	Constants
 /////////////////////////////////////////////////////////////////////////////////
-const uint32	SOUND_OBJ_DEFAULT_ID	= 0;
-const uint32	SOUND_OBJ_START_ID	= 1000000000;
+const uint32_t	SOUND_OBJ_DEFAULT_ID	= 0;
+const uint32_t	SOUND_OBJ_START_ID	= 1000000000;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -78,8 +77,8 @@ class SoundSceneObjClass : public MultiListObjectClass, public PersistClass, pub
 		//////////////////////////////////////////////////////////////////////
 		//	Identification methods
 		//////////////////////////////////////////////////////////////////////
-		virtual uint32			Get_ID (void) const	{ return m_ID; }
-		virtual void			Set_ID (uint32 id);
+		virtual uint32_t			Get_ID (void) const	{ return m_ID; }
+		virtual void			Set_ID (uint32_t id);
 
 		//////////////////////////////////////////////////////////////////////
 		//	Update methods
@@ -89,7 +88,7 @@ class SoundSceneObjClass : public MultiListObjectClass, public PersistClass, pub
 		//////////////////////////////////////////////////////////////////////
 		//	Event handling
 		//////////////////////////////////////////////////////////////////////		
-		virtual void			On_Event (AudioCallbackClass::EVENTS event, uint32 param1 = 0, uint32 param2 = 0);
+		virtual void			On_Event (AudioCallbackClass::EVENTS event, uint32_t param1 = 0, uint32_t param2 = 0);
 		virtual void			Register_Callback (AudioCallbackClass::EVENTS events, AudioCallbackClass *callback);
 		virtual void			Remove_Callback (void);
 
@@ -112,8 +111,8 @@ class SoundSceneObjClass : public MultiListObjectClass, public PersistClass, pub
 		//////////////////////////////////////////////////////////////////////
 		//	User data methods
 		//////////////////////////////////////////////////////////////////////
-		virtual void			Set_User_Data (RefCountClass *user_obj = NULL, uint32 user = 0)	{ REF_PTR_SET (m_UserObj, user_obj); m_UserData = user; }
-		virtual uint32			Get_User_Data (void) const														{ return m_UserData; }
+		virtual void			Set_User_Data (RefCountClass *user_obj = NULL, uint32_t user = 0)	{ REF_PTR_SET (m_UserObj, user_obj); m_UserData = user; }
+		virtual uint32_t			Get_User_Data (void) const														{ return m_UserData; }
 		virtual RefCountClass *Peek_User_Obj (void) const													{ return m_UserObj; }
 
 		//////////////////////////////////////////////////////////////////////
@@ -161,7 +160,7 @@ class SoundSceneObjClass : public MultiListObjectClass, public PersistClass, pub
 		//////////////////////////////////////////////////////////////////////
 		static void				Register_Sound_Object (SoundSceneObjClass *sound_obj);
 		static void				Unregister_Sound_Object (SoundSceneObjClass *sound_obj);		
-		static bool				Find_Sound_Object (uint32 id_to_find, int *index);
+		static bool				Find_Sound_Object (uint32_t id_to_find, int *index);
 
 		//////////////////////////////////////////////////////////////////////
 		//	Protected member data
@@ -170,15 +169,15 @@ class SoundSceneObjClass : public MultiListObjectClass, public PersistClass, pub
 		SoundCullObjClass *			m_PhysWrapper;
 		AudioCallbackClass *			m_pCallback;
 		AudioCallbackClass::EVENTS	m_RegisteredEvents;
-		uint32							m_ID;
+		uint32_t							m_ID;
 
 		RenderObjClass *				m_AttachedObject;
 		int								m_AttachedBone;
-		uint32							m_UserData;
+		uint32_t							m_UserData;
 		RefCountClass *				m_UserObj;
 
 		static DynamicVectorClass<SoundSceneObjClass *>	m_GlobalSoundList;
-		static uint32												m_NextAvailableID;
+		static uint32_t												m_NextAvailableID;
 		static CriticalSectionClass							m_IDListMutex;
 };
 
@@ -191,8 +190,8 @@ __inline void
 SoundSceneObjClass::On_Event
 (
 	AudioCallbackClass::EVENTS	event,
-	uint32							param1,
-	uint32							param2
+	uint32_t							param1,
+	uint32_t							param2
 )
 {
 	if ((m_pCallback != NULL) && (m_RegisteredEvents & event)) {

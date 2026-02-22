@@ -458,7 +458,7 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 	NumRandomOrientationEntriesMinus1 = src.NumRandomOrientationEntriesMinus1;
 	if (src.Orientation) {
 		// Create orientation array
-		Orientation = NEW_REF( ShareBufferClass<uint8> , (MaxNum) );
+		Orientation = NEW_REF( ShareBufferClass<uint8_t> , (MaxNum) );
 
 		// Copy rotation / orientation keyframes
 		RotationKeyFrameTimes = new unsigned int [NumRotationKeyFrames];
@@ -499,7 +499,7 @@ ParticleBufferClass::ParticleBufferClass(const ParticleBufferClass & src) :
 	if (src.Frame || src.UCoord) {
 		// Create frame array
 		if (src.Frame) {
-			Frame = NEW_REF( ShareBufferClass<uint8> , (MaxNum) );
+			Frame = NEW_REF( ShareBufferClass<uint8_t> , (MaxNum) );
 		} else {
 			UCoord = NEW_REF( ShareBufferClass<float>, (MaxNum) );
 		}
@@ -1793,7 +1793,7 @@ void ParticleBufferClass::Reset_Rotations(ParticlePropertyStruct<float> &new_pro
 
 		// Create the array if not present
 		if (!Orientation) {
-			Orientation = NEW_REF( ShareBufferClass<uint8> , (MaxNum) );
+			Orientation = NEW_REF( ShareBufferClass<uint8_t> , (MaxNum) );
 		}
 
 		// Check times of the keyframes (each keytime must be larger than the
@@ -2004,7 +2004,7 @@ void ParticleBufferClass::Reset_Frames(ParticlePropertyStruct<float> &new_props)
 			}
 		} else {
 			if (!Frame) {
-				Frame = NEW_REF( ShareBufferClass<uint8> , (MaxNum) );
+				Frame = NEW_REF( ShareBufferClass<uint8_t> , (MaxNum) );
 			}
 		}
 
@@ -2389,8 +2389,8 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 	Vector3 *color = Color ? Color->Get_Array(): NULL;
 	float *alpha = Alpha ? Alpha->Get_Array(): NULL;
 	float *size = Size ? Size->Get_Array(): NULL;
-	uint8 *orientation = Orientation ? Orientation->Get_Array(): NULL;
-	uint8 *frame = Frame ? Frame->Get_Array(): NULL;
+	uint8_t *orientation = Orientation ? Orientation->Get_Array(): NULL;
+	uint8_t *frame = Frame ? Frame->Get_Array(): NULL;
 	float *ucoord = UCoord ? UCoord->Get_Array() : NULL;
 	Vector3 *tailposition = TailPosition ? TailPosition->Get_Array() : NULL;
 
@@ -2456,7 +2456,7 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 				RandomRotationEntries[part & NumRandomRotationEntriesMinus1] * (float)part_age +
 				RandomOrientationEntries[part & NumRandomOrientationEntriesMinus1];
 			
-			orientation[part] = (uint)(((int)(tmp_orient * 256.0f)) & 0xFF);
+			orientation[part] = (uint32_t)(((int)(tmp_orient * 256.0f)) & 0xFF);
 		}
 
 		// Ensure the current frame keyframe is correct, and calculate frame state
@@ -2470,7 +2470,7 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 				FrameKeyFrameDeltas[fkey] * (float)(part_age - FrameKeyFrameTimes[fkey]) +
 				RandomFrameEntries[part & NumRandomFrameEntriesMinus1];
 			
-			frame[part] = (uint)(((int)(tmp_frame)) & 0xFF);
+			frame[part] = (uint32_t)(((int)(tmp_frame)) & 0xFF);
 		}
 
 		// Ensure the current frame keyframe is correct, and calculate frame state
@@ -2554,7 +2554,7 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 				RandomRotationEntries[part & NumRandomRotationEntriesMinus1] * (float)part_age +
 				RandomOrientationEntries[part & NumRandomOrientationEntriesMinus1];
 			
-			orientation[part] = (uint)(((int)(tmp_orient * 256.0f)) & 0xFF);
+			orientation[part] = (uint32_t)(((int)(tmp_orient * 256.0f)) & 0xFF);
 		}
 
 		// Ensure the current frame keyframe is correct, and calculate frame state
@@ -2568,7 +2568,7 @@ void ParticleBufferClass::Update_Visual_Particle_State(void)
 				FrameKeyFrameDeltas[fkey] * (float)(part_age - FrameKeyFrameTimes[fkey]) +
 				RandomFrameEntries[part & NumRandomFrameEntriesMinus1];
 			
-			frame[part] = (uint)(((int)(tmp_frame)) & 0xFF);
+			frame[part] = (uint32_t)(((int)(tmp_frame)) & 0xFF);
 		}
 
 		// Ensure the current frame keyframe is correct, and calculate frame state

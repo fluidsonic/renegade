@@ -3,7 +3,6 @@
 #define VISTABLE_H
 
 #include "vector.h"
-#include "bittype.h"
 #include "refcount.h"
 #include "multilist.h"
 
@@ -52,11 +51,11 @@ protected:
 
 	int			Get_Byte_Count(void) const;
 	int			Get_Long_Count(void) const;
-	uint8 *		Get_Bytes(void) const;
-	uint32 *		Get_Longs(void) const;
+	uint8_t *		Get_Bytes(void) const;
+	uint32_t *		Get_Longs(void) const;
 
 	int			BitCount;
-	uint32 *		Buffer;
+	uint32_t *		Buffer;
 
 	int			VisSectorID;
 	int			Timestamp;
@@ -93,13 +92,13 @@ public:
 protected:
 
 	int			Get_Byte_Count(void) const;
-	uint8 *		Get_Bytes(void);
+	uint8_t *		Get_Bytes(void);
 
-	void			Compress(uint8 * src_buffer,int src_size);
-	void			Decompress(uint8 * decomp_buffer,int decomp_size);
+	void			Compress(uint8_t * src_buffer,int src_size);
+	void			Decompress(uint8_t * decomp_buffer,int decomp_size);
 	
 	int			BufferSize;
-	uint8 *		Buffer;
+	uint8_t *		Buffer;
 
 	// Not implemented:
 	bool operator == (const CompressedVisTableClass & that);

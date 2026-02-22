@@ -4,7 +4,6 @@
 #define SAVELOADSUBSYSTEM_H
 
 #include "always.h"
-#include "bittype.h"
 #include "postloadable.h"
 
 class ChunkLoadClass;
@@ -31,7 +30,7 @@ public:
 	SaveLoadSubSystemClass (void);
 	virtual ~SaveLoadSubSystemClass (void);
 
-	virtual uint32				Chunk_ID (void) const = 0;
+	virtual uint32_t				Chunk_ID (void) const = 0;
 
 protected:
 

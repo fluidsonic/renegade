@@ -210,8 +210,8 @@ RenegadeTerrainPatchClass::Allocate_Grid (void)
 	//	Allocate and initiailze the array of quad flags
 	//
 	int quad_count	= (GridPointsX - 1) * (GridPointsY - 1);
-	QuadFlags		= new uint8[quad_count];
-	::memset (QuadFlags, 0, sizeof (uint8) * quad_count);
+	QuadFlags		= new uint8_t[quad_count];
+	::memset (QuadFlags, 0, sizeof (uint8_t) * quad_count);
 
 	AreBuffersDirty	= true;
 	return ;
@@ -1763,7 +1763,7 @@ RenegadeTerrainPatchClass::Save (ChunkSaveClass &csave)
 	csave.Begin_Chunk (CHUNKID_QUAD_FLAGS);
 
 		int quad_count = (GridPointsX - 1) * (GridPointsY - 1);
-		csave.Write (QuadFlags, sizeof (uint8) * quad_count);
+		csave.Write (QuadFlags, sizeof (uint8_t) * quad_count);
 				
 	csave.End_Chunk ();
 
@@ -1858,7 +1858,7 @@ RenegadeTerrainPatchClass::Load (ChunkLoadClass &cload)
 				//	Read the array of quad flags
 				//
 				int quad_count = (GridPointsX - 1) * (GridPointsY - 1);
-				cload.Read (QuadFlags, sizeof (uint8) * quad_count);
+				cload.Read (QuadFlags, sizeof (uint8_t) * quad_count);
 				break;
 			}
 

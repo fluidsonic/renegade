@@ -206,7 +206,7 @@ CharacterOptionsMenuClass::On_Character_Selected (int index)
 	//
 	//	Display the model for this purchase
 	//
-	uint32 definition_id	= combo_box->Get_Item_Data (index);	
+	uint32_t definition_id	= combo_box->Get_Item_Data (index);	
 	Display_Default_Model (definition_id);
 	return ;
 }

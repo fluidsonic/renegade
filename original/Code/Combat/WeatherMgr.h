@@ -287,7 +287,7 @@ class	WeatherMgrClass : public SaveLoadSubSystemClass, public NetworkObjectClass
 		 WeatherMgrClass();
 		~WeatherMgrClass() {}
 
-		uint32		Chunk_ID() const	{return (CHUNKID_WEATHER_MGR);}
+		uint32_t		Chunk_ID() const	{return (CHUNKID_WEATHER_MGR);}
 		const char *Name() const		{return ("WeatherMgrClass");}
 		void Delete (void)				{}
 		virtual void Set_Delete_Pending (void) {};

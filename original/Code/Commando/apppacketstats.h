@@ -1,7 +1,6 @@
 #ifndef __APPPACKETSTATS_H__
 #define __APPPACKETSTATS_H__
 
-#include "bittype.h"
 #include "apppackettypes.h"
 #include "networkobject.h"
 

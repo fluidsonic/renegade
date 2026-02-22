@@ -32,7 +32,7 @@ public:
 	//
 	// Type identification
 	//
-	uint32								Get_Class_ID (void) const	{ return CLASSID_TWIDDLERS; }
+	uint32_t								Get_Class_ID (void) const	{ return CLASSID_TWIDDLERS; }
 	PersistClass *						Create (void) const;
 
 	//
@@ -46,8 +46,8 @@ public:
 	//	Twiddler specific
 	//
 	virtual DefinitionClass *		Twiddle (void) const;
-	virtual uint32						Get_Indirect_Class_ID (void) const;
-	virtual void						Set_Indirect_Class_ID (uint32 class_id);
+	virtual uint32_t						Get_Indirect_Class_ID (void) const;
+	virtual void						Set_Indirect_Class_ID (uint32_t class_id);
 
 private:
 
@@ -60,14 +60,14 @@ private:
 	/////////////////////////////////////////////////////////////////////
 	//	Private member data
 	/////////////////////////////////////////////////////////////////////
-	uint32							m_IndirectClassID;
+	uint32_t							m_IndirectClassID;
 	DynamicVectorClass<int>		m_DefinitionList;
 };
 
 /////////////////////////////////////////////////////////////////////
 //	Get_Indirect_Class_ID
 /////////////////////////////////////////////////////////////////////
-inline uint32
+inline uint32_t
 TwiddlerClass::Get_Indirect_Class_ID (void) const
 {
 	return m_IndirectClassID;
@@ -77,7 +77,7 @@ TwiddlerClass::Get_Indirect_Class_ID (void) const
 //	Set_Indirect_Class_ID
 /////////////////////////////////////////////////////////////////////
 inline void
-TwiddlerClass::Set_Indirect_Class_ID (uint32 class_id)
+TwiddlerClass::Set_Indirect_Class_ID (uint32_t class_id)
 {
 	m_IndirectClassID = class_id;
 	return ;

@@ -6,7 +6,6 @@
 #include "vector3.h"
 #include "rect.h"
 #include "refcount.h"
-#include "bittype.h"
 #include "widestring.h"
 #include "controladvisesink.h"
 #include "win.h"
@@ -211,10 +210,10 @@ protected:
 	virtual void			On_Init_Dialog (void);
 	virtual void			On_Destroy (void)					{}
 	virtual void			On_Activate (bool onoff);
-	virtual bool			On_Key_Down (uint32 key_id, uint32 key_data);
-	virtual void			On_Unicode_Char(uint16 unicode);
+	virtual bool			On_Key_Down (uint32_t key_id, uint32_t key_data);
+	virtual void			On_Unicode_Char(uint16_t unicode);
 	virtual void			On_Mouse_Wheel (int direction);
-	virtual bool			On_Key_Up (uint32 key_id);
+	virtual bool			On_Key_Up (uint32_t key_id);
 	virtual void			On_Frame_Update (void);
 	virtual void			On_Periodic (void)				{}
 

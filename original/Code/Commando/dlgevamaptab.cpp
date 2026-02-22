@@ -84,7 +84,7 @@ EvaMapTabClass::On_Init_Dialog (void)
 				//
 				int color = VRGB_TO_INT32 (objective->Type_To_Color ());
 				int item_index = map_ctrl->Add_Marker (u"", objective->Position, RectClass (32, 0, 64, 32), color);
-				map_ctrl->Set_Marker_Data (item_index, (uint32)(uintptr_t)objective);
+				map_ctrl->Set_Marker_Data (item_index, (uint32_t)(uintptr_t)objective);
 			}
 		}
 

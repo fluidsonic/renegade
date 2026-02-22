@@ -5,7 +5,6 @@
 #include "dialogcontrol.h"
 #include "vector.h"
 #include "render2dsentence.h"
-#include "bittype.h"
 #include "scrollbarctrl.h"
 
 ////////////////////////////////////////////////////////////////
@@ -44,8 +43,8 @@ public:
 	void					Delete_String (int index);
 	int					Find_String (const WCHAR* string);
 	int					Find_Closest_String(const WCHAR* string);
-	void					Set_Item_Data (int index, uint32 data);
-	uint32				Get_Item_Data (int index);
+	void					Set_Item_Data (int index, uint32_t data);
+	uint32_t				Get_Item_Data (int index);
 	void					Reset_Content (void);
 	
 	//
@@ -84,7 +83,7 @@ protected:
 	void					On_Mouse_Move (const Vector2 &mouse_pos);
 	void					On_Set_Cursor (const Vector2 &mouse_pos);
 	void					On_Kill_Focus (DialogControlClass *focus);
-	bool					On_Key_Down (uint32 key_id, uint32 key_data);
+	bool					On_Key_Down (uint32_t key_id, uint32_t key_data);
 	void					On_Create (void);
 	void					On_Add_To_Dialog (void);
 	void					On_Remove_From_Dialog (void);
@@ -102,7 +101,7 @@ protected:
 	typedef struct _ENTRY
 	{
 		WideStringClass	text;
-		uint32				user_data;
+		uint32_t				user_data;
 
 		bool operator== (const _ENTRY &src)	{ return false; }
 		bool operator!= (const _ENTRY &src)	{ return true; }
@@ -110,7 +109,7 @@ protected:
 		_ENTRY (void)	:
 			user_data (0) {}
 
-		_ENTRY (const WCHAR *_text, uint32 _data)	:
+		_ENTRY (const WCHAR *_text, uint32_t _data)	:
 			text (_text), user_data (_data) {}
 
 	} ENTRY;

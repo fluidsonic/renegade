@@ -913,7 +913,7 @@ WWAudioClass::Create_Sound
 (
 	int				definition_id,
 	RefCountClass *user_obj,
-	uint32			user_data,
+	uint32_t			user_data,
 	int				classid_hint
 )
 {
@@ -954,7 +954,7 @@ WWAudioClass::Create_Sound
 (
 	const char *	def_name,
 	RefCountClass *user_obj,
-	uint32			user_data,
+	uint32_t			user_data,
 	int				classid_hint
 )
 {
@@ -995,7 +995,7 @@ WWAudioClass::Create_Continuous_Sound
 (
 	int				definition_id,
 	RefCountClass *user_obj,
-	uint32			user_data,
+	uint32_t			user_data,
 	int				classid_hint
 )
 {
@@ -1024,7 +1024,7 @@ WWAudioClass::Create_Instant_Sound
 	int					definition_id,
 	const Matrix3D &	tm,
 	RefCountClass *	user_obj,
-	uint32				user_data,
+	uint32_t				user_data,
 	int					classid_hint
 )
 {
@@ -1059,7 +1059,7 @@ WWAudioClass::Create_Continuous_Sound
 (
 	const char *	def_name,
 	RefCountClass *user_obj,
-	uint32			user_data,
+	uint32_t			user_data,
 	int				classid_hint
 )
 {
@@ -1089,7 +1089,7 @@ WWAudioClass::Create_Instant_Sound
 	const char *		def_name,
 	const Matrix3D &	tm,
 	RefCountClass *	user_obj,
-	uint32				user_data,
+	uint32_t				user_data,
 	int					classid_hint
 )
 {
@@ -1303,7 +1303,7 @@ WWAudioClass::Remove_From_Playlist (AudibleSoundClass *sound_obj)
 		//
 		if (sound_obj->Get_Loop_Count () != INFINITE_LOOPS) {
 			for (int index = 0; index < m_EOSCallbackList.Count (); index ++) {
-				uint32 user_data				= NULL;
+				uint32_t user_data				= NULL;
 				LPFNEOSCALLBACK callback	= m_EOSCallbackList.Get_Callback (index, &user_data);
 				if (callback != NULL) {
 					(*callback) (sound_obj, user_data);
@@ -2447,7 +2447,7 @@ WWAudioClass::Fire_Text_Callback (AudibleSoundClass *sound_obj, const StringClas
 		//	Loop over all the text-callbacks that have been registered
 		//
 		for (int index = 0; index < m_TextCallbackList.Count (); index ++) {
-			uint32 user_data				= 0L;
+			uint32_t user_data				= 0L;
 			LPFNTEXTCALLBACK callback	= m_TextCallbackList.Get_Callback (index, &user_data);
 			if (callback != NULL) {
 
@@ -2808,7 +2808,7 @@ WWAudioClass::Get_Logical_Type (int index, StringClass &name)
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
 SoundSceneObjClass *
-WWAudioClass::Find_Sound_Object (uint32 sound_obj_id)
+WWAudioClass::Find_Sound_Object (uint32_t sound_obj_id)
 {
 	SoundSceneObjClass *sound_obj = NULL;
 

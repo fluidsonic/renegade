@@ -4,7 +4,6 @@
 
 #include "saveloadsubsystem.h"
 #include "vector.h"
-#include "bittype.h"
 #include "translateobj.h"
 #include "tdbcategory.h"
 #include "hashtemplate.h"
@@ -75,7 +74,7 @@ public:
 	//
 	static void						Initialize (void);
 	static void						Shutdown (void);
-	static uint32					Get_Version_Number (void);
+	static uint32_t					Get_Version_Number (void);
 	static void						Update_Version (void);
 	static bool						Is_Loaded()									{return (m_ObjectList.Count () > 0);}
 
@@ -83,7 +82,7 @@ public:
 	//
 	// From SaveLoadSubSystemClass
 	//
-	virtual uint32					Chunk_ID (void) const;
+	virtual uint32_t					Chunk_ID (void) const;
 	virtual const char *			Name (void) const							{ return "TranslateDBClass"; }
 
 	//
@@ -97,10 +96,10 @@ public:
 	//
 	//	Data access
 	//
-	static const char16_t *			Get_String (uint32 id);
+	static const char16_t *			Get_String (uint32_t id);
 	static const char16_t *			Get_String (const char *id_desc);
-	static const char *			Get_English_String (uint32 id);
-	WWINLINE static TDBObjClass *	Find_Object (uint32 id);
+	static const char *			Get_English_String (uint32_t id);
+	WWINLINE static TDBObjClass *	Find_Object (uint32_t id);
 	WWINLINE static TDBObjClass * Find_Object (const char *id_desc);
 
 	//
@@ -115,15 +114,15 @@ public:
 	//
 	static int						Get_Object_Count (void);
 	static TDBObjClass *			Get_Object (int index);
-	static TDBObjClass *			Get_First_Object (uint32 category_id);
-	static TDBObjClass *			Get_Next_Object (uint32 category_id, TDBObjClass *curr_obj);
+	static TDBObjClass *			Get_First_Object (uint32_t category_id);
+	static TDBObjClass *			Get_Next_Object (uint32_t category_id, TDBObjClass *curr_obj);
 
 	//
 	//	Category support
 	//
 	static int						Get_Category_Count (void);
 	static TDBCategoryClass *	Get_Category (int index);
-	static TDBCategoryClass *	Find_Category (uint32 id);
+	static TDBCategoryClass *	Find_Category (uint32_t id);
 	static TDBCategoryClass *	Find_Category (const char *name);
 	static TDBCategoryClass *	Add_Category (const char *name);
 	static bool						Add_Category (TDBCategoryClass *new_category, bool assign_id = true);
@@ -133,7 +132,7 @@ public:
 	//	Language support
 	//
 	static void						Set_Current_Language (int lang_id)	{ m_LanguageID = lang_id; }
-	static uint32					Get_Current_Language (void)			{ return m_LanguageID; }
+	static uint32_t					Get_Current_Language (void)			{ return m_LanguageID; }
 
 	//
 	//	Save/load options
@@ -141,7 +140,7 @@ public:
 	static bool						Is_Single_Language_Export_Enabled (void)		{ return IsSingleLanguageExport; }
 	static void						Enable_Single_Language_Export (bool onoff)	{ IsSingleLanguageExport = onoff; }
 
-	static void						Set_Export_Filter (FILTER_OPT filter, uint32 category_id);
+	static void						Set_Export_Filter (FILTER_OPT filter, uint32_t category_id);
 
 protected:
 
@@ -168,7 +167,7 @@ protected:
 	//
 	//	ID managment
 	//
-	static uint32				Find_Unique_ID (void);
+	static uint32_t				Find_Unique_ID (void);
 
 	//////////////////////////////////////////////////////////////
 	//	Protected data types
@@ -187,19 +186,19 @@ private:
 	static TDB_OBJ_LIST			m_ObjectList;
 	static HashTemplateClass<StringClass,TDBObjClass*> m_ObjectHash;
 	static TDB_CATEGORY_LIST	m_CategoryList;
-	static uint32					m_VersionNumber;
-	static uint32					m_LanguageID;
+	static uint32_t					m_VersionNumber;
+	static uint32_t					m_LanguageID;
 	static bool						IsSingleLanguageExport;
-	static uint32					CategoryExportFilter;
+	static uint32_t					CategoryExportFilter;
 	static FILTER_OPT				FilterType;
-	static uint32					FilterCategoryID;
+	static uint32_t					FilterCategoryID;
 };
 
 //////////////////////////////////////////////////////////////
 //	Get_String
 //////////////////////////////////////////////////////////////
 inline const char16_t*
-TranslateDBClass::Get_String (uint32 id)
+TranslateDBClass::Get_String (uint32_t id)
 {
 	// ID of 0 (zero) is a special case NULL string.
 	if (id == 0) {
@@ -271,7 +270,7 @@ TranslateDBClass::Get_String (const char *id_desc)
 //	Get_English_String
 //////////////////////////////////////////////////////////////
 inline const char *
-TranslateDBClass::Get_English_String (uint32 id)
+TranslateDBClass::Get_English_String (uint32_t id)
 {
 	// ID of 0 (zero) is a special case NULL string.
 	if (id == 0) {
@@ -328,7 +327,7 @@ TranslateDBClass::Find_Object (const char *id_desc)
 //	Find_Object
 //////////////////////////////////////////////////////////////
 WWINLINE TDBObjClass *
-TranslateDBClass::Find_Object (uint32 id)
+TranslateDBClass::Find_Object (uint32_t id)
 {
 	TDBObjClass *object = NULL;
 

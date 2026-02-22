@@ -22,7 +22,7 @@ public:
 	CombatSaveLoadClass(void) {}
 	virtual ~CombatSaveLoadClass(void) {}
 
-	virtual uint32	Chunk_ID (void) const { return CHUNKID_COMBAT; }
+	virtual uint32_t	Chunk_ID (void) const { return CHUNKID_COMBAT; }
 
 protected:
 	virtual bool	Save( ChunkSaveClass &csave );

@@ -419,7 +419,7 @@ StaticAnimPhysDefClass::StaticAnimPhysDefClass(void) :
 
 }
 
-uint32 StaticAnimPhysDefClass::Get_Class_ID (void) const	
+uint32_t StaticAnimPhysDefClass::Get_Class_ID (void) const	
 { 
 	return CLASSID_STATICANIMPHYSDEF; 
 }

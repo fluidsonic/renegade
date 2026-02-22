@@ -200,9 +200,9 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 				file_path += "/";
 				file_path += find_info.cFileName;
 
-				list_ctrl->Set_Entry_Data (item_index, 0, (uint32)(uintptr_t)new FILETIME(local_time));
-				list_ctrl->Set_Entry_Data (item_index, 1, (uint32)(uintptr_t)new StringClass(file_path));
-				list_ctrl->Set_Entry_Data (item_index, 2, (uint32)(uintptr_t)new StringClass(find_info.cFileName));
+				list_ctrl->Set_Entry_Data (item_index, 0, (uint32_t)(uintptr_t)new FILETIME(local_time));
+				list_ctrl->Set_Entry_Data (item_index, 1, (uint32_t)(uintptr_t)new StringClass(file_path));
+				list_ctrl->Set_Entry_Data (item_index, 2, (uint32_t)(uintptr_t)new StringClass(find_info.cFileName));
 			}
 		}
 	}
@@ -388,7 +388,7 @@ LoadSPGameMenuClass::On_ListCtrl_Delete_Entry
 //
 ////////////////////////////////////////////////////////////////
 int CALLBACK
-LoadSPGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param)
+LoadSPGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32_t user_param)
 {
 	int retval = 0;
 

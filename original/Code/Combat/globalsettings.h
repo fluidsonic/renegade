@@ -22,7 +22,7 @@ public:
 	GlobalSettingsDef( void );
 	~GlobalSettingsDef( void );
 
-	virtual uint32								Get_Class_ID( void ) const;
+	virtual uint32_t								Get_Class_ID( void ) const;
 	virtual PersistClass *					Create( void ) const ;
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
@@ -118,7 +118,7 @@ public:
 	HumanLoiterGlobalSettingsDef( void );
 	~HumanLoiterGlobalSettingsDef( void );
 
-	virtual uint32								Get_Class_ID( void ) const;
+	virtual uint32_t								Get_Class_ID( void ) const;
 	virtual PersistClass *					Create( void ) const ;
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
@@ -152,7 +152,7 @@ public:
 	HUDGlobalSettingsDef( void );
 	virtual ~HUDGlobalSettingsDef( void );
 
-	virtual uint32								Get_Class_ID( void ) const;
+	virtual uint32_t								Get_Class_ID( void ) const;
 	virtual PersistClass *					Create( void ) const ;
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
@@ -294,7 +294,7 @@ class	HumanAnimOverrideDef : public DefinitionClass {
 public:
 	HumanAnimOverrideDef( void );		
 
-	virtual uint32								Get_Class_ID( void ) const;
+	virtual uint32_t								Get_Class_ID( void ) const;
 	virtual PersistClass *					Create( void ) const ;
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );

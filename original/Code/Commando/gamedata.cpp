@@ -736,8 +736,8 @@ void cGameData::Export_Tier_1_Data(cPacket & packet)
 	packet.Add(IsClanGame.Get());
 
 #ifndef MULTIPLAYERDEMO
-	packet.Add((uint32)::CRC_Stringi(MapName));
-	packet.Add((uint32)::CRC_Stringi(ModName));
+	packet.Add((uint32_t)::CRC_Stringi(MapName));
+	packet.Add((uint32_t)::CRC_Stringi(ModName));
 #endif // MULTIPLAYERDEMO
 }
 

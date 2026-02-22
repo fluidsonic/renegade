@@ -8,7 +8,6 @@
 #ifndef __NICENUM_H__
 #define __NICENUM_H__
 
-#include "bittype.h"
 
 //-----------------------------------------------------------------------------
 class cNicEnum

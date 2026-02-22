@@ -17,7 +17,6 @@
 #ifndef SINGLEPL_H
 #define SINGLEPL_H
 
-#include "bittype.h"
 #include "slist.h"
 
 enum {

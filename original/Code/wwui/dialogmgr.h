@@ -5,7 +5,6 @@
 #include "vector.h"
 #include "vector2.h"
 #include "vector3.h"
-#include "bittype.h"
 #include "wwuiinput.h"
 
 ////////////////////////////////////////////////////////////////
@@ -58,7 +57,7 @@ public:
 	static IME::IMEManager* Get_IME(void)
 		{return Input->GetIME();}
 
-	static void Show_IME_Message(const char16_t* message, uint32 duration);
+	static void Show_IME_Message(const char16_t* message, uint32_t duration);
 
 	//
 	//	Keyboard Input
@@ -161,9 +160,9 @@ private:
 	//
 	//	Keyboard input
 	//
-	static bool		On_Key_Down (uint32 key_id, uint32 key_data);
-	static bool		On_Key_Up (uint32 key_id);
-	static void		On_Unicode_Char(uint16 unicode);
+	static bool		On_Key_Down (uint32_t key_id, uint32_t key_data);
+	static bool		On_Key_Up (uint32_t key_id);
+	static void		On_Unicode_Char(uint16_t unicode);
 
 	////////////////////////////////////////////////////////////////
 	//	Private member data
@@ -185,15 +184,15 @@ private:
 	static DialogBaseClass *							TransitionDialog;
 	static DialogBaseClass *							PendingActiveDialog;
 
-	static uint32											CurrTime;
-	static uint32											LastFrameTime;
+	static uint32_t											CurrTime;
+	static uint32_t											LastFrameTime;
 
 	static Vector3											LastMousePos;
 
 	static bool IsFlushing;
 
 	static ToolTipClass* mIMEMessage;
-	static uint32 mIMEMessageTime;
+	static uint32_t mIMEMessageTime;
 
 	////////////////////////////////////////////////////////////////
 	//	Friend classes

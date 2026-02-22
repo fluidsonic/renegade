@@ -236,7 +236,7 @@ MPLanGameListMenuClass::On_Frame_Update (void)
 	return ;
 }
 
-bool MPLanGameListMenuClass::On_Key_Down(uint32 key_id, uint32 key_data)
+bool MPLanGameListMenuClass::On_Key_Down(uint32_t key_id, uint32_t key_data)
 {
 	if (VK_F5 == key_id) {
 		Update_Game_List();

@@ -5,7 +5,6 @@
 #include "persist.h"
 #include "wwstring.h"
 #include "vector.h"
-#include "bittype.h"
 
 //////////////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -57,8 +56,8 @@ public:
 	const StringClass &			Get_Name (void) const			{ return Name; }
 	void								Set_Name (const char *name)	{ Name = name; }
 
-	uint32							Get_ID (void) const				{ return ID; }
-	void								Set_ID (uint32 id)				{ ID = id; }
+	uint32_t							Get_ID (void) const				{ return ID; }
+	void								Set_ID (uint32_t id)				{ ID = id; }
 	
 	
 protected:
@@ -75,7 +74,7 @@ private:
 	//	Private member data
 	//////////////////////////////////////////////////////////////
 	StringClass			Name;
-	uint32				ID;
+	uint32_t				ID;
 };
 
 #endif //__TDB_CATEGORY_H

@@ -3,7 +3,6 @@
 #define __DIALOG_PARSER_H
 
 #include "vector.h"
-#include "bittype.h"
 #include "widestring.h"
 
 ////////////////////////////////////////////////////////////////
@@ -42,7 +41,7 @@ typedef struct _ControlDefinitionStruct
 {
 	int					id;
 	CONTROL_TYPE		type;
-	uint32				style;
+	uint32_t				style;
 	int					x;
 	int					y;
 	int					cx;

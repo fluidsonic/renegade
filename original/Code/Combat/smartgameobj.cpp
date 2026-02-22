@@ -1,7 +1,6 @@
 #include "smartgameobj.h"
 #include "gameobjmanager.h"
 #include "weapons.h"
-#include "bittype.h"
 #include "combat.h"
 #include "movephys.h"
 #include "damage.h"

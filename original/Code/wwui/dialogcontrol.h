@@ -6,7 +6,6 @@
 #include "vector2.h"
 #include "vector3.h"
 #include "widestring.h"
-#include "bittype.h"
 #include "controladvisesink.h"
 
 ////////////////////////////////////////////////////////////////
@@ -178,8 +177,8 @@ protected:
 	virtual void			On_MButton_Down (const Vector2 &mouse_pos)	{}
 	virtual void			On_MButton_Up (const Vector2 &mouse_pos)		{}
 	virtual void			On_Mouse_Move (const Vector2 &mouse_pos)		{}
-	virtual bool			On_Key_Down (uint32 key_id, uint32 key_data)	{return false;}
-	virtual bool			On_Key_Up (uint32 key_id)							{return false;}
+	virtual bool			On_Key_Down (uint32_t key_id, uint32_t key_data)	{return false;}
+	virtual bool			On_Key_Up (uint32_t key_id)							{return false;}
 	virtual void			On_Unicode_Char(WCHAR unicode) {}
 	virtual void			On_Mouse_Wheel (int direction)					{}
 	virtual void			On_Set_Cursor (const Vector2 &mouse_pos);

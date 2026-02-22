@@ -5,7 +5,6 @@
 // Includes.
 /*=============================================================================================*/
 #include <assert.h>
-#include "bittype.h"
 
 /*=============================================================================================*/
 // Defines.
@@ -21,8 +20,8 @@ class HeapNodeClass
 {
 	public:
 
-		virtual uint32		Get_Heap_Location (void) const = 0;
-		virtual void		Set_Heap_Location (uint32 location) = 0;
+		virtual uint32_t		Get_Heap_Location (void) const = 0;
+		virtual void		Set_Heap_Location (uint32_t location) = 0;
 
 		// This is pure virtual so that any type of key can be used as long as it uses the comparison operators.
 		virtual Key_Type	Heap_Key (void) const = 0;

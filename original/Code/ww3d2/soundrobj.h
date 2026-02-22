@@ -84,10 +84,10 @@ public:
 	//
 	//	Flag support
 	//
-	uint32					Get_Flags (void) const					{ return Flags; }
-	void						Set_Flags (uint32 flags)				{ Flags = flags; }
-	bool						Get_Flag (uint32 flag)					{ return bool((Flags & flag) == flag); }
-	void						Set_Flag (uint32 flag, bool onoff);
+	uint32_t					Get_Flags (void) const					{ return Flags; }
+	void						Set_Flags (uint32_t flags)				{ Flags = flags; }
+	bool						Get_Flag (uint32_t flag)					{ return bool((Flags & flag) == flag); }
+	void						Set_Flag (uint32_t flag, bool onoff);
 
 protected:
 
@@ -104,7 +104,7 @@ private:
 	bool						IsInitialized;	
 	StringClass				Name;
 	AudibleSoundClass *	Sound;
-	uint32					Flags;
+	uint32_t					Flags;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -167,7 +167,7 @@ private:
 	///////////////////////////////////////////////////////////
 	//	Private member data
 	///////////////////////////////////////////////////////////
-	uint32								Version;
+	uint32_t								Version;
 	StringClass							Name;
 	AudibleSoundDefinitionClass 	Definition;
 	SoundRenderObjClass::FLAGS		Flags;

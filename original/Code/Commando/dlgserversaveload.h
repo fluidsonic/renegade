@@ -47,7 +47,7 @@ private:
 	////////////////////////////////////////////////////////////////
 	//	Static methods
 	////////////////////////////////////////////////////////////////
-	static int CALLBACK ListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param);
+	static int CALLBACK ListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32_t user_param);
 
 	//////////////////////////////////////////////////////////////
 	//	Private methods

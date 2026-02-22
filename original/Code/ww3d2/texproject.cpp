@@ -213,7 +213,7 @@ int TexProjectClass::Get_Texture_Size(void)
  * HISTORY:                                                                                    *
  *   1/4/00     gth : Created.                                                                 *
  *=============================================================================================*/
-void TexProjectClass::Set_Flag(uint32 flag,bool onoff)	
+void TexProjectClass::Set_Flag(uint32_t flag,bool onoff)	
 { 
 	if (onoff) { 
 		Flags |= flag; 
@@ -236,7 +236,7 @@ void TexProjectClass::Set_Flag(uint32 flag,bool onoff)
  * HISTORY:                                                                                    *
  *   1/4/00     gth : Created.                                                                 *
  *=============================================================================================*/
-bool TexProjectClass::Get_Flag(uint32 flag) const
+bool TexProjectClass::Get_Flag(uint32_t flag) const
 { 
 	return (Flags & flag) == flag; 
 }

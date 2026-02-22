@@ -40,7 +40,7 @@ class ShakeableStaticPhysDefClass : public StaticAnimPhysDefClass
 public:
 	ShakeableStaticPhysDefClass(void);
 	
-	virtual uint32								Get_Class_ID(void) const;
+	virtual uint32_t								Get_Class_ID(void) const;
 	virtual const char *						Get_Type_Name(void)				{ return "ShakeableStaticPhysDef"; }
 	virtual bool								Is_Type(const char *);
 	virtual PersistClass *					Create(void) const ;

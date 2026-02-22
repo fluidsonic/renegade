@@ -8,7 +8,6 @@
 #include "parametertypes.h"
 #include "vector.h"
 #include "wwstring.h"
-#include "bittype.h"
 #include "obbox.h"
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -850,10 +849,10 @@ public:
 	virtual bool				Is_Type (Type type) const			{ return (type == TYPE_DEFINITIONIDLIST) || ParameterClass::Is_Type (type); }
 
 	// Data manipulation
-	virtual void				Set_Selected_Class_ID (uint32 *id)	{ m_SelectedClassID = id; }
-	virtual uint32 *			Get_Selected_Class_ID (void) const	{ return m_SelectedClassID; }
-	virtual void				Set_Class_ID (uint32 id)				{ m_ClassID = id; }
-	virtual uint32 			Get_Class_ID (void) const				{ return m_ClassID; }
+	virtual void				Set_Selected_Class_ID (uint32_t *id)	{ m_SelectedClassID = id; }
+	virtual uint32_t *			Get_Selected_Class_ID (void) const	{ return m_SelectedClassID; }
+	virtual void				Set_Class_ID (uint32_t id)				{ m_ClassID = id; }
+	virtual uint32_t 			Get_Class_ID (void) const				{ return m_ClassID; }
 
 	virtual DynamicVectorClass<int> &Get_List (void) const	{ return (*m_IDList); }
 
@@ -866,8 +865,8 @@ protected:
 	//	Private member data
 	//////////////////////////////////////////////////////////////////////////////
 	DynamicVectorClass<int> *	m_IDList;
-	uint32							m_ClassID;
-	uint32 *							m_SelectedClassID;
+	uint32_t							m_ClassID;
+	uint32_t *							m_SelectedClassID;
 };
 
 //////////////////////////////////////////////////////////////////////////////////

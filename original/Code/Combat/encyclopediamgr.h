@@ -75,7 +75,7 @@ public:
 	//
 	//	Inherited
 	//
-	uint32				Chunk_ID (void) const			{ return CHUNKID_ENCYCLOPEDIAMGR; }
+	uint32_t				Chunk_ID (void) const			{ return CHUNKID_ENCYCLOPEDIAMGR; }
 	
 private:
 	

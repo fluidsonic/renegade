@@ -134,7 +134,7 @@ CNCModeSettingsDef::~CNCModeSettingsDef(void)
 	_mInstance = NULL;
 	}
 
-uint32 CNCModeSettingsDef::Get_Class_ID(void) const
+uint32_t CNCModeSettingsDef::Get_Class_ID(void) const
 	{ 
 	return CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE; 
 	}

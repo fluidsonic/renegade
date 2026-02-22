@@ -388,7 +388,7 @@ TrackedVehicleDefClass::TrackedVehicleDefClass(void) :
 	FLOAT_EDITABLE_PARAM(TrackedVehicleDefClass, TurnTorqueScaleFactor, 0.0f, 1.0f);
 }
 
-uint32 TrackedVehicleDefClass::Get_Class_ID (void) const	
+uint32_t TrackedVehicleDefClass::Get_Class_ID (void) const	
 { 
 	return CLASSID_TRACKEDVEHICLEDEF; 
 }

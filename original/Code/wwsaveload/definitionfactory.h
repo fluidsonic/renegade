@@ -3,7 +3,6 @@
 #define __DEFINITION_FACTORY_H
 
 #include "always.h"
-#include "bittype.h"
 #include "definitionclassids.h"
 
 // Forward declarations
@@ -32,7 +31,7 @@ public:
 	//////////////////////////////////////////////////////////////
 	virtual DefinitionClass *	Create (void) const = 0;
 	virtual const char *			Get_Name (void) const = 0;
-	virtual uint32					Get_Class_ID (void) const = 0;
+	virtual uint32_t					Get_Class_ID (void) const = 0;
 	virtual bool					Is_Displayed (void) const = 0;
 
 protected:

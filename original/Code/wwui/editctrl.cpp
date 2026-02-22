@@ -92,8 +92,8 @@ EditCtrlClass::Create_Text_Renderers (void)
 	//
 	//	Draw the text
 	//
-	uint32 color = StyleMgrClass::Get_Text_Color();
-	uint32 shadowColor = StyleMgrClass::Get_Text_Shadow_Color();
+	uint32_t color = StyleMgrClass::Get_Text_Color();
+	uint32_t shadowColor = StyleMgrClass::Get_Text_Shadow_Color();
 
 	if (IsEnabled == false) {
 		color = StyleMgrClass::Get_Disabled_Text_Color();
@@ -424,7 +424,7 @@ EditCtrlClass::Update_Caret (void)
 	//
 	//	Blink the caret if necessary
 	//
-	uint32 curr_time = DialogMgrClass::Get_Time ();
+	uint32_t curr_time = DialogMgrClass::Get_Time ();
 
 	if ((curr_time - LastCaretBlink) > CaretBlinkDelay) {
 		IsCaretDisplayed	= !IsCaretDisplayed;
@@ -637,7 +637,7 @@ EditCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 //
 ////////////////////////////////////////////////////////////////
 bool 
-EditCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
+EditCtrlClass::On_Key_Down (uint32_t key_id, uint32_t key_data)
 {
 	bool handled = false;
 

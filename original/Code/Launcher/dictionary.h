@@ -24,15 +24,15 @@ template <class K,class V>
 class Dictionary
 {
  public:
-                   Dictionary(uint32 (* hashFn)(K &key));
+                   Dictionary(uint32_t (* hashFn)(K &key));
                   ~Dictionary();
 
   void             clear(void);
   bit8             add(IN K &key,IN V &value);
   bit8             getValue(IN K &key, OUT V &value);
   void             print(IN FILE *out) const;
-  uint32           getSize(void) const;
-  uint32           getEntries(void) const;
+  uint32_t           getSize(void) const;
+  uint32_t           getEntries(void) const;
   bit8             contains(IN K &key);
   bit8             updateValue(IN K &key,IN V &value);
   bit8             remove(IN K &key,OUT V &value);
@@ -46,14 +46,14 @@ class Dictionary
 
   DNode<K,V>     **table;      // This stores the lists at each slot
 
-  uint32           entries;    // number of entries
-  uint32           size;       // size of table
-  uint32           tableBits;  // table is 2^tableBits big
-  uint32           log2Size;   // Junk variable
+  uint32_t           entries;    // number of entries
+  uint32_t           size;       // size of table
+  uint32_t           tableBits;  // table is 2^tableBits big
+  uint32_t           log2Size;   // Junk variable
   bit8             keepSize;   // If true don't shrink or expand
 
-  uint32           (* hashFunc)(K &key);   // User provided hash function
-  uint32           keyHash(IN K &key);     // This will reduce to correct range
+  uint32_t           (* hashFunc)(K &key);   // User provided hash function
+  uint32_t           keyHash(IN K &key);     // This will reduce to correct range
 
   // See initilizer list of constructor for values
   const double     SHRINK_THRESHOLD; // When table is this % full shrink it
@@ -63,7 +63,7 @@ class Dictionary
 
 //Create the empty hash dictionary
 template <class K,class V>
-Dictionary<K,V>::Dictionary(uint32 (* hashFn)(K &key)) :
+Dictionary<K,V>::Dictionary(uint32_t (* hashFn)(K &key)) :
  SHRINK_THRESHOLD(0.20), // When table is only 20% full shrink it
  EXPAND_THRESHOLD(0.80), // When table is 80% full grow it
  MIN_TABLE_SIZE(32)      // must be a power of 2
@@ -99,7 +99,7 @@ template <class K,class V>
 void Dictionary<K,V>::clear()
 {
   DNode<K,V> *temp,*del;
-  uint32 i;
+  uint32_t i;
   //free all the data
   for (i=0; i<size; i++)
   {
@@ -114,14 +114,14 @@ void Dictionary<K,V>::clear()
   }
   entries=0;
 
-  while ((getSize()>(uint32)MIN_TABLE_SIZE)&&(keepSize==FALSE))
+  while ((getSize()>(uint32_t)MIN_TABLE_SIZE)&&(keepSize==FALSE))
     shrink();
 }            
 
 template <class K,class V>
-uint32 Dictionary<K,V>::keyHash(IN K &key)
+uint32_t Dictionary<K,V>::keyHash(IN K &key)
 {
-  uint32 retval=hashFunc(key);
+  uint32_t retval=hashFunc(key);
   retval &= ((1<<tableBits)-1);
   assert(retval<getSize());
   return(retval);
@@ -131,7 +131,7 @@ template <class K,class V>
 void Dictionary<K,V>::print(IN FILE *out) const
 {
   DNode<K,V> *temp;
-  uint32 i;
+  uint32_t i;
 
   fprintf(out,"--------------------\n");
   for (i=0; i<getSize(); i++)
@@ -175,7 +175,7 @@ bit8 Dictionary<K,V>::iterate(INOUT int &index,INOUT int &offset,
   if (temp==NULL)   // no more slots with data
     return(FALSE);
 
-  uint32 i=0;
+  uint32_t i=0;
   while ((temp!=NULL) && (i < offset))
   {
     temp=temp->hashNext;
@@ -199,12 +199,12 @@ bit8 Dictionary<K,V>::iterate(INOUT int &index,INOUT int &offset,
 
 // Return the current size of the hash table
 template <class K,class V>
-uint32 Dictionary<K,V>::getSize(void) const
+uint32_t Dictionary<K,V>::getSize(void) const
 { return(size); }    
 
 // Return the current number of entries in the table
 template <class K,class V>
-uint32 Dictionary<K,V>::getEntries(void) const
+uint32_t Dictionary<K,V>::getEntries(void) const
 { return(entries); }
 
 // Does the Dictionary contain the key?
@@ -234,7 +234,7 @@ bit8 Dictionary<K,V>::contains(IN K &key)
 template <class K,class V>
 bit8 Dictionary<K,V>::updateValue(IN K &key,IN V &value)
 {
-  sint32 retval;
+  int32_t retval;
 
   retval=remove(key);
   if (retval==FALSE)
@@ -460,10 +460,10 @@ void Dictionary<K,V>::shrink(void)
 {
   int    i;
   int    oldsize;
-  uint32 offset;
+  uint32_t offset;
   DNode<K,V> **oldtable,*temp,*first,*next;
 
-  if ((size<=(uint32)MIN_TABLE_SIZE)||(keepSize==TRUE))
+  if ((size<=(uint32_t)MIN_TABLE_SIZE)||(keepSize==TRUE))
     return;
 
   //fprintf(stderr,"Shrinking....\n");
@@ -498,7 +498,7 @@ void Dictionary<K,V>::expand(void)
 {
   int    i;
   int    oldsize;
-  uint32 offset;
+  uint32_t offset;
   DNode<K,V> **oldtable,*temp,*first,*next;
 
   if (keepSize==TRUE)

@@ -27,7 +27,7 @@ public:
 	void		On_Command (int ctrl_id, int mesage_id, DWORD param);
 	void		On_Menu_Activate (bool onoff);
 	void		On_Destroy (void);
-	bool		On_Key_Down (uint32 key_id, uint32 key_data);
+	bool		On_Key_Down (uint32_t key_id, uint32_t key_data);
 
 	//
 	//	Singleton access

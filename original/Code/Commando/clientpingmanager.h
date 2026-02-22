@@ -1,7 +1,6 @@
 #ifndef __CLIENTPINGMANAGER_H__
 #define __CLIENTPINGMANAGER_H__
 
-#include "bittype.h"
 
 //-----------------------------------------------------------------------------
 class	cClientPingManager

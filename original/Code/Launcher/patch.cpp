@@ -164,7 +164,7 @@ void Apply_Patch(char *patchfile,ConfigFile &config,int skuIndex, bool show_dial
 
     if (regRetval==ERROR_SUCCESS)
     {
-      RegSetValueEx(regKey,"EXEPatch",0,REG_SZ,(const uint8*)patchfile,strlen(patchfile)+1);
+      RegSetValueEx(regKey,"EXEPatch",0,REG_SZ,(const uint8_t*)patchfile,strlen(patchfile)+1);
 
       char message[256];
       LoadString(NULL,IDS_SYS_RESTART,message,256);
@@ -283,7 +283,7 @@ void Apply_Patch(char *patchfile,ConfigFile &config,int skuIndex, bool show_dial
         KEY_ALL_ACCESS,&regKey);
     if (regRetval!=ERROR_SUCCESS)
       DBGMSG("Can't open reg key for writing");
-    regRetval=RegSetValueEx(regKey,"Version",0,REG_DWORD,(uint8 *)&version,
+    regRetval=RegSetValueEx(regKey,"Version",0,REG_DWORD,(uint8_t *)&version,
         sizeof(version));
 
 		// Create blocking DLG for update info
@@ -467,8 +467,8 @@ __declspec(dllexport) LPVOID CALLBACK PatchCallBack(UINT Id, LPVOID Param)
 
 	case 6:
 	  // Number of patch files
-      DBGMSG("6: "<<*((uint32 *)Param));
-      fileCount=*((uint32 *)Param);
+      DBGMSG("6: "<<*((uint32_t *)Param));
+      fileCount=*((uint32_t *)Param);
       currFile=0;
 	break;
 

@@ -2,7 +2,6 @@
 #pragma once
 #endif
 
-#include "bittype.h"
 
 //
 // This is a storing house for ingame tga's relating to networking

@@ -211,7 +211,7 @@ public:
 private:
 
 	PlaneClass					Plane;		// splitting plane
-	uint32						NumPolys;	// num polys on plane
+	uint32_t						NumPolys;	// num polys on plane
 	BptPolyClass *				Polys;		// array of polys
 	BptNodeClass *				Front;		// pointer to front tree
 	BptNodeClass *				Back;			// pointer to back tree
@@ -312,11 +312,11 @@ public:
 	BptImpNodeClass *			Front;
 	BptImpNodeClass *			Back;
 
-	uint16						FirstPoly;
-	uint16						PolyCount;
+	uint16_t						FirstPoly;
+	uint16_t						PolyCount;
 
-	uint16						NormalIndex;
-	uint16						DistanceIndex;
+	uint16_t						NormalIndex;
+	uint16_t						DistanceIndex;
 
 	bool							Is_Visible(const CameraClass & camera);
 	bool							Cast_AABox_To_Polys(PhysAABoxCollisionTestClass & coltest);

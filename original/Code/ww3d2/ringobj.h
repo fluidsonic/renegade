@@ -25,8 +25,8 @@ typedef LERPAnimationChannelClass<Vector2>	RingScaleChannelClass;
 */
 struct W3dRingStruct
 {
-	uint32				Version;						// file format version
-	uint32				Attributes;					// box attributes (above #define's)
+	uint32_t				Version;						// file format version
+	uint32_t				Attributes;					// box attributes (above #define's)
 	char					Name[2*W3D_NAME_LEN];	// name is in the form <containername>.<boxname>
 
 	W3dVectorStruct	Center;						// center of the box

@@ -6,7 +6,6 @@
 #include "matrix3d.h"
 #include "vector.h"
 #include "refcount.h"
-#include "bittype.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Forward delcarations
@@ -125,7 +124,7 @@ class FloodfillBoxClass : public RefCountClass
 		void								Set_Taken (bool onoff = true)	{ Set_Flag (IsTaken, onoff); }
 		bool								Is_Taken (void)					{ return bool((m_Flags & IsTaken) == IsTaken); }
 
-		uint8								Get_Compress_Skipped_Count (void)	{ return m_CompressedSkipCount; }
+		uint8_t								Get_Compress_Skipped_Count (void)	{ return m_CompressedSkipCount; }
 		void								Inc_Compress_Skipped_Count (void)	{ m_CompressedSkipCount ++; }
 
 		//////////////////////////////////////////////////////////////////////
@@ -176,7 +175,7 @@ class FloodfillBoxClass : public RefCountClass
 		//////////////////////////////////////////////////////////////////////
 		//	Protected methods
 		//////////////////////////////////////////////////////////////////////
-		void								Set_Flag (uint8 flag, bool value);
+		void								Set_Flag (uint8_t flag, bool value);
 
 		void								Set_Traversible (PATHFIND_DIR dir, bool onoff);
 		bool								Get_Traversible (PATHFIND_DIR dir);
@@ -214,9 +213,9 @@ class FloodfillBoxClass : public RefCountClass
 		//////////////////////////////////////////////////////////////////////
 		FloodfillBoxClass *		m_Neighbors[4];
 
-		uint8							m_Flags;
-		uint8							m_DirectionInfo;
-		uint8							m_CompressedSkipCount;
+		uint8_t							m_Flags;
+		uint8_t							m_DirectionInfo;
+		uint8_t							m_CompressedSkipCount;
 
 		FloodfillBoxClass *		m_Prev;
 		FloodfillBoxClass *		m_Next;
@@ -403,7 +402,7 @@ FloodfillBoxClass::Peek_Neighbor (PATHFIND_DIR dir, bool only_traversible)
 // Set_Flag
 //////////////////////////////////////////////////////////////////////////
 inline void
-FloodfillBoxClass::Set_Flag (uint8 flag, bool value)
+FloodfillBoxClass::Set_Flag (uint8_t flag, bool value)
 {
 	m_Flags &= ~flag;
 	if (value) {

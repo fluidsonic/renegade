@@ -342,7 +342,7 @@ void MPLanHostBasicOptionsTabClass::InitSideChoiceCombo(int sidePref)
 			int item = combo->Add_String(_teams[index].TeamName);
 
 			if (item >= 0) {
-				combo->Set_Item_Data(item, (uint32)_teams[index].TeamID);
+				combo->Set_Item_Data(item, (uint32_t)_teams[index].TeamID);
 			}
 
 			if (_teams[index].TeamID == sidePref) {
@@ -863,7 +863,7 @@ MPLanHostMapCycleOptionsTabClass::Build_Mod_Package_List (void)
 
 			int item_index = combobx_ctrl->Add_String (curr_name);
 			if (item_index != -1) {
-				combobx_ctrl->Set_Item_Data (item_index, (uint32)(uintptr_t)package);
+				combobx_ctrl->Set_Item_Data (item_index, (uint32_t)(uintptr_t)package);
 
 				//
 				//	Is this the default entry?  If so select it...

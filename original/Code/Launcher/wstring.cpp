@@ -87,7 +87,7 @@ Wstring &Wstring::operator=(IN Wstring &other)
 bit8 Wstring::cat(IN char *s)
 {
   char    *oldStr;
-  uint32   len;
+  uint32_t   len;
 
   if (s==NULL)   // it's OK to cat nothing
     return(TRUE);
@@ -122,10 +122,10 @@ bit8 Wstring::cat(IN char *s)
   return(TRUE);
 }
 
-bit8 Wstring::cat(uint32 size, IN char *s)
+bit8 Wstring::cat(uint32_t size, IN char *s)
 {
   char    *oldStr;
-  uint32   len;
+  uint32_t   len;
 
   // Save the contents of the string.
   oldStr = str;
@@ -196,15 +196,15 @@ Wstring Wstring::operator+(IN Wstring &s)
 // Otherwise, TRUE is returned.  Note: count has a default value of 1.
 //
 //
-char Wstring::remove(sint32 pos,sint32 count)
+char Wstring::remove(int32_t pos,int32_t count)
 {
   char    *s;
-  sint32   len;
+  int32_t   len;
 
   if (!str)
     return(FALSE);
 
-  len = (sint32)strlen(str);
+  len = (int32_t)strlen(str);
 
   if(pos+count > len)
     pos = len - count;
@@ -277,7 +277,7 @@ void Wstring::clear(void)
  str=NULL;
 }
 
-void Wstring::setSize(sint32 size)
+void Wstring::setSize(int32_t size)
 {
   clear();
   if (size<0)
@@ -286,12 +286,12 @@ void Wstring::setSize(sint32 size)
   memset(str,0,size);
 }
 
-void Wstring::cellCopy(char *dest, uint32 len)
+void Wstring::cellCopy(char *dest, uint32_t len)
 {
-  uint32 i;
+  uint32_t i;
 
   strncpy(dest, str, len);
-  for(i = (uint32)strlen(str); i < len; i++)
+  for(i = (uint32_t)strlen(str); i < len; i++)
     dest[i] = ' ';
   dest[len] = 0;
 }
@@ -303,22 +303,22 @@ char *Wstring::get(void)
   return str;
 }
 
-char Wstring::get(uint32 index)
+char Wstring::get(uint32_t index)
 {
  if(index < strlen(str))
    return str[index];
  return(0);
 }
 
-uint32 Wstring::length(void)
+uint32_t Wstring::length(void)
 {
   if(str == NULL)
     return(0);
-  return((uint32)strlen(str));
+  return((uint32_t)strlen(str));
 }
 
 // Insert at given position and shift old stuff to right
-bit8 Wstring::insert(char *instring, uint32 pos)
+bit8 Wstring::insert(char *instring, uint32_t pos)
 {
   if (str==NULL)
     return(set(instring)); 
@@ -341,10 +341,10 @@ bit8 Wstring::insert(char *instring, uint32 pos)
 // position indexed by `pos'.  If `pos' is >= the length of the string, it is
 // appended to the string.  If an error occurs, FALSE is returned.  Otherwise,
 // TRUE is returned.
-bit8 Wstring::insert(char k, uint32 pos)
+bit8 Wstring::insert(char k, uint32_t pos)
 {
   char    *s;
-  uint32   len;
+  uint32_t   len;
   char     c[2];
 
   if(!str)
@@ -354,7 +354,7 @@ bit8 Wstring::insert(char k, uint32 pos)
     return(set(c));
   }
 
-  len = (uint32)strlen(str);
+  len = (uint32_t)strlen(str);
 
   if(pos > len)
     pos = len;
@@ -386,7 +386,7 @@ bit8 Wstring::replace(char *replaceThis, char *withThis)
 {
   Wstring  dest;
   char    *foundStr, *src;
-  uint32   len;
+  uint32_t   len;
 
   src=get();
   while(src && src[0])
@@ -394,7 +394,7 @@ bit8 Wstring::replace(char *replaceThis, char *withThis)
     foundStr = strstr(src, replaceThis);
     if(foundStr)
     {
-      len = (uint32)foundStr - (uint32)src;
+      len = (uint32_t)foundStr - (uint32_t)src;
       if(len)
       {
         if(!dest.cat(len, src))
@@ -417,11 +417,11 @@ bit8 Wstring::replace(char *replaceThis, char *withThis)
 
 bit8 Wstring::set(IN char *s)
 {
- uint32 len;
+ uint32_t len;
 
  clear();
 
- len = (uint32)strlen(s) + 1;
+ len = (uint32_t)strlen(s) + 1;
 
  if(!(str = new char[len]))
  {
@@ -433,9 +433,9 @@ bit8 Wstring::set(IN char *s)
  return(TRUE);
 }
 
-bit8 Wstring::set(char c, uint32 index)
+bit8 Wstring::set(char c, uint32_t index)
 {
- if(index >= (uint32)strlen(str))
+ if(index >= (uint32_t)strlen(str))
    return FALSE;
 
  str[index] = c;
@@ -443,9 +443,9 @@ bit8 Wstring::set(char c, uint32 index)
  return TRUE;
 }
 
-char Wstring::set(uint32 size, IN char *string)
+char Wstring::set(uint32_t size, IN char *string)
 {
- uint32 len;
+ uint32_t len;
 
  clear();
  len = size + 1;
@@ -467,7 +467,7 @@ char Wstring::set(uint32 size, IN char *string)
 // case.
 void Wstring::toLower(void)
 {
-  uint32 i;
+  uint32_t i;
 
   for(i = 0; i < length(); i++)
   {
@@ -480,7 +480,7 @@ void Wstring::toLower(void)
 // case.
 void Wstring::toUpper(void)
 {
-  uint32 i;
+  uint32_t i;
 
   for(i = 0; i < length(); i++)
   {
@@ -491,7 +491,7 @@ void Wstring::toUpper(void)
 
 //  This function truncates the string so its length will match the specified
 // `len'.  If an error occurs, FALSE is returned.  Otherwise, TRUE is returned.
-bit8 Wstring::truncate(uint32 len)
+bit8 Wstring::truncate(uint32_t len)
 {
   Wstring tmp;
   if(!tmp.set(len, get()) || !set(tmp.get()))
@@ -503,7 +503,7 @@ bit8 Wstring::truncate(uint32 len)
 //   Do nothing if 'c' isn't in the string
 bit8 Wstring::truncate(char c)
 {
-  sint32  len;
+  int32_t  len;
  
   if (str==NULL)
     return(FALSE);
@@ -511,18 +511,18 @@ bit8 Wstring::truncate(char c)
   char   *cptr=strchr(str,c);
   if (cptr==NULL)
     return(FALSE);
-  len=(sint32)(cptr-str); 
-  truncate((uint32)len);
+  len=(int32_t)(cptr-str); 
+  truncate((uint32_t)len);
   return(TRUE);
 }
 
 // Get a token from this string that's seperated by one or more
 //  chars from the 'delim' string , start at offset & return offset
-sint32 Wstring::getToken(int offset,char *delim,Wstring &out)
+int32_t Wstring::getToken(int offset,char *delim,Wstring &out)
 {
   int i;
-  sint32 start;
-  sint32 stop;
+  int32_t start;
+  int32_t stop;
   for (i=offset; i<(int)length(); i++) {
     if(strchr(delim,str[i])==NULL)
       break;
@@ -537,16 +537,16 @@ sint32 Wstring::getToken(int offset,char *delim,Wstring &out)
   }
   stop=i-1; 
   out.set(str+start);
-  out.truncate((uint32)stop-start+1);
+  out.truncate((uint32_t)stop-start+1);
   return(stop+1);
 }
 
 // Get the first line of text after offset.  Lines are terminated by '\r\n' or '\n'
-sint32 Wstring::getLine(int offset, Wstring &out)
+int32_t Wstring::getLine(int offset, Wstring &out)
 {
   int i;
-  sint32 start;
-  sint32 stop;
+  int32_t start;
+  int32_t stop;
 
   start=i=offset;
   if (start >= (int)length())
@@ -561,6 +561,6 @@ sint32 Wstring::getLine(int offset, Wstring &out)
     stop++;
 
   out.set(str+start);
-  out.truncate((uint32)stop-start+1);
+  out.truncate((uint32_t)stop-start+1);
   return(stop+1);
 }

@@ -27,7 +27,7 @@ enum
 //	Static member initialization
 //////////////////////////////////////////////////////////////////////////////////
 DynamicVectorClass<SoundSceneObjClass *>	SoundSceneObjClass::m_GlobalSoundList;
-uint32			SoundSceneObjClass::m_NextAvailableID	= SOUND_OBJ_START_ID;
+uint32_t			SoundSceneObjClass::m_NextAvailableID	= SOUND_OBJ_START_ID;
 CriticalSectionClass	SoundSceneObjClass::m_IDListMutex;
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -237,7 +237,7 @@ SoundSceneObjClass::Save (ChunkSaveClass &csave)
 bool
 SoundSceneObjClass::Load (ChunkLoadClass &cload)
 {
-	uint32 id = SOUND_OBJ_DEFAULT_ID;
+	uint32_t id = SOUND_OBJ_DEFAULT_ID;
 
 	while (cload.Open_Chunk ()) {		
 		switch (cload.Cur_Chunk_ID ()) {
@@ -312,7 +312,7 @@ SoundSceneObjClass::On_Frame_Update (unsigned int /*milliseconds*/)
 //
 //////////////////////////////////////////////////////////////////////////////////
 void
-SoundSceneObjClass::Set_ID (uint32 id)
+SoundSceneObjClass::Set_ID (uint32_t id)
 {
 	//
 	//	Remove the sound object from our sorted list
@@ -396,7 +396,7 @@ SoundSceneObjClass::Unregister_Sound_Object (SoundSceneObjClass *sound_obj)
 //
 //////////////////////////////////////////////////////////////////////////////////
 bool
-SoundSceneObjClass::Find_Sound_Object (uint32 id_to_find, int *index)
+SoundSceneObjClass::Find_Sound_Object (uint32_t id_to_find, int *index)
 {
 	CriticalSectionClass::LockClass lock(m_IDListMutex);
 
@@ -415,7 +415,7 @@ SoundSceneObjClass::Find_Sound_Object (uint32 id_to_find, int *index)
 		//	Calculate what slot we are currently looking at
 		//
 		int curr_index	= min_index + ((max_index - min_index) / 2);
-		uint32 curr_id	= m_GlobalSoundList[curr_index]->Get_ID ();
+		uint32_t curr_id	= m_GlobalSoundList[curr_index]->Get_ID ();
 
 		//
 		//	Did we find the right slot?

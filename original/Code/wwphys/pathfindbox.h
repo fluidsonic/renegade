@@ -4,7 +4,6 @@
 
 #include "vector3.h"
 #include "aabox.h"
-#include "bittype.h"
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -58,11 +57,11 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	//	Private member data
 	//////////////////////////////////////////////////////////////////////////
-	uint16	x_pos;
-	uint16	y_pos;
-	uint16	z_pos;
-	uint8		x_size;
-	uint8		y_size;
+	uint16_t	x_pos;
+	uint16_t	y_pos;
+	uint16_t	z_pos;
+	uint8_t		x_size;
+	uint8_t		y_size;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,12 +86,12 @@ PathfindBoxClass::Get_AABox (AABoxClass &box) const
 inline void
 PathfindBoxClass::Set_AABox (const AABoxClass &box)
 {
-	x_pos = uint16(box.Center.X / _BlockSize.X);
-	y_pos = uint16(box.Center.Y / _BlockSize.Y);
-	z_pos = uint16(box.Center.Z * 10);
+	x_pos = uint16_t(box.Center.X / _BlockSize.X);
+	y_pos = uint16_t(box.Center.Y / _BlockSize.Y);
+	z_pos = uint16_t(box.Center.Z * 10);
 
-	x_size = uint8(box.Extent.X / _BlockSize.X);
-	y_size = uint8(box.Extent.Y / _BlockSize.Y);
+	x_size = uint8_t(box.Extent.X / _BlockSize.X);
+	y_size = uint8_t(box.Extent.Y / _BlockSize.Y);
 	return ;
 }
 
@@ -102,9 +101,9 @@ PathfindBoxClass::Set_AABox (const AABoxClass &box)
 inline void
 PathfindBoxClass::Set_Position (int new_x, int new_y, float new_z)
 {
-	x_pos = uint16(new_x);
-	y_pos = uint16(new_y);
-	z_pos = uint16(new_z * 10);
+	x_pos = uint16_t(new_x);
+	y_pos = uint16_t(new_y);
+	z_pos = uint16_t(new_z * 10);
 	return ;
 }
 
@@ -114,8 +113,8 @@ PathfindBoxClass::Set_Position (int new_x, int new_y, float new_z)
 inline void
 PathfindBoxClass::Set_Size (int cx, int cy)
 {
-	x_size = uint8(cx);
-	y_size = uint8(cy);
+	x_size = uint8_t(cx);
+	y_size = uint8_t(cy);
 	return ;
 }
 

@@ -110,7 +110,7 @@ public:
 	//
 	//	From SaveLoadSubSystemClass
 	//
-	uint32									Chunk_ID (void) const;
+	uint32_t									Chunk_ID (void) const;
 
 protected:
 

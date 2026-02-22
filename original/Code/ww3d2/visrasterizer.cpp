@@ -364,7 +364,7 @@ void IDBufferClass::Allocate_Buffers(void)
 	int bufsize = ResWidth * ResHeight;
 
 	if (bufsize > 0) {
-		IDBuffer = new uint32 [bufsize];
+		IDBuffer = new uint32_t [bufsize];
 		ZBuffer = new float [bufsize];
 	}
 }
@@ -372,7 +372,7 @@ void IDBufferClass::Allocate_Buffers(void)
 void IDBufferClass::Clear(void)
 {
 	if ((ResWidth > 0) && (ResHeight > 0)) {
-		int byte_count = ResWidth * ResWidth * sizeof(uint32);
+		int byte_count = ResWidth * ResWidth * sizeof(uint32_t);
 
 		memset(IDBuffer,0,byte_count);
 		memset(ZBuffer,0,byte_count);

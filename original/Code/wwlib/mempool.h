@@ -2,7 +2,6 @@
 #ifndef MEMPOOL_H
 #define MEMPOOL_H
 
-#include "bittype.h"
 #include "mutex.h"
 #include <new.h>
 #include <stdlib.h>
@@ -234,7 +233,7 @@ T * ObjectPoolClass<T,BLOCK_SIZE>::Allocate_Object_Memory(void)
 		BlockListHead = (uintptr_t*)::operator new( sizeof(T) * BLOCK_SIZE + sizeof(uintptr_t *));
 		// Link this block into the block list; the header stores a pointer-sized prev-block ptr.
 		// Using uintptr_t* ensures BlockListHead+1 skips sizeof(uintptr_t)==8 bytes on 64-bit,
-		// so the first object slot does not overlap the header (was broken with uint32*+1 == +4 bytes).
+		// so the first object slot does not overlap the header (was broken with uint32_t*+1 == +4 bytes).
 		*(uintptr_t **)BlockListHead = tmp_block_head;
 
 		// Link the objects in the block into the free object list

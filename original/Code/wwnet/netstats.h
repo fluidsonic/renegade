@@ -13,7 +13,6 @@
 #ifndef NETSTATS_H
 #define NETSTATS_H
 
-#include "bittype.h"
 #include <cassert>
 
 //

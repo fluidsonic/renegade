@@ -7,7 +7,6 @@
 #include "w3d_file.h"
 #include "w3derr.h"
 #include "vector.h"
-#include "bittype.h"
 #include <string.h>
 
 #ifdef _UNIX

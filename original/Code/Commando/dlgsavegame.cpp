@@ -147,7 +147,7 @@ SaveGameMenuClass::On_ListCtrl_Delete_Entry
 //
 ////////////////////////////////////////////////////////////////
 int CALLBACK
-SaveGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param)
+SaveGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32_t user_param)
 {
 	int retval = 0;
 
@@ -532,8 +532,8 @@ SaveGameMenuClass::Reload_List (const char *current_filename)
 			list_ctrl->Set_Entry_Text (item_index, 1, date_string);
 			list_ctrl->Set_Entry_Text (item_index, 2, description);
 			
-			list_ctrl->Set_Entry_Data (item_index, 0, (uint32)(uintptr_t)new FILETIME(local_time));
-			list_ctrl->Set_Entry_Data (item_index, 2, (uint32)(uintptr_t)new StringClass(find_info.cFileName));
+			list_ctrl->Set_Entry_Data (item_index, 0, (uint32_t)(uintptr_t)new FILETIME(local_time));
+			list_ctrl->Set_Entry_Data (item_index, 2, (uint32_t)(uintptr_t)new StringClass(find_info.cFileName));
 
 			//
 			//	Select this entry if its the default

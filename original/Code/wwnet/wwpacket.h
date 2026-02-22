@@ -13,7 +13,6 @@
 #ifndef WWPACKET_H
 #define WWPACKET_H
 
-#include "bittype.h"
 #include "bitstream.h"
 #include "fromaddress.h"
 #include "packetmgr.h"

@@ -12,7 +12,6 @@
 #ifndef REGINT_H
 #define REGINT_H
 
-#include "bittype.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryInt

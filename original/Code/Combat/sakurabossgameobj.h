@@ -31,7 +31,7 @@ public:
 	////////////////////////////////////////////////////////////////
 	//	Public methods
 	////////////////////////////////////////////////////////////////
-	uint32								Get_Class_ID (void) const;
+	uint32_t								Get_Class_ID (void) const;
 	PersistClass *						Create (void) const;
 	bool									Save (ChunkSaveClass &csave);
 	bool									Load (ChunkLoadClass &cload);

@@ -303,7 +303,7 @@ SoundStreamHandleClass::Set_Sample_Playback_Rate (S32 rate)
 //
 //////////////////////////////////////////////////////////////////////
 void
-SoundStreamHandleClass::Set_Miles_Handle (uint32 handle)
+SoundStreamHandleClass::Set_Miles_Handle (uint32_t handle)
 {
 	SampleHandle = (HSAMPLE)handle;
 	return ;

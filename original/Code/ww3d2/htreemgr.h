@@ -3,7 +3,6 @@
 #define HTREEMGR_H
 
 #include "always.h"
-#include "bittype.h"
 #include "hashtemplate.h"
 
 class FileClass;
@@ -31,7 +30,7 @@ public:
 	int							Num_Trees(void) { return NumTrees; }
 	HTreeClass *				Get_Tree(const char * name);
 	HTreeClass *				Get_Tree(int id);
-	uint32						Get_Tree_Handle(char * name);
+	uint32_t						Get_Tree_Handle(char * name);
 	void							Free_All_Trees(void);
 
 	int							Get_Tree_ID(const char * name);

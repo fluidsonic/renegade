@@ -5,7 +5,6 @@
 
 #include "always.h"
 #include "pointerremap.h"
-#include "bittype.h"
 #include "slist.h"
 
 class RefCountClass;
@@ -109,7 +108,7 @@ public:
 	/*
 	** Look up the persist factory for a given chunk id
 	*/
-	static PersistFactoryClass * Find_Persist_Factory(uint32 chunk_id);
+	static PersistFactoryClass * Find_Persist_Factory(uint32_t chunk_id);
 
 	/*
 	** Post-Load interface.  An object being loaded can ask for a callback after
@@ -133,7 +132,7 @@ protected:
 	*/
 	static void		Register_Sub_System (SaveLoadSubSystemClass * subsys);
 	static void		Unregister_Sub_System (SaveLoadSubSystemClass * subsys);
-	static SaveLoadSubSystemClass * Find_Sub_System (uint32 chunk_id);
+	static SaveLoadSubSystemClass * Find_Sub_System (uint32_t chunk_id);
 
 	static void		Register_Persist_Factory(PersistFactoryClass * factory);
 	static void		Unregister_Persist_Factory(PersistFactoryClass * factory);

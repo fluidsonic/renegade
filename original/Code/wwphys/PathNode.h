@@ -75,8 +75,8 @@ class PathNodeClass : public RefCountClass, public HeapNodeClass<float>, public 
 		void							Disconnect_From_Portal (void);
 
 		// From HeapNodeClass
-		uint32						Get_Heap_Location (void) const;
-		void							Set_Heap_Location (uint32 location);
+		uint32_t						Get_Heap_Location (void) const;
+		void							Set_Heap_Location (uint32_t location);
 		float							Heap_Key (void) const;
 
 	protected:
@@ -101,7 +101,7 @@ class PathNodeClass : public RefCountClass, public HeapNodeClass<float>, public 
 		Matrix3D						m_Transform;
 		bool							m_OnFinalPath;
 		bool							m_InClosedList;
-		uint32						m_HeapLocation;
+		uint32_t						m_HeapLocation;
 };
 
 /////////////////////////////////////////////////////////////////////////
@@ -167,14 +167,14 @@ PathNodeClass::Is_On_Final_Path (void) const					{ return m_OnFinalPath; }
 inline void
 PathNodeClass::On_Final_Path (bool on_path)					{ m_OnFinalPath = on_path; }
 
-inline uint32
+inline uint32_t
 PathNodeClass::Get_Heap_Location (void) const
 {
 	return m_HeapLocation;
 }
 
 inline void
-PathNodeClass::Set_Heap_Location (uint32 location)
+PathNodeClass::Set_Heap_Location (uint32_t location)
 {
 	m_HeapLocation = location;
 

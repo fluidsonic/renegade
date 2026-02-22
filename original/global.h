@@ -48,14 +48,6 @@ typedef unsigned long long __uint64;
 // Function attributes
 #define __pascal
 
-// Fix 64-bit type sizes: MSVC Win32 uses 'unsigned long' for 32-bit,
-// but on macOS/LP64, 'unsigned long' is 64 bits.
-// Redefine the problematic types from bittype.h here:
-#undef uint32
-#undef sint32
-typedef unsigned int    uint32;
-typedef signed int      sint32;
-
 // Bit rotation (MSVC intrinsics)
 static inline unsigned long _lrotl(unsigned long val, int shift) {
     shift &= 31;

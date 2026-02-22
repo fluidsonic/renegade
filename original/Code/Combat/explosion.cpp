@@ -24,7 +24,7 @@ SimplePersistFactoryClass<ExplosionDefinitionClass, CHUNKID_EXPLOSION_DEF>	_Expl
 
 DECLARE_DEFINITION_FACTORY(ExplosionDefinitionClass, CLASSID_DEF_EXPLOSION, "Explosion") _ExplosionDefDefFactory;
 
-uint32	ExplosionDefinitionClass::Get_Class_ID (void) const	{ return CLASSID_DEF_EXPLOSION; }
+uint32_t	ExplosionDefinitionClass::Get_Class_ID (void) const	{ return CLASSID_DEF_EXPLOSION; }
 const PersistFactoryClass & ExplosionDefinitionClass::Get_Factory (void) const { return _ExplosionDefPersistFactory; }
 
 ExplosionDefinitionClass::ExplosionDefinitionClass( void ) :

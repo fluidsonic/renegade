@@ -32,7 +32,7 @@ public:
 	//	Public methods
 	////////////////////////////////////////////////////////////////
 
-	virtual uint32								Get_Class_ID (void) const;
+	virtual uint32_t								Get_Class_ID (void) const;
 	virtual PersistClass *					Create (void) const;
 	virtual bool								Save (ChunkSaveClass &csave);
 	virtual bool								Load (ChunkLoadClass &cload);

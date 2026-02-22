@@ -38,7 +38,7 @@ public:
 	void		On_Frame_Update (void);
 	void		On_Merchandise_Selected (MerchandiseCtrlClass *ctrl, int ctrl_id);
 	void		On_Merchandise_DblClk (MerchandiseCtrlClass *ctrl, int ctrl_id);
-	bool		On_Key_Down (uint32 key_id, uint32 key_data);
+	bool		On_Key_Down (uint32_t key_id, uint32_t key_data);
 	void		Render (void);
 
 	//

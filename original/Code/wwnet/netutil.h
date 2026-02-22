@@ -16,7 +16,6 @@
 #include "win.h"
 #include <winsock.h>
 
-#include "bittype.h"
 
 class cPacket;
 

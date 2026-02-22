@@ -13,7 +13,6 @@
 #ifndef NETINTERFACE_H
 #define NETINTERFACE_H
 
-#include "bittype.h"
 #include "widestring.h"
 
 //GAMESPY - allow 30 chars + ( + 2 chars for collision (add 2..99) + ) + NULL

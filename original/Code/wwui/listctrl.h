@@ -6,7 +6,6 @@
 #include "vector3.h"
 #include "vector.h"
 #include "render2d.h"
-#include "bittype.h"
 #include "scrollbarctrl.h"
 #include "render2dsentence.h"
 #include "listiconmgr.h"
@@ -22,7 +21,7 @@ class TextureClass;
 ////////////////////////////////////////////////////////////////
 //	Typedefs
 ////////////////////////////////////////////////////////////////
-typedef int (CALLBACK *LISTCTRL_SORT_CALLBACK) (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param);
+typedef int (CALLBACK *LISTCTRL_SORT_CALLBACK) (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32_t user_param);
 
 ////////////////////////////////////////////////////////////////
 //
@@ -82,9 +81,9 @@ public:
 	bool				Set_Entry_Text (int index, int col_index, const WCHAR *text);
 	bool				Set_Entry_Int (int index, int col_index, int value);
 	bool				Set_Entry_Color (int index, int col_index, const Vector3 &color);
-	bool				Set_Entry_Data (int index, int col_index, uint32 user_data);
+	bool				Set_Entry_Data (int index, int col_index, uint32_t user_data);
 	bool				Select_Entry (int index, bool onoff);
-	uint32			Get_Entry_Data (int index, int col_index);
+	uint32_t			Get_Entry_Data (int index, int col_index);
 	const WCHAR *	Get_Entry_Text (int index, int col_index);
 	bool				Is_Entry_Selected (int index);
 	bool				Delete_Entry (int index);
@@ -121,7 +120,7 @@ public:
 	//
 	//	Sort support
 	//
-	void				Sort (LISTCTRL_SORT_CALLBACK sort_callback, uint32 user_param);
+	void				Sort (LISTCTRL_SORT_CALLBACK sort_callback, uint32_t user_param);
 	void				Set_Sort_Designator (int col_index, SORT_TYPE type);
 	void				Sort_Alphabetically (int col_index, SORT_TYPE type);
 
@@ -151,7 +150,7 @@ protected:
 	void				On_Set_Cursor (const Vector2 &mouse_pos);
 	void				On_Set_Focus (void);
 	void				On_Kill_Focus (DialogControlClass *focus);
-	bool				On_Key_Down (uint32 key_id, uint32 key_data);
+	bool				On_Key_Down (uint32_t key_id, uint32_t key_data);
 	void				On_Create (void);
 	void				On_Destroy (void);
 	void				Update_Client_Rect (void);	
@@ -164,7 +163,7 @@ protected:
 	void				Update_Scroll_Pos (void);
 	void				Update_Scroll_Bar_Visibility (void);
 	void				Update_Row_Height (int row_index);
-	void				Quick_Sort (int start_index, int end_index, LISTCTRL_SORT_CALLBACK sort_callback, uint32 user_param);
+	void				Quick_Sort (int start_index, int end_index, LISTCTRL_SORT_CALLBACK sort_callback, uint32_t user_param);
 	int				Find_Last_Page_Top_Entry (void);
 	void				Scroll_Page (int direction);
 	int				Find_End_Of_Page (void);
@@ -172,7 +171,7 @@ protected:
 	
 	void				Render_Entry (const RectClass &rect, int col_index, int row_index);
 
-	static int CALLBACK	Default_Sort_Callback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32 user_param);
+	static int CALLBACK	Default_Sort_Callback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32_t user_param);
 
 	////////////////////////////////////////////////////////////////
 	//	Protected constants
@@ -266,8 +265,8 @@ public:
 	//
 	//	User data access
 	//
-	uint32				Get_User_Data (void) const			{ return UserData; }
-	void					Set_User_Data (uint32 user_data)	{ UserData = user_data; }
+	uint32_t				Get_User_Data (void) const			{ return UserData; }
+	void					Set_User_Data (uint32_t user_data)	{ UserData = user_data; }
 
 	//
 	//	Icon support
@@ -284,7 +283,7 @@ private:
 	////////////////////////////////////////////////////////////////
 	WideStringClass						Name;
 	Vector3									Color;
-	uint32									UserData;
+	uint32_t									UserData;
 	DynamicVectorClass<StringClass>	IconList;
 };
 
@@ -349,8 +348,8 @@ public:
 	void					Set_Entry_Color (int index, const Vector3 &color)	{ EntryList[index]->Set_Color (color); }
 	const Vector3 &	Get_Entry_Color (int index) const						{ return EntryList[index]->Get_Color (); }
 
-	void					Set_Entry_Data (int index, uint32 data)				{ EntryList[index]->Set_User_Data (data); }
-	uint32				Get_Entry_Data (int index) const							{ return EntryList[index]->Get_User_Data (); }
+	void					Set_Entry_Data (int index, uint32_t data)				{ EntryList[index]->Set_User_Data (data); }
+	uint32_t				Get_Entry_Data (int index) const							{ return EntryList[index]->Get_User_Data (); }
 
 	int					Get_Icon_Count (int index) const							{ return EntryList[index]->Get_Icon_Count (); }
 	const char *		Get_Icon (int index, int icon_index)					{ return EntryList[index]->Get_Icon (icon_index); }

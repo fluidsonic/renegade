@@ -293,7 +293,7 @@ MovieOptionsMenuClass::On_Frame_Update (void)
 //
 ////////////////////////////////////////////////////////////////
 bool
-MovieOptionsMenuClass::On_Key_Down (uint32 key_id, uint32 key_data)
+MovieOptionsMenuClass::On_Key_Down (uint32_t key_id, uint32_t key_data)
 {
 	bool retval = false;
 	

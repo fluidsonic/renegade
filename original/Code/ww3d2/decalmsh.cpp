@@ -352,7 +352,7 @@ bool RigidDecalMeshClass::Create_Decal
 (
 	DecalGeneratorClass *			generator,
 	const OBBoxClass &				localbox,
-	SimpleDynVecClass<uint32> &	apt,
+	SimpleDynVecClass<uint32_t> &	apt,
 	const DynamicVectorClass<Vector3> * world_vertex_locs
 )
 {
@@ -536,7 +536,7 @@ bool RigidDecalMeshClass::Create_Decal
  * HISTORY:                                                                                    *
  *   1/26/00    gth : Created.                                                                 *
  *=============================================================================================*/
-bool RigidDecalMeshClass::Delete_Decal(uint32 id)
+bool RigidDecalMeshClass::Delete_Decal(uint32_t id)
 {
 	/*
 	** Find the MeshDecal which matches the given id
@@ -806,7 +806,7 @@ int SkinDecalMeshClass::Process_Material_Run(int start_index)
  *   1/31/00    NH : Created.                                                                  *
  *=============================================================================================*/
 bool SkinDecalMeshClass::Create_Decal(DecalGeneratorClass * generator,
-	const OBBoxClass & localbox, SimpleDynVecClass<uint32> & apt,
+	const OBBoxClass & localbox, SimpleDynVecClass<uint32_t> & apt,
 	const DynamicVectorClass<Vector3> * world_vertex_locs)
 {
 	int i;
@@ -911,7 +911,7 @@ bool SkinDecalMeshClass::Create_Decal(DecalGeneratorClass * generator,
  * HISTORY:                                                                                    *
  *   1/31/00    NH : Created.                                                                  *
  *=============================================================================================*/
-bool SkinDecalMeshClass::Delete_Decal(uint32 id)
+bool SkinDecalMeshClass::Delete_Decal(uint32_t id)
 {
 	/*
 	** Find the MeshDecal which matches the given id

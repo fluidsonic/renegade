@@ -33,7 +33,7 @@ public:
 	** affected by the light.
 	*/
 	void					Assign_Vis_IDs(void);
-	void					Merge_Vis_Sector_IDs(uint32 id0,uint32 id1);
+	void					Merge_Vis_Sector_IDs(uint32_t id0,uint32_t id1);
 
 	/*
 	** Save-Load support.  

@@ -1,7 +1,6 @@
 #ifndef __BANDWIDTHGRAPH_H__
 #define __BANDWIDTHGRAPH_H__
 
-#include "bittype.h"
 #include "wwstring.h"
 
 class Render2DTextClass;

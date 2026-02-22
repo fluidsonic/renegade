@@ -107,7 +107,7 @@ LogicalSoundClass::Remove_From_Scene (void)
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 bool
-LogicalSoundClass::Allow_Notify (uint32 timestamp)
+LogicalSoundClass::Allow_Notify (uint32_t timestamp)
 {
 	bool retval = false;
 

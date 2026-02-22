@@ -4,7 +4,6 @@
 #define IOSTRUCT_H
 
 #ifndef BITTYPE_H
-#include "bittype.h"
 #endif
 
 /*
@@ -13,28 +12,28 @@
 */
 struct IOVector2Struct
 {
-	float32		X;
-	float32		Y;
+	float		X;
+	float		Y;
 };
 
 struct IOVector3Struct
 {
-	float32		X;							// X,Y,Z coordinates
-	float32		Y;
-	float32		Z;
+	float		X;							// X,Y,Z coordinates
+	float		Y;
+	float		Z;
 };
 
 struct IOVector4Struct
 {
-	float32		X;
-	float32		Y;
-	float32		Z;
-	float32		W;
+	float		X;
+	float		Y;
+	float		Z;
+	float		W;
 };
 
 struct IOQuaternionStruct
 {
-	float32		Q[4];
+	float		Q[4];
 };
 
 #endif

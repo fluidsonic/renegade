@@ -3,7 +3,6 @@
 #define __NETWORK_OBJECT_FACTORY_MGR_H
 
 #include "always.h"
-#include "bittype.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -22,7 +21,7 @@ public:
 	/////////////////////////////////////////////////////////////////////
 	//	Public methods
 	/////////////////////////////////////////////////////////////////////
-	static NetworkObjectFactoryClass *	Find_Factory (uint32 class_id);	
+	static NetworkObjectFactoryClass *	Find_Factory (uint32_t class_id);	
 	static void									Register_Factory (NetworkObjectFactoryClass *factory);
 	static void									Unregister_Factory (NetworkObjectFactoryClass *factory);
 

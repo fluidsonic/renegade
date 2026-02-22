@@ -13,7 +13,6 @@
 #ifndef ENCODERTYPEENTRY_H
 #define ENCODERTYPEENTRY_H
 
-#include "bittype.h"
 
 class cEncoderTypeEntry
 {

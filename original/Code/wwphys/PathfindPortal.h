@@ -32,8 +32,8 @@ public:
 	//	Public constructors/destructors
 	////////////////////////////////////////////////////////////////////
 	PathfindPortalClass (void)
-		:	m_DestSector1 ((uint16)-1),
-			m_DestSector2 ((uint16)-1),
+		:	m_DestSector1 ((uint16_t)-1),
+			m_DestSector2 ((uint16_t)-1),
 			m_HeapLocation (0),
 			m_ClosedListPtr (NULL),
 			m_ID (0)									{}
@@ -55,22 +55,22 @@ public:
 	PathfindSectorClass *Peek_Dest_Sector (PathfindSectorClass *current_sector);
 	void						Add_Dest_Sector (int sector_index);
 	void						Add_Dest_Sector (PathfindSectorClass *sector);
-	uint16					Get_Dest_Sector1 (void);
-	uint16					Get_Dest_Sector2 (void);
+	uint16_t					Get_Dest_Sector1 (void);
+	uint16_t					Get_Dest_Sector2 (void);
 
 	virtual PathClass::ACTION_ID	Get_Action_Type (void) const { return PathClass::ACTION_NONE; }
 
 	bool						Is_Two_Way_Portal (void) const;
 	virtual bool			Does_Size_Matter (void) const	{ return true; }
 
-	uint32					Get_ID (void) const	{ return m_ID; }
-	void						Set_ID (uint32 id)	{ m_ID = id; }
+	uint32_t					Get_ID (void) const	{ return m_ID; }
+	void						Set_ID (uint32_t id)	{ m_ID = id; }
 
 	//////////////////////////////////////////////////////////////////////
 	//	A-Star list methods
 	//////////////////////////////////////////////////////////////////////
-	uint32					Get_Heap_Location (void) const;
-	void						Set_Heap_Location (uint32 location);
+	uint32_t					Get_Heap_Location (void) const;
+	void						Set_Heap_Location (uint32_t location);
 
 	//////////////////////////////////////////////////////////////////////
 	//	Serialization methods
@@ -93,11 +93,11 @@ private:
 	////////////////////////////////////////////////////////////////////
 	//	Private member data
 	////////////////////////////////////////////////////////////////////
-	uint16 		m_DestSector1;
-	uint16 		m_DestSector2;
+	uint16_t 		m_DestSector1;
+	uint16_t 		m_DestSector2;
 	AABoxClass	m_BoundingBox;	
-	uint32		m_ID;
-	uint32		m_HeapLocation;
+	uint32_t		m_ID;
+	uint32_t		m_HeapLocation;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ inline void
 PathfindPortalClass::Add_Dest_Sector (int sector_index)
 {
 	
-	if (m_DestSector1 == (uint16)-1) {
+	if (m_DestSector1 == (uint16_t)-1) {
 		m_DestSector1 = sector_index;
 	} else {
 		m_DestSector2 = sector_index;
@@ -150,7 +150,7 @@ PathfindPortalClass::Add_Dest_Sector (PathfindSectorClass *sector)
 //////////////////////////////////////////////////////////////////////////
 //	Get_Dest_Sector1
 //////////////////////////////////////////////////////////////////////////
-inline uint16
+inline uint16_t
 PathfindPortalClass::Get_Dest_Sector1 (void)
 {
 	return m_DestSector1;
@@ -159,7 +159,7 @@ PathfindPortalClass::Get_Dest_Sector1 (void)
 //////////////////////////////////////////////////////////////////////////
 //	Get_Dest_Sector2
 //////////////////////////////////////////////////////////////////////////
-inline uint16
+inline uint16_t
 PathfindPortalClass::Get_Dest_Sector2 (void)
 {
 	return m_DestSector2;
@@ -188,13 +188,13 @@ PathfindPortalClass::Peek_Dest_Sector (PathfindSectorClass *current_sector)
 inline bool
 PathfindPortalClass::Is_Two_Way_Portal (void) const
 {
-	return (m_DestSector1 != ((uint16)-1)) && (m_DestSector2 != ((uint16)-1));
+	return (m_DestSector1 != ((uint16_t)-1)) && (m_DestSector2 != ((uint16_t)-1));
 }
 
 //////////////////////////////////////////////////////////////////////////
 //	Get_Heap_Location
 //////////////////////////////////////////////////////////////////////////
-inline uint32
+inline uint32_t
 PathfindPortalClass::Get_Heap_Location (void) const
 {
 	return m_HeapLocation;
@@ -204,7 +204,7 @@ PathfindPortalClass::Get_Heap_Location (void) const
 //	Set_Heap_Location
 //////////////////////////////////////////////////////////////////////////
 inline void
-PathfindPortalClass::Set_Heap_Location (uint32 location)
+PathfindPortalClass::Set_Heap_Location (uint32_t location)
 {
 	m_HeapLocation = location;
 	return ;
@@ -250,8 +250,8 @@ public:
 	//
 	//	Mechanism information (in case we have to interact to do this action)
 	//
-	uint32					Get_Mechanism_ID (void) const		{ return m_MechanismID; }
-	void						Set_Mechanism_ID (uint32 id)		{ m_MechanismID = id; }
+	uint32_t					Get_Mechanism_ID (void) const		{ return m_MechanismID; }
+	void						Set_Mechanism_ID (uint32_t id)		{ m_MechanismID = id; }
 
 	//
 	//	Destination control (where do we end up at the end of this action?)
@@ -297,7 +297,7 @@ private:
 	////////////////////////////////////////////////////////////////////
 	Vector3								m_Destination;
 	PathfindSectorClass *			m_EntranceSector;
-	uint32								m_MechanismID;
+	uint32_t								m_MechanismID;
 	PathClass::ACTION_ID				m_ActionID;
 	PathfindPortalClass *			m_ExitPortal;
 	PathfindActionPortalClass *	m_EnterPortal;	

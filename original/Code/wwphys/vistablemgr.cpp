@@ -326,7 +326,7 @@ void VisTableMgrClass::Delete_All_Vis_Tables(void)
 void VisTableMgrClass::Save(ChunkSaveClass & csave)
 {
 
-	uint32 version = VISMGR_CURRENT_VERSION;
+	uint32_t version = VISMGR_CURRENT_VERSION;
 
 	csave.Begin_Chunk(VISMGR_CHUNK_VARIABLES);
 	WRITE_MICRO_CHUNK(csave,VISMGR_VARIABLE_VERSION,version);
@@ -339,7 +339,7 @@ void VisTableMgrClass::Save(ChunkSaveClass & csave)
 
 		if (VisTables[i] != NULL) {
 			csave.Begin_Chunk(VISMGR_CHUNK_VISTABLEID);
-			uint32 index = i;
+			uint32_t index = i;
 			csave.Write(&index,sizeof(index));
 			csave.End_Chunk();
 
@@ -354,7 +354,7 @@ void VisTableMgrClass::Load(ChunkLoadClass & cload)
 {
 	
 	// read in the variables
-	uint32 version = 0;
+	uint32_t version = 0;
 	cload.Open_Chunk();
 	while (cload.Open_Micro_Chunk()) {
 		switch(cload.Cur_Micro_Chunk_ID()) {
@@ -380,7 +380,7 @@ void VisTableMgrClass::Load(ChunkLoadClass & cload)
 	Cache->Reset(VisSectorCount);
 
 	// read the actual vis tables
-	uint32 id = 0xFFFFFFFF;
+	uint32_t id = 0xFFFFFFFF;
 	
 	while (cload.Open_Chunk()) {
 		switch (cload.Cur_Chunk_ID()) {

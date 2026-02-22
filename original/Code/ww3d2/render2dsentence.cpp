@@ -525,7 +525,7 @@ Render2DSentenceClass::Build_Textures (void)
 //
 ////////////////////////////////////////////////////////////////////////////////////
 void
-Render2DSentenceClass::Draw_Sentence (uint32 color)
+Render2DSentenceClass::Draw_Sentence (uint32_t color)
 {
 	Render2DClass *curr_renderer	= NULL;
 	SurfaceClass *curr_surface		= NULL;
@@ -926,7 +926,7 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 			//	Ensure the surface is locked
 			//
 			if (LockedPtr == NULL) {
-				LockedPtr = (uint16 *)CurSurface->Lock (&LockedStride);
+				LockedPtr = (uint16_t *)CurSurface->Lock (&LockedStride);
 			}
 
 			//
@@ -973,7 +973,7 @@ FontCharsClass::FontCharsClass (void) :
 	FirstUnicodeChar( 0xFFFF ),
 	LastUnicodeChar( 0 ),
 	IsBold (false),
-	BufferList(sizeof(PreAllocatedBufferList)/sizeof(uint16*),PreAllocatedBufferList)
+	BufferList(sizeof(PreAllocatedBufferList)/sizeof(uint16_t*),PreAllocatedBufferList)
 {
 	::memset( ASCIICharArray, 0, sizeof (ASCIICharArray) );
 	return ;
@@ -1063,7 +1063,7 @@ FontCharsClass::Get_Char_Spacing (WCHAR ch)
 //
 ////////////////////////////////////////////////////////////////////////////////////
 void
-FontCharsClass::Blit_Char (WCHAR ch, uint16 *dest_ptr, int dest_stride, int x, int y)
+FontCharsClass::Blit_Char (WCHAR ch, uint16_t *dest_ptr, int dest_stride, int x, int y)
 {
 	const CharDataStruct	* data = Get_Char_Data( ch );
 	if ( data != NULL && data->Width != 0 ) {
@@ -1072,7 +1072,7 @@ FontCharsClass::Blit_Char (WCHAR ch, uint16 *dest_ptr, int dest_stride, int x, i
 		//	Setup the src and destination pointers
 		//
 		int dest_inc		= (dest_stride >> 1);
-		uint16 *src_ptr	= data->Buffer;
+		uint16_t *src_ptr	= data->Buffer;
 		dest_ptr				+= (dest_inc * y) + x;
 
 		//
@@ -1126,7 +1126,7 @@ FontCharsClass::Store_GDI_Char (WCHAR ch)
 	//	Get a pointer to the surface that this character should use
 	//
 	Update_Current_Buffer( char_size.cx );
-	uint16 *curr_buffer = BufferList[BufferList.Count () - 1];
+	uint16_t *curr_buffer = BufferList[BufferList.Count () - 1];
 	curr_buffer += CurrPixelOffset;
 
 	//
@@ -1148,10 +1148,10 @@ FontCharsClass::Store_GDI_Char (WCHAR ch)
 			//
 			//	Get the pixel color at this location
 			//
-			uint8 pixel_value = GDIBitmapBits[index];
+			uint8_t pixel_value = GDIBitmapBits[index];
 			index += 3;
 
-			uint16 pixel_color = 0;
+			uint16_t pixel_color = 0;
 			if (pixel_value != 0) {
 				pixel_color = 0x0FFF;
 			}
@@ -1160,7 +1160,7 @@ FontCharsClass::Store_GDI_Char (WCHAR ch)
 			//	Convert the pixel intensity from 8bit to 4bit and
 			// store it in our buffer
 			//
-			uint8 alpha_value	= ((pixel_value >> 4) & 0xF);
+			uint8_t alpha_value	= ((pixel_value >> 4) & 0xF);
 			*curr_buffer ++	= pixel_color | (alpha_value << 12);
 		}
 	}
@@ -1219,7 +1219,7 @@ FontCharsClass::Update_Current_Buffer (int char_width)
 	//	Do we need to create a new surface?
 	//
 	if (needs_new_buffer) {
-		uint16 *new_buffer = new uint16[CHAR_BUFFER_LEN];
+		uint16_t *new_buffer = new uint16_t[CHAR_BUFFER_LEN];
 		BufferList.Add( new_buffer );
 		CurrPixelOffset = 0;
 	}
@@ -1444,9 +1444,9 @@ FontCharsClass::Grow_Unicode_Array (WCHAR ch)
 		return ;
 	}
 
-	uint16 first_index	= min( FirstUnicodeChar, (uint16)ch );
-	uint16 last_index		= max( LastUnicodeChar, (uint16)ch );
-	uint16 count			= (last_index - first_index) + 1;
+	uint16_t first_index	= min( FirstUnicodeChar, (uint16_t)ch );
+	uint16_t last_index		= max( LastUnicodeChar, (uint16_t)ch );
+	uint16_t count			= (last_index - first_index) + 1;
 
 	//
 	//	Allocate enough memory to hold the new cells

@@ -5,7 +5,6 @@
 
 #include "always.h"
 #include "vector3.h"
-#include "bittype.h"
 #include "w3derr.h"
 
 class MeshModelClass;
@@ -13,7 +12,7 @@ class ChunkLoadClass;
 
 struct RGBStruct 
 {
-	uint8	R,G,B;
+	uint8_t	R,G,B;
 };
 
 struct DamageVertexStruct

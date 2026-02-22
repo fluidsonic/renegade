@@ -3,7 +3,6 @@
 #define PROJECTORMANAGER_H
 
 #include "always.h"
-#include "bittype.h"
 #include "wwstring.h"
 
 class RenderObjClass;
@@ -40,8 +39,8 @@ protected:
 	
 	void											Free(void);
 
-	uint16										Flags;
-	uint16										ProjectorBoneIndex;
+	uint16_t										Flags;
+	uint16_t										ProjectorBoneIndex;
 	TexProjectClass *							Projector;
 
 };

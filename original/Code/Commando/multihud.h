@@ -7,7 +7,6 @@
 
 #include "always.h"
 #include "gamemode.h"
-#include "bittype.h"
 
 class SmartGameObj;
 class Render2DTextClass;

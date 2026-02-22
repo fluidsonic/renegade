@@ -946,7 +946,7 @@ DialogBaseClass::Is_Active (void)
 //
 ////////////////////////////////////////////////////////////////
 bool
-DialogBaseClass::On_Key_Down (uint32 key_id, uint32 key_data)
+DialogBaseClass::On_Key_Down (uint32_t key_id, uint32_t key_data)
 {
 	bool handled = false;
 
@@ -1017,7 +1017,7 @@ DialogBaseClass::On_Key_Down (uint32 key_id, uint32 key_data)
 //
 ////////////////////////////////////////////////////////////////
 bool
-DialogBaseClass::On_Key_Up (uint32 key_id)
+DialogBaseClass::On_Key_Up (uint32_t key_id)
 {
 	bool handled = false;
 
@@ -1043,7 +1043,7 @@ DialogBaseClass::On_Key_Up (uint32 key_id)
 //
 ////////////////////////////////////////////////////////////////
 void
-DialogBaseClass::On_Unicode_Char(uint16 unicode)
+DialogBaseClass::On_Unicode_Char(uint16_t unicode)
 {
 	Add_Ref ();
 

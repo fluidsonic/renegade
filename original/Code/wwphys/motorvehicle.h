@@ -123,7 +123,7 @@ public:
 	virtual ~MotorVehicleDefClass(void);
 	
 	// From PersistClass
-	virtual uint32								Get_Class_ID (void) const;
+	virtual uint32_t								Get_Class_ID (void) const;
 
 	// From PhysDefClass
 	virtual const char *						Get_Type_Name(void)			{ return "MotorVehicleDef"; }

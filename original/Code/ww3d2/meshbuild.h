@@ -5,7 +5,6 @@
 #include	"always.h"
 #include "vector2.h"
 #include "vector3.h"
-#include "bittype.h"
 
 #include <assert.h>
 
@@ -122,12 +121,12 @@ public:
 		int						Attributes;										// user-set attributes
 		int						TextureIndex[MAX_PASSES][MAX_STAGES];	// texture to use for each pass
 		int						ShaderIndex[MAX_PASSES];					// shader for each pass
-		uint32					SurfaceType;									// surface type identifier
+		uint32_t					SurfaceType;									// surface type identifier
 
 		int						AddIndex;			// set by builder: index of addition
 		int						VertIdx[3];			// set by builder: "optimized" vertex indices
 		Vector3					Normal;		 		// set by builder: Face normal
-		float32					Dist;			 		// set by builder: Plane distance
+		float					Dist;			 		// set by builder: Plane distance
 	
 		void						Compute_Plane(void);
 		bool						operator != (const FaceClass & that)		{ return !(*this == that); }

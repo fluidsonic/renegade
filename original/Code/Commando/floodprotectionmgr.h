@@ -3,7 +3,6 @@
 #define __FLOODPROTECTIONMGR_H
 
 #include "widestring.h"
-#include "bittype.h"
 #include "simplevec.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -43,7 +42,7 @@ private:
 	typedef struct
 	{
 		int		text_len;
-		uint32	time;
+		uint32_t	time;
 	} FLOOD_ENTRY;
 	
 

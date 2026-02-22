@@ -531,7 +531,7 @@ public:
 	TexProjListIterator	Get_Static_Projector_Iterator(void);
 	TexProjListIterator	Get_Dynamic_Projector_Iterator(void);
 
-	StaticPhysClass *		Get_Static_Object_By_ID(uint32 id);
+	StaticPhysClass *		Get_Static_Object_By_ID(uint32_t id);
 
 	/*
 	** Dirty Cull List
@@ -738,7 +738,7 @@ public:
 	** pointer to your previous node_id, the lookup will be faster and this variable will be modified
 	** with the updated node id.  The first time this method is called, initialize the node_id to zero.
 	*/
-	uint32						Get_Dynamic_Object_Vis_ID(const AABoxClass & obj_bounds,int * node_id = NULL);
+	uint32_t						Get_Dynamic_Object_Vis_ID(const AABoxClass & obj_bounds,int * node_id = NULL);
 	void							Debug_Display_Dynamic_Vis_Node(int node_id);
 
 	/*
@@ -843,7 +843,7 @@ public:
 														bool					apply_to_translucent_polys = false,
 														PhysClass *			only_this_obj = NULL	);
 
-	bool							Remove_Decal(uint32 id);
+	bool							Remove_Decal(uint32_t id);
 
 	/*
 	** Shatter system
@@ -975,8 +975,8 @@ protected:
 	virtual void				Internal_Vis_Reset(void);
 	CameraClass *				Get_Vis_Camera(void);
 	void							Vis_Render_And_Scan(VisRenderContextClass & context,VisSampleClass & sample);
-	void							Merge_Vis_Sector_IDs(uint32 id0,uint32 id1);
-	void							Merge_Vis_Object_IDs(uint32 id0,uint32 id1);
+	void							Merge_Vis_Sector_IDs(uint32_t id0,uint32_t id1);
+	void							Merge_Vis_Object_IDs(uint32_t id0,uint32_t id1);
 
 	/*
 	** Internal texture-projection functions

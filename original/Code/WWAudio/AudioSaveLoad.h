@@ -4,7 +4,6 @@
 
 #include "saveloadsubsystem.h"
 #include "vector.h"
-#include "bittype.h"
 
 // Singleton instances
 extern class StaticAudioSaveLoadClass _StaticAudioSaveLoadSubsystem;
@@ -30,7 +29,7 @@ public:
 	//////////////////////////////////////////////////////////////
 	
 	// From SaveLoadSubSystemClass
-	virtual uint32				Chunk_ID (void) const;
+	virtual uint32_t				Chunk_ID (void) const;
 	
 protected:
 
@@ -63,7 +62,7 @@ public:
 	//////////////////////////////////////////////////////////////
 	
 	// From SaveLoadSubSystemClass
-	virtual uint32				Chunk_ID (void) const;
+	virtual uint32_t				Chunk_ID (void) const;
 	
 protected:
 

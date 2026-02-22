@@ -8,7 +8,6 @@
 #include "vector3.h"
 #include "vector3i.h"
 #include "aaplane.h"
-#include "bittype.h"
 #include "colmath.h"
 #include "aabtreebuilder.h"
 #include "obbox.h"
@@ -54,8 +53,8 @@ public:
 	int						Get_Node_Count(void) { return NodeCount; }
 	int						Get_Poly_Count(void) { return PolyCount; }
 	int						Compute_Ram_Size(void);
-	void						Generate_APT(const OBBoxClass & box,SimpleDynVecClass<uint32> & apt);
-	void						Generate_APT(const OBBoxClass & box,const Vector3 & viewdir,SimpleDynVecClass<uint32> & apt);
+	void						Generate_APT(const OBBoxClass & box,SimpleDynVecClass<uint32_t> & apt);
+	void						Generate_APT(const OBBoxClass & box,const Vector3 & viewdir,SimpleDynVecClass<uint32_t> & apt);
 
 	bool						Cast_Ray(RayCollisionTestClass & raytest);
 	int						Cast_Semi_Infinite_Axis_Aligned_Ray(const Vector3 & start_point,
@@ -90,8 +89,8 @@ private:
 		Vector3				Min;
 		Vector3				Max;
 		
-		uint32				FrontOrPoly0;
-		uint32				BackOrPolyCount;
+		uint32_t				FrontOrPoly0;
+		uint32_t				BackOrPolyCount;
 
 		// accessors
 		inline bool			Is_Leaf(void);				
@@ -102,10 +101,10 @@ private:
 		inline int			Get_Poly_Count(void);		// returns polygon count (only call on LEAFs)
 
 		// initialization
-		inline void			Set_Front_Child(uint32 index);
-		inline void			Set_Back_Child(uint32 index);
-		inline void			Set_Poly0(uint32 index);
-		inline void			Set_Poly_Count(uint32 count);
+		inline void			Set_Front_Child(uint32_t index);
+		inline void			Set_Back_Child(uint32_t index);
+		inline void			Set_Poly0(uint32_t index);
+		inline void			Set_Poly_Count(uint32_t count);
 	};
 
 	/*
@@ -114,12 +113,12 @@ private:
 	*/
 	struct OBBoxAPTContextStruct
 	{
-		OBBoxAPTContextStruct(const OBBoxClass & box,SimpleDynVecClass<uint32> & apt) : 
+		OBBoxAPTContextStruct(const OBBoxClass & box,SimpleDynVecClass<uint32_t> & apt) : 
 			Box(box), APT(apt)
 		{ }
 
 		OBBoxClass							Box;
-		SimpleDynVecClass<uint32> &	APT;
+		SimpleDynVecClass<uint32_t> &	APT;
 	};
 
 	/**
@@ -128,7 +127,7 @@ private:
 	*/
 	struct OBBoxRayAPTContextStruct
 	{
-		OBBoxRayAPTContextStruct(const OBBoxClass & box,const Vector3 & viewdir,SimpleDynVecClass<uint32> & apt) :
+		OBBoxRayAPTContextStruct(const OBBoxClass & box,const Vector3 & viewdir,SimpleDynVecClass<uint32_t> & apt) :
 			Box(box),
 			ViewVector(viewdir),
 			APT(apt)
@@ -136,7 +135,7 @@ private:
 
 		OBBoxClass							Box;
 		Vector3								ViewVector;
-		SimpleDynVecClass<uint32> &	APT;
+		SimpleDynVecClass<uint32_t> &	APT;
 	};
 
 	void						Generate_OBBox_APT_Recursive(CullNodeStruct * node,OBBoxAPTContextStruct & context);
@@ -161,7 +160,7 @@ private:
 	int						NodeCount;			// number of nodes in the tree
 	CullNodeStruct *		Nodes;				// array of nodes
 	int						PolyCount;			// number of polygons in the parent mesh (and the number of indexes in our array)
-	uint32 *					PolyIndices;		// linear array of polygon indices, nodes index into this array
+	uint32_t *					PolyIndices;		// linear array of polygon indices, nodes index into this array
 	MeshGeometryClass *	Mesh;					// pointer to the parent mesh (non-ref-counted; we are a member of this mesh)
 
 	friend class MeshClass;
@@ -264,22 +263,22 @@ inline int AABTreeClass::CullNodeStruct::Get_Poly_Count(void)
 	return BackOrPolyCount;
 }
 
-inline void AABTreeClass::CullNodeStruct::Set_Front_Child(uint32 index)
+inline void AABTreeClass::CullNodeStruct::Set_Front_Child(uint32_t index)
 {
 	FrontOrPoly0 = index;
 }
 
-inline void AABTreeClass::CullNodeStruct::Set_Back_Child(uint32 index)
+inline void AABTreeClass::CullNodeStruct::Set_Back_Child(uint32_t index)
 {
 	BackOrPolyCount = index;
 }
 
-inline void AABTreeClass::CullNodeStruct::Set_Poly0(uint32 index)
+inline void AABTreeClass::CullNodeStruct::Set_Poly0(uint32_t index)
 {
 	FrontOrPoly0 = (index | AABTREE_LEAF_FLAG);
 }
 
-inline void AABTreeClass::CullNodeStruct::Set_Poly_Count(uint32 count)
+inline void AABTreeClass::CullNodeStruct::Set_Poly_Count(uint32_t count)
 {
 	BackOrPolyCount = count;
 }

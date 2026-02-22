@@ -3,7 +3,6 @@
 #define VISRENDERCONTEXT_H
 
 #include "rinfo.h"
-#include "bittype.h"
 #include "camera.h"
 #include "vistable.h"
 #include "vissample.h"
@@ -26,7 +25,7 @@ public:
 	VisRenderContextClass(CameraClass & cam,VisTableClass & vtab);
 	~VisRenderContextClass(void);
 
-	void						Set_Vis_ID(uint32 id);
+	void						Set_Vis_ID(uint32_t id);
 	void						Set_Resolution(int resx,int resy);
 	void						Get_Resolution(int * set_resx,int * set_resy);
 

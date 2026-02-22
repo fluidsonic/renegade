@@ -6,7 +6,6 @@
 #define PLAYERMANAGER_H
 
 #include "vector3.h"
-#include "bittype.h"
 #include "slist.h"
 #include "player.h"
 #include "wwstring.h"

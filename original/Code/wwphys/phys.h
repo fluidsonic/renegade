@@ -308,8 +308,8 @@ public:
 	/*
 	** Instance ID related methods
 	*/
-	uint32							Get_ID(void) const											{ return InstanceID; }
-	void								Set_ID(uint32 id)												{ InstanceID = id; }
+	uint32_t							Get_ID(void) const											{ return InstanceID; }
+	void								Set_ID(uint32_t id)												{ InstanceID = id; }
 
 	/*
 	** Vis Object ID.  Every phys object can store a vis object id.  Static objects will
@@ -601,14 +601,14 @@ protected:
 	/*
 	** Optional instance identifier (unique if non-zero)
 	*/
-	uint32							InstanceID;
+	uint32_t							InstanceID;
 
 	/*
 	** Vis Object ID.  Every phys object can store a vis object id.  Static objects will
 	** have constant ID's assigned by the vis generation process, dynamic objects will
 	** update their id based on their current location.
 	*/
-	uint32							VisObjectID;
+	uint32_t							VisObjectID;
 
 	/*
 	** Observer object 

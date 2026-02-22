@@ -419,7 +419,7 @@ class	BackgroundMgrClass : public SaveLoadSubSystemClass, public NetworkObjectCl
 		 BackgroundMgrClass();
 		~BackgroundMgrClass() {}
 
-		uint32		Chunk_ID() const	{return (CHUNKID_BACKGROUND_MGR);}
+		uint32_t		Chunk_ID() const	{return (CHUNKID_BACKGROUND_MGR);}
 		const char *Name() const		{return ("BackgroundMgrClass");}
 		void			Delete (void)		{}
 		virtual void Set_Delete_Pending (void) {};

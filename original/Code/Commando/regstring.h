@@ -12,7 +12,6 @@
 #ifndef REGSTRING_H
 #define REGSTRING_H
 
-#include "bittype.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryString

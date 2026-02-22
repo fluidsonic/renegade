@@ -40,8 +40,8 @@ public:
 	PhysClass *			Peek_Projection_Object(void) const;
 	virtual void *		Get_Projection_Object_ID(void) const			{ return ProjectionObject; }
 
-	void					Set_Light_Source_ID(uint32 id);
-	uint32				Get_Light_Source_ID(void);
+	void					Set_Light_Source_ID(uint32_t id);
+	uint32_t				Get_Light_Source_ID(void);
 
 	void					Set_Light_Vector(const Vector3 & vector);
 	void					Get_Light_Vector(Vector3 * set_vector);
@@ -57,7 +57,7 @@ public:
 protected:
 
 	PhysClass *			ProjectionObject;			// Object to be projected, not ref-counted!
-	uint32				LightSourceID;				// ID of the light source (just its pointer,used for matching)
+	uint32_t				LightSourceID;				// ID of the light source (just its pointer,used for matching)
 	Vector3				LightVector;				//	copy of the light vector (postion or direction)
 };
 

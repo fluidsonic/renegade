@@ -381,7 +381,7 @@ public:
 	virtual ~AudibleSoundDefinitionClass (void) { }
 
 	// From DefinitionClass
-	virtual uint32								Get_Class_ID (void) const;
+	virtual uint32_t								Get_Class_ID (void) const;
 
 	// From PersistClass
 	virtual const PersistFactoryClass &	Get_Factory (void) const;

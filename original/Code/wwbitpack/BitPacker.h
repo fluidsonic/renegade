@@ -10,7 +10,6 @@
 #define BITPACKER_H
 
 #include "always.h"
-#include "bittype.h"
 
 #pragma warning(disable:4514)
 

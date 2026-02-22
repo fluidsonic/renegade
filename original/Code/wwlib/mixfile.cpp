@@ -4,7 +4,6 @@
 #include "realcrc.h"
 #include "rawfile.h"
 #include "win.h"
-#include "bittype.h"
 #include <stdint.h>
 
 /*
@@ -143,7 +142,7 @@ bool	MixFileFactoryClass::Build_Filename_List (DynamicVectorClass<StringClass> &
 				//
 				//	Get the length of the filename
 				//
-				uint8 name_len = 0;
+				uint8_t name_len = 0;
 				if (file->Read( &name_len, sizeof( name_len ) ) == sizeof( name_len )) {
 
 					//

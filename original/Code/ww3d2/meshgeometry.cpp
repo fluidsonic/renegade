@@ -181,7 +181,7 @@ void MeshGeometryClass::Reset_Geometry(int polycount,int vertcount)
 	// allocate new geometry arrays
 	if ((polycount != 0) && (vertcount != 0)) {
 		Poly = NEW_REF(ShareBufferClass<TriIndex>,(PolyCount));
-		PolySurfaceType = NEW_REF(ShareBufferClass<uint8>,(PolyCount));
+		PolySurfaceType = NEW_REF(ShareBufferClass<uint8_t>,(PolyCount));
 		Vertex = NEW_REF(ShareBufferClass<Vector3>,(VertexCount));
 
 		Poly->Clear();
@@ -331,7 +331,7 @@ void MeshGeometryClass::Get_Bounding_Sphere(SphereClass * set_sphere)
  * HISTORY:                                                                                    *
  *   5/10/2001  gth : Created.                                                                 *
  *=============================================================================================*/
-void MeshGeometryClass::Generate_Rigid_APT(const Vector3 & view_dir, SimpleDynVecClass<uint32> & apt)
+void MeshGeometryClass::Generate_Rigid_APT(const Vector3 & view_dir, SimpleDynVecClass<uint32_t> & apt)
 {
 	const Vector3 * loc = Get_Vertex_Array();
 	const Vector4 * norms = Get_Plane_Array();
@@ -365,7 +365,7 @@ void MeshGeometryClass::Generate_Rigid_APT(const Vector3 & view_dir, SimpleDynVe
  * HISTORY:                                                                                    *
  *   11/9/2000  gth : Created.                                                                 *
  *=============================================================================================*/
-void MeshGeometryClass::Generate_Rigid_APT(const OBBoxClass & local_box, SimpleDynVecClass<uint32> & apt)
+void MeshGeometryClass::Generate_Rigid_APT(const OBBoxClass & local_box, SimpleDynVecClass<uint32_t> & apt)
 {
 	if (CullTree != NULL) {
 		CullTree->Generate_APT(local_box, apt);
@@ -403,7 +403,7 @@ void MeshGeometryClass::Generate_Rigid_APT(const OBBoxClass & local_box, SimpleD
  * HISTORY:                                                                                    *
  *   5/10/2001  gth : Created.                                                                 *
  *=============================================================================================*/
-void MeshGeometryClass::Generate_Rigid_APT(const OBBoxClass & local_box,const Vector3 & viewdir,SimpleDynVecClass<uint32> & apt)
+void MeshGeometryClass::Generate_Rigid_APT(const OBBoxClass & local_box,const Vector3 & viewdir,SimpleDynVecClass<uint32_t> & apt)
 {
 	if (CullTree != NULL) {
 		CullTree->Generate_APT(local_box, viewdir,apt);
@@ -445,7 +445,7 @@ void MeshGeometryClass::Generate_Rigid_APT(const OBBoxClass & local_box,const Ve
  * HISTORY:                                                                                    *
  *   11/9/2000  gth : Created.                                                                 *
  *=============================================================================================*/
-void MeshGeometryClass::Generate_Skin_APT(const OBBoxClass & world_box, SimpleDynVecClass<uint32> & apt, const Vector3 *world_vertex_locs)
+void MeshGeometryClass::Generate_Skin_APT(const OBBoxClass & world_box, SimpleDynVecClass<uint32_t> & apt, const Vector3 *world_vertex_locs)
 {
 
 	// Beware, this is gonna be expensive!
@@ -1165,7 +1165,7 @@ void MeshGeometryClass::Compute_Vertex_Normals(Vector3 * vnorm)
 
 	const Vector4 * peq = Get_Plane_Array();
 	TriIndex * poly = Poly->Get_Array();
-	const uint32 * shadeIx	= Get_Vertex_Shade_Index_Array(false);
+	const uint32_t * shadeIx	= Get_Vertex_Shade_Index_Array(false);
 
 	// Two cases, with or without vertex shade indices.  The vertex shade indices
 	// implicitly contain the smoothing groups information from the original mesh.
@@ -1518,7 +1518,7 @@ WW3DErrorType MeshGeometryClass::Load_W3D(ChunkLoadClass & cload)
 	*/
 	if ((header.Version < W3D_MAKE_VERSION(3,0)) && (Get_Flag(SKIN))) {
 
-		uint16 * links = get_bone_links();
+		uint16_t * links = get_bone_links();
 		
 		for (int bi = 0; bi < Get_Vertex_Count(); bi++) {
 			links[bi] += 1;
@@ -1696,7 +1696,7 @@ WW3DErrorType MeshGeometryClass::read_triangles(ChunkLoadClass & cload)
 	TriIndex * vi = get_polys();
 	Set_Flag(DIRTY_PLANES,false);
 	Vector4 * peq = get_planes();
-	uint8 * surface_types = Get_Poly_Surface_Type_Array();
+	uint8_t * surface_types = Get_Poly_Surface_Type_Array();
 
 	// read in each polygon one by one
 	for (int i=0; i<Get_Polygon_Count(); i++) {
@@ -1717,7 +1717,7 @@ WW3DErrorType MeshGeometryClass::read_triangles(ChunkLoadClass & cload)
 		peq[i].W = -tri.Dist;
 
 		// set the surface type
-		surface_types[i] = (uint8)(tri.Attributes);
+		surface_types[i] = (uint8_t)(tri.Attributes);
 	}
 
 	return WW3D_ERROR_OK;	
@@ -1776,7 +1776,7 @@ WW3DErrorType MeshGeometryClass::read_user_text(ChunkLoadClass & cload)
 WW3DErrorType MeshGeometryClass::read_vertex_influences(ChunkLoadClass & cload)
 {
 	W3dVertInfStruct vinf;
-	uint16 * links = get_bone_links(true);
+	uint16_t * links = get_bone_links(true);
 
 	for (int i=0; i<Get_Vertex_Count(); i++) {
 
@@ -1804,11 +1804,11 @@ WW3DErrorType MeshGeometryClass::read_vertex_influences(ChunkLoadClass & cload)
  *=============================================================================================*/
 WW3DErrorType MeshGeometryClass::read_vertex_shade_indices(ChunkLoadClass & cload)
 {
-	uint32 * shade_index = get_shade_indices(true);
-	uint32 si;
+	uint32_t * shade_index = get_shade_indices(true);
+	uint32_t si;
 
 	for (int i=0; i<Get_Vertex_Count(); i++) {
-		if (cload.Read(&si,sizeof(uint32)) != sizeof(uint32)) {
+		if (cload.Read(&si,sizeof(uint32_t)) != sizeof(uint32_t)) {
 			return WW3D_ERROR_LOAD_FAILED;
 		}
 		shade_index[i] = si;

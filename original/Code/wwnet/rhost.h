@@ -15,7 +15,6 @@
 
 #include "netstats.h"
 #include "wwpacket.h"
-#include "bittype.h"
 #include "slist.h"
 
 #include "win.h"

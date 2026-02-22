@@ -18,7 +18,6 @@
 // Add anything you need to monitor to the Render method.
 //
 
-#include "bittype.h"
 
 class Render2DTextClass;
 class Font3DInstanceClass;

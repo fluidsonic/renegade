@@ -503,7 +503,7 @@ bool SegmentedLineClass::Cast_Ray(RayCollisionTestClass & raytest)
 	//	Check each line segment against the ray
 	//
 	float fraction = 1.0F;
-	for (uint32 index = 1; index < (unsigned int)PointLocations.Count(); index ++) {
+	for (uint32_t index = 1; index < (unsigned int)PointLocations.Count(); index ++) {
 		Vector3 curr_start	= Transform * PointLocations[index-1];
 		Vector3 curr_end		= Transform * PointLocations[index];
 		LineSegClass line_seg (curr_start, curr_end);

@@ -228,7 +228,7 @@ void MeshModelClass::Shadow_Render(SpecialRenderInfoClass & rinfo,const Matrix3D
 void MeshModelClass::get_deformed_vertices(Vector3 *dst_vert,const HTreeClass * htree)
 {
 	Vector3 * src_vert = Vertex->Get_Array();
-	uint16 * bonelink = VertexBoneLink->Get_Array();
+	uint16_t * bonelink = VertexBoneLink->Get_Array();
 	for (int vi = 0; vi < Get_Vertex_Count(); vi++) {
 		const Matrix3D & tm = htree->Get_Transform(bonelink[vi]);
 		Matrix3D::Transform_Vector(tm, src_vert[vi], &(dst_vert[vi]));
@@ -246,7 +246,7 @@ void MeshModelClass::get_deformed_vertices(Vector3 *dst_vert, Vector3 *dst_norm,
 #else
 	Vector3 * src_norm = VertexNorm->Get_Array();
 #endif
-	uint16 * bonelink = VertexBoneLink->Get_Array();
+	uint16_t * bonelink = VertexBoneLink->Get_Array();
 
 	for (vi = 0; vi < vertex_count;) {
 		const Matrix3D & tm = htree->Get_Transform(bonelink[vi]);
@@ -285,7 +285,7 @@ void MeshModelClass::compose_deformed_vertex_buffer(
 #else
 	Vector3 * src_norm = VertexNorm->Get_Array();
 #endif
-	uint16 * bonelink = VertexBoneLink->Get_Array();
+	uint16_t * bonelink = VertexBoneLink->Get_Array();
 
 	for (vi = 0; vi < vertex_count;) {
 		const Matrix3D & tm = htree->Get_Transform(bonelink[vi]);
@@ -333,7 +333,7 @@ void MeshModelClass::get_deformed_screenspace_vertices(Vector4 *dst_vert,const R
 	int vertex_count=Get_Vertex_Count();
 	
 	if (Get_Flag(SKIN) && VertexBoneLink && htree) {
-		uint16 * bonelink = VertexBoneLink->Get_Array();
+		uint16_t * bonelink = VertexBoneLink->Get_Array();
 		for (int vi = 0; vi < vertex_count;) {
 			int idx=bonelink[vi];
 

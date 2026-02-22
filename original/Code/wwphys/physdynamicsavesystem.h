@@ -15,7 +15,7 @@ class PhysDynamicSaveSystemClass : public SaveLoadSubSystemClass
 {
 public:
 	
-	virtual uint32				Chunk_ID (void) const;
+	virtual uint32_t				Chunk_ID (void) const;
 
 protected:
 

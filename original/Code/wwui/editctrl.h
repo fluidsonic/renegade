@@ -5,7 +5,6 @@
 #include "dialogcontrol.h"
 #include "vector3.h"
 #include "render2dsentence.h"
-#include "bittype.h"
 #include "IMEManager.h"
 #include "IMECandidateCtrl.h"
 #include "ToolTip.h"
@@ -75,7 +74,7 @@ protected:
 	void					On_Set_Cursor (const Vector2 &mouse_pos);
 	void					On_Set_Focus (void);
 	void					On_Kill_Focus (DialogControlClass *focus);
-	bool					On_Key_Down (uint32 key_id, uint32 key_data);
+	bool					On_Key_Down (uint32_t key_id, uint32_t key_data);
 	void					On_Create (void);
 	void					Update_Client_Rect (void);
 
@@ -114,8 +113,8 @@ protected:
 	Render2DClass				CaretRenderer;
 	Render2DClass				HilightRenderer;
 	bool							IsCaretDisplayed;
-	uint32						CaretBlinkDelay;
-	uint32						LastCaretBlink;
+	uint32_t						CaretBlinkDelay;
+	uint32_t						LastCaretBlink;
 	int							CaretPos;
 	int							ScrollPos;
 	int NumChars;

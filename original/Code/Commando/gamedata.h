@@ -6,7 +6,6 @@
 #endif
 
 #include "teammanager.h"
-#include "bittype.h"
 #include "boolean.h"
 #include "netinterface.h"
 #include "wwstring.h"

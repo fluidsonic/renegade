@@ -15,7 +15,6 @@
 
 #pragma warning(disable:4514)
 
-#include "bittype.h"
 
 #ifndef NULL
 #define NULL 0L

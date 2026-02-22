@@ -9,7 +9,6 @@
 #include "sharebuf.h"
 #include "shader.h"
 #include "vertmaterial.h"
-#include "bittype.h"
 #include "colmath.h"
 #include "simplevec.h"
 #include "wwstring.h"
@@ -158,7 +157,7 @@ public:
 	//	Decal interface
 	/////////////////////////////////////////////////////////////////////////////////////
 	void							Create_Decal(DecalGeneratorClass * generator, MeshClass * parent);
-	void							Delete_Decal(uint32 decal_id);
+	void							Delete_Decal(uint32_t decal_id);
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	//	Alternate Material Description Interface

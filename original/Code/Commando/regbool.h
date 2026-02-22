@@ -12,7 +12,6 @@
 #ifndef REGBOOL_H
 #define REGBOOL_H
 
-#include "bittype.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryBool

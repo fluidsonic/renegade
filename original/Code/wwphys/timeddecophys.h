@@ -51,7 +51,7 @@ public:
 	TimedDecorationPhysDefClass(void);
 	
 	// From DefinitionClass
-	virtual uint32								Get_Class_ID (void) const;
+	virtual uint32_t								Get_Class_ID (void) const;
 	virtual PersistClass *					Create(void) const;
 
 	// From PhysDefClass

@@ -26,11 +26,11 @@ class BitCounterClass
 public:
 	BitCounterClass(void);
 	
-	int				Count_True_Bits(uint8 byte)							{ return TrueBits[byte]; }
+	int				Count_True_Bits(uint8_t byte)							{ return TrueBits[byte]; }
 
 protected:
 
-	uint8				TrueBits[256];
+	uint8_t				TrueBits[256];
 };
 
 BitCounterClass::BitCounterClass(void)
@@ -112,13 +112,13 @@ void VisTableClass::Alloc_Buffer(int bitcount)
 	}
 	BitCount = bitcount;
 	int count = ((bitcount + 31) / 32);
-	Buffer = new uint32[count];
-	memset(Buffer,0,count * sizeof(uint32));
+	Buffer = new uint32_t[count];
+	memset(Buffer,0,count * sizeof(uint32_t));
 }
 
-uint8 * VisTableClass::Get_Bytes(void) const
+uint8_t * VisTableClass::Get_Bytes(void) const
 {
-	return (uint8*)Buffer;
+	return (uint8_t*)Buffer;
 }
 
 int VisTableClass::Get_Byte_Count(void) const
@@ -132,7 +132,7 @@ int VisTableClass::Get_Byte_Count(void) const
 	return Get_Long_Count() * 4; //(BitCount + 7) / 8;
 }
 
-uint32 * VisTableClass::Get_Longs(void) const
+uint32_t * VisTableClass::Get_Longs(void) const
 {
 	return Buffer;
 }
@@ -155,7 +155,7 @@ void VisTableClass::Set_All(void)
 	** Set the buffer to FF's
 	*/
 	if (Buffer != NULL) {
-		memset((uint8*)Buffer,0xFF,Get_Byte_Count()); 
+		memset((uint8_t*)Buffer,0xFF,Get_Byte_Count()); 
 	}
 	
 	/*
@@ -238,8 +238,8 @@ int VisTableClass::Count_Differences(const VisTableClass & that)
 
 	int counter = 0;
 	int byte_count = Get_Byte_Count();
-	uint8 * my_bytes = Get_Bytes();
-	uint8 * his_bytes = that.Get_Bytes();
+	uint8_t * my_bytes = Get_Bytes();
+	uint8_t * his_bytes = that.Get_Bytes();
 
 	for (int i=0; i<byte_count; i++) {
 		counter += _TheBitCounter.Count_True_Bits(my_bytes[i] ^ his_bytes[i]);
@@ -251,7 +251,7 @@ int VisTableClass::Count_True_Bits(void)
 {
 	int counter = 0;
 	int byte_count = Get_Byte_Count();
-	uint8 * my_bytes = Get_Bytes();
+	uint8_t * my_bytes = Get_Bytes();
 
 	for (int i=0; i<byte_count; i++) {
 		counter += _TheBitCounter.Count_True_Bits(my_bytes[i]);
@@ -273,8 +273,8 @@ float VisTableClass::Match_Fraction(const VisTableClass & that)
 	int or_counter = 0;
 
 	int byte_count = Get_Byte_Count();
-	uint8 * my_bytes = Get_Bytes();
-	uint8 * his_bytes = that.Get_Bytes();
+	uint8_t * my_bytes = Get_Bytes();
+	uint8_t * his_bytes = that.Get_Bytes();
 
 	for (int i=0; i<byte_count; i++) {
 		xor_counter += _TheBitCounter.Count_True_Bits(my_bytes[i] ^ his_bytes[i]);
@@ -332,12 +332,12 @@ const CompressedVisTableClass &CompressedVisTableClass::operator= (const Compres
 	}
 
 	BufferSize = that.BufferSize;
-	Buffer = new uint8[BufferSize];
-	::memcpy (Buffer, that.Buffer, sizeof(uint8)*BufferSize);
+	Buffer = new uint8_t[BufferSize];
+	::memcpy (Buffer, that.Buffer, sizeof(uint8_t)*BufferSize);
 	return *this;
 }
 
-uint8 * CompressedVisTableClass::Get_Bytes(void)
+uint8_t * CompressedVisTableClass::Get_Bytes(void)
 {
 	return Buffer;
 }
@@ -363,7 +363,7 @@ void CompressedVisTableClass::Load(ChunkLoadClass & cload)
 	cload.Read(&BufferSize,sizeof(BufferSize));
 	cload.Close_Chunk();
 
-	Buffer = new uint8[BufferSize];
+	Buffer = new uint8_t[BufferSize];
 	
 	/*
 	** Load the compressed visibility bits.  At one point in the past,
@@ -404,7 +404,7 @@ void CompressedVisTableClass::Load(ChunkLoadClass & cload)
 
 void CompressedVisTableClass::Save(ChunkSaveClass & csave)
 {
-	uint32 bytecount = BufferSize;
+	uint32_t bytecount = BufferSize;
 	csave.Begin_Chunk(VISTABLE_CHUNK_BYTECOUNT);
 	csave.Write(&bytecount,sizeof(bytecount));
 	csave.End_Chunk();
@@ -430,14 +430,14 @@ void CompressedVisTableClass::Load (void* hfile)
 		/*
 		** Read the buffer size
 		*/
-		uint32 dwbytes_read = 0L;
+		uint32_t dwbytes_read = 0L;
 		::ReadFile ((HANDLE)hfile, &BufferSize, sizeof (BufferSize), &dwbytes_read, NULL);
 
 		/*
 		** Read the buffer
 		*/
-		Buffer = new uint8[BufferSize];
-		::ReadFile ((HANDLE)hfile, Buffer, sizeof (uint8) * BufferSize, &dwbytes_read, NULL);
+		Buffer = new uint8_t[BufferSize];
+		::ReadFile ((HANDLE)hfile, Buffer, sizeof (uint8_t) * BufferSize, &dwbytes_read, NULL);
 	}
 	
 	return;
@@ -450,37 +450,37 @@ void CompressedVisTableClass::Save (void* hfile)
 		/*
 		** Write the buffer size
 		*/
-		uint32 dwbytes_written = 0L;
+		uint32_t dwbytes_written = 0L;
 		::WriteFile ((HANDLE)hfile, &BufferSize, sizeof (BufferSize), &dwbytes_written, NULL);
 
 		/*
 		** Write the buffer
 		*/
-		::WriteFile ((HANDLE)hfile, Buffer, sizeof (uint8) * BufferSize, &dwbytes_written, NULL);		
+		::WriteFile ((HANDLE)hfile, Buffer, sizeof (uint8_t) * BufferSize, &dwbytes_written, NULL);		
 	}
 	
 	return;
 }
 
-void CompressedVisTableClass::Compress(uint8 * src_buffer,int src_size)
+void CompressedVisTableClass::Compress(uint8_t * src_buffer,int src_size)
 {
 	if (Buffer != NULL) {
 		delete[] Buffer;
 		Buffer = NULL;
 	}
 	
-	uint8 * comp_buffer = new uint8[LZO_BUFFER_SIZE(src_size)];
+	uint8_t * comp_buffer = new uint8_t[LZO_BUFFER_SIZE(src_size)];
 	lzo_uint comp_size;
 	int lzocode = LZOCompressor::Compress(src_buffer,src_size,comp_buffer,&comp_size);
 
 	BufferSize = comp_size;
-	Buffer = new uint8[BufferSize];
+	Buffer = new uint8_t[BufferSize];
 	memcpy(Buffer,comp_buffer,BufferSize);
 
 	delete[] comp_buffer;
 }
 
-void CompressedVisTableClass::Decompress(uint8 * decomp_buffer,int decomp_size)
+void CompressedVisTableClass::Decompress(uint8_t * decomp_buffer,int decomp_size)
 {
 	lzo_uint size;
 	LZOCompressor::Decompress(Buffer,BufferSize,decomp_buffer, &size);

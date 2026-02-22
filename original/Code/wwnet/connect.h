@@ -15,7 +15,6 @@
 
 #include "rhost.h"
 #include "netstats.h"
-#include "bittype.h"
 #include "netutil.h"
 #include "slist.h"
 #include "wwpacket.h"

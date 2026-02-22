@@ -4,7 +4,6 @@
 
 #include "vector3.h"
 #include "refcount.h"
-#include "bittype.h"
 #include "win.h"
 #include "IMEManager.h"
 

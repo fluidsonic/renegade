@@ -10,7 +10,6 @@
 #include "shader.h"
 #include "widestring.h"
 #include "rect.h"
-#include "bittype.h"
 
 class	Font3DInstanceClass;
 class TextureClass;
@@ -94,7 +93,7 @@ public:
 	void	Add_Line( const Vector2 & a, const Vector2 & b, float width, const RectClass & uv, unsigned long color = 0xFFFFFFFF );
 	void	Add_Outline( const RectClass & rect, float width = 1.0F, unsigned long color = 0xFFFFFFFF );
 	void	Add_Outline( const RectClass & rect, float width, const RectClass & uv, unsigned long color = 0xFFFFFFFF );
-	void	Add_Rect( const RectClass & rect, float border_width = 1.0F, uint32 border_color = 0xFF000000, uint32 fill_color = 0xFFFFFFFF);
+	void	Add_Rect( const RectClass & rect, float border_width = 1.0F, uint32_t border_color = 0xFF000000, uint32_t fill_color = 0xFFFFFFFF);
 
 	void Set_Hidden( bool hide )			{ IsHidden = hide; }
 

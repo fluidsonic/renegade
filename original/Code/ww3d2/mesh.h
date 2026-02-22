@@ -4,7 +4,6 @@
 
 #include "always.h"
 #include "rendobj.h"
-#include "bittype.h"
 #include "w3derr.h"
 #include "dx8polygonrenderer.h"
 
@@ -84,7 +83,7 @@ public:
 	// Render Object Interface - Decals
 	/////////////////////////////////////////////////////////////////////////////
 	virtual void					Create_Decal(DecalGeneratorClass * generator);
-	virtual void					Delete_Decal(uint32 decal_id);
+	virtual void					Delete_Decal(uint32_t decal_id);
 	
 	/////////////////////////////////////////////////////////////////////////////
 	// MeshClass Interface
@@ -94,7 +93,7 @@ public:
 	void								Generate_Culling_Tree(void);
 	MeshModelClass *				Get_Model(void);
 	MeshModelClass *				Peek_Model(void);
-	uint32							Get_W3D_Flags(void);
+	uint32_t							Get_W3D_Flags(void);
 	const char *					Get_User_Text(void) const;
 
 	bool								Contains(const Vector3 &point);

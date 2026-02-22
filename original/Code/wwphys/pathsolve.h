@@ -88,7 +88,7 @@ public:
 	//
 	//	Birth-time access
 	//
-	uint32				Get_Birth_Time (void) const	{ return m_BirthTime; }
+	uint32_t				Get_Birth_Time (void) const	{ return m_BirthTime; }
 
 	//
 	// Volume access
@@ -188,7 +188,7 @@ private:
 	Vector3											m_DestPos;		
 	STATE_DESC										m_State;
 	float												m_Priority;
-	uint32											m_BirthTime;
+	uint32_t											m_BirthTime;
 
 	PathfindSectorClass *						m_StartSector;
 	PathfindSectorClass *						m_DestSector;

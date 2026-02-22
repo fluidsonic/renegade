@@ -26,7 +26,7 @@ public:
 	//////////////////////////////////////////////////////////////
 	virtual DefinitionClass *	Create (void) const;
 	virtual const char *			Get_Name (void) const;
-	virtual uint32					Get_Class_ID (void) const;
+	virtual uint32_t					Get_Class_ID (void) const;
 	virtual bool					Is_Displayed (void) const	{ return IsDisplayed; }
 
 protected:
@@ -52,7 +52,7 @@ SimpleDefinitionFactoryClass<T, class_id, name>::Get_Name (void) const
 }
 
 template<class T, int class_id, char *name>
-inline uint32
+inline uint32_t
 SimpleDefinitionFactoryClass<T, class_id, name>::Get_Class_ID (void) const
 {
 	return class_id;

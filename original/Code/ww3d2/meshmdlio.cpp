@@ -95,7 +95,7 @@ private:
 	W3dTexCoordStruct *		TexCoords;
 	W3dMaterialInfoStruct	MatInfo;
 
-	uint32						PrelitChunkID;
+	uint32_t						PrelitChunkID;
 
 	int							CurPass;
 	int							CurTexStage;
@@ -303,7 +303,7 @@ WW3DErrorType MeshModelClass::Load_W3D(ChunkLoadClass & cload)
 	*/
 	if ((context->Header.Version < W3D_MAKE_VERSION(3,0)) && (Get_Flag(SKIN))) {
 
-		uint16 * links = get_bone_links();
+		uint16_t * links = get_bone_links();
 		
 		for (int bi = 0; bi < Get_Vertex_Count(); bi++) {
 			links[bi] += 1;
@@ -742,9 +742,9 @@ WW3DErrorType MeshModelClass::read_per_tri_materials(ChunkLoadClass & cload,Mesh
 	for (int i=0; i<Get_Polygon_Count(); i++) {
 
 		// read in the mat id for this poly
-		uint16 matid;
+		uint16_t matid;
 
-		if (cload.Read(&matid,sizeof(uint16)) != sizeof(uint16)) {
+		if (cload.Read(&matid,sizeof(uint16_t)) != sizeof(uint16_t)) {
 			return WW3D_ERROR_LOAD_FAILED;
 		}
 
@@ -997,16 +997,16 @@ WW3DErrorType MeshModelClass::read_vertex_material_ids(ChunkLoadClass & cload,Me
 	** This chunk will either have a single index in it or an array of indices 
 	** with the length equal to the vertex count.
 	*/
-	uint32 vmat;
-	if (cload.Cur_Chunk_Length() == 1*sizeof(uint32)) {
+	uint32_t vmat;
+	if (cload.Cur_Chunk_Length() == 1*sizeof(uint32_t)) {
 		
-		cload.Read(&vmat,sizeof(uint32));
+		cload.Read(&vmat,sizeof(uint32_t));
 		matdesc->Set_Single_Material(context->Peek_Vertex_Material(vmat),context->CurPass);
 	
 	} else {
 
 		for (int i=0; i<Get_Vertex_Count(); i++) {
-			cload.Read(&vmat,sizeof(uint32));
+			cload.Read(&vmat,sizeof(uint32_t));
 			matdesc->Set_Material(i,context->Peek_Vertex_Material(vmat),context->CurPass);
 		}
 	}
@@ -1040,8 +1040,8 @@ WW3DErrorType MeshModelClass::read_shader_ids(ChunkLoadClass & cload,MeshLoadCon
 	/*
 	** Read in the shader id's and plug in the appropriate shader
 	*/
-	uint32 shaderid;
-	if (cload.Cur_Chunk_Length() == 1*sizeof(uint32)) {
+	uint32_t shaderid;
+	if (cload.Cur_Chunk_Length() == 1*sizeof(uint32_t)) {
 		
 		cload.Read(&shaderid,sizeof(shaderid));
 		ShaderClass shader = context->Peek_Shader(shaderid);
@@ -1059,7 +1059,7 @@ WW3DErrorType MeshModelClass::read_shader_ids(ChunkLoadClass & cload,MeshLoadCon
 	} else {
 		
 		for (int i=0; i<Get_Polygon_Count(); i++) {
-			cload.Read(&shaderid,sizeof(uint32));
+			cload.Read(&shaderid,sizeof(uint32_t));
 			ShaderClass shader = context->Peek_Shader(shaderid);
 			matdesc->Set_Shader(i,shader,context->CurPass);
 
@@ -1282,7 +1282,7 @@ WW3DErrorType MeshModelClass::read_texture_stage(ChunkLoadClass & cload,MeshLoad
  *=============================================================================================*/
 WW3DErrorType MeshModelClass::read_texture_ids(ChunkLoadClass & cload,MeshLoadContextClass * context)
 {
-	uint32 texid;
+	uint32_t texid;
 	int pass = context->CurPass;
 	int stage = context->CurTexStage;
 
@@ -1297,14 +1297,14 @@ WW3DErrorType MeshModelClass::read_texture_ids(ChunkLoadClass & cload,MeshLoadCo
 	/*
 	** Read in the texture(s) array
 	*/
-	if (cload.Cur_Chunk_Length() == 1*sizeof(uint32)) {
+	if (cload.Cur_Chunk_Length() == 1*sizeof(uint32_t)) {
 		cload.Read(&texid,sizeof(texid));
 		matdesc->Set_Single_Texture(context->Peek_Texture(texid),pass,stage);
 
 	} else {
 
 		for (int i=0; i<Get_Polygon_Count(); i++) {
-			cload.Read(&texid,sizeof(uint32));
+			cload.Read(&texid,sizeof(uint32_t));
 			if (texid != 0xffffffff) {
 				matdesc->Set_Texture(i,context->Peek_Texture(texid),pass,stage);
 			} 
@@ -2260,7 +2260,7 @@ WW3DErrorType MeshModelClass::write_vertex_shade_indices(ChunkSaveClass & csave,
 	}
 
 	for (int i=0; i<Get_Vertex_Count(); i++) {
-		uint32 idx = VertexShadeIdx->Get_Array()[i];
+		uint32_t idx = VertexShadeIdx->Get_Array()[i];
 		if (csave.Write(&idx,sizeof(idx)) != sizeof(idx)) {
 			return WW3D_ERROR_SAVE_FAILED;
 		}
@@ -2401,7 +2401,7 @@ WW3DErrorType MeshModelClass::write_vertex_material_ids(ChunkSaveClass & csave,M
 
 	csave.Begin_Chunk(W3D_CHUNK_VERTEX_MATERIAL_IDS);
 
-	uint32 id = 0;
+	uint32_t id = 0;
 	if (DefMatDesc->MaterialArray[context->CurPass] == NULL) {
 		
 		id = context->Materials.Find_Vertex_Material(DefMatDesc->Material[context->CurPass]);
@@ -2425,7 +2425,7 @@ WW3DErrorType MeshModelClass::write_shader_ids(ChunkSaveClass & csave,MeshSaveCo
 {
 	csave.Begin_Chunk(W3D_CHUNK_SHADER_IDS);
 
-	uint32 id = 0;
+	uint32_t id = 0;
 	if (DefMatDesc->ShaderArray[context->CurPass] == NULL) {
 		
 		id = context->Materials.Find_Shader(DefMatDesc->Shader[context->CurPass]);
@@ -2508,7 +2508,7 @@ WW3DErrorType MeshModelClass::write_texture_ids(ChunkSaveClass & csave,MeshSaveC
 {
 	csave.Begin_Chunk(W3D_CHUNK_TEXTURE_IDS);
 	
-	uint32 id = 0;
+	uint32_t id = 0;
 	if (DefMatDesc->TextureArray[context->CurPass][context->CurStage] == NULL) {
 		
 		id = context->Materials.Find_Texture(DefMatDesc->Texture[context->CurPass][context->CurStage]);

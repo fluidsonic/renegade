@@ -5,7 +5,6 @@
 #include "vector2.h"
 #include "vector3.h"
 #include "wwstring.h"
-#include "bittype.h"
 #include "saveloadsubsystem.h"
 #include "combatchunkid.h"
 
@@ -79,7 +78,7 @@ public:
 	//
 	//	From SaveLoadSubSystemClass
 	//
-	uint32						Chunk_ID (void) const			{ return CHUNKID_MAPMGR; }
+	uint32_t						Chunk_ID (void) const			{ return CHUNKID_MAPMGR; }
 
 	//
 	//	Title support
@@ -119,7 +118,7 @@ private:
 	static Vector2			MapCenterPoint;
 	static Vector2			MapScale;
 	static Vector2			MapSize;
-	static uint32			CloudVector[CLOUD_VECTOR_SIZE];
+	static uint32_t			CloudVector[CLOUD_VECTOR_SIZE];
 	static bool				EnableVTOL;
 };
 

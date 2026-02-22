@@ -4,7 +4,6 @@
 
 #include "always.h"
 #include "vector3.h"
-#include "bittype.h"
 
 /**
 ** CastResultStruct
@@ -24,7 +23,7 @@ struct CastResultStruct
 	bool		StartBad;		// was the inital configuration interpenetrating something?
 	float		Fraction;		// fraction of the move up until collision
 	Vector3	Normal;			// surface normal at the collision point
-	uint32	SurfaceType;	// surface type of polygon at collision point (see W3D_SURFACE_TYPES in w3d_file.h)
+	uint32_t	SurfaceType;	// surface type of polygon at collision point (see W3D_SURFACE_TYPES in w3d_file.h)
 
 	bool		ComputeContactPoint;		// This signals the collision code to compute the point of collision
 	Vector3	ContactPoint;				// This will be set to the point of collision if ComputeContactPoint is true

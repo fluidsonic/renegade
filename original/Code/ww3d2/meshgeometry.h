@@ -2,7 +2,6 @@
 #define MESHGEOMETRY_H
 
 #include "refcount.h"
-#include "bittype.h"
 #include "simplevec.h"
 #include "sharebuf.h"
 #include "w3derr.h"
@@ -99,10 +98,10 @@ public:
 	const Vector3 *			Get_Vertex_Normal_Array(void);
 	const Vector4 *			Get_Plane_Array(bool create = true);
 	void							Compute_Plane(int pidx,PlaneClass * set_plane) const;	
-	const uint32 *				Get_Vertex_Shade_Index_Array(bool create = true)	{ return get_shade_indices(create); }
-	const uint16 *				Get_Vertex_Bone_Links(void)								{ return get_bone_links(); }
-	uint8 *						Get_Poly_Surface_Type_Array(void)						{ assert(PolySurfaceType); return PolySurfaceType->Get_Array(); }
-	uint8							Get_Poly_Surface_Type(int poly_index) const;
+	const uint32_t *				Get_Vertex_Shade_Index_Array(bool create = true)	{ return get_shade_indices(create); }
+	const uint16_t *				Get_Vertex_Bone_Links(void)								{ return get_bone_links(); }
+	uint8_t *						Get_Poly_Surface_Type_Array(void)						{ assert(PolySurfaceType); return PolySurfaceType->Get_Array(); }
+	uint8_t							Get_Poly_Surface_Type(int poly_index) const;
 
 	void							Get_Bounding_Box(AABoxClass * set_box);
 	void							Get_Bounding_Sphere(SphereClass * set_sphere);
@@ -110,11 +109,11 @@ public:
 	// exposed culling support
 	bool							Has_Cull_Tree(void)											{ return CullTree != NULL; }
 	
-	void							Generate_Rigid_APT(const Vector3 & view_dir, SimpleDynVecClass<uint32> & apt);
-	void							Generate_Rigid_APT(const OBBoxClass & local_box, SimpleDynVecClass<uint32> & apt);
-	void							Generate_Rigid_APT(const OBBoxClass & local_box, const Vector3 & view_dir, SimpleDynVecClass<uint32> & apt);
+	void							Generate_Rigid_APT(const Vector3 & view_dir, SimpleDynVecClass<uint32_t> & apt);
+	void							Generate_Rigid_APT(const OBBoxClass & local_box, SimpleDynVecClass<uint32_t> & apt);
+	void							Generate_Rigid_APT(const OBBoxClass & local_box, const Vector3 & view_dir, SimpleDynVecClass<uint32_t> & apt);
 
-	void							Generate_Skin_APT(const OBBoxClass & world_box, SimpleDynVecClass<uint32> & apt, const Vector3 *world_vertex_locs);
+	void							Generate_Skin_APT(const OBBoxClass & world_box, SimpleDynVecClass<uint32_t> & apt, const Vector3 *world_vertex_locs);
 
 	// containment
 	bool							Contains(const Vector3 &point);
@@ -143,9 +142,9 @@ protected:
 	// internal accessor functions that are not exposed to the user (non-const...)
 	TriIndex *					get_polys(void);
 	Vector3 *					get_vert_normals(void);
-	uint32 *						get_shade_indices(bool create = true);
+	uint32_t *						get_shade_indices(bool create = true);
 	Vector4 *					get_planes(bool create = true);
-	uint16 *						get_bone_links(bool create = true);
+	uint16_t *						get_bone_links(bool create = true);
 
 	// Utility functions (used by collision/intersection functions)
 	int							cast_semi_infinite_axis_aligned_ray(const Vector3 & start_point, int axis_dir, unsigned char & flags);
@@ -182,7 +181,7 @@ protected:
 	ShareBufferClass<char> *							UserText;
 	int														Flags;
 	char														SortLevel;
-	uint32													W3dAttributes;
+	uint32_t													W3dAttributes;
 	
 	// Geometry
 	int														PolyCount;
@@ -192,9 +191,9 @@ protected:
 	ShareBufferClass<Vector3> *						Vertex;
 	ShareBufferClass<Vector3> *						VertexNorm;
 	ShareBufferClass<Vector4> *						PlaneEq;
-	ShareBufferClass<uint32> *							VertexShadeIdx;
-	ShareBufferClass<uint16> *							VertexBoneLink;
-	ShareBufferClass<uint8> *							PolySurfaceType;
+	ShareBufferClass<uint32_t> *							VertexShadeIdx;
+	ShareBufferClass<uint16_t> *							VertexBoneLink;
+	ShareBufferClass<uint8_t> *							PolySurfaceType;
 
 	Vector3													BoundBoxMin;
 	Vector3													BoundBoxMax;
@@ -212,10 +211,10 @@ inline TriIndex * MeshGeometryClass::get_polys(void)
 	return Poly->Get_Array();
 }
 
-inline uint32 * MeshGeometryClass::get_shade_indices(bool create)
+inline uint32_t * MeshGeometryClass::get_shade_indices(bool create)
 {
 	if (create && !VertexShadeIdx) {
-		VertexShadeIdx = NEW_REF(ShareBufferClass<uint32>,(VertexCount));
+		VertexShadeIdx = NEW_REF(ShareBufferClass<uint32_t>,(VertexCount));
 	}
 	if (VertexShadeIdx) {
 		return VertexShadeIdx->Get_Array();
@@ -223,10 +222,10 @@ inline uint32 * MeshGeometryClass::get_shade_indices(bool create)
 	return NULL;
 }
 
-inline uint16 * MeshGeometryClass::get_bone_links(bool create)
+inline uint16_t * MeshGeometryClass::get_bone_links(bool create)
 {
 	if (create && !VertexBoneLink) {
-		VertexBoneLink = NEW_REF(ShareBufferClass<uint16>,(VertexCount));
+		VertexBoneLink = NEW_REF(ShareBufferClass<uint16_t>,(VertexCount));
 	}
 	if (VertexBoneLink) {
 		return VertexBoneLink->Get_Array();
@@ -234,9 +233,9 @@ inline uint16 * MeshGeometryClass::get_bone_links(bool create)
 	return NULL;
 }
 
-inline uint8 MeshGeometryClass::Get_Poly_Surface_Type(int poly_index) const
+inline uint8_t MeshGeometryClass::Get_Poly_Surface_Type(int poly_index) const
 {
-	uint8 *type = PolySurfaceType->Get_Array();
+	uint8_t *type = PolySurfaceType->Get_Array();
 	return type[poly_index];
 }
 

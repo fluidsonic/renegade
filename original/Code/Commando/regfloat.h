@@ -12,7 +12,6 @@
 #ifndef REGFLOAT_H
 #define REGFLOAT_H
 
-#include "bittype.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryFloat

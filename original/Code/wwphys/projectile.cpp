@@ -512,7 +512,7 @@ const PersistFactoryClass & ProjectileDefClass::Get_Factory (void) const
 	return _ProjectileDefFactory;
 }
 
-uint32 ProjectileDefClass::Get_Class_ID (void) const	
+uint32_t ProjectileDefClass::Get_Class_ID (void) const	
 { 
 	return CLASSID_PROJECTILEDEF; 
 }

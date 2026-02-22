@@ -3,7 +3,6 @@
 #define __NETWORK_OBJECT_FACTORY_H
 
 #include "always.h"
-#include "bittype.h"
 #include "wwpacket.h"
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +33,7 @@ public:
 	//////////////////////////////////////////////////////////////
 	virtual NetworkObjectClass *	Create (cPacket &packet) const = 0;
 	virtual void						Prep_Packet (NetworkObjectClass *object, cPacket &packet) const {};
-	virtual uint32						Get_Class_ID (void) const = 0;
+	virtual uint32_t						Get_Class_ID (void) const = 0;
 
 protected:
 	
@@ -72,7 +71,7 @@ public:
 	//	Public methods
 	//////////////////////////////////////////////////////////////
 	virtual NetworkObjectClass *	Create (cPacket &packet) const;
-	virtual uint32						Get_Class_ID (void) const;
+	virtual uint32_t						Get_Class_ID (void) const;
 };
 
 template<class T, int class_id>
@@ -83,7 +82,7 @@ SimpleNetworkObjectFactoryClass<T, class_id>::Create (cPacket & /*packet*/) cons
 }
 
 template<class T, int class_id>
-inline uint32
+inline uint32_t
 SimpleNetworkObjectFactoryClass<T, class_id>::Get_Class_ID (void) const
 {
 	return class_id;

@@ -459,7 +459,7 @@ void	Render2DClass::Add_Line( const Vector2 & a, const Vector2 & b, float width,
 	Add_Quad( a - corner_offset, a + corner_offset, b - corner_offset, b + corner_offset, uv, color );
 }
 
-void	Render2DClass::Add_Rect( const RectClass & rect, float border_width, uint32 border_color, uint32 fill_color )
+void	Render2DClass::Add_Rect( const RectClass & rect, float border_width, uint32_t border_color, uint32_t fill_color )
 {
 	//
 	//	First add the outline

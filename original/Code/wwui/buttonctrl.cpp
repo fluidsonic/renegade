@@ -599,7 +599,7 @@ ButtonCtrlClass::On_Kill_Focus (DialogControlClass *focus)
 //
 ////////////////////////////////////////////////////////////////
 bool
-ButtonCtrlClass::On_Key_Down (uint32 key_id, uint32 key_data)
+ButtonCtrlClass::On_Key_Down (uint32_t key_id, uint32_t key_data)
 {
 	switch (key_id)
 	{

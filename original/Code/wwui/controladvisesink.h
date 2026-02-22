@@ -97,7 +97,7 @@ public:
 	//	Edit control callbacks
 	//
 	virtual void	On_EditCtrl_Enter_Pressed (EditCtrlClass *edit_ctrl, int ctrl_id) {}
-	virtual bool	On_EditCtrl_Key_Down(EditCtrlClass *edit_ctrl, uint32 key_id, uint32 key_data) {return false;}
+	virtual bool	On_EditCtrl_Key_Down(EditCtrlClass *edit_ctrl, uint32_t key_id, uint32_t key_data) {return false;}
 	virtual void	On_EditCtrl_Change(EditCtrlClass *edit_ctrl, int ctrl_id) {}
 
 	//

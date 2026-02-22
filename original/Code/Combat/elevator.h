@@ -34,7 +34,7 @@ class ElevatorPhysDefClass : public AccessiblePhysDefClass
 public:
 	ElevatorPhysDefClass(void);
 	
-	virtual uint32								Get_Class_ID( void ) const;
+	virtual uint32_t								Get_Class_ID( void ) const;
 	virtual const char *						Get_Type_Name(void)				{ return "ElevatorPhysDef"; }
 	virtual bool								Is_Type(const char *);
 	virtual PersistClass *					Create( void ) const ;

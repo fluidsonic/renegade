@@ -35,7 +35,7 @@
 static unsigned MeshDebugIdCount;
 
 bool MeshClass::Legacy_Meshes_Fogged = true;
-static SimpleDynVecClass<uint32> temp_apt;
+static SimpleDynVecClass<uint32_t> temp_apt;
 
 /*
 ** This #define causes the collision code to always recompute the triangle normals rather
@@ -272,7 +272,7 @@ void MeshClass::Set_Name(const char * name)
  * HISTORY:                                                                                    *
  *   5/15/98    GTH : Created.                                                                 *
  *=============================================================================================*/
-uint32 MeshClass::Get_W3D_Flags(void)
+uint32_t MeshClass::Get_W3D_Flags(void)
 { 
 	return Model->W3dAttributes; 
 }
@@ -524,7 +524,7 @@ void MeshClass::Create_Decal(DecalGeneratorClass * generator)
  * HISTORY:                                                                                    *
  *   1/26/00    gth : Created.                                                                 *
  *=============================================================================================*/
-void MeshClass::Delete_Decal(uint32 decal_id)
+void MeshClass::Delete_Decal(uint32_t decal_id)
 {
 	if (DecalMesh != NULL) {
 		DecalMesh->Delete_Decal(decal_id);

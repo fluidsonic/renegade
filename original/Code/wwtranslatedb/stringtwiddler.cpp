@@ -175,7 +175,7 @@ StringTwiddlerClass::Load_Variables (ChunkLoadClass &cload)
 //
 /////////////////////////////////////////////////////////////////
 const WideStringClass &
-StringTwiddlerClass::Get_String (uint32 lang_id)
+StringTwiddlerClass::Get_String (uint32_t lang_id)
 {
 	//
 	//	Copy the contents of one of the string objects

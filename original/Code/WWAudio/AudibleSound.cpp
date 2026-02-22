@@ -1519,7 +1519,7 @@ AudibleSoundDefinitionClass::AudibleSoundDefinitionClass (void)
 }
 
 // SKB: Put here because of conficts with CLASSID_???? with other projects.
-uint32 AudibleSoundDefinitionClass::Get_Class_ID (void) const
+uint32_t AudibleSoundDefinitionClass::Get_Class_ID (void) const
 {
 	return CLASSID_SOUND;
 }
@@ -1848,7 +1848,7 @@ AudibleSoundClass::Save (ChunkSaveClass &csave)
 		SoundSceneObjClass::Save (csave);
 	csave.End_Chunk ();
 
-	uint32 temp_position = 0;
+	uint32_t temp_position = 0;
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
 		WRITE_MICRO_CHUNK (csave, VARID_STATE,						m_State);
 		WRITE_MICRO_CHUNK (csave, VARID_TYPE,						m_Type);

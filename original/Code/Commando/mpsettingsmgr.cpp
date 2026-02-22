@@ -1,6 +1,5 @@
 #include "mpsettingsmgr.h"
 #include "registry.h"
-#include "bittype.h"
 #include "_globals.h"
 #include "time.h"
 

@@ -174,7 +174,7 @@ AccessiblePhysDefClass::AccessiblePhysDefClass (void) :
 //	Get_Class_ID
 //
 ///////////////////////////////////////////////////////////////////////
-uint32
+uint32_t
 AccessiblePhysDefClass::Get_Class_ID (void) const	
 { 
 	return CLASSID_ACCESSIBLEPHYSDEF; 

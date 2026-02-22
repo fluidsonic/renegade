@@ -9,9 +9,6 @@
 	#include "gamemode.h"
 #endif
 
-#ifndef	BITTYPE_H
-	#include "bittype.h"
-#endif
 
 
 #define	Get_Console()		ConsoleGameModeClass::Get_Instance()

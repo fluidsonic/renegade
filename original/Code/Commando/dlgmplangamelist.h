@@ -30,7 +30,7 @@ public:
 	void		On_Init_Dialog (void);
 	void		On_Destroy (void);
 	void		On_Command (int ctrl_id, int mesage_id, DWORD param);
-	bool		On_Key_Down(uint32 key_id, uint32 key_data);
+	bool		On_Key_Down(uint32_t key_id, uint32_t key_data);
 	
 	static void	Set_Update_Nickname(void)						{ UpdateNickname = true; }
 

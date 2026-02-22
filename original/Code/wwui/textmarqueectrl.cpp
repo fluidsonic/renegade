@@ -243,8 +243,8 @@ TextMarqueeCtrlClass::Build_Credit_Lines (void)
 			if (src_end == NULL) {						\
 				dest = src_start;							\
 			} else {											\
-				uint32 bytes	= (uint32)((uintptr_t)src_end - (uintptr_t)src_start);	\
-				uint32 len		= bytes / sizeof (WCHAR);						\
+				uint32_t bytes	= (uint32_t)((uintptr_t)src_end - (uintptr_t)src_start);	\
+				uint32_t len		= bytes / sizeof (WCHAR);						\
 				::memcpy (dest.Get_Buffer (len + 1), src_start, bytes);	\
 				dest.Peek_Buffer ()[len] = 0;										\
 			}
@@ -376,7 +376,7 @@ TextMarqueeCtrlClass::Read_Tag (const WCHAR *text, CREDIT_LINE &line)
 					//
 					//	Store the color
 					//
-					line.Color	= RGB_TO_INT32 ((uint8)color[0], (uint8)color[1], (uint8)color[2]);
+					line.Color	= RGB_TO_INT32 ((uint8_t)color[0], (uint8_t)color[1], (uint8_t)color[2]);
 					retval		= index;
 				}
 

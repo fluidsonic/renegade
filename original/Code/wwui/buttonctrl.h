@@ -49,7 +49,7 @@ protected:
 	void					On_Set_Cursor (const Vector2 &mouse_pos);
 	void					On_Create (void);
 	void					On_Kill_Focus (DialogControlClass *focus);
-	bool					On_Key_Down (uint32 key_id, uint32 key_data);
+	bool					On_Key_Down (uint32_t key_id, uint32_t key_data);
 	void					On_Frame_Update (void);
 
 	void					Create_Bitmap_Button (void);

@@ -3,7 +3,6 @@
 #define __DEFINITION_CLASS_ID_H
 
 #include "always.h"
-#include "bittype.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -49,8 +48,8 @@ enum
 //	SuperClassID_From_ClassID
 //
 //////////////////////////////////////////////////////////////////////////////////
-inline uint32
-SuperClassID_From_ClassID (uint32 class_id)
+inline uint32_t
+SuperClassID_From_ClassID (uint32_t class_id)
 {
 	//
 	//	Which id-range does it fall under?

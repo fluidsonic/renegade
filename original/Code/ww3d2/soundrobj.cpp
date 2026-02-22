@@ -288,7 +288,7 @@ SoundRenderObjClass::Get_Sound (void) const
 //
 //////////////////////////////////////////////////////////////////////////////
 void
-SoundRenderObjClass::Set_Flag (uint32 flag, bool onoff)
+SoundRenderObjClass::Set_Flag (uint32_t flag, bool onoff)
 {
 	Flags &= ~flag;
 	if (onoff) {

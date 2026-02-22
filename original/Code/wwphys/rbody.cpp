@@ -2009,7 +2009,7 @@ RigidBodyDefClass::RigidBodyDefClass(void) :
 	FLOAT_EDITABLE_PARAM(RigidBodyDefClass, AerodynamicDragCoefficient, 0.0f, 100.0f);
 }
 
-uint32 RigidBodyDefClass::Get_Class_ID (void) const	
+uint32_t RigidBodyDefClass::Get_Class_ID (void) const	
 { 
 	return CLASSID_RIGIDBODYDEF; 
 }

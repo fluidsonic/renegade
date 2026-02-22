@@ -122,8 +122,8 @@ cWinEvent::Export_Creation(BitStreamClass & packet)
 	packet.Add(The_Game()->Get_Mvp_Count());
 
 #ifndef MULTIPLAYERDEMO
-	packet.Add((uint32)::CRC_Stringi(The_Game()->Get_Mod_Name()));
-	packet.Add((uint32)::CRC_Stringi(The_Game()->Get_Map_Name()));
+	packet.Add((uint32_t)::CRC_Stringi(The_Game()->Get_Mod_Name()));
+	packet.Add((uint32_t)::CRC_Stringi(The_Game()->Get_Map_Name()));
 #endif // MULTIPLAYERDEMO
 
 	Set_Delete_Pending();

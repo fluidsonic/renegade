@@ -277,7 +277,7 @@ Get_Time (void)
 //
 ////////////////////////////////////////////////////////////////////////////////////////////
 void
-PathMgrClass::Resolve_Paths (const Vector3 &camera_pos, uint32 milliseconds)
+PathMgrClass::Resolve_Paths (const Vector3 &camera_pos, uint32_t milliseconds)
 {
 	__int64 start_time	= Get_Time ();
 	__int64 end_time		= start_time + (((__int64)milliseconds) * TicksPerMilliSec);
@@ -302,7 +302,7 @@ PathMgrClass::Resolve_Paths (const Vector3 &camera_pos, uint32 milliseconds)
 			//
 			//	Let this path think for (up to) the remainder of our timeslice
 			//
-			uint32 time_slice = uint32((end_time - Get_Time ()) / TicksPerMilliSec);
+			uint32_t time_slice = uint32_t((end_time - Get_Time ()) / TicksPerMilliSec);
 			PathSolveClass::STATE_DESC result = ActivePath->Timestep (time_slice);
 
 			//
