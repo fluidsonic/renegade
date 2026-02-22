@@ -3,5 +3,7 @@
 .worktrees/
 client-orig/
 client/
+commands.txt
 data/
 original-untouched/
+renegade_registry.ini

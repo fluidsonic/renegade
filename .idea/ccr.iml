@@ -4,6 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.worktrees" />
+      <excludeFolder url="file://$MODULE_DIR$/LevelEdit" />
       <excludeFolder url="file://$MODULE_DIR$/original-untouched" />
     </content>
     <orderEntry type="inheritedJdk" />

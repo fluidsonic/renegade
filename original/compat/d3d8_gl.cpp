@@ -746,7 +746,9 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     // Apply current render states and texture to GL before a draw call
     void Apply_GL_State() {
-        if (dirty == 0) {
+        // Skip if no flags this function can actually handle are set.
+        // DIRTY_TRANSFORMS and DIRTY_LIGHTS are handled by Apply_GL_Transforms(), not here.
+        if (!(dirty & ~(uint32_t)(DIRTY_TRANSFORMS | DIRTY_LIGHTS))) {
             s_stats.applyGLSkip++;
             return;
         }
@@ -1103,7 +1105,11 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         glActiveTexture(GL_TEXTURE0);  // restore default active unit
         }  // dirty & DIRTY_TEXTURES
 
-        dirty = 0;  // clear all flags after apply
+        // Clear all state flags except DIRTY_TRANSFORMS and DIRTY_LIGHTS — those
+        // are handled by Apply_GL_Transforms(), which runs after this function.
+        // If we cleared them here, Apply_GL_Transforms() would always see dirty=0
+        // and early-return, so 3D world/view/proj matrices would never be uploaded.
+        dirty &= (uint32_t)(DIRTY_TRANSFORMS | DIRTY_LIGHTS);
     }
 
     // Apply D3D world/view/proj matrices to GL

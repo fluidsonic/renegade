@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ccr.iml" filepath="$PROJECT_DIR$/ccr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ccr.iml" filepath="$PROJECT_DIR$/.idea/ccr.iml" />
     </modules>
   </component>
 </project>
