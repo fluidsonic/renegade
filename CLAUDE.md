@@ -38,7 +38,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
 - **Git merges must use `--ff-only`** — always rebase the feature branch onto the base branch first, then FF-merge
 - **Always create worktrees from the latest local `main`** — run `git pull` (or at least `git fetch`) on main before branching; stale branch points cause unnecessary rebase conflicts
-- **Worktree merge sequence**: (1) commit all changes in the worktree, (2) rebase the worktree branch onto local `main`, (3) `git checkout main && git merge --ff-only <branch>`, (4) `git worktree remove` the worktree, (5) delete the branch — in that order; you cannot delete a branch while its worktree still exists
+- **Worktree merge sequence**: (1) check for uncommitted changes in both the worktree AND main repo (`git status` in both), (2) commit all changes in the worktree, (3) rebase the worktree branch onto local `main`, (4) `git checkout main && git merge --ff-only <branch>`, (5) `git worktree remove` the worktree, (6) delete the branch — in that order; you cannot delete a branch while its worktree still exists
 - Write all documentation to `/docs/*.md` — update immediately when new information is discovered
 - Network protocol documentation must be maintained in real-time at `/docs/network.md` — update whenever new packet formats, field meanings, or wire format details are discovered
 - Write every accepted plan to `/plans/*.md` immediately once approved; make that behavior part of each plan itself
@@ -134,7 +134,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - **`Clear()` vs `glDepthMask`**: D3D8 `Clear()` ignores `D3DRS_ZWRITEENABLE`; OpenGL `glClear(GL_DEPTH_BUFFER_BIT)` respects `glDepthMask()` — combat transparent rendering can leave depth writes disabled, silently breaking the backdrop's depth clear; fix: force `glDepthMask(GL_TRUE)` before `glClear` then restore tracked D3D state
 
 ### Building to find all issues
-- **Worktree run commands need absolute paths** — `original/build/.../Commando` resolves relative to CWD; if the user is in the main repo dir they run the unfixed main binary; always give the full absolute path when the fix is in a worktree
+- **All worktree C++ commands need absolute paths** — `cmake --build`, `cmake -S/-B`, and run commands all resolve relative to CWD; if CWD is the main repo dir they target the main repo's build, not the worktree's; always use absolute paths for configure, build, and run when working in a worktree (e.g. `cmake -S /abs/path/.worktrees/feat/original -B /abs/path/.worktrees/feat/original/build -G Ninja`)
 - Use `cmake --build ... -- -k 0` (Ninja keep-going) to see ALL errors, not just the first one
 - After merging a worktree feature branch, reconfigure: `cmake -S original -B original/build -G Ninja` — regenerates `compile_commands.json` with updated flags/includes so clangd stays accurate
 - Batch find-and-replace across source files: use Python3 `re` module or the Edit tool — **never use shell commands (`sed`, `echo`, heredocs) containing `!`** — zsh history expansion corrupts `!=` to `\!=`, `!x` to `\!x`, etc. silently; this applies to Perl, sed scripts, and any heredoc
