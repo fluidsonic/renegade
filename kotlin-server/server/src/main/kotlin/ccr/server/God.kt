@@ -6,7 +6,7 @@ import ccr.net.replication.NetworkObjectManager
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
-import ccr.server.defs.VehicleGameObjDef
+import ccr.server.defs.VehicleGameObjDefWrapper
 import ccr.server.defs.combat.BeaconGameObjDef
 import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
@@ -299,12 +299,10 @@ open class God(private val server: GameServer) {
     fun createVehicle(buyerRhostId: Int, defId: Int, spawnPosition: Vector3): VehicleGameObj? {
         if (defId == 0) return null
 
-        val def = server.loadedLevel?.definitions?.all()
-            ?.filterIsInstance<VehicleGameObjDef>()
-            ?.find { it.definition.id.toInt() == defId }
-
-        val vehicleType = def?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
-        val seatCount   = def?.numSeats ?: 1
+        val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
+            as? VehicleGameObjDefWrapper
+        val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
+        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
         val playerType  = playerTeams[buyerRhostId] ?: 0
 
         val vehicle = VehicleGameObj(
@@ -322,6 +320,34 @@ open class God(private val server: GameServer) {
 
         println("[GOD] vehicle spawned: defId=$defId netId=$netId team=${if (playerType == 0) "NOD" else "GDI"} " +
             "seats=$seatCount pos=(${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z}) buyer=$buyerRhostId")
+        return vehicle
+    }
+
+    /**
+     * Spawns an unoccupied harvester vehicle for the given [team] at [spawnPosition].
+     * Unlike [createVehicle], the harvester has no driver (controlOwner=0).
+     */
+    fun createHarvester(team: Int, defId: Int, spawnPosition: Vector3): VehicleGameObj? {
+        if (defId == 0) return null
+        val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
+            as? VehicleGameObjDefWrapper
+        val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
+        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
+        val vehicle = VehicleGameObj(
+            definitionId     = defId,
+            position         = spawnPosition,
+            vehicleType      = vehicleType,
+            seatCount        = seatCount,
+            team             = team,
+            vehicleDelivered = true,
+            controlOwner     = 0,
+        )
+        val netId = NetworkObjectManager.getNewDynamicId()
+        NetworkObjectManager.registerObject(vehicle, netId)
+        vehiclesByNetId[netId] = vehicle
+        server.gameObjManager.add(vehicle)
+        println("[GOD] harvester spawned: defId=$defId netId=$netId team=${if (team == 0) "NOD" else "GDI"} " +
+            "pos=(${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})")
         return vehicle
     }
 

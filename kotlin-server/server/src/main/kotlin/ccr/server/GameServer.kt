@@ -58,6 +58,7 @@ import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.combat.PowerUpGameObjDef
+import ccr.server.defs.combat.RefineryGameObjDef
 import ccr.server.net.PowerUpGameObj
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -209,8 +210,24 @@ class GameServer(internal val config: ServerConfig) {
                     }
                     // Wire vehicle factory delivery callback so purchased vehicles spawn in-world
                     if (building is VehicleFactoryGameObj) {
+                        val baseCtrl = when (lb.playerType) {
+                            0 -> controllerNod
+                            1 -> controllerGdi
+                            else -> null
+                        }
                         building.onVehicleReady = { defId, buyerRhostId ->
-                            god.createVehicle(buyerRhostId, defId, building.position)
+                            if (buyerRhostId == ccr.server.net.BaseControllerClass.HARVESTER_BUYER_ID) {
+                                // Harvester delivery — find the refinery that requested it
+                                val refinery = baseCtrl?.getBuildings()
+                                    ?.filterIsInstance<ccr.server.net.RefineryGameObj>()
+                                    ?.firstOrNull { !it.isDestroyed && it.harvesterVehicle == null && it.harvesterDefId == defId }
+                                if (refinery != null) {
+                                    val vehicle = god.createHarvester(building.playerType, defId, refinery.position)
+                                    if (vehicle != null) refinery.harvesterVehicle = vehicle
+                                }
+                            } else {
+                                god.createVehicle(buyerRhostId, defId, building.position)
+                            }
                         }
                     }
                     gameObjManager.add(building)
@@ -1187,9 +1204,14 @@ class GameServer(internal val config: ServerConfig) {
                 PowerPlantGameObj(lb.definitionId, pos, sphereCenter, radius,
                     health = health, shieldType = shieldType, isPowerOn = lb.isPowerOn, playerType = lb.playerType)
 
-            ChunkIds.GAMEOBJ_BUILDING_REFINERY ->
-                RefineryGameObj(lb.definitionId, pos, sphereCenter, radius,
+            ChunkIds.GAMEOBJ_BUILDING_REFINERY -> {
+                val refinery = RefineryGameObj(lb.definitionId, pos, sphereCenter, radius,
                     health = health, shieldType = shieldType, playerType = lb.playerType)
+                val refDef = loadedLevel?.definitions?.findById(lb.definitionId.toUInt())
+                    as? RefineryGameObjDef
+                refinery.harvesterDefId = refDef?.harvesterDefId ?: 0
+                refinery
+            }
 
             ChunkIds.GAMEOBJ_BUILDING_SOLDIERFACTORY ->
                 SoldierFactoryGameObj(lb.definitionId, pos, sphereCenter, radius,

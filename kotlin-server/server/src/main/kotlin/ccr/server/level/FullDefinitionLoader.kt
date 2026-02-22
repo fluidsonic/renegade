@@ -96,8 +96,11 @@ object FullDefinitionLoader {
             TransitionGameObjDef.CHUNK_ID ->
                 TransitionGameObjDef.load(chunkId, objDataChunk) ?: fallback
 
-            // FIXME: VehicleGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
-            VehicleGameObjDef.CHUNK_ID -> fallback
+            VehicleGameObjDef.CHUNK_ID -> {
+                val parsed = VehicleGameObjDef.load(objDataChunk)
+                if (parsed != null) VehicleGameObjDefWrapper(name, id, chunkId, parsed)
+                else fallback
+            }
 
             // FIXME: CinematicGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
             CinematicGameObjDef.CHUNK_ID -> fallback

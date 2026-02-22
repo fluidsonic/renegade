@@ -32,6 +32,7 @@ open class VehicleFactoryGameObj(
     playerType     = playerType,
 ) {
     var isBusy: Boolean = false; protected set
+    val isAvailable: Boolean get() = !isBusy && !isDestroyed
     private var endTimer: Float = UNINITIALIZED_TIMER
 
     // Pending order — set by requestVehicle(), consumed by onGenerationComplete()

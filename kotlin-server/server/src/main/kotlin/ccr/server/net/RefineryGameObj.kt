@@ -33,11 +33,25 @@ class RefineryGameObj(
     // Passive credit trickle rate (credits per second, per teammate)
     var fundsDistributedPerSec: Float = 2f
 
+    // Harvester management — set from RefineryGameObjDef.harvesterDefId at init
+    var harvesterDefId: Int = 0
+    var harvesterVehicle: VehicleGameObj? = null
+
     private var distributionTimer: Float = 1f
 
-    // C++: RefineryGameObj::Think — distribute passive trickle each second
+    // C++: RefineryGameObj::Think — request harvester if needed, then distribute passive trickle
     override fun think(deltaSeconds: Float) {
         if (!isDestroyed) {
+            // Clear stale harvester reference if the vehicle was destroyed
+            if (harvesterVehicle != null && harvesterVehicle!!.isDeletePending) {
+                harvesterVehicle = null
+            }
+
+            // Request a new harvester if we don't have one
+            if (harvesterVehicle == null && harvesterDefId != 0) {
+                baseController?.requestHarvester(harvesterDefId)
+            }
+
             distributionTimer -= deltaSeconds
             if (distributionTimer <= 0f) {
                 distributionTimer = 1f
@@ -49,5 +63,16 @@ class RefineryGameObj(
             }
         }
         super.think(deltaSeconds)
+    }
+
+    // C++: RefineryGameObj::On_Destroyed — kill harvester when refinery goes down
+    override fun onDestroyed() {
+        super.onDestroyed()
+        harvesterVehicle?.let { harv ->
+            if (!harv.isDeletePending) {
+                harv.applyDamage(harv.health + harv.shieldStrength + 1f)
+            }
+        }
+        harvesterVehicle = null
     }
 }

@@ -102,6 +102,18 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
         }
     }
 
+    // C++: BaseControllerClass::Request_Harvester — ask the war/vehicle factory to build a harvester
+    fun requestHarvester(defId: Int): Boolean {
+        if (defId == 0) return false
+        val factory = buildings.filterIsInstance<VehicleFactoryGameObj>()
+            .firstOrNull { it.isAvailable }
+        if (factory != null) {
+            factory.requestVehicle(defId, 8f * operationTimeFactor, HARVESTER_BUYER_ID)
+            return true
+        }
+        return false
+    }
+
     // C++: BaseControllerClass::Destroy_Base (forced)
     fun destroyBase() {
         for (b in buildings) b.setNormalizedHealth(0f)
@@ -136,4 +148,9 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
     }
 
     override fun importOccasional(packet: BitStream) {}
+
+    companion object {
+        /** Sentinel buyerRhostId used to distinguish harvester requests from player purchases. */
+        const val HARVESTER_BUYER_ID: Int = -1
+    }
 }
