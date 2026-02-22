@@ -11,6 +11,8 @@
 #include "conversationmgr.h"
 #include "phys.h"
 #include "rendobj.h"
+#include "menudialog.h"
+#include "menubackdrop.h"
 
 /*
 ** Release all objects and resources loaded for this level
@@ -35,6 +37,12 @@ void		LevelManager::Release_Level( void )
 	TransitionManager::Reset();
 
 {
-	WW3DAssetManager::Get_Instance()->Free_Assets();	
+	// Clear the menu backdrop model before freeing assets —
+	// Free_Assets() destroys all textures/anims, leaving the model
+	// with stale references.  The menu will re-create it on demand.
+	if (MenuDialogClass::Get_BackDrop()) {
+		MenuDialogClass::Get_BackDrop()->Remove_Model();
+	}
+	WW3DAssetManager::Get_Instance()->Free_Assets();
 }
 }
