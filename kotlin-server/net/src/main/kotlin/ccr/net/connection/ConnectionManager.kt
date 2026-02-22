@@ -148,6 +148,7 @@ class ConnectionManager(
             host.lastServiceCount = serviceCount
             host.markKeepaliveSent(nowMs)
 
+            host.packetLossPc = host.reliable.computeAndResetLoss()   // ← new line
             val packetId = host.reliable.nextSendId
             val p = serverPacket(PacketType.KEEPALIVE, packetId)
             p.payload.addFloat(host.packetLossPc)

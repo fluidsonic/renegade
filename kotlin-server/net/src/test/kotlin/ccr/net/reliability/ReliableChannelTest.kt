@@ -96,4 +96,41 @@ class ReliableChannelTest {
         assertNotNull(ch.receive(p0a))
         assertNull(ch.receive(p0b))  // duplicate, already delivered
     }
+
+    @Test
+    fun `computeAndResetLoss returns 0 when no packets sent`() {
+        val ch = ReliableChannel()
+        assertEquals(0f, ch.computeAndResetLoss())
+    }
+
+    @Test
+    fun `computeAndResetLoss returns 0 when all packets sent without resend`() {
+        val ch = ReliableChannel()
+        val p = Packet()
+        ch.enqueue(p, ByteArray(4))
+        assertEquals(0f, ch.computeAndResetLoss())
+    }
+
+    @Test
+    fun `computeAndResetLoss returns resend fraction`() {
+        val ch = ReliableChannel()
+        val p1 = Packet(); ch.enqueue(p1, ByteArray(4))
+        val p2 = Packet(); ch.enqueue(p2, ByteArray(4))
+        val p3 = Packet(); ch.enqueue(p3, ByteArray(4))
+        val p4 = Packet(); ch.enqueue(p4, ByteArray(4))
+        // Resend p1 once
+        ch.markResent(p1.id, System.currentTimeMillis())
+        // Loss = 1 resend / 4 sent = 0.25
+        assertEquals(0.25f, ch.computeAndResetLoss())
+    }
+
+    @Test
+    fun `computeAndResetLoss resets counters after call`() {
+        val ch = ReliableChannel()
+        val p = Packet(); ch.enqueue(p, ByteArray(4))
+        ch.markResent(p.id, System.currentTimeMillis())
+        ch.computeAndResetLoss()  // first call resets
+        // Second call should return 0 (counters reset)
+        assertEquals(0f, ch.computeAndResetLoss())
+    }
 }

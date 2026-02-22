@@ -31,11 +31,16 @@ class ReliableChannel {
     var nextReceiveId: Int = 0
         private set
 
+    // C++: per-keepalive-interval packet loss stats
+    private var sentSinceReset: Int = 0
+    private var resentSinceReset: Int = 0
+
     // Enqueue a packet for reliable sending. Assigns the next send ID.
     fun enqueue(packet: Packet, rawData: ByteArray, nowMs: Long = System.currentTimeMillis()): Int {
         val id = nextSendId++
         packet.id = id
         sendQueue[id] = PendingPacket(packet, rawData, nowMs, nowMs)
+        sentSinceReset++
         return id
     }
 
@@ -60,6 +65,7 @@ class ReliableChannel {
                 sentTimeMs = nowMs,
                 resendCount = pending.resendCount + 1,
             )
+            resentSinceReset++
         }
     }
 
@@ -80,6 +86,16 @@ class ReliableChannel {
         val delivered = receiveBuffer.remove(nextReceiveId)!!
         nextReceiveId++
         return delivered
+    }
+
+    // C++: packet loss percentage for keepalive reporting.
+    // Returns fraction of sends that required a resend in the current interval.
+    // Resets counters so each keepalive interval reflects only that interval's traffic.
+    fun computeAndResetLoss(): Float {
+        val loss = if (sentSinceReset > 0) resentSinceReset.toFloat() / sentSinceReset else 0f
+        sentSinceReset = 0
+        resentSinceReset = 0
+        return loss.coerceIn(0f, 1f)
     }
 
     // Deliver all buffered in-order packets (call repeatedly until null)
