@@ -120,13 +120,24 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 ### On-disk / network struct fields must be fixed-width
 - `void*`, `long`, `unsigned long` in binary format structs are bugs on 64-bit macOS (8 bytes vs Windows 32-bit 4 bytes)
 - Use `uint32_t`/`int32_t` for every field read/written from disk or a network wire format
+- `HRESULT` is `typedef long HRESULT` — on arm64 `long` = 8 bytes, but D3D return values fit in 32 bits; use `static_cast<uint32_t>(hr)` when storing into `uint32_t` variables (~42 sites in ww3d2)
+- `TIMEGETTIME()` returns `unsigned long` — logically wraps at 32 bits on arm64; cast with `static_cast<uint32_t>(TIMEGETTIME())`
+- `fseek`/`ftell` return `long` on macOS — cast to `int32_t` at call sites; `fpos_t` is `long long`, also needs cast
+
+### GL rendering layer — d3d8_gl.cpp
+- `original/compat/d3d8_gl.cpp` — D3D8→OpenGL translation layer; texture stages ~line 920, lighting ~line 877, transforms ~line 840
+- **Texture coordinate generation**: `D3DTSS_TCI_CAMERASPACENORMAL` → `GL_TEXTURE_GEN_S/T` with `GL_NORMAL_MAP` (implemented); other TCI modes not yet implemented
+- **Texture transform matrices**: `D3DTS_TEXTURE0..7` stored in `texMatrix[8]`; applied via `glMatrixMode(GL_TEXTURE)` when `D3DTSS_TEXTURETRANSFORMFLAGS != 0`
+- **`d3d_to_gl_matrix`**: straight memcpy of 16 floats — game pre-transposes before calling SetTransform, so this function transposes back to GL column-major
+- **ClassicEnvironmentMapperClass** (`original-untouched/Code/ww3d2/mapper.cpp` ~line 593): sets `D3DTSS_TCI_CAMERASPACENORMAL` + `D3DTS_TEXTURE0` scale+bias matrix; meshes using it have FVF `0x12` (XYZ+NORMAL only, no stored UVs) — if such a mesh appears dark/invisible with screen blend, the texgen path is the suspect
 
 ### Building to find all issues
 - Use `cmake --build ... -- -k 0` (Ninja keep-going) to see ALL errors, not just the first one
 - After merging a worktree feature branch, reconfigure: `cmake -S original -B original/build -G Ninja` — regenerates `compile_commands.json` with updated flags/includes so clangd stays accurate
-- Batch find-and-replace across source files: use Python3 `re` module, not Perl — Perl `(?!_t)` negative lookaheads are mangled by zsh on macOS (`!` triggers history expansion)
+- Batch find-and-replace across source files: use Python3 `re` module or the Edit tool — **never use shell commands (`sed`, `echo`, heredocs) containing `!`** — zsh history expansion corrupts `!=` to `\!=`, `!x` to `\!x`, etc. silently; this applies to Perl, sed scripts, and any heredoc
 - Case-insensitive `#include` search: use `grep -ril '"header.h"'` — include paths can have mixed case (e.g. `"BitType.H"`)
 - Running the game from a background bash subprocess fails with "SDL_Init: no displays" — always run interactively
+- **Keep diagnostic `fprintf` logging until visual confirmation** — remove only after the user confirms the fix works; removing before confirmation means a rebuild just to re-add it
 
 ## Kotlin Server — Known Patterns & Pitfalls
 
@@ -223,6 +234,11 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - `god.createCommando(rhostId, playerType)` — creates/registers SoldierGameObj, sets `BIT_CREATION` dirty; `replicationTick()` handles sending to all in-game hosts
 - `god.deleteSoldier(rhostId)` — calls `setDeletePending()`; centralized delete-pending loop broadcasts deletion
 - `god.removePlayer(rhostId)` — full disconnect cleanup: deleteSoldier + player object removal
+
+### GameObjManager — ticking game objects
+- `gameObjManager.add(obj)` registers any `BaseGameObj` for `think()` ticks; `GameObjManager.think(deltaSeconds)` iterates `gameObjList` and calls `obj.think()` on every registered object
+- New ticking objects must `override fun think(deltaSeconds: Float)` (declared `open` in `BaseGameObj`)
+- **The delete-pending loop does NOT call `gameObjManager.remove()`** — objects with custom `think()` MUST guard with `if (isDeletePending) return` at the top, or explicitly call `gameObjManager.remove(this)` before `setDeletePending()`
 
 ### Game loop architecture (God, GameState, BuildingManager)
 - `God(server)` owns player/soldier lifecycle; all player state maps live in God (`playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`)
