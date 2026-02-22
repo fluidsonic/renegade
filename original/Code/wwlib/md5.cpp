@@ -1,4 +1,4 @@
-#include "global.h"
+#include "md5types.h"
 #include "md5.h"
 
 /* Constants for MD5Transform routine.
