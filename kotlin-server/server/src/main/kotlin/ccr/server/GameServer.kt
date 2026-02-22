@@ -810,6 +810,9 @@ class GameServer(internal val config: ServerConfig) {
                             // (VendorClass already checked canGenerateVehicles so this is very rare)
                             println("[GAME] no available vehicle factory for team=$playerTeam (race condition)")
                         }
+                    } else if (result.isEquipmentPurchase) {
+                        // C++: PowerUpGameObjDef::Grant() — update existing soldier, no respawn
+                        god.grantPowerUp(rhostId, result.purchasedDefId)
                     } else {
                         // Kill current soldier and respawn as purchased character
                         god.deleteSoldier(rhostId)

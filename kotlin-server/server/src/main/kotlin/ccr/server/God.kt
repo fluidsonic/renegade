@@ -11,6 +11,7 @@ import ccr.server.defs.SoldierGameObjDefWrapper
 import ccr.server.defs.VehicleGameObjDefWrapper
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.combat.BeaconGameObjDef
+import ccr.server.defs.combat.PowerUpGameObjDef
 import ccr.server.level.ldd.LoadedVehicleGameObj
 import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
@@ -35,6 +36,20 @@ open class God(private val server: GameServer) {
 
     companion object {
         const val RESPAWN_DELAY_SECONDS = 3.0f
+
+        /**
+         * Adds a weapon to a soldier's weapon bag, or tops up rounds if already owned.
+         * C++: WeaponBagClass::Add_Weapon — new weapon = add entry; already owned = add rounds.
+         */
+        internal fun addWeaponToSoldier(soldier: SoldierGameObj, weaponDefId: Int, rounds: Int, grantWeapon: Boolean) {
+            val existing = soldier.weapons.indexOfFirst { it.definitionId == weaponDefId }
+            if (existing >= 0) {
+                val old = soldier.weapons[existing]
+                soldier.weapons[existing] = old.copy(totalRounds = old.totalRounds + rounds)
+            } else if (grantWeapon) {
+                soldier.weapons.add(WeaponEntry(weaponDefId, rounds))
+            }
+        }
     }
 
     // C++ GodState enum
@@ -420,6 +435,54 @@ open class God(private val server: GameServer) {
         println("[GOD] harvester spawned: defId=$defId netId=$netId team=${if (team == 0) "NOD" else "GDI"} " +
             "pos=(${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z})")
         return vehicle
+    }
+
+    // ---- Equipment grants (PowerUpGameObjDef::Grant) ----
+
+    /**
+     * Applies a PowerUpGameObjDef grant to the buyer's existing soldier.
+     * C++: PowerUpGameObjDef::Grant() — called on equipment purchases and powerup pickups.
+     * Updates in-place and marks BIT_OCCASIONAL dirty so all clients see the change.
+     */
+    fun grantPowerUp(rhostId: Int, powerUpDefId: Int) {
+        val soldier = soldiersByHost[rhostId] ?: return
+        val def = server.loadedLevel?.definitions?.findById(powerUpDefId.toUInt())
+            as? PowerUpGameObjDef ?: return
+
+        if (def.grantShieldStrength != 0f && soldier.shieldStrength < soldier.shieldStrengthMax) {
+            soldier.shieldStrength = (soldier.shieldStrength + def.grantShieldStrength)
+                .coerceAtMost(soldier.shieldStrengthMax)
+            soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+        }
+
+        if (def.grantHealth != 0f && soldier.health < soldier.healthMax) {
+            soldier.health = (soldier.health + def.grantHealth).coerceAtMost(soldier.healthMax)
+            soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+        }
+
+        if (def.grantWeaponId != 0) {
+            addWeaponToSoldier(soldier, def.grantWeaponId, def.grantWeaponRounds, def.grantWeapon)
+            soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+            println("[GOD] equipment grant: rhostId=$rhostId weapon=${def.grantWeaponId} " +
+                "rounds=${def.grantWeaponRounds} grantWeapon=${def.grantWeapon}")
+        } else if (def.grantWeaponClips && def.grantWeaponRounds > 0) {
+            val definitions = server.loadedLevel?.definitions
+            var refilled = false
+            for (i in soldier.weapons.indices) {
+                val entry = soldier.weapons[i]
+                val wDef = definitions?.findById(entry.definitionId.toUInt()) as? WeaponDefinitionClass
+                if (wDef != null && wDef.canReceiveGenericCnCAmmo && wDef.clipSize > 0) {
+                    soldier.weapons[i] = entry.copy(
+                        totalRounds = entry.totalRounds + wDef.clipSize * def.grantWeaponRounds,
+                    )
+                    refilled = true
+                }
+            }
+            if (refilled) {
+                soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+                println("[GOD] equipment grant: rhostId=$rhostId weapon clips refilled")
+            }
+        }
     }
 
     /**
