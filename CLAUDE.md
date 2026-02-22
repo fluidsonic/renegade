@@ -35,6 +35,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 
 ## Workflow Meta-Rules
 - When the user writes **"remember X"**, immediately update `CLAUDE.md` with X — no need to ask for confirmation
+- **Minimize work for the user** — always run build commands, tests, and verifications yourself rather than giving the user commands to paste; only hand off commands that require interactive UI (e.g. running the game for visual confirmation)
 - **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
 - **Git merges must use `--ff-only`** — always rebase the feature branch onto the base branch first, then FF-merge
 - **Always create worktrees from the latest local `main`** — run `git pull` (or at least `git fetch`) on main before branching; stale branch points cause unnecessary rebase conflicts
@@ -46,6 +47,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - `/CLAUDE.md`, `/docs/*.md`, `/plans/*.md` can be written/edited in plan mode
 - Always use `<project root>/.tmp/` for temporary files (scripts, scratch files, etc.) — never use `/tmp` or `$TMPDIR`
 - Use `<project root>/.worktrees/` for git worktrees (not `.claude/worktrees/`)
+- **Always provide copyable debugging instructions** — when the user needs to help debug, give ready-to-paste commands (e.g. how to run the C++ binary with output to a log file, LLDB commands to debug a crash with debugger attached, etc.)
 
 ## C++ Port — Known Patterns & Pitfalls
 

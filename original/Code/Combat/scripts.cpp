@@ -33,7 +33,7 @@ void ScriptManager::Init(void)
 	hDLL = NULL;
 	EngineCommands = Get_Script_Commands();
 
-		Load_Scripts("SCRIPTS.DLu");		// RELEASE
+		Load_Scripts("SCRIPTS.dylib");		// RELEASE
 }
 
 /*
@@ -86,6 +86,7 @@ void ScriptManager::Destroy_Pending(void)
 void ScriptManager::Load_Scripts(const char* dll_filename)
 {
 	Debug_Say(("Script Manager Loading Script File %s\n", dll_filename));
+	fprintf(stderr, "[SCRIPTS] Loading script file: %s\n", dll_filename);
 
 	// If we're in multiplay and not the server, just bail
    if (!IS_SOLOPLAY && CombatManager::I_Am_Only_Client())
@@ -136,8 +137,10 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 
 	if (hDLL == NULL) {
 		Debug_Say(("Cound not load DLL file %s\n", dll_filename));
+		fprintf(stderr, "[SCRIPTS] LoadLibrary FAILED for %s: %s\n", dll_filename, dlerror());
 		return;
 	}
+	fprintf(stderr, "[SCRIPTS] LoadLibrary succeeded: %s\n", dll_filename);
 
 	// Get create script function
 	ScriptCreateFunct = (LPFN_CREATE_SCRIPT)GetProcAddress(hDLL, LPSTR_CREATE_SCRIPT);
@@ -145,6 +148,9 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 
 	if (!ScriptCreateFunct) {
 		Debug_Say(("Cound not find Create_Script\n"));
+		fprintf(stderr, "[SCRIPTS] FAILED to resolve Create_Script\n");
+	} else {
+		fprintf(stderr, "[SCRIPTS] Resolved Create_Script\n");
 	}
 
 	// Get destroy script function
@@ -153,6 +159,9 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 
 	if (!ScriptDestroyFunct) {
 		Debug_Say(("Cound not find Destroy_Script\n"));
+		fprintf(stderr, "[SCRIPTS] FAILED to resolve Destroy_Script\n");
+	} else {
+		fprintf(stderr, "[SCRIPTS] Resolved Destroy_Script\n");
 	}
 
 	// Initialize request script destroy function
@@ -161,9 +170,11 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 	assert(set_request_destroy_func != NULL);
 
 	if (set_request_destroy_func != NULL) {
+		fprintf(stderr, "[SCRIPTS] Resolved Set_Request_Destroy_Func\n");
 		set_request_destroy_func(Request_Destroy_Script);
 	} else {
 		Debug_Say(("Cound not find Set_Request_Destroy_Func\n"));
+		fprintf(stderr, "[SCRIPTS] FAILED to resolve Set_Request_Destroy_Func\n");
 	}
 
 	// Initialize script commands if not being run from the editor
@@ -173,6 +184,7 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 		assert(set_commands_func != NULL);
 
 		if (set_commands_func != NULL) {
+			fprintf(stderr, "[SCRIPTS] Resolved Set_Script_Commands\n");
 			ScriptCommandsClass commands;
 			commands.Commands = EngineCommands;
 
@@ -180,14 +192,20 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 
 			if (!success) {
 				Debug_Say(("Failed to set script commands!\n"));
+				fprintf(stderr, "[SCRIPTS] Script commands set FAILED\n");
 
 				// This should keep us from going to scripts!
 				ScriptCreateFunct = NULL;
+			} else {
+				fprintf(stderr, "[SCRIPTS] Script commands set successfully\n");
 			}
 		} else {
 			Debug_Say(("Cound not find Set_Script_Commands\n"));
+			fprintf(stderr, "[SCRIPTS] FAILED to resolve Set_Script_Commands\n");
 		}
 	}
+
+	fprintf(stderr, "[SCRIPTS] Script system initialized\n");
 }
 
 /*
