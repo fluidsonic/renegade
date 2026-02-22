@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(CnCRenegade CXX C)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Debug build: no optimizations, full debug symbols, AddressSanitizer
@@ -56,7 +56,6 @@ add_compile_options(
     -Wno-dangling-else
     -Wno-macro-redefined
     -Werror=non-pod-varargs
-    -fdelayed-template-parsing
 )
 
 # Thread support for pthread

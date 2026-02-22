@@ -7,8 +7,7 @@
 #include "bittype.h"
 #include "chunkio.h"
 #include "saveload.h"
-
-class PersistClass;
+#include "persist.h"
 
 /*
 ** PersistFactoryClass
