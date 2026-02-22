@@ -478,7 +478,7 @@ int DropDownCtrlClass::Find_Closest_String(const WCHAR* string)
 //
 ////////////////////////////////////////////////////////////////
 void
-DropDownCtrlClass::Set_Item_Data (int index, uint32_t data)
+DropDownCtrlClass::Set_Item_Data (int index, uintptr_t data)
 {
 	//
 	//	Index into the list and set the user data
@@ -495,10 +495,10 @@ DropDownCtrlClass::Set_Item_Data (int index, uint32_t data)
 //	Get_Item_Data
 //
 ////////////////////////////////////////////////////////////////
-uint32_t
+uintptr_t
 DropDownCtrlClass::Get_Item_Data (int index)
 {
-	uint32_t retval = 0;
+	uintptr_t retval = 0;
 
 	//
 	//	Index into the list and return the user data to the caller

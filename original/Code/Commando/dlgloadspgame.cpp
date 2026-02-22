@@ -200,9 +200,9 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 				file_path += "/";
 				file_path += find_info.cFileName;
 
-				list_ctrl->Set_Entry_Data (item_index, 0, (uint32_t)(uintptr_t)new FILETIME(local_time));
-				list_ctrl->Set_Entry_Data (item_index, 1, (uint32_t)(uintptr_t)new StringClass(file_path));
-				list_ctrl->Set_Entry_Data (item_index, 2, (uint32_t)(uintptr_t)new StringClass(find_info.cFileName));
+				list_ctrl->Set_Entry_Data (item_index, 0, (uintptr_t)new FILETIME(local_time));
+				list_ctrl->Set_Entry_Data (item_index, 1, (uintptr_t)new StringClass(file_path));
+				list_ctrl->Set_Entry_Data (item_index, 2, (uintptr_t)new StringClass(find_info.cFileName));
 			}
 		}
 	}
@@ -388,7 +388,7 @@ LoadSPGameMenuClass::On_ListCtrl_Delete_Entry
 //
 ////////////////////////////////////////////////////////////////
 int CALLBACK
-LoadSPGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uint32_t user_param)
+LoadSPGameMenuClass::LoadListSortCallback (ListCtrlClass *list_ctrl, int item_index1, int item_index2, uintptr_t user_param)
 {
 	int retval = 0;
 
@@ -565,7 +565,7 @@ LoadSPGameMenuClass::Update_Button_State (void)
 		//
 		//	Get the filename associated with this entry
 		//
-		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
+		if (list_ctrl->Get_Entry_Data (item_index, 0) != 0) {
 			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 1))->Peek_Buffer ();
 
 			//
@@ -628,7 +628,7 @@ LoadSPGameMenuClass::Delete_Game (bool prompt)
 		//
 		//	Determine what filename this entry refers to
 		//
-		if (list_ctrl->Get_Entry_Data (item_index, 0) != NULL) {
+		if (list_ctrl->Get_Entry_Data (item_index, 0) != 0) {
 			StringClass filename = ((StringClass *)list_ctrl->Get_Entry_Data (item_index, 1))->Peek_Buffer ();
 
 			// Never delete .MIX files

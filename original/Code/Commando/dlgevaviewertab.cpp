@@ -70,7 +70,7 @@ EvaViewerTabClass::On_Init_Dialog (void)
 			//
 			int item_index = ListCtrl->Insert_Entry (index, object.Get_Name ());
 			if (item_index >= 0) {
-				ListCtrl->Set_Entry_Data (item_index, 0, (uint32_t)(uintptr_t)&object);
+				ListCtrl->Set_Entry_Data (item_index, 0, (uintptr_t)&object);
 
 				//
 				//	Colorize the entry
@@ -407,7 +407,7 @@ EvaViewerTabClass::ListSortCallback
 	ListCtrlClass *	list_ctrl,
 	int					item_index1,
 	int					item_index2,
-	uint32_t				user_param
+	uintptr_t				user_param
 )
 {
 	//

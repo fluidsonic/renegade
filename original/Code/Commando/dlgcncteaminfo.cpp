@@ -353,7 +353,7 @@ CNCTeamInfoDialogClass::ListSortCallback
 	ListCtrlClass *	list_ctrl,
 	int					item_index1,
 	int					item_index2,
-	uint32_t				user_param
+	uintptr_t				user_param
 )
 {
 	int rank1 = (int)list_ctrl->Get_Entry_Data (item_index1, COL_RANK);

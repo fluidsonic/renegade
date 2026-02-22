@@ -215,7 +215,7 @@ EvaObjectivesTabClass::ListSortCallback
 	ListCtrlClass *	list_ctrl,
 	int					item_index1,
 	int					item_index2,
-	uint32_t				user_param
+	uintptr_t				user_param
 )
 {
 	int count = list_ctrl->Get_Entry_Count ();

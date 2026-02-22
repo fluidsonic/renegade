@@ -386,7 +386,7 @@ ControlSaveLoadMenuClass::Insert_Configuration (const InputConfigClass &config)
 		//	Make a copy of the config object and store it with the entry
 		//
 		InputConfigClass *local_copy = new InputConfigClass (config);
-		list_ctrl->Set_Entry_Data (item_index, 0, (DWORD)(uintptr_t)local_copy);
+		list_ctrl->Set_Entry_Data (item_index, 0, (uintptr_t)local_copy);
 
 		//
 		//	Change the color of this configuration if the user cannot edit it
@@ -458,14 +458,14 @@ ControlSaveLoadMenuClass::ListSortCallback
 	ListCtrlClass *	list_ctrl,
 	int					item_index1,
 	int					item_index2,
-	uint32_t				user_param
+	uintptr_t				user_param
 )
 {
 	int retval = 0;
 
-	if (list_ctrl->Get_Entry_Data (item_index1, 0) == NULL) {
+	if (list_ctrl->Get_Entry_Data (item_index1, 0) == 0) {
 		retval = 1;
-	} else if (list_ctrl->Get_Entry_Data (item_index2, 0) == NULL) {
+	} else if (list_ctrl->Get_Entry_Data (item_index2, 0) == 0) {
 		retval = -1;
 	} else {
 
