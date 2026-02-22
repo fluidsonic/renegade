@@ -43,14 +43,24 @@ open class God(private val server: GameServer) {
          * When grantWeapon=false and weapon is not owned, nothing is added — this matches
          * C++ WeaponBagClass::Add_Weapon which returns early when give_weapon=false and
          * the weapon is not found in the bag.
+         *
+         * @param maxRounds round cap (from WeaponDefinitionClass.maxInventoryRounds); default = uncapped.
          */
-        internal fun addWeaponToSoldier(soldier: SoldierGameObj, weaponDefId: Int, rounds: Int, grantWeapon: Boolean) {
+        internal fun addWeaponToSoldier(
+            soldier: SoldierGameObj,
+            weaponDefId: Int,
+            rounds: Int,
+            grantWeapon: Boolean,
+            maxRounds: Int = Int.MAX_VALUE,
+        ) {
             val existing = soldier.weapons.indexOfFirst { it.definitionId == weaponDefId }
             if (existing >= 0) {
                 val old = soldier.weapons[existing]
-                soldier.weapons[existing] = old.copy(totalRounds = old.totalRounds + rounds)
+                soldier.weapons[existing] = old.copy(
+                    totalRounds = (old.totalRounds + rounds).coerceAtMost(maxRounds),
+                )
             } else if (grantWeapon) {
-                soldier.weapons.add(WeaponEntry(weaponDefId, rounds))
+                soldier.weapons.add(WeaponEntry(weaponDefId, rounds.coerceAtMost(maxRounds)))
             }
         }
     }
@@ -452,6 +462,8 @@ open class God(private val server: GameServer) {
         val def = server.loadedLevel?.definitions?.findById(powerUpDefId.toUInt())
             as? PowerUpGameObjDef ?: return
 
+        // TODO: grantShieldType — upgrades soldier's armor type when GrantShieldType > current;
+        //   C++: powerup.cpp line 268; requires mutable shieldType field and armor type comparison
         // TODO: grantShieldStrengthMax — increases max shield by (GrantShieldStrengthMax * baseDef.shieldMax);
         //   C++: powerup.cpp line 277; requires looking up SoldierGameObjDef.defenseObjectDef.shieldStrengthMax
         if (def.grantShieldStrength != 0f && soldier.shieldStrength < soldier.shieldStrengthMax) {
@@ -468,7 +480,10 @@ open class God(private val server: GameServer) {
         }
 
         if (def.grantWeaponId != 0) {
-            addWeaponToSoldier(soldier, def.grantWeaponId, def.grantWeaponRounds, def.grantWeapon)
+            // C++: WeaponClass::maxInventoryRounds caps total ammo; Apply_Damage/Add_Rounds respect it
+            val wDef = server.loadedLevel?.definitions?.findById(def.grantWeaponId.toUInt()) as? WeaponDefinitionClass
+            val maxRounds = wDef?.maxInventoryRounds ?: Int.MAX_VALUE
+            addWeaponToSoldier(soldier, def.grantWeaponId, def.grantWeaponRounds, def.grantWeapon, maxRounds)
             soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
             println("[GOD] equipment grant: rhostId=$rhostId weapon=${def.grantWeaponId} " +
                 "rounds=${def.grantWeaponRounds} grantWeapon=${def.grantWeapon}")
@@ -480,7 +495,8 @@ open class God(private val server: GameServer) {
                 val wDef = definitions?.findById(entry.definitionId.toUInt()) as? WeaponDefinitionClass
                 if (wDef != null && wDef.canReceiveGenericCnCAmmo && wDef.clipSize > 0) {
                     soldier.weapons[i] = entry.copy(
-                        totalRounds = entry.totalRounds + wDef.clipSize * def.grantWeaponRounds,
+                        totalRounds = (entry.totalRounds + wDef.clipSize * def.grantWeaponRounds)
+                            .coerceAtMost(wDef.maxInventoryRounds),
                     )
                     refilled = true
                 }
