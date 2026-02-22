@@ -24,22 +24,22 @@ typedef struct _BINKTRACK {
     UINT Channels;
 } BINKTRACK, *LPBINKTRACK;
 
-// All Bink functions are no-ops
-inline HBINK     BinkOpen(const char* name, UINT flags) { return NULL; }
-inline void      BinkClose(HBINK bink) {}
-inline int       BinkDoFrame(HBINK bink) { return 0; }
-inline void      BinkNextFrame(HBINK bink) {}
-inline int       BinkWait(HBINK bink) { return 0; }
-inline int       BinkCopyToBuffer(HBINK bink, void* dest, long destpitch, UINT destheight, UINT destx, UINT desty, UINT flags) { return 0; }
-inline void      BinkGoto(HBINK bink, UINT framenum, int flags) {}
-inline UINT      BinkGetTrackMaxSize(HBINK bink, UINT track) { return 0; }
-inline UINT      BinkGetTrackData(HBINK bink, UINT track) { return 0; }
-inline UINT      BinkGetTrackType(HBINK bink, UINT track) { return 0; }
-inline UINT      BinkGetNumTracks(HBINK bink) { return 0; }
-inline UINT      BinkGetTrackID(HBINK bink, UINT track) { return 0; }
-inline void      BinkSetVolume(HBINK bink, UINT track, int vol) {}
-inline void      BinkSetPan(HBINK bink, UINT track, int pan) {}
-inline void      BinkSoundUseDirectSound(UINT device) {}
+// Bink API -- implemented via FFmpeg in compat/bink_impl.cpp
+extern HBINK     BinkOpen(const char* name, UINT flags);
+extern void      BinkClose(HBINK bink);
+extern int32_t   BinkDoFrame(HBINK bink);
+extern void      BinkNextFrame(HBINK bink);
+extern int32_t   BinkWait(HBINK bink);
+extern int32_t   BinkCopyToBuffer(HBINK bink, void* dest, int32_t destpitch, UINT destheight, UINT destx, UINT desty, UINT flags);
+extern void      BinkGoto(HBINK bink, UINT framenum, int32_t flags);
+extern UINT      BinkGetTrackMaxSize(HBINK bink, UINT track);
+extern UINT      BinkGetTrackData(HBINK bink, UINT track);
+extern UINT      BinkGetTrackType(HBINK bink, UINT track);
+extern UINT      BinkGetNumTracks(HBINK bink);
+extern UINT      BinkGetTrackID(HBINK bink, UINT track);
+extern void      BinkSetVolume(HBINK bink, UINT track, int32_t vol);
+extern void      BinkSetPan(HBINK bink, UINT track, int32_t pan);
+extern void      BinkSoundUseDirectSound(UINT device);
 
 // Bink copy/surface flags
 #define BINKSURFACE565       0x00000010L

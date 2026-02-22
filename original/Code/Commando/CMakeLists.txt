@@ -1,5 +1,6 @@
 set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 set(COMPAT_DIR "${CMAKE_SOURCE_DIR}/compat")
+set(FFMPEG_ROOT "/opt/homebrew/opt/ffmpeg")
 
 file(GLOB COMMANDO_SOURCES CONFIGURE_DEPENDS "${ORIG_SRC}/Commando/*.cpp")
 
@@ -44,6 +45,7 @@ add_executable(Commando MACOSX_BUNDLE
     "${COMPAT_DIR}/wingdi_coretext.cpp"
     "${COMPAT_DIR}/winfile.cpp"
     "${COMPAT_DIR}/mss_impl.cpp"
+    "${COMPAT_DIR}/bink_impl.cpp"
     "${CHAT_RES}"
 )
 
@@ -58,11 +60,12 @@ set_target_properties(Commando PROPERTIES
     # until we explicitly request it (optional — remove to get Dock icon)
     MACOSX_BUNDLE_INFO_PLIST        "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
     # Allow dlopen("SCRIPTS.dylib") to find the dylib next to the executable.
-    BUILD_RPATH   "@executable_path"
-    INSTALL_RPATH "@executable_path"
+    BUILD_RPATH   "@executable_path;${FFMPEG_ROOT}/lib"
+    INSTALL_RPATH "@executable_path;${FFMPEG_ROOT}/lib"
 )
 
 target_include_directories(Commando PRIVATE
+    "${FFMPEG_ROOT}/include"
     "${ORIG_SRC}"
     "${ORIG_SRC}/Commando"
     "${ORIG_SRC}/Combat"
@@ -115,6 +118,9 @@ target_link_libraries(Commando PRIVATE
     "-framework CoreGraphics"
     "-framework CoreAudio"
     "-framework AudioToolbox"
+    # FFmpeg for Bink video playback
+    "-L${FFMPEG_ROOT}/lib"
+    "-lavformat" "-lavcodec" "-lswscale" "-lavutil"
     # Export all global symbols so Scripts.dylib (loaded via dlopen) can find them.
     "-Wl,-export_dynamic"
 )
