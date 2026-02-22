@@ -41,7 +41,6 @@ add_compile_options(
     -Wno-format
     -Wno-parentheses-equality
     -Wno-tautological-compare
-    -Wno-unused-variable
     -Wno-infinite-recursion
     -Wno-self-assign
     -Wno-c++11-extensions
