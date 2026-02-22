@@ -63,6 +63,7 @@
 #include "except.h"
 #include "consolemode.h"
 #include "serversettings.h"
+#include "gamespyadmin.h"
 #include "pscene.h"
 #include "dazzle.h"
 #include "skinpackagemgr.h"
@@ -729,12 +730,18 @@ bool Game_Init(void)
 	}
 
 	//
-	// Start up intro movies.
+	// Start up intro movies (skip for GameSpy / +connect launches).
 	//
-	MovieGameModeClass * mode = (MovieGameModeClass *)GameModeManager::Find ("Movie");
-	if ( mode ) {
-		mode->Activate();
-		mode->Startup_Movies( );
+	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+		if (!ConsoleBox.Is_Exclusive()) {
+			RenegadeDialogMgrClass::Goto_Location(RenegadeDialogMgrClass::LOC_SPLASH_IN);
+		}
+	} else {
+		MovieGameModeClass * mode = (MovieGameModeClass *)GameModeManager::Find ("Movie");
+		if ( mode ) {
+			mode->Activate();
+			mode->Startup_Movies( );
+		}
 	}
 
 
