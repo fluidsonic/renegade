@@ -57,6 +57,8 @@ import ccr.server.net.WarFactoryGameObj
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
+import ccr.server.defs.combat.PowerUpGameObjDef
+import ccr.server.net.PowerUpGameObj
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -168,6 +170,9 @@ class GameServer(internal val config: ServerConfig) {
         loadedLevel?.also { level ->
             if (level.dynamicData.spawners.isNotEmpty()) {
                 spawnManager = SpawnManager(level)
+                spawnManager?.onCreatePowerUp = { position, def ->
+                    createPowerUp(position, def)
+                }
             }
         }
 
@@ -416,6 +421,9 @@ class GameServer(internal val config: ServerConfig) {
 
             // GameObjManager.think() — drives building Think() loops (refinery trickle, war factory timer, etc.)
             gameObjManager.think(frameDeltaSeconds)
+
+            // SpawnManager.think() — ticks powerup spawner countdown timers
+            spawnManager?.think(frameDeltaSeconds)
 
             // Update measured FPS and push to clients
             updateFps(nowMs)
@@ -1392,6 +1400,30 @@ class GameServer(internal val config: ServerConfig) {
     fun getAmmoDefForWeapon(weaponDefId: Int): AmmoDefinitionClass? {
         val wDef = loadedLevel?.definitions?.findById(weaponDefId.toUInt()) as? WeaponDefinitionClass ?: return null
         return loadedLevel?.definitions?.findById(wDef.primaryAmmoDefID.toUInt()) as? AmmoDefinitionClass
+    }
+
+    /**
+     * Creates a PowerUpGameObj at the given position and registers it with the server.
+     * Called by SpawnManager when a powerup spawner's timer fires.
+     * C++: SpawnerClass::Spawn_Object() creates the object and calls Add_Network_Object().
+     *
+     * @param position  world position from the spawner's transform
+     * @param def       the PowerUpGameObjDef describing what to grant
+     */
+    internal fun createPowerUp(position: Vector3, def: PowerUpGameObjDef) {
+        val powerUp = PowerUpGameObj(
+            definitionId  = def.id.toInt(),
+            position      = position,
+            modelName     = "",   // C++: model comes from physics def; stub for Phase 6
+        )
+        powerUp.powerUpDef = def
+        powerUp.serverRef  = this
+
+        val netId = NetworkObjectManager.getNewDynamicId()
+        NetworkObjectManager.registerObject(powerUp, netId)
+        gameObjManager.add(powerUp)
+
+        println("[POWERUP] spawned '${def.name}' netId=$netId at (${position.x}, ${position.y}, ${position.z})")
     }
 
     private fun initEncoders() {
