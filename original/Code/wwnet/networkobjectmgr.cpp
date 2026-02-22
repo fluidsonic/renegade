@@ -224,6 +224,24 @@ NetworkObjectMgrClass::Find_Object (int id_to_find, int *index)
 
 ////////////////////////////////////////////////////////////////
 //
+//	Shutdown
+//
+// Explicitly zero both lists so that post-exit static destructors
+// (e.g. BackgroundMgrClass _TheBackgroundMgr) calling Unregister_Object
+// see Count()==0 and return harmlessly. Without this, VectorClass::~VectorClass
+// zeroes VectorMax but not DynamicVectorClass::ActiveCount, causing a stale
+// ActiveCount to trigger an out-of-bounds assert in the binary search.
+//
+////////////////////////////////////////////////////////////////
+void
+NetworkObjectMgrClass::Shutdown (void)
+{
+	_ObjectList.Clear ();
+	_DeletePendingList.Clear ();
+}
+
+////////////////////////////////////////////////////////////////
+//
 //	Think
 //
 ////////////////////////////////////////////////////////////////

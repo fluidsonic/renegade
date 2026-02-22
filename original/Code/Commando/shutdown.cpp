@@ -35,6 +35,7 @@
 #include "modpackagemgr.h"
 #include "sdl2_platform.h"
 
+#include "networkobjectmgr.h"
 #include "dx8wrapper.h"
 #include "pscene.h"
 #include "systeminfolog.h"
@@ -245,6 +246,7 @@ void Game_Shutdown(void)
 	cBandwidthGraph::Onetime_Shutdown();
 
 	GameModeManager::Destroy_All();
+	NetworkObjectMgrClass::Shutdown();
   EncyclopediaMgrClass::Shutdown();
 	RenegadeDialogMgrClass::Shutdown();
 

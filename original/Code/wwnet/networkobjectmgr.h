@@ -56,6 +56,11 @@ public:
 	static void							Set_Is_Level_Loading (bool onoff)	{ _IsLevelLoading = onoff; }
 
 	//
+	//	Lifecycle
+	//
+	static void							Shutdown (void);
+
+	//
 	//	Timestep
 	//
 	static void							Think (void);
