@@ -59,6 +59,7 @@ data class ServerConfig(
     // CnC_Nod_Minigunner_0 = 0x04e22811, CnC_GDI_MiniGunner_0 = 0x04e22803.
     val nodSoldierDefId: Int = 81930257,   // 0x04e22811  CnC_Nod_Minigunner_0
     val gdiSoldierDefId: Int = 81930243,   // 0x04e22803  CnC_GDI_MiniGunner_0
+    val intermissionTimeSeconds: Int = 30,
 ) {
     // C++: gamedata.cpp Export_Tier_1_Data calls CRC_Stringi(MapName) / CRC_Stringi(ModName).
     // Empty name → CRC is 0 (loop never executes → crc = 0 ^ 0xFFFFFFFF ^ 0xFFFFFFFF = 0).
@@ -95,6 +96,7 @@ data class ServerConfig(
             armorTypeCount      = ini.getInt(SECTION, "ArmorTypeCount", 8),
             nodSoldierDefId     = ini.getInt(SECTION, "NodSoldierDefId", 81930257),
             gdiSoldierDefId     = ini.getInt(SECTION, "GdiSoldierDefId", 81930243),
+            intermissionTimeSeconds = ini.getInt(SECTION, "IntermissionTimeSeconds", 30),
         )
     }
 }

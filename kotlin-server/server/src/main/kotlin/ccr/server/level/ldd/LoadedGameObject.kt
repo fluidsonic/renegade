@@ -34,6 +34,9 @@ data class LoadedBuildingGameObj(
     override val networkId: Int,
     val teamId: Int = 0,
     val factoryChunkId: UInt = 0u,
+    val isPowerOn: Boolean = true,
+    val sphereCenter: ccr.server.level.Vector3 = ccr.server.level.Vector3(0f, 0f, 0f),
+    val sphereRadius: Float = 10f,
 ) : LoadedGameObject()
 
 data class LoadedScriptZoneGameObj(

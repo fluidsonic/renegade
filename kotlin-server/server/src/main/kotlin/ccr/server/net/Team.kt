@@ -42,4 +42,25 @@ class Team(
     override fun importOccasional(packet: BitStream) {}
 
     // C++: cTeam::Export_Frequent — empty
+
+    fun reset() {
+        kills = 0
+        deaths = 0
+        score = 0f
+    }
+
+    fun incrementScore(amount: Float) {
+        score += amount
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
+
+    fun incrementKills() {
+        kills++
+        setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+    }
+
+    fun incrementDeaths() {
+        deaths++
+        setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+    }
 }

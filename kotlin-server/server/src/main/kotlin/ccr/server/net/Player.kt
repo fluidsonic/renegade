@@ -12,6 +12,10 @@ class Player(
     var team: Int,
     var isInGame: Boolean,
     var isActive: Boolean = true,
+    var score: Float = 0f,
+    var kills: Int = 0,
+    var deaths: Int = 0,
+    var money: Float = 0f,
 ) : NetworkObject() {
 
     override val networkClassId: Int = 1011  // NETCLASSID_PLAYER
@@ -41,10 +45,42 @@ class Player(
     // C++: cPlayer::Export_Occasional (player.cpp:935) — calls PlayerDataClass::Export_Occasional
     // (Score, Money) then writes Kills and Deaths.
     override fun exportOccasional(packet: BitStream) {
-        packet.addFloat(0f)  // Score   (PlayerDataClass::Export_Occasional)
-        packet.addFloat(0f)  // Money   (PlayerDataClass::Export_Occasional)
-        packet.addInt(0)     // Kills
-        packet.addInt(0)     // Deaths
+        packet.addFloat(score)  // Score   (PlayerDataClass::Export_Occasional)
+        packet.addFloat(money)  // Money   (PlayerDataClass::Export_Occasional)
+        packet.addInt(kills)    // Kills
+        packet.addInt(deaths)   // Deaths
+    }
+
+    fun resetStats() {
+        score = 0f
+        kills = 0
+        deaths = 0
+        money = 0f
+    }
+
+    fun incrementScore(amount: Float) {
+        score += amount
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
+
+    fun incrementKills() {
+        kills++
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
+
+    fun incrementDeaths() {
+        deaths++
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
+
+    fun addMoney(amount: Float) {
+        money += amount
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
+
+    fun replaceMoney(amount: Float) {
+        money = amount
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
     }
 
     // C++: cPlayer has no Export_Frequent override — NetworkObjectClass's empty default is used.
