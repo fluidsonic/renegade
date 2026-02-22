@@ -540,10 +540,16 @@ class GameServer(internal val config: ServerConfig) {
 
     // ---- Physics tick (stub) ----
 
+    // C++: wwphys PhysicsSceneClass runs at ~30 Hz
     private suspend fun physicsTickLoop() {
-        val intervalMs = 1000L / 120
+        val intervalMs = 1000L / 30
+        var lastTickMs = System.currentTimeMillis()
         while (true) {
             delay(intervalMs)
+            val nowMs = System.currentTimeMillis()
+            val dt = ((nowMs - lastTickMs) / 1000f).coerceAtMost(0.1f)
+            lastTickMs = nowMs
+            physicsScene?.update(dt)
         }
     }
 
