@@ -1322,7 +1322,23 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         if (flags & D3DCLEAR_TARGET)  mask |= GL_COLOR_BUFFER_BIT;
         if (flags & D3DCLEAR_ZBUFFER) mask |= GL_DEPTH_BUFFER_BIT;
         if (flags & D3DCLEAR_STENCIL) mask |= GL_STENCIL_BUFFER_BIT;
-        if (mask) glClear(mask);
+        if (mask) {
+            // D3D8 Clear() ignores write-enable render states; GL's glClear() respects
+            // glDepthMask/glColorMask. Force-enable write masks so the clear always works.
+            if (flags & D3DCLEAR_TARGET)  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+            if (flags & D3DCLEAR_ZBUFFER) glDepthMask(GL_TRUE);
+            if (flags & D3DCLEAR_STENCIL) glStencilMask(0xFF);
+            glClear(mask);
+            // Restore GL write-mask state to match the tracked D3D render state.
+            if (flags & D3DCLEAR_ZBUFFER) glDepthMask(rs[14] ? GL_TRUE : GL_FALSE);
+            if (flags & D3DCLEAR_TARGET) {
+                uint32_t cw = rs[168];  // D3DRS_COLORWRITEENABLE
+                glColorMask((cw & 1) ? GL_TRUE : GL_FALSE,
+                            (cw & 2) ? GL_TRUE : GL_FALSE,
+                            (cw & 4) ? GL_TRUE : GL_FALSE,
+                            (cw & 8) ? GL_TRUE : GL_FALSE);
+            }
+        }
         return S_OK;
     }
 
