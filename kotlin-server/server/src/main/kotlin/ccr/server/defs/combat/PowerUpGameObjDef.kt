@@ -1,5 +1,6 @@
 package ccr.server.defs.combat
 
+import ccr.server.defs.DefinitionClass
 import ccr.server.defs.readMicroBool
 import ccr.server.defs.readMicroFloat
 import ccr.server.defs.readMicroInt
@@ -15,10 +16,10 @@ import ccr.server.mix.ChunkReader
  *   GrantWeaponClips(false), GrantWeaponRounds(0), Persistent(false),
  *   GrantKey(0), GrantSoundID(0), IdleSoundID(0), AlwaysAllowGrant(false)
  */
-data class PowerUpGameObjDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class PowerUpGameObjDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val grantShieldType: Int = 0,
     val grantShieldStrength: Float = 0f,
     val grantShieldStrengthMax: Float = 0f,
@@ -35,16 +36,16 @@ data class PowerUpGameObjDef(
     val grantAnimationName: String = "",
     val idleAnimationName: String = "",
     val alwaysAllowGrant: Boolean = false,
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040107u  // CHUNKID_GAME_OBJECT_DEF_POWERUP
     }
 }
 
-// Chunk IDs from powerup.cpp enum (line 107)
+// Chunk IDs from powerup.cpp enum
 private const val CHUNKID_DEF_VARIABLES = 909991657u // CHUNKID_DEF_PARENT + 1
 
-// Micro-chunk IDs from powerup.cpp enum (line 111-134)
+// Micro-chunk IDs from powerup.cpp enum
 private const val MICROCHUNKID_DEF_PERSISTENT = 2
 private const val MICROCHUNKID_DEF_GRANT_SHIELD_TYPE = 3
 private const val MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH = 4
@@ -71,7 +72,7 @@ fun parsePowerUpGameObjDef(
     name: String,
     id: UInt,
     chunkId: UInt,
-): PowerUpGameObjDef? {
+): PowerUpGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
         ?: return PowerUpGameObjDef(name = name, id = id, chunkId = chunkId)
 

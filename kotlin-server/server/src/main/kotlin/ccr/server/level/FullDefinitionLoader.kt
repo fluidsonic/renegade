@@ -89,8 +89,8 @@ object FullDefinitionLoader {
             // FIXME: SimpleGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
             SimpleGameObjDef.CHUNK_ID -> fallback
 
-            // FIXME: PowerUpGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
-            PowerUpGameObjDef.CHUNK_ID -> fallback
+            PowerUpGameObjDef.CHUNK_ID ->
+                parsePowerUpGameObjDef(objDataChunk, name, id, chunkId)
 
             // TransitionGameObjDef → DefinitionClass
             TransitionGameObjDef.CHUNK_ID ->

@@ -220,4 +220,19 @@ class FullDefinitionLoaderTest {
         assertEquals("HumanPhys", def.name)
         assertTrue(def is ccr.server.defs.HumanPhysDefClass)
     }
+
+    @Test
+    fun `PowerUpGameObjDef dispatches to typed subclass`() {
+        // 0x00040107 = CHUNKID_GAME_OBJECT_DEF_POWERUP
+        // parsePowerUpGameObjDef needs CHUNKID_DEF_VARIABLES=909991657 inside OBJDATA
+        val powerUpVars = buildChunk(909991657u, byteArrayOf(), isContainer = false)
+        val ddb = buildDdbWithExtra(Triple(0x00040107u, 999u, "PowerUp_Health") to powerUpVars)
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(999u)
+        assertNotNull(def)
+        assertEquals("PowerUp_Health", def.name)
+        assertTrue(def is ccr.server.defs.combat.PowerUpGameObjDef)
+    }
 }
