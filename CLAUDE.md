@@ -45,7 +45,7 @@
 - All `wchar_t` in Code/ and compat/ converted to `char16_t` (macOS wchar_t=4 bytes; protocol needs 2-byte UTF-16)
 - `WCHAR` typedef is `char16_t`; all derived types (LPWSTR, LPCWSTR, etc.) auto-update
 - Use `u"..."` and `u'...'` string/char literals (not `L"..."` / `L'...'`)
-- `compat/c16string.h` provides char16_t equivalents of all `wcs*` functions (`c16slen`, `c16scpy`, etc.)
+- `global.h` defines char16_t equivalents of all `wcs*` functions (`c16slen`, `c16scpy`, etc.); `compat/c16string.h` is a forwarder to `global.h`
 - `global.h` provides inline `wcslen(char16_t*)`, `wcscpy(char16_t*)`, etc. overloads (previously in `windef.h`)
 - Two intentional `wchar_t` exceptions: `winbase.h` internal `_vsnwprintf` bridge buffer; `LOGFONTW` struct in wingdi.h
 - `const WCHAR*` (not `WCHAR*`) for string-literal arrays — `u"..."` is `const char16_t[]`
