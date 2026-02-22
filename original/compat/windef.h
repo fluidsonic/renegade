@@ -5,25 +5,21 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>   // strlen, strcpy, strcmp, memcpy, etc.
+#include <strings.h>  // strcasecmp, strncasecmp
 
-// Calling conventions (no-ops on non-Windows)
+// Calling conventions (no-ops on macOS)
 #define WINAPI
 #define APIENTRY
 #define CALLBACK
-#define CDECL
 #define PASCAL
 #define FAR
 #define NEAR
 #define __cdecl
-#define __stdcall
 #define __fastcall
 #define __forceinline inline
-// Single-underscore aliases (MSVC also accepts these)
 #define _cdecl
 #define _stdcall
-#define _fastcall
-#define _pascal
-// __declspec / _declspec - no-op on non-Windows
 #ifndef __declspec
 #define __declspec(x)
 #endif
@@ -48,7 +44,7 @@
 #define _strnicmp strncasecmp
 #endif
 
-// CONST is used in old D3D8/Windows headers as a keyword alias
+// CONST is used in old D3D8 headers as a keyword alias
 #define CONST const
 
 // Primitive types
@@ -56,9 +52,7 @@ typedef unsigned char       BYTE;
 typedef unsigned short      WORD;
 typedef unsigned int        UINT;
 typedef unsigned int        DWORD;
-typedef unsigned int        ULONG;
 typedef int                 INT;
-typedef unsigned long       ULONG_PTR;
 typedef long                LONG;
 /* In Objective-C/Objective-C++ mode __OBJC__ is defined, and objc.h defines
    BOOL as 'bool'. Match that here so the later typedef bool BOOL in objc.h
@@ -71,38 +65,54 @@ typedef int                 BOOL;
 typedef unsigned short      USHORT;
 typedef short               SHORT;
 typedef char                CHAR;
-typedef unsigned char       UCHAR;
 typedef float               FLOAT;
-typedef double              DOUBLE;
 typedef void*               LPVOID;
 typedef void*               PVOID;
 typedef const void*         LPCVOID;
 typedef size_t              SIZE_T;
-typedef ptrdiff_t           SSIZE_T;
 typedef char*               LPSTR;
 typedef const char*         LPCSTR;
 typedef char*               LPTSTR;
 typedef const char*         LPCTSTR;
-#include <wchar.h>
+
+#include "c16string.h"
 #ifndef WCHAR_DEFINED
 #define WCHAR_DEFINED
-typedef wchar_t             WCHAR;
+typedef char16_t            WCHAR;
 typedef WCHAR*              PWSTR;
 typedef WCHAR*              LPWSTR;
 typedef const WCHAR*        PCWSTR;
 typedef const WCHAR*        LPCWSTR;
 #endif
-typedef int*                LPINT;
+// wcs* overloads for char16_t* — existing call sites compile without renaming.
+// WCHAR = char16_t throughout; no wchar_t in this codebase.
+inline size_t   wcslen (const char16_t* s)                           { return c16slen(s); }
+inline char16_t* wcscpy (char16_t* d, const char16_t* s)             { return c16scpy(d, s); }
+inline char16_t* wcsncpy(char16_t* d, const char16_t* s, size_t n)   { return c16sncpy(d, s, n); }
+inline char16_t* wcscat (char16_t* d, const char16_t* s)             { return c16scat(d, s); }
+inline int       wcscmp (const char16_t* a, const char16_t* b)       { return c16scmp(a, b); }
+inline int       wcsncmp(const char16_t* a, const char16_t* b, size_t n) { return c16sncmp(a, b, n); }
+inline int       wcscasecmp(const char16_t* a, const char16_t* b)    { return c16sicmp(a, b); }
+inline const char16_t* wcschr (const char16_t* s, char16_t c)        { return c16schr(s, c); }
+inline char16_t* wcschr (char16_t* s, char16_t c)                    { return c16schr(s, c); }
+inline const char16_t* wcsrchr(const char16_t* s, char16_t c)        { return c16srchr(s, c); }
+inline char16_t* wcsrchr(char16_t* s, char16_t c)                    { return c16srchr(s, c); }
+inline const char16_t* wcsstr (const char16_t* h, const char16_t* n) { return c16sstr(h, n); }
+inline char16_t* wcsstr (char16_t* h, const char16_t* n)             { return c16sstr(h, n); }
+inline char16_t* wcsupr (char16_t* s)                                { return c16supr(s); }
+inline char16_t* wcslwr (char16_t* s)                                { return c16slwr(s); }
+inline const char16_t* wcspbrk(const char16_t* s, const char16_t* a) { return c16spbrk(s, a); }
+inline char16_t* wcspbrk(char16_t* s, const char16_t* a)             { return c16spbrk(s, a); }
+inline unsigned long wcstoul(const char16_t* s, char16_t** e, int b) { return c16stoul(s, e, b); }
+inline long      wcstol (const char16_t* s, char16_t** e, int b)     { return c16stol(s, e, b); }
+
 typedef DWORD*              LPDWORD;
 typedef BYTE*               LPBYTE;
 typedef WORD*               LPWORD;
 typedef LONG*               LPLONG;
-typedef BOOL*               LPBOOL;
-typedef void                VOID;
 typedef DWORD               COLORREF;
-typedef DWORD*              LPCOLORREF;
 
-// Handle types (opaque pointers)
+// Handle types (opaque pointers on macOS)
 typedef void*               HANDLE;
 typedef void*               HWND;
 typedef void*               HDC;
@@ -110,25 +120,17 @@ typedef void*               HINSTANCE;
 typedef void*               HMODULE;
 typedef void*               HKEY;
 typedef void*               HBITMAP;
-typedef void*               HBRUSH;
 typedef void*               HFONT;
 typedef void*               HGLOBAL;
-typedef void*               HLOCAL;
+typedef void*               HBRUSH;
 typedef void*               HMENU;
+typedef void*               HMONITOR;
 typedef void*               HPALETTE;
-typedef void*               HPEN;
-typedef void*               HRGN;
-typedef void*               HRSRC;
 typedef void*               HICON;
 typedef void*               HCURSOR;
-typedef void*               HTASK;
-typedef void*               HFILE;
-typedef void*               HHOOK;
-typedef void*               HMONITOR;
 typedef void*               HACCEL;
 typedef void*               HKL;
 
-typedef uintptr_t           UINT_PTR;
 typedef intptr_t            INT_PTR;
 typedef intptr_t            LONG_PTR;
 
@@ -141,18 +143,17 @@ typedef struct _GUID {
     unsigned short Data3;
     unsigned char  Data4[8];
 } GUID, *LPGUID;
-// C++ COM convention: REFGUID/REFIID are const references, not pointers
+// C++ COM convention: REFGUID/REFIID/REFCLSID are const references, not pointers
 typedef const GUID& REFGUID;
 typedef const GUID& REFIID;
 typedef const GUID& REFCLSID;
-typedef const GUID& REFFMTID;
 typedef GUID IID;
 typedef GUID CLSID;
 #endif
 #define DEFINE_GUID(name, l, w1, w2, b1,b2,b3,b4,b5,b6,b7,b8) \
     extern const GUID name
 
-// strupr/strlwr - not in POSIX, commonly used in Windows code
+// strupr/strlwr — not in POSIX
 #include <ctype.h>
 #ifndef _STRUPR_DEFINED
 #define _STRUPR_DEFINED
@@ -176,30 +177,23 @@ typedef struct tagRECT {
     LONG top;
     LONG right;
     LONG bottom;
-} RECT, *PRECT, *LPRECT;
+} RECT, *LPRECT;
 
 typedef struct tagPOINT {
     LONG x;
     LONG y;
-} POINT, *PPOINT, *LPPOINT;
+} POINT, *LPPOINT;
 
 typedef struct tagSIZE {
     LONG cx;
     LONG cy;
-} SIZE, *PSIZE, *LPSIZE;
-
-typedef struct tagPOINTS {
-    SHORT x;
-    SHORT y;
-} POINTS, *PPOINTS;
+} SIZE;
 
 // Macros
 #define MAKEWORD(a, b)      ((WORD)(((BYTE)(a)) | ((WORD)((BYTE)(b))) << 8))
 #define MAKELONG(a, b)      ((LONG)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16))
 #define LOWORD(l)           ((WORD)(l))
 #define HIWORD(l)           ((WORD)(((DWORD)(l) >> 16) & 0xFFFF))
-#define LOBYTE(w)           ((BYTE)(w))
-#define HIBYTE(w)           ((BYTE)(((WORD)(w) >> 8) & 0xFF))
 
 #define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
 #define GetRValue(rgb)      ((BYTE)(rgb))
@@ -215,28 +209,25 @@ typedef struct tagPOINTS {
 #define MAX_PATH  260
 #define _MAX_PATH 260
 
-// Common return values
+// COM result type and common codes
+typedef long HRESULT;
 #define S_OK                0
 #define S_FALSE             1
 #define E_FAIL              0x80004005L
 #define E_NOTIMPL           0x80004001L
 #define E_NOINTERFACE       0x80004002L
-#define E_POINTER           0x80000005L  // fixed: was 0x80004003L
-#define E_OUTOFMEMORY       0x8007000EL
-#define E_INVALIDARG        0x80070057L
+#define E_POINTER           0x80000005L
 #define SUCCEEDED(hr)       ((HRESULT)(hr) >= 0)
 #define FAILED(hr)          ((HRESULT)(hr) < 0)
-typedef long HRESULT;
 
-// INFINITE wait value
 #define INFINITE            0xFFFFFFFF
 
-// File access
+// File access flags
 #define GENERIC_READ        0x80000000
 #define GENERIC_WRITE       0x40000000
-#define GENERIC_EXECUTE     0x20000000
-#define GENERIC_ALL         0x10000000
 
 #define INVALID_HANDLE_VALUE ((HANDLE)(intptr_t)(-1))
+
+#include "floattypes.h"
 
 #endif // WINDEF_H_COMPAT
