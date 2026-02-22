@@ -40,6 +40,9 @@ open class God(private val server: GameServer) {
         /**
          * Adds a weapon to a soldier's weapon bag, or tops up rounds if already owned.
          * C++: WeaponBagClass::Add_Weapon — new weapon = add entry; already owned = add rounds.
+         * When grantWeapon=false and weapon is not owned, nothing is added — this matches
+         * C++ WeaponBagClass::Add_Weapon which returns early when give_weapon=false and
+         * the weapon is not found in the bag.
          */
         internal fun addWeaponToSoldier(soldier: SoldierGameObj, weaponDefId: Int, rounds: Int, grantWeapon: Boolean) {
             val existing = soldier.weapons.indexOfFirst { it.definitionId == weaponDefId }
@@ -449,12 +452,16 @@ open class God(private val server: GameServer) {
         val def = server.loadedLevel?.definitions?.findById(powerUpDefId.toUInt())
             as? PowerUpGameObjDef ?: return
 
+        // TODO: grantShieldStrengthMax — increases max shield by (GrantShieldStrengthMax * baseDef.shieldMax);
+        //   C++: powerup.cpp line 277; requires looking up SoldierGameObjDef.defenseObjectDef.shieldStrengthMax
         if (def.grantShieldStrength != 0f && soldier.shieldStrength < soldier.shieldStrengthMax) {
             soldier.shieldStrength = (soldier.shieldStrength + def.grantShieldStrength)
                 .coerceAtMost(soldier.shieldStrengthMax)
             soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
         }
 
+        // TODO: grantHealthMax — increases max health by (GrantHealthMax * baseDef.healthMax);
+        //   C++: powerup.cpp line 321; same pattern as grantShieldStrengthMax
         if (def.grantHealth != 0f && soldier.health < soldier.healthMax) {
             soldier.health = (soldier.health + def.grantHealth).coerceAtMost(soldier.healthMax)
             soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
