@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __WAYPATHPOSITION_H
-#define __WAYPATHPOSITION_H
+#include "global.h"
 
 ////////////////////////////////////////////////////////////////
 //
@@ -45,5 +45,3 @@ private:
 	int		WaypointIndex;
 	float		Percent;
 };
-
-#endif //__WAYPATHPOSITION_H

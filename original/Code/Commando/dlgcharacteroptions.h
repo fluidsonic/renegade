@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGOPTIONSCHARACTER_H
-#define __DLGOPTIONSCHARACTER_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -50,6 +50,3 @@ private:
 	////////////////////////////////////////////////////////////////
 	bool		UnloadDefs;
 };
-
-#endif //__DLGOPTIONSCHARACTER_H
-

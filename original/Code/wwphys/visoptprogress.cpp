@@ -1,3 +1,4 @@
+#include "global.h"
 #include "visoptprogress.h"
 
 /************************************************************************************
@@ -28,4 +29,3 @@ void VisOptProgressClass::Reset(int total_operation_count)
 	ObjectsMerged = 0;
 	SectorsMerged = 0;
 }
-

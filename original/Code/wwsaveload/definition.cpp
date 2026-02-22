@@ -1,3 +1,4 @@
+#include "global.h"
 #include "definition.h"
 #include "chunkio.h"
 
@@ -119,4 +120,3 @@ DefinitionClass::Set_ID (uint32_t id)
 
 	return ;
 }
-

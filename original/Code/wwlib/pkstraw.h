@@ -1,5 +1,6 @@
-#ifndef PKSTRAW_H
-#define PKSTRAW_H
+#pragma once
+
+#include "global.h"
 
 #include	"blwstraw.h"
 #include	"pk.h"
@@ -83,5 +84,3 @@ class PKStraw : public Straw
 		PKStraw(PKStraw & rvalue);
 		PKStraw & operator = (PKStraw const & straw);
 };
-
-#endif

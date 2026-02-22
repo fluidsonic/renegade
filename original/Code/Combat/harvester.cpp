@@ -1,3 +1,4 @@
+#include "global.h"
 #include "harvester.h"
 #include "vehicle.h"
 #include "refinerygameobj.h"

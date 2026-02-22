@@ -1,3 +1,4 @@
+#include "global.h"
 #include "playerdata.h"
 #include "chunkio.h"
 #include "wwpacket.h"
@@ -403,4 +404,3 @@ bool	PlayerDataClass::Purchase_Item( int cost )
 	return retval;
 }
 */
-

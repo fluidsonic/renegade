@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlginternetoptions.h"
 #include "string_ids.h"
 #include "dialogresource.h"
@@ -74,4 +75,3 @@ InternetOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-

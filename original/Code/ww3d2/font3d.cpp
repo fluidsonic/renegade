@@ -1,3 +1,4 @@
+#include "global.h"
 #include "font3d.h"
 #include "assetmgr.h"
 #include "texture.h"
@@ -380,4 +381,3 @@ float	Font3DInstanceClass::String_Width( const char *test_str )
 
 	return width;
 }
-

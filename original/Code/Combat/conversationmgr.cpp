@@ -1,3 +1,4 @@
+#include "global.h"
 #include "conversationmgr.h"
 #include "combatchunkid.h"
 #include "chunkio.h"

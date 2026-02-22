@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgsavegame.h"
 #include "listctrl.h"
 #include "dialogresource.h"

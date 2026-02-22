@@ -1,7 +1,8 @@
+#pragma once
+
+
 // Minimal afxres.h stub for llvm-rc compilation on macOS
 // Provides Windows constants normally built into rc.exe / winuser.h / winnt.h
-#ifndef AFXRES_H
-#define AFXRES_H
 
 // Standard dialog button IDs
 #ifndef IDOK
@@ -601,5 +602,3 @@
 #ifndef PBS_VERTICAL
 #define PBS_VERTICAL        0x04
 #endif
-
-#endif // AFXRES_H

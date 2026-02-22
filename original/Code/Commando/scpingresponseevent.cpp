@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scpingresponseevent.h"
 
 #include <stdio.h>

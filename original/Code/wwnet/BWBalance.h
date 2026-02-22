@@ -1,4 +1,7 @@
 #pragma once
+
+#include "global.h"
+
 #ifndef _BWBALANCE_H
 
 class cConnection;

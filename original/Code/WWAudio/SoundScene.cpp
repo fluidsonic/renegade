@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soundscene.h"
 #include "soundcullobj.h"
 #include "logicalsound.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "camerashakesystem.h"
 #include "camera.h"
 
@@ -176,4 +177,3 @@ void CameraShakeSystemClass::Update_Camera(CameraClass & camera)
 	camera_transform.Rotate_Z(angles.Z);
 	camera.Set_Transform(camera_transform);
 }
-

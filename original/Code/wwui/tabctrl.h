@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TAB_CTRL_H
-#define __TAB_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -114,6 +114,3 @@ protected:
 
 	DynamicVectorClass<ChildDialogClass *>	TabList;
 };
-
-#endif //__TAB_CTRL_H
-

@@ -1,9 +1,7 @@
-#ifndef	GAMEOBJREF_H
-#define	GAMEOBJREF_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	REFLIST_H
 	#include "reflist.h"
@@ -17,5 +15,3 @@ typedef	ScriptableGameObj	*									GameObjRefPtr;
 typedef	ReferenceableClass<ScriptableGameObj>			ReferenceableGameObj;
 typedef	ReferencerClass										GameObjReference;
 typedef	RefCountedReferencerClass							RefCountedGameObjReference;
-
-#endif	//	GAMEOBJREF_H

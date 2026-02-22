@@ -1,3 +1,4 @@
+#include "global.h"
 #include "materialeffect.h"
 #include "materialeffectlist.h"
 #include "rinfo.h"
@@ -59,4 +60,3 @@ void SimpleEffectClass::Render_Pop(RenderInfoClass & rinfo)
 { 
 	rinfo.Pop_Material_Pass(); 
 }
-

@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "cdverify.h"
 #include "wwstring.h"
 #include "popupdialog.h"

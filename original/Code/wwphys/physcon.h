@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSCON_H
-#define PHYSCON_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 
 class ChunkLoadClass;
@@ -98,5 +97,3 @@ public:
 	static float	OverrideFriction;
 	static float	OverrideDrag;
 };
-
-#endif PHYSCON_H

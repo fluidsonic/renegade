@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PATHACTION_H
-#define __PATHACTION_H
+#include "global.h"
 
 #include "elevator.h"
 #include "vector3.h"
@@ -145,5 +145,3 @@ private:
 	
 	static DynamicVectorClass<GameObjReference>	LadderList;
 };
-
-#endif //__PATHACTION_H

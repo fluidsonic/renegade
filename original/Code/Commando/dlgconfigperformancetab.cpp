@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgconfigperformancetab.h"
 #include "resource.h"
 #include "registry.h"

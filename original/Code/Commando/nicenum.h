@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     nicenum.cpp
 // Author:       Tom Spencer-Smith
@@ -5,10 +9,7 @@
 // Description:  NIC enumeration
 //
 
-#ifndef __NICENUM_H__
-#define __NICENUM_H__
 
-#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cNicEnum
@@ -28,6 +29,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif // __NICENUM_H__
-

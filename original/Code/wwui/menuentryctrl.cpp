@@ -1,3 +1,4 @@
+#include "global.h"
 #include "menuentryctrl.h"
 #include "assetmgr.h"
 #include "font3d.h"
@@ -725,4 +726,3 @@ MenuEntryCtrlClass::Center_Mouse (void)
 	DialogMgrClass::Set_Mouse_Pos (mouse_pos);
 	return ;
 }
-

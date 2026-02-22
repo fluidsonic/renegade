@@ -1,9 +1,7 @@
-#ifndef HUDINFO_H
-#define HUDINFO_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef PHYSICALGAMEOBJ_H
 	#include "physicalgameobj.h"
@@ -67,5 +65,3 @@ private:
 	static	Vector3				HUDHelpTextColor;
 	static	bool					IsMCT;
 };
-
-#endif		// HUDINFO_H

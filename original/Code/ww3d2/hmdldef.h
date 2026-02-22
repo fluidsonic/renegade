@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HMDLDEF_H
-#define HMDLDEF_H
+#include "global.h"
 
-#include "always.h"
 #include "w3d_file.h"
 
 class FileClass;
@@ -67,5 +66,3 @@ private:
 	friend class HModelClass;
 	friend class HLodClass;
 };
-
-#endif 

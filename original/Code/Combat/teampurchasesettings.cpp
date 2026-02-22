@@ -1,3 +1,4 @@
+#include "global.h"
 #include "teampurchasesettings.h"
 #include "combatchunkid.h"
 #include "persistfactory.h"
@@ -316,4 +317,3 @@ TeamPurchaseSettingsDefClass::Get_Definition (TEAM team)
 {
 	return DefinitionArray[team];
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "htreemgr.h"
 #include <string.h>
 #include "htree.h"

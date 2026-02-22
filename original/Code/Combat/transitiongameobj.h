@@ -1,9 +1,7 @@
-#ifndef	TRANSITIONGAMEOBJ_H
-#define	TRANSITIONGAMEOBJ_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef BASEGAMEOBJ_H
 	#include "basegameobj.h"
@@ -83,6 +81,3 @@ protected:
 	Matrix3D						TM;
 	int							LadderIndex;
 };
-
-#endif	//	TRANSITIONGAMEOBJ_H
-

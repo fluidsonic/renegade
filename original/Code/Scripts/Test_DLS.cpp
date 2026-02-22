@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include "toolkit.h"
 #include "Mission7.h"
@@ -3251,4 +3252,3 @@ DECLARE_SCRIPT (MX0_Explosive_Barrels_DLS, "Logical_Sound=0:int, Radius:float")
 		Commands->Create_Logical_Sound(obj, Get_Int_Parameter("Logical_Sound"), Commands->Get_Position(obj), radius);
 	}
 };
-

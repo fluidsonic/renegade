@@ -1,9 +1,7 @@
-#ifndef	PERSISTENTGAMEOBJOBSERVER_H
-#define	PERSISTENTGAMEOBJOBSERVER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEOBJOBSERVER_H
 	#include "gameobjobserver.h"
@@ -46,5 +44,3 @@ public:
 private:
 	static	DynamicVectorClass<PersistentGameObjObserverClass *>	ObserverList;
 };
-
-#endif	//	PERSISTENTGAMEOBJOBSERVER_H

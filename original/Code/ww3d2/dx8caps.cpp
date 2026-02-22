@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "dx8caps.h"
 #include "dx8wrapper.h"
 #include "formconv.h"
@@ -1017,4 +1017,3 @@ void DX8Caps::Vendor_Specific_Hacks(const D3DADAPTER_IDENTIFIER8& adapter_id)
 
 	}
 }
-

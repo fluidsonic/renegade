@@ -1,5 +1,6 @@
-#ifndef __PRIORITY_H__
-#define __PRIORITY_H__
+#pragma once
+
+#include "global.h"
 
 #include "networkobject.h"
 
@@ -38,5 +39,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __PRIORITY_H__

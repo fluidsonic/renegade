@@ -1,3 +1,4 @@
+#include "global.h"
 #include "consolefunction.h"
 #include "console.h"
 #include "textdisplay.h"
@@ -1729,4 +1730,3 @@ void	ConsoleFunctionManager::Print( const char *format, ... )
 	ConsoleBox.Print(string.Peek_Buffer());
 	va_end (arg_list);
 }
-

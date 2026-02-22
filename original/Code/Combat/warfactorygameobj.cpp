@@ -1,3 +1,4 @@
+#include "global.h"
 #include "warfactorygameobj.h"
 #include "basecontroller.h"
 #include "vehicle.h"
@@ -496,4 +497,3 @@ WarFactoryGameObj::Begin_Generation (void)
 	}
 	return ;
 }
-

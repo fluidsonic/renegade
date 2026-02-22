@@ -1,3 +1,4 @@
+#include "global.h"
 #include "evasettings.h"
 #include "combatchunkid.h"
 #include "persistfactory.h"

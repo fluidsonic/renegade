@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"_timer.h"
 
 /***************************************************************************
@@ -10,4 +10,3 @@ CDTimerClass<SystemTimerClass> FrameTimer;
 ** Tick Count global timer object.
 */
 TTimerClass<SystemTimerClass> TickCount = 0;
-

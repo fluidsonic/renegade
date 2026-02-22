@@ -1,3 +1,4 @@
+#include "global.h"
 #include "lightphys.h"
 #include "w3d_file.h"
 #include "chunkio.h"

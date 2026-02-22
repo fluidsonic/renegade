@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogue.h"
 #include "chunkio.h"
 #include "wwmath.h"

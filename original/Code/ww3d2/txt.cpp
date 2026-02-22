@@ -1,3 +1,4 @@
+#include "global.h"
 #include <stdio.h>
 #include <math.h>
 #include "pot.h"
@@ -121,4 +122,3 @@ bool TextTextureClass::Build_Texture(FontClass &font, const char *str, int fore,
 
 	return true;
 }
-

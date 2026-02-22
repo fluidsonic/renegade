@@ -1,7 +1,7 @@
-#ifndef LOOKUPTABLE_H
-#define LOOKUPTABLE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "simplevec.h"
 #include "wwstring.h"
 #include "refcount.h"
@@ -114,5 +114,3 @@ protected:
 	static RefMultiListClass<LookupTableClass>	Tables;
 
 };
-
-#endif // LOOKUPTABLE_H

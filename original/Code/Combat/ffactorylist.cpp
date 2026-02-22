@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ffactorylist.h"
 #include "wwfile.h"
 

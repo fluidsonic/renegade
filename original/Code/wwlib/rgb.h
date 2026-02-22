@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef RGB_H
-#define RGB_H
+#include "global.h"
 
 class PaletteClass;
 class HSVClass;
@@ -52,5 +52,3 @@ class RGBClass
 };
 
 extern RGBClass const BlackColor;
-
-#endif

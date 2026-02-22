@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DYNAMICAABTREECULL_H
-#define DYNAMICAABTREECULL_H
+#include "global.h"
 
-#include "always.h"
 #include "physaabtreecull.h"
 #include "physlist.h"
 
@@ -178,5 +177,3 @@ inline bool DynamicAABTreeCullClass::deflated_box_contains_point
 	if (WWMath::Fabs(point.Z - box.Center.Z) > box.Extent.Z - MaxObjRadius) return false;
 	return true;
 }
-
-#endif //DYNAMICAABTREECULL_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pscene.h"
 #include "staticaabtreecull.h"
 #include "dynamicaabtreecull.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "IMECandidate.h"
 
 namespace IME {

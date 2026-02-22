@@ -1,5 +1,6 @@
-#ifndef __ANNOUNCEEVENT_H__
-#define __ANNOUNCEEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "NetEvent.h"
 #include "NetClassIDs.h"
@@ -67,5 +68,3 @@ class	SCAnnouncement :
 		int mRadioCmdID;
 		AnnouncementEnum mType;
 	};
-
-#endif // __ANNOUNCEEVENT_H__

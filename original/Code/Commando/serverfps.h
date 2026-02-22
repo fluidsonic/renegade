@@ -1,5 +1,6 @@
-#ifndef __SERVERFPS_H__
-#define __SERVERFPS_H__
+#pragma once
+
+#include "global.h"
 
 #include "networkobject.h"
 
@@ -45,6 +46,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __SERVERFPS_H__
-

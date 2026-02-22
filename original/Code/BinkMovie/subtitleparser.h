@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef _SUBTITLEPARSER_H_
-#define _SUBTITLEPARSER_H_
+#include "global.h"
 
-#include "always.h"
 #include <wwlib/vector.h>
 #include <stddef.h>
 
@@ -41,5 +40,3 @@ private:
 	char16_t mBuffer[SUBTITLE_LINE_MAX];
 	unsigned int mLineNumber;
 };
-
-#endif // _SUBTITLEPARSER_H_

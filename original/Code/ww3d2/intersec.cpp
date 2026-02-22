@@ -1,3 +1,4 @@
+#include "global.h"
 #include "intersec.h"
 #include "camera.h"
 #include "scene.h"
@@ -396,4 +397,3 @@ bool IntersectionClass::Intersect_Object_Array(
 //	Intersection_Node = candidate_indices[nearest_index];
 	return true;
 }
-

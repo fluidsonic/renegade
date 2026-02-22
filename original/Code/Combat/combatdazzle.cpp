@@ -1,3 +1,4 @@
+#include "global.h"
 #include "combatdazzle.h"
 #include "rinfo.h"
 #include "camera.h"
@@ -67,4 +68,3 @@ float CombatDazzleClass::Compute_Dazzle_Visibility
 		return 0.0f;
 	}
 }
-

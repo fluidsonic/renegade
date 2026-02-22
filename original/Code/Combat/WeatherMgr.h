@@ -1,5 +1,6 @@
-#ifndef WEATHERMGR_H
-#define WEATHERMGR_H
+#pragma once
+
+#include "global.h"
 
 // Code controlling defines.
 
@@ -391,5 +392,3 @@ class	WeatherMgrClass : public SaveLoadSubSystemClass, public NetworkObjectClass
 
 // Externals.
 extern WeatherMgrClass _TheWeatherMgr;
-
-#endif // WEATHERMGR_H

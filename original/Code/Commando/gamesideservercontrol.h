@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _GAMESIDESERVERCONTROL_H
-#define _GAMESIDESERVERCONTROL_H
+
+#include "global.h"
 
 #include <WWLib/wwstring.h>
 
@@ -33,5 +33,3 @@ class GameSideServerControlClass
 		static StringClass Response;
 
 };
-
-#endif //_GAMESIDESERVERCONTROL_H

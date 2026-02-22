@@ -1,5 +1,6 @@
-#ifndef __CLIENTFPS_H__
-#define __CLIENTFPS_H__
+#pragma once
+
+#include "global.h"
 
 #include "networkobject.h"
 #include "netclassids.h"
@@ -40,5 +41,3 @@ private:
 extern CClientFps *		PClientFps;
 
 //-----------------------------------------------------------------------------
-
-#endif	// __CLIENTFPS_H__

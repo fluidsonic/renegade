@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef ASSETMGR_H
-#define ASSETMGR_H
+#include "global.h"
 
-#include "always.h"
 #include "vector.h"
 #include "htreemgr.h"
 #include "hanimmgr.h"
@@ -388,5 +387,3 @@ protected:
 	// Font3DInstance need access to the Font3DData
 	friend class Font3DInstanceClass;
 };
-
-#endif

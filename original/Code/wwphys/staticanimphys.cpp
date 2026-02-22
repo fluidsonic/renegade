@@ -1,3 +1,4 @@
+#include "global.h"
 #include "staticanimphys.h"
 #include "colmathaabox.h"
 #include "physinttest.h"
@@ -519,4 +520,3 @@ bool StaticAnimPhysDefClass::Load(ChunkLoadClass &cload)
 	}
 	return true;
 }
-

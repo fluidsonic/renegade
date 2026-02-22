@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCNCWINSCREEN_H
-#define __DLGCNCWINSCREEN_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "player.h"
@@ -66,5 +66,3 @@ private:
 	static CNCWinScreenMenuClass *	_TheInstance;
 	static const float					UpdateIntervalS;
 };
-
-#endif //__DLGCNCWINSCREEN_H

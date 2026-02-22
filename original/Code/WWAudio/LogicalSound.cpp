@@ -1,3 +1,4 @@
+#include "global.h"
 #include "LogicalSound.H"
 #include "WWAudio.H"
 #include "SoundScene.H"
@@ -214,4 +215,3 @@ LogicalSoundClass::Load (ChunkLoadClass &cload)
 
 	return true;
 }
-

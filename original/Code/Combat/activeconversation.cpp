@@ -1,3 +1,4 @@
+#include "global.h"
 #include "activeconversation.h"
 #include "soldier.h"
 #include "chunkio.h"

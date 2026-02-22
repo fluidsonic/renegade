@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_EVA_VIEWER_TAB_H
-#define __DLG_EVA_VIEWER_TAB_H
+#include "global.h"
 
 #include "childdialog.h"
 #include "wwstring.h"
@@ -148,6 +148,3 @@ protected:
 
 	DynamicVectorClass<EvaViewerObjectClass> ObjectList;
 };
-
-#endif //__DLG_EVA_VIEWER_TAB_H
-

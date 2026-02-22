@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"rle.h"
 #include	<assert.h>
 #include	<stdlib.h>
@@ -215,4 +215,3 @@ int RLEEngine::Line_Decompress(void const * source, void * dest) const
 	*/
 	return(Decompress(sptr, dest, datalen - sizeof(short)));
 }
-

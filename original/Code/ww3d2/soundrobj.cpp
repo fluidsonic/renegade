@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soundrobj.h"
 #include "audiblesound.h"
 #include "sound3d.h"
@@ -693,4 +694,3 @@ SoundRenderObjLoaderClass::Load_W3D (ChunkLoadClass &cload)
 
 	return prototype;
 }
-

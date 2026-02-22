@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mutex.h"
 #include <windows.h>
 
@@ -37,4 +38,3 @@ MutexClass::LockClass::~LockClass()
 }
 
 // CriticalSectionClass is implemented in critsection.cpp.
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physstaticsavesystem.h"
 #include "wwphysids.h"
 #include "pscene.h"
@@ -100,4 +101,3 @@ void PhysStaticObjectsSaveSystemClass::On_Post_Load(void)
 {
 	PhysicsSceneClass::Get_Instance()->Post_Load_Level_Static_Objects();
 }
-

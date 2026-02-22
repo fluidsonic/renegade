@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __ANIMATEDSOUNDMGR_H
-#define __ANIMATEDSOUNDMGR_H
+#include "global.h"
 
 #include "simplevec.h"
 #include "vector.h"
@@ -62,5 +62,3 @@ private:
 	///////////////////////////////////////////////////////////////////
 	static ANIM_SOUND_LIST *	Find_Sound_List (HAnimClass *anim);
 };
-
-#endif //__ANIMATEDSOUNDMGR_H

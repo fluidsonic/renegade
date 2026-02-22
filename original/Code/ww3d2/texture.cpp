@@ -1,3 +1,4 @@
+#include "global.h"
 #include "texture.h"
 
 #include <d3d8.h>

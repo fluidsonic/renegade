@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     fromaddress.h
 // Project:      wwnet
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef FROMADDRESS_H
-#define FROMADDRESS_H
 
 #include "win.h"
 #include <winsock.h>
@@ -24,5 +26,3 @@ class cFromAddress
 
 		SOCKADDR_IN FromAddress;
 };
-
-#endif // FROMADDRESS_H

@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"_convert.h"
 
 ConvertClass * VoxelDrawer = NULL;
@@ -7,4 +7,3 @@ ConvertClass * TerrainDrawer = NULL;
 ConvertClass * AnimDrawer = NULL;
 ConvertClass * NormalDrawer = NULL;
 ConvertClass * IsometricDrawer = NULL;
-

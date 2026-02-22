@@ -1,9 +1,7 @@
-#ifndef	ELEVATOR_H
-#define	ELEVATOR_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	__ACCESSIBLE_PHYS_H
 	#include "accessiblephys.h"
@@ -149,6 +147,3 @@ protected:
 
 	friend class ElevatorNetworkObjectClass;
 };
-
-#endif	// ELEVATOR_H
-

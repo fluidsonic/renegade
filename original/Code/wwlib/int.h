@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef INT_H
-#define INT_H
+#include "global.h"
 
 #include	"mpmath.h"
 #include	"straw.h"
@@ -242,6 +242,3 @@ T Generate_Prime(Straw & rng, int pbits, T const *)
 
 typedef Int<MAX_UNIT_PRECISION>	bignum;
 typedef Int<MAX_UNIT_PRECISION>	BigInt;
-
-#endif
-

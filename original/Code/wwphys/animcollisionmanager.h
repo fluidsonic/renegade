@@ -1,7 +1,7 @@
-#ifndef ANIMCOLLISIONMANAGER_H
-#define ANIMCOLLISIONMANAGER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "ridermanager.h"
 #include "matrix3d.h"
 #include "vector.h"
@@ -215,7 +215,3 @@ public:
 */
 
 #define	ANIMCOLLISIONMANAGERDEF_EDITABLE_PARAMS( class_name, member_name )															
-
-#endif																																		
-
-

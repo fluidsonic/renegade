@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __WWAUDIO_THREADS_H
-#define __WWAUDIO_THREADS_H
+#include "global.h"
 
 #include "Windows.H"
 #include "Vector.H"
@@ -71,6 +71,3 @@ class WWAudioThreadsClass
 		static CriticalSectionClass	m_ListMutex;
 		static bool							m_IsFlushing;
 };
-
-#endif //__WWAUDIO_THREADS_H
-

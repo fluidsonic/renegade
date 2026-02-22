@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef BOUND_H
-#define BOUND_H
+#include "global.h"
 
 template<class T> inline
 T Bound(T original, T minval, T maxval)
@@ -9,6 +9,3 @@ T Bound(T original, T minval, T maxval)
 	if (original > maxval) return(maxval);
 	return(original);
 };
-
-#endif
-

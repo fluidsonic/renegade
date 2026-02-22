@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vehiclecurve.h"
 #include "vector3.h"
 #include "matrix3d.h"

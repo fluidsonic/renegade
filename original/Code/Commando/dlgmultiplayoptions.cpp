@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmultiplayoptions.h"
 #include "useroptions.h"
 #include "vector3.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgevaencyclopedia.h"
 #include "dialogresource.h"
 #include "tabctrl.h"

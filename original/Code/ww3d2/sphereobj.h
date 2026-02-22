@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef SPHEREOBJ_H
-#define SPHEREOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "rendobj.h"
 #include "w3d_file.h"
 #include "shader.h"
@@ -402,7 +401,5 @@ private:
 */
 extern SphereLoaderClass			_SphereLoader;
 
-#endif // SPHEREOBJ_H
 
 // EOF - sphereobj,h
-

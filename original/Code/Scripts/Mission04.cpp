@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include <string.h>
 #include "toolkit.h"
@@ -10416,4 +10417,3 @@ DECLARE_SCRIPT(M04_Objective_Reminder_Controller_JDG, "")//105760
 		}
 	}
 };
-

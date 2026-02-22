@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef __PURCHASESETTINGS_H
-#define __PURCHASESETTINGS_H
+#include "global.h"
 
-#include "always.h"
 #include "definition.h"
 #include "widestring.h"
 
@@ -121,5 +120,3 @@ protected:
 	
 	static PurchaseSettingsDefClass *	DefinitionArray[TYPE_COUNT][TEAM_COUNT];
 };
-
-#endif //__PURCHASESETTINGS_H

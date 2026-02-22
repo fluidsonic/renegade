@@ -1,3 +1,4 @@
+#include "global.h"
 #include "IMECandidateCtrl.h"
 #include "IMECandidate.h"
 #include "DialogBase.h"

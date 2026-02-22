@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef CARDINALSPLINE_H
-#define CARDINALSPLINE_H
+#include "global.h"
 
 #include "hermitespline.h"
 
@@ -57,6 +57,3 @@ protected:
 	
 	DynamicVectorClass<float>	Tightness;
 };
-
-#endif
-

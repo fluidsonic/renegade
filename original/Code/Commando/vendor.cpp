@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vendor.h"
 #include "gameobjmanager.h"
 #include "playerdata.h"

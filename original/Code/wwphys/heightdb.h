@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __HEIGHT_DB_H
-#define __HEIGHT_DB_H
+#include "global.h"
 
 #include "vector.h"
 #include "vector3.h"
@@ -96,5 +96,3 @@ HeightDBClass::Get_Height_Entry (int row, int col)
 
 	return retval;
 }
-
-#endif //__HEIGHT_DB_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "rendobj.h"
 #include "assetmgr.h"
 #include "_mono.h"

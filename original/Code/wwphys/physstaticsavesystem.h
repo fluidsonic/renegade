@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSSTATICSAVESYSTEM_H
-#define PHYSSTATICSAVESYSTEM_H
+#include "global.h"
 
-#include "always.h"
 #include "saveloadsubsystem.h"
 
 /**
@@ -84,5 +83,3 @@ protected:
 ** global instance of the static objects save sub-system
 */
 extern PhysStaticObjectsSaveSystemClass _PhysStaticObjectsSaveSystem;
-
-#endif

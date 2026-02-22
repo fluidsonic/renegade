@@ -1,3 +1,4 @@
+#include "global.h"
 #include "wwstring.h"
 #include "win.h"
 #include "mutex.h"

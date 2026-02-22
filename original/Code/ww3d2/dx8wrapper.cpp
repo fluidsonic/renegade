@@ -2,6 +2,7 @@
 //#define CREATE_DX8_FPU_PRESERVE
 #define WW3D_DEVTYPE D3DDEVTYPE_HAL
 
+#include "global.h"
 #include <stdio.h>
 #include "dx8wrapper.h"
 #include "dx8fvf.h"

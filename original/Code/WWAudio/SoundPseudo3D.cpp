@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soundpseudo3d.h"
 #include "wwaudio.h"
 #include "soundscene.h"

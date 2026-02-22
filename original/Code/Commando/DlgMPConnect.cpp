@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmpconnect.h"
 #include "gamedata.h"
 #include "gameinitmgr.h"

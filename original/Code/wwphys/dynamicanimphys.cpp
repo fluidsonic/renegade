@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dynamicanimphys.h"
 #include "wwphysids.h"
 #include "persistfactory.h"
@@ -290,4 +291,3 @@ bool DynamicAnimPhysDefClass::Load(ChunkLoadClass &cload)
 	}
 	return true;
 }
-

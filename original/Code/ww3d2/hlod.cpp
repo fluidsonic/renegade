@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hlod.h"
 #include <stdio.h>
 #include "assetmgr.h"
@@ -3362,4 +3363,3 @@ void HLodClass::Set_Hidden(int onoff)
 	Animatable3DObjClass::Set_Hidden(onoff);
 	return ;
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MODPACKAGEMGR_H
-#define __MODPACKAGEMGR_H
+#include "global.h"
 
 #include "modpackage.h"
 
@@ -73,5 +73,3 @@ protected:
 	static DynamicVectorClass<ModPackageClass>	PackageList;
 	static ModPackageClass								CurrentPackage;
 };
-
-#endif //__MODPACKAGEMGR_H

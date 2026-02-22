@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"_mono.h"
 
 /*
@@ -6,4 +6,3 @@
 **	debugging mono printing.
 */
 MonoClass Mono;
-

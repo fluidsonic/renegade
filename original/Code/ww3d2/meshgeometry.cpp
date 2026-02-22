@@ -1,3 +1,4 @@
+#include "global.h"
 #include "meshgeometry.h"
 #include "aabtree.h"
 #include "chunkio.h"

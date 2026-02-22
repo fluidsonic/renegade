@@ -1,7 +1,6 @@
+#pragma once
 
-
-#ifndef __PATHFIND_SECTOR_H
-#define __PATHFIND_SECTOR_H
+#include "global.h"
 
 #include "refcount.h"
 #include "vector.h"
@@ -200,6 +199,3 @@ private:
 	//////////////////////////////////////////////////////////////////////
 	bool					Load_Variables (ChunkLoadClass &cload);
 };
-
-#endif //__PATHFIND_SECTOR_H
-

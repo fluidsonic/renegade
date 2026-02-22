@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HASH_TEMPLATE_H
-#define HASH_TEMPLATE_H
+#include "global.h"
 
-#include "always.h"
 #include "wwstring.h"
 
 // Class for providing hash values
@@ -387,5 +386,3 @@ template <> inline unsigned int HashTemplateKeyClass<StringClass>::Get_Hash_Valu
 	hval = hval + (hval>>5) + (hval>>10) + (hval >> 20);
 	return hval;
 }
-
-#endif

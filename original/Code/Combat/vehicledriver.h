@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __VEHICLEDRIVER_H
-#define __VEHICLEDRIVER_H
+#include "global.h"
 
 #include "vector3.h"
 
@@ -98,6 +98,3 @@ private:
 
 	float					m_LastFrameExpectedVelocity;
 };
-
-#endif //__VEHICLEDRIVER_H
-

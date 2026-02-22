@@ -1,10 +1,7 @@
+#pragma once
 
-#ifndef MOTORCYCLE_H
-#define MOTORCYCLE_H
+#include "global.h"
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 #ifndef WHEELVEHICLE_H
 #include "wheelvehicle.h"
@@ -83,5 +80,3 @@ protected:
 
 	friend class MotorcycleClass;
 };
-
-#endif

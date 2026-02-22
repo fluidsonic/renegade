@@ -1,3 +1,4 @@
+#include "global.h"
 #include "staticnetworkobject.h"
 #include "staticanimphys.h"
 #include "doors.h"

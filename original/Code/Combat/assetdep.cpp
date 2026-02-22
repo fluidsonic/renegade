@@ -1,3 +1,4 @@
+#include "global.h"
 #include "assetdep.h"
 #include "chunkio.h"
 #include "wwstring.h"

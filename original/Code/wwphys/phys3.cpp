@@ -1,3 +1,4 @@
+#include "global.h"
 #include "phys3.h"
 #include "wwphystrig.h"
 #include "physcoltest.h"

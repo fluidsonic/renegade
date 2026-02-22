@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __RENEGADEPLAYERTERMINAL_H
-#define __RENEGADEPLAYERTERMINAL_H
+#include "global.h"
 
 #include "playerterminal.h"
 #include "purchasesettings.h"
@@ -37,6 +37,3 @@ private:
 	////////////////////////////////////////////////////////////////
 	void				Show_Terminal_Dialog (PurchaseSettingsDefClass::TEAM team);
 };
-
-#endif //__RENEGADEPLAYERTERMINAL_H
-

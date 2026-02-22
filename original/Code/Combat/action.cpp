@@ -1,3 +1,4 @@
+#include "global.h"
 #include "action.h"
 #include "input.h"
 #include "persistfactory.h"

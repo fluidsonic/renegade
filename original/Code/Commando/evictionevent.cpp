@@ -1,3 +1,4 @@
+#include "global.h"
 #include "evictionevent.h"
 
 #include <stdio.h>
@@ -91,4 +92,3 @@ cEvictionEvent::Import_Creation(BitStreamClass & packet)
 
 	Act();
 }
-

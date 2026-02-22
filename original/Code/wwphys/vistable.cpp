@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vistable.h"
 #include "wwphysids.h"
 #include "pscene.h"
@@ -485,4 +486,3 @@ void CompressedVisTableClass::Decompress(uint8_t * decomp_buffer,int decomp_size
 	lzo_uint size;
 	LZOCompressor::Decompress(Buffer,BufferSize,decomp_buffer, &size);
 }
-

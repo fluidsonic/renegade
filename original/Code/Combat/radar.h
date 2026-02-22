@@ -1,9 +1,7 @@
-#ifndef	RADAR_H
-#define	RADAR_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -129,6 +127,3 @@ private:
 	// Possibily add a blip, return the new intensity
 	static	float		Add_Blip( const Vector3 & pos, int shape_type, int color_type, float intensity, bool bracket, bool altitude_fade = false );
 };
-
-#endif
-

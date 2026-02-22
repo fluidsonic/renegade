@@ -1,3 +1,4 @@
+#include "global.h"
 #include "input.h"
 #include "slist.h"
 #include "assets.h"

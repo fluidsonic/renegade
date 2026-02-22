@@ -1,3 +1,4 @@
+#include "global.h"
 #include "skinpackagemgr.h"
 #include "registry.h"
 #include "_globals.h"

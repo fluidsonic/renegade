@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef RENDER2D_H
-#define RENDER2D_H
+#include "global.h"
 
-#include "always.h"
 //#include "simplevec.h"
 #include "vector.h"
 #include "vector2.h"
@@ -195,5 +194,3 @@ private:
 
 	void	Draw_Char( WCHAR ch, unsigned long color );
 };
-
-#endif	// RENDER2D_H

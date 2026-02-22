@@ -1,5 +1,6 @@
-#ifndef _TOOLKIT_H_
-#define _TOOLKIT_H_
+#pragma once
+
+#include "global.h"
 
 // Defines and Includes
 
@@ -151,5 +152,3 @@ inline int Get_Int_Random(int min, int max)
 #define TEXT_COLOR_PLAYERTYPE_MUTANT			Vector3 (  0.0f, .392f,  0.0f)
 #define TEXT_COLOR_WHITE						Vector3 (  1.0f,  1.0f,  1.0f)
 #define TEXT_COLOR_YELLOW						Vector3 (  1.0f,  1.0f,  0.0f)
-
-#endif // _TOOLKIT_H_

@@ -20,6 +20,7 @@
 #ifndef INTERSEC_INL
 #define INTERSEC_INL
 
+#include "global.h"
 #include "camera.h"
 
 

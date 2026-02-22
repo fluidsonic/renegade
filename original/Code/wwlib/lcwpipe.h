@@ -1,5 +1,6 @@
-#ifndef LCWPIPE_H
-#define LCWPIPE_H
+#pragma once
+
+#include "global.h"
 
 #include	"pipe.h"
 
@@ -61,5 +62,3 @@ class LCWPipe : public Pipe
 		LCWPipe(LCWPipe & rvalue);
 		LCWPipe & operator = (LCWPipe const & pipe);
 };
-
-#endif

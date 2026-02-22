@@ -1,9 +1,7 @@
-#ifndef	TIMEMGR_H
-#define	TIMEMGR_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	PERSIST_H
 	#include "persist.h"
@@ -81,5 +79,3 @@ private:
 	static	int			AveragedFPSTicks;
 	static	int			AveragedFPSCounter;
 };
-
-#endif	//	TIMEMGR_H

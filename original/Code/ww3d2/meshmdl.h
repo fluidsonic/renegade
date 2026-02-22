@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef MESHMDL_H
-#define MESHMDL_H
+#include "global.h"
 
 #include "vector2.h"
 #include "vector3.h"
@@ -298,6 +298,3 @@ public:
 	void Add_Polygon(unsigned polygon_index,unsigned vidx1,unsigned vidx2, unsigned vidx3);
 	void Shrink_Buffers();
 };
-
-#endif
-

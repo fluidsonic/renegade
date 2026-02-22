@@ -1,3 +1,4 @@
+#include "global.h"
 #include "announceevent.h"
 #include "networkobjectfactory.h"
 #include "apppackettypes.h"

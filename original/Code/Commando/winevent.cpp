@@ -1,3 +1,4 @@
+#include "global.h"
 #include "winevent.h"
 
 #include <stdio.h>

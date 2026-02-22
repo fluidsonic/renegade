@@ -1,3 +1,4 @@
+#include "global.h"
 #include "specialeffectsgameobj.h"
 #include "combatchunkid.h"
 #include "wwaudio.h"
@@ -424,4 +425,3 @@ SpecialEffectsGameObj::Think (void)
 	
 	return ;
 }
-

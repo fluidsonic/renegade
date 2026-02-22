@@ -1,9 +1,9 @@
-// dinput.h compat shim for macOS - DirectInput stubs
 #pragma once
-#ifndef DINPUT_H_COMPAT
-#define DINPUT_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// dinput.h compat shim for macOS - DirectInput stubs
+
 #include "d3d8types.h"
 
 #define DIRECTINPUT_VERSION 0x0800
@@ -320,5 +320,3 @@ static const DIDATAFORMAT c_dfDIJoystick  = {sizeof(DIDATAFORMAT), sizeof(DIOBJE
 #define DIERR_ACQUIRED          0x8007001EL
 #define DIERR_NOTACQUIRED       0x8007001FL
 #define DIERR_INPUTLOST         0x8007001FL
-
-#endif // DINPUT_H_COMPAT

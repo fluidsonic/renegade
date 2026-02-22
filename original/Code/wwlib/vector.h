@@ -1,12 +1,11 @@
+#pragma once
 
-#ifndef VECTOR_H
-#define VECTOR_H
+#include "global.h"
 
-#include "always.h"
 #include	<assert.h>
 #include	<stdlib.h>
 #include <string.h>
-#include <new.h>
+#include <new>
 
 class	NoInitClass;
 
@@ -1007,5 +1006,3 @@ bool Pointer_Vector_Remove(T const * ptr, VectorClass<T *> & vec)
 	}
 	return(false);
 }
-
-#endif

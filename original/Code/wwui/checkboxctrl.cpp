@@ -1,3 +1,4 @@
+#include "global.h"
 #include "checkboxctrl.h"
 #include "assetmgr.h"
 #include "refcount.h"
@@ -355,4 +356,3 @@ CheckBoxCtrlClass::On_Create (void)
 {
 	return ;
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "weapons.h"
 #include "weaponmanager.h"
 #include "soldier.h"

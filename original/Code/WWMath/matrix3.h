@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef Matrix3_H
-#define Matrix3_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 #include "osdep.h"
 
@@ -950,5 +949,3 @@ WWINLINE void Matrix3::Rotate_AABox_Extent(const Vector3 & extent,Vector3 * set_
 		}
 	}
 }
-
-#endif /*Matrix3_H*/

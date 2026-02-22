@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     encodertypeentry.h
 // Project:      wwbitpack.lib
@@ -7,10 +11,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef ENCODERTYPEENTRY_H
-#define ENCODERTYPEENTRY_H
 
-#include "global.h"
 
 class cEncoderTypeEntry
 {
@@ -43,5 +44,3 @@ class cEncoderTypeEntry
 		double Resolution;
 		UINT BitPrecision;
 };
-
-#endif // ENCODERTYPEENTRY_H

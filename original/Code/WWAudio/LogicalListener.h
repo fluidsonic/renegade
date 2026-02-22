@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __LOGICAL_LISTENER_H
-#define __LOGICAL_LISTENER_H
+#include "global.h"
 
 #include "SoundSceneObj.H"
 #include "Vector3.H"
@@ -110,6 +110,3 @@ class LogicalListenerClass : public SoundSceneObjClass
 		static uint32_t			m_OldestTimestamp;
 		static uint32_t			m_NewestTimestamp;
 };
-
-#endif //__LOGICAL_LISTENER_H
-

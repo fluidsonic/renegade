@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ddsfile.h"
 #include "ffactory.h"
 #include "bufffile.h"

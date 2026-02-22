@@ -1,9 +1,7 @@
-#ifndef	ACTIONPARAMS_H
-#define	ACTIONPARAMS_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -185,6 +183,3 @@ void	inline ActionParamsStruct::Set_Look( const Vector3 &obj_pos, float angle,  
 	LookDuration	= duration;
 	return ;
 }
-
-#endif	// ACTIONPARAMS_H
-

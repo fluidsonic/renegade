@@ -1,3 +1,6 @@
+#pragma once
+
+
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
 // Used by chat.rc
@@ -785,4 +788,3 @@
 #define IDC_VISIT_WEB_BUTTON            11037
 #define IDC_EXIT_BUTTON                 11038
 #define IDM_TOGGLE_FULLSCREEN           40001
-

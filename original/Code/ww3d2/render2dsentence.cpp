@@ -1,3 +1,4 @@
+#include "global.h"
 #include "render2dsentence.h"
 #include "surfaceclass.h"
 #include "texture.h"
@@ -1516,4 +1517,3 @@ FontCharsClass::Free_Character_Arrays (void)
 
 	return ;
 }
-

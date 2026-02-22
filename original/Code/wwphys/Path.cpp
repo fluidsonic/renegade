@@ -1,3 +1,4 @@
+#include "global.h"
 #include "path.h"
 #include <windows.h>
 #include "colmathaabox.h"

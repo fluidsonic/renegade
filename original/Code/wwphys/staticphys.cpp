@@ -1,3 +1,4 @@
+#include "global.h"
 #include "staticphys.h"
 #include "colmathaabox.h"
 #include "vistable.h"

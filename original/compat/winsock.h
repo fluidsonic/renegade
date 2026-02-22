@@ -1,9 +1,9 @@
-// winsock.h compat shim for macOS - maps to BSD sockets
 #pragma once
-#ifndef WINSOCK_H_COMPAT
-#define WINSOCK_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// winsock.h compat shim for macOS - maps to BSD sockets
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -169,5 +169,3 @@ inline int accept(SOCKET s, LPSOCKADDR from, int* fromlen) {
 #define _LINGER_DEFINED
 typedef struct linger LINGER;
 #endif
-
-#endif // WINSOCK_H_COMPAT

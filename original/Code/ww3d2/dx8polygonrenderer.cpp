@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dx8polygonrenderer.h"
 #include "dx8renderer.h"
 
@@ -67,4 +68,3 @@ void DX8PolygonRendererClass::Log()
 		mmc->Get_Name());
 */	
 }
-

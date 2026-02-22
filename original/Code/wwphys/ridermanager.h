@@ -1,7 +1,7 @@
-#ifndef RIDERMANAGER_H
-#define RIDERMANAGER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "physlist.h"
 
 class Matrix3D;
@@ -33,6 +33,3 @@ protected:
 	NonRefPhysListClass	RiderList;
 
 };
-
-#endif
-

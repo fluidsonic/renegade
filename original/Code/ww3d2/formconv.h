@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef FORMCONV_H
-#define FORMCONV_H
+#include "global.h"
 
 #include "ww3dformat.h"
 #include <d3d8.h>
@@ -13,5 +13,3 @@ D3DFORMAT WW3DFormat_To_D3DFormat(WW3DFormat ww3d_format);
 WW3DFormat D3DFormat_To_WW3DFormat(D3DFORMAT d3d_format);
 
 void Init_D3D_To_WW3_Conversion();
-
-#endif

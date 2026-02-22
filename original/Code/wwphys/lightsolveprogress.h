@@ -1,5 +1,6 @@
-#ifndef LIGHTSOLVEPROGRESS_H
-#define LIGHTSOLVEPROGRESS_H
+#pragma once
+
+#include "global.h"
 
 /**
 ** LightSolveProgressClass
@@ -57,5 +58,3 @@ inline LightSolveProgressClass::LightSolveProgressClass(void) :
 	CancelRequested(false)
 {
 }
-
-#endif

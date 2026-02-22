@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dx8rendererdebugger.h"
 #include "hashtemplate.h"
 #include "mesh.h"
@@ -98,4 +99,3 @@ void DX8RendererDebugger::Enable_All()
 		ite.Peek_Value()->Set_Debugger_Disable(false);
 	}
 }
-

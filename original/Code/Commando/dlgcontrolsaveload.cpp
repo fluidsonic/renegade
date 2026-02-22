@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcontrolsaveload.h"
 #include "resource.h"
 #include "listctrl.h"
@@ -508,4 +509,3 @@ ControlSaveLoadMenuClass::On_EditCtrl_Enter_Pressed (EditCtrlClass *edit_ctrl, i
 
 	return ;
 }
-

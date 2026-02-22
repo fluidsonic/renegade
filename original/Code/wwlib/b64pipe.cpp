@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"b64pipe.h"
 #include	"base64.h"
 #include	<string.h>
@@ -119,4 +119,3 @@ int Base64Pipe::Flush(void)
 	len += Pipe::Flush();
 	return(len);
 }
-

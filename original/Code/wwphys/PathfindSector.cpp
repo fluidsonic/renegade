@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pathfindsector.h"
 #include "phys3.h"
 #include "boxrobj.h"
@@ -321,4 +322,3 @@ PathfindWaypathSectorClass::Can_Access_Portal
 
 	return retval;
 }
-

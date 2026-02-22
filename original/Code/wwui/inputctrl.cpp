@@ -1,3 +1,4 @@
+#include "global.h"
 #include "inputctrl.h"
 #include "assetmgr.h"
 #include "refcount.h"

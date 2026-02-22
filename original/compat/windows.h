@@ -1,12 +1,12 @@
-// Windows API compatibility shim for macOS/clang
 #pragma once
-#ifndef WINDOWS_H_COMPAT
-#define WINDOWS_H_COMPAT
+
+#include "global.h"
+
+// Windows API compatibility shim for macOS/clang
 
 // Prevent multiple conflicting definitions
 #define _WINDOWS_
 
-#include "windef.h"
 #include "winnt.h"
 #include "winbase.h"
 #include "winuser.h"
@@ -23,5 +23,3 @@
 #ifdef DEPTH_MAX
 #undef DEPTH_MAX
 #endif
-
-#endif // WINDOWS_H_COMPAT

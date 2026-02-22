@@ -2,8 +2,8 @@
 // Implements IDirect3D8 and IDirect3DDevice8 backed by SDL2+OpenGL.
 // Phase A: enough to pass WW3D::Init() and run the game loop with glClear.
 
-#include "global.h"
 #define SDL_MAIN_HANDLED
+#include "global.h"
 #include <SDL2/SDL.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>

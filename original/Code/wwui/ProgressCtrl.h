@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PROGRESS_CTRL_H
-#define __PROGRESS_CTRL_H
+#include "global.h"
 
 #include "DialogControl.h"
 #include "Render2D.h"
@@ -60,5 +60,3 @@ class ProgressCtrlClass :
 		unsigned int mPosition;
 		unsigned int mStep;
 	};
-
-#endif //__PROGRESS_CTRL_H

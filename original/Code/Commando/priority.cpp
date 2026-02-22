@@ -1,3 +1,4 @@
+#include "global.h"
 #include "priority.h"
 
 #include <math.h>

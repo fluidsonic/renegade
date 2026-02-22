@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"straw.h"
 #include	<stddef.h>
 //#include	<string.h>
@@ -94,4 +94,3 @@ int Straw::Get(void * source, int slen)
 	}
 	return(0);
 }
-

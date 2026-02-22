@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pathdebugplotter.h"
 #include "widgets.h"
 #include "matinfo.h"
@@ -29,4 +30,3 @@ PathDebugPlotterClass::Render_Vector
 	
 	return ;
 }
-

@@ -1,5 +1,6 @@
-#ifndef _DATASAFE_H
-#define _DATASAFE_H
+#pragma once
+
+#include "global.h"
 
 // DataSafe system removed — replaced with plain types.
 // The encryption / anti-cheat machinery was written for 32-bit Windows and
@@ -32,5 +33,3 @@ public:
     static void Security_Check(void) {}
     static void Say_Security_Fault(void) {}
 };
-
-#endif // _DATASAFE_H

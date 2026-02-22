@@ -1,5 +1,6 @@
-#ifndef __CLIENTCONTROL_H__
-#define __CLIENTCONTROL_H__
+#pragma once
+
+#include "global.h"
 
 #include "networkobject.h"
 #include "netclassids.h"
@@ -39,5 +40,3 @@ private:
 extern CClientControl *		PClientControl;
 
 //-----------------------------------------------------------------------------
-
-#endif	// __CLIENTCONTROL_H__

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef MATERIALEFFECTLIST_H
-#define MATERIALEFFECTLIST_H
+#include "global.h"
 
-#include "always.h"
 #include "multilist.h"
 
 class MaterialEffectClass;
@@ -12,6 +11,3 @@ typedef MultiListIterator<MaterialEffectClass>		NonRefMaterialEffectListIterator
 
 typedef RefMultiListClass<MaterialEffectClass>		RefMaterialEffectListClass;
 typedef RefMultiListIterator<MaterialEffectClass>	RefMaterialEffectListIterator;
-
-#endif //MATERIALEFFECTLIST_H
-

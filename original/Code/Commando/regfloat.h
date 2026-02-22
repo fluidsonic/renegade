@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     regfloat.h
 // Author:       Tom Spencer-Smith
@@ -6,10 +10,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef REGFLOAT_H
-#define REGFLOAT_H
 
-#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryFloat
@@ -28,4 +29,3 @@ class cRegistryFloat
 };
 
 //-----------------------------------------------------------------------------
-#endif // REGFLOAT_H

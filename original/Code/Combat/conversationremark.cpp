@@ -1,3 +1,4 @@
+#include "global.h"
 #include "conversationremark.h"
 #include "chunkio.h"
 

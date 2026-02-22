@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"buff.h"
 #include	"lzo.h"
 #include	"lzopipe.h"
@@ -273,4 +273,3 @@ int LZOPipe::Flush(void)
 	total += Pipe::Flush();
 	return(total);
 }
-

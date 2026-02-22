@@ -1,9 +1,7 @@
-#ifndef	REFLIST_H
-#define	REFLIST_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 
 #ifndef	CHUNKIO_H
@@ -160,6 +158,3 @@ class RefCountedReferencerClass : public ReferencerClass, public RefCountClass {
 		}
 
 };
-
-#endif
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scriptcommands.h"
 #include "combat.h"
 #include "smartgameobj.h"

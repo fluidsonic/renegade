@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef NULL_H
-#define NULL_H
+#include "global.h"
 
 #ifndef RENDOBJ_H
 #include "rendobj.h"
@@ -54,6 +54,3 @@ public:
 ** automatically install at creation time
 */
 extern NullLoaderClass _NullLoader;
-
-#endif
-

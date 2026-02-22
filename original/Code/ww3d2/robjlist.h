@@ -1,10 +1,7 @@
+#pragma once
 
-#ifndef ROBJLIST_H
-#define ROBJLIST_H
+#include "global.h"
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 #ifndef MULTILIST_H
 #include "multilist.h"
@@ -18,6 +15,3 @@ typedef RefMultiListIterator<RenderObjClass>	RefRenderObjListIterator;
 
 typedef MultiListClass<RenderObjClass>			NonRefRenderObjListClass;
 typedef MultiListIterator<RenderObjClass>		NonRefRenderObjListIterator;
-
-#endif
-

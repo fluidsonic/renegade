@@ -1,9 +1,6 @@
+#pragma once
 
-
-#ifndef BUILDINGSTATES_H
-#define BUILDINGSTATES_H
-
-#include "always.h"
+#include "global.h"
 
 /**
 ** BuildingStateClass
@@ -53,6 +50,3 @@ public:
 	
 	static const char *	Get_State_Name(int state);
 };
-
-#endif // BUILDINGSTATES_H
-

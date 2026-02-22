@@ -1,9 +1,7 @@
-#ifndef	GAMEMENU_H
-#define	GAMEMENU_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEMODE_H
 	#include "gamemode.h"
@@ -29,6 +27,3 @@ public:
 private:
 	class AudibleSoundClass *	MenuMusic;
 };
-
-#endif
-

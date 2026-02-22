@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef INDEX_H
-#define INDEX_H
+#include "global.h"
 
 #include	"bsearch.h"
 
@@ -633,6 +633,3 @@ IndexClass<INDEX, T>::NodeElement const * IndexClass<INDEX, T>::Search_For_Node(
 	return(Binary_Search(IndexTable, IndexCount, node));
 //	return((NodeElement const *)bsearch(&node, &IndexTable[0], IndexCount, sizeof(IndexTable[0]), search_compfunc));
 }
-
-#endif
-

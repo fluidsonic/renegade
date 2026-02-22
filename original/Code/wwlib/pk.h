@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef PK_H
-#define PK_H
+#include "global.h"
 
 #ifndef STRAW_H
 #include "straw.h"
@@ -56,5 +56,3 @@ class PKey
 		// Maximum bits allowed for block.
 		int BitPrecision;
 };
-
-#endif

@@ -1,7 +1,7 @@
-#ifndef MATRIXMAPPER_H
-#define MATRIXMAPPER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "matrix4.h"
 #include "mapper.h"
 
@@ -98,5 +98,3 @@ inline const Matrix4 & MatrixMapperClass::Get_Texture_Transform(void) const
 { 
 	return ViewToTexture; 
 }
-
-#endif

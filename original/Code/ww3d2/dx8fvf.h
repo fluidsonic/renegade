@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DX8_FVF_H
-#define DX8_FVF_H
+#include "global.h"
 
-#include "always.h"
 #include <d3d8.h>
 
 class StringClass;
@@ -168,5 +167,3 @@ public:
 
 	void Get_FVF_Name(StringClass& fvfname) const;	// For debug purposes
 };
-
-#endif

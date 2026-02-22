@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DROPDOWN_CTRL_H
-#define __DROPDOWN_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector.h"
@@ -135,5 +135,3 @@ protected:
 	bool							ButtonClickedOnMe;
 	int							DisplayTime;
 };
-
-#endif //__DROPDOWN_CTRL_H

@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"mpmath.h"
 #include	"win.h"
 #include	<assert.h>

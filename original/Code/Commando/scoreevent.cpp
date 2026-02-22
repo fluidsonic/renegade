@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scoreevent.h"
 
 #include <stdio.h>
@@ -81,4 +82,3 @@ cScoreEvent::Import_Creation(BitStreamClass & packet)
 
 	Act();
 }
-

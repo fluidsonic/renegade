@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vtolvehicle.h"
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
@@ -530,4 +531,3 @@ bool VTOLVehicleDefClass::Is_Type(const char * type_name)
 		return VehiclePhysDefClass::Is_Type(type_name);
 	}
 }
-

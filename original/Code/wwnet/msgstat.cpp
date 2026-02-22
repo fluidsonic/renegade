@@ -6,6 +6,7 @@
 // Description:  
 //
 //------------------------------------------------------------------------------------
+#include "global.h"
 #include "msgstat.h" // I WANNA BE FIRST!
 
 #include <string.h>
@@ -87,4 +88,3 @@ void cMsgStat::Set_Name(LPCSTR name)
 
 	::strcpy(Name, name);
 }
-

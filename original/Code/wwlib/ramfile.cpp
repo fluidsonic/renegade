@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"ramfile.h"
 #include	<string.h>
 

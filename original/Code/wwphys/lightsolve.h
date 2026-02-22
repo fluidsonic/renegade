@@ -1,7 +1,7 @@
-#ifndef LIGHTSOLVE_H
-#define LIGHTSOLVE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "physlist.h"
 
 class PhysClass;
@@ -32,6 +32,3 @@ static bool		Does_Obj_Get_Static_Light_Solve(StaticPhysClass * obj);
 static bool		Does_Model_Get_Static_Light_Solve(RenderObjClass * model);
 
 };
-
-#endif //LIGHTSOLVE_H
-

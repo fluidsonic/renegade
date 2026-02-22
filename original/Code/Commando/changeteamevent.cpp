@@ -1,3 +1,4 @@
+#include "global.h"
 #include "changeteamevent.h"
 
 #include <stdio.h>
@@ -166,4 +167,3 @@ cChangeTeamEvent::Is_Change_Team_Possible(void)
 		//The_Game()->Is_Team_Game() && 
 		The_Game()->IsTeamChangingAllowed.Is_True();
 }
-

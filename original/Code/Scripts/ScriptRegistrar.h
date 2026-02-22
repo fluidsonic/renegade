@@ -1,5 +1,6 @@
-#ifndef _SCRIPTREGISTRAR_H_
-#define _SCRIPTREGISTRAR_H_
+#pragma once
+
+#include "global.h"
 
 class ScriptFactory;
 class ScriptImpClass;
@@ -28,5 +29,3 @@ class ScriptRegistrar
 	private:
 		static ScriptFactory* mScriptFactories;
 	};
-
-#endif // _SCRIPTREGISTRAR_H_

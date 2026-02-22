@@ -1,3 +1,4 @@
+#include "global.h"
 #include "serverfps.h"
 
 #include "cnetwork.h"
@@ -75,4 +76,3 @@ cServerFps::Get_Instance
 {
 	return TheInstance;
 }
-

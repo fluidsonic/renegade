@@ -1,3 +1,4 @@
+#include "global.h"
 #include "muzzlerecoil.h"
 #include "timemgr.h"
 #include "rendobj.h"
@@ -46,4 +47,3 @@ void MuzzleRecoilClass::Update(RenderObjClass * model)
 		model->Release_Bone(BoneIndex);
 	}
 }
-

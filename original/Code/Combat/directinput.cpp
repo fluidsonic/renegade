@@ -1,6 +1,7 @@
 // directinput.cpp — SDL2-backed input layer (replaces DirectInput8)
 // Keeps the exact same public API as the original but uses SDL2 internally.
 #define SDL_MAIN_HANDLED
+#include "global.h"
 #include <SDL2/SDL.h>
 
 #include "directinput.h"

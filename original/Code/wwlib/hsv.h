@@ -1,5 +1,6 @@
-#ifndef HSV_H
-#define HSV_H
+#pragma once
+
+#include "global.h"
 
 class RGBClass;
 class HSVClass;
@@ -41,5 +42,3 @@ class HSVClass
 		unsigned char Saturation;
 		unsigned char Value;
 };
-
-#endif

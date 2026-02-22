@@ -1,7 +1,7 @@
-#ifndef COMBATDAZZLE_H
-#define COMBATDAZZLE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "dazzle.h"
 
 /**
@@ -18,6 +18,3 @@ class CombatDazzleClass : public DazzleVisibilityClass
 };
 
 extern CombatDazzleClass _TheCombatDazzleHandler;
-
-#endif
-

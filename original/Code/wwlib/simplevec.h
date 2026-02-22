@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef SIMPLEVEC_H
-#define SIMPLEVEC_H
+#include "global.h"
 
-#include "always.h"
 #include <assert.h>
 #include <string.h>		// for memmove
 
@@ -578,7 +577,3 @@ inline int SimpleDynVecClass<T>::Find_Index(T const & object)
 	}
 	return(-1);
 }
-
-
-#endif // SIMPLEVEC_H
-

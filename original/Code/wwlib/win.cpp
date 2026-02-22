@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "win.h"
 
 HINSTANCE	ProgramInstance;
@@ -17,4 +17,3 @@ bool GameInFocus = false;
  * HISTORY:                                                                                    *
  *   6/21/01    DEL : Created.                                                                 *
  *=============================================================================================*/
-

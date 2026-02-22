@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     singlepl.h
 // Project:      wwnet
@@ -11,8 +15,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef SINGLEPL_H
-#define SINGLEPL_H
 
 #include "slist.h"
 
@@ -48,6 +50,3 @@ class cSinglePlayerData
 };
 
 //-----------------------------------------------------------------------------
-
-#endif // SINGLEPL_H
-  

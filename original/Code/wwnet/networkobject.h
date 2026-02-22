@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef	__NETWORKOBJECT_H
-#define	__NETWORKOBJECT_H
+#include "global.h"
 
 #include "wwpacket.h"
 
@@ -286,5 +286,3 @@ inline BYTE NetworkObjectClass::Get_Client_Hint_Count_2(int client_id)
 	//virtual float		Get_Cached_Priority (void) const													{ return CachedPriority; }
 	//static void			Set_Max_Distance (float distance)				{ MaxDistance = distance; }
 	//static float		MaxDistance;
-
-#endif // __NETWORKOBJECT_H

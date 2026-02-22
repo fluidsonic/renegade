@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef MOTCHAN_H
-#define MOTCHAN_H
+#include "global.h"
 
-#include "always.h"
 #include "w3d_file.h"
 
 class ChunkLoadClass;
@@ -241,5 +240,3 @@ private:
 
 	friend class HCompressedAnimClass;
 };
-
-#endif

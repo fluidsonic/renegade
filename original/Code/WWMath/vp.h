@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef VECTORPROCESSOR_H
-#define VECTORPROCESSOR_H
+#include "global.h"
 
 class Vector2;
 class Vector3;
@@ -39,5 +39,3 @@ public:
 	static void ClampMin(float *dst, float *src, const float min, const int count);
 	static void Power(float *dst, float *src, const float pow, const int count);
 };
-
-#endif // VECTORPROCESSOR_H

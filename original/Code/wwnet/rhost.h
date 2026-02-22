@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     rhost.h
 // Project:      wwnet
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef RHOST_H
-#define RHOST_H
 
 #include "netstats.h"
 #include "wwpacket.h"
@@ -192,7 +194,6 @@ class cRemoteHost
 
 };
 
-#endif // RHOST_H
 
       //
       // When this is set to true, sends to ALL will include this rhost.

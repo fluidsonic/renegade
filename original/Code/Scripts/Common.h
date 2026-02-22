@@ -1,5 +1,6 @@
-#ifndef _COMMON_H_
-#define _COMMON_H_
+#pragma once
+
+#include "global.h"
 
 #include "customevents.h"
 #include "scripts.h"
@@ -14,5 +15,3 @@
 class Vector3;
 
 Vector3 RandomVector3(float xRange, float yRange, float zRange);
-
-#endif // _COMMON_H_

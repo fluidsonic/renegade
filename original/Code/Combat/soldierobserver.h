@@ -1,7 +1,7 @@
-#ifndef	SOLDIEROBSERVER_H
-#define	SOLDIEROBSERVER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "persistentgameobjobserver.h"
 #include "vector3.h"
 #include "gameobjref.h"
@@ -128,5 +128,3 @@ private:
 	void	Release_Cover_Position( void );
 
 };
-
-#endif	// SOLDIEROBSERVER_H

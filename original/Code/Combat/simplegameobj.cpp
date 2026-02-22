@@ -1,3 +1,4 @@
+#include "global.h"
 #include "simplegameobj.h"
 #include "combat.h"
 #include "animcontrol.h"
@@ -228,4 +229,3 @@ void	SimpleGameObj::On_Post_Load( void )
 	}
 	*/
 }
-

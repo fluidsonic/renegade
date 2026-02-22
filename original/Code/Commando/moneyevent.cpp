@@ -1,3 +1,4 @@
+#include "global.h"
 #include "moneyevent.h"
 
 #include <stdio.h>
@@ -78,4 +79,3 @@ cMoneyEvent::Import_Creation(BitStreamClass & packet)
 
 	Act();
 }
-

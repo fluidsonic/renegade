@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef	SYSTEMSETTINGS_H
-#define	SYSTEMSETTINGS_H
+#include "global.h"
 
 #include "vector.h"
 
@@ -165,5 +165,3 @@ public:
 	virtual	const char *		Get_Enum_Name( int selection )				= 0;
 
 };
-
-#endif	// SYSTEMSETTINGS_H

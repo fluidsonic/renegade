@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pivot.h"
 #include "wwmath.h"
 
@@ -39,4 +40,3 @@ void PivotClass::Capture_Update(void)
 		Matrix3D::Multiply(Transform,CapTransform,&(Transform));
 	}
 }
-

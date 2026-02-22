@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef LISTNODE_H
-#define LISTNODE_H
+#include "global.h"
 
 /*
 ** Includes
@@ -267,5 +267,3 @@ public:
 	SECONDARY Get_Secondary() { return SecondaryValue; };
 	void Unlink() { Primary.Unlink(); Secondary.Unlink(); };
 };
-
-#endif

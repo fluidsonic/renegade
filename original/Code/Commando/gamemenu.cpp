@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gamemenu.h"
 #include "scene.h"
 #include "camera.h"
@@ -193,4 +194,3 @@ MenuGameModeClass2::Deactivate (void)
 	GameModeClass::Deactivate();
 	return ;
 }
-

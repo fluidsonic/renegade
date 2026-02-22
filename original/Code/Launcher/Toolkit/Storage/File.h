@@ -1,5 +1,6 @@
-#ifndef FILE_H
-#define FILE_H
+#pragma once
+
+#include "global.h"
 
 #include <Support\UTypes.h>
 #include "Stream.h"
@@ -113,5 +114,3 @@ class File : public Stream
 		HANDLE mHandle;
 		static const HANDLE INVALID_HANDLE;
 	};
-
-#endif // FILE_H

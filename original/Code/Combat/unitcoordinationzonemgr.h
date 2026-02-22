@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __UNITCOORDINATIONZONEMGR_H
-#define __UNITCOORDINATIONZONEMGR_H
+#include "global.h"
 
 #include "vector.h"
 #include "aabox.h"
@@ -46,5 +46,3 @@ private:
 	///////////////////////////////////////////////////////////////////
 	static DynamicVectorClass<AABoxClass>	ZoneList;
 };
-
-#endif //__UNITCOORDINATIONZONEMGR_H

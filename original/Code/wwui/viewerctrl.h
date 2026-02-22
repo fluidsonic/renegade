@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __VIEWER_CTRL_H
-#define __VIEWER_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -99,5 +99,3 @@ protected:
 	InterfaceModeEnum		InterfaceMode;
 	Vector3					LastMousePosition;
 };
-
-#endif //__VIEWER_CTRL_H

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __ENCYCLOPEDIAMGR_H
-#define __ENCYCLOPEDIAMGR_H
+#include "global.h"
 
 #include "saveloadsubsystem.h"
 #include "vector.h"
@@ -106,5 +106,3 @@ private:
 	static BooleanVectorClass	KnownObjectVector[TYPE_COUNT];
 	static BooleanVectorClass	CopyOfKnownObjectVector[TYPE_COUNT];
 };
-
-#endif //__ENCYCLOPEDIAMGR_H

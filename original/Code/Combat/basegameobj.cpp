@@ -1,3 +1,4 @@
+#include "global.h"
 #include "basegameobj.h"
 #include "combat.h"
 #include "pscene.h"

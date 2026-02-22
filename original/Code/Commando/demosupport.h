@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     demosupport.h
 // Author:       Tom Spencer-Smith
@@ -5,8 +9,6 @@
 // Description:  MP Demo support
 //
 
-#ifndef __DEMOSUPPORT_H__
-#define __DEMOSUPPORT_H__
 
 #include <stdlib.h>
 #include <wwlib/realcrc.h>
@@ -38,6 +40,3 @@ cDemoSupport::Security_Check
 }
 
 //-----------------------------------------------------------------------------
-
-#endif // __DEMOSUPPORT_H__
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bwrender.h"
 #include "vp.h"
 #include <string.h>
@@ -199,4 +200,3 @@ void BWRenderClass::Render_Preprocessed_Triangle(Vector3& xcf,Vector3i& yci)
 	}
 
 }
-

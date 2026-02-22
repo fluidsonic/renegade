@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCONFIGVIDEOTAB_H
-#define __DLGCONFIGVIDEOTAB_H
+#include "global.h"
 
 // Includes.
 #include "childdialog.h"
@@ -86,5 +86,3 @@ inline void	DlgConfigVideoTabClass::Update_Gamma (int g, int b, int c)
 {
 	DX8Wrapper::Set_Gamma (Gamma_Scale (g), Gamma_Scale (b), Gamma_Scale (c), true, false);
 }
-
-#endif //__DLGCONFIGVIDEOTAB_H

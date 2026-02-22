@@ -1,5 +1,6 @@
-#ifndef __WARPEVENT_H__
-#define __WARPEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -31,5 +32,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __WARPEVENT_H__

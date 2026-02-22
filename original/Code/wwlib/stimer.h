@@ -1,5 +1,6 @@
-#ifndef STIMER_H
-#define STIMER_H
+#pragma once
+
+#include "global.h"
 
 /****************************************************************************
 **	Timer constants. These are used when setting the countdown timer.
@@ -24,5 +25,3 @@ class SystemTimerClass
 		long operator () (void) const;
 		operator long (void) const;
 };
-
-#endif

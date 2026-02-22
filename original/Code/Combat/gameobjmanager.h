@@ -1,9 +1,7 @@
-#ifndef	GAMEOBJMANAGER_H
-#define	GAMEOBJMANAGER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef SLIST_H
 	#include "slist.h"
@@ -118,5 +116,3 @@ private:
 
 	static	bool							CinematicFreezeActive;
 };
-
-#endif		//	GAMEOBJMANAGER_H

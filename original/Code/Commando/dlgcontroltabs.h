@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCONTROLTABS_H
-#define __DLGCONTROLTABS_H
+#include "global.h"
 
 #include "dlgcontrolslisttab.h"
 #include "resource.h"
@@ -89,6 +89,3 @@ public:
 private:
 	void			Load_Controls (void);
 };
-
-#endif //__DLGCONTROLTABS_H
-

@@ -1,5 +1,6 @@
-#ifndef __DLGMPCONNECT_H__
-#define __DLGMPCONNECT_H__
+#pragma once
+
+#include "global.h"
 
 #include <PopupDialog.h>
 
@@ -33,5 +34,3 @@ class DlgMPConnect :
 		cGameData* mTheGame;
 		bool mFailed;
 	};
-
-#endif // __DLGMPCONNECT_H__

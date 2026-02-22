@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dynamicshadowmanager.h"
 #include "chunkio.h"
 #include "phys.h"
@@ -190,4 +191,3 @@ void DynamicShadowManagerClass::Release_Shadow(void)
 		Shadow = NULL;
 	}
 }
-

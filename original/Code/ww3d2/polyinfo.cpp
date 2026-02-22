@@ -1,3 +1,4 @@
+#include "global.h"
 #include "polyinfo.h"
 #include "texture.h"
 #include "vertmaterial.h"
@@ -41,4 +42,3 @@ PolygonInfoClass::~PolygonInfoClass()
 	if(Shader)
 		delete Shader;
 }
-

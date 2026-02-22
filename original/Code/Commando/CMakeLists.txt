@@ -82,6 +82,11 @@ target_include_directories(Commando PRIVATE
 # We must still build it before Commando so the dylib is ready to be found.
 add_dependencies(Commando Scripts)
 
+target_precompile_headers(Commando PRIVATE "${CMAKE_SOURCE_DIR}/global.h")
+
+# macos_fix.mm is Objective-C++ — exclude it from the C++ PCH
+set_source_files_properties("${COMPAT_DIR}/macos_fix.mm" PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+
 target_link_libraries(Commando PRIVATE
     Combat
     SControl

@@ -1,4 +1,5 @@
 
+#include "global.h"
 #include "seglinerenderer.h"
 #include "ww3d.h"
 #include "rinfo.h"
@@ -1156,4 +1157,3 @@ void SegLineRendererClass::subdivision_util(unsigned int point_cnt, const Vector
 	// Output:
 	*p_sub_point_cnt = sub_pidx;
 }
-

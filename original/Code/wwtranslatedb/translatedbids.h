@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TRANSLATE_DB_IDS_H
-#define __TRANSLATE_DB_IDS_H
+#include "global.h"
 
 #include "saveloadids.h"
 
@@ -18,5 +18,3 @@ enum
 	CHUNKID_TDBCATEGORY,
 	CHUNKID_STRING_TWIDDLER,
 };
-
-#endif //__TRANSLATE_DB_IDS_H

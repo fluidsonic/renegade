@@ -1,5 +1,3 @@
+#pragma once
 
-#ifndef BIN_AABOX_H
-#define BIN_AABOX_H
-
-#endif
+#include "global.h"

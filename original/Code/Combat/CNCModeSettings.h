@@ -1,7 +1,7 @@
-#ifndef	__CNCMODESETTINGS_H__
-#define	__CNCMODESETTINGS_H__
+#pragma once
 
-#include "Always.h"
+#include "global.h"
+
 #include "Definition.h"
 
 class CNCModeSettingsDef :
@@ -70,5 +70,3 @@ class CNCModeSettingsDef :
 		int			mRadioCmds[30];
 		StringClass	mRadioCmdIcons[30];
 		};
-
-#endif // __CNCMODESETTINGS_H__

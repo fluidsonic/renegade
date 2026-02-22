@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MERCHANDISECTRL_H
-#define __MERCHANDISECTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "render2dsentence.h"
@@ -85,6 +85,3 @@ protected:
 	DynamicVectorClass<StringClass>	TextureNameList;
 	int										CurrentTextureIndex;
 };
-
-#endif //__MERCHANDISECTRL_H
-

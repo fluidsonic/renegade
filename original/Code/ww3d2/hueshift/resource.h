@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
 // Used by hueshift.rc
@@ -15,4 +19,3 @@
 #define IDR_MAINFRAME                   128
 #define IDM_RELOAD                      32772
 #define IDC_STATIC                      -1
-

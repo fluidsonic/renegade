@@ -1,3 +1,4 @@
+#include "global.h"
 #include "control.h"
 #include "input.h"
 #include "wwmath.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "editctrl.h"
 #include "assetmgr.h"
 #include "refcount.h"

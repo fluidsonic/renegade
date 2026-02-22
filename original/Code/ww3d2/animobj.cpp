@@ -1,3 +1,4 @@
+#include "global.h"
 #include "animobj.h"
 #include "htree.h"
 #include "assetmgr.h"

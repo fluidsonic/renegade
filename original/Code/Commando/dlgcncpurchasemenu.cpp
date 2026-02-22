@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcncpurchasemenu.h"
 #include "dlgcncpurchasemainmenu.h"
 #include "resource.h"

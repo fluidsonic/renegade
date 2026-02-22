@@ -1,9 +1,7 @@
-#ifndef LEVEL_H
-#define LEVEL_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 /*
 **
@@ -12,5 +10,3 @@ class	LevelManager {
 public:
 	static	void		Release_Level( void );
 };
-
-#endif

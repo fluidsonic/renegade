@@ -1,3 +1,4 @@
+#include "global.h"
 #include "waypath.h"
 #include "persistfactory.h"
 #include "wwphysids.h"

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef V3_RND_H
-#define V3_RND_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 #include "random.h"
 #include <limits.h>
@@ -186,6 +185,3 @@ class Vector3SolidCylinderRandomizer : public Vector3Randomizer {
 		float	Extent;
 		float	Radius;
 };
-
-#endif
-

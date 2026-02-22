@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgevaobjectivestab.h"
 #include "listctrl.h"
 #include "string_ids.h"

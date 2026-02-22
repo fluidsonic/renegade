@@ -1,9 +1,9 @@
-// oaidl.h compat shim for macOS - OLE Automation stubs
 #pragma once
-#ifndef OAIDL_H_COMPAT
-#define OAIDL_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// oaidl.h compat shim for macOS - OLE Automation stubs
+
 #include "winnt.h"
 #include "winbase.h"
 
@@ -145,5 +145,3 @@ inline HRESULT VariantCopy(VARIANT* dst, const VARIANT* src) {
 // SysAllocString / SysFreeString stubs
 inline BSTR SysAllocString(const OLECHAR* str) { return NULL; }
 inline void SysFreeString(BSTR bstr) {}
-
-#endif // OAIDL_H_COMPAT

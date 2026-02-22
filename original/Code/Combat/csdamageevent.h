@@ -1,5 +1,6 @@
-#ifndef __CSDAMAGEEVENT_H__
-#define __CSDAMAGEEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "networkobject.h"
 #include "netclassids.h"
@@ -38,5 +39,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __CSDAMAGEEVENT_H__

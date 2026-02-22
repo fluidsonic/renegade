@@ -1,3 +1,4 @@
+#include "global.h"
 #include "comcentergameobj.h"
 #include "basecontroller.h"
 #include "simpledefinitionfactory.h"
@@ -317,4 +318,3 @@ ComCenterGameObj::On_Destroyed (void)
 
 	return ;
 }
-

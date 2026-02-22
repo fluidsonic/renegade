@@ -1,5 +1,6 @@
-#ifndef _MISSION2_H_
-#define _MISSION2_H_
+#pragma once
+
+#include "global.h"
 
 // Defines and Includes
 
@@ -68,5 +69,3 @@ inline void Send_Custom_To_SAM_Sites (GameObject * obj, int type, int param)
 		Commands->Send_Custom_Event(obj, sam, type, param, 0.5f);
 	}
 }
-
-#endif // _MISSION2_H_

@@ -1,9 +1,7 @@
-#ifndef	WEAPONBAG_H
-#define	WEAPONBAG_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR_H
 	#include "vector.h"
@@ -86,5 +84,3 @@ private:
 	void		Mark_Owner_Dirty( void );
 
 };
-
-#endif	// WEAPONBAG_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "surfaceclass.h"
 #include "formconv.h"
 #include "dx8wrapper.h"

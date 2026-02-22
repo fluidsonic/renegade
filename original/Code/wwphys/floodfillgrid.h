@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __FLOODFILLGRID_H
-#define __FLOODFILLGRID_H
+#include "global.h"
 
 #include "vector2.h"
 #include "vector2i.h"
@@ -212,6 +212,3 @@ FloodfillGridClass::Remove_Box (FloodfillBoxClass *box)
 
 	return found;
 }
-
-#endif //__FLOODFILLGRID_H
-

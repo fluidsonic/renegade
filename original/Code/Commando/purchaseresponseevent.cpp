@@ -1,3 +1,4 @@
+#include "global.h"
 #include "purchaseresponseevent.h"
 
 #include <stdio.h>

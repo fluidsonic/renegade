@@ -1,3 +1,4 @@
+#include "global.h"
 #include "phystexproject.h"
 #include "pscene.h"
 #include "phys.h"

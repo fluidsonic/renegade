@@ -1,11 +1,7 @@
+#pragma once
 
+#include "global.h"
 
-#ifndef ARGV_H	
-#define ARGV_H	 
-
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 #include "osdep.h"
 
@@ -119,5 +115,3 @@ class ArgvClass
 		enum {MAX_ARGC = 256};
 		static char  *Argv[MAX_ARGC];
 };
-
-#endif

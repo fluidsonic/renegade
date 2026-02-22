@@ -1,7 +1,7 @@
 // commando_stubs.cpp - Global definitions for removed/stubbed systems
 // Provides definitions for globals that were in deleted or excluded source files
 
-#include "always.h"
+#include "global.h"
 #include "stackdump.h"       // compat/stackdump.h
 #include "verchk.h"          // compat/verchk.h
 #include "BandTest/BandTest.h"

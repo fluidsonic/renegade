@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PATHNODE_H
-#define __PATHNODE_H
+#include "global.h"
 
 #include "matrix3d.h"
 #include "refcount.h"
@@ -225,6 +225,3 @@ PathNodeClass::Reconnect_To_Portal (void)
 
 	return ;
 }
-
-#endif //__PATHNODE_H
-

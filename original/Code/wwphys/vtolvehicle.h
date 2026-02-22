@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef VTOLVEHICLE_H
-#define VTOLVEHICLE_H
+#include "global.h"
 
 #include "vehiclephys.h"
 
@@ -157,6 +157,3 @@ protected:
 
 	friend class VTOLVehicleClass;
 };
-
-#endif
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "objectives.h"
 #include "gameobjref.h"
 #include "radar.h"

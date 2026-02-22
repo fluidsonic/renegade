@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colors.h"
 
 #include "playertype.h"

@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef VECTOR2I_H
-#define VECTOR2I_H
-
-#include "always.h"
+#include "global.h"
 
 class Vector2i
 {
@@ -67,5 +65,3 @@ WWINLINE void Vector2i::Swap(Vector2i & other)
 	other.J ^= J;
 	J ^= other.J;
 }
-
-#endif

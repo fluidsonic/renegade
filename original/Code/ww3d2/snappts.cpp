@@ -1,3 +1,4 @@
+#include "global.h"
 #include "snappts.h"
 #include "chunkio.h"
 #include "w3d_file.h"

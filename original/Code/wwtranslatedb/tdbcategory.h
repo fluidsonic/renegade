@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TDB_CATEGORY_H
-#define __TDB_CATEGORY_H
+#include "global.h"
 
 #include "persist.h"
 #include "wwstring.h"
@@ -76,5 +76,3 @@ private:
 	StringClass			Name;
 	uint32_t				ID;
 };
-
-#endif //__TDB_CATEGORY_H

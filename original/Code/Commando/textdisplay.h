@@ -1,9 +1,7 @@
-#ifndef	TEXTDISPLAY_H
-#define	TEXTDISPLAY_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEMODE_H
 	#include "gamemode.h"
@@ -143,5 +141,3 @@ public:
 	static	bool	Is_Current_Display( const char* title); // Returns true if "title" is currently active
 	static	void	Set_Stat( const char * title, const char * text, unsigned long color = 0xffffffff, const Vector2& location = Vector2( 0, -240 ) );
 };
-
-#endif

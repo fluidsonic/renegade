@@ -1,7 +1,8 @@
-// d3d8.h compat shim for macOS
 #pragma once
-#ifndef D3D8_H_COMPAT
-#define D3D8_H_COMPAT
+
+#include "global.h"
+
+// d3d8.h compat shim for macOS
 
 #include "d3d8types.h"
 #include "d3d8caps.h"
@@ -219,5 +220,3 @@ typedef IDirect3DIndexBuffer8*   LPDIRECT3DINDEXBUFFER8;
 #define D3DCLEAR_ZBUFFER   0x00000002L
 #define D3DCLEAR_STENCIL   0x00000004L
 #define D3D_SDK_VERSION    220
-
-#endif // D3D8_H_COMPAT

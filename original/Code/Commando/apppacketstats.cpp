@@ -1,3 +1,4 @@
+#include "global.h"
 #include "apppacketstats.h"
 
 #include <memory.h>

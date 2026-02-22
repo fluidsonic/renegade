@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_MGR_H
-#define __DIALOG_MGR_H
+#include "global.h"
 
 #include "vector.h"
 #include "vector2.h"
@@ -199,5 +199,3 @@ private:
 	////////////////////////////////////////////////////////////////
 	friend WWUIInputClass;
 };
-
-#endif //__DIALOG_MGR_H

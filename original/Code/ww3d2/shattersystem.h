@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef SHATTERSYSTEM_H
-#define SHATTERSYSTEM_H
-
-#include "always.h"
+#include "global.h"
 
 class MeshClass;
 class PhysicsSceneClass;
@@ -52,6 +50,3 @@ protected:
 	static void		Process_Clip_Pools(const Matrix3D &Mshatter_to_mesh,MeshClass * mesh,MeshMtlParamsClass & mtl_params);
 
 };
-
-#endif
-

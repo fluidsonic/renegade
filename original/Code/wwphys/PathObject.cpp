@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pathobject.h"
 #include "rendobj.h"
 #include "phys.h"
@@ -132,4 +133,3 @@ Get_Collision_Box (RenderObjClass *render_obj, OBBoxClass &bounding_box)
 
 	return ;
 }
-

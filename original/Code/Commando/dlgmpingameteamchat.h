@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGMPINGAMETEAMCHAT_H__
-#define __DLGMPINGAMETEAMCHAT_H__
+#include "global.h"
 
 #include "popupdialog.h"
 #include "resource.h"
@@ -21,5 +21,3 @@ public:
 
 private:
 };
-
-#endif //__DLGMPINGAMETEAMCHAT_H__

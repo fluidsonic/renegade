@@ -1,3 +1,6 @@
+#pragma once
+
+#include "global.h"
 
 /* POINTER defines a generic pointer type */
 typedef unsigned char *POINTER;

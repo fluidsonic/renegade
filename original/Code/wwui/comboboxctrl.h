@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __COMBOBOX_CTRL_H
-#define __COMBOBOX_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -111,5 +111,3 @@ protected:
 	int							CurrSel;
 	EditCtrlClass				EditControl;
 };
-
-#endif //__COMBOBOX_CTRL_H

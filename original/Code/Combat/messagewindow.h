@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MESSAGE_WINDOW_H
-#define __MESSAGE_WINDOW_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "vector.h"
@@ -102,6 +102,3 @@ private:
 	DynamicVectorClass<WideStringClass>	MessageLog;
 	DynamicVectorClass<Vector3> MessageLogColor;
 };
-
-#endif //__MESSAGE_WINDOW_H
-

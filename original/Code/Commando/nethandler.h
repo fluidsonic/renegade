@@ -1,9 +1,7 @@
-#ifndef NETHANDLER_H
-#define NETHANDLER_H
+#pragma once
 
-#ifndef ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef COMBAT_H
    #include "combat.h"
@@ -24,6 +22,3 @@ public:
 	void	On_Soldier_Kill(SoldierGameObj * p_soldier, SoldierGameObj * p_victim);
 	void	On_Soldier_Death(SoldierGameObj * p_soldier);
 };
-
-#endif // NETHANDLER_H
-

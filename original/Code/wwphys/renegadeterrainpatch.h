@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __RENEGADETERRAINPATCH_H
-#define __RENEGADETERRAINPATCH_H
+#include "global.h"
 
 #include "rendobj.h"
 #include "vector.h"
@@ -403,5 +403,3 @@ RenegadeTerrainPatchClass::Is_Valid_Quad (int x, int y)
 
 	return retval;
 }
-
-#endif //__RENEGADETERRAINPATCH_H

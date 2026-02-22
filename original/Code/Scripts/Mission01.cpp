@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include <string.h>
 #include "toolkit.h"
@@ -21775,4 +21776,3 @@ DECLARE_SCRIPT(M01_Base_GDI_Minigunner_JDG, "")//116382
 		}
 	}
 };
-

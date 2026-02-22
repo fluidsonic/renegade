@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSCONTROL_H
-#define PHYSCONTROL_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 
 class	ChunkSaveClass;
@@ -61,5 +60,3 @@ inline bool PhysControllerClass::Is_Inactive(void)
 {
 	return ((TurnLeft == 0.0f) && (MoveVector.Length2() == 0.0f));
 }
-
-#endif 

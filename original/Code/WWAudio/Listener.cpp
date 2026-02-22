@@ -1,3 +1,4 @@
+#include "global.h"
 #include "listener.h"
 #include "wwaudio.h"
 #include "utils.h"
@@ -94,4 +95,3 @@ Listener3DClass::On_Removed_From_Scene (void)
 	Free_Miles_Handle ();		
 	return ;
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "characterclasssettings.h"
 #include "combatchunkid.h"
 #include "persistfactory.h"
@@ -599,4 +600,3 @@ CharacterClassSettingsDefClass::Get_Definition
 
 	return definition_id;
 }
-

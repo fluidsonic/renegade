@@ -1,3 +1,4 @@
+#include "global.h"
 #include "LaunchWeb.h"
 #include <windows.h>
 #include <shellapi.h>

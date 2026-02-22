@@ -1,3 +1,4 @@
+#include "global.h"
 #include "networkobject.h"
 #include "networkobjectmgr.h"
 #include "wwmath.h"
@@ -548,4 +549,3 @@ int NetworkObjectClass::Get_Clientside_Update_Frequency(void)
 
 	return(ClientsideUpdateRate);
 }
-

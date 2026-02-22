@@ -1,9 +1,9 @@
-// wingdi.h compat shim for macOS/clang
 #pragma once
-#ifndef WINGDI_H_COMPAT
-#define WINGDI_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// wingdi.h compat shim for macOS/clang
+
 
 typedef void* HGDIOBJ;
 // HFONT already typedef'd in windef.h
@@ -266,5 +266,3 @@ inline BOOL TextOut(HDC dc, int x, int y, LPCSTR str, int len) { (void)dc;(void)
 inline int  SetBkMode(HDC dc, int mode) { (void)dc;(void)mode; return 0; }
 #define TRANSPARENT 1
 #define OPAQUE      2
-
-#endif // WINGDI_H_COMPAT

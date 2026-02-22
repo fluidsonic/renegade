@@ -1,9 +1,7 @@
-#ifndef	SOLDIER_H
-#define	SOLDIER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef SMARTGAMEOBJ_H
 	#include "smartgameobj.h"
@@ -394,6 +392,3 @@ protected:
 	int						Check(void);
 
 };
-
-#endif	//	SOLDIER_H
-

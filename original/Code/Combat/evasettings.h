@@ -1,7 +1,7 @@
-#ifndef	EVASETTINGS_H
-#define	EVASETTINGS_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "definition.h"
 #include "rect.h"
 #include "render2d.h"
@@ -178,5 +178,3 @@ EvaSettingsDefClass::Get_Messages_Icon_Position (void) const
 	adjusted_point.Y *= Render2DClass::Get_Screen_Resolution ().Height ();
 	return adjusted_point;
 }
-
-#endif	//	EVASETTINGS_H

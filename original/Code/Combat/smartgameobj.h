@@ -1,9 +1,7 @@
-#ifndef	SMARTGAMEOBJ_H
-#define	SMARTGAMEOBJ_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef ARMEDGAMEOBJ_H
 	#include "armedgameobj.h"
@@ -211,6 +209,5 @@ private:
 	static	float			GlobalSightRangeScale;
 };
 
-#endif	//	SMARTGAMEOBJ_H
 
 		//MOBIUS_CONTROL_OWNER		= -1

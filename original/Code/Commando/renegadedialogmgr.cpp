@@ -1,3 +1,4 @@
+#include "global.h"
 #include "renegadedialogmgr.h"
 #include "dialogmgr.h"
 #include "dialogbase.h"

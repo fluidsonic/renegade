@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MAP_CTRL_H
-#define __MAP_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -223,5 +223,3 @@ MapCtrlClass::Is_Cell_Shrouded (int cell_x, int cell_y)
 
 	return retval;
 }
-
-#endif //__MAP_CTRL_H

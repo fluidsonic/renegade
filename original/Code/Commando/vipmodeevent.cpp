@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vipmodeevent.h"
 
 #include <stdio.h>

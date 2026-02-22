@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"pipe.h"
 #include	<stddef.h>
 //#include	<string.h>
@@ -117,4 +117,3 @@ int Pipe::Flush(void)
 	}
 	return(0);
 }
-

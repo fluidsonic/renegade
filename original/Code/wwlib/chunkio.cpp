@@ -1,3 +1,4 @@
+#include "global.h"
 #include "chunkio.h"
 #include <string.h>
 #include <assert.h>
@@ -751,4 +752,3 @@ uint32_t ChunkLoadClass::Read(IOQuaternionStruct * q)
 	assert(q != NULL);
 	return Read(q,sizeof(q));
 }
-

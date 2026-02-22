@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hanimmgr.h"
 #include <string.h>
 #include "hanim.h"
@@ -339,4 +340,3 @@ HAnimClass * HAnimManagerIterator::Get_Current_Anim( void )
 { 
 	return (HAnimClass *)Get_Current(); 
 }
-

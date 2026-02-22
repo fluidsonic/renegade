@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PART_EMT_LDR_H
-#define __PART_EMT_LDR_H
+#include "global.h"
 
 #include "proto.h"
 #include "rendobj.h"
@@ -317,5 +317,3 @@ class ParticleEmitterLoaderClass : public PrototypeLoaderClass
 //	Global variables
 //
 extern ParticleEmitterLoaderClass	_ParticleEmitterLoader;
-
-#endif //__PART_EMT_LDR_H

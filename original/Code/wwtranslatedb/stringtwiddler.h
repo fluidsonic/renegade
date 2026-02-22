@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __STRING_TWIDDLER_H
-#define __STRING_TWIDDLER_H
+#include "global.h"
 
 #include "translateobj.h"
 #include "translatedb.h"
@@ -88,6 +88,3 @@ private:
 	//////////////////////////////////////////////////////////////
 	DynamicVectorClass<int>		StringList;
 };
-
-#endif //__STRING_TWIDDLER_H
-

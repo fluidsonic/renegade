@@ -1,3 +1,4 @@
+#include "global.h"
 #include "visrasterizer.h"
 #include "camera.h"
 #include "plane.h"
@@ -659,4 +660,3 @@ int IDBufferClass::Render_Non_Occluder_Scanline(GradientsStruct & grads,EdgeStru
 
 	return 0;
 }
-

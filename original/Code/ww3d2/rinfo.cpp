@@ -1,3 +1,4 @@
+#include "global.h"
 #include "rinfo.h"
 #include "camera.h"
 #include "matpass.h"
@@ -97,4 +98,3 @@ SpecialRenderInfoClass::SpecialRenderInfoClass(CameraClass & cam,int render_type
 SpecialRenderInfoClass::~SpecialRenderInfoClass(void)
 {
 }
-

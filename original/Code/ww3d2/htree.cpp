@@ -1,3 +1,4 @@
+#include "global.h"
 #include "htree.h"
 #include "hanim.h"
 #include "hcanim.h"
@@ -924,4 +925,3 @@ HTreeClass * HTreeClass::Create_Interpolated(const HTreeClass * tree_base,
 
 	return new_tree;
 }
-

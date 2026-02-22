@@ -1,9 +1,5 @@
-#ifndef UMBRASUPPORT_H
-#define UMBRASUPPORT_H
+#pragma once
 
+#include "global.h"
 
-#include "always.h"
 #include "physlist.h"
-
-
-#endif //UMBRASUPPORT_H

@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "scriptregistrar.h"
 #include "scriptfactory.h"
 #include "dprint.h"

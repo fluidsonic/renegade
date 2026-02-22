@@ -1,5 +1,6 @@
 //#define INDEX_BUFFER_LOG
 
+#include "global.h"
 #include "dx8indexbuffer.h"
 #include "dx8wrapper.h"
 #include "dx8caps.h"
@@ -449,4 +450,3 @@ void DynamicIBAccessClass::_Reset(bool frame_changed)
 	_DynamicSortingIndexArrayOffset=0;
 	if (frame_changed) _DynamicDX8IndexBufferOffset=0;
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "assetstatus.h"
 #include "hashtemplate.h"
 #include "wwstring.h"
@@ -64,4 +65,3 @@ void AssetStatusClass::Report_Missing_HTree(const char* name)
 {
 	Add_To_Report(REPORT_MISSING_HTREE,name);
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGOPTIONSPREVIEW_H
-#define __DLGOPTIONSPREVIEW_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -35,6 +35,3 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGOPTIONSPREVIEW_H
-

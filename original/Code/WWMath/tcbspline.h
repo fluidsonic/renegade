@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef TCBSPLINE_H
-#define TCBSPLINE_H
+#include "global.h"
 
 #include "hermitespline.h"
 
@@ -40,6 +40,3 @@ protected:
 
 	DynamicVectorClass<TCBClass> Params;
 };
-
-#endif
-

@@ -1,5 +1,6 @@
-#ifndef COLMATHLINE_H
-#define COLMATHLINE_H
+#pragma once
+
+#include "global.h"
 
 /*
 ** Inline collision functions dealing with line segments
@@ -16,6 +17,3 @@ inline CollisionMath::OverlapType	CollisionMath::Overlap_Test
 	box.Init_Min_Max(min,max);
 	return CollisionMath::Overlap_Test(box,line);
 }
-
-#endif
-

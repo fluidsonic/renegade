@@ -1,3 +1,4 @@
+#include "global.h"
 #include "airstripgameobj.h"
 #include "basecontroller.h"
 #include "vehicle.h"
@@ -502,4 +503,3 @@ AirStripGameObj::Start_Cinematic (void)
 	DisplayVehicleTimer = Get_Definition ().CinematicLengthToVehicleDisplay;
 	return ;
 }
-

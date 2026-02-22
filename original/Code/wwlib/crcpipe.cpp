@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"crcpipe.h"
 
 /***********************************************************************************************
@@ -46,4 +46,3 @@ long CRCPipe::Result(void) const
 {
 	return(CRC());
 }
-

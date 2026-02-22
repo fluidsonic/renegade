@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hanim.h"
 #include "assetmgr.h"
 #include "htree.h"
@@ -406,4 +407,3 @@ void HAnimComboClass::Remove_Anim_Combo_Data(HAnimComboDataClass * Data)
 {
 	HAnimComboData.Delete(Data);
 }
-

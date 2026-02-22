@@ -1,5 +1,6 @@
-#ifndef __LAUNCHWEB_H__
-#define __LAUNCHWEB_H__
+#pragma once
+
+#include "global.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -10,5 +11,3 @@ bool LaunchWebBrowser(const char* url);
 #ifdef __cplusplus
 }
 #endif
-
-#endif // __LAUNCHWEB_H__

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "combatsaveload.h"
 #include "chunkio.h"
 #include "gameobjmanager.h"

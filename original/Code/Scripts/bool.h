@@ -1,4 +1,0 @@
-
-#ifndef TRUE_FALSE_DEFINED
-#define TRUE_FALSE_DEFINED
-#endif

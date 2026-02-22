@@ -1,5 +1,5 @@
+#include "global.h"
 #include "timemgr.h"
-#include "always.h"
 #include "ww3d.h"
 #include "slist.h"
 #include "input.h"
@@ -197,4 +197,3 @@ void	TimeManager::Update( void )
 
 
 }
-

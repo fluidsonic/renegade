@@ -1,5 +1,6 @@
-#ifndef RC4_H
-#define RC4_H
+#pragma once
+
+#include "global.h"
 
 //
 // RC4.h - Implementation of RC4 encryption
@@ -44,5 +45,3 @@ private:
 
 	RC4Key	Key;
 };
-
-#endif

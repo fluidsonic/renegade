@@ -1,3 +1,4 @@
+#include "global.h"
 #include "combatsound.h"
 #include "wwaudio.h"
 
@@ -35,4 +36,3 @@ void	CombatSoundManager::Shutdown( void )
 {
 	WWAudioClass::Get_Instance()->Reset_Logical_Types();
 }
-

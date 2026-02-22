@@ -1,11 +1,11 @@
-// mbctype.h compat shim for macOS - Multi-byte char type stubs
 #pragma once
-#ifndef MBCTYPE_H_COMPAT
-#define MBCTYPE_H_COMPAT
+
+#include "global.h"
+
+// mbctype.h compat shim for macOS - Multi-byte char type stubs
 
 #include <ctype.h>
 #include <string.h>
-#include "windef.h"
 
 // MBCS code page constants
 #define _UNKNOWN_CODEPAGE   0
@@ -73,5 +73,3 @@ inline size_t _mbsnbcnt(const unsigned char* str, size_t cnt) {
 // IsDBCSLeadByte - always false on macOS (no DBCS support)
 inline BOOL IsDBCSLeadByte(BYTE TestChar) { return FALSE; }
 inline BOOL IsDBCSLeadByteEx(UINT CodePage, BYTE TestChar) { return FALSE; }
-
-#endif // MBCTYPE_H_COMPAT

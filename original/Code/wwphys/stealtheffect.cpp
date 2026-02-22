@@ -1,3 +1,4 @@
+#include "global.h"
 #include "stealtheffect.h"
 #include "matpass.h"
 #include "vertmaterial.h"

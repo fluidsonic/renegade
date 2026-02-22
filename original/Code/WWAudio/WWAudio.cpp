@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include <Windows.H>
 #include "WWAudio.H"
 #include "Utils.H"

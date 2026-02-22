@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmplanhostoptions.h"
 #include "tabctrl.h"
 #include "gamedata.h"

@@ -6,6 +6,7 @@
 // Description:
 //
 //-----------------------------------------------------------------------------
+#include "global.h"
 #include "encodertypeentry.h" // I WANNA BE FIRST!
 
 #include <math.h>

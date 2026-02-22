@@ -1,5 +1,6 @@
-#ifndef __SVRGOODBYEEVENT_H__
-#define __SVRGOODBYEEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -27,5 +28,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __SVRGOODBYEEVENT_H__

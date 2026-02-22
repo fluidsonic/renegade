@@ -1,3 +1,4 @@
+#include "global.h"
 #include "phys.h"
 #include "colmathaabox.h"
 #include "rendobj.h"
@@ -593,4 +594,3 @@ bool PhysDefClass::Is_Type(const char * type_name)
 		return false;
 	}
 }
-

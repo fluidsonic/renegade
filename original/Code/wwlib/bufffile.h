@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef BUFFFILE_H
-#define BUFFFILE_H
+#include "global.h"
 
 #include	"rawfile.h"
 
@@ -37,5 +37,3 @@ class BufferedFileClass : public RawFileClass
 		int					BufferOffset;		// The data already given out
 		static	int		_DesiredBufferSize;
 };
-
-#endif

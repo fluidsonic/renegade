@@ -1,3 +1,4 @@
+#include "global.h"
 #include "inputconfigmgr.h"
 #include <stdio.h>
 #include "dlgcontrols.h"

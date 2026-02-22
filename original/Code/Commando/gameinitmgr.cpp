@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gameinitmgr.h"
 #include "gamedata.h"
 #include "gamemode.h"
@@ -769,4 +770,3 @@ void _reload_game_configuration_files(void)
 	ScriptManager::Shutdown();
 	ScriptManager::Init();
 }
-

@@ -1,5 +1,6 @@
-#ifndef PKPIPE_H
-#define PKPIPE_H
+#pragma once
+
+#include "global.h"
 
 #include	"blowpipe.h"
 #include	"pipe.h"
@@ -93,5 +94,3 @@ class PKPipe : public Pipe
 		PKPipe(PKPipe & rvalue);
 		PKPipe & operator = (PKPipe const & pipe);
 };
-
-#endif

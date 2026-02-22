@@ -1,5 +1,6 @@
-#ifndef _SCRIPTREGISTRANT_H_
-#define _SCRIPTREGISTRANT_H_
+#pragma once
+
+#include "global.h"
 
 #include "scriptfactory.h"
 
@@ -26,5 +27,3 @@ class	ScriptRegistrant : public ScriptFactory
 #define REGISTER_SCRIPT(x, d) \
 	class x; \
 	ScriptRegistrant<x> _## x ##Registrant(#x, d);
-
-#endif // _SCRIPTREGISTRANT_H_

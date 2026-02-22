@@ -1,7 +1,8 @@
-// d3dx8math.h compat shim for macOS
 #pragma once
-#ifndef D3DX8MATH_H_COMPAT
-#define D3DX8MATH_H_COMPAT
+
+#include "global.h"
+
+// d3dx8math.h compat shim for macOS
 
 #include "d3d8types.h"
 #include <math.h>
@@ -95,5 +96,3 @@ inline D3DXVECTOR3* D3DXVec3Cross(D3DXVECTOR3* pOut, const D3DXVECTOR3* pV1, con
     tmp.z = pV1->x*pV2->y - pV1->y*pV2->x;
     *pOut = tmp; return pOut;
 }
-
-#endif // D3DX8MATH_H_COMPAT

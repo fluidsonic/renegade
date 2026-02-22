@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmpteamselect.h"
 #include "gamedata.h"
 #include "dlgmessagebox.h"

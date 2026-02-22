@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSTEXPROJECT_H
-#define PHYSTEXPROJECT_H
+#include "global.h"
 
-#include "always.h"
 #include "texproject.h"
 
 class PhysClass;
@@ -30,6 +29,3 @@ public:
 	bool						Compute_Texture(PhysClass * obj,bool additive_projection = false);
 
 };
-
-#endif
-

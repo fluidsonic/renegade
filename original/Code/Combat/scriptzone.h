@@ -1,9 +1,7 @@
-#ifndef	SCRIPTZONEOBJ_H
-#define	SCRIPTZONEOBJ_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef SCRIPTABLEGAMEOBJ_H
 	#include "scriptablegameobj.h"
@@ -123,6 +121,3 @@ protected:
 	bool		Inside_Me( const SmartGameObj * obj );
 
 };
-
-#endif
-

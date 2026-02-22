@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ProgressCtrl.h"
 #include "StyleMgr.h"
 

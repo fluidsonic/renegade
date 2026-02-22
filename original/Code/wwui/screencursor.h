@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SCREENCURSOR_H
-#define __SCREENCURSOR_H
+#include "global.h"
 
 #include "vector2.h"
 #include "win.h"
@@ -46,5 +46,3 @@ private:
 	Render2DClass			Renderer;
 	TextureClass *			Texture;
 };
-
-#endif //__SCREENCURSOR_H

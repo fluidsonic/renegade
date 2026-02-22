@@ -1,3 +1,4 @@
+#include "global.h"
 #include "weaponview.h"
 #include "assets.h"
 #include "hanim.h"
@@ -769,4 +770,3 @@ static void	Set_Bob_Recoil( float amount )
 { 
 	BobRecoil = amount; 
 }
-

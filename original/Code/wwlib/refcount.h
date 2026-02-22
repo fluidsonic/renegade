@@ -1,10 +1,7 @@
- 
-#ifndef REFCOUNT_H
-#define REFCOUNT_H
+#pragma once
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef LISTNODE_H
 #include "listnode.h"
@@ -208,5 +205,3 @@ public:
 #endif
 
 };
-
-#endif

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     netstats.h
 // Project:      wwnet
@@ -7,10 +11,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef NETSTATS_H
-#define NETSTATS_H
 
-#include "global.h"
 #include <cassert>
 
 //
@@ -141,6 +142,5 @@ class cNetStats
 
 //-----------------------------------------------------------------------------
 
-#endif // NETSTATS_H
 
 		//static const USHORT SAMPLE_TIME; // stats gathering period in ms

@@ -1,7 +1,7 @@
-#ifndef DYNTEXPROJECT_H
-#define DYNTEXPROJECT_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "phystexproject.h"
 
 /**
@@ -60,5 +60,3 @@ protected:
 	uint32_t				LightSourceID;				// ID of the light source (just its pointer,used for matching)
 	Vector3				LightVector;				//	copy of the light vector (postion or direction)
 };
-
-#endif

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "animcollisionmanager.h"
 #include "colmathaabox.h"
 #include "pscene.h"
@@ -1387,4 +1388,3 @@ bool AnimCollisionManagerDefClass::Load(ChunkLoadClass &cload)
 	}
 	return true;
 }
-

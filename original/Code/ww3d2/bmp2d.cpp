@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bmp2d.h"
 #include "pot.h"
 #include "ww3d.h"

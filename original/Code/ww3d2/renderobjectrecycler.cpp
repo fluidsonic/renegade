@@ -1,3 +1,4 @@
+#include "global.h"
 #include "renderobjectrecycler.h"
 #include <string.h>
 #include "rendobj.h"

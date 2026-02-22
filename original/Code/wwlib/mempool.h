@@ -1,9 +1,9 @@
+#pragma once
 
-#ifndef MEMPOOL_H
-#define MEMPOOL_H
+#include "global.h"
 
 #include "mutex.h"
-#include <new.h>
+#include <new>
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdint.h>	// uintptr_t
@@ -307,6 +307,3 @@ void AutoPoolClass<T,BLOCK_SIZE>::operator delete( void * memory )
 	if ( memory == 0 ) return;
 	Allocator.Free_Object_Memory((T*)memory);
 }
- 
-
-#endif // MEMPOOL_H

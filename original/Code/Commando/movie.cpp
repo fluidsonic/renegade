@@ -1,3 +1,4 @@
+#include "global.h"
 #include "movie.h"
 #include "binkmovie.h"
 #include "campaign.h"

@@ -3,6 +3,7 @@
 //
 // Skeleton WW3D code, Hector Yee, 8/31/00
 
+#include "global.h"
 #include "resource.h"
 #include "wwmath.h"
 #include "ww3d.h"
@@ -1214,4 +1215,3 @@ void Init_3D_Scene()
 
 
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cshint.h"
 
 #include <stdio.h>

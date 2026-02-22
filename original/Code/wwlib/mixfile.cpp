@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mixfile.h"
 #include "ffactory.h"
 #include "wwfile.h"

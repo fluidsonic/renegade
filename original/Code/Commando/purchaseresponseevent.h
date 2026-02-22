@@ -1,5 +1,6 @@
-#ifndef __PURCHASERESPONSEEVENT_H__
-#define __PURCHASERESPONSEEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -28,5 +29,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __PURCHASERESPONSEEVENT_H__

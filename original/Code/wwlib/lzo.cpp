@@ -1,3 +1,4 @@
+#include "global.h"
 #include "lzo.h"
 #include "mutex.h"
 #include <stdlib.h>

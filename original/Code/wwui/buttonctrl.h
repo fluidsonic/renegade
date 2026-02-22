@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __BUTTON_CTRL_H
-#define __BUTTON_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -81,5 +81,3 @@ protected:
 	bool							IsBitmapMode;
 	int							PulseTime;
 };
-
-#endif //__BUTTON_CTRL_H

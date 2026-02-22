@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TREECTRL_H
-#define __TREECTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector.h"
@@ -252,6 +252,3 @@ protected:
 	bool					IsExpanded;
 	bool					NeedsChildren;
 };
-
-#endif //__TREECTRL_H
-

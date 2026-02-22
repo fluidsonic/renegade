@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef TRI_H
-#define TRI_H
+#include "global.h"
 
-#include "always.h"
 #include "vector4.h"
 #include "vector3.h"
 #include "vector2.h"
@@ -258,5 +257,3 @@ inline bool Cast_Semi_Infinite_Axis_Aligned_Ray_To_Triangle(const Vector3 &tri_p
 
 	return retval;
 }
-
-#endif

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     useroptions.h
 // Author:       Tom Spencer-Smith
@@ -6,8 +10,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef USEROPTIONS_H
-#define USEROPTIONS_H
 
 #include "regbool.h"
 #include "regint.h"
@@ -66,7 +68,6 @@ class cUserOptions
 };
 
 //-----------------------------------------------------------------------------
-#endif // USEROPTIONS_H
 
 /*
 		static cRegistryInt	GameListFilterMaxPing;

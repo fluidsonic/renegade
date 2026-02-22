@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef PART_BUF_H
-#define PART_BUF_H
+#include "global.h"
 
 #include "rendobj.h"
 #include "pointgr.h"
@@ -417,6 +417,3 @@ class ParticleBufferClass : public RenderObjClass
 		// what the tail color should be
 		TailDiffuseTypeEnum Determine_Tail_Diffuse();
 };
-
-#endif // PART_BUF_H
-

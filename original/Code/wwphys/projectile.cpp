@@ -1,3 +1,4 @@
+#include "global.h"
 #include "projectile.h"
 #include "pscene.h"
 #include "lineseg.h"
@@ -564,4 +565,3 @@ bool ProjectileDefClass::Is_Type(const char * type_name)
 		return MoveablePhysDefClass::Is_Type(type_name);
 	}
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "binkmovie.h"
 #include "dx8wrapper.h"
 #include "formconv.h"
@@ -323,4 +324,3 @@ bool BINKMovieClass::Is_Complete()
 	if (!Bink) return true;
 	return (Bink->FrameNum>=Bink->Frames);
 }
-

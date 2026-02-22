@@ -1,3 +1,4 @@
+#include "global.h"
 #include "godmodeevent.h"
 
 #include <stdio.h>

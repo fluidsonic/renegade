@@ -1,5 +1,6 @@
-#ifndef POLYINFO_H
-#define POLYINFO_H
+#pragma once
+
+#include "global.h"
 
 class TextureClass;
 class VertexMaterialClass;
@@ -46,6 +47,3 @@ protected:
 	VertexMaterialClass *VertexMaterial;
 	ShaderClass *Shader;
 };
-
-#endif
-

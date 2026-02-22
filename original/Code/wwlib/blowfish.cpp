@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blowfish.h"
 #include	<string.h>
 #include	<assert.h>
@@ -544,4 +544,3 @@ unsigned long const BlowfishEngine::S_Init[4][UCHAR_MAX+1] = {
 		0x90D4F869U,0xA65CDEA0U,0x3F09252DU,0xC208E69FU,0xB74E6132U,0xCE77E25BU,0x578FDFE3U,0x3AC372E6U
 	}
 };
-

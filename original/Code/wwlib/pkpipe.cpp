@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"pkpipe.h"
 #include	<string.h>
 

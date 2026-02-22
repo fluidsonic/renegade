@@ -1,3 +1,4 @@
+#include "global.h"
 #include "radar.h"
 #include "assets.h"
 #include "soldier.h"
@@ -590,4 +591,3 @@ bool	RadarMarkerClass::Load( ChunkLoadClass &cload )
 	}
 	return true;
 }
-

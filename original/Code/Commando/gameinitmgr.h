@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __GAME_INIT_MGR_H
-#define __GAME_INIT_MGR_H
+#include "global.h"
 
 #include "renegadedialogmgr.h"
 
@@ -90,5 +90,3 @@ private:
 	static bool		NeedsGameExit;
 	static bool		NeedsGameExitAll;
 };
-
-#endif //__GAME_INIT_MGR_H

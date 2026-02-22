@@ -1,7 +1,7 @@
-#ifndef CAMERASHAKESYSTEM_H
-#define CAMERASHAKESYSTEM_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "vector3.h"
 #include "multilist.h"
 #include "mempool.h"
@@ -65,6 +65,3 @@ public:
 	MultiListClass<CameraShakerClass>	CameraShakerList;
 
 };
-
-#endif //CAMERASHAKESYSTEM_H
-

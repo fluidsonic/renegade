@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physdecalsys.h"
 #include "colmathaabox.h"
 #include "pscene.h"
@@ -329,4 +330,3 @@ void PhysDecalSysClass::LogicalDecalClass::Reset(void)
 	Meshes.Delete_All();
 	DecalID = 0xFFFFFFFF;
 }
-

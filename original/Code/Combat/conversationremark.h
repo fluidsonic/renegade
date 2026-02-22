@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CONVERSATIONREMARK_H
-#define __CONVERSATIONREMARK_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "simplevec.h"
@@ -73,5 +73,3 @@ protected:
 	int				TextID;
 	StringClass		AnimationName;
 };
-
-#endif //__CONVERSATIONREMARK_H

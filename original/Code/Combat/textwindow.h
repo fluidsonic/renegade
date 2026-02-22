@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TEXT_WINDOW_H
-#define __TEXT_WINDOW_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "widestring.h"
@@ -279,6 +279,3 @@ private:
 	ITEM_LIST			Items;
 	float					Width;
 };
-
-#endif //__TEXT_WINDOW_H
-

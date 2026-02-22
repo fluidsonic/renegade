@@ -1,5 +1,6 @@
-#ifndef __APPPACKETSTATS_H__
-#define __APPPACKETSTATS_H__
+#pragma once
+
+#include "global.h"
 
 #include "apppackettypes.h"
 #include "networkobject.h"
@@ -39,5 +40,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __APPPACKETSTATS_H__

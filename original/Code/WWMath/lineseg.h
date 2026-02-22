@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef LINESEG_H
-#define LINESEG_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 #include "castres.h"
 
@@ -47,5 +46,3 @@ protected:
 	Vector3				Dir;		// normalized direction.
 	float					Length;	// length of the segment
 };
-
-#endif

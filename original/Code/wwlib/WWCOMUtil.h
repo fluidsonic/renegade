@@ -1,5 +1,6 @@
-#ifndef __WWCOMUTIL_H__
-#define __WWCOMUTIL_H__
+#pragma once
+
+#include "global.h"
 
 #include <oaidl.h>
 
@@ -20,5 +21,3 @@ bool RegisterCOMServer(const char* dllName);
 
 //! Unregister COM in-process DLL server
 bool UnregisterCOMServer(const char* dllName);
-
-#endif // __WWCOMUTIL_H__

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "stringtwiddler.h"
 
 #include "chunkio.h"

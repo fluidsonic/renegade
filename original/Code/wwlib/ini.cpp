@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"b64pipe.h"
 #include	"b64straw.h"
 #include	"cstraw.h"
@@ -9,7 +9,7 @@
 #include	"xpipe.h"
 #include	"xstraw.h"
 #include	<stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include "rawfile.h"
 #include "ffactory.h"
@@ -2179,4 +2179,3 @@ void	INIClass::Keep_Blank_Entries (bool keep_blanks)
 {
 	KeepBlankEntries = keep_blanks;
 }
-

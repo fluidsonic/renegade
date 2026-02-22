@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CHECKBOX_CTRL_H
-#define __CHECKBOX_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -71,5 +71,3 @@ protected:
 	RectClass					TextRect;
 	RectClass					MaxRect;
 };
-
-#endif //__CHECKBOX_CTRL_H

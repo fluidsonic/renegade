@@ -1,5 +1,6 @@
-#ifndef	SCRIPTEVENTS_H
-#define	SCRIPTEVENTS_H
+#pragma once
+
+#include "global.h"
 
 #include	"gameobjobserver.h"
 
@@ -113,5 +114,3 @@ const char * const PARAM_TYPE_STRINGS[PARAM_TYPE_COUNT] =
 	"sound",
 	"color",
 };
-
-#endif	//	SCRIPTEVENTS_H

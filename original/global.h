@@ -1,9 +1,8 @@
+#pragma once
+
 // global.h — single universal include for the C&C Renegade macOS/clang port
 // Absorbs: compat/windef.h, compat/c16string.h, compat/clangcompat.h,
 //          compat/floattypes.h, Code/wwlib/always.h
-#pragma once
-#ifndef GLOBAL_H
-#define GLOBAL_H
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 1: Platform defines
@@ -578,5 +577,3 @@ inline void Set_Exit_On_Exception(bool set) { (void)set; }
 #define IS_TRYING_TO_EXIT_DEFINED
 inline bool Is_Trying_To_Exit(void) { return false; }
 #endif
-
-#endif // GLOBAL_H

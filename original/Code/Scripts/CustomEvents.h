@@ -1,5 +1,6 @@
-#ifndef _CUSTOMEVENTS_H_
-#define _CUSTOMEVENTS_H_
+#pragma once
+
+#include "global.h"
 
 // Custom script events
 typedef enum {
@@ -133,5 +134,3 @@ typedef enum {
 	STIMER_TOOLKIT = 9900,
 
 } SCRIPT_TIMER;
-
-#endif // _CUSTOMEVENTS_H_

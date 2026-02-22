@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physcontrol.h"
 #include "chunkio.h"
 
@@ -42,4 +43,3 @@ bool PhysControllerClass::Load(ChunkLoadClass & cload)
 
 	return true;
 }
-

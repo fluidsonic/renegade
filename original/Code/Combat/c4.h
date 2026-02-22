@@ -1,9 +1,7 @@
-#ifndef	C4_H
-#define	C4_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	SIMPLEGAMEOBJ_H
 	#include "simplegameobj.h"
@@ -103,5 +101,3 @@ private:
 	void				Restore_Owner( void );
 
 };
-
-#endif	// C4_H

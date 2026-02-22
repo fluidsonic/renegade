@@ -1,9 +1,7 @@
-#ifndef	OVERLAY_H
-#define	OVERLAY_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEMODE_H
 	#include "gamemode.h"
@@ -56,5 +54,3 @@ private:
 	static	float					  ModelTimer;
 	static	bool					  EndScreen;
 };
-
-#endif

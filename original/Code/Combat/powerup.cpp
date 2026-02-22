@@ -1,3 +1,4 @@
+#include "global.h"
 #include "powerup.h"
 #include "combat.h"
 #include "phys.h"

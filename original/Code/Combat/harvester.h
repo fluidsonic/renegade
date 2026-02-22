@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __HARVESTER_H
-#define __HARVESTER_H
+#include "global.h"
 
 #include "gameobjobserver.h"
 #include "vector3.h"
@@ -119,6 +119,3 @@ private:
 	float					HarvestTimer;
 	bool					IsHarvesting;
 };
-
-#endif //__HARVESTER_H
-

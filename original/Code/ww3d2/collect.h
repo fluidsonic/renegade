@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef COLLECT_H
-#define COLLECT_H
+#include "global.h"
 
 #include "rendobj.h"
 #include "composite.h"
@@ -103,5 +103,3 @@ public:
 };
 
 extern CollectionLoaderClass _CollectionLoader;
-
-#endif

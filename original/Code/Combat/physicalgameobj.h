@@ -1,9 +1,7 @@
-#ifndef	PHYSICALGAMEOBJ_H
-#define	PHYSICALGAMEOBJ_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	DAMAGEABLEGAMEOBJ_H
 	#include "damageablegameobj.h"
@@ -244,5 +242,3 @@ private:
 	bool					HUDPokableIndicatorEnabled;
 	bool					IsInnateConversationsEnabled;
 };
-
-#endif	//	PHYSICALGAMEOBJ_H

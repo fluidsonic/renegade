@@ -1,3 +1,4 @@
+#include "global.h"
 #include "subtitleparser.h"
 #include "subtitle.h"
 #include "straw.h"

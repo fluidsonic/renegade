@@ -1,10 +1,7 @@
+#pragma once
 
-#ifndef	SURFACEEFFECTS_H
-#define	SURFACEEFFECTS_H
+#include "global.h"
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
 
 class	Matrix3D;
 class PhysClass;
@@ -126,6 +123,3 @@ private:
 	static	MODE	Mode;						// Do we need to save this???
 	static	int	OverrideSurfaceType;					
 };
-
-#endif	// SURFACEEFFECTS_H
-

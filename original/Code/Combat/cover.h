@@ -1,9 +1,7 @@
-#ifndef	COVER_H
-#define	COVER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	MATRIX3D_H
 	#include "matrix3d.h"
@@ -78,5 +76,3 @@ private:
 	static	DynamicVectorClass<CoverEntryClass *>		CoverPositions;
 
 };
-
-#endif	// COVER_H

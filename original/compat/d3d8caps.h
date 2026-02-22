@@ -1,7 +1,8 @@
-// d3d8caps.h compat shim for macOS
 #pragma once
-#ifndef D3D8CAPS_H_COMPAT
-#define D3D8CAPS_H_COMPAT
+
+#include "global.h"
+
+// d3d8caps.h compat shim for macOS
 
 #include "d3d8types.h"
 #include "winnt.h"
@@ -110,5 +111,3 @@ typedef struct _D3DCAPS8 {
     DWORD      PixelShaderVersion;
     float      MaxPixelShaderValue;
 } D3DCAPS8;
-
-#endif // D3D8CAPS_H_COMPAT

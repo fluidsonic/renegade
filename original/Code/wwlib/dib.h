@@ -1,7 +1,7 @@
-#ifndef DIB_H
-#define DIB_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "bsurface.h"
 #include "palette.h"
 #include "win.h"
@@ -33,5 +33,3 @@ private:
 
 	BSurface *			Surface;	// Bsurface wrapped around the pixel buffer.
 };
-
-#endif /*DIB_H*/

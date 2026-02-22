@@ -1,3 +1,4 @@
+#include "global.h"
 #include "tri.h"
 #include "vector2.h"
 

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __STATEMACHINE_H
-#define __STATEMACHINE_H
+#include "global.h"
 
 #include "simplevec.h"
 #include "chunkio.h"
@@ -396,5 +396,3 @@ protected:
 	int									CurrState;
 	bool									IsHalted;
 };
-
-#endif //__STATEMACHINE_H

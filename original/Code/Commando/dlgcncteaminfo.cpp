@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcncteaminfo.h"
 #include "resource.h"
 #include "listctrl.h"

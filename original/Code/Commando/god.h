@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     god.h
 // Author:       Tom Spencer-Smith
@@ -6,8 +10,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef GOD_H
-#define GOD_H
 
 #include "inventory.h"
 
@@ -54,5 +56,3 @@ class cGod
 };
 
 //-----------------------------------------------------------------------------
-#endif // GOD_H
-

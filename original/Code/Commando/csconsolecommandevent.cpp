@@ -1,3 +1,4 @@
+#include "global.h"
 #include "csconsolecommandevent.h"
 
 #include <stdio.h>

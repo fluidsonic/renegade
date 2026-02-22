@@ -1,7 +1,7 @@
 // main_stub.cpp — macOS entry point that bridges main() -> WinMain()
 // WinMain is defined in WINMAIN.CPP with our compat types
 
-#include "windef.h"
+#include "global.h"
 #include "winbase.h"
 
 // Forward-declare WinMain as defined in WINMAIN.CPP
@@ -19,4 +19,3 @@ int main(int argc, char* argv[])
     }
     return WinMain(NULL, NULL, cmdline, 1);
 }
-

@@ -1,5 +1,6 @@
-#ifndef WHEEL_H
-#define WHEEL_H
+#pragma once
+
+#include "global.h"
 
 #include "vector3.h"
 #include "matrix3d.h"
@@ -325,6 +326,3 @@ protected:
 	void				Roll_Wheel(void);
 
 };
-
-#endif //WHEEL_H
-

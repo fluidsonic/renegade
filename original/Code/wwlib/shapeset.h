@@ -1,5 +1,6 @@
-#ifndef SHAPESET_H
-#define SHAPESET_H
+#pragma once
+
+#include "global.h"
 
 #include	"trect.h"
 
@@ -220,5 +221,3 @@ inline bool ShapeSet::Is_RLE_Compressed(int shape) const
 	}
 	return(false);
 }
-
-#endif

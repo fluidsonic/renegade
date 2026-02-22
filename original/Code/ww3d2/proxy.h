@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PROXY_H
-#define __PROXY_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "matrix3d.h"
@@ -67,6 +67,3 @@ ProxyClass::operator!= (const ProxyClass &src)
 {
 	return ((Name != src.Name) || (Transform != src.Transform));
 }
-
-#endif //__PROXY_H
-

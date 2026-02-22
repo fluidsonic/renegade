@@ -1,3 +1,4 @@
+#include "global.h"
 #include "effectrecycler.h"
 #include "timeddecophys.h"
 #include "rendobj.h"
@@ -196,4 +197,3 @@ RenderObjClass * EffectRecyclerClass::internal_get_model(const char * robj_name,
 
 	return model;
 }
-

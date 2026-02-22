@@ -1,5 +1,6 @@
-#ifndef BLOWPIPE_H
-#define BLOWPIPE_H
+#pragma once
+
+#include "global.h"
 
 #include	"pipe.h"
 #include	"blowfish.h"
@@ -42,5 +43,3 @@ class BlowPipe : public Pipe
 		BlowPipe(BlowPipe & rvalue);
 		BlowPipe & operator = (BlowPipe const & pipe);
 };
-
-#endif

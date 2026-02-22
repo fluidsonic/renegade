@@ -1,9 +1,7 @@
-#ifndef	SCRIPTS_H
-#define	SCRIPTS_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	SCRIPTEVENTS_H
 	#include "scriptevents.h"
@@ -72,5 +70,3 @@ private:
 
 	static bool	EnableScriptCreation;
 };
-
-#endif		// SCRIPTS_H

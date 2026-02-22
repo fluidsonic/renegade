@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HRAWANIM_H
-#define HRAWANIM_H
+#include "global.h"
 
-#include "always.h"
 #include "hanim.h"
  
  
@@ -74,6 +73,3 @@ private:
 	void add_bit_channel(BitChannelClass * newchan);
 
 };
-
-#endif
-

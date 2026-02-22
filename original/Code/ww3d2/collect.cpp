@@ -1,3 +1,4 @@
+#include "global.h"
 #include "collect.h"
 #include "chunkio.h"
 #include "camera.h"
@@ -982,4 +983,3 @@ PrototypeClass * CollectionLoaderClass::Load_W3D(ChunkLoadClass & cload)
 	
 	}
 }
-

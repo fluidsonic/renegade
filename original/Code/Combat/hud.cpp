@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hud.h"
 
 #include <stdio.h>

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__BEACONGAMEOBJ_H
-#define	__BEACONGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "simplegameobj.h"
 #include "timemgr.h"
 
@@ -202,6 +201,3 @@ private:
 	void				Restore_Owner( void );
 
 };
-
-#endif	// __BEACONGAMEOBJ_H
-

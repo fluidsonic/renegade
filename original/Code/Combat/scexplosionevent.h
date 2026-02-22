@@ -1,5 +1,6 @@
-#ifndef __SCEXPLOSIONEVENT_H__
-#define __SCEXPLOSIONEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "networkobject.h"
 #include "netclassids.h"
@@ -32,5 +33,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __SCEXPLOSIONEVENT_H__

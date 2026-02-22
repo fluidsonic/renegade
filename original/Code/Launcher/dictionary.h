@@ -1,5 +1,6 @@
-#ifndef DICTIONARY_HEADER
-#define DICTIONARY_HEADER    
+#pragma once
+
+#include "global.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -490,5 +491,3 @@ void Dictionary<K,V>::expand(void)
   }
   delete[](oldtable);
 }
-
-#endif

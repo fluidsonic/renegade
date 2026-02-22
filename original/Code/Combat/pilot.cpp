@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pilot.h"
 
 #include "smartgameobj.h"

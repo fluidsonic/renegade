@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mapper.h"
 #include "ww3d.h"
 #include "ini.h"

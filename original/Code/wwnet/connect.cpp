@@ -6,10 +6,10 @@
 // Description:
 //
 //------------------------------------------------------------------------------------
-#include	"always.h"
 
 // Disable warning about exception handling not being enabled. It's used as part of STL - in a part of STL we don't use.
 
+#include "global.h"
 #include "connect.h" // I WANNA BE FIRST!
 
 //#include <stdlib.h>

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef FRUSTUM_H
-#define FRUSTUM_H
+#include "global.h"
 
 #include "vector3.h"
 #include "plane.h"
@@ -25,6 +25,3 @@ public:
 	Vector3				BoundMin;
 	Vector3				BoundMax;
 };
-
-#endif
-

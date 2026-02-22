@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soldier.h"
 #include "pscene.h"
 #include "combat.h"
@@ -4768,4 +4769,3 @@ void	SoldierGameObj::Update_Locked_Facing( void )
 		CombatManager::Soldier_Dies(this);
 	}
 	*/
-

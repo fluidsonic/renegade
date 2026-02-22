@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mesh.h"
 #include <assert.h>
 #include <stdio.h>
@@ -1464,4 +1465,3 @@ void MeshClass::Load_User_Lighting (ChunkLoadClass & cload)
 
 	Set_Has_User_Lighting(true);
 }
-

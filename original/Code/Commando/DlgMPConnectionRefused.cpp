@@ -1,3 +1,4 @@
+#include "global.h"
 #include "DlgMPConnectionRefused.h"
 #include "cnetwork.h"
 #include "resource.h"

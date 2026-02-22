@@ -1,9 +1,7 @@
-#ifndef	INPUT_H
-#define	INPUT_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	WWMATH_H
 	#include "wwmath.h"
@@ -346,5 +344,3 @@ inline float Input::Get_Amount( InputFunction function )
 {
 	return ((MenuMode || ConsoleMode) ? 0 : FunctionValue[ function ]);
 }
-
-#endif

@@ -1,3 +1,4 @@
+#include "global.h"
 #include	"ffactory.h"
 #include	"rawfile.h"
 #include "bufffile.h"
@@ -264,4 +265,3 @@ void SimpleFileFactoryClass::Return_File( FileClass *file )
 {
 	delete file;
 }
-

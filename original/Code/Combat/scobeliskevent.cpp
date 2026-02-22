@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scobeliskevent.h"
 
 #include <stdio.h>

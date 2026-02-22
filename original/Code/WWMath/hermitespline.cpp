@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hermitespline.h"
 #include "wwmathids.h"
 #include "persistfactory.h"
@@ -386,4 +387,3 @@ bool HermiteSpline1DClass::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-

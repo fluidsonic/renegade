@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef SURFACE_H
-#define SURFACE_H
+#include "global.h"
 
 #include	"point.h"
 #include	"trect.h"
@@ -80,5 +80,3 @@ class Surface
 		int Width;
 		int Height;
 };
-
-#endif

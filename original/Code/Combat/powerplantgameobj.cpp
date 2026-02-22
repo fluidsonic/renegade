@@ -1,3 +1,4 @@
+#include "global.h"
 #include "powerplantgameobj.h"
 #include "basecontroller.h"
 #include "simpledefinitionfactory.h"

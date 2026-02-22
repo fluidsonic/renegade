@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PATH_SOLVE_H
-#define __PATH_SOLVE_H
+#include "global.h"
 
 #include "vector.h"
 #include "vector3.h"
@@ -220,5 +220,3 @@ PathSolveClass::Get_Start_Pos (void) const		{ return m_StartPos; }
 
 inline const Vector3 &
 PathSolveClass::Get_Dest_Pos (void) const			{ return m_DestPos; }
-
-#endif //__PATH_SOLVE_H

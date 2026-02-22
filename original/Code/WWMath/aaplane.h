@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef AAPLANE_H
-#define AAPLANE_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 
 /*
@@ -39,5 +38,3 @@ inline void AAPlaneClass::Get_Normal(Vector3 * normal) const
 	normal->Set(0,0,0);
 	(*normal)[Normal] = 1.0f;
 }
-
-#endif

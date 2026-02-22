@@ -1,3 +1,4 @@
+#include "global.h"
 #include "projector.h"
 #include "refcount.h"
 #include "matrixmapper.h"
@@ -179,4 +180,3 @@ void ProjectorClass::Update_WS_Bounding_Volume(void)
 	OBBoxClass localbox(LocalBoundingVolume.Center,LocalBoundingVolume.Extent,Matrix3(1));
 	OBBoxClass::Transform(Transform,localbox,&WorldBoundingVolume);	
 }
-

@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"rawfile.h"
 #include	<direct.h>
 //#include	<share.h>
@@ -1010,4 +1010,3 @@ void RawFileClass::Detach (void)
 	Time = 0;
 	Handle = NULL_HANDLE;
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "transition.h"
 #include "soldier.h"
 #include "assets.h"

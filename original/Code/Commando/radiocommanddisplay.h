@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __RADIOCOMMANDDISPLAY_H
-#define __RADIOCOMMANDDISPLAY_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "vector.h"
@@ -71,5 +71,3 @@ private:
 	static bool						IsDisplayed;
 	static TextWindowClass *	TextWindow;
 };
-
-#endif //__RADIOCOMMANDDISPLAY_H

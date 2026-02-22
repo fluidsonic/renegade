@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __ORATOR_H
-#define __ORATOR_H
+#include "global.h"
 
 #include "vector3.h"
 #include "gameobjref.h"
@@ -120,5 +120,3 @@ private:
 	int								LookAtObjID;
 	bool								IsInvisible;
 };
-
-#endif //__ORATOR_H

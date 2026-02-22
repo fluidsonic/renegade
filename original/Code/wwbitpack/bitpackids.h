@@ -1,5 +1,6 @@
-#ifndef	BITPACKIDS_H
-#define	BITPACKIDS_H
+#pragma once
+
+#include "global.h"
 
 enum {
 	/*
@@ -58,5 +59,3 @@ enum {
 	BITPACK_PACKET_ID,
 
 };
-
-#endif	// BITPACKIDS_H

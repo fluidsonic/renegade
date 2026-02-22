@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __BUILDINGMONITOR_H
-#define __BUILDINGMONITOR_H
+#include "global.h"
 
 #include "gameobjobserver.h"
 
@@ -61,6 +61,3 @@ private:
 	////////////////////////////////////////////////////////////////////
 	BuildingGameObj *	Building;
 };
-
-#endif //__BUILDINGMONITOR_H
-

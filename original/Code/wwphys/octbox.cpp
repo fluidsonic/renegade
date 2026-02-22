@@ -1,3 +1,4 @@
+#include "global.h"
 #include "octbox.h"
 #include "pscene.h"
 #include "physcoltest.h"
@@ -275,4 +276,3 @@ void OctBoxClass::Compute_Octant_Contact(int oi,bool lock_to_centroids)
 		}
 	}
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef STATICPHYS_H
-#define STATICPHYS_H
+#include "global.h"
 
 #include "phys.h"
 #include "pscene.h"
@@ -226,6 +226,3 @@ inline bool StaticPhysClass::Intersects(const OBBoxClass & obbox)
 	Cast_OBBox(boxtest);
 	return result.StartBad;
 }
-
-#endif
-

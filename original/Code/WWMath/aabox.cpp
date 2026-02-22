@@ -1,3 +1,4 @@
+#include "global.h"
 #include "aabox.h"
 #include "colmath.h"
 #include "colmathinlines.h"

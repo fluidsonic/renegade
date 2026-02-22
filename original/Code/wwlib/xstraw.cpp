@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"xstraw.h"
 #include	<stddef.h>
 #include	<string.h>

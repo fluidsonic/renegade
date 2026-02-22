@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"win.h"
 #include	"mpu.h"
 #include "math.h"
@@ -77,4 +77,3 @@ static unsigned long TSC_High;
 void RDTSC(void) { TSC_Low = 0; TSC_High = 0; }
 
 int Get_RDTSC_CPU_Speed(void) { return 0; }
-

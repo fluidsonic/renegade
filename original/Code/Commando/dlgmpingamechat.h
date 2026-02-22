@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGMPINGAMECHAT_H__
-#define __DLGMPINGAMECHAT_H__
+#include "global.h"
 
 #include "popupdialog.h"
 #include "childdialog.h"
@@ -118,5 +118,3 @@ protected:
 	TextMessageEnum				DefaultType;
 	MPChatChildDialogClass *	ChatModule;
 };
-
-#endif //__DLGMPINGAMECHAT_H__

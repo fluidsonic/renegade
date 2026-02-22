@@ -1,3 +1,4 @@
+#include "global.h"
 #include "shader.h"
 #include "w3d_file.h"
 #include "Dx8Wrapper.h"

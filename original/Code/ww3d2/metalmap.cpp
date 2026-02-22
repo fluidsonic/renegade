@@ -1,3 +1,4 @@
+#include "global.h"
 #include "metalmap.h"
 #include "texture.h"
 #include "ww3dformat.h"

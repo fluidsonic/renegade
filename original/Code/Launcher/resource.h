@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
 // Used by launcher1.rc
@@ -27,4 +31,3 @@
 #define IDC_CAPTION                     1010
 #define IDC_TEXT                        1011
 #define IDC_WORKING_BOX                 1015
-

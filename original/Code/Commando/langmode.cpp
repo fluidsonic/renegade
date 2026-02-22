@@ -1,3 +1,4 @@
+#include "global.h"
 #include "langmode.h"
 #include "_globals.h"
 #include "registry.h"

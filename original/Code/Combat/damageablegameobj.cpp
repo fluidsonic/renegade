@@ -1,3 +1,4 @@
+#include "global.h"
 #include "damageablegameobj.h"
 #include "armedgameobj.h"
 #include "playertype.h"
@@ -390,4 +391,3 @@ bool DamageableGameObj::Is_Enemy(DamageableGameObj * p_obj)
 {
    return ( (p_obj != this) && Player_Types_Are_Enemies( Get_Player_Type(), p_obj->Get_Player_Type() ) );
 }
-

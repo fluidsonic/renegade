@@ -5,6 +5,7 @@
 // Description:  This class handles the creations of players and soldiers.
 //
 
+#include "global.h"
 #include "god.h"
 
 #include "cnetwork.h"
@@ -480,4 +481,3 @@ void cGod::Reset_Inventory( void )
 {
 	LevelStartInventory.Reset();
 }
-

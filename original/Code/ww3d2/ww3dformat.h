@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef WW3DFORMAT_H
-#define WW3DFORMAT_H
+#include "global.h"
 
-#include "always.h"
 #include "wwstring.h"
 
 class Vector4;
@@ -137,5 +136,3 @@ WW3DFormat Get_Valid_Texture_Format(WW3DFormat format,bool is_compression_allowe
 unsigned Get_Bytes_Per_Pixel(WW3DFormat format);
 
 void Get_WW3D_Format_Name(WW3DFormat format, StringClass& name);
-
-#endif

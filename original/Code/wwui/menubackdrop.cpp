@@ -1,3 +1,4 @@
+#include "global.h"
 #include "menubackdrop.h"
 #include <stdio.h>
 #include "scene.h"

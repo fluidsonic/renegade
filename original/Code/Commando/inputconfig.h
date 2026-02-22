@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __INPUT_CONFIG_H
-#define __INPUT_CONFIG_H
+#include "global.h"
 
 #include "widestring.h"
 #include "wwstring.h"
@@ -84,5 +84,3 @@ private:
 	bool					IsDefault;
 	bool					IsCustom;
 };
-
-#endif //__INPUT_CONFIG_H

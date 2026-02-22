@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmpchangelannickname.h"
 #include <EditCtrl.h>
 #include "netinterface.h"

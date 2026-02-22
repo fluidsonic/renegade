@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef HUMANRECOIL_H
-#define HUMANRECOIL_H
-
-#include "always.h"
+#include "global.h"
 
 class RenderObjClass;
 class Matrix3D;
@@ -34,6 +32,3 @@ protected:
 
 	static bool IsInitted;
 };
-
-#endif //HUMANRECOIL_H
-

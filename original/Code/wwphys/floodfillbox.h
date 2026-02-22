@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __FLOODFILLBOX_H
-#define __FLOODFILLBOX_H
+#include "global.h"
 
 #include "vector3.h"
 #include "matrix3d.h"
@@ -460,6 +460,3 @@ FloodfillBoxClass::Part_Of_Portal (PATHFIND_DIR dir)
 	int bit = (1 << (dir + 4));
 	return (m_DirectionInfo & bit) == bit;
 }
-
-#endif //__FLOODFILLBOX_H
-

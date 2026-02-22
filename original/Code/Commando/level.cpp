@@ -1,3 +1,4 @@
+#include "global.h"
 #include "level.h"
 #include "combat.h"
 #include "pscene.h"
@@ -41,4 +42,3 @@ void		LevelManager::Release_Level( void )
 	WW3DAssetManager::Get_Instance()->Free_Assets();	
 }
 }
-

@@ -1,9 +1,7 @@
-#ifndef	ANIMCONTROL_H
-#define	ANIMCONTROL_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	HANIM_H
 	#include "hanim.h"
@@ -263,6 +261,3 @@ private:
 
 	void								Build_Skeleton_Anim_Name( StringClass& new_name, const char * name );
 };
-
-#endif		// ANIMCONTROL_H
-

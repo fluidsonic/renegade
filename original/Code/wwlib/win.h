@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef WIN_H
-#define WIN_H
+#include "global.h"
 
 /*
 **	This header file includes the Windows headers. If there are any special pragmas that need
@@ -30,5 +30,3 @@
 extern HINSTANCE ProgramInstance;
 extern HWND      MainWindow;
 extern bool      GameInFocus;
-
-#endif // WIN_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "argv.h"
 
 #include <assert.h>
@@ -451,4 +452,3 @@ bool ArgvClass::Remove_Value(const char *attrib)
 	}
 	return(false);
 }
-

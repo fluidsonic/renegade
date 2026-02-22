@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef	__NETWORKOBJECTMGR_H
-#define	__NETWORKOBJECTMGR_H
+#include "global.h"
 
 #include "vector.h"
 
@@ -113,5 +113,3 @@ private:
 	static int			_NewClientID;
 	static bool			_IsLevelLoading;
 };
-
-#endif	// __NETWORKOBJECTMGR_H

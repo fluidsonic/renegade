@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     bitpacker.h
 // Project:      wwbitpack.lib
@@ -6,10 +10,7 @@
 // Description:  Minimal bit encoding
 //
 
-#ifndef BITPACKER_H
-#define BITPACKER_H
 
-#include "always.h"
 
 
 static const int MAX_BITS = 32;
@@ -52,7 +53,6 @@ class cBitPacker
 		UINT BitReadPosition;
 };
 
-#endif // BITPACKER_H
 
 		/*
 		void Reset() {BitWritePosition = 0;}

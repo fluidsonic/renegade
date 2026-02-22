@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef _SUBTITLEMANAGER_H_
-#define _SUBTITLEMANAGER_H_
+#include "global.h"
 
-#include "always.h"
 #include <wwlib/vector.h>
 #include "wwstring.h"
 #include <windows.h>
@@ -44,5 +43,3 @@ private:
 	SubTitleClass* mActiveSubTitle;
 	Render2DSentenceClass Renderer;
 };
-
-#endif // _SUBTITLEMANAGER_H_

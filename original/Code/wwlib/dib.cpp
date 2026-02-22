@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "dib.h"
 #include <math.h>
 
@@ -130,4 +130,3 @@ void DIB8Class::Clear(unsigned char color)
 		memset(Pixels, color, Width*Height);
 	}
 }
-

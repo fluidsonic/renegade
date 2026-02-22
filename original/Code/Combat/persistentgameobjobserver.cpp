@@ -1,3 +1,4 @@
+#include "global.h"
 #include "persistentgameobjobserver.h"
 #include "chunkio.h"
 #include "persistfactory.h"

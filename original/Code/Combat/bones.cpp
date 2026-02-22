@@ -1,7 +1,8 @@
+#include "global.h"
 #include "bones.h"
 #include "assets.h"
 #include "wwstring.h"
-#include "stl.h"
+#include <map>
 
 static bool _BonesMangerInitted = false;
 
@@ -95,4 +96,3 @@ float BonesManager::Get_Bone_Damage_Scale( const char * bone_name )
 	}
 	return 1.0f;
 }
-

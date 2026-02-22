@@ -1,5 +1,6 @@
-#ifndef __BIOEVENT_H__
-#define __BIOEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -32,6 +33,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __BIOEVENT_H__
-

@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"lzo1x.h"
 #include	<assert.h>
 

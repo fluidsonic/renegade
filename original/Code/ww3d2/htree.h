@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HTREE_H
-#define HTREE_H
+#include "global.h"
 
-#include "always.h"
 #include "pivot.h"
 #include "quat.h"
 #include "matrix3d.h"
@@ -152,5 +151,3 @@ WWINLINE const Matrix3D & HTreeClass::Get_Transform(int pivot) const
 
 	return Pivot[pivot].Transform;
 }
-
-#endif

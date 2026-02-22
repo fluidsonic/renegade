@@ -1,3 +1,4 @@
+#include "global.h"
 #include "screenfademanager.h"
 #include "render2d.h"
 #include "vector3.h"
@@ -272,4 +273,3 @@ bool	ScreenFadeManager::Load( ChunkLoadClass &cload )
 	}
 	return true;
 }
-

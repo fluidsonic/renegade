@@ -1,9 +1,7 @@
-#ifndef	GAMEMODE_H
-#define	GAMEMODE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -116,5 +114,3 @@ public:
 private:
 	static	Vector3	BackgroundColor;
 };
-
-#endif	// GAMEMODE_H

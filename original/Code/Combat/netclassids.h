@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __NET_CLASSIDS_H
-#define __NET_CLASSIDS_H
+#include "global.h"
 
 ////////////////////////////////////////////////////////////////
 //	Network class IDs
@@ -57,7 +57,6 @@ enum
 	NETCLASSID_DONATEEVENT					= 1038,
 };
 
-#endif //__NET_CLASSIDS_H
 
 	//NETCLASSID_MOBIUSCAPEVENT,
 	//NETCLASSID_LMSPLAYEROUTEVENT,

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "thread.h"
 #include <pthread.h>
 #include <sched.h>

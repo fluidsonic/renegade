@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CHILD_DIALOG_H
-#define __CHILD_DIALOG_H
+#include "global.h"
 
 #include "dialogbase.h"
 #include "wwstring.h"
@@ -73,6 +73,3 @@ protected:
 	////////////////////////////////////////////////////////////////	
 	DialogBaseClass *		ParentDialog;
 };
-
-#endif //__CHILD_DIALOG_H
-

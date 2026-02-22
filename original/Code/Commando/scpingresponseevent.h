@@ -1,5 +1,6 @@
-#ifndef __SCPINGRESPONSEEVENT_H__
-#define __SCPINGRESPONSEEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -28,5 +29,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __SCPINGRESPONSEEVENT_H__

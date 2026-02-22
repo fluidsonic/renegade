@@ -1,3 +1,4 @@
+#include "global.h"
 #include "persistfactory.h"
 #include "saveload.h"
 

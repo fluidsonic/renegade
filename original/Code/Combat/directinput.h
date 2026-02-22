@@ -1,9 +1,7 @@
-#ifndef	DIRECTINPUT_H
-#define	DIRECTINPUT_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #include "vector3.h"
 #include "vector2.h"
@@ -154,5 +152,3 @@ DirectInput::Get_Button_Value (int button_id)
 
 	return retval;
 }
-
-#endif

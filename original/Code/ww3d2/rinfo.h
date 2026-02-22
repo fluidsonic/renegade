@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef RINFO_H
-#define RINFO_H
+#include "global.h"
 
-#include "always.h"
 #include "ww3d.h"
 #include "shader.h"
 #include "vector.h"
@@ -110,5 +109,3 @@ private:
 	SpecialRenderInfoClass & operator = (const RenderInfoClass &);
 
 };
-
-#endif

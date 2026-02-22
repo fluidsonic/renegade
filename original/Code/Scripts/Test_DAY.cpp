@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 
 DECLARE_SCRIPT(M00_Screenshot_Poser_DAY, "Anim_Name:string" )
@@ -294,4 +295,3 @@ DECLARE_SCRIPT (M00_Set_Background_Music_DAY, "MusicFile:string")
 	}
 
 };
-

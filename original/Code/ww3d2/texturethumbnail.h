@@ -1,7 +1,7 @@
-#ifndef TEXTURETHUMBNAIL_H
-#define TEXTURETHUMBNAIL_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "wwstring.h"
 #include "hashtemplate.h"
 #include "dllist.h"
@@ -107,5 +107,3 @@ public:
 };
 
 // ----------------------------------------------------------------------------
-
-#endif

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __STRING_IDS_H
-#define __STRING_IDS_H
+#include "global.h"
 
 #define STRINGS_VER		145
 
@@ -11557,5 +11557,3 @@
 #define IDS_HOPTERR_TITLE_TOOBIG		12672
 #define IDS_MP_MAXPLAYER_WARNING		12673
 // TRANSLATEDB: End ID Block
-
-#endif //__STRING_IDS_H

@@ -1,7 +1,7 @@
-#ifndef	SAVEGAME_H
-#define	SAVEGAME_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "wwstring.h"
 #include "widestring.h"
 
@@ -56,5 +56,3 @@ protected:
 
 	static const char * DefaultDefinitionFilename;
 };
-
-#endif	//	SAVEGAME_H

@@ -1,5 +1,6 @@
-#ifndef _GROUPCONTROL_H_
-#define _GROUPCONTROL_H_
+#pragma once
+
+#include "global.h"
 
 #include "scripts.h"
 #include "slist.h"
@@ -39,5 +40,3 @@ class GroupController
 		// List of groups
 		SList<Group> mGroups;
 	};
-
-#endif // _GROUPCONTROL_H_

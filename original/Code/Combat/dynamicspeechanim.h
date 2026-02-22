@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DYNAMICSPEECHANIM_H
-#define __DYNAMICSPEECHANIM_H
+#include "global.h"
 
 #include "hmorphanim.h"
 #include "viseme.h"
@@ -47,5 +47,3 @@ protected:
 	////////////////////////////////////////////////////////////////
 	static VisemeManager		VisemeLookupMgr;
 };
-
-#endif //__DYNAMICSPEECHANIM_H

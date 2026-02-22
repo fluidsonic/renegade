@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     regbool.h
 // Author:       Tom Spencer-Smith
@@ -6,10 +10,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef REGBOOL_H
-#define REGBOOL_H
 
-#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryBool
@@ -32,4 +33,3 @@ class cRegistryBool
 };
 
 //-----------------------------------------------------------------------------
-#endif // REGBOOL_H

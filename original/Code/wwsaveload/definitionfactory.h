@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef __DEFINITION_FACTORY_H
-#define __DEFINITION_FACTORY_H
+#include "global.h"
 
-#include "always.h"
 #include "definitionclassids.h"
 
 // Forward declarations
@@ -48,5 +47,3 @@ protected:
 	//////////////////////////////////////////////////////////////
 	friend class DefinitionFactoryMgrClass;
 };
-
-#endif //__DEFINITION_FACTORY_H

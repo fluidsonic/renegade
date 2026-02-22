@@ -1,3 +1,4 @@
+#include "global.h"
 #include "wheel.h"
 #include "wheelvehicle.h"
 #include "trackedvehicle.h"
@@ -1119,4 +1120,3 @@ void VTOLWheelClass::Roll_Wheel(void)
 		LastPoint = Contact;
 	}
 }
-

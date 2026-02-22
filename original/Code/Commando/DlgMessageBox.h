@@ -1,5 +1,6 @@
-#ifndef __DLGMESSAGEBOX_H__
-#define __DLGMESSAGEBOX_H__
+#pragma once
+
+#include "global.h"
 
 #include <PopupDialog.h>
 #include <Notify.h>
@@ -90,5 +91,3 @@ class DlgMsgBox :
 		static int CurrentCount;
 		unsigned long mUserData;
 	};
-
-#endif // __DLGMESSAGEBOX_H__

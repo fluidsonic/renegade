@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef MATINFO_H
-#define MATINFO_H
+#include "global.h"
 
-#include "always.h"
 #include "vector.h"
 #include "vertmaterial.h"
 #include "texture.h"
@@ -277,5 +276,3 @@ inline void	MaterialInfoClass::Replace_Texture(int index, TextureClass *newTextu
 {
 	REF_PTR_SET(Textures[index],newTexture);
 }
-
-#endif // MATINFO_H

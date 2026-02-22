@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"vector.h"
 #include	"win.h"
 #include	"sdl2_platform.h"

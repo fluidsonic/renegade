@@ -1,5 +1,6 @@
-#ifndef CONFIGFILE_HEADER
-#define CONFIGFILE_HEADER
+#pragma once
+
+#include "global.h"
 
 #include "dictionary.h"
 #include "wstring.h"
@@ -23,5 +24,3 @@ class ConfigFile
   Dictionary<Wstring,Wstring> dictionary; // stores the mappings from keys
                                         //  to value strings
 };
-
-#endif

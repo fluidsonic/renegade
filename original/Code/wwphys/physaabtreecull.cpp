@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physaabtreecull.h"
 #include "pscene.h"
 #include "physcoltest.h"

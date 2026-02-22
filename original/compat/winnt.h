@@ -1,9 +1,9 @@
-// winnt.h compat shim for macOS/clang
 #pragma once
-#ifndef WINNT_H_COMPAT
-#define WINNT_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// winnt.h compat shim for macOS/clang
+
 #include <pthread.h>
 
 // Integer types with explicit sizes
@@ -183,5 +183,3 @@ typedef double float64_t;
 #endif
 
 #include "typesizes.h"
-
-#endif // WINNT_H_COMPAT

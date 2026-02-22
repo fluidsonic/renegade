@@ -1,5 +1,6 @@
-#ifndef REFCOUNTED_H
-#define REFCOUNTED_H
+#pragma once
+
+#include "global.h"
 
 #include <assert.h>
 
@@ -43,5 +44,3 @@ class RefCounted
 
 		unsigned int mRefCount;
 	};
-
-#endif // REFCOUNTED_H

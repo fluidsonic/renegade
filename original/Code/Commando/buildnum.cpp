@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "buildnum.h"
 #include <stdio.h>
 #include "win.h"
@@ -241,4 +241,3 @@ char *BuildInfoClass::Composite_Build_Info(void)
 void BuildInfoClass::Log_Build_Info(void)
 {
 }
-

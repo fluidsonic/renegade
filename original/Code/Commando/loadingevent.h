@@ -1,5 +1,6 @@
-#ifndef __LOADINGEVENT_H__
-#define __LOADINGEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -29,5 +30,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __LOADINGEVENT_H__

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pscene.h"
 #include "physcoltest.h"
 #include "physinttest.h"
@@ -628,4 +629,3 @@ void PhysicsSceneClass::Collect_Lights
 
 	Add_Collected_Lights_To_List(static_lights,dynamic_lights,list);
 }
-

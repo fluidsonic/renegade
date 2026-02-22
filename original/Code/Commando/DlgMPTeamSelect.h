@@ -1,5 +1,6 @@
-#ifndef __DLGMPTEAMSELECT_H__
-#define __DLGMPTEAMSELECT_H__
+#pragma once
+
+#include "global.h"
 
 #include "PlayerManager.h"
 #include <MenuDialog.h>
@@ -46,5 +47,3 @@ class DlgMPTeamSelect :
 		bool mCanChoose;
 		float mTimeRemaining;
 	};
-
-#endif // __DLGMPTEAMSELECT_H__

@@ -6,6 +6,7 @@
 // Description:  Data about a remote host
 //
 //-----------------------------------------------------------------------------
+#include "global.h"
 #include "rhost.h" // I WANNA BE FIRST!
 
 #include <stdlib.h>

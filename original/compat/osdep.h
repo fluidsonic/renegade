@@ -1,9 +1,9 @@
-// osdep.h compat shim for macOS - Unix compatibility
 #pragma once
-#ifndef OSDEP_H_COMPAT
-#define OSDEP_H_COMPAT
 
-#include "global.h"   // provides string.h (strlen, strncpy, strrchr), _UNIX, NOMINMAX
+#include "global.h"
+
+// osdep.h compat shim for macOS - Unix compatibility
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,5 +88,3 @@ inline void _makepath(char* path, const char* drive, const char* dir, const char
     if (fname) strcat(path, fname);
     if (ext) strcat(path, ext);
 }
-
-#endif // OSDEP_H_COMPAT

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DX8TEXTUREMANAGER_H
-#define DX8TEXTUREMANAGER_H
+#include "global.h"
 
-#include "always.h"
 #include "texture.h"
 #include "dx8wrapper.h"
 #include "ww3dformat.h"
@@ -47,5 +46,3 @@ public:
 private:
 	static DX8TextureTrackerList Managed_Textures;
 };
-
-#endif // ifdef TEXTUREMANAGER

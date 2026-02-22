@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soundhandle.h"
 #include "threads.h"
 
@@ -42,4 +43,3 @@ SoundHandleClass::Initialize (SoundBufferClass *buffer)
 	REF_PTR_SET (Buffer, buffer);
 	return ;
 }
-

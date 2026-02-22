@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colmath.h"
 #include "obbox.h"
 #include "tri.h"
@@ -1423,4 +1424,3 @@ bool CollisionMath::Intersection_Test(const OBBoxClass & box,const TriClass & tr
 
 	return true;
 }
-

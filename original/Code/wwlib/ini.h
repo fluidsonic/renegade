@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef INI_H
-#define INI_H
+#include "global.h"
 
 //#include	"listnode.h"
 //#include	"trect.h"
@@ -198,5 +198,3 @@ class INIClass {
 		*/
 		static bool KeepBlankEntries;
 };
-
-#endif

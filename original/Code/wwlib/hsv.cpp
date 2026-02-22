@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"hsv.h"
 #include	"rgb.h"
 
@@ -142,4 +142,3 @@ HSVClass::operator RGBClass (void) const
 	RGBClass rgb((unsigned char)red, (unsigned char)green, (unsigned char)blue);
 	return(rgb);
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "transitiongameobj.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TRANSLATE_OBJ_H
-#define __TRANSLATE_OBJ_H
+#include "global.h"
 
 #include "persist.h"
 #include "wwstring.h"
@@ -100,6 +100,3 @@ protected:
 	StringClass									AnimationName;
 	DynamicVectorClass<WideStringClass>	TranslatedStrings;
 };
-
-#endif //__TRANSLATE_OBJ_H
-

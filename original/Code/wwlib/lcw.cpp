@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"lcw.h"
 
 /***************************************************************************
@@ -128,4 +128,3 @@ int LCW_Uncomp(void const * source, void * dest, unsigned long )
 		}
 	}
 }
-

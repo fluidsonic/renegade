@@ -1,3 +1,4 @@
+#include "global.h"
 #include "textureloader.h"
 #include "mutex.h"
 #include "thread.h"

@@ -1,10 +1,7 @@
+#pragma once
 
-#ifndef FFACTORY_H
-#define FFACTORY_H
+#include "global.h"
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 #include "mutex.h"
 #include "vector.h"
@@ -112,5 +109,3 @@ protected:
 extern FileFactoryClass	*	_TheFileFactory;
 extern FileFactoryClass	*	_TheWritingFileFactory;
 extern SimpleFileFactoryClass	*	_TheSimpleFileFactory;
-
-#endif

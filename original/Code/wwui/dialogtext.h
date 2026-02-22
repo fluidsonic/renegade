@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_TEXT_H
-#define __DIALOG_TEXT_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -50,5 +50,3 @@ protected:
 	Render2DClass				ControlRenderer;
 	bool							IsTitle;
 };
-
-#endif //__DIALOG_TEXT_H

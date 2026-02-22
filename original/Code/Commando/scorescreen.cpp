@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scorescreen.h"
 #include "campaign.h"
 #include "resource.h"

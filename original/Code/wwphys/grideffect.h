@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef GRIDEFFECT_H
-#define GRIDEFFECT_H
+#include "global.h"
 
-#include "always.h"
 #include "materialeffect.h"
 #include "matrix3d.h"
 
@@ -67,5 +66,3 @@ protected:
 	MatrixMapperClass *		Stage1Mapper;
 	MaterialPassClass *		MaterialPass;
 };
-
-#endif //GRIDEFFECT_H

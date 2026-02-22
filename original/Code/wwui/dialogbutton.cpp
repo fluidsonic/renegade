@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogbutton.h"
 #include "assetmgr.h"
 #include "font3d.h"

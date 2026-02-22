@@ -1,3 +1,4 @@
+#include "global.h"
 #include "wwphys.h"
 #include "physcon.h"
 #include "physresourcemgr.h"
@@ -12,4 +13,3 @@ void WWPhys::Shutdown(void)
 {
 	PhysResourceMgrClass::Shutdown();
 }
-

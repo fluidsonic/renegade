@@ -1,9 +1,7 @@
-#ifndef	EXPLOSION_H
-#define	EXPLOSION_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	DEFINITION_H
 	#include "definition.h"
@@ -58,5 +56,3 @@ public:
 	static	void	Server_Explode( int explosion_id, const Vector3 & pos, int owner_id, DamageableGameObj * force_victim = NULL );
 	static	void	Explode( int explosion_id, const Vector3 & pos, int owner_id, int victim_id = 0 );
 };
-
-#endif	//	EMITTER_H

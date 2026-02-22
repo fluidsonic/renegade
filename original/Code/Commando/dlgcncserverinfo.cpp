@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcncserverinfo.h"
 #include "gamedata.h"
 #include "resource.h"
@@ -150,4 +151,3 @@ CNCServerInfoDialogClass::On_Frame_Update (void)
 
 	return ;
 }
-

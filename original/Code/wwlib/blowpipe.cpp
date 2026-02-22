@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blowpipe.h"
 #include	<string.h>
 #include	<assert.h>
@@ -154,4 +154,3 @@ void BlowPipe::Key(void const * key, int length)
 		BF->Submit_Key(key, length);
 	}
 }
-

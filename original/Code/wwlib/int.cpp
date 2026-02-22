@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"int.h"
 #include	"mpmath.h"
 #include	"rng.h"
@@ -9,4 +9,3 @@ template<> bool Int<MAX_UNIT_PRECISION>::Borrow = false;
 template<> Int<MAX_UNIT_PRECISION> Int<MAX_UNIT_PRECISION>::Remainder = {};
 
 //BigInt Gcd(const BigInt & a, const BigInt & n);
-

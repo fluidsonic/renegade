@@ -1,7 +1,8 @@
-// process.h compat shim for macOS
 #pragma once
-#ifndef PROCESS_H_COMPAT
-#define PROCESS_H_COMPAT
+
+#include "global.h"
+
+// process.h compat shim for macOS
 
 #include <pthread.h>
 #include <stdlib.h>
@@ -36,5 +37,3 @@ inline void _endthreadex(unsigned retval) { pthread_exit((void*)(uintptr_t)retva
 
 // getpid
 #define _getpid getpid
-
-#endif // PROCESS_H_COMPAT

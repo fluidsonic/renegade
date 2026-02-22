@@ -1,6 +1,5 @@
+#pragma once
 
-#ifndef __DIALOG_RESOURCE_H
-#define __DIALOG_RESOURCE_H
 
 //
 //	These button IDs are used for "simple" buttons
@@ -126,6 +125,3 @@
 
 #define IDC_SCORE_TABCTRL						40001
 #define IDC_GENERIC_TABCTRL					40002
-
-#endif //__DIALOG_RESOURCE_H
-

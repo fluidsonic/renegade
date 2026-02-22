@@ -1,5 +1,6 @@
-#ifndef WSTRING_HEADER
-#define WSTRING_HEADER
+#pragma once
+
+#include "global.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,5 +56,3 @@ class Wstring
  private:
    char    *str;    // Pointer to allocated string.
 };
-
-#endif

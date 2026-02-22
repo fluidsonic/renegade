@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 
 /*Editor Script - M00_Action

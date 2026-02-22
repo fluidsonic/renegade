@@ -1,9 +1,9 @@
-// bink.h compat shim for macOS - Bink video stubs
 #pragma once
-#ifndef BINK_H_COMPAT
-#define BINK_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// bink.h compat shim for macOS - Bink video stubs
+
 
 typedef struct _BINK* HBINK;
 typedef struct _BINKTRACK* HBINKTRACK;
@@ -56,5 +56,3 @@ inline void      BinkSoundUseDirectSound(UINT device) {}
 #define BINKRBINVERT         0x00040000L
 #define BINKGRAYSCALE        0x00020000L
 #define BINK_COPY_COLOR_ONLY 0x00000001L
-
-#endif // BINK_H_COMPAT

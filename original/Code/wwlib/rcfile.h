@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef RCFILE_H
-#define RCFILE_H
+#include "global.h"
 
-#include "always.h"
 #include "wwfile.h"
 #include "win.h"
 
@@ -52,5 +51,3 @@ class ResourceFileClass : public FileClass
 		unsigned char *	EndOfFile;
 
 };
-
-#endif

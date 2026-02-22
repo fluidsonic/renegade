@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __LIST_CTRL_H
-#define __LIST_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -429,6 +429,3 @@ private:
 	float			Height;
 	bool			IsSelected;
 };
-
-#endif //__LIST_CTRL_H
-

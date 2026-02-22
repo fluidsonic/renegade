@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef SAVELOADIDS_H
-#define SAVELOADIDS_H
+#include "global.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -26,5 +26,3 @@ enum
 	CHUNKID_WWMATH_BEGIN				= 0x00080000,
 	CHUNKID_WWTRANSLATEDB_BEGIN		    = 0x00090000
 };
-
-#endif

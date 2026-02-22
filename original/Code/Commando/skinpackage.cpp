@@ -1,3 +1,4 @@
+#include "global.h"
 #include "skinpackage.h"
 #include "assets.h"
 #include "init.h"
@@ -22,4 +23,3 @@ SkinPackageClass::~SkinPackageClass (void)
 {
 	return ;
 }
-

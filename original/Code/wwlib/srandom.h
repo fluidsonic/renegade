@@ -1,5 +1,6 @@
-#ifndef SRANDOM_H
-#define SRANDOM_H
+#pragma once
+
+#include "global.h"
 
 #include "random.h"	// for the helper RNG
 
@@ -45,5 +46,3 @@ private:
 
 		static Random3Class		RandomHelper;
 };
-
-#endif

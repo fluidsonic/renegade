@@ -1,3 +1,4 @@
+#include "global.h"
 #include "campaign.h"
 #include "gamemode.h"
 #include "gamedata.h"

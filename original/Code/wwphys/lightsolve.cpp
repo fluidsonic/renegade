@@ -1,3 +1,4 @@
+#include "global.h"
 #include "lightsolve.h"
 #include "phys.h"
 #include "staticphys.h"
@@ -550,4 +551,3 @@ bool LightSolveClass::Does_Model_Get_Static_Light_Solve(RenderObjClass * model)
 
 	return true;
 }
-

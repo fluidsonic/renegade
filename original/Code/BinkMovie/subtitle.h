@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef _SUBTITLE_H_
-#define _SUBTITLE_H_
-
-#include "always.h"
+#include "global.h"
 
 class SubTitleClass
 {
@@ -66,5 +64,3 @@ private:
 	Alignment mAlignment;
 	char16_t* mCaption;
 };
-
-#endif // _SUBTITLE_H_

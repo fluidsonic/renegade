@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogmgr.h"
 #include "dialogbase.h"
 #include "childdialog.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "humanphys.h"
 #include "physcoltest.h"
 #include "pscene.h"
@@ -688,4 +689,3 @@ bool HumanPhysDefClass::Is_Type(const char * type_name)
 		return Phys3DefClass::Is_Type(type_name);
 	}
 }
-

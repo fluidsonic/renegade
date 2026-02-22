@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PILOT_H
-#define __PILOT_H
+#include "global.h"
 
 #include "vector3.h"
 #include "gameobjref.h"
@@ -202,6 +202,3 @@ private:
 	float					m_MinCircleAngle;
 	float					m_MaxCircleAngle;
 };
-
-#endif //__PILOT_H
-

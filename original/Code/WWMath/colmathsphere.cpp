@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colmath.h"
 #include "aaplane.h"
 #include "plane.h"
@@ -190,4 +191,3 @@ CollisionMath::Overlap_Test(const SphereClass & sphere,const OBBoxClass & obbox)
 	// TODO: overlap function that detects containment?
 	return ( Intersection_Test(sphere,obbox) ? BOTH : POS );
 }
-

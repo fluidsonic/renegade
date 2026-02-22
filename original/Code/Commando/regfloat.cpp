@@ -5,6 +5,7 @@
 // Description:  
 //
 
+#include "global.h"
 #include "regfloat.h"
 
 #include "string.h"

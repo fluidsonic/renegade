@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ode.h"
 #include <assert.h>
 
@@ -321,4 +322,3 @@ void IntegrationSystem::Runge_Kutta5_Integrate(ODESystemClass * odesys,float dt)
 
 	odesys->Set_State(Y1);
 }
-

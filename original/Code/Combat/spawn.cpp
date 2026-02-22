@@ -1,3 +1,4 @@
+#include "global.h"
 #include "spawn.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
@@ -991,4 +992,3 @@ SpawnManager::~SpawnManager(void)
 {
 	Remove_All_Spawners();
 }
-

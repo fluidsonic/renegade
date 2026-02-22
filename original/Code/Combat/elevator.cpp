@@ -1,3 +1,4 @@
+#include "global.h"
 #include "elevator.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"

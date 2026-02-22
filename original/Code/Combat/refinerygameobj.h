@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__REFINERYGAMEOBJ_H
-#define	__REFINERYGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "building.h"
 
 ////////////////////////////////////////////////////////////////
@@ -179,5 +178,3 @@ private:
 	AudibleSoundClass * MoneyTrickleSound;
 
 };
-
-#endif	// __REFINERYGAMEOBJ_H

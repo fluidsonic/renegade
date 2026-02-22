@@ -1,3 +1,4 @@
+#include "global.h"
 #include "systemsettings.h"
 #include "registry.h"
 //#include "menuentry.h"

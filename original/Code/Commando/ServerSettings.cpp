@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ServerSettings.h"
 #include "gamedata.h"
 #include "gdcnc.h"

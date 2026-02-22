@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TOOLTIP_MGR_H
-#define __TOOLTIP_MGR_H
+#include "global.h"
 
 #include "vector2.h"
 #include "vector3.h"
@@ -55,5 +55,3 @@ private:
 	static int						PauseTime;
 	static DialogControlClass *CurrentControl;
 };
-
-#endif //__TOOLTIP_MGR_H

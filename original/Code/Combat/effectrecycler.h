@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef EFFECTRECYCLER_H
-#define EFFECTRECYCLER_H
+#include "global.h"
 
-#include "always.h"
 #include "robjlist.h"
 #include "multilist.h"
 #include "combatphysobserver.h"
@@ -49,6 +48,3 @@ private:
 	RefMultiListClass<TimedDecorationPhysClass>	InactiveTDecos;
 
 };
-
-#endif //EFFECTRECYCLER_H
-

@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef MUZZLERECOIL_H
-#define MUZZLERECOIL_H
-
-#include "always.h"
+#include "global.h"
 
 class RenderObjClass;
 
@@ -30,6 +28,3 @@ protected:
 	float		OORecoilTime;		// one-over the total time for the recoil effect
 
 };
-
-#endif //MUZZLERECOIL_H
-

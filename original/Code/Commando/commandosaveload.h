@@ -1,9 +1,7 @@
-#ifndef	COMMANDOSAVELOAD_H
-#define	COMMANDOSAVELOAD_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	SAVELOADSUBSYSTEM_H
 	#include "saveloadsubsystem.h"
@@ -34,5 +32,3 @@ protected:
 **
 */
 extern	CommandoSaveLoadClass	_CommandoSaveLoad;
-
-#endif	//	COMBATSAVELOAD_H

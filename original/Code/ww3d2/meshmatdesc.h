@@ -1,7 +1,7 @@
-#ifndef MESHMATDESC_H
-#define MESHMATDESC_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "vector2.h"
 #include "vector3.h"
 #include "vector3i.h"
@@ -432,6 +432,3 @@ inline void MeshMatDescClass::Disable_Backface_Culling(void)
 		}
 	}
 }
-
-#endif //MESHMATDESC_H
-

@@ -1,9 +1,7 @@
-#ifndef	DIAGLOG_H
-#define	DIAGLOG_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #define	DIAG_LOG( a ) 		DiagLogClass::Log_Timed a 
 
@@ -18,5 +16,3 @@ public:
 
 	static	void	Log_Timed( const char * type, const char * format, ... );
 };
-
-#endif	// DIAGLOG_H

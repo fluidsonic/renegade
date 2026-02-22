@@ -1,3 +1,4 @@
+#include "global.h"
 #include "explosion.h"
 #include "damage.h"
 #include "combat.h"

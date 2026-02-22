@@ -1,9 +1,7 @@
-#ifndef INIT_H
-#define INIT_H
+#pragma once
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
+#include "global.h"
+
 
 #include "ffactory.h"
 
@@ -18,5 +16,3 @@ void	Application_Exception_Callback(void);
 #define VALUE_NAME_DISABLE_LOG_COPYING "DisableLogCopying"
 
 extern SimpleFileFactoryClass	RenegadeBaseFileFactory;
-
-#endif

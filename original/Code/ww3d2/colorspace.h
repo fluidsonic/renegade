@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef COLORSPACE_H
-#define COLORSPACE_H
+#include "global.h"
 
 #include <wwmath.h>
 
@@ -106,6 +106,3 @@ inline void Recolor(Vector3 &rgb, const Vector3 &hsv_shift)
 	hsv.Z=WWMath::Clamp(hsv.Z,0.0f,1.0f);	
 	HSV_To_RGB(rgb,hsv);
 }
-
-#endif
-

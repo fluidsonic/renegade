@@ -1,3 +1,4 @@
+#include "global.h"
 #include "objlibrary.h"
 #include "definition.h"
 #include "definitionfactory.h"
@@ -36,4 +37,3 @@ PhysicalGameObj	*ObjectLibraryManager::Create_Object( const char *name )
 
 	return NULL;
 }
-

@@ -1,5 +1,6 @@
-#ifndef __WINEVENT_H__
-#define __WINEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -30,6 +31,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __WINEVENT_H__
-

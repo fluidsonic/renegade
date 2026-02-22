@@ -1,5 +1,6 @@
-#ifndef RIGHTS_H
-#define RIGHTS_H
+#pragma once
+
+#include "global.h"
 
 // Access rights
 typedef enum
@@ -8,5 +9,3 @@ typedef enum
 	Rights_WriteOnly,
 	Rights_ReadWrite,
 	} ERights;
-
-#endif // RIGHTS_H

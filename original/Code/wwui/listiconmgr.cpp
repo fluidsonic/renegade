@@ -1,3 +1,4 @@
+#include "global.h"
 #include "listiconmgr.h"
 #include "stylemgr.h"
 #include "assetmgr.h"

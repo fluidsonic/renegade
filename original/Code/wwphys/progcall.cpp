@@ -1,3 +1,4 @@
+#include "global.h"
 #include "progcall.h"
 
 ProgressCallbackClass::ProgressCallbackClass(void)
@@ -30,4 +31,3 @@ float ProgressCallbackClass::Percent_Done(void)
 	if (TotalCost <= 0) return 1.0f;
 	return 100.0f * (float)Completed / (float)TotalCost;
 }
-

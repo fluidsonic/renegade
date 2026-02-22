@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vissample.h"
 #include "chunkio.h"
 #include <memory.h>
@@ -219,4 +220,3 @@ bool VisSampleClass::Load(ChunkLoadClass &chunk_load)
 
 	return retval;
 }
-

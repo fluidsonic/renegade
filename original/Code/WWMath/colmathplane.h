@@ -1,7 +1,7 @@
-#ifndef COLMATHPLANE_H
-#define COLMATHPLANE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "plane.h"
 #include "aabox.h"
 
@@ -104,6 +104,3 @@ CollisionMath::Overlap_Test(const PlaneClass & plane,const AABoxClass & box)
 	}
 	return BOTH;
 }
-
-#endif
-

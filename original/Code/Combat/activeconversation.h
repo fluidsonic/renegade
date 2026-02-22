@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __ACTIVE_CONVERSATION_H
-#define __ACTIVE_CONVERSATION_H
+#include "global.h"
 
 #include "refcount.h"
 #include "conversation.h"
@@ -165,5 +165,3 @@ ActiveConversationClass::Peek_Conversation (void) const
 {
 	return Conversation;
 }
-
-#endif //__ACTIVE_CONVERSATION_H

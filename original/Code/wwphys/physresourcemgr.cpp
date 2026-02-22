@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physresourcemgr.h"
 #include "vertmaterial.h"
 #include "texture.h"
@@ -127,4 +128,3 @@ TextureClass * PhysResourceMgrClass::Peek_Grid_Texture(void)
 	}
 	return _GridTexture;
 }
-

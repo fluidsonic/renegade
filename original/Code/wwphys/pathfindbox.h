@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PATHFIND_BOX_H
-#define __PATHFIND_BOX_H
+#include "global.h"
 
 #include "vector3.h"
 #include "aabox.h"
@@ -117,6 +117,3 @@ PathfindBoxClass::Set_Size (int cx, int cy)
 	y_size = uint8_t(cy);
 	return ;
 }
-
-#endif // __PATHFIND_BOX_H
-

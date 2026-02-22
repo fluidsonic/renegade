@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pscene.h"
 #include "colmathaabox.h"
 #include "assetmgr.h"
@@ -39,4 +40,3 @@ bool PhysicsSceneClass::Remove_Decal(uint32_t id)
 {
 	return DecalSystem->Remove_Decal(id);
 }
-

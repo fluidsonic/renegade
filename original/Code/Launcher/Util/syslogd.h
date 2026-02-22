@@ -1,5 +1,6 @@
-#ifndef SYSLOGD_HEADER
-#define SYSLOGD_HEADER
+#pragma once
+
+#include "global.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,5 +17,3 @@ class SyslogD : public OutputDevice
  private:
    int priority;
 };
-
-#endif

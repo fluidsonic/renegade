@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blitblit.h"
 #include	"convert.h"
 #include	"dsurface.h"
@@ -220,4 +220,3 @@ RLEBlitter const * ConvertClass::RLEBlitter_From_Flags(ShapeFlags_Type flags) co
 
 	return(RLETransBlitter);
 }
-

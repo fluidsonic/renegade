@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_PARSER_H
-#define __DIALOG_PARSER_H
+#include "global.h"
 
 #include "vector.h"
 #include "widestring.h"
@@ -80,6 +80,3 @@ public:
 	////////////////////////////////////////////////////////////////
 	static void	Parse_Template (int res_id, int *dlg_width, int *dlg_height, WideStringClass *dlg_title, DynamicVectorClass<ControlDefinitionStruct> *control_list);
 };
-
-#endif //__DIALOG_PARSER_H
-

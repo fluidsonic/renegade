@@ -1,9 +1,7 @@
-#ifndef	COMMANDOCHUNKID_H
-#define	COMMANDOCHUNKID_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	SAVELOADIDS_H
 	#include "saveloadids.h"
@@ -27,5 +25,3 @@ enum {
 enum {
 //	CLASSID_GAME_OBJECT_DEF_SOLDIER			= 	CLASSID_GAME_OBJECTS + 1,
 };
-
-#endif	//	COMMANDOCHUNKID_H

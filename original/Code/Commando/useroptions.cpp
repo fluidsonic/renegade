@@ -5,6 +5,7 @@
 // Description:
 //
 
+#include "global.h"
 #include "useroptions.h"
 
 #include "_globals.h"

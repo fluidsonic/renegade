@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     packettype.h
 // Project:      wwnet
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef PACKETTYPE_H
-#define PACKETTYPE_H
 
 //
 // Don't use these at application level
@@ -32,5 +34,3 @@ enum
 };
 
 //-----------------------------------------------------------------------------
-
-#endif // PACKETTYPE_H

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 #include <win.h>
 
 class StringClass;
@@ -36,4 +40,3 @@ class ServerSettingsClass
 		static int DiskLogSize;
 
 };
-

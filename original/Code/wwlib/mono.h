@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef MONO_H
-#define MONO_H
+#include "global.h"
 
 #include	"win.h"
 
@@ -59,6 +59,3 @@ class MonoClass {
 
 		MonoClass & operator = (MonoClass const & );
 };
-
-#endif
-

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef W3D_UTIL_H
-#define W3D_UTIL_H
+#include "global.h"
 
-#include "always.h"
 #include "w3d_file.h"
 
 class Vector3;
@@ -34,6 +33,3 @@ public:
 	static void Convert_Shader(const ShaderClass & shader,W3dShaderStruct * set);
 
 };
-
-#endif
-

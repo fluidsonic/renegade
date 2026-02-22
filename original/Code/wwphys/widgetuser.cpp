@@ -1,3 +1,4 @@
+#include "global.h"
 #include "widgetuser.h"
 #include "widgets.h"
 #include "mempool.h"
@@ -172,4 +173,3 @@ WidgetUserClass::~WidgetUserClass(void)
 {
 	Reset_Debug_Widget_List();
 }
-

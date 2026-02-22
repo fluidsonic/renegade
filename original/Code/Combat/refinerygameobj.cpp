@@ -1,3 +1,4 @@
+#include "global.h"
 #include "refinerygameobj.h"
 #include "harvester.h"
 #include "basecontroller.h"
@@ -787,4 +788,3 @@ RefineryGameObj::Import_Rare (BitStreamClass &packet)
 
 	packet.Get (IsHarvesterDocked);
 }
-

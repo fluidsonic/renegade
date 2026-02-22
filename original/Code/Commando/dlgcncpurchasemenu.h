@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCNCPURCHASEMENU_H
-#define __DLGCNCPURCHASEMENU_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "playerterminal.h"
@@ -91,6 +91,3 @@ private:
 	float											HealthUpdateTimer;
 	float											EnabledStateUpdateTimer;
 };
-
-#endif //__DLGCNCPURCHASEMENU_H
-

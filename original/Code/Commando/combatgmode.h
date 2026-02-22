@@ -1,9 +1,7 @@
-#ifndef	COMBATGMODE_H
-#define	COMBATGMODE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEMODE_H
 	#include "gamemode.h"
@@ -59,6 +57,3 @@ private:
 	static	void	Spawn_Point_Validation(void);
 
 };
-
-#endif
-

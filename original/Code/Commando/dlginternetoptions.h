@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGINTERNETOPTIONS_H
-#define __DLGINTERNETOPTIONS_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -40,5 +40,3 @@ protected:
 	//	Protected member data
 	///////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGINTERNETOPTIONS_H

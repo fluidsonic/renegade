@@ -1,5 +1,6 @@
-#ifndef __NOTIFY_H__
-#define __NOTIFY_H__
+#pragma once
+
+#include "global.h"
 
 // Reduce warning level for STL
 
@@ -224,5 +225,3 @@ class TypedEventPair
 		A mItemA;
 		B mItemB;
 	};
-
-#endif // __NOTIFY_H__

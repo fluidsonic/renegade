@@ -1,3 +1,4 @@
+#include "global.h"
 #include "statistics.h"
 #include "wwstring.h"
 #include "simplevec.h"
@@ -355,4 +356,3 @@ void Debug_Statistics::End_Statistics()
 }
 
 // ----------------------------------------------------------------------------
-

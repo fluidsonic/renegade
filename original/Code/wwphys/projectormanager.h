@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PROJECTORMANAGER_H
-#define PROJECTORMANAGER_H
+#include "global.h"
 
-#include "always.h"
 #include "wwstring.h"
 
 class RenderObjClass;
@@ -101,6 +100,3 @@ public:
 	NAMED_FLOAT_UNITS_PARAM( class_name , member_name.Intensity , 0.01f , 1.0f, "","Intensity" );													\
 	FILENAME_PARAM ( class_name , member_name.TextureName, "Texture files", ".tga");																	\
 	NAMED_EDITABLE_PARAM( class_name , ParameterClass::TYPE_STRING,	member_name.BoneName, "BoneName" );
-
-#endif
-

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 #include "Resource.h"
 #include <PopupDialog.h>
 #include <Signaler.h>
@@ -24,4 +28,3 @@ class DlgPasswordPrompt :
 		void On_EditCtrl_Change(EditCtrlClass* edit, int id);
 		void On_EditCtrl_Enter_Pressed(EditCtrlClass* edit, int id);
 	};
-

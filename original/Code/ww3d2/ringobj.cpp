@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ringobj.h"
 #include "w3d_util.h"
 #include "vertmaterial.h"

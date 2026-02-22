@@ -1,3 +1,4 @@
+#include "global.h"
 #include "wwuiinput.h"
 #include "dialogmgr.h"
 

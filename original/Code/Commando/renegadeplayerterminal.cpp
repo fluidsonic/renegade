@@ -1,3 +1,4 @@
+#include "global.h"
 #include "renegadeplayerterminal.h"
 #include "dlgcncpurchasemainmenu.h"
 #include "soldier.h"

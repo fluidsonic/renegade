@@ -1,3 +1,4 @@
+#include "global.h"
 #include "textmarqueectrl.h"
 #include "stylemgr.h"
 #include "dialogmgr.h"

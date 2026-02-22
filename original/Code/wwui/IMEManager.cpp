@@ -1,3 +1,4 @@
+#include "global.h"
 #include "IMEManager.h"
 #include "WWString.h"
 #include <locale.h>

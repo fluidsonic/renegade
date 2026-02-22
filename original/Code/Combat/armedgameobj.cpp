@@ -1,3 +1,4 @@
+#include "global.h"
 #include "armedgameobj.h"
 #include "weaponbag.h"
 #include "weapons.h"

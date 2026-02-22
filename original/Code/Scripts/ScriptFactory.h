@@ -1,5 +1,6 @@
-#ifndef _SCRIPTFACTORY_H_
-#define _SCRIPTFACTORY_H_
+#pragma once
+
+#include "global.h"
 
 class ScriptImpClass;
 class ScriptRegistrar;
@@ -34,5 +35,3 @@ class ScriptFactory
 		const char * ScriptName;
 		const char * ParamDescription;
 	};
-
-#endif // _SCRIPTFACTORY_H_

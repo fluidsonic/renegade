@@ -6,6 +6,7 @@
 // Description:  
 //
 //------------------------------------------------------------------------------------
+#include "global.h"
 #include "msgstatlist.h" // I WANNA BE FIRST!
 
 #include "mathutil.h"

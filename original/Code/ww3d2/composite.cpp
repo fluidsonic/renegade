@@ -1,3 +1,4 @@
+#include "global.h"
 #include "composite.h"
 #include <stdlib.h>
 #include <string.h>
@@ -453,4 +454,3 @@ void CompositeRenderObjClass::Set_User_Data(void *value, bool recursive)
 		}
 	}
 }
-

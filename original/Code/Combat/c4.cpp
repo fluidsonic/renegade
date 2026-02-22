@@ -1,3 +1,4 @@
+#include "global.h"
 #include "c4.h"
 #include "phys.h"
 #include "combat.h"

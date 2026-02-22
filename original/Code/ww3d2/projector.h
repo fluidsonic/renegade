@@ -1,7 +1,7 @@
-#ifndef PROJECTOR_H
-#define PROJECTOR_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "matrix3d.h"
 #include "matrix4.h"
 #include "aabox.h"
@@ -42,6 +42,3 @@ protected:
 
 	MatrixMapperClass *			Mapper;
 };
-
-#endif
-

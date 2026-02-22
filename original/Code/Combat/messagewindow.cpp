@@ -1,3 +1,4 @@
+#include "global.h"
 #include "messagewindow.h"
 #include "assetmgr.h"
 #include "texture.h"

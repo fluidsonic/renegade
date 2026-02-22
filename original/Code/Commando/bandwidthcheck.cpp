@@ -1,5 +1,5 @@
 
-#include	"always.h"
+#include "global.h"
 #include	<windows.h>
 #include "systimer.h"
 #include	<stddef.h>
@@ -635,4 +635,3 @@ void BandwidthCheckerClass::Get_Compact_Log(StringClass &log_string)
 	sprintf(temp, "%d\t%d\t%d\t", UpstreamBandwidth, DownstreamBandwidth, cUserOptions::Get_Bandwidth_Type());
 	log_string = temp;
 }
-

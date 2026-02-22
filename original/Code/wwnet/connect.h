@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     connect.h
 // Project:      wwnet
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef CONNECT_H
-#define CONNECT_H
 
 #include "rhost.h"
 #include "netstats.h"
@@ -208,7 +210,6 @@ class cConnection
 
 };
 
-#endif // CONNECT_H
 
       //void Init_As_Client(LPCSTR server_ip, USHORT server_port);
       //void Send_Packet_To_All(cPacket & packet, BYTE send_flags); // send to all rhosts

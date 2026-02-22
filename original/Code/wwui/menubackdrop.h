@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MENU_BACKDROP_H
-#define __MENU_BACKDROP_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "rendobj.h"
@@ -68,5 +68,3 @@ protected:
 	HAnimClass *			Anim;
 	bool						ClearScreen;
 };
-
-#endif //__MENU_BACKDROP_H

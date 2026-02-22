@@ -1,7 +1,6 @@
+#pragma once
 
-
-#ifndef HASHCALC_H
-#define HASHCALC_H
+#include "global.h"
 
 /*
 ** HashCalculatorClass
@@ -29,5 +28,3 @@ public:
 	virtual int		Num_Hash_Values(void) = 0;
 	virtual int		Get_Hash_Value(int index = 0) = 0;
 };
-
-#endif

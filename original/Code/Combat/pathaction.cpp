@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pathaction.h"
 #include "smartgameobj.h"
 #include "soldier.h"

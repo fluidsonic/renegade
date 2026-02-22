@@ -1,3 +1,4 @@
+#include "global.h"
 #include "visrendercontext.h"
 #include "simplevec.h"
 

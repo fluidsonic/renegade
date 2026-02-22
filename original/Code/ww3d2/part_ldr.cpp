@@ -1,3 +1,4 @@
+#include "global.h"
 #include "part_ldr.h"
 #include "part_emt.h"
 #include "w3derr.h"

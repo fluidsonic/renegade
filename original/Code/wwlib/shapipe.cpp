@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"shapipe.h"
 
 /***********************************************************************************************
@@ -45,4 +45,3 @@ int SHAPipe::Result(void * result) const
 {
 	return(SHA.Result(result));
 }
-

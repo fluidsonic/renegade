@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MOUSE_MGR_H
-#define __MOUSE_MGR_H
+#include "global.h"
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -65,6 +65,3 @@ private:
 
 	static unsigned int CursorWaitCount;
 };
-
-#endif //__MOUSE_MGR_H
-

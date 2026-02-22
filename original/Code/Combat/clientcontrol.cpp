@@ -1,3 +1,4 @@
+#include "global.h"
 #include "clientcontrol.h"
 
 #include "networkobjectfactory.h"
@@ -131,4 +132,3 @@ CClientControl::Import_Frequent(BitStreamClass & packet)
 		}
 	}
 }
-

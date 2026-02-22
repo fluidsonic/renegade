@@ -1,5 +1,6 @@
-#ifndef FILED_HEADER
-#define FILED_HEADER
+#pragma once
+
+#include "global.h"
 
 #include "odevice.h"
 
@@ -29,5 +30,3 @@ class FileD : public OutputDevice
 
    FILE      *out;
 };
-
-#endif

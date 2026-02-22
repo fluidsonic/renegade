@@ -1,6 +1,7 @@
 //#define ENABLE_CATEGORY_LOG
 //#define ENABLE_STRIPING
 
+#include "global.h"
 #include "dx8renderer.h"
 #include "dx8wrapper.h"
 #include "dx8polygonrenderer.h"
@@ -1840,4 +1841,3 @@ void DX8MeshRendererClass::Invalidate()
 
 	texture_category_container_lists_rigid.Delete_All();
 }
-

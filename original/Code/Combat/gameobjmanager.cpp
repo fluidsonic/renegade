@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gameobjmanager.h"
 #include "smartgameobj.h"
 #include "combatchunkid.h"
@@ -547,4 +548,3 @@ bool	GameObjManager::Is_In_Environment_Zone( Vector3 & pos )
 		}
 	}
 }*/
-

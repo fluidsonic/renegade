@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DX8CAPS_H
-#define DX8CAPS_H
+#include "global.h"
 
-#include "always.h"
 #include "ww3dformat.h"
 #include <d3d8.h>
 
@@ -257,5 +256,3 @@ private:
 	StringClass CapsLog;
 	StringClass CompactLog;
 };
-
-#endif

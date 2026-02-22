@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef WWMATH_H
-#define WWMATH_H
+#include "global.h"
 
-#include "always.h"
 #include <math.h>
 #include <float.h>
 #include <assert.h>
@@ -444,5 +443,3 @@ WWINLINE float WWMath::Inv_Sqrt(float val)
 {
 	return 1.0f / (float)sqrt(val);
 }
-
-#endif

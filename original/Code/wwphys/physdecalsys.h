@@ -1,7 +1,7 @@
-#ifndef PHYSDECALSYS_H
-#define PHYSDECALSYS_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "vector.h"
 #include "simplevec.h"
 #include "multilist.h"
@@ -110,6 +110,3 @@ protected:
 
 	DistAlphaVPClass*							DecalDistAlphaVP;
 };
-
-#endif //PHYSDECALSYS_H
-

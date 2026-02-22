@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef LAYER_H
-#define LAYER_H
+#include "global.h"
 
-#include "always.h"
 #include "listnode.h"
 #include "vector3.h"
 
@@ -51,6 +50,3 @@ public:
 };
 
 typedef List<LayerClass *> LayerListClass;
-
-#endif //LAYER_H
-

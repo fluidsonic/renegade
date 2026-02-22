@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hrawanim.h"
 #include "motchan.h"
 #include "chunkio.h"
@@ -639,4 +640,3 @@ bool HRawAnimClass::Has_Visibility (int pividx)
 {
 	return NodeMotion[pividx].Vis != NULL;
 }
-

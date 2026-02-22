@@ -1,7 +1,6 @@
-#ifndef VEHICLEDAZZLE_H
-#define VEHICLEDAZZLE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
 
 class RenderObjClass;
 class DazzleRenderObjClass;
@@ -40,6 +39,3 @@ private:
 	VehicleDazzleClass(const VehicleDazzleClass & that);
 	VehicleDazzleClass & operator = (const VehicleDazzleClass & that);
 };
-
-#endif // VEHICLEDAZZLE_H
-

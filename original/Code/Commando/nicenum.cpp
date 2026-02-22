@@ -5,6 +5,7 @@
 // Description:
 //
 
+#include "global.h"
 #include "nicenum.h"
 
 #include <winsock.h>
@@ -206,4 +207,3 @@ cNicEnum::Enumerate_Nics
 
 	return num_addresses;
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef RANDOM_H
-#define RANDOM_H
+#include "global.h"
 
 /*
 **	This class functions like a 'magic' int value that returns a random number
@@ -221,5 +221,3 @@ int Pick_Random_Number(T & generator, int minval, int maxval)
 	*/
 	return(pick + minval);
 }
-
-#endif

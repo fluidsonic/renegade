@@ -1,3 +1,4 @@
+#include "global.h"
 #include "decalmsh.h"
 #include "decalsys.h"
 #include "rinfo.h"

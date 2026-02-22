@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef DISTLOD_H
-#define DISTLOD_H
+#include "global.h"
 
 #include "proto.h"
 #include "rendobj.h"
@@ -196,5 +196,3 @@ private:
 ** Instance of the loaders which the asset manager install
 */
 extern DistLODLoaderClass			_DistLODLoader;
-
-#endif

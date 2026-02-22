@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCONTROLSLISTTAB_H
-#define __DLGCONTROLSLISTTAB_H
+#include "global.h"
 
 #include "childdialog.h"
 #include "resource.h"
@@ -71,6 +71,3 @@ protected:
 	int PendingFunctionID;
 	int PendingDIK_ID;
 };
-
-#endif //__DLGCONTROLSLISTTAB_H
-

@@ -1,9 +1,7 @@
-#ifndef	SNIPER_H
-#define	SNIPER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 /*
 **
@@ -19,5 +17,3 @@ public:
 private:
 	static	void 	Build_Base( void );
 };
-
-#endif

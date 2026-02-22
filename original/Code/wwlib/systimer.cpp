@@ -1,3 +1,4 @@
+#include "global.h"
 #include "systimer.h"
 
 SysTimeClass SystemTime;
@@ -47,4 +48,3 @@ bool SysTimeClass::Is_Getting_Late(void)
 	}
 	return(false);
 }
-

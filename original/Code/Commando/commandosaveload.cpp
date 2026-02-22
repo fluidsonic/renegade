@@ -1,3 +1,4 @@
+#include "global.h"
 #include "commandosaveload.h"
 #include "chunkio.h"
 #include "cnetwork.h"
@@ -63,4 +64,3 @@ bool	CommandoSaveLoadClass::Load( ChunkLoadClass &cload )
 	}
 	return true;
 }
-

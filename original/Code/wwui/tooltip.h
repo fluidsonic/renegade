@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TOOLTIP_H
-#define __TOOLTIP_H
+#include "global.h"
 
 #include "vector3.h"
 #include "render2dsentence.h"
@@ -56,5 +56,3 @@ private:
 	Vector3					TextColor;
 	Vector3					BkColor;
 };
-
-#endif //__TOOLTIP_H

@@ -1,5 +1,6 @@
-#ifndef	SCRIPTS_H
-#define	SCRIPTS_H
+#pragma once
+
+#include "global.h"
 
 #include "scriptevents.h"
 #include "scriptcommands.h"
@@ -194,5 +195,3 @@ extern ScriptCommands* Commands;
 // Array Macros
 #define		ARRAY_ELEMENT_COUNT( x )	( sizeof( x ) / sizeof( x[0] ) )
 #define		RANDOM_ARRAY_ELEMENT( x )	( x[Commands->Get_Random_Int( 0, ARRAY_ELEMENT_COUNT( x ) )] )    
-
-#endif // SCRIPTS_H

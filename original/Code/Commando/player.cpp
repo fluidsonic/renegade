@@ -1,3 +1,4 @@
+#include "global.h"
 #include "player.h"
 
 #include <string.h>
@@ -862,4 +863,3 @@ bool cPlayer::Is_Alive_And_Kicking(void) const
 
 	return Is_Human() && IsInGame.Is_True() && IsActive.Is_True();
 }
-

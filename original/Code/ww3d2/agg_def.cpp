@@ -1,3 +1,4 @@
+#include "global.h"
 #include "agg_def.h"
 #include "htree.h"
 #include "w3derr.h"
@@ -821,4 +822,3 @@ AggregateLoaderClass::Load_W3D (ChunkLoadClass &chunk_load)
     // Return a pointer to the prototype
 	 return pprototype;
 }
-

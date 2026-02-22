@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pointgr.h"
 #include "vertmaterial.h"
 #include "ww3d.h"
@@ -1378,4 +1379,3 @@ void PointGroupClass::_Shutdown(void)
 	REF_PTR_RELEASE(Quads);
 	REF_PTR_RELEASE(Tris);
 }
-

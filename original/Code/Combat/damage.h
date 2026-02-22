@@ -1,9 +1,7 @@
-#ifndef	DAMAGE_H
-#define	DAMAGE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEOBJREF_H
 	#include "gameobjref.h"
@@ -264,6 +262,3 @@ public:
 */
 
 #define	DEFENSEOBJECTDEF_EDITABLE_PARAMS( class_name, member_name )
-
-#endif
-

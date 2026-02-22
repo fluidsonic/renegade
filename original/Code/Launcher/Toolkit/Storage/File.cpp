@@ -1,3 +1,4 @@
+#include "global.h"
 #include "File.h"
 #include <Debug\DebugPrint.h>
 #include <assert.h>

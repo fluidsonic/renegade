@@ -1,3 +1,4 @@
+#include "global.h"
 #include "surfaceeffects.h"
 #include "w3d_file.h"
 #include "part_emt.h"
@@ -654,4 +655,3 @@ void SurfaceEffectsManager::Set_Override_Surface_Type(int type)
 
 	PhysicsConstants::Set_Override_Surface_Type(OverrideSurfaceType);
 }
-

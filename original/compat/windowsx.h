@@ -1,7 +1,8 @@
-// windowsx.h compat shim for macOS - Windows message crackers and macros stub
 #pragma once
-#ifndef WINDOWSX_H_COMPAT
-#define WINDOWSX_H_COMPAT
+
+#include "global.h"
+
+// windowsx.h compat shim for macOS - Windows message crackers and macros stub
 #define _INC_WINDOWSX
 
 #include "windows.h"
@@ -21,5 +22,3 @@
 #ifndef DeleteBitmap
 #define DeleteBitmap(hbm)       (DeleteObject((HGDIOBJ)(HBITMAP)(hbm)) != 0)
 #endif
-
-#endif // WINDOWSX_H_COMPAT

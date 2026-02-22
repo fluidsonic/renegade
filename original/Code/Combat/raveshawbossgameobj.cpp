@@ -1,3 +1,4 @@
+#include "global.h"
 #include "raveshawbossgameobj.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"

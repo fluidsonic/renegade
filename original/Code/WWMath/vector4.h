@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef VECTOR4_H
-#define VECTOR4_H
+#include "global.h"
 
-#include "always.h"
 #include "wwmath.h"
 #include <math.h>
 
@@ -354,6 +353,3 @@ WWINLINE bool Vector4::Is_Valid(void) const
 {
 	return (WWMath::Is_Valid_Float(X) && WWMath::Is_Valid_Float(Y) && WWMath::Is_Valid_Float(Z) && WWMath::Is_Valid_Float(W));
 }
-
-#endif /* VECTOR4_H */
-

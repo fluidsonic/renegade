@@ -1,3 +1,4 @@
+#include "global.h"
 #include "samsite.h"
 #include "decophys.h"
 #include "combat.h"
@@ -348,4 +349,3 @@ void	SAMSiteGameObj::Think( void )
 	}
 }
 }
-

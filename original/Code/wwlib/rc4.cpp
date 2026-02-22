@@ -2,6 +2,7 @@
 // rc4.cpp
 // RC4 encryption / decryption
 //
+#include "global.h"
 #include "rc4.h"
 #include <memory.h>
 

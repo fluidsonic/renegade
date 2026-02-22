@@ -1,5 +1,6 @@
-#ifndef PLAYERMANAGER_H
-#define PLAYERMANAGER_H
+#pragma once
+
+#include "global.h"
 
 #include "vector3.h"
 #include "slist.h"
@@ -87,6 +88,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif // PLAYERMANAGER_H
-

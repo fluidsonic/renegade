@@ -1,7 +1,6 @@
+#pragma once
 
-
-#ifndef WIDGETUSER_H
-#define WIDGETUSER_H
+#include "global.h"
 
 class Vector3;
 class Matrix3D;
@@ -48,5 +47,3 @@ protected:
 
 	void				Add_Debug_Widget(WidgetRenderOpClass * op)												{}
 };
-
-#endif

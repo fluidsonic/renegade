@@ -1,5 +1,6 @@
-#ifndef	TEAMMANAGER_H
-#define	TEAMMANAGER_H
+#pragma once
+
+#include "global.h"
 
 #include "vector3.h"
 #include "slist.h"
@@ -58,6 +59,3 @@ private:
 	static int							XPos;
 	static int							YPos;
 };
-
-#endif // TEAMMANAGER_H
-

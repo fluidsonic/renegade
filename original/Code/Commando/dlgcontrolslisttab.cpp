@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcontrolslisttab.h"
 #include "inputctrl.h"
 #include "input.h"
@@ -508,4 +509,3 @@ ControlsListTabClass::Get_Function_Name (int function_id)
 
 	return retval;
 }
-

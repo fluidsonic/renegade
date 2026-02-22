@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef LINEGRP_H
-#define LINEGRP_H
+#include "global.h"
 
 #include "shader.h"
 #include "vector4.h"
@@ -89,5 +89,3 @@ protected:
 	Vector4					DefaultTailDiffuse;	// Tail diffuse RGBA
 	LineModeType			LineMode;
 };
-
-#endif

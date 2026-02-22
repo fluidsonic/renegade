@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef SAMPLER_H
-#define SAMPLER_H
+#include "global.h"
 
 class Random4Class;
 
@@ -81,5 +81,3 @@ public:
 protected:
 	unsigned int index;
 };
-
-#endif

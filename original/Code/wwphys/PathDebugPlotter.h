@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PATH_DEBUG_PLOTTER_H
-#define __PATH_DEBUG_PLOTTER_H
+#include "global.h"
 
 #include "pscene.h"
 #include "vector3.h"
@@ -148,6 +148,3 @@ PathDebugPlotterClass::Display (bool display)
 
 	return ;
 }
-
-#endif //__PATH_DEBUG_PLOTTER_H
-

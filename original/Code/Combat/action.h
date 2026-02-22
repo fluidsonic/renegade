@@ -1,9 +1,7 @@
-#ifndef	ACTION_H
-#define	ACTION_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -104,6 +102,3 @@ protected:
 
 // Debugging
 void	Toggle_Display_Findpaths( void );
-
-#endif	// ACTION_H
-

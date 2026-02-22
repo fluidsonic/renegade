@@ -1,3 +1,4 @@
+#include "global.h"
 #include "beacongameobj.h"
 #include "phys.h"
 #include "combat.h"

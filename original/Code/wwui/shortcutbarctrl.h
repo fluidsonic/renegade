@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SHORTCUT_BAR_CTRL_H
-#define __SHORTCUT_BAR_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector.h"
@@ -106,5 +106,3 @@ protected:
 	float							BarOpacity;
 	float							PulseDirection;
 };
-
-#endif //__SHORTCUT_BAR_CTRL_H

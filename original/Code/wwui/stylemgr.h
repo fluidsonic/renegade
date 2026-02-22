@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __STYLE_MGR_H
-#define __STYLE_MGR_H
+#include "global.h"
 
 #include "widestring.h"
 #include "vector.h"
@@ -166,6 +166,3 @@ private:
 	static DynamicVectorClass<StringClass>	FontFileList;
 	static StringClass				EventAudioList[EVENT_AUDIO_MAX];
 };
-
-#endif //__STYLE_MGR_H
-

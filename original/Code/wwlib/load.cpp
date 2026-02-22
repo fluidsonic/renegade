@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"iff.h"
 #include	"lcw.h"
 #include	<string.h>
@@ -65,4 +65,3 @@ unsigned long __cdecl Uncompress_Data(void const *src, void *dst)
 
 	return(uncomp_size);
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCONFIGAUDIOTAB_H
-#define __DLGCONFIGAUDIOTAB_H
+#include "global.h"
 
 //////////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -67,5 +67,3 @@ protected:
 	int						DialogVolumeTestSoundStartTime;
 	int						CinematicVolumeTestSoundStartTime;
 };
-
-#endif //__DLGCONFIGAUDIOTAB_H

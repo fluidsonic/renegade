@@ -1,5 +1,6 @@
-#ifndef STREAMER_HEADER
-#define STREAMER_HEADER
+#pragma once
+
+#include "global.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,5 +37,3 @@ class Streamer : public streambuf
 
     OutputDevice  *Output_Device;
 };
-
-#endif

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "csdamageevent.h"
 
 #include <stdio.h>

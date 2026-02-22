@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCNCPURCHASEMAINMENU_H
-#define __DLGCNCPURCHASEMAINMENU_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "purchasesettings.h"
@@ -75,6 +75,3 @@ private:
 	int										MessageLogLength;
 	static bool								SecretsEnabled;
 };
-
-#endif //__DLGCNCPURCHASEMAINMENU_H
-

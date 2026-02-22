@@ -1,5 +1,6 @@
 //#define VERTEX_BUFFER_LOG
 
+#include "global.h"
 #include "dx8vertexbuffer.h"
 #include "dx8wrapper.h"
 #include "dx8fvf.h"
@@ -694,4 +695,3 @@ void DynamicVBAccessClass::_Reset(bool frame_changed)
 	_DynamicSortingVertexArrayOffset=0;
 	if (frame_changed) _DynamicDX8VertexBufferOffset=0;
 }
-

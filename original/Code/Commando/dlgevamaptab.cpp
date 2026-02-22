@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgevamaptab.h"
 #include "resource.h"
 #include "mapctrl.h"
@@ -225,4 +226,3 @@ EvaMapTabClass::On_MapCtrl_Pos_Clicked
 	GameInitMgrClass::Continue_Game();
 	return ;
 }
-

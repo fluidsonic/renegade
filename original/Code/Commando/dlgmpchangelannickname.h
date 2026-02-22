@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 #include "Resource.h"
 #include <PopupDialog.h>
 
@@ -17,4 +21,3 @@ protected:
 
 	static int DialogCount;
 };
-

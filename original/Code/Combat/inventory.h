@@ -1,9 +1,7 @@
-#ifndef	INVENTORY_H
-#define	INVENTORY_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	SIMPLEVEC_H
 	#include "simplevec.h"
@@ -46,6 +44,3 @@ private:
 	float			Health;
 	float			HealthMax;
 };
-
-#endif
-

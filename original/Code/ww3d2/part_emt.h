@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef PART_EMT_H
-#define PART_EMT_H
+#include "global.h"
 
 #include "rendobj.h"
 #include "random.h"
@@ -294,6 +294,3 @@ class ParticleEmitterClass : public RenderObjClass
 		// all particle emitters.
 		static bool					DebugDisable;
 };
-
-#endif // PART_EMT_H
-

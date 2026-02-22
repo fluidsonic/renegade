@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blwstraw.h"
 #include	"pkstraw.h"
 #include	"rndstraw.h"

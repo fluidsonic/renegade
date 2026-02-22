@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CDVERIFY_H
-#define __CDVERIFY_H
+#include "global.h"
 
 #include "notify.h"
 
@@ -82,5 +82,3 @@ private:
 	//	Private member data
 	///////////////////////////////////////////////////////////////////
 };
-
-#endif //__CDVERIFY_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "damageablestaticphys.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
@@ -431,4 +432,3 @@ bool DamageableStaticPhysClass::Load(ChunkLoadClass & cload)
 	Start_Loop();
 	return true;
 }
-

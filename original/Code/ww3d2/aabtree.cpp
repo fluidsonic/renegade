@@ -1,3 +1,4 @@
+#include "global.h"
 #include "aabtree.h"
 #include "aabtreebuilder.h"
 #include "tri.h"
@@ -1065,4 +1066,3 @@ void AABTreeClass::Read_Nodes(ChunkLoadClass & cload)
 		Nodes[i].BackOrPolyCount = w3dnode.BackOrPolyCount;
 	}
 }
-

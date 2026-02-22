@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef MATPASS_H
-#define MATPASS_H
+#include "global.h"
 
 #ifndef REFCOUNT_H
 #include "refcount.h"
@@ -76,5 +76,3 @@ inline TextureClass * MaterialPassClass::Peek_Texture(int stage) const
 {	
 	return Texture[stage];
 }
-
-#endif // MATPASS_H

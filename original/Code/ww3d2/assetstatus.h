@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef WW3D_ASSET_STATUS_H
-#define WW3D_ASSET_STATUS_H
+#include "global.h"
 
-#include "always.h"
 #include "hashtemplate.h"
 
 class AssetStatusClass
@@ -43,5 +42,3 @@ private:
 	void Add_To_Report(int index, const char* name);
 
 };
-
-#endif

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "CDKeyAuth.h"
 
 void CCDKeyAuth::GetSerialNum(StringClass &serial) { serial = ""; }

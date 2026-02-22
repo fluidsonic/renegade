@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ccamera.h"
 #include "timemgr.h"
 #include "physicalgameobj.h"
@@ -1477,4 +1478,3 @@ void	CCameraClass::Handle_Snap_Shot_Mode( void )
 
 	Set_Transform( tm );
 }
-

@@ -1,10 +1,7 @@
+#pragma once
 
-#ifndef __SLNODE_H__
-#define __SLNODE_H__
+#include "global.h"
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 #include "mempool.h"
 
@@ -81,5 +78,3 @@ class	SLNode : public GenericSLNode
 	private:
 		SLNode(void) {};
 };
-
-#endif

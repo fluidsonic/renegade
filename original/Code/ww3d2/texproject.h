@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef TEXPROJECT_H
-#define TEXPROJECT_H
+#include "global.h"
 
-#include "always.h"
 #include "matrix3d.h"
 #include "matrix4.h"
 #include "obbox.h"
@@ -188,6 +187,3 @@ protected:
 */
 typedef RefMultiListClass<TexProjectClass>		TexProjListClass;
 typedef RefMultiListIterator<TexProjectClass>	TexProjListIterator;
-
-#endif
-

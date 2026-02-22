@@ -1,3 +1,4 @@
+#include "global.h"
 #include "realcrc.h"
 #include <ctype.h>
 

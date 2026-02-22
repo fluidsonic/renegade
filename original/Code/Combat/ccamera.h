@@ -1,9 +1,7 @@
-#ifndef CCAMERA_H
-#define CCAMERA_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef CAMERA_H
 	#include "camera.h"
@@ -159,5 +157,3 @@ protected:
 	void				Update_Sniper_Listener_Pos( void );
 	void				Handle_Snap_Shot_Mode( void );
 };
-
-#endif		// CCAMERA_H

@@ -1,7 +1,6 @@
+#pragma once
 
-
-#ifndef HUMANPHYS_H
-#define HUMANPHYS_H
+#include "global.h"
 
 #include "vector3.h"
 #include "phys3.h"
@@ -98,6 +97,3 @@ protected:
 	
 	// No variables for now...
 };
-
-#endif
-

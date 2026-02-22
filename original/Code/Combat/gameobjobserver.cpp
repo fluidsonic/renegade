@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gameobjobserver.h"
 #include "simplevec.h"
 #include "chunkio.h"
@@ -63,4 +64,3 @@ bool	GameObjObserverManager::Load( ChunkLoadClass & cload )
 
 	return true;
 }
-

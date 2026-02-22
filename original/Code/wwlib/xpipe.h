@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef XPIPE_H
-#define XPIPE_H
+#include "global.h"
 
 #include	"buff.h"
 #include	"pipe.h"
@@ -51,5 +51,3 @@ class FilePipe : public Pipe
 		FilePipe & operator = (FilePipe const & pipe);
 
 };
-
-#endif

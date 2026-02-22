@@ -1,5 +1,6 @@
-#ifndef __CLIENTHINTMANAGER_H__
-#define __CLIENTHINTMANAGER_H__
+#pragma once
+
+#include "global.h"
 
 #include "vector.h"
 class NetworkObjectClass;
@@ -16,6 +17,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __CLIENTHINTMANAGER_H__
-

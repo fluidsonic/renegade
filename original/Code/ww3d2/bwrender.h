@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef BWRENDER_H
-#define BWRENDER_H
+#include "global.h"
 
-#include "always.h"
 #include "vector2.h"
 #include "vector3.h"
 #include "vector3i.h"
@@ -48,6 +47,3 @@ public:
 	void Render_Triangles(const unsigned long* indices,int index_count);
 	void Render_Triangle_Strip(const unsigned long* indices,int index_count);
 };
-
-#endif //BWRENDER_H
-

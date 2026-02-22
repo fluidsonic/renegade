@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __COMMANDO_PATH_H
-#define __COMMANDO_PATH_H
+#include "global.h"
 
 #include "vector.h"
 #include "vector3.h"
@@ -292,5 +292,3 @@ PathClass::Get_Action_Mechanism (void)
 
 	return mechanism_id;
 }
-
-#endif //__COMMANDO_PATH_H

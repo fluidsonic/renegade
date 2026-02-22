@@ -1,9 +1,7 @@
-#ifndef	WEAPONVIEW_H
-#define	WEAPONVIEW_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -29,5 +27,3 @@ public:
 
 	static	Vector3	Get_Muzzle_Pos();
 };
-
-#endif

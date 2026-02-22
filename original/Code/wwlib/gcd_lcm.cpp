@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gcd_lcm.h"
 
 unsigned int Greatest_Common_Divisor(unsigned int a, unsigned int b)

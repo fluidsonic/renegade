@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soundstreamhandle.h"
 #include "audiblesound.h"
 

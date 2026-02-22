@@ -1,13 +1,13 @@
-// winbase.h compat shim for macOS/clang
 #pragma once
-#ifndef WINBASE_H_COMPAT
-#define WINBASE_H_COMPAT
+
+#include "global.h"
+
+// winbase.h compat shim for macOS/clang
 
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif
 
-#include "windef.h"
 #include "winnt.h"
 #include <pthread.h>
 #include <unistd.h>
@@ -1338,6 +1338,3 @@ inline HRSRC FindResourceEx(HMODULE hModule, LPCSTR lpType, LPCSTR lpName, WORD 
     (void)hModule; (void)lpType; (void)lpName; (void)wLanguage; return nullptr;
 }
 inline BOOL  FreeResource(HGLOBAL hResData) { (void)hResData; return TRUE; }
-
-#endif // WINBASE_H_COMPAT
-

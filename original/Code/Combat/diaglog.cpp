@@ -1,3 +1,4 @@
+#include "global.h"
 #include "diaglog.h"
 #include "ffactory.h"
 #include "wwfile.h"
@@ -68,4 +69,3 @@ void	DiagLogClass::Log_Timed( const char * type, const char * format, ... )
 		_DiagLogFile->Write( line, ::strlen( line ) );
 	}
 }
-

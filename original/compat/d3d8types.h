@@ -1,9 +1,9 @@
-// d3d8types.h compat shim for macOS
 #pragma once
-#ifndef D3D8TYPES_H_COMPAT
-#define D3D8TYPES_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// d3d8types.h compat shim for macOS
+
 #include <stdint.h>
 #include <math.h>
 #include <string.h>
@@ -487,5 +487,3 @@ struct IUnknown {
     virtual ~IUnknown() {}
 };
 #endif // __IUnknown_INTERFACE_DEFINED__
-
-#endif // D3D8TYPES_H_COMPAT

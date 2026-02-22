@@ -1,7 +1,6 @@
-#ifndef	COMNETRCV_H
-#define	COMNETRCV_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
 
 class cPacket;
 
@@ -17,6 +16,3 @@ public:
 	virtual void Server_Send_Delete_Notifications(void)						= 0;
 	virtual bool Client_Update_Dynamic_Objects(bool is_urgent = false)	= 0;
 };
-
-#endif // COMNETRCV_H
-

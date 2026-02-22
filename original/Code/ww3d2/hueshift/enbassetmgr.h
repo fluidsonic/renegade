@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef ENBASSETMGR_H
-#define ENBASSETMGR_H
+#include "global.h"
 
 #include <assetmgr.h>
 
@@ -28,6 +28,3 @@ private:
 	void Recolor_ParticleEmitter(RenderObjClass *robj,Vector3 &hsv_shift);
 	void Recolor_Asset(RenderObjClass *robj,Vector3 &hsv_shift);
 };
-
-#endif
-

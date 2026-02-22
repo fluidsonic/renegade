@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"data.h"
 #include	"mono.h"
 #include	"monodrvr.h"
@@ -362,4 +362,3 @@ void MonoClass::Print(int text)
 void MonoClass::View(void)
 {
 }
-

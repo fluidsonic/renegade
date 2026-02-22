@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_FACTORY_H
-#define __DIALOG_FACTORY_H
+#include "global.h"
 
 #include "dialogbase.h"
 
@@ -34,6 +34,3 @@ public:
 	////////////////////////////////////////////////////////////////
 	void	Do_Dialog (void)	{ T *dialog = new T; dialog->Start_Dialog (); REF_PTR_RELEASE (dialog); }
 };
-
-#endif //__DIALOG_FACTORY_H
-

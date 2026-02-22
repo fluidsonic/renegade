@@ -1,3 +1,4 @@
+#include "global.h"
 #include "predlod.h"
 #include <memory.h>
 
@@ -357,4 +358,3 @@ void PredictiveLODOptimizerClass::AllocVisibleObjArrays(int num_objects)
 		VisibleObjArray2=VisibleObjArray1+(num_objects + 1);
 	}
 }
-

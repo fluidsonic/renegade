@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __WAYPATH_H
-#define __WAYPATH_H
+#include "global.h"
 
 #include "persist.h"
 #include "refcount.h"
@@ -118,5 +118,3 @@ WaypathClass::Get_Point (int index) const
 
 	return waypoint;
 }
-
-#endif //__WAYPATH_H

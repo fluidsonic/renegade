@@ -1,5 +1,6 @@
-#ifndef WW_MOUSE_H
-#define WW_MOUSE_H
+#pragma once
+
+#include "global.h"
 
 #include	"win.h"
 #include	"xmouse.h"
@@ -202,5 +203,3 @@ class WWMouseClass : public Mouse {
 
 		bool Is_Hidden(void) const {return(MouseState < 0);}
 };
-
-#endif

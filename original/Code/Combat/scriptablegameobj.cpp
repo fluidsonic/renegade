@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scriptablegameobj.h"
 #include "damage.h"
 #include "scripts.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "aabtreecull.h"
 #include "chunkio.h"
 #include "iostruct.h"

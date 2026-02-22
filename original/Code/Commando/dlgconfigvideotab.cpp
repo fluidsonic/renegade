@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgconfigvideotab.h"
 #include "resource.h"
 #include "ww3d.h"
@@ -177,4 +178,3 @@ DlgConfigVideoTabClass::On_SliderCtrl_Pos_Changed
 
 	return ;
 }
-

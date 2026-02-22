@@ -1,3 +1,4 @@
+#include "global.h"
 #include "assets.h"
 #include "wwfile.h"
 #include "ffactory.h"

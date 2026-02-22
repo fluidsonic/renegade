@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef __DEFINITION_FACTORY_MGR_H
-#define __DEFINITION_FACTORY_MGR_H
+#include "global.h"
 
-#include "always.h"
 #include "definitionclassids.h"
 
 class DefinitionFactoryClass;
@@ -45,5 +44,3 @@ private:
 	/////////////////////////////////////////////////////////////////////
 	static DefinitionFactoryClass *	_FactoryListHead;
 };
-
-#endif //__DEFINITION_FACTORY_MGR_H

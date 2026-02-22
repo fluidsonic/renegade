@@ -1,9 +1,7 @@
-#ifndef	DOORS_H
-#define	DOORS_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	__ACCESSIBLE_PHYS_H
 	#include "accessiblephys.h"
@@ -117,6 +115,3 @@ protected:
 	// Friends
 	friend class DoorNetworkObjectClass;
 };
-
-#endif	// DOORS_H
-

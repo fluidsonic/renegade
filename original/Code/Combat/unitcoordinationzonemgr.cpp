@@ -1,3 +1,4 @@
+#include "global.h"
 #include "unitcoordinationzonemgr.h"
 #include "transition.h"
 #include "obbox.h"
@@ -174,4 +175,3 @@ UnitCoordinationZoneMgr::Display_Debug_Boxes (void)
 
 	return ;
 }
-

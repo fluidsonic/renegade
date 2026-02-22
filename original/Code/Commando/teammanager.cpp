@@ -1,3 +1,4 @@
+#include "global.h"
 #include "teammanager.h" // I WANNA BE FIRST!
 
 #include <stdio.h>
@@ -555,4 +556,3 @@ void cTeamManager::Render_Team_List(void)
    }
 
 }
-

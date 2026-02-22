@@ -1,3 +1,4 @@
+#include "global.h"
 #include "wwsaveload.h"
 #include "definitionmgr.h"
 
@@ -9,4 +10,3 @@ void WWSaveLoad::Shutdown(void)
 {
 	_TheDefinitionMgr.Free_Definitions();
 }
-

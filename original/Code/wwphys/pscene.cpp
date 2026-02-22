@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pscene.h"
 #include "rinfo.h"
 #include "light.h"
@@ -1903,4 +1904,3 @@ void PhysicsSceneClass::StatsStruct::Reset(void)
 	CullNodesTriviallyAccepted = 0;
 	CullNodesRejected = 0;
 }
-

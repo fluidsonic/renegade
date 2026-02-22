@@ -1,9 +1,9 @@
-// commctrl.h compat shim for macOS - Common Controls stubs
 #pragma once
-#ifndef COMMCTRL_H_COMPAT
-#define COMMCTRL_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// commctrl.h compat shim for macOS - Common Controls stubs
+
 #include "winuser.h"
 
 // InitCommonControls stub
@@ -81,5 +81,3 @@ inline BOOL InitCommonControlsEx(LPINITCOMMONCONTROLSEX p) { return TRUE; }
 #define PBM_SETBKCOLOR      (WM_USER+10)
 #define PBS_SMOOTH          0x01
 #define PBS_VERTICAL        0x04
-
-#endif // COMMCTRL_H_COMPAT

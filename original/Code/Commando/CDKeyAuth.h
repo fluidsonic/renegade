@@ -1,5 +1,6 @@
-#ifndef _CDKEYAUTH_H_
-#define _CDKEYAUTH_H_
+#pragma once
+
+#include "global.h"
 
 /********
 INCLUDES
@@ -25,5 +26,3 @@ public:
 	static void AuthSerial(const char *challenge, StringClass &resp);
 
 };
-
-#endif // CDKEYAUTH

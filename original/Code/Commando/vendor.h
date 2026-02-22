@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __VENDOR_H
-#define __VENDOR_H
+#include "global.h"
 
 #include "building.h"
 #include "basecontroller.h"
@@ -68,6 +68,3 @@ private:
 	static void					Get_Merchandise_Information (SoldierGameObj *player, PURCHASE_TYPE type, int item_index, int alt_skin_index, int &cost, int &definition);
 	static void					Grant_Supplies (SoldierGameObj *player);
 };
-
-#endif //__VENDOR_H
-

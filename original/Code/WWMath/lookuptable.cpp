@@ -1,3 +1,4 @@
+#include "global.h"
 #include "lookuptable.h"
 #include "curve.h"
 #include "wwfile.h"
@@ -201,4 +202,3 @@ void LookupTableMgrClass::Load_Table_Desc
 		set_max_corner->Set(xmax,ymax);
 	}
 }
-

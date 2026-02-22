@@ -1,3 +1,4 @@
+#include "global.h"
 #include "SoundSceneObj.h"
 #include "camera.h"
 #include "rendobj.h"

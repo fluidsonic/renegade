@@ -1,5 +1,6 @@
-#ifndef BLWSTRAW_H
-#define BLWSTRAW_H
+#pragma once
+
+#include "global.h"
 
 #include	"straw.h"
 #include	"blowfish.h"
@@ -43,5 +44,3 @@ class BlowStraw : public Straw
 		BlowStraw(BlowStraw & rvalue);
 		BlowStraw & operator = (BlowStraw const & straw);
 };
-
-#endif

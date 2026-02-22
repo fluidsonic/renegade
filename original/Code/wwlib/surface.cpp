@@ -1,3 +1,2 @@
-#include	"always.h"
+#include "global.h"
 #include	"surface.h"
-

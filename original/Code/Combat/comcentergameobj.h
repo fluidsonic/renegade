@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__COMCENTERGAMEOBJ_H
-#define	__COMCENTERGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "building.h"
 
 ////////////////////////////////////////////////////////////////
@@ -110,5 +109,3 @@ private:
 	////////////////////////////////////////////////////////////////
 	void					Load_Variables (ChunkLoadClass &cload);
 };
-
-#endif	//__COMCENTERGAMEOBJ_H

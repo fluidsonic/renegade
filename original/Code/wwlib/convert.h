@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef CONVERT_H
-#define CONVERT_H
+#include "global.h"
 
 #include	"blitter.h"
 #include	"palette.h"
@@ -130,5 +130,3 @@ class ConvertClass
 		*/
 		mutable unsigned char const * RemapTable;
 };
-
-#endif

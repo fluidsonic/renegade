@@ -1,3 +1,4 @@
+#include "global.h"
 #include "merchandisectrl.h"
 #include "stylemgr.h"
 #include "mousemgr.h"

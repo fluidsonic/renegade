@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TRANSLATE_DB_H
-#define __TRANSLATE_DB_H
+#include "global.h"
 
 #include "saveloadsubsystem.h"
 #include "vector.h"
@@ -352,6 +352,3 @@ TranslateDBClass::Find_Object (uint32_t id)
 
 	return object;
 }
-
-#endif //__TRANSLATE_DB_H
-

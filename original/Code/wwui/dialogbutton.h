@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_BUTTON_H
-#define __DIALOG_BUTTON_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -66,5 +66,3 @@ protected:
 	bool							WasButtonPressedOnMe;
 	bool							IsMouseOverMe;
 };
-
-#endif //__DIALOG_BUTTON_H

@@ -1,5 +1,6 @@
-#ifndef __LZOCONF_H
-#define __LZOCONF_H
+#pragma once
+
+#include "global.h"
 
 #define LZO_VERSION             0x0200
 #define LZO_VERSION_STRING      "0.20"
@@ -153,7 +154,6 @@ LZO_EXTERN(int) _lzo_config_check(void);
 //} /* extern "C" */
 //#endif
 
-#endif /* already included */
 
 /*
 vi:ts=4

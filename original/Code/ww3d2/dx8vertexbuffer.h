@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DX8VERTEXBUFFER_H
-#define DX8VERTEXBUFFER_H
+#include "global.h"
 
-#include "always.h"
 #include "refcount.h"
 #include "dx8fvf.h"
 
@@ -206,5 +205,3 @@ protected:
 public:
 	SortingVertexBufferClass(unsigned short VertexCount);
 };
-
-#endif //DX8VERTEXBUFFER_H

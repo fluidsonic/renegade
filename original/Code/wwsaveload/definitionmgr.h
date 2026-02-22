@@ -1,9 +1,7 @@
+#pragma once
 
+#include "global.h"
 
-#ifndef __DEFINITION_MGR_H
-#define __DEFINITION_MGR_H
-
-#include "always.h"
 #include "saveload.h"
 #include "saveloadsubsystem.h"
 #include "saveloadids.h"
@@ -140,5 +138,3 @@ DefinitionMgrClass::Get_First (void)
 
 	return definition;
 }
-
-#endif //__DEFINITION_MGR_H

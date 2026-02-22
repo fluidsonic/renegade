@@ -1,3 +1,4 @@
+#include "global.h"
 #include "modpackagemgr.h"
 
 #include "registry.h"

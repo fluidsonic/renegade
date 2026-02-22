@@ -1,5 +1,6 @@
-#ifndef COMNETRCVINST_H
-#define COMNETRCVINST_H
+#pragma once
+
+#include "global.h"
 
 #include "comnetrcv.h"
 #include "gamedata.h"
@@ -18,5 +19,3 @@ public:
 	void	Print( const char *format, ... );
 	void	Print( const Vector3 & color, const char *format, ... );
 };
-
-#endif // COMNETRCVINST_H

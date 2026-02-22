@@ -1,3 +1,4 @@
+#include "global.h"
 #include "groupcontrol.h"
 #include "group.h"
 #include "scripts.h"

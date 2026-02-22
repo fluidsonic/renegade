@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef VISRENDERCONTEXT_H
-#define VISRENDERCONTEXT_H
+#include "global.h"
 
 #include "rinfo.h"
 #include "camera.h"
@@ -54,5 +54,3 @@ private:
 	VisRenderContextClass & operator = (const VisRenderContextClass &);
 
 };
-
-#endif // VISRENDERCONTEXT_H

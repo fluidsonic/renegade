@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlghelpscreen.h"
 #include "menubackdrop.h"
 #include "gameinitmgr.h"
@@ -181,4 +182,3 @@ HelpScreenDialogClass::On_Key_Down (uint32_t key_id, uint32_t key_data)
 
 	return retval;
 }
-

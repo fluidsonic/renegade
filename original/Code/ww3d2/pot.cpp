@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pot.h"
 
 /************************************************************************** 
@@ -75,4 +76,3 @@ unsigned int Find_POT_Log2(unsigned int val)
 	// be rounded up to the next highest power of 2.
 	return recpos + 1;
 }
-

@@ -1,7 +1,7 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "playerdata.h"
 #include "boolean.h"
 #include "netinterface.h"
@@ -168,7 +168,6 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 
 //-----------------------------------------------------------------------------
 
-#endif	//	PLAYER_H
 
 		//virtual void	On_Kill(int victim_id);
 		//virtual void On_Kill(int victim_id, int victim_team);

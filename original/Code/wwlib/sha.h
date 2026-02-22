@@ -1,7 +1,8 @@
-#ifndef SHA_H
-#define SHA_H
+#pragma once
 
-#include	<new.h>
+#include "global.h"
+
+#include <new>
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
@@ -144,5 +145,3 @@ class SHAEngine
 #define	SHA_SOURCE3		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 #define	SHA_DIGEST3a	"\x34\xAA\x97\x3C\xD4\xC4\xDA\xA4\xF6\x1E\xEB\x2B\xDB\xAD\x27\x31\x65\x34\x01\x6F"
 #define	SHA_DIGEST3b	"\x32\x32\xAF\xFA\x48\x62\x8A\x26\x65\x3B\x5A\xAA\x44\x54\x1F\xD9\x0D\x69\x06\x03"
-
-#endif

@@ -1,5 +1,6 @@
-#ifndef BLITBLIT_H
-#define BLITBLIT_H
+#pragma once
+
+#include "global.h"
 
 /*
 **	This module contains the pixel-pushing blitter objects. These objects only
@@ -399,5 +400,3 @@ class BlitTransLucent75 : public Blitter {
 **	does not allow inline-assembly to be part of an inline function -- go figure. 
 **	It will still compile, it just generates warning messages.
 */
-
-#endif

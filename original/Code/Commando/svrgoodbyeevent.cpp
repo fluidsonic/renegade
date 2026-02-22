@@ -1,3 +1,4 @@
+#include "global.h"
 #include "svrgoodbyeevent.h"
 
 #include <stdio.h>
@@ -106,4 +107,3 @@ cSvrGoodbyeEvent::Import_Creation(BitStreamClass & packet)
 
 	Act();
 }
-

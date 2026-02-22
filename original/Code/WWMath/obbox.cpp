@@ -1,3 +1,4 @@
+#include "global.h"
 #include "obbox.h"
 #include "matrix3.h"
 #include "vector3.h"

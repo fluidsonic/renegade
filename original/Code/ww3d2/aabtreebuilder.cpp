@@ -1,3 +1,4 @@
+#include "global.h"
 #include "aabtreebuilder.h"
 #include "chunkio.h"
 #include "w3d_file.h"
@@ -822,4 +823,3 @@ void AABTreeBuilderClass::Build_W3D_AABTree_Recursive
 		Build_W3D_AABTree_Recursive(node->Back,w3d_nodes,poly_indices,cur_node,cur_poly);
 	}
 }
-

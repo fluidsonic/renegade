@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGEVAENCYCLOPEDIA_H
-#define __DLGEVAENCYCLOPEDIA_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -64,6 +64,3 @@ private:
 	static EVAEncyclopediaMenuClass *	_TheInstance;
 	static int									_NextTabIndex;
 };
-
-#endif //__DLGEVAENCYCLOPEDIA_H
-

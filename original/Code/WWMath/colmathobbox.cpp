@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colmath.h"
 #include "aaplane.h"
 #include "plane.h"
@@ -124,4 +125,3 @@ bool CollisionMath::Collide
 	}
 	return false;
 }
-
