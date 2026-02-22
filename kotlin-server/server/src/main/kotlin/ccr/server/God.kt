@@ -150,8 +150,8 @@ class God(private val server: GameServer) {
             return null
         }
 
-        val position = server.spawnManager?.getMultiplayerSpawnLocation(playerType)
-            ?: Vector3(0f, 0f, 5f).also {
+        val (position, _facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType)
+            ?: Pair(Vector3(0f, 0f, 5f), 0f).also {
                 println("[GOD] WARNING: spawnManager is null, spawning at fallback origin (0, 0, 5)")
             }
 
@@ -175,9 +175,13 @@ class God(private val server: GameServer) {
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(soldier, netId)
         soldiersByHost[rhostId] = soldier
+        server.gameObjManager.addStar(soldier)
+
+        // Bind the player's data object so buildings (Refinery) can award money
+        soldier.playerData = playersByHost[rhostId]
 
         // Give starting credits on first spawn if configured
-        if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5) {
+        if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5f) {
             playersByHost[rhostId]?.replaceMoney(server.config.startingCredits.toFloat())
         }
 
@@ -192,6 +196,7 @@ class God(private val server: GameServer) {
      */
     fun deleteSoldier(rhostId: Int) {
         val soldier = soldiersByHost.remove(rhostId) ?: return
+        server.gameObjManager.removeStar(soldier)
         soldier.setDeletePending()
         println("[GOD] marked soldier delete-pending for host $rhostId netId=${soldier.networkId}")
     }

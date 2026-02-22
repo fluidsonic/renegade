@@ -28,6 +28,8 @@ import ccr.server.net.SoldierGameObj
 import ccr.server.net.Team
 import ccr.server.net.WeaponEntry
 import ccr.server.net.WinEvent
+import ccr.server.net.BackgroundMgr
+import ccr.server.net.WeatherMgr
 import ccr.server.net.CsAnnouncement
 import ccr.server.net.ScAnnouncement
 import ccr.server.net.DonateEvent
@@ -119,6 +121,14 @@ class GameServer(internal val config: ServerConfig) {
     // Game state machine — timer, intermission, game-over (port of cGameData::Think).
     internal val gameState = GameState(config)
 
+    // GameObjManager — owns all BaseGameObj instances and drives their Think() loops.
+    internal val gameObjManager = GameObjManager()
+
+    // GameContext — session-scoped container for shared game state (lazy to allow gameState init first).
+    internal val gameContext: GameContext by lazy {
+        GameContext(config = config, gameObjManager = gameObjManager, gameState = gameState)
+    }
+
     // Periodic GameDataUpdateEvent resend (once per second) to keep clients' timer in sync.
     private var lastGameDataUpdateMs: Long = 0L
 
@@ -126,7 +136,12 @@ class GameServer(internal val config: ServerConfig) {
     private val loadingHosts = mutableSetOf<Int>()
 
     // C++: cServerFps singleton — informs clients of server framerate.
-    private val serverFps = ServerFps(fps = config.netUpdateRate)
+    private val serverFps = ServerFps()
+
+    // FPS tracking state
+    private var lastFpsUpdateMs: Long = 0L
+    private var fpsFrameCount: Int = 0
+    private var frameDeltaSeconds: Float = 0f
 
     // Client FPS tracking: rhostId → last reported fps value.
     private val clientFpsMap = mutableMapOf<Int, Int>()
@@ -143,6 +158,8 @@ class GameServer(internal val config: ServerConfig) {
         }
 
         // Initialise base controllers and building network objects from loaded level.
+        // Force gameContext initialisation so baseControllers array is ready before buildings use it.
+        val ctx = gameContext
         loadedLevel?.also { level ->
             val loadedBuildings = level.dynamicData.gameObjects.filterIsInstance<LoadedBuildingGameObj>()
             if (loadedBuildings.isNotEmpty()) {
@@ -154,20 +171,37 @@ class GameServer(internal val config: ServerConfig) {
                 controllerGdi.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
                 baseControllerNod = controllerNod
                 baseControllerGdi = controllerGdi
+                ctx.baseControllers[0] = controllerNod
+                ctx.baseControllers[1] = controllerGdi
 
                 println("[BUILDING] found ${loadedBuildings.size} buildings in LDD")
                 for (lb in loadedBuildings) {
                     val building = createBuilding(lb) ?: continue
                     NetworkObjectManager.registerObject(building, lb.networkId)
-                    when (lb.playerType) {
-                        0 -> controllerNod.addBuilding(building)
-                        1 -> controllerGdi.addBuilding(building)
+                    building.gameContext = ctx
+                    val controller = when (lb.playerType) {
+                        0 -> { controllerNod.addBuilding(building); controllerNod }
+                        1 -> { controllerGdi.addBuilding(building); controllerGdi }
+                        else -> null
                     }
+                    if (controller != null) {
+                        building.cncInitialize(controller)
+                    }
+                    gameObjManager.add(building)
+                    gameObjManager.addBuilding(building)
                     println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
                 }
                 println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
             }
         }
+
+        // Register WeatherMgr and BackgroundMgr singletons with well-known static IDs.
+        val weatherMgr = WeatherMgr()
+        val backgroundMgr = BackgroundMgr()
+        NetworkObjectManager.registerObject(weatherMgr, NET_ID_SERVER_WEATHER)
+        NetworkObjectManager.registerObject(backgroundMgr, NET_ID_SERVER_BACKGROUND)
+        weatherMgr.setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+        backgroundMgr.setObjectDirtyBit(NetworkObject.BIT_RARE, true)
 
         // Register team singletons with static IDs. These persist for the lifetime of the server.
         // Dirty bits are set by Team.init — no explicit call needed here.
@@ -311,6 +345,10 @@ class GameServer(internal val config: ServerConfig) {
             val tickDeltaMs = (nowMs - lastTickMs).coerceAtMost(1000L)
             lastTickMs = nowMs
 
+            // Update frame delta seconds for use by think() loops
+            frameDeltaSeconds = tickDeltaMs / 1000f
+            gameContext.frameDeltaSeconds = frameDeltaSeconds
+
             // Send keepalives
             for ((host, kp) in connectionManager.getKeepalives(nowMs)) {
                 val wire = Packet.buildWirePacket(kp)
@@ -355,6 +393,12 @@ class GameServer(internal val config: ServerConfig) {
                 gameState.pendingCoreRestart = false
                 handleCoreRestart()
             }
+
+            // GameObjManager.think() — drives building Think() loops (refinery trickle, war factory timer, etc.)
+            gameObjManager.think(frameDeltaSeconds)
+
+            // Update measured FPS and push to clients
+            updateFps(nowMs)
 
             // God.think() — handles respawn loop (creates soldiers for soldierless in-game players)
             god.think()
@@ -553,6 +597,8 @@ class GameServer(internal val config: ServerConfig) {
                 god.playerTeams[rhostId] = newTeam
                 god.playersByHost[rhostId]?.team = newTeam  // sync stored player object
                 println("[GAME] CHANGETEAMEVENT from rhostId=$rhostId senderId=$senderId: ${if (currentTeam == 0) "NOD" else "GDI"} → ${if (newTeam == 0) "NOD" else "GDI"}")
+                // Kill existing soldier so god.think() respawns with the new team
+                god.deleteSoldier(rhostId)
                 sendPlayerRareUpdate(host, rhostId)
             }
             1026 -> {  // NETCLASSID_BIOEVENT — sent after Load_Level() in gameinitmgr.cpp
@@ -812,6 +858,18 @@ class GameServer(internal val config: ServerConfig) {
         sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, event, NetworkObjectManager.getNewDynamicId()) }
     }
 
+    // Measures actual server tick rate and updates serverFps once per second.
+    private fun updateFps(nowMs: Long) {
+        fpsFrameCount++
+        val interval = nowMs - lastFpsUpdateMs
+        if (interval > 1000L) {
+            val measuredFps = (fpsFrameCount * 1000f / interval + 0.5f).toInt()
+            lastFpsUpdateMs = nowMs
+            fpsFrameCount = 0
+            serverFps.setFps(measuredFps)
+        }
+    }
+
     // Builds a RELIABLE packet, enqueues it in the host's reliable channel, and sends it immediately.
     // The packet ID is pre-assigned from host.reliable.nextSendId so the wire bytes are consistent.
     internal fun sendGameNetObj(host: RemoteHost, writePayload: (BitStream) -> Unit) {
@@ -857,7 +915,7 @@ class GameServer(internal val config: ServerConfig) {
             hostedGameNumber = hostedGameNumber,
             isMapCycleOver = false,
             winType = winType,
-            gameDuration = gameState.gameDurationSeconds,
+            gameDuration = gameState.gameDurationSeconds.toInt(),
             mvpName = mvpName,
             mvpCount = if (mvp != null) mvp.kills else 0,
             modNameCrc = gameData.modNameCrc,
@@ -889,6 +947,14 @@ class GameServer(internal val config: ServerConfig) {
         for (rhostId in god.playerInGame.toList()) {
             god.deleteSoldier(rhostId)
         }
+
+        // Reset buildings and base controllers for new round
+        baseControllerNod?.reset()
+        baseControllerGdi?.reset()
+        for (building in gameObjManager.getBuildingList()) {
+            building.resetToFull()
+        }
+
         println("[GAME] core restart complete — hostedGameNumber=$hostedGameNumber")
     }
 
@@ -938,6 +1004,10 @@ class GameServer(internal val config: ServerConfig) {
         // BaseControllerClass static IDs (C++: CNCGameMgr uses 2100000002 / 2100000003)
         internal const val NET_ID_BASE_CONTROLLER_NOD = 2_100_000_002
         internal const val NET_ID_BASE_CONTROLLER_GDI = 2_100_000_003
+
+        // WeatherMgr and BackgroundMgr static IDs
+        internal const val NET_ID_SERVER_WEATHER    = 2_100_000_007
+        internal const val NET_ID_SERVER_BACKGROUND = 2_100_000_008
     }
 
     // ---- Encoder setup ----

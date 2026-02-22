@@ -3,7 +3,6 @@ package ccr.server.net
 import ccr.math.Vector3
 
 // C++: ComCenterGameObj (comcenter.cpp) — extends BuildingGameObj.
-// No Export overrides.
 // Hierarchy: NetworkObject → BaseGameObj → DamageableGameObj → BuildingGameObj → ComCenterGameObj
 class ComCenterGameObj(
     definitionId: Int,
@@ -29,4 +28,10 @@ class ComCenterGameObj(
     isPowerOn      = isPowerOn,
     currentState   = currentState,
     playerType     = playerType,
-)
+) {
+    // C++: ComCenterGameObj::On_Destroyed — triggers radar check
+    override fun onDestroyed() {
+        super.onDestroyed()
+        baseController?.checkRadar()
+    }
+}

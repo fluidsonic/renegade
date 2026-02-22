@@ -24,13 +24,16 @@ class VehicleFactoryGameObjTest {
 
         private val ZERO = Vector3(0f, 0f, 0f)
 
-        private fun defaultFactory(isBusy: Boolean = false) = VehicleFactoryGameObj(
-            definitionId = 500,
-            position     = ZERO,
-            sphereCenter = ZERO,
-            sphereRadius = 10f,
-            isBusy       = isBusy,
-        )
+        private fun defaultFactory(isBusy: Boolean = false): VehicleFactoryGameObj {
+            val factory = VehicleFactoryGameObj(
+                definitionId = 500,
+                position     = ZERO,
+                sphereCenter = ZERO,
+                sphereRadius = 10f,
+            )
+            if (isBusy) factory.requestVehicle(1, 999f)
+            return factory
+        }
     }
 
     @Test fun `networkClassId is 1000`() {

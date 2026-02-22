@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.math.Vector3
 
 // C++: RefineryGameObj (refinery.cpp) — extends BuildingGameObj.
-// Export_Rare body calls super only — no additional fields beyond BuildingGameObj.
+// Manages passive credit trickle to teammates.
 // Hierarchy: NetworkObject → BaseGameObj → DamageableGameObj → BuildingGameObj → RefineryGameObj
 class RefineryGameObj(
     definitionId: Int,
@@ -29,4 +29,25 @@ class RefineryGameObj(
     isPowerOn      = isPowerOn,
     currentState   = currentState,
     playerType     = playerType,
-)
+) {
+    // Passive credit trickle rate (credits per second, per teammate)
+    var fundsDistributedPerSec: Float = 2f
+
+    private var distributionTimer: Float = 1f
+
+    // C++: RefineryGameObj::Think — distribute passive trickle each second
+    override fun think(deltaSeconds: Float) {
+        if (!isDestroyed) {
+            distributionTimer -= deltaSeconds
+            if (distributionTimer <= 0f) {
+                distributionTimer = 1f
+                val ctrl = baseController ?: return
+                val opFactor = ctrl.operationTimeFactor
+                val funds = (fundsDistributedPerSec / opFactor).toInt()
+                val ctx = gameContext ?: return
+                ctrl.distributeFundsToEachTeammate(funds, ctx.gameObjManager.getStarList())
+            }
+        }
+        super.think(deltaSeconds)
+    }
+}

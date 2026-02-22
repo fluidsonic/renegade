@@ -22,7 +22,6 @@ class WarFactoryGameObjTest {
             position     = Vector3(5f, 10f, 0f),
             sphereCenter = Vector3(5f, 10f, 0f),
             sphereRadius = 15f,
-            isBusy       = true,
         )
         assertEquals(601, obj.definitionId)
     }

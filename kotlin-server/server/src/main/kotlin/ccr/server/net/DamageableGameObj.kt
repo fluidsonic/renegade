@@ -14,6 +14,47 @@ abstract class DamageableGameObj(
     var shieldType: Int = 0,
 ) : BaseGameObj(definitionId) {
 
+    // Maximum values — set at construction time
+    var healthMax: Float = health
+    var shieldStrengthMax: Float = shieldStrength
+
+    // C++: DefenseObjectClass::IsDead
+    val isDead: Boolean get() = health <= 0f
+
+    // Convenience alias
+    val isDestroyedDmg: Boolean get() = isDead
+
+    // C++: DamageableGameObj::Apply_Damage (simplified — no armor table yet)
+    // Damage path: shield absorbs first, remainder goes to health.
+    // Repair (negative damage): heals health first, then shield.
+    open fun applyDamage(damage: Float) {
+        if (isDead && damage >= 0f) return
+        if (damage >= 0f) {
+            val shieldDamage = damage.coerceAtMost(shieldStrength)
+            shieldStrength -= shieldDamage
+            val healthDamage = (damage - shieldDamage).coerceAtMost(health)
+            health -= healthDamage
+        } else {
+            val repair = -damage
+            val healthRepair = repair.coerceAtMost(healthMax - health)
+            health += healthRepair
+            val shieldRepair = (repair - healthRepair).coerceAtMost(shieldStrengthMax - shieldStrength)
+            shieldStrength += shieldRepair
+        }
+        if (isDead) {
+            completelyDamaged()
+        }
+    }
+
+    // C++: DamageableGameObj::Completely_Damaged — virtual, override in subtypes
+    protected open fun completelyDamaged() {}
+
+    fun getNormalizedHealth(): Float = if (healthMax > 0f) health / healthMax else 0f
+
+    fun setNormalizedHealth(pct: Float) {
+        health = (pct * healthMax).coerceIn(0f, healthMax)
+    }
+
     // C++: DamageableGameObj::Export_Occasional → DefenseObjectClass::Export (damage.cpp)
     // Chain: calls ScriptableGameObj::Export_Occasional (empty) then writes defense state.
     override fun exportOccasional(packet: BitStream) {

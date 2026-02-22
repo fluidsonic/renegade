@@ -19,16 +19,7 @@ import ccr.net.replication.NetworkObject
 //     isBaseDestroyed (bool)
 //     didBeaconDestroyBase (bool)
 //     isRadarEnabled (bool)
-class BaseControllerClass(
-    val playerType: Int = 0,
-    val operationTimeFactor: Float = 1f,
-    val isBasePowered: Boolean = true,
-    val canGenerateSoldiers: Boolean = true,
-    val canGenerateVehicles: Boolean = true,
-    val isBaseDestroyed: Boolean = false,
-    val didBeaconDestroyBase: Boolean = false,
-    val isRadarEnabled: Boolean = true,
-) : NetworkObject() {
+class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
 
     // C++: Get_Network_Class_ID() not overridden → returns 0 (base class default)
     override val networkClassId: Int = 0
@@ -39,16 +30,98 @@ class BaseControllerClass(
     // C++: Set_Delete_Pending is overridden to no-op — persists between levels
     override fun setDeletePending() {}
 
+    // All fields start at C++ Initialize() defaults
+    var operationTimeFactor: Float = 1f; private set
+    var isBasePowered: Boolean = true; private set
+    var canGenerateSoldiers: Boolean = false; private set   // C++: Initialize sets false
+    var canGenerateVehicles: Boolean = false; private set   // C++: Initialize sets false
+    var isBaseDestroyed: Boolean = false; private set
+    var didBeaconDestroyBase: Boolean = false; private set
+    var isRadarEnabled: Boolean = true; private set
+
+    // C++ setters — each sets BIT_OCCASIONAL
+    fun setOperationTimeFactor(v: Float) { operationTimeFactor = v; setObjectDirtyBit(BIT_OCCASIONAL, true) }
+    fun setBasePowered(v: Boolean) { isBasePowered = v; setObjectDirtyBit(BIT_OCCASIONAL, true) }
+    fun setCanGenerateSoldiers(v: Boolean) { canGenerateSoldiers = v; setObjectDirtyBit(BIT_OCCASIONAL, true) }
+    fun setCanGenerateVehicles(v: Boolean) { canGenerateVehicles = v; setObjectDirtyBit(BIT_OCCASIONAL, true) }
+    fun setBaseDestroyed(v: Boolean) { isBaseDestroyed = v; setObjectDirtyBit(BIT_OCCASIONAL, true) }
+    fun setBeaconDestroyedBase(v: Boolean) { didBeaconDestroyBase = v; setObjectDirtyBit(BIT_OCCASIONAL, true) }
+    fun enableRadar(v: Boolean) { isRadarEnabled = v; setObjectDirtyBit(BIT_OCCASIONAL, true) }
+
     private val buildings = mutableListOf<BuildingGameObj>()
 
-    fun addBuilding(building: BuildingGameObj) {
-        buildings.add(building)
-    }
+    fun addBuilding(building: BuildingGameObj) { buildings.add(building) }
+    fun getBuildings(): List<BuildingGameObj> = buildings
 
     // C++: BaseControllerClass::Are_All_Buildings_Destroyed()
     fun areAllBuildingsDestroyed(): Boolean {
         if (buildings.isEmpty()) return false
         return buildings.all { it.isDestroyed }
+    }
+
+    // C++: BaseControllerClass::Check_Base_Power
+    // Power is ON if any PowerPlant is alive. Power is OFF only if ALL PowerPlants are destroyed.
+    fun checkBasePower(powerPlants: List<PowerPlantGameObj>) {
+        val anyAlive = powerPlants.any { !it.isDestroyed }
+        powerBase(anyAlive)
+    }
+
+    // C++: BaseControllerClass::Power_Base
+    fun powerBase(onoff: Boolean) {
+        if (isBasePowered != onoff) {
+            setBasePowered(onoff)
+            setOperationTimeFactor(if (onoff) 1.0f else 2.0f)
+            for (building in buildings) {
+                if (!onoff || !building.isDestroyed) {
+                    building.enablePower(onoff)
+                }
+            }
+        }
+    }
+
+    // C++: BaseControllerClass::Check_Radar
+    fun checkRadar() {
+        val enable = buildings.any { it is ComCenterGameObj && !it.isDestroyed }
+        enableRadar(enable)
+    }
+
+    // C++: BaseControllerClass::On_Building_Destroyed
+    fun onBuildingDestroyed(building: BuildingGameObj) {
+        if (areAllBuildingsDestroyed()) {
+            setBaseDestroyed(true)
+        }
+    }
+
+    // C++: BaseControllerClass::Distribute_Funds_To_Each_Teammate
+    fun distributeFundsToEachTeammate(funds: Int, starList: List<SoldierGameObj>) {
+        if (funds <= 0) return
+        for (soldier in starList) {
+            if (soldier.team == playerType) {
+                soldier.playerData?.addMoney(funds.toFloat())
+            }
+        }
+    }
+
+    // C++: BaseControllerClass::Destroy_Base (forced)
+    fun destroyBase() {
+        for (b in buildings) b.setNormalizedHealth(0f)
+        setBasePowered(false)
+        setCanGenerateSoldiers(false)
+        setCanGenerateVehicles(false)
+        setBaseDestroyed(true)
+        setOperationTimeFactor(2.0f)
+    }
+
+    // Reset for new round
+    fun reset() {
+        operationTimeFactor = 1f
+        isBasePowered = true
+        canGenerateSoldiers = false
+        canGenerateVehicles = false
+        isBaseDestroyed = false
+        didBeaconDestroyBase = false
+        isRadarEnabled = true
+        setObjectDirtyBit(BIT_OCCASIONAL, true)
     }
 
     // C++: BaseControllerClass::Export_Occasional — transmits all base state variables

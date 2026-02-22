@@ -11,7 +11,7 @@ import ccr.net.replication.NetworkObject
 //
 // Wire format:
 //   Export_Frequent: fps (int)
-class ServerFps(val fps: Int = 0) : NetworkObject() {
+class ServerFps : NetworkObject() {
 
     // C++: Get_Network_Class_ID() not overridden → returns 0 (base class default)
     override val networkClassId: Int = 0
@@ -21,6 +21,14 @@ class ServerFps(val fps: Int = 0) : NetworkObject() {
 
     // C++: Set_Delete_Pending is overridden to be a no-op — singleton persists
     override fun setDeletePending() {}
+
+    var fps: Int = 0; private set
+
+    // C++: cNetwork::Update_Fps — sets new fps and marks dirty
+    fun setFps(value: Int) {
+        fps = value
+        setObjectDirtyBit(BIT_FREQUENT, true)
+    }
 
     // C++: cServerFps::Export_Frequent — packet.Add(Fps) where Fps is int
     override fun exportFrequent(packet: BitStream) {

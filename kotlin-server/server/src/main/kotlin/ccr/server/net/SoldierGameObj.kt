@@ -29,6 +29,9 @@ class SoldierGameObj(
     controlOwner  = controlOwner,
     team          = team,
 ) {
+    // C++: cGod stores reference to cPlayer so buildings can award money via playerData
+    var playerData: Player? = null
+
     // C++: SoldierGameObj::Export_Rare — calls super then appends definitionId (soldier.cpp).
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)       // PhysicalGameObj: model, anim, host, player_type, hud_pokable

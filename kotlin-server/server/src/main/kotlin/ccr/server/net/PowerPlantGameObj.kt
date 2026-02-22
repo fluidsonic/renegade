@@ -3,7 +3,6 @@ package ccr.server.net
 import ccr.math.Vector3
 
 // C++: PowerPlantGameObj (powerplant.cpp) — extends BuildingGameObj.
-// No Export overrides.
 // Hierarchy: NetworkObject → BaseGameObj → DamageableGameObj → BuildingGameObj → PowerPlantGameObj
 class PowerPlantGameObj(
     definitionId: Int,
@@ -29,4 +28,12 @@ class PowerPlantGameObj(
     isPowerOn      = isPowerOn,
     currentState   = currentState,
     playerType     = playerType,
-)
+) {
+    // C++: PowerPlantGameObj::On_Destroyed — triggers base power check
+    override fun onDestroyed() {
+        super.onDestroyed()
+        val ctrl = baseController ?: return
+        val powerPlants = ctrl.getBuildings().filterIsInstance<PowerPlantGameObj>()
+        ctrl.checkBasePower(powerPlants)
+    }
+}

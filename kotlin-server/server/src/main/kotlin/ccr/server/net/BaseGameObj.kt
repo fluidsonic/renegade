@@ -14,4 +14,10 @@ abstract class BaseGameObj(val definitionId: Int) : NetworkObject() {
     init {
         setObjectDirtyBit(BIT_CREATION, true)
     }
+
+    // C++: BaseGameObj::Think — base impl; subclasses override to add behaviour
+    open fun think(deltaSeconds: Float) {}
+
+    // C++: BaseGameObj::Post_Think — default no-op
+    open fun postThink() {}
 }

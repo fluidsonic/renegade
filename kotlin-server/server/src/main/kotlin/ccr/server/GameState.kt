@@ -13,7 +13,7 @@ class GameState(private val config: ServerConfig) {
         private set
 
     // gameDurationSeconds tracks elapsed play time (used for MVP qualifying time).
-    var gameDurationSeconds: Int = 0
+    var gameDurationSeconds: Float = 0f
         private set
 
     var frameCount: Int = 0
@@ -47,7 +47,7 @@ class GameState(private val config: ServerConfig) {
         }
 
         // Count elapsed play time
-        gameDurationSeconds += deltaSec.toInt()
+        gameDurationSeconds += deltaSec
 
         // Count down the timer (only if a time limit is set)
         if (timeRemainingSeconds > 0f) {
@@ -92,7 +92,7 @@ class GameState(private val config: ServerConfig) {
     /** Resets the game state for a new match (called at core restart). */
     fun reset() {
         timeRemainingSeconds = if (config.timeLimitMinutes > 0) config.timeLimitMinutes * 60f else 0f
-        gameDurationSeconds = 0
+        gameDurationSeconds = 0f
         frameCount = 0
         isIntermission = false
         intermissionTimeRemaining = 0f

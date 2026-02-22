@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.net.replication.NetworkObject
 
 // C++: BuildingGameObj (building.cpp)
 // Hierarchy: NetworkObject → BaseGameObj → DamageableGameObj → BuildingGameObj
@@ -18,11 +19,76 @@ open class BuildingGameObj(
     health: Float = 5000f,
     shieldStrength: Float = 0f,
     shieldType: Int = 0,
-    val isDestroyed: Boolean = false,
-    val isPowerOn: Boolean = true,
-    val currentState: Int = 0,   // BuildingStateClass::HEALTH100_POWERON
+    var isDestroyed: Boolean = false,
+    var isPowerOn: Boolean = true,
+    var currentState: Int = 0,   // BuildingStateClass::HEALTH100_POWERON
     val playerType: Int = 0,
 ) : DamageableGameObj(definitionId, health, shieldStrength, shieldType) {
+
+    // Set healthMax to match initial health
+    init { healthMax = health; shieldStrengthMax = shieldStrength }
+
+    // C++: BuildingGameObj::BaseController — set by cncInitialize
+    var baseController: BaseControllerClass? = null
+
+    // Context reference for think() loops that need frameDeltaSeconds or starList
+    var gameContext: ccr.server.GameContext? = null
+
+    // C++: BuildingGameObj::Apply_Damage (override DamageableGameObj)
+    override fun applyDamage(damage: Float) {
+        if (isDestroyed) return
+        val oldHealth = health
+        super.applyDamage(damage)
+        if (oldHealth != health) {
+            setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+        }
+        updateState()
+    }
+
+    // C++: BuildingGameObj::Update_State
+    fun updateState(forceUpdate: Boolean = false) {
+        val healthPct = if (healthMax > 0f) 100f * health / healthMax else 0f
+        val healthState = percentageToHealthState(healthPct)
+        val newState = composeState(healthState, isPowerOn)
+        if (newState != currentState || forceUpdate) {
+            currentState = newState
+            setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+        }
+    }
+
+    // C++: BuildingGameObj::On_Destroyed — called when health reaches 0
+    open fun onDestroyed() {
+        isDestroyed = true
+        baseController?.onBuildingDestroyed(this)
+        setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+    }
+
+    override fun completelyDamaged() {
+        onDestroyed()
+    }
+
+    // C++: BuildingGameObj::Enable_Power
+    fun enablePower(on: Boolean) {
+        if (isPowerOn != on) {
+            isPowerOn = on
+            updateState()
+        }
+    }
+
+    // C++: BuildingGameObj::CnC_Initialize (base)
+    open fun cncInitialize(base: BaseControllerClass) {
+        baseController = base
+    }
+
+    // Reset for new round — restore full health and power
+    fun resetToFull() {
+        health = healthMax
+        shieldStrength = shieldStrengthMax
+        isDestroyed = false
+        isPowerOn = true
+        updateState(forceUpdate = true)
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
 
     // C++: BuildingGameObj::Export_Creation — calls DamageableGameObj::Export_Creation (empty chain),
     // then writes position and CollectionSphere (center + radius).
@@ -46,5 +112,19 @@ open class BuildingGameObj(
         packet.addBool(isDestroyed)                               // IsDestroyed
         packet.addBool(isPowerOn)                                 // IsPowerOn
         packet.addInt(currentState, BITPACK_BUILDING_STATE)       // CurrentState
+    }
+
+    companion object {
+        // C++: BuildingStateClass health thresholds
+        fun percentageToHealthState(pct: Float): Int = when {
+            pct <= 0f  -> 4   // HEALTH_0
+            pct <= 25f -> 3   // HEALTH_25
+            pct <= 50f -> 2   // HEALTH_50
+            pct <= 75f -> 1   // HEALTH_75
+            else       -> 0   // HEALTH_100
+        }
+        // Power state offset: 0..4 = power on, 5..9 = power off
+        fun composeState(healthState: Int, powerOn: Boolean): Int =
+            healthState + if (!powerOn) 5 else 0
     }
 }

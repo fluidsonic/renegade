@@ -17,11 +17,17 @@ class BaseControllerClassTest {
         isBaseDestroyed: Boolean = false,
         didBeaconDestroyBase: Boolean = false,
         isRadarEnabled: Boolean = true,
-    ) = BaseControllerClass(
-        playerType, operationTimeFactor, isBasePowered,
-        canGenerateSoldiers, canGenerateVehicles,
-        isBaseDestroyed, didBeaconDestroyBase, isRadarEnabled,
-    )
+    ): BaseControllerClass {
+        val ctrl = BaseControllerClass(playerType)
+        if (operationTimeFactor != 1.0f) ctrl.setOperationTimeFactor(operationTimeFactor)
+        if (!isBasePowered) ctrl.setBasePowered(isBasePowered)
+        if (canGenerateSoldiers) ctrl.setCanGenerateSoldiers(canGenerateSoldiers)
+        if (canGenerateVehicles) ctrl.setCanGenerateVehicles(canGenerateVehicles)
+        if (isBaseDestroyed) ctrl.setBaseDestroyed(isBaseDestroyed)
+        if (didBeaconDestroyBase) ctrl.setBeaconDestroyedBase(didBeaconDestroyBase)
+        if (!isRadarEnabled) ctrl.enableRadar(isRadarEnabled)
+        return ctrl
+    }
 
     @Test fun `occasional - field order matches C++ exactly`() {
         val bs = BitStream()

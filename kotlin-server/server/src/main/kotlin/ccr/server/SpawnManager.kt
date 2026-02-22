@@ -51,7 +51,7 @@ class SpawnManager(level: LoadedLevel) {
      *
      * @param playerType  0=NOD, 1=GDI, -1=RENEGADE (neutral/unassigned → remapped to RENEGADE)
      */
-    fun getMultiplayerSpawnLocation(playerType: Int): Vector3 {
+    fun getMultiplayerSpawnLocation(playerType: Int): Pair<Vector3, Float> {
         val effectiveType = if (playerType == PLAYERTYPE_NEUTRAL) PLAYERTYPE_RENEGADE else playerType
 
         val candidates = spawners.filter { (_, def) ->
@@ -60,14 +60,14 @@ class SpawnManager(level: LoadedLevel) {
 
         if (candidates.isEmpty()) {
             println("[SPAWN] WARNING: no spawners for playerType=$effectiveType, using origin fallback")
-            return Vector3(0f, 0f, 5f)
+            return Pair(Vector3(0f, 0f, 5f), 0f)
         }
 
         val selected = candidates.random()
         val levelPos = selected.spawner.transform.position
         println("[SPAWN] selected spawner defId=${selected.spawner.definitionId} " +
             "pos=(${levelPos.x}, ${levelPos.y}, ${levelPos.z})")
-        return Vector3(levelPos.x, levelPos.y, levelPos.z)
+        return Pair(Vector3(levelPos.x, levelPos.y, levelPos.z), 0f)
     }
 
     companion object {

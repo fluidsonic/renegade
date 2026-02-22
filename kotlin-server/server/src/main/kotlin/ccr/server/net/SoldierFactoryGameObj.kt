@@ -3,7 +3,6 @@ package ccr.server.net
 import ccr.math.Vector3
 
 // C++: SoldierFactoryGameObj (soldierfactory.cpp) — extends BuildingGameObj.
-// No Export overrides.
 // Hierarchy: NetworkObject → BaseGameObj → DamageableGameObj → BuildingGameObj → SoldierFactoryGameObj
 class SoldierFactoryGameObj(
     definitionId: Int,
@@ -29,4 +28,16 @@ class SoldierFactoryGameObj(
     isPowerOn      = isPowerOn,
     currentState   = currentState,
     playerType     = playerType,
-)
+) {
+    // C++: SoldierFactoryGameObj::CnC_Initialize — register soldier capability
+    override fun cncInitialize(base: BaseControllerClass) {
+        super.cncInitialize(base)
+        base.setCanGenerateSoldiers(true)
+    }
+
+    // C++: SoldierFactoryGameObj::On_Destroyed — revoke soldier capability
+    override fun onDestroyed() {
+        super.onDestroyed()
+        baseController?.setCanGenerateSoldiers(false)
+    }
+}

@@ -22,7 +22,6 @@ class AirStripGameObjTest {
             position     = Vector3(10f, 0f, 0f),
             sphereCenter = Vector3(10f, 0f, 0f),
             sphereRadius = 30f,
-            isBusy       = false,
         )
         assertEquals(701, obj.definitionId)
     }
