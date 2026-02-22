@@ -3,6 +3,9 @@ package ccr.server.net
 import ccr.math.Quaternion
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 // C++: VehicleGameObj (vehicle.cpp)
 // Full hierarchy: NetworkObject → BaseGameObj → PhysicalGameObj → DamageableGameObj
@@ -61,6 +64,11 @@ class VehicleGameObj(
         const val VEHICLE_TYPE_BIKE   = 2
         const val VEHICLE_TYPE_FLYING = 3
         const val VEHICLE_TYPE_TURRET = 4
+
+        // Simple kinematics parameters
+        private const val MAX_SPEED_CAR  = 15f   // m/s at full forward analog
+        private const val MAX_SPEED_TANK = 10f   // m/s at full forward analog
+        private const val TURN_RATE      = 2.0f  // rad/s at full turn analog
     }
 
     // Definitional (immutable — set at construction from definition data)
@@ -80,6 +88,50 @@ class VehicleGameObj(
     var isHidden: Boolean = isHidden
     // One slot per seat; -1 means empty. Initialised from constructor param or filled with -1.
     val seatOccupantIds: MutableList<Int> = MutableList(seatCount) { seatOccupantIds.getOrElse(it) { -1 } }
+
+    // The soldier currently driving this vehicle (null if unoccupied).
+    var driver: SoldierGameObj? = null
+
+    // ---- Simple server-side kinematics ----
+
+    // Updates vehicle position and orientation from the driver's stored control inputs.
+    // Called every network tick while the vehicle has a driver.
+    // C++: VehiclePhysClass::Apply_Control drives this; we use a simple flat-plane model.
+    override fun think(deltaSeconds: Float) {
+        val d = driver ?: return
+
+        val maxSpeed = when (vehicleType) {
+            VEHICLE_TYPE_TANK -> MAX_SPEED_TANK
+            else              -> MAX_SPEED_CAR
+        }
+        val speed     = d.analogMoveForward * maxSpeed
+        val turnDelta = d.analogTurnLeft * TURN_RATE * deltaSeconds
+
+        // Apply yaw rotation around the Z axis
+        if (turnDelta != 0f) {
+            val halfAngle = turnDelta / 2f
+            val dq = Quaternion(0f, 0f, sin(halfAngle), cos(halfAngle))
+            quaternion = (quaternion * dq).normalized()
+        }
+
+        // Extract forward direction by rotating (1,0,0) with the current quaternion
+        val q = quaternion
+        val fwdX = 1f - 2f * (q.y * q.y + q.z * q.z)
+        val fwdY = 2f * (q.x * q.y + q.z * q.w)
+        val fwdZ = 2f * (q.x * q.z - q.y * q.w)
+
+        // Integrate position
+        position = Vector3(
+            position.x + fwdX * speed * deltaSeconds,
+            position.y + fwdY * speed * deltaSeconds,
+            position.z + fwdZ * speed * deltaSeconds,
+        )
+
+        // Update velocity for client-side interpolation
+        velocity = Vector3(fwdX * speed, fwdY * speed, fwdZ * speed)
+
+        isEngineOn = speed != 0f || turnDelta != 0f
+    }
 
     // C++: VehicleGameObj::Export_Creation — calls SmartGameObj chain, then writes lock state.
     // SmartGameObj::Export_Creation → PhysicalGameObj (definitionId + position + facing) → controlOwner

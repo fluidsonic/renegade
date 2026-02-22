@@ -17,6 +17,7 @@ import ccr.server.net.WeaponEntry
  *  - Soldier spawning for connected players (cGod::Create_Commando)
  *  - Respawn loop — each tick spawns soldiers for soldierless in-game players (cGod::Think)
  *  - Disconnect/suicide cleanup (deleteSoldier, removePlayer)
+ *  - Vehicle entry/exit tracking (enterVehicle, exitVehicle)
  *
  * Single-player stubs are included for structural parity with C++ but are no-ops in this MP server.
  */
@@ -34,6 +35,7 @@ class God(private val server: GameServer) {
     val playersByHost = mutableMapOf<Int, Player>()
     val soldiersByHost = mutableMapOf<Int, SoldierGameObj>()
     val vehiclesByNetId = mutableMapOf<Int, VehicleGameObj>()  // networkId → VehicleGameObj
+    val playerVehicles = mutableMapOf<Int, VehicleGameObj>()   // rhostId → vehicle being driven
     val playerTeams = mutableMapOf<Int, Int>()   // rhostId → team (0=NOD, 1=GDI)
     val playerInGame = mutableSetOf<Int>()        // rhostIds where IsInGame=true
     val playerNetIds = mutableMapOf<Int, Int>()   // rhostId → networkId of cPlayer object
@@ -285,6 +287,75 @@ class God(private val server: GameServer) {
         return vehicle
     }
 
+    // ---- Vehicle entry/exit ----
+
+    /**
+     * Records that [rhostId]'s soldier has entered [vehicle].
+     * Sets the seat occupant, links the driver reference, marks dirty bits.
+     * C++: TransitionManager handles this server-side; we detect it from the client's
+     * in_vehicle=true flag in the frequent update and respond immediately.
+     */
+    fun enterVehicle(rhostId: Int, vehicle: VehicleGameObj) {
+        val soldier = soldiersByHost[rhostId] ?: return
+        vehicle.seatOccupantIds[0] = soldier.networkId
+        vehicle.controlOwner = rhostId
+        vehicle.driver = soldier
+        soldier.inVehicle = true
+        playerVehicles[rhostId] = vehicle
+
+        // BIT_RARE for vehicle — seat occupant changed; all clients need to know
+        for (clientId in playerInGame) {
+            vehicle.setObjectDirtyBit(clientId, NetworkObject.BIT_RARE, true)
+        }
+        // BIT_FREQUENT for soldier — in_vehicle=true needs to reach other clients
+        for (clientId in playerInGame) {
+            if (clientId != rhostId) {
+                soldier.setObjectDirtyBit(clientId, NetworkObject.BIT_FREQUENT, true)
+            }
+        }
+
+        println("[GOD] rhostId=$rhostId entered vehicle netId=${vehicle.networkId} soldierNetId=${soldier.networkId}")
+    }
+
+    /**
+     * Records that the player driving a vehicle has exited.
+     * Clears seat occupant, repositions the soldier near the vehicle.
+     */
+    fun exitVehicle(rhostId: Int) {
+        val vehicle = playerVehicles.remove(rhostId) ?: return
+        val soldier = soldiersByHost[rhostId]
+
+        vehicle.seatOccupantIds[0] = -1
+        vehicle.controlOwner = 0
+        vehicle.driver = null
+        vehicle.isEngineOn = false
+        vehicle.velocity = Vector3(0f, 0f, 0f)
+
+        if (soldier != null) {
+            // Place the soldier 2 units to the side of the vehicle
+            soldier.position = Vector3(
+                vehicle.position.x + 2f,
+                vehicle.position.y + 2f,
+                vehicle.position.z,
+            )
+            soldier.inVehicle = false
+
+            // BIT_FREQUENT for soldier — on-foot again; other clients need updated position
+            for (clientId in playerInGame) {
+                if (clientId != rhostId) {
+                    soldier.setObjectDirtyBit(clientId, NetworkObject.BIT_FREQUENT, true)
+                }
+            }
+        }
+
+        // BIT_RARE for vehicle — seat occupant cleared
+        for (clientId in playerInGame) {
+            vehicle.setObjectDirtyBit(clientId, NetworkObject.BIT_RARE, true)
+        }
+
+        println("[GOD] rhostId=$rhostId exited vehicle netId=${vehicle.networkId}")
+    }
+
     // ---- cGod cleanup helpers ----
 
     /**
@@ -292,6 +363,10 @@ class God(private val server: GameServer) {
      * Reused for suicide, team-change, and disconnect.
      */
     fun deleteSoldier(rhostId: Int) {
+        // Exit vehicle before deleting the soldier to clear seat occupant state
+        if (rhostId in playerVehicles) {
+            exitVehicle(rhostId)
+        }
         val soldier = soldiersByHost.remove(rhostId) ?: return
         server.gameObjManager.removeStar(soldier)
         soldier.setDeletePending()

@@ -32,6 +32,10 @@ class SoldierGameObj(
     // C++: cGod stores reference to cPlayer so buildings can award money via playerData
     var playerData: Player? = null
 
+    // True when this soldier is riding inside a vehicle.
+    // C++: SoldierGameObj::Export_Frequent writes in_vehicle (bool) then branches.
+    var inVehicle: Boolean = false
+
     // C++: SoldierGameObj::Export_Rare — calls super then appends definitionId (soldier.cpp).
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)       // PhysicalGameObj: model, anim, host, player_type, hud_pokable
@@ -55,12 +59,19 @@ class SoldierGameObj(
         }
     }
 
-    // C++: SoldierGameObj::Export_Frequent — writes soldier-specific fields first, then calls super.
-    // Non-vehicle path: in_vehicle=false, has_weapon=false, no weapon data, no velocity, no anim name,
-    // no special damage. SmartGameObj::Export_Frequent (called via super) handles on_host_bone,
-    // targeting, and control.
+    // C++: SoldierGameObj::Export_Frequent — writes in_vehicle first, then branches.
+    // In-vehicle path (soldier.cpp:1077-1087): in_vehicle=true, then SmartGameObj::Export_Frequent
+    //   (on_host_bone + targeting + control) and returns. No position/weapon/humanState written.
+    // On-foot path: in_vehicle=false, has_weapon, [weapon data], position, human_state,
+    //   human_sub_state, is_special_damage, then SmartGameObj chain.
     override fun exportFrequent(packet: BitStream) {
-        packet.addBool(false)                                  // in_vehicle
+        packet.addBool(inVehicle)
+        if (inVehicle) {
+            // Soldier is in vehicle — position comes from the vehicle, not the soldier.
+            // C++: calls SmartGameObj::Export_Frequent directly after in_vehicle=true.
+            super.exportFrequent(packet)   // SmartGameObj → ArmedGameObj → PhysicalGameObj
+            return
+        }
         val hasWeapon = weapons.isNotEmpty()
         packet.addBool(hasWeapon)                              // has_weapon
         if (hasWeapon) {

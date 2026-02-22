@@ -19,6 +19,13 @@ abstract class SmartGameObj(
     var team: Int = 0,
 ) : ArmedGameObj(definitionId, position, facing, modelName, animName, health, shieldStrength, shieldType, targeting) {
 
+    // Last received control inputs from the client (used for vehicle movement, stored for replication)
+    var continuousBoolBits: Int = 0
+    var analogMoveForward: Float = 0f
+    var analogMoveLeft: Float = 0f
+    var analogMoveUp: Float = 0f
+    var analogTurnLeft: Float = 0f
+
     // C++: SmartGameObj overrides Get_Player_Type() — PhysicalGameObj::Export_Rare reads it.
     override val playerType: Int get() = team
 
@@ -35,10 +42,10 @@ abstract class SmartGameObj(
         super.exportFrequent(packet)  // ArmedGameObj: on_host_bone + targeting
         // C++: Export_Control_Sc → ControlClass::Export_Sc (control.cpp #if 01 branch)
         // NOTE: #if 01 is truthy — sends 4 analog floats, NOT BITPACK_CONTROL_MOVES_SC.
-        packet.addByte(0, BITPACK_CONTINUOUS_BOOLEAN_BITS)  // unsigned char ContinuousBooleanBits
-        packet.addFloat(0f, BITPACK_ANALOG_VALUES)         // ANALOG_MOVE_FORWARD
-        packet.addFloat(0f, BITPACK_ANALOG_VALUES)         // ANALOG_MOVE_LEFT
-        packet.addFloat(0f, BITPACK_ANALOG_VALUES)         // ANALOG_MOVE_UP
-        packet.addFloat(0f, BITPACK_ANALOG_VALUES)         // ANALOG_TURN_LEFT
+        packet.addByte(continuousBoolBits.toByte(), BITPACK_CONTINUOUS_BOOLEAN_BITS)
+        packet.addFloat(analogMoveForward, BITPACK_ANALOG_VALUES)  // ANALOG_MOVE_FORWARD
+        packet.addFloat(analogMoveLeft, BITPACK_ANALOG_VALUES)     // ANALOG_MOVE_LEFT
+        packet.addFloat(analogMoveUp, BITPACK_ANALOG_VALUES)       // ANALOG_MOVE_UP
+        packet.addFloat(analogTurnLeft, BITPACK_ANALOG_VALUES)     // ANALOG_TURN_LEFT
     }
 }
