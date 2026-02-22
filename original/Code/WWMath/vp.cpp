@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vp.h"
 #include "vector2.h"
 #include "vector3.h"

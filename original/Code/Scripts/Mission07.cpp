@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include "toolkit.h"
 #include "mission7.h"
@@ -6667,4 +6668,3 @@ DECLARE_SCRIPT(M07_Hotwire_Dead, "")
 	}
 
 };
-

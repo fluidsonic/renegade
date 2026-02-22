@@ -1,4 +1,5 @@
 // Includes.
+#include "global.h"
 #include "soundenvironment.h"
 #include "camera.h"
 #include "combat.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "suicideevent.h"
 
 #include <stdio.h>

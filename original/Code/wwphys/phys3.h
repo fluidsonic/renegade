@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef PHYS3_H
-#define PHYS3_H
+#include "global.h"
 
 #include "vector3.h"
 #include "movephys.h"
@@ -299,5 +299,3 @@ protected:
 	friend class Phys3Class;
 
 };
-
-#endif

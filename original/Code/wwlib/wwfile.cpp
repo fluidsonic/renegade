@@ -45,4 +45,3 @@ int FileClass::Printf_Indented(unsigned depth, char *str, ...)
 
 	return Write(text, length + depth);
 }
-

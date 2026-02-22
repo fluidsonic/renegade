@@ -6,6 +6,7 @@
 // Description:
 //
 //-----------------------------------------------------------------------------
+#include "global.h"
 #include "netutil.h" // I WANNA BE FIRST!
 
 #include <stdio.h>

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pscene.h"
 #include "rendobj.h"
 #include "phys.h"

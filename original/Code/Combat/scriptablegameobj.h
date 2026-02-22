@@ -1,9 +1,7 @@
-#ifndef	SCRIPTABLEGAMEOBJ_H
-#define	SCRIPTABLEGAMEOBJ_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	BASEGAMEOBJ_H
 	#include "basegameobj.h"
@@ -133,5 +131,3 @@ protected:
 	DynamicVectorClass<GameObjObserverTimerClass *>	ObserverTimerList;
 	DynamicVectorClass<GameObjCustomTimerClass *>	CustomTimerList;
 };
-
-#endif	//	SCRIPTABLEGAMEOBJ_H

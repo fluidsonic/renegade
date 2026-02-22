@@ -1,9 +1,9 @@
-// mmsystem.h compat shim for macOS
 #pragma once
-#ifndef MMSYSTEM_H_COMPAT
-#define MMSYSTEM_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// mmsystem.h compat shim for macOS
+
 #include <sys/time.h>
 #include <time.h>
 
@@ -69,5 +69,3 @@ inline MMRESULT timeEndPeriod(UINT period) { return MMSYSERR_NOERROR; }
 #define TIME_ONESHOT    0x0000
 #define TIME_PERIODIC   0x0001
 #define TIME_CALLBACK_FUNCTION 0x0000
-
-#endif // MMSYSTEM_H_COMPAT

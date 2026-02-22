@@ -1,3 +1,4 @@
+#include "global.h"
 #include "listctrl.h"
 #include "assetmgr.h"
 #include "refcount.h"
@@ -2396,4 +2397,3 @@ ListColumnClass::Swap_Entries (int index1, int index2)
 	EntryList[index2] = temp_entry;
 	return ;
 }
-

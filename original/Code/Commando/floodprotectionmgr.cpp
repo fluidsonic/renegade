@@ -1,3 +1,4 @@
+#include "global.h"
 #include "floodprotectionmgr.h"
 #include "combat.h"
 #include "messagewindow.h"

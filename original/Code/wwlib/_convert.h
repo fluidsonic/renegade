@@ -1,5 +1,6 @@
-#ifndef _CONVERT_H
-#define _CONVERT_H
+#pragma once
+
+#include "global.h"
 
 #include	"convert.h"
 
@@ -9,5 +10,3 @@ extern ConvertClass * TerrainDrawer;
 extern ConvertClass * AnimDrawer;
 extern ConvertClass * NormalDrawer;
 extern ConvertClass * IsometricDrawer;
-
-#endif

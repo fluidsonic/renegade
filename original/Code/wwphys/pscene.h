@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PSCENE_H
-#define PSCENE_H
+#include "global.h"
 
-#include "always.h"
 #include "scene.h"
 #include "widgetuser.h"
 #include "physlist.h"
@@ -1227,7 +1226,3 @@ private:
 	friend class VisOptimizationContextClass;
 
 };
-
-	
-
-#endif

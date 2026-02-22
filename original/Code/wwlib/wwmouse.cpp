@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"_convert.h"
 #include	"_mono.h"
 #include	"blit.h"
@@ -911,4 +911,3 @@ void WWMouseClass::Set_Mouse_XY( int x, int y )
 
 	SetCursorPos( x, y );			// set the current cursor position
 }
-

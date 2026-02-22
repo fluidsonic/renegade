@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SOUND_SCENE_OBJ_H
-#define __SOUND_SCENE_OBJ_H
+#include "global.h"
 
 #include "Refcount.H"
 #include "WWAudio.H"
@@ -255,6 +255,3 @@ SoundSceneObjClass::Remove_Callback (void)
 	m_RegisteredEvents	= AudioCallbackClass::EVENT_NONE;
 	return ;
 }
-
-#endif //__SOUND_SCENE_OBJ_H
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcncreference.h"
 #include "resource.h"
 #include "dialogresource.h"

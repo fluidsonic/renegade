@@ -1,3 +1,4 @@
+#include "global.h"
 #include "w3d_util.h"
 #include "vector3.h"
 #include "vector4.h"

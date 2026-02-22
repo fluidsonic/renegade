@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGLOADSPGAME_H
-#define __DLGLOADSPGAME_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -79,6 +79,3 @@ private:
 
 	static LoadSPGameMenuClass *_TheInstance;
 };
-
-#endif //__DLGLOADSPGAME_H
-

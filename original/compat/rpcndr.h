@@ -1,9 +1,9 @@
-// rpcndr.h compat stub for macOS - NDR (Network Data Representation) stubs
 #pragma once
-#ifndef RPCNDR_H_COMPAT
-#define RPCNDR_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// rpcndr.h compat stub for macOS - NDR (Network Data Representation) stubs
+
 
 // COM/RPC pointer and calling convention modifiers (no-ops on macOS)
 #ifndef __RPC_FAR
@@ -75,5 +75,3 @@ typedef void* RPC_IF_HANDLE;
 struct IUnknown;
 struct IRpcStubBuffer;
 struct IRpcChannelBuffer;
-
-#endif // RPCNDR_H_COMPAT

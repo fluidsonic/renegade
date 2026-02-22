@@ -1,5 +1,6 @@
-#ifndef SWAP_H
-#define SWAP_H
+#pragma once
+
+#include "global.h"
 
 /**********************************************************************
 **	Swaps two objects.
@@ -12,5 +13,3 @@ void swap(T & left, T & right)
 	left = right;
 	right = temp;
 }
-
-#endif

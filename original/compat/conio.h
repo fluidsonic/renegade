@@ -1,7 +1,8 @@
-// conio.h compat shim for macOS
 #pragma once
-#ifndef CONIO_H_COMPAT
-#define CONIO_H_COMPAT
+
+#include "global.h"
+
+// conio.h compat shim for macOS
 
 #include <stdio.h>
 
@@ -17,5 +18,3 @@ inline int cprintf(const char* fmt, ...) {
     va_list ap; va_start(ap, fmt); int r = vprintf(fmt, ap); va_end(ap); return r;
 }
 #endif
-
-#endif // CONIO_H_COMPAT

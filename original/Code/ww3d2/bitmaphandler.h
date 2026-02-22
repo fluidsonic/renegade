@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef BITMAPHANDLER_H
-#define BITMAPHANDLER_H
+#include "global.h"
 
-#include "always.h"
 #include "ww3dformat.h"
 
 void Bitmap_Assert(bool condition);
@@ -423,5 +422,3 @@ WWINLINE unsigned BitmapHandlerClass::Combine_A8R8G8B8(
 	bgra1+=bgra3;
 	return bgra1;
 }
-
-#endif

@@ -1,9 +1,7 @@
-#ifndef	BASEGAMEOBJ_H
-#define	BASEGAMEOBJ_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef PERSIST_H
 	#include "persist.h"
@@ -108,6 +106,3 @@ private:
 	// This keeps certain object alive during cinematic freeze
 	bool							EnableCinematicFreeze;
 };
-
-#endif	//	BASEGAMEOBJ_H
-

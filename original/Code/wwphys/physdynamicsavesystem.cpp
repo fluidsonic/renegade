@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physdynamicsavesystem.h"
 #include "wwphysids.h"
 #include "pscene.h"
@@ -68,4 +69,3 @@ void PhysDynamicSaveSystemClass::On_Post_Load(void)
 {
 	PhysicsSceneClass::Get_Instance()->Post_Load_Level_Dynamic_Data();
 }
-

@@ -6,6 +6,7 @@
 // Description:  Adding and extracting data from byte streams
 //
 //------------------------------------------------------------------------------------
+#include "global.h"
 #include "wwpacket.h"
 
 #include "win.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gamemode.h"
 #include "ww3d.h"
 #include "miscutil.h"

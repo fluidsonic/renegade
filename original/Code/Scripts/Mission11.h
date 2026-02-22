@@ -1,5 +1,6 @@
-#ifndef _MISSION11_H_
-#define _MISSION11_H_
+#pragma once
+
+#include "global.h"
 
 // Defines and Includes
 
@@ -237,5 +238,3 @@ typedef enum
 {
 	M11TIMER_START = STIMER_MISSION11,
 } M11TIMER;
-
-#endif // _MISSION11_H_

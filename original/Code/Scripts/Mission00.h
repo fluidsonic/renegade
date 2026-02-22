@@ -1,5 +1,6 @@
-#ifndef _MISSION0_H_
-#define _MISSION0_H_
+#pragma once
+
+#include "global.h"
 
 // Defines and Includes
 
@@ -396,5 +397,3 @@ inline float Get_Obj_Distance (GameObject * obj1, GameObject * obj2)
 #define MSK_SOLDIER_DEAD	100
 #define MSK_TIMER			101
 #define MSK_TIMER_02		102
-
-#endif // _MISSION2_H_

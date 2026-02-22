@@ -1,5 +1,6 @@
-#ifndef _BANDWIDTHCHECK_H
-#define _BANDWIDTHCHECK_H
+#pragma once
+
+#include "global.h"
 
 #include <wwlib/except.h>
 #include <wwlib/wwstring.h>
@@ -75,5 +76,3 @@ class BandwidthCheckerClass
 		static const char *DefaultServerName;
 
 };
-
-#endif //_BANDWIDTHCHECK_H

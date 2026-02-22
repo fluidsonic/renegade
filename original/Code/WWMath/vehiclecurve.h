@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __VEHICLE_CURVE_H
-#define __VEHICLE_CURVE_H
+#include "global.h"
 
 #include "curve.h"
 #include "vector.h"
@@ -161,6 +161,3 @@ VehicleCurveClass::Clear_Keys (void)
 	Curve3DClass::Clear_Keys ();
 	return ;
 }	
-
-#endif //__VEHICLE_CURVE_H
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cnetwork.h"
 
 #include <shellapi.h>

@@ -1,9 +1,7 @@
-#ifndef	BONES_H
-#define	BONES_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 /*
 ** BONES MANAGER
@@ -18,6 +16,3 @@ public:
 	static float			Get_Bone_Damage_Scale( const char * bone_name );
 
 };
-
-#endif
-

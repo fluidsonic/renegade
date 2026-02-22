@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef MULTILIST_H
-#define MULTILIST_H
+#include "global.h"
 
-#include "always.h"
 #include "mempool.h"
 #include <assert.h>
 
@@ -466,6 +465,3 @@ protected:
 	
 	MultiListNodeClass *		OriginalHead;
 };
-
-#endif //LIST_CLASS_H
-

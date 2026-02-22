@@ -22,7 +22,6 @@
 #include <ctype.h>
 
 // Pull in compat types
-#include "windef.h"
 #include "wingdi.h"    // BITMAPINFO, TEXTMETRIC, HGDIOBJ, etc.
 #include "winuser.h"   // HWND, SIZE, RECT
 

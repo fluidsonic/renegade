@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vehiclephys.h"
 #include "chunkio.h"
 #include "persistfactory.h"
@@ -806,4 +807,3 @@ bool VehiclePhysDefClass::Is_Type(const char * type_name)
 		return RigidBodyDefClass::Is_Type(type_name);
 	}
 }
-

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PROJECTILE_H
-#define PROJECTILE_H
+#include "global.h"
 
-#include "always.h"
 #include "movephys.h"
 #include "ode.h"
 
@@ -235,5 +234,3 @@ protected:
 	friend class ProjectileClass;
 
 };
-
-#endif

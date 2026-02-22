@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef __NETWORK_OBJECT_FACTORY_MGR_H
-#define __NETWORK_OBJECT_FACTORY_MGR_H
-
-#include "always.h"
+#include "global.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -42,5 +40,3 @@ private:
 	/////////////////////////////////////////////////////////////////////
 	static NetworkObjectFactoryClass *	_FactoryListHead;
 };
-
-#endif //__NETWORK_OBJECT_FACTORY_MGR_H

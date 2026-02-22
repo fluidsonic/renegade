@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__WARFACTORYGAMEOBJ_H
-#define	__WARFACTORYGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "vehiclefactorygameobj.h"
 
 ////////////////////////////////////////////////////////////////
@@ -120,6 +119,3 @@ protected:
 	int					CreationAnimationID;
 	float					CreationFinishedTimer;
 };
-
-#endif	// __WARFACTORYGAMEOBJ_H
-

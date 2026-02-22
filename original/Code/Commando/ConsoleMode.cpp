@@ -1,3 +1,4 @@
+#include "global.h"
 #include "consolemode.h"
 #include "consolefunction.h"
 #include "conio.h"

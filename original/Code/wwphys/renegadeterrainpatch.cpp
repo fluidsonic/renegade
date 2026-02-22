@@ -1,3 +1,4 @@
+#include "global.h"
 #include "renegadeterrainpatch.h"
 
 #include "dx8vertexbuffer.h"

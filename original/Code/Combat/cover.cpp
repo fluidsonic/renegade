@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cover.h"
 #include "chunkio.h"
 #include "saveload.h"

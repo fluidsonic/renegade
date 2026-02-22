@@ -1,7 +1,7 @@
-#ifndef	CNETWORK_H
-#define	CNETWORK_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "vector3.h"
 #include "w3d_file.h"
 #include "teammanager.h"
@@ -208,6 +208,3 @@ private:
 
 	static VisTableClass *		VisTable;
 };
-
-#endif
-

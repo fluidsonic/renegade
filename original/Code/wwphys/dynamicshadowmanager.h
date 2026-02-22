@@ -1,7 +1,7 @@
-#ifndef DYNAMICSHADOWMANAGER_H
-#define DYNAMICSHADOWMANAGER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "vector3.h"
 
 class ChunkLoadClass;
@@ -82,6 +82,3 @@ inline void DynamicShadowManagerClass::Get_Shadow_Planes(float * set_znear,float
 	*set_znear = ShadowNearZ;
 	*set_zfar = ShadowFarZ;
 }
-
-#endif // DYNAMICSHADOWMANAGER_H
-

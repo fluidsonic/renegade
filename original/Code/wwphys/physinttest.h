@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef PHYSINTTEST_H
-#define PHYSINTTEST_H
+#include "global.h"
 
 #include "inttest.h"
 #include "mesh.h"
@@ -154,6 +154,3 @@ inline bool PhysMeshIntersectionTestClass::Cull(const AABoxClass & cull_box)
 
 	return false;
 }
-
-#endif
-

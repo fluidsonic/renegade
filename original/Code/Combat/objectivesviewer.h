@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __OBJECTIVES_VIEWER_H
-#define __OBJECTIVES_VIEWER_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "vector.h"
@@ -65,5 +65,3 @@ private:
 	bool					IsDisplayed;
 	TextWindowClass *	TextWindow;
 };
-
-#endif //__OBJECTIVES_VIEWER_H

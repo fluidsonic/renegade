@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __BASE_CONTROLLER_H
-#define __BASE_CONTROLLER_H
+#include "global.h"
 
 #include "building.h"
 #include "obbox.h"
@@ -209,5 +209,3 @@ private:
 
 	static BaseControllerClass	*		CurrentBases[BuildingConstants::BASE_COUNT];
 };
-
-#endif //__BASE_CONTROLLER_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cullsys.h"
 
 /*************************************************************************
@@ -105,4 +106,3 @@ void CullSystemClass::Add_To_Collection(CullableClass * obj)
 	obj->NextCollected = CollectionHead;
 	CollectionHead = obj;
 }
-

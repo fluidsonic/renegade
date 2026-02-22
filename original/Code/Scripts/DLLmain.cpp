@@ -1,3 +1,4 @@
+#include "global.h"
 #include "Windows.H"
 #include "scripts.h"
 #include "scriptregistrar.h"

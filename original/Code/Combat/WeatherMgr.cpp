@@ -1,4 +1,5 @@
 // Includes.
+#include "global.h"
 #include "weathermgr.h"
 #include "apppackettypes.h"
 #include "assetmgr.h"

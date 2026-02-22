@@ -1,9 +1,7 @@
+#pragma once
 
+#include "global.h"
 
-#ifndef SAVELOADSUBSYSTEM_H
-#define SAVELOADSUBSYSTEM_H
-
-#include "always.h"
 #include "postloadable.h"
 
 class ChunkLoadClass;
@@ -46,5 +44,3 @@ private:
 
 	friend class SaveLoadSystemClass;
 };
-
-#endif

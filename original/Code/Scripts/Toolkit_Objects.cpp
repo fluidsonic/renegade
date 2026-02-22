@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 
 /*M00_Object_Create_RMV

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mendozabossgameobj.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
@@ -3685,4 +3686,3 @@ MendozaBossGameObjClass::Spawn_Health_Powerups (void)
 
 	return ;
 }
-

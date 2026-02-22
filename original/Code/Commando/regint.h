@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     regint.h
 // Author:       Tom Spencer-Smith
@@ -6,10 +10,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef REGINT_H
-#define REGINT_H
 
-#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryInt
@@ -28,4 +29,3 @@ class cRegistryInt
 };
 
 //-----------------------------------------------------------------------------
-#endif // REGINT_H

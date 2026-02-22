@@ -1,9 +1,7 @@
-#ifndef	HUD_H
-#define	HUD_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 /*
 **
@@ -49,5 +47,3 @@ public:
 	// Damage rendering support
 	static	void	Damage_Render( void );
 };
-
-#endif

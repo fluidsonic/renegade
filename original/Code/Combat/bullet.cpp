@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bullet.h"
 #include "projectile.h"
 #include "combat.h"	  // for collision groups (should be damage.h?)
@@ -1003,4 +1004,3 @@ bool	BulletManager::Load( ChunkLoadClass &cload )
 	}
 	return true;
 }
-

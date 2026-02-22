@@ -1,9 +1,7 @@
-#ifndef	COMBATCHUNKID_H
-#define	COMBATCHUNKID_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	SAVELOADIDS_H
 	#include "saveloadids.h"
@@ -257,5 +255,3 @@ enum {
 	CLASSID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE		= 0xF009u,
 	CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE				= 0xF00Au,
 };
-
-#endif	//	COMBATCHUNKID_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "tooltipmgr.h"
 #include "tooltip.h"
 #include "dialogcontrol.h"
@@ -152,4 +153,3 @@ ToolTipMgrClass::Update (const Vector2 &mouse_pos)
 	LastMousePos = mouse_pos;
 	return ;
 }
-

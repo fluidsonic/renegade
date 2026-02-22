@@ -1,5 +1,6 @@
-#ifndef __DLGRESTART_H__
-#define __DLGRESTART_H__
+#pragma once
+
+#include "global.h"
 
 #include <PopupDialog.h>
 
@@ -21,5 +22,3 @@ class DlgRestart :
 		DlgRestart(const DlgRestart&);
 		const DlgRestart& operator=(const DlgRestart&);
 	};
-
-#endif // __DLGRESTART_H__

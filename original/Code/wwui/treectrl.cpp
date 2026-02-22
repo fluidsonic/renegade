@@ -1,3 +1,4 @@
+#include "global.h"
 #include "treectrl.h"
 #include "assetmgr.h"
 #include "refcount.h"

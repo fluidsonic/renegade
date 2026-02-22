@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef MPMATH_H
-#define MPMATH_H
+#include "global.h"
 
 //lint -e740 -e534 -e537 -e760
 //lint -d_LINT=1
@@ -110,5 +110,3 @@ inline bool MPEXPORT XMP_Test_Bit(const digit * r, unsigned bit)
 {
 	return ((r[bit >> LOG_UNITSIZE] & ((digit)1 << (bit & (UNITSIZE-1)))) != 0);
 }
-
-#endif

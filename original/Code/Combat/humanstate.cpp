@@ -1,3 +1,4 @@
+#include "global.h"
 #include "humanstate.h"
 #include "animcontrol.h"
 #include "humanphys.h"
@@ -1322,4 +1323,3 @@ void	HumanStateClass::Complete_Jump( void )
 	int ground_type = HumanPhys->Get_Contact_Surface_Type();
 	SurfaceEffectsManager::Apply_Effect( ground_type, SurfaceEffectsManager::HITTER_TYPE_FOOTSTEP_LAND, tm );
 }
-

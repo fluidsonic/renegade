@@ -1,7 +1,6 @@
-#ifndef VISOPTPROGRESS_H
-#define VISOPTPROGRESS_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
 
 /**
 ** VisOptProgressClass
@@ -78,6 +77,3 @@ protected:
 	int						SectorsMerged;										// Number of arbitrary vis sectors merged
 
 };
-
-#endif //VISOPTPROGRESS_H
-

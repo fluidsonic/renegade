@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SOUNDHANDLE_H
-#define __SOUNDHANDLE_H
+#include "global.h"
 
 #include "wwaudio.h"
 
@@ -84,5 +84,3 @@ protected:
 	///////////////////////////////////////////////////////////////////
 	SoundBufferClass *	Buffer;
 };
-
-#endif //__SOUNDHANDLE_H

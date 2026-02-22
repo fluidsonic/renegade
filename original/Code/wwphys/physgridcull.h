@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef PHYSGRIDCULL_H
-#define PHYSGRIDCULL_H
+#include "global.h"
 
 #include "gridcull.h"
 #include "phys.h"
@@ -55,6 +55,3 @@ protected:
 	PhysicsSceneClass * Scene;
 
 };
-
-#endif // PHYSGRIDCULL_H
-

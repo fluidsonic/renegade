@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SLIST_H__
-#define __SLIST_H__
+#include "global.h"
 
 #include "slnode.h"
 
@@ -480,5 +480,3 @@ inline SLNode<T> *SList<T>::Find_Node(T * data) const
 	
 	return cur;
 }
-
-#endif

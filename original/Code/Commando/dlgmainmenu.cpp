@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmainmenu.h"
 #include "assetmgr.h"
 #include "rendobj.h"

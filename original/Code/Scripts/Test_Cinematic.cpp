@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include "toolkit.h"
 #include <stdio.h>
@@ -1000,5 +1001,3 @@ public:
 	}
 
 };
-
-

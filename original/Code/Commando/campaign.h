@@ -1,9 +1,7 @@
-#ifndef	CAMPAIGN_H
-#define	CAMPAIGN_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 class	ChunkSaveClass;
 class	ChunkLoadClass;
@@ -39,5 +37,3 @@ private:
 	static	int	State;
 	static	int	BackdropIndex;
 };
-
-#endif

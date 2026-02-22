@@ -1,9 +1,7 @@
-#ifndef	ASSETS_H
-#define	ASSETS_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef ASSETMGR_H
 	#include "assetmgr.h"
@@ -39,6 +37,3 @@ TextureClass * Get_Texture_From_Filename(	const char * filename,
 ** Filenames
 */
 void Create_Animation_Name( StringClass& anim_name, const char * anim_filename, const char * model_name );
-
-#endif	// ASSETS_H
-

@@ -1,5 +1,6 @@
-#ifndef WDEBUG_HEADER
-#define WDEBUG_HEADER
+#pragma once
+
+#include "global.h"
 
 #include <iostream.h>
 #include "odevice.h"
@@ -132,5 +133,3 @@ class MsgManager
    static ostream            *warnStream(void);
    static ostream            *errorStream(void);
 };
-
-#endif

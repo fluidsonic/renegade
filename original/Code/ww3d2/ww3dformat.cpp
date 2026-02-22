@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ww3dformat.h"
 #include "vector4.h"
 #include "targa.h"

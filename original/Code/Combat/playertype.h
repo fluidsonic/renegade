@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     playertype.h
 // Author:       Tom Spencer-Smith
@@ -6,8 +10,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef PLAYERTYPE_H
-#define PLAYERTYPE_H
 
 // 4514: unreferenced inline function has been removed.
 
@@ -59,5 +61,3 @@ inline bool	Player_Types_Are_Enemies( int player_type_1, int player_type_2 )
 	// iff they are not the same type, they are enemies
 	return ( player_type_1 != player_type_2 );
 }
-
-#endif // PLAYERTYPE_H

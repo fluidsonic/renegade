@@ -1,3 +1,4 @@
+#include "global.h"
 #include "lightcull.h"
 #include "lightphys.h"
 #include "ww3d.h"

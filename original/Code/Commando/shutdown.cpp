@@ -1,3 +1,4 @@
+#include "global.h"
 #include "shutdown.h"
 #include "wwmath.h"
 #include "wwsaveload.h"

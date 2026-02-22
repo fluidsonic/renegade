@@ -1,9 +1,7 @@
-#ifndef	POWERUP_H
-#define	POWERUP_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef SIMPLEGAMEOBJ_H
 	#include "simplegameobj.h"
@@ -117,6 +115,3 @@ protected:
 
 	friend	class			PowerUpGameObjDef;
 };
-
-#endif	// POWERUP_H
-

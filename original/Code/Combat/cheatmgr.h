@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CHEATMGR_H
-#define __CHEATMGR_H
+#include "global.h"
 
 #include "gametype.h"
 
@@ -76,5 +76,3 @@ protected:
 	//
 	static CheatMgrClass *_TheInstance;
 };
-
-#endif //__CHEATMGR_H

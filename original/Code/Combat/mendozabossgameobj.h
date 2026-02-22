@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MENDOZABOSSGAMEOBJ_H
-#define __MENDOZABOSSGAMEOBJ_H
+#include "global.h"
 
 #include "soldier.h"
 #include "statemachine.h"
@@ -342,5 +342,3 @@ private:
 	StateMachineClass<MendozaBossGameObjClass>	CameraState;
 	StateMachineClass<MendozaBossGameObjClass>	AttackState;
 };
-
-#endif //__MENDOZABOSSGAMEOBJ_H

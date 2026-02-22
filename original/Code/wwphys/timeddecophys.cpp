@@ -1,3 +1,4 @@
+#include "global.h"
 #include "timeddecophys.h"
 //#include "rendobj.h"
 #include "persistfactory.h"
@@ -221,4 +222,3 @@ bool TimedDecorationPhysDefClass::Load(ChunkLoadClass &cload)
 	}
 	return true;
 }
-

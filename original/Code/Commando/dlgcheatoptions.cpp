@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcheatoptions.h"
 #include "listctrl.h"
 #include "cheatmgr.h"

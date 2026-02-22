@@ -6,6 +6,7 @@
 // Description:  
 //
 //------------------------------------------------------------------------------------
+#include "global.h"
 #include "msgstatlistgroup.h" // I WANNA BE FIRST!
 
 #include "mathutil.h"
@@ -150,4 +151,3 @@ void cMsgStatListGroup::Set_Name(int message_type, LPCSTR name)
 		PStatList[i].Set_Name(message_type, name);
 	}
 }
-

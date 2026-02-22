@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gameoptionsevent.h"
 
 #include <stdio.h>
@@ -130,4 +131,3 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 
 	Set_Delete_Pending();
 }
-

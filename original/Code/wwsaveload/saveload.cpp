@@ -1,3 +1,4 @@
+#include "global.h"
 #include "saveload.h"
 #include "saveloadsubsystem.h"
 #include "persist.h"
@@ -218,4 +219,3 @@ void SaveLoadSystemClass::Unlink_Factory(PersistFactoryClass * fact)
 
 	fact->NextFactory = NULL;
 }
-

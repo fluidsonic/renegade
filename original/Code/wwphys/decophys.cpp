@@ -1,3 +1,4 @@
+#include "global.h"
 #include "decophys.h"
 #include "rendobj.h"
 #include "persistfactory.h"
@@ -279,4 +280,3 @@ bool DecorationPhysDefClass::Load(ChunkLoadClass &cload)
 	}
 	return true;
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_EVA_OBJECTIVES_TAB_H
-#define __DLG_EVA_OBJECTIVES_TAB_H
+#include "global.h"
 
 #include "childdialog.h"
 #include "resource.h"
@@ -43,6 +43,3 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLG_EVA_OBJECTIVES_TAB_H
-

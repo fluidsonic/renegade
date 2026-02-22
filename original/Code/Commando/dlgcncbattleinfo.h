@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCNCBATTLEINFO_H
-#define __DLGCNCBATTLEINFO_H
+#include "global.h"
 
 #include "menudialog.h"
 
@@ -50,5 +50,3 @@ private:
 	//	Private member data
 	///////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGCNCBATTLEINFO_H

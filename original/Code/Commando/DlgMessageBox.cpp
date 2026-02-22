@@ -1,3 +1,4 @@
+#include "global.h"
 #include "DlgMessageBox.h"
 #include "Resource.h"
 #include <WWTranslateDB/TranslateDB.h>

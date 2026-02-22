@@ -1,9 +1,7 @@
-#ifndef	HUMANSTATE_H
-#define	HUMANSTATE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -187,5 +185,3 @@ private:
 	void					Begin_Jump( void );
 	void					Complete_Jump( void );
 };
-
-#endif	//	HUMANSTATE_H

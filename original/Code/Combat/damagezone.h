@@ -1,9 +1,7 @@
-#ifndef	DAMAGEZONE_H
-#define	DAMAGEZONE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef OBBOX_H
 	#include "obbox.h"
@@ -73,5 +71,3 @@ protected:
 	float						DamageTimer;
 
 };
-
-#endif

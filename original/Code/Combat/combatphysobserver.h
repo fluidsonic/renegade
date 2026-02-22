@@ -1,9 +1,7 @@
-#ifndef	COMBATPHYSOBSERVER_H
-#define	COMBATPHYSOBSERVER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	PHYSOBSERVER_H
 	#include "physobserver.h"
@@ -20,5 +18,3 @@ public:
 	virtual	PhysicalGameObj *		As_PhysicalGameObj( void )		{ return NULL; }
 	virtual	BuildingGameObj *		As_BuildingGameObj( void )		{ return NULL; }
 };
-
-#endif	//	COMBATPHYSOBSERVER_H

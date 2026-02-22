@@ -1,5 +1,6 @@
-#ifndef GDSINGLEPLAYER_H
-#define GDSINGLEPLAYER_H
+#pragma once
+
+#include "global.h"
 
 #include "gamedata.h"
 
@@ -22,6 +23,3 @@ class	cGameDataSinglePlayer : public cGameData {
 		virtual	bool	Remember_Inventory( void )	const				{ return true; }
 
 };
-
-#endif	// GDSINGLEPLAYER_H
-

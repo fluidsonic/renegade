@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __POPUP_DIALOG_H
-#define __POPUP_DIALOG_H
+#include "global.h"
 
 #include "dialogbase.h"
 #include "rendobj.h"
@@ -70,6 +70,3 @@ protected:
 	bool							IsBackgroundDarkened;
 
 };
-
-#endif //__POPUP_DIALOG_H
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "PrimitiveTypeCheck.h"
 #include "clang-tidy/ClangTidyModule.h"
 #include "clang-tidy/ClangTidyModuleRegistry.h"

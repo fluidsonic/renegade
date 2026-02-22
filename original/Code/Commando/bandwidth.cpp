@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bandwidth.h"  // I WANNA BE FIRST!
 
 #include "miscutil.h"

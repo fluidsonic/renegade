@@ -1,3 +1,4 @@
+#include "global.h"
 #include "loadingevent.h"
 
 #include <stdio.h>

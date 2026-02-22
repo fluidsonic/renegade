@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DX8LIST_H
-#define DX8LIST_H
+#include "global.h"
 
-#include "always.h"
 #include "multilist.h"
 
 /*
@@ -24,6 +23,3 @@ typedef MultiListIterator<DX8PolygonRendererClass>		DX8PolygonRendererListIterat
 class DX8TextureTrackerClass;
 typedef MultiListClass<DX8TextureTrackerClass>			DX8TextureTrackerList;
 typedef MultiListIterator<DX8TextureTrackerClass>		DX8TextureTrackerListIterator;
-
-#endif //DX8LIST_H
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef RNDSTRNG_H
-#define RNDSTRNG_H
+#include "global.h"
 
 #include	"vector.h"
 #include	"random.h"
@@ -24,6 +24,3 @@ private:
 	DynamicVectorClass<StringClass>	Strings;
 	Random2Class							Randomizer;
 };
-
-#endif // RNDSTRNG_H
-

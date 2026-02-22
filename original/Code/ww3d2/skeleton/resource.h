@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by SKELETON.RC

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __AUDIO_EVENTS_H
-#define __AUDIO_EVENTS_H
+#include "global.h"
 
 #include "simplevec.h"
 #include "vector.h"
@@ -175,6 +175,3 @@ AudioCallbackListClass<T>::Remove_Callback (T pointer)
 
 	return ;
 }
-
-#endif //__AUDIO_EVENTS_H
-

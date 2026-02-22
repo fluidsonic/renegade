@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCREDITS_H
-#define __DLGCREDITS_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -35,6 +35,3 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGCREDITS_H
-

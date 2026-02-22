@@ -1,5 +1,6 @@
-#ifndef __LZO_CONF_H
-#define __LZO_CONF_H
+#pragma once
+
+#include "global.h"
 
 #ifndef __LZOCONF_H
 #  include "lzoconf.h"
@@ -213,9 +214,7 @@
 	(BOUNDS_CHECKING_OFF_IN_EXPR( \
 		(m_pos < in || (m_off = ip - m_pos) <= 0 || m_off > max_offset) ))
 
-#endif /* already included */
 
 /*
 vi:ts=4
 */
-

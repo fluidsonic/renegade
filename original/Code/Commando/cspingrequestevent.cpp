@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cspingrequestevent.h"
 
 #include <stdio.h>

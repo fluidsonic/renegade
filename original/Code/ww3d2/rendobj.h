@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef RENDOBJ_H
-#define RENDOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "refcount.h"
 #include "sphere.h"
 #include "coltype.h"
@@ -513,5 +512,3 @@ WWINLINE bool RenderObjClass::Is_Transform_Identity_No_Validity_Check() const
 {
 	return IsTransformIdentity;
 }
-
-#endif

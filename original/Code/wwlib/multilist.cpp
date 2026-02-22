@@ -1,3 +1,4 @@
+#include "global.h"
 #include "multilist.h"
 
 /*
@@ -195,4 +196,3 @@ MultiListObjectClass * GenericMultiListClass::Internal_Remove_List_Head(void)
 	// here you go.
 	return obj;
 }
-

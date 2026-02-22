@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_TESTS_H
-#define __DIALOG_TESTS_H
+#include "global.h"
 
 #include "popupdialog.h"
 #include "menudialog.h"
@@ -435,5 +435,3 @@ protected:
 	float								WheelRadius;
 
 };
-
-#endif //__DIALOG_TESTS_H

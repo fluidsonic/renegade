@@ -1,9 +1,9 @@
-// ddraw.h compat shim for macOS
 #pragma once
-#ifndef DDRAW_H_COMPAT
-#define DDRAW_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// ddraw.h compat shim for macOS
+
 #include "wingdi.h"
 #include "d3d8types.h"
 
@@ -252,5 +252,3 @@ inline HRESULT DirectDrawCreateEx(void* lpGUID, void** lplpDD, void* iid, IUnkno
 // DDFLIP flags
 #define DDFLIP_WAIT              0x00000001L
 #define DDFLIP_DONOTWAIT         0x00000020L
-
-#endif // DDRAW_H_COMPAT

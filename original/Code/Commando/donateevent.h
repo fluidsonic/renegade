@@ -1,5 +1,6 @@
-#ifndef __DONATEEVENT_H__
-#define __DONATEEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -33,5 +34,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __DONATEEVENT_H__

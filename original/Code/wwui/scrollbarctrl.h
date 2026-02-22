@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SCROLLBAR_CTRL_H
-#define __SCROLLBAR_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -104,6 +104,3 @@ protected:
 	float						ScaleX;
 	float						ScaleY;
 };
-
-#endif //__SCROLLBAR_CTRL_H
-

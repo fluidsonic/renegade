@@ -1,3 +1,4 @@
+#include "global.h"
 #include "formconv.h"
 
 D3DFORMAT WW3DFormatToD3DFormatConversionArray[WW3D_FORMAT_COUNT] = {

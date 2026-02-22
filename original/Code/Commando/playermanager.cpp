@@ -1,3 +1,4 @@
+#include "global.h"
 #include "playermanager.h"
 
 #include <win.h>
@@ -1255,4 +1256,3 @@ bool cPlayerManager::Load(ChunkLoadClass &cload)
 }
 
 //-----------------------------------------------------------------------------
-

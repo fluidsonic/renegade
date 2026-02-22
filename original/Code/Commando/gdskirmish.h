@@ -1,5 +1,6 @@
-#ifndef GDSKIRMISH_H
-#define GDSKIRMISH_H
+#pragma once
+
+#include "global.h"
 
 #include "gamedata.h"
 #include "basecontroller.h"
@@ -51,5 +52,3 @@ private:
 	BaseControllerClass	BaseNOD;
 	bool						IsPlaying;
 };
-
-#endif	// GDSKIRMISH_H

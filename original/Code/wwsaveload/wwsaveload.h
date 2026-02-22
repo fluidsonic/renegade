@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef WWSAVELOAD_H
-#define WWSAVELOAD_H
+#include "global.h"
 
 /**
 ** WWSaveLoad
@@ -13,6 +13,3 @@ public:
 	static void		Init(void);
 	static void		Shutdown(void);
 };
-
-#endif
-

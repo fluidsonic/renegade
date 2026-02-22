@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physicalgameobj.h"
 #include "damage.h"
 #include "scripts.h"
@@ -1262,4 +1263,3 @@ void PhysicalGameObj::Object_Shattered_Something
 														false		// no emitter
 														);
 }
-

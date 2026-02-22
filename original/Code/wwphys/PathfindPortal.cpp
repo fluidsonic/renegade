@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pathfindportal.h"
 #include "pathfindsector.h"
 #include "pathfind.h"
@@ -317,4 +318,3 @@ PathfindWaypathPortalClass::Load_Variables (ChunkLoadClass &cload)
 	
 	return true;
 }
-

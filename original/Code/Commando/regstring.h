@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     regstring.h
 // Author:       Tom Spencer-Smith
@@ -6,10 +10,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef REGSTRING_H
-#define REGSTRING_H
 
-#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryString
@@ -28,4 +29,3 @@ class cRegistryString
 };
 
 //-----------------------------------------------------------------------------
-#endif // REGSTRING_H

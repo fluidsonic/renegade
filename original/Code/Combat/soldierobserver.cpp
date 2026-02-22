@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soldierobserver.h"
 #include "soldier.h"
 #include "action.h"

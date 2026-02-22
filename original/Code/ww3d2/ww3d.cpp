@@ -1,3 +1,4 @@
+#include "global.h"
 #include <stdio.h>
 #include "ww3d.h"
 #include "rinfo.h"

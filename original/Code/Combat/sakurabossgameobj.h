@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SAKURABOSS_GAMEOBJ_H
-#define __SAKURABOSS_GAMEOBJ_H
+#include "global.h"
 
 #include "vehicle.h"
 #include "damage.h"
@@ -260,5 +260,3 @@ private:
 	float							TiltAngle;
 	int							ChopperTiltBoneIndex;
 };
-
-#endif //__SAKURABOSS_GAMEOBJ_H

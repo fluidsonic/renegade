@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef WWPHYSTRIG_H
-#define WWPHYSTRIG_H
+#include "global.h"
 
 /*
 ** Debug triggers for WWPhys
@@ -16,5 +16,3 @@ enum
 	WWPHYS_TRIGGER_INVERT_VIS =						0x202,
 	WWPHYS_TRIGGER_DISABLE_VIS =						0x203,
 };
-
-#endif

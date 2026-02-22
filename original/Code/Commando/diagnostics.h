@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     diagnostics.h
 // Project:      Commando
@@ -7,10 +11,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef DIAGNOSTICS_H
-#define DIAGNOSTICS_H
 
-#include "global.h"
 
 //
 // This class is for displaying the state of variables on the screen.
@@ -40,4 +41,3 @@ class cDiagnostics
 };
 
 //-----------------------------------------------------------------------------
-#endif // DIAGNOSTICS_H

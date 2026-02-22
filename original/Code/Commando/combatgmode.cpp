@@ -1,3 +1,4 @@
+#include "global.h"
 #include "combatgmode.h"
 #include "systimer.h"
 #include "level.h"

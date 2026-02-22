@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef FONT3D_H
-#define FONT3D_H
+#include "global.h"
 
-#include "always.h"
 #include "refcount.h"
 #include "vector4.h"
 #include "widestring.h"
@@ -178,5 +177,3 @@ private:
 
 	void					Build_Cached_Tables();
 };
-
-#endif 

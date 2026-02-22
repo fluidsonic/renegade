@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef FONT_H
-#define FONT_H
+#include "global.h"
 
 #include	"convert.h"
 #include	"point.h"
@@ -27,5 +27,3 @@ class FontClass {
 		virtual int Set_XSpacing(int x) = 0;
 		virtual int Set_YSpacing(int y) = 0;
 };
-
-#endif

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef STRAW_H
-#define STRAW_H
+#include "global.h"
 
 /*
 **	This is a demand driven data carrier. It will retrieve the byte request by passing
@@ -33,5 +33,3 @@ class Straw
 		Straw(Straw & rvalue);
 		Straw & operator = (Straw const & pipe);
 };
-
-#endif

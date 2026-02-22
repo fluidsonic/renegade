@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYS_H
-#define PHYS_H
+#include "global.h"
 
-#include "always.h"
 #include "refcount.h"
 #include "matrix3d.h"
 #include "physobserver.h"
@@ -731,5 +730,3 @@ protected:
 	
 	friend class PhysClass;
 };
-
-#endif

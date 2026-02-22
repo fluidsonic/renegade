@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef	__STATICNETWORKOBJECT_H
-#define	__STATICNETWORKOBJECT_H
+#include "global.h"
 
 #include "networkobject.h"
 #include "vector.h"
@@ -261,5 +261,3 @@ private:
 	////////////////////////////////////////////////////////////////
 	float		Health;
 };
-
-#endif	// __STATICNETWORKOBJECT_H

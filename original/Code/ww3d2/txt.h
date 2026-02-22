@@ -1,5 +1,6 @@
-#ifndef TXT_H
-#define TXT_H
+#pragma once
+
+#include "global.h"
 
 class FontClass;
 class ConvertClass;
@@ -36,5 +37,3 @@ class TextTextureClass {
 		int				TextureSize;
 	
 };
-
-#endif

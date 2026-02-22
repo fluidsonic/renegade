@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     mathutil.h
 // Project:      wwutil
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef MATHUTIL_H
-#define MATHUTIL_H
 
 class cMathUtil
 {
@@ -33,5 +35,3 @@ class cMathUtil
 		static const double PI;
 		static const double PI_2;
 };
-
-#endif // MATHUTIL_H

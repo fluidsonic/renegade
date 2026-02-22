@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef BOXROBJ_H
-#define BOXROBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "rendobj.h"
 #include "w3d_file.h"
 #include "shader.h"
@@ -211,6 +210,3 @@ private:
 ** Instance of the loader which the asset manager installs
 */
 extern BoxLoaderClass			_BoxLoader;
-
-#endif
-

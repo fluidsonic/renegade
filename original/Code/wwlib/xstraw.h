@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef XSTRAW_H
-#define XSTRAW_H
+#include "global.h"
 
 #include	"buff.h"
 #include	"straw.h"
@@ -49,5 +49,3 @@ class FileStraw : public Straw
 		FileStraw(FileStraw & rvalue);
 		FileStraw & operator = (FileStraw const & pipe);
 };
-
-#endif

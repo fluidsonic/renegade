@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgevadatatab.h"
 #include "string_ids.h"
 #include "translatedb.h"

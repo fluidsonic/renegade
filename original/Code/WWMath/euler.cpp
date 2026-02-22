@@ -1,3 +1,4 @@
+#include "global.h"
 #include "euler.h"	
 #include <float.h>
 
@@ -315,4 +316,3 @@ void _euler_unpack_order(int order,int &i,int &j,int &k,int &h,int &n,int &s,int
 	k = _euler_next[i+1-n];
 	h = (s ? k : i);
 }
-

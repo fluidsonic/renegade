@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef SEGLINE_H
-#define SEGLINE_H
+#include "global.h"
 
 #include "rendobj.h"
 #include "shader.h"
@@ -138,5 +138,3 @@ class SegmentedLineClass : public RenderObjClass
 		// LineRenderer, contains most of the line settings.
 		SegLineRendererClass		LineRenderer;
 };
-
-#endif SEGLINE_H

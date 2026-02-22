@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef BUILDINGAGGREGATE_H
-#define BUILDINGAGGREGATE_H
+#include "global.h"
 
-#include "always.h"
 #include "staticanimphys.h"
 #include "buildingstate.h"
 
@@ -106,6 +105,3 @@ protected:
 
 	friend class BuildingAggregateClass;
 };
-
-#endif //BUILDINGAGGREGATE_H
-

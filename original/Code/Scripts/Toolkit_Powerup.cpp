@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 
 // The Soldier Powerup Tables contains three columns.

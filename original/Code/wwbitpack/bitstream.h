@@ -1,5 +1,6 @@
-#ifndef BITSTREAM_H
-#define BITSTREAM_H
+#pragma once
+
+#include "global.h"
 
 #include "bitpacker.h"
 #include "encoderlist.h"
@@ -165,5 +166,3 @@ class BitStreamClass : public cBitPacker
 
 		UINT UncompressedSizeBytes; // for statistics only
 };
-
-#endif // TYPEENCODER_H

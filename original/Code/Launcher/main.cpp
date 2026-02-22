@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialog.h"
 #include "patch.h"
 #include "findpatch.h"

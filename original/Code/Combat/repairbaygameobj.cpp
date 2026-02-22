@@ -1,3 +1,4 @@
+#include "global.h"
 #include "repairbaygameobj.h"
 #include "basecontroller.h"
 #include "simpledefinitionfactory.h"

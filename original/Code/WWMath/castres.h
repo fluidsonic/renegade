@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef CASTRES_H
-#define CASTRES_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 
 /**
@@ -29,5 +28,3 @@ struct CastResultStruct
 	Vector3	ContactPoint;				// This will be set to the point of collision if ComputeContactPoint is true
 
 };
-
-#endif

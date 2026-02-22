@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MENU_ENTRY_CTRL_H
-#define __MENU_ENTRY_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -92,5 +92,3 @@ protected:
 	static int				MaxDefaultRedValue;
 	static int				MaxHilightRedValue;
 };
-
-#endif //__MENU_ENTRY_CTRL_H

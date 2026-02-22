@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colmath.h"
 #include "colmathinlines.h"
 #include "aaplane.h"
@@ -145,4 +146,3 @@ CollisionMath::Overlap_Test(const FrustumClass & frustum,const OBBoxClass & box,
 	}
 	return OVERLAPPED;
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_CONTROL_SAVELOAD_H
-#define __DLG_CONTROL_SAVELOAD_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "dlgmessagebox.h"
@@ -53,6 +53,3 @@ private:
 	int		Insert_Configuration (const InputConfigClass &config);
 	void		HandleNotification (DlgMsgBoxEvent &event);
 };
-
-#endif //__DLG_CONTROL_SAVELOAD_H
-

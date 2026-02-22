@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef VISSAMPLE_H
-#define VISSAMPLE_H
+#include "global.h"
 
 #include "visenum.h"
 #include "matrix3d.h"
@@ -51,6 +51,3 @@ protected:
 	int					BitsChanged;			// number of bits that changed with this sample
 
 };
-
-	
-#endif

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef WIDGETS_H
-#define WIDGETS_H
+#include "global.h"
 
 class RenderObjClass;
 
@@ -37,6 +37,3 @@ protected:
 	** call.  They are meant to be rendered immediately and released.
 	*/
 };
-
-#endif
-

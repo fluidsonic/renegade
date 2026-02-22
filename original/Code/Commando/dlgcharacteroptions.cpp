@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcharacteroptions.h"
 #include "listctrl.h"
 #include "translatedb.h"
@@ -285,4 +286,3 @@ CharacterOptionsMenuClass::Ensure_Definitions_Are_Loaded (void)
 	UnloadDefs = true;
 	return ;
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cstextobj.h"
 
 #include <stdio.h>

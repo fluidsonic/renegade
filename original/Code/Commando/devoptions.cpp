@@ -5,6 +5,7 @@
 // Description:
 //
 
+#include "global.h"
 #include "devoptions.h" // I WANNA BE FIRST!
 
 #include "_globals.h"

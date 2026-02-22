@@ -1,7 +1,6 @@
+#pragma once
 
-
-#ifndef WW3DIDS_H
-#define WW3DIDS_H
+#include "global.h"
 
 #include "saveloadids.h"
 
@@ -34,5 +33,3 @@ enum
 	WW3D_PERSIST_CHUNKID_DAZZLE,
 	WW3D_PERSIST_CHUNKID_RENEGADE_TERRAIN,
 };
-
-#endif

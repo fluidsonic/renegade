@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     netutil.h
 // Project:      wwnet
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef NETUTIL_H
-#define NETUTIL_H
 
 #include "win.h"
 #include <winsock.h>
@@ -74,7 +76,6 @@ class cNetUtil
 		static char		WorkingAddressBuffer[300];
 };
 
-#endif // NETUTIL_H
 
       //static USHORT Get_Header_Bytes() {return HeaderBytes;}
       //static USHORT Get_Max_Packet_App_Data_Size() {return MaxPacketAppDataSize;}

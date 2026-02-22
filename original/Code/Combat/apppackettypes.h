@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __APPPACKETTYPES_H__
-#define __APPPACKETTYPES_H__
+#include "global.h"
 
 //-----------------------------------------------------------------------------
 //
@@ -83,7 +83,6 @@ enum
 
 //-----------------------------------------------------------------------------
 
-#endif //__APPPACKETTYPES_H__
 
 	//APPPACKETTYPE_FLAGCAPEVENT,
 	//APPPACKETTYPE_STEALTHEVENT,

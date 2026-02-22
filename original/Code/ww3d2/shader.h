@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef SHADER_H
-#define SHADER_H
-
-#include "always.h"
+#include "global.h"
 
 #undef PASS_MAX
 
@@ -430,5 +428,3 @@ inline void ShaderClass::Reset()
 	Set_Post_Detail_Alpha_Func(DETAILALPHA_DISABLE);
 	Set_NPatch_Enable(NPATCH_DISABLE);
 }
-
-#endif //SHADER_H

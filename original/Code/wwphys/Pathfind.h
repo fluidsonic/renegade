@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PATHFIND_H
-#define __PATHFIND_H
+#include "global.h"
 
 #include "aabtreecull.h"
 #include "pathfindsector.h"
@@ -189,6 +189,3 @@ PathfindClass::Peek_Sector (int sector_index)
 		return NULL;
 	}
 }
-
-#endif //__PATHFIND_H
-

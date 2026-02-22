@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CONVERSATION_MGR_H
-#define __CONVERSATION_MGR_H
+#include "global.h"
 
 #include "saveloadsubsystem.h"
 #include "vector.h"
@@ -195,6 +195,3 @@ ConversationMgrClass::Peek_Conversation (int index_to_find)
 
 	return conversation;
 }
-
-#endif //__CONVERSATION_MGR_H
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef VISTABLE_H
-#define VISTABLE_H
+#include "global.h"
 
 #include "vector.h"
 #include "refcount.h"
@@ -121,5 +121,3 @@ inline void VisTableClass::Set_Bit(int i,bool onoff)
 		Buffer[i>>5] &= ~(0x80000000u >> (i & 0x01F)); 
 	} 
 }
-
-#endif

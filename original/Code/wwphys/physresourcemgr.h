@@ -1,7 +1,7 @@
-#ifndef PHYSRESOURCEMGR_H
-#define PHYSRESOURCEMGR_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "shader.h"
 
 class TextureClass;
@@ -34,6 +34,3 @@ public:
 	static TextureClass *				Get_Grid_Texture(void);
 	static TextureClass *				Peek_Grid_Texture(void);
 };
-
-#endif
-

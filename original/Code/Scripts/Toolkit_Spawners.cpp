@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 
 DECLARE_SCRIPT(M00_Spawner_Controller_RMV, "Spawner_ID:int, Custom_Type_To_Enable:int, Custom_Type_To_Trigger:int, On_When_Created=0:int")

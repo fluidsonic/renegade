@@ -1,6 +1,5 @@
-#ifndef SHUTDOWN_H
-#define SHUTDOWN_H
+#pragma once
+
+#include "global.h"
 
 void Game_Shutdown(void);
-
-#endif

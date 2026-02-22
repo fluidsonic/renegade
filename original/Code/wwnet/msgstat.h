@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     msgstat.h
 // Project:      
@@ -7,10 +11,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef MSGSTAT_H
-#define MSGSTAT_H
 
-#include "global.h"
 
 #ifndef NULL
 #define NULL 0L
@@ -52,6 +53,3 @@ class cMsgStat
 };
 
 //-----------------------------------------------------------------------------
-
-#endif // MSGSTAT_H
-

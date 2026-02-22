@@ -1,4 +1,5 @@
 
+#include "global.h"
 #include "movephys.h"
 #include "colmathaabox.h"
 #include "pscene.h"
@@ -540,4 +541,3 @@ bool MoveablePhysDefClass::Is_Type(const char * type_name)
 		return DynamicPhysDefClass::Is_Type(type_name);
 	}
 }
-

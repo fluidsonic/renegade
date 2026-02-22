@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"dsurface.h"
 #include	<assert.h>
 
@@ -849,4 +849,3 @@ void DSurface::Build_Remap_Table(unsigned short * table, PaletteClass const & pa
 		table[index] = (unsigned short)Build_Hicolor_Pixel(palette[index].Get_Red(), palette[index].Get_Green(), palette[index].Get_Blue());
 	}
 }
-

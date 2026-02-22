@@ -1,5 +1,6 @@
-#ifndef MISC_H
-#define MISC_H
+#pragma once
+
+#include "global.h"
 
 #include	"win.h"
 #include	"ddraw.h"
@@ -128,6 +129,3 @@ extern WORD OperationgSystem;
 #endif
 
 /*=========================================================================*/
-
-#endif // MISC_H
-

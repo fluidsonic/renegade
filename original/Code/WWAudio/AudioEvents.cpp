@@ -1,3 +1,4 @@
+#include "global.h"
 #include "audioevents.h"
 #include "soundsceneobj.h"
 

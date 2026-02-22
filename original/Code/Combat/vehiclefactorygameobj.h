@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__VEHICLEFACTORYGAMEOBJ_H
-#define	__VEHICLEFACTORYGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "building.h"
 
 ////////////////////////////////////////////////////////////////
@@ -170,6 +169,3 @@ protected:
 
 	static int			MaxVehiclesPerTeam;
 };
-
-#endif	// __VEHICLEFACTORYGAMEOBJ_H
-

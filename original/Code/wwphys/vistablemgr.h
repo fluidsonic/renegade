@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef VISTABLEMGR_H
-#define VISTABLEMGR_H
+#include "global.h"
 
-#include "always.h"
 #include "simplevec.h"
 
 class VisTableClass;
@@ -68,5 +67,3 @@ protected:
 	VisDecompressionCacheClass *							Cache;	
 	unsigned int												FrameCounter;
 };
-
-#endif

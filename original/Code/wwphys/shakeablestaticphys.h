@@ -1,7 +1,7 @@
-#ifndef SHAKEABLESTATICPHYS_H
-#define SHAKEABLESTATICPHYS_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "staticanimphys.h"
 
 class ShakeableStaticPhysDefClass;
@@ -54,6 +54,3 @@ protected:
 
 	friend class								ShakeableStaticPhysClass;
 };
-
-#endif //SHAKEABLESTATICPHYS_H
-

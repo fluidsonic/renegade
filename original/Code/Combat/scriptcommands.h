@@ -1,5 +1,6 @@
-#ifndef	SCRIPTCOMMANDS_H
-#define	SCRIPTCOMMANDS_H
+#pragma once
+
+#include "global.h"
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -437,5 +438,3 @@ public:
 ** and not from the DLL
 */
 ScriptCommands	*Get_Script_Commands( void );
-
-#endif	// SCRIPTCOMMANDS_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "sharebuf.h"
 #include "linegrp.h"
 #include "texture.h"

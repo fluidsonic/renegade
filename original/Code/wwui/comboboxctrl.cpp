@@ -1,3 +1,4 @@
+#include "global.h"
 #include "comboboxctrl.h"
 #include "assetmgr.h"
 #include "refcount.h"
@@ -723,4 +724,3 @@ ComboBoxCtrlClass::On_EditCtrl_Key_Down (EditCtrlClass *edit, uint32_t key_id, u
 
 	return handled;
 }
-

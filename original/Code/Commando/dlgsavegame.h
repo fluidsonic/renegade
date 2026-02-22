@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_SAVE_GAME_H
-#define __DLG_SAVE_GAME_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -66,6 +66,3 @@ private:
 	uint16_t	CurrSortCol;
 	bool		IsSortAscending;
 };
-
-#endif //__DLG_SAVE_GAME_H
-

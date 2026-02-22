@@ -1,3 +1,4 @@
+#include "global.h"
 #include "texturethumbnail.h"
 #include "hashtemplate.h"
 #include "missingtexture.h"

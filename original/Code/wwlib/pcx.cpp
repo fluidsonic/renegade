@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"pcx.h"
 #include <stdlib.h>
 
@@ -126,4 +126,3 @@ Surface * Read_PCX_File(FileClass & file_handle, PaletteClass * palette, void * 
 	file_handle.Close();
 	return pic;
 }
-

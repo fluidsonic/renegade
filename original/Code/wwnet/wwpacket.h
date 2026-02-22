@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     wwpacket.h
 // Project:      wwnet
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef WWPACKET_H
-#define WWPACKET_H
 
 #include "bitstream.h"
 #include "fromaddress.h"
@@ -92,7 +94,6 @@ class cPacket : public BitStreamClass, public AutoPoolClass<cPacket, 256>
 
 //-----------------------------------------------------------------------------
 
-#endif // WWPACKET_H
 
       //int ExecuteTime;
       //int ReturnCode;

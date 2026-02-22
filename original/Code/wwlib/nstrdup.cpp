@@ -1,3 +1,4 @@
+#include "global.h"
 #include "string.h"
 #include "nstrdup.h"
 //#include "../app/main/gnew.h"
@@ -23,4 +24,3 @@ char * nstrdup(const char *str)
 	strcpy(retval, str);
 	return retval;
 }
-

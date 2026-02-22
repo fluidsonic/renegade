@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgevaviewertab.h"
 
 #include "resource.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "wwmath.h"
 #include "lookuptable.h"
 #include <stdlib.h>
@@ -39,4 +40,3 @@ float		WWMath::Random_Float(void)
 { 
 	return ((float)(rand() & 0xFFF)) / (float)(0xFFF); 
 }
-

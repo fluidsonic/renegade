@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef LIGHTPHYS_H
-#define LIGHTPHYS_H
+#include "global.h"
 
 #include "decophys.h"
 #include "rendobj.h"
@@ -59,5 +59,3 @@ private:
 	LightPhysClass(const LightPhysClass &);
 	LightPhysClass & operator = (const LightPhysClass &);
 };
-
-#endif

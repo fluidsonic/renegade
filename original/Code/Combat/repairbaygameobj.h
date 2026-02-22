@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__REPAIRBAYGAMEOBJ_H
-#define	__REPAIRBAYGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "building.h"
 
 ////////////////////////////////////////////////////////////////
@@ -150,5 +149,3 @@ private:
 	Matrix3D					Bones[BONE_COUNT];
 	static const char *	BoneNames[BONE_COUNT];
 };
-
-#endif	// __REPAIRBAYGAMEOBJ_H

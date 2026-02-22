@@ -1,3 +1,4 @@
+#include "global.h"
 #include "sortingrenderer.h"
 #include "dx8vertexbuffer.h"
 #include "dx8indexbuffer.h"
@@ -671,4 +672,3 @@ void SortingRendererClass::Deinit()
 	temp_index_array=NULL;
 	temp_index_array_count=0;
 }
-

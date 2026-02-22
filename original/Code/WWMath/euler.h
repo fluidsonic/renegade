@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef EULER_H
-#define EULER_H
+#include "global.h"
 
-#include "always.h"
 #include "matrix3d.h"
 #include "quat.h"
 
@@ -78,5 +77,3 @@ private:
 	int		Order;
 
 };
-
-#endif /*EULER_H*/

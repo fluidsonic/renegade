@@ -1,3 +1,4 @@
+#include "global.h"
 #include "missingtexture.h"
 #include "texture.h"
 #include "dx8wrapper.h"

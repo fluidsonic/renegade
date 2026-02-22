@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcontrols.h"
 #include "dlgcontroltabs.h"
 #include "dlgcontrolsaveload.h"
@@ -130,4 +131,3 @@ ControlsMenuClass::Reload (void)
 	
 	return ;
 }
-

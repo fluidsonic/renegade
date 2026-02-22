@@ -1,3 +1,4 @@
+#include "global.h"
 #include "globalsettings.h"
 #include "persistfactory.h"
 #include "combatchunkid.h"
@@ -1157,4 +1158,3 @@ bool	HumanAnimOverrideDef::Load( ChunkLoadClass &cload )
 
 	return true;
 }
-

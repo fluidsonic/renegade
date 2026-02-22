@@ -1,5 +1,6 @@
-#ifndef _GROUP_H_
-#define _GROUP_H_
+#pragma once
+
+#include "global.h"
 
 #include "scripts.h"
 #include "vector.h"
@@ -65,5 +66,3 @@ class Group
 		char mName[64];
 		DynamicVectorClass<GameObject*> mMembers;
 	};
-
-#endif // _GROUP_H_

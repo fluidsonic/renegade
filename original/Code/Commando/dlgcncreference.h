@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCNCREFERENCE_H
-#define __DLGCNCREFERENCE_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "dlgmessagebox.h"
@@ -55,5 +55,3 @@ private:
 	static DWORD	LastSuicideTimeMs;
 	static DWORD	LastChangeTeamTimeMs;
 };
-
-#endif //__DLGCNCREFERENCE_H

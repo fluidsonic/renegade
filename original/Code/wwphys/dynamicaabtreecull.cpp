@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dynamicaabtreecull.h"
 #include "pscene.h"
 #include "visrendercontext.h"
@@ -858,4 +859,3 @@ void DynamicAABTreeCullClass::Merge_Vis_Object_IDs(uint32_t id0,uint32_t id1)
 		}
 	}
 }
-

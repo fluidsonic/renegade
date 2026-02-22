@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 class BuildInfoClass
 {
 
@@ -62,4 +66,3 @@ class BuildInfoClass
 		static char BuildNumber [64];
 		static char BuildDate   [64];
 };
-

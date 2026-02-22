@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vehicledazzle.h"
 #include "dazzle.h"
 #include "ww3d.h"

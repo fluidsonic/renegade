@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __WAYPOINT_H
-#define __WAYPOINT_H
+#include "global.h"
 
 #include "persist.h"
 #include "vector3.h"
@@ -112,5 +112,3 @@ WaypointClass::Set_Flag (int flag, bool onoff)
 
 	return ;
 }
-
-#endif //__WAYPOINT_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "refcount.h"
 #include <windows.h>
 
@@ -152,4 +153,3 @@ void	RefCountClass::Dec_Total_Refs(RefCountClass * obj)
 }
 
 #endif
-

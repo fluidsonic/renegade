@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __RENEGADE_DIALOG_MGR_H
-#define __RENEGADE_DIALOG_MGR_H
+#include "global.h"
 
 #include "dialogfactory.h"
 #include "dialogresource.h"
@@ -92,6 +92,3 @@ RenegadeDialogMgrClass::Do_Dialog_By_Button_ID (int button_id)
 	FactoryArray[button_id - DIALOG_LINK_FIRST]->Do_Dialog ();
 	return ;
 }
-
-#endif //__RENEGADE_DIALOG_MGR_H
-

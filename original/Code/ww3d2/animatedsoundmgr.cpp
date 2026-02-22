@@ -1,3 +1,4 @@
+#include "global.h"
 #include "animatedsoundmgr.h"
 #include "ini.h"
 #include "inisup.h"
@@ -371,4 +372,3 @@ AnimatedSoundMgrClass::Trigger_Sound
 
 	return retval;
 }
-

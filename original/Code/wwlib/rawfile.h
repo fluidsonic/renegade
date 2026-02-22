@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef RAWFILE_Hx
-#define RAWFILE_Hx
+#include "global.h"
 
 //#include	<errno.h>
 
@@ -134,5 +134,3 @@ inline char const * RawFileClass::File_Name(void) const
 {
 	return(Filename);
 }
-
-#endif

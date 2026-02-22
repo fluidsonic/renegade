@@ -1,3 +1,4 @@
+#include "global.h"
 #include "donateevent.h"
 
 #include <stdio.h>
@@ -110,4 +111,3 @@ cDonateEvent::Import_Creation(BitStreamClass & packet)
 
 	Act();
 }
-

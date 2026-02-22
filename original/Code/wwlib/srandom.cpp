@@ -3,6 +3,7 @@
 //
 
 
+#include "global.h"
 #include "srandom.h"
 #include <stdlib.h>
 #include <stdio.h>

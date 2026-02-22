@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef COMPOSITE_H
-#define COMPOSITE_H
+#include "global.h"
 
 #include "rendobj.h"
 #include "wwstring.h"
@@ -53,5 +53,3 @@ protected:
 	SphereClass						ObjSphere;				// object-space bounding sphere
 	AABoxClass						ObjBox;					// object-space bounding box
 };
-
-#endif

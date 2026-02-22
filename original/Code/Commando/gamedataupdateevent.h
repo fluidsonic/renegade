@@ -1,5 +1,6 @@
-#ifndef __GAMEDATAUPDATEEVENT_H__
-#define __GAMEDATAUPDATEEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -28,5 +29,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __GAMEDATAUPDATEEVENT_H__

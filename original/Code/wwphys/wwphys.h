@@ -1,7 +1,6 @@
-#ifndef WWPHYS
-#define WWPHYS
+#pragma once
 
-#include "always.h"
+#include "global.h"
 
 class WWPhys
 {
@@ -13,6 +12,3 @@ public:
 	static void Init(void);
 	static void Shutdown(void);
 };
-
-#endif
-

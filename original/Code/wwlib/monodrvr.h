@@ -1,5 +1,6 @@
+#pragma once
 
-
+#include "global.h"
 
 /*
 **	This is the identifier for the Monochrome Display Driver.
@@ -76,4 +77,3 @@ int main(int argc, char *argv[])
 }
 
 */
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "inventory.h"
 #include "soldier.h"
 #include "weaponbag.h"
@@ -94,4 +95,3 @@ void	InventoryClass::Restore_Inventory( SoldierGameObj * soldier )
 
 	}
 }
-

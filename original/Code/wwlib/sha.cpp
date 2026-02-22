@@ -1,3 +1,4 @@
+#include "global.h"
 #include	"sha.h"
 #include	<iostream.h>
 #include	<stdlib.h>
@@ -276,4 +277,3 @@ void SHAEngine::Process_Block(void const * source, SHADigest & acc) const
 	acc.Long[3] += alt.Long[3];
 	acc.Long[4] += alt.Long[4];
 }
-

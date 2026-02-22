@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef SPHERE_H
-#define SPHERE_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 #include "matrix3d.h"
 
@@ -444,6 +443,3 @@ inline SphereClass operator * (const Matrix3D & m, const SphereClass & s)
 {
 	return Transform_Sphere(m,s);
 }
-
-#endif
-

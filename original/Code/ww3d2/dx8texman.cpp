@@ -5,6 +5,7 @@
 // Note: It does NOT addref to textures because it is called in the texture
 // destructor
 
+#include "global.h"
 #include "dx8texman.h"
 
 DX8TextureTrackerList DX8TextureManagerClass::Managed_Textures;

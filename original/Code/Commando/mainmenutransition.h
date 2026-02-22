@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MAIN_MENU_TRANSITION_H
-#define __MAIN_MENU_TRANSITION_H
+#include "global.h"
 
 #include "dialogtransition.h"
 
@@ -70,6 +70,3 @@ private:
 	float					TargetFrame;
 
 };
-
-#endif //__MAIN_MENU_TRANSITION_H
-

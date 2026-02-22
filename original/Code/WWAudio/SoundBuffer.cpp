@@ -1,3 +1,4 @@
+#include "global.h"
 #include "soundbuffer.h"
 #include "rawfile.h"
 #include "utils.h"
@@ -323,4 +324,3 @@ StreamSoundBufferClass::Load_From_File (FileClass &file)
 
 	return true;
 }
-

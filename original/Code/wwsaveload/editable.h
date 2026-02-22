@@ -1,9 +1,7 @@
+#pragma once
 
+#include "global.h"
 
-#ifndef __EDITABLE_H
-#define __EDITABLE_H
-
-#include "always.h"
 #include "persist.h"
 #include "parameter.h"
 #include "simpleparameter.h"
@@ -81,7 +79,3 @@ EditableClass::Unlock_Parameter (int i)
 	#define ZONE_PARAM(_class, data, name) 											
 	#define PARAM_SEPARATOR(_class, name) 											
 	#define GENERIC_DEFID_PARAM(_class, data, root_class_id) 						
-
-
-#endif //__EDITABLE_H
-

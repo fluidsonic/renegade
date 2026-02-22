@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef MSGLOOP_H
-#define MSGLOOP_H
+#include "global.h"
 
 #include <windows.h>
 
@@ -17,5 +17,3 @@ void Remove_Accelerator(HACCEL accelerator);
 
 // General purpose message intercept handler.
 extern bool (*Message_Intercept_Handler)(MSG &msg);
-
-#endif

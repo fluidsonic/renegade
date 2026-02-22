@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_BASE_H
-#define __DIALOG_BASE_H
+#include "global.h"
 
 #include "vector.h"
 #include "vector3.h"
@@ -242,6 +242,3 @@ protected:
 
 	static DEFAULT_DLG_CMD_HANDLER	DefaultCmdHandler;
 };
-
-#endif //__DIALOG_BASE_H
-

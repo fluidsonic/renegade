@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dynamesh.h"
 #include "dx8vertexbuffer.h"
 #include "dx8indexbuffer.h"
@@ -786,4 +787,3 @@ void DynamicScreenMeshClass::Reset( void )
 	Reset_Flags();	
 	Reset_Mesh_Counters();	
 }
-

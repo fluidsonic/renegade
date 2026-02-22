@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dx8fvf.h"
 #include "wwstring.h"
 #include <D3dx8core.h>

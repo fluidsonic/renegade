@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCNCTEAMINFO_H
-#define __DLGCNCTEAMINFO_H
+#include "global.h"
 
 #include "menudialog.h"
 
@@ -46,5 +46,3 @@ private:
 	//	Private member data
 	///////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGCNCTEAMINFO_H

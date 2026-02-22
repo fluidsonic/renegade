@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"vector.h"
 #include	<string.h>
 

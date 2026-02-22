@@ -1,5 +1,4 @@
-#ifndef __CLIENTPINGMANAGER_H__
-#define __CLIENTPINGMANAGER_H__
+#pragma once
 
 #include "global.h"
 
@@ -28,6 +27,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __CLIENTPINGMANAGER_H__
-

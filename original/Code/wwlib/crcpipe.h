@@ -1,5 +1,6 @@
-#ifndef CRCPIPE_H
-#define CRCPIPE_H
+#pragma once
+
+#include "global.h"
 
 #include	"crc.h"
 #include	"pipe.h"
@@ -24,5 +25,3 @@ class CRCPipe : public Pipe
 		CRCPipe(CRCPipe & rvalue);
 		CRCPipe & operator = (CRCPipe const & pipe);
 };
-
-#endif

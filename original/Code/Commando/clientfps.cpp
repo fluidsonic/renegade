@@ -1,3 +1,4 @@
+#include "global.h"
 #include "clientfps.h"
 
 #include "networkobjectfactory.h"
@@ -100,4 +101,3 @@ CClientFps::Import_Frequent(BitStreamClass & packet)
 
 	Act();
 }
-

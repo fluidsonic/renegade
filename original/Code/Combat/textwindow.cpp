@@ -1,3 +1,4 @@
+#include "global.h"
 #include "textwindow.h"
 #include "render2dsentence.h"
 #include "assetmgr.h"

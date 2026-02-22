@@ -1,5 +1,6 @@
-#ifndef XMOUSE_H
-#define XMOUSE_H
+#pragma once
+
+#include "global.h"
 
 #include	"trect.h"
 class Surface;
@@ -85,5 +86,3 @@ class Mouse {
 		*/
 		virtual void Convert_Coordinate(int & x, int & y) const = 0;
 };
-
-#endif

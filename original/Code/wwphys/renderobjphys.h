@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef RENDEROBJPHYS_H
-#define RENDEROBJPHYS_H
+#include "global.h"
 
-#include "always.h"
 #include "dynamicphys.h"
 #include "pscene.h"
 #include "physcoltest.h"
@@ -48,6 +47,3 @@ private:
 	RenderObjPhysClass & operator = (const RenderObjPhysClass &);
 
 };
-
-#endif
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SPECIALEFFECTSGAMEOBJ_H
-#define __SPECIALEFFECTSGAMEOBJ_H
+#include "global.h"
 
 #include "physicalgameobj.h"
 
@@ -109,6 +109,3 @@ protected:
 	float				LifeRemaining;
 	bool				IsInitialized;
 };
-
-#endif //__SPECIALEFFECTSGAMEOBJ_H
-

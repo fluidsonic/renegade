@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hash.h"
 #include "realcrc.h"
 #include "osdep.h"
@@ -117,4 +118,3 @@ void	HashTableIteratorClass::Advance_Next(void)
 		NextEntry = Table.HashTable[ Index ];
 	}
 }
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __INPUT_CONFIG_MGR_H
-#define __INPUT_CONFIG_MGR_H
+#include "global.h"
 
 #include "inputconfig.h"
 #include "vector.h"
@@ -85,6 +85,3 @@ private:
 	static DynamicVectorClass<InputConfigClass>	ConfigList;
 	static int												CurrentConfigIndex;
 };
-
-#endif //__INPUT_CONFIG_MGR_H
-

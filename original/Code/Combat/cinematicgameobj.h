@@ -1,9 +1,7 @@
-#ifndef	CINEMATICGAMEOBJ_H
-#define	CINEMATICGAMEOBJ_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef ARMEDGAMEOBJ_H
 	#include "armedgameobj.h"
@@ -87,5 +85,3 @@ public:
 protected:
 	AudibleSoundClass		*Sound;
 };
-
-#endif	//	CINEMATICGAMEOBJ_H

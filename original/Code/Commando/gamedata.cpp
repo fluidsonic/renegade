@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gamedata.h"
 
 #include <stdio.h>

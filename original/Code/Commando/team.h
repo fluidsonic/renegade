@@ -1,5 +1,6 @@
-#ifndef TEAM_H
-#define TEAM_H
+#pragma once
+
+#include "global.h"
 
 #include "vector3.h"
 #include "soldier.h"
@@ -81,6 +82,3 @@ class cTeam : public NetworkObjectClass {
       int					Money;
       int					TeamNumber;
 };
-
-#endif	//	TEAM_H
-

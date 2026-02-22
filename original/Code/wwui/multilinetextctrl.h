@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MULTILINETEXTCTRL_H
-#define __MULTILINETEXTCTRL_H
+#include "global.h"
 
 #include "render2d.h"
 #include "render2dsentence.h"
@@ -65,5 +65,3 @@ protected:
 	int							RowsPerPage;
 	float							MouseWheelIncrement;
 };
-
-#endif //__MULTILINETEXTCTRL_H

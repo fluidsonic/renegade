@@ -1,9 +1,9 @@
-// mss.h compat shim for macOS - Miles Sound System stubs
 #pragma once
-#ifndef MSS_H_COMPAT
-#define MSS_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// mss.h compat shim for macOS - Miles Sound System stubs
+
 #include "winnt.h"
 #include "tchar.h"
 #include "mmsystem.h"
@@ -256,5 +256,3 @@ inline void AIL_set_file_callbacks(
 // Error
 inline char*       AIL_last_error() { return (char*)""; }
 inline INT32       AIL_error_string(INT32 err) { return 0; }
-
-#endif // MSS_H_COMPAT

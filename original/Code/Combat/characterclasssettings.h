@@ -1,7 +1,7 @@
-#ifndef	__CHARACTER_CLASS_SETTINGS_H
-#define	__CHARACTER_CLASS_SETTINGS_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "definition.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -88,5 +88,3 @@ protected:
 
 	static CharacterClassSettingsDefClass *			GlobalInstance;
 };
-
-#endif	//	__CHARACTER_CLASS_SETTINGS_H

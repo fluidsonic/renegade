@@ -1,3 +1,4 @@
+#include "global.h"
 #include "assetmgr.h"
 #include <assert.h>
 
@@ -1404,4 +1405,3 @@ const char * HTreeIterator::Current_Item_Name(void)
 {
 	return WW3DAssetManager::Get_Instance()->HTreeManager.Get_Tree(Index)->Get_Name();
 }
-

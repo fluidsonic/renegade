@@ -1,5 +1,6 @@
-#ifndef __IMECANDIDATE_H__
-#define __IMECANDIDATE_H__
+#pragma once
+
+#include "global.h"
 
 #include "Notify.h"
 #include "win.h"
@@ -79,6 +80,3 @@ typedef TypedActionPtr<CandidateAction, IMECandidate> CandidateEvent;
 typedef std::vector<IMECandidate> IMECandidateCollection;
 
 } // namespace IME
-
-#endif // __IMECANDIDATE_H__
-

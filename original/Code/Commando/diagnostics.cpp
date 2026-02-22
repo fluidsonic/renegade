@@ -6,6 +6,7 @@
 // Description:
 //
 
+#include "global.h"
 #include "diagnostics.h"
 
 #include <stdio.h>

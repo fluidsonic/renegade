@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PATH_OBJECT_H
-#define __PATH_OBJECT_H
+#include "global.h"
 
 #include "aabox.h"
 #include "obbox.h"
@@ -163,5 +163,3 @@ inline float PathObjectClass::Get_Width (void) const
 {
 	return m_CollisionBox.Extent.Y;
 }
-
-#endif //__PATH_OBJECT_H

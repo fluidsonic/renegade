@@ -1,3 +1,4 @@
+#include "global.h"
 #include "projectormanager.h"
 #include "colmathaabox.h"
 #include "pscene.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "buildingaggregate.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
@@ -625,4 +626,3 @@ bool BuildingAggregateDefClass::Load_State_Animation_Data(ChunkLoadClass & cload
 	}
 	return true;
 }
-

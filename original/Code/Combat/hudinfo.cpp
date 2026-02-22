@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hudinfo.h"
 #include "combat.h"
 #include "ccamera.h"

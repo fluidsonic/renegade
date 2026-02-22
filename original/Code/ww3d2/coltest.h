@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef COLTEST_H
-#define COLTEST_H
+#include "global.h"
 
-#include "always.h"
 #include "castres.h"
 #include "lineseg.h"
 #include "aabox.h"
@@ -258,5 +257,3 @@ inline bool OBBoxCollisionTestClass::Cast_To_Triangle(const TriClass & tri)
 {
 	return CollisionMath::Collide(Box,Move,tri,Vector3(0,0,0),Result);
 }
-
-#endif

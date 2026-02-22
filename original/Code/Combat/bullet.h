@@ -1,9 +1,7 @@
-#ifndef	BULLET_H
-#define	BULLET_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 class	ChunkSaveClass;
 class	ChunkLoadClass;
@@ -28,6 +26,3 @@ public:
 	static	void	Create_Bullet( const AmmoDefinitionClass * def, const Vector3 & position, 
 					const Vector3 & velocity, const ArmedGameObj * owner, float progress_time, const Vector3 & target, DamageableGameObj * target_object = NULL );
 };
-
-#endif	// BULLET_H
-

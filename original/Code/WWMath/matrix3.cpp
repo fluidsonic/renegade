@@ -1,3 +1,4 @@
+#include "global.h"
 #include "matrix3.h"
 #include "matrix3d.h"
 #include "matrix4.h"
@@ -315,4 +316,3 @@ void Matrix3::Re_Orthogonalize(void)
 	Row[2][1] = z.Y;
 	Row[2][2] = z.Z;
 }
-

@@ -1,7 +1,7 @@
-#ifndef RBODY_H
-#define RBODY_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "movephys.h"
 #include "ode.h"
 #include "aabox.h"
@@ -333,5 +333,3 @@ protected:
 
 	friend class RigidBodyClass;
 };
-
-#endif

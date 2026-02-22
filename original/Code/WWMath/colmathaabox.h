@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef COLMATHAABOX_H
-#define COLMATHAABOX_H
+#include "global.h"
 
-#include "always.h"
 #include "aabox.h"
 #include "vector3.h"
 #include "lineseg.h"
@@ -61,5 +60,3 @@ WWINLINE CollisionMath::OverlapType CollisionMath::Overlap_Test(const AABoxClass
 
 	return BOTH;
 }
-
-#endif

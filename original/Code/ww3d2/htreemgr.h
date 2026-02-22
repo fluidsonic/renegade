@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HTREEMGR_H
-#define HTREEMGR_H
+#include "global.h"
 
-#include "always.h"
 #include "hashtemplate.h"
 
 class FileClass;
@@ -49,5 +48,3 @@ private:
 	HashTemplateClass<StringClass,HTreeClass*> TreeHash;
 
 };
-
-#endif

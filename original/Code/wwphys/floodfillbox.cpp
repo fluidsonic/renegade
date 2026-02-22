@@ -1,3 +1,4 @@
+#include "global.h"
 #include "floodfillbox.h"
 #include "pathfindsector.h"
 #include "pathfindportal.h"

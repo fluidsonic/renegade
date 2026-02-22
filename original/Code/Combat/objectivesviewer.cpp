@@ -1,3 +1,4 @@
+#include "global.h"
 #include "objectivesviewer.h"
 #include "assetmgr.h"
 #include "texture.h"

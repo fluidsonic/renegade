@@ -1,3 +1,4 @@
+#include "global.h"
 #include "renegadecheatmgr.h"
 #include "player.h"
 #include "playermanager.h"

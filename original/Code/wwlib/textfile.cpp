@@ -1,3 +1,4 @@
+#include "global.h"
 #include "textfile.h"
 #include "wwstring.h"
 

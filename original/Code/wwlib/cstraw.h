@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef CSTRAW_H
-#define CSTRAW_H
+#include "global.h"
 
 #include	"buff.h"
 #include	"straw.h"
@@ -27,6 +27,3 @@ class CacheStraw : public Straw
 		CacheStraw(CacheStraw & rvalue);
 		CacheStraw & operator = (CacheStraw const & pipe);
 };
-
-#endif
-

@@ -6,6 +6,7 @@
 // Description:
 //
 //------------------------------------------------------------------------------------
+#include "global.h"
 #include "netstats.h" // I WANNA BE FIRST!
 
 #include "win.h"

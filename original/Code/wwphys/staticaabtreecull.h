@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef STATICAABTREECULL_H
-#define STATICAABTREECULL_H
+#include "global.h"
 
-#include "always.h"
 #include "physaabtreecull.h"
 #include "physlist.h"
 
@@ -120,5 +119,3 @@ protected:
 	*/
 	friend class PhysicsSceneClass;
 };
-
-#endif //STATICAABTREECULL_H

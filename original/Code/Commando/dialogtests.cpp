@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogtests.h"
 #include "dialogresource.h"
 #include "dialogcontrol.h"

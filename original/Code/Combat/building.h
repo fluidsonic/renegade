@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	BUILDING_H
-#define	BUILDING_H
+#include "global.h"
 
-#include "always.h"
 #include "damageablegameobj.h"
 #include "combatphysobserver.h"
 #include "buildingaggregate.h"
@@ -280,6 +279,3 @@ protected:
 
 	friend class GameObjManager;
 };
-
-#endif // BUILDING_H
-

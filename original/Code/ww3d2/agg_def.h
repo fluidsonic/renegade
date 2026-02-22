@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef AGGREGATE_DEF_H
-#define AGGREGATE_DEF_H
+#include "global.h"
 
 #include "proto.h"
 #include "rendobj.h"
@@ -202,5 +202,3 @@ class AggregateLoaderClass : public PrototypeLoaderClass
 //	Global variables
 //
 extern AggregateLoaderClass	_AggregateLoader;
-
-#endif //__AGGREGATE_DEF_H

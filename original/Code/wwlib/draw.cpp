@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blit.h"
 #include	"blitblit.h"
 #include	"blitter.h"
@@ -147,4 +147,3 @@ void Blit_Block(Surface & surface, ConvertClass & convert, Surface const & sourc
 	*/
 	Bit_Blit(surface, window, Rect(point.X, point.Y, sourcerect.Width, sourcerect.Height), source, source.Get_Rect(), sourcerect, *blitter);
 }
-

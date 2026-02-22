@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmpingameteamchat.h"
 
 #include "cnetwork.h"
@@ -46,4 +47,3 @@ MPIngameTeamChatPopupClass::On_Key_Down (uint32_t key_id, uint32_t key_data)
 	
 	return retval;
 }
-

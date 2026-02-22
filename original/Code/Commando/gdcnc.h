@@ -1,5 +1,6 @@
-#ifndef GDCNC_H
-#define GDCNC_H
+#pragma once
+
+#include "global.h"
 
 #include "gamedata.h"
 #include "basecontroller.h"
@@ -76,6 +77,3 @@ private:
 	BaseControllerClass	BaseNOD;
 	bool						IsPlaying;
 };
-
-#endif	// GDCNC_H
-

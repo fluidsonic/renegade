@@ -1,5 +1,6 @@
-#ifndef KEY_H
-#define KEY_H
+#pragma once
+
+#include "global.h"
 
 #include	"_xmouse.h"
 #include	"win.h"
@@ -623,5 +624,3 @@ struct KeyboardClass : public WWKeyboardClass
 	int Mouse_X(void) {return(Get_Mouse_X());};
 	int Mouse_Y(void) {return(Get_Mouse_Y());};
 };
-
-#endif

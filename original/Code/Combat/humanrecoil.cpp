@@ -1,3 +1,4 @@
+#include "global.h"
 #include "humanrecoil.h"
 #include "vector3.h"
 #include "rendobj.h"
@@ -100,4 +101,3 @@ void HumanRecoilClass::Initialize(RenderObjClass * model)
 	}
 	IsInitted = true;
 }
-

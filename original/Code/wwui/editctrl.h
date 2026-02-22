@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __EDIT_CTRL_H
-#define __EDIT_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -132,5 +132,3 @@ protected:
 
 	IMECandidateCtrl mCandidateList;
 };
-
-#endif //__EDIT_CTRL_H

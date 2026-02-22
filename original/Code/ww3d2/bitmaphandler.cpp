@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bitmaphandler.h"
 
 void Bitmap_Assert(bool condition)

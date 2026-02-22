@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__SOLDIERFACTORYGAMEOBJ_H
-#define	__SOLDIERFACTORYGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "building.h"
 
 ////////////////////////////////////////////////////////////////
@@ -111,5 +110,3 @@ private:
 	////////////////////////////////////////////////////////////////
 	void					Load_Variables (ChunkLoadClass &cload);
 };
-
-#endif	//__SOLDIERFACTORYGAMEOBJ_H

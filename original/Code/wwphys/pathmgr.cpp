@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pathmgr.h"
 #include "pathsolve.h"
 #include "chunkio.h"

@@ -1,7 +1,7 @@
-#ifndef DYNAMICPHYS_H
-#define DYNAMICPHYS_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "phys.h"
 
 class DynamicPhysDefClass;
@@ -95,6 +95,3 @@ protected:
 
 	friend class DynamicPhysClass;
 };
-
-#endif //DYNAMICPHYS_H
-

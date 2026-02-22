@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef UARRAY_H
-#define UARRAY_H
+#include "global.h"
 
 #ifndef HASHCALC_H
 #include "hashcalc.h"
@@ -176,6 +176,3 @@ inline int UniqueArrayClass<T>::Add(const T & new_item)
 
 	return index;
 }
-
-#endif // UARRAY_H
-

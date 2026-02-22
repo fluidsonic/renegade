@@ -1,9 +1,7 @@
-#ifndef	MOVIE_H
-#define	MOVIE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEMODE_H
 	#include "gamemode.h"
@@ -48,5 +46,3 @@ protected:
 	bool					IsPending;
 	bool					IsPlaying;
 };
-
-#endif //	MOVIE_H

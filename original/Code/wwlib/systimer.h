@@ -1,7 +1,9 @@
 #pragma once
+
+#include "global.h"
+
 #ifndef _SYSTIMER_H
 
-#include "always.h"
 #include <windows.h>
 #include "mmsys.h"
 

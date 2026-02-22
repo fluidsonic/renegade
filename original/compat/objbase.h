@@ -1,7 +1,8 @@
-// objbase.h - COM base stub for macOS port
 #pragma once
-#ifndef OBJBASE_H_COMPAT
-#define OBJBASE_H_COMPAT
+
+#include "global.h"
+
+// objbase.h - COM base stub for macOS port
 
 #include "windows.h"
 #include <stdlib.h>
@@ -28,5 +29,3 @@ typedef LONG HRESULT;
 inline HRESULT CoInitialize(void* pvReserved) { return S_OK; }
 inline HRESULT CoInitializeEx(void* pvReserved, DWORD dwCoInit) { return S_OK; }
 inline void    CoUninitialize(void) {}
-
-#endif // OBJBASE_H_COMPAT

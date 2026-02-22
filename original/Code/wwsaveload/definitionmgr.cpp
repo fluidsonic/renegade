@@ -1,3 +1,4 @@
+#include "global.h"
 #include "definitionmgr.h"
 #include "definition.h"
 #include "definitionfactory.h"

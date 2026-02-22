@@ -1,3 +1,4 @@
+#include "global.h"
 #include "heightdb.h"
 #include "pscene.h"
 #include "coltest.h"

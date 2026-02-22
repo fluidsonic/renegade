@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include "toolkit.h"
 #include "mission9.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include	<stdlib.h>
 #include	"servercontrolsocket.h"
 #include "systimer.h"
@@ -972,4 +973,3 @@ void ServerControlSocketClass::Decrypt(unsigned char *packet, int size)
 		key[i & 7] ^= b;
 	}
 }
-

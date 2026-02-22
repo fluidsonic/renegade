@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cardinalspline.h"
 #include "persistfactory.h"
 #include "wwmathids.h"
@@ -301,4 +302,3 @@ bool CardinalSpline1DClass::Load(ChunkLoadClass &cload)
 
 	return true;
 }
-

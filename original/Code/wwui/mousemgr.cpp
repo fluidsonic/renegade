@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mousemgr.h"
 #include "screencursor.h"
 #include "assetmgr.h"
@@ -169,4 +170,3 @@ MouseMgrClass::Render (void)
 
 	return ;
 }
-

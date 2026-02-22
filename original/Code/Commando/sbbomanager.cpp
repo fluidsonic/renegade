@@ -1,3 +1,4 @@
+#include "global.h"
 #include "sbbomanager.h"
 
 #include "cnetwork.h"

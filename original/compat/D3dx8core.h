@@ -1,7 +1,8 @@
-// D3dx8core.h compat shim for macOS - D3DX8 core utility stubs
 #pragma once
-#ifndef D3DX8CORE_H_COMPAT
-#define D3DX8CORE_H_COMPAT
+
+#include "global.h"
+
+// D3dx8core.h compat shim for macOS - D3DX8 core utility stubs
 
 #include "d3d8.h"
 
@@ -106,5 +107,3 @@ inline HRESULT D3DXFilterTexture(IDirect3DBaseTexture8* pTexture, const void* pP
 {
     return E_NOTIMPL;
 }
-
-#endif // D3DX8CORE_H_COMPAT

@@ -1,7 +1,8 @@
-// iostream.h compat shim - maps old-style pre-standard iostream.h to standard <iostream>
 #pragma once
-#ifndef IOSTREAM_H_COMPAT
-#define IOSTREAM_H_COMPAT
+
+#include "global.h"
+
+// iostream.h compat shim - maps old-style pre-standard iostream.h to standard <iostream>
 
 #include <iostream>
 using std::cin;
@@ -13,5 +14,3 @@ using std::flush;
 using std::ostream;
 using std::istream;
 using std::iostream;
-
-#endif // IOSTREAM_H_COMPAT

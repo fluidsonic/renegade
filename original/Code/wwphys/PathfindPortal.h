@@ -1,7 +1,6 @@
+#pragma once
 
-
-#ifndef __PATHFIND_PORTAL_H
-#define __PATHFIND_PORTAL_H
+#include "global.h"
 
 #include "refcount.h"
 #include "aabox.h"
@@ -358,5 +357,3 @@ private:
 	////////////////////////////////////////////////////////////////////
 	WaypathPositionClass		WaypathPos;
 };
-
-#endif //__PATHFIND_PORTAL_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "orator.h"
 #include "chunkio.h"
 #include "activeconversation.h"
@@ -241,4 +242,3 @@ OratorClass::Load_Variables (ChunkLoadClass &cload)
 	SaveLoadSystemClass::Register_Pointer (old_ptr, this);
 	return ;
 }
-

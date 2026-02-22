@@ -1,3 +1,4 @@
+#include "global.h"
 #include "overlay.h"
 #include "scene.h"
 #include "camera.h"
@@ -152,4 +153,3 @@ void 	Overlay3DGameModeClass::Think()
 		}
 	}
 }
-

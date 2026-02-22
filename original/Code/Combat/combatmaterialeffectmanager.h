@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef COMBATMATERIALEFFECTMANAGER_H
-#define COMBATMATERIALEFFECTMANAGER_H
-
-#include "always.h"
+#include "global.h"
 
 class TransitionEffectClass;
 
@@ -14,6 +12,3 @@ public:
 	static TransitionEffectClass * Get_Health_Effect(void);
 	static TransitionEffectClass * Get_Electrocution_Effect(void);
 };
-
-#endif
-

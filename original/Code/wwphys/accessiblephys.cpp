@@ -1,3 +1,4 @@
+#include "global.h"
 #include "accessiblephys.h"
 #include "wwphysids.h"
 #include "persistfactory.h"
@@ -306,4 +307,3 @@ AccessiblePhysDefClass::Load_Variables (ChunkLoadClass &cload)
 
 	return true;
 }
-

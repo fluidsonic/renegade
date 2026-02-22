@@ -1,5 +1,6 @@
-#ifndef SHAPIPE_H
-#define SHAPIPE_H
+#pragma once
+
+#include "global.h"
 
 #include	"pipe.h"
 #include	"sha.h"
@@ -24,5 +25,3 @@ class SHAPipe : public Pipe
 		SHAPipe(SHAPipe & rvalue);
 		SHAPipe & operator = (SHAPipe const & pipe);
 };
-
-#endif

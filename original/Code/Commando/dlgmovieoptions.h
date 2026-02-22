@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGOPTIONSMOVIE_H
-#define __DLGOPTIONSMOVIE_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -55,6 +55,3 @@ private:
 	CDVerifyClass	CDVerifier;
 	StringClass		PendingMovieFilename;
 };
-
-#endif //__DLGOPTIONSMOVIE_H
-

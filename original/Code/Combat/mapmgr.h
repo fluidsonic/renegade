@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MAP_MGR_H
-#define __MAP_MGR_H
+#include "global.h"
 
 #include "vector2.h"
 #include "vector3.h"
@@ -251,6 +251,3 @@ MapMgrClass::Is_Cell_Visible (int x_pos, int y_pos)
 	//
 	return ((CloudVector[index] & (1 << bit)) == 0);
 }
-
-#endif //__MAP_MGR_H
-

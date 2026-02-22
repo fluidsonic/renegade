@@ -1,3 +1,4 @@
+#include "global.h"
 #include "playerkill.h"
 
 #include <stdio.h>

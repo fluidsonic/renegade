@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SOUNDSTREAMHANDLE_H
-#define __SOUNDSTREAMHANDLE_H
+#include "global.h"
 
 #include "soundhandle.h"
 
@@ -68,5 +68,3 @@ protected:
 	HSAMPLE		SampleHandle;
 	HSTREAM		StreamHandle;
 };
-
-#endif //__SOUNDSTREAMHANDLE_H

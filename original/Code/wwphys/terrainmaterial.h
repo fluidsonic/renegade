@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TERRAINMATERIAL_H
-#define __TERRAINMATERIAL_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "refcount.h"
@@ -75,5 +75,3 @@ protected:
 	bool						AreUVsMirrored;
 	int						SurfaceType;
 };
-
-#endif //__TERRAINMATERIAL_H

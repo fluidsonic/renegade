@@ -1,5 +1,4 @@
-#ifndef BANDWIDTH_H
-#define BANDWIDTH_H
+#pragma once
 
 #include "global.h"
 
@@ -31,5 +30,3 @@ class	cBandwidth {
 		static const WCHAR *	Get_Bandwidth_String_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type);
 		static BANDWIDTH_TYPE_ENUM		Get_Bandwidth_Type_From_String(LPCSTR bandwidth_string);
 };
-
-#endif	// BANDWIDTH_H

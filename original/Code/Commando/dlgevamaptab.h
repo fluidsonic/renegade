@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_EVA_MAP_TAB_H
-#define __DLG_EVA_MAP_TAB_H
+#include "global.h"
 
 #include "childdialog.h"
 #include "resource.h"
@@ -37,6 +37,3 @@ protected:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLG_EVA_MAP_TAB_H
-

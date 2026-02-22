@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scriptfactory.h"
 #include "scriptregistrar.h"
 #include "scripts.h"
@@ -149,4 +150,3 @@ const char* ScriptFactory::GetParamDescription(void)
 {
 	return ParamDescription;
 }
-

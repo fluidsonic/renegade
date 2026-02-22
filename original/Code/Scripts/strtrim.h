@@ -1,6 +1,5 @@
-#ifndef _STRTRIM_H_
-#define _STRTRIM_H_
+#pragma once
+
+#include "global.h"
 
 char* strtrim(char* buffer);
-
-#endif // _STRTRIM_H_

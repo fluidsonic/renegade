@@ -1,5 +1,6 @@
-#ifndef WTYPES_HEADER
-#define WTYPES_HEADER
+#pragma once
+
+#include "global.h"
 
 #ifndef TRUE
 #define TRUE               1
@@ -43,6 +44,3 @@ typedef unsigned int       uint32_t;
 #define MAX_SINT32  0x7FFFFFFF
 #define MAX_SINT16  0x7FFF
 #define MAX_SINT8   0x7F   
-
-
-#endif

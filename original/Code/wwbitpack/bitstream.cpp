@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bitstream.h"
 
 #include <string.h>	// for strlen

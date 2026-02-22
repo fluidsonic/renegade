@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bioevent.h"
 
 #include <stdio.h>

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __WWUIINPUT_H
-#define __WWUIINPUT_H
+#include "global.h"
 
 #include "vector3.h"
 #include "refcount.h"
@@ -70,5 +70,3 @@ public:
 	private:
 		IME::IMEManager* mIMEManager;
 };
-
-#endif //__WWUIINPUT_H

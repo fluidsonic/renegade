@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef __WWAUDIO_H
-#define __WWAUDIO_H
+#include "global.h"
 
-#include "always.h"
 #include "Mss.H"
 
 #include "Vector.H"
@@ -682,5 +681,3 @@ private:
 
 	bool													m_ForceDisable;
 };
-
-#endif //__WWAUDIO_H

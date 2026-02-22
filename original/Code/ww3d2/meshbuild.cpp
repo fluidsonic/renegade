@@ -1,3 +1,4 @@
+#include "global.h"
 #include "meshbuild.h"
 #include "uarray.h"
 #include <stdlib.h>
@@ -1742,4 +1743,3 @@ int vertex_compare(const void *elem1, const void *elem2)
 
 	return 0;
 }
-

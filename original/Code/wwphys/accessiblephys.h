@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __ACCESSIBLE_PHYS_H
-#define __ACCESSIBLE_PHYS_H
+#include "global.h"
 
 #include "staticanimphys.h"
 
@@ -126,5 +126,3 @@ protected:
 	/////////////////////////////////////////////////////////////////////////
 	friend class	AccessiblePhysClass;
 };
-
-#endif //__ACCESSIBLE_PHYS_H

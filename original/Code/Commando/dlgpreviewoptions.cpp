@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgpreviewoptions.h"
 #include "listctrl.h"
 
@@ -47,4 +48,3 @@ PreviewOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-

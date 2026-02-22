@@ -29,6 +29,7 @@ set_target_properties(Scripts PROPERTIES
 
 target_include_directories(Scripts PRIVATE
     "${ORIG_SRC}/Scripts"
+    "${ORIG_SRC}"
     "${ORIG_SRC}/Combat"
     "${ORIG_SRC}/wwlib"
     "${ORIG_SRC}/WWMath"

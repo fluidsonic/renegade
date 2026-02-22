@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scriptzone.h"
 #include "gameobjmanager.h"
 #include "scripts.h"
@@ -481,4 +482,3 @@ bool	ScriptZoneGameObj::Exists_On_Client( void ) const
 		CombatManager::Soldier_Enters_Pedestal(obj->As_SoldierGameObj(), Get_Player_Type());
 	}
 	*/
-

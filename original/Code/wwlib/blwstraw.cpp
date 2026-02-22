@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blwstraw.h"
 #include	<string.h>
 #include	<assert.h>

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "boxrobj.h"
 #include "w3d_util.h"
 #include "vertmaterial.h"
@@ -1233,4 +1234,3 @@ RenderObjClass * BoxPrototypeClass::Create(void)
 ** Global instance of the box loader
 */
 BoxLoaderClass _BoxLoader;
-

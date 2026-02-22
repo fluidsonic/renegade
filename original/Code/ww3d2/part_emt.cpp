@@ -1,3 +1,4 @@
+#include "global.h"
 #include "part_emt.h"
 #include "ww3d.h"
 #include "assetmgr.h"

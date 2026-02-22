@@ -6,6 +6,7 @@
 // Description:  
 //
 
+#include "global.h"
 #include "netinterface.h"
 
 #include <stdio.h>
@@ -98,4 +99,3 @@ int cNetInterface::Get_Side_Preference(void)
 	*/
 
    //return Nickname;
-

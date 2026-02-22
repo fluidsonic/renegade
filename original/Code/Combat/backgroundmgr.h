@@ -1,5 +1,6 @@
-#ifndef __BACKGROUNDMGR_H
-#define __BACKGROUNDMGR_H
+#pragma once
+
+#include "global.h"
 
 // Includes.
 #include "combat.h"
@@ -595,5 +596,3 @@ class	BackgroundMgrClass : public SaveLoadSubSystemClass, public NetworkObjectCl
 
 // Externals.
 extern BackgroundMgrClass _TheBackgroundMgr;
-
-#endif // BACKGROUNDMGR_H

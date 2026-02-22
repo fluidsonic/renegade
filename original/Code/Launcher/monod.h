@@ -1,5 +1,6 @@
-#ifndef MONOD_HEADER
-#define MONOD_HEADER
+#pragma once
+
+#include "global.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -18,5 +19,3 @@ class MonoD : public OutputDevice
 
  private:
 };
-
-#endif

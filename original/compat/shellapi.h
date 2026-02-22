@@ -1,9 +1,9 @@
-// shellapi.h compat shim for macOS
 #pragma once
-#ifndef SHELLAPI_H_COMPAT
-#define SHELLAPI_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// shellapi.h compat shim for macOS
+
 
 // ShellExecute stub - launches a URL or file
 inline HINSTANCE ShellExecute(HWND hwnd, LPCSTR op, LPCSTR file,
@@ -31,5 +31,3 @@ inline HINSTANCE FindExecutable(LPCSTR lpFile, LPCSTR lpDir, LPSTR lpResult) {
 #define SE_ERR_OOM    8
 #define SW_SHOW       5
 #define SW_SHOWNORMAL 1
-
-#endif // SHELLAPI_H_COMPAT

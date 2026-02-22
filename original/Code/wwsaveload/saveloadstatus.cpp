@@ -1,3 +1,4 @@
+#include "global.h"
 #include "saveloadstatus.h"
 #include "mutex.h"
 
@@ -34,4 +35,3 @@ int	SaveLoadStatus::Get_Status_Count( void )
 {
 	return status_count;
 }
-

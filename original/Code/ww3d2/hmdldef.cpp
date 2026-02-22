@@ -1,3 +1,4 @@
+#include "global.h"
 #include "hmdldef.h"
 #include <assert.h>
 #include <string.h>
@@ -213,4 +214,3 @@ bool HModelDefClass::read_connection(ChunkLoadClass & cload,HmdlNodeDefStruct * 
 	
 	return true;
 }
-

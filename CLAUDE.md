@@ -35,19 +35,24 @@
 - Narrowing/conversion warnings: `-Wconversion`, `-Wsign-conversion`, `-Wdouble-promotion` (warnings, not errors, until each module is clean)
 
 ### global.h — project-wide preamble
-- `original/global.h` is the single project-wide preamble — must be included first in all source files
+- `original/global.h` is the single project-wide preamble — must be included FIRST in all source files
 - Contains: platform defines (_UNIX, NOMINMAX), Windows types (BYTE/WORD/DWORD/HANDLE etc.), char16_t string functions, IEEE 754 asserts, engine macros (MIN/MAX/WWINLINE), debug stubs, MSVC compat
-- `compat/windef.h`, `compat/c16string.h`, `Code/wwlib/always.h` are thin forwarding headers to `global.h` — files that include them still work
-- `compat/clangcompat.h`, `compat/floattypes.h`, `Code/wwlib/bittype.h` are DELETED — absorbed into `global.h`
-- No `-include` CLI magic — files include `global.h` explicitly (or via a forwarder)
+- **Forwarder headers DELETED**: `compat/windef.h`, `compat/c16string.h`, `Code/wwlib/always.h`, `compat/malloc.h`, `compat/new.h`, `compat/osdep/osdep.h` — all content is in `global.h` or replaced by standard includes
+- `compat/clangcompat.h`, `compat/floattypes.h`, `Code/wwlib/bittype.h` are also DELETED — absorbed into `global.h`
+- **All .h files use `#pragma once` exclusively** — no `#ifndef`/`#define` include guards anywhere
+- **`#include "global.h"` is the first include in every .h and .cpp file** — explicit, not transitive
+- PCH enabled: `target_precompile_headers(Commando PRIVATE "global.h")` in Code/Commando/CMakeLists.txt
+- `compat/macos_fix.mm` is excluded from PCH (Objective-C++ — `SKIP_PRECOMPILE_HEADERS ON`)
 - Source root `original/` is in the include path so `#include "global.h"` resolves from any TU
+- Exclusions (no `#include "global.h"` added): `compat/typesizes.h` (mid-file include in winnt.h), `tools/primitive-type-check/PrimitiveTypeCheck.h` (clang-tidy plugin), resource compiler headers (`resource.h`, `dialogresource.h`, `afxres.h` — processed by llvm-rc which lacks the include path)
+- **`Code/Scripts/vector.h`** forwards to `Code/wwlib/vector.h` — Scripts has its own copy; the old shared `#ifndef VECTOR_H` guard masked the duplication; now scripts CMakeLists adds `Code/` to include path so `#include "wwlib/vector.h"` works
 
 ### wchar_t → char16_t conversion (COMPLETE)
 - All `wchar_t` in Code/ and compat/ converted to `char16_t` (macOS wchar_t=4 bytes; protocol needs 2-byte UTF-16)
 - `WCHAR` typedef is `char16_t`; all derived types (LPWSTR, LPCWSTR, etc.) auto-update
 - Use `u"..."` and `u'...'` string/char literals (not `L"..."` / `L'...'`)
-- `global.h` defines char16_t equivalents of all `wcs*` functions (`c16slen`, `c16scpy`, etc.); `compat/c16string.h` is a forwarder to `global.h`
-- `global.h` provides inline `wcslen(char16_t*)`, `wcscpy(char16_t*)`, etc. overloads (previously in `windef.h`)
+- `global.h` defines char16_t equivalents of all `wcs*` functions (`c16slen`, `c16scpy`, etc.); `compat/c16string.h` is DELETED (was a forwarder to `global.h`)
+- `global.h` provides inline `wcslen(char16_t*)`, `wcscpy(char16_t*)`, etc. overloads; `compat/windef.h` is DELETED (was a forwarder to `global.h`)
 - Two intentional `wchar_t` exceptions: `winbase.h` internal `_vsnwprintf` bridge buffer; `LOGFONTW` struct in wingdi.h
 - `const WCHAR*` (not `WCHAR*`) for string-literal arrays — `u"..."` is `const char16_t[]`
 

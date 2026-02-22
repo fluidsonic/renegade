@@ -1,3 +1,4 @@
+#include "global.h"
 #include "render2d.h"
 #include "mutex.h"
 #include <stdio.h>
@@ -684,4 +685,3 @@ Vector2	Render2DTextClass::Get_Text_Extents( const WCHAR * text )
 
 	return extent;
 }
-

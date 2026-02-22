@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef __NETWORK_OBJECT_FACTORY_H
-#define __NETWORK_OBJECT_FACTORY_H
+#include "global.h"
 
-#include "always.h"
 #include "wwpacket.h"
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -90,5 +89,3 @@ SimpleNetworkObjectFactoryClass<T, class_id>::Get_Class_ID (void) const
 
 #define DECLARE_NETWORKOBJECT_FACTORY(_class, _id)					\
 SimpleNetworkObjectFactoryClass<_class, _id> _class ## Factory
-
-#endif //__NETWORK_OBJECT_FACTORY_H

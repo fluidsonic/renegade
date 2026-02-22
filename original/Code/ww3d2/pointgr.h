@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef POINTGR_H
-#define POINTGR_H
+#include "global.h"
 
 #include "sharebuf.h"
 #include "shader.h"
@@ -174,5 +174,3 @@ private:
 	static Vector2 *_QuadVertexUVFrameTable[5];
 	static VertexMaterialClass *PointMaterial;
 };
-
-#endif

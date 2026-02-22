@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef XSURFACE_H
-#define XSURFACE_H
+#include "global.h"
 
 #include	"surface.h"
 
@@ -89,5 +89,3 @@ class XSurface : public Surface
 };
 
 bool Blit_Clip(Rect & drect, Rect const & dwindow, Rect & srect, Rect const & swindow);
-
-#endif

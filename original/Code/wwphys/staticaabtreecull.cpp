@@ -1,3 +1,4 @@
+#include "global.h"
 #include "staticaabtreecull.h"
 #include "staticphys.h"
 #include "wwphystrig.h"
@@ -607,4 +608,3 @@ void StaticAABTreeCullClass::Save_Static_Data(ChunkSaveClass & csave)
 	TypedAABTreeCullSystemClass<PhysClass>::Save(csave);
 	csave.End_Chunk();
 }
-

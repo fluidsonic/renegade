@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SOUND3DHANDLE_H
-#define __SOUND3DHANDLE_H
+#include "global.h"
 
 #include "soundhandle.h"
 
@@ -66,5 +66,3 @@ protected:
 	///////////////////////////////////////////////////////////////////
 	H3DSAMPLE	SampleHandle;
 };
-
-#endif //__SOUND3DHANDLE_H

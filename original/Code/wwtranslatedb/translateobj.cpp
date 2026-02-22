@@ -1,3 +1,4 @@
+#include "global.h"
 #include "translateobj.h"
 
 #include "chunkio.h"

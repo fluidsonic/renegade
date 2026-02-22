@@ -1,5 +1,6 @@
-#ifndef LZOPIPE_H
-#define LZOPIPE_H
+#pragma once
+
+#include "global.h"
 
 #include	"pipe.h"
 
@@ -60,5 +61,3 @@ class LZOPipe : public Pipe
 		LZOPipe(LZOPipe & rvalue);
 		LZOPipe & operator = (LZOPipe const & pipe);
 };
-
-#endif

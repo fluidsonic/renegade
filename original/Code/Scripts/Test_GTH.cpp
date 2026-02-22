@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include <string.h>
 #include "toolkit.h"
@@ -957,4 +958,3 @@ DECLARE_SCRIPT(GTH_CTF_Object2, "Update_Delay=0.05:float,Enemy_Player_Type=0:int
 		}
 	}
 };
-

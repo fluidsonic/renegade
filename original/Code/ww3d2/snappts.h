@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef SNAPPTS_H
-#define SNAPPTS_H
+#include "global.h"
 
 #include "refcount.h"
 #include "vector.h"
@@ -20,5 +20,3 @@ protected:
 	~SnapPointsClass(void) {}
 
 };
-
-#endif

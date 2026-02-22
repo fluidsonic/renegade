@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gamedataupdateevent.h"
 
 #include "networkobjectfactory.h"
@@ -77,4 +78,3 @@ cGameDataUpdateEvent::Import_Creation(BitStreamClass & packet)
 
 	Set_Delete_Pending();
 }
-

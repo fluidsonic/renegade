@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DECALSYS_H
-#define DECALSYS_H
+#include "global.h"
 
-#include "always.h"
 #include "matrix3d.h"
 #include "matrix4.h"
 #include "obbox.h"
@@ -257,6 +256,3 @@ protected:
 	uint32_t											PoolCount;
 
 };
-
-#endif //DECALSYS_H
-

@@ -1,5 +1,6 @@
-#ifndef PATCH_HEADER
-#define PATCH_HEADER
+#pragma once
+
+#include "global.h"
 
 #include "winblows.h"
 #include "dialog.h"
@@ -8,5 +9,3 @@
 #include "process.h"
 
 void Apply_Patch(char *patchfile,ConfigFile &config,int skuIndex, bool show_dialog = true);
-
-#endif

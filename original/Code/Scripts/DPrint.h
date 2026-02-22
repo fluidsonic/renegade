@@ -1,5 +1,6 @@
-#ifndef _DPRINT_H_
-#define _DPRINT_H_
+#pragma once
+
+#include "global.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -11,5 +12,3 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-
-#endif // _DPRINT_H_

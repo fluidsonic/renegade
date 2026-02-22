@@ -1,9 +1,7 @@
-#ifndef	COMBAT_H
-#define	COMBAT_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEOBJREF_H
 	#include "gameobjref.h"
@@ -307,5 +305,3 @@ private:
 	static	bool	MultiplayRenderingAllowed;
 
 };
-
-#endif

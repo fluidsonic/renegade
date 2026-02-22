@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef OCTBOX_H
-#define OCTBOX_H
+#include "global.h"
 
-#include "always.h"
 #include "obbox.h"
 #include "rbody.h"
 
@@ -154,5 +153,3 @@ inline void OctBoxClass::Get_Inner_Box(OBBoxClass * set_box, const Quaternion & 
 	Matrix3D tm(q,p);
 	OBBoxClass::Transform(tm,InnerBox,set_box);
 }
-
-#endif

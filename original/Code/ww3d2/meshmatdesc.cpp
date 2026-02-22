@@ -1,3 +1,4 @@
+#include "global.h"
 #include "meshmatdesc.h"
 #include "texture.h"
 #include "vertmaterial.h"

@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef PHYSOBSERVER_H
-#define PHYSOBSERVER_H
-
-#include "always.h"
+#include "global.h"
 
 class	PhysClass;
 class RenderObjClass;
@@ -69,5 +67,3 @@ public:
 	virtual void							Object_Removed_From_Scene(PhysClass * observed_obj)	{ };
 	virtual void							Object_Shattered_Something(PhysClass * observed_obj, PhysClass * shattered_obj, int surface_type) { };
 };
-
-#endif	// PHYSOBSERVER_H

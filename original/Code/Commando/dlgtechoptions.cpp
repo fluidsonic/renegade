@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgtechoptions.h"
 #include "tabctrl.h"
 #include "dlgconfigaudiotab.h"

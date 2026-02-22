@@ -1,3 +1,4 @@
+#include "global.h"
 #include "floodfillgrid.h"
 //#include "utils.h"
 #include "aabox.h"
@@ -239,4 +240,3 @@ FloodfillGridClass::Compute_Box_Count(const AABoxClass & vol)
 
 	return count;
 }
-

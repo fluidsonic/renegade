@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef RDDESC_H
-#define RDDESC_H
+#include "global.h"
 
 #include "vector.h"
 #include "wwstring.h"
@@ -124,6 +124,3 @@ inline void RenderDeviceDescClass::add_resolution(int w,int h,int bits)
 		ResArray.Add(ResolutionDescClass(w,h,bits)); 
 	}
 }
-
-#endif 
-

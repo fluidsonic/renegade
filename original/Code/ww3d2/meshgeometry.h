@@ -1,5 +1,6 @@
-#ifndef MESHGEOMETRY_H
-#define MESHGEOMETRY_H
+#pragma once
+
+#include "global.h"
 
 #include "refcount.h"
 #include "simplevec.h"
@@ -237,6 +238,3 @@ inline uint8_t MeshGeometryClass::Get_Poly_Surface_Type(int poly_index) const
 	uint8_t *type = PolySurfaceType->Get_Array();
 	return type[poly_index];
 }
-
-#endif //MESHGEOMETRY_H
-

@@ -1,5 +1,6 @@
-#ifndef __CHANGETEAMEVENT_H__
-#define __CHANGETEAMEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -30,5 +31,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __CHANGETEAMEVENT_H__

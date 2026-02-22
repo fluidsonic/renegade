@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	TRANSITION_H
-#define	TRANSITION_H
+#include "global.h"
 
-#include "always.h"
 #include "matrix3d.h"
 #include "aabox.h"
 #include "gameobjref.h"
@@ -129,6 +128,3 @@ public:
 
 	static void						Build_Ladder_List (DynamicVectorClass<TransitionInstanceClass *> &list);
 };
-
-#endif	//	TRANSITION_H
-

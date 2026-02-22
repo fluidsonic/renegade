@@ -1,3 +1,4 @@
+#include "global.h"
 #include "modpackage.h"
 #include "init.h"
 #include "mixfile.h"

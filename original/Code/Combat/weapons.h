@@ -1,9 +1,7 @@
-#ifndef	WEAPONS_H
-#define	WEAPONS_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEOBJREF_H
    #include "gameobjref.h"
@@ -288,5 +286,3 @@ private:
 	void				Unignore_Owner( void );
 
 };
-
-#endif		// WEAPONS_H

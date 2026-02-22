@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PLANE_H
-#define PLANE_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 #include "sphere.h"
 
@@ -201,5 +200,3 @@ inline void PlaneClass::Intersect_Planes(const PlaneClass & a, const PlaneClass 
 	// find the point).
 	line_dir->Normalize();
 }
-
-#endif /*PLANE_H*/

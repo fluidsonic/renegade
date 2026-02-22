@@ -1,3 +1,4 @@
+#include "global.h"
 #include "animcontrol.h"
 #include "assets.h"
 #include "rendobj.h"
@@ -858,4 +859,3 @@ void	HumanAnimControlClass::Get_Information( StringClass & string )
 	_Monitor = this;
 	string += _MonitorAnimDescription;
 }
-

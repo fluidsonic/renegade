@@ -1,5 +1,6 @@
-#ifndef POSTLOADABLE_H
-#define POSTLOADABLE_H
+#pragma once
+
+#include "global.h"
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -25,6 +26,3 @@ private:
 
 	bool									IsPostLoadRegistered;
 };
-
-#endif
-

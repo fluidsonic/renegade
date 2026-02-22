@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_EVA_CHARACTERS_TAB_H
-#define __DLG_EVA_CHARACTERS_TAB_H
+#include "global.h"
 
 #include "dlgevaviewertab.h"
 #include "resource.h"
@@ -31,6 +31,3 @@ protected:
 	////////////////////////////////////////////////////////////////
 	void		On_Init_Dialog (void);
 };
-
-#endif //__DLG_EVA_CHARACTERS_TAB_H
-

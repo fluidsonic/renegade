@@ -1,9 +1,7 @@
-#ifndef	VEHICLE_H
-#define	VEHICLE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef SMARTGAMEOBJ_H
 	#include "smartgameobj.h"
@@ -302,5 +300,3 @@ protected:
 	void		Update_Engine_Sound_Pitch( void );
 
 };
-
-#endif	//	VEHICLE_H

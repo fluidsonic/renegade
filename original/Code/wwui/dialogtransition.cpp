@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogtransition.h"
 #include "dialogmgr.h"
 

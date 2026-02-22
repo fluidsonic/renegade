@@ -1,3 +1,4 @@
+#include "global.h"
 #include "grideffect.h"
 #include "ww3d.h"
 #include "physresourcemgr.h"
@@ -155,4 +156,3 @@ TextureClass * GridEffectClass::Peek_Texture(void)
 {
 	return MaterialPass->Peek_Texture();
 }
-

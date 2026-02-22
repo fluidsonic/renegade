@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef BMP2D_H
-#define BMP2D_H
+#include "global.h"
 
 #include "dynamesh.h"
 
@@ -16,5 +16,3 @@ class Bitmap2DObjClass : public DynamicScreenMeshClass
 		virtual RenderObjClass * 	Clone(void) const;
 		virtual int						Class_ID(void) const { return CLASSID_BITMAP2D; }
 };
-
-#endif

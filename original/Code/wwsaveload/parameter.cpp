@@ -1,3 +1,4 @@
+#include "global.h"
 #include "parameter.h"
 #include "parametertypes.h"
 #include "simpleparameter.h"

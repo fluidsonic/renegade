@@ -1,3 +1,4 @@
+#include "global.h"
 #include "nethandler.h"
 
 #include "cnetwork.h"
@@ -119,4 +120,3 @@ bool GameCombatNetworkHandlerClass::Is_Gameplay_Permitted(void)
 		}
 	}
 	*/
-

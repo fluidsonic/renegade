@@ -1,7 +1,7 @@
-#ifndef TEXTURELOADER_H
-#define TEXTURELOADER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "texture.h"
 
 class StringClass;
@@ -210,5 +210,3 @@ class TextureLoadTaskClass : public TextureLoadTaskListNodeClass
 		PriorityType			Priority;
 		StateType				State;
 };
-
-#endif

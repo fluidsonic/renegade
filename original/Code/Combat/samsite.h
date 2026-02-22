@@ -1,9 +1,7 @@
-#ifndef	SAMSITE_H
-#define	SAMSITE_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef SMARTGAMEOBJ_H
 	#include "smartgameobj.h"
@@ -73,6 +71,3 @@ protected:
 	float								Timer;
 
 };
-
-#endif	//	SAMSITE_H
-

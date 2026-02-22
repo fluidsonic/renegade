@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PIVOT_H
-#define PIVOT_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 #include "matrix3d.h"
 #include "quat.h"
@@ -44,5 +43,3 @@ public:
 	void Capture_Update(void);
 
 };
-
-#endif

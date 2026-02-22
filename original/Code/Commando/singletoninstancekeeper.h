@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SINGLETONINSTANCEKEEPER_H
-#define __SINGLETONINSTANCEKEEPER_H
+#include "global.h"
 
 #include "win.h"
 
@@ -54,5 +54,3 @@ private:
 	static bool AllowMultipleInstances;
 
 };
-
-#endif //__SINGLETONINSTANCEKEEPER_H

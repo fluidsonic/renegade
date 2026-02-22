@@ -1,9 +1,7 @@
-#ifndef	PLAYERDATA_H
-#define	PLAYERDATA_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEOBJREF_H
 	#include "gameobjref.h"
@@ -160,7 +158,6 @@ protected:
 	SimpleDynVecClass<int>	StatWeaponFireCount;
 };
 
-#endif	//	PLAYERDATA_H
 
 	//safe_int				Score;
 	//virtual	bool	Purchase_Item( int cost );

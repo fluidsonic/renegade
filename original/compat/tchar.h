@@ -1,7 +1,8 @@
-// tchar.h compat shim for macOS - TCHAR as plain char (MBCS/ASCII mode)
 #pragma once
-#ifndef TCHAR_H_COMPAT
-#define TCHAR_H_COMPAT
+
+#include "global.h"
+
+// tchar.h compat shim for macOS - TCHAR as plain char (MBCS/ASCII mode)
 
 #include <string.h>
 #include <stdio.h>
@@ -51,7 +52,6 @@ typedef const char* LPCTSTR;
 #define _trename        rename
 
 // Wide string functions — WCHAR = char16_t, use c16s* functions
-#include "c16string.h"
 
 // wcstrim is declared in trim.h and defined in trim.cpp — no redefinition here.
 
@@ -79,5 +79,3 @@ inline int _wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16
 #define _istlower       islower
 #define _totupper       toupper
 #define _totlower       tolower
-
-#endif // TCHAR_H_COMPAT

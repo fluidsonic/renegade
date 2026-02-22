@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcncwinscreen.h"
 #include "resource.h"
 #include "rendobj.h"

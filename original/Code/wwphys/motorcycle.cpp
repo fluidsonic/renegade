@@ -1,3 +1,4 @@
+#include "global.h"
 #include "motorcycle.h"
 #include "physcontrol.h"
 #include "persistfactory.h"
@@ -254,4 +255,3 @@ bool MotorcycleDefClass::Is_Type(const char * type_name)
 		return WheeledVehicleDefClass::Is_Type(type_name);
 	}
 }
-

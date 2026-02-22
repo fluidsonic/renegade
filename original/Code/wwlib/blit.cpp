@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blit.h"
 #include	"bsurface.h"
 //#include	"rle.h"
@@ -360,4 +360,3 @@ bool RLE_Blit(Surface & dest, Rect const & dcliprect, Rect const & ddrect, Surfa
 
 	return(true);
 }
-

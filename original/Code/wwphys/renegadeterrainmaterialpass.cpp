@@ -1,3 +1,4 @@
+#include "global.h"
 #include "renegadeterrainmaterialpass.h"
 #include "terrainmaterial.h"
 #include "vector2.h"

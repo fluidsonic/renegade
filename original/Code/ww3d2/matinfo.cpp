@@ -1,3 +1,4 @@
+#include "global.h"
 #include "matinfo.h"
 #include "meshmdl.h"
 #include "texture.h"

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __LISTENER_H
-#define __LISTENER_H
+#include "global.h"
 
 #include "Sound3D.H"
 
@@ -98,5 +98,3 @@ class Listener3DClass : public Sound3DClass
 		//	Private member data
 		//////////////////////////////////////////////////////////////////////
 };
-
-#endif //__LISTENER_H

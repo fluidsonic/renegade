@@ -1,3 +1,4 @@
+#include "global.h"
 #include "rcfile.h"
 #include <stdlib.h>
 

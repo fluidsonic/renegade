@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSLIST_H
-#define PHYSLIST_H
+#include "global.h"
 
-#include "always.h"
 #include "multilist.h"
 
 class PhysClass;
@@ -12,5 +11,3 @@ typedef RefMultiListIterator<PhysClass>	RefPhysListIterator;
 
 typedef MultiListClass<PhysClass>			NonRefPhysListClass;
 typedef MultiListIterator<PhysClass>		NonRefPhysListIterator;
-
-#endif // PHYSLIST_H

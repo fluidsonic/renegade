@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef RECT_H
-#define RECT_H
+#include "global.h"
 
 #include "vector2.h"
 
@@ -63,6 +63,3 @@ public:
 	void	Snap_To_Units( const Vector2 & u ) { Left = (int)(Left / u.X + 0.5f) * u.X; Right = (int)(Right / u.X + 0.5f) * u.X; Top = (int)(Top / u.Y + 0.5f) * u.Y; Bottom = (int)(Bottom / u.Y + 0.5f) * u.Y; }
 
 };
-
-#endif
-

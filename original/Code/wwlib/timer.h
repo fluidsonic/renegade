@@ -1,5 +1,6 @@
-#ifndef TIMER_H
-#define TIMER_H
+#pragma once
+
+#include "global.h"
 
 #include	"noinit.h"
 
@@ -602,5 +603,3 @@ inline bool CDTimerClass<T>::Is_Active(void) const
 {
 	return(Started != -1);
 }
-
-#endif

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __VERCHK_H
-#define __VERCHK_H
+
+#include "global.h"
 
 #include <windows.h>
 
@@ -8,5 +8,3 @@
 bool GetVersionInfo(char* filename, VS_FIXEDFILEINFO* fileInfo);
 bool GetFileCreationTime(char* filename, FILETIME* createTime);
 int  Compare_EXE_Version(int app_instance, const char* filename);
-
-#endif // __VERCHK_H

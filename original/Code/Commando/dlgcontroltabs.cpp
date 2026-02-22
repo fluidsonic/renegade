@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcontroltabs.h"
 #include "input.h"
 #include "sliderctrl.h"
@@ -277,4 +278,3 @@ ControlsMultiPlayTabClass::ControlsMultiPlayTabClass (void)	:
 	Add_Function (INPUT_FUNCTION_EVA_MAP_SCREEN,				IDC_HOTKEY6, IDC_HOTKEY18);
 	return ;
 }
-

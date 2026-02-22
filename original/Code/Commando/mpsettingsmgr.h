@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_MP_SETTINGS_MGR_H
-#define __DLG_MP_SETTINGS_MGR_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "vector.h"
@@ -115,5 +115,3 @@ private:
 	static int								OptionFlags;
 
 };
-
-#endif //__DLG_MP_SETTINGS_MGR_H

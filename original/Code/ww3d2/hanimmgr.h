@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HANIMMGR_H
-#define HANIMMGR_H
+#include "global.h"
 
-#include "always.h"
 #include "hash.h"
 #include "wwstring.h"
 
@@ -67,5 +66,3 @@ public:
 	HAnimManagerIterator( HAnimManagerClass & manager ) : HashTableIteratorClass( *manager.AnimPtrTable ) {}
 	HAnimClass * Get_Current_Anim( void );
 };
-
-#endif

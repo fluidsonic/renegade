@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 #define MD 5
 
 #ifndef MD

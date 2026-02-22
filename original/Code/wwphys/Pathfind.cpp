@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pathfind.h"
 #include "pathfindportal.h"
 #include "path.h"
@@ -1901,4 +1902,3 @@ PathfindClass::Render_Debug_Widgets (RenderInfoClass &rinfo)
 	m_PortalDisplayWidgets.Render_Debug_Widgets (rinfo);
 	return ;
 }
-

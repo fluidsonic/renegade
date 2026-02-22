@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef BLITTER_H
-#define BLITTER_H
+#include "global.h"
 
 /*
 **	This is the interface class to the blitter object. The blitter object handles moving
@@ -49,5 +49,3 @@ class RLEBlitter {
 		*/
 		virtual void Blit(void * dest, void const * source, int length, int leadskip=0) const = 0;
 };
-
-#endif

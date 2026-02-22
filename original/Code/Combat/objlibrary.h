@@ -1,9 +1,7 @@
-#ifndef	OBJLIBRARY_H
-#define	OBJLIBRARY_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 class PhysicalGameObj;
 
@@ -17,6 +15,3 @@ public:
 	static PhysicalGameObj	*Create_Object( int type );
 	static PhysicalGameObj	*Create_Object( const char *name );
 };
-
-#endif  // OBJLIBRARY_H
-

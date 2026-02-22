@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SOUND3DOBJ_H
-#define __SOUND3DOBJ_H
+#include "global.h"
 
 #include "AudibleSound.H"
 #include "mempool.h"
@@ -154,5 +154,3 @@ class Sound3DClass : public AudibleSoundClass
 		bool						m_IsStatic;
 		unsigned int			m_LastUpdate;
 };
-
-#endif //__SOUND3DOBJ_H

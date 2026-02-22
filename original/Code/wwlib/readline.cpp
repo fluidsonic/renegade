@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"readline.h"
 #include	"trim.h"
 #include	"wwfile.h"

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef LIGHT_H
-#define LIGHT_H
+#include "global.h"
 
-#include "always.h"
 #include "rendobj.h"
 #include "w3derr.h"
 
@@ -141,5 +140,3 @@ protected:
 	float						SpotExponent;
 	Vector3					SpotDirection;
 };
-
-#endif

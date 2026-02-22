@@ -1,3 +1,4 @@
+#include "global.h"
 #include "light.h"
 #include "ww3d.h"
 #include "ww3dids.h"
@@ -597,4 +598,3 @@ bool LightClass::Load (ChunkLoadClass &cload)
 	Set_Transform(tm);
 	return true;
 }
-

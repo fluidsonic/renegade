@@ -5,6 +5,7 @@
 // Description:  
 //
 
+#include "global.h"
 #include "regbool.h" // I WANNA BE FIRST!
 
 #include "string.h"

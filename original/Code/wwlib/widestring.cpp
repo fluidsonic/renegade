@@ -1,4 +1,5 @@
 
+#include "global.h"
 #include "widestring.h"
 #include "win.h"
 #include <stdio.h>
@@ -314,4 +315,3 @@ bool WideStringClass::Is_ANSI(void)
 
 	return true;
 	}
-

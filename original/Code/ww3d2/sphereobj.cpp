@@ -1,3 +1,4 @@
+#include "global.h"
 #include "sphereobj.h"
 #include "w3d_util.h"
 #include "vertmaterial.h"
@@ -1502,4 +1503,3 @@ void SphereMeshClass::Free(void)
 }
 
 // EOF - sphereobj.cpp
-

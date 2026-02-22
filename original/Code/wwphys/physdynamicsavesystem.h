@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSDYNAMICSAVESYSTEM_H
-#define PHYSDYNAMICSAVESYSTEM_H
+#include "global.h"
 
-#include "always.h"
 #include "saveloadsubsystem.h"
 
 /******************************************************************************************
@@ -40,5 +39,3 @@ protected:
 ** _WWPhysDynamicSaveSystem - global instance of the sub-system for dynamic data
 */
 extern PhysDynamicSaveSystemClass _PhysDynamicSaveSystem;
-
-#endif

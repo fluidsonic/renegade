@@ -1,5 +1,7 @@
 #pragma once
 
+#include "global.h"
+
 #include "cullsys.h"
 #include "mempool.h"
 #include "frustum.h"

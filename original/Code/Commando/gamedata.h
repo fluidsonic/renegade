@@ -1,6 +1,6 @@
-#ifndef	GAMEDATA_H
-#define	GAMEDATA_H
+#pragma once
 
+#include "global.h"
 
 #include "teammanager.h"
 #include "boolean.h"
@@ -353,7 +353,6 @@ extern cGameDataSinglePlayer *		The_Single_Player_Game(void);
 extern cGameDataSkirmish *				The_Skirmish_Game(void);
 extern cGameDataCnc *					The_Cnc_Game(void);
 
-#endif	// GAMEDATA_H
 
 //extern cGameDataDeathMatch *			The_Deathmatch_Game(void);
 //extern cGameDataTeamDeathMatch *		The_Team_Deathmatch_Game(void);

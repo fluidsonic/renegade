@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef RENDER2DSENTENCE_H
-#define RENDER2DSENTENCE_H
+#include "global.h"
 
 #include "render2d.h"
 #include "refcount.h"
@@ -209,5 +209,3 @@ private:
 	TextureClass *									CurTexture;
 	ShaderClass										Shader;
 };
-
-#endif	// RENDER2DSENTENCE_H

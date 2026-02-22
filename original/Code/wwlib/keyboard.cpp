@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"_xmouse.h"
 #include "keyboard.h"
 //#include	"mono.h"

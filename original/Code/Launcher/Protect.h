@@ -1,5 +1,3 @@
-#ifndef __PROTECT_H__
-#define __PROTECT_H__
+#pragma once
 
-
-#endif // PROTECT_H
+#include "global.h"

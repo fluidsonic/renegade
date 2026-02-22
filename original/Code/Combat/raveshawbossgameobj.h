@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __RAVESHAWBOSSGAMEOBJ_H
-#define __RAVESHAWBOSSGAMEOBJ_H
+#include "global.h"
 
 #include "soldier.h"
 #include "statemachine.h"
@@ -460,5 +460,3 @@ RaveshawBossGameObjClass::Peek_Stealth_Soldier (void)
 
 	return soldier;
 }
-
-#endif //__RAVESHAWBOSSGAMEOBJ_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gdcnc.h"
 
 #include "cnetwork.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "distlod.h"
 #include "nstrdup.h"
 #include "ww3d.h"
@@ -1038,4 +1039,3 @@ void DistLODClass::Decrement_Lod(void)
 		}
 	}
 }
-

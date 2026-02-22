@@ -1,3 +1,4 @@
+#include "global.h"
 #include "textdisplay.h"
 #include "font3d.h"
 #include "assets.h"

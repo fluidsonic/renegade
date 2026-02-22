@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef W3D_OBSOLETE_H
-#define W3D_OBSOLETE_H
+#include "global.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Obsolete chunk id's
@@ -280,5 +280,3 @@ struct W3dHModelAuxDataStruct
 	float					LODMax;
 	uint32_t					FutureUse[32];	
 };
-
-#endif // W3D_OBSOLETE_H

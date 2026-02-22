@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 
 #define DME_OCCUPIED	13000
@@ -1006,4 +1007,3 @@ DECLARE_SCRIPT(DME_Cinematic_Test, "")
 //                             MISSION X0                               //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
-

@@ -1,5 +1,6 @@
-#ifndef WINBLOWS_HEADER
-#define WINBLOWS_HEADER
+#pragma once
+
+#include "global.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -15,5 +16,3 @@
   extern int       main(int argc, char *argv[]);
 
   int              Print_WM(UINT wm,char *out);
-
-#endif

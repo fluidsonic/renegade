@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmplangamelist.h"
 #include "win.h"
 #include "listctrl.h"

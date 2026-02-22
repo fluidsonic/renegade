@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vehicle.h"
 #include "animcontrol.h"
 #include "combat.h"

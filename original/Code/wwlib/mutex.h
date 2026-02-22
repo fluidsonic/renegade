@@ -1,7 +1,7 @@
-#ifndef MUTEX_H
-#define MUTEX_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "thread.h"
 #include "critsection.h"
 
@@ -102,5 +102,3 @@ public:
 
 	friend class LockClass;
 };
-
-#endif

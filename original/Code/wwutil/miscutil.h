@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     miscutil.h
 // Project:      wwutil
@@ -7,12 +11,7 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef MISCUTIL_H
-#define MISCUTIL_H
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
 
 #include	"wwstring.h"
 
@@ -38,6 +37,5 @@ class cMiscUtil
 	private:
 };
 
-#endif // MISCUTIL_H
 
 		//static int		Get_Exe_Key(void);

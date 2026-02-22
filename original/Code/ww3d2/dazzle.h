@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DAZZLE_H
-#define DAZZLE_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 #include "matrix3d.h"
 #include "rendobj.h"
@@ -365,5 +364,3 @@ public:
 };
 
 extern DazzleLoaderClass		_DazzleLoader;
-
-#endif

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef STATICANIMPHYS_H
-#define STATICANIMPHYS_H
+#include "global.h"
 
-#include "always.h"
 #include "staticphys.h"
 #include "wwstring.h"
 #include "projectormanager.h"
@@ -166,5 +165,3 @@ protected:
 	
 	friend class StaticAnimPhysClass;
 };
-
-#endif //STATICANIMPHYS_H

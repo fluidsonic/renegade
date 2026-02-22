@@ -6,6 +6,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#include "global.h"
 #include "playertype.h"
 
 const char * Player_Type_Name( int player_type )
@@ -20,4 +21,3 @@ const char * Player_Type_Name( int player_type )
 	}
 	return "Unknown";
 }
-

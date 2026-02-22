@@ -1,11 +1,11 @@
+#pragma once
+
+#include "global.h"
+
 // except.h compat shim for macOS - missing from GPL release
 // This header was not included in the EA GPL release.
 // Provides stub implementations for exception handling utilities.
-#pragma once
-#ifndef EXCEPT_H_COMPAT
-#define EXCEPT_H_COMPAT
 
-#include "windef.h"
 #include <signal.h>
 #include <setjmp.h>
 
@@ -37,5 +37,3 @@ inline void Unregister_Thread_ID(unsigned long thread_id, const char* name, bool
 #define __except(x) else if(0)
 #define __finally   // no-op
 #endif
-
-#endif // EXCEPT_H_COMPAT

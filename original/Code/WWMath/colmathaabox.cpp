@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colmath.h"
 #include "colmathinlines.h"
 #include "aaplane.h"
@@ -441,4 +442,3 @@ exit:
 	}
 	return false;
 }
-

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	DAMAGEABLEGAMEOBJ_H
-#define	DAMAGEABLEGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "scriptablegameobj.h"
 #include "damage.h"
 #include "encyclopediamgr.h"
@@ -112,6 +111,3 @@ protected:
 	int					PlayerType;
 	bool					IsHealthBarDisplayed;
 };
-
-#endif	//	DAMAGEABLEGAMEOBJ_H
-

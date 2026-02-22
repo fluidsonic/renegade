@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef WW3D2_STRIP_OPTIMIZER_H__
-#define WW3D2_STRIP_OPTIMIZER_H__
-
-#include "always.h"
+#include "global.h"
 
 // strip data =
 //
@@ -22,5 +20,3 @@ public:
 
 	static int Get_Strip_Index_Count(const int* strips, int strips_count);
 };
-
-#endif // WW3D2_STRIP_OPTIMIZER_H__

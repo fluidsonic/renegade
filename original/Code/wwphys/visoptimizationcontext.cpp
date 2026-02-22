@@ -1,3 +1,4 @@
+#include "global.h"
 #include "visoptimizationcontext.h"
 #include "visoptprogress.h"
 #include "pscene.h"
@@ -320,4 +321,3 @@ VisOptProgressClass & VisOptimizationContextClass::Get_Progress_Object(void)
 {
 	return Stats;
 }
-

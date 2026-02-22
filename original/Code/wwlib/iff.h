@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef IFF_H
-#define IFF_H
+#include "global.h"
 
 #define __cdecl
 
@@ -113,5 +113,3 @@ extern unsigned long __cdecl LCW_Uncompress(void *source, void *dest, unsigned l
 }
 #endif
 /*=========================================================================*/
-
-#endif //IFF_H

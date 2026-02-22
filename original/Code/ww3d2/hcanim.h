@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HCANIM_H
-#define HCANIM_H
+#include "global.h"
 
-#include "always.h"
 #include "quat.h"
 #include "refcount.h"
 #include "w3d_file.h"
@@ -90,6 +89,3 @@ private:
 	void add_bit_channel(TimeCodedBitChannelClass * newchan);
 
 };
-
-#endif // hcanim.h
- 

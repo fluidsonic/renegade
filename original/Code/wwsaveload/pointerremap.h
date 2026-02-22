@@ -1,11 +1,9 @@
+#pragma once
 
+#include "global.h"
 
-#ifndef POINTERREMAP_H
-#define POINTERREMAP_H
+#include "compat/osdep.h"
 
-#include "osdep/osdep.h"
-
-#include "always.h"
 #include "vector.h"
 
 class RefCountClass;
@@ -58,5 +56,3 @@ class PointerRemapClass
 		DynamicVectorClass<PtrRemapStruct>	PointerRequestTable;
 		DynamicVectorClass<PtrRemapStruct>	RefCountRequestTable;
 };
-
-#endif

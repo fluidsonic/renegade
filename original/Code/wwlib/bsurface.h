@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef BSURFACE_H
-#define BSURFACE_H
+#include "global.h"
 
 #include	"buff.h"
 #include	"xsurface.h"
@@ -45,5 +45,3 @@ class BSurface : public XSurface
 		*/
 		Buffer Buff;
 };
-
-#endif

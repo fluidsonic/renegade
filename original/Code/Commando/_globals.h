@@ -1,6 +1,6 @@
-#ifndef _GLOBALS_H
-#define _GLOBALS_H
+#pragma once
 
+#include "global.h"
 
 /*
 // FDS: IsDedicatedServer() returned true for dedicated server builds
@@ -45,5 +45,3 @@ extern char *Build_Registry_Location_String(char *base, char *modifier, char *su
 #define  RENEGADE_BASE_SKU										3072
 #define	RENEGADE_FDS_SKU										12288
 #define	RENEGADE_DEMO_SKU										13056
-
-#endif

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TDB_CATEGORIES_H
-#define __TDB_CATEGORIES_H
+#include "global.h"
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -12,5 +12,3 @@ typedef enum
 	CATEGORY_DEFAULT	= 0,
 
 } TDB_CATEGORIES;
-
-#endif //__TDB_CATEGORIES_H

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_MP_LAN_HOST_OPTIONS_H
-#define __DLG_MP_LAN_HOST_OPTIONS_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -254,6 +254,3 @@ public:
 	void		On_Init_Dialog (void);
 	bool		On_Apply (void);
 };
-
-#endif //__DLG_MP_LAN_HOST_OPTIONS_H
-

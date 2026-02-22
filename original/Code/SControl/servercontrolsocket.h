@@ -1,7 +1,6 @@
 #pragma once
 
-#ifndef SERVERCONTROLSOCKET_H
-#define SERVERCONTROLSOCKET_H
+#include "global.h"
 
 #include	"assert.h"
 #include	"vector.h"
@@ -161,5 +160,3 @@ class ServerControlSocketClass
 		*/
 		char Key[12];
 };
-
-#endif //SERVERCONTROLSOCKET_H

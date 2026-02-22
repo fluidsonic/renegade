@@ -1,7 +1,7 @@
-#ifndef DAMAGEABLESTATICPHYS_H
-#define DAMAGEABLESTATICPHYS_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "staticanimphys.h"
 #include "damage.h"
 
@@ -102,6 +102,3 @@ protected:
 	friend class								DamageableStaticPhysClass;
 	friend class								DSAPONetworkObjectClass;
 };
-
-#endif	// DAMAGEABLESTATICPHYS_H
-

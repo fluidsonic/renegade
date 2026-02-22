@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef AABTREE_H
-#define AABTREE_H
+#include "global.h"
 
-#include "always.h"
 #include "refcount.h"
 #include "simplevec.h"
 #include "vector3.h"
@@ -282,5 +281,3 @@ inline void AABTreeClass::CullNodeStruct::Set_Poly_Count(uint32_t count)
 {
 	BackOrPolyCount = count;
 }
-
-#endif

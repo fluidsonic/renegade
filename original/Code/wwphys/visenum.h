@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef VISENUM_H
-#define VISENUM_H
+#include "global.h"
 
 enum VisStatusType
 {
@@ -38,6 +38,3 @@ enum VisDirType
 
 const float VIS_NEAR_CLIP	= 0.2f;
 const float VIS_FAR_CLIP	= 300.0f;
-
-#endif
-

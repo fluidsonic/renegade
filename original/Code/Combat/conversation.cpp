@@ -1,3 +1,4 @@
+#include "global.h"
 #include "conversation.h"
 #include "chunkio.h"
 #include "soldier.h"
@@ -420,4 +421,3 @@ ConversationClass::Find_Orator (int orator_id)
 
 	return orator;
 }
-

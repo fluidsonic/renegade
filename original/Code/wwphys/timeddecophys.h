@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef TIMEDDECOPHYS_H
-#define TIMEDDECOPHYS_H
+#include "global.h"
 
 #include "decophys.h"
 
@@ -75,5 +75,3 @@ protected:
 
 	friend class TimedDecorationPhysClass;
 };
-
-#endif

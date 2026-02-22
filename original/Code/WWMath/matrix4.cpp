@@ -1,3 +1,4 @@
+#include "global.h"
 #include "matrix4.h"
 #include <assert.h>
 

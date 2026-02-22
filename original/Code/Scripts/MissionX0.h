@@ -1,5 +1,6 @@
-#ifndef _MISSIONX0_H_
-#define _MISSIONX0_H_
+#pragma once
+
+#include "global.h"
 
 // Defines and Includes
 
@@ -351,6 +352,3 @@ enum
 	MX0_A02_ID_NOD_UNIT_03,
 	MX0_A02_ID_NOD_UNIT_04
 };
-
-#endif // _MISSION4_H_
-

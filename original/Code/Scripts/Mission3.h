@@ -1,5 +1,6 @@
-#ifndef _MISSION3_H_
-#define _MISSION3_H_
+#pragma once
+
+#include "global.h"
 
 // Defines and Includes
 #define GOTO_STAR	20000
@@ -42,5 +43,3 @@
 // Timer Enumerations
 #define INLET_REINFORCE		60000
 #define CLOUD_DELAY			60001
-
-#endif // _MISSION3_H_

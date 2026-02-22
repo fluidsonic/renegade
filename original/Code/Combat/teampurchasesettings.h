@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TEAMPURCHASESETTINGS_H
-#define __TEAMPURCHASESETTINGS_H
+#include "global.h"
 
 #include "translatedb.h"
 #include "wwstring.h"
@@ -114,5 +114,3 @@ protected:
 	
 	static TeamPurchaseSettingsDefClass *	DefinitionArray[TEAM_COUNT];
 };
-
-#endif //__TEAMPURCHASESETTINGS_H

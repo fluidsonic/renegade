@@ -1,7 +1,10 @@
+#pragma once
+
+#include "global.h"
+
 #ifndef DYANMICANIMPHYS_H
 #define DYNAMICANIMPHYS_H
 
-#include "always.h"
 #include "decophys.h"
 #include "animcollisionmanager.h"
 #include "dynamicshadowmanager.h"
@@ -117,4 +120,3 @@ inline const DynamicAnimPhysDefClass * DynamicAnimPhysClass::Get_DynamicAnimPhys
 }
 
 #endif //DYNAMICANIMPHYS_H
-

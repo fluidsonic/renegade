@@ -1,3 +1,4 @@
+#include "global.h"
 #include "gdsingleplayer.h"  // I WANNA BE FIRST!
 
 #include "cnetwork.h"
@@ -54,4 +55,3 @@ int cGameDataSinglePlayer::Choose_Player_Type(cPlayer* player, int team_choice, 
 
 	return team;
 }
-

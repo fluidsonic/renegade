@@ -1,8 +1,6 @@
+#pragma once
 
-
-#ifndef IOSTRUCT_H
-#define IOSTRUCT_H
-
+#include "global.h"
 
 /*
 ** Some useful structures for writing/writing (safe from changes).
@@ -33,6 +31,3 @@ struct IOQuaternionStruct
 {
 	float		Q[4];
 };
-
-#endif
-

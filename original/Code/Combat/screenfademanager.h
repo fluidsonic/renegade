@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef SCREENFADEMANAGER_H
-#define SCREENFADEMANAGER_H
-
-#include "always.h"
+#include "global.h"
 
 class Vector3;
 class	ChunkSaveClass;
@@ -37,6 +35,3 @@ public:
 	static	void	Set_Screen_Overlay_Opacity(float opacity,float time = 0.0f);
 
 };
-
-#endif //SCREENFADEMANAGER_H
-

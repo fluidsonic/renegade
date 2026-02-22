@@ -1,5 +1,6 @@
-#ifndef __EVICTIONEVENT_H__
-#define __EVICTIONEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -34,5 +35,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __EVICTIONEVENT_H__

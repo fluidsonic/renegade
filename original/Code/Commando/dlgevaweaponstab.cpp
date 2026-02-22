@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgevaweaponstab.h"
 
 ////////////////////////////////////////////////////////////////
@@ -29,4 +30,3 @@ EvaWeaponsTabClass::On_Init_Dialog (void)
 	EvaViewerTabClass::On_Init_Dialog ();
 	return ;
 }
-

@@ -1,9 +1,7 @@
-#ifndef	CONSOLEFUNCTION_H
-#define	CONSOLEFUNCTION_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR_H
 	#include "vector.h"
@@ -50,5 +48,3 @@ private:
 
 	static	DynamicVectorClass<ConsoleFunctionClass *>	FunctionList;	// list of all console functions
 };
-
-#endif // CONSOLEFUNCTION_H

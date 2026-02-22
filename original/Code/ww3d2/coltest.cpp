@@ -1,3 +1,4 @@
+#include "global.h"
 #include "coltest.h"
 
 AABoxCollisionTestClass::AABoxCollisionTestClass(const AABoxCollisionTestClass & that) :

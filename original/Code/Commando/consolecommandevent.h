@@ -1,5 +1,6 @@
-#ifndef __CONSOLECOMMANDEVENT_H__
-#define __CONSOLECOMMANDEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -28,5 +29,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __CONSOLECOMMANDEVENT_H__

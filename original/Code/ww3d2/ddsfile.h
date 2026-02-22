@@ -1,7 +1,7 @@
-#ifndef DDSFILE_H
-#define DDSFILE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "ww3dformat.h"
 #include "wwstring.h"
 
@@ -203,5 +203,3 @@ public:
 };
 
 // ----------------------------------------------------------------------------
-
-#endif

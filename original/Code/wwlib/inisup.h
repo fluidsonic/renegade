@@ -1,4 +1,6 @@
+#pragma once
 
+#include "global.h"
 
 /*
 **	This header defines generally unused member structures used by the INI class.
@@ -45,4 +47,3 @@ struct INISection : public Node<INISection *> {
 		INISection(INISection const & rvalue);
 		INISection operator = (INISection const & rvalue);
 };
-

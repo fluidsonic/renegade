@@ -6,6 +6,7 @@
 // Description:  
 //
 //-----------------------------------------------------------------------------
+#include "global.h"
 #include "singlepl.h" // I WANNA BE FIRST!
 
 #include "netutil.h"
@@ -49,4 +50,3 @@ SList<cPacket> * cSinglePlayerData::Get_Input_Packet_List(int type)
 {
 	return &InputPacketList[type];
 }
-

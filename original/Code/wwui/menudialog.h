@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MENU_DIALOG_H
-#define __MENU_DIALOG_H
+#include "global.h"
 
 #include "dialogbase.h"
 #include "wwstring.h"
@@ -82,6 +82,3 @@ protected:
 	static MenuBackDropClass *								BackDrop;
 	static DynamicVectorClass<MenuDialogClass *>		MenuStack;
 };
-
-#endif //__MENU_DIALOG_H
-

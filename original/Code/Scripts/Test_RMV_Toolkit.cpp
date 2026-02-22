@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include <string.h>
 #include <stdio.h>
@@ -516,4 +517,3 @@ DECLARE_SCRIPT(M00_Play_Sound, "Sound_Preset:string, Is_3D=1:int, Offset:vector3
 		}
 	}
 };
-

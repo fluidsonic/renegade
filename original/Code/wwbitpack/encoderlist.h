@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     encoderlist.h
 // Project:      wwbitpack.lib
@@ -6,8 +10,6 @@
 // Description:  
 //					  
 
-#ifndef ENCODERLIST_H
-#define ENCODERLIST_H
 
 #include "encodertypeentry.h"
 #include "miscutil.h"
@@ -62,5 +64,3 @@ class cEncoderList
 
 		static bool IsCompressionEnabled;
 };
-
-#endif // ENCODERLIST_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "layer.h"
 #include "scene.h"
 #include "camera.h"

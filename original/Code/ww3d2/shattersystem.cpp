@@ -1,3 +1,4 @@
+#include "global.h"
 #include "shattersystem.h"
 #include "assetmgr.h"
 #include "mesh.h"

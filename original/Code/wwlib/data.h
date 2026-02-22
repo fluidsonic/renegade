@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef DATA_H
-#define DATA_H
+#include "global.h"
 
 #include	"buff.h"
 #include	"iff.h"
@@ -14,5 +14,3 @@ void * Load_Alloc_Data(FileClass & file);
 long Load_Uncompress(FileClass & file, Buffer & uncomp_buff, Buffer & dest_buff, void * reserved_data);
 char const * Fetch_String(int id);
 void const * Fetch_Resource(LPCSTR resname, LPCSTR restype);
-
-#endif

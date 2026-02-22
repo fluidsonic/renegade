@@ -1,5 +1,8 @@
-// BandTest/BandTest.h - compat stub (BandTest was a Windows DLL for bandwidth detection)
 #pragma once
+
+#include "global.h"
+
+// BandTest/BandTest.h - compat stub (BandTest was a Windows DLL for bandwidth detection)
 
 enum {
     BANDTEST_OK,

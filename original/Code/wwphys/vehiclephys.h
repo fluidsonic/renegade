@@ -1,5 +1,6 @@
-#ifndef VEHICLEPHYS_H
-#define VEHICLEPHYS_H
+#pragma once
+
+#include "global.h"
 
 #include "rbody.h"
 #include "simplevec.h"
@@ -204,6 +205,3 @@ protected:
 
 	friend class VehiclePhysClass;
 };
-
-#endif
-

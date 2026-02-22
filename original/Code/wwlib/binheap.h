@@ -1,5 +1,6 @@
-#ifndef BINARY_HEAP_CLASS_H
-#define BINARY_HEAP_CLASS_H
+#pragma once
+
+#include "global.h"
 
 /*=============================================================================================*/
 // Includes.
@@ -277,5 +278,3 @@ class BinaryHeapClass
 		// binary tree.
 		bool								Own_Array;
 };
-
-#endif //BINARY_HEAP_CLASS_H

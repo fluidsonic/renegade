@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgsidebarhelp.h"
 #include "mpsettingsmgr.h"
 #include "resource.h"

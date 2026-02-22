@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"random.h"
 
 // Timing tests for random these random number generators in seconds for

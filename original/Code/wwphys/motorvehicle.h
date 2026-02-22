@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef MOTORVEHICLE_H
-#define MOTORVEHICLE_H
+#include "global.h"
 
 #include "vehiclephys.h"
 
@@ -176,5 +176,3 @@ protected:
 
 	friend class MotorVehicleClass;
 };
-
-#endif

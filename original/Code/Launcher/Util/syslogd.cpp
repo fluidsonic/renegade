@@ -1,3 +1,4 @@
+#include "global.h"
 #include "syslogd.h"
 
 SyslogD::SyslogD(char *ident,int logopt,int facility,int _priority)

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogcontrol.h"
 #include "dialogbase.h"
 #include "mousemgr.h"

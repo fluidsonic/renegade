@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCONFIGPERFORMANCETAB_H
-#define __DLGCONFIGPERFORMANCETAB_H
+#include "global.h"
 
 #include "childdialog.h"
 #include "vector.h"
@@ -55,5 +55,3 @@ protected:
 	///////////////////////////////////////////////////////////////////
 	DynamicVectorClass<DialogControlClass *>	ExpertWindowList;
 };
-
-#endif //__DLGCONFIGPERFORMANCETAB_H

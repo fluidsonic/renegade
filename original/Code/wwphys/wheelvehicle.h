@@ -1,10 +1,7 @@
+#pragma once
 
-#ifndef WHEELVEHICLE_H
-#define WHEELVEHICLE_H
+#include "global.h"
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 #ifndef MOTORVEHICLE_H
 #include "motorvehicle.h"
@@ -112,6 +109,3 @@ inline const WheeledVehicleDefClass * WheeledVehicleClass::Get_WheeledVehicleDef
 {
 	return (WheeledVehicleDefClass *)Definition;
 }
-
-#endif
-

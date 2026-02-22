@@ -1,3 +1,4 @@
+#include "global.h"
 #include "savegame.h"
 #include "definitionmgr.h"
 #include "chunkio.h"
@@ -484,4 +485,3 @@ void	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_po
 //		assert( file );
 	}
 }
-

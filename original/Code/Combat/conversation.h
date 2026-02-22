@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CONVERSATION_H
-#define __CONVERSATION_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "vector.h"
@@ -131,5 +131,3 @@ protected:
 	float										MaxDist;
 	bool										IsInterruptable;
 };
-
-#endif //__CONVERSATION_H

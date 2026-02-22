@@ -1,3 +1,4 @@
+#include "global.h"
 #include "physcon.h"
 #include "chunkio.h"
 #include "w3d_file.h"
@@ -184,4 +185,3 @@ void PhysicsConstants::Load(ChunkLoadClass & cload)
 		cload.Close_Chunk();
 	}
 }
-

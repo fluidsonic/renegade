@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TWIDDLER_H
-#define __TWIDDLER_H
+#include "global.h"
 
 #include "definition.h"
 #include "definitionclassids.h"
@@ -82,6 +82,3 @@ TwiddlerClass::Set_Indirect_Class_ID (uint32_t class_id)
 	m_IndirectClassID = class_id;
 	return ;
 }
-
-#endif //__TWIDDLER_H
-

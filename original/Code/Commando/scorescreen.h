@@ -1,9 +1,7 @@
-#ifndef	SCORESCREEN_H
-#define	SCORESCREEN_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	GAMEMODE_H
 	#include "gamemode.h"
@@ -53,5 +51,3 @@ private:
 	int				Get_Saves_Loaded_Stars( void );
 	int				Get_Secondary_Missions_Stars( void );
 };
-
-#endif

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "CNCModeSettings.h"
 #include "CombatChunkID.h"
 #include "PersistFactory.h"

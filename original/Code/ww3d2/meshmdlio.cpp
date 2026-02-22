@@ -1,3 +1,4 @@
+#include "global.h"
 #include "meshmdl.h"
 #include "aabtree.h"
 #include "matinfo.h"
@@ -15,7 +16,7 @@
 
 #include <stdio.h>
 
-#include "osdep/osdep.h"
+#include "compat/osdep.h"
 
 /**
 ** MeshLoadContextClass
@@ -2019,4 +2020,3 @@ MeshSaveContextClass::MeshSaveContextClass(void) :
 MeshSaveContextClass::~MeshSaveContextClass(void)
 {
 }
-

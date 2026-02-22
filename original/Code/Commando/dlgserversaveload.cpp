@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgserversaveload.h"
 #include "resource.h"
 #include "listctrl.h"

@@ -1,5 +1,6 @@
-#ifndef RLE_H
-#define RLE_H
+#pragma once
+
+#include "global.h"
 
 /*
 **	This class will RLE compress and decompress arbitrary blocks of data. This RLE compression
@@ -21,6 +22,3 @@ class RLEEngine
 		int Line_Compress(void const * source, void * dest, int length) const;
 		int Line_Decompress(void const * source, void * dest) const;
 };
-
-#endif
-

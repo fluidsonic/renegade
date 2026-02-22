@@ -1,3 +1,4 @@
+#include "global.h"
 #include "line3d.h"
 #include "vertmaterial.h"
 #include "shader.h"
@@ -430,4 +431,3 @@ int Line3DClass::Get_Num_Polys(void) const
 { 
 	return 12;
 }
-

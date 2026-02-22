@@ -1,3 +1,4 @@
+#include "global.h"
 #include "team.h"
 
 #include <stdio.h>

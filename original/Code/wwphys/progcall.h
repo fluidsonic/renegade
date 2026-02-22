@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef PROGCALL_H
-#define PROGCALL_H
+#include "global.h"
 
 /*
 ** This is the base class definition for a progress callback to be used with some of the 
@@ -24,6 +24,3 @@ protected:
 	int				TotalCost;
 	int				Completed;
 };
-
-#endif
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "systeminfolog.h"
 #include "registry.h"
 #include "timemgr.h"

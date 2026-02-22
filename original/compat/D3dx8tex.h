@@ -1,7 +1,8 @@
-// D3dx8tex.h compat shim for macOS - D3DX8 texture utility stubs
 #pragma once
-#ifndef D3DX8TEX_H_COMPAT
-#define D3DX8TEX_H_COMPAT
+
+#include "global.h"
+
+// D3dx8tex.h compat shim for macOS - D3DX8 texture utility stubs
 
 #include "D3dx8core.h"
 
@@ -42,5 +43,3 @@ inline HRESULT D3DXSaveTextureToFileA(const char* pDestFile, DWORD DestFormat,
     return E_NOTIMPL;
 }
 #define D3DXSaveTextureToFile D3DXSaveTextureToFileA
-
-#endif // D3DX8TEX_H_COMPAT

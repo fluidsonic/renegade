@@ -1,9 +1,7 @@
-#ifndef	WEAPONMANAGER_H
-#define	WEAPONMANAGER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	WWSTRING_H
 	#include "wwstring.h"
@@ -180,5 +178,3 @@ public:
 private:
 	static	bool									IsWeaponHelpDisabled;
 };
-
-#endif		// WEAPONMANAGER_H

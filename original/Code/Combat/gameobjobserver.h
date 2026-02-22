@@ -1,9 +1,7 @@
-#ifndef	GAMEOBJOBSERVER_H
-#define	GAMEOBJOBSERVER_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 class		ScriptableGameObj;
 typedef	ScriptableGameObj	 GameObject;
@@ -107,5 +105,3 @@ private:
 	static	int	NextID;
 
 };
-
-#endif		//	GAMEOBJOBSERVER_H

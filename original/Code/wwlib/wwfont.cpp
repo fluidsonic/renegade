@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"_convert.h"
 #include	"wwfont.h"
 //#include	<stdlib.h>

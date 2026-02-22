@@ -1,10 +1,7 @@
+#pragma once
 
-#ifndef CURVE_H
-#define CURVE_H
+#include "global.h"
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 #ifndef VECTOR_H
 #include "vector.h"
@@ -130,5 +127,3 @@ public:
 	virtual bool								Save(ChunkSaveClass &csave);
 	virtual bool								Load(ChunkLoadClass &cload);
 };
-
-#endif //CURVE_H

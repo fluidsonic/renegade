@@ -1,3 +1,4 @@
+#include "global.h"
 #include "combatmaterialeffectmanager.h"
 #include "materialeffect.h"
 #include "transitioneffect.h"
@@ -84,4 +85,3 @@ CombatMaterialEffectManager::Get_Electrocution_Effect(void)
 
 	return effect;
 }
-

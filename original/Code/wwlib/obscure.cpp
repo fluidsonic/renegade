@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"crc.h"
 #include	"obscure.h"
 #include	<ctype.h>
@@ -192,4 +192,3 @@ long Obfuscate(char const * string)
 	*/
 	return(code);
 }
-

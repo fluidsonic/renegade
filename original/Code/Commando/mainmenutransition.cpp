@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mainmenutransition.h"
 #include "camera.h"
 #include "stylemgr.h"
@@ -244,4 +245,3 @@ MainMenuTransitionClass::Is_Valid (void) const
 
 	return retval;
 }
-

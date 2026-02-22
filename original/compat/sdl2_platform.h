@@ -1,9 +1,10 @@
+#pragma once
+
+#include "global.h"
+
 // sdl2_platform.h — SDL2 platform layer for macOS port
 // Owns the SDL2 lifecycle: window, GL context, event dispatch.
 // Pure C declarations (no SDL2 headers) so this can be included widely.
-#pragma once
-#ifndef SDL2_PLATFORM_H
-#define SDL2_PLATFORM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,5 +62,3 @@ void macos_activate_app(void);
 #ifdef __cplusplus
 } // extern "C"
 #endif
-
-#endif // SDL2_PLATFORM_H

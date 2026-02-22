@@ -1,9 +1,9 @@
-// imm.h compat shim for macOS - Input Method Manager stubs
 #pragma once
-#ifndef IMM_H_COMPAT
-#define IMM_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// imm.h compat shim for macOS - Input Method Manager stubs
+
 #include "wingdi.h"
 
 // IME handles
@@ -213,5 +213,3 @@ inline UINT ImmGetDescriptionW(HKL hKL, LPWSTR lpszDescription, UINT uBufLen) { 
 #define ImmGetCandidateList      ImmGetCandidateListA
 #define ImmSetCompositionString  ImmSetCompositionStringA
 #define ImmConfigureIME          ImmConfigureIMEA
-
-#endif // IMM_H_COMPAT

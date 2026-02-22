@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 #include "mission1.h"
 #include "mission11.h"
@@ -18,4 +19,3 @@
 	virtual	void	Entered( GameObject * obj, GameObject * enterer ) {}		
 	virtual	void	Exited( GameObject * obj, GameObject * exiter ) {}
 */
-

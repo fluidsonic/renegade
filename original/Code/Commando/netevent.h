@@ -1,5 +1,6 @@
-#ifndef __NETEVENT_H__
-#define __NETEVENT_H__
+#pragma once
+
+#include "global.h"
 
 #include "networkobject.h"
 #include "netclassids.h"
@@ -27,5 +28,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __NETEVENT_H__

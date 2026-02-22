@@ -1,5 +1,6 @@
-#ifndef __LZO1X_H
-#define __LZO1X_H
+#pragma once
+
+#include "global.h"
 
 #include	"lzoconf.h"
 
@@ -54,7 +55,6 @@ lzo1x_999_compress      ( const lzo_byte *src, lzo_uint  src_len,
 //} /* extern "C" */
 //#endif
 
-#endif /* already included */
 
 /*
 vi:ts=4

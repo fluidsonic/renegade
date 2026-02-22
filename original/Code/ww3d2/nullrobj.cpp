@@ -1,3 +1,4 @@
+#include "global.h"
 #include "nullrobj.h"
 #include "chunkio.h"
 

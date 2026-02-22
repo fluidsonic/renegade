@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef MATERIALEFFECT_H
-#define MATERIALEFFECT_H
+#include "global.h"
 
-#include "always.h"
 #include "multilist.h"
 #include "refcount.h"
 
@@ -87,6 +86,3 @@ private:
 	MaterialPassClass *	MatPass;
 
 };
-
-#endif //MATERIALEFFECT_H
-

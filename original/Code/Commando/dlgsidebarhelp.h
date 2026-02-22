@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGSIDEBARHELP_H
-#define __DLGSIDEBARHELP_H
+#include "global.h"
 
 #include "popupdialog.h"
 
@@ -39,5 +39,3 @@ private:
 	//	Private member data
 	///////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGSIDEBARHELP_H

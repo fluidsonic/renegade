@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __RENEGADECHEATMGR_H
-#define __RENEGADECHEATMGR_H
+#include "global.h"
 
 #include "cheatmgr.h"
 
@@ -35,5 +35,3 @@ protected:
 	//	Protected methods
 	///////////////////////////////////////////////////////////////////
 };
-
-#endif //__RENEGADECHEATMGR_H

@@ -1,8 +1,7 @@
-#ifndef	MULTIHUD_H
-#define	MULTIHUD_H
+#pragma once
 
+#include "global.h"
 
-#include "always.h"
 #include "gamemode.h"
 
 class SmartGameObj;
@@ -56,6 +55,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif // MULTIHUD_H
-

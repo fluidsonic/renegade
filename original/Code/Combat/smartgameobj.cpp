@@ -1,3 +1,4 @@
+#include "global.h"
 #include "smartgameobj.h"
 #include "gameobjmanager.h"
 #include "weapons.h"
@@ -983,4 +984,3 @@ void	SmartGameObj::Reset_Controller( void )
 		CombatManager::Send_Control_Packet(this);
 		CombatManager::Send_State_Packet(this);
 		*/
-

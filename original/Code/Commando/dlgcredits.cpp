@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgcredits.h"
 #include "wwfile.h"
 #include "ffactory.h"
@@ -81,4 +82,3 @@ CreditsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 	MenuDialogClass::On_Command (ctrl_id, message_id, param);
 	return ;
 }
-

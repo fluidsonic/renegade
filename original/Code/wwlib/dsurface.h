@@ -1,5 +1,6 @@
-#ifndef DSURFACE_H
-#define DSURFACE_H
+#pragma once
+
+#include "global.h"
 
 #include	"palette.h"
 #include	"win.h"
@@ -164,5 +165,3 @@ class DSurface : public XSurface
 		DSurface(DSurface const & rvalue);
 		DSurface const operator = (DSurface const & rvalue);
 };
-
-#endif

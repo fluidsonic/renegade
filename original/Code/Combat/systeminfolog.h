@@ -1,9 +1,9 @@
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "wwstring.h"
 
-#ifndef __SYSTEM_INFO_LOG_H
-#define __SYSTEM_INFO_LOG_H
 
 class SystemInfoLog
 {
@@ -36,6 +36,3 @@ public:
 
 	static void Report_Tally_Size(int type, int size);
 };
-
-#endif
-

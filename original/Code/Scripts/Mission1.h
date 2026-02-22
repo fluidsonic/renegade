@@ -1,5 +1,6 @@
-#ifndef _MISSION1_H_
-#define _MISSION1_H_
+#pragma once
+
+#include "global.h"
 
 // Defines and Includes
 
@@ -759,5 +760,3 @@ inline char *M01_Choose_Idle_Animation ( )
 
 	return animationName;
 };*/
-
-#endif // _MISSION1_H_

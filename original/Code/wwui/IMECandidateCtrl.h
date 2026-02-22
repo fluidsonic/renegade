@@ -1,5 +1,6 @@
-#ifndef __IMECANDIDATECTRL_H__
-#define __IMECANDIDATECTRL_H__
+#pragma once
+
+#include "global.h"
 
 #include "DialogControl.h"
 #include "ScrollBarCtrl.h"
@@ -70,6 +71,3 @@ class IMECandidateCtrl :
 
 		IME::IMECandidate* mCandidate;
 		};
-
-#endif // __IMECANDIDATECTRL_H__
-

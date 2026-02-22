@@ -6,6 +6,7 @@
 // Description:  
 //
 //-----------------------------------------------------------------------------
+#include "global.h"
 #include "mathutil.h" // I WANNA BE FIRST!
 
 #include <math.h>
@@ -181,4 +182,3 @@ int cMathUtil::Get_Hat_Pdf_Int(int lower, int upper)
 {
    return Round(Get_Hat_Pdf_Double(lower, upper));
 }
-

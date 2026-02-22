@@ -1,5 +1,6 @@
-#ifndef __VISEME_H_
-#define __VISEME_H_
+#pragma once
+
+#include "global.h"
 
 /*typedef enum VISEME_ID
 {
@@ -60,5 +61,3 @@ private:
 	int		Do_Letter_s(const char *pchar,  char prevchar, int *viseme) const;
 	int		Do_Letter_t(const char *pchar,  char prevchar, int *viseme) const;
 };
-
-#endif

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef SCENE_H
-#define SCENE_H
+#include "global.h"
 
-#include "always.h"
 #include "refcount.h"
 #include "vector3.h"
 #include "robjlist.h"
@@ -208,5 +207,3 @@ protected:
 	virtual void Customized_Render(RenderInfoClass & rinfo);
 	virtual void Post_Render_Processing(RenderInfoClass& rinfo);
 };
-
-#endif

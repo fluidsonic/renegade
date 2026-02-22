@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dynamicphys.h"
 #include "chunkio.h"
 #include "pscene.h"
@@ -194,4 +195,3 @@ bool DynamicPhysDefClass::Load(ChunkLoadClass &cload)
 	}
 	return true;
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "translatedb.h"
 
 #include <windows.h>

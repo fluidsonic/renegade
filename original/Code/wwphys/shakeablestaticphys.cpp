@@ -1,3 +1,4 @@
+#include "global.h"
 #include "shakeablestaticphys.h"
 #include "simpledefinitionfactory.h"
 #include "persistfactory.h"
@@ -164,4 +165,3 @@ bool ShakeableStaticPhysClass::Load(ChunkLoadClass & cload)
 
 	return true;
 }
-

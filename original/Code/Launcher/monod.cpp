@@ -1,3 +1,4 @@
+#include "global.h"
 #include "monod.h"
 
 MonoD::MonoD(void)

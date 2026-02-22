@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include "scriptfactory.h"
 #include "dprint.h"

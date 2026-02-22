@@ -1,8 +1,9 @@
+#pragma once
+
+#include "global.h"
 
 #include "vector.h"
 
-#ifndef __DIALOGUE_H
-#define __DIALOGUE_H
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -161,6 +162,3 @@ protected:
 	DIALOGUE_OPTION_LIST		OptionList;
 	float							SilenceWeight;
 };
-
-#endif //__DIALOGUE_H
-

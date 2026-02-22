@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"stimer.h"
 #include	"win.h"
 

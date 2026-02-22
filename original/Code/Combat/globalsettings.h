@@ -1,9 +1,7 @@
-#ifndef	GLOBALSETTINGS_H
-#define	GLOBALSETTINGS_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef DEFINITION_H
 	#include "definition.h"
@@ -309,5 +307,3 @@ public:
 	StringClass									RunAtHip;
 	StringClass									WalkAtHip;
 };
-
-#endif	//	GLOBALSETTINGS_H

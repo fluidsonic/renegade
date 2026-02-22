@@ -1,3 +1,4 @@
+#include "global.h"
 #include "tcbspline.h"
 #include "persistfactory.h"
 #include "wwmathids.h"

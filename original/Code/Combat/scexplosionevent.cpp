@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scexplosionevent.h"
 
 #include <stdio.h>

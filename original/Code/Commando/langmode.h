@@ -1,5 +1,6 @@
-#ifndef LANGMODE_H
-#define LANGMODE_H
+#pragma once
+
+#include "global.h"
 
 #include "GameMode.h"
 
@@ -19,5 +20,3 @@ public:
 	static void Load_Lan_Registry_Keys(void);
 	static void Save_Lan_Registry_Keys(void);
 };
-
-#endif // LANGMODE_H

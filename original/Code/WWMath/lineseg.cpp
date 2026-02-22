@@ -1,3 +1,4 @@
+#include "global.h"
 #include "lineseg.h"
 //#include <stdlib.h>
 
@@ -170,4 +171,3 @@ LineSegClass::Find_Intersection
 
 	return retval;
 }
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "damage.h"
 #include "assets.h"
 #include "smartgameobj.h"
@@ -1264,4 +1265,3 @@ void	DefenseObjectClass::Set_Shield_Type( ArmorType type )
 				smart->Get_Player_Data()->On_Kill(victim_id, victim_team);
 			}
 			*/
-

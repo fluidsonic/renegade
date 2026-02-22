@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SLIDER_CTRL_H
-#define __SLIDER_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -64,6 +64,3 @@ protected:
 	int						MaxPos;
 	int						CurrPos;
 };
-
-#endif //__SLIDER_CTRL_H
-

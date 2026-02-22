@@ -1,3 +1,4 @@
+#include "global.h"
 #include "texproject.h"
 #include "vertmaterial.h"
 #include "shader.h"
@@ -1205,4 +1206,3 @@ void TexProjectClass::Update_WS_Bounding_Volume(void)
 	WorldBoundingVolume.Compute_Axis_Aligned_Extent(&extent);
 	Set_Cull_Box(AABoxClass(WorldBoundingVolume.Center,extent));
 }
-

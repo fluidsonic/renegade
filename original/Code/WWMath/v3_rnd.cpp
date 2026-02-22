@@ -1,3 +1,4 @@
+#include "global.h"
 #include "v3_rnd.h"
 #include "vector2.h"
 

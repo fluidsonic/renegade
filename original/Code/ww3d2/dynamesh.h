@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef DYNAMESH_H
-#define DYNAMESH_H
+#include "global.h"
 
 #include "meshgeometry.h"
 #include "meshmatdesc.h"
@@ -536,5 +536,3 @@ protected:
 	// tells when the triangle needs to be back flipped
 	virtual	bool	Flip_Face( void) { return !DynamicMeshClass::Flip_Face(); }
 };
-
-#endif	// DYNAMESH

@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     devoptions.h
 // Author:       Tom Spencer-Smith
@@ -6,8 +10,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef DEVOPTIONS_H
-#define DEVOPTIONS_H
 
 #include "regbool.h"
 #include "regint.h"
@@ -40,6 +42,5 @@ class cDevOptions
 };
 
 //-----------------------------------------------------------------------------
-#endif // DEVOPTIONS_H
 
 	//static cRegistryBool DoThumbnailPreInit;

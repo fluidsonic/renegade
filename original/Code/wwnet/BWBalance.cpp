@@ -1,4 +1,4 @@
-#include <always.h>
+#include "global.h"
 #include "bwbalance.h"
 #include "connect.h"
 #include "packetmgr.h"

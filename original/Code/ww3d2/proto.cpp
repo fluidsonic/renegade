@@ -1,3 +1,4 @@
+#include "global.h"
 #include "proto.h"
 #include "mesh.h"
 #include "hmdldef.h"
@@ -125,4 +126,3 @@ PrototypeClass * HModelLoaderClass::Load_W3D(ChunkLoadClass & cload)
 	
 	}
 }
-

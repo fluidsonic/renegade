@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "subtitlemanager.h"
 #include "subtitleparser.h"
 #include "subtitle.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "pointerremap.h"
 #include "refcount.h"
 
@@ -135,4 +136,3 @@ int __cdecl PointerRemapClass::ptr_request_compare_function(void const * ptr1, v
 	}
 	return(1);
 }
-

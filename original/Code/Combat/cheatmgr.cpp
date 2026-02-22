@@ -1,5 +1,5 @@
+#include "global.h"
 #include "cheatmgr.h"
-#include "always.h"
 
 //////////////////////////////////////////////////////////////////////
 //	Static member initialization
@@ -29,4 +29,3 @@ CheatMgrClass::~CheatMgrClass (void)
 	_TheInstance = NULL;
 	return ;
 }
-

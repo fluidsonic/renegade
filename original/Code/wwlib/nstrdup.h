@@ -1,8 +1,5 @@
+#pragma once
 
-
-#ifndef __NSTRDUP_H__
-#define __NSTRDUP_H__
+#include "global.h"
 
 char * nstrdup(const char *str);
-
-#endif

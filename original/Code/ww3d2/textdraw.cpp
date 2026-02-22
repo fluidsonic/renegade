@@ -1,3 +1,4 @@
+#include "global.h"
 #include "textdraw.h"
 #include "font3d.h"
 #include "simplevec.h"

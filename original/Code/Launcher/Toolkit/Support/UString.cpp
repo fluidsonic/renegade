@@ -1,3 +1,4 @@
+#include "global.h"
 #include "VisualC.h"
 #include "UString.h"
 #include "StringConvert.h"

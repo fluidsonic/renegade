@@ -1,6 +1,7 @@
 //
 // Create the dialog used during the patching process.
 //
+#include "global.h"
 #include"winblows.h"
 #include"resource.h"
 #include"loadbmp.h"

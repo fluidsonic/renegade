@@ -1,3 +1,4 @@
+#include "global.h"
 #include "purchasesettings.h"
 #include "combatchunkid.h"
 #include "persistfactory.h"
@@ -344,4 +345,3 @@ PurchaseSettingsDefClass::Find_Definition (TYPE type, TEAM team)
 
 	return retval;
 }
-

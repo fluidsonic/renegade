@@ -1,7 +1,7 @@
-#ifndef RENDEROBJECTRECYCLER_H
-#define RENDEROBJECTRECYCLER_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "robjlist.h"
 
 class RenderObjClass;
@@ -37,5 +37,3 @@ private:
 	RefRenderObjListClass	InactiveModels;
 
 };
-
-#endif //RENDEROBJECTRECYCLER_H

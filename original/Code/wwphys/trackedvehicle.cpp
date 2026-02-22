@@ -1,3 +1,4 @@
+#include "global.h"
 #include "trackedvehicle.h"
 #include "rendobj.h"
 #include "lineseg.h"
@@ -446,4 +447,3 @@ bool TrackedVehicleDefClass::Is_Type(const char * type_name)
 		return VehiclePhysDefClass::Is_Type(type_name);
 	}
 }
-

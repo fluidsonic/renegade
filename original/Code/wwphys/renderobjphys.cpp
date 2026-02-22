@@ -1,3 +1,4 @@
+#include "global.h"
 #include "renderobjphys.h"
 #include "rendobj.h"
 #include "persistfactory.h"
@@ -162,4 +163,3 @@ void RenderObjPhysClass::On_Post_Load (void)
 		Model->Set_User_Data((void*)this);
 	}
 }
-

@@ -1,5 +1,6 @@
-#ifndef SOUNDENVIRONMENT_H
-#define SOUNDENVIRONMENT_H
+#pragma once
+
+#include "global.h"
 
 // Includes.
 #include "refcount.h"
@@ -37,6 +38,3 @@ class SoundEnvironmentClass : public RefCountClass
 		float		 AmplitudeSum;
 		float		*AmplitudeBuffer;
 };
-
-#endif // SOUNDENVIRONMENT_H
-

@@ -1,5 +1,6 @@
-#ifndef FIXED_H
-#define FIXED_H
+#pragma once
+
+#include "global.h"
 
 //#pragma warning 604 9
 //#pragma warning 595 9
@@ -171,5 +172,3 @@ class fixed
 			unsigned short Raw;
 		} Data;
 };
-
-#endif

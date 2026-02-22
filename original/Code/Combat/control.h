@@ -1,9 +1,7 @@
-#ifndef	CONTROL_H
-#define	CONTROL_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef WWMATH_H
 #include "wwmath.h"
@@ -120,6 +118,3 @@ inline float ControlClass::Get_Analog( AnalogControl control )
 { 
 	return AnalogValues[ control ]; 
 }
-
-#endif	//	CONTROL_H
-

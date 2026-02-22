@@ -1,3 +1,4 @@
+#include "global.h"
 #include "imagectrl.h"
 #include "texture.h"
 #include "assetmgr.h"

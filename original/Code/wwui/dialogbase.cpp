@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogbase.h"
 #include "dialogparser.h"
 #include "dialogcontrol.h"

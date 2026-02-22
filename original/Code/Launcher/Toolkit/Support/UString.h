@@ -1,5 +1,6 @@
-#ifndef USTRING_H
-#define USTRING_H
+#pragma once
+
+#include "global.h"
 
 #include "UTypes.h"
 #include "RefCounted.h"
@@ -199,5 +200,3 @@ class UString
 		WChar* mData;
 		UInt mCapacity;
 	};
-
-#endif // USTRING_H

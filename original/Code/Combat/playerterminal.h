@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __PLAYERTERMINAL_H
-#define __PLAYERTERMINAL_H
+#include "global.h"
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -54,6 +54,3 @@ protected:
 	////////////////////////////////////////////////////////////////
 	static PlayerTerminalClass *	_TheInstance;
 };
-
-#endif //__PLAYERTERMINAL_H
-

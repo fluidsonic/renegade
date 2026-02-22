@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSCOLTEST_H
-#define PHYSCOLTEST_H
+#include "global.h"
 
-#include "always.h"
 #include "coltest.h"
 
 class PhysClass;
@@ -111,5 +110,3 @@ private:
 	PhysOBBoxCollisionTestClass & operator = (const PhysOBBoxCollisionTestClass & );
 
 };
-
-#endif

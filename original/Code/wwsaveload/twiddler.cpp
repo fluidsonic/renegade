@@ -1,3 +1,4 @@
+#include "global.h"
 #include "twiddler.h"
 #include "random.h"
 #include "saveloadids.h"

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "sniper.h"
 #include "render2d.h"
 #include "texture.h"
@@ -254,4 +255,3 @@ void 	SniperHUDClass::Render( void )
 		_Sniper2DRenderer->Render();
 	}
 }
-

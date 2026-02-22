@@ -44,6 +44,7 @@
 
 // Prevent SDL2 from hijacking main() — we keep WinMain as the entry point.
 #define SDL_MAIN_HANDLED
+#include "global.h"
 #include <SDL2/SDL.h>
 
 #include "winmain.h"
@@ -119,7 +120,6 @@ void Set_Working_Directory(char *old_path, char *new_path);
 int Start_Application( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow );
 void Set_Working_Directory(HINSTANCE hInstance);
 
-#include "packet.h"
 
 long Top_Level_Exception_Filter(EXCEPTION_POINTERS *e_info)
 {

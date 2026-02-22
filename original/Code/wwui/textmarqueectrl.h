@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __TEXTMARQUEECTRL_H
-#define __TEXTMARQUEECTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "render2dsentence.h"
@@ -85,5 +85,3 @@ protected:
 	
 	DynamicVectorClass<CREDIT_LINE>	CreditLines;
 };
-
-#endif //__TEXTMARQUEECTRL_H

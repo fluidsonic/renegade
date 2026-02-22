@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colmath.h"
 #include "aaplane.h"
 #include "plane.h"
@@ -434,4 +435,3 @@ inline bool Test_Aligned_Box(BoxTestStruct * test)
 	test->Side = quadrant[intersection_plane];
 	return true;
 }
-

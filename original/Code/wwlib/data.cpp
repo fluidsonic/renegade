@@ -1,5 +1,5 @@
-#include	"always.h"
-#include <new.h>
+#include "global.h"
+#include <new>
 #include	"data.h"
 
 /***********************************************************************************************
@@ -201,4 +201,3 @@ void * Hires_Load(FileClass & file)
 		return (NULL);
 	}
 }
-

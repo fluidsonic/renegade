@@ -1,5 +1,6 @@
-#ifndef __PLAYERKILL_H__
-#define __PLAYERKILL_H__
+#pragma once
+
+#include "global.h"
 
 #include "netevent.h"
 #include "netclassids.h"
@@ -30,5 +31,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __PLAYERKILL_H__

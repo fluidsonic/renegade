@@ -1,4 +1,4 @@
-#include "always.h"
+#include "global.h"
 #include "gamesideservercontrol.h"
 #include "registry.h"
 #include "_globals.h"

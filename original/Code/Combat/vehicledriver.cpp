@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vehicledriver.h"
 #include "smartgameobj.h"
 #include "matrix3d.h"

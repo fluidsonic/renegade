@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include <string.h>
 #include "toolkit.h"
@@ -11183,4 +11184,3 @@ DECLARE_SCRIPT(M11_CeilingRepeller2_JDG, "")
 		}
 	}
 };
-

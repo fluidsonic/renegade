@@ -37,9 +37,6 @@
 #ifndef WINMAIN_H
 #define WINMAIN_H
 
-#ifndef ALWAYS_H
-#include "always.h"
-#endif
 
 // This is the main entry point of the game, located in another library
 extern int Game_Main_Loop(void);

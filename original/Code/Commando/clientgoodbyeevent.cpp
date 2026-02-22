@@ -1,3 +1,4 @@
+#include "global.h"
 #include "clientgoodbyeevent.h"
 
 #include "networkobjectfactory.h"

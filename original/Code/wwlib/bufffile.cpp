@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"bufffile.h"
 #include	<string.h>
 

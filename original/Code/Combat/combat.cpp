@@ -1,3 +1,4 @@
+#include "global.h"
 #include "combat.h"
 #include "ccamera.h"
 #include "gameobjmanager.h"
@@ -1242,4 +1243,3 @@ void	CombatManager::Register_Star_Killer( ArmedGameObj * killer )
 		StarKillerID = 0;
 	}
 }
-

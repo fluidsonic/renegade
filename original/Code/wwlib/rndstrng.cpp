@@ -1,3 +1,4 @@
+#include "global.h"
 #include	"rndstrng.h"
 #include	"wwstring.h"
 
@@ -19,4 +20,3 @@ const char * RandomStringClass::Get_String( void )
 	index %= Strings.Count();
 	return Strings[index];
 }
-

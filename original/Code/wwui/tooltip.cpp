@@ -1,3 +1,4 @@
+#include "global.h"
 #include "tooltip.h"
 #include "assetmgr.h"
 #include "refcount.h"
@@ -215,4 +216,3 @@ ToolTipClass::Update_Rect (void)
 	Create_Background_Renderer ();
 	return ;
 }
-

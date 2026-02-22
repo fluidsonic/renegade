@@ -1,3 +1,4 @@
+#include "global.h"
 #include "mapctrl.h"
 
 #include "assetmgr.h"

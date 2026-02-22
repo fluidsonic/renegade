@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgconfigaudiotab.h"
 #include "resource.h"
 #include "sliderctrl.h"

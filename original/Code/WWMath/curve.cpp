@@ -1,3 +1,4 @@
+#include "global.h"
 #include "curve.h"
 #include "persistfactory.h"
 #include "wwmathids.h"
@@ -531,4 +532,3 @@ bool LinearCurve1DClass::Load(ChunkLoadClass & cload)
 
 	return true;
 }
-

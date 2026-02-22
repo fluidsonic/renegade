@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dlgmpingamechat.h"
 
 #include "cnetwork.h"

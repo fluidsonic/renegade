@@ -1,3 +1,4 @@
+#include "global.h"
 #include "networkobjectfactorymgr.h"
 #include "networkobjectfactory.h"
 #include <string.h>

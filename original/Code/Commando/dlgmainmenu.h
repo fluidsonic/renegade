@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLG_MAIN_MENU_H
-#define __DLG_MAIN_MENU_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -70,5 +70,3 @@ private:
 
 	static MainMenuDialogClass *	_TheInstance;
 };
-
-#endif //__DLG_MAIN_MENU_H

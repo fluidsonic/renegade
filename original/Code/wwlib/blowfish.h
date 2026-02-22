@@ -1,5 +1,6 @@
-#ifndef BLOWFISH_H
-#define BLOWFISH_H
+#pragma once
+
+#include "global.h"
 
 #include	<limits.h>
 
@@ -62,6 +63,3 @@ class BlowfishEngine {
 		*/
 		unsigned long bf_S[4][UCHAR_MAX+1];
 };
-
-#endif
-

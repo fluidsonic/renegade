@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef _DLG_SERVER_SAVELOAD_H
-#define _DLG_SERVER_SAVELOAD_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "dlgmessagebox.h"
@@ -95,5 +95,3 @@ class ServerSettingsManagerClass
 		static void Clear_Settings_List(void);
 
 };
-
-#endif //_DLG_CONTROL_SAVELOAD_H

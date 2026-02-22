@@ -1,7 +1,7 @@
-#ifndef CRIT_SECTION
-#define CRIT_SECTION
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include <windows.h>
 
 class CriticalSectionClass
@@ -29,5 +29,3 @@ private:
 	void Enter();
 	void Exit();
 };
-
-#endif

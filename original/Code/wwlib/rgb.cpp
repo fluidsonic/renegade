@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"hsv.h"
 #include	"palette.h"
 #include	"rgb.h"
@@ -185,4 +185,3 @@ RGBClass::operator HSVClass (void) const
 	HSVClass hsv((unsigned char)hue, (unsigned char)saturation, (unsigned char)value);
 	return(hsv);
 }
-

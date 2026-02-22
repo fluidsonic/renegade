@@ -1,10 +1,9 @@
-#ifndef	MIXFILE_H
-#define	MIXFILE_H
+#pragma once
+
+#include "global.h"
+
 #include <stdint.h>
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
 
 #ifndef	FFACTORY_H
 	#include "ffactory.h"
@@ -125,5 +124,3 @@ private:
 **
 */
 void	Setup_Mix_File( void );
-
-#endif

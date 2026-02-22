@@ -1,9 +1,7 @@
-#ifndef	SPAWN_H
-#define	SPAWN_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef PERSIST_H
 	#include "persist.h"
@@ -177,7 +175,6 @@ protected:
 	friend	class	SpawnerClass;
 };
 
-#endif	//	SPAWN_H	
 
 //static	Matrix3D	Get_First_Spawn_Location( int player_type );
 	//int						SpawnNumber;				// These are used for sequenced spawns
@@ -188,4 +185,3 @@ protected:
 	int	Get_Spawn_Number(void) {return SpawnNumber;}
 	void	Update_Spawn_Number( void ) { SpawnNumber = GlobalSpawnNumber++; }
 	*/
-

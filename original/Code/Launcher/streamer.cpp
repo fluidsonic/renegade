@@ -1,3 +1,4 @@
+#include "global.h"
 #include "streamer.h"
 
 Streamer::Streamer() : streambuf()

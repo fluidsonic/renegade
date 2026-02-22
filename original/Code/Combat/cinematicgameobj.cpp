@@ -1,3 +1,4 @@
+#include "global.h"
 #include "cinematicgameobj.h"
 #include "animcontrol.h"
 #include "Sound3D.H"

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DX8INDEXBUFFER_H
-#define DX8INDEXBUFFER_H
+#include "global.h"
 
-#include "always.h"
 #include "refcount.h"
 #include "sphere.h"
 
@@ -148,6 +147,3 @@ public:
 protected:
 	unsigned short* index_buffer;
 };
-
-#endif //DX8INDEXBUFFER_H
-

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef DECOPHYS_H
-#define DECOPHYS_H
+#include "global.h"
 
-#include "always.h"
 #include "dynamicphys.h"
 #include "pscene.h"
 #include "physcoltest.h"
@@ -83,5 +82,3 @@ protected:
 	
 	friend class StaticPhysClass;
 };
-
-#endif

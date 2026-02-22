@@ -1,3 +1,4 @@
+#include "global.h"
 #include "rbody.h"
 #include "pscene.h"
 #include "boxrobj.h"
@@ -1981,4 +1982,3 @@ bool RigidBodyDefClass::Is_Type(const char * type_name)
 		return MoveablePhysDefClass::Is_Type(type_name);
 	}
 }
-

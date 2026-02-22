@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SOUNDSCENE_H
-#define __SOUNDSCENE_H
+#include "global.h"
 
 #include "aabtreecull.h"
 #include "gridcull.h"
@@ -181,5 +181,3 @@ class SoundSceneClass
 
 		bool								m_IsBatchMode;
 };
-
-#endif //__SOUNDSCENE_H

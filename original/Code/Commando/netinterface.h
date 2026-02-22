@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     netinterface.h
 // Project:      Network.lib, for Commando
@@ -7,8 +11,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef NETINTERFACE_H
-#define NETINTERFACE_H
 
 #include "widestring.h"
 
@@ -39,6 +41,5 @@ class cNetInterface
 };
 
 //-----------------------------------------------------------------------------
-#endif // NETINTERFACE_H
 
       //static WideStringClass &	Get_Nickname(void);

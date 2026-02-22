@@ -1,5 +1,6 @@
-#ifndef MAINLOOP_H
-#define MAINLOOP_H
+#pragma once
+
+#include "global.h"
 
 // If the program returns this exitcode then it wants the launcher to check for patches.
 #define UPDATE_EXITCODE 123456789
@@ -7,5 +8,3 @@
 
 int	Game_Main_Loop(void);
 void	Stop_Main_Loop(int exitCode);
-
-#endif 

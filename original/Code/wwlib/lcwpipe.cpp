@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"lcw.h"
 #include	"lcwpipe.h"
 #include	<assert.h>
@@ -265,4 +265,3 @@ int LCWPipe::Flush(void)
 	total += Pipe::Flush();
 	return(total);
 }
-

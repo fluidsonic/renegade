@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef PHYSAABTREECULL_H
-#define PHYSAABTREECULL_H
+#include "global.h"
 
-#include "always.h"
 #include "aabtreecull.h"
 #include "phys.h"
 
@@ -76,5 +75,3 @@ inline bool PhysAABTreeCullClass::Cast_OBBox(PhysOBBoxCollisionTestClass & boxte
 {
 	return Cast_OBBox_Recursive(RootNode,boxtest);
 }
-
-#endif // PHYSAABTREECULL_H

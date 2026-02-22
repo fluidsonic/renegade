@@ -1,9 +1,7 @@
+#pragma once
 
+#include "global.h"
 
-#ifndef SAVELOAD_H
-#define SAVELOAD_H
-
-#include "always.h"
 #include "pointerremap.h"
 #include "slist.h"
 
@@ -162,6 +160,3 @@ protected:
 */
 #define REQUEST_POINTER_REMAP(pp)					SaveLoadSystemClass::Request_Pointer_Remap(pp)
 #define REQUEST_REF_COUNTED_POINTER_REMAP(pp)	SaveLoadSystemClass::Request_Ref_Counted_Pointer_Remap(pp)
-
-#endif //SAVELOAD_H
-

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "listenerhandle.h"
 #include "audiblesound.h"
 

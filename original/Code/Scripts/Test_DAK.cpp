@@ -1,3 +1,4 @@
+#include "global.h"
 #include "toolkit.h"
 
 DECLARE_SCRIPT (DAK_TestScriptOne, "")

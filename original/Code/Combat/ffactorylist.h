@@ -1,9 +1,7 @@
-#ifndef	FFACTORYLIST_H
-#define	FFACTORYLIST_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	SIMPLEVEC_H
 	#include "simplevec.h"
@@ -50,5 +48,3 @@ private:
 
 	static FileFactoryListClass * Instance;
 };
-
-#endif

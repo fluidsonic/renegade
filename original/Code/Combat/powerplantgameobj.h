@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__POWERPLANTGAMEOBJ_H
-#define	__POWERPLANTGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "building.h"
 
 ////////////////////////////////////////////////////////////////
@@ -110,5 +109,3 @@ private:
 	////////////////////////////////////////////////////////////////
 	void					Load_Variables (ChunkLoadClass &cload);
 };
-
-#endif	//__POWERPLANTGAMEOBJ_H

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "widgets.h"
 #include "bin_aabox.h"
 #include "bin_axes.h"

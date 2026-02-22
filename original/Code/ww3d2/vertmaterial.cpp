@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vertmaterial.h"
 #include "realcrc.h"
 #include "w3d_util.h"

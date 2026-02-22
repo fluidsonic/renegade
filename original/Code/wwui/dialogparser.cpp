@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dialogparser.h"
 #include "win.h"
 #include "translatedb.h"
@@ -256,4 +257,3 @@ DialogParserClass::Parse_Template
 
 	return ;
 }
-

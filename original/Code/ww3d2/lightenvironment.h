@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef LIGHTENVIRONMENT_H
-#define LIGHTENVIRONMENT_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 
 class Matrix3D;
@@ -99,6 +98,3 @@ protected:
 	OutputLightStruct	OutputLights[MAX_LIGHTS];	// ouput lights
 
 };
-
-#endif //LIGHTENVIRONMENT_H
-

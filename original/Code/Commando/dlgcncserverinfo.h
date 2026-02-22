@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGCNCSERVERINFO_H
-#define __DLGCNCSERVERINFO_H
+#include "global.h"
 
 #include "menudialog.h"
 
@@ -48,5 +48,3 @@ private:
 	//	Private member data
 	///////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGCNCSERVERINFO_H

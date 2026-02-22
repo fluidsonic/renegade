@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DLGMULTIPLAYOPTIONS_H
-#define __DLGMULTIPLAYOPTIONS_H
+#include "global.h"
 
 #include "menudialog.h"
 #include "resource.h"
@@ -37,6 +37,3 @@ private:
 	//	Private member data
 	////////////////////////////////////////////////////////////////
 };
-
-#endif //__DLGMULTIPLAYOPTIONS_H
-

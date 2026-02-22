@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"misc.h"
 #include	"dsurface.h"
 #include	"data.h"
@@ -420,4 +420,3 @@ void Wait_Blit (void)
 		return_code=PaletteSurface->GetBltStatus (DDGBS_ISBLTDONE);
 	} while (return_code != DD_OK && return_code != DDERR_SURFACELOST);
 }
-

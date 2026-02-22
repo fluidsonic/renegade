@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 #include <win.h>
 
 class WideStringClass;

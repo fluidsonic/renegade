@@ -1,9 +1,9 @@
-// winuser.h compat shim for macOS/clang
 #pragma once
-#ifndef WINUSER_H_COMPAT
-#define WINUSER_H_COMPAT
 
-#include "windef.h"
+#include "global.h"
+
+// winuser.h compat shim for macOS/clang
+
 #include <stdio.h>
 #include <stdarg.h>
 #include "sdl2_platform.h"
@@ -867,5 +867,3 @@ typedef void* HACCEL;
 #endif
 inline HACCEL LoadAccelerators(HINSTANCE hInst, LPCSTR lpTableName) { (void)hInst; (void)lpTableName; return nullptr; }
 inline BOOL   TranslateAccelerator(HWND hwnd, HACCEL hAccTable, void* lpMsg) { (void)hwnd; (void)hAccTable; (void)lpMsg; return FALSE; }
-
-#endif // WINUSER_H_COMPAT

@@ -1,6 +1,5 @@
-#ifndef OBSCURE_H
-#define OBSCURE_H
+#pragma once
+
+#include "global.h"
 
 long Obfuscate(char const * string);
-
-#endif

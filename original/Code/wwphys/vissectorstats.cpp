@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vissectorstats.h"
 #include "pscene.h"
 #include "vistable.h"
@@ -219,4 +220,3 @@ const char *VisSectorStatsClass::Get_Name(void)
 
 	return name;
 }
-

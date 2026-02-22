@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef CULLSYS_H
-#define CULLSYS_H
+#include "global.h"
 
 #include "stdlib.h"
 #include "refcount.h"
@@ -151,5 +151,3 @@ protected:
 
 	friend class CullableClass;
 };
-
-#endif

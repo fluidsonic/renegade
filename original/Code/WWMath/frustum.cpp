@@ -1,3 +1,4 @@
+#include "global.h"
 #include "frustum.h"
 
 /***********************************************************************************************
@@ -97,4 +98,3 @@ void FrustumClass::Init
 		if (Corners[i].Z > BoundMax.Z) BoundMax.Z = Corners[i].Z;
 	}
 }
-

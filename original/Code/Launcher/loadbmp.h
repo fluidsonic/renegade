@@ -1,5 +1,6 @@
-#ifndef LOADBMP_HEADER
-#define LOADBMP_HEADER
+#pragma once
+
+#include "global.h"
 
 #include<stdlib.h>
 #include<stdio.h>
@@ -22,5 +23,3 @@ class LoadBmp
    HPALETTE       PalHandle_;
    HWND           WindowHandle_;
 };
-
-#endif

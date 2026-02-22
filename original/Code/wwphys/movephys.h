@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef MOVEPHYS_H
-#define MOVEPHYS_H
+#include "global.h"
 
-#include "always.h"
 #include "dynamicphys.h"
 #include "matrix3.h"
 #include "dynamicshadowmanager.h"
@@ -164,5 +163,3 @@ protected:
 	
 	friend class MoveablePhysClass;
 };
-
-#endif

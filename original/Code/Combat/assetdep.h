@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __ASSET_DEP_H
-#define __ASSET_DEP_H
+#include "global.h"
 
 #include "vector.h"
 
@@ -37,5 +37,3 @@ public:
 	static void				Load_Assets (const char *filename);
 	static void				Load_Assets (ChunkLoadClass &cload);
 };
-
-#endif //__ASSET_DEP_H

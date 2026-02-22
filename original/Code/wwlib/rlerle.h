@@ -1,5 +1,6 @@
-#ifndef RLERLE_H
-#define RLERLE_H
+#pragma once
+
+#include "global.h"
 
 /*
 **	This class holds the RLE enabled blitter object definitions. There is a blitter object
@@ -407,5 +408,3 @@ class RLEBlitTransLucent75 : public RLEBlitter {
 		T const * TranslateTable;
 		T Mask;
 };
-
-#endif

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "networkobjectmgr.h"
 #include "networkobject.h"
 
@@ -370,4 +371,3 @@ NetworkObjectMgrClass::Reset_Import_State_Counts(void)
 		p_object->Reset_Import_State_Count();
 	}
 }
-

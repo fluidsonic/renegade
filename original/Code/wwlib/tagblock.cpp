@@ -1,3 +1,4 @@
+#include "global.h"
 #include "tagblock.h"
 #include "realcrc.h"
 

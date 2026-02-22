@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __RENEGADETERRAINMATERIALPASS_H
-#define __RENEGADETERRAINMATERIALPASS_H
+#include "global.h"
 
 #include "vector.h"
 
@@ -67,5 +67,3 @@ public:
 	DX8IndexBufferClass *		IndexBuffers[PASS_COUNT];
 	DX8VertexBufferClass *		VertexBuffers[PASS_COUNT];
 };
-
-#endif //__RENEGADETERRAINMATERIALPASS_H

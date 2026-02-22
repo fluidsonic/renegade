@@ -1,3 +1,4 @@
+#include "global.h"
 #include "lightenvironment.h"
 #include "matrix3d.h"
 #include "camera.h"
@@ -212,4 +213,3 @@ float LightEnvironmentClass::Get_Lighting_LOD_Cutoff(void)
 {
 	return _LightingLODCutoff;
 }
-

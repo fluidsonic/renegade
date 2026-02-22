@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef ODE_H
-#define ODE_H
+#include "global.h"
 
-#include "always.h"
 #include "vector.h"
 
 /*
@@ -84,6 +83,3 @@ public:
 	static void Runge_Kutta5_Integrate(ODESystemClass * odesys,float dt);
 
 };
-
-#endif
-

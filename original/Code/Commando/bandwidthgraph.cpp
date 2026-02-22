@@ -1,3 +1,4 @@
+#include "global.h"
 #include "bandwidthgraph.h"
 
 #include "assets.h"

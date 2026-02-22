@@ -1,5 +1,6 @@
-#ifndef WWFONT_H
-#define WWFONT_H
+#pragma once
+
+#include "global.h"
 
 #include	"font.h"
 #include	"surface.h"
@@ -102,5 +103,3 @@ class WWFontClass : public FontClass
 		int Raw_Width(void) const;
 		int Raw_Height(void) const;
 };
-
-#endif

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __MODPACKAGE_H
-#define __MODPACKAGE_H
+#include "global.h"
 
 #include "wwstring.h"
 
@@ -64,5 +64,3 @@ protected:
 	StringClass			PackageFilename;
 	uint32_t				FileCRC;
 };
-
-#endif //__MODPACKAGE_H

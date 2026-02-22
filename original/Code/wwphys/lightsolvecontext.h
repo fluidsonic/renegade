@@ -1,7 +1,7 @@
-#ifndef LIGHTSOLVECONTEXT_H
-#define LIGHTSOLVECONTEXT_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "lightsolveprogress.h"
 
 class LightSolveObserverClass;
@@ -51,6 +51,3 @@ public:
 	virtual ~LightSolveObserverClass(void) { };
 	virtual void Progress_Callback(LightSolveContextClass & context) { };
 };
-
-#endif //LIGHTSOLVECONTEXT_H
-

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef	__AIRSTRIPGAMEOBJ_H
-#define	__AIRSTRIPGAMEOBJ_H
+#include "global.h"
 
-#include "always.h"
 #include "vehiclefactorygameobj.h"
 
 ////////////////////////////////////////////////////////////////
@@ -128,6 +127,3 @@ protected:
 	bool					IsCinematicStarted;
 	PhysicalGameObj *	CinematicObject;
 };
-
-#endif	// __AIRSTRIPGAMEOBJ_H
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __CONTROL_ADVISE_SINK_H
-#define __CONTROL_ADVISE_SINK_H
+#include "global.h"
 
 ////////////////////////////////////////////////////////////////
 //	Forward declarations
@@ -112,5 +112,3 @@ public:
 	virtual void	On_Merchandise_Selected (MerchandiseCtrlClass *ctrl, int ctrl_id) {}
 	virtual void	On_Merchandise_DblClk (MerchandiseCtrlClass *ctrl, int ctrl_id) {}
 };
-
-#endif //__CONTROL_ADVISE_SINK_H

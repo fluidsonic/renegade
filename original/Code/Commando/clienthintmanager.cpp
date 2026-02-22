@@ -1,3 +1,4 @@
+#include "global.h"
 #include "clienthintmanager.h"
 
 #include "cshint.h"

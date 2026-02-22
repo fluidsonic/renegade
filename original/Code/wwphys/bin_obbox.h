@@ -1,5 +1,3 @@
+#pragma once
 
-#ifndef BIN_OBBOX_H
-#define BIN_OBBOX_H
-
-#endif
+#include "global.h"

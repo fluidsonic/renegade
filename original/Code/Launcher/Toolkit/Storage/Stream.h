@@ -1,5 +1,6 @@
-#ifndef STREAM_H
-#define STREAM_H
+#pragma once
+
+#include "global.h"
 
 #include <Support\UTypes.h>
 
@@ -41,5 +42,3 @@ class Stream
 		//! Flush the stream
 		virtual void Flush(void) = 0;
 	};
-
-#endif // STREAM_H

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef HANIM_H
-#define HANIM_H
+#include "global.h"
 
-#include "always.h"
 #include "quat.h"
 #include "refcount.h"
 #include "w3d_file.h"
@@ -213,5 +212,3 @@ protected:
 	DynamicVectorClass<HAnimComboDataClass *> HAnimComboData;
 
 };
-
-#endif 

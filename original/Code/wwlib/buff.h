@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef CCBUFF_H
-#define CCBUFF_H
+#include "global.h"
 
 /*
 **	A general purpose buffer pointer handler object. It holds not only the pointer to the
@@ -43,5 +43,3 @@ class Buffer {
 		*/
 		bool IsAllocated;
 };
-
-#endif

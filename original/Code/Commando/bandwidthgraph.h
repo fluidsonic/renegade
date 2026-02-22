@@ -1,5 +1,6 @@
-#ifndef __BANDWIDTHGRAPH_H__
-#define __BANDWIDTHGRAPH_H__
+#pragma once
+
+#include "global.h"
 
 #include "wwstring.h"
 
@@ -32,5 +33,3 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-
-#endif	// __BANDWIDTHGRAPH_H__

@@ -1,3 +1,4 @@
+#include "global.h"
 #include "motchan.h"
 #include "w3d_file.h"
 #include "chunkio.h"
@@ -1275,4 +1276,3 @@ Get_Vector(int frame,float * setvec) const{
 }
 
 // EOF - motchan.cpp
-

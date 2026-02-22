@@ -1,3 +1,4 @@
+#include "global.h"
 #include "transitioneffect.h"
 #include "matpass.h"
 #include "vertmaterial.h"
@@ -245,4 +246,3 @@ bool TransitionEffectClass::Load(ChunkLoadClass & cload)
 	}
 	return true;
 }
-

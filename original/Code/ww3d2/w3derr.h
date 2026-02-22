@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef W3DERR_H
-#define W3DERR_H
-
-#include "always.h"
+#include "global.h"
 
 /*
 ** These are the error codes which should be returned by all WW3D functions that can fail
@@ -17,5 +15,3 @@ enum WW3DErrorType
 	WW3D_ERROR_INITIALIZATION_FAILED,
 	WW3D_ERROR_DIRECTX8_INITIALIZATION_FAILED
 };
-
-#endif

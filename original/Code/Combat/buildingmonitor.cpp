@@ -1,3 +1,4 @@
+#include "global.h"
 #include "buildingmonitor.h"
 #include "building.h"
 

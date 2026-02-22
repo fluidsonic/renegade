@@ -1,3 +1,4 @@
+#include "global.h"
 #include <stdio.h>
 #include "camera.h"
 #include "ww3d.h"

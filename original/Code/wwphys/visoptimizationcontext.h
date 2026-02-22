@@ -1,7 +1,7 @@
-#ifndef VISOPTIMIZATIONCONTEXT_H
-#define VISOPTIMIZATIONCONTEXT_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "vector.h"
 
 class PhysicsSceneClass;
@@ -75,5 +75,3 @@ protected:
 
 	VisOptProgressClass &						Stats;				// Progress and statistics tracker object.
 };
-
-#endif //VISOPTIMIZATIONCONTEXT_H

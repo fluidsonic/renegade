@@ -1,3 +1,4 @@
+#include "global.h"
 #include "dynamicspeechanim.h"
 #include "assetmgr.h"
 #include "crandom.h"

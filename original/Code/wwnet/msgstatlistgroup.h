@@ -1,3 +1,7 @@
+#pragma once
+
+#include "global.h"
+
 //
 // Filename:     msgstatlistgroup.h
 // Project:      
@@ -8,8 +12,6 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef MSGSTATLISTGROUP_H
-#define MSGSTATLISTGROUP_H
 
 #include "msgstatlist.h"
 
@@ -56,5 +58,3 @@ class cMsgStatListGroup
 };
 
 //-----------------------------------------------------------------------------
-
-#endif // MSGSTATLISTGROUP_H

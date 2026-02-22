@@ -1,5 +1,6 @@
-#ifndef NOINIT_H
-#define NOINIT_H
+#pragma once
+
+#include "global.h"
 
 /**********************************************************************
 **	This class is solely used as a parameter to a constructor that does
@@ -15,6 +16,4 @@ class NoInitClass {
 	public:
 		void operator () (void) const {};
 };
-#endif
-
 #endif

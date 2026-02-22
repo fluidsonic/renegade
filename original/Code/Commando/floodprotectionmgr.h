@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __FLOODPROTECTIONMGR_H
-#define __FLOODPROTECTIONMGR_H
+#include "global.h"
 
 #include "widestring.h"
 #include "simplevec.h"
@@ -51,5 +51,3 @@ private:
 	///////////////////////////////////////////////////////////////////
 	static SimpleDynVecClass<FLOOD_ENTRY>	FloodList;
 };
-
-#endif //__FLOODPROTECTIONMGR_H

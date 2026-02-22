@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __LISTICONMGR_H
-#define __LISTICONMGR_H
+#include "global.h"
 
 #include "vector.h"
 #include "wwstring.h"
@@ -69,5 +69,3 @@ private:
 	float											IconWidth;
 	float											IconHeight;
 };
-
-#endif //__LISTICONMGR_H

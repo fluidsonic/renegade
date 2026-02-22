@@ -1,3 +1,4 @@
+#include "global.h"
 #include "decalsys.h"
 #include "rendobj.h"
 #include "decalmsh.h"

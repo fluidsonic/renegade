@@ -1,3 +1,4 @@
+#include "global.h"
 #include "requestkillevent.h"
 
 #include <stdio.h>

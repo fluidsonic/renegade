@@ -1,3 +1,4 @@
+#include "global.h"
 #include "basecontroller.h"
 #include "gameobjmanager.h"
 #include "scriptzone.h"

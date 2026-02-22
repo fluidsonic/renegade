@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SKINPACKAGE_H
-#define __SKINPACKAGE_H
+#include "global.h"
 
 #include "wwstring.h"
 #include "vector.h"
@@ -56,5 +56,3 @@ protected:
 	StringClass			Name;	
 	StringClass			PackageFilename;
 };
-
-#endif //__SKINPACKAGE_H

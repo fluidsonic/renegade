@@ -1,9 +1,7 @@
-#ifndef	COMBATSOUND_H
-#define	COMBATSOUND_H
+#pragma once
 
-#ifndef	ALWAYS_H
-	#include "always.h"
-#endif
+#include "global.h"
+
 
 #ifndef	VECTOR3_H
 	#include "vector3.h"
@@ -53,5 +51,3 @@ public:
 	static	void	Init( void );
 	static	void	Shutdown( void );
 };
-
-#endif	// COMBATSOUND_H

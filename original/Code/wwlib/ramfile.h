@@ -1,5 +1,6 @@
-#ifndef RAMFILE_H
-#define RAMFILE_H
+#pragma once
+
+#include "global.h"
 
 #include	"wwfile.h"
 
@@ -67,5 +68,3 @@ class RAMFileClass : public FileClass
 		*/
 		bool IsAllocated;
 };
-
-#endif

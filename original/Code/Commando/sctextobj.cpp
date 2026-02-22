@@ -1,3 +1,4 @@
+#include "global.h"
 #include "sctextobj.h"
 
 #include <stdio.h>

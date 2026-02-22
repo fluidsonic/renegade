@@ -1,3 +1,4 @@
+#include "global.h"
 #include "meshmdl.h"
 #include "matinfo.h"
 #include "aabtree.h"

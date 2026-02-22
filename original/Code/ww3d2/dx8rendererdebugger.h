@@ -1,8 +1,6 @@
+#pragma once
 
-#ifndef DX8_RENDERER_DEBUGGER_H
-#define DX8_RENDERER_DEBUGGER_H
-
-#include "always.h"
+#include "global.h"
 
 class StringClass;
 class MeshClass;
@@ -25,5 +23,3 @@ public:
 	static void Disable_All();
 	static void Enable_All();
 };
-
-#endif

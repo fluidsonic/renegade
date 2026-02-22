@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef TEXTDRAW_H
-#define TEXTDRAW_H
+#include "global.h"
 
-#include "always.h"
 #include "dynamesh.h"
 
 // sgc : wwlib and wwmath contain different rect.h files...
@@ -78,5 +77,3 @@ private:
 	Vector2					TranslateOffset;
 	Vector2					PixelSize;
 };
-
-#endif	// TEXTDRAW_H

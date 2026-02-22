@@ -1,5 +1,6 @@
-#ifndef __SIGNALER_H__
-#define __SIGNALER_H__
+#pragma once
+
+#include "global.h"
 
 template<typename T> class Signaler
 	{
@@ -40,6 +41,3 @@ template<typename T> class Signaler
 	private:
 		Signaler<T>* mConnection;
 	};
-
-#endif // __SIGNALER_H__
-

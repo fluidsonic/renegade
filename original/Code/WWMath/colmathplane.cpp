@@ -1,3 +1,4 @@
+#include "global.h"
 #include "colmath.h"
 #include "colmathplane.h"
 #include "aaplane.h"

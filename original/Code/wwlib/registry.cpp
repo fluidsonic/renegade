@@ -2,6 +2,7 @@
 // Stores all registry values in "renegade_registry.ini" in the working directory.
 // Section names = registry sub-keys, entry names = value names.
 
+#include "global.h"
 #include "registry.h"
 #include "rawfile.h"
 #include "ini.h"

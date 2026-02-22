@@ -1,7 +1,7 @@
-#ifndef TRACKEDVEHICLE_H
-#define TRACKEDVEHICLE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "vehiclephys.h"
 
 class TrackedVehicleDefClass;
@@ -121,6 +121,3 @@ protected:
 
 	friend class TrackedVehicleClass;
 };
-
-#endif
-

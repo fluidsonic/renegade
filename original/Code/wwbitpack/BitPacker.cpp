@@ -6,6 +6,7 @@
 // Description:  Minimal bit encoding
 //
 
+#include "global.h"
 #include "bitpacker.h"
 
 #include <string.h>	// for memset
@@ -162,4 +163,3 @@ inline void cBitPacker::Advance_Bit_Position()
 }
 
 */
-

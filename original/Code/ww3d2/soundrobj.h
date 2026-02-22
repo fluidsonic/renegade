@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __SOUNDROBJ_H
-#define __SOUNDROBJ_H
+#include "global.h"
 
 #include "rendobj.h"
 #include "wwstring.h"
@@ -223,6 +223,3 @@ public:
 //	Global variables
 ///////////////////////////////////////////////////////////////////////////////////
 extern SoundRenderObjLoaderClass		_SoundRenderObjLoader;
-
-#endif //__SOUNDROBJ_H
-

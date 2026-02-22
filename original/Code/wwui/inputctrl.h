@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __INPUTBOX_CTRL_H
-#define __INPUTBOX_CTRL_H
+#include "global.h"
 
 #include "dialogcontrol.h"
 #include "vector3.h"
@@ -81,5 +81,3 @@ protected:
 	uint32_t						UserData;	
 	int							PendingKeyID;
 };
-
-#endif //__INPUTBOX_CTRL_H

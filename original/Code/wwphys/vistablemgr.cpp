@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vistablemgr.h"
 #include "vistable.h"
 #include "chunkio.h"
@@ -401,4 +402,3 @@ void VisTableMgrClass::Load(ChunkLoadClass & cload)
 		cload.Close_Chunk();
 	}
 }
-

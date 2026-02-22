@@ -1,5 +1,6 @@
-#ifndef __UTILS_H
-#define __UTILS_H
+#pragma once
+
+#include "global.h"
 
 #include "Mss.H"
 
@@ -58,5 +59,3 @@ Get_Filename_From_Path (LPCTSTR path)
 	// Return the filename part of the path
 	return filename;
 }
-
-#endif //__UTILS_H

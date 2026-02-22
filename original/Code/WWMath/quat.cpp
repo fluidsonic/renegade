@@ -1,3 +1,4 @@
+#include "global.h"
 #include "quat.h"
 #include "matrix3d.h"
 #include "matrix4.h"
@@ -667,4 +668,3 @@ void Quaternion::Randomize(void)
 	
 	Normalize();
 }
-

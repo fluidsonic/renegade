@@ -1,7 +1,6 @@
 #pragma once
 
-#ifndef _PACKETMGR_H
-#define _PACKETMGR_H
+#include "global.h"
 
 #include "mutex.h"
 #include "vector.h"
@@ -301,5 +300,3 @@ class PacketManagerClass
 ** Single instance of the packet manager.
 */
 extern PacketManagerClass PacketManager;
-
-#endif //_PACKETMGR_H

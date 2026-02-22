@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef DLLIST_H
-#define DLLIST_H
+#include "global.h"
 
 template <class T> class DLNodeClass;
 
@@ -158,5 +158,3 @@ inline void DLListClass<T>::Remove_Tail()
 	else tail->succ=0;
 	n->Remove();
 }
-
-#endif //DLLIST_H

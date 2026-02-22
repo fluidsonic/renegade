@@ -1,4 +1,4 @@
-#include	"always.h"
+#include "global.h"
 #include	"blit.h"
 #include	"blitblit.h"
 #include	"bsurface.h"
@@ -784,4 +784,3 @@ bool XSurface::Blit_Trans(Surface & dest, Rect const & destrect, Surface const &
 			return(false);
 	}
 }
-

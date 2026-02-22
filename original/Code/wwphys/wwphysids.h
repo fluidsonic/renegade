@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef WWPHYSIDS_H
-#define WWPHYSIDS_H
+#include "global.h"
 
 #include "saveloadids.h"
 #include "definitionclassids.h"
@@ -102,5 +102,3 @@ enum
 	CLASSID_DAMAGEABLESTATICPHYSDEF,
 	CLASSID_BUILDINGAGGREGATEDEF,
 };
-
-#endif

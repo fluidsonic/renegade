@@ -1,3 +1,4 @@
+#include "global.h"
 #include "matrix3d.h"
 
 #include <math.h>

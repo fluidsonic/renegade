@@ -1,3 +1,4 @@
+#include "global.h"
 #include "vehiclefactorygameobj.h"
 #include "basecontroller.h"
 #include "vehicle.h"

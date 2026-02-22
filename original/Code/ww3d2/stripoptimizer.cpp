@@ -1,3 +1,4 @@
+#include "global.h"
 #include "stripoptimizer.h"
 #include "hashtemplate.h"
 
@@ -972,4 +973,3 @@ int* StripOptimizerClass::Stripify(const int* tris, int N)
 }
 
 //------------------------------------------------------------------------
-

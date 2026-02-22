@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef B64PIPE_H
-#define B64PIPE_H
+#include "global.h"
 
 #include	"pipe.h"
 
@@ -51,5 +51,3 @@ class Base64Pipe : public Pipe
 		Base64Pipe(Base64Pipe & rvalue);
 		Base64Pipe & operator = (Base64Pipe const & pipe);
 };
-
-#endif

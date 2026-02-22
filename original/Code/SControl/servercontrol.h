@@ -1,7 +1,6 @@
 #pragma once
 
-#ifndef SERVERCONTROL_H
-#define SERVERCONTROL_H
+#include "global.h"
 
 #include	"assert.h"
 #include "vector.h"
@@ -140,5 +139,3 @@ class ServerControlClass
 ** Single instance of local controller.
 */
 extern ServerControlClass ServerControl;
-
-#endif //SERVERCONTROL_H

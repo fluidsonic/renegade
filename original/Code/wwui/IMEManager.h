@@ -1,5 +1,6 @@
-#ifndef __IMEMANAGER_H__
-#define __IMEMANAGER_H__
+#pragma once
+
+#include "global.h"
 
 #include "RefCount.h"
 #include "IMECandidate.h"
@@ -170,5 +171,3 @@ class IMEManager :
 	};
 
 } // namespace IME
-
-#endif __IMEMANAGER_H__

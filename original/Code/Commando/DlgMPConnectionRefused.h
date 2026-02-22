@@ -1,5 +1,6 @@
-#ifndef __DLGMPCONNECTIONREFUSED_H__
-#define __DLGMPCONNECTIONREFUSED_H__
+#pragma once
+
+#include "global.h"
 
 #include <PopupDialog.h>
 
@@ -24,5 +25,3 @@ class DlgMPConnectionRefused :
 		WideStringClass	Text;
 		bool					ShowSplashScreen;
 	};
-
-#endif // __DLGMPCONNECTIONREFUSED_H__

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef LIGHTCULL_H
-#define LIGHTCULL_H
+#include "global.h"
 
 #include "aabtreecull.h"
 #include "lightphys.h"
@@ -44,6 +44,3 @@ public:
 	void					Load_Static_Data(ChunkLoadClass & cload);
 
 };
-
-#endif //LIGHTCULL_H
-

@@ -1,6 +1,6 @@
+#pragma once
 
-#ifndef __DIALOG_CONTROL_H
-#define __DIALOG_CONTROL_H
+#include "global.h"
 
 #include "rect.h"
 #include "vector2.h"
@@ -212,5 +212,3 @@ protected:
 
 	ControlAdviseSinkClass *	AdviseSink;
 };
-
-#endif //__DIALOG_CONTROL_H

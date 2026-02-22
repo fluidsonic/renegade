@@ -1,3 +1,4 @@
+#include "global.h"
 #include "segline.h"
 #include "ww3d.h"
 #include "rinfo.h"
@@ -536,4 +537,3 @@ bool SegmentedLineClass::Cast_Ray(RayCollisionTestClass & raytest)
 
 	return retval;
 }
-

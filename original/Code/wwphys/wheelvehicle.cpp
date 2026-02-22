@@ -1,3 +1,4 @@
+#include "global.h"
 #include "wheelvehicle.h"
 #include "rendobj.h"
 #include "lineseg.h"

@@ -1,8 +1,7 @@
+#pragma once
 
-#ifndef VISSECTORSTATS_H
-#define VISSECTORSTATS_H
+#include "global.h"
 
-#include "always.h"
 #include "vector3.h"
 
 class StaticPhysClass;
@@ -82,6 +81,3 @@ inline StaticPhysClass *VisSectorStatsClass::Peek_Phys_Obj(void)
 {
 	return PhysObj;
 }
-
-#endif // VISSECTORSTATS_H
-

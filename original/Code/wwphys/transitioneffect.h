@@ -1,7 +1,7 @@
-#ifndef TRANSITIONEFFECT_H
-#define TRANSITIONEFFECT_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "materialeffect.h"
 #include "vector2.h"
 #include "matrixmapper.h"
@@ -82,6 +82,3 @@ protected:
 	MatrixMapperClass *		Mapper;
 	MaterialPassClass *		MaterialPass;
 };
-
-#endif //TRANSITIONEFFECT_H
-

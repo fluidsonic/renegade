@@ -1,3 +1,4 @@
+#include "global.h"
 #include	"fixed.h"
 #include	<string.h>
 #include	<stdlib.h>

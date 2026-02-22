@@ -1,3 +1,4 @@
+#include "global.h"
 #include "patch.h"
 #include <shellapi.h>
 #include <direct.h>

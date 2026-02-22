@@ -1,7 +1,7 @@
-#ifndef BINKMOVIE_H
-#define BINKMOVIE_H
+#pragma once
 
-#include "always.h"
+#include "global.h"
+
 #include "wwstring.h"
 
 class FontCharsClass;
@@ -28,5 +28,3 @@ public:
 	static void Shutdown();
 	static bool	Is_Complete();
 };
-
-#endif

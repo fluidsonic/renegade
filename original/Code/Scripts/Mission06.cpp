@@ -1,3 +1,4 @@
+#include "global.h"
 #include "scripts.h"
 #include "toolkit.h"
 #include "mission6.h"
@@ -5642,4 +5643,3 @@ DECLARE_SCRIPT(M06_Enable_Alarm_Objective, "")
 
 	
 };
-
