@@ -7,6 +7,8 @@ import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
 import ccr.server.defs.VehicleGameObjDef
+import ccr.server.defs.combat.BeaconGameObjDef
+import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
@@ -51,6 +53,10 @@ open class God(private val server: GameServer) {
     // C4 tracking
     val c4Objects = mutableListOf<C4GameObj>()
     private val lastC4PlaceMs = mutableMapOf<Int, Long>()  // rhostId → last placement time
+
+    // Beacon tracking (parallel to C4 tracking)
+    val beaconObjects = mutableListOf<BeaconGameObj>()
+    private val lastBeaconPlaceMs = mutableMapOf<Int, Long>()  // rhostId → last placement time
 
     // Respawn cooldown timers: rhostId → remaining seconds before next spawn is permitted
     private val respawnTimers = mutableMapOf<Int, Float>()
@@ -477,6 +483,53 @@ open class God(private val server: GameServer) {
         }
     }
 
+    // ---- Beacon management ----
+
+    /**
+     * Creates a beacon object for the given soldier.
+     * Returns null if rate-limited or the ammoDef has no associated BeaconGameObjDef.
+     * C++: BeaconGameObj is created in response to BOOLEAN_WEAPON_FIRE_PRIMARY for beacon weapons.
+     */
+    fun createBeacon(rhostId: Int, soldier: SoldierGameObj, ammoDef: AmmoDefinitionClass, nowMs: Long): BeaconGameObj? {
+        // Rate limit: 1 beacon per second per player
+        if (nowMs - (lastBeaconPlaceMs[rhostId] ?: 0L) < 1000L) return null
+
+        val beaconDef = server.loadedLevel?.definitions?.findById(ammoDef.beaconDefId.toUInt())
+            as? BeaconGameObjDef ?: return null
+
+        val beacon = BeaconGameObj(
+            definitionId = beaconDef.id.toInt(),
+            position     = soldier.position.copy(),
+            modelName    = ammoDef.modelFilename,
+            initialState = BeaconGameObj.STATE_ARMING,
+            initialOwnerId = soldier.networkId,
+        )
+
+        // Set runtime fields
+        beacon.ownerId       = soldier.networkId
+        beacon.beaconDef     = beaconDef
+        beacon.serverRef     = server
+        beacon.ownerRhostId  = rhostId
+        beacon.armTimer      = beaconDef.armTime
+
+        val netId = NetworkObjectManager.getNewDynamicId()
+        NetworkObjectManager.registerObject(beacon, netId)
+        server.gameObjManager.add(beacon)
+        beaconObjects.add(beacon)
+        lastBeaconPlaceMs[rhostId] = nowMs
+
+        println("[GOD] beacon placed by rhostId=$rhostId netId=$netId arm=${beaconDef.armTime}s det=${beaconDef.detonateTime}s")
+        return beacon
+    }
+
+    /**
+     * Injects a last-placement timestamp for [rhostId], used by tests to pre-arm the rate limiter.
+     * Exposed as `internal` so tests can simulate a recent beacon placement without a full server.
+     */
+    internal fun injectBeaconPlacementTime(rhostId: Int, ms: Long) {
+        lastBeaconPlaceMs[rhostId] = ms
+    }
+
     // ---- cGod cleanup helpers ----
 
     /**
@@ -492,6 +545,9 @@ open class God(private val server: GameServer) {
         // Defuse all remote C4 owned by this player (timed C4 continues to tick after disconnect)
         c4Objects.filter { !it.isDeletePending && it.ownerRhostId == rhostId && it.ammoDefinition?.ammoType == AMMO_TYPE_C4_REMOTE }
             .forEach { it.defuse() }
+        // Cancel all beacons owned by this player
+        beaconObjects.filter { !it.isDeletePending && it.ownerRhostId == rhostId }
+            .forEach { it.cancel() }
         val soldier = soldiersByHost.remove(rhostId) ?: return
         server.gameObjManager.removeStar(soldier)
         soldier.setDeletePending()
