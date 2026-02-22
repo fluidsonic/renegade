@@ -596,7 +596,8 @@ void MeshClass::Render(RenderInfoClass & rinfo)
 
 		const FrustumClass & frustum=rinfo.Camera.Get_Frustum();
 
-		const bool _in_frustum = Model->Get_Flag(MeshGeometryClass::SKIN) ||
+		const bool _in_frustum = Is_Force_Visible() ||
+				Model->Get_Flag(MeshGeometryClass::SKIN) ||
 				CollisionMath::Overlap_Test(frustum,Get_Bounding_Box())!=CollisionMath::OUTSIDE;
 		if (_in_frustum)
 		{

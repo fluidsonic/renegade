@@ -390,17 +390,6 @@ void SimpleSceneClass::Visibility_Check(CameraClass * camera)
 		} else {
 			robj->Set_Visible(!camera->Cull_Sphere(robj->Get_Bounding_Sphere()));
 		}
-		static int _vis_log_n = 0;
-		if (_vis_log_n < 20 && strstr(robj->Get_Name(), "IF_B") != nullptr) {
-			_vis_log_n++;
-			const SphereClass& sp = robj->Get_Bounding_Sphere();
-			fprintf(stderr, "[vis] %s force_vis=%d culled=%d really_vis=%d sphere=(%.0f,%.0f,%.0f) r=%.0f\n",
-				robj->Get_Name(), (int)robj->Is_Force_Visible(),
-				(int)camera->Cull_Sphere(robj->Get_Bounding_Sphere()),
-				(int)robj->Is_Really_Visible(),
-				sp.Center.X, sp.Center.Y, sp.Center.Z, sp.Radius);
-		}
-
 		// Prepare visible objects for LOD:
 		if (robj->Is_Really_Visible()) {
 			robj->Prepare_LOD(*camera);

@@ -94,11 +94,6 @@ MenuBackDropClass::~MenuBackDropClass (void)
 void
 MenuBackDropClass::Render (void)
 {
-	static int _bd_render_n = 0;
-	if (_bd_render_n < 3) {
-		_bd_render_n++;
-		fprintf(stderr, "[backdrop] Render #%d model=%p\n", _bd_render_n, (void*)Model);
-	}
 	//
 	//	Simple render the scene
 	//
@@ -121,7 +116,6 @@ MenuBackDropClass::Set_Model (const char *name)
 	//	Load the new model
 	//
 	Model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj (name);
-	fprintf(stderr, "[backdrop] Set_Model(%s) -> model=%p\n", name, (void*)Model);
 	if (Model != NULL) {
 
 		//
@@ -129,7 +123,7 @@ MenuBackDropClass::Set_Model (const char *name)
 		//
 		int camera_bone_index = Model->Get_Bone_Index ("CAMERA");
 		if (camera_bone_index > 0) {
-			
+
 			//
 			// Convert the bone's transform into a camera transform
 			//
@@ -144,9 +138,19 @@ MenuBackDropClass::Set_Model (const char *name)
 		}
 
 		//
-		//	Add the model to the scene
+		//	Add the model to the scene and force-visible all sub-meshes so the
+		//	per-mesh frustum cull in MeshClass::Render does not clip parts of the
+		//	backdrop that extend outside the camera frustum.
 		//
 		Scene->Add_Render_Object (Model);
+		Model->Set_Force_Visible(true);
+		for (int32_t i = 0; i < Model->Get_Num_Sub_Objects(); i++) {
+			RenderObjClass* sub = Model->Get_Sub_Object(i);
+			if (sub != nullptr) {
+				sub->Set_Force_Visible(true);
+				sub->Release_Ref();
+			}
+		}
 	}
 
 	//
