@@ -3,6 +3,8 @@
 #ifndef OSDEP_H_COMPAT
 #define OSDEP_H_COMPAT
 
+#include "global.h"   // provides string.h (strlen, strncpy, strrchr), _UNIX, NOMINMAX
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -31,7 +33,6 @@ inline char* _itoa(int value, char* str, int radix) {
 inline char* itoa(int value, char* str, int radix) { return _itoa(value, str, radix); }
 
 // strrev (not in POSIX)
-// strlen is available via global.h (force-included before osdep.h)
 inline char* strrev(char* s) {
     char* start = s;
     char* end = s + strlen(s) - 1;
