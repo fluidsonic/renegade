@@ -22,6 +22,9 @@ object GameObjectFactory {
                 networkId = networkId,
                 teamId = 0,
                 factoryChunkId = factoryChunkId,
+                isPowerOn = true,
+                sphereCenter = ccr.server.level.Vector3(0f, 0f, 0f),
+                sphereRadius = 10f,
             )
             factoryChunkId == ChunkIds.GAMEOBJ_SOLDIER -> LoadedSoldierGameObj(defId, transform, networkId)
             factoryChunkId == ChunkIds.GAMEOBJ_VEHICLE -> LoadedVehicleGameObj(defId, transform, networkId)
