@@ -98,7 +98,7 @@ open class BuildingGameObjDef(
 
     companion object {
         /** Persist factory chunk ID for BuildingGameObjDef in the DDB. */
-        const val CHUNKID_GAME_OBJECT_DEF_BUILDING = 0x00040133u
+        const val CHUNK_ID: UInt = 0x00040134u  // CHUNKID_GAME_OBJECT_DEF_BUILDING
 
         // --- BuildingConstants::BuildingType (building.h) ---
         const val BUILDING_TYPE_NONE = -1

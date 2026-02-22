@@ -203,6 +203,7 @@
 - Automatically update `/CLAUDE.md` as you learn new things to remember in every conversation.
 - `/CLAUDE.md`, `/docs/*.md`, `/plans/*.md` can be written/edited in plan mode.
 - Always use `<project root>/.tmp/` for temporary files (scripts, scratch files, etc.). Never use `/tmp` or `$TMPDIR`.
+- Use `<project root>/.worktrees/` for git worktrees (not `.claude/worktrees/`)
 
 ### Game loop architecture (God, GameState, BuildingManager)
 - `God(server)` owns player/soldier lifecycle; all player state maps live in God (`playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`)

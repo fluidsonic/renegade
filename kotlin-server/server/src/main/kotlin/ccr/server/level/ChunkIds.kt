@@ -17,7 +17,8 @@ object ChunkIds {
     // ─── LDD top-level (combatsaveload.cpp) ────────────────────────────────────
     const val CHUNKID_LEVEL_INFO        = 1011991648u    // 0x3C51C460
     const val CHUNKID_LEVEL_DATA        = 1011991649u    // 0x3C51C461
-    const val CHUNKID_GAMEOBJMANAGER    = 916991654u     // 0x36A82EA6
+    const val CHUNKID_GAMEOBJMANAGER    = 916991654u     // 0x36A82EA6 — written by CombatSaveLoadClass
+    const val CHUNKID_GAMEOBJ_OBJECTS   = 916991653u     // 0x36A82EA5 — object list inside GAMEOBJMANAGER
     const val CHUNKID_SPAWNERS          = 916991657u     // 0x36A82EA9
     const val CHUNKID_SCRIPTS           = 916991659u     // 0x36A82EAB
     const val CHUNKID_COMBAT_BEGIN      = 0x00040000u

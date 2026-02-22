@@ -509,6 +509,8 @@ data class SoldierGameObjDef(
     val dialogList: List<Dialogue> = emptyList(),
 ) {
     companion object {
+        const val CHUNK_ID: UInt = 0x0004010Fu  // CHUNKID_GAME_OBJECT_DEF_SOLDIER
+
         // SoldierGameObjDef chunk IDs
         private const val CHUNKID_DEF_PARENT = 909991656u
         private const val CHUNKID_DEF_VARIABLES = 909991657u

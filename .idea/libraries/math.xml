@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="math">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/kotlin-server/math/build/libs/math.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="physics">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/kotlin-server/physics/build/libs/physics.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

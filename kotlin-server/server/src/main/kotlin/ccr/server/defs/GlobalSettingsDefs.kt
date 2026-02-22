@@ -5,11 +5,11 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 // =====================================================================================
-// GlobalSettingsDef (Combat/globalsettings.h)
+// GlobalSettingsGeneralDef (Combat/globalsettings.h)
 // CLASSID_GLOBAL_SETTINGS_DEF_GENERAL = 0xF003
 // =====================================================================================
 
-data class GlobalSettingsDef(
+data class GlobalSettingsGeneralDef(
     val name: String,
     val id: UInt,
     val chunkId: UInt,
@@ -46,16 +46,16 @@ data class GlobalSettingsDef(
     }
 }
 
-fun parseGlobalSettingsDef(
+fun parseGlobalSettingsGeneralDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
     chunkId: UInt,
-): GlobalSettingsDef? {
+): GlobalSettingsGeneralDef? {
     val vars = objDataReader.findChunk(GLOBAL_CHUNKID_DEF_VARIABLES)
-        ?: return GlobalSettingsDef(name = name, id = id, chunkId = chunkId)
+        ?: return GlobalSettingsGeneralDef(name = name, id = id, chunkId = chunkId)
 
-    return GlobalSettingsDef(
+    return GlobalSettingsGeneralDef(
         name = name, id = id, chunkId = chunkId,
         deathSoundId = vars.mcInt(2) ?: 0,
         evaObjectivesSoundId = vars.mcInt(3) ?: 0,
@@ -406,10 +406,10 @@ fun parseHumanAnimOverrideDef(
 }
 
 // =====================================================================================
-// Shared chunk ID for GlobalSettingsDef
+// Shared chunk IDs for global settings def classes
 // =====================================================================================
 
-// GlobalSettingsDef uses CHUNKID_DEF_PARENT=803001812, CHUNKID_DEF_VARIABLES=803001813
+// GlobalSettingsGeneralDef uses CHUNKID_DEF_PARENT=803001812, CHUNKID_DEF_VARIABLES=803001813
 private const val GLOBAL_CHUNKID_DEF_VARIABLES = 803001813u
 
 // =====================================================================================

@@ -80,6 +80,12 @@ object FullDefinitionLoader {
             SpawnerDefClass.CHUNK_ID ->
                 parseSpawnerDefClass(objDataChunk, name, id, chunkId) ?: fallback
 
+            // FIXME: C4GameObjDef is a data class — convert to DefinitionClass subclass and parse properly
+            C4GameObjDef.CHUNK_ID -> fallback
+
+            // FIXME: SoldierGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
+            SoldierGameObjDef.CHUNK_ID -> fallback
+
             // FIXME: SimpleGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
             SimpleGameObjDef.CHUNK_ID -> fallback
 
@@ -92,6 +98,12 @@ object FullDefinitionLoader {
 
             // FIXME: VehicleGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
             VehicleGameObjDef.CHUNK_ID -> fallback
+
+            // FIXME: CinematicGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
+            CinematicGameObjDef.CHUNK_ID -> fallback
+
+            // FIXME: BeaconGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
+            BeaconGameObjDef.CHUNK_ID -> fallback
 
             // ScriptZoneGameObjDef → DefinitionClass
             ScriptZoneGameObjDef.CHUNK_ID ->
@@ -206,8 +218,27 @@ object FullDefinitionLoader {
             RepairBayGameObjDef.CHUNK_ID ->
                 parseRepairBayGameObjDef(objDataChunk, name, id, chunkId)
 
+            // BuildingGameObjDef → DefinitionClass (generic building not covered by a subtype)
+            BuildingGameObjDef.CHUNK_ID ->
+                BuildingGameObjDef.load(objDataChunk, chunkId) ?: fallback
+
+            // ── Global Settings (0x40600 range) ─────────────────────────────────────
+            // FIXME: all are data classes — convert to DefinitionClass subclasses and parse properly
+            0x00040600u,                                    // CHUNKID_GLOBAL_SETTINGS_DEF (wrapper)
+            HumanLoiterGlobalSettingsDef.CHUNK_ID,          // 0x40601
+            GlobalSettingsGeneralDef.CHUNK_ID,              // 0x40602
+            HUDGlobalSettingsDef.CHUNK_ID,                  // 0x40603
+            EvaSettingsDefClass.CHUNK_ID,                   // 0x40604
+            CharacterClassSettingsDefClass.CHUNK_ID,        // 0x40605
+            HumanAnimOverrideDef.CHUNK_ID,                  // 0x40606
+            PurchaseSettingsDefClass.CHUNK_ID,              // 0x40607
+            TeamPurchaseSettingsDefClass.CHUNK_ID,          // 0x40608
+            CNCModeSettingsDef.CHUNK_ID,                    // 0x40609
+            -> fallback
+
             // ── Editor-only objects (CHUNKID_COMMANDO_EDITOR_BEGIN range 0x50000) ────
             // These appear in Objects.DDB but have no gameplay role on the server.
+            0x00050003u,  // CHUNKID_WAYPATH_DEF
             0x00050016u,  // CHUNKID_VIS_POINT_DEF
             0x00050018u,  // CHUNKID_PATHFIND_START_DEF
             -> fallback

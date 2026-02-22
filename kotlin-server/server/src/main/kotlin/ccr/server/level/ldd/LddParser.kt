@@ -55,7 +55,9 @@ object LddParser {
     }
 
     private fun parseGameObjects(gameobjReader: ChunkReader, out: MutableList<LoadedGameObject>) {
-        gameobjReader.forEachChunk { factoryId, _, factoryChunkReader ->
+        // GameObjManager::Save nests the object list inside CHUNKID_GAMEOBJ_OBJECTS (gameobjmanager.cpp)
+        val objectsChunk = gameobjReader.findChunk(ChunkIds.CHUNKID_GAMEOBJ_OBJECTS) ?: return
+        objectsChunk.forEachChunk { factoryId, _, factoryChunkReader ->
             val objData = factoryChunkReader.findChunk(ChunkIds.SIMPLEFACTORY_CHUNKID_OBJDATA)
                 ?: return@forEachChunk
             try {

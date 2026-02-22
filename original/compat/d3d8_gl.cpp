@@ -702,31 +702,26 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     // Apply current render states and texture to GL before a draw call
     void Apply_GL_State() {
-        // Log full state for first few 3D draw calls
+        // Log all alpha-blended 3D draw calls (first 30) to diagnose transparency issues
         static int _state_log_n = 0;
-        if (_state_log_n < 3 && !(currentFVF & D3DFVF_XYZRHW)) {
+        if (_state_log_n < 30 && !(currentFVF & D3DFVF_XYZRHW) && rs[27]) {  // alphaBlend=1
             _state_log_n++;
-            fprintf(stderr, "[GLState] #%d fvf=0x%X cullMode=%u zEnable=%u zWrite=%u zFunc=%u lighting=%u ambient=0x%X alphaTest=%u alphaBlend=%u\n",
+            fprintf(stderr, "[GLState] #%d fvf=0x%X lighting=%u srcBlend=%u dstBlend=%u alphaTest=%u\n",
                 _state_log_n, (unsigned)currentFVF,
-                (unsigned)rs[22],   // D3DRS_CULLMODE
-                (unsigned)rs[7],    // D3DRS_ZENABLE
-                (unsigned)rs[14],   // D3DRS_ZWRITEENABLE
-                (unsigned)rs[23],   // D3DRS_ZFUNC
                 (unsigned)rs[137],  // D3DRS_LIGHTING
-                (unsigned)rs[139],  // D3DRS_AMBIENT
-                (unsigned)rs[15],   // D3DRS_ALPHATESTENABLE
-                (unsigned)rs[27]);  // D3DRS_ALPHABLENDENABLE
-            fprintf(stderr, "[GLState] #%d tss0: colorOp=%u arg1=%u arg2=%u alphaOp=%u alphaArg1=%u tex=%p glId=%u\n",
+                (unsigned)rs[19],   // D3DRS_SRCBLEND
+                (unsigned)rs[20],   // D3DRS_DESTBLEND
+                (unsigned)rs[15]);  // D3DRS_ALPHATESTENABLE
+            fprintf(stderr, "[GLState] #%d diffMtlSrc=%u tss0: cOp=%u cA1=%u cA2=%u aOp=%u aA1=%u aA2=%u tex=%p\n",
                 _state_log_n,
+                (unsigned)rs[145],  // D3DRS_DIFFUSEMATERIALSOURCE
                 (unsigned)tss[0][1], (unsigned)tss[0][2], (unsigned)tss[0][3],
-                (unsigned)tss[0][4], (unsigned)tss[0][5],
-                (void*)currentTextures[0],
-                currentTextures[0] ? currentTextures[0]->glTexId : 0u);
-            fprintf(stderr, "[GLState] #%d colorWrite=0x%X fillMode=%u shadeMode=%u\n",
+                (unsigned)tss[0][4], (unsigned)tss[0][5], (unsigned)tss[0][6],
+                (void*)currentTextures[0]);
+            fprintf(stderr, "[GLState] #%d mat: diff=(%.2f,%.2f,%.2f,%.2f) emis=(%.2f,%.2f,%.2f,%.2f)\n",
                 _state_log_n,
-                (unsigned)rs[168],  // D3DRS_COLORWRITEENABLE
-                (unsigned)rs[8],    // D3DRS_FILLMODE
-                (unsigned)rs[9]);   // D3DRS_SHADEMODE
+                material.Diffuse.r, material.Diffuse.g, material.Diffuse.b, material.Diffuse.a,
+                material.Emissive.r, material.Emissive.g, material.Emissive.b, material.Emissive.a);
         }
 
         // -- Alpha blending + blend op --
@@ -826,10 +821,19 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             glLightModelfv(GL_LIGHT_MODEL_AMBIENT,     sceneAmb);
             glLightModeli (GL_LIGHT_MODEL_TWO_SIDE,     GL_FALSE);
             glLightModeli (GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
-            GLfloat mdiff[4] = { material.Diffuse.r,  material.Diffuse.g,  material.Diffuse.b,  material.Diffuse.a  };
+            // D3DRS_DIFFUSEMATERIALSOURCE (rs[145]): 0=material.Diffuse, 1/2=vertex COLOR1/COLOR2
+            // When COLOR1, GL_COLOR_MATERIAL lets vertex glColor4ub drive GL_DIFFUSE (alpha=1.0)
+            // instead of material.Diffuse (which can be ~0.48), fixing EVA logo transparency.
+            if (rs[145] == D3DMCS_COLOR1 || rs[145] == D3DMCS_COLOR2) {
+                glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+                glEnable(GL_COLOR_MATERIAL);
+            } else {
+                glDisable(GL_COLOR_MATERIAL);
+                GLfloat mdiff[4] = { material.Diffuse.r, material.Diffuse.g, material.Diffuse.b, material.Diffuse.a };
+                glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mdiff);
+            }
             GLfloat mambi[4] = { material.Ambient.r,  material.Ambient.g,  material.Ambient.b,  material.Ambient.a  };
             GLfloat memis[4] = { material.Emissive.r, material.Emissive.g, material.Emissive.b, material.Emissive.a };
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,  mdiff);
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,  mambi);
             glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, memis);
             if (material.Power == 0.0f) {
@@ -845,6 +849,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         } else {
             glDisable(GL_LIGHTING);
             glDisable(GL_NORMALIZE);
+            glDisable(GL_COLOR_MATERIAL);
         }
 
         // -- Texture stages 0..7 --
@@ -1339,13 +1344,33 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     HRESULT MultiplyTransform(D3DTRANSFORMSTATETYPE, const D3DMATRIX*) override { return S_OK; }
     HRESULT SetMaterial(const D3DMATERIAL8* mat) override {
         if (mat) {
+            // Content-based dedup: skip if all components match what's already set.
+            // DX8Wrapper only caches by pointer, so many redundant calls arrive here.
+            bool changed = (mat->Diffuse.r  != material.Diffuse.r  ||
+                            mat->Diffuse.g  != material.Diffuse.g  ||
+                            mat->Diffuse.b  != material.Diffuse.b  ||
+                            mat->Diffuse.a  != material.Diffuse.a  ||
+                            mat->Ambient.r  != material.Ambient.r  ||
+                            mat->Ambient.g  != material.Ambient.g  ||
+                            mat->Ambient.b  != material.Ambient.b  ||
+                            mat->Specular.r != material.Specular.r ||
+                            mat->Emissive.r != material.Emissive.r ||
+                            mat->Emissive.g != material.Emissive.g ||
+                            mat->Emissive.b != material.Emissive.b ||
+                            mat->Power      != material.Power);
+            if (!changed) return S_OK;
             material = *mat;
+            // Log only first few distinct materials
             static unsigned s_mat_count = 0;
-            fprintf(stderr, "[tex] SetMaterial #%u: diff=(%.2f,%.2f,%.2f,%.2f) amb=(%.2f,%.2f,%.2f,%.2f) emis=(%.2f,%.2f,%.2f,%.2f)\n",
-                    ++s_mat_count,
-                    mat->Diffuse.r,  mat->Diffuse.g,  mat->Diffuse.b,  mat->Diffuse.a,
-                    mat->Ambient.r,  mat->Ambient.g,  mat->Ambient.b,  mat->Ambient.a,
-                    mat->Emissive.r, mat->Emissive.g, mat->Emissive.b, mat->Emissive.a);
+            if (s_mat_count < 20) {
+                fprintf(stderr, "[tex] SetMaterial #%u: diff=(%.2f,%.2f,%.2f,%.2f) amb=(%.2f,%.2f,%.2f,%.2f) emis=(%.2f,%.2f,%.2f,%.2f)\n",
+                        ++s_mat_count,
+                        mat->Diffuse.r,  mat->Diffuse.g,  mat->Diffuse.b,  mat->Diffuse.a,
+                        mat->Ambient.r,  mat->Ambient.g,  mat->Ambient.b,  mat->Ambient.a,
+                        mat->Emissive.r, mat->Emissive.g, mat->Emissive.b, mat->Emissive.a);
+            } else {
+                ++s_mat_count;
+            }
         }
         return S_OK;
     }
@@ -1524,17 +1549,17 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             d ? (void*)d->parentTexture : nullptr,
             numRects);
         if (s && d && s->pixels && d->pixels && s->fmt == d->fmt) {
-            UINT bpp = D3D8Surface_GL::bytes_per_pixel(s->fmt);
             if (numRects == 0) {
-                // Full copy
-                UINT w = (s->width  < d->width)  ? s->width  : d->width;
-                UINT h = (s->height < d->height) ? s->height : d->height;
-                for (UINT row = 0; row < h; row++) {
-                    memcpy(d->pixels + row * d->width * bpp,
-                           s->pixels + row * s->width * bpp,
-                           w * bpp);
-                }
+                // Full copy — use total_surface_bytes so DXT compressed sizes are handled correctly
+                UINT src_bytes = D3D8Surface_GL::total_surface_bytes(s->width, s->height, s->fmt);
+                UINT dst_bytes = D3D8Surface_GL::total_surface_bytes(d->width, d->height, d->fmt);
+                UINT bytes = src_bytes < dst_bytes ? src_bytes : dst_bytes;
+                if (s->pixels != d->pixels)
+                    memmove(d->pixels, s->pixels, bytes);
             } else {
+                // Rect-based sub-copy — only valid for uncompressed formats
+                // (DXT is block-based; sub-rect copies of DXT aren't supported here)
+                UINT bpp = D3D8Surface_GL::bytes_per_pixel(s->fmt);
                 for (UINT i = 0; i < numRects; i++) {
                     int sx = srcRects ? srcRects[i].left : 0;
                     int sy = srcRects ? srcRects[i].top  : 0;
@@ -1543,9 +1568,9 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                     int dx = dstPoints ? dstPoints[i].x : 0;
                     int dy = dstPoints ? dstPoints[i].y : 0;
                     for (int row = 0; row < sh; row++) {
-                        memcpy(d->pixels + ((dy + row) * d->width + dx) * bpp,
-                               s->pixels + ((sy + row) * s->width + sx) * bpp,
-                               sw * bpp);
+                        memcpy(d->pixels + ((dy + row) * (int)d->width + dx) * (int)bpp,
+                               s->pixels + ((sy + row) * (int)s->width + sx) * (int)bpp,
+                               (size_t)(sw * (int)bpp));
                     }
                 }
             }
@@ -1584,10 +1609,10 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                 (void*)d, d ? d->width : 0, d ? d->height : 0, d ? (unsigned)d->fmt : 0, d ? (void*)d->pixels : nullptr);
         }
         if (s && d && s->pixels && d->pixels) {
-            UINT bpp = D3D8Surface_GL::bytes_per_pixel(s->fmt);
-            UINT bytes = s->width * s->height * bpp;
+            UINT bytes = D3D8Surface_GL::total_surface_bytes(s->width, s->height, s->fmt);
             if (d->width == s->width && d->height == s->height && d->fmt == s->fmt) {
-                memcpy(d->pixels, s->pixels, bytes);
+                if (s->pixels != d->pixels)
+                    memmove(d->pixels, s->pixels, bytes);  // memmove: src/dst pixel buffers may overlap
                 d->dirty = true;
                 d->Upload_To_GL();
                 fprintf(stderr, "[tex] UpdateTexture #%u: copy done, Upload_To_GL triggered\n", un);
