@@ -18,7 +18,7 @@ class SoldierGameObj(
     position: Vector3,
     facing: Float = 0f,
     health: Float = 100f,
-    val weapons: List<WeaponEntry> = emptyList(),
+    val weapons: MutableList<WeaponEntry> = mutableListOf(),
 ) : SmartGameObj(
     definitionId  = definitionId,
     position      = position,

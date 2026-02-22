@@ -352,7 +352,7 @@ class ServerJoinFlowTest {
             modelName     = "c_ag_nod_mg",
             animName      = "S_A_HUMAN.H_A_AINM",
             position      = Vector3(0f, 0f, 5f),
-            weapons       = listOf(WeaponEntry(pistolDefId, 100)),
+            weapons       = mutableListOf(WeaponEntry(pistolDefId, 100)),
         )
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, soldier, 1_500_000_001)
@@ -386,7 +386,7 @@ class ServerJoinFlowTest {
             modelName     = "c_ag_nod_mg",
             animName      = "S_A_HUMAN.H_A_AINM",
             position      = Vector3(0f, 0f, 5f),
-            weapons       = listOf(WeaponEntry(pistolDefId, 100)),
+            weapons       = mutableListOf(WeaponEntry(pistolDefId, 100)),
         )
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, soldier, 1_500_000_001)

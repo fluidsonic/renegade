@@ -197,7 +197,7 @@ open class God(private val server: GameServer) {
         val weapons = buildList {
             if (server.pistolWeaponDefId != 0) add(WeaponEntry(server.pistolWeaponDefId, 100))
             if (server.timedC4WeaponDefId != 0) add(WeaponEntry(server.timedC4WeaponDefId, 1))
-        }
+        }.toMutableList()
 
         val soldier = SoldierGameObj(
             definitionId = defId,
@@ -254,7 +254,7 @@ open class God(private val server: GameServer) {
         val weapons = buildList {
             if (server.pistolWeaponDefId != 0) add(WeaponEntry(server.pistolWeaponDefId, 100))
             if (server.timedC4WeaponDefId != 0) add(WeaponEntry(server.timedC4WeaponDefId, 1))
-        }
+        }.toMutableList()
 
         val soldier = SoldierGameObj(
             definitionId = defId,

@@ -304,7 +304,7 @@ class SoldierGameObjTest {
             team = 0,
             modelName = "s_a_human",
             position = Vector3(0f, 0f, 5f),
-            weapons = listOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
+            weapons = mutableListOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
         )
         val bs = BitStream()
         soldier.exportOccasional(bs)
@@ -330,7 +330,7 @@ class SoldierGameObjTest {
             team = 0,
             modelName = "s_a_human",
             position = Vector3(0f, 0f, 5f),
-            weapons = listOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
+            weapons = mutableListOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
         )
         val bs = BitStream()
         soldier.exportFrequent(bs)
