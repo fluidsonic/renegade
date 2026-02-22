@@ -12,6 +12,7 @@
 class DialogFactoryBaseClass
 {
 public:
+	virtual ~DialogFactoryBaseClass() = default;
 
 	////////////////////////////////////////////////////////////////
 	//	Public methods

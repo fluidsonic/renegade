@@ -18,7 +18,7 @@ template<typename Event> class Observer
 		typedef std::vector< Notifier<Event>* > NotifierColl;
 
 		Observer() :
-				mNotifiers(NULL)
+				mNotifiers(0)
 			{}
 
 		virtual ~Observer()

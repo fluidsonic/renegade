@@ -399,7 +399,7 @@ public:
 	// Note:  The cache sizes are in kilo-bytes.  The default
 	// is currently set to 1MB.
 	//
-	bool					Set_Cache_Size (int kbytes = DEF_CACHE_SIZE)	{ m_MaxCacheSize = (kbytes * 1024); }
+	bool					Set_Cache_Size (int kbytes = DEF_CACHE_SIZE)	{ m_MaxCacheSize = (kbytes * 1024); return true; }
 	int					Get_Cache_Size (void) const						{ return m_MaxCacheSize / 1024; }
 	int					Get_Current_Cache_Size (void) const				{ return m_CurrentCacheSize; }
 	void					Flush_Cache (void);
@@ -451,7 +451,7 @@ public:
 	// when the secondary page is active.
 	//
 	void					Set_Active_Sound_Page (SOUND_PAGE page);
-	SOUND_PAGE			Get_Active_Sound_Page (void)					{ m_CurrPage; }
+	SOUND_PAGE			Get_Active_Sound_Page (void)					{ return m_CurrPage; }
 
 	void					Push_Active_Sound_Page (SOUND_PAGE page);
 	void					Pop_Active_Sound_Page (void);

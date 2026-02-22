@@ -310,7 +310,7 @@ void ScriptImpClass::Clear_Parameters(void)
 			}
 		}
 
-		delete (void*)mArgV;
+		delete[] mArgV;
 	}
 
 	mArgC = 0;

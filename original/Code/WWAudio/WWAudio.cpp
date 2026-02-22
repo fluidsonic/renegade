@@ -86,14 +86,14 @@ WWAudioClass::Is_OK_To_Give_Handle (const AudibleSoundClass &sound_obj)
 ////////////////////////////////////////////////////////////////////////////////////////////////
 WWAudioClass::WWAudioClass (bool lite)
 	: m_Driver2D (NULL),
-	  m_Driver3D (NULL),
+	  m_Driver3D (0),
 	  m_PlaybackRate (44100),
 	  m_PlaybackBits (16),
 	  m_PlaybackStereo (true),
 	  m_SpeakerType (0),
 	  m_ReverbFilter (INVALID_MILES_HANDLE),
 	  m_UpdateTimer (-1),
-	  m_Driver3DPseudo (NULL),
+	  m_Driver3DPseudo (0),
 	  m_MusicVolume (DEF_MUSIC_VOL),
 	  m_SoundVolume (DEF_SFX_VOL),
 	  m_RealMusicVolume (DEF_MUSIC_VOL),
@@ -397,7 +397,7 @@ WWAudioClass::Close_3D_Device (void)
 	//
 	if (m_Driver3D != NULL) {
 		::AIL_close_3D_provider (m_Driver3D);
-		m_Driver3D = NULL;
+		m_Driver3D = 0;
 		retval = true;
 	}
 
@@ -1315,7 +1315,7 @@ WWAudioClass::Remove_From_Playlist (AudibleSoundClass *sound_obj)
 		//
 		if (sound_obj->Get_Loop_Count () != INFINITE_LOOPS) {
 			for (int index = 0; index < m_EOSCallbackList.Count (); index ++) {
-				uint32_t user_data				= NULL;
+				uint32_t user_data				= 0;
 				LPFNEOSCALLBACK callback	= m_EOSCallbackList.Get_Callback (index, &user_data);
 				if (callback != NULL) {
 					(*callback) (sound_obj, user_data);
@@ -1537,7 +1537,7 @@ WWAudioClass::Get_2D_Sample (const AudibleSoundClass &sound_obj)
 	float lowest_priority					= sound_obj.Get_Priority ();
 	float lowest_runtime_priority			= sound_obj.Get_Runtime_Priority ();
 	AudibleSoundClass *lowest_pri_sound = NULL;
-	HSAMPLE lowest_pri_sample				= NULL;
+	HSAMPLE lowest_pri_sample				= 0;
 	HSAMPLE free_sample						= (HSAMPLE)INVALID_MILES_HANDLE;
 
 	// Loop through all the available sample handles and try to find
@@ -1604,7 +1604,7 @@ WWAudioClass::Get_3D_Sample (const Sound3DClass &sound_obj)
 	float lowest_priority					= sound_obj.Get_Priority ();
 	float lowest_runtime_priority			= sound_obj.Get_Runtime_Priority ();
 	AudibleSoundClass *lowest_pri_sound = NULL;
-	H3DSAMPLE lowest_pri_sample			= NULL;
+	H3DSAMPLE lowest_pri_sample			= 0;
 	H3DSAMPLE free_sample					= (H3DSAMPLE)INVALID_MILES_HANDLE;
 
 	// Loop through all the available sample handles and try to find
@@ -1677,7 +1677,7 @@ WWAudioClass::Build_3D_Driver_List (void)
 	MMSLockClass lock;
 
 	HPROENUM next = HPROENUM_FIRST;
-	HPROVIDER provider = NULL;
+	HPROVIDER provider = 0;
 	char *name = NULL;
 	while (::AIL_enumerate_3D_providers (&next, &provider, &name) > 0) {
 
@@ -1748,7 +1748,7 @@ WWAudioClass::Free_3D_Driver_List (void)
 
 	if (m_Driver3D != NULL) {
 		::AIL_close_3D_provider (m_Driver3D);
-		m_Driver3D = NULL;
+		m_Driver3D = 0;
 	}
 
 	//

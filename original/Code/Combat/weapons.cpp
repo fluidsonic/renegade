@@ -91,7 +91,7 @@ WeaponClass::WeaponClass( const WeaponDefinitionClass *def ) :
 	BurstCount( 0 ),
 	BulletBumpTime( 0 ),
    DidFire( false ),
-	ContinuousEmitters( NULL ),
+	ContinuousEmitters( 0 ),
 	ContinuousSound( NULL ),
 	C4DetonationMode( 1 ),
 	Target( 0, 0, 0 ),

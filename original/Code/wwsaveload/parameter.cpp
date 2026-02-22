@@ -139,6 +139,9 @@ ParameterClass::Construct (Type type, void *data, const char *name)
 			new_param = new SeparatorParameterClass;
 			new_param->Set_Name (name);
 			break;
+
+		default:
+			break;
 	}
 
 	return new_param;

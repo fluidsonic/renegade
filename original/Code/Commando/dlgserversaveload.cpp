@@ -297,7 +297,7 @@ ServerSaveLoadMenuClass::On_ListCtrl_Delete_Entry
 	//	Remove the data we associated with this entry
 	//
 	ServerSettingsClass *config = (ServerSettingsClass *)list_ctrl->Get_Entry_Data (item_index, 0);
-	list_ctrl->Set_Entry_Data (item_index, 0, NULL);
+	list_ctrl->Set_Entry_Data (item_index, 0, 0);
 
 	//
 	//	Free the config object

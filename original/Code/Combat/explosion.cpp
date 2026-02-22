@@ -197,7 +197,7 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 		StringClass	new_name(true);
 		::Strip_Path_From_Filename( new_name, explosion_def->DecalFilename );
 		PhysicsSceneClass::Get_Instance()->Create_Decal( blast_tm, new_name,
-																		explosion_def->DecalSize, false, NULL );
+																		explosion_def->DecalSize, false, false );
 	}
 
 	// Apply the damage

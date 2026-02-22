@@ -1625,7 +1625,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 							{
 								Commands->Send_Custom_Event( obj, honSpawn01, 0, M01_HUNT_THE_PLAYER_JDG, 0 );
 								m01_hon_spawned_guy_01_alive = false;
-								m01_hon_spawned_guy_01_ID = NULL;
+								m01_hon_spawned_guy_01_ID = 0;
 							}
 
 							GameObject * honSpawn02 = Commands->Find_Object ( m01_hon_spawned_guy_02_ID );
@@ -1633,7 +1633,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 							{
 								Commands->Send_Custom_Event( obj, honSpawn02, 0, M01_HUNT_THE_PLAYER_JDG, 0 );
 								m01_hon_spawned_guy_02_alive = false;
-								m01_hon_spawned_guy_02_ID = NULL;
+								m01_hon_spawned_guy_02_ID = 0;
 							}
 
 							GameObject * honSpawn03 = Commands->Find_Object ( m01_hon_spawned_guy_03_ID );
@@ -1641,7 +1641,7 @@ DECLARE_SCRIPT(M01_Mission_Controller_JDG, "")//this guys ID number is 100376
 							{
 								Commands->Send_Custom_Event( obj, honSpawn03, 0, M01_HUNT_THE_PLAYER_JDG, 0 );
 								m01_hon_spawned_guy_03_alive = false;
-								m01_hon_spawned_guy_03_ID = NULL;
+								m01_hon_spawned_guy_03_ID = 0;
 							}
 
 							m01_hon_spawners_tally = 0;

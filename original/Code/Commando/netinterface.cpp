@@ -65,11 +65,6 @@ void cNetInterface::Set_Random_Nickname(void)
 	DWORD size = sizeof(name);
 	::GetComputerName(name, &size);
 
-	int length_test = MAX_COMPUTERNAME_LENGTH + 1 - MAX_NICKNAME_LENGTH;
-	if (length_test > 0) {
-		name[MAX_NICKNAME_LENGTH - 1] = 0;
-	}
-
 	WideStringClass widename;
 	widename.Convert_From(name);
 

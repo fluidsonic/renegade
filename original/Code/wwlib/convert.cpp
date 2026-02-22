@@ -140,7 +140,7 @@ ConvertClass::~ConvertClass(void)
 	delete Translucent3Blitter;
 	Translucent3Blitter = NULL;
 
-	delete [] Translator;
+	::operator delete[](Translator);
 	Translator = NULL;
 
 	delete [] ShadowTable;

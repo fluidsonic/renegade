@@ -22,7 +22,7 @@ DIB8Class::DIB8Class(HWND hwnd,int width,int height,PaletteClass & pal):
 	Width(width),
 	Height(height),
 	PixelBase(NULL),
-	Pitch(NULL),
+	Pitch(0),
 	Surface(NULL)
 {
 	// Allocate a BITMAPINFO structure

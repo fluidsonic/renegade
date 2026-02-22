@@ -68,7 +68,7 @@ class BinaryHeapClass
 		// Reset all entries in the array to NULL
 		void Flush_Array (void)
 		{
-			::memset (Elements, NULL, sizeof (HeapNodeClass<Key_Type> *) * Max_Number_Of_Elements);
+			::memset (Elements, 0, sizeof (HeapNodeClass<Key_Type> *) * Max_Number_Of_Elements);
 			Number_Of_Elements = 0;
 		}
 		
@@ -85,7 +85,7 @@ class BinaryHeapClass
 			Own_Array					= true;
 			
 			// Initialize to NULL
-			::memset (Elements, NULL, sizeof (HeapNodeClass<Key_Type> *) * new_size);
+			::memset (Elements, 0, sizeof (HeapNodeClass<Key_Type> *) * new_size);
 			return ;
 		}
 

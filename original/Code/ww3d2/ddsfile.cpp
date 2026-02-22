@@ -135,6 +135,8 @@ unsigned DDSFileClass::Calculate_DXTC_Surface_Size(unsigned width, unsigned heig
 	case WW3D_FORMAT_DXT5:
 		level_size*=16;
 		break;
+	default:
+		break;
 	}
 	return level_size;
 }
@@ -435,6 +437,8 @@ unsigned DDSFileClass::Get_Pixel(unsigned level,unsigned x,unsigned y) const
 			}
 		}
 		break;
+	default:
+		break;
 	}
 	return 0xffffffff;
 }
@@ -642,6 +646,8 @@ bool DDSFileClass::Get_4x4_Block(
 			return contains_alpha!=0xff;	// Alpha block... DXT5 should only be used when the image needs alpha
 													// but for now check anyway...
 		}
+	default:
+		break;
 	}
 	return false;
 

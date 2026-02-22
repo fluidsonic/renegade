@@ -43,9 +43,9 @@ public:
 	//
 	//	Handle access
 	//
-	virtual H3DSAMPLE		Get_H3DSAMPLE (void)		{ return NULL; }
-	virtual HSAMPLE		Get_HSAMPLE (void)		{ return NULL; }
-	virtual HSTREAM		Get_HSTREAM (void)		{ return NULL; }
+	virtual H3DSAMPLE		Get_H3DSAMPLE (void)		{ return 0; }
+	virtual HSAMPLE		Get_HSAMPLE (void)		{ return 0; }
+	virtual HSTREAM		Get_HSTREAM (void)		{ return 0; }
 
 	//
 	//	Initialization

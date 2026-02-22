@@ -49,6 +49,11 @@ add_compile_options(
     -Wno-dangling-else
     -Wno-macro-redefined
     -Werror=non-pod-varargs
+    -Werror=return-type
+    -Werror=delete-incomplete
+    -Werror=delete-abstract-non-virtual-dtor
+    -Werror=null-conversion
+    -Werror=array-bounds
     -Wconversion
     -Wsign-conversion
     -Wdouble-promotion
