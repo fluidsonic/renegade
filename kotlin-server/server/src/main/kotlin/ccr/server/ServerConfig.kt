@@ -60,11 +60,22 @@ data class ServerConfig(
     val nodSoldierDefId: Int = 81930257,   // 0x04e22811  CnC_Nod_Minigunner_0
     val gdiSoldierDefId: Int = 81930243,   // 0x04e22803  CnC_GDI_MiniGunner_0
     val intermissionTimeSeconds: Int = 30,
+    val mapList: List<String> = emptyList(),
+    val mapCycleLoops: Boolean = false,
 ) {
     // C++: gamedata.cpp Export_Tier_1_Data calls CRC_Stringi(MapName) / CRC_Stringi(ModName).
     // Empty name → CRC is 0 (loop never executes → crc = 0 ^ 0xFFFFFFFF ^ 0xFFFFFFFF = 0).
     val mapNameCrc: Int get() = if (mapName.isEmpty()) 0 else crcStringi(mapName)
     val modNameCrc: Int get() = if (modName.isEmpty()) 0 else crcStringi(modName)
+    /**
+     * Effective map list for rotation: uses mapList if non-empty, otherwise falls back to
+     * a single-item list containing mapName (or empty if mapName is also empty).
+     */
+    val effectiveMapList: List<String> get() = when {
+        mapList.isNotEmpty() -> mapList
+        mapName.isNotEmpty() -> listOf(mapName)
+        else -> emptyList()
+    }
     companion object {
         fun from(ini: IniParser): ServerConfig = ServerConfig(
             gamePort            = ini.getInt(SECTION, "GamePort", 4848),
@@ -97,6 +108,13 @@ data class ServerConfig(
             nodSoldierDefId     = ini.getInt(SECTION, "NodSoldierDefId", 81930257),
             gdiSoldierDefId     = ini.getInt(SECTION, "GdiSoldierDefId", 81930243),
             intermissionTimeSeconds = ini.getInt(SECTION, "IntermissionTimeSeconds", 30),
+            mapCycleLoops = ini.getBool(SECTION, "MapCycleLoops"),
+            mapList = buildList {
+                for (i in 1..32) {
+                    val v = ini.getString(SECTION, "Map$i")
+                    if (v.isNotEmpty()) add(v) else break
+                }
+            },
         )
     }
 }
