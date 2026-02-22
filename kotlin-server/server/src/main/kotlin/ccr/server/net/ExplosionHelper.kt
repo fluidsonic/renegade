@@ -52,8 +52,9 @@ object ExplosionHelper {
             // Objects at or beyond the radius take no damage
             if (distSq >= radiusSq) continue
 
-            // Line-of-sight check: skip targets blocked by static terrain
-            // C++: ExplosionClass::Damage_Objects casts a ray per target
+            // Line-of-sight check: blocked targets take 25% damage
+            // C++: ExplosionManager::Create_Explosion_At casts a ray per target
+            var scale = if (explosionDef.damageIsScaled) 1f - (sqrt(distSq) / radius) else 1f
             if (physicsScene != null && distSq > 0.0001f) {
                 val ray = RayCollisionTest(
                     ray = LineSeg(
@@ -63,11 +64,8 @@ object ExplosionHelper {
                     checkStatic  = true,
                     checkDynamic = false,   // only terrain walls occlude; other entities don't
                 )
-                if (physicsScene.castRay(ray)) continue   // blocked → no damage
+                if (physicsScene.castRay(ray)) scale *= 0.25f   // C++: blocked targets take 25% damage
             }
-
-            val dist = sqrt(distSq)
-            val scale = if (explosionDef.damageIsScaled) 1f - (dist / radius) else 1f
 
             val rawDamage = explosionDef.damageStrength * scale
             val finalDamage = ArmorWarheadManager.scaleDamage(

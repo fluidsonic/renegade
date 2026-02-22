@@ -114,7 +114,7 @@ class ExplosionHelperTest {
         assertApprox(100f, target.health)
     }
 
-    @Test fun `target behind wall receives no damage, clear target still does`() {
+    @Test fun `target behind wall receives reduced damage, clear target gets full damage`() {
         // Wall at x=5, perpendicular to x-axis: two triangles forming a quad at x=5, y/z in [-20,20]
         val scene = buildSceneWithWallAt(x = 5f)
         // Blocked target at x=10 (ray from 0,0,0 to 10,0,0 crosses x=5 wall)
@@ -127,7 +127,7 @@ class ExplosionHelperTest {
             listOf<Any>(blocked, clear),
             physicsScene = scene,
         )
-        assertApprox(0f,   blocked.damageTaken)
+        assertApprox(25f,  blocked.damageTaken)   // 100f * 0.25f = 25f (C++: blocked = 25% damage)
         assertApprox(100f, clear.damageTaken)
     }
 }
@@ -153,8 +153,8 @@ private fun buildSceneWithWallAt(x: Float): PhysicsScene {
     return scene
 }
 
-/** Convenience: how much damage was actually applied (initial health 200f, read back via health). */
-private val SoldierGameObj.damageTaken: Float get() = 200f - health
+/** Convenience: how much damage was actually applied (uses healthMax set at construction time). */
+private val SoldierGameObj.damageTaken: Float get() = healthMax - health
 
 private fun assertApprox(expected: Float, actual: Float, tolerance: Float = 0.01f) {
     assert(kotlin.math.abs(expected - actual) <= tolerance) {
