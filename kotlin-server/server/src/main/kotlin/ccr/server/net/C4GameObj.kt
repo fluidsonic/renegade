@@ -2,13 +2,10 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.net.bitstream.*
-import ccr.net.replication.NetworkObjectManager
 import ccr.server.GameServer
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
-import ccr.server.combat.ArmorWarheadManager
-import ccr.server.defs.ExplosionDefinitionClass
 
 // C++: C4GameObj (c4gameobj.cpp) — extends SimpleGameObj.
 // Export_Rare appends C4-specific fields after the SimpleGameObj/PhysicalGameObj chain.
@@ -77,42 +74,22 @@ class C4GameObj(
 
     // C++: C4GameObj::Detonate — applies building damage, broadcasts explosion event, marks for deletion.
     fun detonate() {
-        val server = serverRef
-        val ammoDef = ammoDefinition
-        val explosionDefId = ammoDef?.explosionDefId ?: 0
-
-        if (server != null && stuckBuilding != null && explosionDefId != 0) {
-            val explosionDef = server.loadedLevel?.definitions?.findById(explosionDefId.toUInt())
-                as? ExplosionDefinitionClass
-            if (explosionDef != null) {
-                val warheadSaveId = ammoDefinition?.warhead ?: 0
-                val building = stuckBuilding!!
-                val effectiveArmorSaveId = if (stuckMct) building.mctSkinSaveId else building.shieldType
-                val damage = ArmorWarheadManager.scaleDamage(
-                    explosionDef.damageStrength, warheadSaveId, effectiveArmorSaveId)
-                building.applyDamage(damage)
-            }
-        }
-
-        // Broadcast explosion visual/sound to all in-game clients
-        if (server != null && explosionDefId != 0) {
-            val explosion = ScExplosionEvent(
-                defId    = explosionDefId,
-                posX     = stuckPosX,
-                posY     = stuckPosY,
-                posZ     = stuckPosZ,
-                ownerId  = ownerId,
-            )
-            for (clientId in server.god.playerInGame) {
-                val host = server.connectionManager.getHost(clientId) ?: continue
-                server.sendGameNetObj(host) { bs ->
-                    NetworkObjectPacketWriter.writeCreation(bs, explosion, NetworkObjectManager.getNewDynamicId())
-                }
-            }
-        }
-
-        server?.gameObjManager?.remove(this)
+        // Remove from manager and mark pending BEFORE AoE so this object is not damaged by its own explosion
+        serverRef?.gameObjManager?.remove(this)
         setDeletePending()
+
+        val server = serverRef ?: return
+        val explosionDefId = ammoDefinition?.explosionDefId ?: 0
+        if (explosionDefId == 0) return
+
+        ExplosionHelper.applyExplosionDamage(
+            explosionDefId = explosionDefId,
+            posX           = stuckPosX,
+            posY           = stuckPosY,
+            posZ           = stuckPosZ,
+            ownerId        = ownerId,
+            server         = server,
+        )
     }
 
     // C++: C4GameObj::Defuse — removes C4 without damage or explosion.

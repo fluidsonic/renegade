@@ -48,4 +48,16 @@ class ExplosionDamageTest {
         assertEquals(100f, soldier.health)
         assertFalse(soldier.getObjectDirtyBit(0, NetworkObject.BIT_OCCASIONAL))
     }
+
+    @Test fun `C4GameObj detonate with null serverRef sets delete-pending`() {
+        val c4 = C4GameObj(definitionId = 1, position = Vector3(0f, 0f, 0f))
+        c4.detonate()
+        assertTrue(c4.isDeletePending)
+    }
+
+    @Test fun `BeaconGameObj cancel sets delete-pending`() {
+        val beacon = BeaconGameObj(definitionId = 1, position = Vector3(0f, 0f, 0f))
+        beacon.cancel()
+        assertTrue(beacon.isDeletePending)
+    }
 }

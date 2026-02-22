@@ -3,10 +3,7 @@ package ccr.server.net
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.net.replication.NetworkObject
-import ccr.net.replication.NetworkObjectManager
 import ccr.server.GameServer
-import ccr.server.combat.ArmorWarheadManager
-import ccr.server.defs.ExplosionDefinitionClass
 import ccr.server.defs.combat.BeaconGameObjDef
 
 // C++: BeaconGameObj (beacongameobj.cpp) — extends SimpleGameObj.
@@ -75,54 +72,21 @@ class BeaconGameObj(
             return
         }
 
-        val explosionDefId = def.explosionDefId
-
-        if (explosionDefId != 0) {
-            val explosionDef = server.loadedLevel?.definitions?.findById(explosionDefId.toUInt())
-                as? ExplosionDefinitionClass
-
-            if (explosionDef != null) {
-                val radiusSq = explosionDef.damageRadius * explosionDef.damageRadius
-                val px = position.x
-                val py = position.y
-                val pz = position.z
-
-                listOfNotNull(server.baseControllerNod, server.baseControllerGdi)
-                    .flatMap { it.getBuildings() }
-                    .filter { !it.isDestroyed }
-                    .forEach { building ->
-                        val dx = building.position.x - px
-                        val dy = building.position.y - py
-                        val dz = building.position.z - pz
-                        if (dx * dx + dy * dy + dz * dz <= radiusSq) {
-                            val damage = ArmorWarheadManager.scaleDamage(
-                                explosionDef.damageStrength,
-                                explosionDef.damageWarhead,
-                                building.shieldType,
-                            )
-                            building.applyDamage(damage)
-                        }
-                    }
-
-                // Broadcast explosion visual/sound to all in-game clients
-                val explosion = ScExplosionEvent(
-                    defId   = explosionDefId,
-                    posX    = position.x,
-                    posY    = position.y,
-                    posZ    = position.z,
-                    ownerId = ownerId,
-                )
-                for (clientId in server.god.playerInGame) {
-                    val host = server.connectionManager.getHost(clientId) ?: continue
-                    server.sendGameNetObj(host) { bs ->
-                        NetworkObjectPacketWriter.writeCreation(bs, explosion, NetworkObjectManager.getNewDynamicId())
-                    }
-                }
-            }
-        }
-
+        // Remove from manager and mark pending BEFORE AoE so this object is not damaged by its own explosion
         server.gameObjManager.remove(this)
         setDeletePending()
+
+        val explosionDefId = def.explosionDefId
+        if (explosionDefId == 0) return
+
+        ExplosionHelper.applyExplosionDamage(
+            explosionDefId = explosionDefId,
+            posX           = position.x,
+            posY           = position.y,
+            posZ           = position.z,
+            ownerId        = ownerId,
+            server         = server,
+        )
     }
 
     // C++: BeaconGameObj removed without detonation (owner disconnect, defuse, etc.).
