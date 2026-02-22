@@ -260,6 +260,12 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - `Vector3` is a data class with `var` fields — direct mutation works: `force.x += gravX`
 - `ccr.physics.static` package — `static` is a Java reserved word but valid Kotlin package name
 
+### ArmorWarheadManager — armor × warhead damage table
+- `ArmorWarheadManager` is no longer a stub — loaded from `armor.ini` inside `always.dbs` during `loadLevel()` / `loadDefinitions()`
+- Call: `ArmorWarheadManager.scaleDamage(rawDamage, warheadSaveId, armorSaveId)` — returns 1.0× if table not yet loaded
+- `AmmoDefinitionClass.warhead` is the warhead save ID; `BuildingGameObj.shieldType` is the normal armor save ID; `BuildingGameObj.mctSkinSaveId` is the MCT alternate armor save ID (from `BuildingGameObjDef.mctSkin`)
+- `IniFile` (ccr.server.mix) — simple section-based INI parser: `getString/getInt/getFloat/entryCount/getEntry`, case-insensitive, `;` comments
+
 ### Live proxy (diagnostic tool)
 - `gradlew :server:liveProxy -PlocalPort=4849 -PremoteHost=127.0.0.1 -PremotePort=4848 -PlogFile=.tmp/proxy_log.txt`
 - Forwards client↔server traffic and decodes every packet in real-time
