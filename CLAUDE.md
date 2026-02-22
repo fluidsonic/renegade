@@ -266,6 +266,10 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - `Integrator.midpointIntegrate(sys, 0f, dt)` — default for `RigidBodyClass`; all 4 methods (Euler/Midpoint/RK4/RK5) in `ccr.physics.ode.Integrator` object
 - `Vector3` is a data class with `var` fields — direct mutation works: `force.x += gravX`
 - `ccr.physics.static` package — `static` is a Java reserved word but valid Kotlin package name
+- `StaticPhysClass` is `open class` (not abstract) — directly instantiable; set `triangles` and `transform` then call `scene.addStaticObject()`
+- Static collision geometry loaded by `PhysicsSceneBuilder.build(staticObjects, mapMix, alwaysMix)` → `PhysicsScene`; called inside `GameServer.loadLevel()` after `LevelLoader`; result stored in `GameServer.physicsScene`
+- W3D collision flag: `(mesh.attributes and W3D_MESH_FLAG_COLLISION_TYPE_PHYSICAL) != 0u` — only meshes with bit 0x10 set should be added to the scene
+- StaticPhysClass save format: `STATICPHYS_CHUNK_PHYS(0xDC2F94)` → `PHYS_CHUNK_VARIABLES(0x660055)` (micro 0x06=definitionId) + `PHYS_CHUNK_MODEL(0x660056)` → `WW3D_PERSIST_CHUNKID_RENDEROBJ(0x10000)` → `RENDOBJFACTORY_CHUNKID_VARIABLES(0x555040)` (micro 0x01=modelName string, 0x02=transform 48 bytes row-major Matrix3D)
 
 ### ArmorWarheadManager — armor × warhead damage table
 - `ArmorWarheadManager` is no longer a stub — loaded from `armor.ini` inside `always.dbs` during `loadLevel()` / `loadDefinitions()`
