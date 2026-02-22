@@ -131,8 +131,10 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - **Texture transform matrices**: `D3DTS_TEXTURE0..7` stored in `texMatrix[8]`; applied via `glMatrixMode(GL_TEXTURE)` when `D3DTSS_TEXTURETRANSFORMFLAGS != 0`
 - **`d3d_to_gl_matrix`**: straight memcpy of 16 floats — game pre-transposes before calling SetTransform, so this function transposes back to GL column-major
 - **ClassicEnvironmentMapperClass** (`original-untouched/Code/ww3d2/mapper.cpp` ~line 593): sets `D3DTSS_TCI_CAMERASPACENORMAL` + `D3DTS_TEXTURE0` scale+bias matrix; meshes using it have FVF `0x12` (XYZ+NORMAL only, no stored UVs) — if such a mesh appears dark/invisible with screen blend, the texgen path is the suspect
+- **`Clear()` vs `glDepthMask`**: D3D8 `Clear()` ignores `D3DRS_ZWRITEENABLE`; OpenGL `glClear(GL_DEPTH_BUFFER_BIT)` respects `glDepthMask()` — combat transparent rendering can leave depth writes disabled, silently breaking the backdrop's depth clear; fix: force `glDepthMask(GL_TRUE)` before `glClear` then restore tracked D3D state
 
 ### Building to find all issues
+- **Worktree run commands need absolute paths** — `original/build/.../Commando` resolves relative to CWD; if the user is in the main repo dir they run the unfixed main binary; always give the full absolute path when the fix is in a worktree
 - Use `cmake --build ... -- -k 0` (Ninja keep-going) to see ALL errors, not just the first one
 - After merging a worktree feature branch, reconfigure: `cmake -S original -B original/build -G Ninja` — regenerates `compile_commands.json` with updated flags/includes so clangd stays accurate
 - Batch find-and-replace across source files: use Python3 `re` module or the Edit tool — **never use shell commands (`sed`, `echo`, heredocs) containing `!`** — zsh history expansion corrupts `!=` to `\!=`, `!x` to `\!x`, etc. silently; this applies to Perl, sed scripts, and any heredoc
