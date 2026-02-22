@@ -22,12 +22,12 @@ class BeaconGameObj(
     shieldStrength: Float = 0f,
     shieldType: Int = 0,
     initialState: Int = 0,
-    ownerId: Int = 0,
+    initialOwnerId: Int = 0,
 ) : SimpleGameObj(definitionId, position, facing, modelName, animName, health, shieldStrength, shieldType) {
 
     // Mutable state fields
     var state: Int = initialState
-    var ownerId: Int = ownerId
+    var ownerId: Int = initialOwnerId
 
     // Runtime fields — not serialised in the wire format; set by God after creation
     var beaconDef: BeaconGameObjDef? = null

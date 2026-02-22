@@ -48,8 +48,8 @@ class BeaconGameObjTest {
             position     = Vector3(0f, 0f, 0f),
             modelName    = "",
             animName     = "",
-            initialState = 3,
-            ownerId      = 777,
+            initialState   = 3,
+            initialOwnerId = 777,
         )
         val bs = BitStream()
         beacon.exportRare(bs)
