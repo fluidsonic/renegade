@@ -23,7 +23,7 @@ class LevelLoader(
         if (alwaysDdbData != null) {
             val alwaysRegistry = FullDefinitionLoader.load(alwaysDdbData)
             for (def in alwaysRegistry.all()) registry.register(def)
-            context.warn("Loaded ${alwaysRegistry.size} definitions from always.dbs")
+            context.info("Loaded ${alwaysRegistry.size} definitions from always.dbs")
         } else {
             context.warn("Objects.ddb not found in always mix")
         }
