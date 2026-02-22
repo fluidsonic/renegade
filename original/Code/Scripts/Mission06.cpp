@@ -2,8 +2,6 @@
 #include "scripts.h"
 #include "toolkit.h"
 #include "mission6.h"
-#include <string.h>
-#include <stdio.h>
 
 // ************************* M06B
 // Objective Controller

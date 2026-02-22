@@ -2,7 +2,6 @@
 
 #include "global.h"
 
-#include <stdlib.h>
 #include "w3d_file.h"
 
 class RenderObjClass;

@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"pcx.h"
-#include <stdlib.h>
 
 /***************************************************************************
  * READ_PCX_FILE -- read a pcx file into a Graphic Buffer                  *

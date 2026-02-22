@@ -6,7 +6,6 @@
 //#include "menu.h"
 #include "textdisplay.h"
 #include "thread.h"
-#include <stdio.h>
 #include "backgroundmgr.h"
 #include "render2d.h"
 #include "dazzle.h"

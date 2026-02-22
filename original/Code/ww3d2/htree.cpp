@@ -2,8 +2,6 @@
 #include "htree.h"
 #include "hanim.h"
 #include "hcanim.h"
-#include <string.h>
-#include <assert.h>
 #include "wwmath.h"
 #include "chunkio.h"
 #include "w3d_file.h"

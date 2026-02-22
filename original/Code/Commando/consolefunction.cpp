@@ -27,9 +27,6 @@
 #include "assets.h"
 #include "animobj.h"
 #include "matpass.h"
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
 #include "objlibrary.h"
 #include "useroptions.h"
 #include "devoptions.h"

@@ -1,8 +1,6 @@
 #include "global.h"
 #include	"lzo.h"
 #include	"lzostraw.h"
-#include	<assert.h>
-#include	<string.h>
 
 /***********************************************************************************************
  * LZOStraw::LZOStraw -- Constructor for LZO straw object.                                     *

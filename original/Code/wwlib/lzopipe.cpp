@@ -2,8 +2,6 @@
 #include	"buff.h"
 #include	"lzo.h"
 #include	"lzopipe.h"
-#include	<assert.h>
-#include	<string.h>
 
 /***********************************************************************************************
  * LZOPipe::LZOPipe -- Constructor for the LZO processor pipe.                                 *

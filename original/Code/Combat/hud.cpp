@@ -1,7 +1,6 @@
 #include "global.h"
 #include "hud.h"
 
-#include <stdio.h>
 
 #include "assets.h"
 #include "font3d.h"

@@ -3,8 +3,6 @@
 #include "toolkit.h"
 #include "Mission7.h"
 #include "Mission5.h"
-#include <stdio.h>
-#include <time.h>
 
 DECLARE_SCRIPT (DLS_SpawnTest, "")
 {

@@ -1,7 +1,6 @@
 #include "global.h"
 #include	"iff.h"
 #include	"lcw.h"
-#include	<string.h>
 
 /***************************************************************************
  * Uncompress_Data -- Uncompresses data from one buffer to another.        *

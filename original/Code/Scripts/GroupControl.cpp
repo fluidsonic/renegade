@@ -2,7 +2,6 @@
 #include "groupcontrol.h"
 #include "group.h"
 #include "scripts.h"
-#include <assert.h>
 
 GroupController _GroupController;
 GroupController* GroupController::_mInstance = NULL;

@@ -4,8 +4,6 @@
 
 #include "mutex.h"
 #include "win.h"
-#include <string.h>
-#include <stdarg.h>
 #include <tchar.h>
 #include "trim.h"
 #include "osdep.h"

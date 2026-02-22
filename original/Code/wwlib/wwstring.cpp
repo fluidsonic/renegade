@@ -2,7 +2,6 @@
 #include "wwstring.h"
 #include "win.h"
 #include "mutex.h"
-#include <stdio.h>
 
 ///////////////////////////////////////////////////////////////////
 //	Static member initialzation

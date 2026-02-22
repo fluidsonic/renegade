@@ -5,7 +5,6 @@
 #include "vector4.h"
 #include "matrix3d.h"
 #include "matrix4.h"
-#include <memory.h>
 
 #define SHUFFLE(x, y, z, w)	(((x)&3)<< 6|((y)&3)<<4|((z)&3)<< 2|((w)&3))
 #define	BROADCAST(XMM, INDEX)	__asm	shufps	XMM,XMM,(((INDEX)&3)<< 6|((INDEX)&3)<<4|((INDEX)&3)<< 2|((INDEX)&3))

@@ -2,7 +2,6 @@
 #include "aabox.h"
 #include "colmath.h"
 #include "colmathinlines.h"
-#include <float.h>
 
 /***********************************************************************************************
  * AABoxClass::Init_Random -- initializes this box to a random state                           *

@@ -1,6 +1,4 @@
 #include "global.h"
-#include <stdio.h>
-#include <math.h>
 #include "pot.h"
 #include "txt.h"
 #include "bsurface.h"

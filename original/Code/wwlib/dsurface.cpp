@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"dsurface.h"
-#include	<assert.h>
 
 extern	LPDIRECTDRAW	DirectDrawObject;	//pointer to direct draw object
 extern	LPDIRECTDRAWSURFACE	PaletteSurface;

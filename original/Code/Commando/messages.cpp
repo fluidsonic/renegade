@@ -1,7 +1,6 @@
 #include "global.h"
 #include "cnetwork.h"
 
-#include <stdio.h>
 
 #include "playermanager.h"
 #include "gameobjmanager.h"

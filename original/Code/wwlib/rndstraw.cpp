@@ -1,8 +1,6 @@
 #include "global.h"
 #include	"rndstraw.h"
 #include	"sha.h"
-#include	<limits.h>
-#include	<string.h>
 
 /***********************************************************************************************
  * RandomStraw::RandomStraw -- Constructor for the random straw class.                         *

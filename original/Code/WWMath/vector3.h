@@ -3,7 +3,6 @@
 #include "global.h"
 
 #include "wwmath.h"
-#include <assert.h>
 #include "osdep.h"
 
 /*

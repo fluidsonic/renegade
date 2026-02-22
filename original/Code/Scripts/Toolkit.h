@@ -7,10 +7,6 @@
 #include "dprint.h"
 #include "vector3.h"
 #include "wwmath.h"
-#include <string.h>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
 
 // Defines and Includes
 

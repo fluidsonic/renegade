@@ -13,7 +13,6 @@
 #include "hlod.h"
 #include "physcontrol.h"
 #include "phys3.h"
-#include <stdio.h>
 
 #define RBODY_DEBUG_FILTER				(stricmp(Model->Get_Name(),"V_GDI_ORCA_M") == 0) && (PhysicsSceneClass::Get_Instance()->Is_Debug_Display_Enabled())
 

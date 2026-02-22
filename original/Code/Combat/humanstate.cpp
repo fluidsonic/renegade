@@ -8,7 +8,6 @@
 #include "combat.h"
 #include "physcoltest.h"
 #include "pscene.h"
-#include <stdio.h>
 #include "timemgr.h"
 #include "definitionclassids.h"
 #include "pathfind.h"

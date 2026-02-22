@@ -9,9 +9,6 @@
 #include "global.h"
 #include "netinterface.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "miscutil.h"
 #include "win.h"

@@ -3,8 +3,6 @@
 #include "scriptfactory.h"
 #include "dprint.h"
 #include "strtrim.h"
-#include <string.h>
-#include <stdio.h>
 
 #define	CHUNKID_SCRIPTHEADER				'shdr'
 #define	CHUNKID_SCRIPTDATA				'sdat'

@@ -9,7 +9,6 @@
 #include "global.h"
 #include "miscutil.h" // I WANNA BE FIRST!
 
-#include <time.h>
 
 #include "rawfile.h"
 #include "win.h"

@@ -3,7 +3,6 @@
 #include "global.h"
 
 #include "wwmath.h"
-#include <math.h>
 
 /*
 ** Vector4 - 4 dimensional vectors

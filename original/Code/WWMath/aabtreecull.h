@@ -7,8 +7,6 @@
 #include "wwmath.h"
 #include "mempool.h"
 #include "simplevec.h"
-#include <math.h>
-#include <float.h>
 
 class AABTreeNodeClass;
 class ChunkLoadClass;

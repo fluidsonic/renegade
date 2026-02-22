@@ -2,7 +2,6 @@
 
 #include "global.h"
 
-#include	<stdlib.h>
 	#include "osdep.h"
 
 /*

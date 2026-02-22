@@ -1,11 +1,5 @@
 #include "global.h"
 #include "thread.h"
-#include <pthread.h>
-#include <sched.h>
-#include <unistd.h>
-#include <stdint.h>
-#include <string.h>
-#include <assert.h>
 
 ThreadClass::ThreadClass(const char *thread_name, ExceptionHandlerType exception_handler) : handle(0), running(false), thread_priority(0)
 {

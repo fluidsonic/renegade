@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"pkpipe.h"
-#include	<string.h>
 
 /***********************************************************************************************
  * PKPipe::PKPipe -- Constructor for the public key pipe object.                               *

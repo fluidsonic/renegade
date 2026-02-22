@@ -2,7 +2,6 @@
 
 #include "global.h"
 
-#include	<limits.h>
 
 /*
 **	This engine will process data blocks by encryption and decryption.

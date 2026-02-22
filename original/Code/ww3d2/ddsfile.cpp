@@ -5,7 +5,6 @@
 #include "formconv.h"
 #include "dx8wrapper.h"
 #include "bitmaphandler.h"
-#include <string.h>
 
 // ----------------------------------------------------------------------------
 

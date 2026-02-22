@@ -1,7 +1,5 @@
 #include "global.h"
 #include	"blowpipe.h"
-#include	<string.h>
-#include	<assert.h>
 
 /***********************************************************************************************
  * BlowPipe::Flush -- Flushes any pending data out the pipe.                                   *

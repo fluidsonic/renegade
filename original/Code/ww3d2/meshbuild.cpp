@@ -1,9 +1,6 @@
 #include "global.h"
 #include "meshbuild.h"
 #include "uarray.h"
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 
 const float EPSILON = 0.0001f;
 

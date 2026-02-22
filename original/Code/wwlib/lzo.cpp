@@ -1,7 +1,6 @@
 #include "global.h"
 #include "lzo.h"
 #include "mutex.h"
-#include <stdlib.h>
 
 /*
 ** Work Buffer for the LZOCompressor...

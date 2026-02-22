@@ -6,8 +6,6 @@
 #include "registry.h"
 #include "rawfile.h"
 #include "ini.h"
-#include <assert.h>
-#include <string.h>
 
 bool RegistryClass::IsLocked = false;
 

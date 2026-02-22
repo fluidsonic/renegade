@@ -2,7 +2,6 @@
 #include "translatedb.h"
 
 #include <windows.h>
-#include <string.h>
 
 #include "persist.h"
 #include "persistfactory.h"

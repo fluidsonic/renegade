@@ -1,8 +1,6 @@
 #include "global.h"
 #include "player.h"
 
-#include <string.h>
-#include <stdio.h>
 
 #include "playermanager.h"
 #include "teammanager.h"

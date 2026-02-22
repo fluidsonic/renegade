@@ -8,9 +8,6 @@
 #include	"win.h"
 #include	"xpipe.h"
 #include	"xstraw.h"
-#include	<stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
 #include "rawfile.h"
 #include "ffactory.h"
 

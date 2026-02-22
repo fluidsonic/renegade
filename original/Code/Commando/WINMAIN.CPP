@@ -48,7 +48,6 @@
 #include <SDL2/SDL.h>
 
 #include "winmain.h"
-#include <stdio.h>
 #define _WIN32_WINDOWS 0x0401
 #include "win.h"
 #include "resource.h"
@@ -89,7 +88,6 @@
 #pragma warning(push,1)
 #endif
 
-#include <iostream>
 #include "singletoninstancekeeper.h"
 #include "packetmgr.h"
 

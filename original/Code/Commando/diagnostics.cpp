@@ -9,7 +9,6 @@
 #include "global.h"
 #include "diagnostics.h"
 
-#include <stdio.h>
 
 #include "assets.h"
 #include "font3d.h"

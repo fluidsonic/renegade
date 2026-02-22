@@ -16,8 +16,6 @@
 #include "systimer.h"
 #include "tooltip.h"
 #include "sdl2_platform.h"
-#include <stdio.h>
-#include <typeinfo>
 
 ////////////////////////////////////////////////////////////////
 //	Static member initialization

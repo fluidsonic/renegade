@@ -1,8 +1,6 @@
 #include "global.h"
 #include "apppacketstats.h"
 
-#include <memory.h>
-#include <string.h>
 
 #include "mathutil.h"
 #include "networkobjectmgr.h"

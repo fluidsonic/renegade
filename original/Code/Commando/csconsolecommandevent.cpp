@@ -1,8 +1,6 @@
 #include "global.h"
 #include "csconsolecommandevent.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "networkobjectfactory.h"
 #include "gamemode.h"

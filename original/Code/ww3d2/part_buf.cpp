@@ -10,7 +10,6 @@
 #include "bound.h"
 #include "simplevec.h"
 #include "sphere.h"
-#include <limits.h>
 #include "vp.h"
 #include "texture.h"
 #include "dx8wrapper.h"

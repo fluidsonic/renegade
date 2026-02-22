@@ -14,7 +14,6 @@
 #include "missingtexture.h"
 #include "targa.h"
 #include <D3dx8tex.h>
-#include <cstdio>
 #include "texture.h"
 #include "formconv.h"
 #include "texturethumbnail.h"

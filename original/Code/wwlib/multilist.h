@@ -3,7 +3,6 @@
 #include "global.h"
 
 #include "mempool.h"
-#include <assert.h>
 
 class MultiListNodeClass;
 class GenericMultiListClass;

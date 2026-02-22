@@ -9,8 +9,6 @@
 */
 
 #include	"blitter.h"
-#include	<assert.h>
-#include	<string.h>
 
 /*
 **	This is a helper function that will skip N pixels in the RLE compressed source. This is

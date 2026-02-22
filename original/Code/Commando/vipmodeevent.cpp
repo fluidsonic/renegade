@@ -1,8 +1,6 @@
 #include "global.h"
 #include "vipmodeevent.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "networkobjectfactory.h"
 #include "cnetwork.h"

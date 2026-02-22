@@ -1,7 +1,6 @@
 #include "global.h"
 #include "definitionfactorymgr.h"
 #include "definitionfactory.h"
-#include <string.h>
 #include "osdep.h"
 
 ////////////////////////////////////////////////////////////////////////////

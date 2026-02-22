@@ -1,7 +1,6 @@
 #include "global.h"
 #include	"pk.h"
 #include	"rndstraw.h"
-#include	<string.h>
 
 /***********************************************************************************************
  * PKey::PKey -- Construct a key using encoded strings.                                        *

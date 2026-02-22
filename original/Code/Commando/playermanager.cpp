@@ -2,8 +2,6 @@
 #include "playermanager.h"
 
 #include <win.h>
-#include <stdio.h>
-#include <float.h>
 
 #include "teammanager.h"
 #include "miscutil.h"

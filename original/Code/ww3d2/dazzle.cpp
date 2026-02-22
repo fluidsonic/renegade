@@ -24,8 +24,6 @@
 #include "texture.h"
 #include "scene.h"
 #include "visrasterizer.h"
-#include <cstdio>
-#include <limits.h>
 
 // All dazzle types appear under Dazzles_List in the dazzle.ini file.
 const char* DAZZLE_LIST_STRING="Dazzles_List";

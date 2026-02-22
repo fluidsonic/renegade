@@ -2,7 +2,6 @@
 #include "global.h"
 #include	<windows.h>
 #include "systimer.h"
-#include	<stddef.h>
 
 #include "bandwidthcheck.h"
 #include "registry.h"

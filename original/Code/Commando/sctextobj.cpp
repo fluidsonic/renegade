@@ -1,8 +1,6 @@
 #include "global.h"
 #include "sctextobj.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "networkobjectfactory.h"
 #include "textdisplay.h"

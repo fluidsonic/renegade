@@ -2,8 +2,6 @@
 #include "scriptregistrar.h"
 #include "scriptfactory.h"
 #include "dprint.h"
-#include <string.h>
-#include <assert.h>
 
 // ScriptFactory list
 ScriptFactory* ScriptRegistrar::mScriptFactories = NULL;

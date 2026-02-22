@@ -1,7 +1,5 @@
 #include "global.h"
 #include "chunkio.h"
-#include <string.h>
-#include <assert.h>
 
 /***********************************************************************************************
  * ChunkSaveClass::ChunkSaveClass -- Constructor                                               *

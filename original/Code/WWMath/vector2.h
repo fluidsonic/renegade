@@ -3,7 +3,6 @@
 #include "global.h"
 
 #include "wwmath.h"
-#include <math.h>
 
 /*
 ** 2-Dimensional Vectors

@@ -5,7 +5,6 @@
 #include	"buff.h"
 #include	"straw.h"
 #include	"wwfile.h"
-#include	<stddef.h>
 
 /*
 **	This class is used to manage a buffer as a data source. Data requests will draw from the

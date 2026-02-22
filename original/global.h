@@ -10,15 +10,47 @@
 #define NOMINMAX
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Section 2: Standard C headers
+// Section 2: Standard C/C++ headers & POSIX
 // ─────────────────────────────────────────────────────────────────────────────
+
+// C standard library
 #include <stdint.h>
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>   // strlen, strcpy, strcmp, memcpy, etc.
 #include <strings.h>  // strcasecmp, strncasecmp
 #include <ctype.h>
+#include <math.h>
+#include <float.h>
+#include <limits.h>
+#include <stdarg.h>
+#include <time.h>
+#include <errno.h>
+#include <locale.h>
+#include <assert.h>
+
+// C++ standard library
 #include <stdexcept>
 #include <type_traits>
+#include <new>
+#include <typeinfo>
+#include <string>
+#include <vector>
+#include <list>
+#include <map>
+#include <algorithm>
+#include <memory>
+#include <sstream>
+#include <iostream>
+#include <cstdio>
+
+// POSIX
+#include <pthread.h>
+#include <sched.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 3: MSVC compiler compat (Clang/macOS only)

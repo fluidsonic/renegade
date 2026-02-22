@@ -5,7 +5,6 @@
 #include "realcrc.h"
 #include "rawfile.h"
 #include "win.h"
-#include <stdint.h>
 
 /*
 ** On-disk format uses 32-bit integers (Windows DWORD/long).

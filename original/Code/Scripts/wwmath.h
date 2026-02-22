@@ -2,10 +2,6 @@
 
 #include "global.h"
 
-#include <math.h>
-#include <float.h>
-#include <assert.h>
-#include <float.h>
 
 /*
 ** Some global constants.

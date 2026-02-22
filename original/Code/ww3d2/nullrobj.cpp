@@ -2,7 +2,6 @@
 #include "nullrobj.h"
 #include "chunkio.h"
 
-#include <string.h>
 
 NullLoaderClass _NullLoader;
 

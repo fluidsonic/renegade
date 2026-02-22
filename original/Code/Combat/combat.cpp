@@ -33,7 +33,6 @@
 #include "savegame.h"
 #include "assetdep.h"
 #include "saveloadstatus.h"
-#include <stdio.h>
 #include "soundenvironment.h"
 #include "weaponview.h"
 #include "hud.h"

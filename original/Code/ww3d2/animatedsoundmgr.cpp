@@ -4,7 +4,6 @@
 #include "inisup.h"
 #include "ffactory.h"
 #include "wwfile.h"
-#include <stdio.h>
 #include "definition.h"
 #include "definitionmgr.h"
 #include "definitionclassids.h"

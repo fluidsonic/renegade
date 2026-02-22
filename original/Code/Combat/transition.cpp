@@ -11,8 +11,6 @@
 #include "vehicle.h"
 #include "phys3.h"
 #include "diaglog.h"
-#include <string.h>
-#include <stdlib.h>
 #include "pathaction.h"
 
 /*

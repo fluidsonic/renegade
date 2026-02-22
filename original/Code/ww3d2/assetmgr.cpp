@@ -1,6 +1,5 @@
 #include "global.h"
 #include "assetmgr.h"
-#include <assert.h>
 
 #include "chunkio.h"
 #include "realcrc.h"
@@ -29,7 +28,6 @@
 #include "metalmap.h"
 #include <ini.h>
 #include <windows.h>
-#include <stdio.h>
 #include <D3dx8core.h>
 #include "texture.h"
 #include "assetstatus.h"

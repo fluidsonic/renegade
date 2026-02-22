@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"ramfile.h"
-#include	<string.h>
 
 /***********************************************************************************************
  * RAMFileClass::RAMFileClass -- Construct a RAM buffer based "file" object.                   *

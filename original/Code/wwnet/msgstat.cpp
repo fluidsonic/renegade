@@ -9,7 +9,6 @@
 #include "global.h"
 #include "msgstat.h" // I WANNA BE FIRST!
 
-#include <string.h>
 
 #include "mathutil.h"
 

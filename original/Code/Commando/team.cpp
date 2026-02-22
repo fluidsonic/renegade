@@ -1,7 +1,6 @@
 #include "global.h"
 #include "team.h"
 
-#include <stdio.h>
 
 #include "teammanager.h"
 #include "miscutil.h"

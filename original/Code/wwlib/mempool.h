@@ -3,10 +3,6 @@
 #include "global.h"
 
 #include "mutex.h"
-#include <new>
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdint.h>	// uintptr_t
 
 /**********************************************************************************************
 ** ObjectPoolClass

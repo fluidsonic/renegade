@@ -1,8 +1,6 @@
 #include "global.h"
 #include "gamedata.h"
 
-#include <stdio.h>
-#include <string.h>
 
 #include "win.h"
 #include "miscutil.h"

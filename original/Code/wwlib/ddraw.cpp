@@ -3,8 +3,6 @@
 #include	"dsurface.h"
 #include	"data.h"
 #include	"_timer.h"
-#include	<assert.h>
-#include <stdio.h>
 
 LPDIRECTDRAW DirectDrawObject = NULL;	// Pointer to the direct draw object
 LPDIRECTDRAW2 DirectDraw2Interface = NULL;  	// Pointer to direct draw 2 interface

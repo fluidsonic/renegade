@@ -5,7 +5,6 @@
 #include	"bsurface.h"
 #include	"palette.h"
 #include	"wwfile.h"
-#include	<string.h>
 
 struct RGB {
 	unsigned char	red;

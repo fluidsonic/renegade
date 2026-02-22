@@ -4,9 +4,6 @@
 
 #include	"mpmath.h"
 #include	"straw.h"
-#include	<assert.h>
-#include	<limits.h>
-#include	<memory.h>
 
 template<class T> struct RemainderTable;
 template<class T> T Gcd(const T & a, const T & n);

@@ -1,11 +1,8 @@
 #include "global.h"
 #include "IMEManager.h"
 #include "WWString.h"
-#include <locale.h>
 #include <mbctype.h>
 
-#include <algorithm>
-#include <memory>
 
 #pragma comment(lib, "imm32.lib")
 

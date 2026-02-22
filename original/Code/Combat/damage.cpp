@@ -10,8 +10,6 @@
 #include "weapons.h"
 #include "diaglog.h"
 #include "playertype.h"
-#include <string.h>
-#include <stdio.h>
 
 #include "wwmath.h"
 #include "encoderlist.h"

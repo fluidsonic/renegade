@@ -2,7 +2,6 @@
 #include "tagblock.h"
 #include "realcrc.h"
 
-#include <assert.h>
 
 int TagBlockHandle::_InDestructor = 0;
 

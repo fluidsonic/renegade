@@ -4,10 +4,7 @@
 
 // Reduce warning level for STL
 
-#include <vector>
-#include <algorithm>
 
-#include <assert.h>
 
 template<typename Event> class Notifier;
 template<typename Event> class Observer;

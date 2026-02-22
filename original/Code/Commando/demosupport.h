@@ -10,7 +10,6 @@
 //
 
 
-#include <stdlib.h>
 #include <wwlib/realcrc.h>
 #include "gamedata.h"
 

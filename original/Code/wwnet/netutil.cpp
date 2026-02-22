@@ -9,8 +9,6 @@
 #include "global.h"
 #include "netutil.h" // I WANNA BE FIRST!
 
-#include <stdio.h>
-#include <string.h>
 
 #include "miscutil.h"
 #include "mathutil.h"

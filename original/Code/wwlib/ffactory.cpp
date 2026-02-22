@@ -3,10 +3,6 @@
 #include	"rawfile.h"
 #include "bufffile.h"
 #include "realcrc.h"
-#include	<stdio.h>
-#include <stdlib.h>
-#include	<assert.h>
-#include <string.h>
 
 /*
 ** Statics

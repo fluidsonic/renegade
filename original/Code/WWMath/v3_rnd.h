@@ -4,7 +4,6 @@
 
 #include "vector3.h"
 #include "random.h"
-#include <limits.h>
 
 /*
 ** Vector3Randomizer is an abstract class for generating random Vector3s.

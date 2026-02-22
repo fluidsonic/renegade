@@ -2,7 +2,6 @@
 #include	"data.h"
 #include	"mono.h"
 #include	"monodrvr.h"
-#include	<stdio.h>
 
 /*
 **	Global flag to indicate whether mono output is enabled. If it is not enabled,

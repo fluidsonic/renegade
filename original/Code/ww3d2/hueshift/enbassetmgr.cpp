@@ -15,7 +15,6 @@
 #include "textureloader.h"
 #include "ww3dformat.h"
 #include "colorspace.h"
-#include <stdio.h>
 
 //---------------------------------------------------------------------
 // Constants

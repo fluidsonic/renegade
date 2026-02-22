@@ -1,8 +1,5 @@
 #include "global.h"
 #include "strtrim.h"
-#include <ctype.h>
-#include <stddef.h>
-#include <string.h>
 
 /******************************************************************************
 *

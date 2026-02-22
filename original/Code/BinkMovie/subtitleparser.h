@@ -3,7 +3,6 @@
 #include "global.h"
 
 #include <wwlib/vector.h>
-#include <stddef.h>
 
 class Straw;
 class SubTitleClass;

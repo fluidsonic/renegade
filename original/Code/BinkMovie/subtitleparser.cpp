@@ -4,7 +4,6 @@
 #include "straw.h"
 #include "readline.h"
 #include "trim.h"
-#include <stdlib.h>
 
 // Subtitle control file parsing tokens
 #define BEGINMOVIE_TOKEN u"BeginMovie"

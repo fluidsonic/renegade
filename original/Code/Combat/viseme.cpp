@@ -1,6 +1,4 @@
 #include "global.h"
-#include <string.h>
-#include <stdlib.h>
 #include "Viseme.h"
 
 #define IS_VOWEL(x)			( x && (x=='a' || x=='e' || x=='i' || x=='o' || x=='u') )

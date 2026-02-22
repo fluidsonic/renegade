@@ -2,7 +2,6 @@
 #include "global.h"
 #include "widestring.h"
 #include "win.h"
-#include <stdio.h>
 
 ///////////////////////////////////////////////////////////////////
 //	Static member initialzation

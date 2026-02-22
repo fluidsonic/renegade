@@ -3,7 +3,6 @@
 #include "scriptregistrar.h"
 #include "scripts.h"
 #include "dprint.h"
-#include <string.h>
 
 /******************************************************************************
 *

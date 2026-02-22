@@ -10,7 +10,6 @@
 #include "damage.h"
 #include "wwpacket.h"
 #include "gameobjmanager.h"
-#include <stdio.h>
 #include "WWAudio.H"
 #include "Sound3D.H"
 #include "vehiclephys.h"

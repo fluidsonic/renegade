@@ -9,8 +9,6 @@
 #include "global.h"
 #include "mathutil.h" // I WANNA BE FIRST!
 
-#include <math.h>
-#include <stdlib.h>
 #include "wwmath.h"
 #include "miscutil.h"
 

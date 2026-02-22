@@ -1,8 +1,6 @@
 #include "global.h"
 #include "scripts.h"
 #include "toolkit.h"
-#include <stdio.h>
-#include <string.h>
 
 #define		LAST_VALID_TIMESTAMP		999000.0f
 

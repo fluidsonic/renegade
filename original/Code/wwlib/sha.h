@@ -2,10 +2,6 @@
 
 #include "global.h"
 
-#include <new>
-#include	<stdio.h>
-#include	<stdlib.h>
-#include	<string.h>
 
 /*
 **	This implements the Secure Hash Algorithm. It is a cryptographically

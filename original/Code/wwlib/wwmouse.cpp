@@ -8,7 +8,6 @@
 #include	"surface.h"
 #include	"win.h"
 #include	"wwmouse.h"
-#include	<assert.h>
 
 /*
 **	Persistant mouse object pointer that is used to facilitate access to the mouse

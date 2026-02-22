@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"bufffile.h"
-#include	<string.h>
 
 int		BufferedFileClass::_DesiredBufferSize	=	1024*16;	
 

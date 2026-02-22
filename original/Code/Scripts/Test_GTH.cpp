@@ -1,6 +1,5 @@
 #include "global.h"
 #include "scripts.h"
-#include <string.h>
 #include "toolkit.h"
 
 #define GTH_DEBUG	0

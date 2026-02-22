@@ -9,7 +9,6 @@
 #include "global.h"
 #include "bitpacker.h"
 
-#include <string.h>	// for memset
 
 //-----------------------------------------------------------------------------
 //cBitPacker::cBitPacker(UINT buffer_size) :

@@ -7,9 +7,7 @@
 #include "dx8caps.h"
 #include "textureloader.h"
 #include "texture.h"
-#include <cstdio>
 
-#include <memory.h>
 #include "osdep.h"
 
 // ----------------------------------------------------------------------------

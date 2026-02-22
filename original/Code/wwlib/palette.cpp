@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"palette.h"
-#include	<string.h>
 
 /***********************************************************************************************
  * PaletteClass::PaletteClass -- Constructor that fills palette with color specified.          *

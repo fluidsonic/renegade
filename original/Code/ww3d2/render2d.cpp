@@ -1,7 +1,6 @@
 #include "global.h"
 #include "render2d.h"
 #include "mutex.h"
-#include <stdio.h>
 #include "ww3d.h"
 #include "refcount.h"
 #include "font3d.h"

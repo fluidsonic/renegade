@@ -8,7 +8,6 @@
 #include "input.h"
 #include "assets.h"
 #include "slist.h"
-#include <string.h>
 #include "vector3.h"
 #include "phys.h"
 #include "vehicle.h"

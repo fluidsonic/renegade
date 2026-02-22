@@ -8,7 +8,6 @@
 #include "mousemgr.h"
 #include "stylemgr.h"
 #include "dialogmgr.h"
-#include <stdio.h>
 
 ////////////////////////////////////////////////////////////////
 //	Local constants

@@ -4,7 +4,6 @@
 #include "phys.h"
 #include "hlod.h"
 #include "boxrobj.h"
-#include <stdio.h>
 
 //////////////////////////////////////////////////////////////////
 //	Local constants

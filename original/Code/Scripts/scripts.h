@@ -6,7 +6,6 @@
 #include "scriptcommands.h"
 #include "scriptregistrant.h"
 #include "string_ids.h"
-#include <stdlib.h>
 
 class CombatSound;
 class ScriptFactory;

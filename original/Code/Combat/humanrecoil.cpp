@@ -3,7 +3,6 @@
 #include "vector3.h"
 #include "rendobj.h"
 #include "htree.h"
-#include <string.h>
 
 /*
 ** Static members of HumanRecoilClass

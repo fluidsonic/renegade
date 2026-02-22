@@ -11,7 +11,6 @@
 #include "teammanager.h"
 #include "scene.h"
 #include "ww3d.h"
-#include <stdio.h>
 #include "wwaudio.h"
 #include "audiblesound.H"
 //#include "gamesettings.h"
@@ -52,7 +51,6 @@
 //#include "dlgmpingamechat.h"
 
 
-#include <sstream>
 
 
 

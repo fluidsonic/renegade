@@ -5,11 +5,7 @@
 
 #include "global.h"
 #include "srandom.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include "osdep.h"
-#include <time.h>
-#include <assert.h>
 #include "sha.h"
 
 // Static class variables

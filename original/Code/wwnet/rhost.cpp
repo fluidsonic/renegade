@@ -9,8 +9,6 @@
 #include "global.h"
 #include "rhost.h" // I WANNA BE FIRST!
 
-#include <stdlib.h>
-#include <math.h>
 
 #include "systimer.h"
 #include "miscutil.h"

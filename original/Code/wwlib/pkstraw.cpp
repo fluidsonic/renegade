@@ -2,7 +2,6 @@
 #include	"blwstraw.h"
 #include	"pkstraw.h"
 #include	"rndstraw.h"
-#include	<string.h>
 
 /***********************************************************************************************
  * PKStraw::PKStraw -- Initialize the public key straw object.                                 *

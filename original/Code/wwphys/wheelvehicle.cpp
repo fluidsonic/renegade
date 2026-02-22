@@ -9,7 +9,6 @@
 #include "persistfactory.h"
 #include "simpledefinitionfactory.h"
 #include "wheel.h"
-#include <string.h>
 
 												
 /*

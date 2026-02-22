@@ -1,8 +1,5 @@
 #include "global.h"
 #include "mesh.h"
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
 #include "w3d_file.h"
 #include "assetmgr.h"
 #include "w3derr.h"
@@ -31,7 +28,6 @@
 #include "dx8renderer.h"
 #include "visrasterizer.h"
 #include "dx8rendererdebugger.h"
-#include <stdio.h>
 
 static unsigned MeshDebugIdCount;
 

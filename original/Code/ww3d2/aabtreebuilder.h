@@ -6,7 +6,6 @@
 #include "vector3i.h"
 #include "aaplane.h"
 #include "meshgeometry.h"
-#include <float.h>
 
 class AABTreeClass;
 class ChunkSaveClass;

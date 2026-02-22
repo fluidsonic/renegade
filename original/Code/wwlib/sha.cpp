@@ -1,7 +1,6 @@
 #include "global.h"
 #include	"sha.h"
 #include	<iostream.h>
-#include	<stdlib.h>
 
 #if !defined(min)
 #define	min(a, b)		((a)<(b))?(a):(b)

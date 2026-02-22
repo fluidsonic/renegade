@@ -2,8 +2,6 @@
 
 #include "global.h"
 
-#include <assert.h>
-#include <string.h>		// for memmove
 
 
 /** 

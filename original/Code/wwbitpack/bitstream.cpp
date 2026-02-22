@@ -1,8 +1,6 @@
 #include "global.h"
 #include "bitstream.h"
 
-#include <string.h>	// for strlen
-#include <math.h>		// for ceil
 
 #include "mathutil.h"
 #include "widestring.h"

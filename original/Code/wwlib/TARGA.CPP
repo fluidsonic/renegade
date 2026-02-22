@@ -63,18 +63,13 @@
 #include "global.h"
 #include "targa.h"
 #ifndef TGA_USES_WWLIB_FILE_CLASSES
-#include <stdio.h>
 #endif
-#include <stdlib.h>
-#include <memory.h>
-#include <string.h>
 #ifdef TGA_USES_WWLIB_FILE_CLASSES
 #include "wwfile.h"
 #include "ffactory.h"
 #else
 #include <io.h>
 #include <fcntl.h>
-#include <sys/stat.h>
 #endif
 
 

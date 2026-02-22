@@ -1,7 +1,5 @@
 #include "global.h"
 #include	"blowfish.h"
-#include	<string.h>
-#include	<assert.h>
 
 /*
 **	Byte order controlled long integer. This integer is constructed

@@ -14,7 +14,6 @@
 #include "realcrc.h"
 #include "dx8wrapper.h"
 
-#include <stdio.h>
 
 #include "compat/osdep.h"
 

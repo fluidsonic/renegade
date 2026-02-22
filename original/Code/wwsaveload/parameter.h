@@ -2,8 +2,6 @@
 
 #include "global.h"
 
-#include <string.h>
-#include <stdlib.h>
 #include "parametertypes.h"
 #include "vector.h"
 #include "wwstring.h"

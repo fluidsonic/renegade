@@ -1,10 +1,8 @@
 #include "global.h"
 #include "packetmgr.h"
 
-#include <memory.h>
 //#include <winsock.h>
 #include "systimer.h"
-#include <stdlib.h>
 
 #include "netutil.h"
 #include "crc.h"

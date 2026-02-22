@@ -5,7 +5,6 @@
 #include	"swap.h"
 #include	"xsurface.h"
 //#include	<stdlib.h>
-#include	<string.h>
 
 /***********************************************************************************************
  * XSurface::Draw_Line -- Draws a line upon the surface.                                       *

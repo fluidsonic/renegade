@@ -2,8 +2,6 @@
 #include "scripts.h"
 #include "toolkit.h"
 #include "mission9.h"
-#include <string.h>
-#include <stdio.h>
 
 DECLARE_SCRIPT(M09_Objective_Controller, "") // Object Controller id: 2000071
 {

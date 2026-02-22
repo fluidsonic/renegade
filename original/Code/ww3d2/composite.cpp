@@ -1,7 +1,5 @@
 #include "global.h"
 #include "composite.h"
-#include <stdlib.h>
-#include <string.h>
 
 /***********************************************************************************************
  * CompositeRenderObjClass::CompositeRenderObjClass -- Constructor                             *

@@ -1,7 +1,6 @@
 #include "global.h"
 #include "wwmath.h"
 #include "lookuptable.h"
-#include <stdlib.h>
 
 // TODO: convert to use loouptablemanager...
 float _FastAcosTable[ARC_TABLE_SIZE];

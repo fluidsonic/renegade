@@ -3,7 +3,6 @@
 #define WW3D_DEVTYPE D3DDEVTYPE_HAL
 
 #include "global.h"
-#include <stdio.h>
 #include "dx8wrapper.h"
 #include "dx8fvf.h"
 #include "dx8vertexbuffer.h"
@@ -28,7 +27,6 @@
 #include "textureloader.h"
 #include "missingtexture.h"
 #include "thread.h"
-#include <stdio.h>
 #include <D3dx8core.h>
 #include "pot.h"
 #include "ffactory.h"

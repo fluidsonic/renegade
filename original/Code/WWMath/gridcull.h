@@ -8,7 +8,6 @@
 #include "aabox.h"
 #include "lineseg.h"
 #include "obbox.h"
-#include <string.h>
 
 class ChunkLoadClass;
 class ChunkSaveClass;

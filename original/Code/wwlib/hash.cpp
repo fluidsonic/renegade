@@ -3,7 +3,6 @@
 #include "realcrc.h"
 #include "osdep.h"
 
-#include <string.h>
 
 /*
 ** HashTableClass

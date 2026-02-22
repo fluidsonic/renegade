@@ -1,8 +1,6 @@
 #include "global.h"
 #include	"lcw.h"
 #include	"lcwpipe.h"
-#include	<assert.h>
-#include	<string.h>
 
 /***********************************************************************************************
  * LCWPipe::LCWPipe -- Constructor for the LCW processor pipe.                                 *

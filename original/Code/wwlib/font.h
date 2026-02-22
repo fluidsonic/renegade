@@ -5,7 +5,6 @@
 #include	"convert.h"
 #include	"point.h"
 #include	"trect.h"
-#include	<stddef.h>
 
 class Surface;
 

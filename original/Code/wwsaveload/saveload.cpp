@@ -8,8 +8,6 @@
 
 #include <windows.h>
 #include "systimer.h"
-#include <typeinfo>
-#include <cstdio>
 
 SaveLoadSubSystemClass *		SaveLoadSystemClass::SubSystemListHead = NULL;
 PersistFactoryClass *			SaveLoadSystemClass::FactoryListHead = NULL;

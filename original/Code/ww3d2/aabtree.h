@@ -11,7 +11,6 @@
 #include "aabtreebuilder.h"
 #include "obbox.h"
 #include <tri.h>
-#include <float.h>
 
 class MeshClass;
 class CameraClass;

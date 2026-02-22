@@ -1,7 +1,6 @@
 #include "global.h"
 #include "multihud.h"
 
-#include <stdio.h>
 
 #include "soldier.h"
 #include "assets.h"

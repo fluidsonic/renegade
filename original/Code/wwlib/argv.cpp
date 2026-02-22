@@ -1,11 +1,6 @@
 #include "global.h"
 #include "argv.h"
 
-#include <assert.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "ffactory.h"
 #include "rawfile.h"
 int   	 ArgvClass::Argc = 0;

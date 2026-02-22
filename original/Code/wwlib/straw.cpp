@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"straw.h"
-#include	<stddef.h>
 //#include	<string.h>
 
 /***********************************************************************************************

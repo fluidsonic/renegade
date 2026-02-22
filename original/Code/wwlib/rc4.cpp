@@ -4,7 +4,6 @@
 //
 #include "global.h"
 #include "rc4.h"
-#include <memory.h>
 
 static unsigned char RC4_Temp_Byte;
 #define RC4_SWAP_BYTE(a,b) RC4_Temp_Byte=a; a=b; b=RC4_Temp_Byte

@@ -6,7 +6,6 @@
 #include "crc.h"
 #include "rawfile.h"
 
-#include <string.h>
 
 class TagBlockHandle;
 class TagBlockIndex;

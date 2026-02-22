@@ -35,7 +35,6 @@
 #include "wwmouse.h"
 #include "predlod.h"
 #include "sphere.h"
-#include <stdio.h>
 #include "dx8renderer.h"
 #include "ini.h"
 

@@ -1,7 +1,6 @@
 #include "global.h"
 #include	"lzo1x.h"
 #include	"lzo_conf.h"
-#include	<assert.h>
 
 #if !defined(LZO1X) && !defined(LZO1Y)
 #  define LZO1X

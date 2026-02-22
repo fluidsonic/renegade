@@ -6,7 +6,6 @@
 #include "tri.h"
 #include "plane.h"
 #include "quat.h"
-#include <assert.h>
 //#include <stdlib.h>
 
 /***********************************************************************************************

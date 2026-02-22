@@ -1,6 +1,5 @@
 #include "global.h"
 #include "init.h"
-#include <stdio.h>
 #include "wwmath.h"
 #include "ww3d.h"
 #include "wwphys.h"

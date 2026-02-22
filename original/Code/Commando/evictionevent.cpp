@@ -1,8 +1,6 @@
 #include "global.h"
 #include "evictionevent.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "networkobjectfactory.h"
 #include "gamemode.h"

@@ -1,8 +1,6 @@
 #include "global.h"
 #include "scripts.h"
 #include "toolkit.h"
-#include <string.h>
-#include <stdio.h>
 #include "Mission3.h"
 
 DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004

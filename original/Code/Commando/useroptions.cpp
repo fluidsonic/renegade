@@ -16,7 +16,6 @@
 #include "playertype.h"
 #include "bandwidth.h"
 #include "bandwidthcheck.h"
-#include <stdio.h>
 #include "trim.h"
 #include "singletoninstancekeeper.h"
 #include "rawfile.h"

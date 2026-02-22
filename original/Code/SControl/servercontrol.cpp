@@ -1,5 +1,4 @@
 #include "global.h"
-#include	<stdlib.h>
 #include	"servercontrol.h"
 #include "systimer.h"
 

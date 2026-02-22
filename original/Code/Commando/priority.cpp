@@ -1,7 +1,6 @@
 #include "global.h"
 #include "priority.h"
 
-#include <math.h>
 
 #include "wwmath.h"
 #include "vector3.h"

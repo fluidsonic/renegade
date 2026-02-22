@@ -9,8 +9,6 @@
 #include "buildnum.h"
 #include "consolemode.h"
 
-#include <string.h>
-#include <stdio.h>
 
 /*
 ** Static class data.

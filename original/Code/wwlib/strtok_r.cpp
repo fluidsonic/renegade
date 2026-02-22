@@ -1,7 +1,5 @@
 #include "global.h"
 #include "strtok_r.h"
-#include <string.h>
-#include <stdio.h>
 
 //
 // Replacement for strtok() that doesn't use a static to

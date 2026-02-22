@@ -6,9 +6,6 @@
 #include "global.h"
 #include "sampler.h"
 #include "random.h"
-#include <math.h>
-#include <assert.h>
-#include <memory.h>
 
 Random4Class Random;
 

@@ -7,7 +7,6 @@
 #include "ffactorylist.h"
 #include "rawfile.h"
 #include "gametype.h"
-#include <stdio.h>
 #include <win.h>
 
 ScriptCommands* EngineCommands = NULL;

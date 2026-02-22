@@ -6,7 +6,6 @@
 #include <vp.h>
 #include <ini.h>
 #include <point.h>
-#include <stdio.h>
 #include <hashtemplate.h>
 #include <wwstring.h>
 #include <wwmath.h>

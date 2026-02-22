@@ -9,8 +9,6 @@
 #include "group.h"
 #include "vector3.h"
 #include "wwmath.h"
-#include <string.h>
-#include <assert.h>
 
 class Vector3;
 

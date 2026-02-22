@@ -4,7 +4,6 @@
 #include "wwmath.h"
 #include "wwpacket.h"
 #include "chunkio.h"
-#include <memory.h>
 
 #include "combat.h"
 //#include "clientinterpmodels.h"

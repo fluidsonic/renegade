@@ -1,7 +1,5 @@
 #include "global.h"
 #include	"rle.h"
-#include	<assert.h>
-#include	<stdlib.h>
 
 /*********************************************************************************************** 
  * RLEEngine::Compress -- Compresses a sequence of bytes.                                      * 

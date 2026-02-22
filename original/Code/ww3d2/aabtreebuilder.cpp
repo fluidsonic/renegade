@@ -2,9 +2,6 @@
 #include "aabtreebuilder.h"
 #include "chunkio.h"
 #include "w3d_file.h"
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
 
 const float COINCIDENCE_EPSILON = 0.001f;
 

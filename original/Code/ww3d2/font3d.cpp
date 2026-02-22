@@ -2,7 +2,6 @@
 #include "font3d.h"
 #include "assetmgr.h"
 #include "texture.h"
-#include <assert.h>
 #include "surfaceclass.h"
 #include "texture.h"
 #include "vector2i.h"

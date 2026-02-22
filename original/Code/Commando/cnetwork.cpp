@@ -2,7 +2,6 @@
 #include "cnetwork.h"
 
 #include <shellapi.h>
-#include <stdio.h>
 
 
 #include "DlgMPConnect.h"

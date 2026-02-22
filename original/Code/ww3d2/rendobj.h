@@ -9,7 +9,6 @@
 #include "persist.h"
 #include "multilist.h"
 #include "robjlist.h"
-#include <float.h>
 
 class	Vector3;
 class Matrix3D;

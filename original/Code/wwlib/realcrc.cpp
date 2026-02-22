@@ -1,6 +1,5 @@
 #include "global.h"
 #include "realcrc.h"
-#include <ctype.h>
 
 //    CRC for poly 0x04C11DB7   
 unsigned long  CRC32_Table[ 256 ] =

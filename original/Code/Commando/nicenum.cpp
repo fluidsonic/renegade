@@ -9,7 +9,6 @@
 #include "nicenum.h"
 
 #include <winsock.h>
-#include <stdio.h>
 
 #include "netutil.h"
 #include "useroptions.h"

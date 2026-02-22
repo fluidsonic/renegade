@@ -1,6 +1,5 @@
 #include "global.h"
 #include	"vector.h"
-#include	<string.h>
 
 /*
 **	The following template function can be located here ONLY if all the instantiations are

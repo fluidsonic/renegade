@@ -20,7 +20,6 @@
 #include "mixfile.h"
 #include "texturethumbnail.h"
 #include "systeminfolog.h"
-#include <stdlib.h>
 
 /*
 **

@@ -24,7 +24,6 @@
 #include "bound.h"
 #include "rddesc.h"
 #include "vector3i.h"
-#include <cstdio>
 #include "dx8wrapper.h"
 #include "targa.h"
 #include "sortingrenderer.h"

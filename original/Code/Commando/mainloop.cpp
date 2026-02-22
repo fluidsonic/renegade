@@ -1,6 +1,5 @@
 #include "global.h"
 #include "mainloop.h"
-#include <stdio.h>
 #include "sdl2_platform.h"
 #include "init.h"
 #include "shutdown.h"

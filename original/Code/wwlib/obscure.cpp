@@ -1,8 +1,6 @@
 #include "global.h"
 #include	"crc.h"
 #include	"obscure.h"
-#include	<ctype.h>
-#include	<string.h>
 
 /***********************************************************************************************
  * Obfuscate -- Sufficiently transform parameter to thwart casual hackers.                     *

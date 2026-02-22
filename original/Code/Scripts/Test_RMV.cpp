@@ -2,8 +2,6 @@
 #include "scripts.h"
 #include "toolkit.h"
 #include "wwmath.h"
-#include <string.h>
-#include <stdio.h>
 
 #include "mission3.h"
 

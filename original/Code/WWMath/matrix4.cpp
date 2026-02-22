@@ -1,6 +1,5 @@
 #include "global.h"
 #include "matrix4.h"
-#include <assert.h>
 
 /***********************************************************************************************
  * Matrix4::Multiply -- Multiply two Matrix4's together                                        *

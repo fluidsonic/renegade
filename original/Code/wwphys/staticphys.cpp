@@ -12,7 +12,6 @@
 #include "mesh.h"
 #include "meshmdl.h"
 #include "lightexclude.h"
-#include <memory.h>
 #include "part_emt.h"
 #include "renegadeterrainpatch.h"
 

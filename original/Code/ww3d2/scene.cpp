@@ -1,7 +1,5 @@
 #include "global.h"
 #include "scene.h"
-#include <stdio.h>
-#include <string.h>
 #include "plane.h"
 #include "camera.h"
 #include "ww3d.h"

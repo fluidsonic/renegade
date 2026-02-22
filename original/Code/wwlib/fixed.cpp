@@ -1,9 +1,5 @@
 #include "global.h"
 #include	"fixed.h"
-#include	<string.h>
-#include	<stdlib.h>
-#include	<stdio.h>
-#include	<ctype.h>
 
 /*
 **	These are some handy fixed point constants. Using these constants instead of manually

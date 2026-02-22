@@ -6,7 +6,6 @@
 
 // #include	"win.h"
 
-#include <stdio.h>
 #include "osdep.h"
   #define	NULL_HANDLE	 	NULL	
   #define	HANDLE_TYPE		FILE*	

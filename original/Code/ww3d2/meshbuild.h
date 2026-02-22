@@ -5,7 +5,6 @@
 #include "vector2.h"
 #include "vector3.h"
 
-#include <assert.h>
 
 /*
 ** WorldInfoClass

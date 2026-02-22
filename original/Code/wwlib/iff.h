@@ -3,7 +3,6 @@
 #include "global.h"
 
 #include	"buff.h"
-#include	<stddef.h>
 
 #define LZW_SUPPORTED			FALSE
 

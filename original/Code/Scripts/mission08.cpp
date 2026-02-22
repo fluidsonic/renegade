@@ -2,8 +2,6 @@
 #include "scripts.h"
 #include "toolkit.h"
 #include "mission8.h"
-#include <string.h>
-#include <stdio.h>
 
 // Objective Controller
 DECLARE_SCRIPT(M08_Objective_Controller, "")   // 100002

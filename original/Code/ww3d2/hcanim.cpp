@@ -5,7 +5,6 @@
 #include "motchan.h"
 #include "chunkio.h"
 #include "w3d_file.h"
-#include <string.h>
 #include <nstrdup.h>
 
 struct NodeCompressedMotionStruct

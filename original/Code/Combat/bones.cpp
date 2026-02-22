@@ -2,7 +2,6 @@
 #include "bones.h"
 #include "assets.h"
 #include "wwstring.h"
-#include <map>
 
 static bool _BonesMangerInitted = false;
 

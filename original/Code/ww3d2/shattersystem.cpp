@@ -10,7 +10,6 @@
 #include "wwstring.h"
 #include "vp.h"
 #include "meshmatdesc.h"
-#include <stdlib.h>
 
 /*
 ** Debug logging for the shatter system

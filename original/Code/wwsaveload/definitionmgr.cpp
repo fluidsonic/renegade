@@ -7,7 +7,6 @@
 #include "chunkio.h"
 #include "persistfactory.h"
 #include "twiddler.h"
-#include <string.h>
 
 //////////////////////////////////////////////////////////////////////////////////
 //	Global instance

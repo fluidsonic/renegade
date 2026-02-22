@@ -30,7 +30,6 @@
 #include "soldierobserver.h"
 #include "cinematicgameobj.h"
 #include "dynamicanimphys.h"
-#include <stdio.h>
 #include "conversationmgr.h"
 #include "activeconversation.h"
 #include "orator.h"

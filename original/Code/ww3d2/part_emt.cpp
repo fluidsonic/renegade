@@ -6,7 +6,6 @@
 #include "w3derr.h"
 #include "scene.h"
 #include "texture.h"
-#include <limits.h>
 #include <gcd_lcm.h>
 #include "texture.h"
 #include "part_ldr.h"

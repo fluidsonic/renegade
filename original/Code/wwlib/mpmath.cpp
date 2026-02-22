@@ -1,11 +1,6 @@
 #include "global.h"
 #include	"mpmath.h"
 #include	"win.h"
-#include	<assert.h>
-#include	<ctype.h>
-#include	<limits.h>
-#include	<stdlib.h>
-#include	<string.h>
 
 extern unsigned short primeTable[3511];
 

@@ -25,8 +25,6 @@
 */
 
 #include	"blitter.h"
-#include	<assert.h>
-#include	<string.h>
 
 /*
 ** Blits without translation and source and dest are same pixel format. Note that

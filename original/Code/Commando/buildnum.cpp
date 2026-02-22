@@ -1,6 +1,5 @@
 #include "global.h"
 #include "buildnum.h"
-#include <stdio.h>
 #include "win.h"
 
 /*

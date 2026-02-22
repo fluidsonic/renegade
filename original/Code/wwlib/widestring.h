@@ -2,8 +2,6 @@
 
 #include "global.h"
 
-#include <string.h>
-#include <stdarg.h>
 #include "win.h"
 #include "wwstring.h"
 #include "trim.h"

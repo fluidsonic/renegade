@@ -9,8 +9,6 @@
 #include "ww3d.h"
 #include "vector4.h"
 #include "assetmgr.h"
-#include <stdio.h>
-#include <typeinfo>
 #include "texture.h"
 #include "mousemgr.h"
 #include "comboboxctrl.h"

@@ -1,6 +1,5 @@
 #include "global.h"
 #include "inputconfigmgr.h"
-#include <stdio.h>
 #include "dlgcontrols.h"
 #include "input.h"
 #include "rawfile.h"

@@ -1,7 +1,6 @@
 #include "global.h"
 #include "teammanager.h" // I WANNA BE FIRST!
 
-#include <stdio.h>
 #include "miscutil.h"
 #include "_globals.h"
 #include "assets.h"

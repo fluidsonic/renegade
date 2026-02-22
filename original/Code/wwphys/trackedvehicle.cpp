@@ -16,7 +16,6 @@
 #include "matinfo.h"
 #include "vertmaterial.h"
 #include "mapper.h"
-#include <string.h>
 
 static bool _is_left_track_name(const char * name) 
 {

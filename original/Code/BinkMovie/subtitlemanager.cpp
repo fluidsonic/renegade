@@ -6,7 +6,6 @@
 #include "rawfile.h"
 #include "assetmgr.h"
 #include "ww3d.h"
-#include <stdlib.h>
 
 /******************************************************************************
 *

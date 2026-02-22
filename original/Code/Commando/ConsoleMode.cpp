@@ -2,7 +2,6 @@
 #include "consolemode.h"
 #include "consolefunction.h"
 #include "conio.h"
-#include <stdio.h>
 #include "systimer.h"
 #include "widestring.h"
 #include "vector3.h"

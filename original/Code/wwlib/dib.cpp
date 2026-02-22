@@ -1,6 +1,5 @@
 #include "global.h"
 #include "dib.h"
-#include <math.h>
 
 /*********************************************************************************************** 
  * DIB8C::DIB8Class -- constructor                                                             * 
