@@ -93,19 +93,19 @@ inline SphereClass::SphereClass(const Vector3 *Position,const int VertCount)
 	
 	// xspan = distance between the 2 points xmin and xmax squared.
 	// same goes for yspan and zspan.
-	dx = xmax.X - xmin.X;
-	dy = xmax.Y - xmin.Y;
-	dz = xmax.Z - xmin.Z;
+	dx = static_cast<double>(xmax.X - xmin.X);
+	dy = static_cast<double>(xmax.Y - xmin.Y);
+	dz = static_cast<double>(xmax.Z - xmin.Z);
 	double xspan = dx*dx + dy*dy + dz*dz;
 
-	dx = ymax.X - ymin.X;
-	dy = ymax.Y - ymin.Y;
-	dz = ymax.Z - ymin.Z;
+	dx = static_cast<double>(ymax.X - ymin.X);
+	dy = static_cast<double>(ymax.Y - ymin.Y);
+	dz = static_cast<double>(ymax.Z - ymin.Z);
 	double yspan = dx*dx + dy*dy + dz*dz;
 
-	dx = zmax.X - zmin.X;
-	dy = zmax.Y - zmin.Y;
-	dz = zmax.Z - zmin.Z;
+	dx = static_cast<double>(zmax.X - zmin.X);
+	dy = static_cast<double>(zmax.Y - zmin.Y);
+	dz = static_cast<double>(zmax.Z - zmin.Z);
 	double zspan = dx*dx + dy*dy + dz*dz;
 
 	// Set points dia1 and dia2 to the maximally separated pair
@@ -132,9 +132,9 @@ inline SphereClass::SphereClass(const Vector3 *Position,const int VertCount)
 	center.Y = (dia1.Y + dia2.Y) / 2.0f;
 	center.Z = (dia1.Z + dia2.Z) / 2.0f;
 
-	dx = dia2.X - center.X;
-	dy = dia2.Y - center.Y;
-	dz = dia2.Z - center.Z;
+	dx = static_cast<double>(dia2.X - center.X);
+	dy = static_cast<double>(dia2.Y - center.Y);
+	dz = static_cast<double>(dia2.Z - center.Z);
 
 	double radsqr = dx*dx + dy*dy + dz*dz;
 	double radius = sqrt(radsqr);
@@ -144,9 +144,9 @@ inline SphereClass::SphereClass(const Vector3 *Position,const int VertCount)
 	// Increment current sphere if any points fall outside of it.
 	for (i=0; i<VertCount; i++) {
 
-		dx = Position[i].X - center.X;
-		dy = Position[i].Y - center.Y;
-		dz = Position[i].Z - center.Z;
+		dx = static_cast<double>(Position[i].X - center.X);
+		dy = static_cast<double>(Position[i].Y - center.Y);
+		dz = static_cast<double>(Position[i].Z - center.Z);
 		
 		double testrad2 = dx*dx + dy*dy + dz*dz;
 
@@ -161,14 +161,15 @@ inline SphereClass::SphereClass(const Vector3 *Position,const int VertCount)
 			radsqr = radius * radius;
 
 			double oldtonew = testrad - radius;
-			center.X = (radius * center.X + oldtonew * Position[i].X) / testrad;
-			center.Y = (radius * center.Y + oldtonew * Position[i].Y) / testrad;
-			center.Z = (radius * center.Z + oldtonew * Position[i].Z) / testrad;
+			double cx = static_cast<double>(center.X), cy = static_cast<double>(center.Y), cz = static_cast<double>(center.Z);
+			center.X = static_cast<float>((radius * cx + oldtonew * static_cast<double>(Position[i].X)) / testrad);
+			center.Y = static_cast<float>((radius * cy + oldtonew * static_cast<double>(Position[i].Y)) / testrad);
+			center.Z = static_cast<float>((radius * cz + oldtonew * static_cast<double>(Position[i].Z)) / testrad);
 		}
 	}
 
 	Center = center;
-	Radius = radius;
+	Radius = static_cast<float>(radius);
 }
 
 /***********************************************************************************************
@@ -285,7 +286,7 @@ inline void SphereClass::Transform(const Matrix3D & tm)
  *=============================================================================================*/
 inline float SphereClass::Volume(void) const
 {
-	return (4.0 / 3.0) * WWMATH_PI * (Radius * Radius * Radius);
+	return (4.0f / 3.0f) * WWMATH_PI * (Radius * Radius * Radius);
 }
 
 /***********************************************************************************************

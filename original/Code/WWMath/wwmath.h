@@ -29,11 +29,11 @@
 **	Macros to convert between degrees and radians
 */
 #ifndef RAD_TO_DEG
-#define RAD_TO_DEG(x)	(((double)x)*180.0/WWMATH_PI)
+#define RAD_TO_DEG(x)	(((double)(x))*180.0/((double)WWMATH_PI))
 #endif
 
 #ifndef DEG_TO_RAD
-#define DEG_TO_RAD(x)	(((double)x)*WWMATH_PI/180.0)
+#define DEG_TO_RAD(x)	(((double)(x))*((double)WWMATH_PI)/180.0)
 #endif
 
 #ifndef RAD_TO_DEGF
@@ -92,8 +92,8 @@ static WWINLINE float Acos(float val);
 static WWINLINE float Fast_Asin(float val);
 static WWINLINE float Asin(float val);
 
-static float		Atan(float x) { return static_cast<float>(atan(x)); }
-static float		Atan2(float y,float x) { return static_cast<float>(atan2(y,x)); }
+static float		Atan(float x) { return atanf(x); }
+static float		Atan2(float y,float x) { return atan2f(y,x); }
 static float		Sign(float val);
 static float		Ceil(float val) { return ceilf(val); }
 static float		Floor(float val) { return floorf(val); }
@@ -102,10 +102,10 @@ static bool			Fast_Is_Float_Positive(const float & val);
 static float		Random_Float(void);
 static float		Random_Float(float min,float max);
 static float		Clamp(float val, float min = 0.0f, float max = 1.0f);
-static double		Clamp(double val, double min = 0.0f, double max = 1.0f);
+static double		Clamp(double val, double min = 0.0, double max = 1.0);
 static int			Clamp_Int(int val, int min_val, int max_val);
 static float		Wrap(float val, float min = 0.0f, float max = 1.0f);
-static double		Wrap(double val, double min = 0.0f, double max = 1.0f);
+static double		Wrap(double val, double min = 0.0, double max = 1.0);
 static float		Min(float a, float b);
 static float		Max(float a, float b);
 
@@ -212,7 +212,7 @@ WWINLINE float WWMath::Lerp(float a, float b, float lerp )
 
 WWINLINE double WWMath::Lerp(double a, double b, float lerp )
 {
-	return (a + (b - a)*lerp);
+	return (a + (b - a)*static_cast<double>(lerp));
 }
 
 WWINLINE bool WWMath::Is_Valid_Float(float x)
@@ -360,7 +360,7 @@ WWINLINE float WWMath::Fast_Acos(float val)
 
 WWINLINE float WWMath::Acos(float val)
 {
-	return (float)acos(val);
+	return acosf(val);
 }
 
 // ----------------------------------------------------------------------------
@@ -397,7 +397,7 @@ WWINLINE float WWMath::Fast_Asin(float val)
 
 WWINLINE float WWMath::Asin(float val)
 {
-	return (float)asin(val);
+	return asinf(val);
 }
 
 // ----------------------------------------------------------------------------
@@ -406,7 +406,7 @@ WWINLINE float WWMath::Asin(float val)
 
 WWINLINE float WWMath::Sqrt(float val)
 {
-	return (float)sqrt(val);
+	return sqrtf(val);
 }
 
 WWINLINE int WWMath::Float_To_Int_Chop(const float& f)
@@ -441,5 +441,5 @@ WWINLINE int WWMath::Float_To_Int_Floor (const float& f)
 
 WWINLINE float WWMath::Inv_Sqrt(float val)
 {
-	return 1.0f / (float)sqrt(val);
+	return 1.0f / sqrtf(val);
 }

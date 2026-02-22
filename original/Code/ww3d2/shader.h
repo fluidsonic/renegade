@@ -253,35 +253,35 @@ public:
 	
 	inline void	Reset(void);
 
-	inline DepthCompareType		Get_Depth_Compare(void)	const								{ return (DepthCompareType)(ShaderBits&MASK_DEPTHCOMPARE>>SHIFT_DEPTHCOMPARE); }
-	inline DepthMaskType			Get_Depth_Mask(void) const									{ return (DepthMaskType)((ShaderBits&MASK_DEPTHMASK)>>SHIFT_DEPTHMASK); }
-	inline ColorMaskType			Get_Color_Mask(void) const									{ return (ColorMaskType)((ShaderBits&MASK_COLORMASK)>>SHIFT_COLORMASK); }
-	inline DetailAlphaFuncType	Get_Post_Detail_Alpha_Func(void) const					{ return (DetailAlphaFuncType)((ShaderBits&MASK_POSTDETAILALPHAFUNC)>>SHIFT_POSTDETAILALPHAFUNC); }
-	inline DetailColorFuncType	Get_Post_Detail_Color_Func(void) const					{ return (DetailColorFuncType)((ShaderBits&MASK_POSTDETAILCOLORFUNC)>>SHIFT_POSTDETAILCOLORFUNC); }
-	inline AlphaTestType			Get_Alpha_Test(void) const									{ return (AlphaTestType)((ShaderBits&MASK_ALPHATEST)>>SHIFT_ALPHATEST); }
-	inline CullModeType			Get_Cull_Mode(void) const									{ return (CullModeType)((ShaderBits&MASK_CULLMODE)>>SHIFT_CULLMODE); }
-	inline DstBlendFuncType		Get_Dst_Blend_Func(void) const							{ return (DstBlendFuncType)((ShaderBits&MASK_DSTBLEND)>>SHIFT_DSTBLEND); }
-	inline FogFuncType			Get_Fog_Func(void) const									{ return (FogFuncType)((ShaderBits&MASK_FOG)>>SHIFT_FOG); }
-	inline PriGradientType		Get_Primary_Gradient(void) const							{ return (PriGradientType)((ShaderBits&MASK_PRIGRADIENT)>>SHIFT_PRIGRADIENT); }
-	inline SecGradientType		Get_Secondary_Gradient(void) const						{ return (SecGradientType)((ShaderBits&MASK_SECGRADIENT)>>SHIFT_SECGRADIENT); }
-	inline SrcBlendFuncType		Get_Src_Blend_Func(void) const							{ return (SrcBlendFuncType)((ShaderBits&MASK_SRCBLEND)>>SHIFT_SRCBLEND); }
-	inline TexturingType			Get_Texturing(void) const									{ return (TexturingType)((ShaderBits&MASK_TEXTURING)>>SHIFT_TEXTURING); }
-	inline NPatchEnableType		Get_NPatch_Enable(void) const								{ return (NPatchEnableType)((ShaderBits&MASK_NPATCHENABLE)>>SHIFT_NPATCHENABLE); }
+	inline DepthCompareType		Get_Depth_Compare(void)	const								{ return (DepthCompareType)((ShaderBits & static_cast<uint32_t>(MASK_DEPTHCOMPARE)) >> SHIFT_DEPTHCOMPARE); }
+	inline DepthMaskType			Get_Depth_Mask(void) const									{ return (DepthMaskType)((ShaderBits & static_cast<uint32_t>(MASK_DEPTHMASK)) >> SHIFT_DEPTHMASK); }
+	inline ColorMaskType			Get_Color_Mask(void) const									{ return (ColorMaskType)((ShaderBits & static_cast<uint32_t>(MASK_COLORMASK)) >> SHIFT_COLORMASK); }
+	inline DetailAlphaFuncType	Get_Post_Detail_Alpha_Func(void) const					{ return (DetailAlphaFuncType)((ShaderBits & static_cast<uint32_t>(MASK_POSTDETAILALPHAFUNC)) >> SHIFT_POSTDETAILALPHAFUNC); }
+	inline DetailColorFuncType	Get_Post_Detail_Color_Func(void) const					{ return (DetailColorFuncType)((ShaderBits & static_cast<uint32_t>(MASK_POSTDETAILCOLORFUNC)) >> SHIFT_POSTDETAILCOLORFUNC); }
+	inline AlphaTestType			Get_Alpha_Test(void) const									{ return (AlphaTestType)((ShaderBits & static_cast<uint32_t>(MASK_ALPHATEST)) >> SHIFT_ALPHATEST); }
+	inline CullModeType			Get_Cull_Mode(void) const									{ return (CullModeType)((ShaderBits & static_cast<uint32_t>(MASK_CULLMODE)) >> SHIFT_CULLMODE); }
+	inline DstBlendFuncType		Get_Dst_Blend_Func(void) const							{ return (DstBlendFuncType)((ShaderBits & static_cast<uint32_t>(MASK_DSTBLEND)) >> SHIFT_DSTBLEND); }
+	inline FogFuncType			Get_Fog_Func(void) const									{ return (FogFuncType)((ShaderBits & static_cast<uint32_t>(MASK_FOG)) >> SHIFT_FOG); }
+	inline PriGradientType		Get_Primary_Gradient(void) const							{ return (PriGradientType)((ShaderBits & static_cast<uint32_t>(MASK_PRIGRADIENT)) >> SHIFT_PRIGRADIENT); }
+	inline SecGradientType		Get_Secondary_Gradient(void) const						{ return (SecGradientType)((ShaderBits & static_cast<uint32_t>(MASK_SECGRADIENT)) >> SHIFT_SECGRADIENT); }
+	inline SrcBlendFuncType		Get_Src_Blend_Func(void) const							{ return (SrcBlendFuncType)((ShaderBits & static_cast<uint32_t>(MASK_SRCBLEND)) >> SHIFT_SRCBLEND); }
+	inline TexturingType			Get_Texturing(void) const									{ return (TexturingType)((ShaderBits & static_cast<uint32_t>(MASK_TEXTURING)) >> SHIFT_TEXTURING); }
+	inline NPatchEnableType		Get_NPatch_Enable(void) const								{ return (NPatchEnableType)((ShaderBits & static_cast<uint32_t>(MASK_NPATCHENABLE)) >> SHIFT_NPATCHENABLE); }
 
-	inline	void	Set_Depth_Compare(DepthCompareType x)					{ ShaderBits&=~MASK_DEPTHCOMPARE;ShaderBits|=(x<<SHIFT_DEPTHCOMPARE);	}
-	inline	void	Set_Depth_Mask(DepthMaskType x)							{ ShaderBits&=~MASK_DEPTHMASK; ShaderBits|=(x<<SHIFT_DEPTHMASK);	}
-	inline	void	Set_Color_Mask(ColorMaskType x)							{ ShaderBits&=~MASK_COLORMASK; ShaderBits|=(x<<SHIFT_COLORMASK);	}
-	inline	void	Set_Post_Detail_Alpha_Func(DetailAlphaFuncType x)	{ ShaderBits&=~MASK_POSTDETAILALPHAFUNC;ShaderBits|=(x<<SHIFT_POSTDETAILALPHAFUNC);	}
-	inline	void	Set_Post_Detail_Color_Func(DetailColorFuncType x)	{ ShaderBits&=~MASK_POSTDETAILCOLORFUNC;ShaderBits|=(x<<SHIFT_POSTDETAILCOLORFUNC);	}
-	inline	void	Set_Alpha_Test(AlphaTestType x)							{ ShaderBits&=~MASK_ALPHATEST; ShaderBits|=(x<<SHIFT_ALPHATEST);		}
-	inline	void	Set_Cull_Mode(CullModeType x)								{ ShaderBits&=~MASK_CULLMODE; ShaderBits|=(x<<SHIFT_CULLMODE);		}
-	inline	void	Set_Dst_Blend_Func(DstBlendFuncType x)					{ ShaderBits&=~MASK_DSTBLEND; ShaderBits|=(x<<SHIFT_DSTBLEND);		}
-	inline	void	Set_Fog_Func(FogFuncType x)								{ ShaderBits&=~MASK_FOG; ShaderBits|=(x<<SHIFT_FOG);			}
-	inline	void	Set_Primary_Gradient(PriGradientType x)				{ ShaderBits&=~MASK_PRIGRADIENT;ShaderBits|=(x<<SHIFT_PRIGRADIENT);	}
-	inline	void	Set_Secondary_Gradient(SecGradientType x)				{ ShaderBits&=~MASK_SECGRADIENT;ShaderBits|=(x<<SHIFT_SECGRADIENT);	}
-	inline	void	Set_Src_Blend_Func(SrcBlendFuncType x)					{ ShaderBits&=~MASK_SRCBLEND;ShaderBits|=(x<<SHIFT_SRCBLEND);		}
-	inline	void	Set_Texturing(TexturingType x)							{ ShaderBits&=~MASK_TEXTURING; ShaderBits|=(x<<SHIFT_TEXTURING);	}
-	inline	void	Set_NPatch_Enable(NPatchEnableType x)					{ ShaderBits&=~MASK_NPATCHENABLE; ShaderBits|=(x<<SHIFT_NPATCHENABLE);	}
+	inline	void	Set_Depth_Compare(DepthCompareType x)					{ ShaderBits&=~static_cast<uint32_t>(MASK_DEPTHCOMPARE);ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_DEPTHCOMPARE);	}
+	inline	void	Set_Depth_Mask(DepthMaskType x)							{ ShaderBits&=~static_cast<uint32_t>(MASK_DEPTHMASK); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_DEPTHMASK);	}
+	inline	void	Set_Color_Mask(ColorMaskType x)							{ ShaderBits&=~static_cast<uint32_t>(MASK_COLORMASK); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_COLORMASK);	}
+	inline	void	Set_Post_Detail_Alpha_Func(DetailAlphaFuncType x)	{ ShaderBits&=~static_cast<uint32_t>(MASK_POSTDETAILALPHAFUNC);ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_POSTDETAILALPHAFUNC);	}
+	inline	void	Set_Post_Detail_Color_Func(DetailColorFuncType x)	{ ShaderBits&=~static_cast<uint32_t>(MASK_POSTDETAILCOLORFUNC);ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_POSTDETAILCOLORFUNC);	}
+	inline	void	Set_Alpha_Test(AlphaTestType x)							{ ShaderBits&=~static_cast<uint32_t>(MASK_ALPHATEST); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_ALPHATEST);		}
+	inline	void	Set_Cull_Mode(CullModeType x)								{ ShaderBits&=~static_cast<uint32_t>(MASK_CULLMODE); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_CULLMODE);		}
+	inline	void	Set_Dst_Blend_Func(DstBlendFuncType x)					{ ShaderBits&=~static_cast<uint32_t>(MASK_DSTBLEND); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_DSTBLEND);		}
+	inline	void	Set_Fog_Func(FogFuncType x)								{ ShaderBits&=~static_cast<uint32_t>(MASK_FOG); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_FOG);			}
+	inline	void	Set_Primary_Gradient(PriGradientType x)				{ ShaderBits&=~static_cast<uint32_t>(MASK_PRIGRADIENT);ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_PRIGRADIENT);	}
+	inline	void	Set_Secondary_Gradient(SecGradientType x)				{ ShaderBits&=~static_cast<uint32_t>(MASK_SECGRADIENT);ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_SECGRADIENT);	}
+	inline	void	Set_Src_Blend_Func(SrcBlendFuncType x)					{ ShaderBits&=~static_cast<uint32_t>(MASK_SRCBLEND);ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_SRCBLEND);		}
+	inline	void	Set_Texturing(TexturingType x)							{ ShaderBits&=~static_cast<uint32_t>(MASK_TEXTURING); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_TEXTURING);	}
+	inline	void	Set_NPatch_Enable(NPatchEnableType x)					{ ShaderBits&=~static_cast<uint32_t>(MASK_NPATCHENABLE); ShaderBits|=(static_cast<uint32_t>(x)<<SHIFT_NPATCHENABLE);	}
 
 	void	Init_From_Material3(const W3dMaterial3Struct & mat3);
 	void	Enable_Fog (const char *source);

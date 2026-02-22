@@ -205,10 +205,10 @@ WWINLINE Matrix4::Matrix4(const Vector4 & r0, const Vector4 & r1, const Vector4 
  *=============================================================================================*/
 WWINLINE void Matrix4::Make_Identity(void)
 {
-	Row[0].Set(1.0,0.0,0.0,0.0);
-	Row[1].Set(0.0,1.0,0.0,0.0);
-	Row[2].Set(0.0,0.0,1.0,0.0);
-	Row[3].Set(0.0,0.0,0.0,1.0);
+	Row[0].Set(1.0f,0.0f,0.0f,0.0f);
+	Row[1].Set(0.0f,1.0f,0.0f,0.0f);
+	Row[2].Set(0.0f,0.0f,1.0f,0.0f);
+	Row[3].Set(0.0f,0.0f,0.0f,1.0f);
 }
 
 /***********************************************************************************************
@@ -225,7 +225,7 @@ WWINLINE void Matrix4::Make_Identity(void)
  *=============================================================================================*/
 WWINLINE void Matrix4::Init(const Matrix3D & m)
 {
-	Row[0] = m[0]; Row[1] = m[1]; Row[2] = m[2]; Row[3] = Vector4(0.0,0.0,0.0,1.0); 
+	Row[0] = m[0]; Row[1] = m[1]; Row[2] = m[2]; Row[3] = Vector4(0.0f,0.0f,0.0f,1.0f);
 }
 
 /***********************************************************************************************
@@ -323,10 +323,10 @@ WWINLINE void Matrix4::Init_Perspective(float hfov,float vfov,float znear,float 
 	assert(zfar > znear);
 
 	Make_Identity();
-	Row[0][0] = static_cast<float>(1.0 / tan(hfov*0.5));
-	Row[1][1] = static_cast<float>(1.0 / tan(vfov*0.5));
+	Row[0][0] = 1.0f / tanf(hfov * 0.5f);
+	Row[1][1] = 1.0f / tanf(vfov * 0.5f);
 	Row[2][2] = -(zfar + znear) / (zfar - znear);
-	Row[2][3] = static_cast<float>(-(2.0*zfar*znear) / (zfar - znear));
+	Row[2][3] = -(2.0f * zfar * znear) / (zfar - znear);
 	Row[3][2] = -1.0f;
 	Row[3][3] = 0.0f;
 }
@@ -375,12 +375,12 @@ WWINLINE void Matrix4::Init_Perspective
 	assert(zfar > 0.0f);
 
 	Make_Identity();
-	Row[0][0] = static_cast<float>(2.0*znear / (right - left));
+	Row[0][0] = 2.0f * znear / (right - left);
 	Row[0][2] = (right + left) / (right - left);
-	Row[1][1] = static_cast<float>(2.0*znear / (top - bottom));
+	Row[1][1] = 2.0f * znear / (top - bottom);
 	Row[1][2] = (top + bottom) / (top - bottom);
 	Row[2][2] = -(zfar + znear) / (zfar - znear);
-	Row[2][3] = static_cast<float>(-(2.0*zfar*znear) / (zfar - znear));
+	Row[2][3] = -(2.0f * zfar * znear) / (zfar - znear);
 	Row[3][2] = -1.0f;
 	Row[3][3] = 0.0f;
 }
@@ -442,7 +442,7 @@ WWINLINE Matrix4 Matrix4::Inverse() const    // Gauss-Jordan elimination with pa
 		Swap(b.Row[i1], b.Row[j]);
 
 		// Scale row j to have a unit diagonal
-		if (a[j][j]==0.) {
+		if (a[j][j]==0.0f) {
 			//ALGEBRA_ERROR("Matrix4::inverse: singular matrix; can't invert\n");
 		}
 		b.Row[j] /= a.Row[j][j];

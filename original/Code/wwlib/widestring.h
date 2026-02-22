@@ -195,7 +195,7 @@ inline
 WideStringClass::WideStringClass (const char16_t *string, bool hint_temporary)
 	:	m_Buffer (m_EmptyString)
 {
-	int len=string ? wcslen(string) : 0;
+	int len=string ? static_cast<int>(wcslen(string)) : 0;
 	if (hint_temporary || len>0) {
 		Get_String (len+1, hint_temporary);
 	}
@@ -212,7 +212,7 @@ WideStringClass::WideStringClass (const char *string, bool hint_temporary)
 	:	m_Buffer (m_EmptyString)
 {
 	if (hint_temporary || (string && strlen(string)>0)) {
-		Get_String (strlen(string) + 1, hint_temporary);
+		Get_String (static_cast<int>(strlen(string)) + 1, hint_temporary);
 	}
 
 	(*this) = string;
@@ -383,9 +383,9 @@ WideStringClass::Erase (int start_index, int char_count)
 
 		::memmove (	&m_Buffer[start_index],
 						&m_Buffer[start_index + char_count],
-						(len - (start_index + char_count) + 1) * sizeof (char16_t));
+						static_cast<size_t>(len - (start_index + char_count) + 1) * sizeof (char16_t));
 
-		Store_Length( wcslen(m_Buffer) );
+		Store_Length( static_cast<int>(wcslen(m_Buffer)) );
 	}
 
 	return ;
@@ -397,7 +397,7 @@ WideStringClass::Erase (int start_index, int char_count)
 inline void WideStringClass::Trim(void)
 {
 	wcstrim(m_Buffer);
-	int len = wcslen(m_Buffer);
+	int len = static_cast<int>(wcslen(m_Buffer));
 	Store_Length(len);
 }
 
@@ -408,11 +408,11 @@ inline const WideStringClass &
 WideStringClass::operator= (const char16_t *string)
 {
 	if (string) {
-		int len = wcslen (string);
+		int len = static_cast<int>(wcslen (string));
 		Uninitialised_Grow (len + 1);
 		Store_Length (len);
 
-		::memcpy (m_Buffer, string, (len + 1) * sizeof (char16_t));
+		::memcpy (m_Buffer, string, static_cast<size_t>(len + 1) * sizeof (char16_t));
 	}
 
 	return (*this);
@@ -451,7 +451,7 @@ WideStringClass::operator+= (const char16_t *string)
 {
 	if (string) {
 		int cur_len = Get_Length ();
-		int src_len = wcslen (string);
+		int src_len = static_cast<int>(wcslen (string));
 		int new_len = cur_len + src_len;
 
 		//
@@ -463,7 +463,7 @@ WideStringClass::operator+= (const char16_t *string)
 		//
 		//	Copy the new string onto our the end of our existing buffer
 		//
-		::memcpy (&m_Buffer[cur_len], string, (src_len + 1) * sizeof (char16_t));
+		::memcpy (&m_Buffer[cur_len], string, static_cast<size_t>(src_len + 1) * sizeof (char16_t));
 	}
 
 	return (*this);
@@ -528,7 +528,7 @@ WideStringClass::operator+= (const WideStringClass &string)
 		//
 		//	Copy the new string onto our the end of our existing buffer
 		//
-		::memcpy (&m_Buffer[cur_len], (const char16_t *)string, (src_len + 1) * sizeof (char16_t));
+		::memcpy (&m_Buffer[cur_len], (const char16_t *)string, static_cast<size_t>(src_len + 1) * sizeof (char16_t));
 	}
 
 	return (*this);
@@ -614,7 +614,7 @@ WideStringClass::Get_Length (void) const
 		// we better manually get the string length.
 		//
 		if (length == 0) {
-			length = wcslen (m_Buffer);
+			length = static_cast<int>(wcslen (m_Buffer));
 			((WideStringClass *)this)->Store_Length (length);
 		}
 	}
@@ -656,7 +656,7 @@ WideStringClass::Allocate_Buffer (int length)
 	//	Allocate a buffer that is 'length' characters long, plus the
 	// bytes required to hold the header.
 	//
-	char *buffer = new char[(sizeof (char16_t) * length) + sizeof (WideStringClass::_HEADER)];
+	char *buffer = new char[(sizeof (char16_t) * static_cast<size_t>(length)) + sizeof (WideStringClass::_HEADER)];
 
 	//
 	//	Fill in the fields of the header

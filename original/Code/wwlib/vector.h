@@ -106,9 +106,9 @@ VectorClass<T>::VectorClass(int size, T const * array) :
 	*/
 	if (size) {
 		if (array) {
-			Vector = new((void*)array) T[size];
+			Vector = new((void*)array) T[static_cast<size_t>(size)];
 		} else {
-			Vector = new T[size];
+			Vector = new T[static_cast<size_t>(size)];
 			IsAllocated = true;
 		}
 	}
@@ -182,7 +182,7 @@ VectorClass<T> & VectorClass<T>::operator =(VectorClass<T> const & vector)
 		Clear();
 		VectorMax = vector.Length();
 		if (VectorMax) {
-			Vector = new T[VectorMax];
+			Vector = new T[static_cast<size_t>(VectorMax)];
 			if (Vector) {
 				IsAllocated = true;
 				for (int index = 0; index < VectorMax; index++) {
@@ -249,7 +249,7 @@ template<class T>
 inline int VectorClass<T>::ID(T const * ptr)
 {
 	if (!IsValid) return(0);
-	return(((unsigned long)ptr - (unsigned long)&(*this)[0]) / sizeof(T));
+	return(static_cast<int>(((uintptr_t)ptr - (uintptr_t)&(*this)[0]) / sizeof(T)));
 }
 
 /***********************************************************************************************
@@ -347,9 +347,9 @@ bool VectorClass<T>::Resize(int newsize, T const * array)
 		*/
 		IsValid = false;
 		if (!array) {
-			newptr = new T[newsize];
+			newptr = new T[static_cast<size_t>(newsize)];
 		} else {
-			newptr = new((void*)array) T[newsize];
+			newptr = new((void*)array) T[static_cast<size_t>(newsize)];
 		}
 		IsValid = true;
 		if (!newptr) {
@@ -518,7 +518,7 @@ class DynamicVectorClass : public VectorClass<T>
  *=============================================================================================*/
 template<class T>
 DynamicVectorClass<T>::DynamicVectorClass(unsigned size, T const * array)
-	: VectorClass<T>(size, array)
+	: VectorClass<T>(static_cast<int>(size), array)
 {
 	GrowthStep = 10;
 	ActiveCount = 0;
@@ -669,7 +669,7 @@ bool DynamicVectorClass<T>::Add_Head(T const & object)
 	**	There is room for the new object now. Add it to the end of the object vector.
 	*/
 	if (ActiveCount) {
-		memmove(&(*this)[1], &(*this)[0], ActiveCount * sizeof(T));
+		memmove(&(*this)[1], &(*this)[0], static_cast<size_t>(ActiveCount) * sizeof(T));
 	}
 	(*this)[0] = object;
 	ActiveCount++;
@@ -719,7 +719,7 @@ bool DynamicVectorClass<T>::Insert(int index,T const & object)
 	**	There is room for the new object now. Add it at the desired position.
 	*/
 	if (index < ActiveCount) {
-		memmove(&(*this)[index+1], &(*this)[index], (ActiveCount-index) * sizeof(T));
+		memmove(&(*this)[index+1], &(*this)[index], static_cast<size_t>(ActiveCount - index) * sizeof(T));
 	}
 	(*this)[index] = object;
 	ActiveCount++;

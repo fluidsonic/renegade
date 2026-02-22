@@ -338,33 +338,33 @@ public:
    virtual int						Get_Sort_Level(void) const													{ return 0; /* SORT_LEVEL_NONE */ }
    virtual void					Set_Sort_Level(int level)													{ }
 	
-	virtual int						Is_Really_Visible(void)														{ return ((Bits & IS_REALLY_VISIBLE) == IS_REALLY_VISIBLE); }
-	virtual int						Is_Not_Hidden_At_All(void)													{ return ((Bits & IS_NOT_HIDDEN_AT_ALL) == IS_NOT_HIDDEN_AT_ALL); }
-	virtual int						Is_Visible(void) const														{ return (Bits & IS_VISIBLE); }
-	virtual void					Set_Visible(int onoff)														{ if (onoff) { Bits |= IS_VISIBLE; } else { Bits &= ~IS_VISIBLE; } }
-	virtual int						Is_Hidden(void) const														{ return !(Bits & IS_NOT_HIDDEN); }
-	virtual void					Set_Hidden(int onoff)														{ if (onoff) { Bits &= ~IS_NOT_HIDDEN; } else { Bits |= IS_NOT_HIDDEN; } }
-	virtual int						Is_Animation_Hidden(void) const											{ return !(Bits & IS_NOT_ANIMATION_HIDDEN); }
-	virtual void					Set_Animation_Hidden(int onoff)											{ if (onoff) { Bits &= ~IS_NOT_ANIMATION_HIDDEN; } else { Bits |= IS_NOT_ANIMATION_HIDDEN; } }
-	virtual int						Is_Force_Visible(void) const												{ return Bits & IS_FORCE_VISIBLE; }
-	virtual void					Set_Force_Visible(int onoff)          									{ if (onoff) { Bits |= IS_FORCE_VISIBLE; } else { Bits &= ~IS_FORCE_VISIBLE; } }
-	virtual int						Has_User_Lighting(void) const												{ return Bits & HAS_USER_LIGHTING; }
-	virtual void					Set_Has_User_Lighting(bool onoff)										{ if (onoff) { Bits |= HAS_USER_LIGHTING; } else { Bits &= ~HAS_USER_LIGHTING; } }
+	virtual int						Is_Really_Visible(void)														{ return ((Bits & static_cast<uint32_t>(IS_REALLY_VISIBLE)) == static_cast<uint32_t>(IS_REALLY_VISIBLE)); }
+	virtual int						Is_Not_Hidden_At_All(void)													{ return ((Bits & static_cast<uint32_t>(IS_NOT_HIDDEN_AT_ALL)) == static_cast<uint32_t>(IS_NOT_HIDDEN_AT_ALL)); }
+	virtual int						Is_Visible(void) const														{ return static_cast<int>(Bits & static_cast<uint32_t>(IS_VISIBLE)); }
+	virtual void					Set_Visible(int onoff)														{ if (onoff) { Bits |= static_cast<uint32_t>(IS_VISIBLE); } else { Bits &= ~static_cast<uint32_t>(IS_VISIBLE); } }
+	virtual int						Is_Hidden(void) const														{ return !(Bits & static_cast<uint32_t>(IS_NOT_HIDDEN)); }
+	virtual void					Set_Hidden(int onoff)														{ if (onoff) { Bits &= ~static_cast<uint32_t>(IS_NOT_HIDDEN); } else { Bits |= static_cast<uint32_t>(IS_NOT_HIDDEN); } }
+	virtual int						Is_Animation_Hidden(void) const											{ return !(Bits & static_cast<uint32_t>(IS_NOT_ANIMATION_HIDDEN)); }
+	virtual void					Set_Animation_Hidden(int onoff)											{ if (onoff) { Bits &= ~static_cast<uint32_t>(IS_NOT_ANIMATION_HIDDEN); } else { Bits |= static_cast<uint32_t>(IS_NOT_ANIMATION_HIDDEN); } }
+	virtual int						Is_Force_Visible(void) const												{ return static_cast<int>(Bits & static_cast<uint32_t>(IS_FORCE_VISIBLE)); }
+	virtual void					Set_Force_Visible(int onoff)          									{ if (onoff) { Bits |= static_cast<uint32_t>(IS_FORCE_VISIBLE); } else { Bits &= ~static_cast<uint32_t>(IS_FORCE_VISIBLE); } }
+	virtual int						Has_User_Lighting(void) const												{ return static_cast<int>(Bits & static_cast<uint32_t>(HAS_USER_LIGHTING)); }
+	virtual void					Set_Has_User_Lighting(bool onoff)										{ if (onoff) { Bits |= static_cast<uint32_t>(HAS_USER_LIGHTING); } else { Bits &= ~static_cast<uint32_t>(HAS_USER_LIGHTING); } }
 
-	virtual int						Is_Translucent(void) const													{ return Bits & IS_TRANSLUCENT; }
-	virtual void					Set_Translucent(int onoff)													{ if (onoff) { Bits |= IS_TRANSLUCENT; } else { Bits &= ~IS_TRANSLUCENT; } }
-	virtual int						Get_Collision_Type(void) const											{ return (Bits & COLLISION_TYPE_MASK); }
-	virtual void					Set_Collision_Type(int type)												{ Bits &= ~COLLISION_TYPE_MASK; Bits |= (type & COLLISION_TYPE_MASK) | COLLISION_TYPE_ALL; }
+	virtual int						Is_Translucent(void) const													{ return static_cast<int>(Bits & static_cast<uint32_t>(IS_TRANSLUCENT)); }
+	virtual void					Set_Translucent(int onoff)													{ if (onoff) { Bits |= static_cast<uint32_t>(IS_TRANSLUCENT); } else { Bits &= ~static_cast<uint32_t>(IS_TRANSLUCENT); } }
+	virtual int						Get_Collision_Type(void) const											{ return static_cast<int>(Bits & static_cast<uint32_t>(COLLISION_TYPE_MASK)); }
+	virtual void					Set_Collision_Type(int type)												{ Bits &= ~static_cast<uint32_t>(COLLISION_TYPE_MASK); Bits |= static_cast<uint32_t>((type & COLLISION_TYPE_MASK) | COLLISION_TYPE_ALL); }
    virtual bool					Is_Complete(void)																{ return false; }
 	virtual bool					Is_In_Scene(void)																{ return Scene != NULL; }
 	virtual float					Get_Native_Screen_Size(void) const										{ return NativeScreenSize; }
 	virtual void					Set_Native_Screen_Size(float screensize)								{ NativeScreenSize = screensize; }
 
-	void								Set_Sub_Objects_Match_LOD(int onoff)									{ if (onoff) { Bits |= SUBOBJS_MATCH_LOD; } else { Bits &= ~SUBOBJS_MATCH_LOD; } }
-	int								Is_Sub_Objects_Match_LOD_Enabled(void)									{ return Bits & SUBOBJS_MATCH_LOD; }
+	void								Set_Sub_Objects_Match_LOD(int onoff)									{ if (onoff) { Bits |= static_cast<uint32_t>(SUBOBJS_MATCH_LOD); } else { Bits &= ~static_cast<uint32_t>(SUBOBJS_MATCH_LOD); } }
+	int								Is_Sub_Objects_Match_LOD_Enabled(void)									{ return static_cast<int>(Bits & static_cast<uint32_t>(SUBOBJS_MATCH_LOD)); }
 
-	void								Set_Sub_Object_Transforms_Dirty(bool onoff)							{ if (onoff) { Bits |= SUBOBJ_TRANSFORMS_DIRTY; } else { Bits &= ~SUBOBJ_TRANSFORMS_DIRTY; } }
-	bool								Are_Sub_Object_Transforms_Dirty(void)									{ return (Bits & SUBOBJ_TRANSFORMS_DIRTY) != 0; }
+	void								Set_Sub_Object_Transforms_Dirty(bool onoff)							{ if (onoff) { Bits |= static_cast<uint32_t>(SUBOBJ_TRANSFORMS_DIRTY); } else { Bits &= ~static_cast<uint32_t>(SUBOBJ_TRANSFORMS_DIRTY); } }
+	bool								Are_Sub_Object_Transforms_Dirty(void)									{ return (Bits & static_cast<uint32_t>(SUBOBJ_TRANSFORMS_DIRTY)) != 0; }
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Persistant object save-load interface
@@ -383,9 +383,9 @@ protected:
 	virtual void					Update_Cached_Bounding_Volumes(void) const;
 	virtual void					Update_Sub_Object_Bits(void);
 	
-	bool								Bounding_Volumes_Valid(void) const										{ return (Bits & BOUNDING_VOLUMES_VALID) != 0; }
-	void								Invalidate_Cached_Bounding_Volumes(void) const						{ Bits &= ~BOUNDING_VOLUMES_VALID; }
-	void								Validate_Cached_Bounding_Volumes(void)	const							{ Bits |= BOUNDING_VOLUMES_VALID; }
+	bool								Bounding_Volumes_Valid(void) const										{ return (Bits & static_cast<uint32_t>(BOUNDING_VOLUMES_VALID)) != 0; }
+	void								Invalidate_Cached_Bounding_Volumes(void) const						{ Bits &= ~static_cast<uint32_t>(BOUNDING_VOLUMES_VALID); }
+	void								Validate_Cached_Bounding_Volumes(void)	const							{ Bits |= static_cast<uint32_t>(BOUNDING_VOLUMES_VALID); }
 
 	void								Save_Sub_Object_User_Lighting(ChunkSaveClass & csave,RenderObjClass * sub_obj,int bone_index);
 	void								Load_Sub_Object_User_Lighting(ChunkLoadClass & cload);
@@ -410,7 +410,7 @@ protected:
 		DEFAULT_BITS =					COLLISION_TYPE_ALL | IS_NOT_HIDDEN | IS_NOT_ANIMATION_HIDDEN,
 	};
 
-	mutable unsigned long		Bits;
+	mutable uint32_t				Bits;
 	Matrix3D							Transform;
 	mutable SphereClass			CachedBoundingSphere;
 	mutable AABoxClass			CachedBoundingBox;
@@ -427,7 +427,7 @@ protected:
 
 WWINLINE const SphereClass & RenderObjClass::Get_Bounding_Sphere(void) const
 {
-	if (!(Bits & BOUNDING_VOLUMES_VALID)) {
+	if (!(Bits & static_cast<uint32_t>(BOUNDING_VOLUMES_VALID))) {
 		Update_Cached_Bounding_Volumes();
 	} 
 	return CachedBoundingSphere;
@@ -435,7 +435,7 @@ WWINLINE const SphereClass & RenderObjClass::Get_Bounding_Sphere(void) const
 
 WWINLINE const AABoxClass & RenderObjClass::Get_Bounding_Box(void) const
 {
-	if (!(Bits & BOUNDING_VOLUMES_VALID)) {
+	if (!(Bits & static_cast<uint32_t>(BOUNDING_VOLUMES_VALID))) {
 		Update_Cached_Bounding_Volumes();
 	}
 	return CachedBoundingBox;

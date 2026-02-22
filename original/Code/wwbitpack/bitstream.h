@@ -112,7 +112,7 @@ class BitStreamClass : public cBitPacker
 				//
 
 				uint32_t scaled_value;
-				bool is_in_range = entry.Scale(value, scaled_value);
+				bool is_in_range = entry.Scale(static_cast<double>(value), scaled_value);
 				if (!is_in_range) {
 					//
 					//DIE;
@@ -146,7 +146,7 @@ class BitStreamClass : public cBitPacker
 
 				double f_value = entry.Unscale(u_value);
 
-				if ((::fabs(f_value - static_cast<T>(f_value)) < MISCUTIL_EPSILON)) {
+				if ((::fabs(f_value - static_cast<double>(static_cast<T>(f_value))) < static_cast<double>(MISCUTIL_EPSILON))) {
 					//
 					// N.B. More error may be introduced here
 					//

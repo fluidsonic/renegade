@@ -159,7 +159,7 @@ StringClass::operator= (const StringClass &string)
 	Uninitialised_Grow(len+1);
 	Store_Length(len);
 
-	::memcpy (m_Buffer, string.m_Buffer, (len+1) * sizeof (TCHAR));		
+	::memcpy (m_Buffer, string.m_Buffer, static_cast<size_t>(len + 1) * sizeof (TCHAR));
 	return (*this);
 
 }
@@ -172,11 +172,11 @@ StringClass::operator= (const TCHAR *string)
 {
 	if (string != 0) {
 
-		int len = _tcslen (string);
+		int len = static_cast<int>(_tcslen (string));
 		Uninitialised_Grow (len+1);
 		Store_Length (len);
 
-		::memcpy (m_Buffer, string, (len + 1) * sizeof (TCHAR));		
+		::memcpy (m_Buffer, string, static_cast<size_t>(len + 1) * sizeof (TCHAR));		
 	}
 
 	return (*this);
@@ -270,7 +270,7 @@ inline
 StringClass::StringClass (const TCHAR *string, bool hint_temporary)
 	:	m_Buffer (m_EmptyString)
 {
-	int len=string ? _tcsclen(string) : 0;
+	int len=string ? static_cast<int>(_tcsclen(string)) : 0;
 	if (hint_temporary || len>0) {
 		Get_String (len+1, hint_temporary);
 	}
@@ -286,7 +286,7 @@ inline
 StringClass::StringClass (const WCHAR *string, bool hint_temporary)
 	:	m_Buffer (m_EmptyString)
 {
-	int len = string ? wcslen (string) : 0;
+	int len = string ? static_cast<int>(wcslen (string)) : 0;
 	if (hint_temporary || len > 0) {
 		Get_String (len + 1, hint_temporary);
 	}
@@ -429,7 +429,7 @@ StringClass::Erase (int start_index, int char_count)
 
 		::memmove (	&m_Buffer[start_index],
 						&m_Buffer[start_index + char_count],
-						(len - (start_index + char_count) + 1) * sizeof (TCHAR));
+						static_cast<size_t>(len - (start_index + char_count) + 1) * sizeof (TCHAR));
 
 		Store_Length( len - char_count );
 	}
@@ -453,7 +453,7 @@ StringClass::operator+= (const TCHAR *string)
 {
 
 	int cur_len = Get_Length ();
-	int src_len = _tcslen (string);
+	int src_len = static_cast<int>(_tcslen (string));
 	int new_len = cur_len + src_len;
 
 	//
@@ -465,7 +465,7 @@ StringClass::operator+= (const TCHAR *string)
 	//
 	//	Copy the new string onto our the end of our existing buffer
 	//
-	::memcpy (&m_Buffer[cur_len], string, (src_len + 1) * sizeof (TCHAR));
+	::memcpy (&m_Buffer[cur_len], string, static_cast<size_t>(src_len + 1) * sizeof (TCHAR));
 	return (*this);
 }
 
@@ -537,7 +537,7 @@ StringClass::operator+= (const StringClass &string)
 		//
 		//	Copy the new string onto our the end of our existing buffer
 		//
-		::memcpy (&m_Buffer[cur_len], (const TCHAR *)string, (src_len + 1) * sizeof (TCHAR));				
+		::memcpy (&m_Buffer[cur_len], (const TCHAR *)string, static_cast<size_t>(src_len + 1) * sizeof (TCHAR));				
 	}
 
 	return (*this);
@@ -624,7 +624,7 @@ StringClass::Get_Length (void) const
 		// we better manually get the string length.
 		//
 		if (length == 0) {
-			length = _tcslen (m_Buffer);
+			length = static_cast<int>(_tcslen (m_Buffer));
 			((StringClass *)this)->Store_Length (length);
 		}
 	}
@@ -666,7 +666,7 @@ StringClass::Allocate_Buffer (int length)
 	//	Allocate a buffer that is 'length' characters long, plus the
 	// bytes required to hold the header.
 	//
-	char *buffer = new char[(sizeof (TCHAR) * length) + sizeof (StringClass::_HEADER)];
+	char *buffer = new char[(sizeof (TCHAR) * static_cast<size_t>(length)) + sizeof (StringClass::_HEADER)];
 	
 	//
 	//	Fill in the fields of the header

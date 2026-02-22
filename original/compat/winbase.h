@@ -59,7 +59,7 @@ inline void OutputDebugStringA(const char* str) {
 inline DWORD FormatMessage(DWORD flags, LPCVOID src, DWORD msgid, DWORD langid,
                            LPSTR buf, DWORD size, va_list* args) {
     if (buf && size > 0) {
-        strncpy(buf, strerror(msgid), size - 1);
+        strncpy(buf, strerror(static_cast<int>(msgid)), size - 1);
         buf[size - 1] = 0;
     }
     return buf ? (DWORD)strlen(buf) : 0;
@@ -557,7 +557,7 @@ inline HMODULE LoadLibrary(LPCSTR name) {
     if (dot) {
         char dylib_name[256];
         int base_len = (int)(dot - lower);
-        strncpy(dylib_name, name, base_len);
+        strncpy(dylib_name, name, static_cast<size_t>(base_len));
         strcpy(dylib_name + base_len, ".dylib");
         h = (HMODULE)dlopen(dylib_name, RTLD_LAZY | RTLD_GLOBAL);
         if (h) return h;
@@ -845,7 +845,7 @@ inline int _vsnwprintf(char16_t* buf, size_t count, const char16_t* fmt, va_list
                 if (!ljust) { memmove(ns+2, ns+1, (size_t)(ni-1)); ns[1] = '-'; ni++; }
                 ljust = true; width = -width;
             }
-            ni += snprintf(ns+ni, (int)sizeof(ns)-ni, "%d", width);
+            ni += snprintf(ns+ni, sizeof(ns) - static_cast<size_t>(ni), "%d", width);
             ++p;
         } else {
             while (*p >= u'0' && *p <= u'9') { ns[ni++] = (char)*p; width = width*10 + (*p - u'0'); ++p; }
@@ -858,7 +858,7 @@ inline int _vsnwprintf(char16_t* buf, size_t count, const char16_t* fmt, va_list
             if (*p == u'*') {
                 prec = va_arg(va, int);
                 if (prec < 0) prec = 0;
-                ni += snprintf(ns+ni, (int)sizeof(ns)-ni, "%d", prec);
+                ni += snprintf(ns+ni, sizeof(ns) - static_cast<size_t>(ni), "%d", prec);
                 ++p;
             } else {
                 prec = 0;
