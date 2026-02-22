@@ -101,7 +101,7 @@ CnCReferenceMenuClass::On_Init_Dialog (void)
 
 	//
 	//	Now, fill in the names of the mapped keys for these functions
-	//	
+	//
 	WideStringClass name;
 
 	Input::Get_Translated_Key_Name (Input::Get_Primary_Key_For_Function (INPUT_FUNCTION_TEAM_INFO_TOGGLE), name);
@@ -144,7 +144,7 @@ CnCReferenceMenuClass::On_Destroy (void)
 			delete OldBackdrop;
 			OldBackdrop = NULL;
 		}
-	}		
+	}
 
 	MenuDialogClass::On_Destroy ();
 	return ;
@@ -200,7 +200,7 @@ CnCReferenceMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 			// Play a custom SFX for feedback
 			//
 			WWAudioClass::Get_Instance()->Create_Instant_Sound("Changed_Team", Matrix3D(1));
-			
+
 			GameInitMgrClass::Continue_Game();
 			End_Dialog();
 
@@ -285,7 +285,7 @@ CnCReferenceMenuClass::On_Menu_Activate (bool onoff)
 				delete OldBackdrop;
 				OldBackdrop = NULL;
 			}
-		}		
+		}
 	}
 
 	return ;
@@ -304,13 +304,13 @@ CnCReferenceMenuClass::On_Frame_Update (void)
 	//
 	// Enable or disable the suicide button
 	//
-	bool is_suicide_enabled = 
+	bool is_suicide_enabled =
 		The_Game() != NULL &&
-		!IS_MISSION && 
+		!IS_MISSION &&
 		cNetwork::I_Am_Client();// &&
 		//GameModeManager::Find("Combat") != NULL &&
 		//GameModeManager::Find("Combat")->Is_Active();
-	
+
 	bool can_suicide_now = (time_now_ms - LastSuicideTimeMs >= ACTION_TIMEOUT_MS);
 
 	Get_Dlg_Item(IDC_OPTIONS_MULTIPLAY_SUICIDE)->Enable (can_suicide_now);
@@ -319,12 +319,12 @@ CnCReferenceMenuClass::On_Frame_Update (void)
 	//
 	// Enable or disable the change teams button
 	//
-	bool is_team_change_enabled = 
+	bool is_team_change_enabled =
 		The_Game() != NULL &&
-		!IS_MISSION && 
+		!IS_MISSION &&
 		cNetwork::I_Am_Client() &&
-		The_Game()->IsTeamChangingAllowed.Is_True() && 
-		(!(GameModeManager::Find("WOL") != NULL && GameModeManager::Find("WOL")->Is_Active()) || The_Game()->IsLaddered.Is_False());// && 
+		The_Game()->IsTeamChangingAllowed.Is_True() &&
+		The_Game()->IsLaddered.Is_False();// &&
 		//GameModeManager::Find("Combat") != NULL &&
 		//GameModeManager::Find("Combat")->Is_Active();
 
@@ -362,7 +362,7 @@ CnCReferenceMenuClass::Prompt_User (void)
 	if (cUserOptions::SkipIngameQuitConfirmDialog.Is_True()) {
 		Exit_Game ();
 	} else {
-		DlgMsgBox::DoDialog (TRANSLATE (IDS_MENU_TEXT054), TRANSLATE (IDS_EXIT_GAME_VERIFICATION), DlgMsgBox::YesNo, this);	
+		DlgMsgBox::DoDialog (TRANSLATE (IDS_MENU_TEXT054), TRANSLATE (IDS_EXIT_GAME_VERIFICATION), DlgMsgBox::YesNo, this);
 	}
 
 	return ;
@@ -404,9 +404,9 @@ CnCReferenceMenuClass::Exit_Game (void)
 }
 
 	/*
-	bool is_suicide_enabled = 
+	bool is_suicide_enabled =
 		The_Game() != NULL &&
-		!IS_MISSION && 
+		!IS_MISSION &&
 		cNetwork::I_Am_Client() &&
 		GameModeManager::Find("Combat") != NULL &&
 		GameModeManager::Find("Combat")->Is_Active();
@@ -417,12 +417,12 @@ CnCReferenceMenuClass::Exit_Game (void)
 	//
 	// Enable or disable the change teams button
 	//
-	bool is_team_change_enabled = 
+	bool is_team_change_enabled =
 		The_Game() != NULL &&
-		!IS_MISSION && 
+		!IS_MISSION &&
 		cNetwork::I_Am_Client() &&
-		The_Game()->IsTeamChangingAllowed.Is_True() && 
-		(!(GameModeManager::Find("WOL") != NULL && GameModeManager::Find("WOL")->Is_Active()) || The_Game()->IsLaddered.Is_False()) && 
+		The_Game()->IsTeamChangingAllowed.Is_True() &&
+		The_Game()->IsLaddered.Is_False() &&
 		GameModeManager::Find("Combat") != NULL &&
 		GameModeManager::Find("Combat")->Is_Active();
 
@@ -430,4 +430,4 @@ CnCReferenceMenuClass::Exit_Game (void)
 	Get_Dlg_Item (IDC_OPTIONS_MULTIPLAY_CHANGE_TEAMS)->Show (is_team_change_enabled);
 	*/
 
-	
+

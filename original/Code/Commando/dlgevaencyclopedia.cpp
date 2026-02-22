@@ -118,7 +118,7 @@ EVAEncyclopediaMenuClass::On_Init_Dialog (void)
 		cNetwork::I_Am_Client() &&
 		//The_Game()->Is_Team_Game() &&
 		The_Game()->IsTeamChangingAllowed.Is_True() &&
-		(!(GameModeManager::Find("WOL") != NULL && GameModeManager::Find("WOL")->Is_Active()) || The_Game()->IsLaddered.Is_False()) &&
+		The_Game()->IsLaddered.Is_False() &&
 		GameModeManager::Find("Combat") != NULL &&
 		GameModeManager::Find("Combat")->Is_Active();
 

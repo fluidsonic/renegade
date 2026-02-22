@@ -570,46 +570,6 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 		return false;
 	}
 
-	if (GameModeManager::Find("WOL")->Is_Active()) {
-		if (IsPassworded.Is_True() && Is_QuickMatch_Server()) {
-			Debug_Say(("cGameData::Is_Valid_Settings: Quickmatch can not have passwords.\n" ));
-			PRINT_CONFIG_ERROR;
-			ConsoleBox.Print("A password cannot be used on a Quickmatch server\n\n");
-			outMsg = TRANSLATE(IDS_HOPTERR_QM_HASPASS);
-			return false;
-		}
-
-		if (Is_QuickMatch_Server() && IsLaddered.Is_False()) {
-			Debug_Say(("cGameData::Is_Valid_Settings: Quickmatch must be laddered.\n" ));
-			PRINT_CONFIG_ERROR;
-			ConsoleBox.Print("A Quickmatch server must also be laddered\n\n");
-			outMsg = TRANSLATE(IDS_HOPTERR_QM_NOLADDER);
-			return false;
-		}
-
-		if (Is_QuickMatch_Server() && IsClanGame.Is_True()) {
-			Debug_Say(("cGameData::Is_Valid_Settings: Quickmatch cannot be clanned.\n" ));
-			PRINT_CONFIG_ERROR;
-			ConsoleBox.Print("Clans are not allowed in a quickmatch server\n\n");
-			outMsg = TRANSLATE(IDS_HOPTERR_QM_NOCLANS);
-			return false;
-		}
-
-		if (IsLaddered.Is_True() && IsTeamChangingAllowed.Is_True()) {
-			PRINT_CONFIG_ERROR;
-			ConsoleBox.Print("Team changing not allowed on a laddered server\n\n");
-			outMsg = TRANSLATE(IDS_HOPTERR_NO_TEAMCHANGE);
-			return false;
-		}
-
-		if (IsClanGame.Is_True() && (IsTeamChangingAllowed.Is_True() || RemixTeams.Is_True())) {
-			PRINT_CONFIG_ERROR;
-			ConsoleBox.Print("Team changing or Team Remix not allowed on a clan game server.\n");
-			outMsg = "Team changing or Team Remix not allowed on a clan game server."; //TRANSLATE(IDS_HOPTERR_NO_TEAMCHANGE);
-			return false;
-		}
-	}
-
 	if (Get_Max_Players() == 0) {
 		PRINT_CONFIG_ERROR;
 		ConsoleBox.Print("Max player count must be greater than 0\n\n");
