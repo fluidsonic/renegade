@@ -25,7 +25,11 @@ import ccr.server.net.WeaponEntry
  *
  * Single-player stubs are included for structural parity with C++ but are no-ops in this MP server.
  */
-class God(private val server: GameServer) {
+open class God(private val server: GameServer) {
+
+    companion object {
+        const val RESPAWN_DELAY_SECONDS = 3.0f
+    }
 
     // C++ GodState enum
     enum class State {
@@ -48,13 +52,18 @@ class God(private val server: GameServer) {
     val c4Objects = mutableListOf<C4GameObj>()
     private val lastC4PlaceMs = mutableMapOf<Int, Long>()  // rhostId → last placement time
 
+    // Respawn cooldown timers: rhostId → remaining seconds before next spawn is permitted
+    private val respawnTimers = mutableMapOf<Int, Float>()
+
     // ---- cGod::Think (god.cpp:91-168) ----
 
     /**
      * Called every network tick. Transitions state machine and spawns soldiers
      * for in-game players that currently have no soldier.
+     *
+     * @param deltaSeconds elapsed time since the last tick, in seconds
      */
-    fun think() {
+    fun think(deltaSeconds: Float) {
         // Return early if no players (C++: player list head == NULL)
         if (playerInGame.isEmpty()) return
 
@@ -79,8 +88,18 @@ class God(private val server: GameServer) {
 
         // MP respawn loop: create a commando for every in-game player without a soldier
         if (state == State.MULTIPLAYER) {
+            // Decrement respawn timers
+            val timerIter = respawnTimers.iterator()
+            while (timerIter.hasNext()) {
+                val entry = timerIter.next()
+                entry.setValue(entry.value - deltaSeconds)
+                if (entry.value <= 0f) timerIter.remove()
+            }
+
             for (rhostId in playerInGame.toList()) {  // toList() to avoid ConcurrentModificationException
                 if (rhostId !in soldiersByHost) {
+                    // Skip if still in respawn cooldown
+                    if (respawnTimers.containsKey(rhostId)) continue
                     val player = playersByHost[rhostId] ?: continue
                     createCommando(player)
                 }
@@ -151,11 +170,14 @@ class God(private val server: GameServer) {
      * resolves a spawn position via [SpawnManager], creates [SoldierGameObj],
      * registers it, and sends creation packets to all in-game hosts.
      *
+     * Declared `open` so tests can override it to verify spawn suppression logic
+     * without actually spawning network objects.
+     *
      * @param rhostId   remote host / client ID
      * @param playerType  0=NOD, 1=GDI
      * @return the spawned [SoldierGameObj], or null if no definition ID is available
      */
-    fun createCommando(rhostId: Int, playerType: Int): SoldierGameObj? {
+    open fun createCommando(rhostId: Int, playerType: Int): SoldierGameObj? {
         // C++: Is_Cnc() == true → use CnC minigunner presets
         val defId = if (playerType == 0) server.nodSoldierDefId else server.gdiSoldierDefId
         if (defId == 0) {
@@ -459,6 +481,7 @@ class God(private val server: GameServer) {
 
     /**
      * Removes a player's soldier: sends deletion to all other in-game hosts, then unregisters.
+     * Starts a [RESPAWN_DELAY_SECONDS]-second cooldown so [think] will not immediately re-spawn.
      * Reused for suicide, team-change, and disconnect.
      */
     fun deleteSoldier(rhostId: Int) {
@@ -472,8 +495,24 @@ class God(private val server: GameServer) {
         val soldier = soldiersByHost.remove(rhostId) ?: return
         server.gameObjManager.removeStar(soldier)
         soldier.setDeletePending()
+        startRespawnCooldown(rhostId)
         println("[GOD] marked soldier delete-pending for host $rhostId netId=${soldier.networkId}")
     }
+
+    /**
+     * Starts (or resets) the respawn cooldown timer for [rhostId].
+     * [think] will not call [createCommando] while this timer is active.
+     * Exposed as `internal` so tests can inject a cooldown directly.
+     */
+    internal fun startRespawnCooldown(rhostId: Int) {
+        respawnTimers[rhostId] = RESPAWN_DELAY_SECONDS
+    }
+
+    /**
+     * Returns the remaining respawn cooldown in seconds for [rhostId], or 0 if no cooldown is active.
+     * Exposed as `internal` for test inspection.
+     */
+    internal fun respawnTimerRemaining(rhostId: Int): Float = respawnTimers[rhostId] ?: 0f
 
     /**
      * Full cleanup when a client disconnects:

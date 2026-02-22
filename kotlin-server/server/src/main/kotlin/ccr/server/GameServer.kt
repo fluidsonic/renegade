@@ -421,7 +421,7 @@ class GameServer(internal val config: ServerConfig) {
             updateFps(nowMs)
 
             // God.think() — handles respawn loop (creates soldiers for soldierless in-game players)
-            god.think()
+            god.think(frameDeltaSeconds)
 
             // Mark driven vehicles BIT_FREQUENT dirty — gameObjManager.think() already advanced
             // their position via VehicleGameObj.think(). All clients need the updated position.
