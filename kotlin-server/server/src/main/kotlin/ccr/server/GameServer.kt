@@ -1218,6 +1218,12 @@ class GameServer(internal val config: ServerConfig) {
         gameContext.baseControllers[0] = null
         gameContext.baseControllers[1] = null
 
+        // Unregister vehicles from NetworkObjectManager and clear God's vehicle tracking
+        for (vehicle in god.vehiclesByNetId.values.toList()) {
+            NetworkObjectManager.unregisterObject(vehicle)
+        }
+        god.vehiclesByNetId.clear()
+
         // Clear all ticking game objects (buildings, any remaining C4/beacons)
         gameObjManager.destroyAll()
 
