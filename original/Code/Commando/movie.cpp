@@ -217,9 +217,9 @@ void	MovieGameModeClass::Movie_Done( void )
 		Start_Movie( "DATA/MOVIES/R_INTRO.BIK" );		// Play Renegade intro movie
 	} else if ( MovieStartupMode == STARTUP_MOVIE_INTRO ) {
 		MovieStartupMode = STARTUP_MOVIE_OFF;
-		// Goto main menu
-		
-		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_MAIN_MENU);
+		// Goto splash screen, which transitions to main menu and signals IsComplete for auto-connect
+
+		RenegadeDialogMgrClass::Goto_Location (RenegadeDialogMgrClass::LOC_SPLASH_IN);
 
 		IntroMovieSkipAllowed = true;
 
