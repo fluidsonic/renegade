@@ -1,9 +1,10 @@
 package ccr.server.defs.combat
 
 import ccr.server.defs.DefinitionClass
+import ccr.server.defs.readMicroFloat
+import ccr.server.defs.readMicroInt
+import ccr.server.defs.readMicroString
 import ccr.server.mix.ChunkReader
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 /**
  * Kotlin representation of BeaconGameObjDef (Combat/beacongameobj.cpp).
@@ -63,79 +64,28 @@ private const val MICROCHUNKID_DEF_IS_NUKE = 17
 
 fun parseBeaconGameObjDef(objDataReader: ChunkReader, name: String, id: UInt, chunkId: UInt): BeaconGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-
-    var armingAnimationName = ""
-    var broadcastToAllTime = 5f
-    var armTime = 10f
-    var disarmTime = 10f
-    var preDetonateCinematicDelay = 0f
-    var detonateTime = 30f
-    var postDetonateTime = 10f
-    var armedSoundDefId = 0
-    var disarmingTextId = 0
-    var disarmedTextId = 0
-    var armingTextId = 0
-    var armingInterruptedTextId = 0
-    var disarmingInterruptedTextId = 0
-    var preDetonateCinematicDefId = 0
-    var postDetonateCinematicDefId = 0
-    var explosionDefId = 0
-    var isNuke = 1
-
-    vars?.forEachMicroChunk { microChunkId, bytes ->
-        when (microChunkId) {
-            MICROCHUNKID_DEF_ARMING_ANIM_NAME -> armingAnimationName = bytes.toNullTerminatedString()
-            MICROCHUNKID_DEF_BROADCAST_TIME -> broadcastToAllTime = bytes.toLeFloat()
-            MICROCHUNKID_DEF_ARM_TIME -> armTime = bytes.toLeFloat()
-            MICROCHUNKID_DEF_DISARM_TIME -> disarmTime = bytes.toLeFloat()
-            MICROCHUNKID_DEF_PRE_DETONATE_CINEMATIC_DELAY -> preDetonateCinematicDelay = bytes.toLeFloat()
-            MICROCHUNKID_DEF_DETONATE_TIME -> detonateTime = bytes.toLeFloat()
-            MICROCHUNKID_DEF_POST_DETONATE_TIME -> postDetonateTime = bytes.toLeFloat()
-            MICROCHUNKID_DEF_ARMED_SOUNDID -> armedSoundDefId = bytes.toLeInt()
-            MICROCHUNKID_DEF_DISARMING_TEXTID -> disarmingTextId = bytes.toLeInt()
-            MICROCHUNKID_DEF_DISARMED_TEXTID -> disarmedTextId = bytes.toLeInt()
-            MICROCHUNKID_DEF_ARMING_TEXTID -> armingTextId = bytes.toLeInt()
-            MICROCHUNKID_DEF_ARM_INTERRUPT_TEXTID -> armingInterruptedTextId = bytes.toLeInt()
-            MICROCHUNKID_DEF_DISARM_INTERRUPT_TEXTID -> disarmingInterruptedTextId = bytes.toLeInt()
-            MICROCHUNKID_DEF_PRE_CINEMATIC_DEFID -> preDetonateCinematicDefId = bytes.toLeInt()
-            MICROCHUNKID_DEF_POST_CINEMATIC_DEFID -> postDetonateCinematicDefId = bytes.toLeInt()
-            MICROCHUNKID_DEF_EXPLOSION_DEFID -> explosionDefId = bytes.toLeInt()
-            MICROCHUNKID_DEF_IS_NUKE -> isNuke = bytes.toLeInt()
-        }
-    }
+        ?: return BeaconGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return BeaconGameObjDef(
         name = name,
         id = id,
         chunkId = chunkId,
-        armingAnimationName = armingAnimationName,
-        broadcastToAllTime = broadcastToAllTime,
-        armTime = armTime,
-        disarmTime = disarmTime,
-        preDetonateCinematicDelay = preDetonateCinematicDelay,
-        detonateTime = detonateTime,
-        postDetonateTime = postDetonateTime,
-        armedSoundDefId = armedSoundDefId,
-        disarmingTextId = disarmingTextId,
-        disarmedTextId = disarmedTextId,
-        armingTextId = armingTextId,
-        armingInterruptedTextId = armingInterruptedTextId,
-        disarmingInterruptedTextId = disarmingInterruptedTextId,
-        preDetonateCinematicDefId = preDetonateCinematicDefId,
-        postDetonateCinematicDefId = postDetonateCinematicDefId,
-        explosionDefId = explosionDefId,
-        isNuke = isNuke,
+        armingAnimationName = vars.readMicroString(MICROCHUNKID_DEF_ARMING_ANIM_NAME) ?: "",
+        broadcastToAllTime = vars.readMicroFloat(MICROCHUNKID_DEF_BROADCAST_TIME) ?: 5f,
+        armTime = vars.readMicroFloat(MICROCHUNKID_DEF_ARM_TIME) ?: 10f,
+        disarmTime = vars.readMicroFloat(MICROCHUNKID_DEF_DISARM_TIME) ?: 10f,
+        preDetonateCinematicDelay = vars.readMicroFloat(MICROCHUNKID_DEF_PRE_DETONATE_CINEMATIC_DELAY) ?: 0f,
+        detonateTime = vars.readMicroFloat(MICROCHUNKID_DEF_DETONATE_TIME) ?: 30f,
+        postDetonateTime = vars.readMicroFloat(MICROCHUNKID_DEF_POST_DETONATE_TIME) ?: 10f,
+        armedSoundDefId = vars.readMicroInt(MICROCHUNKID_DEF_ARMED_SOUNDID) ?: 0,
+        disarmingTextId = vars.readMicroInt(MICROCHUNKID_DEF_DISARMING_TEXTID) ?: 0,
+        disarmedTextId = vars.readMicroInt(MICROCHUNKID_DEF_DISARMED_TEXTID) ?: 0,
+        armingTextId = vars.readMicroInt(MICROCHUNKID_DEF_ARMING_TEXTID) ?: 0,
+        armingInterruptedTextId = vars.readMicroInt(MICROCHUNKID_DEF_ARM_INTERRUPT_TEXTID) ?: 0,
+        disarmingInterruptedTextId = vars.readMicroInt(MICROCHUNKID_DEF_DISARM_INTERRUPT_TEXTID) ?: 0,
+        preDetonateCinematicDefId = vars.readMicroInt(MICROCHUNKID_DEF_PRE_CINEMATIC_DEFID) ?: 0,
+        postDetonateCinematicDefId = vars.readMicroInt(MICROCHUNKID_DEF_POST_CINEMATIC_DEFID) ?: 0,
+        explosionDefId = vars.readMicroInt(MICROCHUNKID_DEF_EXPLOSION_DEFID) ?: 0,
+        isNuke = vars.readMicroInt(MICROCHUNKID_DEF_IS_NUKE) ?: 1,
     )
-}
-
-private fun ByteArray.toLeInt(): Int =
-    ByteBuffer.wrap(this, 0, 4.coerceAtMost(size)).order(ByteOrder.LITTLE_ENDIAN).int
-
-private fun ByteArray.toLeFloat(): Float =
-    ByteBuffer.wrap(this, 0, 4.coerceAtMost(size)).order(ByteOrder.LITTLE_ENDIAN).float
-
-private fun ByteArray.toNullTerminatedString(): String {
-    val nullIndex = indexOfFirst { it == 0.toByte() }
-    val len = if (nullIndex < 0) size else nullIndex
-    return String(this, 0, len, Charsets.ISO_8859_1)
 }
