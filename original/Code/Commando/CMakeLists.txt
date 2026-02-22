@@ -57,6 +57,9 @@ set_target_properties(Commando PROPERTIES
     # Tell macOS this is a background/agent process so it doesn't show in Dock
     # until we explicitly request it (optional — remove to get Dock icon)
     MACOSX_BUNDLE_INFO_PLIST        "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
+    # Allow dlopen("SCRIPTS.dylib") to find the dylib next to the executable.
+    BUILD_RPATH   "@executable_path"
+    INSTALL_RPATH "@executable_path"
 )
 
 target_include_directories(Commando PRIVATE
@@ -114,6 +117,4 @@ target_link_libraries(Commando PRIVATE
     "-framework AudioToolbox"
     # Export all global symbols so Scripts.dylib (loaded via dlopen) can find them.
     "-Wl,-export_dynamic"
-    # Allow dlopen("SCRIPTS.dylib") to find the dylib next to the executable.
-    "-Wl,-rpath,@executable_path"
 )
