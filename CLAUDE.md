@@ -31,6 +31,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 ## C++ Port — Workflow Rules
 - **All compiler AND linker errors are your problem to fix** — never leave a build broken; fix them before moving on
 - **macOS-only codebase — no platform ifdefs**: This port targets macOS only; write clean macOS/POSIX code directly; no need to preserve `#ifdef _WIN32` / `#ifdef _UNIX` branches
+- **Visual/runtime verification is required for C++ fixes** — a successful build is NOT sufficient to call a fix complete; the game must be run interactively and the fix confirmed visually before declaring done or merging
 
 ## Workflow Meta-Rules
 - When the user writes **"remember X"**, immediately update `CLAUDE.md` with X — no need to ask for confirmation

@@ -505,6 +505,7 @@ INT32 AIL_sample_status(HSAMPLE s) {
 void AIL_set_sample_volume(HSAMPLE s, INT32 vol) {
     Sample2D* smp = get_sample(s);
     if (!smp) return;
+    if (smp->volume == vol) return;
     fprintf(stderr, "[audio] set_sample_volume: handle=%u vol=%d (%.3f)\n",
         (uint32_t)s, vol, miles_vol_to_ma(vol));
     smp->volume = vol;
@@ -520,6 +521,7 @@ INT32 AIL_sample_volume(HSAMPLE s) {
 void AIL_set_sample_pan(HSAMPLE s, INT32 pan) {
     Sample2D* smp = get_sample(s);
     if (!smp) return;
+    if (smp->pan == pan) return;
     smp->pan = pan;
     if (smp->sound_initialized) ma_sound_set_pan(&smp->sound, miles_pan_to_ma(pan));
 }
@@ -812,6 +814,7 @@ INT32 AIL_3D_user_data(H3DSAMPLE s, UINT32 index) {
 void AIL_set_3D_sample_volume(H3DSAMPLE s, INT32 vol) {
     Sample3D* smp = get_sample3d(s);
     if (!smp) return;
+    if (smp->volume == vol) return;
     fprintf(stderr, "[audio] set_3d_sample_volume: handle=%u vol=%d\n", (uint32_t)s, vol);
     smp->volume = vol;
     update_3d_vol(smp);
@@ -1044,6 +1047,7 @@ INT32 AIL_stream_status(HSTREAM s) {
 void AIL_set_stream_volume(HSTREAM s, INT32 vol) {
     Stream* str = get_stream(s);
     if (!str) return;
+    if (str->volume == vol) return;
     str->volume = vol;
     if (str->sound_initialized) ma_sound_set_volume(&str->sound, miles_vol_to_ma(vol));
 }
