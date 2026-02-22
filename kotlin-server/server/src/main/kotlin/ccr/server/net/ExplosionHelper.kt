@@ -1,6 +1,10 @@
 package ccr.server.net
 
+import ccr.math.LineSeg
+import ccr.math.Vector3
 import ccr.net.replication.NetworkObjectManager
+import ccr.physics.collision.RayCollisionTest
+import ccr.physics.scene.PhysicsScene
 import ccr.server.GameServer
 import ccr.server.combat.ArmorWarheadManager
 import ccr.server.defs.ExplosionDefinitionClass
@@ -24,6 +28,7 @@ object ExplosionHelper {
         posY: Float,
         posZ: Float,
         objects: List<*>,
+        physicsScene: PhysicsScene? = null,
     ) {
         val radius = explosionDef.damageRadius
         if (radius <= 0f) return
@@ -46,6 +51,20 @@ object ExplosionHelper {
 
             // Objects at or beyond the radius take no damage
             if (distSq >= radiusSq) continue
+
+            // Line-of-sight check: skip targets blocked by static terrain
+            // C++: ExplosionClass::Damage_Objects casts a ray per target
+            if (physicsScene != null && distSq > 0.0001f) {
+                val ray = RayCollisionTest(
+                    ray = LineSeg(
+                        p0 = Vector3(posX, posY, posZ),
+                        p1 = Vector3(objPos.x, objPos.y, objPos.z),
+                    ),
+                    checkStatic  = true,
+                    checkDynamic = false,   // only terrain walls occlude; other entities don't
+                )
+                if (physicsScene.castRay(ray)) continue   // blocked → no damage
+            }
 
             val dist = sqrt(distSq)
             val scale = if (explosionDef.damageIsScaled) 1f - (dist / radius) else 1f
@@ -79,6 +98,7 @@ object ExplosionHelper {
             posY = posY,
             posZ = posZ,
             objects = server.gameObjManager.getAllObjects(),
+            physicsScene = server.physicsScene,
         )
 
         val explosion = ScExplosionEvent(

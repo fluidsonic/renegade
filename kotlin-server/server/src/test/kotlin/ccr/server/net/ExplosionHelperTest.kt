@@ -1,6 +1,9 @@
 package ccr.server.net
 
+import ccr.math.Triangle
 import ccr.math.Vector3
+import ccr.physics.scene.PhysicsScene
+import ccr.physics.static.StaticPhysClass
 import ccr.server.defs.ExplosionDefinitionClass
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -83,7 +86,75 @@ class ExplosionHelperTest {
         assertApprox(20f, near.health,   tolerance = 0.1f)
         assertApprox(50f, middle.health, tolerance = 0.1f)
     }
+
+    // --- Ray occlusion tests ---
+
+    @Test fun `null physicsScene applies damage as before`() {
+        val target = SoldierGameObj(definitionId = 1, position = Vector3(5f, 0f, 0f), health = 200f, shieldStrength = 0f)
+        ExplosionHelper.applyDamageToObjects(
+            makeExplosionDef(radius = 10f, strength = 100f, scaled = false),
+            0f, 0f, 0f,
+            listOf<Any>(target),
+            physicsScene = null,
+        )
+        // No physics scene → distance check only → full damage applied
+        assertApprox(100f, target.health)
+    }
+
+    @Test fun `empty physicsScene with no walls still applies damage`() {
+        val scene = PhysicsScene()   // no static objects → ray never hits anything
+        val target = SoldierGameObj(definitionId = 1, position = Vector3(5f, 0f, 0f), health = 200f, shieldStrength = 0f)
+        ExplosionHelper.applyDamageToObjects(
+            makeExplosionDef(radius = 10f, strength = 100f, scaled = false),
+            0f, 0f, 0f,
+            listOf<Any>(target),
+            physicsScene = scene,
+        )
+        // Empty scene → ray misses → full damage applied
+        assertApprox(100f, target.health)
+    }
+
+    @Test fun `target behind wall receives no damage, clear target still does`() {
+        // Wall at x=5, perpendicular to x-axis: two triangles forming a quad at x=5, y/z in [-20,20]
+        val scene = buildSceneWithWallAt(x = 5f)
+        // Blocked target at x=10 (ray from 0,0,0 to 10,0,0 crosses x=5 wall)
+        val blocked = SoldierGameObj(definitionId = 1, position = Vector3(10f, 0f, 0f), health = 200f, shieldStrength = 0f)
+        // Clear target at x=3 (ray from 0,0,0 to 3,0,0 does not cross x=5 wall)
+        val clear   = SoldierGameObj(definitionId = 1, position = Vector3(3f,  0f, 0f), health = 200f, shieldStrength = 0f)
+        ExplosionHelper.applyDamageToObjects(
+            makeExplosionDef(radius = 20f, strength = 100f, scaled = false),
+            0f, 0f, 0f,
+            listOf<Any>(blocked, clear),
+            physicsScene = scene,
+        )
+        assertApprox(0f,   blocked.damageTaken)
+        assertApprox(100f, clear.damageTaken)
+    }
 }
+
+/** Builds a PhysicsScene with a vertical wall perpendicular to the x-axis at the given x coordinate. */
+private fun buildSceneWithWallAt(x: Float): PhysicsScene {
+    val scene = PhysicsScene()
+    val wall = StaticPhysClass()
+    // Two triangles forming a quad: covers y in [-20,20], z in [-20,20], all at x=wallX
+    wall.triangles = listOf(
+        Triangle(
+            Vector3(x, -20f, -20f),
+            Vector3(x,  20f, -20f),
+            Vector3(x,  20f,  20f),
+        ),
+        Triangle(
+            Vector3(x, -20f, -20f),
+            Vector3(x,  20f,  20f),
+            Vector3(x, -20f,  20f),
+        ),
+    )
+    scene.addStaticObject(wall)
+    return scene
+}
+
+/** Convenience: how much damage was actually applied (initial health 200f, read back via health). */
+private val SoldierGameObj.damageTaken: Float get() = 200f - health
 
 private fun assertApprox(expected: Float, actual: Float, tolerance: Float = 0.01f) {
     assert(kotlin.math.abs(expected - actual) <= tolerance) {
