@@ -9,6 +9,7 @@
 			"Edit(/CLAUDE.md)",
 			"Edit(/docs/**)",
 			"Edit(/plans/**)",
+			"Read(/.claude/**)",
 			"Write(/CLAUDE.md)",
 			"Write(/docs/**)",
 			"Write(/plans/**)"
