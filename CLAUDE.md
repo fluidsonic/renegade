@@ -60,6 +60,25 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - Run lint: `cmake --build original/build --target lint`
 - Narrowing/conversion warnings: `-Wconversion`, `-Wsign-conversion`, `-Wdouble-promotion` (warnings, not errors, until each module is clean)
 
+### Active compiler warnings — what to avoid in new code
+
+**Hard errors (`-Werror=`)** — these break the build immediately:
+- `non-pod-varargs`: don't pass `StringClass`/`WideStringClass` through `...`; cast to `const char*`/`const WCHAR*` first
+- `return-type`: every non-void function must return a value on all paths
+- `delete-incomplete`: never `delete ptr` when the pointed-to type is forward-declared only; include the full definition
+- `null-conversion`: don't assign `NULL`/`0` to a non-pointer (e.g. `bool x = NULL` — use `false`)
+- `array-bounds`: no out-of-bounds constant array indexing
+
+**Active warnings (not errors yet — avoid adding new instances):**
+- `-Wconversion` / `-Wsign-conversion`: avoid implicit signed↔unsigned or narrowing conversions; use explicit casts (`static_cast<uint32_t>(x)`)
+- `-Wdouble-promotion`: avoid passing `float` to functions that take `double` (e.g. `printf`-family `%f`); use explicit `(double)` cast or `%f` with a float literal
+- `-Wunused-function`: don't write static/internal functions that are never called; remove or `#if 0` dead helpers
+- `-Wunused-private-field`: remove private fields that are never read
+- `-Wunneeded-internal-declaration`: don't declare functions/vars in anonymous namespaces unless they're actually used
+- `-Wunreachable-code` / `-Wunreachable-code-return`: no dead code after `return`/`break`/`throw`; no `return x;` after unconditional `return`
+
+**Intentional no-op pattern:** to silence an unused-value on a parameter that must be named, use `(void)param;` — not a bare `param;`
+
 ### float32_t / float64_t
 - NOT in the macOS SDK — typedef'd as `float`/`double` in `original/compat/winnt.h` just before `#include "typesizes.h"`
 - Never replace with raw `float`/`double` in `typesizes.h` itself
