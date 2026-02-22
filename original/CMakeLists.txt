@@ -38,7 +38,6 @@ add_compile_options(
     -Wno-register
     -Wno-writable-strings
     -Wno-invalid-offsetof
-    -Wno-narrowing
     -Wno-int-to-pointer-cast
     -Wno-pointer-to-int-cast
     -Wno-comment
@@ -56,6 +55,9 @@ add_compile_options(
     -Wno-dangling-else
     -Wno-macro-redefined
     -Werror=non-pod-varargs
+    -Wconversion
+    -Wsign-conversion
+    -Wdouble-promotion
 )
 
 # Thread support for pthread
