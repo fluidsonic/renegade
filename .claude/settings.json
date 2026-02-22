@@ -21,7 +21,8 @@
 			"Bash(*git *remote*)",
 			"Bash(*git *reset*)",
 			"Bash(*git *stash*)",
-			"Bash(*git *worktree*)",
+			"Bash(*git worktree*)",
+			"Bash(*git * worktree*)",
 			"Bash(cxbottle:*)",
 			"Edit(~/Library/Application Support/CrossOver/Bottles/**)",
 			"Write(~/Library/Application Support/CrossOver/Bottles/**)"
@@ -40,7 +41,8 @@
 			"*git*remote*",
 			"*git*reset*",
 			"*git*stash*",
-			"*git*worktree*",
+			"*git worktree*",
+			"*git * worktree*",
 			"*launch-server.sh*",
 			"*RenegadeServer.exe*",
 			"cxbottle:*"

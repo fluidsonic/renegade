@@ -16,6 +16,11 @@
 
 ## C++ Port — Workflow Rules
 - **All compiler AND linker errors are your problem to fix** — never leave a build broken; fix them before moving on
+- **macOS-only codebase — no platform ifdefs**: This port targets macOS only; write clean macOS/POSIX code directly; no need to preserve `#ifdef _WIN32` / `#ifdef _UNIX` branches
+
+## Workflow Meta-Rules
+- When the user writes **"remember X"**, immediately update `CLAUDE.md` with X — no need to ask for confirmation
+- **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
 
 ## C++ Port — Known Patterns & Pitfalls
 
@@ -55,6 +60,17 @@
 - `MovieGameModeClass::Start_Movie()` hangs forever if the .BIK file is missing AND no CD drive (macOS has neither)
 - Fixed: `else if (force_cd)` branch now calls `Movie_Done()` directly instead of `CDVerifier.Display_UI()`
 - Allows the game to skip both intro movies and proceed to the main menu when video files aren't present
+
+### ThreadClass — POSIX thread implementation (COMPLETE)
+- `Execute()`: `pthread_create` + `pthread_detach`; stores `pthread_t` cast to `unsigned long` in `handle`
+- `Stop(ms)`: sets `running=false`, spin-waits on `handle==0` (set by `Internal_Thread_Function` on exit), `pthread_cancel` on timeout
+- `Switch_Thread()`: `sched_yield()`; `Sleep_Ms(ms)`: `usleep(ms*1000)`; `_Get_Current_Thread_ID()`: `(unsigned)(uintptr_t)pthread_self()`
+- Root cause of texture-load exit hang: all `ThreadClass` methods were `return;` no-ops on macOS → background thread never started → `_BackgroundQueue` never drained → `Flush_Pending_Load_Tasks` looped forever
+
+### On-disk / network struct fields must be fixed-width
+- `void*`, `long`, `unsigned long` in binary format structs are bugs on 64-bit macOS (8 bytes vs Windows 32-bit 4 bytes)
+- Use `uint32_t`/`int32_t` for every field that is read/written from disk or a network wire format
+- Example caught: `LegacyDDSURFACEDESC2::Surface` was `void*` → struct became 132 bytes instead of 124 → DDS loading silently failed
 
 ### Building to find all issues
 - Use `cmake --build ... -- -k 0` (Ninja keep-going) to see ALL errors, not just the first one
@@ -175,3 +191,12 @@
 - Automatically update `/CLAUDE.md` as you learn new things to remember in every conversation.
 - `/CLAUDE.md`, `/docs/*.md`, `/plans/*.md` can be written/edited in plan mode.
 - Always use `<project root>/.tmp/` for temporary files (scripts, scratch files, etc.). Never use `/tmp` or `$TMPDIR`.
+
+### Game loop architecture (God, GameState, BuildingManager)
+- `God(server)` owns player/soldier lifecycle; all player state maps live in God (`playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`)
+- `GameState(config)` handles timer countdown, intermission, game-over detection; `gameState.think(deltaMs)` called every tick before `god.think()`
+- `BuildingManager(server, level)` instantiates building subtypes from `LoadedBuildingGameObj`, registers `BaseControllerClass` singletons at `NET_ID_BASE_CONTROLLER_NOD/GDI`
+- `GameServer.config` is `internal`; `GameServer.sendGameNetObj()` is `internal` — God and BuildingManager access these directly
+- Player reconnect: `God.createPlayer()` checks for existing inactive player by same name, reactivates instead of creating new
+- `ServerFps` registered with `NET_ID_SERVER_FPS = 2_100_000_006`; sent in `sendConnectionObjects()` and BIOEVENT handler
+- `Player.replaceMoney()` named that way (not `setMoney`) because Kotlin generates a `setMoney` JVM setter that clashes with the `var money` property

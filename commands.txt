@@ -1,4 +1,4 @@
-RENEGADE COMMANDS as at Sat Feb 21 19:38:08 2026
+RENEGADE COMMANDS as at Sun Feb 22 14:47:18 2026
 
 ADMIN_MESSAGE <message> - sends an admin message to all clients. Host only. (amsg)
 ALLOW [<Nickname>|<Id>] - Remove user channel ban from this server (WOL mode only).

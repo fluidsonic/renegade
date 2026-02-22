@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$/kotlin-server" />
             <option value="$PROJECT_DIR$/kotlin-server/math" />
             <option value="$PROJECT_DIR$/kotlin-server/net" />
+            <option value="$PROJECT_DIR$/kotlin-server/physics" />
             <option value="$PROJECT_DIR$/kotlin-server/server" />
           </set>
         </option>
