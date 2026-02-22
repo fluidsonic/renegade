@@ -34,15 +34,7 @@ inline void Sleep(DWORD milliseconds) {
     usleep(milliseconds * 1000);
 }
 
-// GetTickCount (milliseconds since some epoch)
-#ifndef GETTICKCOUNT_DEFINED
-#define GETTICKCOUNT_DEFINED
-inline DWORD GetTickCount() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return (DWORD)(tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-#endif
+// GetTickCount — defined in global.h (available via force-include)
 
 // GetCurrentTime - Windows macro for GetTickCount (deprecated in modern SDK)
 #ifndef GetCurrentTime
