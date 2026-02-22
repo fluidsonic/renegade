@@ -57,6 +57,7 @@ object PacketCombiner {
 
             val buf = ByteArray(PACKET_MANAGER_MTU)
             var pos = 0
+            var lastHeaderPos = -1  // byte offset of the most recently written group header
 
             for ((groupIndex, entry) in sizeList.withIndex()) {
                 val (packetSize, sizePackets) = entry
@@ -76,9 +77,14 @@ object PacketCombiner {
                     }
 
                     if (maxFit <= 0) {
-                        // Flush current buffer and start new datagram
+                        // The datagram ends here. Clear MorePackets on the last group header written,
+                        // since no more groups follow in this datagram.
+                        if (lastHeaderPos >= 0) {
+                            buf[lastHeaderPos + 1] = (buf[lastHeaderPos + 1].toInt() and 0x7F).toByte()
+                        }
                         result.add(OutgoingDatagram(dest, buf.copyOf(pos)))
                         pos = 0
+                        lastHeaderPos = -1
                         continue
                     }
 
@@ -88,6 +94,7 @@ object PacketCombiner {
 
                     // Write group header (16-bit, little-endian C bitfield)
                     val header = encodeGroupHeader(count, packetSize, morePackets)
+                    lastHeaderPos = pos
                     buf[pos++] = header.toByte()
                     buf[pos++] = (header shr 8).toByte()
 

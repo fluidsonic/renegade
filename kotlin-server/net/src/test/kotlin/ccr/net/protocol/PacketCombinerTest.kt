@@ -116,6 +116,65 @@ class PacketCombinerTest {
         assertTrue(p3.contentEquals(packets[2].data))
     }
 
+    @Test
+    fun `MTU overflow splits into multiple datagrams with correct MorePackets flag`() {
+        // Use 35-byte packets (matches real server scenario for buildings+events).
+        // Capacity per datagram: header(2) + 35 + 13×36 = 505 bytes → 14 packets fit.
+        // 20 packets → datagram 1 has 14, datagram 2 has 6.
+        // The MorePackets bit on the last group header of datagram 1 must be 0 (not 1).
+        val packetSize = 35
+        val packets = (0 until 20).map { i ->
+            Pair(addr1, ByteArray(packetSize) { b -> (i * 7 + b).toByte() })
+        }
+
+        val datagrams = PacketCombiner.combine(packets)
+        assertEquals(2, datagrams.size, "20 packets of 35B should produce exactly 2 datagrams")
+
+        // Verify last group header in datagram 1 has MorePackets=0
+        val d1 = datagrams[0].data
+        val header1Low = d1[0].toInt() and 0xFF
+        val header1High = d1[1].toInt() and 0xFF
+        val morePackets1 = (header1High shr 7) and 1
+        assertEquals(0, morePackets1, "Last group header in datagram 1 must have MorePackets=0")
+
+        // All 20 packets must round-trip correctly
+        val recovered = datagrams.flatMap { dg -> PacketCombiner.split(dg.data, dg.data.size) }
+        assertEquals(20, recovered.size, "All 20 packets must be recovered")
+        for (i in 0 until 20) {
+            val expected = ByteArray(packetSize) { b -> (i * 7 + b).toByte() }
+            assertTrue(expected.contentEquals(recovered[i].data), "Packet $i must round-trip intact")
+        }
+    }
+
+    @Test
+    fun `MTU overflow with mixed sizes clears MorePackets on datagram boundary`() {
+        // Mix of small (17B) and large (77B) packets that together overflow one datagram.
+        // The plan's real scenario: 11 size-groups across 3 datagrams.
+        // Here we use 2 sizes: many 77B packets to force a split.
+        // 77B packets: header(2) + 77 + 6×78 = 2+77+468 = 547 > MTU → only 6 fit (6×78+77+2=547>540, so 5 fit)
+        // Actually: 2 + 77 + N×78 ≤ 540 → N×78 ≤ 461 → N=5, total=6 packets per datagram.
+        // 12 packets → 2 datagrams.
+        val packets = (0 until 12).map { i ->
+            Pair(addr1, ByteArray(77) { b -> (i + b).toByte() })
+        }
+
+        val datagrams = PacketCombiner.combine(packets)
+        assertEquals(2, datagrams.size, "12 packets of 77B should produce 2 datagrams")
+
+        // Last group header of datagram 1 must have MorePackets=0
+        val d1 = datagrams[0].data
+        val morePackets1 = (d1[1].toInt() and 0x80) ushr 7
+        assertEquals(0, morePackets1, "Datagram 1 last group header MorePackets must be 0")
+
+        // All 12 packets must round-trip
+        val recovered = datagrams.flatMap { dg -> PacketCombiner.split(dg.data, dg.data.size) }
+        assertEquals(12, recovered.size)
+        for (i in 0 until 12) {
+            val expected = ByteArray(77) { b -> (i + b).toByte() }
+            assertTrue(expected.contentEquals(recovered[i].data), "Packet $i must round-trip intact")
+        }
+    }
+
     // --- Delta format tests (C++ client wire format) ---
 
     @Test

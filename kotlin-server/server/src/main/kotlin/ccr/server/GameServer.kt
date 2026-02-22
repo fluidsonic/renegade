@@ -535,6 +535,10 @@ class GameServer(internal val config: ServerConfig) {
         bytesSentThisTick.clear()
         for ((rhostId, packets) in pendingOutbox) {
             val datagrams = PacketCombiner.combine(packets)
+            if (datagrams.isNotEmpty()) {
+                val sizes = datagrams.joinToString(", ") { "${it.data.size}B" }
+                println("[NET] → combined ${packets.size} packets for host $rhostId into ${datagrams.size} datagram(s) ($sizes)")
+            }
             enqueueWithCrc(datagrams)
             bytesSentThisTick[rhostId] = datagrams.sumOf { it.data.size }
         }
