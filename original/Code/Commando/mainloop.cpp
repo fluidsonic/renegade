@@ -1,5 +1,6 @@
 #include "global.h"
 #include "mainloop.h"
+#include "gamespyadmin.h"
 #include "sdl2_platform.h"
 #include "init.h"
 #include "shutdown.h"
@@ -91,6 +92,10 @@ void _Game_Main_Loop_Loop(void)
    NetworkObjectMgrClass::Think ();
 	ServerControl.Service();
 }
+
+	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+		cGameSpyAdmin::Think();
+	}
 
 	//
 	// If the following assert hits it may indicate that your

@@ -1,5 +1,6 @@
 #include "global.h"
 #include "cnetwork.h"
+#include "gamespyadmin.h"
 
 #include <shellapi.h>
 
@@ -166,6 +167,11 @@ void cNetwork::Init_Client(unsigned short my_port)
 		cAppPacketStats::Reset();
 	}
 	LastServerConnectionStateBad = false;
+
+	if (cGameSpyAdmin::Is_Gamespy_Game()) {
+		assert(PTheGameData != NULL);
+		The_Game()->Set_Password(cGameSpyAdmin::Get_Password_Attempt());
+	}
 
 	cClientPingManager::Init();
 

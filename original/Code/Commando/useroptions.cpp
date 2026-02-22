@@ -8,6 +8,7 @@
 #include "global.h"
 #include "useroptions.h"
 
+#include "gamespyadmin.h"
 #include "_globals.h"
 #include "player.h"
 #include "cnetwork.h"
@@ -151,6 +152,9 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 		}
 
 		addr = ::inet_addr(ipaddr);
+		cGameSpyAdmin::Set_Game_Host_Ip(static_cast<uint32_t>(addr));
+		cGameSpyAdmin::Set_Game_Host_Port(port);
+		cGameSpyAdmin::Set_Is_Launch_From_Gamespy_Requested(true);
 	}
 
 	char * nickname_param = ::strstr(tmpstr, "+NETPLAYERNAME");
@@ -188,6 +192,7 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 		nickname2[end - start] = 0;
 
 		cUserOptions::GameSpyNickname.Set(nickname2);
+		cGameSpyAdmin::Set_Is_Launch_From_Gamespy_Requested(true);
 	}
 
 	char * password_param = ::strstr(tmpstr, "+PASS");
@@ -232,6 +237,7 @@ bool cUserOptions::Parse_Command_Line(LPCSTR command)
 
 		WideStringClass wide_password;
 		wide_password.Convert_From(password);
+		cGameSpyAdmin::Set_Password_Attempt(wide_password);
 	}
 
 	free(tmpstr);
