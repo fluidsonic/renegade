@@ -803,6 +803,21 @@ void	Input::Update( void )
 	DirectInput::Read();
 	Update_Sliders ();
 
+	{
+		static int32_t s_log_frame = 0;
+		if (++s_log_frame >= 300) {
+			s_log_frame = 0;
+			fprintf(stderr, "[Input] MenuMode=%d HasFocus=%d MouseCaptured=%d FwdKey=0x%02X DIK_W=%d mouseX=%ld mouseY=%ld\n",
+				(int32_t)MenuMode,
+				(int32_t)SDL2_HasFocus,
+				(int32_t)SDL2_MouseCaptured,
+				(int32_t)FunctionPrimaryKeys[INPUT_FUNCTION_MOVE_FORWARD],
+				DirectInput::Get_Keyboard_Button(0x11),
+				DirectInput::Get_Mouse_Axis(DirectInput::MOUSE_X_AXIS),
+				DirectInput::Get_Mouse_Axis(DirectInput::MOUSE_Y_AXIS));
+		}
+	}
+
 	//
 	// zero all values
 	//
