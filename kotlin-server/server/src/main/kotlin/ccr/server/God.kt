@@ -11,6 +11,7 @@ import ccr.server.defs.SoldierGameObjDefWrapper
 import ccr.server.defs.VehicleGameObjDefWrapper
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.combat.BeaconGameObjDef
+import ccr.server.level.ldd.LoadedVehicleGameObj
 import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
 import ccr.server.net.Player
@@ -426,30 +427,29 @@ open class God(private val server: GameServer) {
      * Unlike [createVehicle] (purchased), uses the LDD-assigned network ID.
      * C++: cGod equivalent of loading SaveGame objects for vehicles.
      */
-    fun createLevelVehicle(lv: ccr.server.level.ldd.LoadedVehicleGameObj): VehicleGameObj? {
+    fun createLevelVehicle(lv: LoadedVehicleGameObj): VehicleGameObj? {
         if (lv.definitionId == 0) return null
         val wrapper = server.loadedLevel?.definitions?.findById(lv.definitionId.toUInt())
             as? VehicleGameObjDefWrapper
         val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
         val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
-        val lvPos = lv.transform.position
-        val position = Vector3(lvPos.x, lvPos.y, lvPos.z)
+        val position = lv.transform.position.let { Vector3(it.x, it.y, it.z) }
         val vehicle = VehicleGameObj(
-            definitionId = lv.definitionId,
-            modelName    = resolveModelName(wrapper),
-            position     = position,
-            team         = lv.playerType,
-            vehicleType  = vehicleType,
-            seatCount    = seatCount,
+            definitionId     = lv.definitionId,
+            modelName        = resolveModelName(wrapper),
+            position         = position,
+            team             = lv.playerType,
+            vehicleType      = vehicleType,
+            seatCount        = seatCount,
             vehicleDelivered = true,
-            controlOwner = 0,
+            controlOwner     = 0,
         )
         NetworkObjectManager.registerObject(vehicle, lv.networkId)
         vehiclesByNetId[lv.networkId] = vehicle
         server.gameObjManager.add(vehicle)
         println("[GOD] level vehicle: defId=${lv.definitionId} netId=${lv.networkId} " +
             "team=${if (lv.playerType == 0) "NOD" else "GDI"} " +
-            "pos=(${lvPos.x}, ${lvPos.y}, ${lvPos.z})")
+            "pos=(${position.x}, ${position.y}, ${position.z})")
         return vehicle
     }
 
