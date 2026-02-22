@@ -117,6 +117,24 @@ class PacketCombinerTest {
     }
 
     @Test
+    fun `non-consecutive same-size packets preserve delivery order`() {
+        // C++ Take_Packet groups only consecutive same-size packets.
+        // Packets A(25B), B(21B), C(25B) must be delivered as A, B, C — not A, C, B.
+        val pA = ByteArray(25) { it.toByte() }
+        val pB = ByteArray(21) { it.toByte() }
+        val pC = ByteArray(25) { (it + 100).toByte() }
+
+        val datagrams = PacketCombiner.combine(listOf(Pair(addr1, pA), Pair(addr1, pB), Pair(addr1, pC)))
+        assertEquals(1, datagrams.size)
+
+        val packets = PacketCombiner.split(datagrams[0].data, datagrams[0].data.size)
+        assertEquals(3, packets.size)
+        assertTrue(pA.contentEquals(packets[0].data), "first packet must be A (25B)")
+        assertTrue(pB.contentEquals(packets[1].data), "second packet must be B (21B), not C")
+        assertTrue(pC.contentEquals(packets[2].data), "third packet must be C (25B)")
+    }
+
+    @Test
     fun `MTU overflow splits into multiple datagrams with correct MorePackets flag`() {
         // Use 35-byte packets (matches real server scenario for buildings+events).
         // Capacity per datagram: header(2) + 35 + 13×36 = 505 bytes → 14 packets fit.

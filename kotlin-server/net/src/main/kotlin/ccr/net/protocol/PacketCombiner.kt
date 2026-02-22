@@ -51,9 +51,17 @@ object PacketCombiner {
         val result = mutableListOf<OutgoingDatagram>()
 
         for ((dest, destPackets) in byDest) {
-            // Group by size
-            val bySizeGroups = destPackets.groupBy { it.second.size }
-            val sizeList = bySizeGroups.entries.toList()
+            // Group consecutive same-size packets (mirrors C++ Take_Packet: each call accumulates
+            // into the current group if sizes match, otherwise finalizes it and starts a new group).
+            // Using groupBy would merge ALL same-size packets regardless of position, breaking order.
+            val sizeList = mutableListOf<Pair<Int, List<Pair<InetSocketAddress, ByteArray>>>>()
+            var gi = 0
+            while (gi < destPackets.size) {
+                val size = destPackets[gi].second.size
+                val start = gi
+                while (gi < destPackets.size && destPackets[gi].second.size == size) gi++
+                sizeList.add(Pair(size, destPackets.subList(start, gi)))
+            }
 
             val buf = ByteArray(PACKET_MANAGER_MTU)
             var pos = 0
