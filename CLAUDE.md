@@ -1,5 +1,14 @@
 # Project: C&C Renegade Kotlin Server
 
+## Project Overview
+C&C Renegade (2002 FPS) server reimplementation and macOS port.
+
+- **`original/`** — C++ macOS port of the original Windows game (builds and runs the Commando executable)
+- **`original-untouched/`** — pristine Windows/DirectX reference source; consult to understand original GDI/D3D8/Win32 behavior
+- **`kotlin-server/`** — from-scratch Kotlin server reimplementation
+- Kotlin modules: `math`, `net`, `physics`, `server`
+- Key constraint: all wire formats must match the original Renegade client exactly
+
 ## Build Commands
 
 ### Kotlin Server
@@ -15,6 +24,10 @@
 - Run: `MallocNanoZone=0 original/build/Code/Commando/Commando.app/Contents/MacOS/Commando`
 - Build type: Debug with ASan (`-fsanitize=address` in root CMakeLists.txt); `MallocNanoZone=0` required on macOS
 
+### Tests
+- Run all Kotlin tests: `kotlin-server/gradlew -p kotlin-server test`
+- Individual modules: `:server:test`, `:net:test`, `:math:test`, `:physics:test`
+
 ## C++ Port — Workflow Rules
 - **All compiler AND linker errors are your problem to fix** — never leave a build broken; fix them before moving on
 - **macOS-only codebase — no platform ifdefs**: This port targets macOS only; write clean macOS/POSIX code directly; no need to preserve `#ifdef _WIN32` / `#ifdef _UNIX` branches
@@ -24,7 +37,14 @@
 - **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
 - **Git merges must use `--ff-only`** — always rebase the feature branch onto the base branch first, then FF-merge
 - **Always create worktrees from the latest local `main`** — run `git pull` (or at least `git fetch`) on main before branching; stale branch points cause unnecessary rebase conflicts
-- **Worktree merge sequence**: (1) commit all changes in the worktree, (2) rebase the worktree branch onto latest local `main`, (3) `git worktree remove` the worktree, (4) delete the branch — in that order; you cannot delete a branch while its worktree still exists
+- **Worktree merge sequence**: (1) commit all changes in the worktree, (2) rebase the worktree branch onto local `main`, (3) `git worktree remove` the worktree, (4) delete the branch — in that order; you cannot delete a branch while its worktree still exists
+- Write all documentation to `/docs/*.md` — update immediately when new information is discovered
+- Network protocol documentation must be maintained in real-time at `/docs/network.md` — update whenever new packet formats, field meanings, or wire format details are discovered
+- Write every accepted plan to `/plans/*.md` immediately once approved; make that behavior part of each plan itself
+- Automatically update `/CLAUDE.md` as you learn new things in every conversation
+- `/CLAUDE.md`, `/docs/*.md`, `/plans/*.md` can be written/edited in plan mode
+- Always use `<project root>/.tmp/` for temporary files (scripts, scratch files, etc.) — never use `/tmp` or `$TMPDIR`
+- Use `<project root>/.worktrees/` for git worktrees (not `.claude/worktrees/`)
 
 ## C++ Port — Known Patterns & Pitfalls
 
@@ -37,6 +57,10 @@
 - Run lint: `cmake --build original/build --target lint`
 - Narrowing/conversion warnings: `-Wconversion`, `-Wsign-conversion`, `-Wdouble-promotion` (warnings, not errors, until each module is clean)
 
+### float32_t / float64_t
+- NOT in the macOS SDK — typedef'd as `float`/`double` in `original/compat/winnt.h` just before `#include "typesizes.h"`
+- Never replace with raw `float`/`double` in `typesizes.h` itself
+
 ### global.h — project-wide preamble
 - `original/global.h` is the single project-wide preamble — must be included FIRST in all source files
 - Contains: platform defines (_UNIX, NOMINMAX), Windows types (BYTE/WORD/DWORD/HANDLE etc.), char16_t string functions, IEEE 754 asserts, engine macros (MIN/MAX/WWINLINE), debug stubs, MSVC compat
@@ -48,9 +72,8 @@
 - `compat/macos_fix.mm` is excluded from PCH (Objective-C++ — `SKIP_PRECOMPILE_HEADERS ON`); **no other file should use `SKIP_PRECOMPILE_HEADERS ON`** — the PCH only pre-compiles `global.h`, so defining implementation macros (e.g. `MINIAUDIO_IMPLEMENTATION`) before a `#include` in a `.cpp` works correctly without it
 - Source root `original/` is in the include path so `#include "global.h"` resolves from any TU
 - Exclusions (no `#include "global.h"` added): `compat/typesizes.h` (mid-file include in winnt.h), `tools/primitive-type-check/PrimitiveTypeCheck.h` (clang-tidy plugin), resource compiler headers (`resource.h`, `dialogresource.h`, `afxres.h` — processed by llvm-rc which lacks the include path)
-- **`Code/Scripts/vector.h`** forwards to `Code/wwlib/vector.h` — Scripts has its own copy; the old shared `#ifndef VECTOR_H` guard masked the duplication; now scripts CMakeLists adds `Code/` to include path so `#include "wwlib/vector.h"` works
 
-### wchar_t → char16_t conversion (COMPLETE)
+### wchar_t → char16_t convention
 - All `wchar_t` in Code/ and compat/ converted to `char16_t` (macOS wchar_t=4 bytes; protocol needs 2-byte UTF-16)
 - `WCHAR` typedef is `char16_t`; all derived types (LPWSTR, LPCWSTR, etc.) auto-update
 - Use `u"..."` and `u'...'` string/char literals (not `L"..."` / `L'...'`)
@@ -60,20 +83,16 @@
 - `const WCHAR*` (not `WCHAR*`) for string-literal arrays — `u"..."` is `const char16_t[]`
 
 ### Non-POD varargs (`-Werror=non-pod-varargs`)
-- `StringClass` and `WideStringClass` are non-trivially-copyable; passing them through `...` is UB
-- Clang inserts `__builtin_trap()` at the call site even when the warning is suppressed with `-Wno-non-pod-varargs`
-- CMakeLists.txt uses `-Werror=non-pod-varargs` to catch these at compile time
+- `StringClass` and `WideStringClass` are non-trivially-copyable; passing through `...` is UB — Clang crashes the program even with `-Wno-non-pod-varargs`
 - Fix: explicit cast at call site — `(const char*)strVar` or `(const WCHAR*)wideVar`
 
 ### `RawFileClass::Error()` is a no-op stub
-- After calling `Error(EBADF, ...)`, execution continues — callers must `return` manually
-- All code paths that call `Error()` then fall through to the faulting operation without the explicit return
+- `Error(EBADF, ...)` does NOT abort — execution continues, so callers must `return` manually after calling it
 
 ### mempool.h — 64-bit pointer arithmetic
-- `BlockListHead` must be `uintptr_t*` (not `uint32_t*`) so that `+1` skips a full pointer width (8 bytes on arm64)
-- Original Windows code used `uint32*`; first object slot overlapped the block header on 64-bit → corruption on free
+- `BlockListHead` must be `uintptr_t*` (not `uint32_t*`) so `+1` skips a full 8-byte pointer width (arm64), not 4 bytes — prevents first-object-slot/block-header overlap on free
 
-### Audio backend — mss_impl.cpp (COMPLETE)
+### Audio backend — mss_impl.cpp
 - `compat/mss.h` has extern declarations only (no bodies); all ~106 `AIL_*` functions implemented in `compat/mss_impl.cpp` via miniaudio
 - `compat/miniaudio.h` is a vendored single-header library (CoreAudio backend); linked with `-framework CoreAudio -framework AudioToolbox`
 - Pool sizes: 64 2D samples (`HSAMPLE`), 32 3D samples (`H3DSAMPLE`), 16 streams (`HSTREAM`), 16 timers; handles are 1-based (0 and -1 are invalid sentinels)
@@ -81,21 +100,22 @@
 - `FilteredSoundClass` reverb (`AIL_set_sample_processor`, `AIL_set_filter_sample_preference`) is currently a no-op stub
 - See `docs/audio-system.md` for full architecture, class hierarchy, MSS function list, and coordinate transform details
 
-### Intro movie startup (movie.cpp)
-- `MovieGameModeClass::Start_Movie()` hangs forever if the .BIK file is missing AND no CD drive (macOS has neither)
-- Fixed: `else if (force_cd)` branch now calls `Movie_Done()` directly instead of `CDVerifier.Display_UI()`
-- Allows the game to skip both intro movies and proceed to the main menu when video files aren't present
+### SDL2 input and cursor architecture
+- **`SDL2_ShouldRender`** — render gate in `sdl2_platform.h`; true in unfocused windowed mode, false only when minimized or fullscreen+unfocused; use this instead of `GameInFocus` for render gating
+- **`SDL2_MouseCaptured`** — click-to-capture flag set by `SDL_MOUSEBUTTONDOWN` in `SDL2_Platform_PollEvents`; pre-capture: absolute mouse + button events via `SDL_GetMouseState`; captured: raw deltas via `SDL_GetRelativeMouseState`
+- **SDL cursor hiding is async on macOS**: `SDL_ShowCursor(SDL_DISABLE)` dispatches `invalidateCursorRectsForView:waitUntilDone:NO` — call `SDL_PumpEvents()` immediately after so AppKit processes the cursor rect update before game init runs
 
-### ThreadClass — POSIX thread implementation (COMPLETE)
-- `Execute()`: `pthread_create` + `pthread_detach`; stores `pthread_t` cast to `unsigned long` in `handle`
-- `Stop(ms)`: sets `running=false`, spin-waits on `handle==0` (set by `Internal_Thread_Function` on exit), `pthread_cancel` on timeout
-- `Switch_Thread()`: `sched_yield()`; `Sleep_Ms(ms)`: `usleep(ms*1000)`; `_Get_Current_Thread_ID()`: `(unsigned)(uintptr_t)pthread_self()`
-- Root cause of texture-load exit hang: all `ThreadClass` methods were `return;` no-ops on macOS → background thread never started → `_BackgroundQueue` never drained → `Flush_Pending_Load_Tasks` looped forever
+### Intro movie startup (movie.cpp)
+- `MovieGameModeClass::Start_Movie()` hangs if .BIK file missing and no CD drive (macOS has neither); patched to call `Movie_Done()` directly
+- Fix allows skipping both intro movies and proceeding to the main menu when video files aren't present
+
+### ThreadClass — POSIX thread implementation
+- Implemented with pthreads: `Execute()` → `pthread_create`/`pthread_detach`; `Switch_Thread()` → `sched_yield()`; `Sleep_Ms()` → `usleep()`
+- Warning: if methods revert to `return;` no-ops, background thread never starts → `_BackgroundQueue` never drains → `Flush_Pending_Load_Tasks` loops forever
 
 ### On-disk / network struct fields must be fixed-width
 - `void*`, `long`, `unsigned long` in binary format structs are bugs on 64-bit macOS (8 bytes vs Windows 32-bit 4 bytes)
-- Use `uint32_t`/`int32_t` for every field that is read/written from disk or a network wire format
-- Example caught: `LegacyDDSURFACEDESC2::Surface` was `void*` → struct became 132 bytes instead of 124 → DDS loading silently failed
+- Use `uint32_t`/`int32_t` for every field read/written from disk or a network wire format
 
 ### Building to find all issues
 - Use `cmake --build ... -- -k 0` (Ninja keep-going) to see ALL errors, not just the first one
@@ -199,7 +219,15 @@
 - `god.createCommando(rhostId, playerType)` — creates/registers SoldierGameObj, sets `BIT_CREATION` dirty; `replicationTick()` handles sending to all in-game hosts
 - `god.deleteSoldier(rhostId)` — calls `setDeletePending()`; centralized delete-pending loop broadcasts deletion
 - `god.removePlayer(rhostId)` — full disconnect cleanup: deleteSoldier + player object removal
-- `god.choosePlayerType()` — auto-balance team assignment (0=NOD, 1=GDI)
+
+### Game loop architecture (God, GameState, BuildingManager)
+- `God(server)` owns player/soldier lifecycle; all player state maps live in God (`playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`)
+- `GameState(config)` handles timer countdown, intermission, game-over detection; `gameState.think(deltaMs)` called every tick before `god.think()`
+- `BuildingManager(server, level)` instantiates building subtypes from `LoadedBuildingGameObj`, registers `BaseControllerClass` singletons at `NET_ID_BASE_CONTROLLER_NOD/GDI`
+- `GameServer.config` is `internal`; `GameServer.sendGameNetObj()` is `internal` — God and BuildingManager access these directly
+- Player reconnect: `God.createPlayer()` checks for existing inactive player by same name, reactivates instead of creating new
+- `ServerFps` registered with `NET_ID_SERVER_FPS = 2_100_000_006`; sent via `replicationTick()` dirty bits (BIT_FREQUENT), never manually
+- `Player.replaceMoney()` named that way (not `setMoney`) because Kotlin generates a `setMoney` JVM setter that clashes with the `var money` property
 
 ### Physics module (ccr.physics)
 - Gradle module: `kotlin-server/physics/`, depends on `:math`. Added to `settings.gradle.kts` and `server/build.gradle.kts`
@@ -216,21 +244,3 @@
 - Forwards client↔server traffic and decodes every packet in real-time
 - `PacketDecoder` object: `ccr.server.net.PacketDecoder` — reusable decode logic for all packet analysis
 - Captured logs go in `server/src/test/resources/proxy_log.txt` for use by `ProxyDecoderTest`
-
-## Workflow Preferences
-- Write all documentation to `/docs/*.md`. Update documentation as soon as you learn something new.
-- Network protocol documentation must be maintained in real-time at `/docs/network.md`. Update it immediately whenever new packet formats, field meanings, connection sequences, or wire format details are discovered.
-- Write every accepted plan to `/plans/*.md`. Write immediately once a plan was approved. Make that behavior part of each plan itself.
-- Automatically update `/CLAUDE.md` as you learn new things to remember in every conversation.
-- `/CLAUDE.md`, `/docs/*.md`, `/plans/*.md` can be written/edited in plan mode.
-- Always use `<project root>/.tmp/` for temporary files (scripts, scratch files, etc.). Never use `/tmp` or `$TMPDIR`.
-- Use `<project root>/.worktrees/` for git worktrees (not `.claude/worktrees/`)
-
-### Game loop architecture (God, GameState, BuildingManager)
-- `God(server)` owns player/soldier lifecycle; all player state maps live in God (`playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`)
-- `GameState(config)` handles timer countdown, intermission, game-over detection; `gameState.think(deltaMs)` called every tick before `god.think()`
-- `BuildingManager(server, level)` instantiates building subtypes from `LoadedBuildingGameObj`, registers `BaseControllerClass` singletons at `NET_ID_BASE_CONTROLLER_NOD/GDI`
-- `GameServer.config` is `internal`; `GameServer.sendGameNetObj()` is `internal` — God and BuildingManager access these directly
-- Player reconnect: `God.createPlayer()` checks for existing inactive player by same name, reactivates instead of creating new
-- `ServerFps` registered with `NET_ID_SERVER_FPS = 2_100_000_006`; sent via `replicationTick()` dirty bits (BIT_FREQUENT), never manually
-- `Player.replaceMoney()` named that way (not `setMoney`) because Kotlin generates a `setMoney` JVM setter that clashes with the `var money` property
