@@ -54,6 +54,8 @@ import ccr.server.net.RefineryGameObj
 import ccr.server.net.SoldierFactoryGameObj
 import ccr.server.net.VehicleFactoryGameObj
 import ccr.server.net.WarFactoryGameObj
+import ccr.server.defs.AmmoDefinitionClass
+import ccr.server.defs.WeaponDefinitionClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -111,6 +113,10 @@ class GameServer(internal val config: ServerConfig) {
     internal var nodSoldierDefId: Int = config.nodSoldierDefId
     internal var gdiSoldierDefId: Int = config.gdiSoldierDefId
     internal var pistolWeaponDefId: Int = 0
+
+    // C4 weapon and object definition IDs (populated by loadLevel / loadDefinitions).
+    internal var timedC4WeaponDefId: Int = 0
+    internal var tossedC4DefId: Int = 0
 
     // SpawnManager resolves multiplayer spawn locations from loaded spawners.
     internal var spawnManager: SpawnManager? = null
@@ -439,6 +445,9 @@ class GameServer(internal val config: ServerConfig) {
                     }
                     NetworkObjectManager.unregisterObject(obj)
                 }
+
+            // Clean up C4 objects that have been marked for deletion
+            god.c4Objects.removeAll { it.isDeletePending }
 
             delay(tickIntervalMs)
         }
@@ -937,6 +946,8 @@ class GameServer(internal val config: ServerConfig) {
                 soldier.analogMoveUp       = up
                 soldier.analogTurnLeft     = turn
                 soldier.inVehicle          = true
+                // Player can detonate remote C4 while riding in a vehicle
+                soldier.detonateC4 = (contBits and 2) != 0 && isC4Weapon(soldier.currentWeaponDefId)
 
                 // Entry detection: client reports in_vehicle=true but we haven't recorded entry yet
                 if (rhostId !in god.playerVehicles) {
@@ -976,8 +987,9 @@ class GameServer(internal val config: ServerConfig) {
             // ---- On-foot path ----
             val hasWeapon = snap.getBool()
             if (hasWeapon) {
-                snap.getInt()  // weaponDefId (discard — we don't trust client weapon data)
+                val weaponDefId = snap.getInt()
                 snap.getInt()  // totalRounds
+                soldier.currentWeaponDefId = weaponDefId
             }
 
             val x = snap.getFloat(BITPACK_WORLD_POSITION_X)
@@ -1008,6 +1020,14 @@ class GameServer(internal val config: ServerConfig) {
             soldier.analogMoveLeft     = left
             soldier.analogMoveUp       = up
             soldier.analogTurnLeft     = turn
+
+            // C4 detonation: bit 1 = BOOLEAN_WEAPON_FIRE_SECONDARY (alt-fire / remote trigger)
+            val weaponFirePrimary   = (contBits and 1) != 0
+            val weaponFireSecondary = (contBits and 2) != 0
+            soldier.detonateC4 = weaponFireSecondary && isC4Weapon(soldier.currentWeaponDefId)
+            if (weaponFirePrimary && isC4Weapon(soldier.currentWeaponDefId)) {
+                god.createC4(rhostId, soldier, System.currentTimeMillis())
+            }
 
             // Mark BIT_FREQUENT dirty for all other in-game clients so the replication tick
             // will forward the position update unreliably
@@ -1244,6 +1264,14 @@ class GameServer(internal val config: ServerConfig) {
             pistolWeaponDefId = it.id.toInt()
             println("[SERVER] Using pistol: ${it.name} defId=0x${pistolWeaponDefId.toUInt().toString(16)}")
         }
+        defs.all().filterIsInstance<WeaponDefinitionClass>().find { it.style == 0 }?.let {
+            timedC4WeaponDefId = it.id.toInt()
+            println("[SERVER] C4 weapon: ${it.name} defId=0x${timedC4WeaponDefId.toUInt().toString(16)}")
+        }
+        defs.findByName("Tossed C4")?.let {
+            tossedC4DefId = it.id.toInt()
+            println("[SERVER] Tossed C4 preset: ${it.name} defId=0x${tossedC4DefId.toUInt().toString(16)}")
+        }
 
         // Restore nextDynamicId so dynamically created objects (soldiers, vehicles)
         // get IDs that don't collide with pre-placed LDD objects.
@@ -1318,6 +1346,28 @@ class GameServer(internal val config: ServerConfig) {
         } else {
             println("[SERVER] No pistol weapon found in objects.ddb")
         }
+        definitions.filterIsInstance<WeaponDefinitionClass>().find { it.style == 0 }?.let {
+            timedC4WeaponDefId = it.id.toInt()
+            println("[SERVER] C4 weapon: ${it.name} defId=0x${timedC4WeaponDefId.toUInt().toString(16)}")
+        }
+        definitions.find { it.name.equals("Tossed C4", ignoreCase = true) }?.let {
+            tossedC4DefId = it.id.toInt()
+            println("[SERVER] Tossed C4 preset: ${it.name} defId=0x${tossedC4DefId.toUInt().toString(16)}")
+        }
+    }
+
+    // ---- C4 definition lookup helpers ----
+
+    // Returns true if the given weapon definition ID corresponds to a C4 weapon (style == 0).
+    fun isC4Weapon(weaponDefId: Int): Boolean {
+        val def = loadedLevel?.definitions?.findById(weaponDefId.toUInt()) ?: return false
+        return (def as? WeaponDefinitionClass)?.style == 0
+    }
+
+    // Returns the AmmoDefinitionClass for the primary ammo of the given weapon, or null.
+    fun getAmmoDefForWeapon(weaponDefId: Int): AmmoDefinitionClass? {
+        val wDef = loadedLevel?.definitions?.findById(weaponDefId.toUInt()) as? WeaponDefinitionClass ?: return null
+        return loadedLevel?.definitions?.findById(wDef.primaryAmmoDefID.toUInt()) as? AmmoDefinitionClass
     }
 
     private fun initEncoders() {

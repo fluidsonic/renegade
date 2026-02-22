@@ -3,7 +3,11 @@ package ccr.server
 import ccr.math.Vector3
 import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
+import ccr.server.defs.AmmoDefinitionClass
+import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
+import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
 import ccr.server.defs.VehicleGameObjDef
+import ccr.server.net.C4GameObj
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
 import ccr.server.net.VehicleGameObj
@@ -39,6 +43,10 @@ class God(private val server: GameServer) {
     val playerTeams = mutableMapOf<Int, Int>()   // rhostId → team (0=NOD, 1=GDI)
     val playerInGame = mutableSetOf<Int>()        // rhostIds where IsInGame=true
     val playerNetIds = mutableMapOf<Int, Int>()   // rhostId → networkId of cPlayer object
+
+    // C4 tracking
+    val c4Objects = mutableListOf<C4GameObj>()
+    private val lastC4PlaceMs = mutableMapOf<Int, Long>()  // rhostId → last placement time
 
     // ---- cGod::Think (god.cpp:91-168) ----
 
@@ -164,9 +172,10 @@ class God(private val server: GameServer) {
             "pos=(${position.x}, ${position.y}, ${position.z})")
 
         val modelName = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
-        val weapons = if (server.pistolWeaponDefId != 0) {
-            listOf(WeaponEntry(server.pistolWeaponDefId, 100))
-        } else emptyList()
+        val weapons = buildList {
+            if (server.pistolWeaponDefId != 0) add(WeaponEntry(server.pistolWeaponDefId, 100))
+            if (server.timedC4WeaponDefId != 0) add(WeaponEntry(server.timedC4WeaponDefId, 1))
+        }
 
         val soldier = SoldierGameObj(
             definitionId = defId,
@@ -220,9 +229,10 @@ class God(private val server: GameServer) {
         println("[GOD] spawned purchased soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
             "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z})")
 
-        val weapons = if (server.pistolWeaponDefId != 0) {
-            listOf(WeaponEntry(server.pistolWeaponDefId, 100))
-        } else emptyList()
+        val weapons = buildList {
+            if (server.pistolWeaponDefId != 0) add(WeaponEntry(server.pistolWeaponDefId, 100))
+            if (server.timedC4WeaponDefId != 0) add(WeaponEntry(server.timedC4WeaponDefId, 1))
+        }
 
         val soldier = SoldierGameObj(
             definitionId = defId,
@@ -356,6 +366,95 @@ class God(private val server: GameServer) {
         println("[GOD] rhostId=$rhostId exited vehicle netId=${vehicle.networkId}")
     }
 
+    // ---- C4 management ----
+
+    /**
+     * Creates a C4 object for the given soldier and attaches it to the nearest enemy building.
+     * Returns null if rate-limited, wrong weapon type, or no building in range.
+     * C++: C4GameObj is created in response to BOOLEAN_WEAPON_FIRE_PRIMARY when weapon style==0.
+     */
+    fun createC4(rhostId: Int, soldier: SoldierGameObj, nowMs: Long): C4GameObj? {
+        // Rate limit: 1 C4 per second per player
+        if (nowMs - (lastC4PlaceMs[rhostId] ?: 0L) < 1000L) return null
+
+        val ammoDef = server.getAmmoDefForWeapon(soldier.currentWeaponDefId) ?: return null
+        if (ammoDef.ammoType != AMMO_TYPE_C4_REMOTE && ammoDef.ammoType != AMMO_TYPE_C4_TIMED) return null
+
+        // Find nearest alive enemy building within 15m (225 = 15²)
+        val enemyTeam = if ((playerTeams[rhostId] ?: 0) == 0) 1 else 0
+        val enemyController = if (enemyTeam == 0) server.baseControllerNod else server.baseControllerGdi
+        val nearest = enemyController?.getBuildings()
+            ?.filter { !it.isDestroyed }
+            ?.minByOrNull { b ->
+                val dx = b.position.x - soldier.position.x
+                val dy = b.position.y - soldier.position.y
+                val dz = b.position.z - soldier.position.z
+                dx * dx + dy * dy + dz * dz
+            }
+
+        if (nearest != null) {
+            val dx = nearest.position.x - soldier.position.x
+            val dy = nearest.position.y - soldier.position.y
+            val dz = nearest.position.z - soldier.position.z
+            if (dx * dx + dy * dy + dz * dz > 225f) return null
+        } else {
+            return null
+        }
+
+        val tossedC4DefId = server.tossedC4DefId
+        val c4 = C4GameObj(
+            definitionId  = tossedC4DefId,
+            position      = soldier.position.copy(),
+            modelName     = ammoDef.modelFilename,
+            ammoDef       = ammoDef.id.toInt(),
+            ownerId       = soldier.networkId,
+            stuck         = true,
+            stuckPosX     = soldier.position.x,
+            stuckPosY     = soldier.position.y,
+            stuckPosZ     = soldier.position.z,
+            stuckMct      = false,
+            stuckToObject = true,
+            stuckObjectId = nearest.networkId,
+        )
+
+        // Set runtime fields
+        c4.ammoDefinition = ammoDef
+        c4.ownerRhostId   = rhostId
+        c4.stuckBuilding  = nearest
+        c4.serverRef      = server
+        c4.detonationMode = 1
+        c4.timer          = if (ammoDef.ammoType == AMMO_TYPE_C4_TIMED) ammoDef.c4TriggerTime1 else 0f
+
+        val netId = NetworkObjectManager.getNewDynamicId()
+        NetworkObjectManager.registerObject(c4, netId)
+        server.gameObjManager.add(c4)
+        c4Objects.add(c4)
+        lastC4PlaceMs[rhostId] = nowMs
+
+        // Enforce per-team C4 limit for non-timed C4 (remote detonation)
+        if (ammoDef.ammoType == AMMO_TYPE_C4_REMOTE) {
+            maintainC4Limit(playerTeams[rhostId] ?: 0)
+        }
+
+        println("[GOD] C4 placed by rhostId=$rhostId netId=$netId type=${if (ammoDef.ammoType == AMMO_TYPE_C4_TIMED) "TIMED" else "REMOTE"} target=${nearest::class.simpleName}")
+        return c4
+    }
+
+    /**
+     * Enforces the per-team non-timed (remote) C4 limit.
+     * If the team has more than C4_LIMIT remote C4 active, defuses the oldest by age.
+     */
+    private fun maintainC4Limit(team: Int) {
+        val teamC4 = c4Objects.filter { c4 ->
+            !c4.isDeletePending &&
+            c4.ammoDefinition?.ammoType == AMMO_TYPE_C4_REMOTE &&
+            (playerTeams[c4.ownerRhostId] ?: -1) == team
+        }
+        if (teamC4.size > C4GameObj.C4_LIMIT) {
+            teamC4.maxByOrNull { it.age }?.defuse()
+        }
+    }
+
     // ---- cGod cleanup helpers ----
 
     /**
@@ -367,6 +466,9 @@ class God(private val server: GameServer) {
         if (rhostId in playerVehicles) {
             exitVehicle(rhostId)
         }
+        // Defuse all remote C4 owned by this player (timed C4 continues to tick after disconnect)
+        c4Objects.filter { !it.isDeletePending && it.ownerRhostId == rhostId && it.ammoDefinition?.ammoType == AMMO_TYPE_C4_REMOTE }
+            .forEach { it.defuse() }
         val soldier = soldiersByHost.remove(rhostId) ?: return
         server.gameObjManager.removeStar(soldier)
         soldier.setDeletePending()

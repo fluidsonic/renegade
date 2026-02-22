@@ -36,6 +36,13 @@ class SoldierGameObj(
     // C++: SoldierGameObj::Export_Frequent writes in_vehicle (bool) then branches.
     var inVehicle: Boolean = false
 
+    // Weapon tracking — updated from CClientControl frequent updates when has_weapon=true.
+    var currentWeaponDefId: Int = 0
+
+    // Set from continuousBoolBits bit 1 (BOOLEAN_WEAPON_FIRE_SECONDARY) each tick.
+    // True when the player is alt-firing their C4 weapon to trigger remote detonation.
+    var detonateC4: Boolean = false
+
     // C++: SoldierGameObj::Export_Rare — calls super then appends definitionId (soldier.cpp).
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)       // PhysicalGameObj: model, anim, host, player_type, hud_pokable
