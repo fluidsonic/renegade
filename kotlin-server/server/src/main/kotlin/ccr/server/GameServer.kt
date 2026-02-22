@@ -120,6 +120,7 @@ class GameServer(internal val config: ServerConfig) {
     // C4 weapon and object definition IDs (populated by loadLevel / loadDefinitions).
     internal var timedC4WeaponDefId: Int = 0
     internal var tossedC4DefId: Int = 0
+    internal var beaconWeaponDefId: Int = 0  // first weapon whose primary ammo has beaconDefId != 0
 
     // SpawnManager resolves multiplayer spawn locations from loaded spawners.
     internal var spawnManager: SpawnManager? = null
@@ -457,6 +458,7 @@ class GameServer(internal val config: ServerConfig) {
 
             // Clean up C4 objects that have been marked for deletion
             god.c4Objects.removeAll { it.isDeletePending }
+            god.beaconObjects.removeAll { it.isDeletePending }
 
             delay(tickIntervalMs)
         }
@@ -1037,6 +1039,12 @@ class GameServer(internal val config: ServerConfig) {
             if (weaponFirePrimary && isC4Weapon(soldier.currentWeaponDefId)) {
                 god.createC4(rhostId, soldier, System.currentTimeMillis())
             }
+            if (weaponFirePrimary && isBeaconWeapon(soldier.currentWeaponDefId)) {
+                val ammoDef = getAmmoDefForWeapon(soldier.currentWeaponDefId)
+                if (ammoDef != null) {
+                    god.createBeacon(rhostId, soldier, ammoDef, System.currentTimeMillis())
+                }
+            }
 
             // Mark BIT_FREQUENT dirty for all other in-game clients so the replication tick
             // will forward the position update unreliably
@@ -1297,6 +1305,15 @@ class GameServer(internal val config: ServerConfig) {
             tossedC4DefId = it.id.toInt()
             println("[SERVER] Tossed C4 preset: ${it.name} defId=0x${tossedC4DefId.toUInt().toString(16)}")
         }
+        // Beacon weapon: find the weapon whose primary ammo has beaconDefId != 0
+        defs.all().filterIsInstance<AmmoDefinitionClass>().find { it.beaconDefId != 0 }?.let { ammoDef ->
+            defs.all().filterIsInstance<WeaponDefinitionClass>()
+                .find { it.primaryAmmoDefID == ammoDef.id.toInt() }
+                ?.let { weaponDef ->
+                    beaconWeaponDefId = weaponDef.id.toInt()
+                    println("[SERVER] beacon weapon: ${weaponDef.name} defId=0x${beaconWeaponDefId.toUInt().toString(16)}")
+                }
+        }
 
         // Restore nextDynamicId so dynamically created objects (soldiers, vehicles)
         // get IDs that don't collide with pre-placed LDD objects.
@@ -1386,6 +1403,15 @@ class GameServer(internal val config: ServerConfig) {
             tossedC4DefId = it.id.toInt()
             println("[SERVER] Tossed C4 preset: ${it.name} defId=0x${tossedC4DefId.toUInt().toString(16)}")
         }
+        // Beacon weapon: find the weapon whose primary ammo has beaconDefId != 0
+        definitions.filterIsInstance<AmmoDefinitionClass>().find { it.beaconDefId != 0 }?.let { ammoDef ->
+            definitions.filterIsInstance<WeaponDefinitionClass>()
+                .find { it.primaryAmmoDefID == ammoDef.id.toInt() }
+                ?.let { weaponDef ->
+                    beaconWeaponDefId = weaponDef.id.toInt()
+                    println("[SERVER] beacon weapon: ${weaponDef.name} defId=0x${beaconWeaponDefId.toUInt().toString(16)}")
+                }
+        }
     }
 
     // ---- C4 definition lookup helpers ----
@@ -1394,6 +1420,12 @@ class GameServer(internal val config: ServerConfig) {
     fun isC4Weapon(weaponDefId: Int): Boolean {
         val def = loadedLevel?.definitions?.findById(weaponDefId.toUInt()) ?: return false
         return (def as? WeaponDefinitionClass)?.style == 0
+    }
+
+    // Returns true if the weapon's primary ammo has a non-zero beaconDefId.
+    fun isBeaconWeapon(weaponDefId: Int): Boolean {
+        val ammoDef = getAmmoDefForWeapon(weaponDefId) ?: return false
+        return ammoDef.beaconDefId != 0
     }
 
     // Returns the AmmoDefinitionClass for the primary ammo of the given weapon, or null.
