@@ -55,6 +55,7 @@ import ccr.server.net.SoldierFactoryGameObj
 import ccr.server.net.VehicleFactoryGameObj
 import ccr.server.net.WarFactoryGameObj
 import ccr.server.defs.AmmoDefinitionClass
+import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -1160,28 +1161,42 @@ class GameServer(internal val config: ServerConfig) {
 
         if (!ChunkIds.isBuilding(lb.factoryChunkId)) return null
 
-        return when (lb.factoryChunkId) {
+        val health = lb.defense.healthMax.takeIf { it > 0f } ?: 5000f
+        val shieldType = lb.defense.skinSaveId
+        val mctSkinSaveId = (loadedLevel?.definitions?.findById(lb.definitionId.toUInt())
+            as? BuildingGameObjDef)?.mctSkin ?: 0
+
+        val building = when (lb.factoryChunkId) {
             ChunkIds.GAMEOBJ_BUILDING_POWERPLANT ->
-                PowerPlantGameObj(lb.definitionId, pos, sphereCenter, radius, isPowerOn = lb.isPowerOn, playerType = lb.playerType)
+                PowerPlantGameObj(lb.definitionId, pos, sphereCenter, radius,
+                    health = health, shieldType = shieldType, isPowerOn = lb.isPowerOn, playerType = lb.playerType)
 
             ChunkIds.GAMEOBJ_BUILDING_REFINERY ->
-                RefineryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+                RefineryGameObj(lb.definitionId, pos, sphereCenter, radius,
+                    health = health, shieldType = shieldType, playerType = lb.playerType)
 
             ChunkIds.GAMEOBJ_BUILDING_SOLDIERFACTORY ->
-                SoldierFactoryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+                SoldierFactoryGameObj(lb.definitionId, pos, sphereCenter, radius,
+                    health = health, shieldType = shieldType, playerType = lb.playerType)
 
             ChunkIds.GAMEOBJ_BUILDING_WARFACTORY ->
-                WarFactoryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+                WarFactoryGameObj(lb.definitionId, pos, sphereCenter, radius,
+                    health = health, shieldType = shieldType, playerType = lb.playerType)
 
             ChunkIds.GAMEOBJ_BUILDING_AIRSTRIP,
             ChunkIds.GAMEOBJ_BUILDING_VEHICLEFACTORY ->
-                VehicleFactoryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+                VehicleFactoryGameObj(lb.definitionId, pos, sphereCenter, radius,
+                    health = health, shieldType = shieldType, playerType = lb.playerType)
 
             ChunkIds.GAMEOBJ_BUILDING_COMCENTER ->
-                ComCenterGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+                ComCenterGameObj(lb.definitionId, pos, sphereCenter, radius,
+                    health = health, shieldType = shieldType, playerType = lb.playerType)
 
-            else -> BuildingGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+            else -> BuildingGameObj(lb.definitionId, pos, sphereCenter, radius,
+                health = health, shieldType = shieldType, playerType = lb.playerType)
         }
+        building.mctSkinSaveId = mctSkinSaveId
+        return building
     }
 
     companion object {

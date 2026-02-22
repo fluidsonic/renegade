@@ -28,6 +28,10 @@ open class BuildingGameObj(
     // Set healthMax to match initial health
     init { healthMax = health; shieldStrengthMax = shieldStrength }
 
+    // MCT alternate armor type save ID (from BuildingGameObjDef.mctSkin).
+    // Used by C4GameObj.detonate() when stuckMct = true.
+    var mctSkinSaveId: Int = 0
+
     // C++: BuildingGameObj::BaseController — set by cncInitialize
     var baseController: BaseControllerClass? = null
 
