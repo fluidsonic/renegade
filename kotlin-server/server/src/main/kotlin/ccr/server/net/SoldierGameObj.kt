@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.net.replication.NetworkObject
 
 // C++: SoldierGameObj (soldier.cpp)
 // Full hierarchy: NetworkObject → BaseGameObj → PhysicalGameObj → DamageableGameObj
@@ -11,23 +12,25 @@ data class WeaponEntry(val definitionId: Int, val totalRounds: Int)
 
 class SoldierGameObj(
     definitionId: Int,
-    controlOwner: Int,
-    team: Int,
-    modelName: String,
+    controlOwner: Int = 0,
+    team: Int = 0,
+    modelName: String = "",
     animName: String = "",
     position: Vector3,
     facing: Float = 0f,
     health: Float = 100f,
+    shieldStrength: Float = 0f,
     val weapons: MutableList<WeaponEntry> = mutableListOf(),
 ) : SmartGameObj(
-    definitionId  = definitionId,
-    position      = position,
-    facing        = facing,
-    modelName     = modelName,
-    animName      = animName,
-    health        = health,
-    controlOwner  = controlOwner,
-    team          = team,
+    definitionId    = definitionId,
+    position        = position,
+    facing          = facing,
+    modelName       = modelName,
+    animName        = animName,
+    health          = health,
+    shieldStrength  = shieldStrength,
+    controlOwner    = controlOwner,
+    team            = team,
 ) {
     // C++: cGod stores reference to cPlayer so buildings can award money via playerData
     var playerData: Player? = null
@@ -42,6 +45,12 @@ class SoldierGameObj(
     // Set from continuousBoolBits bit 1 (BOOLEAN_WEAPON_FIRE_SECONDARY) each tick.
     // True when the player is alt-firing their C4 weapon to trigger remote detonation.
     var detonateC4: Boolean = false
+
+    // C++: SoldierGameObj::Apply_Damage — marks BIT_OCCASIONAL dirty when damage is applied.
+    override fun applyDamage(damage: Float) {
+        super.applyDamage(damage)
+        if (damage > 0f) setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
 
     // C++: SoldierGameObj::Export_Rare — calls super then appends definitionId (soldier.cpp).
     override fun exportRare(packet: BitStream) {

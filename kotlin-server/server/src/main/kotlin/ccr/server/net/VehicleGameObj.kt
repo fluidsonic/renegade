@@ -3,6 +3,7 @@ package ccr.server.net
 import ccr.math.Quaternion
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.net.replication.NetworkObject
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -91,6 +92,12 @@ class VehicleGameObj(
 
     // The soldier currently driving this vehicle (null if unoccupied).
     var driver: SoldierGameObj? = null
+
+    // C++: VehicleGameObj::Apply_Damage — marks BIT_OCCASIONAL dirty when damage is applied.
+    override fun applyDamage(damage: Float) {
+        super.applyDamage(damage)
+        if (damage > 0f) setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
 
     // ---- Simple server-side kinematics ----
 
