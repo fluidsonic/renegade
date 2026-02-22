@@ -135,4 +135,12 @@ static void preinit_nsapp(void)
 
     // Step 4: NSApp is fully initialised — alignment-fault workaround no longer needed.
     remove_sigbus_handler();
+
+    // Step 5: Disable the macOS press-and-hold accent picker for this process.
+    // Without this, holding any key while the Cocoa text-input machinery is
+    // active (which SDL2 leaves enabled by default) shows the accent popup
+    // instead of repeating the key.  The NSUserDefaults write is process-local;
+    // it does not change any persistent user preference.
+    [[NSUserDefaults standardUserDefaults] setBool:NO
+                                            forKey:@"ApplePressAndHoldEnabled"];
 }

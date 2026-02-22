@@ -58,6 +58,12 @@ void SDL2_Platform_PollEvents(void);
 void On_Focus_Loss(void);
 void On_Focus_Restore(void);
 
+// Keyboard callbacks — implemented in WINMAIN.CPP; called from PollEvents.
+// vk is a Windows VK_ virtual-key code; ch is a UTF-16 BMP codepoint.
+void On_Key_Down(uint32_t vk);
+void On_Key_Up(uint32_t vk);
+void On_Char(uint32_t ch);
+
 // macOS CoreAnalytics ARM64 alignment-fault workaround (macos_fix.mm).
 // Call install before SDL_Init; call remove after SDL_Init returns.
 // These are no-ops when SIGBUS is already handled (forward to prev handler).

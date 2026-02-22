@@ -122,6 +122,77 @@ void SDL2_Platform_SwapWindow(void)
     }
 }
 
+// Map an SDL_Keycode to a Windows VK_ virtual-key code.
+// Returns 0 for keys that have no meaningful VK mapping.
+static uint32_t sdl_keycode_to_vk(SDL_Keycode sym)
+{
+    // ASCII control chars where SDL value == VK value
+    if (sym == SDLK_BACKSPACE) return 0x08; // VK_BACK
+    if (sym == SDLK_TAB)       return 0x09; // VK_TAB
+    if (sym == SDLK_RETURN)    return 0x0D; // VK_RETURN
+    if (sym == SDLK_ESCAPE)    return 0x1B; // VK_ESCAPE
+    if (sym == SDLK_SPACE)     return 0x20; // VK_SPACE
+
+    // Digits 0-9: SDL value == ASCII == VK value
+    if (sym >= SDLK_0 && sym <= SDLK_9) return (uint32_t)sym;
+
+    // Letters a-z: SDL value is lowercase ASCII; VK is uppercase ASCII
+    if (sym >= SDLK_a && sym <= SDLK_z) return (uint32_t)(sym - 32);
+
+    // Extended keys encoded as SDLK_SCANCODE_MASK | scancode
+    switch (sym) {
+        case SDLK_F1:       return 0x70; // VK_F1
+        case SDLK_F2:       return 0x71;
+        case SDLK_F3:       return 0x72;
+        case SDLK_F4:       return 0x73;
+        case SDLK_F5:       return 0x74;
+        case SDLK_F6:       return 0x75;
+        case SDLK_F7:       return 0x76;
+        case SDLK_F8:       return 0x77;
+        case SDLK_F9:       return 0x78;
+        case SDLK_F10:      return 0x79;
+        case SDLK_F11:      return 0x7A;
+        case SDLK_F12:      return 0x7B;
+        case SDLK_UP:       return 0x26; // VK_UP
+        case SDLK_DOWN:     return 0x28; // VK_DOWN
+        case SDLK_LEFT:     return 0x25; // VK_LEFT
+        case SDLK_RIGHT:    return 0x27; // VK_RIGHT
+        case SDLK_HOME:     return 0x24; // VK_HOME
+        case SDLK_END:      return 0x23; // VK_END
+        case SDLK_PAGEUP:   return 0x21; // VK_PRIOR
+        case SDLK_PAGEDOWN: return 0x22; // VK_NEXT
+        case SDLK_DELETE:   return 0x2E; // VK_DELETE
+        case SDLK_LSHIFT:
+        case SDLK_RSHIFT:   return 0x10; // VK_SHIFT
+        case SDLK_LCTRL:
+        case SDLK_RCTRL:    return 0x11; // VK_CONTROL
+        case SDLK_LALT:
+        case SDLK_RALT:     return 0x12; // VK_MENU
+        default:            return 0;
+    }
+}
+
+// Decode the first UTF-8 codepoint in s to a UTF-16 BMP value.
+// Returns 0 on failure or if the codepoint is outside the BMP.
+static uint32_t utf8_first_codepoint(const char* s)
+{
+    uint8_t c0 = (uint8_t)s[0];
+    if (c0 == 0)              return 0;
+    if (c0 < 0x80)            return c0;
+    if ((c0 & 0xE0) == 0xC0) {
+        uint8_t c1 = (uint8_t)s[1];
+        if (!c1) return 0;
+        return ((uint32_t)(c0 & 0x1F) << 6) | (c1 & 0x3F);
+    }
+    if ((c0 & 0xF0) == 0xE0) {
+        uint8_t c1 = (uint8_t)s[1];
+        uint8_t c2 = (uint8_t)s[2];
+        if (!c1 || !c2) return 0;
+        return ((uint32_t)(c0 & 0x0F) << 12) | ((uint32_t)(c1 & 0x3F) << 6) | (c2 & 0x3F);
+    }
+    return 0; // 4-byte sequences are outside the BMP; ignore
+}
+
 void SDL2_Platform_PollEvents(void)
 {
     SDL_Event event;
@@ -167,6 +238,30 @@ void SDL2_Platform_PollEvents(void)
                 break;
             }
             break;
+
+        case SDL_KEYDOWN: {
+            uint32_t vk = sdl_keycode_to_vk(event.key.keysym.sym);
+            if (vk != 0) {
+                On_Key_Down(vk);
+            }
+            break;
+        }
+
+        case SDL_KEYUP: {
+            uint32_t vk = sdl_keycode_to_vk(event.key.keysym.sym);
+            if (vk != 0) {
+                On_Key_Up(vk);
+            }
+            break;
+        }
+
+        case SDL_TEXTINPUT: {
+            uint32_t cp = utf8_first_codepoint(event.text.text);
+            if (cp > 0) {
+                On_Char(cp);
+            }
+            break;
+        }
 
         case SDL_MOUSEWHEEL:
             SDL2_MouseWheelDelta += event.wheel.y;

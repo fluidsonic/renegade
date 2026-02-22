@@ -731,6 +731,22 @@ void On_Focus_Restore(void)
 }
 
 
+void On_Key_Down(uint32_t vk)
+{
+	Main_Window_Proc(MainWindow, WM_KEYDOWN, vk, 0);
+}
+
+void On_Key_Up(uint32_t vk)
+{
+	Main_Window_Proc(MainWindow, WM_KEYUP, vk, 0);
+}
+
+void On_Char(uint32_t ch)
+{
+	Main_Window_Proc(MainWindow, WM_CHAR, ch, 0);
+}
+
+
 void Prog_End(void)
 {
 }

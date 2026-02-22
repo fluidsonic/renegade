@@ -208,7 +208,7 @@ DialogParserClass::Parse_Template
 					ctrl_type = LIST_BOX;
 				} else if (::wcsstr (text_buffer, u"TRACKBAR") != 0) {
 					ctrl_type = SLIDER;
-				} else if (::wcsstr (text_buffer, u"TABCONTROu") != 0) {
+				} else if (::wcsstr (text_buffer, u"TABCONTROL") != 0) {
 					ctrl_type = TAB;
 				} else if (::wcsstr (text_buffer, u"LISTVIEW") != 0) {
 					ctrl_type = LIST_CTRL;
