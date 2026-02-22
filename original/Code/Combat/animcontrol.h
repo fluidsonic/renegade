@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	HANIM_H
-	#include "hanim.h"
-#endif
+#include "hanim.h"
 
-#ifndef	VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
 #include "wwstring.h"
 

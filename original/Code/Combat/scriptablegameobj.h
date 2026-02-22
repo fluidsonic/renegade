@@ -3,33 +3,19 @@
 #include "global.h"
 
 
-#ifndef	BASEGAMEOBJ_H
-	#include "basegameobj.h"
-#endif
+#include "basegameobj.h"
 
-#ifndef	GAMEOBJREF_H
-	#include "gameobjref.h"
-#endif
+#include "gameobjref.h"
 
-#ifndef	TIMEMGR_H
-	#include "timemgr.h"
-#endif
+#include "timemgr.h"
 
-#ifndef GAMEOBJOBSERVER_H
-	#include "gameobjobserver.h"
-#endif
+#include "gameobjobserver.h"
 
-#ifndef SIMPLEVEC_H
-	#include "simplevec.h"
-#endif
+#include "simplevec.h"
 
-#ifndef	VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
-#ifndef	__AUDIO_EVENTS_H
-	#include "audioevents.h"
-#endif
+#include "audioevents.h"
 
 typedef	SimpleDynVecClass<GameObjObserverClass *>		GameObjObserverList;
 

@@ -3,21 +3,13 @@
 #include "global.h"
 
 
-#ifndef	VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
-#ifndef	GAMEOBJREF_H
-	#include "gameobjref.h"
-#endif
+#include "gameobjref.h"
 
-#ifndef	WWSTRING_H
-	#include "wwstring.h"
-#endif
+#include "wwstring.h"
 
-#ifndef	ACTIONPARAMS_H
-	#include "actionparams.h"
-#endif
+#include "actionparams.h"
 
 /*
 **

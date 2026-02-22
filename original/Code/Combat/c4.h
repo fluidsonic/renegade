@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	SIMPLEGAMEOBJ_H
-	#include "simplegameobj.h"
-#endif
+#include "simplegameobj.h"
 
-#ifndef	TIMEMGR_H
-	#include "timemgr.h"
-#endif
+#include "timemgr.h"
 
 class		AmmoDefinitionClass;
 class		StaticAnimPhysClass;

@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef VECTOR3_H
 #include "vector3.h"
-#endif
 
-#ifndef CASTRES_H
 #include "castres.h"
-#endif
 
 class AAPlaneClass;
 class PlaneClass;

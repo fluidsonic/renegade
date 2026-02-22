@@ -3,21 +3,13 @@
 #include "global.h"
 
 
-#ifndef	DAMAGEABLEGAMEOBJ_H
-	#include "damageablegameobj.h"
-#endif
+#include "damageablegameobj.h"
 
-#ifndef	COMBATPHYSOBSERVER_H
-	#include "combatphysobserver.h"
-#endif
+#include "combatphysobserver.h"
 
-#ifndef WWPACKET_H
-	#include "wwpacket.h"
-#endif
+#include "wwpacket.h"
 
-#ifndef PHYS_H
-	#include "phys.h"
-#endif
+#include "phys.h"
 
 /*
 **

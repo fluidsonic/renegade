@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
 /*
 **

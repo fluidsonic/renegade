@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef	GAMEOBJOBSERVER_H
-	#include "gameobjobserver.h"
-#endif
+#include "gameobjobserver.h"
 
-#ifndef	PERSIST_H
-	#include "persist.h"
-#endif
+#include "persist.h"
 
-#ifndef	VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
 /*
 ** PersistentGameObjObserverClass

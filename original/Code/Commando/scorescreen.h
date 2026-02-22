@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	GAMEMODE_H
-	#include "gamemode.h"
-#endif
+#include "gamemode.h"
 
-#ifndef	__MENU_DIALOG_H
-	#include "menudialog.h"
-#endif
+#include "menudialog.h"
 
 /*
 ** Game (Sub) Mode to display ScoreScreen view

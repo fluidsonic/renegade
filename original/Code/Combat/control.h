@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef WWMATH_H
 #include "wwmath.h"
-#endif
 
 
 /*

@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	SIMPLEVEC_H
-	#include "simplevec.h"
-#endif
+#include "simplevec.h"
 
-#ifndef	FFACTORY_H
-	#include "ffactory.h"
-#endif
+#include "ffactory.h"
 
 /*
 **

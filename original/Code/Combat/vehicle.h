@@ -3,21 +3,13 @@
 #include "global.h"
 
 
-#ifndef SMARTGAMEOBJ_H
-	#include "smartgameobj.h"
-#endif
+#include "smartgameobj.h"
 
-#ifndef VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
-#ifndef TRANSITION_H
-	#include "transition.h"
-#endif
+#include "transition.h"
 
-#ifndef	WWSTRING_H
-	#include "wwstring.h"
-#endif
+#include "wwstring.h"
 
 class	Sound3DClass;
 class	VehiclePhysClass;

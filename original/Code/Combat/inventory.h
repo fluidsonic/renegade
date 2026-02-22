@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	SIMPLEVEC_H
-	#include "simplevec.h"
-#endif
+#include "simplevec.h"
 
-#ifndef	DAMAGE_H
-	#include "damage.h"
-#endif
+#include "damage.h"
 
 class	SoldierGameObj;
 

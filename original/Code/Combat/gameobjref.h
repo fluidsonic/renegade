@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	REFLIST_H
-	#include "reflist.h"
-#endif
+#include "reflist.h"
 
 /*
 **

@@ -4,17 +4,11 @@
 
 
 
-#ifndef	CHUNKIO_H
-	#include "chunkio.h"
-#endif
+#include "chunkio.h"
 
-#ifndef	SAVELOAD_H
-	#include "saveload.h"
-#endif
+#include "saveload.h"
 
-#ifndef	PERSIST_H
-	#include "persist.h"
-#endif
+#include "persist.h"
 
 /*
 ** Forward declarations

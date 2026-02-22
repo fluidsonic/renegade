@@ -5,13 +5,9 @@
 #include <stdint.h>
 
 
-#ifndef	FFACTORY_H
-	#include "ffactory.h"
-#endif
+#include "ffactory.h"
 
-#ifndef	WWSTRING_H
-	#include "wwstring.h"
-#endif
+#include "wwstring.h"
 
 #include "vector.h"
 

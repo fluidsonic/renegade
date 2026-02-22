@@ -1341,9 +1341,6 @@ DECLARE_SCRIPT(DAK_MX0_Sec_3_Humvee, "" )
 	}
 };
 
-#include "scripts.h"
-#include "MissionX0.h"
-
 DECLARE_SCRIPT(MX0_A03_NOD_PLACED_MINIGUNNER, "" )
 {
 	void Created( GameObject *obj )

@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef ARMEDGAMEOBJ_H
-	#include "armedgameobj.h"
-#endif
+#include "armedgameobj.h"
 
 class	AudibleSoundClass;
 

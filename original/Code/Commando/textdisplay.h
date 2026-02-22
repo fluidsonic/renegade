@@ -3,30 +3,18 @@
 #include "global.h"
 
 
-#ifndef	GAMEMODE_H
-	#include "gamemode.h"
-#endif
+#include "gamemode.h"
 
-#ifndef	SLIST_H
-	#include "slist.h"
-#endif
+#include "slist.h"
 
-#ifndef	WWSTRING_H
-	#include "wwstring.h"
-#endif
+#include "wwstring.h"
 
-#ifndef	WIDESTRING_H
-	#include "widestring.h"
-#endif
+#include "widestring.h"
 
 
-#ifndef VECTOR2_H
-	#include "vector2.h"
-#endif
+#include "vector2.h"
 
-#ifndef VECTOR4_H
-	#include "vector4.h"
-#endif
+#include "vector4.h"
 
 class	Font3DInstanceClass;
 class	Render2DTextClass;

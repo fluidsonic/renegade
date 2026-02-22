@@ -2,29 +2,17 @@
 
 #include "global.h"
 
-#ifndef ANIMOBJ_H
 #include "animobj.h"
-#endif
 
-#ifndef VECTOR_H
 #include "vector.h"
-#endif
 
-#ifndef SNAPPTS_H
 #include "snappts.h"
-#endif
 
-#ifndef PROTO_H
 #include "proto.h"
-#endif
 
-#ifndef W3DERR_H
 #include "w3derr.h"
-#endif
 
-#ifndef __PROXY_H
 #include "proxy.h"
-#endif
 
 class DistLODClass;
 class HModelClass;

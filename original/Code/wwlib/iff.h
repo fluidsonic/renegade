@@ -2,8 +2,6 @@
 
 #include "global.h"
 
-#define __cdecl
-
 #include	"buff.h"
 #include	<stddef.h>
 

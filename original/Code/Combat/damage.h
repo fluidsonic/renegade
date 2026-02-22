@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	GAMEOBJREF_H
-	#include "gameobjref.h"
-#endif
+#include "gameobjref.h"
 
-#ifndef _DATASAFE_H
-	#include	"datasafe.h"
-#endif //_DATASAFE_H
+#include	"datasafe.h"
 
 #include "editable.h"
 

@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef SLIST_H
-	#include "slist.h"
-#endif
+#include "slist.h"
 
 #include "networkobjectmgr.h"
 

@@ -2,13 +2,9 @@
 
 #include "global.h"
 
-#ifndef REFCOUNT_H
 #include "refcount.h"
-#endif
 
-#ifndef SHADER_H
 #include "shader.h"
-#endif
 
 
 class TextureClass;

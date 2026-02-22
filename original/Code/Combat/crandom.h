@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	RANDOM_H
-	#include "random.h"
-#endif
+#include "random.h"
 
 
 #define	CRANDOM_FLOAT_RANGE			0x1000

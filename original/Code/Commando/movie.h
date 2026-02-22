@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef	GAMEMODE_H
-	#include "gamemode.h"
-#endif
+#include "gamemode.h"
 
-#ifndef	QUAT_H
-	#include "quat.h"
-#endif
+#include "quat.h"
 
-#ifndef	VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
 #include "cdverify.h"
 #include "wwstring.h"

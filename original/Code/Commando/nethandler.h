@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef COMBAT_H
-   #include "combat.h"
-#endif
+#include "combat.h"
 
 //
 // The combat lib calls these commando application-level methods.

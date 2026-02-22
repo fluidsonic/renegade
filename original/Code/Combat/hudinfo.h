@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef PHYSICALGAMEOBJ_H
-	#include "physicalgameobj.h"
-#endif
+#include "physicalgameobj.h"
 
-#ifndef VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
 /*
 **

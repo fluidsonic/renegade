@@ -4,13 +4,9 @@
 
 
 
-#ifndef WWFILE_H
 #include "wwfile.h"
-#endif
 
-#ifndef IOSTRUCT_H
 #include "iostruct.h"
-#endif
 
 /************************************************************************************
 

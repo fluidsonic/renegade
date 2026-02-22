@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	PERSIST_H
-	#include "persist.h"
-#endif
+#include "persist.h"
 
 class	ChunkSaveClass;
 class	ChunkLoadClass;

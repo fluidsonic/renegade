@@ -2,13 +2,9 @@
 
 #include "global.h"
 
-#ifndef HASHCALC_H
 #include "hashcalc.h"
-#endif
 
-#ifndef VECTOR_H
 #include "vector.h"
-#endif
 
 /*
 ** UniqueArrayClass

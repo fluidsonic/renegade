@@ -3,29 +3,17 @@
 #include "global.h"
 
 
-#ifndef ARMEDGAMEOBJ_H
-	#include "armedgameobj.h"
-#endif
+#include "armedgameobj.h"
 
-#ifndef ACTION_H
-	#include "action.h"
-#endif
+#include "action.h"
 
-#ifndef CONTROL_H
-	#include "control.h"
-#endif
+#include "control.h"
 
-#ifndef COMBATSOUND_H
-	#include "combatsound.h"
-#endif
+#include "combatsound.h"
 
-#ifndef PHYSCONTROL_H
-	#include "physcontrol.h"
-#endif
+#include "physcontrol.h"
 
-#ifndef __AUDIO_EVENTS_H
-	#include "audioevents.h"
-#endif
+#include "audioevents.h"
 
 /*
 **

@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef SIMPLEGAMEOBJ_H
-	#include "simplegameobj.h"
-#endif
+#include "simplegameobj.h"
 
 class		PowerUpGameObj;
 class		AudibleSoundClass;

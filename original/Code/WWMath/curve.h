@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef VECTOR_H
 #include "vector.h"
-#endif
 
-#ifndef VECTOR3_H
 #include "vector3.h"
-#endif
 
-#ifndef PERSIST_H
 #include "persist.h"
-#endif
 
 class ChunkLoadClass;
 class ChunkSaveClass;

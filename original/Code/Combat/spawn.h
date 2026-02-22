@@ -3,21 +3,13 @@
 #include "global.h"
 
 
-#ifndef PERSIST_H
-	#include "persist.h"
-#endif
+#include "persist.h"
 
-#ifndef DEFINITION_H
-	#include "definition.h"
-#endif
+#include "definition.h"
 
-#ifndef VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
-#ifndef GAMEOBJREF_H
-	#include "gameobjref.h"
-#endif
+#include "gameobjref.h"
 
 class	PhysicalGameObj;
 class	SoldierGameObj;

@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef PERSIST_H
-	#include "persist.h"
-#endif
+#include "persist.h"
 
-#ifndef DEFINITION_H
-	#include "definition.h"
-#endif
+#include "definition.h"
 
-#ifndef __NETWORKOBJECT_H
-	#include "networkobject.h"
-#endif
+#include "networkobject.h"
 
 #include "netclassids.h"
 

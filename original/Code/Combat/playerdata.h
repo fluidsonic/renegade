@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef	GAMEOBJREF_H
-	#include "gameobjref.h"
-#endif
+#include "gameobjref.h"
 
-#ifndef	_DATASAFE_H
-	#include	"datasafe.h"
-#endif		//_DATASAFE_H
+#include	"datasafe.h"
 
-#ifndef	SIMPLEVEC_H
-	#include "simplevec.h"
-#endif
+#include "simplevec.h"
 
 class	ChunkSaveClass;
 class	ChunkLoadClass;

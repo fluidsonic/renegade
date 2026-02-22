@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
-#ifndef	GAMEOBJOBSERVER_H
-	#include "gameobjobserver.h"
-#endif
+#include "gameobjobserver.h"
 
 /*
 **

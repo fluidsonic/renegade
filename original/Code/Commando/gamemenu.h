@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	GAMEMODE_H
-	#include "gamemode.h"
-#endif
+#include "gamemode.h"
 
 /*
 ** Game Mode to do menus

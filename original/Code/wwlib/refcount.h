@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef LISTNODE_H
 #include "listnode.h"
-#endif
 
 class RefCountClass;
 

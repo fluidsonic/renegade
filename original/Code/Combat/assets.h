@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef ASSETMGR_H
-	#include "assetmgr.h"
-#endif
+#include "assetmgr.h"
 
-#ifndef INI_H
-	#include "ini.h"
-#endif
+#include "ini.h"
 
 /*
 ** INI File Access

@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef	MATRIX3D_H
-	#include "matrix3d.h"
-#endif
+#include "matrix3d.h"
 
-#ifndef	VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
-#ifndef	REFCOUNT_H
-	#include "refcount.h"
-#endif
+#include "refcount.h"
 
 class	ChunkSaveClass;
 class	ChunkLoadClass;

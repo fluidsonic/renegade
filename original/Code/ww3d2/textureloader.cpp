@@ -20,6 +20,7 @@
 #include "texturethumbnail.h"
 #include "ddsfile.h"
 #include "bitmaphandler.h"
+#include <mmsystem.h>
 
 bool TextureLoader::TextureLoadSuspended;
 
@@ -716,7 +717,6 @@ void TextureLoader::Flush_Pending_Load_Tasks(void)
 }
 
 // Nework update macro for texture loader.
-#include <mmsystem.h>
 #define UPDATE_NETWORK 											\
 	if (network_callback) {                            \
 		unsigned long time2 = timeGetTime();            \

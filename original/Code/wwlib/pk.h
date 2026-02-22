@@ -2,9 +2,7 @@
 
 #include "global.h"
 
-#ifndef STRAW_H
 #include "straw.h"
-#endif
 
 #include	"int.h"
 

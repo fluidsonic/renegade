@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef BASEGAMEOBJ_H
-	#include "basegameobj.h"
-#endif
+#include "basegameobj.h"
 
-#ifndef TRANSITION_H
-	#include "transition.h"
-#endif
+#include "transition.h"
 
 /*
 ** TransitionGameObjDef - Defintion class for a TransitionGameObj 

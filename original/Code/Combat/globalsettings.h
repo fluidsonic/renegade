@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef DEFINITION_H
-	#include "definition.h"
-#endif
+#include "definition.h"
 
-#ifndef RECT_H
-	#include "rect.h"
-#endif
+#include "rect.h"
 
 /*
 ** GlobalSettingsDef - Defintion class for a GlobalSettingsDef

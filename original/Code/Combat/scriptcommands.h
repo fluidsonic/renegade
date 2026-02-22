@@ -2,17 +2,11 @@
 
 #include "global.h"
 
-#ifndef	VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
-#ifndef	COMBATSOUND_H
-	#include "combatsound.h"
-#endif
+#include "combatsound.h"
 
-#ifndef	ACTIONPARAMS_H
-	#include "actionparams.h"
-#endif
+#include "actionparams.h"
 
 /*
 ** DLL import/export macros

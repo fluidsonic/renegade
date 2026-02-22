@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	SCRIPTEVENTS_H
-	#include "scriptevents.h"
-#endif
+#include "scriptevents.h"
 
-#ifndef	SIMPLEVEC_H
-	#include "simplevec.h"
-#endif
+#include "simplevec.h"
 
 /*
 **

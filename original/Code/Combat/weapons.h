@@ -3,21 +3,13 @@
 #include "global.h"
 
 
-#ifndef	GAMEOBJREF_H
-   #include "gameobjref.h"
-#endif
+#include "gameobjref.h"
 
-#ifndef	MATRIX3D_H
-	#include "matrix3d.h"
-#endif
+#include "matrix3d.h"
 
-#ifndef	WEAPONMANAGER_H
-	#include "weaponmanager.h"
-#endif
+#include "weaponmanager.h"
 
-#ifndef	SIMPLEVEC_H
-	#include "simplevec.h"
-#endif
+#include "simplevec.h"
 
 class	BitStreamClass;
 class	ChunkSaveClass;

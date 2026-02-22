@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	DEFINITION_H
-	#include "definition.h"
-#endif
+#include "definition.h"
 
 class	ArmedGameObj;
 class	BuildingGameObj;

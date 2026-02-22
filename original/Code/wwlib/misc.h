@@ -4,6 +4,7 @@
 
 #include	"win.h"
 #include	"ddraw.h"
+#include	"palette.h"
 
 extern unsigned char CurrentPalette[768];
 extern bool Debug_Windowed;
@@ -24,8 +25,6 @@ void 		Wait_Blit(void);
 unsigned 	Get_Video_Hardware_Capabilities(void);
 
 extern "C" void Wait_Vert_Blank(void);
-
-#include	"palette.h"
 
 void Set_Palette(PaletteClass const & pal, int time = 0, void (*callback)() = NULL);
 void Set_Palette(void const * palette);

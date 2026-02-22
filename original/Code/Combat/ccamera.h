@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef CAMERA_H
-	#include "camera.h"
-#endif
+#include "camera.h"
 
-#ifndef WWSTRING_H
-	#include "wwstring.h"
-#endif
+#include "wwstring.h"
 
 class CCameraProfileClass;
 class Listener3DClass;

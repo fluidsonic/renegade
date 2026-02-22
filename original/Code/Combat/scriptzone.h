@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef SCRIPTABLEGAMEOBJ_H
-	#include "scriptablegameobj.h"
-#endif
+#include "scriptablegameobj.h"
 
-#ifndef OBBOX_H
-	#include "obbox.h"
-#endif
+#include "obbox.h"
 
-#ifndef SLIST_H
-	#include "slist.h"
-#endif
+#include "slist.h"
 
 /*
 ** ZoneConstants

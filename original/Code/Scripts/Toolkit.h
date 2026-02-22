@@ -2,6 +2,16 @@
 
 #include "global.h"
 
+#include "customevents.h"
+#include "scripts.h"
+#include "dprint.h"
+#include "vector3.h"
+#include "wwmath.h"
+#include <string.h>
+#include <assert.h>
+#include <stdio.h>
+#include <time.h>
+
 // Defines and Includes
 
 #define SCRIPT_DEBUG_MESSAGE( X )
@@ -19,16 +29,6 @@
 #define DIFFICULTY (Commands->Get_Difficulty_Level())
 
 #define MAX3( a, b, c ) (WWMath::Max(WWMath::Max(a, b), WWMath::Max(b, c)))
-
-#include "customevents.h"
-#include "scripts.h"
-#include "dprint.h"
-#include "vector3.h"
-#include "wwmath.h"
-#include <string.h>
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
 
 #define M00_BROADCASTER_TERMINAL_SIZE_RAD			100
 #define M00_BROADCASTER_TERMINAL_PROMPT_SIZE_RAD	10

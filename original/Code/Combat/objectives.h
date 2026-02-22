@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
 #include "wwstring.h"
 #include "widestring.h"

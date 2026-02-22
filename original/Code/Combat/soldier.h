@@ -3,21 +3,13 @@
 #include "global.h"
 
 
-#ifndef SMARTGAMEOBJ_H
-	#include "smartgameobj.h"
-#endif
+#include "smartgameobj.h"
 
-#ifndef HUMANSTATE_H
-	#include "humanstate.h"
-#endif
+#include "humanstate.h"
 
-#ifndef	WWSTRING_H
-	#include "wwstring.h"
-#endif
+#include "wwstring.h"
 
-#ifndef	__DIALOGUE_HE
-	#include "dialogue.h"
-#endif
+#include "dialogue.h"
 
 struct TransitionCompletionDataStruct;
 class	PrivateTimerClass;

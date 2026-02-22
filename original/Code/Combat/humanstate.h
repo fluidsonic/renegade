@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
-#ifndef	MATRIX3D_H
-	#include "matrix3D.h"
-#endif
+#include "matrix3D.h"
 
 class	HumanAnimControlClass;
 class	HumanPhysClass;

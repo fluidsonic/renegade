@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef MULTILIST_H
 #include "multilist.h"
-#endif
 
 
 class RenderObjClass;

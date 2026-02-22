@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef SMARTGAMEOBJ_H
-	#include "smartgameobj.h"
-#endif
+#include "smartgameobj.h"
 
 /*
 ** SamSiteGameObjDef - Defintion class for a SamSiteGameObj

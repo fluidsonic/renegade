@@ -1,9 +1,3 @@
-#pragma once
-
-#include "global.h"
-
-#ifndef DYANMICANIMPHYS_H
-#define DYNAMICANIMPHYS_H
 
 #include "decophys.h"
 #include "animcollisionmanager.h"
@@ -119,4 +113,3 @@ inline const DynamicAnimPhysDefClass * DynamicAnimPhysClass::Get_DynamicAnimPhys
 	return (DynamicAnimPhysDefClass *)Definition;
 }
 
-#endif //DYNAMICANIMPHYS_H

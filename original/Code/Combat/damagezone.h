@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef OBBOX_H
-	#include "obbox.h"
-#endif
+#include "obbox.h"
 
-#ifndef	BASEGAMEOBJ_H
-	#include "basegameobj.h"
-#endif
+#include "basegameobj.h"
 
 /*
 ** Damage Zone Definition

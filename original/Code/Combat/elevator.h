@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	__ACCESSIBLE_PHYS_H
-	#include "accessiblephys.h"
-#endif
+#include "accessiblephys.h"
 
 #include "gameobjref.h"
 

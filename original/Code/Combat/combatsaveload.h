@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	SAVELOADSUBSYSTEM_H
-	#include "saveloadsubsystem.h"
-#endif
+#include "saveloadsubsystem.h"
 
-#ifndef	COMBATCHUNKID_H
-	#include "combatchunkid.h"
-#endif
+#include "combatchunkid.h"
 
 /*
 **

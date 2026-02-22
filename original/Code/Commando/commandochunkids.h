@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	SAVELOADIDS_H
-	#include "saveloadids.h"
-#endif
+#include "saveloadids.h"
 
 //#ifndef	DEFINITIONCLASSIDS_H
 //	#include "definitionclassids.h"

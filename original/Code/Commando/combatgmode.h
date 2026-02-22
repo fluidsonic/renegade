@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef	GAMEMODE_H
-	#include "gamemode.h"
-#endif
+#include "gamemode.h"
 
-#ifndef	COMBAT_H
-	#include "combat.h"
-#endif
+#include "combat.h"
 
 /*
 **

@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef PHYSICALGAMEOBJ_H
-	#include "physicalgameobj.h"
-#endif
+#include "physicalgameobj.h"
 
 #include "playerterminal.h"
 

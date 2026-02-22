@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef WHEELVEHICLE_H
 #include "wheelvehicle.h"
-#endif
 
 class MotorcycleDefClass;
 

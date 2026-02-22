@@ -2,9 +2,7 @@
 
 #include "global.h"
 
-#ifndef RENDOBJ_H
 #include "rendobj.h"
-#endif
 
 #include "proto.h"
 

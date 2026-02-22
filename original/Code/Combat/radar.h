@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef	VECTOR3_H
-	#include "vector3.h"
-#endif
+#include "vector3.h"
 
-#ifndef	VECTOR_H
-	#include "vector.h"
-#endif
+#include "vector.h"
 
-#ifndef	RECT_H
-	#include "rect.h"
-#endif
+#include "rect.h"
 
 /*
 **

@@ -3,9 +3,7 @@
 #include "global.h"
 
 
-#ifndef	PHYSOBSERVER_H
-	#include "physobserver.h"
-#endif
+#include "physobserver.h"
 
 class	DamageableGameObj;
 class	PhysicalGameObj;

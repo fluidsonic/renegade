@@ -3,17 +3,11 @@
 #include "global.h"
 
 
-#ifndef	WWSTRING_H
-	#include "wwstring.h"
-#endif
+#include "wwstring.h"
 
-#ifndef	DEFINITION_H
-	#include "definition.h"
-#endif
+#include "definition.h"
 
-#ifndef	_DATASAFE_H
-	#include	"datasafe.h"
-#endif		//_DATASAFE_H
+#include	"datasafe.h"
 
 class		WeaponClass;
 

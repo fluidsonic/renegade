@@ -3,13 +3,9 @@
 #include "global.h"
 
 
-#ifndef MOTORVEHICLE_H
 #include "motorvehicle.h"
-#endif
 
-#ifndef LOOKUPTABLE_H
 #include "lookuptable.h"
-#endif
 
 #include "wheel.h"
 class WheelClass;
