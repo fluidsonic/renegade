@@ -106,7 +106,9 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 	//	Get the path to the directory we'll be searching
 	//
 	StringClass path_name;
-	const char *search_dir = ::strrchr (search_string, '\\');
+	const char *search_dir_fwd  = ::strrchr (search_string, '/');
+	const char *search_dir_back = ::strrchr (search_string, '\\');
+	const char *search_dir = (search_dir_back > search_dir_fwd) ? search_dir_back : search_dir_fwd;
 	if (search_dir != NULL) {
 
 		//

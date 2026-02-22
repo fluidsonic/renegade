@@ -41,10 +41,10 @@ void	Release_INI( INIClass * ini )
 */
 void Strip_Path_From_Filename( StringClass& new_name, const char * filename )
 {
-	if ( ::strchr( filename, '\\' ) != 0 ) {
-		new_name = ::strrchr( filename, '\\' ) + 1;
-	}
-	else new_name=filename;
+	const char *fwd  = ::strrchr( filename, '/' );
+	const char *back = ::strrchr( filename, '\\' );
+	const char *last = (back > fwd) ? back : fwd;
+	new_name = last ? last + 1 : filename;
 }
 
 /*
@@ -88,10 +88,15 @@ TextureClass * Get_Texture_From_Filename
 void Create_Animation_Name( StringClass& anim_name, const char * anim_filename, const char * model_name )
 {
 	anim_name=anim_filename;
-	if ( ::strrchr( anim_name, '\\' ) != 0 ) {
-		StringClass temp(::strrchr( anim_name, '\\' ) + 1,true);
-		anim_name = temp;
-		anim_name.Erase( anim_name.Get_Length() - 4, 4 );	// Strip off ".w3d"
+	{
+		const char *fwd  = ::strrchr( (const char *)anim_name, '/' );
+		const char *back = ::strrchr( (const char *)anim_name, '\\' );
+		const char *last = (back > fwd) ? back : fwd;
+		if ( last != nullptr ) {
+			StringClass temp(last + 1, true);
+			anim_name = temp;
+			anim_name.Erase( anim_name.Get_Length() - 4, 4 );	// Strip off ".w3d"
+		}
 	}
 
 	if ( ::strchr( anim_name, '.' ) == 0 ) {	// Add model name

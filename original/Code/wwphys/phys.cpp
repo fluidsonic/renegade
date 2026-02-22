@@ -27,8 +27,11 @@ const float SUN_CHECK_DISTANCE = 50.0f;	//If a ray this long doesn't intersect, 
 RenderObjClass * create_render_obj_from_filename( const char * filename )
 {
 	StringClass	render_obj_name(filename,true);
-	if ( ::strchr( filename, '\\' ) != 0 ) {
-		render_obj_name = ::strrchr( filename, '\\' ) + 1;
+	const char *fwd_sep  = ::strrchr( filename, '/' );
+	const char *back_sep = ::strrchr( filename, '\\' );
+	const char *sep = (back_sep > fwd_sep) ? back_sep : fwd_sep;
+	if ( sep != 0 ) {
+		render_obj_name = sep + 1;
 	}
 	render_obj_name.Erase( render_obj_name.Get_Length() - 4, 4 );
 

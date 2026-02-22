@@ -314,8 +314,6 @@ InputConfigMgrClass::Load_Configuration (const InputConfigClass &config)
 	//	named file can't be found (e.g. stale reference in CONFIG.DAT)
 	//
 	if (!Input::Load_Configuration (config.Get_Filename ())) {
-		fprintf(stderr, "[InputConfigMgr] '%s' not found, falling back to DEFAULT_INPUT.CFG\n",
-			config.Get_Filename ());
 		Input::Load_Configuration (DEFAULT_INPUT_FILENAME);
 	}
 
@@ -424,8 +422,6 @@ InputConfigMgrClass::Save (void)
 	//	Open the file for writing
 	//
 	if (!file->Open (FileClass::WRITE)) {
-		fprintf(stderr, "[InputConfigMgr] Save: failed to open '%s' for writing — skipping save\n",
-		        CFG_DICTIONARY_FILENAME);
 		_TheWritingFileFactory->Return_File (file);
 		return;
 	}
@@ -644,7 +640,7 @@ InputConfigMgrClass::Get_Config_Path (StringClass &full_path)
 	//
 	//	Strip off the filename
 	//
-	char *filename_portion = ::strrchr (path, '\\');
+	char *filename_portion = ::strrchr (path, '/');
 	if (filename_portion != NULL) {
 		filename_portion[0] = 0;
 	}

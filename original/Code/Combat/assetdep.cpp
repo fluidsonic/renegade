@@ -262,7 +262,9 @@ AssetDependencyManager::Load_Assets (ChunkLoadClass &cload)
 void Get_Filename_From_Path (StringClass& new_filename, const char *path)
 {
 	// Find the last occurance of the directory deliminator
-	const char *filename = ::strrchr (path, '\\');
+	const char *fwd  = ::strrchr (path, '/');
+	const char *back = ::strrchr (path, '\\');
+	const char *filename = (back > fwd) ? back : fwd;
 	if (filename != NULL) {
 		// Increment past the directory deliminator
 		filename ++;

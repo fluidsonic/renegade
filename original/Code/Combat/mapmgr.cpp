@@ -54,9 +54,11 @@ MapMgrClass::Get_Map_Texture_Filename (StringClass &filename)
 	//	Strip off the path if necessary
 	//
 	filename = MapTextureName;
-	const char *dir_delimiter			= ::strrchr (MapTextureName, '\\');
-	if (dir_delimiter != NULL) {
-		filename = (dir_delimiter + 1);
+	{
+		const char *fwd  = ::strrchr (MapTextureName, '/');
+		const char *back = ::strrchr (MapTextureName, '\\');
+		const char *last = (back > fwd) ? back : fwd;
+		if (last != NULL) { filename = last + 1; }
 	}
 
 	return ;
@@ -73,11 +75,10 @@ MapMgrClass::Set_Map_Texture (const char *filename)
 	//
 	//	Strip off the path if necessary
 	//
-	StringClass filename_only	= filename;
-	const char *dir_delimiter			= ::strrchr (filename, '\\');
-	if (dir_delimiter != NULL) {
-		filename_only = (dir_delimiter + 1);
-	}
+	const char *fwd  = ::strrchr (filename, '/');
+	const char *back = ::strrchr (filename, '\\');
+	const char *last = (back > fwd) ? back : fwd;
+	StringClass filename_only = last ? last + 1 : filename;
 
 	//
 	//	Load the texture

@@ -68,7 +68,9 @@ TerrainMaterialClass::Set_Texture (const char *texture_name)
 	//
 	TextureName = texture_name;
 
-	const char *dir_delim = ::strrchr (texture_name, '\\');
+	const char *fwd_delim  = ::strrchr (texture_name, '/');
+	const char *back_delim = ::strrchr (texture_name, '\\');
+	const char *dir_delim = (back_delim > fwd_delim) ? back_delim : fwd_delim;
 	if (dir_delim != NULL) {
 		TextureName = dir_delim + 1;
 	}

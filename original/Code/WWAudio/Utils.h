@@ -48,7 +48,9 @@ __inline LPCTSTR
 Get_Filename_From_Path (LPCTSTR path)
 {
 	// Find the last occurance of the directory deliminator
-	LPCTSTR filename = ::strrchr (path, '\\');
+	LPCTSTR fwd_sep  = ::strrchr (path, '/');
+	LPCTSTR back_sep = ::strrchr (path, '\\');
+	LPCTSTR filename = (back_sep > fwd_sep) ? back_sep : fwd_sep;
 	if (filename != NULL) {
 		// Increment past the directory deliminator
 		filename ++;

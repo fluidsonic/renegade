@@ -193,11 +193,11 @@ MovieOptionsMenuClass::Begin_Play_Movie (void)
 			//
 			//	Strip any path information off the filename
 			//
-			StringClass filename_only (filename->Peek_Buffer (), true);
-			const char *delimiter = ::strrchr (filename->Peek_Buffer (), '\\');
-			if (delimiter != NULL) {
-				filename_only = delimiter + 1;
-			}
+			const char *buf  = filename->Peek_Buffer ();
+			const char *fwd  = ::strrchr (buf, '/');
+			const char *back = ::strrchr (buf, '\\');
+			const char *delimiter = (back > fwd) ? back : fwd;
+			StringClass filename_only (delimiter ? delimiter + 1 : buf, true);
 
 			//
 			//	Try to find the CD...

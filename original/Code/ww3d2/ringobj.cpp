@@ -977,7 +977,9 @@ RingPrototypeClass::RingPrototypeClass(RingRenderObjClass *ring)
 	//
 	if (ring->RingTexture != NULL) {
 		StringClass name = ring->RingTexture->Get_Full_Path();
-		const char *filename = ::strrchr (name, '\\');
+		const char *fwd  = ::strrchr (name, '/');
+		const char *back = ::strrchr (name, '\\');
+		const char *filename = (back > fwd) ? back : fwd;
 		if (filename != NULL) {
 			filename ++;
 		} else {

@@ -166,7 +166,7 @@ public:
 		Commands->Debug_Message( "Loading Control File %s\n", (int)filename );
 
 		char full_filename[80];
-		sprintf( full_filename, "DATA\\%s", filename );
+		sprintf( full_filename, "DATA/%s", filename );
 //		FILE * in = fopen( full_filename, "rt" );
 		int handle = Commands->Text_File_Open( filename );
 		if ( handle == 0 ) {

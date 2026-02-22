@@ -107,7 +107,9 @@ void	MovieGameModeClass::Start_Movie( const char * filename )
 		//	Strip any path information off the filename
 		//
 		StringClass filename_only( filename, true );
-		const char *delimiter = ::strrchr( filename, '\\' );
+		const char *fwd  = ::strrchr( filename, '/' );
+		const char *back = ::strrchr( filename, '\\' );
+		const char *delimiter = (back > fwd) ? back : fwd;
 		if ( delimiter != NULL ) {
 			filename_only = delimiter + 1;
 		}

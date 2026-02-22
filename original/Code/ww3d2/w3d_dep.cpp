@@ -447,11 +447,9 @@ static void Get_W3D_Name (const char *filename, char *w3d_name)
 
 	// Figure out the first character of the name of the file
 	// (bypass the path if it was given).
-	const char *start = strrchr(filename, '\\');
-	if (start)
-		++start;					// point to first character after the last backslash
-	else
-		start = filename;		// point to the start of the filename
+	const char *fwd  = strrchr(filename, '/');
+	const char *back = strrchr(filename, '\\');
+	const char *start = (back > fwd) ? back + 1 : (fwd ? fwd + 1 : filename);
 
 	// We don't want to copy the .w3d extension. Find where
 	// it occurs.

@@ -951,12 +951,10 @@ SpherePrototypeClass::SpherePrototypeClass(SphereRenderObjClass *sphere)
 	//
 	if (sphere->SphereTexture != NULL) {
 		StringClass name = sphere->SphereTexture->Get_Full_Path();
-		const char *filename = ::strrchr (name, '\\');
-		if (filename != NULL) {
-			filename ++;
-		} else {
-			filename = name;
-		}
+		const char *fwd  = ::strrchr (name, '/');
+		const char *back = ::strrchr (name, '\\');
+		const char *sep  = (back > fwd) ? back : fwd;
+		const char *filename = sep ? sep + 1 : (const char *)name;
 
 		::strcpy (Definition.TextureName, filename);
 

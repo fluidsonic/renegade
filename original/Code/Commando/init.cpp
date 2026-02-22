@@ -305,7 +305,7 @@ void	Construct_Directory_Structure(void)
 	//
 	//	Strip off the filename
 	//
-	char *filename = ::strrchr (path, '\\');
+	char *filename = ::strrchr (path, '/');
 	if (filename != NULL) {
 		filename[1] = 0;
 	}

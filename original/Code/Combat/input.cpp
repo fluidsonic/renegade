@@ -803,21 +803,6 @@ void	Input::Update( void )
 	DirectInput::Read();
 	Update_Sliders ();
 
-	{
-		static int32_t s_log_frame = 0;
-		if (++s_log_frame >= 300) {
-			s_log_frame = 0;
-			fprintf(stderr, "[Input] MenuMode=%d HasFocus=%d MouseCaptured=%d FwdKey=0x%02X DIK_W=%d mouseX=%ld mouseY=%ld\n",
-				(int32_t)MenuMode,
-				(int32_t)SDL2_HasFocus,
-				(int32_t)SDL2_MouseCaptured,
-				(int32_t)FunctionPrimaryKeys[INPUT_FUNCTION_MOVE_FORWARD],
-				DirectInput::Get_Keyboard_Button(0x11),
-				DirectInput::Get_Mouse_Axis(DirectInput::MOUSE_X_AXIS),
-				DirectInput::Get_Mouse_Axis(DirectInput::MOUSE_Y_AXIS));
-		}
-	}
-
 	//
 	// zero all values
 	//
@@ -1245,7 +1230,7 @@ Input::Save_Configuration (const char *filename)
 	//	Save the data to a file
 	//
 	StringClass	config_filename;
-	config_filename.Format( "config\\%s", filename );
+	config_filename.Format( "config/%s", filename );
 	FileClass *ini_file = _TheWritingFileFactory->Get_File (config_filename);
 	if (ini_file != NULL) {
 		ini_file->Open (FileClass::WRITE);
@@ -1407,10 +1392,8 @@ Input::Load_Configuration (const char *filename)
 	INIClass	*input_ini = Get_INI (filename);
 	if (input_ini == NULL) {
 		Debug_Say(("Input::Load_Configuration - Unable to load %s\n", filename));
-		fprintf(stderr, "[Input] Load_Configuration: FAILED to load '%s'\n", filename);
 		return false;
 	}
-	fprintf(stderr, "[Input] Load_Configuration: loaded '%s' OK\n", filename);
 
 	//
 	//	Loop over each function and try to read data about it from the INI

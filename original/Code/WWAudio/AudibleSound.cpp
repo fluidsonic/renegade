@@ -1743,7 +1743,9 @@ AudibleSoundDefinitionClass::Create_Sound (int classid_hint) const
 	// the current directory is set correctly.
 	//
 	StringClass real_filename(m_Filename,true);
-	const char *dir_delimiter = ::strrchr (m_Filename, '\\');
+	const char *fwd_delim2  = ::strrchr (m_Filename, '/');
+	const char *back_delim2 = ::strrchr (m_Filename, '\\');
+	const char *dir_delimiter = (back_delim2 > fwd_delim2) ? back_delim2 : fwd_delim2;
 	if (dir_delimiter != NULL && m_Filename.Get_Length () > 2 && m_Filename[1] != ':') {
 		real_filename = (dir_delimiter + 1);
 	}

@@ -282,10 +282,12 @@ ParticleEmitterDefClass::Normalize_Filename (void)
 	::lstrcpy (path, m_Info.TextureFilename);
 
 	// Find the last occurance of the directory deliminator
-	LPCTSTR filename = ::strrchr (path, '\\');
+	const char *fwd_sep  = ::strrchr (path, '/');
+	const char *back_sep = ::strrchr (path, '\\');
+	LPCTSTR filename = (back_sep > fwd_sep) ? back_sep : fwd_sep;
 	if (filename != NULL) {
-		
-		// Increment past the directory deliminator
+
+		// Increment past the directory delimiter
 		filename ++;
 
 		// Now copy the filename protion of the path to the structure

@@ -798,16 +798,12 @@ DialogMgrClass::Flush_Dialogs (void)
 	//
 	//	Exit menu mode immediately so input isn't gated until the next frame update
 	//
-	bool was_in_menu_mode = IsInMenuMode;
 	if (IsInMenuMode) {
 		IsInMenuMode = false;
 		if (Input != NULL) {
 			Input->Exit_Menu_Mode ();
 		}
 	}
-
-	fprintf(stderr, "[DialogMgr] Flush_Dialogs: wasInMenuMode=%d dialogs=%d\n",
-		(int32_t)was_in_menu_mode, DialogList.Count ());
 
 	IsFlushing = false;
 

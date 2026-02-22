@@ -15,8 +15,11 @@
 TextureClass * create_projector_texture_from_filename( const char * filename )
 {
 	StringClass	tex_name = filename;
-	if (::strchr(tex_name, '\\') != 0) {
-		tex_name = ::strrchr(filename, '\\') + 1;
+	const char *fwd_sep2  = ::strrchr(filename, '/');
+	const char *back_sep2 = ::strrchr(filename, '\\');
+	const char *sep2 = (back_sep2 > fwd_sep2) ? back_sep2 : fwd_sep2;
+	if (sep2 != 0) {
+		tex_name = sep2 + 1;
 	}
 
 	TextureClass * texture = WW3DAssetManager::Get_Instance()->Get_Texture(tex_name,TextureClass::MIP_LEVELS_1);
