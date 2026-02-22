@@ -102,3 +102,30 @@ add_subdirectory(Code/SControl)
 add_subdirectory(Code/Scripts)
 add_subdirectory(Code/Combat)
 add_subdirectory(Code/Commando)
+
+# ── Primitive-type lint (requires brew install llvm) ──────────────────────────
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+find_program(CLANG_TIDY_EXE NAMES clang-tidy
+    HINTS /opt/homebrew/opt/llvm/bin NO_DEFAULT_PATH)
+find_program(RUN_CLANG_TIDY NAMES run-clang-tidy
+    HINTS /opt/homebrew/opt/llvm/bin NO_DEFAULT_PATH)
+
+if(CLANG_TIDY_EXE AND RUN_CLANG_TIDY)
+    add_subdirectory(tools/primitive-type-check)
+
+    add_custom_target(lint
+        COMMAND "${RUN_CLANG_TIDY}"
+                -clang-tidy-binary "${CLANG_TIDY_EXE}"
+                -load "$<TARGET_FILE:PrimitiveTypeCheck>"
+                -checks=-*,ccr-primitive-type
+                -header-filter=".*/Code/.*"
+                -p "${CMAKE_BINARY_DIR}"
+                -j8
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        DEPENDS PrimitiveTypeCheck
+        COMMENT "Running CCR primitive-type lint across Code/"
+    )
+else()
+    message(STATUS "clang-tidy not found at /opt/homebrew/opt/llvm/bin — lint target unavailable")
+endif()
