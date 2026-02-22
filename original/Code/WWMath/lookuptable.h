@@ -50,7 +50,7 @@ inline float LookupTableClass::Get_Value(float input)
 	float normalized_input = (float)(OutputSamples.Length()-1) * (input - MinInputValue) * OOMaxMinusMin;
 	float input0 = WWMath::Floor(normalized_input);
 	
-	int index0 = WWMath::Float_To_Long(input0);
+	int index0 = static_cast<int32_t>(WWMath::Float_To_Long(input0));
 	int index1 = index0+1;
 	float lerp = normalized_input - input0;
 
@@ -66,7 +66,7 @@ inline float LookupTableClass::Get_Value_Quick(float input)
 		return OutputSamples[OutputSamples.Length()-1];
 	}
 	
-	int index = (OutputSamples.Length()-1) * WWMath::Float_To_Long((input - MinInputValue) * OOMaxMinusMin);
+	int index = static_cast<int32_t>((OutputSamples.Length()-1) * WWMath::Float_To_Long((input - MinInputValue) * OOMaxMinusMin));
 	return OutputSamples[index];
 }
 

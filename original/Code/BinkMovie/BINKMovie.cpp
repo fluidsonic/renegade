@@ -279,14 +279,14 @@ void BINKMovieClass::Render()
 				D3DSURFACE_DESC d3d_surf_desc;
 				D3DLOCKED_RECT locked_rect;
 
-				DX8_ErrorCode(d3d_texture->GetLevelDesc(0, &d3d_surf_desc));
+				DX8_ErrorCode(static_cast<uint32_t>(d3d_texture->GetLevelDesc(0, &d3d_surf_desc)));
 
 				RECT rect;
 				rect.left = 0;
 				rect.top = 0;
 				rect.right = w;
 				rect.bottom = h;
-				DX8_ErrorCode(d3d_texture->LockRect(0,&locked_rect,&rect,0));
+				DX8_ErrorCode(static_cast<uint32_t>(d3d_texture->LockRect(0,&locked_rect,&rect,0)));
 
 				for (unsigned y = 0; y < h; ++y) {
 					unsigned char* dest = (unsigned char*)locked_rect.pBits + y * locked_rect.Pitch;
@@ -294,7 +294,7 @@ void BINKMovieClass::Render()
 					cur_tex_ptr += Bink->Width * 2;
 				}
 
-				DX8_ErrorCode(d3d_texture->UnlockRect(0));
+				DX8_ErrorCode(static_cast<uint32_t>(d3d_texture->UnlockRect(0)));
 			}
 		}
 

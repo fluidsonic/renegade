@@ -92,7 +92,7 @@ class cNetStats
 		int Get_Remote_Service_Count() {return RemoteServiceCount;}
 		void Set_Remote_Service_Count(int remote_service_count);
 
-		int Get_Sample_Start_Time() const {return SampleStartTime;}
+		int Get_Sample_Start_Time() const {return static_cast<int32_t>(SampleStartTime);}
 
       int Get_Last_Unreliable_Packet_Id() const {return LastUnreliablePacketId;}
       void Set_Last_Unreliable_Packet_Id(int id) {LastUnreliablePacketId = id;}

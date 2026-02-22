@@ -107,7 +107,7 @@ Sound3DClass::Play (bool alloc_handle)
 {
 	// Record our first 'tick' if we just started playing
 	if (m_State != STATE_PLAYING) {
-		m_LastUpdate = TIMEGETTIME ();
+		m_LastUpdate = static_cast<uint32_t>(TIMEGETTIME ());
 	}
 
 	// Allow the base class to process this call
@@ -147,7 +147,7 @@ Sound3DClass::On_Frame_Update (unsigned int milliseconds)
 	// Remember when the last time we updated our 'auto-calc'
 	// variables.
 	//
-	m_LastUpdate = TIMEGETTIME ();
+	m_LastUpdate = static_cast<uint32_t>(TIMEGETTIME ());
 	m_PrevTransform = m_Transform;
 
 	//
@@ -681,7 +681,7 @@ Sound3DClass::Set_Miles_Handle (MILES_HANDLE handle)
 		//	Configure the sound handle
 		//
 		m_SoundHandle = new Sound3DHandleClass;
-		m_SoundHandle->Set_Miles_Handle (handle);
+		m_SoundHandle->Set_Miles_Handle (static_cast<uint32_t>(handle));
 
 		//
 		//	Use this new handle

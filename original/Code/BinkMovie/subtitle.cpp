@@ -105,7 +105,7 @@ void SubTitleClass::Set_Caption(char16_t* string)
 
 	// Make a copy of caption
 	if (string != NULL) {
-		unsigned int length = wcslen(string);
+		unsigned int length = static_cast<uint32_t>(wcslen(string));
 		mCaption = new char16_t[length + 1];
 
 		if (mCaption != NULL) {

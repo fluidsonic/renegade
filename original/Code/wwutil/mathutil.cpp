@@ -28,20 +28,20 @@ void cMathUtil::Angle_To_Vector(double angle, double & dx, double & dy)
 
 	if (angle >= 0 && angle < 90) {
 		angleRadians = angle * PI / 180.0;
-		dx = WWMath::Sin(angleRadians);
-		dy = WWMath::Cos(angleRadians);
+		dx = WWMath::Sin(static_cast<float>(angleRadians));
+		dy = WWMath::Cos(static_cast<float>(angleRadians));
 	} else if (angle >= 90 && angle < 180) {
 		angleRadians = (angle - 90) * PI / 180.0;
-		dx = WWMath::Cos(angleRadians);
-		dy = -WWMath::Sin(angleRadians);
+		dx = WWMath::Cos(static_cast<float>(angleRadians));
+		dy = -WWMath::Sin(static_cast<float>(angleRadians));
 	} else if (angle >= 180 && angle < 270) {
 		angleRadians = (angle - 180) * PI / 180.0;
-		dx = -WWMath::Sin(angleRadians);
-		dy = -WWMath::Cos(angleRadians);
+		dx = -WWMath::Sin(static_cast<float>(angleRadians));
+		dy = -WWMath::Cos(static_cast<float>(angleRadians));
 	} else {
 		angleRadians = (angle - 270) * PI / 180.0;
-		dx = -WWMath::Cos(angleRadians);
-		dy = WWMath::Sin(angleRadians);
+		dx = -WWMath::Cos(static_cast<float>(angleRadians));
+		dy = WWMath::Sin(static_cast<float>(angleRadians));
 	}
 
    double len;
@@ -69,7 +69,7 @@ void cMathUtil::Vector_To_Angle(double dx, double dy, double & angle)
 			theta = PI;
 		}
 	} else {
-		theta = WWMath::Atan(-dy / dx);
+		theta = WWMath::Atan(static_cast<float>(-dy / dx));
 		if (dx < 0) {
 			theta += PI;
 		}
@@ -116,8 +116,8 @@ void cMathUtil::Rotate_Vector(double & vx, double & vy, double angle)
    double vx1 = vx;
    double vy1 = vy;
 
-   vx = vx1 * ::WWMath::Cos(angle_radians) - vy1 * ::WWMath::Sin(angle_radians);
-   vy = vx1 * ::WWMath::Sin(angle_radians) + vy1 * ::WWMath::Cos(angle_radians);
+   vx = vx1 * ::WWMath::Cos(static_cast<float>(angle_radians)) - vy1 * ::WWMath::Sin(static_cast<float>(angle_radians));
+   vy = vx1 * ::WWMath::Sin(static_cast<float>(angle_radians)) + vy1 * ::WWMath::Cos(static_cast<float>(angle_radians));
 }
 
 //-----------------------------------------------------------------------------

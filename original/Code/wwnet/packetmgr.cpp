@@ -345,7 +345,7 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
 		/*
 		** Calculate the size of the whole delta patch.
 		*/
-		int patch_size = (delta_bytes_ptr - delta_packet) + num_diff_bytes;
+		int patch_size = static_cast<int32_t>((delta_bytes_ptr - delta_packet) + num_diff_bytes);
 
 		return(patch_size);
 	}
@@ -464,7 +464,7 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 	/*
 	** Work out how many delta bytes we processed - it's needed for meta packet decoding.
 	*/
-	delta_size = (patch_bytes - delta_packet) + num_patches;
+	delta_size = static_cast<int32_t>((patch_bytes - delta_packet) + num_patches);
 
 	/*
 	** Copy the patch bytes into the correct positions.
@@ -801,7 +801,7 @@ void PacketManagerClass::Flush(bool forced)
 
 
 			Register_Packet_Out(&SendBuffers[i].IPAddress[0], SendBuffers[i].Port, SendBuffers[i].PacketSendLength + UDP_HEADER_SIZE, 0);
-			int result = sendto(socket, (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength, 0, (LPSOCKADDR) &addr, sizeof(SOCKADDR_IN));
+			int result = static_cast<int32_t>(sendto(socket, (const char*)SendBuffers[i].PacketBuffer, SendBuffers[i].PacketSendLength, 0, (LPSOCKADDR) &addr, sizeof(SOCKADDR_IN)));
 
 
 			if (result == SOCKET_ERROR){
@@ -946,7 +946,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 		}
 	}
 
-	int bytes_pulled_from_packet = packet_ptr - packet;
+	int bytes_pulled_from_packet = static_cast<int32_t>(packet_ptr - packet);
 
 	/*
 	** More packets in this buffer?

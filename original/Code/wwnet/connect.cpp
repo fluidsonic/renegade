@@ -545,7 +545,7 @@ bool cConnection::Receive_Packet()
       //PRHost[addressee]->Get_Stats().StatSample[STAT_HdrByteRcv] += cNetUtil::Get_Header_Bytes();
       PRHost[addressee]->Get_Stats().StatSample[STAT_BitsRcv] += packet_bits;
 
-		PRHost[addressee]->Set_Last_Contact_Time(TIMEGETTIME());
+		PRHost[addressee]->Set_Last_Contact_Time(static_cast<int32_t>(TIMEGETTIME()));
    }
 
 	//
@@ -1686,7 +1686,7 @@ void cConnection::Service_Read()
 			}
 
          if (PRHost[rhost_id] != NULL) {
-				PRHost[rhost_id]->Set_List_Processing_Time(UNRELIABLE_RCV_LIST, TIMEGETTIME() - list_processing_start);
+				PRHost[rhost_id]->Set_List_Processing_Time(UNRELIABLE_RCV_LIST, static_cast<int32_t>(TIMEGETTIME() - list_processing_start));
 			}
 
          if (PRHost[rhost_id] != NULL) {
@@ -2025,15 +2025,15 @@ void cConnection::Service_Send(bool is_urgent)
             CombinedStats.StatSample[statistic] / (double) NumRHosts);
       }
 
-      AveragedStats.Update_If_Sample_Done(ThisFrameTimeMs);
+      AveragedStats.Update_If_Sample_Done(static_cast<int32_t>(ThisFrameTimeMs));
    }
 
-   CombinedStats.Update_If_Sample_Done(ThisFrameTimeMs);
+   CombinedStats.Update_If_Sample_Done(static_cast<int32_t>(ThisFrameTimeMs));
 
 	for (rhost_id = MinRHost; rhost_id <= MaxRHost; rhost_id++) {
 		if (PRHost[rhost_id] != NULL) {
 			bool is_updated = PRHost[rhost_id]->Get_Stats().Update_If_Sample_Done(
-            ThisFrameTimeMs, false);
+            static_cast<int32_t>(ThisFrameTimeMs), false);
 
          if (is_updated) {
 				PRHost[rhost_id]->Adjust_Resend_Timeout();

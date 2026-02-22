@@ -203,7 +203,7 @@ void cPacket::Construct_Full_Packet(cPacket & full_packet, cPacket & src_packet)
 	//	full_packet.Get_Max_Size() - sizeof(CRC_PLACEHOLDER));
 
 	// Only CRC the meaningful data in the buffer - not the other 1300ish bytes as well. ST - 9/19/2001 11:18PM
-	uint32_t crc = CRC::Memory((BYTE *) (full_packet.Get_Data() + sizeof(CRC_PLACEHOLDER)), (whole_bit_length / 8) - sizeof(CRC_PLACEHOLDER));
+	uint32_t crc = static_cast<uint32_t>(CRC::Memory((BYTE *) (full_packet.Get_Data() + sizeof(CRC_PLACEHOLDER)), (whole_bit_length / 8) - sizeof(CRC_PLACEHOLDER)));
 
 	//
 	// Overwrite the crc placeholder with the computed crc.
@@ -238,7 +238,7 @@ void cPacket::Construct_App_Packet(cPacket & packet, cPacket & full_packet)
 		//
 		// Only CRC the meaningful data in the buffer - not the other 1300ish bytes as well. ST - 9/19/2001 11:29PM
 		//
-		int local_crc = CRC::Memory((BYTE *) (full_packet.Get_Data() + sizeof(CRC_PLACEHOLDER)), ((bit_size / 8) + PACKET_HEADER_SIZE) - sizeof(CRC_PLACEHOLDER));
+		int local_crc = static_cast<int32_t>(CRC::Memory((BYTE *) (full_packet.Get_Data() + sizeof(CRC_PLACEHOLDER)), ((bit_size / 8) + PACKET_HEADER_SIZE) - sizeof(CRC_PLACEHOLDER)));
 
 		if (local_crc == remote_crc) {
 			packet.Set_Is_Crc_Correct(true);

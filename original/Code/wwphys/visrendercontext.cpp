@@ -161,10 +161,10 @@ void VisRenderContextClass::Scan_Frame_Buffer
 	int width,height;
 	VisRasterizer->Get_Resolution(&width,&height);
 
-	int minx = MAX(min.X * width , 1);		// ignore the far left column
-	int miny = MAX(min.Y * height , 1);		// ignore the top row
-	int maxx = MIN(max.X * width , width-1);
-	int maxy = MIN(max.Y * height , height-1);
+	int minx = MAX(static_cast<int32_t>(min.X * width) , 1);		// ignore the far left column
+	int miny = MAX(static_cast<int32_t>(min.Y * height) , 1);		// ignore the top row
+	int maxx = MIN(static_cast<int32_t>(max.X * width) , width-1);
+	int maxy = MIN(static_cast<int32_t>(max.Y * height) , height-1);
 	int backface_count = 0;
 
 	const uint32_t * pixel_row = NULL;

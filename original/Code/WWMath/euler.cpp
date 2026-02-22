@@ -138,13 +138,13 @@ void EulerAnglesClass::From_Matrix(const Matrix3D & M, int order)
 		if (sy > 16*FLT_EPSILON) {
 
 			Angle[0] = WWMath::Atan2(M[i][j],M[i][k]);
-			Angle[1] = WWMath::Atan2(sy,M[i][i]);
+			Angle[1] = WWMath::Atan2(static_cast<float>(sy),M[i][i]);
 			Angle[2] = WWMath::Atan2(M[j][i],-M[k][i]);
 
 		} else {
 
 			Angle[0] = WWMath::Atan2(-M[j][k],M[j][j]);
-			Angle[1] = WWMath::Atan2(sy,M[i][i]);
+			Angle[1] = WWMath::Atan2(static_cast<float>(sy),M[i][i]);
 			Angle[2] = 0.0;
 		}
 
@@ -155,13 +155,13 @@ void EulerAnglesClass::From_Matrix(const Matrix3D & M, int order)
 		if (cy > 16*FLT_EPSILON) {
 
 			Angle[0] = WWMath::Atan2(M[k][j],M[k][k]);
-			Angle[1] = WWMath::Atan2(-M[k][i],cy);
+			Angle[1] = WWMath::Atan2(-M[k][i],static_cast<float>(cy));
 			Angle[2] = WWMath::Atan2(M[j][i],M[i][i]);
 
 		} else {
 
 			Angle[0] = WWMath::Atan2(-M[j][k],M[j][j]);
-			Angle[1] = WWMath::Atan2(-M[k][i],cy);
+			Angle[1] = WWMath::Atan2(-M[k][i],static_cast<float>(cy));
 			Angle[2] = 0;
 		}
 	}
@@ -235,8 +235,8 @@ void EulerAnglesClass::To_Matrix(Matrix3D & M)
 	}
 
 	ti = a0;				tj = a1;				th = a2;
-	ci = WWMath::Cos(ti);		cj = WWMath::Cos(tj);		ch = WWMath::Cos(th);
-	si = WWMath::Sin(ti);		sj = WWMath::Sin(tj);		sh = WWMath::Sin(th);
+	ci = WWMath::Cos(static_cast<float>(ti));		cj = WWMath::Cos(static_cast<float>(tj));		ch = WWMath::Cos(static_cast<float>(th));
+	si = WWMath::Sin(static_cast<float>(ti));		sj = WWMath::Sin(static_cast<float>(tj));		sh = WWMath::Sin(static_cast<float>(th));
 
 	cc = ci*ch;
 	cs = ci*sh;

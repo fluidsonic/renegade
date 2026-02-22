@@ -26,7 +26,7 @@ NetworkObjectClass::NetworkObjectClass (void)	:
 	UnreliableOverride (false),
 	AppPacketType (0),
 	FrequentExportPacketSize(0),
-	ClientsideUpdateFrequencySampleStartTime(TIMEGETTIME()),
+	ClientsideUpdateFrequencySampleStartTime(static_cast<uint32_t>(TIMEGETTIME())),
 	ClientsideUpdateFrequencySampleCount(0),
 	ClientsideUpdateRate(0),
 	LastObjectIdIDamaged(-1),
@@ -504,7 +504,7 @@ NetworkObjectClass::Get_Object_Distance (const Vector3 &client_pos)
 void NetworkObjectClass::Reset_Last_Clientside_Update_Time(void)
 {
 	LastClientsideUpdateTime = 0;
-	ClientsideUpdateFrequencySampleStartTime = TIMEGETTIME();
+	ClientsideUpdateFrequencySampleStartTime = static_cast<uint32_t>(TIMEGETTIME());
 	ClientsideUpdateFrequencySampleCount = 0;
 }
 
@@ -540,8 +540,8 @@ int NetworkObjectClass::Get_Clientside_Update_Frequency(void)
 		// Say 10 seconds if we don't know.
 		int rate = 10000;
 		if (ClientsideUpdateFrequencySampleCount) {
-			rate = (time - ClientsideUpdateFrequencySampleStartTime) / ClientsideUpdateFrequencySampleCount;
-			ClientsideUpdateFrequencySampleStartTime = time;
+			rate = static_cast<int32_t>((time - ClientsideUpdateFrequencySampleStartTime) / ClientsideUpdateFrequencySampleCount);
+			ClientsideUpdateFrequencySampleStartTime = static_cast<uint32_t>(time);
 			ClientsideUpdateFrequencySampleCount = 0;
 		}
 		ClientsideUpdateRate = rate;

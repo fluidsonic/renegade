@@ -105,7 +105,7 @@ bool ServerControlSocketClass::Open(int port, bool loopback, unsigned long ip)
 		if (ip == 0) {
 			ip = INADDR_ANY;
 		}
-		addr.sin_addr.s_addr = htonl(ip);
+		addr.sin_addr.s_addr = htonl(static_cast<uint32_t>(ip));
 	}
 
 	DebugString(("ServerControlSocketClass - About to bind the UDP socket to port %d\n", port));
@@ -809,7 +809,7 @@ void ServerControlSocketClass::Service(void)
 		/*
 		** Send it.
 		*/
-		result = sendto(Socket, ((char const *)packet->Buffer) - sizeof(packet->CRC), packet->BufferLen + sizeof(packet->CRC), 0, (LPSOCKADDR)&addr, sizeof (addr));
+		result = static_cast<int32_t>(sendto(Socket, ((char const *)packet->Buffer) - sizeof(packet->CRC), packet->BufferLen + sizeof(packet->CRC), 0, (LPSOCKADDR)&addr, sizeof (addr)));
 
 		if (result == SOCKET_ERROR){
 			if (LAST_ERROR != WSAEWOULDBLOCK) {

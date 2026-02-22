@@ -374,7 +374,7 @@ PathSolveClass::Initialize (float sector_fudge)
 {
 	m_State				= THINKING;
 	m_CompletedNode	= NULL;
-	m_BirthTime			= TIMEGETTIME ();
+	m_BirthTime			= static_cast<uint32_t>(TIMEGETTIME ());
 
 	//
 	//	Lookup the start and destination sectors

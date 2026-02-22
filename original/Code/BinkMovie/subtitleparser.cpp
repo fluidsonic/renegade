@@ -457,7 +457,7 @@ void Parse_Position(char16_t* param, SubTitleClass* subTitle)
 
 	if (separator != NULL) {
 		*separator++ = 0;
-		int linePos = wcstol(ptr, NULL, 0);
+		int linePos = static_cast<int32_t>(wcstol(ptr, NULL, 0));
 		subTitle->Set_Line_Position(linePos);
 		ptr = separator;
 	}

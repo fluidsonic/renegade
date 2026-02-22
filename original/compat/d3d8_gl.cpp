@@ -1652,12 +1652,12 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                 // (DXT is block-based; sub-rect copies of DXT aren't supported here)
                 UINT bpp = D3D8Surface_GL::bytes_per_pixel(s->fmt);
                 for (UINT i = 0; i < numRects; i++) {
-                    int sx = srcRects ? srcRects[i].left : 0;
-                    int sy = srcRects ? srcRects[i].top  : 0;
-                    int sw = srcRects ? (srcRects[i].right - srcRects[i].left) : (int)s->width;
-                    int sh = srcRects ? (srcRects[i].bottom - srcRects[i].top) : (int)s->height;
-                    int dx = dstPoints ? dstPoints[i].x : 0;
-                    int dy = dstPoints ? dstPoints[i].y : 0;
+                    int sx = srcRects ? static_cast<int32_t>(srcRects[i].left) : 0;
+                    int sy = srcRects ? static_cast<int32_t>(srcRects[i].top)  : 0;
+                    int sw = srcRects ? static_cast<int32_t>(srcRects[i].right - srcRects[i].left) : (int)s->width;
+                    int sh = srcRects ? static_cast<int32_t>(srcRects[i].bottom - srcRects[i].top) : (int)s->height;
+                    int dx = dstPoints ? static_cast<int32_t>(dstPoints[i].x) : 0;
+                    int dy = dstPoints ? static_cast<int32_t>(dstPoints[i].y) : 0;
                     for (int row = 0; row < sh; row++) {
                         memcpy(d->pixels + ((dy + row) * (int)d->width + dx) * (int)bpp,
                                s->pixels + ((sy + row) * (int)s->width + sx) * (int)bpp,

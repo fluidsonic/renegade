@@ -277,7 +277,7 @@ void SubTitleManagerClass::Draw_Sub_Title(const SubTitleClass* subtitle)
 	// Assume left justification
 	int xPos = 0;
 	int yPos = subtitle->Get_Line_Position() * (h/16);
-	int xSize=extents[0];
+	int xSize = static_cast<int32_t>(extents[0]);
 
 	SubTitleClass::Alignment align = subtitle->Get_Alignment();
 
@@ -294,7 +294,7 @@ void SubTitleManagerClass::Draw_Sub_Title(const SubTitleClass* subtitle)
 	// Set font color
 	unsigned long rgbColor = subtitle->Get_RGB_Color()|0xff000000;
 
-	Renderer.Draw_Sentence(rgbColor);
+	Renderer.Draw_Sentence(static_cast<uint32_t>(rgbColor));
 }
 
 void SubTitleManagerClass::Render()

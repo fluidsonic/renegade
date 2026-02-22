@@ -152,7 +152,7 @@ inline int getsockopt(SOCKET s, int level, int optname, char* optval, int* optle
 }
 inline int recvfrom(SOCKET s, char* buf, int len, int flags, LPSOCKADDR from, int* fromlen) {
     socklen_t sl = (socklen_t)*fromlen;
-    int r = ::recvfrom(s, buf, len, flags, from, &sl);
+    int r = static_cast<int32_t>(::recvfrom(s, buf, len, flags, from, &sl));
     *fromlen = (int)sl;
     return r;
 }

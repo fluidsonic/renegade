@@ -173,7 +173,7 @@ SoundBufferClass::Load_From_File (FileClass &file)
 		// Allocate a new buffer of the correct length and read the contents
 		// of the file into the buffer
 		m_Buffer = new unsigned char[m_Length];
-		retval = bool(file.Read (m_Buffer, m_Length) == (int)m_Length);
+		retval = bool(file.Read (m_Buffer, static_cast<int32_t>(m_Length)) == static_cast<int32_t>(m_Length));
 
 		// If we failed, free the buffer
 		if (retval == false) {

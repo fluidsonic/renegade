@@ -46,7 +46,7 @@ Sound2DHandleClass::Initialize (SoundBufferClass *buffer)
 		//
 		if (Buffer != NULL) {
 			::AIL_set_named_sample_file (SampleHandle, (char *)Buffer->Get_Filename (),
-					Buffer->Get_Raw_Buffer (), Buffer->Get_Raw_Length (), 0);
+					Buffer->Get_Raw_Buffer (), static_cast<uint32_t>(Buffer->Get_Raw_Length ()), 0);
 		}
 	}
 

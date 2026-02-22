@@ -68,7 +68,7 @@ TwiddlerClass::Twiddle (void) const
 		//
 		//	Get a random index into our definition list
 		//
-		RandomClass randomizer (TIMEGETTIME ());
+		RandomClass randomizer (static_cast<uint32_t>(TIMEGETTIME ()));
 		int index = randomizer (0, m_DefinitionList.Count () - 1);
 
 		//

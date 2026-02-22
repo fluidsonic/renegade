@@ -452,7 +452,7 @@ AudibleSoundClass::Play (bool alloc_handle)
 			m_SoundHandle->Start_Sample ();
 		}
 
-		m_CurrentPosition	= m_StartOffset * m_Length;
+		m_CurrentPosition	= static_cast<unsigned long>(m_StartOffset * m_Length);
 		if (m_CurrentPosition > 0) {
 			Seek (m_CurrentPosition);
 		}
@@ -654,7 +654,7 @@ AudibleSoundClass::Seek (unsigned long milliseconds)
 
 		// Update the actual sound data if we are playing the sound
 		if (m_SoundHandle != NULL) {
-			m_SoundHandle->Set_Sample_MS_Position (m_CurrentPosition);
+			m_SoundHandle->Set_Sample_MS_Position (static_cast<uint32_t>(m_CurrentPosition));
 		}
 	}
 
@@ -691,7 +691,7 @@ AudibleSoundClass::Set_Miles_Handle (MILES_HANDLE handle)
 		//
 		//	Configure the sound handle
 		//
-		m_SoundHandle->Set_Miles_Handle (handle);
+		m_SoundHandle->Set_Miles_Handle (static_cast<uint32_t>(handle));
 
 		//
 		//	Use this new handle
@@ -888,8 +888,8 @@ AudibleSoundClass::Set_Pitch_Factor (float factor)
 			//	Get the base rate of the sound and scale our playback rate
 			// based on the factor
 			//
-			int base_rate	= m_Buffer->Get_Rate ();
-			int new_rate	= base_rate * m_PitchFactor;
+			int32_t base_rate	= static_cast<int32_t>(m_Buffer->Get_Rate ());
+			int32_t new_rate	= static_cast<int32_t>(base_rate * m_PitchFactor);
 			m_SoundHandle->Set_Sample_Playback_Rate (new_rate);
 		}
 	}
@@ -1871,7 +1871,10 @@ AudibleSoundClass::Save (ChunkSaveClass &csave)
 		WRITE_MICRO_CHUNK (csave, VARID_VIRTUAL_CHANNEL,		m_VirtualChannel);
 
 		if (m_Buffer != NULL) {
-			WRITE_MICRO_CHUNK_STRING (csave, VARID_FILENAME, m_Buffer->Get_Filename ());
+			const char *_fn = m_Buffer->Get_Filename ();
+			csave.Begin_Micro_Chunk (VARID_FILENAME);
+			csave.Write (_fn, static_cast<uint32_t>(strlen (_fn) + 1));
+			csave.End_Micro_Chunk ();
 		}
 
 		AudibleSoundClass *this_ptr = this;

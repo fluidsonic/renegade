@@ -115,7 +115,7 @@ void cRemoteHost::Set_Last_Service_Count(int service_count)
 //-----------------------------------------------------------------------------
 void cRemoteHost::Compute_List_Max(int list_type)
 {
-	ListMax[list_type] = PacketList[list_type].Get_Count();
+	ListMax[list_type] = static_cast<int32_t>(PacketList[list_type].Get_Count());
 }
 
 //-----------------------------------------------------------------------------
@@ -228,14 +228,14 @@ void cRemoteHost::Remove_Packet(int packet_id, BYTE list_type)
 				// biased towards a low resend timeout value on connections of variable quality. ST - 12/7/2001 12:48PM
 				if (p_packet->Get_Resend_Count() == 0 || NumInternalPings == 0) {
 					unsigned long time = TIMEGETTIME();
-					int ping_time = time - p_packet->Get_Send_Time();
+					int ping_time = static_cast<int32_t>(time - p_packet->Get_Send_Time());
 
 					if (p_packet->Get_Resend_Count() != 0) {
 
 						// If we are not getting any timing info at all then we need to do something. Use the first send time. It's going
 						// to make it big but that should cut down on the resends and let us get better timing info.
 						if (NumInternalPings == 0) {
-							ping_time = TIMEGETTIME() - p_packet->Get_First_Send_Time();
+							ping_time = static_cast<int32_t>(TIMEGETTIME() - p_packet->Get_First_Send_Time());
 						}
 					}
 					TotalInternalPingtimeMs += ping_time;
@@ -420,7 +420,7 @@ bool cRemoteHost::Is_Outgoing_Flooded(void)
 	// 2. An excessive number of packets in the out queue that are older than the average ping time. Since acks aren't
 	// coming back we resend more and so exacerbate the problem.
 	//
-	int total_in_queue = PacketList[RELIABLE_SEND_LIST].Get_Count();
+	int total_in_queue = static_cast<int32_t>(PacketList[RELIABLE_SEND_LIST].Get_Count());
 
 	// Let's say that if more than 90% of the packets in the queue have been resent then there is a problem.
 	if (total_in_queue > 20 && (TotalResentPacketsInQueue*10) > (total_in_queue*9)) {

@@ -180,8 +180,8 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 				** some fine tuning.
 				*/
 				unsigned long total_bbo = connection->Get_Bandwidth_Budget_Out();
-				int diff = total_bbo - total_bbo_allocated;
-				int percent_diff = (100 * abs(diff)) / total_bbo;
+				int diff = static_cast<int32_t>(total_bbo - total_bbo_allocated);
+				int percent_diff = static_cast<int32_t>((100 * abs(diff)) / total_bbo);
 				diff = total_bbo - total_bbo_allocated;
 				bw_adjust = 100 + ((100 * diff) / (((int)total_bbo * 9) / 10));
 
@@ -194,8 +194,8 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 					while ((diff < 0 || percent_diff > 10) && tries >= 0) {
 						//
 						total_bbo_allocated = Allocate_Bandwidth(average_priority, bw_adjust, connection->Get_Bandwidth_Budget_Out());
-						diff = total_bbo - total_bbo_allocated;
-						percent_diff = (100 * abs(diff)) / total_bbo;
+						diff = static_cast<int32_t>(total_bbo - total_bbo_allocated);
+						percent_diff = static_cast<int32_t>((100 * abs(diff)) / total_bbo);
 						bw_adjust = bw_adjust * (100 + ((100 * diff) / (((int)total_bbo * 9) / 10))) / 100;
 						if (bw_adjust <= 0) {
 							break;
@@ -216,7 +216,7 @@ void BandwidthBalancerClass::Adjust(cConnection *connection, bool is_dedicated)
 					for (int i=connection->Get_Min_RHost() + (is_dedicated ? 0 : 1) ; i <= connection->Get_Max_RHost() ; i++) {
 						cRemoteHost *client = connection->Get_Remote_Host(i);
 						if (client != NULL) {
-							client->Set_Target_Bps(ClientInfo[index++].AllocatedBBO);
+							client->Set_Target_Bps(static_cast<int32_t>(ClientInfo[index++].AllocatedBBO));
 						}
 					}
 				}
@@ -261,13 +261,13 @@ unsigned long BandwidthBalancerClass::Allocate_Bandwidth(float average_priority,
 		/*
 		** Work out the bandwidth, initially based on average priority.
 		*/
-		int client_bbo_adjust = (pri - average_priority) * bbo_per_client;
+		int client_bbo_adjust = static_cast<int32_t>((pri - average_priority) * bbo_per_client);
 		if (client_bbo_adjust > 0) {
 			client_bbo_adjust = min(client_bbo_adjust, (int)bbo_per_client / 2);
 		} else {
 			client_bbo_adjust = max(client_bbo_adjust, -((int)bbo_per_client / 2));
 		}
-		int new_client_bbo = bbo_per_client + client_bbo_adjust;
+		int new_client_bbo = static_cast<int32_t>(bbo_per_client) + client_bbo_adjust;
 
 		/*
 		** Boost the bandwidth if the client is loading. He doesn't need it now but there will be a huge demand for

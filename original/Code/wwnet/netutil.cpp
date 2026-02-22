@@ -227,7 +227,7 @@ int cNetUtil::Get_Local_Tcpip_Addresses(SOCKADDR_IN ip_address[], USHORT max_add
 			ZeroMemory(&ip_address[num_adapters], sizeof(SOCKADDR_IN));
 			ip_address[num_adapters].sin_family = AF_INET;
 	      ip_address[num_adapters].sin_addr.s_addr =
-				*((u_long *) (p_hostent->h_addr_list[num_adapters]));
+				*((uint32_t *) (p_hostent->h_addr_list[num_adapters]));
 			num_adapters++;
 		}
 	}
@@ -524,8 +524,8 @@ void cNetUtil::Broadcast(SOCKET & sock, USHORT port, cPacket & packet)
    int bytes_sent;
 	//WSA_CHECK(bytes_sent = sendto(sock, packet.Data, packet.SendLength,
    //   0, &broadcast_address, sizeof(SOCKADDR_IN)));
-	bytes_sent = sendto(sock, packet.Get_Data(), packet.Get_Compressed_Size_Bytes(),
-      0, (LPSOCKADDR) &broadcast_address, sizeof(SOCKADDR_IN));
+	bytes_sent = static_cast<int32_t>(sendto(sock, packet.Get_Data(), packet.Get_Compressed_Size_Bytes(),
+      0, (LPSOCKADDR) &broadcast_address, sizeof(SOCKADDR_IN)));
    //
 }
 

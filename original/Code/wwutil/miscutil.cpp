@@ -109,7 +109,7 @@ bool cMiscUtil::Is_Whitespace(char c)
 void cMiscUtil::Trim_Trailing_Whitespace(char * text)
 {	
 
-	int length = ::strlen(text);
+	int length = static_cast<int32_t>(::strlen(text));
 	while (length > 0 && Is_Whitespace(text[length - 1])) {
 		text[--length] = 0;
 	}

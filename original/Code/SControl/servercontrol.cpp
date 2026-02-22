@@ -202,7 +202,7 @@ void ServerControlClass::Parse_Message(void *buffer, int len, unsigned long addr
 	/*
 	** This line prevents external control by only accepting messages from the loopback address.
 	*/
-	if (ntohl(address) == INADDR_LOOPBACK || RemoteAdminAllowed) {
+	if (ntohl(static_cast<uint32_t>(address)) == INADDR_LOOPBACK || RemoteAdminAllowed) {
 
 		/*
 		** Convert to upper case for parsing.
@@ -427,7 +427,7 @@ void ServerControlClass::Send_Message(char *text, unsigned long ip, unsigned sho
 	message.Type = CONTROL_REQUEST;
 	strcpy(message.Message, text);
 
-	Comms.Write(&message, sizeof(message.Type) + strlen(text) + 1, &ip, port);
+	Comms.Write(&message, static_cast<int32_t>(sizeof(message.Type) + strlen(text) + 1), &ip, port);
 	Comms.Service();
 }
 
@@ -463,7 +463,7 @@ void ServerControlClass::Respond(const char *text, unsigned long ip, unsigned sh
 			outlen = sizeof(message.Message)-1;
 			outmsg += (sizeof(message.Message)-1);
 		} else {
-			outlen = strlen(outmsg);
+			outlen = static_cast<int32_t>(strlen(outmsg));
 			outmsg += outlen;
 		}
 

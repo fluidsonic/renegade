@@ -65,7 +65,7 @@ inline void _splitpath(const char* path, char* drive, char* dir, char* fname, ch
         const char* d = dirname(tmp1);
         strncpy(dir, d, _MAX_DIR-1); dir[_MAX_DIR-1] = '\0';
         if (dir[0] && dir[1] == '\0' && dir[0] == '.') dir[0] = '\0';
-        else { int n = strlen(dir); if (n && dir[n-1] != '/') { dir[n] = '/'; dir[n+1] = '\0'; } }
+        else { int n = static_cast<int32_t>(strlen(dir)); if (n && dir[n-1] != '/') { dir[n] = '/'; dir[n+1] = '\0'; } }
     }
     if (fname || ext) {
         const char* b = basename(tmp2);

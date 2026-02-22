@@ -162,7 +162,7 @@ WWAudioClass::WWAudioClass (bool lite)
 		fprintf(stderr, "[audio] WWAudioClass ctor: SoundScene=%p\n", (void*)m_SoundScene);
 	}
 
-	m_Max3DBufferSize = m_Max3DBufferSize * 2.0F;
+	m_Max3DBufferSize = static_cast<int32_t>(m_Max3DBufferSize * 2.0F);
 
 	return;
 }
@@ -3054,10 +3054,10 @@ WWAudioClass::Save_To_Registry
 		registry.Set_Int (VALUE_NAME_SOUND_ENABLED,		sound_enabled);
 		registry.Set_Int (VALUE_NAME_DIALOG_ENABLED,		dialog_enabled);
 		registry.Set_Int (VALUE_NAME_CINEMATIC_ENABLED,	cinematic_enabled);
-		registry.Set_Int (VALUE_NAME_MUSIC_VOL,			music_volume * 100);
-		registry.Set_Int (VALUE_NAME_SOUND_VOL,			sound_volume * 100);
-		registry.Set_Int (VALUE_NAME_DIALOG_VOL,			dialog_volume * 100);
-		registry.Set_Int (VALUE_NAME_CINEMATIC_VOL,		cinematic_volume * 100);
+		registry.Set_Int (VALUE_NAME_MUSIC_VOL,			static_cast<int32_t>(music_volume * 100));
+		registry.Set_Int (VALUE_NAME_SOUND_VOL,			static_cast<int32_t>(sound_volume * 100));
+		registry.Set_Int (VALUE_NAME_DIALOG_VOL,			static_cast<int32_t>(dialog_volume * 100));
+		registry.Set_Int (VALUE_NAME_CINEMATIC_VOL,		static_cast<int32_t>(cinematic_volume * 100));
 		registry.Set_Int (VALUE_NAME_SPEAKER_TYPE,		speaker_type);
 
 		retval = true;

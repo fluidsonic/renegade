@@ -94,7 +94,7 @@ void
 SoundSceneClass::Collect_Logical_Sounds (int listener_count)
 {
 
-	uint32_t timestamp = TIMEGETTIME ();
+	uint32_t timestamp = static_cast<uint32_t>(TIMEGETTIME ());
 
 	//
 	//	Determine how many listeners to process

@@ -210,7 +210,7 @@ Sound3DHandleClass::Set_Sample_MS_Position (U32 ms)
 {
 	if (SampleHandle != (H3DSAMPLE)INVALID_MILES_HANDLE) {
 
-		U32 bytes_per_sec = (Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3;
+		U32 bytes_per_sec = static_cast<uint32_t>((Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3);
 		U32 bytes = (ms * bytes_per_sec) / 1000;
 		bytes += (bytes & 1);
 		::AIL_set_3D_sample_offset (SampleHandle, bytes);
@@ -231,14 +231,14 @@ Sound3DHandleClass::Get_Sample_MS_Position (S32 *len, S32 *pos)
 
 		if (pos != NULL) {
 			U32 bytes = ::AIL_3D_sample_offset (SampleHandle);
-			U32 bytes_per_sec = (Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3;
+			U32 bytes_per_sec = static_cast<uint32_t>((Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3);
 			U32 ms = (bytes * 1000) / bytes_per_sec;
 			(*pos) = ms;
 		}
 
 		if (len != NULL) {
 			U32 bytes = ::AIL_3D_sample_length (SampleHandle);
-			U32 bytes_per_sec = (Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3;
+			U32 bytes_per_sec = static_cast<uint32_t>((Buffer->Get_Rate () * Buffer->Get_Bits ()) >> 3);
 			U32 ms = (bytes * 1000) / bytes_per_sec;
 			(*len) = ms;
 		}

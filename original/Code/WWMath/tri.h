@@ -144,7 +144,7 @@ inline bool Point_In_Triangle_2D(const Vector3 &tri_point0, const Vector3 &tri_p
 
 		if (max_dist2 != 0.0f) {
 			// Triangle is line segment, check if test point is colinear with it
-			if (Vector2::Perp_Dot_Product(pSpE, pSpT)) {
+			if (Vector2::Perp_Dot_Product(pSpE, pSpT) != 0.0f) {
 				// Not colinear
 				return false;
 			} else {
@@ -234,7 +234,7 @@ inline bool Cast_Semi_Infinite_Axis_Aligned_Ray_To_Triangle(const Vector3 &tri_p
 				// Therefore in case B) we just report no intersection. We still need to find
 				// out whether the point is embedded in the triangle (for setting the flag) so
 				// we do another simple 2D test on the dominant plane.
-				if (tri_plane[axis_r]) {
+				if (tri_plane[axis_r] != 0.0f) {
 					// Case A)
 					flags |= (flags_2d & TRI_RAYCAST_FLAG_HIT_EDGE);
 					flags |= TRI_RAYCAST_FLAG_START_IN_TRI;

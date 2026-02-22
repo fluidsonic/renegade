@@ -113,7 +113,7 @@ WWAudioThreadsClass::Add_Delayed_Release_Object
 			//
 			DELAYED_RELEASE_INFO *info = new DELAYED_RELEASE_INFO;
 			info->object	= object;
-			info->time		= TIMEGETTIME () + delay;
+			info->time		= static_cast<uint32_t>(TIMEGETTIME ()) + delay;
 			info->next		= m_ReleaseListHead;
 			info->prev		= NULL;
 
@@ -182,7 +182,7 @@ WWAudioThreadsClass::Delayed_Release_Thread_Proc (LPVOID /*param*/)
 			//	Loop through all the objects in our delay list, and
 			// free any that have expired.
 			//
-			DWORD current_time			= TIMEGETTIME ();
+			DWORD current_time			= static_cast<uint32_t>(TIMEGETTIME ());
 			DELAYED_RELEASE_INFO *curr = NULL;
 			DELAYED_RELEASE_INFO *prev	= NULL;
 			DELAYED_RELEASE_INFO *next	= NULL;
