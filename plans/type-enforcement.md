@@ -4,7 +4,7 @@
 
 **Goal:** Enforce fixed-width types (`(u)intN_t`, `charN_t`) and size-guaranteed float/double project-wide via a custom clang-tidy plugin, and enable narrowing/conversion warnings.
 
-**Architecture:** A `MODULE` library (`PrimitiveTypeCheck.dylib`) registers a `ClangTidyCheck` subclass that walks AST declarations and flags any raw `BuiltinType` that isn't in the allowed set: `bool`, `void`, `char8_t`, `char16_t`, `char32_t`, `float`, `double`. `float` and `double` are kept as-is (their sizes are guaranteed by static_asserts in `floattypes.h`). A CMake `lint` target runs `run-clang-tidy` with this plugin across all files in `original/Code/`. Narrowing and conversion warnings are separate flag-level changes in the root `CMakeLists.txt`.
+**Architecture:** A `MODULE` library (`PrimitiveTypeCheck.dylib`) registers a `ClangTidyCheck` subclass that walks AST declarations and flags any raw `BuiltinType` that isn't in the allowed set: `bool`, `void`, `char8_t`, `char16_t`, `char32_t`, `float`, `double`. `float` and `double` are kept as-is (their sizes are guaranteed by static_asserts in `global.h`). A CMake `lint` target runs `run-clang-tidy` with this plugin across all files in `original/Code/`. Narrowing and conversion warnings are separate flag-level changes in the root `CMakeLists.txt`.
 
 **Tech Stack:** Clang-tidy plugin API (LLVM 21, `/opt/homebrew/opt/llvm`), CMake 3.20, Ninja, C++23.
 
@@ -13,7 +13,9 @@
 ## Status
 
 - [x] C++23 already bumped (`CMAKE_CXX_STANDARD 23` in `original/CMakeLists.txt`)
-- [ ] `float`/`double` size guarantees via `static_assert` in `original/compat/floattypes.h` (no type aliases — `float`/`double` are kept and whitelisted in the plugin)
+- [x] `float`/`double` size guarantees via `static_assert` in `original/global.h` (absorbed from `floattypes.h`, which is now deleted)
+- [x] `Code/wwlib/bittype.h` eliminated — all non-standard types replaced with `stdint.h` equivalents project-wide
+- [x] `original/global.h` created as project-wide preamble; `clangcompat.h`, `floattypes.h`, `bittype.h` deleted
 - [ ] Narrowing/conversion warnings not yet enabled
 - [ ] Plugin not yet written
 - [ ] `lint` CMake target not yet wired
@@ -52,11 +54,13 @@ git commit -m "build: bump to C++23, remove deprecated -fdelayed-template-parsin
 
 ## Task 2: Add float/double size guarantees
 
-`float` and `double` are kept as-is (they are whitelisted in the plugin). Guarantee their sizes via `static_assert` in a new compat header force-included from `windef.h`.
+> **COMPLETED (superseded):** `floattypes.h` was created, then absorbed into `original/global.h` and deleted. The `static_assert` guarantees now live in `global.h`. `windef.h` is a thin forwarding header to `global.h`.
+
+`float` and `double` are kept as-is (they are whitelisted in the plugin). Guarantee their sizes via `static_assert` in `original/global.h`.
 
 **Files:**
-- Create: `original/compat/floattypes.h`
-- Modify: `original/compat/windef.h` (one line: `#include "floattypes.h"`)
+- (was) Create: `original/compat/floattypes.h` — now absorbed into `original/global.h` and deleted
+- (was) Modify: `original/compat/windef.h` — now a thin forwarding header to `global.h`
 
 **Step 1: Create `original/compat/floattypes.h`**
 
@@ -260,8 +264,8 @@ bool PrimitiveTypeCheck::isForbiddenRawBuiltin(QualType QT) {
         case BuiltinType::Char8:    // char8_t  (C++20)
         case BuiltinType::Char16:   // char16_t (C++11)
         case BuiltinType::Char32:   // char32_t (C++11)
-        case BuiltinType::Float:    // float  (size asserted == 4 in floattypes.h)
-        case BuiltinType::Double:   // double (size asserted == 8 in floattypes.h)
+        case BuiltinType::Float:    // float  (size asserted == 4 in global.h)
+        case BuiltinType::Double:   // double (size asserted == 8 in global.h)
             return false;
 
         // ── Everything else is forbidden ───────────────────────────────────
@@ -524,7 +528,7 @@ target_compile_options(wwlib PRIVATE -Werror=conversion -Werror=sign-conversion)
 For the plugin check, add `-warnings-as-errors=ccr-primitive-type` to the lint target for that module's files.
 
 ### `<stdfloat>` future
-When Apple Clang gains `<stdfloat>` support, replace `original/compat/floattypes.h` with:
+When Apple Clang gains `<stdfloat>` support, replace the `static_assert` block in `original/global.h` with:
 ```cpp
 #include <stdfloat>
 using float32_t = std::float32_t;

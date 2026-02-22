@@ -29,16 +29,24 @@
 - **Allowed** raw built-ins: `bool`, `void`, `nullptr_t`, `char8_t`, `char16_t`, `char32_t`, `float`, `double`
 - **Required replacements**: use `(u)intN_t` (e.g. `int32_t`, `uint8_t`) for integers; `float`/`double` are fine as-is
 - Typedefs like `int32_t`, `size_t`, `ptrdiff_t` are fine — the check only fires on raw un-typedef'd built-ins
-- `float` and `double` sizes are guaranteed by `static_assert` in `original/compat/floattypes.h` (4 and 8 bytes)
+- `float` and `double` sizes are guaranteed by `static_assert` in `original/global.h` (4 and 8 bytes)
 - Run lint: `cmake --build /Users/marc/Documents/ccr/original/build --target lint`
 - Narrowing/conversion warnings: `-Wconversion`, `-Wsign-conversion`, `-Wdouble-promotion` (warnings, not errors, until each module is clean)
+
+### global.h — project-wide preamble
+- `original/global.h` is the single project-wide preamble — must be included first in all source files
+- Contains: platform defines (_UNIX, NOMINMAX), Windows types (BYTE/WORD/DWORD/HANDLE etc.), char16_t string functions, IEEE 754 asserts, engine macros (MIN/MAX/WWINLINE), debug stubs, MSVC compat
+- `compat/windef.h`, `compat/c16string.h`, `Code/wwlib/always.h` are thin forwarding headers to `global.h` — files that include them still work
+- `compat/clangcompat.h`, `compat/floattypes.h`, `Code/wwlib/bittype.h` are DELETED — absorbed into `global.h`
+- No `-include` CLI magic — files include `global.h` explicitly (or via a forwarder)
+- Source root `original/` is in the include path so `#include "global.h"` resolves from any TU
 
 ### wchar_t → char16_t conversion (COMPLETE)
 - All `wchar_t` in Code/ and compat/ converted to `char16_t` (macOS wchar_t=4 bytes; protocol needs 2-byte UTF-16)
 - `WCHAR` typedef is `char16_t`; all derived types (LPWSTR, LPCWSTR, etc.) auto-update
 - Use `u"..."` and `u'...'` string/char literals (not `L"..."` / `L'...'`)
 - `compat/c16string.h` provides char16_t equivalents of all `wcs*` functions (`c16slen`, `c16scpy`, etc.)
-- `compat/windef.h` re-exports them as inline `wcslen(char16_t*)`, `wcscpy(char16_t*)`, etc. overloads
+- `global.h` provides inline `wcslen(char16_t*)`, `wcscpy(char16_t*)`, etc. overloads (previously in `windef.h`)
 - Two intentional `wchar_t` exceptions: `winbase.h` internal `_vsnwprintf` bridge buffer; `LOGFONTW` struct in wingdi.h
 - `const WCHAR*` (not `WCHAR*`) for string-literal arrays — `u"..."` is `const char16_t[]`
 
