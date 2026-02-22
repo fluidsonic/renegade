@@ -91,7 +91,7 @@ class GameServer(internal val config: ServerConfig) {
         commandHandler = ::handleRconCommand,
     )
 
-    private val lanResponder = LanBroadcastResponder(config, connectionManager)
+    private val lanResponder = LanBroadcastResponder(config, connectionManager) { gameData.mapNameCrc }
 
     // Milliseconds per network tick
     private val tickIntervalMs: Long = 1000L / config.netUpdateRate.coerceAtLeast(1)

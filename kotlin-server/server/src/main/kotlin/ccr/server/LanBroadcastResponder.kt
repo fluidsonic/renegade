@@ -53,6 +53,7 @@ fun detectLocalIp(): Int {
 class LanBroadcastResponder(
     private val config: ServerConfig,
     private val connectionManager: ConnectionManager,
+    private val mapNameCrc: () -> Int,
 ) {
     private var broadcastNumber = 0
 
@@ -111,7 +112,7 @@ class LanBroadcastResponder(
         bs.addBool(config.isPassworded)
         bs.addBool(config.isLaddered)
         bs.addBool(config.isClanGame)
-        bs.addInt(config.mapNameCrc) // C++: CRC_Stringi(MapName)
+        bs.addInt(mapNameCrc()) // C++: CRC_Stringi(MapName)
         bs.addInt(config.modNameCrc) // C++: CRC_Stringi(ModName)
 
         val data = bs.buffer.copyOf(bs.compressedSizeBytes)
