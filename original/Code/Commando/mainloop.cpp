@@ -34,6 +34,7 @@ int		ExitCode = EXIT_SUCCESS;
 
 void Stop_Main_Loop(int exitCode)
 {
+	fprintf(stderr, "[mainloop] Stop_Main_Loop called (exitCode=%d)\n", exitCode);
 	RunMainLoop = false;
 	ExitCode = exitCode;
 }
@@ -52,6 +53,9 @@ void _Game_Main_Loop_Loop(void)
 	if (s_frame_count % 300 == 0) {
 		fprintf(stderr, "[loop] Frame %lu — game loop running\n", s_frame_count);
 	}
+
+	// Poll events first so SDL_QUIT is detected before this frame's render/swap.
+	Windows_Message_Handler();
 
 	unsigned long time1 = TIMEGETTIME();
 

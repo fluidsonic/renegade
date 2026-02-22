@@ -6,6 +6,8 @@
       <excludeFolder url="file://$MODULE_DIR$/.worktrees" />
       <excludeFolder url="file://$MODULE_DIR$/LevelEdit" />
       <excludeFolder url="file://$MODULE_DIR$/original-untouched" />
+      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/original/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

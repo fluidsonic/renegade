@@ -35,10 +35,6 @@ void		LevelManager::Release_Level( void )
 	TransitionManager::Reset();
 
 {
-	COMBAT_SCENE->Remove_All();
-}
-
-{
 	WW3DAssetManager::Get_Instance()->Free_Assets();	
 }
 }

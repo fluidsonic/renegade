@@ -94,6 +94,7 @@ int SDL2_Platform_Init(const char* title, int w, int h)
 
 void SDL2_Platform_Shutdown(void)
 {
+    fprintf(stderr, "[SDL2] SDL2_Platform_Shutdown — begin\n");
     if (s_glcontext) {
         SDL_GL_DeleteContext(s_glcontext);
         s_glcontext = NULL;
@@ -103,6 +104,7 @@ void SDL2_Platform_Shutdown(void)
         s_window = NULL;
     }
     SDL_Quit();
+    fprintf(stderr, "[SDL2] SDL2_Platform_Shutdown — done\n");
 }
 
 SDL2_Window* SDL2_Platform_GetWindow(void)
@@ -199,6 +201,7 @@ void SDL2_Platform_PollEvents(void)
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
         case SDL_QUIT:
+            fprintf(stderr, "[SDL2] SDL_QUIT received — requesting shutdown\n");
             SDL2_QuitRequested = 1;
             break;
 
