@@ -6,7 +6,7 @@ package ccr.net.flow
 // Threshold priority starts high and is dynamically lowered if the send queue is too large.
 // Objects with priority below the threshold are not sent in that tick.
 
-private const val INITIAL_THRESHOLD_PRIORITY = 100.0
+private const val INITIAL_THRESHOLD_PRIORITY = 0.0
 private const val TP_INCREMENT = 0.01
 private const val TP_TOLERANCE_DOWN = 0.1
 private const val TP_TOLERANCE_UP = 0.05

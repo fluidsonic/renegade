@@ -42,6 +42,8 @@ import ccr.server.net.PurchaseRequestEvent
 import ccr.server.net.PurchaseResponseEvent
 import ccr.server.net.RequestKillEvent
 import ccr.server.net.SuicideEvent
+import ccr.net.flow.BandwidthBudget
+import ccr.net.flow.FlowController
 import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.level.ChunkIds
@@ -174,6 +176,11 @@ class GameServer(internal val config: ServerConfig) {
     private val pendingOutbox = mutableMapOf<Int, MutableList<Pair<InetSocketAddress, ByteArray>>>()
     private val bytesSentThisTick = mutableMapOf<Int, Int>()
 
+    // C++: cConnection bandwidth management
+    private val bandwidthBudget = BandwidthBudget(if (config.bandwidthBps > 0) config.bandwidthBps else 1_500_000)
+    // Per-host flow controllers (C++: Adjust_Flow_If_Necessary in rhost.cpp)
+    private val flowControllers = mutableMapOf<Int, FlowController>()
+
     // Tracks rhostIds of clients currently in a loading state (LOADINGEVENT).
     private val loadingHosts = mutableSetOf<Int>()
 
@@ -219,6 +226,7 @@ class GameServer(internal val config: ServerConfig) {
         connectionManager.disconnectHandler = { id ->
             println("[CONNECT] client $id disconnected")
             loadingHosts.remove(id)
+            flowControllers.remove(id)
             god.removePlayer(id)
         }
         connectionManager.serverPacketHandler = ::handleGamePacket
@@ -453,6 +461,13 @@ class GameServer(internal val config: ServerConfig) {
             // Flush per-tick packet outbox: combines buffered packets into fewer datagrams per host
             flushOutbox()
 
+            // Adjust per-host flow controllers with bytes sent this tick
+            val connectedCount = connectionManager.getConnectedCount()
+            val targetBps = bandwidthBudget.perHostBps(connectedCount)
+            for ((rhostId, bytesSent) in bytesSentThisTick) {
+                flowControllers[rhostId]?.adjust(targetBps, bytesSent, tickDeltaMs.toFloat())
+            }
+
             delay(tickIntervalMs)
         }
     }
@@ -488,9 +503,12 @@ class GameServer(internal val config: ServerConfig) {
                     sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeOccasionalUpdate(bs, obj, obj.networkId) }
                     obj.setObjectDirtyBits(clientId, 0)
                 } else if ((bits and 0x01) != 0) {
-                    // BIT_FREQUENT only — skip own soldier; send unreliably to others
+                    // BIT_FREQUENT only — skip own soldier; gate others through FlowController
                     if (!isOwnSoldier) {
-                        sendUnreliable(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId) }
+                        val fc = flowControllers[clientId]
+                        if (fc == null || fc.shouldSend(50.0f)) {
+                            sendUnreliable(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId) }
+                        }
                     }
                     obj.setObjectDirtyBits(clientId, 0)
                 }
@@ -695,6 +713,7 @@ class GameServer(internal val config: ServerConfig) {
                 if (rhostId !in god.playerInGame) {
                     println("[GAME] BIOEVENT from rhostId=$rhostId → entering game (post-load)")
                     god.playerInGame.add(rhostId)
+                    flowControllers[rhostId] = FlowController()
 
                     // Mark all registered objects dirty for this new client.
                     // C++: Tell_Client_About_Dynamic_Objects sets per-client dirty bits for all objects.
@@ -718,6 +737,7 @@ class GameServer(internal val config: ServerConfig) {
             1025 -> {  // NETCLASSID_CLIENTGOODBYEEVENT (header=1024, wire=1025) — graceful disconnect
                 val senderId = snap.getInt()
                 println("[GAME] CLIENTGOODBYE from rhostId=$rhostId senderId=$senderId — removing player")
+                flowControllers.remove(rhostId)
                 god.removePlayer(rhostId)
             }
             1027 -> {  // NETCLASSID_LOADINGEVENT (loadingevent.cpp Import_Creation)
@@ -1812,6 +1832,7 @@ class GameServer(internal val config: ServerConfig) {
                         sendGameNetObj(targetHost) { bs ->
                             NetworkObjectPacketWriter.writeCreation(bs, eviction, NetworkObjectManager.getNewDynamicId())
                         }
+                        flowControllers.remove(targetId)
                         god.removePlayer(targetId)
                         "Kicked player $targetId."
                     }
