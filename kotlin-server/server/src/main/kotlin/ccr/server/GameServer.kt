@@ -1597,12 +1597,23 @@ class GameServer(internal val config: ServerConfig) {
         EncoderRegistry.setPrecision(BITPACK_HEALTH,          0.0, 2000.0, 1.0)   // damage.cpp
         EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)   // damage.cpp
         EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE,     0.0, config.armorTypeCount.toDouble(), 1.0) // damage.cpp
-        EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE,     0.0, 12.0,  1.0)    // humanstate.cpp: HIGHEST_HUMAN_STATE=12
+        EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE,     0.0, 19.0,  1.0)    // humanstate.h: LOCKED_ANIMATION=19
         EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)    // humanstate.cpp: (1<<9)-1=511
         EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_CS, 8)                 // control.cpp: CONTROL_TURN_RIGHT+1=8
         EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_SC, 6)                 // control.cpp: CONTROL_MOVE_DOWN+1=6
         EncoderRegistry.setPrecision(BITPACK_BUILDING_RADIUS, 0.0, 50.0, 0.1)     // building.cpp
         EncoderRegistry.setPrecision(BITPACK_BUILDING_STATE, -1.0, 10.0, 1.0)     // building.cpp
+        // Vehicle encoders — vehicle.cpp: VehicleGameObj::Set_Precision()
+        EncoderRegistry.setPrecision(BITPACK_VEHICLE_VELOCITY,         -90.0,  90.0, 0.01)
+        EncoderRegistry.setPrecision(BITPACK_VEHICLE_ANGULAR_VELOCITY, -20.0,  20.0, 0.01)
+        EncoderRegistry.setPrecision(BITPACK_VEHICLE_QUATERNION,        -1.0,   1.0, 0.0005)
+        EncoderRegistry.setPrecision(BITPACK_VEHICLE_LOCK_TIMER,         0.0,  16.0, 0.25)
+        // Door encoder — doors.cpp: DoorPhysClass::Set_Precision(), STATE_MAX=5
+        EncoderRegistry.setPrecision(BITPACK_DOOR_STATE, 0.0, 5.0, 1.0)
+        // Elevator encoders — elevator.cpp: ElevatorPhysClass::Set_Precision()
+        EncoderRegistry.setPrecision(BITPACK_ELEVATOR_STATE,             0.0, 4.0, 1.0) // STATE_MAX=4
+        EncoderRegistry.setPrecision(BITPACK_ELEVATOR_TOP_DOOR_STATE,    0.0, 3.0, 1.0) // DOOR_STATE_MAX=3
+        EncoderRegistry.setPrecision(BITPACK_ELEVATOR_BOTTOM_DOOR_STATE, 0.0, 3.0, 1.0) // DOOR_STATE_MAX=3
     }
 
     // Reads the map .mix file and extracts world extents from the embedded .lsd file.
