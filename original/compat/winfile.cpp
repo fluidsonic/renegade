@@ -1,4 +1,5 @@
 // winfile.cpp — POSIX implementation of Win32 FindFirstFile / FindNextFile / FindClose
+#include "global.h"
 #include "winbase.h"
 #include <dirent.h>
 #include <fnmatch.h>

@@ -13,6 +13,8 @@
 #ifndef DIAGNOSTICS_H
 #define DIAGNOSTICS_H
 
+#include "global.h"
+
 //
 // This class is for displaying the state of variables on the screen.
 // Add anything you need to monitor to the Render method.

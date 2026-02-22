@@ -6,6 +6,7 @@
 // Also implements AddFontResource / RemoveFontResource which load font bytes
 // from MIX archives and register them with CoreText.
 
+#include "global.h"
 #include <CoreText/CoreText.h>
 #include <CoreGraphics/CoreGraphics.h>
 #include <stdlib.h>

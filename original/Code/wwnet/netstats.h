@@ -13,6 +13,7 @@
 #ifndef NETSTATS_H
 #define NETSTATS_H
 
+#include "global.h"
 #include <cassert>
 
 //

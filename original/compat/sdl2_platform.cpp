@@ -1,4 +1,5 @@
 // sdl2_platform.cpp — SDL2 platform layer implementation
+#include "global.h"
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <stdio.h>

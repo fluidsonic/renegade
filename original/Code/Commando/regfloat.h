@@ -12,6 +12,7 @@
 #ifndef REGFLOAT_H
 #define REGFLOAT_H
 
+#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryFloat

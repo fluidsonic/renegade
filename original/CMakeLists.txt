@@ -15,12 +15,6 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address" CACHE STRING "" FORCE)
 
 set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 
-# Global compile definitions
-add_compile_definitions(
-    _UNIX
-    NOMINMAX
-)
-
 # Compat layer is FIRST on include path so it intercepts system headers
 set(COMPAT_DIR "${CMAKE_SOURCE_DIR}/compat")
 
@@ -30,10 +24,6 @@ include_directories(
     "${CMAKE_SOURCE_DIR}"    # global.h lives at source root
     "${COMPAT_DIR}"
 )
-
-# Force-include windef.h so Windows types and calling-convention macros are
-# available even in headers that don't #include <windows.h>
-add_compile_options(-include "${COMPAT_DIR}/windef.h")
 
 # Clang/Apple Silicon specific flags
 add_compile_options(

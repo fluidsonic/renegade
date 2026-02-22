@@ -12,6 +12,7 @@
 #ifndef REGSTRING_H
 #define REGSTRING_H
 
+#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryString

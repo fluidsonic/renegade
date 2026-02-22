@@ -12,6 +12,7 @@
 #ifndef REGBOOL_H
 #define REGBOOL_H
 
+#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryBool

@@ -12,6 +12,7 @@
 #ifndef REGINT_H
 #define REGINT_H
 
+#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cRegistryInt

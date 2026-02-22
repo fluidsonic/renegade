@@ -2,21 +2,14 @@
 // Implements FindResource / LoadResource / LockResource / SizeofResource
 // by loading and parsing chat.res from alongside the executable.
 
-#include <stdint.h>
+#include "global.h"
+#include "winbase.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>
 #include <mach-o/dyld.h>
-
-// ---- Types (mirrored from winbase.h to avoid circular include) ----
-typedef void*        HMODULE;
-typedef const char*  LPCSTR;
-typedef void*        HRSRC;
-typedef void*        HGLOBAL;
-typedef void*        LPVOID;
-typedef unsigned int DWORD;
 
 // ---- Internal resource entry ----
 struct ResEntry {

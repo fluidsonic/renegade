@@ -14,7 +14,7 @@
 #define MSGSTAT_H
 
 #pragma warning(disable:4514)
-
+#include "global.h"
 
 #ifndef NULL
 #define NULL 0L

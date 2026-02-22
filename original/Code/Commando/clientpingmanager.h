@@ -1,6 +1,7 @@
 #ifndef __CLIENTPINGMANAGER_H__
 #define __CLIENTPINGMANAGER_H__
 
+#include "global.h"
 
 //-----------------------------------------------------------------------------
 class	cClientPingManager

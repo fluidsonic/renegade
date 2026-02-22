@@ -8,6 +8,7 @@
 #ifndef __NICENUM_H__
 #define __NICENUM_H__
 
+#include "global.h"
 
 //-----------------------------------------------------------------------------
 class cNicEnum

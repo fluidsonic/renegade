@@ -1,3 +1,4 @@
+#include "global.h"
 #include "strtok_r.h"
 #include <string.h>
 #include <stdio.h>

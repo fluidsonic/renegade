@@ -1,3 +1,4 @@
+#include "global.h"
 #include <string.h>
 #include <stdlib.h>
 #include "Viseme.h"

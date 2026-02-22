@@ -5,6 +5,7 @@
 #ifndef BANDWIDTH_H
 #define BANDWIDTH_H
 
+#include "global.h"
 
 enum BANDWIDTH_TYPE_ENUM {
 

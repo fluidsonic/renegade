@@ -13,6 +13,7 @@
 #ifndef ENCODERTYPEENTRY_H
 #define ENCODERTYPEENTRY_H
 
+#include "global.h"
 
 class cEncoderTypeEntry
 {
