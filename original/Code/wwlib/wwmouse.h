@@ -175,7 +175,6 @@ class WWMouseClass : public Mouse {
 		**	flag.
 		*/
 		Rect ConditionalRect;
-		int ConditionalState;
 
 		/*
 		**	Maintenance timer handle.

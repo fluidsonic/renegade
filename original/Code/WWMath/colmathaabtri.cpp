@@ -403,29 +403,6 @@ static inline bool aabtri_check_normal_axis(void)
 }
 
 /***********************************************************************************************
- * eval_side -- returns -1,0,+1 depending on the sign of val and side                          *
- *                                                                                             *
- * INPUT:                                                                                      *
- *                                                                                             *
- * OUTPUT:                                                                                     *
- *                                                                                             *
- * WARNINGS:                                                                                   *
- *                                                                                             *
- * HISTORY:                                                                                    *
- *   4/8/99     GTH : Created.                                                                 *
- *=============================================================================================*/
-static inline float eval_side(float val,int side)
-{
-	if (val > 0.0f) {
-		return side;
-	} else if (val < 0.0f) {
-		return -side;
-	} else {
-		return 0.0f;
-	}
-}
-
-/***********************************************************************************************
  * aabtri_compute_contact_normal -- computes the normal of the collision                       *
  *                                                                                             *
  * INPUT:                                                                                      *

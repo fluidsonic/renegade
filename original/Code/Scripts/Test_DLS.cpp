@@ -94,7 +94,6 @@ DECLARE_SCRIPT(DLS_Invulnerable_Test, "")
 {
 		
 	bool debug_mode;
-	int poke_id;
 	
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -118,7 +117,6 @@ DECLARE_SCRIPT(DLS_InnateIsStationary_Test, "")
 {
 		
 	bool debug_mode;
-	int poke_id;
 	
 	// Register variables to be Auto-Saved
 	// All variables must have a unique ID, less than 256, that never changes
@@ -1136,7 +1134,6 @@ DECLARE_SCRIPT(M00_Reinforcement_C130, "Controller_ID:int")
 
 DECLARE_SCRIPT(DLS_Test_Conversation, "Debug_Mode=0:int")
 {
-	bool debug_mode;
 	
 	void Created(GameObject * obj)
 	{
@@ -1165,7 +1162,6 @@ DECLARE_SCRIPT(DLS_Test_Conversation, "Debug_Mode=0:int")
 DECLARE_SCRIPT(DLS_Test_Zone_Timer, "Debug_Mode=0:int")
 {
 		
-	bool debug_mode;
 	
 	
 		

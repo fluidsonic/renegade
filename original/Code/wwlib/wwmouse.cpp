@@ -72,7 +72,6 @@ WWMouseClass::WWMouseClass(Surface * surfaceptr, HWND window) :
 	Alternate(NULL),
 	SidebarAlternate(NULL),
 	ConditionalRect(0,0,0,0),
-	ConditionalState(-1),
 	TimerHandle(0)
 {
 	_MousePtr = this;

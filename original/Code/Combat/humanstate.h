@@ -163,7 +163,6 @@ private:
 	HumanPhysClass	*	HumanPhys;				// Our local copy	// Physical Object for Human
 	HumanAnimControlClass * AnimControl;	// Our local copy	// Animation Control for Human Model
 	float					TurnVelocity;
-	float					LegRotation;
 	Matrix3D				JumpTM;
 	float					RecoilTimer;			// remaining recoil time.
 	float					RecoilScale;			// scale factor on the recoil motion.

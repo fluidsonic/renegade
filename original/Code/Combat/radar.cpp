@@ -44,17 +44,6 @@ const char * RadarManager::Get_Blip_Shape_Type_Name( int index )
 	return names[index];
 }
 
-/*
-**
-*/
-static	const RectClass &	Scale_UV( const RectClass & uv, float texture_size )
-{
-	static RectClass new_uv;
-	new_uv = uv;
-	new_uv.Scale( 1/texture_size );
-	return new_uv;
-}
-
 void	RadarManager::Set_Hidden( bool onoff )	
 { 
 	if ( IsHidden != onoff ) {

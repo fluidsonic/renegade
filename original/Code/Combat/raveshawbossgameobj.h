@@ -364,9 +364,7 @@ private:
 	//
 	//	Taunts
 	//
-	float							RaveshawTauntTimeLeft;
 	int							TauntList[MAX_TAUNTS];
-	int							AvailableTaunts;
 
 	//
 	//	Timers

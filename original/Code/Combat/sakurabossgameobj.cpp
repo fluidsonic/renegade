@@ -407,8 +407,7 @@ SakuraBossGameObj::SakuraBossGameObj (void)	:
 	IsAttacking (false),
 	Path (NULL),
 	ChopperTiltBoneIndex (0),
-	TiltAngle (0),
-	AvailableTaunts (0xFFFFFF)
+	TiltAngle (0)
 {
 	Path = new PathClass;
 

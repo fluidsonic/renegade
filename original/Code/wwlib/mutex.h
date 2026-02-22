@@ -16,8 +16,6 @@
 
 class MutexClass
 {
-	void* handle;
-	unsigned locked;
 
 	// Lock and unlock are private so that you can't use them directly. Use LockClass as a sentry instead!
 	// Lock returns true if lock was succesful, false otherwise

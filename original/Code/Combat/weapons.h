@@ -72,7 +72,6 @@ private:
 
 	int					MuzzleA0Bone;
 	int					MuzzleA1Bone;
-	float					Rotation;
 	RenderObjClass *	Model;
 
 	bool					LastFlashA0;

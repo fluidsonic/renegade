@@ -4910,7 +4910,6 @@ DECLARE_SCRIPT(M08_Facility_Scientist_Inactive, "Point1_ID=0:int, Point2_ID=0:in
 	int point1_id;
 	int point2_id;
 	int point3_id;
-	int controller_id;
 	bool enemy_seen;
 
 	enum {GO_POINT1, GO_POINT2, GO_POINT3, GO_POINT1A, GO_POINT2A, GO_POINT3A,

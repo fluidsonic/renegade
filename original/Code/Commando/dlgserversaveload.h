@@ -58,7 +58,6 @@ private:
 	int		Insert_Configuration (ServerSettingsClass *config);
 	void		HandleNotification (DlgMsgBoxEvent &event);
 
-	bool		YesNo;
 };
 
 #define MAX_SETTINGS_FILES 500

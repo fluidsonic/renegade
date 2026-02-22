@@ -54,9 +54,6 @@ Render2DClass		*	_Sniper2DRenderer;
 
 #define	HUD_SNIPER_TEXTURE			"hud_sniper.tga"
 
-static	void	Info_Editor_Init( void ); 
-static	void	Info_Editor_Update( void ); 
-static	void	Info_Editor_Shutdown( void ); 
 
 /*
 **

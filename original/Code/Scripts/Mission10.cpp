@@ -4159,7 +4159,7 @@ DECLARE_SCRIPT(M10_Occupied, "")
 
 DECLARE_SCRIPT(M10_Con_Yard_Repair, "RepairSpeed=1:float")
 {
-	bool objective_completed, inside_obelisk, conyard_destroyed;
+	bool objective_completed, conyard_destroyed;
 	float full_health, curr_health, counter;
 
 	REGISTER_VARIABLES()

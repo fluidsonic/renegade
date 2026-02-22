@@ -773,7 +773,7 @@ DECLARE_SCRIPT (M05_Tech_Wander_DME, "Work_Area=1:int")
 	int loc_id [7], count, choice, last_loc, poke_choice;
 	int area_range, area_start, area_end;
 	char area_anim [9];
-	bool work_done[20], star_seen, poked, reward_given, anim_playing;
+	bool work_done[20], star_seen, reward_given, anim_playing;
 	float facing;
 	Vector3 location;
 

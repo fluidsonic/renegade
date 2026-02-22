@@ -652,7 +652,6 @@ DECLARE_SCRIPT (M09_LabRoom_Zones, "Mutant_Num:int, Mutant_Goto:int")
 
 DECLARE_SCRIPT (M09_Animating_Mutant, "Animation=0:int")
 {
-	float face;
 
 	void Custom(GameObject *obj, int type, int param, GameObject *sender)
 	{

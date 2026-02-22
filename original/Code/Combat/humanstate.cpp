@@ -51,7 +51,6 @@ HumanStateClass::HumanStateClass( void ) :
 	RecoilScale( 1.0f ),
 	LoiterDelay( 0 ),
 	LoitersAllowed( true ),
-	LegRotation( 0 ),
 	WeaponHoldTimer( 0 ),
 	NoAnimBlend( false ),
 	HumanAnimOverride( NULL ),

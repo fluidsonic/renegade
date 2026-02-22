@@ -277,7 +277,6 @@ class ParticleEmitterClass : public RenderObjClass
 		int							MaxParticles;		// Total particles to emit
 		bool							IsComplete;			// Completed Emissions		
 		char *						NameString;
-		char *						UserString;
 		bool							RemoveOnComplete;	// Should this emitter destroy itself when it completes?
 		bool							IsInScene;
 

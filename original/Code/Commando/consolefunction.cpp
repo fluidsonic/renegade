@@ -257,15 +257,15 @@ public:
 		char str[128];
 		sprintf(str,"ERROR (%s)\n", input );
 		if (stricmp(input,"screen") == 0) {
-			sprintf(str, "Screen Debug %s\n", false ? "Enabled" : "Disabled" );
+			sprintf(str, "Screen Debug %s\n", "Disabled" );
 		} else if (stricmp(input,"mono") == 0) {
-			sprintf(str, "Mono Debug %s\n", false ? "Enabled" : "Disabled" );
+			sprintf(str, "Mono Debug %s\n", "Disabled" );
 		} else if (stricmp(input,"dbwin32") == 0) {
-			sprintf(str, "DBWin32 Debug %s\n", false ? "Enabled" : "Disabled" );
+			sprintf(str, "DBWin32 Debug %s\n", "Disabled" );
 		} else if (stricmp(input,"log") == 0) {
-			sprintf(str, "Log File Debug %s\n", false ? "Enabled" : "Disabled" );
+			sprintf(str, "Log File Debug %s\n", "Disabled" );
 		} else if (stricmp(input,"windows") == 0) {
-			sprintf(str, "Windows Debug %s\n", false ? "Enabled" : "Disabled" );
+			sprintf(str, "Windows Debug %s\n", "Disabled" );
 		} else if (stricmp(input,"on") == 0) {
 			sprintf(str, "All Debug Devices Enabled\n" );
 		} else if (stricmp(input,"off") == 0) {

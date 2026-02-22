@@ -304,9 +304,7 @@ private:
 	///////////////////////////////////////////////////////////////////
 	//	Private member data
 	///////////////////////////////////////////////////////////////////
-	float							MendozaTauntTimeLeft;
 	int							TauntList[MAX_TAUNTS];
-	int							AvailableTaunts;
 
 	float							OverallStateTimer;
 	float							MendozaStateTimer;

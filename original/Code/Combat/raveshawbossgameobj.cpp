@@ -352,8 +352,6 @@ RaveshawBossGameObjDefClass::Get_Factory (void) const
 //
 ///////////////////////////////////////////////////////////////////////////
 RaveshawBossGameObjClass::RaveshawBossGameObjClass (void)	:
-	RaveshawTauntTimeLeft (0),
-	AvailableTaunts (0xFFFFFF),
 	OverallState (this),
 	RaveshawState (this),
 	EngorgedState (this),

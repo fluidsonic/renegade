@@ -485,7 +485,6 @@ MeshBuilderClass::MeshBuilderClass(int pass_count,int face_count_guess,int face_
 	PassCount(pass_count),
 	FaceCount(0),
 	Faces(NULL),
-	InputVertCount(0),
 	VertCount(0),
 	Verts(NULL),
 	CurFace(0),
@@ -1648,20 +1647,6 @@ void MeshBuilderClass::Sort_Vertices(void)
 	** Deallocate the temporary remap table
 	*/
 	delete[] vertex_remap_table;
-}
-
-/*
-** Compare functions for qsorting the polygons by texture.
-*/
-
-int face_material_compare(const void *elem1, const void *elem2 )
-{
-	MeshBuilderClass::FaceClass * f0 = (MeshBuilderClass::FaceClass *)elem1;
-	MeshBuilderClass::FaceClass * f1 = (MeshBuilderClass::FaceClass *)elem2;
-	
-	if (f0->TextureIndex[0][0] < f1->TextureIndex[0][0]) return -1;
-	if (f0->TextureIndex[0][0] > f1->TextureIndex[0][0]) return 1;
-	return 0;
 }
 
 inline int tex_compare(const void * elem1,const void * elem2,int pass,int stage)

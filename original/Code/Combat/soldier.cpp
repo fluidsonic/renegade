@@ -2342,55 +2342,6 @@ void	SoldierGameObj::Look_Random( float time )
 	HeadLookAngle = Vector3( 1,1,1 );
 }
 
-////////////////////////////////////////////////////////////////
-//	Clamp_Angle
-////////////////////////////////////////////////////////////////
-static inline float
-Clamp_Angle (float angle, float min_angle, float max_angle)
-{
-	//
-	//	Make sure all the parameters are in the same range
-	//
-	angle			= WWMath::Wrap (angle,		0, DEG_TO_RADF (360));
-	min_angle	= WWMath::Wrap (min_angle,	0, DEG_TO_RADF (360));
-	max_angle	= WWMath::Wrap (max_angle,	0, DEG_TO_RADF (360));
-
-	float result = angle;
-
-	if (min_angle <= max_angle) {
-
-		//
-		//	Handle the 'typical' case where there is no 360-mark wrap-around
-		//
-		if (angle < min_angle) {
-			result = min_angle;
-		} else if (angle > max_angle) {
-			result = max_angle;
-		}
-
-	} else {
-
-		//
-		//	Handle the 360-mark wrap-around case
-		//
-		if (angle < min_angle && angle > max_angle) {
-			float min_delta = min_angle - angle;
-			float max_delta = angle - max_angle;
-
-			//
-			//	Which edge is the angle closer to?
-			//
-			if (min_delta < max_delta) {
-				result = min_angle;
-			} else {
-				result = max_angle;
-			}
-		}
-	}
-
-	return result;
-}
-
 void	SoldierGameObj::Handle_Head_look( void )
 {
 	if ( Peek_Model ()->Get_HTree () == NULL ) {

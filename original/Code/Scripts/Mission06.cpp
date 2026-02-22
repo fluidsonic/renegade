@@ -5562,8 +5562,6 @@ DECLARE_SCRIPT(M06_Activate_MidtroC, "")
 
 DECLARE_SCRIPT (M06_Clear_For_Mendoza, "")
 {
-	bool open;
-	const char * anim;
 
 	void Created (GameObject * obj)
 	{

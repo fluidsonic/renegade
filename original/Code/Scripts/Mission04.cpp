@@ -8589,7 +8589,6 @@ DECLARE_SCRIPT(M04_ApacheRoom_Second_EntryZone_BottomFloor_JDG, "")//105083 1050
 DECLARE_SCRIPT(M04_Apache_GoBackToHangar_EntryZone_JDG, "")//105085
 {
 	int apache_id;
-	bool commandClearance;
 
 	REGISTER_VARIABLES()
 	{
@@ -10243,8 +10242,8 @@ DECLARE_SCRIPT(M04_Objective_Reminder_Controller_JDG, "")//105760
 	bool l03keycard_primaryActive;
 	bool torpedo_primaryActive;
 	bool escape_primaryActive;
-
 	bool commandClearance;
+
 
 	REGISTER_VARIABLES()
 	{

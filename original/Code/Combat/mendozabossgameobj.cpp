@@ -283,8 +283,6 @@ MendozaBossGameObjDefClass::Get_Factory (void) const
 //
 ///////////////////////////////////////////////////////////////////////////
 MendozaBossGameObjClass::MendozaBossGameObjClass (void)	:
-	MendozaTauntTimeLeft (0),
-	AvailableTaunts (0xFFFFFF),
 	OverallState (this),
 	MendozaState (this),
 	SydneyState (this),

@@ -57,6 +57,11 @@ add_compile_options(
     -Wconversion
     -Wsign-conversion
     -Wdouble-promotion
+    -Wunused-function
+    -Wunused-private-field
+    -Wunneeded-internal-declaration
+    -Wunreachable-code
+    -Wunreachable-code-return
 )
 
 # Thread support for pthread

@@ -252,7 +252,6 @@ private:
 	int							PassCount;				// number of render passes for this mesh
 	int							FaceCount;				// number of faces
 	FaceClass *					Faces;					// array of faces
-	int							InputVertCount;		// number of input verts;
 	int							VertCount;				// number of verts;
 	VertClass *					Verts;					// array of verts;
 	int							CurFace;					// current face being added

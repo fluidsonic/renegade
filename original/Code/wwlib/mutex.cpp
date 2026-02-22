@@ -4,7 +4,7 @@
 
 // ----------------------------------------------------------------------------
 
-MutexClass::MutexClass(const char* name) : handle(NULL), locked(false)
+MutexClass::MutexClass(const char* name)
 {
 		//assert(0);
 }

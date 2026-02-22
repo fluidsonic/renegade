@@ -334,7 +334,6 @@ static const Vector3 VELOCITY_COLOR(1,0,0);				// color for the velocity debug v
 static const Vector3 CONTACT_COLOR(0.25f,0.7f,0.2f);	// color for contact vectors
 static const Vector3 GROUND_COLOR(0.0f,1.0f,1.0f);
 
-static inline void Clip_Move(const Vector3 * contacts,int contact_count,Vector3 * move);
 
 /*************************************************************************************
 **

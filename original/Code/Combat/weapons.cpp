@@ -1700,7 +1700,6 @@ void	WeaponClass::Unignore_Owner( void )
 MuzzleFlashClass::MuzzleFlashClass( void ) :
 	MuzzleA0Bone( 0 ),
 	MuzzleA1Bone( 0 ),
-	Rotation( 0 ),
 	Model( 0 ),
 	LastFlashA0( true ),
 	LastFlashA1( true )

@@ -152,7 +152,6 @@ SplashIntroMenuDialogClass::On_Command (int ctrl_id, int mesage_id, DWORD param)
 //
 ////////////////////////////////////////////////////////////////
 SplashOutroMenuDialogClass::SplashOutroMenuDialogClass (void)	:
-	Timer (5.0F),
 	MenuDialogClass (IDD_MENU_SPLASH2)
 {
 	return ;

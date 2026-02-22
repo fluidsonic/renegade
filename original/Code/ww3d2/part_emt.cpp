@@ -55,7 +55,6 @@ ParticleEmitterClass::ParticleEmitterClass(float emit_rate, unsigned int burst_s
 	IsComplete(false),
 	RemoveOnComplete(DefaultRemoveOnComplete),
 	NameString(NULL),
-	UserString(NULL),
 	IsInScene(false)
 {
 	EmitRate		= emit_rate	>	0.0f ? (unsigned int)(1000.0f / emit_rate) : 1000U;

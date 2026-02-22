@@ -11,8 +11,6 @@ DECLARE_SCRIPT(M03_Objective_Controller, "")  //1100004
 	bool gunboat_triggered, rain;
 	bool gunboat1, gunboat2, gunboat3;
 
-	int background_song;
-	int battle_song;
 	int sender1;
 
 	REGISTER_VARIABLES()
@@ -6828,7 +6826,6 @@ DECLARE_SCRIPT (M10_Elevator_All_Controller, "")
 	int block1, block2, block3, block4;
 	int block5, block6, block7, block8;
 
-	GameObject *mobius;
 
 	REGISTER_VARIABLES()
 	{

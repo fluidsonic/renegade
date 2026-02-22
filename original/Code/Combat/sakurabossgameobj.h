@@ -255,7 +255,6 @@ private:
 	PathClass *					Path;
 
 	int							TauntList[MAX_TAUNTS];
-	int							AvailableTaunts;
 
 	float							TiltAngle;
 	int							ChopperTiltBoneIndex;

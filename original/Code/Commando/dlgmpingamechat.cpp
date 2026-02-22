@@ -15,8 +15,6 @@
 #include "translatedb.h"
 #include "string_ids.h"
 
-static const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& param);
-
 ////////////////////////////////////////////////////////////////
 //
 //	MPChatChildDialogClass
@@ -140,42 +138,6 @@ bool MPChatChildDialogClass::Process_Commands(const WCHAR* message)
 	// WOL removed - in-game chat commands (kick, page, r, locate, invite, join) were WOL-only and have been removed.
 	(void)message;
 	return false;
-}
-
-////////////////////////////////////////////////////////////////
-//
-// Get_Parameter_From_String
-//
-////////////////////////////////////////////////////////////////
-
-const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& param)
-{
-	#define LOCAL_STRIP_WHITESPACE(str)	\
-		while (str[0] != 0 && str[0] == u' ') {++str;}
-
-	//	Strip off whitespace
-	LOCAL_STRIP_WHITESPACE(command);
-
-	const WCHAR* curr_pos = command;
-
-	//	Look for the first whitespace break
-	while (curr_pos[0] != 0 && curr_pos[0] != u' ') {
-		++curr_pos;
-	}
-
-	// Return the string contents to the caller
-	int length = static_cast<int32_t>((curr_pos + 1) - command);
-
-	if (length > 0) {
-		WCHAR* buffer = param.Get_Buffer(length + 1);
-		wcsncpy(buffer, command, length);
-		buffer[length - 1] = 0;
-	}
-
-	//	Strip off whitespace
-	LOCAL_STRIP_WHITESPACE(curr_pos);
-
-	return curr_pos;
 }
 
 //////////////////////////////////////////////////////////////////////

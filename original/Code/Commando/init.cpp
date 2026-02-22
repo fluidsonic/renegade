@@ -339,69 +339,6 @@ void	Construct_Directory_Structure(void)
 	return ;
 }
 
-static bool Verify_Log_Directory(const StringClass& folder)
-{
-	if (GetFileAttributes(folder)!=0xffffffff) return true;
-	//HANDLE file;
-	//file = CreateFile(folder, 0, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	//if (file!=INVALID_HANDLE_VALUE) {
-	//	CloseHandle(file);
-	//	return true;
-	//}
-
-	if (CreateDirectory(folder,NULL)) {
-		return true;
-	}
-	if (GetLastError() == ERROR_ALREADY_EXISTS) {
-		return(true);
-	}
-	return false;
-}
-
-static bool Create_Log_File_Name(const StringClass& folder, StringClass& filename,bool use_numbering)
-{
-	StringClass original(filename);
-	if (!use_numbering) {
-		filename.Format("%s/%s",(const char*)folder,(const char*)original);
-		return true;
-	}
-	for (int i=0;i<999;++i) {
-		HANDLE file;
-		filename.Format("%s/%3.3d%s",(const char*)folder,i,(const char*)original);
-		file = CreateFile(filename, GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (file!=INVALID_HANDLE_VALUE) {
-			CloseHandle(file);
-			return true;
-		}
-	}
-	return false;
-}
-
-static void Copy_Log(const StringClass& folder,const char* filename,bool use_numbering)
-{
-	RawFileClass raw_log_file(filename);
-	if (raw_log_file.Is_Available()) {
-		int size=raw_log_file.Size();
-		if (size) {
-			StringClass log_file_name(filename);
-			if (Create_Log_File_Name(folder,log_file_name,use_numbering)) {
-				DWORD written;
-				HANDLE file;
-				file = CreateFile(log_file_name, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-				if (INVALID_HANDLE_VALUE != file) {
-					raw_log_file.Open();
-					unsigned char* memory=new unsigned char[size];
-					raw_log_file.Read(memory,size);
-					raw_log_file.Close();
-					WriteFile(file, memory, size, &written, NULL);
-					delete[] memory;
-					CloseHandle(file);
-				}
-			}
-		}
-	}
-}
-
 void Application_Exception_Callback(void)
 {
 	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
@@ -515,11 +452,6 @@ bool Game_Init(void)
 
 	_TheFileFactory = &_RenegadeFileFactory;
 
-	// Logging File Factory
-	if ( false ) {
-		LoggingFileFactory.Set_Base_Factory( &_RenegadeFileFactory );
-		_TheFileFactory = &LoggingFileFactory;
-	}
 
 	AudioFileFactory.Set_Base_Factory( _TheFileFactory );
 
@@ -630,11 +562,6 @@ bool Game_Init(void)
 		ParticleBufferClass::Set_LOD_Max_Screen_Size(i,_ParticleLODScreenSizes[i]);
 	}
 
-	if ( cUserOptions::PermitDiagLogging.Is_True() &&
-		  false ) {
-
-		DiagLogClass::Init();
-	}
 
 	fprintf(stderr, "[trace] WWPhys::Init / WWSaveLoad::Init...\n");
 	WWPhys::Init();

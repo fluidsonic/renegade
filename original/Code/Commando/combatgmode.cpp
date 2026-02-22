@@ -931,21 +931,6 @@ void CombatGameModeClass::Compute_World_Size(void)
 		0.0, 50.0, 0.1);
 }
 
-//-----------------------------------------------------------------------------
-#define ADD_CASE(exp) case exp: return #exp; break;
-static LPCSTR Playertype_To_String(int player_type)
-{
-	switch (player_type) {
-		ADD_CASE(PLAYERTYPE_MUTANT);
-		ADD_CASE(PLAYERTYPE_NEUTRAL);
-		ADD_CASE(PLAYERTYPE_RENEGADE);
-		ADD_CASE(PLAYERTYPE_NOD);
-		ADD_CASE(PLAYERTYPE_GDI);
-
-		default:
-			return "ERROR"; // to avoid compiler warning
-	}
-}
 
 //-----------------------------------------------------------------------------
 void CombatGameModeClass::Spawn_Point_Validation(void)

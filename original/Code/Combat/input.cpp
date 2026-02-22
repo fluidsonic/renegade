@@ -807,11 +807,6 @@ void	Input::Update( void )
 	//
 	memset( FunctionValue, 0, sizeof( FunctionValue ) );
 
-	// No ESC, O, M, F1, etc in cinematics!
-	if ( COMBAT_CAMERA && COMBAT_CAMERA->Is_In_Cinematic() && !true ) {
-		return;
-	}
-
 	//
 	//	Don't process function inputs if we're in the menu
 	//
