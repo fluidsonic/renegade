@@ -499,7 +499,7 @@ void StarfieldClass::Configure()
 
 				m1.Look_At (d * Length, d * Length * 2.0f, 0.0f);
 
-				r = pow (r, 10) * maxradius;
+				r = static_cast<float>(pow (r, 10)) * maxradius;
 				r = MAX (r, minradius);
 				VertexArray [ActiveVertexCount]		= m1 * Vector3 (-r, -r, 0.0f);
 				VertexArray [ActiveVertexCount + 1] = m1 * Vector3 (-r, +r, 0.0f);
@@ -553,7 +553,7 @@ void StarfieldClass::Render()
 			alpha	= Alpha * flickeralpha;
 			f	   = flickercount * (((float) ActiveTriangleCount) / TriangleCount);
 			frac  = f - floorf (f);
-			activeflickercount = (frac < 0.5f) ? floorf (f) : floorf (f) + 1;
+			activeflickercount = static_cast<uint32_t>((frac < 0.5f) ? floorf (f) : floorf (f) + 1);
 			for (i = 0; i < activeflickercount; i++) {
 				triangleindices [i] = _RandomNumber (0, ActiveTriangleCount - 1);
 				v = triangleindices [i] * VERTICES_PER_TRIANGLE;
@@ -1472,7 +1472,7 @@ LightningBoltClass::LightningBoltClass (int branchcount, Matrix3D &m, float leng
 {
 	const int		 randomness					  = 100;
 	const float		 oorandomness				  = 1.0f / randomness;
-	const unsigned  maxvertexcount			  = MAX (2, length * 0.5f);
+	const unsigned  maxvertexcount			  = static_cast<uint32_t>(MAX (2, length * 0.5f));
 	const float		 oomaxvertexcountminusone = 1.0f / (maxvertexcount - 1);
 	const char		*texturename				  = "LightningBolt.tga";
 
@@ -1531,7 +1531,7 @@ LightningBoltClass::LightningBoltClass (int branchcount, Matrix3D &m, float leng
 		Branches = new BranchStruct [BranchCount];
 		oobranchcount = 1.0f / BranchCount;
 		branchrandomness = vertexcount / (BranchCount * 2);
-		branchcount = BranchCount * branchfactor;
+		branchcount = static_cast<int32_t>(BranchCount * branchfactor);
 		minlength = childlength * minlengthfactor;
 		maxlength = childlength * maxlengthfactor;
 		w = MAX (minwidth, width * widthfactor);
@@ -1545,7 +1545,7 @@ LightningBoltClass::LightningBoltClass (int branchcount, Matrix3D &m, float leng
 			angle = WWMath::Lerp (minbranchangle, maxbranchangle, _RandomNumber (0, randomness) * oorandomness);
 			if ((b & 0x1) == 0) angle = -angle;
 			l = WWMath::Lerp (minlength, maxlength, _RandomNumber (0, randomness) * oorandomness);
-			v = MIN (((int) vertexcount) - 1, b * oobranchcount * (((int) vertexcount) - 1) + _RandomNumber (0, +branchrandomness));
+			v = static_cast<uint32_t>(MIN (((int) vertexcount) - 1, b * oobranchcount * (((int) vertexcount) - 1) + _RandomNumber (0, +branchrandomness)));
 			m0.Translate (localvertex [v] - localvertex [0]);
 			m0.Rotate_Z (angle);
 
@@ -1741,11 +1741,11 @@ LightningClass::LightningClass (float extent, float startdistance, float enddist
 	unsigned	majorsampleindex, minorsampleindex;
 
 	Distance			  = WWMath::Lerp (startdistance, enddistance, _RandomNumber (0, randomness) * oorandomness);
-	ThunderDelayTime = WWMath::Lerp ((float) minthunderdelaytime, (float) maxthunderdelaytime, Distance);
+	ThunderDelayTime = static_cast<uint32_t>(WWMath::Lerp ((float) minthunderdelaytime, (float) maxthunderdelaytime, Distance));
 
 	LightningGlow = new SkyGlowClass (extent);
 
-	branchcount = WWMath::Lerp ((float) maxbranchcount, (float) minbranchcount, Distance);
+	branchcount = static_cast<uint32_t>(WWMath::Lerp ((float) maxbranchcount, (float) minbranchcount, Distance));
 	latitude = heading + (0.5f * WWMATH_PI) + (_RandomNumber (- ((int) randomness), ((int) randomness)) * oorandomness * WWMATH_PI * distribution);
 	x = cosf (latitude);
 	y = sinf (latitude);
@@ -1832,7 +1832,7 @@ bool LightningClass::Update (Matrix3D &t, Vector3 &additivecolor, SoundEnvironme
   		unsigned phase;
   		Vector3	color;
 
-  		phase = (((float) Time) / lightningtime) * (phasecount + 1);
+  		phase = static_cast<uint32_t>((((float) Time) / lightningtime) * (phasecount + 1));
   		phase = MIN (phase, phasecount);
 
   		additivecolor = blue * _intensities [phase] * MAX (1.0f - Distance, minglowintensity);
@@ -1936,7 +1936,7 @@ WarBlitzClass::WarBlitzClass (float extent, float startdistance, float enddistan
 	Vector2 position;
 
 	Distance			 = WWMath::Lerp (startdistance, enddistance, _RandomNumber (0, randomness) * oorandomness);
-	SampleDelayTime = WWMath::Lerp ((float) minsampledelaytime, (float) maxsampledelaytime, Distance);
+	SampleDelayTime = static_cast<uint32_t>(WWMath::Lerp ((float) minsampledelaytime, (float) maxsampledelaytime, Distance));
 
 	latitude = heading + (0.5f * WWMATH_PI) + (_RandomNumber (- ((int) randomness), ((int) randomness)) * oorandomness * WWMATH_PI * distribution);
 	x = cosf (latitude);
@@ -1996,7 +1996,7 @@ bool WarBlitzClass::Update (Matrix3D &t, Vector3 &additivecolor)
 
   		unsigned phase;
 
-  		phase = (((float) Time) / warblitztime) * (phasecount + 1);
+  		phase = static_cast<uint32_t>((((float) Time) / warblitztime) * (phasecount + 1));
   		phase = MIN (phase, phasecount);
   		additivecolor = red * _intensities [phase] * MAX (1.0f - Distance, minglowintensity);
 		WarBlitzGlow->Configure (Direction, additivecolor, coldintensity);
@@ -2570,7 +2570,7 @@ Vector3 SkyClass::Interpolate_Color (const unsigned char colortable [][3], unsig
 	interpolant = MIN (MAX (0.0f, interpolant), colorcount);
 	if (interpolant == colorcount) interpolant = 0.0f;
 
-	lowerindex = floorf (interpolant);
+	lowerindex = static_cast<uint32_t>(floorf (interpolant));
 	upperindex = (lowerindex + 1) % colorcount;
 
 	lowercolor = Vector3 (colortable [lowerindex][0] * ooucharmax, colortable [lowerindex][1] * ooucharmax, colortable [lowerindex][2] * ooucharmax);
@@ -2604,7 +2604,7 @@ float SkyClass::Interpolate_Scalar (const unsigned char scalartable [], unsigned
 	interpolant = MIN (MAX (0.0f, interpolant), scalarcount);
 	if (interpolant == scalarcount) interpolant = 0.0f;
 
-	lowerindex = floorf (interpolant);
+	lowerindex = static_cast<uint32_t>(floorf (interpolant));
 	upperindex = (lowerindex + 1) % scalarcount;
 
 	lowervalue = scalartable [lowerindex] * ooucharmax;

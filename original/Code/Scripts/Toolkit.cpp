@@ -663,7 +663,7 @@ DECLARE_SCRIPT (M00_Advanced_Guard_Tower, "")
 		{
 			float health = Commands->Get_Health (obj);
 			bool power = Commands->Get_Building_Power (obj);
-			if ((!health) || (!power))
+			if ((health == 0.0f) || (!power))
 			{
 				if (gun_01)
 				{
@@ -1083,7 +1083,7 @@ DECLARE_SCRIPT(M00_Nod_Obelisk_CNC, "Controller_ID=0:int")
 		{
 			float health = Commands->Get_Health (obj);
 			bool power = Commands->Get_Building_Power (obj);
-			if ((!health) || (!power))
+			if ((health == 0.0f) || (!power))
 			{
 				GameObject * obelisk = Commands->Find_Object (obelisk_id);
 				if (obelisk)
@@ -1324,7 +1324,7 @@ DECLARE_SCRIPT(M00_Nod_Obelisk, "Controller_ID=0:int")
 		{
 			float health = Commands->Get_Health (obj);
 			bool power = Commands->Get_Building_Power (obj);
-			if ((!health) || (!power))
+			if ((health == 0.0f) || (!power))
 			{
 				GameObject * obelisk = Commands->Find_Object (obelisk_id);
 				if (obelisk)

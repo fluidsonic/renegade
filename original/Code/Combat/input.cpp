@@ -892,8 +892,8 @@ void	Input::Update( void )
 			//
 			//	Is this fuction activated?
 			//
-			if (	Get_Value (def.Function, FunctionPrimaryKeys[def.Function], 1.0F) ||
-					Get_Value (def.Function, FunctionSecondaryKeys[def.Function], 1.0F))
+			if (	Get_Value (def.Function, FunctionPrimaryKeys[def.Function], 1.0F) != 0.0f ||
+					Get_Value (def.Function, FunctionSecondaryKeys[def.Function], 1.0F) != 0.0f)
 			{
 				//
 				//	Apply the accelerated value

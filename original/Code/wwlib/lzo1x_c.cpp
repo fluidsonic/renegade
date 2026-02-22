@@ -85,7 +85,7 @@ static int do_compress(const lzo_byte * in, lzo_uint  in_len,
 		{
 		} else {
 			if (m_pos[2] == ip[2]) {
-				lit = ip - ii;
+				lit = static_cast<lzo_uint>(ip - ii);
 				m_pos += 3;
 				if (m_off <= M2_MAX_OFFSET)
 					goto match;
@@ -153,7 +153,7 @@ code_match:
 		    *m_pos++ != *ip++ || *m_pos++ != *ip++ || *m_pos++ != *ip++)
 		{
 			--ip;
-			m_len = ip - ii;
+			m_len = static_cast<lzo_uint>(ip - ii);
 			assert(m_len >= 3); assert(m_len <= 8);
 
 			if (m_off <= M2_MAX_OFFSET) {
@@ -180,7 +180,7 @@ code_match:
 				m_pos++;
 				ip++;
 			}
-			m_len = (ip - ii);
+			m_len = static_cast<lzo_uint>(ip - ii);
 			assert(m_len >= 3);
 
 			if (m_off <= M3_MAX_OFFSET) {
@@ -225,7 +225,7 @@ m3_m4_offset:
 
 	/* store final literal run */
 	if (in_end - ii > 0) {
-		register lzo_uint t = in_end - ii;
+		register lzo_uint t = static_cast<lzo_uint>(in_end - ii);
 
 		if (op == out && t <= 238) {
 			*op++ = LZO_BYTE(17 + t);
@@ -253,7 +253,7 @@ m3_m4_offset:
 		} while (--t > 0);
 	}
 
-	*out_len = op - out;
+	*out_len = static_cast<lzo_uint>(op - out);
 	return LZO_E_OK;
 }
 
@@ -274,7 +274,7 @@ int lzo1x_1_compress     ( const lzo_byte * in, lzo_uint  in_len,
 		if (in_len <= 9 + 4) {
 			*op++ = LZO_BYTE(17 + in_len);
 			do *op++ = *in++; while (--in_len > 0);
-			*out_len = op - out;
+			*out_len = static_cast<lzo_uint>(op - out);
 		} else {
 			r = do_compress(in,in_len,out,out_len,wrkmem);
 		}

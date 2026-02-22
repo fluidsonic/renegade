@@ -1510,7 +1510,7 @@ DECLARE_SCRIPT (MDD_Nod_Apache, "Area_ID:int")
 			{
 				ActionParamsStruct params;
 				params.Set_Basic(this, 90, 0);
-				params.Set_Movement(Vector3(0,0,0), 0.2 + (0.1 * DIFFICULTY), 5.0f);
+				params.Set_Movement(Vector3(0,0,0), 0.2f + (0.1f * DIFFICULTY), 5.0f);
 				params.WaypathID = waypath_id;
 				params.WaypathSplined = true;
 				params.Set_Attack(STAR, 200.0f, 0.0f, true);

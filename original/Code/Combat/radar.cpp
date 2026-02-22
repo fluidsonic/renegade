@@ -287,7 +287,7 @@ float	RadarManager::Add_Blip( const Vector3 & pos, int shape_type, int color_typ
 				color_alpha *= 0.66f;
 			}
 
-			unsigned int color = BlipColors[ color_type ];
+			uint32_t color = static_cast<uint32_t>(BlipColors[ color_type ]);
 			color &= 0x00FFFFFF;
 			color |= (unsigned int)(RadarIntensity * color_alpha * 255) << 24;
 			if ( Renderer ) {
@@ -352,7 +352,7 @@ void	RadarManager::Update( const Matrix3D & player_tm, const Vector2 & center )
 	Renderer->Add_Quad_Backfaced( draw.Lower_Right(), draw.Lower_Left(), draw.Upper_Right(), draw.Upper_Left(), uv, RadarColor );
 
 
-	float	bering = WWMath::Wrap( (player_tm.Get_Z_Rotation() / DEG_TO_RAD( 360.0f )) + 0.25f, 0, 1 );
+	float	bering = WWMath::Wrap( (player_tm.Get_Z_Rotation() / DEG_TO_RADF( 360.0f )) + 0.25f, 0, 1 );
 	CurrentCompassRendererIndex = (int)((bering * 8.0f) + 0.5f);
 	CurrentCompassRendererIndex&=7;
 

@@ -188,7 +188,7 @@ bool CombatNetworkReceiverInstanceClass::Server_Update_Dynamic_Objects(bool is_u
 			//
 			// His eyes are say 1.5 m above his feet
 			//
-			dest_pos.Z += 1.5;
+			dest_pos.Z += 1.5f;
 		}
 
       cNetwork::Tell_Client_About_Dynamic_Objects(client_id, dest_pos);

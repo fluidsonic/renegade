@@ -524,8 +524,8 @@ bool WWKeyboardClass::Message_Handler(HWND window, UINT message, UINT wParam, LO
 	point.x = LOWORD(lParam);
 	point.y = HIWORD(lParam);
 	ClientToScreen(window, &point);
-	int x = point.x;
-	int y = point.y;
+	int x = static_cast<int32_t>(point.x);
+	int y = static_cast<int32_t>(point.y);
 
 	// Special conversion to game coordinates is needed here.
 	if (MouseCursor != NULL) MouseCursor->Convert_Coordinate(x, y);

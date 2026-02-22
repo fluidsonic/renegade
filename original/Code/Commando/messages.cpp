@@ -314,7 +314,7 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 				}
 				temp_obj->Set_Update_Rate(client_id, (unsigned short) update_rate);
 				if (update_rate != infinity_update_rate) {
-					int bps = (1000.0f / update_rate) * temp_obj->Get_Frequent_Update_Export_Size();
+					int bps = static_cast<int32_t>((1000.0f / update_rate) * temp_obj->Get_Frequent_Update_Export_Size());
 					total_bps += bps;
 				}
 			}
@@ -540,7 +540,7 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 										hidden = true;
 									}
 									if (hidden) {
-										int distance = cPriority::Get_Object_Distance_2(dest_pos, p_object);
+										int distance = static_cast<int32_t>(cPriority::Get_Object_Distance_2(dest_pos, p_object));
 										if (distance > min_vis_distance) {
 											/*
 											** Allow some very infrequent updates for distant, hidden objects on broadband connections.
@@ -682,12 +682,12 @@ if (cDevOptions::UseNewTCADO.Is_False()) {
 					update_rate = (unsigned long)(((1.0f - pri) * spread) + ms_low);
 				} else {
 					if (pri > 0.009f) {
-						update_rate = min_update_rate;
+						update_rate = static_cast<uint32_t>(min_update_rate);
 					}
 				}
 				temp_obj->Set_Update_Rate(client_id, (unsigned short) update_rate);
 				if (update_rate != infinity_update_rate) {
-					int bps = (1000.0f / update_rate) * temp_obj->Get_Frequent_Update_Export_Size();
+					int bps = static_cast<int32_t>((1000.0f / update_rate) * temp_obj->Get_Frequent_Update_Export_Size());
 					total_bps += bps;
 				}
 			}

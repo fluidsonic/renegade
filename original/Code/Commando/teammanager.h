@@ -39,7 +39,7 @@ public:
    static void	      				Add(cTeam * p_team);
    static void       				Remove_All(void); // N.B. destructive
 	static float						Get_Team_List_Height(void) {return TeamListHeight;}
-	static int							Count(void)	{return TeamList.Get_Count();};
+	static int							Count(void)	{return static_cast<int32_t>(TeamList.Get_Count());};
 	static int							Compute_Team_List_Height(void);
    static void       				Log_Team_List(void);
 

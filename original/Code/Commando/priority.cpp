@@ -71,7 +71,7 @@ cPriority::Compute_Object_Priority
 			//float bendy = WWMath::Fast_Sin(priority * DEG_TO_RAD(90.0f));
 			//priority = (priority + bendy) / 2.0f;
 			float bendy = WWMath::Fast_Asin(priority);
-			bendy = (RAD_TO_DEG(bendy)) / 90.0f;
+			bendy = static_cast<float>(RAD_TO_DEG(bendy)) / 90.0f;
 			priority = (priority + bendy) / 2.0f;
 		}
 	}
@@ -296,7 +296,7 @@ cPriority::Compute_Object_Priority_2
 			//float bendy = WWMath::Fast_Sin(priority * DEG_TO_RAD(90.0f));
 			//priority = (priority + bendy) / 2.0f;
 			float bendy = WWMath::Fast_Asin(priority);
-			bendy = (RAD_TO_DEG(bendy)) / 90.0f;
+			bendy = static_cast<float>(RAD_TO_DEG(bendy)) / 90.0f;
 			priority = (priority + bendy) / 2.0f;
 		}
 	}

@@ -4094,8 +4094,8 @@ DECLARE_SCRIPT(M07_Inn_APC, "")
 
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
-				float a = cos(DEG_TO_RADF(facing)) * -4.0;
-				float b = sin(DEG_TO_RADF(facing)) * -4.0;
+				float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+				float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 			
 				Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 				GameObject * soldier1 = Commands->Create_Object("M07_Nod_APC", soldier_loc1);
@@ -4965,8 +4965,8 @@ DECLARE_SCRIPT(M07_Hostage, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * 1.5;
-			float b = sin(DEG_TO_RADF(facing)) * 1.5;
+			float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+			float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 			Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 			Commands->Create_Object("Ramjet_Weapon_Powerup", powerup_loc);
 
@@ -5086,8 +5086,8 @@ DECLARE_SCRIPT(M07_APC_Dec, "")
 
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
-				float a = cos(DEG_TO_RADF(facing)) * -4.0;
-				float b = sin(DEG_TO_RADF(facing)) * -4.0;
+				float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+				float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 			
 				Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 				GameObject * soldier1 = Commands->Create_Object("M07_Nod_APC", soldier_loc1);

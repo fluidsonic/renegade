@@ -12,7 +12,7 @@ class TagBlockIndex
 {
 public:
 	TagBlockIndex(const char *tagname, int blockoffset):
-		CRC(CRC_Stringi(tagname)),
+		CRC(static_cast<uint32_t>(CRC_Stringi(tagname))),
 		BlockOffset(blockoffset),
 		DataOffset(TagBlockFile::Calc_Data_Offset(blockoffset, tagname))
 	{}
@@ -36,7 +36,7 @@ private:
 
 	// The index file is sorted by the CRC of the file name for
 	// quicker retrieval.  The filename is saved in the texture file.
-	unsigned long	CRC;
+	uint32_t	CRC;
 
 	// Start of the block - this is the start of TagBlockFile::BlockHeader.
 	int				BlockOffset;
@@ -247,7 +247,7 @@ TagBlockHandle *TagBlockFile::Create_Tag(const char *tagname)
 	// Write out the block header and the tag.
 	Seek(index->Get_BlockOffset(), SEEK_SET);
 	Write(blockheader, sizeof(*blockheader));
-	Write(tagname, strlen(tagname) + 1);
+	Write(tagname, static_cast<int32_t>(strlen(tagname) + 1));
 
 	// Now that we have all that we need, create the 
 	CreateHandle = new TagBlockHandle(this, index, blockheader);

@@ -4491,8 +4491,8 @@ DECLARE_SCRIPT(M08_Facility_APC, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * -4.0;
-			float b = sin(DEG_TO_RADF(facing)) * -4.0;
+			float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+			float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 		
 			Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 			GameObject * soldier1 = Commands->Create_Object("Nod_MiniGunner_1Off", soldier_loc1);
@@ -4532,8 +4532,8 @@ DECLARE_SCRIPT(M08_Facility_APC, "")
 
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
-				float a = cos(DEG_TO_RADF(facing)) * -4.0;
-				float b = sin(DEG_TO_RADF(facing)) * -4.0;
+				float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+				float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 			
 				Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 				GameObject * soldier1 = Commands->Create_Object("Nod_MiniGunner_1Off", soldier_loc1);
@@ -4571,8 +4571,8 @@ DECLARE_SCRIPT(M08_Facility_APC, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * -4.0;
-			float b = sin(DEG_TO_RADF(facing)) * -4.0;
+			float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+			float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 		
 			Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 			GameObject * soldier1 = Commands->Create_Object("Nod_MiniGunner_1Off", soldier_loc1);
@@ -5246,8 +5246,8 @@ DECLARE_SCRIPT(M08_Cavern_Tunnel_APC, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * -4.0;
-			float b = sin(DEG_TO_RADF(facing)) * -4.0;
+			float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+			float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 		
 			Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 			GameObject * soldier1 = Commands->Create_Object("Nod_FlameThrower_2SF", soldier_loc1);
@@ -5285,8 +5285,8 @@ DECLARE_SCRIPT(M08_Cavern_Tunnel_APC, "")
 
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
-				float a = cos(DEG_TO_RADF(facing)) * -4.0;
-				float b = sin(DEG_TO_RADF(facing)) * -4.0;
+				float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+				float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 			
 				Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 				GameObject * soldier1 = Commands->Create_Object("Nod_FlameThrower_2SF", soldier_loc1);
@@ -5324,8 +5324,8 @@ DECLARE_SCRIPT(M08_Cavern_Tunnel_APC, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * -4.0;
-			float b = sin(DEG_TO_RADF(facing)) * -4.0;
+			float a = cos(DEG_TO_RADF(facing)) * -4.0f;
+			float b = sin(DEG_TO_RADF(facing)) * -4.0f;
 		
 			Vector3 soldier_loc1 = pos + Vector3(a, b + .5f, 0.5f);
 			GameObject * soldier1 = Commands->Create_Object("Nod_FlameThrower_2SF", soldier_loc1);

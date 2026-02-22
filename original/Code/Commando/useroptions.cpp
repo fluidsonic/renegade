@@ -260,7 +260,7 @@ void cUserOptions::Set_Bandwidth_Type(BANDWIDTH_TYPE_ENUM bandwidth_type)
 
 	if (bandwidth_type != BANDWIDTH_CUSTOM) {
 		if (bandwidth_type == BANDWIDTH_AUTO && BandwidthCheckerClass::Got_Bandwidth()) {
-			uint32_t bps = BandwidthCheckerClass::Get_Upstream_Bandwidth();
+			uint32_t bps = static_cast<uint32_t>(BandwidthCheckerClass::Get_Upstream_Bandwidth());
 			BandwidthBps.Set(bps);
 		} else {
 			uint32_t bps = cBandwidth::Get_Bandwidth_Bps_From_Type(bandwidth_type);

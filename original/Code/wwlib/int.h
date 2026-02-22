@@ -51,7 +51,7 @@ class Int {
 		**	Attribute query functions.
 		*/
 		int ByteCount(void) const {return(XMP_Count_Bytes(&reg[0], PRECISION));}
-		int BitCount(void) const {return(XMP_Count_Bits(&reg[0], PRECISION));}
+		int BitCount(void) const {return(static_cast<int32_t>(XMP_Count_Bits(&reg[0], PRECISION)));}
 		bool Is_Negative(void) const {return(XMP_Is_Negative(&reg[0], PRECISION));}
 		unsigned MaxBitPrecision() const {return PRECISION*(sizeof(unsigned long)*CHAR_BIT);}
 		bool IsSmallPrime(void) const {return(XMP_Is_Small_Prime(&reg[0], PRECISION));}
@@ -79,7 +79,7 @@ class Int {
 		Int operator - (const Int & number) const {Int term;Borrow = XMP_Sub(term, &reg[0], number, 0, PRECISION);return(term);}
 		Int operator - (unsigned short b) const {Int result;Borrow = XMP_Sub_Int(result, &reg[0], b, 0, PRECISION);return(result);}
 		Int operator * (const Int & multiplier) const {Int result;Error=XMP_Signed_Mult(result, &reg[0], multiplier, PRECISION);return result;}
-		Int operator * (unsigned short b) const {Int result;Error=XMP_Unsigned_Mult_Int(result, &reg[0], b, PRECISION);return(result);}
+		Int operator * (unsigned short b) const {Int result;Error=XMP_Unsigned_Mult_Int(result, &reg[0], static_cast<short>(b), PRECISION);return(result);}
 		Int operator / (const Int & divisor) const {Int quotient = *this;XMP_Signed_Div(Remainder, quotient, &reg[0], divisor, PRECISION);return (quotient);}
 		Int operator / (unsigned long b) const {return(*this / Int<PRECISION>(b));}
 		Int operator / (unsigned short divisor) const {Int quotient;Error=XMP_Unsigned_Div_Int(quotient, &reg[0], divisor, PRECISION);return(quotient);}
@@ -242,3 +242,10 @@ T Generate_Prime(Straw & rng, int pbits, T const *)
 
 typedef Int<MAX_UNIT_PRECISION>	bignum;
 typedef Int<MAX_UNIT_PRECISION>	BigInt;
+
+// Forward-declare explicit specializations so the compiler knows they are defined in int.cpp.
+// This suppresses -Wundefined-var-template without redefining the members.
+template<> int       Int<MAX_UNIT_PRECISION>::Error;
+template<> bool      Int<MAX_UNIT_PRECISION>::Carry;
+template<> bool      Int<MAX_UNIT_PRECISION>::Borrow;
+template<> Int<MAX_UNIT_PRECISION> Int<MAX_UNIT_PRECISION>::Remainder;

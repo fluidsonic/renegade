@@ -982,8 +982,8 @@ void	PhysicalGameObj::Export_Rare( BitStreamClass &packet )
 	AnimMode anim_mode	= ANIM_MODE_TARGET;
 	if (AnimControl != NULL) {
 		animation_name	= AnimControl->Get_Animation_Name();
-		target_frame	= AnimControl->Get_Target_Frame ();
-		curr_frame		= AnimControl->Get_Current_Frame ();
+		target_frame	= static_cast<int32_t>(AnimControl->Get_Target_Frame ());
+		curr_frame		= static_cast<int32_t>(AnimControl->Get_Current_Frame ());
 		anim_mode		= AnimControl->Get_Mode ();
 	}
 

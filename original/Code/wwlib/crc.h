@@ -40,7 +40,7 @@ class CRCEngine {
 
 		long Value(void) const {
 			if (Buffer_Needs_Data()) {
-				return(_lrotl(CRC, 1) + StagingBuffer.Composite);
+				return(static_cast<long>(_lrotl(static_cast<unsigned long>(CRC), 1)) + StagingBuffer.Composite);
 			}
 			return(CRC);
 		};

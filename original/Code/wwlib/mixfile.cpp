@@ -79,7 +79,7 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 		//
 		if ( IsValid ) {
 			FileInfo.Resize( FileCount );
-			int size = FileCount * sizeof( FileInfoStruct );
+			int size = static_cast<int32_t>(static_cast<size_t>(FileCount) * sizeof( FileInfoStruct ));
 			IsValid = ( file->Read( &FileInfo[0], size ) == size );
 		}
 
@@ -205,7 +205,7 @@ FileClass * MixFileFactoryClass::Get_File( char const *filename )
 	if ( info != NULL) {
 		file = (RawFileClass *)Factory->Get_File( MixFilename );
 		if ( file ) {
-			file->Bias( BaseOffset + info->Offset, info->Size );
+			file->Bias( BaseOffset + static_cast<int32_t>(info->Offset), static_cast<int32_t>(info->Size) );
 		}
 	} else {
 		static unsigned s_miss_count = 0;
@@ -405,7 +405,7 @@ MixFileCreator::~MixFileCreator( void )
 		MixFile->Write( &num_files, sizeof( num_files ) );
 
 		if ( num_files > 1 ) {
-		   qsort( &FileInfo[0], num_files, sizeof(FileInfo[0]), &File_Info_Compare);
+		   qsort( &FileInfo[0], static_cast<size_t>(num_files), sizeof(FileInfo[0]), &File_Info_Compare);
 		}
 
 		// Save file info (CRC, Offset, Size )
@@ -428,7 +428,7 @@ MixFileCreator::~MixFileCreator( void )
 		for ( i = 0; i < num_files; i++ ) {
 			const char * filename = FileInfo[i].Filename;
 			int size = FileInfo[i].Filename.Get_Length()+1;
-			unsigned char csize = size;
+			unsigned char csize = static_cast<uint8_t>(size);
 			MixFile->Write( &csize, 1 );
 			MixFile->Write( filename, size );
 		}
@@ -466,9 +466,9 @@ void	MixFileCreator::Add_File( const char * source_filename, const char * saved_
 			file->Open();
 
 			MixFileCreator::FileInfoStruct info;
-			info.CRC			= CRC_Stringi( saved_filename );
-			info.Offset		= MixFile->Tell();
-			info.Size		= file->Size();
+			info.CRC			= static_cast<uint32_t>(CRC_Stringi( saved_filename ));
+			info.Offset		= static_cast<uint32_t>(MixFile->Tell());
+			info.Size		= static_cast<uint32_t>(file->Size());
 			FileInfo.Add( info );
 			FileInfo[ FileInfo.Count()-1 ].Filename = saved_filename;
 
@@ -504,9 +504,9 @@ void	MixFileCreator::Add_File( const char * filename, FileClass *file )
 	if ( MixFile != NULL ) {
 
 		MixFileCreator::FileInfoStruct info;
-		info.CRC			= CRC_Stringi( filename );
-		info.Offset		= MixFile->Tell();
-		info.Size		= file->Size();
+		info.CRC			= static_cast<uint32_t>(CRC_Stringi( filename ));
+		info.Offset		= static_cast<uint32_t>(MixFile->Tell());
+		info.Size		= static_cast<uint32_t>(file->Size());
 		FileInfo.Add( info );
 		FileInfo[ FileInfo.Count()-1 ].Filename = filename;
 

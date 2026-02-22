@@ -129,7 +129,7 @@ void WWMouseClass::Calc_Confining_Rect(void)
 	lr.y = rect.bottom;
 	ClientToScreen(Window, &lr);
 
-	ConfiningRect = Rect(point.x, point.y, lr.x-point.x, lr.y-point.y);
+	ConfiningRect = Rect(static_cast<int32_t>(point.x), static_cast<int32_t>(point.y), static_cast<int32_t>(lr.x-point.x), static_cast<int32_t>(lr.y-point.y));
 //	ConfiningRect = Rect(point.x, point.y, lr.x-point.x+1, lr.y-point.y+1);
 }
 
@@ -156,7 +156,7 @@ int WWMouseClass::Get_Mouse_State(void) const
 		int state = ShowCursor(TRUE);
 		return(state);
 	}
-	return(MouseState);
+	return(static_cast<int32_t>(MouseState));
 }
 
 /***********************************************************************************************
@@ -816,8 +816,8 @@ void WWMouseClass::Get_Bounded_Position(int & x, int & y) const
 	*/
 	POINT pt;
 	GetCursorPos(&pt);			// get the current cursor position
-	x = pt.x;
-	y = pt.y;
+	x = static_cast<int32_t>(pt.x);
+	y = static_cast<int32_t>(pt.y);
 	Convert_Coordinate(x, y);
 }
 

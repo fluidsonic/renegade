@@ -132,7 +132,7 @@ void	CCameraProfileClass::Set_Zoom( float amount )
 float CCameraProfileClass::Get_Zoom( void )
 {
 	// TSS - by my reckoning this is the actual zoom factor
-	return 0.8 / FOV;
+	return 0.8f / FOV;
 }
 
 #define	Get_Camera_Profile_Radians( v, e )			\
@@ -630,7 +630,7 @@ void CCameraClass::Update()
 
 	bool interpolating = false;
 
-	if ( LerpTimeTotal ) {
+	if ( LerpTimeTotal != 0.0f ) {
 		interpolating = true;
 
 		float frame_time = TimeManager::Get_Frame_Seconds();

@@ -67,7 +67,7 @@ cClientHintManager::Think
 
 	Vector3 my_position;
 	p_my_soldier->Get_Position(&my_position);
-	my_position.Z += 1.5;
+	my_position.Z += 1.5f;
 
 	VisTableClass * pvs = COMBAT_SCENE->Get_Vis_Table(my_position);
 

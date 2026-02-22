@@ -23,7 +23,7 @@ class BasicTimerClass {
 		virtual ~BasicTimerClass(void);
 
 		// Fetch current value of timer.
-		int Value(void) const {return(Timer()-Started);}
+		int Value(void) const {return(static_cast<int32_t>(Timer()-Started));}
 
 		// Conversion operator to allow consistent treatment with integral types.
 		operator int(void) const;
@@ -109,7 +109,7 @@ inline BasicTimerClass<T>::~BasicTimerClass(void)
 template<class T>
 inline BasicTimerClass<T>::operator int(void) const
 {
-	return(Timer()-Started);
+	return(static_cast<int32_t>(Timer()-Started));
 }
 
 /***********************************************************************************************
@@ -131,7 +131,7 @@ inline BasicTimerClass<T>::operator int(void) const
 template<class T>
 inline int BasicTimerClass<T>::operator () (void) const
 {
-	return(Timer()-Started);
+	return(static_cast<int32_t>(Timer()-Started));
 }
 
 /*

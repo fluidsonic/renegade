@@ -256,7 +256,7 @@ int VisemeManager::Lookup(const char *pchar, const char * /*word*/, int viseme[]
 	// we search backwards so that we can find the max. match first
 	VisemeTableItem *pI = &gsVisemeTable[pR->StartIndex + pR->Count - 1];
 	for (int i=0; i<pR->Count; i++,pI--) {
-		length = strlen(pI->LetterCombination);
+		length = static_cast<int32_t>(strlen(pI->LetterCombination));
 		if ( strnicmp(pchar, pI->LetterCombination, length) == 0 )
 		{
 			// found!

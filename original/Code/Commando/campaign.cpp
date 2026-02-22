@@ -275,7 +275,7 @@ void	CampaignManager::Continue( bool success )
 		//
 		//	Parse the parameters
 		//
-		int len = ::strlen( state_description );
+		int len = static_cast<int32_t>(::strlen( state_description ));
 		StringClass foo( len + 1, true );
 		StringClass filename( len + 1, true );
 		StringClass description( len + 1, true );

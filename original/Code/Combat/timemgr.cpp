@@ -98,7 +98,7 @@ FrameTimeHistogramClass& TimeManager::Peek_Frame_Time_Histogram()
 */
 int	TimeManager::SystemTicks()
 {
-	return TIMEGETTIME();
+	return static_cast<int32_t>(TIMEGETTIME());
 }
 
 void TimeManager::Reset(void)
@@ -132,7 +132,7 @@ void	TimeManager::Update_Frame_Time()
 	FrameTicks = MIN( FrameTicks, (TICKS_PER_SECOND / SLOWEST_FPS) );
 
 	if ( WW3D::Get_Movie_Capture_Frame_Rate() != 0.0f ) {
-		FrameTicks = TICKS_PER_SECOND / WW3D::Get_Movie_Capture_Frame_Rate();
+		FrameTicks = static_cast<int32_t>(TICKS_PER_SECOND / WW3D::Get_Movie_Capture_Frame_Rate());
 	}
 
 
@@ -148,7 +148,7 @@ void	TimeManager::Update_Frame_Time()
 		FrameTicks = 0;
 	}
 
-	FrameTicks *= TimeScale;
+	FrameTicks = static_cast<int32_t>(FrameTicks * TimeScale);
 	FrameSeconds=(float)FrameTicks / TICKS_PER_SECOND;
 	RealFrameSeconds=(float)RealFrameTicks / TICKS_PER_SECOND;
 

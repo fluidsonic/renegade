@@ -1875,7 +1875,7 @@ DECLARE_SCRIPT(M03_Announce_PowerPlant_Controller_JDG, "")
 		{
 
 			
-			float lineNumber = Commands->Get_Random ( 0.5f, total_number_of_sounds+0.5);
+			float lineNumber = Commands->Get_Random ( 0.5f, total_number_of_sounds+0.5f);
 
 			if ((lineNumber >= 0.5) && (lineNumber < 1.5))
 			{
@@ -2326,7 +2326,7 @@ DECLARE_SCRIPT(M03_Announce_Refinery_Controller_JDG, "")
 		else if (param == pick_sound)
 		{
 
-			float lineNumber = Commands->Get_Random ( 0.5f, total_number_of_sounds+0.5);
+			float lineNumber = Commands->Get_Random ( 0.5f, total_number_of_sounds+0.5f);
 
 			if ((lineNumber >= 0.5) && (lineNumber < 1.5))
 			{
@@ -2783,7 +2783,7 @@ DECLARE_SCRIPT(M03_Announce_CommCenter_Controller_JDG, "")
 		else if (param == pick_sound)
 		{
 
-			float lineNumber = Commands->Get_Random ( 0.5f, total_number_of_sounds+0.5);
+			float lineNumber = Commands->Get_Random ( 0.5f, total_number_of_sounds+0.5f);
 
 			if ((lineNumber >= 0.5) && (lineNumber < 1.5))
 			{

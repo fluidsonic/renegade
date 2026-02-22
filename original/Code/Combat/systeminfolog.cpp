@@ -100,7 +100,7 @@ void SystemInfoLog::Set_State_Playing()
 		CurrentString+="Crashed while playing";
 		Set_Latest_Game_String(registry,0,CurrentString );
 	}
-	PlayingStartTime=TIMEGETTIME();
+	PlayingStartTime=static_cast<uint32_t>(TIMEGETTIME());
 }
 
 void SystemInfoLog::Get_Final_String(StringClass& string)
@@ -124,7 +124,7 @@ void SystemInfoLog::Get_Final_String(StringClass& string)
 
 void SystemInfoLog::Set_State_Exiting()
 {
-	TotalPlayingTime=(TIMEGETTIME()-PlayingStartTime)/1000;
+	TotalPlayingTime=static_cast<uint32_t>((TIMEGETTIME()-PlayingStartTime)/1000);
 
 	AvgFPS=0;
 	if (CurrentFPSCount) {
@@ -164,7 +164,7 @@ void SystemInfoLog::Record_Loading_Time(unsigned loading_time)
 
 void SystemInfoLog::Record_Frame()
 {
-	unsigned fps=TimeManager::Get_Average_Frame_Rate();
+	uint32_t fps=static_cast<uint32_t>(TimeManager::Get_Average_Frame_Rate());
 	CurrentTotalFPS+=fps;
 	CurrentFPSCount++;
 	if (fps<VeryMinFPS) {

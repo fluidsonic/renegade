@@ -604,7 +604,7 @@ bool	SoldierGameObj::Save( ChunkSaveClass & csave )
 		csave.Begin_Micro_Chunk( MICROCHUNKID_ANIMATION_NAME );
 		char anim_string[80];
 		strcpy( anim_string, AnimationName );
-		csave.Write( anim_string, strlen( anim_string ) + 1);
+		csave.Write( anim_string, static_cast<uint32_t>(strlen( anim_string ) + 1));
 		csave.End_Micro_Chunk();
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_INNATE_ENABLE_BITS, InnateEnableBits );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_INNATE_OBSERVER_PTR, InnateObserver );
@@ -1100,7 +1100,7 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 
 	// Bump Z up to the top of the possible values due to packing
 	// we assume the max error is half of the resolution
-	float max_error = cEncoderList::Get_Encoder_Type_Entry( BITPACK_WORLD_POSITION_Z ).Get_Resolution() / 2.0f;
+	float max_error = static_cast<float>(cEncoderList::Get_Encoder_Type_Entry( BITPACK_WORLD_POSITION_Z ).Get_Resolution() / 2.0);
 	sc_position.Z += max_error;
 
 	Interpret_Sc_Position_Data(sc_position);
@@ -1297,7 +1297,7 @@ tm.Pre_Rotate_Z( 0.5f );
 tm.Translate_X( 3.1f );
 					amount = file->Read( buffer, amount );
 tm.Translate_Y( 4.6f );
-					crc = CRC_Memory( buffer, amount, crc );
+					crc = static_cast<int32_t>(CRC_Memory( buffer, amount, crc ));
 tm.Translate_Z( 8.2f );
 					size -= amount;
 				}
@@ -2516,8 +2516,8 @@ void	SoldierGameObj::Handle_Head_look( void )
 
 #define	HEAD_TURN_RATE		(DEG_TO_RAD( 360 )/2)
 #define	HEAD_TILT_RATE		(DEG_TO_RAD( 180 )/2)
-		float max_turn = HEAD_TURN_RATE * TimeManager::Get_Frame_Seconds();
-		float max_tilt = HEAD_TILT_RATE * TimeManager::Get_Frame_Seconds();
+		float max_turn = static_cast<float>(HEAD_TURN_RATE) * TimeManager::Get_Frame_Seconds();
+		float max_tilt = static_cast<float>(HEAD_TILT_RATE) * TimeManager::Get_Frame_Seconds();
 		HeadRotation.X += WWMath::Clamp( (desired_head_rotation.X - HeadRotation.X), -max_turn, max_turn );
 		HeadRotation.Z += WWMath::Clamp( (desired_head_rotation.Z - HeadRotation.Z), -max_tilt, max_tilt );
 
@@ -2788,7 +2788,7 @@ bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do
 	// Set Tilt
 	float dist = rel_target_pos.Length();
 	float	tilt = 0;
-	if ( dist && do_tilt ) {
+	if ( dist != 0.0f && do_tilt ) {
 		tilt = WWMath::Fast_Asin( rel_target_pos.Z / dist );
 	}
 
@@ -2836,7 +2836,7 @@ bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do
 			direction = 1;
 		}
 
-		ReloadingTilt += direction * TimeManager::Get_Frame_Seconds() * TILT_DOWN_SPEED;
+		ReloadingTilt += direction * TimeManager::Get_Frame_Seconds() * static_cast<float>(TILT_DOWN_SPEED);
 		ReloadingTilt = WWMath::Clamp( ReloadingTilt, 0, 1 );
 
 		if ( ReloadingTilt > 0 ) {

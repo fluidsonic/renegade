@@ -222,8 +222,8 @@ unsigned int Random3Class::Mix2[20] = {
  *   05/20/1997 JLB : Created.                                                                 * 
  *=============================================================================================*/
 Random3Class::Random3Class(unsigned seed1, unsigned seed2) :
-	Seed(seed1),
-	Index(seed2)
+	Seed(static_cast<int32_t>(seed1)),
+	Index(static_cast<int32_t>(seed2))
 {
 }	
 
@@ -248,12 +248,12 @@ int Random3Class::operator() (void)
 	int hiword = Index++;
 	for (int i = 0; i < 4; i++) {
 		int hihold  = hiword;
-		int temp    = hihold ^  Mix1[i];
+		int temp    = static_cast<int32_t>(static_cast<uint32_t>(hihold) ^ Mix1[i]);
 		int itmpl   = temp   &  0xffff;
 		int itmph   = temp   >> 16;
 		temp    = itmpl * itmpl + ~(itmph * itmph);
 		temp    = (temp >> 16) | (temp << 16);
-		hiword  = loword ^ ((temp ^ Mix2[i]) + itmpl * itmph);
+		hiword  = static_cast<int32_t>(static_cast<uint32_t>(loword) ^ (static_cast<uint32_t>(temp ^ static_cast<int32_t>(Mix2[i])) + static_cast<uint32_t>(itmpl * itmph)));
 		loword  = hihold;
 	}
 	return(hiword);

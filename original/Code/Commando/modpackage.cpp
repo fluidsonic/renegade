@@ -169,7 +169,7 @@ ModPackageClass::Compute_CRC (void)
 			//
 			//	Get the accumulated CRC result from the CRC engine
 			//
-			FileCRC = crc_engine ();
+			FileCRC = static_cast<uint32_t>(crc_engine ());
 
 			//
 			//	Close the file

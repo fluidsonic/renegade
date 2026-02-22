@@ -371,7 +371,7 @@ Point2D WWFontClass::Print(char const * string, Surface & surface, Rect const & 
 		**	Process the whole string. Stop when the string reaches the right margin.
 		*/
 		while (*string != '\0') {
-			unsigned char c = *string++;
+			unsigned char c = static_cast<unsigned char>(*string++);
 
 			/*
 			**	Certain control characters serve a formatting purpose. They merely
@@ -564,7 +564,7 @@ Point2D WWFontClass::Print(char const * string, Surface & surface, Rect const & 
 					}
 				}
 			}
-			xpos += Char_Pixel_Width(c);
+			xpos += Char_Pixel_Width(static_cast<char>(c));
 //			xpos += width + xspacing;
 		}
 

@@ -213,7 +213,7 @@ void QMCSamplingClass::Sample(float *target)
 	unsigned int i;
 	for (i=0; i<Dimensions; i++)
 	{
-		target[i]=RadInv(index,primes[i]);
+		target[i]=RadInv(static_cast<int32_t>(index),primes[i]);
 	}
 
 	index++;

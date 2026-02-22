@@ -78,7 +78,7 @@ int Read_Line(Straw & file, char * buffer, int len, bool & eof)
 	buffer[count] = '\0';
 
 	strtrim(buffer);
-	return(strlen(buffer));
+	return(static_cast<int32_t>(strlen(buffer)));
 }
 
 int Read_Line(Straw & file, char16_t * buffer, int len, bool & eof)
@@ -102,5 +102,5 @@ int Read_Line(Straw & file, char16_t * buffer, int len, bool & eof)
 	buffer[count] = u'\0';
 
 	wcstrim(buffer);
-	return(wcslen(buffer));
+	return(static_cast<int32_t>(wcslen(buffer)));
 }

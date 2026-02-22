@@ -169,7 +169,7 @@ void 	ConsoleGameModeClass::Think()
 
       if (enable_console) {
 		   InputActive = true;
-         PromptLength = strlen(InputLine);
+         PromptLength = static_cast<int32_t>(strlen(InputLine));
 		   Input::Console_Enable();
 			Clear_Suggestion();
       }
@@ -184,14 +184,14 @@ void 	ConsoleGameModeClass::Think()
 
 		while ( key ) {
 
-			int len = strlen( InputLine ) ;
+			int len = static_cast<int32_t>(strlen( InputLine )) ;
 
 			switch( key ) {
 
 				case ENTER_KEY:
 					if (ConsoleInputType == INPUT_FUNCTION_BEGIN_CONSOLE) {
 						Accept_Suggestion(InputLine + PromptLength);
-						len = strlen(InputLine);
+						len = static_cast<int32_t>(strlen(InputLine));
 						Clear_Suggestion();
 					}
 					//Parse_Input( InputLine );
@@ -223,7 +223,7 @@ void 	ConsoleGameModeClass::Think()
 					// Accept any suggested command line completion and fall through to default
 					if (ConsoleInputType == INPUT_FUNCTION_BEGIN_CONSOLE) {
 						Accept_Suggestion(InputLine + PromptLength);
-						len = strlen(InputLine);
+						len = static_cast<int32_t>(strlen(InputLine));
 					}
 
 				default:

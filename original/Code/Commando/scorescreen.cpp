@@ -358,7 +358,7 @@ int	ScoreScreenDialogClass::Get_Time_To_Finish_Stars( void )
 		stars = 5;
 	}
 
-	int minutes = time;
+	int minutes = static_cast<int32_t>(time);
 	WideStringClass wtime;
 	wtime.Format( TRANSLATE( IDS_SS_HOURS_MINUTES ), minutes / 60, minutes % 60 );
 	Set_Dlg_Item_Text( IDC_SCORE_SCREEN_PLAYTIME, wtime );

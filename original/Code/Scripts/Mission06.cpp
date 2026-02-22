@@ -977,8 +977,8 @@ DECLARE_SCRIPT(M06_Civ_Prisoner, "")
 				
 				Vector3 pos = Commands->Get_Position(obj);
 				float facing = Commands->Get_Facing(obj);
-				float a = cos(DEG_TO_RADF(facing)) * 1.5;
-				float b = sin(DEG_TO_RADF(facing)) * 1.5;
+				float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+				float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 				Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 				Commands->Create_Object("POW_Health_100", powerup_loc);
 				Commands->Enable_HUD_Pokable_Indicator( obj, false );
@@ -2375,8 +2375,8 @@ DECLARE_SCRIPT(M06_Barracks_Patrol, "")
 		{
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * 1.5;
-			float b = sin(DEG_TO_RADF(facing)) * 1.5;
+			float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+			float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 			Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 			Commands->Create_Object("M06_Barracks_Powerups_Twiddler", powerup_loc);
 
@@ -3466,8 +3466,8 @@ DECLARE_SCRIPT(M06_Resistance_Raider_DLS, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * 1.5;
-			float b = sin(DEG_TO_RADF(facing)) * 1.5;
+			float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+			float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 			Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 			Commands->Create_Object("POW_GrenadeLauncher_Player", powerup_loc);
 			
@@ -3523,8 +3523,8 @@ DECLARE_SCRIPT(M06_Assistance_Farmer_DLS, "")
 		{
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * 1.5;
-			float b = sin(DEG_TO_RADF(facing)) * 1.5;
+			float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+			float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 			Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 			Commands->Create_Object("POW_GrenadeLauncher_Player", powerup_loc);
 
@@ -3563,8 +3563,8 @@ DECLARE_SCRIPT(M06_Assistance_Farmer_DLS, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * 1.5;
-			float b = sin(DEG_TO_RADF(facing)) * 1.5;
+			float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+			float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 			Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 			Commands->Create_Object("tw_POW00_Health", powerup_loc);
 

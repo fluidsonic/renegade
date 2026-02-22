@@ -35,7 +35,7 @@ cBioEvent::Init(int teamChoice, unsigned long clanID)
 	SenderId		= cNetwork::Get_My_Id();
 	Nickname		= cNetInterface::Get_Nickname();
 	TeamChoice	= teamChoice;
-	ClanID		= clanID;
+	ClanID		= static_cast<uint32_t>(clanID);
 
 	strcpy(MapName, The_Game()->Get_Map_Name().Peek_Buffer());
 

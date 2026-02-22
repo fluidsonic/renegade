@@ -64,7 +64,7 @@ Surface * Read_PCX_File(FileClass & file_handle, PaletteClass * palette, void * 
 	height = header.height - header.y + 1;
 
 	if (Buff != NULL) {
-    	i = Size / width;
+    	i = static_cast<uint32_t>(Size / width);
     	height = MIN ((int)(i - 1), (int)height);
 		Buffer b(Buff, Size);
     	pic = new BSurface(width, height, 1, &b);

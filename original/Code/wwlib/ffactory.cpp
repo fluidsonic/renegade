@@ -96,7 +96,7 @@ void SimpleFileFactoryClass::Set_Sub_Directory( const char * sub_directory )
 
 void SimpleFileFactoryClass::Prepend_Sub_Directory( const char * sub_directory )
 {
-	int sub_len = strlen(sub_directory);
+	int sub_len = static_cast<int32_t>(strlen(sub_directory));
 	// Overflow prevention
 	if (sub_len > 1021) {
 		return;
@@ -129,7 +129,7 @@ void SimpleFileFactoryClass::Prepend_Sub_Directory( const char * sub_directory )
 
 void SimpleFileFactoryClass::Append_Sub_Directory( const char * sub_directory )
 {
-	int sub_len = strlen(sub_directory);
+	int sub_len = static_cast<int32_t>(strlen(sub_directory));
 	// Overflow prevention
 	if (sub_len > 1022) {
 		return;

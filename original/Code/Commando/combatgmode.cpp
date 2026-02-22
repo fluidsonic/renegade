@@ -446,7 +446,7 @@ public:
 				::sscanf( desc, "%f,%f,%f", &r, &g, &b );
 
 				Vector3 c( r/255.0f, g/255.0f, b/255.0f );
-				color = c.Convert_To_ARGB();
+				color = static_cast<int32_t>(c.Convert_To_ARGB());
 			}
 
 		}
@@ -499,7 +499,7 @@ public:
 		LoadPercentageDrawn += ( LoadPercentage - LoadPercentageDrawn ) * 0.1f;
 		backdrop.Set_Animation_Percentage( LoadPercentageDrawn );
 		if (ConsoleBox.Is_Exclusive() && _last_percent_drawn != LoadPercentageDrawn) {
-			_last_percent_drawn = LoadPercentageDrawn;
+			_last_percent_drawn = static_cast<int32_t>(LoadPercentageDrawn);
 			ConsoleBox.Print("Load %d%% complete\r", (int)(LoadPercentageDrawn * 100.0f));
 		}
 
@@ -1171,11 +1171,11 @@ void 	CombatGameModeClass::Think()
 	// Autosave, after one run throught main loop
 	if ( CombatManager::Is_Autosave_Requested() ) {
 		Debug_Say(( "Autosaving\n" ));
-		int time=TIMEGETTIME();
+		int time=static_cast<int32_t>(TIMEGETTIME());
 		CombatManager::Request_Autosave( false );
 		SaveGameManager::Set_Description( TRANSLATE( IDS_SAVE_AUTOSAVE ) );
 		SaveGameManager::Save_Game( "save/autosave.sav", &_CommandoSaveLoad, NULL );
-		time=TIMEGETTIME()-time;
+		time=static_cast<int32_t>(TIMEGETTIME())-time;
 		Debug_Say(( "Autosaving Complete, took %d.%2.2d seconds\n",time/1000,(time/10)%100 ));
 	}
 

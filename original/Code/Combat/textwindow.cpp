@@ -172,13 +172,13 @@ TextWindowClass::Set_Backdrop
 		//
 		//	Calculate the width and height of the sections
 		//
-		int endcap_width		= endcap_rect.Width ();
-		int fadeout_width		= fadeout_rect.Width ();
-		int textback_width	= screen_rect.Width () - ((endcap_width + fadeout_width) * 2);
+		int endcap_width		= static_cast<int32_t>(endcap_rect.Width ());
+		int fadeout_width		= static_cast<int32_t>(fadeout_rect.Width ());
+		int textback_width	= static_cast<int32_t>(screen_rect.Width ()) - ((endcap_width + fadeout_width) * 2);
 
-		int endcap_height		= endcap_rect.Height ();
-		int fadeout_height	= fadeout_rect.Height ();
-		int textback_height	= textback_rect.Height ();
+		int endcap_height		= static_cast<int32_t>(endcap_rect.Height ());
+		int fadeout_height	= static_cast<int32_t>(fadeout_rect.Height ());
+		int textback_height	= static_cast<int32_t>(textback_rect.Height ());
 
 		//
 		//	Calculate the UV coordinates for each section
@@ -232,7 +232,7 @@ TextWindowClass::Set_Backdrop
 		//
 		int largest_height	= min (endcap_height, fadeout_height);
 		largest_height			= min (largest_height, textback_height);		
-		int section_count		= (screen_rect.Height () / largest_height);
+		int section_count		= static_cast<int32_t>(screen_rect.Height ()) / largest_height;
 
 		//
 		//	Tile the text backdrop sections
@@ -276,7 +276,7 @@ TextWindowClass::Set_Backdrop
 		//
 		//	Tile the endcaps appropriately
 		//
-		section_count = screen_rect.Height () / endcap_height;
+		section_count = static_cast<int32_t>(screen_rect.Height ()) / endcap_height;
 		for (int index = 0; index < section_count; index ++) {
 
 			//

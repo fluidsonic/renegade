@@ -380,7 +380,7 @@ long Targa::Load(const char* name, char* palette, char* image,bool invert_image)
 				}
 
 			} else {
-				if (File_Seek(size, SEEK_CUR) == -1) {
+				if (File_Seek(static_cast<int32_t>(size), SEEK_CUR) == -1) {
 					error = TGAERR_READ;
 				}
 			}
@@ -396,13 +396,13 @@ long Targa::Load(const char* name, char* palette, char* image,bool invert_image)
 
 			switch (Header.ImageType) {
 				case TGA_CMAPPED:
-					if (File_Read(image, size) != size) {
+					if (File_Read(image, static_cast<int32_t>(size)) != size) {
 						error = TGAERR_READ;
 					}
 					break;
 
 				case TGA_TRUECOLOR:
-					if (File_Read(image, size) == size) {
+					if (File_Read(image, static_cast<int32_t>(size)) == size) {
 						if (invert_image) InvertImage();
 					} else {
 						error = TGAERR_READ;
@@ -410,7 +410,7 @@ long Targa::Load(const char* name, char* palette, char* image,bool invert_image)
 					break;
 
 				case TGA_MONO:
-					if (File_Read(image, size) != size) {
+					if (File_Read(image, static_cast<int32_t>(size)) != size) {
 						error = TGAERR_READ;
 					}
 					break;
@@ -1058,7 +1058,7 @@ long Targa::DecodeImage()
 				size = (count * depth);
 
 				/* Read in raw pixels. */
-				if ((unsigned)File_Read(image, size) == size)
+				if ((unsigned)File_Read(image, static_cast<int32_t>(size)) == size)
 					image += size;
 				else
 					error = TGAERR_READ;

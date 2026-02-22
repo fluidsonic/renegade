@@ -16,7 +16,6 @@ const char * RandomStringClass::Get_String( void )
 	if ( Strings.Count() == 0 ) {
 		return NULL;
 	}
-	unsigned int index = Randomizer();
-	index %= Strings.Count();
+	int index = static_cast<int32_t>(static_cast<uint32_t>(Randomizer()) % static_cast<uint32_t>(Strings.Count()));
 	return Strings[index];
 }

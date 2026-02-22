@@ -144,10 +144,10 @@ bool WindClass::Update()
 
 		for (unsigned octave = 0; octave < OCTAVE_COUNT; octave++) {
 
-			Theta [octave] += WW3D::Get_Frame_Time() * 0.001l * frequency [octave];
-			d = floorf (Theta [octave] / twopi);
-			if (d >= 1) Theta [octave] -= d * twopi;
-			f += sinf (Theta [octave]);
+			Theta [octave] += (double)WW3D::Get_Frame_Time() * 0.001 * frequency [octave];
+			d = static_cast<int32_t>(Theta [octave] / twopi);
+			if (d >= 1) Theta [octave] -= (double)d * twopi;
+			f += static_cast<float>(sin (Theta [octave]));
 		}
 		speed = Speed - (Speed * ((f + 1.0f) * 0.5f) * Variability);
 	} else {
@@ -345,7 +345,7 @@ void WeatherSystemClass::Set_Density (float density)
 
 	// Calculate no. of rays required.
 	ParticleDensity = density;
-	raycount			 = Spawn_Count (1.0f) / (ParticlesPerUnitLength * ParticleSpeed);
+	raycount			 = static_cast<uint32_t>(Spawn_Count (1.0f) / (ParticlesPerUnitLength * ParticleSpeed));
 
 	// Is the ray count increasing or decreasing in size?
 	signedcount = ((int) RayCount) - ((int) raycount);
@@ -411,7 +411,7 @@ bool WeatherSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 	const unsigned randomness		= 10000;
 	const float		oorandomness	= 1.0f / randomness;
 	const float		overlapdelta	= EmitterSize * 2.0f;
-	const unsigned rayupdatecount = MAX (RayCount * 0.018f, 1);
+	const unsigned rayupdatecount = static_cast<uint32_t>(MAX (RayCount * 0.018f, 1));
 
 	Vector3				oldemitterposition;
 	float					ooz;
@@ -607,7 +607,7 @@ bool WeatherSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 			// Spawn some particles along the ray.
 			// NOTE: For accuracy, accumulate fractional spawncounts so that they can be used on a later ray.
 			s = ParticlesPerUnitLength * (rayptr->EndPosition - raystartposition).Quick_Length();
-			spawncount = floor (s);
+			spawncount = static_cast<uint32_t>(floor (s));
 			spawncountfraction += s - spawncount;
 			if (spawncountfraction >= 1.0f) {
 				spawncountfraction -= 1.0f;
@@ -748,7 +748,7 @@ bool WeatherSystemClass::Update (WindClass *wind, const Vector3 &cameraposition)
 	// Spawn any new particles that need to be spawned on this update.
 	// NOTE: For accuracy, accumulate fractional spawncounts so that they can be used on a later iteration.
 	s = Spawn_Count (time);
-	spawncount = floor (s);
+	spawncount = static_cast<uint32_t>(floor (s));
 	SpawnCountFraction += s - spawncount;
 	if (SpawnCountFraction >= 1.0f) {
 		SpawnCountFraction -= 1.0f;

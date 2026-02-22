@@ -27,7 +27,7 @@ void * Load_Alloc_Data(FileClass & file)
 
 		ptr = new char[size];
 		if (ptr != NULL) {
-			file.Read(ptr, size);
+			file.Read(ptr, static_cast<int32_t>(size));
 		}
 	}
 	return(ptr);
@@ -167,7 +167,7 @@ void const * Fetch_Resource(LPCSTR resname, LPCSTR restype)
 
 int Load_Picture(FileClass & file, Buffer & scratchbuf, Buffer & destbuf, unsigned char * palette, PicturePlaneType )
 {
-	return(Load_Uncompress(file, scratchbuf, destbuf,  palette ) / 8000);
+	return(static_cast<int32_t>(Load_Uncompress(file, scratchbuf, destbuf,  palette ) / 8000));
 }
 
 /***********************************************************************************************

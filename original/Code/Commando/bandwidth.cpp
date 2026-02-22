@@ -33,7 +33,7 @@ uint32_t cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_t
 			return 2000000;
 		case BANDWIDTH_AUTO:
 		{
-			uint32_t bps = BandwidthCheckerClass::Get_Upstream_Bandwidth();
+			uint32_t bps = static_cast<uint32_t>(BandwidthCheckerClass::Get_Upstream_Bandwidth());
 //			assert(bps > 0);
 			return bps;
 		}

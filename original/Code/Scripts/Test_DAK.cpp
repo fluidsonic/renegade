@@ -115,7 +115,7 @@ DECLARE_SCRIPT(DAK_Electric_Death_DAK, "" )
 {
 	void Created ( GameObject *obj )
 	{
-		int time = Commands->Get_Random(1, 3);
+		int32_t time = static_cast<int32_t>(Commands->Get_Random(1, 3));
 		Commands->Send_Custom_Event ( obj, obj, 0, 0, time );
 	}
 

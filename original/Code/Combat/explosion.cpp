@@ -241,7 +241,7 @@ void	ExplosionManager::Create_Explosion_At( int explosion_def_id, const Matrix3D
 						if ( dist <= radius ) {
 							float scale = 1.0f;
 							if ( explosion_def->DamageIsScaled ) {
-								scale = 1.0 - (dist / radius);
+								scale = 1.0f - (dist / radius);
 							}
 
 							// Check for collisions in the path of the object

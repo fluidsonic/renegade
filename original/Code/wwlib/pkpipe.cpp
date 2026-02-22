@@ -165,7 +165,7 @@ int PKPipe::Put(void const * source, int length)
 			**	First try to accumulate a full key.
 			*/
 			int toget = (BytesLeft < length) ? BytesLeft : length;
-			memmove(&Buffer[Counter-BytesLeft], source, toget);
+			memmove(&Buffer[Counter-BytesLeft], source, static_cast<size_t>(toget));
 			length -= toget;
 			BytesLeft -= toget;
 			source = (char *)source + toget;

@@ -99,6 +99,12 @@ private:
 
 };
 
+// Primary template definition — required to suppress -Wundefined-var-template.
+// DEFINE_AUTO_POOL provides an explicit specialization per concrete class to ensure
+// each class gets its own pool instance (not shared across types with the same size).
+template<class T, int BLOCK_SIZE>
+ObjectPoolClass<T,BLOCK_SIZE> AutoPoolClass<T,BLOCK_SIZE>::Allocator;
+
 /*
 ** DEFINE_AUTO_POOL(T,BLOCKSIZE)
 ** Macro to declare the allocator for your class.  Put this in the cpp file for

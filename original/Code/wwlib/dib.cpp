@@ -64,8 +64,8 @@ DIB8Class::DIB8Class(HWND hwnd,int width,int height,PaletteClass & pal):
 		return;
     }
 
-	Width = Info->bmiHeader.biWidth;
-	Height = abs(Info->bmiHeader.biHeight);
+	Width = static_cast<int32_t>(Info->bmiHeader.biWidth);
+	Height = static_cast<int32_t>(abs(Info->bmiHeader.biHeight));
 	Pitch = (Width + 3) & 0xfffffffC;
 
 	// Check if the DIB is bottom-up or top-down.

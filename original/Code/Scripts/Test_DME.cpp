@@ -252,7 +252,7 @@ DECLARE_SCRIPT (DME_Test_Paradrop, "")
 		{
 			GameObject *para1;
 			Vector3 loc = Commands->Get_Position ( obj );
-			loc.Z += 1.5;
+			loc.Z += 1.5f;
 			float facing = Commands->Get_Facing(obj);
 			para1 = Commands->Create_Object("Generic_Cinematic", loc);
 			Commands->Set_Facing(para1, facing);
@@ -565,8 +565,8 @@ DECLARE_SCRIPT (DME_Test_Worker_Wander, "Work_Area=3:int")
 						Vector3 pos = Commands->Get_Position(obj);				//specifies drop location and plays droping anim.
 						float facing = Commands->Get_Facing(obj);
 						Commands->Set_Animation( obj, "H_A_J12C", false );
-						float a = cos(DEG_TO_RADF(facing)) * 1.5;
-						float b = sin(DEG_TO_RADF(facing)) * 1.5;
+						float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+						float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 						Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 						
 						switch (reward_type)									//random reward type.

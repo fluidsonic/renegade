@@ -162,7 +162,7 @@ void cDiagnostics::Render(void)
 						RendererPing = ping;
 						changed = true;
 					}
-					int bps = PacketManager.Get_Compressed_Bandwidth_In(&server->Get_Address());
+					int bps = static_cast<int32_t>(PacketManager.Get_Compressed_Bandwidth_In(&server->Get_Address()));
 					if (bps && bps != RendererBandwidthBps) {
 						RendererBandwidthBps = bps;
 						changed = true;
@@ -170,7 +170,7 @@ void cDiagnostics::Render(void)
 				}
 			}
 		} else {
-			int bps = PacketManager.Get_Total_Compressed_Bandwidth_Out();
+			int bps = static_cast<int32_t>(PacketManager.Get_Total_Compressed_Bandwidth_Out());
 			if (bps && bps != RendererBandwidthBps) {
 				RendererBandwidthBps = bps;
 				changed = true;

@@ -203,7 +203,7 @@ int Pick_Random_Number(T & generator, int minval, int maxval)
 	**	Create a full bit mask pattern that has all bits set that just
 	**	barely covers the magnitude of the number range desired.
 	*/
-	int mask = ~( (~0L) << (highbit+1));
+	int mask = static_cast<int32_t>(~( (~0L) << (highbit+1)));
 
 	/*
 	**	Keep picking random numbers until it fits within the magnitude desired. With a 

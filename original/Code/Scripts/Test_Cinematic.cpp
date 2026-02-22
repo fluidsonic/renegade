@@ -184,14 +184,14 @@ public:
 
 			// Remove leading and trailing white space
 			while ( *line && *line <= ' ' )	line++;
-			int length = ::strlen( line );
+			int32_t length = static_cast<int32_t>(::strlen( line ));
 			while ( (length != 0) && (line[length-1] <= ' ') )	{
 				line[--length] = 0;
 			}
 
 			if ( *line && *line != ';' ) {	// ignore comments
 				float	time;
-				time = atof( line );
+				time = static_cast<float>(atof( line ));
 
 				if ( time < 0 ) {	// handle frame numbers
 					time = -time / 30.f;
@@ -246,7 +246,7 @@ public:
 		}
 
 		// Remove trailing whitespace
-		int length = ::strlen( parameter );
+		int32_t length = static_cast<int32_t>(::strlen( parameter ));
 		while ( length && parameter[ length-1 ] <= ' ' ) {
 			parameter[ --length ] = 0;
 		}
@@ -304,7 +304,7 @@ public:
 		ControlLine * controls = Controls;
 		while ( controls != NULL ) {
 			Commands->Save_Data(saver, CHUNKID_CONTROL_TIME, sizeof( controls->Time ), &controls->Time );
-			int len = strlen( controls->Command ) + 1;
+			int32_t len = static_cast<int32_t>(strlen( controls->Command )) + 1;
 			Commands->Save_Data(saver, CHUNKID_CONTROL_COMMAND_SIZE, sizeof( len ), &len );
 			Commands->Save_Data(saver, CHUNKID_CONTROL_COMMAND, len, controls->Command );
 //Commands->Debug_Message( "Saving Command %f %s\n", controls->Time, controls->Command );
@@ -779,7 +779,7 @@ public:
 	void	Command_Sniper_Control( char * params )
 	{
 		int enabled = atoi( Get_First_Parameter( params ) );
-		float zoom = atof( Get_Next_Parameter() );
+		float zoom = static_cast<float>(atof( Get_Next_Parameter() ));
 
 		Commands->Cinematic_Sniper_Control( enabled != 0, zoom );
 	}
@@ -787,8 +787,8 @@ public:
 	void	Command_Shake_Camera( char * params )
 	{
 		int obj_slot = atoi( Get_First_Parameter( params ) );
-		float intensity = atof( Get_Next_Parameter() );
-		float duration = atof( Get_Next_Parameter() );
+		float intensity = static_cast<float>(atof( Get_Next_Parameter() ));
+		float duration = static_cast<float>(atof( Get_Next_Parameter() ));
 
 		if ( (obj_slot < 0) || ( obj_slot >= NUM_SLOTS ) ) {
 //			Commands->Debug_Message( "Bad Obj Slot Number %d\n", obj_slot );
@@ -831,25 +831,25 @@ public:
 	void	Command_Enable_Letterbox( char * params )
 	{
 		int onoff = atoi( Get_First_Parameter( params ) );
-		float time = atof( Get_Next_Parameter() );
+		float time = static_cast<float>(atof( Get_Next_Parameter() ));
 		
 		Commands->Enable_Letterbox(!!onoff,time);
 	}
 
 	void Command_Set_Screen_Fade_Color( char * params )
 	{
-		float r = atof( Get_First_Parameter( params ) );
-		float g = atof( Get_Next_Parameter() );
-		float b = atof( Get_Next_Parameter() );
-		float time = atof( Get_Next_Parameter() );
+		float r = static_cast<float>(atof( Get_First_Parameter( params ) ));
+		float g = static_cast<float>(atof( Get_Next_Parameter() ));
+		float b = static_cast<float>(atof( Get_Next_Parameter() ));
+		float time = static_cast<float>(atof( Get_Next_Parameter() ));
 
 		Commands->Set_Screen_Fade_Color(r,g,b,time);
 	}
 
 	void Command_Set_Screen_Fade_Opacity( char * params )
 	{
-		float opacity = atof( Get_First_Parameter( params ) );
-		float time = atof( Get_Next_Parameter() );
+		float opacity = static_cast<float>(atof( Get_First_Parameter( params ) ));
+		float time = static_cast<float>(atof( Get_Next_Parameter() ));
 		
 		Commands->Set_Screen_Fade_Opacity(opacity,time);
 	}

@@ -201,9 +201,9 @@ void	C4GameObj::Init_C4( const AmmoDefinitionClass * def, SoldierGameObj *owner,
 	if ( detonation_mode == 2 ) 		sound_id = def->C4TimingSound1ID;
 	if ( detonation_mode == 3 )		sound_id = def->C4TimingSound1ID;
 
-	if ( sound_id ) {
+	if ( sound_id != 0.0f ) {
 		RefCountedGameObjReference *owner_ref = new RefCountedGameObjReference(Owner);
-		WWAudioClass::Get_Instance()->Create_Instant_Sound( sound_id, Get_Transform(), owner_ref);
+		WWAudioClass::Get_Instance()->Create_Instant_Sound( static_cast<int32_t>(sound_id), Get_Transform(), owner_ref);
 		REF_PTR_RELEASE(owner_ref);
 	}
 
@@ -503,7 +503,7 @@ void C4GameObj::Think( void )
 		if ( Timer <= 0 ) {
 			// Reset Timer
 //			Timer += 1;		// Check every second
-			Timer += 0.25;		// Check every 1/4 second
+			Timer += 0.25f;		// Check every 1/4 second
 
 			// Check for smart objs in proximity
 			float trigger_range	= AmmoDefinition->C4TriggerRange1;

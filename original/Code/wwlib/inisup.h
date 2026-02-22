@@ -21,7 +21,7 @@ struct INIEntry : public Node<INIEntry *> {
 	~INIEntry(void);
 //	~INIEntry(void) {free(Entry);Entry = NULL;free(Value);Value = NULL;}
 //	int Index_ID(void) const {return(CRCEngine()(Entry, strlen(Entry)));};
-	int Index_ID(void) const { return CRC::String(Entry);};
+	int Index_ID(void) const { return static_cast<int32_t>(CRC::String(Entry));};
 
 	char * Entry;
 	char * Value;
@@ -37,7 +37,7 @@ struct INISection : public Node<INISection *> {
 //		~INISection(void) {free(Section);Section = 0;EntryList.Delete();}
 		INIEntry * Find_Entry(char const * entry) const;
 //		int Index_ID(void) const {return(CRCEngine()(Section, strlen(Section)));};
-		int Index_ID(void) const { return CRC::String(Section); }; 
+		int Index_ID(void) const { return static_cast<int32_t>(CRC::String(Section)); }; 
 
 		char * Section;
 		List<INIEntry *> EntryList;

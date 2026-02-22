@@ -407,8 +407,8 @@ static	void	Powerup_Update( void )
 
 		// Slide the bottom (first) icon away
 		if ( i == 0 && LeftAnimateTimer > 0.0f ) {
-			green = COLOR( WWMath::Clamp( 1.0f - (LeftAnimateTimer/ANIMATE_TIME), 0, 1 ), green ) ;
-			white = COLOR( WWMath::Clamp( 1.0f - (LeftAnimateTimer/ANIMATE_TIME), 0, 1 ), white ) ;
+			green = static_cast<int32_t>(COLOR( WWMath::Clamp( 1.0f - (LeftAnimateTimer/ANIMATE_TIME), 0, 1 ), green )) ;
+			white = static_cast<int32_t>(COLOR( WWMath::Clamp( 1.0f - (LeftAnimateTimer/ANIMATE_TIME), 0, 1 ), white )) ;
 		}
 
 
@@ -448,8 +448,8 @@ static	void	Powerup_Update( void )
 
 		// Slide the bottom (first) icon away
 		if ( i == 0 && RightAnimateTimer > 0.0f ) {
-			green = COLOR( WWMath::Clamp( 1.0f - (RightAnimateTimer/ANIMATE_TIME), 0, 1 ), green ) ;
-			white = COLOR( WWMath::Clamp( 1.0f - (RightAnimateTimer/ANIMATE_TIME), 0, 1 ), white ) ;
+			green = static_cast<int32_t>(COLOR( WWMath::Clamp( 1.0f - (RightAnimateTimer/ANIMATE_TIME), 0, 1 ), green )) ;
+			white = static_cast<int32_t>(COLOR( WWMath::Clamp( 1.0f - (RightAnimateTimer/ANIMATE_TIME), 0, 1 ), white )) ;
 		}
 
 
@@ -748,7 +748,7 @@ static	void	Weapon_Update( void )
 			// Also draw the above at the center
 
 			Vector2	center_clip_count_offset = Render2DClass::Get_Screen_Resolution().Center();
-			center_clip_count_offset.X *= 1.5;
+			center_clip_count_offset.X *= 1.5f;
 
 			float fade = WWMath::Clamp( CenterClipCountTimer, 0, 1 );
 
@@ -1084,7 +1084,7 @@ static	void	Weapon_Chart_Update( void )
 					color = COLOR( alpha * 0.5f, color );
 				}
 
-				WeaponChartIcons[index]->Force_Color( color );
+				WeaponChartIcons[index]->Force_Color( static_cast<int32_t>(color) );
 				index++;
 			}
 		}
@@ -1332,22 +1332,22 @@ static	void	Target_Update( void )
 			box_zoom_size += TimeManager::Get_Frame_Seconds() * 4;
 			box_zoom_size = WWMath::Clamp( box_zoom_size, 0, 1 );
 
-			int color = HUDGlobalSettingsDef::Get_Instance()->Get_No_Relation_Color().Convert_To_ARGB();
+			int color = static_cast<int32_t>(HUDGlobalSettingsDef::Get_Instance()->Get_No_Relation_Color().Convert_To_ARGB());
 			if ( p_obj != NULL ) {
 				if ( COMBAT_STAR->Is_Teammate(p_obj) ) {
-					color = HUDGlobalSettingsDef::Get_Instance()->Get_Friendly_Color().Convert_To_ARGB();
+					color = static_cast<int32_t>(HUDGlobalSettingsDef::Get_Instance()->Get_Friendly_Color().Convert_To_ARGB());
 				} else if ( COMBAT_STAR->Is_Enemy(p_obj) ) {
-					color = HUDGlobalSettingsDef::Get_Instance()->Get_Enemy_Color().Convert_To_ARGB();
+					color = static_cast<int32_t>(HUDGlobalSettingsDef::Get_Instance()->Get_Enemy_Color().Convert_To_ARGB());
 				}
 			}
 
 			if ( building != NULL ) {
 //				if ( building->Is_GDI() ) {
 				if ( COMBAT_STAR->Is_Teammate(building) ) {
-					color = HUDGlobalSettingsDef::Get_Instance()->Get_Friendly_Color().Convert_To_ARGB();
+					color = static_cast<int32_t>(HUDGlobalSettingsDef::Get_Instance()->Get_Friendly_Color().Convert_To_ARGB());
 //				} else if ( building->Is_Nod() ) {
 				} else if ( COMBAT_STAR->Is_Enemy(building) ) {
-					color = HUDGlobalSettingsDef::Get_Instance()->Get_Enemy_Color().Convert_To_ARGB();
+					color = static_cast<int32_t>(HUDGlobalSettingsDef::Get_Instance()->Get_Enemy_Color().Convert_To_ARGB());
 				}
 			}
 
@@ -1415,7 +1415,7 @@ static	void	Target_Update( void )
 	//					shield *= ((health/health_max) / 0.25f);
 	//				}
 					// Display less shield as health drops
-					if ( health_max ) {
+					if ( health_max != 0.0f ) {
 						shield *= (health/health_max);
 					}
 					float total = health + shield;
@@ -1424,7 +1424,7 @@ static	void	Target_Update( void )
 						health_percent = WWMath::Clamp( health_percent, 0, 1 );
 					}
 				}
-				int health_color = Get_Health_Color( health_percent );
+				int health_color = static_cast<int32_t>(Get_Health_Color( health_percent ));
 
 				// Draw Health
 				static float power_flash = 0;
@@ -1558,7 +1558,7 @@ static	void	Target_Update( void )
 				uv.Set( TARGET_ENTERABLE_UV_UL, TARGET_ENTERABLE_UV_LR );
 				uv.Scale( INFO_UV_SCALE );
 
-				color = Get_Health_Color( 1 );
+				color = static_cast<int32_t>(Get_Health_Color( 1 ));
 
 //				TargetRenderer->Add_Quad( enterable_box, uv );
 				enterable_box -= Vector2( 0, enterable_box.Height() * 0.6f );
@@ -1872,7 +1872,7 @@ static	void	Objective_Update( void )
 						if ( ObjectiveManager::Get_Objective(index) != NULL ) {
 							color3 = ObjectiveManager::Get_Objective(index)->Type_To_Color();
 						}
-						unsigned int color = color3.Convert_To_ARGB();
+						uint32_t color = static_cast<uint32_t>(color3.Convert_To_ARGB());
 						renderer->Add_Quad( star_box, color  );
 						ObjectivePogRenderers.Add( renderer );
 					}
@@ -1905,16 +1905,16 @@ static	void	Objective_Update( void )
 		}
 
 		Vector2 arrow_vertex;
-		arrow_vertex.X = WWMath::Fast_Sin( angle + DEG_TO_RAD( 180 + 45 ) );
-		arrow_vertex.Y = WWMath::Fast_Cos( angle + DEG_TO_RAD( 180 + 45 ) );
+		arrow_vertex.X = WWMath::Fast_Sin( angle + DEG_TO_RADF( 180 + 45 ) );
+		arrow_vertex.Y = WWMath::Fast_Cos( angle + DEG_TO_RADF( 180 + 45 ) );
 		Vector2 verts[4];
 		verts[0] = Vector2( arrow_vertex.X, arrow_vertex.Y );
 		verts[1] = Vector2( arrow_vertex.Y, -arrow_vertex.X );
 		verts[2] = Vector2( -arrow_vertex.Y, arrow_vertex.X );
 		verts[3] = Vector2( -arrow_vertex.X, -arrow_vertex.Y );
 		Vector2 offset;
-		offset.Y = WWMath::Fast_Sin( -angle + DEG_TO_RAD( -90 ) );
-		offset.X = WWMath::Fast_Cos( -angle + DEG_TO_RAD( -90 ) );
+		offset.Y = WWMath::Fast_Sin( -angle + DEG_TO_RADF( -90 ) );
+		offset.X = WWMath::Fast_Cos( -angle + DEG_TO_RADF( -90 ) );
 		offset *= 35;
 		offset += pog_box.Center();
 
@@ -2105,11 +2105,11 @@ static	void	Info_Update_Health_Shield( void )
 		if ( COMBAT_STAR->Get_Vehicle() ) {
 			def = COMBAT_STAR->Get_Vehicle()->Get_Defense_Object();
 		}
-		if ( def && def->Get_Health_Max() ) {
+		if ( def && def->Get_Health_Max() != 0.0f ) {
 			health = def->Get_Health();
 			health_percent = WWMath::Clamp( def->Get_Health() / def->Get_Health_Max(), 0, 1 );
 		}
-		if ( def && def->Get_Shield_Strength_Max() ) {
+		if ( def && def->Get_Shield_Strength_Max() != 0.0f ) {
 			shield = def->Get_Shield_Strength();
 			shield_percent = WWMath::Clamp( def->Get_Shield_Strength() / def->Get_Shield_Strength_Max(), 0, 1 );
 		}
@@ -2156,7 +2156,7 @@ static	void	Info_Update_Health_Shield( void )
 		intensity = 2 - flash;
 	}
 
-	int health_color = Get_Health_Color( color_percent );
+	int health_color = static_cast<int32_t>(Get_Health_Color( color_percent ));
 
 	uv.Set( HEALTH_CROSS_1_UV_UL, HEALTH_CROSS_1_UV_LR );
 	draw = uv;
@@ -2178,7 +2178,7 @@ static	void	Info_Update_Health_Shield( void )
 	//text.Format( "%03d", (int)health );
 	long lhealth=WWMath::Float_To_Long(health);
 	WCHAR tmp_text[5];
-	Generate_WChar_Text_From_Number(tmp_text,4,3,lhealth);
+	Generate_WChar_Text_From_Number(tmp_text,4,3,static_cast<int32_t>(lhealth));
 
 	InfoHealthCountRenderer->Set_Location( draw.Upper_Right() + Vector2( 4,4) );
 	InfoHealthCountRenderer->Draw_Text( tmp_text, health_color );
@@ -2192,7 +2192,7 @@ static	void	Info_Update_Health_Shield( void )
 		// Also draw the above at the center
 
 		Vector2	health_center_offset = Render2DClass::Get_Screen_Resolution().Center();
-		health_center_offset.X *= 0.5;
+		health_center_offset.X *= 0.5f;
 		health_center_offset.Y -= draw.Height() / 2;
 
 		health_center_offset -= HEALTH_CROSS_1_OFFSET;
@@ -2250,7 +2250,7 @@ static	void	Info_Update_Health_Shield( void )
 //		text.Format( "%03d", (int)shield );
 		long lshield=WWMath::Float_To_Long(shield);
 		WCHAR tmp_text[5];
-		Generate_WChar_Text_From_Number(tmp_text,4,3,lshield);
+		Generate_WChar_Text_From_Number(tmp_text,4,3,static_cast<int32_t>(lshield));
 		InfoShieldCountRenderer->Set_Location( draw.Upper_Left() + Vector2( 4,4) );
 		InfoShieldCountRenderer->Draw_Text( tmp_text );
 	} else {
@@ -2709,7 +2709,7 @@ void	HUDClass::Add_Objective( int type )
 
 void	HUDClass::Add_Data_Link( void )
 {
-	int cur = TimeManager::Get_Total_Seconds() * 2.0f;
+	int cur = static_cast<int32_t>(TimeManager::Get_Total_Seconds() * 2.0f);
 	static int last = 0;
 	// Don't accept too fast;
 	if ( cur == last ) {

@@ -240,7 +240,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		RegistryClass reg_remote(APPLICATION_SUB_KEY_NAME_NET_SERVER_CONTROL);
 		if (allow_remote) {
 			ini.Get_String(MasterServerSection, "RemoteAdminPassword", "", remote_admin_pass, sizeof(remote_admin_pass));
-			int len = strlen(remote_admin_pass);
+			int len = static_cast<int32_t>(strlen(remote_admin_pass));
 			if (len == 0) {
 				ConsoleBox.Print("Error - Remote admin password must be specified - aborting\n");
 				ConsoleBox.Wait_For_Keypress();;
@@ -284,7 +284,7 @@ bool ServerSettingsClass::Parse(bool apply)
 			*/
 			ini.Get_String(MasterServerSection, "RemoteAdminIP", "0.0.0.0", remote_admin_ip, sizeof(remote_admin_ip));
 			unsigned long admin_ip_long = ntohl(inet_addr(remote_admin_ip));
-			reg_remote.Set_Int(SERVER_CONTROL_IP_KEY, admin_ip_long);
+			reg_remote.Set_Int(SERVER_CONTROL_IP_KEY, static_cast<int32_t>(admin_ip_long));
 
 		} else {
 

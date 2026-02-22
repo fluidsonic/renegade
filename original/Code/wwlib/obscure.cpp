@@ -46,7 +46,7 @@ long Obfuscate(char const * string)
 	*/
 	strncpy(buffer, string, sizeof(buffer));
 	buffer[sizeof(buffer)-1] = '\0';
-	int length = strlen(buffer);
+	int length = static_cast<int32_t>(strlen(buffer));
 
 	/*
 	**	Only upper case letters are significant.
@@ -132,8 +132,8 @@ long Obfuscate(char const * string)
 		static unsigned char _lossbits[] = {0x00,0x08,0x00,0x20,0x00,0x04,0x10,0x00};
 		static unsigned char _addbits[] = {0x10,0x00,0x00,0x80,0x40,0x00,0x00,0x04};
 
-		buffer[index3] |= _addbits[index3 % (sizeof(_addbits)/sizeof(_addbits[0]))];
-		buffer[index3] &= (char)(~_lossbits[index3 % (sizeof(_lossbits)/sizeof(_lossbits[0]))]);
+		buffer[index3] |= _addbits[static_cast<size_t>(index3) % (sizeof(_addbits)/sizeof(_addbits[0]))];
+		buffer[index3] &= (char)(~_lossbits[static_cast<size_t>(index3) % (sizeof(_lossbits)/sizeof(_lossbits[0]))]);
 	}
 
 	/*
@@ -175,10 +175,10 @@ long Obfuscate(char const * string)
 		val2 ^= s3;
 		val3 ^= s2;
 
-		buffer[index4] = val1;
-		buffer[index4+1] = val2;
-		buffer[index4+2] = val3;
-		buffer[index4+3] = val4;
+		buffer[index4] = static_cast<char>(val1);
+		buffer[index4+1] = static_cast<char>(val2);
+		buffer[index4+2] = static_cast<char>(val3);
+		buffer[index4+3] = static_cast<char>(val4);
 	}
 
 	/*

@@ -343,7 +343,7 @@ void cTeamManager::List_Print(WideStringClass & text, Vector3 color)
 
 	PTextRenderer->Draw_Text(text, c);
 
-   YPos += PFont->Char_Height() * Y_INCREMENT_FACTOR;
+   YPos += static_cast<int32_t>(PFont->Char_Height() * Y_INCREMENT_FACTOR);
 }
 
 //-----------------------------------------------------------------------------
@@ -513,9 +513,9 @@ void cTeamManager::Render_Team_List(void)
 	XPos = 0;
 	float text_len = PFont->String_Width(heading);
 	if (The_Game()->IsIntermission.Is_True()) {
-		XPos = Render2DClass::Get_Screen_Resolution().Center().X - text_len / 2.0f;
+		XPos = static_cast<int32_t>(Render2DClass::Get_Screen_Resolution().Center().X - text_len / 2.0f);
 	} else {
-		XPos = Render2DClass::Get_Screen_Resolution().Right - 20 - text_len;
+		XPos = static_cast<int32_t>(Render2DClass::Get_Screen_Resolution().Right - 20 - text_len);
 	}
 
 	YPos = 10;
@@ -528,7 +528,7 @@ void cTeamManager::Render_Team_List(void)
 		int combined_height =
 			Compute_Team_List_Height() +
 			cPlayerManager::Compute_Full_Player_List_Height() +
-			2 * PFont->Char_Height() * Y_INCREMENT_FACTOR;
+			static_cast<int32_t>(2 * PFont->Char_Height() * Y_INCREMENT_FACTOR);
 
 		YPos = (int)(Render2DClass::Get_Screen_Resolution().Height() / 2.0 - combined_height / 2.0);
 		if (YPos < 10) {
@@ -543,7 +543,7 @@ void cTeamManager::Render_Team_List(void)
 		PTextRenderer->Set_Location(Vector2(cMathUtil::Round(x), cMathUtil::Round(y)));
 		PTextRenderer->Draw_Text(text);
 
-		YPos += 2 * PFont->Char_Height() * Y_INCREMENT_FACTOR;
+		YPos += static_cast<int32_t>(2 * PFont->Char_Height() * Y_INCREMENT_FACTOR);
 	}
 
    //

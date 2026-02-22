@@ -501,7 +501,7 @@ RefineryGameObj::Think (void)
 					// Requested to give the Total Funds to all players, no division .
 					//
 					//BaseController->Deposit_Funds (TotalFunds);
-					BaseController->Distribute_Funds_To_Each_Teammate (TotalFunds);
+					BaseController->Distribute_Funds_To_Each_Teammate (static_cast<int32_t>(TotalFunds));
 					TotalFunds = 0;
 				}
 

@@ -334,7 +334,7 @@ DECLARE_SCRIPT (M00_Broadcaster_Terminal_RAD, "Random_Percentage=100.0:float, Ra
 
 								for (object_count = 0;object_count < M00_BROADCASTER_TERMINAL_SIZE_RAD; object_count++)
 								{
-									random_value = Commands->Get_Random (0.0f, 100.0f);
+									random_value = static_cast<int32_t>(Commands->Get_Random (0.0f, 100.0f));
 									if (random_value <= Get_Float_Parameter ("Random_Percentage"))
 									{
 										if (object_random_record [object_count])
@@ -388,7 +388,7 @@ DECLARE_SCRIPT (M00_Broadcaster_Terminal_RAD, "Random_Percentage=100.0:float, Ra
 								{
 									if (object_random_record [object_count])
 									{
-										random_value = Commands->Get_Random (0.0f, 100.0f);
+										random_value = static_cast<int32_t>(Commands->Get_Random (0.0f, 100.0f));
 										if (random_value <= Get_Float_Parameter ("Random_Percentage"))
 										{
 											target_obj = Commands->Find_Object (object_random_record [object_count]);

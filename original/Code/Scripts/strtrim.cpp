@@ -34,7 +34,7 @@ char* strtrim(char* buffer)
 			memmove(buffer, source, strlen(source) + 1);
 
 		// Clip trailing white space from the string.
-		for (int index = strlen(buffer) - 1; index >= 0; index--)
+		for (int32_t index = static_cast<int32_t>(strlen(buffer)) - 1; index >= 0; index--)
 			{
 			if (isspace(buffer[index]))
 				buffer[index] = '\0';

@@ -32,12 +32,12 @@ int BufferStraw::Get(void * source, int slen)
 	if (Is_Valid() && source != NULL && slen > 0) {
 		int len = slen;
 		if (BufferPtr.Get_Size() != 0) {
-			int theoretical_max = BufferPtr.Get_Size() - Index;
+			int theoretical_max = static_cast<int32_t>(BufferPtr.Get_Size()) - Index;
 			len = (slen < theoretical_max) ? slen : theoretical_max;
 		}
 
 		if (len > 0) {
-			memmove(source, ((char*)BufferPtr.Get_Buffer()) + Index, len);
+			memmove(source, ((char*)BufferPtr.Get_Buffer()) + Index, static_cast<size_t>(len));
 		}
 
 		Index += len;

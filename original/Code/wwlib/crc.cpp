@@ -71,10 +71,10 @@ long CRCEngine::operator() (void const * buffer, int length)
 		**	data blocks.
 		*/
 		long const * longptr = (long const *)dataptr;
-		int longcount = bytes_left / sizeof(long);		// Whole 'long' elements remaining.
+		int longcount = static_cast<int32_t>(static_cast<size_t>(bytes_left) / sizeof(long));		// Whole 'long' elements remaining.
 		while (longcount--) {
-			CRC = _lrotl(CRC, 1) + *longptr++;
-			bytes_left -= sizeof(long);
+			CRC = static_cast<long>(_lrotl(static_cast<unsigned long>(CRC), 1) + static_cast<unsigned long>(*longptr++));
+			bytes_left -= static_cast<int32_t>(sizeof(long));
 		}
 
 		/*
@@ -176,7 +176,7 @@ unsigned long	CRC::String( const char *string, unsigned long crc)
 {
  	crc ^= 0xFFFFFFFF;									// invert previous CRC
 	while ( *string )	{
-		crc = CRC32( *string++, crc );				// calc crc for each byte
+		crc = CRC32( static_cast<unsigned long>(static_cast<unsigned char>(*string++)), crc );				// calc crc for each byte
 	}
 	return (crc ^ 0xFFFFFFFF); 						// invert new CRC and return it
 }

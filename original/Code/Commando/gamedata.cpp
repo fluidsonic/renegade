@@ -1604,7 +1604,7 @@ void cGameData::Show_Game_Settings_Limits(void)
 	if (!changed) {
 		// Proceed the multihud by one line (as we are caching the time render which would usually do this)
 		float y = MultiHUDClass::Get_Bottom_Text_Y_Pos();
-		y -= 1.2 * charHeight;
+		y -= 1.2f * charHeight;
 		MultiHUDClass::Set_Bottom_Text_Y_Pos(y);
 		BottomText.Reset_Active();
 		return;
@@ -1631,14 +1631,14 @@ void cGameData::Show_Game_Settings_Limits(void)
 	MultiHUDClass::Set_Bottom_Text_Y_Pos( Render2DClass::Get_Screen_Resolution().Bottom - 15 );
 
 	y = MultiHUDClass::Get_Bottom_Text_Y_Pos();
-	y -= 1.2 * charHeight;
+	y -= 1.2f * charHeight;
 	Vector2 loc(cMathUtil::Round(x), cMathUtil::Round(y));
 	PTextRenderer->Set_Location(loc);
 	PTextRenderer->Build_Sentence(renderer_time_text);
 	PTextRenderer->Draw_Sentence();
 
 	for (j=0;j<OldBottomText.Count();++j) {
-		y -= 1.2 * charHeight;
+		y -= 1.2f * charHeight;
 		loc[1]=cMathUtil::Round(y);
 		PTextRenderer->Set_Location(loc);
 		PTextRenderer->Build_Sentence(OldBottomText[j]);
@@ -1661,7 +1661,7 @@ void cGameData::Show_Game_Settings_Limits(void)
 	if (show_gameplay_label) {
 		Vector2 extent = PTextRenderer->Get_Text_Extents(renderer_gameplay_label);
 		x = Render2DClass::Get_Screen_Resolution().Center().X -  extent.X / 2.0f;
-		y = Render2DClass::Get_Screen_Resolution().Center().Y + 1.2 * charHeight;
+		y = Render2DClass::Get_Screen_Resolution().Center().Y + 1.2f * charHeight;
 		PTextRenderer->Set_Location(Vector2(cMathUtil::Round(x), cMathUtil::Round(y)));
 		PTextRenderer->Build_Sentence(renderer_gameplay_label);
 		PTextRenderer->Draw_Sentence(color);
@@ -1770,7 +1770,7 @@ void cGameData::On_Game_Begin(void)
 	GetSystemTime(&GameStartTime);
 	FrameCount = 0;
 
-	GameStartTimeMs = TIMEGETTIME();
+	GameStartTimeMs = static_cast<uint32_t>(TIMEGETTIME());
 
 	//
 	// Clear the MVP name

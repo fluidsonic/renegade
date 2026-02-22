@@ -114,7 +114,7 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 				int scripts_size = scripts_dll->Size();
 				int cur_pos = 0;
 				while (cur_pos < scripts_size) {
-					int read_count = WWMath::Min(scripts_size - cur_pos,sizeof(buffer));
+					int read_count = static_cast<int32_t>(WWMath::Min(scripts_size - cur_pos,sizeof(buffer)));
 					scripts_dll->Read(buffer,read_count);
 					unpacked_scripts.Write(buffer,read_count);
 					cur_pos += read_count;

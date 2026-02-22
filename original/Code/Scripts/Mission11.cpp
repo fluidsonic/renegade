@@ -44,7 +44,7 @@ DECLARE_SCRIPT(M11_VoltRifleGuy_Script_JDG, "")
 		if (player_has_volt_rifle == true)
 		{
 			Vector3 myPosition = Commands->Get_Position ( obj );
-			myPosition.Z += 0.75;
+			myPosition.Z += 0.75f;
 
 			Commands->Create_Object ( "POW_VoltAutoRifle_Player", myPosition );
 		}

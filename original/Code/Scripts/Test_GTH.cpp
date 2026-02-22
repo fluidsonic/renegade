@@ -916,7 +916,7 @@ DECLARE_SCRIPT(GTH_CTF_Object2, "Update_Delay=0.05:float,Enemy_Player_Type=0:int
 				
 					captured_by_id = 0;
 					// start the flag respawn timer.
-					capture_timer = (((float)Commands->Get_Sync_Time()) / 1000.0);
+					capture_timer = (((float)Commands->Get_Sync_Time()) / 1000.0f);
 					Commands->Attach_To_Object_Bone(obj,NULL,NULL);
 					GTH_DEBUG_INT(0,"Capturer killed!\n");
 

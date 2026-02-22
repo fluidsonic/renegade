@@ -521,7 +521,7 @@ void ConsoleModeClass::Think(void)
 					*/
 					cprintf("\r                                                                              \r>%s", suggestion);
 					strcpy(string+1, suggestion);
-					Pos = strlen(string);
+					Pos = static_cast<int32_t>(strlen(string));
 					break;
 				}
 

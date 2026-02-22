@@ -213,12 +213,12 @@ cBandwidthGraph::Think
 	if (cNetwork::I_Am_Client() && cNetwork::PClientConnection->Is_Established())
 	{
 		text.Format("c%d->s", cNetwork::Get_My_Id());
-		bps = PacketManager.Get_Compressed_Bandwidth_Out(&cNetwork::Get_Client_Rhost()->Get_Address());
+		bps = static_cast<uint32_t>(PacketManager.Get_Compressed_Bandwidth_Out(&cNetwork::Get_Client_Rhost()->Get_Address()));
 		target_bps = cNetwork::Get_Client_Rhost()->Get_Target_Bps();
 		Bandwidth_Graph(text, bps, target_bps, -1.0f, -1.0f, false);	//cNetwork::Get_Client_Rhost()->Get_Threshold_Priority());
 
 		text.Format("c%d<-s", cNetwork::Get_My_Id());
-		bps = PacketManager.Get_Compressed_Bandwidth_In(&cNetwork::Get_Client_Rhost()->Get_Address());
+		bps = static_cast<uint32_t>(PacketManager.Get_Compressed_Bandwidth_In(&cNetwork::Get_Client_Rhost()->Get_Address()));
 		Bandwidth_Graph(text, bps, -1, -1, -1.0f, false);
 	}
 
@@ -228,12 +228,12 @@ cBandwidthGraph::Think
 	if (cNetwork::PServerConnection != NULL)
 	{
 		text.Format("s->c*");
-		bps = PacketManager.Get_Total_Compressed_Bandwidth_Out();
+		bps = static_cast<uint32_t>(PacketManager.Get_Total_Compressed_Bandwidth_Out());
 		target_bps = cNetwork::PServerConnection->Get_Bandwidth_Budget_Out();
 		Bandwidth_Graph(text, bps, target_bps, -1, -1.0f, false);
 
 		text.Format("s<-c*");
-		bps = PacketManager.Get_Total_Compressed_Bandwidth_In();
+		bps = static_cast<uint32_t>(PacketManager.Get_Total_Compressed_Bandwidth_In());
 		Bandwidth_Graph(text, bps, -1, -1, -1.0f, false);
 
 	   for (int i = cNetwork::PServerConnection->Get_Min_RHost(); i <= cNetwork::PServerConnection->Get_Max_RHost(); i++)
@@ -244,12 +244,12 @@ cBandwidthGraph::Think
 			{
 				bool is_loading = p_rhost->Get_Flood();
 				text.Format("s->c%d", i);
-				bps = PacketManager.Get_Compressed_Bandwidth_Out(&p_rhost->Get_Address());
+				bps = static_cast<uint32_t>(PacketManager.Get_Compressed_Bandwidth_Out(&p_rhost->Get_Address()));
 				target_bps = p_rhost->Get_Target_Bps();
 				Bandwidth_Graph(text, bps, target_bps, p_rhost->Get_Bandwidth_Multiplier(), p_rhost->Get_Average_Priority(), is_loading);
 
 				text.Format("s<-c%d", i);
-				bps = PacketManager.Get_Compressed_Bandwidth_In(&p_rhost->Get_Address());
+				bps = static_cast<uint32_t>(PacketManager.Get_Compressed_Bandwidth_In(&p_rhost->Get_Address()));
 				Bandwidth_Graph(text, bps, -1, -1, -1.0f, false);
 			}
 		}

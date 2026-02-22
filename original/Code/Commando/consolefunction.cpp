@@ -611,7 +611,7 @@ public:
 
 				if (active && The_Game()) {
 
-					unsigned long time = The_Game()->Get_Time_Remaining_Seconds();
+					unsigned long time = static_cast<uint32_t>(The_Game()->Get_Time_Remaining_Seconds());
 					unsigned long seconds = time % 60;
 					unsigned long minutes = (time / 60) % 60;
 					unsigned long hours = (time / (60*60));
@@ -700,7 +700,7 @@ public:
 								(int)_ip[0], (int)_ip[1], (int)_ip[2], (int)_ip[3],
 								(unsigned int)ntohs(addr->sin_port));
 							}
-							int addr_string_len = strlen(addr_string);
+							int addr_string_len = static_cast<int32_t>(strlen(addr_string));
 							char local_addr_string[128];
 							strcpy(local_addr_string, addr_string);
 							if (addr_string_len < 21) {
@@ -1619,8 +1619,8 @@ void	ConsoleFunctionManager::Parse_Input( const char * string )
             strlen(function->Get_Alias()) > 0) {
             char alias[100];
             strcpy(alias, function->Get_Alias());
-            int alias_len = strlen(alias);
-            int string_len = strlen(string);
+            int alias_len = static_cast<int32_t>(strlen(alias));
+            int string_len = static_cast<int32_t>(strlen(string));
             if (!strnicmp(string, alias, alias_len) &&
                (string_len == alias_len || string[alias_len] == ' ')) {
 				   string += alias_len;

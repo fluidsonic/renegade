@@ -1067,7 +1067,7 @@ bool	VehicleGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 		// Set the tilt and turn
 		relative_turn = WWMath::Atan2( turret_space_target.Y, turret_space_target.X );
 
-		if ( BarrelOffset ) {
+		if ( BarrelOffset != 0.0f ) {
 			turret_space_target.Z = 0;
 			float barrel_offset_angle = WWMath::Atan2( BarrelOffset, turret_space_target.Length() );
 //			Debug_Say(( "barrel angle %f %f\n", RAD_TO_DEG( barrel_offset_angle ), RAD_TO_DEG( relative_turn + barrel_offset_angle ) ));
@@ -1085,7 +1085,7 @@ bool	VehicleGameObj::Set_Targeting( const Vector3 & target_pos, bool do_tilt )
 			Matrix3D::Inverse_Transform_Vector( barrel_base, target_pos, &barrel_space_target );
 
 			float dist = barrel_space_target.Length();
-			if ( dist ) {
+			if ( dist != 0.0f ) {
 			// Only tilt when the turn is within 80 deg
 				relative_tilt = WWMath::Fast_Asin( barrel_space_target.Z / dist );
 			}
@@ -1271,7 +1271,7 @@ void VehicleGameObj::Apply_Control( void )
 			target_direction += TARGET_STRAFE_ANGLE * Control.Get_Analog( ControlClass::ANALOG_TURN_LEFT );
 
 			// Set the final steering angle
-			float turn_amount = target_direction / DEG_TO_RAD( 60 ) * Control.Get_Analog( ControlClass::ANALOG_MOVE_FORWARD );
+			float turn_amount = target_direction / DEG_TO_RADF( 60 ) * Control.Get_Analog( ControlClass::ANALOG_MOVE_FORWARD );
 			Control.Set_Analog( ControlClass::ANALOG_TURN_LEFT, turn_amount );
 
 		} else {
@@ -2102,9 +2102,9 @@ void	VehicleGameObj::Update_Damage_Meshes( void )
 			static const char *	DAMAGE25_BONE_NAME		= "DAMAGE25";
 			static const char *	DAMAGE50_BONE_NAME		= "DAMAGE50";
 			static const char *	DAMAGE75_BONE_NAME		= "DAMAGE75";
-			static int				DAMAGE25_BONE_NAME_LEN	= ::strlen( DAMAGE25_BONE_NAME );
-			static int				DAMAGE50_BONE_NAME_LEN	= ::strlen( DAMAGE50_BONE_NAME );
-			static int				DAMAGE75_BONE_NAME_LEN	= ::strlen( DAMAGE75_BONE_NAME );
+			static int				DAMAGE25_BONE_NAME_LEN	= static_cast<int32_t>(::strlen( DAMAGE25_BONE_NAME ));
+			static int				DAMAGE50_BONE_NAME_LEN	= static_cast<int32_t>(::strlen( DAMAGE50_BONE_NAME ));
+			static int				DAMAGE75_BONE_NAME_LEN	= static_cast<int32_t>(::strlen( DAMAGE75_BONE_NAME ));
 
 			//
 			//	Loop over all the bones in the model, showing and hiding any that represent

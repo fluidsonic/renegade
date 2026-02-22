@@ -89,7 +89,7 @@ void	GameModeManager::Remove( GameModeClass *mode )
 
 int	GameModeManager::Count()
 {
-	return GameModeList.Get_Count();
+	return static_cast<int32_t>(GameModeList.Get_Count());
 }
 
 /*

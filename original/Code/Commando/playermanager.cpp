@@ -421,7 +421,7 @@ void cPlayerManager::Compute_Ladder_Points(int winning_team)
 			continue;
 		}
 
-		float player_duration_s = Player_Array[i]->Get_Total_Time() / 1000.0;
+		float player_duration_s = Player_Array[i]->Get_Total_Time() / 1000.0f;
 		float ratio_present = player_duration_s / game_duration_s;
 		float ladder_points = ratio_present * Player_Array[i]->Get_Ladder_Points();
 		/*
@@ -488,7 +488,7 @@ int cPlayerManager::Compute_Full_Player_List_Height(void)
 
 	int count = 0;
 	if (show_inactive) {
-		count = PlayerList.Get_Count();
+		count = static_cast<int32_t>(PlayerList.Get_Count());
 	} else {
 		count = Count();
 	}
@@ -783,7 +783,7 @@ int cPlayerManager::Fast_Player_Compare(const void * elem1, const void * elem2)
 int cPlayerManager::Compute_Fast_Sort_Key(cPlayer * player)
 {
 	int key = 0;
-	key = player->Get_Score();
+	key = static_cast<int32_t>(player->Get_Score());
 	return key;
 }
 
@@ -877,7 +877,7 @@ void cPlayerManager::List_Print(WideStringClass & text, Vector3 color)
 
 	PTextRenderer->Draw_Text(text, c);
 
-   YPos += PFont->Char_Height() * Y_INCREMENT_FACTOR;
+   YPos += static_cast<int32_t>(PFont->Char_Height() * Y_INCREMENT_FACTOR);
 }
 
 //-----------------------------------------------------------------------------
@@ -970,7 +970,7 @@ void cPlayerManager::Render_Player_List(void)
 	// Build player list
 
 	//int current_count = Count();
-	int current_count = PlayerList.Get_Count();
+	int current_count = static_cast<int32_t>(PlayerList.Get_Count());
 
 	if (renderer_player_count!= current_count) {
 		renderer_player_count = current_count;
@@ -1052,9 +1052,9 @@ void cPlayerManager::Render_Player_List(void)
 	XPos = 0;
 	float text_len = PFont->String_Width(heading);
 	if (The_Game()->IsIntermission.Is_True()) {
-		XPos = Render2DClass::Get_Screen_Resolution().Center().X - text_len / 2.0f;
+		XPos = static_cast<int32_t>(Render2DClass::Get_Screen_Resolution().Center().X - text_len / 2.0f);
 	} else {
-		XPos = Render2DClass::Get_Screen_Resolution().Right - 20 - text_len;
+		XPos = static_cast<int32_t>(Render2DClass::Get_Screen_Resolution().Right - 20 - text_len);
 	}
 
 	//
@@ -1066,7 +1066,7 @@ void cPlayerManager::Render_Player_List(void)
 		int combined_height =
 			cTeamManager::Compute_Team_List_Height() +
 			cPlayerManager::Compute_Full_Player_List_Height() +
-			2 * PFont->Char_Height() * Y_INCREMENT_FACTOR;
+			static_cast<int32_t>(2 * PFont->Char_Height() * Y_INCREMENT_FACTOR);
 
 		YPos = (int)(Render2DClass::Get_Screen_Resolution().Height() / 2.0 - combined_height / 2.0);
 		if (YPos < 10) {
@@ -1093,7 +1093,7 @@ void cPlayerManager::Render_Player_List(void)
 		}
 		*/
 
-		YPos += 2 * PFont->Char_Height() * Y_INCREMENT_FACTOR;
+		YPos += static_cast<int32_t>(2 * PFont->Char_Height() * Y_INCREMENT_FACTOR);
 		YPos += cTeamManager::Compute_Team_List_Height();
 
 	} else {

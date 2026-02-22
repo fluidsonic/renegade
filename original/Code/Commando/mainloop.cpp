@@ -133,7 +133,7 @@ void _Game_Main_Loop_Loop(void)
 			unsigned long diff = time2 - time1;
 			if (diff < 16) {
 				unsigned long sleep_time = 16 - (time2 - time1);
-				Sleep(sleep_time);
+				Sleep(static_cast<uint32_t>(sleep_time));
 			}
 		}
 	}

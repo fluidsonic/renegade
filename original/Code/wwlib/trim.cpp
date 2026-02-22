@@ -33,7 +33,7 @@ char* strtrim(char* buffer)
 		}
 
 		/* Clip trailing white space from the string. */
-		for (int index = strlen(buffer) - 1; index >= 0; --index) {
+		for (int index = static_cast<int32_t>(strlen(buffer)) - 1; index >= 0; --index) {
 			if ((*source != 0) && ((unsigned char)buffer[index] <= 32)) {
 				buffer[index] = '\0';
 			} else {
@@ -58,7 +58,7 @@ char16_t* wcstrim(char16_t* buffer)
 
 		if (source != buffer) {
 			int src_len = 0; while (source[src_len]) src_len++;
-			memmove(buffer, source, (src_len + 1) * sizeof(char16_t));
+			memmove(buffer, source, static_cast<size_t>(src_len + 1) * sizeof(char16_t));
 		}
 
 		/* Clip trailing white space from the string. */

@@ -53,7 +53,7 @@ int CacheStraw::Get(void * source, int slen)
 			**	Since there is more to be fulfilled yet the holding buffer is empty,
 			**	refill the buffer with a fresh block of data from the source.
 			*/
-			Length = Straw::Get(BufferPtr, BufferPtr.Get_Size());
+			Length = Straw::Get(BufferPtr, static_cast<int32_t>(BufferPtr.Get_Size()));
 			Index = 0;
 			if (Length == 0) break;
 		}

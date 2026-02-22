@@ -66,7 +66,7 @@ int LCW_Uncomp(void const * source, void * dest, unsigned long )
 				if (op_code == 0x80) {
 
 					/* Return # of destination bytes written. */
-					return ((unsigned long) (dest_ptr - (unsigned char*) dest));
+					return (static_cast<int32_t>(dest_ptr - (unsigned char*) dest));
 
 				} else {
 

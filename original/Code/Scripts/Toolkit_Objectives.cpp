@@ -323,9 +323,9 @@ DECLARE_SCRIPT(M00_Global_Objective_Controller_RMV, "Set_Type:int, Set_Status:in
 		if (type == set_type)
 		{
 			f_obj = (float)param;
-			f_obj /= 10.0;
+			f_obj /= 10.0f;
 			i_obj = int(f_obj);
-			i_new = (f_obj - i_obj) * 10;
+			i_new = static_cast<int32_t>((f_obj - i_obj) * 10);
 			switch (i_new) {
 			case 1: Commands->Change_Objective_Type(i_obj, OBJECTIVE_TYPE_PRIMARY);
 			case 2: Commands->Change_Objective_Type(i_obj, OBJECTIVE_TYPE_SECONDARY);
@@ -335,9 +335,9 @@ DECLARE_SCRIPT(M00_Global_Objective_Controller_RMV, "Set_Type:int, Set_Status:in
 		else if (type == set_status)
 		{
 			f_obj = (float)param;
-			f_obj /= 10.0;
+			f_obj /= 10.0f;
 			i_obj = int(f_obj);
-			i_new = (f_obj - i_obj) * 10;
+			i_new = static_cast<int32_t>((f_obj - i_obj) * 10);
 			switch (i_new) {
 			case 1: Commands->Set_Objective_Status(i_obj, OBJECTIVE_STATUS_PENDING);
 			case 2: Commands->Set_Objective_Status(i_obj, OBJECTIVE_STATUS_ACCOMPLISHED);

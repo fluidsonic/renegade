@@ -263,7 +263,7 @@ void cNetwork::Refusal_Handler(REFUSAL_CODE refusal_code)
 
 	const unsigned long refusalMsg = _refusalStrings[refusal_code - 1];
 
-	DlgMsgBox::DoDialog(TRANSLATE (IDS_MENU_SERVER_MESSAGE_TITLE), TRANSLATE(refusalMsg));
+	DlgMsgBox::DoDialog(TRANSLATE (IDS_MENU_SERVER_MESSAGE_TITLE), TRANSLATE(static_cast<uint32_t>(refusalMsg)));
 
 	//
 	// N.B. We cannot destroy the connection from inside this callback.
@@ -362,7 +362,7 @@ int cNetwork::Get_Data_Files_CRC(void)
 					unsigned char buffer[ 4096 ];
 					int amount = min( (int)size, (int)sizeof(buffer) );
 					amount = file->Read( buffer, amount );
-					crc = CRC_Memory( buffer, amount, crc );
+					crc = static_cast<int32_t>(CRC_Memory( buffer, amount, crc ));
 					size -= amount;
 				}
 				file->Close();
@@ -394,7 +394,7 @@ void cNetwork::Compute_Exe_Key(void)
 
 	key_string += string;
 	key_string += " ";
-	ExeCRC = CRCEngine()(string, strlen(string));
+	ExeCRC = static_cast<int32_t>(CRCEngine()(string, static_cast<int32_t>(strlen(string))));
 
 	//
 	// TSS 09/07/01
@@ -412,7 +412,7 @@ void cNetwork::Compute_Exe_Key(void)
 	string.Format("strings.tdb %u", TranslateDBClass::Get_Version_Number());
 	key_string += string;
 	key_string += " ";
-	StringsCRC = CRCEngine()(string, strlen(string));
+	StringsCRC = static_cast<int32_t>(CRCEngine()(string, static_cast<int32_t>(strlen(string))));
 
 	//
 	// TSS102401 - we can't match always.dbs either.
@@ -422,7 +422,7 @@ void cNetwork::Compute_Exe_Key(void)
 	//
 	// Use the crc of the keystring as the key
 	//
-	ExeKey = CRCEngine()(key_string, strlen(key_string));
+	ExeKey = static_cast<int32_t>(CRCEngine()(key_string, static_cast<int32_t>(strlen(key_string))));
 
 	//
 	// Include data file crc
@@ -503,7 +503,7 @@ void cNetwork::Init_Server(void)
 		//assert(GameModeManager::Find("WOu")->Is_Active());
 		unsigned long bw = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 
-		PServerConnection->Set_Bandwidth_Budget_Out(bw);
+		PServerConnection->Set_Bandwidth_Budget_Out(static_cast<uint32_t>(bw));
 		//PServerConnection->Set_Bandwidth_Budget_Out(cUserOptions::BandwidthBps.Get());
 		int bw_scale = (cUserOptions::BandwidthBps.Get() * 2) / 10;
 		bw_scale = (bw_scale / 1000) * 1000;
@@ -895,13 +895,13 @@ cRemoteHost * cNetwork::Get_Client_Rhost(void)
 //-----------------------------------------------------------------------------
 float cNetwork::Get_Server_Rhost_Threshold_Priority(int client_id)
 {
-   return Get_Server_Rhost(client_id)->Get_Threshold_Priority();
+   return static_cast<float>(Get_Server_Rhost(client_id)->Get_Threshold_Priority());
 }
 
 //-----------------------------------------------------------------------------
 float cNetwork::Get_Client_Rhost_Threshold_Priority(void)
 {
-   return Get_Client_Rhost()->Get_Threshold_Priority();
+   return static_cast<float>(Get_Client_Rhost()->Get_Threshold_Priority());
 }
 
 //-----------------------------------------------------------------------------

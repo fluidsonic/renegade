@@ -163,7 +163,7 @@ int fixed::To_ASCII(char * buffer, int maxlen) const
 	**	zero.
 	*/
 	if (maxlen == -1) {
-		maxlen = strlen(tbuffer)+1;
+		maxlen = static_cast<int32_t>(strlen(tbuffer)+1);
 	}
 
 	/*
@@ -174,7 +174,7 @@ int fixed::To_ASCII(char * buffer, int maxlen) const
 	/*
 	**	Return with the number of ASCII characters placed into the output buffer.
 	*/
-	int len = strlen(tbuffer);
+	int len = static_cast<int32_t>(strlen(tbuffer));
 	if (len < maxlen-1) return(len);
 	return(maxlen-1);
 }

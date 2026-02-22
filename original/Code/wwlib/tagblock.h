@@ -58,10 +58,10 @@ class TagBlockFile : protected RawFileClass
 		// Methods to figure an offset of the tag name and the data
 		// given the offset of the start of the block (BlockHeader)..
 		static int Calc_Tag_Offset(int blockoffset)  {
-			return(blockoffset + sizeof(BlockHeader));
+			return(blockoffset + static_cast<int32_t>(sizeof(BlockHeader)));
 		}
 		static int Calc_Data_Offset(int blockoffset, const char *tagname)  {
-			return(Calc_Tag_Offset(blockoffset) + strlen(tagname) + 1);
+			return(Calc_Tag_Offset(blockoffset) + static_cast<int32_t>(strlen(tagname) + 1));
 			
 		}
 	protected:

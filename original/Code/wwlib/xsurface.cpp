@@ -135,7 +135,7 @@ bool XSurface::Draw_Line(Rect const & xcliprect, Point2D const & startpoint, Poi
 
 		if (start.Y == end.Y) {
 			if (bbp == 1) {
-				memset(buffer, color, (end.X-start.X)+1);
+				memset(buffer, color, static_cast<size_t>((end.X-start.X)+1));
 			} else {
 				for (int x = 0; x <= end.X-start.X; x++) {
 					((short *)buffer)[x] = (short)color;
@@ -338,7 +338,7 @@ bool XSurface::Fill_Rect(Rect const & cliprect, Rect const & fillrect, int color
 	if (buffer != NULL) {
 		if (Bytes_Per_Pixel() == 1) {
 			for (int y = 0; y < crect.Height; y++) {
-				memset(buffer, color, crect.Width);
+				memset(buffer, color, static_cast<size_t>(crect.Width));
 				buffer = ((char *)buffer) + Stride();
 			}
 		} else {

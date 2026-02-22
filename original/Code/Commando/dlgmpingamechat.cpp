@@ -164,7 +164,7 @@ const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& pa
 	}
 
 	// Return the string contents to the caller
-	int length = ((curr_pos + 1) - command);
+	int length = static_cast<int32_t>((curr_pos + 1) - command);
 
 	if (length > 0) {
 		WCHAR* buffer = param.Get_Buffer(length + 1);
@@ -287,7 +287,7 @@ MPChatChildDialogClass::Auto_Complete_Name (void)
 void	
 MPChatChildDialogClass::Complete_Player_Name (const WCHAR *typed_name, WideStringClass &completed_name)
 {
-	int typed_len = ::wcslen (typed_name);
+	int typed_len = static_cast<int32_t>(::wcslen (typed_name));
 	
 	//
 	//	Require more then one character for any name starting with "R'.  This is
@@ -419,7 +419,7 @@ MPChatChildDialogClass::Find_Current_Command(const WCHAR* message, int& start_in
 		//
 		const WCHAR *command_start = ::wcsrchr (message, u'/');
 		if (command_start != NULL) {
-			start_index = command_start - message;
+			start_index = static_cast<int32_t>(command_start - message);
 			command_start ++;
 			
 			//
@@ -428,10 +428,10 @@ MPChatChildDialogClass::Find_Current_Command(const WCHAR* message, int& start_in
 			//
 			const WCHAR *first_space = ::wcschr (command_start, u' ');
 			if (first_space == NULL) {
-				end_index = ::wcslen (message);
+				end_index = static_cast<int32_t>(::wcslen (message));
 				retval = true;
 			} else if (caret_pos <= (first_space - message)) {
-				end_index = (first_space - message);
+				end_index = static_cast<int32_t>(first_space - message);
 				retval = true;
 			}
 		}

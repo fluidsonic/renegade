@@ -1227,12 +1227,12 @@ DECLARE_SCRIPT(M00_Trigger_Timer_Expired_RAD, "Start_Now=0:int, Receive_Type=15:
 					if (target_obj)
 					{
 						SCRIPT_DEBUG_MESSAGE(("M00_Trigger_Timer_Expired_RAD found its target object.\n"));
-						min_delay = Get_Float_Parameter("Min_Delay");
-						max_delay = Get_Float_Parameter("Max_Delay");
+						min_delay = static_cast<int32_t>(Get_Float_Parameter("Min_Delay"));
+						max_delay = static_cast<int32_t>(Get_Float_Parameter("Max_Delay"));
 
 						if (max_delay > min_delay)
 						{
-							delay_value = Commands->Get_Random(min_delay, max_delay);
+							delay_value = static_cast<int32_t>(Commands->Get_Random(min_delay, max_delay));
 						}
 						else
 						{
@@ -1368,12 +1368,12 @@ DECLARE_SCRIPT(M00_Trigger_State_Sequence_RAD, "Start_Now=0:int, Receive_Type:in
 			{
 				SCRIPT_DEBUG_MESSAGE(("M00_Trigger_State_Sequence_RAD found its target object.\n"));
 
-				min_delay = Get_Float_Parameter("Min_Delay");
-				max_delay = Get_Float_Parameter("Max_Delay");
+				min_delay = static_cast<int32_t>(Get_Float_Parameter("Min_Delay"));
+				max_delay = static_cast<int32_t>(Get_Float_Parameter("Max_Delay"));
 
 				if (max_delay > min_delay)
 				{
-					delay_value = Commands->Get_Random(min_delay, max_delay);
+					delay_value = static_cast<int32_t>(Commands->Get_Random(min_delay, max_delay));
 				}
 				else
 				{

@@ -282,7 +282,7 @@ float Get_Facing( GameObject * obj )
 		return 0;
 	}
 
-	return RAD_TO_DEG( pgobj->Get_Facing() );
+	return RAD_TO_DEGF( pgobj->Get_Facing() );
 }
 
 void	Set_Facing( GameObject * obj, float degrees )
@@ -301,7 +301,7 @@ void	Set_Facing( GameObject * obj, float degrees )
 
 	Matrix3D tm(1);
 	tm.Translate(pos);
-	tm.Rotate_Z( DEG_TO_RAD( degrees ) );
+	tm.Rotate_Z( DEG_TO_RADF( degrees ) );
 
 	pgobj->Set_Transform(tm);
 }

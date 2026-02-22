@@ -73,7 +73,7 @@ LoadSPGameMenuClass::On_Init_Dialog (void)
 		//
 		//	Sort the list and select the first entry
 		//
-		list_ctrl->Sort (LoadListSortCallback, MAKELONG (CurrSortCol, IsSortAscending));
+		list_ctrl->Sort (LoadListSortCallback, static_cast<uint32_t>(MAKELONG (CurrSortCol, IsSortAscending)));
 		list_ctrl->Set_Curr_Sel (0);
 		Update_Button_State ();
 
@@ -113,8 +113,8 @@ LoadSPGameMenuClass::Build_List (const char *search_string, int start_index)
 		//	Strip the search mask from the string
 		//
 		path_name	= search_string;
-		int len		= ::strlen (search_string);
-		int index	= search_dir - search_string;
+		int len		= static_cast<int32_t>(::strlen (search_string));
+		int index	= static_cast<int32_t>(search_dir - search_string);
 		path_name.Erase (index, len - index);
 	}
 
@@ -326,7 +326,7 @@ LoadSPGameMenuClass::On_ListCtrl_Column_Click
 		//
 		//	Sort the list by the column that was clicked
 		//
-		list_ctrl->Sort (LoadListSortCallback, MAKELONG (CurrSortCol, IsSortAscending));
+		list_ctrl->Sort (LoadListSortCallback, static_cast<uint32_t>(MAKELONG (CurrSortCol, IsSortAscending)));
 
 		//
 		//	Update the sort marker

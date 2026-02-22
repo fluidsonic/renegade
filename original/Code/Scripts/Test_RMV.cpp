@@ -25,7 +25,7 @@ DECLARE_SCRIPT(M00_C130_Dropoff_RMV, "ObjToCreate=:string")
 		int drop_frame;
 		drop_frame = 460;
 		float drop_time;
-		drop_time= ( float )drop_frame / 30.0;
+		drop_time= ( float )drop_frame / 30.0f;
 		Commands->Start_Timer( obj, this, drop_time, M00_TIMER_DROP_OBJECT_RMV );
 	}
 

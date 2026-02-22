@@ -508,7 +508,7 @@ int DSurface::Bytes_Per_Pixel(void) const
  *=============================================================================================*/
 int DSurface::Stride(void) const
 {
-	return(Description->lPitch);
+	return(static_cast<int32_t>(Description->lPitch));
 }
 
 /***********************************************************************************************

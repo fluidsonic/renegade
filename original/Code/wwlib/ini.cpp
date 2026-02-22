@@ -551,19 +551,19 @@ int INIClass::Save(Pipe & pipe) const
 		**	Output the section identifier.
 		*/
 		total += pipe.Put("[", 1);
-		total += pipe.Put(secptr->Section, strlen(secptr->Section));
+		total += pipe.Put(secptr->Section, static_cast<int32_t>(strlen(secptr->Section)));
 		total += pipe.Put("]", 1);
-		total += pipe.Put(EOL, strlen(EOL));
+		total += pipe.Put(EOL, static_cast<int32_t>(strlen(EOL)));
 
 		/*
 		**	Output all the entries and values in this section.
 		*/
 		INIEntry * entryptr = secptr->EntryList.First();
 		while (entryptr && entryptr->Is_Valid()) {
-			total += pipe.Put(entryptr->Entry, strlen(entryptr->Entry));
+			total += pipe.Put(entryptr->Entry, static_cast<int32_t>(strlen(entryptr->Entry)));
 			total += pipe.Put("=", 1);
-			total += pipe.Put(entryptr->Value, strlen(entryptr->Value));
-			total += pipe.Put(EOL, strlen(EOL));
+			total += pipe.Put(entryptr->Value, static_cast<int32_t>(strlen(entryptr->Value)));
+			total += pipe.Put(EOL, static_cast<int32_t>(strlen(EOL)));
 
 			entryptr = entryptr->Next();
 		}
@@ -572,7 +572,7 @@ int INIClass::Save(Pipe & pipe) const
 		**	After the last entry in this section, output an extra
 		**	blank line for readability purposes.
 		*/
-		total += pipe.Put(EOL, strlen(EOL));
+		total += pipe.Put(EOL, static_cast<int32_t>(strlen(EOL)));
 
 		secptr = secptr->Next();
 	}
@@ -604,7 +604,7 @@ INISection * INIClass::Find_Section(char const * section) const
 {
 	if (section != NULL) {
 //		long crc = CRCEngine()(section, strlen(section));
-		long crc = CRC(section);
+		const int32_t crc = CRC(section);
 
 		if (SectionIndex->Is_Present(crc)) {
 			return((*SectionIndex)[crc]);
@@ -1008,7 +1008,7 @@ bool INIClass::Put_TextBlock(char const * section, char const * text)
 		/*
 		**	Scan backward looking for a good break position.
 		*/
-		int count = strlen(buffer);
+		int count = static_cast<int32_t>(strlen(buffer));
 		if (count > 0) {
 			if (count >= 75) {
 				while (count) {
@@ -1081,7 +1081,7 @@ int INIClass::Get_TextBlock(char const * section, char * buffer, int len) const
 
 		Get_String(section, Get_Entry(section, index), "", buffer, len);
 
-		int partial = strlen(buffer);
+		int partial = static_cast<int32_t>(strlen(buffer));
 		total += partial;
 		buffer += partial;
 		len -= partial;
@@ -1366,7 +1366,7 @@ bool INIClass::Put_Float(char const * section, char const * entry, float number)
 {
 	char buffer[MAX_LINE_LENGTH];
 
-	sprintf(buffer, "%f", number);
+	sprintf(buffer, "%f", static_cast<double>(number));
 	return(Put_String(section, entry, buffer));
 }
 
@@ -1398,11 +1398,11 @@ double INIClass::Get_Double(char const * section, char const * entry, double def
 
 	INIEntry * entryptr = Find_Entry(section, entry);
 	if (entryptr != NULL && entryptr->Value != NULL) {
-		float val = defvalue;
+		double val = defvalue;
 		sscanf(entryptr->Value, "%lf", &val);
 		defvalue = val;
 		if (strchr(entryptr->Value, '%') != NULL) {
-			defvalue /= 100.0f;
+			defvalue /= 100.0;
 		}
 	}
 	return(defvalue);
@@ -1553,10 +1553,10 @@ int INIClass::Get_String(char const * section, char const * entry, char const * 
 		buffer[0] = '\0';
 		return(0);
 	} else {
-		strncpy(buffer, defvalue, size);
+		strncpy(buffer, defvalue, static_cast<size_t>(size));
 		buffer[size-1] = '\0';
 		strtrim(buffer);
-		return(strlen(buffer));
+		return(static_cast<int32_t>(strlen(buffer)));
 	}
 }
 
@@ -1703,7 +1703,7 @@ int *	INIClass::Get_Alloc_Int_Array(char const * section, char const * entry, in
 
 	// now that we know how many tokens there are in the string, allocate a int
 	// array to hold the tokens and parse out the actual values.
-	retval	= new int[count+1];
+	retval	= new int[static_cast<size_t>(count+1)];
 	count		= 0;
 	str		= strdup(entryptr->Value);
 	for (token = strtok(str, " "); token; token = strtok(NULL, " ")) {
@@ -1932,7 +1932,7 @@ TPoint3D<int> const INIClass::Get_Point(char const * section, char const * entry
 bool INIClass::Put_Point(char const * section, char const * entry, TPoint3D<float> const & value)
 {
 	char buffer[54];
-	sprintf(buffer, "%f,%f,%f", (float)value.X, (float)value.Y, (float)value.Z);
+	sprintf(buffer, "%f,%f,%f", static_cast<double>(value.X), static_cast<double>(value.Y), static_cast<double>(value.Z));
 	return(Put_String(section, entry, buffer));
 }
 
@@ -2021,7 +2021,7 @@ INIEntry * INISection::Find_Entry(char const * entry) const
 {
 	if (entry != NULL) {
 //		int crc = CRCEngine()(entry, strlen(entry));
-		int crc = CRC::String(entry);
+		const int32_t crc = static_cast<int32_t>(CRC::String(entry));
 		if (EntryIndex.Is_Present(crc)) {
 			return(EntryIndex[crc]);
 		}
@@ -2087,7 +2087,7 @@ PKey INIClass::Get_PKey(bool fast) const
 	**	exponent from the database.
 	*/
 	if (fast) {
-		BigInt exp = PKey::Fast_Exponent();
+		BigInt exp = static_cast<unsigned long>(PKey::Fast_Exponent());
 		exp.DEREncode((unsigned char *)buffer);
 		key.Decode_Exponent(buffer);
 	} else {
@@ -2145,7 +2145,7 @@ void INIClass::Strip_Comments(char * buffer)
 int INIClass::CRC(const char *string)
 {
 	// simply call the CRC class string evaluator.
-	return CRC::String(string);
+	return static_cast<int32_t>(CRC::String(string));
 }
 
 /***********************************************************************************************

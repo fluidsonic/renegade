@@ -64,7 +64,7 @@ public:
 	// Frame
 	void			Set_Frame( float frame )	{ Frame = frame; }
 	float			Get_Frame( void )				{ return Frame; }
-	float			Get_Progress( void )			{ return NumFrames ? Frame / NumFrames : 0; }
+	float			Get_Progress( void )			{ return NumFrames != 0.0f ? Frame / NumFrames : 0.0f; }
 
 	void			Set_Target_Frame( float frame )	{ TargetFrame = frame; }
 	float			Get_Target_Frame( void )			{ return TargetFrame; }

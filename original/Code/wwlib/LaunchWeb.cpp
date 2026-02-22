@@ -54,7 +54,7 @@ bool LaunchWebBrowser(const char* url)
 	// Write generic contents
 	const char* contents = "<title>ViewHTML</title>";
 	DWORD written;
-	WriteFile(file, contents, strlen(contents), &written, NULL);
+	WriteFile(file, contents, static_cast<uint32_t>(strlen(contents)), &written, NULL);
 	CloseHandle(file);
 
 	// Find the executable that can launch this file

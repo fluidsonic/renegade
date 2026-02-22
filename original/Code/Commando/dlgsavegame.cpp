@@ -97,7 +97,7 @@ SaveGameMenuClass::On_ListCtrl_Column_Click
 		//
 		//	Sort the list by the column that was clicked
 		//
-		list_ctrl->Sort (LoadListSortCallback, MAKELONG (CurrSortCol, IsSortAscending));
+		list_ctrl->Sort (LoadListSortCallback, static_cast<uint32_t>(MAKELONG (CurrSortCol, IsSortAscending)));
 
 		//
 		//	Update the sort marker
@@ -554,7 +554,7 @@ SaveGameMenuClass::Reload_List (const char *current_filename)
 	//
 	//	Sort the list
 	//
-	list_ctrl->Sort (LoadListSortCallback, MAKELONG (CurrSortCol, IsSortAscending));		
+	list_ctrl->Sort (LoadListSortCallback, static_cast<uint32_t>(MAKELONG (CurrSortCol, IsSortAscending)));
 
 	//
 	//	Update the sort marker

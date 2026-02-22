@@ -83,7 +83,7 @@ unsigned long SecureRandomClass::Randval(void)
 
 	// SHA doesn't have the best distribution properties in the world
 	//   We'll XOR the result with the output of another random number
-	unsigned long helperval=RandomHelper();
+	unsigned long helperval=static_cast<unsigned long>(static_cast<uint32_t>(RandomHelper()));
 	retval^=helperval;
 
 	return(retval);
@@ -130,10 +130,10 @@ void SecureRandomClass::Generate_Seed(void)
 		if ((i % 4) == 0)
 			int_seeds[i]^=time(NULL);
 		else if ((i % 4) == 1)
-			int_seeds[i]^=getpid();
+			int_seeds[i]^=static_cast<uint32_t>(getpid());
 		else if ((i % 4) == 2)
 			int_seeds[i]^=GetTickCount();
 		else if ((i % 4) == 3)
-			int_seeds[i]^=i;
+			int_seeds[i]^=static_cast<uint32_t>(i);
 	}
 }

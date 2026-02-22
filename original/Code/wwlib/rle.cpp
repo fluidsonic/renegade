@@ -113,7 +113,7 @@ int RLEEngine::Line_Compress(void const * source, void * dest, int length) const
 	*/
 	if (dest != NULL) {
 		unsigned short * sizeptr = (unsigned short *)dest;
-		int complen = Compress(source, sizeptr+1, length) + sizeof(short);
+		int complen = Compress(source, sizeptr+1, length) + static_cast<int32_t>(sizeof(short));
 		*sizeptr = (unsigned short)complen;
 		return(complen);
 	}
@@ -122,7 +122,7 @@ int RLEEngine::Line_Compress(void const * source, void * dest, int length) const
 	**	Since no output buffer was specifed, this call merely determins how
 	**	many bytes would be consumed in the output buffer.
 	*/
-	return(Compress(source, NULL, length) + sizeof(short));
+	return(Compress(source, NULL, length) + static_cast<int32_t>(sizeof(short)));
 }
 
 /*********************************************************************************************** 
@@ -180,7 +180,7 @@ int RLEEngine::Decompress(void const * source, void * dest, int length) const
 	/*
 	**	Return with the number of bytes stored into the output buffer.
 	*/
-	return(dptr - (unsigned char const *)dest);
+	return(static_cast<int32_t>(dptr - (unsigned char const *)dest));
 }
 
 /*********************************************************************************************** 
@@ -213,5 +213,5 @@ int RLEEngine::Line_Decompress(void const * source, void * dest) const
 	/*
 	**	Process the RLE data normally.
 	*/
-	return(Decompress(sptr, dest, datalen - sizeof(short)));
+	return(Decompress(sptr, dest, datalen - static_cast<int32_t>(sizeof(short))));
 }

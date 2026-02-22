@@ -71,7 +71,7 @@ const char *ArgvClass::Find_Again(const char *arg)
 				}
 			} else {
 				// Case Sensitive, Match first strlen(arg).
-				int len = strlen(arg);			   
+				int len = static_cast<int32_t>(strlen(arg));
 				for (; CurrentPos < Argc; CurrentPos++) {
 					if (!strncmp(arg, Argv[CurrentPos], len)) {
 						return Argv[CurrentPos];
@@ -88,7 +88,7 @@ const char *ArgvClass::Find_Again(const char *arg)
 				}
 			} else {
 				// Note case sensitive, Match first strlen(arg).
-				int len = strlen(arg);
+				int len = static_cast<int32_t>(strlen(arg));
 				for (; CurrentPos < Argc; CurrentPos++) {
 					if (!strnicmp(arg, Argv[CurrentPos], len)) {
 						return Argv[CurrentPos];
@@ -127,7 +127,7 @@ int ArgvClass::Init(char *lpCmdLine, char *fileprefix)
 		return 0;
 	}
 
-	int fp_cmp_len = (fileprefix) ? strlen(fileprefix) : 0;
+	int fp_cmp_len = (fileprefix) ? static_cast<int32_t>(strlen(fileprefix)) : 0;
 
 	// Save original Argc for return.
 	int origargc = Argc;
@@ -293,7 +293,7 @@ const char *ArgvClass::Find_Value(const char *arg)
 	if (arg && *arg) {
 		const char *ptr = Find(arg);
 		if (ptr) {
-			return(Get_Cur_Value(strlen(arg)));
+			return(Get_Cur_Value(static_cast<uint32_t>(strlen(arg))));
 		}		  
 	}
 	return(NULL);

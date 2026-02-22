@@ -48,7 +48,7 @@ cClientPingManager::Think
 	{
 		if (!IsAwaitingResponse)
 		{
-			DWORD time_now_ms = TIMEGETTIME();
+			DWORD time_now_ms = static_cast<uint32_t>(TIMEGETTIME());
 			if (time_now_ms - TimeSentMs >= MIN_PING_DELAY_MS)
 			{
 				PingNumber++;
@@ -128,7 +128,7 @@ cClientPingManager::Response_Received
 {
 	if (ping_number == PingNumber)
 	{
-		LastRoundTripPingMs = TIMEGETTIME() - TimeSentMs;
+		LastRoundTripPingMs = static_cast<uint32_t>(TIMEGETTIME()) - TimeSentMs;
 		RoundTripPingSamplesMs[PingNumber % MAX_SAMPLES] = LastRoundTripPingMs;
 		Compute_Average_Round_Trip_Ping_Ms();
 		IsAwaitingResponse = false;

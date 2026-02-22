@@ -205,7 +205,7 @@ char const * RawFileClass::Set_Name(char const * filename)
 		{
 			if (Filename[i]=='\\')
 				Filename[i]='/';
-			Filename[i]=tolower(Filename[i]);  // don't preserve case
+			Filename[i]=static_cast<char>(tolower(Filename[i]));  // don't preserve case
 		}
 
 	return(Filename);
@@ -320,7 +320,7 @@ int RawFileClass::Open(int rights)
 		if (Handle == NULL_HANDLE) {
 			return(false);
 
-//			Error(GetLastError(), false, Filename);
+//			Error(static_cast<int32_t>(GetLastError()), false, Filename);
 //			continue;
 		}
 		break;
@@ -387,7 +387,7 @@ bool RawFileClass::Is_Available(int forced)
 	int closeok;
 		closeok=((fclose(Handle)==0)?TRUE:FALSE);
 	if (! closeok) {
-		Error(GetLastError(), false, Filename);
+		Error(static_cast<int32_t>(GetLastError()), false, Filename);
 	}
 	Handle = NULL_HANDLE;
 
@@ -424,7 +424,7 @@ void RawFileClass::Close(void)
 			closeok=(fclose(Handle)==0)?TRUE:FALSE;
 
 		if (!closeok) {
-			Error(GetLastError(), false, Filename);
+			Error(static_cast<int32_t>(GetLastError()), false, Filename);
 		}
 
 		/*
@@ -492,7 +492,7 @@ int RawFileClass::Read(void * buffer, int size)
 		int readok=TRUE;
 
 			readok=TRUE;
-			bytesread=fread(buffer,1,size,Handle);
+			bytesread=static_cast<long>(fread(buffer,1,static_cast<size_t>(size),Handle));
 			if ((bytesread == 0)&&( ! feof(Handle)))
 				readok=ferror(Handle);
 
@@ -514,7 +514,7 @@ int RawFileClass::Read(void * buffer, int size)
 	**	the actual number of bytes read into the buffer.
 	*/
 	if (opened) Close();
-	return(bytesread);
+	return(static_cast<int32_t>(bytesread));
 }
 
 /***********************************************************************************************
@@ -553,12 +553,12 @@ int RawFileClass::Write(void const * buffer, int size)
 	}
 
    int writeok=TRUE;
-		byteswritten = fwrite(buffer, 1, size, Handle);
+		byteswritten = static_cast<long>(fwrite(buffer, 1, static_cast<size_t>(size), Handle));
 		if (byteswritten != size)
 			writeok = FALSE;
 
 	if (! writeok) {
-		Error(GetLastError(), false, Filename);
+		Error(static_cast<int32_t>(GetLastError()), false, Filename);
 	}
 
 	/*
@@ -581,7 +581,7 @@ int RawFileClass::Write(void const * buffer, int size)
 	**	Return with the number of bytes written. This will always be the number of bytes
 	**	requested, since the case of the disk being full is caught by this routine.
 	*/
-	return(byteswritten);
+	return(static_cast<int32_t>(byteswritten));
 }
 
 /***********************************************************************************************
@@ -647,7 +647,7 @@ int RawFileClass::Seek(int pos, int dir)
 		if (newpos > BiasLength) {
 			newpos = Raw_Seek(BiasStart+BiasLength, SEEK_SET) - BiasStart;
 		}
-		return(newpos);
+		return(static_cast<int32_t>(newpos));
 	}
 
 	/*
@@ -698,14 +698,14 @@ int RawFileClass::Size(void)
 			fseek(Handle,0,SEEK_END);
 			fgetpos(Handle,&endpos);
 
-			size=endpos-startpos;
+			size=static_cast<int32_t>(endpos-startpos);
 			fsetpos(Handle,&curpos);
 
 		/*
 		**	If there was in internal error, then call the error function.
 		*/
 		if (size == 0xFFFFFFFF) {
-			Error(GetLastError(), false, Filename);
+			Error(static_cast<int32_t>(GetLastError()), false, Filename);
 		}
 
 	} else {
@@ -817,7 +817,7 @@ int RawFileClass::Delete(void)
 			deleteok=(unlink(Filename)==0)?TRUE:FALSE;
 
 		if (! deleteok) {
-			Error(GetLastError(), false, Filename);
+			Error(static_cast<int32_t>(GetLastError()), false, Filename);
 			return(false);
 		}
 		break;
@@ -849,7 +849,7 @@ unsigned long RawFileClass::Get_Date_Time(void)
 {
 	struct stat statbuf;
 	lstat(Filename, &statbuf);
-	return(statbuf.st_mtime);
+	return(static_cast<unsigned long>(statbuf.st_mtime));
 }
 
 /***********************************************************************************************
@@ -951,9 +951,9 @@ int RawFileClass::Raw_Seek(int pos, int dir)
 	}
 
 	pos = fseek(Handle, pos, dir) == -1;
-    if (pos == 0) pos = ftell(Handle);
+    if (pos == 0) pos = static_cast<int32_t>(ftell(Handle));
 	if (pos == -1) {
-		Error(GetLastError(), false, Filename);
+		Error(static_cast<int32_t>(GetLastError()), false, Filename);
 		return Size();
 	}
 

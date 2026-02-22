@@ -114,7 +114,7 @@ CNCPurchaseMenuClass::On_Init_Dialog (void)
 				//
 				//	Configure the merchandise settings
 				//
-				int cost = Definition->Get_Cost (index) * CostScalingFactor;
+				int cost = static_cast<int32_t>(Definition->Get_Cost (index) * CostScalingFactor);
 				ctrl->Set_Text (Definition->Get_Name (index));
 				ctrl->Set_Cost (cost);
 				ctrl->Set_Texture (Definition->Get_Texture (index));
@@ -278,7 +278,7 @@ CNCPurchaseMenuClass::Add_Item_To_Shopping_Cart (int ctrl_id)
 	//
 
 	int funds	= (int) COMBAT_STAR->Get_Player_Data ()->Get_Money ();
-	int cost		= Definition->Get_Cost (item_index) * CostScalingFactor;
+	int cost		= static_cast<int32_t>(Definition->Get_Cost (item_index) * CostScalingFactor);
 	if ((TotalCost + cost) <= funds) {
 		
 		//
@@ -777,7 +777,7 @@ CNCPurchaseMenuClass::Update_Enabled_Status (void)
 				//
 				//	Configure the merchandise settings
 				//
-				int cost = Definition->Get_Cost (index) * CostScalingFactor;
+				int cost = static_cast<int32_t>(Definition->Get_Cost (index) * CostScalingFactor);
 
 				//
 				//	Disable any options that cost money if production is disabled

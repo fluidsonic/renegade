@@ -237,7 +237,7 @@ bool IndexClass<INDEX, T>::Increase_Table_Size(int amount)
 	*/
 	if (amount < 0) return(false);
 
-	NodeElement * table = new NodeElement[IndexSize + amount];
+	NodeElement * table = new NodeElement[static_cast<size_t>(IndexSize + amount)];
 	if (table != NULL) {
 
 		/*
@@ -620,7 +620,7 @@ IndexClass<INDEX, T>::NodeElement const * IndexClass<INDEX, T>::Search_For_Node(
 	**	the list to be sorted.
 	*/
 	if (!IsSorted) {
-		qsort(&IndexTable[0], IndexCount, sizeof(IndexTable[0]), search_compfunc);
+		qsort(&IndexTable[0], static_cast<size_t>(IndexCount), sizeof(IndexTable[0]), search_compfunc);
 		Invalidate_Archive();
 		IsSorted = true;
 	}

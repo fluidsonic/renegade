@@ -1725,7 +1725,7 @@ public:
 			HasArrived = true;
 			SoldierGameObj	* obj = Action->Get_Action_Obj()->As_SoldierGameObj();
 			if ( obj != NULL ) {
-				int observer_id = Action->Get_Parameters ().ObserverID;
+				int observer_id = static_cast<int32_t>(Action->Get_Parameters ().ObserverID);
 				if ( observer_id != 0 ) {
 					const GameObjObserverList & observer_list = obj->Get_Observers();
 					for( int index = 0; index < observer_list.Count(); index++ ) {
@@ -2657,7 +2657,7 @@ public:
 			//	Let the observer know that the vehicle will be
 			// backing into the bay
 			//
-			int observer_id = Action->Get_Parameters ().ObserverID;
+			int observer_id = static_cast<int32_t>(Action->Get_Parameters ().ObserverID);
 			if ( observer_id != 0 ) {
 				const GameObjObserverList & observer_list = obj->Get_Observers();
 				for( int index = 0; index < observer_list.Count(); index++ ) {
@@ -2958,7 +2958,7 @@ void	ActionClass::Done( int reason )
 	Parameters.Priority = 0;		// reset
 	if ( ActionCode != NULL ) {
 		Set_Action_Code( NULL );
-		Notify_Completed( Parameters.ObserverID, Parameters.ActionID, reason );	// Notify the observer
+		Notify_Completed( static_cast<int32_t>(Parameters.ObserverID), Parameters.ActionID, reason );	// Notify the observer
 	}
 }
 
@@ -3021,7 +3021,7 @@ bool	ActionClass::Request_Action( ActionCodeClass * action, const ActionParamsSt
 
 		if ( ActionCode != NULL ) {
 			old_action_completed = true;
-			old_observer_id = Parameters.ObserverID;
+			old_observer_id = static_cast<int32_t>(Parameters.ObserverID);
 			old_action_id = Parameters.ActionID;
 		}
 		Parameters = parameters;
@@ -3032,7 +3032,7 @@ bool	ActionClass::Request_Action( ActionCodeClass * action, const ActionParamsSt
 		}
 		return true;
 	} else {
-		Notify_Completed( parameters.ObserverID, parameters.ActionID, ACTION_COMPLETE_LOW_PRIORITY );
+		Notify_Completed( static_cast<int32_t>(parameters.ObserverID), parameters.ActionID, ACTION_COMPLETE_LOW_PRIORITY );
 		if ( action != NULL ) {
 			delete action;
 		}

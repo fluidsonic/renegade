@@ -3077,7 +3077,7 @@ DECLARE_SCRIPT(M04_EngineRoom_Prisoner_01_JDG, "")//this guys ID number is M04_P
 		{
 			if (damager == STAR )
 			{	
-				int myMaxHealth = Commands->Get_Max_Health ( obj );
+				int32_t myMaxHealth = static_cast<int32_t>(Commands->Get_Max_Health ( obj ));
 				Commands->Set_Health ( obj, myMaxHealth );
 
 				if (firstTimeDamaged == true)
@@ -3244,7 +3244,7 @@ DECLARE_SCRIPT(M04_EngineRoom_Prisoner_02_JDG, "")//this guys ID number is M04_P
 	{
 		if (obj && damager == STAR)
 		{
-			int myMaxHealth = Commands->Get_Max_Health ( obj );
+			int32_t myMaxHealth = static_cast<int32_t>(Commands->Get_Max_Health ( obj ));
 			Commands->Set_Health ( obj, myMaxHealth );
 
 			if (firstTimeDamaged == true)
@@ -3275,7 +3275,7 @@ DECLARE_SCRIPT(M04_EngineRoom_Prisoner_02_JDG, "")//this guys ID number is M04_P
 	{
 		if (obj && damager == STAR)
 		{
-			int myMaxHealth = Commands->Get_Max_Health ( obj );
+			int32_t myMaxHealth = static_cast<int32_t>(Commands->Get_Max_Health ( obj ));
 			Commands->Set_Health ( obj, myMaxHealth );
 
 			if (firstTimeDamaged == true)
@@ -3352,7 +3352,7 @@ DECLARE_SCRIPT(M04_EngineRoom_Prisoner_03_JDG, "")//this guys ID number is M04_P
 		ActionParamsStruct params;
 		if (obj && damager == STAR)
 		{
-			int myMaxHealth = Commands->Get_Max_Health ( obj );
+			int32_t myMaxHealth = static_cast<int32_t>(Commands->Get_Max_Health ( obj ));
 			Commands->Set_Health ( obj, myMaxHealth );
 
 			if (firstTimeDamaged == true)

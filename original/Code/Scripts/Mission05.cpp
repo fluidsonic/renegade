@@ -1574,9 +1574,9 @@ DECLARE_SCRIPT(M05_Mendoza, "")
 			health -= damage;
 			Commands->Set_Health(obj, health);
 		}
-		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .23))
+		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .23f))
 		{
-			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .23) );
+			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .23f) );
 			
 			if(!exiting)
 			{
@@ -2358,8 +2358,8 @@ DECLARE_SCRIPT(M05_Escapee_Brother, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * 1.5;
-			float b = sin(DEG_TO_RADF(facing)) * 1.5;
+			float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+			float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 			Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 			Commands->Create_Object("POW_PersonalIonCannon_Player", powerup_loc);
 
@@ -3513,9 +3513,9 @@ DECLARE_SCRIPT(M05_Mendoza3, "")
 			health -= damage;
 			Commands->Set_Health(obj, health);
 		}
-		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .13))
+		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .13f))
 		{
-			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .13) );
+			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .13f) );
 			
 			if(!exiting)
 			{
@@ -3790,9 +3790,9 @@ DECLARE_SCRIPT(M05_Mendoza4, "")
 			health -= damage;
 			Commands->Set_Health(obj, health);
 		}
-		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .13))
+		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .13f))
 		{
-			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .13) );
+			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .13f) );
 			
 			if(!exiting)
 			{
@@ -5742,8 +5742,8 @@ DECLARE_SCRIPT(M05_Execution_Civilian, "")
 
 			Vector3 pos = Commands->Get_Position(obj);
 			float facing = Commands->Get_Facing(obj);
-			float a = cos(DEG_TO_RADF(facing)) * 1.5;
-			float b = sin(DEG_TO_RADF(facing)) * 1.5;
+			float a = cos(DEG_TO_RADF(facing)) * 1.5f;
+			float b = sin(DEG_TO_RADF(facing)) * 1.5f;
 			Vector3 powerup_loc = pos + Vector3(a, b, 0.5f);
 			Commands->Create_Object("tw_POW00_Health", powerup_loc);
 
@@ -5911,9 +5911,9 @@ DECLARE_SCRIPT(M05_Entrapment_Mendoza, "")
 			health -= damage;
 			Commands->Set_Health(obj, health);
 		}
-		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .23))
+		if((Commands->Get_Health(obj)) < (Commands->Get_Max_Health(obj) * .23f))
 		{
-			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .23) );
+			Commands->Set_Health( obj, (Commands->Get_Max_Health(obj) * .23f) );
 			
 			if(!exiting)
 			{
@@ -6589,11 +6589,11 @@ DECLARE_SCRIPT(M05_Building_Debris, "")
 
 	void Created (GameObject * obj)
 	{
-		health = Commands->Get_Max_Health(obj);
+		health = static_cast<int32_t>(Commands->Get_Max_Health(obj));
 		//Commands->Set_Shield_Type ( obj, "ShieldKevlar" );
 	}
 
-	void Damaged( GameObject * obj, GameObject * damager, float amount ) 
+	void Damaged( GameObject * obj, GameObject * damager, float amount )
 	{
 		if(Commands->Get_Player_Type(damager) == SCRIPT_PLAYERTYPE_NOD)
 		{
@@ -6601,7 +6601,7 @@ DECLARE_SCRIPT(M05_Building_Debris, "")
 		}
 		else
 		{
-			health = Commands->Get_Health(obj);
+			health = static_cast<int32_t>(Commands->Get_Health(obj));
 		}
 	}
 

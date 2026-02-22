@@ -537,7 +537,7 @@ void DlgMPTeamSelect::AddLANPlayerInfo(cPlayer* player)
 		{
 		list->Set_Entry_Text(itemIndex, COL_NAME, player->Get_Name());
 		list->Set_Entry_Int(itemIndex, COL_RANK, player->Get_Rung());
-		list->Set_Entry_Int(itemIndex, COL_SCORE, player->Get_Score());
+		list->Set_Entry_Int(itemIndex, COL_SCORE, static_cast<int32_t>(player->Get_Score()));
 
 		WideStringClass text(0, true);
 		text.Format(u"%d/%d", player->Get_Kills(), player->Get_Deaths());

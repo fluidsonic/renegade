@@ -116,7 +116,7 @@ int RandomStraw::Seed_Bits_Needed(void) const
  *=============================================================================================*/
 void RandomStraw::Seed_Bit(int seed)
 {
-	char * ptr = ((char *)&Random[0]) + ((SeedBits / CHAR_BIT) % sizeof(Random));
+	char * ptr = ((char *)&Random[0]) + ((SeedBits / CHAR_BIT) % static_cast<int32_t>(sizeof(Random)));
 	char frac = (char)(1 << (SeedBits & (CHAR_BIT-1)));
 
 	if (seed & 0x01) {
@@ -167,7 +167,7 @@ void RandomStraw::Seed_Byte(char seed)
  *=============================================================================================*/
 void RandomStraw::Seed_Short(short seed)
 {
-	for (int index = 0; index < (sizeof(seed)*CHAR_BIT); index++) {
+	for (int index = 0; index < static_cast<int32_t>(sizeof(seed)*CHAR_BIT); index++) {
 		Seed_Bit(seed);
 		seed >>= 1;
 	}
@@ -189,8 +189,8 @@ void RandomStraw::Seed_Short(short seed)
  *=============================================================================================*/
 void RandomStraw::Seed_Long(long seed)
 {
-	for (int index = 0; index < (sizeof(seed)*CHAR_BIT); index++) {
-		Seed_Bit(seed);
+	for (int index = 0; index < static_cast<int32_t>(sizeof(seed)*CHAR_BIT); index++) {
+		Seed_Bit(static_cast<int32_t>(seed));
 		seed >>= 1;
 	}
 }
@@ -217,14 +217,14 @@ void RandomStraw::Scramble_Seed(void)
 {
 	SHAEngine sha;
 
-	for (int index = 0; index < sizeof(Random); index++) {
+	for (int index = 0; index < static_cast<int32_t>(sizeof(Random)); index++) {
 		char digest[20];
 
 		sha.Hash(&Random[0], sizeof(Random));
 		sha.Result(digest);
 
-		int tocopy = sizeof(digest) < (sizeof(Random)-index) ? sizeof(digest) : (sizeof(Random)-index);
-		memmove(((char *)&Random[0]) + index, digest, tocopy);
+		int tocopy = static_cast<int32_t>(sizeof(digest) < (sizeof(Random) - static_cast<size_t>(index)) ? sizeof(digest) : (sizeof(Random) - static_cast<size_t>(index)));
+		memmove(((char *)&Random[0]) + index, digest, static_cast<size_t>(tocopy));
 	}
 }
 
@@ -255,7 +255,7 @@ int RandomStraw::Get(void * source, int slen)
 	int total = 0;
 	while (slen > 0) {
 		*(char *)source = (char)(Random[Current++]());
-		Current = Current % (sizeof(Random) / sizeof(Random[0]));
+		Current = Current % static_cast<int32_t>(sizeof(Random) / sizeof(Random[0]));
 		source = (char*)source + sizeof(char);
 		slen--;
 		total++;
