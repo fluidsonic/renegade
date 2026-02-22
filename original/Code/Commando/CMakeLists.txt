@@ -1,7 +1,7 @@
 set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 set(COMPAT_DIR "${CMAKE_SOURCE_DIR}/compat")
 
-file(GLOB COMMANDO_SOURCES "${ORIG_SRC}/Commando/*.cpp")
+file(GLOB COMMANDO_SOURCES CONFIGURE_DEPENDS "${ORIG_SRC}/Commando/*.cpp")
 
 # ---- Compile chat.rc → chat.res using llvm-rc ----
 find_program(LLVM_RC NAMES llvm-rc
