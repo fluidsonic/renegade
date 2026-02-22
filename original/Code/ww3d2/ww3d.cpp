@@ -1,5 +1,4 @@
 #include "global.h"
-#include <stdio.h>
 #include "ww3d.h"
 #include "rinfo.h"
 #include "assetmgr.h"
@@ -773,16 +772,6 @@ WW3DErrorType WW3D::Render(SceneClass * scene,CameraClass * cam,bool clear,bool 
 		return(WW3D_ERROR_OK);
 	}
 
-	static int _ww3d_render_n = 0;
-	bool _log = (++_ww3d_render_n <= 3);
-	if (_log) {
-		Vector3 camPos = cam->Get_Transform().Get_Translation();
-		fprintf(stderr, "[WW3D::Render] #%d scene=%p cam=%p pos=(%.1f,%.1f,%.1f) clear=%d/%d clearColor=(%.2f,%.2f,%.2f)\n",
-			_ww3d_render_n, (void*)scene, (void*)cam,
-			camPos.X, camPos.Y, camPos.Z, (int)clear, (int)clearz,
-			color.X, color.Y, color.Z);
-	}
-
 	cam->On_Frame_Update();
 	RenderInfoClass rinfo(*cam);
 
@@ -816,12 +805,9 @@ WW3DErrorType WW3D::Render(SceneClass * scene,CameraClass * cam,bool clear,bool 
 
 	TheDX8MeshRenderer.Set_Camera(&rinfo.Camera);
 
-	if (_log) fprintf(stderr, "[WW3D::Render] calling scene->Render\n");
 	scene->Render(rinfo);
 
-	if (_log) fprintf(stderr, "[WW3D::Render] calling Flush\n");
 	Flush(rinfo);
-	if (_log) fprintf(stderr, "[WW3D::Render] done\n");
 
 	return WW3D_ERROR_OK;
 }
@@ -892,15 +878,9 @@ WW3DErrorType WW3D::Render(
  *=============================================================================================*/
 void WW3D::Flush(RenderInfoClass & rinfo)
 {
-	static int _flush_n = 0;
-	bool _log = (++_flush_n <= 3);
-	if (_log) fprintf(stderr, "[WW3D::Flush] #%d calling DX8MeshRenderer.Flush\n", _flush_n);
 	TheDX8MeshRenderer.Flush();
-	if (_log) fprintf(stderr, "[WW3D::Flush] #%d calling Render_And_Clear_Static_Sort_Lists\n", _flush_n);
 	WW3D::Render_And_Clear_Static_Sort_Lists(rinfo);
-	if (_log) fprintf(stderr, "[WW3D::Flush] #%d calling SortingRendererClass::Flush\n", _flush_n);
 	SortingRendererClass::Flush();
-	if (_log) fprintf(stderr, "[WW3D::Flush] #%d done\n", _flush_n);
 	TheDX8MeshRenderer.Clear_Pending_Delete_Lists();
 }
 
@@ -932,12 +912,7 @@ WW3DErrorType WW3D::End_Render(bool flip_frame)
 
 	IsRendering = false;
 
-	{
-		static int _end_n = 0;
-		if (++_end_n <= 3)
-			fprintf(stderr, "[WW3D::End_Render] #%d flip=%d calling End_Scene\n", _end_n, (int)flip_frame);
-		DX8Wrapper::End_Scene(flip_frame);
-	}
+	DX8Wrapper::End_Scene(flip_frame);
 
 	FrameCount++;
 

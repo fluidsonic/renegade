@@ -1303,10 +1303,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     }
 
     HRESULT Present(const RECT*, const RECT*, HWND, const void*) override {
-        static unsigned s_present_n = 0;
-        if (++s_present_n <= 5) {
-            fprintf(stderr, "[Present] #%u swapping buffers\n", s_present_n);
-        }
         SDL2_Platform_SwapWindow();
         return S_OK;
     }
@@ -1315,15 +1311,10 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     HRESULT EndScene()   override { report_frame_stats(); return S_OK; }
 
     HRESULT Clear(DWORD count, const D3DRECT* pRects, DWORD flags, D3DCOLOR color, float z, DWORD stencil) override {
-        static unsigned s_clear_n = 0;
         float r = ColorComponent(color, 16);
         float g = ColorComponent(color,  8);
         float b = ColorComponent(color,  0);
         float a = ColorComponent(color, 24);
-        if (++s_clear_n <= 6) {
-            fprintf(stderr, "[Clear] #%u flags=0x%X color=(%.2f,%.2f,%.2f,%.2f) depth=%.4f\n",
-                s_clear_n, (unsigned)flags, r, g, b, a, z);
-        }
         glClearColor(r, g, b, a);
         glClearDepth(z);
         glClearStencil(stencil);
@@ -1332,9 +1323,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         if (flags & D3DCLEAR_ZBUFFER) mask |= GL_DEPTH_BUFFER_BIT;
         if (flags & D3DCLEAR_STENCIL) mask |= GL_STENCIL_BUFFER_BIT;
         if (mask) glClear(mask);
-        GLenum err = glGetError();
-        if (err && s_clear_n <= 6)
-            fprintf(stderr, "[Clear] GL error: 0x%x\n", err);
         return S_OK;
     }
 
@@ -1342,12 +1330,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         if (!vp) return E_POINTER;
         // D3D viewport Y is top-down; GL is bottom-up — flip Y
         int glY = height - (vp->Y + vp->Height);
-        static unsigned s_vp_n = 0;
-        if (++s_vp_n <= 5) {
-            fprintf(stderr, "[Viewport] #%u d3d=(%d,%d %dx%d minZ=%.3f maxZ=%.3f) -> glY=%d (device %dx%d)\n",
-                s_vp_n, (int)vp->X, (int)vp->Y, (int)vp->Width, (int)vp->Height,
-                vp->MinZ, vp->MaxZ, glY, width, height);
-        }
         glViewport(vp->X, glY, vp->Width, vp->Height);
         glDepthRange(vp->MinZ, vp->MaxZ);
         return S_OK;
