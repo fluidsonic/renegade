@@ -28,6 +28,7 @@ class VendorClass(private val server: GameServer) {
         val responseId: Int,
         val purchasedDefId: Int = 0,
         val isVehiclePurchase: Boolean = false,
+        val isEquipmentPurchase: Boolean = false,
     )
 
     /**
@@ -40,12 +41,6 @@ class VendorClass(private val server: GameServer) {
      * @return [PurchaseResult] with responseId and purchased definition ID
      */
     fun handlePurchase(rhostId: Int, purchaseType: Int, itemIndex: Int, altSkinIndex: Int): PurchaseResult {
-        // Equipment purchases not yet implemented
-        if (purchaseType == PURCHASE_EQUIPMENT) {
-            println("[VENDOR] equipment purchase denied (not implemented) for rhostId=$rhostId")
-            return PurchaseResult(RESPONSE_DENIED)
-        }
-
         // Resolve player team
         val playerType = server.god.playerTeams[rhostId]
         if (playerType == null) {
@@ -127,6 +122,12 @@ class VendorClass(private val server: GameServer) {
         println("[VENDOR] purchase success: rhostId=$rhostId type=$purchaseType index=$itemIndex " +
             "defId=$defId cost=$cost remaining=${player.money}")
 
-        return PurchaseResult(RESPONSE_SUCCESS, purchasedDefId = defId, isVehiclePurchase = isVehiclePurchase)
+        val isEquipmentPurchase = purchaseType == PURCHASE_EQUIPMENT
+        return PurchaseResult(
+            responseId          = RESPONSE_SUCCESS,
+            purchasedDefId      = defId,
+            isVehiclePurchase   = isVehiclePurchase,
+            isEquipmentPurchase = isEquipmentPurchase,
+        )
     }
 }
