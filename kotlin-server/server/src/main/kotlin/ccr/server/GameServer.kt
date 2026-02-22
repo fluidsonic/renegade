@@ -175,77 +175,7 @@ class GameServer(internal val config: ServerConfig) {
 
     suspend fun run() = coroutineScope {
         loadLevel()        // Load level data (definitions, world extents, spawners) from MIX files
-        initEncoders()     // Configure all BITPACK_* encoders from loaded world extents
-
-        // Initialise SpawnManager from loaded level (if available)
-        loadedLevel?.also { level ->
-            if (level.dynamicData.spawners.isNotEmpty()) {
-                spawnManager = SpawnManager(level)
-                spawnManager?.onCreatePowerUp = { position, def ->
-                    createPowerUp(position, def)
-                }
-            }
-        }
-
-        // Initialise base controllers and building network objects from loaded level.
-        // Force gameContext initialisation so baseControllers array is ready before buildings use it.
-        val ctx = gameContext
-        loadedLevel?.also { level ->
-            val loadedBuildings = level.dynamicData.gameObjects.filterIsInstance<LoadedBuildingGameObj>()
-            if (loadedBuildings.isNotEmpty()) {
-                val controllerNod = BaseControllerClass(playerType = 0)
-                val controllerGdi = BaseControllerClass(playerType = 1)
-                NetworkObjectManager.registerObject(controllerNod, NET_ID_BASE_CONTROLLER_NOD)
-                NetworkObjectManager.registerObject(controllerGdi, NET_ID_BASE_CONTROLLER_GDI)
-                controllerNod.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
-                controllerGdi.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
-                baseControllerNod = controllerNod
-                baseControllerGdi = controllerGdi
-                ctx.baseControllers[0] = controllerNod
-                ctx.baseControllers[1] = controllerGdi
-
-                println("[BUILDING] found ${loadedBuildings.size} buildings in LDD")
-                for (lb in loadedBuildings) {
-                    val building = createBuilding(lb) ?: continue
-                    NetworkObjectManager.registerObject(building, lb.networkId)
-                    building.gameContext = ctx
-                    val controller = when (lb.playerType) {
-                        0 -> { controllerNod.addBuilding(building); controllerNod }
-                        1 -> { controllerGdi.addBuilding(building); controllerGdi }
-                        else -> null
-                    }
-                    if (controller != null) {
-                        building.cncInitialize(controller)
-                    }
-                    // Wire vehicle factory delivery callback so purchased vehicles spawn in-world
-                    if (building is VehicleFactoryGameObj) {
-                        val baseCtrl = when (lb.playerType) {
-                            0 -> controllerNod
-                            1 -> controllerGdi
-                            else -> null
-                        }
-                        building.onVehicleReady = { defId, buyerRhostId ->
-                            if (buyerRhostId == ccr.server.net.BaseControllerClass.HARVESTER_BUYER_ID) {
-                                // Harvester delivery — find the refinery that requested it
-                                val refinery = baseCtrl?.getBuildings()
-                                    ?.filterIsInstance<ccr.server.net.RefineryGameObj>()
-                                    ?.firstOrNull { !it.isDestroyed && it.harvesterVehicle == null && it.harvesterDefId == defId }
-                                if (refinery != null) {
-                                    val vehicle = god.createHarvester(building.playerType, defId, refinery.position)
-                                    if (vehicle != null) refinery.harvesterVehicle = vehicle
-                                }
-                            } else {
-                                god.createVehicle(buyerRhostId, defId, building.position)
-                            }
-                        }
-                    }
-                    gameObjManager.add(building)
-                    gameObjManager.addBuilding(building)
-                    println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
-                }
-                println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
-            }
-        }
+        initializeLevel()  // Set up encoders, SpawnManager, buildings and base controllers
 
         // Register WeatherMgr and BackgroundMgr singletons with well-known static IDs.
         val weatherMgr = WeatherMgr()
@@ -440,10 +370,17 @@ class GameServer(internal val config: ServerConfig) {
                 }
             }
 
-            // Core restart after intermission
+            // Core restart after intermission: rotate to next map or same-map restart
             if (gameState.pendingCoreRestart) {
                 gameState.pendingCoreRestart = false
-                handleCoreRestart()
+                val nextMap = mapRotation.nextName()
+                if (nextMap != null) {
+                    mapRotation = mapRotation.advance()
+                    handleMapRotation(nextMap)
+                } else {
+                    mapRotation = mapRotation.advance()  // reset index to 0 for next cycle
+                    handleCoreRestart()
+                }
             }
 
             // GameObjManager.think() — drives building Think() loops (refinery trickle, war factory timer, etc.)
@@ -1194,6 +1131,140 @@ class GameServer(internal val config: ServerConfig) {
         }
 
         println("[GAME] core restart complete — hostedGameNumber=$hostedGameNumber")
+    }
+
+    private fun initializeLevel() {
+        initEncoders()  // must run before building encoders
+
+        loadedLevel?.also { level ->
+            if (level.dynamicData.spawners.isNotEmpty()) {
+                spawnManager = SpawnManager(level).also { sm ->
+                    sm.onCreatePowerUp = { position, def -> createPowerUp(position, def) }
+                }
+            }
+        }
+
+        // Force gameContext initialisation so baseControllers array is ready before buildings use it.
+        val ctx = gameContext
+        loadedLevel?.also { level ->
+            val loadedBuildings = level.dynamicData.gameObjects.filterIsInstance<LoadedBuildingGameObj>()
+            if (loadedBuildings.isNotEmpty()) {
+                val controllerNod = BaseControllerClass(playerType = 0)
+                val controllerGdi = BaseControllerClass(playerType = 1)
+                NetworkObjectManager.registerObject(controllerNod, NET_ID_BASE_CONTROLLER_NOD)
+                NetworkObjectManager.registerObject(controllerGdi, NET_ID_BASE_CONTROLLER_GDI)
+                controllerNod.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+                controllerGdi.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+                baseControllerNod = controllerNod
+                baseControllerGdi = controllerGdi
+                ctx.baseControllers[0] = controllerNod
+                ctx.baseControllers[1] = controllerGdi
+
+                println("[BUILDING] found ${loadedBuildings.size} buildings in LDD")
+                for (lb in loadedBuildings) {
+                    val building = createBuilding(lb) ?: continue
+                    NetworkObjectManager.registerObject(building, lb.networkId)
+                    building.gameContext = ctx
+                    val controller = when (lb.playerType) {
+                        0 -> { controllerNod.addBuilding(building); controllerNod }
+                        1 -> { controllerGdi.addBuilding(building); controllerGdi }
+                        else -> null
+                    }
+                    if (controller != null) building.cncInitialize(controller)
+                    // Wire vehicle factory delivery callback so purchased vehicles spawn in-world
+                    if (building is VehicleFactoryGameObj) {
+                        val baseCtrl = when (lb.playerType) {
+                            0 -> controllerNod
+                            1 -> controllerGdi
+                            else -> null
+                        }
+                        building.onVehicleReady = { defId, buyerRhostId ->
+                            if (buyerRhostId == ccr.server.net.BaseControllerClass.HARVESTER_BUYER_ID) {
+                                // Harvester delivery — find the refinery that requested it
+                                val refinery = baseCtrl?.getBuildings()
+                                    ?.filterIsInstance<ccr.server.net.RefineryGameObj>()
+                                    ?.firstOrNull { !it.isDestroyed && it.harvesterVehicle == null && it.harvesterDefId == defId }
+                                if (refinery != null) {
+                                    val vehicle = god.createHarvester(building.playerType, defId, refinery.position)
+                                    if (vehicle != null) refinery.harvesterVehicle = vehicle
+                                }
+                            } else {
+                                god.createVehicle(buyerRhostId, defId, building.position)
+                            }
+                        }
+                    }
+                    gameObjManager.add(building)
+                    gameObjManager.addBuilding(building)
+                    println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
+                }
+                println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
+            }
+        }
+    }
+
+    private fun unloadLevel() {
+        println("[SERVER] unloading level '$currentMapName'")
+
+        // Unregister buildings from NetworkObjectManager
+        for (building in gameObjManager.getBuildingList().toList()) {
+            NetworkObjectManager.unregisterObject(building)
+        }
+
+        // Unregister base controllers
+        baseControllerNod?.let { NetworkObjectManager.unregisterObject(it) }
+        baseControllerGdi?.let { NetworkObjectManager.unregisterObject(it) }
+        baseControllerNod = null
+        baseControllerGdi = null
+        gameContext.baseControllers[0] = null
+        gameContext.baseControllers[1] = null
+
+        // Clear all ticking game objects (buildings, any remaining C4/beacons)
+        gameObjManager.destroyAll()
+
+        // Clear level-specific state
+        spawnManager = null
+        loadedLevel = null
+
+        // Reset weapon/soldier def IDs (repopulated by loadLevel)
+        nodSoldierDefId = config.nodSoldierDefId
+        gdiSoldierDefId = config.gdiSoldierDefId
+        pistolWeaponDefId = 0
+        timedC4WeaponDefId = 0
+        tossedC4DefId = 0
+        beaconWeaponDefId = 0
+
+        println("[SERVER] level unloaded")
+    }
+
+    private suspend fun handleMapRotation(nextMapName: String) {
+        println("[GAME] map rotation → '$nextMapName'")
+        hostedGameNumber++
+        teamNod.reset()
+        teamGdi.reset()
+        gameState.reset()
+
+        // Reset all player scores
+        for (player in god.playersByHost.values) {
+            player.resetStats()
+        }
+
+        // Delete all soldiers (re-spawned by god.think() after level init)
+        for (rhostId in god.playerInGame.toList()) {
+            god.deleteSoldier(rhostId)
+        }
+
+        // Unload the current level
+        unloadLevel()
+
+        // Update runtime map name and gameData CRC
+        currentMapName = nextMapName
+        gameData.mapNameCrc = if (nextMapName.isEmpty()) 0 else crcStringi(nextMapName)
+
+        // Load and initialize the new level
+        loadLevel(nextMapName)
+        initializeLevel()
+
+        println("[GAME] map rotation complete — now on '$nextMapName', hostedGameNumber=$hostedGameNumber")
     }
 
     private fun createBuilding(lb: LoadedBuildingGameObj): BuildingGameObj? {
