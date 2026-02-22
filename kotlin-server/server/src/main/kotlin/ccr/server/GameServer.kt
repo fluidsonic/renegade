@@ -113,6 +113,15 @@ class GameServer(internal val config: ServerConfig) {
     // Loaded level data (definitions, static/dynamic data, spawners).
     internal var loadedLevel: LoadedLevel? = null
 
+    // Map rotation state (advanced at each round end)
+    private var mapRotation: MapRotation = MapRotation(
+        maps = config.effectiveMapList,
+        loops = config.mapCycleLoops,
+    )
+
+    // Runtime name of the currently active map (may differ from config.mapName after rotation)
+    private var currentMapName: String = mapRotation.currentName
+
     // Soldier definition IDs loaded from always.dat at startup; fall back to config values.
     internal var nodSoldierDefId: Int = config.nodSoldierDefId
     internal var gdiSoldierDefId: Int = config.gdiSoldierDefId
@@ -1142,7 +1151,7 @@ class GameServer(internal val config: ServerConfig) {
             winner = winner,
             loser = loser,
             hostedGameNumber = hostedGameNumber,
-            isMapCycleOver = false,
+            isMapCycleOver = mapRotation.isMapCycleOver,
             winType = winType,
             gameDuration = gameState.gameDurationSeconds.toInt(),
             mvpName = mvpName,
@@ -1263,7 +1272,7 @@ class GameServer(internal val config: ServerConfig) {
     // Loads level data from MIX files using LevelLoader. Populates loadedLevel, and extracts
     // soldier/weapon definition IDs for spawning. Falls back to the legacy loadDefinitions() path
     // if the map MIX is not available.
-    private suspend fun loadLevel() {
+    private suspend fun loadLevel(mapName: String = currentMapName) {
         val dataDir = if (config.dataPath.isNotEmpty()) File(config.dataPath) else File(".")
 
         // Find always MIX (Renegade loads Always2.dat, Always.dbs, Always.dat in init.cpp)
@@ -1280,14 +1289,14 @@ class GameServer(internal val config: ServerConfig) {
             }
         }
 
-        if (config.mapName.isEmpty()) {
+        if (mapName.isEmpty()) {
             println("[SERVER] no MapName configured, skipping level load")
             loadDefinitions()  // fall back to legacy path for definitions only
             return
         }
 
-        val baseName = if (config.mapName.endsWith(".mix", ignoreCase = true))
-            config.mapName.dropLast(4) else config.mapName
+        val baseName = if (mapName.endsWith(".mix", ignoreCase = true))
+            mapName.dropLast(4) else mapName
         val mixFile = File(dataDir, "$baseName.mix")
         if (!mixFile.exists()) {
             println("[SERVER] map MIX not found: ${mixFile.absolutePath}, falling back to legacy loading")

@@ -25,7 +25,7 @@ class GameData(config: ServerConfig, localIp: Int) {
     val isPassworded: Boolean = config.isPassworded
     val isLaddered: Boolean = config.isLaddered
     val isClanGame: Boolean = config.isClanGame
-    val mapNameCrc: Int = config.mapNameCrc
+    var mapNameCrc: Int = config.mapNameCrc
     val modNameCrc: Int = config.modNameCrc
 
     // Tier 2 fields (static from config)
