@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cScoreEvent — classId = NETCLASSID_SCOREEVENT = 1029
+// C++: cScoreEvent — networkClassId = NETCLASSID_SCOREEVENT = 1029
 // Client→Server event for score adjustments.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

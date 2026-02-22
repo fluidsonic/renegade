@@ -21,17 +21,23 @@ object LddParser {
         val spawners = mutableListOf<LoadedSpawner>()
         val scripts = mutableListOf<String>()
 
-        reader.forEachChunk { chunkId, _, chunkReader ->
+        reader.forEachChunk { chunkId, isContainer, chunkReader ->
             when (chunkId) {
                 ChunkIds.CHUNKID_LEVEL_INFO -> {
                     levelInfo = LevelInfoLoader.load(chunkReader)
                 }
                 ChunkIds.CHUNKID_LEVEL_DATA -> {
                     chunkReader.forEachChunk { subId, _, subReader ->
-                        when (subId) {
-                            ChunkIds.CHUNKID_GAMEOBJMANAGER -> parseGameObjects(subReader, gameObjects)
-                            ChunkIds.CHUNKID_SPAWNERS -> spawners.addAll(SpawnerLoader.load(subReader))
-                            ChunkIds.CHUNKID_SCRIPTS -> parseScripts(subReader, scripts)
+                        // Game objects/spawners/scripts are nested inside CHUNKID_COMBAT_BEGIN
+                        // (written by SaveLoadSystemClass for the combat subsystem)
+                        if (subId == ChunkIds.CHUNKID_COMBAT_BEGIN) {
+                            subReader.forEachChunk { combatId, _, combatReader ->
+                                when (combatId) {
+                                    ChunkIds.CHUNKID_GAMEOBJMANAGER -> parseGameObjects(combatReader, gameObjects)
+                                    ChunkIds.CHUNKID_SPAWNERS -> spawners.addAll(SpawnerLoader.load(combatReader))
+                                    ChunkIds.CHUNKID_SCRIPTS -> parseScripts(combatReader, scripts)
+                                }
+                            }
                         }
                     }
                 }

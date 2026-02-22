@@ -40,7 +40,7 @@ class SoldierGameObjTest {
         private const val ANALOG_BITS = 8
 
         // Expected section sizes with default ±500 encoders
-        private const val HEADER_BITS = 73 // networkId(32) + dirtyBits(8) + isDeletePending(1) + classId(32)
+        private const val HEADER_BITS = 73 // networkId(32) + dirtyBits(8) + isDeletePending(1) + networkClassId(32)
         private const val CREATION_BITS = 32 + POS_X_BITS + POS_Y_BITS + POS_Z_BITS + 32 + 32 // 135
         private const val FREQUENT_BITS = 1 + 1 + POS_X_BITS + POS_Y_BITS + POS_Z_BITS +
                 HUMAN_STATE_BITS + HUMAN_SUB_STATE_BITS + 1 + // SoldierGameObj part
@@ -116,7 +116,7 @@ class SoldierGameObjTest {
         assertEquals(200001, bs.getInt())                        // networkId
         assertEquals(0x0F, bs.getByte().toInt() and 0xFF)        // dirtyBits = BIT_CREATION
         assertFalse(bs.getBool())                                 // isDeletePending
-        assertEquals(1000, bs.getInt())                          // classId
+        assertEquals(1000, bs.getInt())                          // networkClassId
     }
 
     @Test
@@ -379,7 +379,7 @@ class SoldierGameObjTest {
         assertEquals(0x00030D41, bs.getInt())                       // networkId
         assertEquals(0x0F, bs.getByte().toInt() and 0xFF)           // dirtyBits
         assertFalse(bs.getBool())                                    // isDeletePending
-        assertEquals(1000, bs.getInt())                             // classId
+        assertEquals(1000, bs.getInt())                             // networkClassId
 
         // exportCreation
         assertEquals(defId, bs.getInt())                            // definitionId
@@ -553,7 +553,7 @@ class SoldierGameObjTest {
         assertEquals(1_500_000_001, bs.getInt())
         assertEquals(0x0F, bs.getByte().toInt() and 0xFF)
         assertFalse(bs.getBool())
-        assertEquals(1000, bs.getInt())                              // SoldierGameObj classId
+        assertEquals(1000, bs.getInt())                              // SoldierGameObj networkClassId
 
         // exportCreation
         assertEquals(defId, bs.getInt())

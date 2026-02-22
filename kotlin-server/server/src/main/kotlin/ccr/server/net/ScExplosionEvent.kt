@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 import ccr.net.bitstream.*
 
-// C++: cScExplosionEvent (scexplosionevent.h/.cpp) — classId = NETCLASSID_SCEXPLOSIONEVENT = 1014
+// C++: cScExplosionEvent (scexplosionevent.h/.cpp) — networkClassId = NETCLASSID_SCEXPLOSIONEVENT = 1014
 // Server-to-client one-shot event that triggers an explosion effect on the client.
 // Export_Creation: DefID(int) + Position.X(BITPACK_WORLD_POSITION_X) + Position.Y(BITPACK_WORLD_POSITION_Y)
 //                 + Position.Z(BITPACK_WORLD_POSITION_Z) + OwnerID(int)

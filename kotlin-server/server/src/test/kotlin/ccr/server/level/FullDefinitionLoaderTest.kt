@@ -17,30 +17,30 @@ class FullDefinitionLoaderTest {
      * DDB structure:
      *   [CHUNKID_SAVELOAD_DEFMGR = 0x101]           <- container
      *     [CHUNKID_OBJECTS = 0x101]                   <- container
-     *       [classId]                                 <- container, one per definition
+     *       [chunkId]                                 <- container, one per definition
      *         [SIMPLEFACTORY_CHUNKID_OBJDATA = 0x100101]  <- container
      *           [CHUNKID_VARIABLES = 0x100]           <- leaf (micro-chunks: id + name)
      */
-    private fun buildDdb(vararg defs: Triple<UInt, UInt, String>): ByteArray {
-        // Build the inner definitions
-        val defsBytes = defs.map { (classId, defId, name) ->
-            // Build the variables leaf chunk (micro-chunks for id + name)
+    private fun buildDdb(vararg defs: Triple<UInt, UInt, String>): ByteArray =
+        buildDdbWithExtra(*defs.map { (a, b, c) -> Triple(a, b, c) to byteArrayOf() }.toTypedArray())
+
+    /**
+     * Like [buildDdb] but allows appending extra bytes inside each definition's OBJDATA chunk.
+     * Each pair is (chunkId, defId, name) → extra bytes appended alongside the variables chunk.
+     */
+    private fun buildDdbWithExtra(vararg defs: Pair<Triple<UInt, UInt, String>, ByteArray>): ByteArray {
+        val defsBytes = defs.map { (triple, extra) ->
+            val (chunkId, defId, name) = triple
             val idMicroChunk = buildMicroChunk(0x01, intToLeBytes(defId.toInt()))
             val nameMicroChunk = buildMicroChunk(0x03, name.toByteArray(Charsets.ISO_8859_1) + 0.toByte())
             val variablesData = idMicroChunk + nameMicroChunk
             val variablesChunk = buildChunk(0x00000100u, variablesData, isContainer = false)
 
-            // Wrap in OBJDATA container
-            val objDataChunk = buildChunk(0x00100101u, variablesChunk, isContainer = true)
-
-            // Wrap in classId container
-            buildChunk(classId, objDataChunk, isContainer = true)
+            val objDataChunk = buildChunk(0x00100101u, variablesChunk + extra, isContainer = true)
+            buildChunk(chunkId, objDataChunk, isContainer = true)
         }.fold(byteArrayOf()) { acc, bytes -> acc + bytes }
 
-        // Wrap in CHUNKID_OBJECTS container
         val objectsChunk = buildChunk(0x00000101u, defsBytes, isContainer = true)
-
-        // Wrap in CHUNKID_SAVELOAD_DEFMGR container
         return buildChunk(0x00000101u, objectsChunk, isContainer = true)
     }
 
@@ -70,7 +70,7 @@ class FullDefinitionLoaderTest {
     }
 
     @Test
-    fun `loads single definition with unknown classId as base DefinitionClass`() {
+    fun `loads single definition with unknown chunkId as base DefinitionClass`() {
         val ddb = buildDdb(Triple(0xFFFFu, 42u, "TestDef"))
         val registry = FullDefinitionLoader.load(ddb)
 
@@ -79,7 +79,7 @@ class FullDefinitionLoaderTest {
         assertNotNull(def)
         assertEquals("TestDef", def.name)
         assertEquals(42u, def.id)
-        assertEquals(0xFFFFu, def.classId)
+        assertEquals(0xFFFFu, def.chunkId)
     }
 
     @Test
@@ -110,22 +110,22 @@ class FullDefinitionLoaderTest {
     }
 
     @Test
-    fun `known classId for buildings registers typed subclass`() {
-        // 0xD007 = WarFactoryGameObjDef — the parse function wraps in DefinitionClass subclass
-        val ddb = buildDdb(Triple(0xD007u, 100u, "WarFactory"))
+    fun `known chunkId for buildings registers typed subclass`() {
+        // 0x00040142 = WarFactoryGameObjDef (CHUNKID_GAME_OBJECT_DEF_WARFACTORY)
+        val ddb = buildDdb(Triple(0x00040142u, 100u, "WarFactory"))
         val registry = FullDefinitionLoader.load(ddb)
 
         assertEquals(1, registry.size)
         val def = registry.findById(100u)
         assertNotNull(def)
         assertEquals("WarFactory", def.name)
-        assertEquals(0xD007u, def.classId)
+        assertEquals(0x00040142u, def.chunkId)
     }
 
     @Test
-    fun `known physics classId registers definition`() {
-        // 0x9007 = StaticPhysDefClass
-        val ddb = buildDdb(Triple(0x9007u, 200u, "StaticPhys"))
+    fun `known physics chunkId registers definition`() {
+        // 0x00020508 = StaticPhysDefClass (PHYSICS_CHUNKID_STATICPHYSDEF)
+        val ddb = buildDdb(Triple(0x00020508u, 200u, "StaticPhys"))
         val registry = FullDefinitionLoader.load(ddb)
 
         assertEquals(1, registry.size)
@@ -145,8 +145,79 @@ class FullDefinitionLoaderTest {
         val def = registry.findById(300u)
         assertNotNull(def)
         assertEquals("Soldier", def.name)
-        assertEquals(0x3001u, def.classId)
+        assertEquals(0x3001u, def.chunkId)
         // Verify it's the base DefinitionClass (not a subclass)
         assertEquals(DefinitionClass::class, def::class)
+    }
+
+    @Test
+    fun `SpawnerDefClass dispatches correctly`() {
+        // 0x00040121 = CHUNKID_SPAWNER_DEF
+        // parseSpawnerDefClass needs CHUNKID_DEF_VARIABLES=1013991543 inside OBJDATA
+        val spawnerVars = buildChunk(1013991543u, byteArrayOf(), isContainer = false)
+        val ddb = buildDdbWithExtra(Triple(0x00040121u, 400u, "SpawnPoint") to spawnerVars)
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(400u)
+        assertNotNull(def)
+        assertEquals("SpawnPoint", def.name)
+        assertTrue(def is ccr.server.defs.combat.SpawnerDefClass)
+    }
+
+    @Test
+    fun `WeaponDefinitionClass dispatches correctly`() {
+        // 0x00040127 = CHUNKID_WEAPON_DEF
+        // parseWeaponDefinitionClass needs CHUNKID_WEAPON_DEF_VARIABLES=1205091654 inside OBJDATA
+        val weaponVars = buildChunk(1205091654u, byteArrayOf(), isContainer = false)
+        val ddb = buildDdbWithExtra(Triple(0x00040127u, 500u, "Pistol") to weaponVars)
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(500u)
+        assertNotNull(def)
+        assertEquals("Pistol", def.name)
+        assertTrue(def is ccr.server.defs.WeaponDefinitionClass)
+    }
+
+    @Test
+    fun `AmmoDefinitionClass dispatches correctly`() {
+        // 0x00040128 = CHUNKID_AMMO_DEF
+        // parseAmmoDefinitionClass needs CHUNKID_AMMO_DEF_VARIABLES=1206091429 inside OBJDATA
+        val ammoVars = buildChunk(1206091429u, byteArrayOf(), isContainer = false)
+        val ddb = buildDdbWithExtra(Triple(0x00040128u, 600u, "Bullets") to ammoVars)
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(600u)
+        assertNotNull(def)
+        assertEquals("Bullets", def.name)
+        assertTrue(def is ccr.server.defs.AmmoDefinitionClass)
+    }
+
+    @Test
+    fun `building defs dispatch to typed subclasses`() {
+        // 0x00040138 = CHUNKID_GAME_OBJECT_DEF_REFINERY
+        val ddb = buildDdb(Triple(0x00040138u, 700u, "Refinery"))
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(700u)
+        assertNotNull(def)
+        assertEquals("Refinery", def.name)
+        assertTrue(def is ccr.server.defs.combat.RefineryGameObjDef)
+    }
+
+    @Test
+    fun `physics defs dispatch correctly`() {
+        // 0x00020501 = PHYSICS_CHUNKID_HUMANPHYSDEF
+        val ddb = buildDdb(Triple(0x00020501u, 800u, "HumanPhys"))
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(800u)
+        assertNotNull(def)
+        assertEquals("HumanPhys", def.name)
+        assertTrue(def is ccr.server.defs.HumanPhysDefClass)
     }
 }

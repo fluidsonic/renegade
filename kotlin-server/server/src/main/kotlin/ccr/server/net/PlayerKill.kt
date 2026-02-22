@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cPlayerKill — classId = NETCLASSID_PLAYERKILL = 1002
+// C++: cPlayerKill — networkClassId = NETCLASSID_PLAYERKILL = 1002
 // BIT_CREATION: [KillerId: int] [VictimId: int]
 class PlayerKill(
     val killerId: Int,

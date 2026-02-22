@@ -14,7 +14,7 @@ import ccr.server.mix.ChunkReader
 data class CinematicGameObjDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val soundDefId: Int = 0,
     val soundBoneName: String = "",
     val animationName: String = "",
@@ -23,7 +23,7 @@ data class CinematicGameObjDef(
     val cameraRelative: Boolean = false,
 ) {
     companion object {
-        const val CLASS_ID: UInt = 0x3011u // CLASSID_GAME_OBJECT_DEF_CINEMATIC
+        const val CHUNK_ID: UInt = 0x0004012Cu  // CHUNKID_GAME_OBJECT_DEF_CINEMATIC
     }
 }
 
@@ -38,14 +38,14 @@ private const val MICROCHUNKID_DEF_AUTO_FIRE_WEAPON = 4
 private const val MICROCHUNKID_DEF_DESTROY_AFTER_ANIMATION = 5
 private const val MICROCHUNKID_DEF_CAMERA_RELATIVE = 6
 
-fun parseCinematicGameObjDef(objDataReader: ChunkReader, name: String, id: UInt, classId: UInt): CinematicGameObjDef {
+fun parseCinematicGameObjDef(objDataReader: ChunkReader, name: String, id: UInt, chunkId: UInt): CinematicGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return CinematicGameObjDef(name = name, id = id, classId = classId)
+        ?: return CinematicGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return CinematicGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         soundDefId = vars.readMicroInt(MICROCHUNKID_DEF_SOUND_DEF_ID) ?: 0,
         soundBoneName = vars.readMicroString(MICROCHUNKID_DEF_SOUND_BONE_NAME) ?: "",
         animationName = vars.readMicroString(MICROCHUNKID_DEF_ANIMATION_NAME) ?: "",

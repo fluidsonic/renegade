@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cConsoleCommandEvent — classId = NETCLASSID_CONSOLECOMMANDEVENT = 1005
+// C++: cConsoleCommandEvent — networkClassId = NETCLASSID_CONSOLECOMMANDEVENT = 1005
 // BIT_CREATION: [Command: terminatedString]
 // Note: The C++ Add_Terminated_String uses permitEmpty=false
 class ConsoleCommandEvent(

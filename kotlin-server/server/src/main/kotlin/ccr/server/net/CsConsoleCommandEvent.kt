@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cCsConsoleCommandEvent — classId = NETCLASSID_CSCONSOLECOMMANDEVENT = 1035
+// C++: cCsConsoleCommandEvent — networkClassId = NETCLASSID_CSCONSOLECOMMANDEVENT = 1035
 // Client→Server event carrying a console command string from the client.
 // Wire format (BIT_CREATION):
 //   Command (terminatedString, ASCII, permitEmpty=false)

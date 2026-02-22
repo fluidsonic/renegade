@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cGameOptionsEvent (gameoptionsevent.cpp) — classId = NETCLASSID_GAMEOPTIONSEVENT = 1008
+// C++: cGameOptionsEvent (gameoptionsevent.cpp) — networkClassId = NETCLASSID_GAMEOPTIONSEVENT = 1008
 // Export_Creation: tier1 + tier2 + timeRemaining(float) + hostedGameNumber + modCrc + mapCrc
 // Sent once on client connection to describe the game being hosted.
 class GameOptionsEvent(private val gameData: GameData) : NetEvent() {

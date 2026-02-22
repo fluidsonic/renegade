@@ -413,7 +413,7 @@ class GameServer(internal val config: ServerConfig) {
 
     // Reads the network object header from a payload without consuming it.
     // Wire layout: [networkId:32][dirtyBits:8 (BYTE)][isDeletePending:1 (compressed bool)]
-    //              [classId:32 if BIT_CREATION set]
+    //              [networkClassId:32 if BIT_CREATION set]
     // C++: messages.cpp Send_Object_Update, pkthandlers.cpp BYTE dirty_bits = packet.Get(...)
     private fun peekGameEvent(packet: Packet): String {
         val bs = packet.payload
@@ -432,8 +432,8 @@ class GameServer(internal val config: ServerConfig) {
             if (isDeletePending) sb.append(" DELETE")
 
             if ((dirtyBits and 0x08) != 0) {  // BIT_CREATION
-                val classId = snap.getInt()
-                sb.append(" class=$classId(${NetClassIds.name(classId)})")
+                val networkClassId = snap.getInt()
+                sb.append(" class=$networkClassId(${NetClassIds.name(networkClassId)})")
             }
             sb.toString()
         } catch (e: Exception) {
@@ -470,12 +470,12 @@ class GameServer(internal val config: ServerConfig) {
         buildingManager?.sendToClient(host)
 
         // Player creation is NOT sent here. C++ sends it in cBioEvent::Act() after the client
-        // finishes loading. See BIOEVENT handler (classId=1026) which sends Player + GameDataUpdateEvent.
+        // finishes loading. See BIOEVENT handler (networkClassId=1026) which sends Player + GameDataUpdateEvent.
     }
 
     // ---- Game event handlers ----
 
-    // C++: pkthandlers.cpp / neteventhandlers.cpp — dispatches incoming game events by classId.
+    // C++: pkthandlers.cpp / neteventhandlers.cpp — dispatches incoming game events by networkClassId.
     private fun handleGamePacket(packet: Packet, rhostId: Int) {
         val bs = packet.payload
         if (bs.bitWritePosition < 41) {
@@ -497,10 +497,10 @@ class GameServer(internal val config: ServerConfig) {
             return
         }
 
-        val classId = snap.getInt()
+        val networkClassId = snap.getInt()
         val host = connectionManager.getHost(rhostId) ?: return
 
-        when (classId) {
+        when (networkClassId) {
             1018 -> {  // NETCLASSID_CLIENTCONTROL — sent BEFORE loading; do not spawn here
                 // Import_Creation reads ClientId. Spawning here would send a game-object
                 // packet to a client that hasn't loaded the world yet.  Wait for BioEvent.
@@ -566,11 +566,9 @@ class GameServer(internal val config: ServerConfig) {
                 if (isLoading) loadingHosts.add(rhostId) else loadingHosts.remove(rhostId)
                 println("[GAME] LOADINGEVENT from rhostId=$rhostId senderId=$senderId isLoading=$isLoading")
             }
-            1032 -> {  // NETCLASSID_CLIENTFPS — Import_Creation reads ClientId + Fps
+            1032 -> {  // NETCLASSID_CLIENTFPS — Import_Creation reads ClientId only; fps is in frequent updates
                 val clientId = snap.getInt()
-                val fps = snap.getInt()
-                clientFpsMap[rhostId] = fps
-                println("[GAME] CLIENTFPS from rhostId=$rhostId clientId=$clientId fps=$fps")
+                println("[GAME] CLIENTFPS from rhostId=$rhostId clientId=$clientId")
             }
             1033 -> {  // NETCLASSID_CSPINGREQUESTEVENT — Act() sends ScPingResponseEvent back
                 // C++: cCsPingRequestEvent::Import_Creation reads SenderId + PingNumber, then Act().
@@ -656,7 +654,7 @@ class GameServer(internal val config: ServerConfig) {
                     println("[GAME] DONATEEVENT from rhostId=$rhostId: sender=${event.senderId} or recipient=${event.recipientId} not found")
                 }
             }
-            else -> println("[GAME] unhandled classId=$classId netId=$networkId from rhostId=$rhostId")
+            else -> println("[GAME] unhandled networkClassId=$networkClassId netId=$networkId from rhostId=$rhostId")
         }
     }
 
@@ -692,7 +690,7 @@ class GameServer(internal val config: ServerConfig) {
         println("[GAME] broadcastPlayerKill: killer=$killerId victim=$victimId")
     }
 
-    // Sends a PLAYER BIT_RARE update (no classId — not a creation packet).
+    // Sends a PLAYER BIT_RARE update (no networkClassId — not a creation packet).
     // C++: cPlayer::Export_Rare + Export_Occasional + Export_Frequent.
     // dirtyBits=0x07 = BIT_RARE|BIT_OCCASIONAL|BIT_FREQUENT (not BIT_CREATION).
     private fun sendPlayerRareUpdate(host: RemoteHost, rhostId: Int) {
@@ -1005,7 +1003,7 @@ class GameServer(internal val config: ServerConfig) {
 
         val weaponDefs = definitions.filter { it.name.contains("weapon", ignoreCase = true) || it.name.contains("pistol", ignoreCase = true) }
         println("[SERVER] Weapon definitions found (${weaponDefs.size}):")
-        weaponDefs.forEach { println("[SERVER]   ${it.name} id=0x${it.id.toString(16)} classId=${it.classId}") }
+        weaponDefs.forEach { println("[SERVER]   ${it.name} id=0x${it.id.toString(16)} chunkId=${it.chunkId}") }
 
         val pistolDef = definitions.find { it.name.equals("Weapon_Pistol_Player", ignoreCase = true) }
         if (pistolDef != null) {

@@ -18,7 +18,7 @@ import ccr.server.mix.ChunkReader
 class HumanPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -28,11 +28,10 @@ class HumanPhysDefClass(
     normSpeed: Float = 10f,
     slideAngle: Float = 0.7853982f, // DEG_TO_RADF(45)
     stepHeight: Float = 0.25f,
-) : Phys3DefClass(name, id, classId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode, normSpeed, slideAngle, stepHeight) {
+) : Phys3DefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode, normSpeed, slideAngle, stepHeight) {
 
     companion object {
-        /** CLASSID_HUMANPHYSDEF = CLASSID_PHYSICS + 1 = 0x9001 */
-        const val CLASS_ID: UInt = 0x9001u
+        const val CHUNK_ID: UInt = 0x00020501u  // PHYSICS_CHUNKID_HUMANPHYSDEF
 
         // Chunk ID from humanphys.cpp: wraps Phys3DefClass data
         private const val HUMANPHYSDEF_CHUNK_PHYS3DEF = 0x00516000u
@@ -52,7 +51,7 @@ class HumanPhysDefClass(
          *   [PHYS3DEF_CHUNK_VARIABLES] → normSpeed, slideAngle, stepHeight
          * ```
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): HumanPhysDefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): HumanPhysDefClass {
             val phys3Chunk = objDataChunk.findChunk(HUMANPHYSDEF_CHUNK_PHYS3DEF)
             val fields = if (phys3Chunk != null) {
                 Phys3DefClass.parseFields(phys3Chunk)
@@ -66,7 +65,7 @@ class HumanPhysDefClass(
             return HumanPhysDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = fields.modelName,
                 isPreLit = fields.isPreLit,
                 mass = fields.mass,

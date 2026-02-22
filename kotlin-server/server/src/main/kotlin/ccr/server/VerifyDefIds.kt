@@ -56,8 +56,8 @@ fun main() {
             println("NOT FOUND: $name")
         } else {
             val idHex = entry.id.toString(16).padStart(8, '0')
-            val classHex = entry.classId.toString(16).padStart(8, '0')
-            println("${entry.name} = ${entry.id} (hex: 0x$idHex) classId=0x$classHex")
+            val chunkHex = entry.chunkId.toString(16).padStart(8, '0')
+            println("${entry.name} = ${entry.id} (hex: 0x$idHex) chunkId=0x$chunkHex")
             val matches = entry.id == defaultId
             val defaultHex = defaultId.toString(16).padStart(8, '0')
             println("  Matches ServerConfig default 0x$defaultHex (${defaultId}): $matches")
@@ -73,8 +73,8 @@ fun main() {
     } else {
         for (entry in minigunners) {
             val idHex = entry.id.toString(16).padStart(8, '0')
-            val classHex = entry.classId.toString(16).padStart(8, '0')
-            println("  ${entry.name} = ${entry.id} (hex: 0x$idHex) classId=0x$classHex")
+            val chunkHex = entry.chunkId.toString(16).padStart(8, '0')
+            println("  ${entry.name} = ${entry.id} (hex: 0x$idHex) chunkId=0x$chunkHex")
         }
     }
 }

@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cCsHint — classId = NETCLASSID_CSHINT = 1036
+// C++: cCsHint — networkClassId = NETCLASSID_CSHINT = 1036
 // Client→Server event carrying a hint/objective notification from the client.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

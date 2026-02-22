@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cCsTextObj — classId = NETCLASSID_CSTEXTOBJ = 1018
+// C++: cCsTextObj — networkClassId = NETCLASSID_CSTEXTOBJ = 1018
 // Client→Server chat message. Mirror of cScTextObj (1001) in the opposite direction.
 // Wire format (BIT_CREATION):
 //   Type (BYTE) — TextMessageEnum

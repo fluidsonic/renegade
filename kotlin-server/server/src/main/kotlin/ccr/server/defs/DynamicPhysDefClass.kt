@@ -9,10 +9,10 @@ package ccr.server.defs
 open class DynamicPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
-) : PhysDefClass(name, id, classId, modelName, isPreLit) {
+) : PhysDefClass(name, id, chunkId, modelName, isPreLit) {
 
     companion object {
         // Chunk ID from dynamicphys.cpp: wraps PhysDefClass data

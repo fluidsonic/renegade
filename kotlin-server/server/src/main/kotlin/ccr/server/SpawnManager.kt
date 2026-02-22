@@ -31,7 +31,7 @@ class SpawnManager(level: LoadedLevel) {
                 def == null ->
                     null.also { println("[SPAWN]   defId=${spawner.definitionId}: NOT FOUND in registry") }
                 def !is SpawnerDefClass ->
-                    null.also { println("[SPAWN]   defId=${spawner.definitionId}/${def.classId} name='${def.name}': found but is ${def::class.simpleName} (not SpawnerDefClass)") }
+                    null.also { println("[SPAWN]   defId=${spawner.definitionId}/${def.chunkId} name='${def.name}': found but is ${def::class.simpleName} (not SpawnerDefClass)") }
                 else -> {
                     println("[SPAWN]   defId=${spawner.definitionId} name='${def.name}': " +
                         "isPrimary=${def.isPrimary} isSoldierStartup=${def.isSoldierStartup} playerType=${def.playerType}")

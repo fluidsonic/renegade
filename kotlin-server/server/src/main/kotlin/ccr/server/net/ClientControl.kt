@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
 
-// C++: CClientControl (Combat/clientcontrol.h) — classId = NETCLASSID_CLIENTCONTROL = 1017
+// C++: CClientControl (Combat/clientcontrol.h) — networkClassId = NETCLASSID_CLIENTCONTROL = 1017
 // C→S mirrored object to represent client control and targeting data.
 // The server only imports (reads) this object; the client exports (writes) it.
 //

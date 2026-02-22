@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cWarpEvent — classId = NETCLASSID_WARPEVENT = 1022
+// C++: cWarpEvent — networkClassId = NETCLASSID_WARPEVENT = 1022
 // Client→Server event for warping a player by name.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

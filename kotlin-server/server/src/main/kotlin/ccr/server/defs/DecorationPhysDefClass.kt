@@ -18,14 +18,14 @@ import ccr.server.mix.ChunkReader
 open class DecorationPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
-) : DynamicPhysDefClass(name, id, classId, modelName, isPreLit) {
+) : DynamicPhysDefClass(name, id, chunkId, modelName, isPreLit) {
 
     companion object {
         /** CLASSID_DECOPHYSDEF = CLASSID_PHYSICS + 0 = 0x9000 */
-        const val CLASS_ID: UInt = 0x9000u
+        const val CHUNK_ID: UInt = 0x00020500u  // PHYSICS_CHUNKID_DECOPHYSDEF
 
         // Chunk IDs from decophys.cpp
         internal const val DECORATIONPHYSDEF_CHUNK_PHYSDEF = 0x01070003u         // old parent (PhysDefClass direct)
@@ -49,14 +49,14 @@ fun parseDecorationPhysDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): DecorationPhysDefClass {
     val (modelName, isPreLit) = DecorationPhysDefClass.parseParentFields(objDataReader)
 
     return DecorationPhysDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         modelName = modelName,
         isPreLit = isPreLit,
     )

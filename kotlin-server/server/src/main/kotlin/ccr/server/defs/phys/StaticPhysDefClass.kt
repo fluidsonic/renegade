@@ -21,15 +21,15 @@ import ccr.server.mix.ChunkReader
 open class StaticPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     val isNonOccluder: Boolean = true,
-) : PhysDefClass(name, id, classId, modelName, isPreLit) {
+) : PhysDefClass(name, id, chunkId, modelName, isPreLit) {
 
     companion object {
         /** CLASSID_STATICPHYSDEF = CLASSID_PHYSICS(0x9000) + 7 */
-        const val CLASS_ID: UInt = 0x9007u
+        const val CHUNK_ID: UInt = 0x00020508u  // PHYSICS_CHUNKID_STATICPHYSDEF
     }
 }
 
@@ -40,7 +40,7 @@ private const val STATICPHYSDEF_CHUNK_VARIABLES = 0x01070003u
 // Micro-chunk IDs
 private const val STATICPHYSDEF_VARIABLE_ISNONOCCLUDER = 0x00
 
-fun parseStaticPhysDefClass(objDataReader: ChunkReader, name: String, id: UInt, classId: UInt): StaticPhysDefClass {
+fun parseStaticPhysDefClass(objDataReader: ChunkReader, name: String, id: UInt, chunkId: UInt): StaticPhysDefClass {
     // PhysDefClass fields (nested inside STATICPHYSDEF_CHUNK_PHYSDEF)
     val physDefChunk = objDataReader.findChunk(STATICPHYSDEF_CHUNK_PHYSDEF)
     val physDefVars = physDefChunk?.findChunk(PhysDefClass.CHUNK_VARIABLES)
@@ -55,7 +55,7 @@ fun parseStaticPhysDefClass(objDataReader: ChunkReader, name: String, id: UInt, 
     return StaticPhysDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         modelName = modelName,
         isPreLit = isPreLit,
         isNonOccluder = isNonOccluder,

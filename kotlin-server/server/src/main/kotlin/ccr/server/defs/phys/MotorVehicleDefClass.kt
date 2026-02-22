@@ -22,7 +22,7 @@ import ccr.server.mix.ChunkReader
 open class MotorVehicleDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -53,7 +53,7 @@ open class MotorVehicleDefClass(
     val shiftUpRpm: Float = 7000f,
     val shiftDownRpm: Float = 2000f,
 ) : VehiclePhysDefClass(
-    name, id, classId, modelName, isPreLit,
+    name, id, chunkId, modelName, isPreLit,
     mass, gravScale, elasticity, cinematicCollisionMode,
     aerodynamicDragCoefficient, collisionDisabled,
     springConstant, dampingConstant, springLength, tractionMultiplier,
@@ -96,7 +96,7 @@ open class MotorVehicleDefClass(
 
     companion object {
         /** CLASSID_MOTORVEHICLEDEF = CLASSID_PHYSICS(0x9000) + 3 */
-        const val CLASS_ID: UInt = 0x9003u
+        const val CHUNK_ID: UInt = 0x00020504u  // PHYSICS_CHUNKID_MOTORVEHICLEDEF
 
         // Chunk IDs from motorvehicle.cpp local enum
         const val CHUNK_RIGIDBODYDEF: UInt = 0x00516000u    // old parent (obsolete)

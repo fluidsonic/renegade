@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cRequestKillEvent — classId = NETCLASSID_REQUESTKILLEVENT = 1034
+// C++: cRequestKillEvent — networkClassId = NETCLASSID_REQUESTKILLEVENT = 1034
 // Client→Server event requesting the server kill a specific game object.
 // Wire format (BIT_CREATION):
 //   ObjectId (int)

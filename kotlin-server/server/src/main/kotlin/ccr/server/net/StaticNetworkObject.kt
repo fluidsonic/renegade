@@ -5,7 +5,7 @@ import ccr.net.replication.NetworkObject
 import kotlin.math.roundToInt
 
 // C++: StaticNetworkObjectClass (staticnetworkobject.h/.cpp)
-// Static objects are identified by well-known networkId values (not classId).
+// Static objects are identified by well-known networkId values (not networkClassId).
 // Get_Network_Class_ID() is not overridden — returns 0 (base class default).
 // SetDeletePending is overridden to no-op (static objects are never deleted).
 abstract class StaticNetworkObject(

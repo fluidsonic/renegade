@@ -39,7 +39,7 @@ class GameOptionsEventTest {
         assertEquals(100003, bs.getInt())         // networkId
         assertEquals(0x0F, bs.getByte().toInt() and 0xFF)  // dirtyBits
         assertEquals(false, bs.getBool())          // isDeletePending
-        assertEquals(1008, bs.getInt())            // classId
+        assertEquals(1008, bs.getInt())            // networkClassId
 
         // Read tier 1
         assertEquals(0, bs.getInt())               // ipAddr
@@ -98,7 +98,7 @@ class GameOptionsEventTest {
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, event, networkId = 1)
 
-        // Skip header (73 bits): networkId + dirtyBits + isDeletePending + classId
+        // Skip header (73 bits): networkId + dirtyBits + isDeletePending + networkClassId
         bs.getInt(); bs.getByte(); bs.getBool(); bs.getInt()
 
         // Skip tier 1 (421 bits)

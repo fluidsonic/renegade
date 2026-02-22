@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cDonateEvent — classId = NETCLASSID_DONATEEVENT = 1038
+// C++: cDonateEvent — networkClassId = NETCLASSID_DONATEEVENT = 1038
 // Client→Server event for donating credits to another player.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

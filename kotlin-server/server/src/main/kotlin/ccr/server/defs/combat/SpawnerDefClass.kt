@@ -20,7 +20,7 @@ import java.nio.ByteOrder
 class SpawnerDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     // Spawner fields — defaults match C++ constructor (spawn.cpp SpawnerDefClass::SpawnerDefClass)
     val spawnDefinitionIdList: List<Int> = emptyList(),
     val playerType: Int = -2,                  // PLAYERTYPE_NEUTRAL
@@ -40,10 +40,10 @@ class SpawnerDefClass(
     val isMultiplayWeaponSpawner: Boolean = false,
     val scriptNames: List<String> = emptyList(),
     val scriptParameters: List<String> = emptyList(),
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        const val CLASS_ID: UInt = 0x300Du // CLASSID_GAME_OBJECTS(0x3000) + 13
+        const val CHUNK_ID: UInt = 0x00040121u  // CHUNKID_SPAWNER_DEF
     }
 }
 
@@ -78,7 +78,7 @@ fun parseSpawnerDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): SpawnerDefClass? {
     val varsReader = objDataReader.findChunk(CHUNKID_DEF_VARIABLES) ?: return null
 
@@ -93,7 +93,7 @@ fun parseSpawnerDefClass(
     return SpawnerDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         spawnDefinitionIdList = spawnDefIds,
         playerType = varsReader.readMicroInt(MCID_PLAYER_TYPE) ?: -2,
         spawnMax = varsReader.readMicroInt(MCID_SPAWN_MAX) ?: -1,

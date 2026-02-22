@@ -44,7 +44,7 @@ class BioEventTest {
         assertEquals(999999, parsed.clanId)
     }
 
-    @Test fun `full creation envelope - classId is 1025`() {
+    @Test fun `full creation envelope - networkClassId is 1025`() {
         val event = BioEvent(senderId = 1, nickname = "P", teamChoice = 0, mapName = "C&C_Under")
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, event, networkId = 500001)

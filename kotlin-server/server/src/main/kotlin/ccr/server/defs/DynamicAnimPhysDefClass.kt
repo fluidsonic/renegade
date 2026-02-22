@@ -14,7 +14,7 @@ import ccr.server.mix.ChunkReader
 class DynamicAnimPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     // AnimCollisionManagerDefClass fields (sub-object in C++)
@@ -25,10 +25,10 @@ class DynamicAnimPhysDefClass(
     val castsShadows: Boolean = false,
     val shadowNearZ: Float = -1.0f,
     val shadowFarZ: Float = -1.0f,
-) : DecorationPhysDefClass(name, id, classId, modelName, isPreLit) {
+) : DecorationPhysDefClass(name, id, chunkId, modelName, isPreLit) {
 
     companion object {
-        const val CLASS_ID: UInt = 0x900Eu // CLASSID_DYNAMICANIMPHYSDEF
+        const val CHUNK_ID: UInt = 0x0002050Fu  // PHYSICS_CHUNKID_DYNAMICANIMPHYSDEF
     }
 }
 
@@ -61,7 +61,7 @@ fun parseDynamicAnimPhysDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): DynamicAnimPhysDefClass {
     // Navigate the parent chunk chain to reach PhysDefClass level:
     // CHUNK_DECOPHYSDEF -> DECORATIONPHYSDEF_CHUNK_DYNAMICPHYSDEF -> DYNAMICPHYSDEF_CHUNK_PHYSDEF
@@ -86,7 +86,7 @@ fun parseDynamicAnimPhysDefClass(
     return DynamicAnimPhysDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         modelName = modelName,
         isPreLit = isPreLit,
         // AnimCollisionManagerDefClass

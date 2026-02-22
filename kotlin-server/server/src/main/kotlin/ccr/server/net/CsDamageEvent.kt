@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cCsDamageEvent — classId = NETCLASSID_CSDAMAGEEVENT = 1033
+// C++: cCsDamageEvent — networkClassId = NETCLASSID_CSDAMAGEEVENT = 1033
 // Client→Server event reporting damage dealt by this client.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

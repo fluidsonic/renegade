@@ -112,8 +112,7 @@ data class VehicleGameObjDef(
     val transitions: List<TransitionData> = emptyList(),
 ) {
     companion object {
-        /** CLASSID_GAME_OBJECT_DEF_VEHICLE from combatchunkid.h = CLASSID_GAME_OBJECTS + 16 = 0x3010. */
-        const val CLASS_ID: UInt = 0x3010u
+        const val CHUNK_ID: UInt = 0x00040129u  // CHUNKID_GAME_OBJECT_DEF_VEHICLE
 
         // VehicleGameObjDef chunk IDs (enum starts at 930991656)
         private const val CHUNKID_DEF_PARENT = 930991656u

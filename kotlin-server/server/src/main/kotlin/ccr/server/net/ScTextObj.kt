@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cScTextObj — classId = NETCLASSID_SCTEXTOBJ = 1001
+// C++: cScTextObj — networkClassId = NETCLASSID_SCTEXTOBJ = 1001
 // Server-to-client text message event.
 // BIT_CREATION:
 //   Type (BYTE) — TextMessageEnum value

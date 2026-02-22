@@ -18,7 +18,7 @@ class TeamTest {
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, team, networkId = 100001)
         skipEnvelopePrefix(bs)
-        assertEquals(1010, bs.getInt())  // classId
+        assertEquals(1010, bs.getInt())  // networkClassId
         assertEquals(0, bs.getInt())     // teamNumber = NOD
     }
 
@@ -27,7 +27,7 @@ class TeamTest {
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, team, networkId = 100002)
         skipEnvelopePrefix(bs)
-        assertEquals(1010, bs.getInt())  // classId
+        assertEquals(1010, bs.getInt())  // networkClassId
         assertEquals(1, bs.getInt())     // teamNumber = GDI
     }
 

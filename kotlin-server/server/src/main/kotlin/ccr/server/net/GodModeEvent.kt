@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cGodModeEvent — classId = NETCLASSID_GODMODEEVENT = 1027
+// C++: cGodModeEvent — networkClassId = NETCLASSID_GODMODEEVENT = 1027
 // Client→Server event for toggling god mode via password.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

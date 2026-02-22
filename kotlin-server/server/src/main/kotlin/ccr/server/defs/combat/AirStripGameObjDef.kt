@@ -18,16 +18,16 @@ import ccr.server.mix.ChunkReader
 class AirStripGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val cinematicDefId: Int = 0,
     val cinematicSlotIndex: Int = 0,
     val cinematicLengthToDropOff: Float = 0f,
     val cinematicLengthToVehicleDisplay: Float = 0f,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_GAME_OBJECT_DEF_AIRSTRIP = CLASSID_BUILDINGS + 6 = 0xD006 */
-        const val CLASS_ID: UInt = 0xD006u
+        const val CHUNK_ID: UInt = 0x00040140u  // CHUNKID_GAME_OBJECT_DEF_AIRSTRIP
     }
 }
 
@@ -42,21 +42,21 @@ private const val MICROCHUNKID_DEF_DISPLAY_VEHICLE_TIME = 4
 
 /**
  * Parses an AirStripGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parseAirStripGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): AirStripGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return AirStripGameObjDef(name = name, id = id, classId = classId)
+        ?: return AirStripGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return AirStripGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         cinematicDefId = vars.readMicroInt(MICROCHUNKID_DEF_CINEMATIC_DEFID) ?: 0,
         cinematicLengthToDropOff = vars.readMicroFloat(MICROCHUNKID_DEF_CINEMATIC_LENGTH_TO_DROPOFF) ?: 0f,
         cinematicSlotIndex = vars.readMicroInt(MICROCHUNKID_DEF_CINEMATIC_SLOT_INDEX) ?: 0,

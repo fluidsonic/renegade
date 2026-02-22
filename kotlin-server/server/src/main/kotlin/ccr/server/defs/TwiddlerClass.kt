@@ -14,10 +14,10 @@ import java.nio.ByteOrder
 class TwiddlerClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val indirectClassID: UInt = 0u,
     val definitionList: List<Int> = emptyList(),
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         // Chunk IDs from twiddler.cpp
@@ -33,7 +33,7 @@ class TwiddlerClass(
         private const val VARID_DEFINTION_ID = 0x01
         private const val VARID_INDIRECT_CLASSID = 0x02
 
-        fun load(classId: UInt, objDataChunk: ChunkReader): TwiddlerClass? {
+        fun load(chunkId: UInt, objDataChunk: ChunkReader): TwiddlerClass? {
             // TwiddlerClass::Save writes CHUNKID_VARIABLES first, then CHUNKID_BASE_CLASS.
             // CHUNKID_BASE_CLASS contains DefinitionClass::Save (id + name).
             val baseChunk = objDataChunk.findChunk(CHUNKID_BASE_CLASS) ?: return null
@@ -82,7 +82,7 @@ class TwiddlerClass(
             return TwiddlerClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 indirectClassID = indirectClassID,
                 definitionList = definitionList,
             )

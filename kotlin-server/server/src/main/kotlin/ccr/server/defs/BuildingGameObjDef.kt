@@ -29,7 +29,7 @@ open class BuildingGameObjDef(
     // DefinitionClass base
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 
     // ScriptableGameObjDef
     val scriptNames: List<String> = emptyList(),
@@ -52,7 +52,7 @@ open class BuildingGameObjDef(
     val nodDamageReportId: Int = 0,
     val gdiDestroyReportId: Int = 0,
     val nodDestroyReportId: Int = 0,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     /**
      * DefenseObjectDefClass (Combat/damage.h).
@@ -159,7 +159,7 @@ open class BuildingGameObjDef(
          * Loads a BuildingGameObjDef from the OBJDATA chunk of a definition entry.
          * Returns null if required base fields (id, name) are missing.
          */
-        fun load(objDataChunk: ChunkReader, classId: UInt): BuildingGameObjDef? {
+        fun load(objDataChunk: ChunkReader, chunkId: UInt): BuildingGameObjDef? {
             // --- DefinitionClass base (id + name) ---
             val baseVarsChunk = objDataChunk.findChunkRecursive(CHUNKID_DEF_BASE_VARIABLES)
                 ?: return null
@@ -220,7 +220,7 @@ open class BuildingGameObjDef(
             return BuildingGameObjDef(
                 name = name,
                 id = definitionId,
-                classId = classId,
+                chunkId = chunkId,
                 scriptNames = scriptNames,
                 scriptParameters = scriptParams,
                 translatedNameId = translatedNameId,

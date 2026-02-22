@@ -18,7 +18,7 @@ import ccr.server.mix.ChunkReader
 class TrackedVehicleDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -40,7 +40,7 @@ class TrackedVehicleDefClass(
     val trackVScaleFactor: Float = 0.0f,
     val turnTorqueScaleFactor: Float = 1.0f,
 ) : VehiclePhysDefClass(
-    name, id, classId, modelName, isPreLit, mass, gravScale, elasticity,
+    name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity,
     cinematicCollisionMode, aerodynamicDragCoefficient, collisionDisabled,
     springConstant, dampingConstant, springLength, tractionMultiplier,
     lateralMomentArm, tractiveMomentArm, engineFlameLength, isFake,
@@ -48,7 +48,7 @@ class TrackedVehicleDefClass(
 
     companion object {
         /** CLASSID_TRACKEDVEHICLEDEF = CLASSID_PHYSICS + 12 = 0x900C */
-        const val CLASS_ID: UInt = 0x900Cu
+        const val CHUNK_ID: UInt = 0x0002050Du  // PHYSICS_CHUNKID_TRACKEDVEHICLEDEF
 
         // Chunk IDs from trackedvehicle.cpp local enum (C++ octal 0406001454 = 0x0418032C)
         private const val TRACKEDVEHICLEDEF_CHUNK_VEHICLEPHYSDEF = 0x0418032Cu
@@ -78,7 +78,7 @@ class TrackedVehicleDefClass(
          * [TRACKEDVEHICLEDEF_CHUNK_VARIABLES] → maxEngineTorque, trackUScaleFactor, etc.
          * ```
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): TrackedVehicleDefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): TrackedVehicleDefClass {
             // Parse parent chain via VehiclePhysDefClass
             val vehiclePhysChunk = objDataChunk.findChunk(TRACKEDVEHICLEDEF_CHUNK_VEHICLEPHYSDEF)
             val parentFields = if (vehiclePhysChunk != null) {
@@ -100,7 +100,7 @@ class TrackedVehicleDefClass(
             return TrackedVehicleDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = parentFields.modelName,
                 isPreLit = parentFields.isPreLit,
                 mass = parentFields.mass,

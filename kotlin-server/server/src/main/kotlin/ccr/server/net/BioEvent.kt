@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cBioEvent (Commando/bioevent.h) — classId = NETCLASSID_BIOEVENT = 1025
+// C++: cBioEvent (Commando/bioevent.h) — networkClassId = NETCLASSID_BIOEVENT = 1025
 // C→S event object for transmitting initial player bio data on join.
 // The server imports (reads) this; the client exports (writes) it.
 //

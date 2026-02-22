@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
 
-// C++: cTeam (team.h / team.cpp) — classId = NETCLASSID_TEAM = 1010
+// C++: cTeam (team.h / team.cpp) — networkClassId = NETCLASSID_TEAM = 1010
 // S->C object holding team stats: kills, deaths, score.
 // Export_Creation: teamNumber (int)
 // Export_Rare:     kills (int), deaths (int)

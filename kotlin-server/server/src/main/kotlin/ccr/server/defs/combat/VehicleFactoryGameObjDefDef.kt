@@ -17,14 +17,14 @@ import ccr.server.mix.ChunkReader
 open class VehicleFactoryGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val padClearingWarhead: Int = 25,
     val totalBuildingTime: Float = 12f,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_GAME_OBJECT_DEF_VEHICLE_FACTORY = CLASSID_BUILDINGS + 5 = 0xD005 */
-        const val CLASS_ID: UInt = 0xD005u
+        const val CHUNK_ID: UInt = 0x0004013Eu  // CHUNKID_GAME_OBJECT_DEF_VEHICLE_FACTORY
     }
 }
 
@@ -37,21 +37,21 @@ private const val MICROCHUNKID_DEF_TOTALBUILDINGTIME = 3
 
 /**
  * Parses a VehicleFactoryGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parseVehicleFactoryGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): VehicleFactoryGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return VehicleFactoryGameObjDef(name = name, id = id, classId = classId)
+        ?: return VehicleFactoryGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return VehicleFactoryGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         padClearingWarhead = vars.readMicroInt(MICROCHUNKID_DEF_PADCLEARINGWARHEAD) ?: 25,
         totalBuildingTime = vars.readMicroFloat(MICROCHUNKID_DEF_TOTALBUILDINGTIME) ?: 12f,
     )

@@ -37,7 +37,7 @@ data class ShakeableStaticPhysDefClass(
 ) {
     companion object {
         /** CLASSID_SHAKEABLESTATICPHYSDEF (wwphysids.h enum offset 15 from CLASSID_PHYSICS=0x9000) */
-        const val CLASS_ID: UInt = 0x900Fu
+        const val CHUNK_ID: UInt = 0x00020510u  // PHYSICS_CHUNKID_SHAKEABLESTATICPHYSDEF
 
         // Chunk IDs from shakeablestaticphys.cpp
         private const val CHUNKID_PARENT = 7311734u
@@ -46,7 +46,7 @@ data class ShakeableStaticPhysDefClass(
             // Parse all parent StaticAnimPhysDefClass fields from the parent chunk
             val parentChunk = objDataChunk.findChunk(CHUNKID_PARENT)
             val parent = if (parentChunk != null) {
-                parseStaticAnimPhysDefClass(parentChunk, name, id, CLASS_ID)
+                parseStaticAnimPhysDefClass(parentChunk, name, id, CHUNK_ID)
             } else {
                 null
             }

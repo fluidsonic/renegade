@@ -109,12 +109,12 @@ data class TransitionDataClass(
 class TransitionGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val transitions: List<TransitionDataClass> = emptyList(),
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        const val CLASS_ID: UInt = 0x300Fu // CLASSID_GAME_OBJECT_DEF_TRANSITION
+        const val CHUNK_ID: UInt = 0x00040125u  // CHUNKID_GAME_OBJECT_DEF_TRANSITION
 
         // Chunk IDs from transitiongameobj.cpp
         private const val CHUNKID_DEF_PARENT = 1111991201u
@@ -125,7 +125,7 @@ class TransitionGameObjDef(
         private const val VARID_INSTANCEID = 0x01
         private const val VARID_NAME = 0x03
 
-        fun load(classId: UInt, objDataChunk: ChunkReader): TransitionGameObjDef? {
+        fun load(chunkId: UInt, objDataChunk: ChunkReader): TransitionGameObjDef? {
             // Navigate parent chain: TransitionGameObjDef -> BaseGameObjDef -> DefinitionClass
             val parentChunk = objDataChunk.findChunk(CHUNKID_DEF_PARENT) ?: return null
             val baseVarsChunk = parentChunk.findChunkRecursive(CHUNKID_BASE_VARIABLES) ?: return null
@@ -150,7 +150,7 @@ class TransitionGameObjDef(
             return TransitionGameObjDef(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 transitions = transitions,
             )
         }

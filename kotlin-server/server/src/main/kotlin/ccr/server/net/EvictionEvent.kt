@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cEvictionEvent — classId = NETCLASSID_EVICTIONEVENT = 1009
+// C++: cEvictionEvent — networkClassId = NETCLASSID_EVICTIONEVENT = 1009
 // BIT_CREATION: [EvictionCode: int]
 class EvictionEvent(
     val evictionCode: Int,

@@ -17,14 +17,14 @@ import ccr.server.mix.ChunkReader
 class RepairBayGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val repairPerSec: Float = 0f,
     val repairingStaticAnimDefId: Int = 0,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_GAME_OBJECT_DEF_REPAIR_BAY = CLASSID_BUILDINGS + 9 = 0xD009 */
-        const val CLASS_ID: UInt = 0xD009u
+        const val CHUNK_ID: UInt = 0x00040146u  // CHUNKID_GAME_OBJECT_DEF_REPAIR_BAY
     }
 }
 
@@ -37,21 +37,21 @@ private const val MICROCHUNKID_DEF_REPAIRING_STATICANIM_DEFID = 2
 
 /**
  * Parses a RepairBayGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parseRepairBayGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): RepairBayGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return RepairBayGameObjDef(name = name, id = id, classId = classId)
+        ?: return RepairBayGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return RepairBayGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         repairPerSec = vars.readMicroFloat(MICROCHUNKID_DEF_REPAIR_PER_SEC) ?: 0f,
         repairingStaticAnimDefId = vars.readMicroInt(MICROCHUNKID_DEF_REPAIRING_STATICANIM_DEFID) ?: 0,
     )

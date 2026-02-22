@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 import ccr.net.bitstream.*
 
-// C++: cScObeliskEvent (scobeliskevent.h/.cpp) — classId = NETCLASSID_SCOBELISKEVENT = 1015
+// C++: cScObeliskEvent (scobeliskevent.h/.cpp) — networkClassId = NETCLASSID_SCOBELISKEVENT = 1015
 // Server-to-client one-shot event that triggers an obelisk beam/explosion effect on the client.
 // Same wire format as cScExplosionEvent: DefID + Position + OwnerID.
 // Export_Creation: DefID(int) + Position.X(BITPACK_WORLD_POSITION_X) + Position.Y(BITPACK_WORLD_POSITION_Y)

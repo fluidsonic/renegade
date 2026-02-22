@@ -56,13 +56,17 @@ class SpawnerLoaderTest {
             microString(10, "MyScript") +                     // scriptName
             microString(11, "param1=val1")                    // scriptParams
 
-        // Wrap in SPAWNER_CHUNKID_VARIABLES chunk
+        // Wrap in SPAWNER_CHUNKID_VARIABLES chunk (sibling of PARENT inside DATA)
         val varsChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_VARIABLES, vars.size, isContainer = false) + vars
 
-        // Wrap in SPAWNER_CHUNKID_PARENT chunk (container)
-        val parentChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_PARENT, varsChunk.size, isContainer = true) + varsChunk
+        // SPAWNER_CHUNKID_PARENT chunk (empty — PersistClass data not needed for parsing)
+        val parentChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_PARENT, 0, isContainer = false)
 
-        val spawners = SpawnerLoader.load(ChunkReader(parentChunk))
+        // Wrap both in SPAWNER_CHUNKID_DATA (the per-spawner wrapper written by SpawnManager)
+        val dataPayload = parentChunk + varsChunk
+        val dataChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_DATA, dataPayload.size, isContainer = true) + dataPayload
+
+        val spawners = SpawnerLoader.load(ChunkReader(dataChunk))
 
         assertEquals(1, spawners.size)
         val s = spawners[0]
@@ -95,9 +99,11 @@ class SpawnerLoaderTest {
             microMatrix(7, 25f, 30f, 35f)         // spawn point 2
 
         val varsChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_VARIABLES, vars.size, isContainer = false) + vars
-        val parentChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_PARENT, varsChunk.size, isContainer = true) + varsChunk
+        val parentChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_PARENT, 0, isContainer = false)
+        val dataPayload = parentChunk + varsChunk
+        val dataChunk = chunkHeader(ChunkIds.SPAWNER_CHUNKID_DATA, dataPayload.size, isContainer = true) + dataPayload
 
-        val spawners = SpawnerLoader.load(ChunkReader(parentChunk))
+        val spawners = SpawnerLoader.load(ChunkReader(dataChunk))
 
         assertEquals(1, spawners.size)
         val s = spawners[0]

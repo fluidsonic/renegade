@@ -274,7 +274,7 @@ class ProxyDecoderTest {
         val entries = parseProxyLog(lines)
         var decoded = 0
         var errors = 0
-        val classIdCounts = mutableMapOf<String, Int>()
+        val networkClassIdCounts = mutableMapOf<String, Int>()
 
         for (entry in entries) {
             if (entry.direction != "SERVER->CLIENT") continue
@@ -296,11 +296,11 @@ class ProxyDecoderTest {
                     val isDeletePending = bs.getBool()
 
                     if ((dirtyBits and 0x08) != 0) {
-                        val classId = bs.getInt()
-                        val key = "${NetClassIds.name(classId)}($classId)"
-                        classIdCounts.merge(key, 1) { a, b -> a + b }
+                        val networkClassId = bs.getInt()
+                        val key = "${NetClassIds.name(networkClassId)}($networkClassId)"
+                        networkClassIdCounts.merge(key, 1) { a, b -> a + b }
                     } else {
-                        classIdCounts.merge("UPDATE(dirty=0x${dirtyBits.toString(16)})", 1) { a, b -> a + b }
+                        networkClassIdCounts.merge("UPDATE(dirty=0x${dirtyBits.toString(16)})", 1) { a, b -> a + b }
                     }
                     decoded++
                 } catch (e: Exception) {
@@ -310,8 +310,8 @@ class ProxyDecoderTest {
         }
 
         println("Server game objects decoded: $decoded (errors: $errors)")
-        println("Class ID distribution:")
-        for ((key, count) in classIdCounts.entries.sortedByDescending { it.value }) {
+        println("Network Class ID distribution:")
+        for ((key, count) in networkClassIdCounts.entries.sortedByDescending { it.value }) {
             println("  $key: $count")
         }
     }

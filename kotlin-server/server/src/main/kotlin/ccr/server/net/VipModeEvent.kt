@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cVipModeEvent — classId = NETCLASSID_VIPMODEEVENT = 1028
+// C++: cVipModeEvent — networkClassId = NETCLASSID_VIPMODEEVENT = 1028
 // Client→Server event for toggling VIP mode via password.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

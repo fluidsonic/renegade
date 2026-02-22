@@ -10,7 +10,7 @@ import ccr.server.mix.ChunkReader
 class AmmoDefinitionClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val modelFilename: String = "",
     val warhead: Int = 0,
     val damage: Float = 1f,
@@ -75,10 +75,10 @@ class AmmoDefinitionClass(
     val iconOffsetX: Float = 0f,
     val iconOffsetY: Float = 0f,
     val grenadeSafetyTime: Float = 0f,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        const val CLASS_ID: UInt = 0x0000B002u // CLASSID_MUNITIONS + 2
+        const val CHUNK_ID: UInt = 0x00040128u  // CHUNKID_AMMO_DEF
 
         const val AMMO_TYPE_NORMAL = 0
         const val AMMO_TYPE_C4_REMOTE = 1
@@ -152,7 +152,7 @@ fun parseAmmoDefinitionClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): AmmoDefinitionClass? {
     val vars = objDataReader.findChunkRecursive(CHUNKID_AMMO_DEF_VARIABLES)
         ?: return null
@@ -160,7 +160,7 @@ fun parseAmmoDefinitionClass(
     return AmmoDefinitionClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         modelFilename = vars.readMicroString(MC_MODEL) ?: "",
         warhead = vars.readMicroInt(MC_WARHEAD) ?: 0,
         damage = vars.readMicroFloat(MC_DAMAGE) ?: 1f,

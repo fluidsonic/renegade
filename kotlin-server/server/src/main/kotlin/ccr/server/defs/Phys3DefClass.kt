@@ -12,7 +12,7 @@ import ccr.server.mix.ChunkReader
 open class Phys3DefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -22,7 +22,7 @@ open class Phys3DefClass(
     val normSpeed: Float = 10f,
     val slideAngle: Float = 0.7853982f, // DEG_TO_RADF(45)
     val stepHeight: Float = 0.25f,
-) : MoveablePhysDefClass(name, id, classId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
+) : MoveablePhysDefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
 
     internal data class ParsedFields(
         val modelName: String,
@@ -37,7 +37,7 @@ open class Phys3DefClass(
     )
 
     companion object {
-        const val CLASS_ID: UInt = 0x9004u
+        const val CHUNK_ID: UInt = 0x00020505u  // PHYSICS_CHUNKID_PHYS3DEF
 
         // Chunk IDs from phys3.cpp local enum
         internal const val PHYS3DEF_CHUNK_MOVEABLEPHYSDEF = 0x04486000u
@@ -90,13 +90,13 @@ open class Phys3DefClass(
          * [PHYS3DEF_CHUNK_VARIABLES] → normSpeed, slideAngle, stepHeight
          * ```
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): Phys3DefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): Phys3DefClass {
             val fields = parseFields(objDataChunk)
 
             return Phys3DefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = fields.modelName,
                 isPreLit = fields.isPreLit,
                 mass = fields.mass,

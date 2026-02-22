@@ -13,7 +13,7 @@ import ccr.server.mix.ChunkReader
 open class VehiclePhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -31,7 +31,7 @@ open class VehiclePhysDefClass(
     val engineFlameLength: Float = 1f,
     val isFake: Boolean = false,
 ) : RigidBodyDefClass(
-    name, id, classId, modelName, isPreLit, mass, gravScale, elasticity,
+    name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity,
     cinematicCollisionMode, aerodynamicDragCoefficient, collisionDisabled,
 ) {
 
@@ -56,7 +56,7 @@ open class VehiclePhysDefClass(
 
     companion object {
         /** CLASSID_VEHICLEPHYSDEF = CLASSID_PHYSICS + 11 = 0x900B */
-        const val CLASS_ID: UInt = 0x900Bu
+        const val CHUNK_ID: UInt = 0x0002050Cu  // PHYSICS_CHUNKID_VEHICLEPHYSDEF
 
         // Chunk IDs from vehiclephys.cpp local enum
         internal const val VEHICLEPHYSDEF_CHUNK_RIGIDBODYDEF = 405001519u  // 0x1823D52F
@@ -113,13 +113,13 @@ open class VehiclePhysDefClass(
         /**
          * Loads a VehiclePhysDefClass from the OBJDATA chunk.
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): VehiclePhysDefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): VehiclePhysDefClass {
             val fields = parseFields(objDataChunk)
 
             return VehiclePhysDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = fields.modelName,
                 isPreLit = fields.isPreLit,
                 mass = fields.mass,

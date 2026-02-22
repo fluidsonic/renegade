@@ -11,7 +11,7 @@ import ccr.server.mix.ChunkReader
 data class CNCModeSettingsDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val announcementInterval: Int = 30,
     // Per-team EVA string IDs (index 0 = Nod, 1 = GDI)
     val nodPowerOfflineId: Int = 0,
@@ -39,8 +39,7 @@ data class CNCModeSettingsDef(
     val radioCmdIcons: List<String> = List(30) { "" },
 ) {
     companion object {
-        /** CLASSID_GLOBAL_SETTINGS_DEF_CNCMODE = 0xF00A */
-        const val CLASS_ID: UInt = 61450u
+        const val CHUNK_ID: UInt = 0x00040609u  // CHUNKID_GLOBAL_SETTINGS_DEF_CNCMODE
     }
 }
 
@@ -78,10 +77,10 @@ fun parseCNCModeSettingsDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): CNCModeSettingsDef? {
     val vars = objDataReader.findChunk(CHUNKID_CNC_VARIABLES)
-        ?: return CNCModeSettingsDef(name = name, id = id, classId = classId)
+        ?: return CNCModeSettingsDef(name = name, id = id, chunkId = chunkId)
 
     val radioCmds = MutableList(30) { 0 }
     val radioCmdIcons = MutableList(30) { "" }
@@ -92,7 +91,7 @@ fun parseCNCModeSettingsDef(
     }
 
     return CNCModeSettingsDef(
-        name = name, id = id, classId = classId,
+        name = name, id = id, chunkId = chunkId,
         announcementInterval = vars.mcInt(VARID_ANNOUNCEMENT_INTERVAL) ?: 30,
         nodPowerOfflineId = vars.mcInt(VARID_NOD_POWER_OFFLINE_ID) ?: 0,
         gdiPowerOfflineId = vars.mcInt(VARID_GDI_POWER_OFFLINE_ID) ?: 0,

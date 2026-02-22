@@ -15,7 +15,7 @@ import java.nio.ByteOrder
 class ProjectileDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -30,10 +30,10 @@ class ProjectileDefClass(
     val tumbleRate: Float = 0.17453292f, // DEG_TO_RADF(10)
     val lifetime: Float = 2f,
     val bounceCount: Int = 0,
-) : MoveablePhysDefClass(name, id, classId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
+) : MoveablePhysDefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
 
     companion object {
-        const val CLASS_ID: UInt = 0x9009u
+        const val CHUNK_ID: UInt = 0x00020506u  // PHYSICS_CHUNKID_PROJECTILEDEF
 
         const val ORIENTATION_ALIGNED = 0
         const val ORIENTATION_FIXED = 1
@@ -65,7 +65,7 @@ class ProjectileDefClass(
          * [PROJECTILEDEF_CHUNK_VARIABLES] → collidesOnMove, orientationMode, tumbleAxis, tumbleRate, lifetime, bounceCount
          * ```
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): ProjectileDefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): ProjectileDefClass {
             // Parse parent chain
             val moveableChunk = objDataChunk.findChunk(PROJECTILEDEF_CHUNK_MOVEABLEPHYSDEF)
             val parentFields = if (moveableChunk != null) {
@@ -103,7 +103,7 @@ class ProjectileDefClass(
             return ProjectileDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = parentFields.modelName,
                 isPreLit = parentFields.isPreLit,
                 mass = parentFields.mass,

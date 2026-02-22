@@ -13,10 +13,10 @@ import java.nio.ByteOrder
 open class PhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val modelName: String = "NULL",
     val isPreLit: Boolean = false,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         // Chunk IDs from phys.cpp local enum

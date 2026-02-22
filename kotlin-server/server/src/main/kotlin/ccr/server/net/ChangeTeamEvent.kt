@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cChangeTeamEvent — classId = NETCLASSID_CHANGETEAMEVENT = 1020
+// C++: cChangeTeamEvent — networkClassId = NETCLASSID_CHANGETEAMEVENT = 1020
 // Client→Server event sent when a player requests a team change.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

@@ -13,14 +13,13 @@ import ccr.server.mix.ChunkReader
 data class SimpleGameObjDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val isEditorObject: Boolean = false,
     val isHiddenObject: Boolean = false,
     val playerTerminalType: Int = -1,
 ) {
     companion object {
-        /** CLASSID_GAME_OBJECT_DEF_SIMPLE = CLASSID_GAME_OBJECTS + 4 = 0x3004 */
-        const val CLASS_ID: UInt = 0x3004u
+        const val CHUNK_ID: UInt = 0x0004010Bu  // CHUNKID_GAME_OBJECT_DEF_SIMPLE
     }
 }
 
@@ -34,21 +33,21 @@ private const val MICROCHUNKID_DEF_PLAYER_TERM_TYPE = 3
 
 /**
  * Parses a SimpleGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parseSimpleGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): SimpleGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return SimpleGameObjDef(name = name, id = id, classId = classId)
+        ?: return SimpleGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return SimpleGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         isEditorObject = vars.readMicroBool(MICROCHUNKID_DEF_IS_EDITOR_OBJECT) ?: false,
         isHiddenObject = vars.readMicroBool(MICROCHUNKID_DEF_IS_HIDDEN_OBJECT) ?: false,
         playerTerminalType = vars.readMicroInt(MICROCHUNKID_DEF_PLAYER_TERM_TYPE) ?: -1,

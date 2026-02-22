@@ -16,16 +16,16 @@ import java.nio.ByteOrder
 class ScriptZoneGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val colorR: Float = 0f,
     val colorG: Float = 0.7f,
     val colorB: Float = 0f,
     val checkStarsOnly: Boolean = true,
     val zoneType: Int = 0,
     val isEnvironmentZone: Boolean = false,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
-        const val CLASS_ID: UInt = 0x300Eu
+        const val CHUNK_ID: UInt = 0x00040123u  // CHUNKID_GAME_OBJECT_DEF_SCRIPT_ZONE
     }
 }
 
@@ -42,10 +42,10 @@ fun parseScriptZoneGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): ScriptZoneGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return ScriptZoneGameObjDef(name = name, id = id, classId = classId)
+        ?: return ScriptZoneGameObjDef(name = name, id = id, chunkId = chunkId)
 
     // Color is a Vector3 (3 floats = 12 bytes)
     val colorBytes = vars.findMicroChunk(MICROCHUNKID_DEF_ZONE_COLOR)
@@ -78,7 +78,7 @@ fun parseScriptZoneGameObjDef(
     return ScriptZoneGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         colorR = colorR,
         colorG = colorG,
         colorB = colorB,

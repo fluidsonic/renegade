@@ -38,7 +38,7 @@ import java.nio.ByteOrder
 class DoorPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     // PhysDefClass
     val modelName: String = "NULL",
     val isPreLit: Boolean = false,
@@ -68,17 +68,17 @@ class DoorPhysDefClass(
     val unlockSoundDefId: Int = 0,
     val accessDeniedSoundDefId: Int = 0,
     val doorOpensForVehicles: Boolean = false,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_DOORPHYSDEF = CLASSID_PHYSICS(0x9000) + 0x80 */
-        const val CLASS_ID: UInt = 0x9080u
+        const val CHUNK_ID: UInt = 0x00020C00u  // PHYSICS_CHUNKID_DOORPHYSDEF
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is DoorPhysDefClass) return false
-        return name == other.name && id == other.id && classId == other.classId &&
+        return name == other.name && id == other.id && chunkId == other.chunkId &&
             modelName == other.modelName && isPreLit == other.isPreLit &&
             isNonOccluder == other.isNonOccluder &&
             shadowDynamicObjs == other.shadowDynamicObjs &&
@@ -104,7 +104,7 @@ class DoorPhysDefClass(
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + id.hashCode()
-        result = 31 * result + classId.hashCode()
+        result = 31 * result + chunkId.hashCode()
         result = 31 * result + modelName.hashCode()
         result = 31 * result + closeDelay.hashCode()
         result = 31 * result + (triggerZone1?.contentHashCode() ?: 0)
@@ -144,7 +144,7 @@ fun parseDoorPhysDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): DoorPhysDefClass {
     // Parse AccessiblePhysDefClass parent chain
     val accessibleChunk = objDataReader.findChunk(CHUNKID_DEF_PARENT)
@@ -152,7 +152,7 @@ fun parseDoorPhysDefClass(
     // StaticAnimPhysDefClass fields (nested inside Accessible -> StaticAnimPhysDef parent)
     val staticAnimChunk = accessibleChunk?.findChunk(AccessiblePhysDefClass.CHUNKID_DEF_PARENT)
     val parentObj = if (staticAnimChunk != null) {
-        parseStaticAnimPhysDefClass(staticAnimChunk, name, id, classId)
+        parseStaticAnimPhysDefClass(staticAnimChunk, name, id, chunkId)
     } else null
 
     // LockCode from AccessiblePhysDefClass variables
@@ -166,7 +166,7 @@ fun parseDoorPhysDefClass(
     // Door-specific fields
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
         ?: return DoorPhysDefClass(
-            name = name, id = id, classId = classId,
+            name = name, id = id, chunkId = chunkId,
             modelName = parentObj?.modelName ?: "NULL",
             isPreLit = parentObj?.isPreLit ?: false,
             isNonOccluder = parentObj?.isNonOccluder ?: true,
@@ -199,7 +199,7 @@ fun parseDoorPhysDefClass(
     return DoorPhysDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         modelName = parentObj?.modelName ?: "NULL",
         isPreLit = parentObj?.isPreLit ?: false,
         isNonOccluder = parentObj?.isNonOccluder ?: true,

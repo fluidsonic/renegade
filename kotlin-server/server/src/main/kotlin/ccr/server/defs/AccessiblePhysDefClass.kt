@@ -27,7 +27,7 @@ import java.nio.ByteOrder
 class AccessiblePhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     // PhysDefClass
     val modelName: String = "NULL",
     val isPreLit: Boolean = false,
@@ -46,7 +46,7 @@ class AccessiblePhysDefClass(
     val projectorManagerDef: ProjectorManagerDef = ProjectorManagerDef(),
     // AccessiblePhysDef own field
     val lockCode: Int = 0,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         // Chunk IDs from accessiblephys.cpp
@@ -61,7 +61,7 @@ class AccessiblePhysDefClass(
         // Own micro-chunk IDs
         internal const val VARID_DEF_LOCKCODE = 1
 
-        fun load(classId: UInt, objDataChunk: ChunkReader): AccessiblePhysDefClass? {
+        fun load(chunkId: UInt, objDataChunk: ChunkReader): AccessiblePhysDefClass? {
             // DefinitionClass base (deep in parent chain)
             val baseVarsChunk = objDataChunk.findChunkRecursive(CHUNKID_BASE_VARIABLES) ?: return null
             val idBytes = baseVarsChunk.findMicroChunk(BASE_VARID_INSTANCEID) ?: return null
@@ -74,7 +74,7 @@ class AccessiblePhysDefClass(
             // Parse StaticAnimPhysDefClass parent chain
             val parentChunk = objDataChunk.findChunk(CHUNKID_DEF_PARENT)
             val parentObj = if (parentChunk != null) {
-                parseStaticAnimPhysDefClass(parentChunk, name, id, classId)
+                parseStaticAnimPhysDefClass(parentChunk, name, id, chunkId)
             } else null
 
             // Own variables
@@ -88,7 +88,7 @@ class AccessiblePhysDefClass(
             return AccessiblePhysDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = parentObj?.modelName ?: "NULL",
                 isPreLit = parentObj?.isPreLit ?: false,
                 isNonOccluder = parentObj?.isNonOccluder ?: true,

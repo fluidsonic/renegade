@@ -16,12 +16,11 @@ import ccr.server.mix.ChunkReader
 class MendozaBossGameObjDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
-) : DefinitionClass(name, id, classId) {
+    chunkId: UInt,
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        /** CLASSID_GAME_OBJECT_DEF_MENDOZA_BOSS = CLASSID_GAME_OBJECTS + 23 = 0x3017 */
-        const val CLASS_ID: UInt = 0x3017u
+        const val CHUNK_ID: UInt = 0x0004014Au  // CHUNKID_GAME_OBJECT_DEF_MENDOZA_BOSS
     }
 }
 
@@ -33,7 +32,7 @@ fun parseMendozaBossGameObjDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): MendozaBossGameObjDefClass {
-    return MendozaBossGameObjDefClass(name = name, id = id, classId = classId)
+    return MendozaBossGameObjDefClass(name = name, id = id, chunkId = chunkId)
 }

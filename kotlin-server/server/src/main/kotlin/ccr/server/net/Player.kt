@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
 
-// C++: cPlayer (player.cpp) — classId = NETCLASSID_PLAYER = 1011
+// C++: cPlayer (player.cpp) — networkClassId = NETCLASSID_PLAYER = 1011
 // Directly inherits NetworkObjectClass (NOT in the game object hierarchy).
 // Holds player identity, team, score, and connection state.
 class Player(

@@ -35,7 +35,7 @@ import java.nio.ByteOrder
 class ElevatorPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     // PhysDefClass
     val modelName: String = "NULL",
     val isPreLit: Boolean = false,
@@ -69,11 +69,11 @@ class ElevatorPhysDefClass(
     val doorUnlockSoundDefId: Int = 0,
     val doorAccessDeniedSoundDefId: Int = 0,
     val elevatorMovingSoundDefId: Int = 0,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_ELEVATORPHYSDEF = CLASSID_PHYSICS + 0x81 = 0x9081 */
-        const val CLASS_ID: UInt = 0x9081u
+        const val CHUNK_ID: UInt = 0x00020C01u  // PHYSICS_CHUNKID_ELEVATORPHYSDEF
     }
 }
 
@@ -115,7 +115,7 @@ fun parseElevatorPhysDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): ElevatorPhysDefClass? {
     // Parse AccessiblePhysDefClass parent chain
     val accessibleChunk = objDataReader.findChunk(CHUNKID_DEF_PARENT)
@@ -123,7 +123,7 @@ fun parseElevatorPhysDefClass(
     // StaticAnimPhysDefClass fields (nested inside Accessible -> StaticAnimPhysDef parent)
     val staticAnimChunk = accessibleChunk?.findChunk(AccessiblePhysDefClass.CHUNKID_DEF_PARENT)
     val parentObj = if (staticAnimChunk != null) {
-        parseStaticAnimPhysDefClass(staticAnimChunk, name, id, classId)
+        parseStaticAnimPhysDefClass(staticAnimChunk, name, id, chunkId)
     } else null
 
     // LockCode from AccessiblePhysDefClass variables
@@ -174,7 +174,7 @@ fun parseElevatorPhysDefClass(
     return ElevatorPhysDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         modelName = parentObj?.modelName ?: "NULL",
         isPreLit = parentObj?.isPreLit ?: false,
         isNonOccluder = parentObj?.isNonOccluder ?: true,

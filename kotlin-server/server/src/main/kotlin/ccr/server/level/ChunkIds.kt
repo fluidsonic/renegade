@@ -15,16 +15,20 @@ package ccr.server.level
 object ChunkIds {
 
     // ─── LDD top-level (combatsaveload.cpp) ────────────────────────────────────
-    const val CHUNKID_LEVEL_INFO        = 1011991648u    // 0x3C3E1320
-    const val CHUNKID_LEVEL_DATA        = 1011991649u    // 0x3C3E1321
-    const val CHUNKID_GAMEOBJMANAGER    = 916991654u     // 0x369E82A6
-    const val CHUNKID_SPAWNERS          = 916991656u     // 0x369E82A8
-    const val CHUNKID_SCRIPTS           = 916991658u     // 0x369E82AA
+    const val CHUNKID_LEVEL_INFO        = 1011991648u    // 0x3C51C460
+    const val CHUNKID_LEVEL_DATA        = 1011991649u    // 0x3C51C461
+    const val CHUNKID_GAMEOBJMANAGER    = 916991654u     // 0x36A82EA6
+    const val CHUNKID_SPAWNERS          = 916991657u     // 0x36A82EA9
+    const val CHUNKID_SCRIPTS           = 916991659u     // 0x36A82EAB
     const val CHUNKID_COMBAT_BEGIN      = 0x00040000u
 
     // ─── SpawnerClass (spawn.cpp) ───────────────────────────────────────────────
-    const val SPAWNER_CHUNKID_PARENT    = 1014991053u    // 0x3C56AAED
-    const val SPAWNER_CHUNKID_VARIABLES = 1014991054u    // 0x3C56AAEE
+    // SpawnManager::Save writes SPAWNER_CHUNKID_DATA wrappers (one per spawner),
+    // then SpawnerClass::Save writes SPAWNER_CHUNKID_PARENT + SPAWNER_CHUNKID_VARIABLES inside.
+    const val SPAWNER_CHUNKID_DATA      = 1014991133u    // wrapper written by SpawnManager per-spawner
+    const val SPAWNER_CHUNKID_VARIABLES_MGR = 1014991134u // SpawnManager's own timer (skip)
+    const val SPAWNER_CHUNKID_PARENT    = 1014991053u    // 0x3C56AAED — written by SpawnerClass
+    const val SPAWNER_CHUNKID_VARIABLES = 1014991054u    // 0x3C56AAEE — written by SpawnerClass
 
     // ─── PersistFactory (persistfactory.h) ─────────────────────────────────────
     const val SIMPLEFACTORY_CHUNKID_OBJPOINTER = 0x00100100u
@@ -76,26 +80,26 @@ object ChunkIds {
     const val PHYSICS_CHUNKID_WAYPOINT = 0x00020111u
 
     // ─── Game object persist factory IDs (combatchunkid.h) ─────────────────────
-    const val GAMEOBJ_C4               = 0x00040108u
+    const val GAMEOBJ_C4               = 0x00040102u
     const val GAMEOBJ_SIMPLE           = 0x0004010Au
-    const val GAMEOBJ_POWERUP          = 0x0004010Cu
-    const val GAMEOBJ_SOLDIER          = 0x00040110u
-    const val GAMEOBJ_VEHICLE          = 0x00040112u
-    const val GAMEOBJ_SCRIPTZONE       = 0x0004011Eu
-    const val GAMEOBJ_TRANSITION       = 0x00040120u
-    const val GAMEOBJ_CINEMATIC        = 0x00040124u
-    const val GAMEOBJ_DAMAGEZONE       = 0x00040126u
-    const val GAMEOBJ_SPECIALEFFECTS   = 0x00040128u
-    const val GAMEOBJ_BUILDING         = 0x00040132u
-    const val GAMEOBJ_BEACON           = 0x00040134u
-    const val GAMEOBJ_BUILDING_REFINERY        = 0x00040136u
-    const val GAMEOBJ_BUILDING_POWERPLANT      = 0x00040138u
-    const val GAMEOBJ_BUILDING_SOLDIERFACTORY  = 0x0004013Au
-    const val GAMEOBJ_BUILDING_VEHICLEFACTORY  = 0x0004013Cu
-    const val GAMEOBJ_BUILDING_AIRSTRIP        = 0x0004013Eu
-    const val GAMEOBJ_BUILDING_WARFACTORY      = 0x00040140u
-    const val GAMEOBJ_BUILDING_COMCENTER       = 0x00040142u
-    const val GAMEOBJ_BUILDING_REPAIRBAY       = 0x00040144u
+    const val GAMEOBJ_POWERUP          = 0x00040106u
+    const val GAMEOBJ_SOLDIER          = 0x0004010Eu
+    const val GAMEOBJ_VEHICLE          = 0x00040110u
+    const val GAMEOBJ_SCRIPTZONE       = 0x00040122u
+    const val GAMEOBJ_TRANSITION       = 0x00040124u
+    const val GAMEOBJ_CINEMATIC        = 0x0004012Bu
+    const val GAMEOBJ_DAMAGEZONE       = 0x0004012Du
+    const val GAMEOBJ_SPECIALEFFECTS   = 0x0004012Fu
+    const val GAMEOBJ_BUILDING         = 0x00040133u
+    const val GAMEOBJ_BEACON           = 0x00040135u
+    const val GAMEOBJ_BUILDING_REFINERY        = 0x00040137u
+    const val GAMEOBJ_BUILDING_POWERPLANT      = 0x00040139u
+    const val GAMEOBJ_BUILDING_SOLDIERFACTORY  = 0x0004013Bu
+    const val GAMEOBJ_BUILDING_VEHICLEFACTORY  = 0x0004013Du
+    const val GAMEOBJ_BUILDING_AIRSTRIP        = 0x0004013Fu
+    const val GAMEOBJ_BUILDING_WARFACTORY      = 0x00040141u
+    const val GAMEOBJ_BUILDING_COMCENTER       = 0x00040143u
+    const val GAMEOBJ_BUILDING_REPAIRBAY       = 0x00040145u
 
     // ─── BackgroundMgr / WeatherMgr (combatchunkid.h) ──────────────────────────
     const val CHUNKID_BACKGROUND_MGR = 0x00040126u

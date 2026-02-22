@@ -17,7 +17,7 @@ import ccr.server.mix.ChunkReader
 class SakuraBossGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     // SakuraBoss-specific fields — defaults match C++ constructor
     val gattlingGunDefId: Int = 0,
     val rocketLauncherDefId: Int = 0,
@@ -25,10 +25,10 @@ class SakuraBossGameObjDef(
     val rocketDoorOpenSoundId: Int = 0,
     val rocketDestroyedExplosionId: Int = 0,
     val rocketsDefense: BuildingGameObjDef.DefenseObjectDef = BuildingGameObjDef.DefenseObjectDef(),
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        const val CLASS_ID: UInt = 0x3014u // CLASSID_GAME_OBJECT_DEF_SAKURA_BOSS
+        const val CHUNK_ID: UInt = 0x00040132u  // CHUNKID_GAME_OBJECT_DEF_SAKURA_BOSS
     }
 }
 
@@ -47,7 +47,7 @@ fun parseSakuraBossGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): SakuraBossGameObjDef? {
     // Parse sakura-specific variables
     val varsReader = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
@@ -69,7 +69,7 @@ fun parseSakuraBossGameObjDef(
     return SakuraBossGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         gattlingGunDefId = gattlingGunDefId,
         rocketLauncherDefId = rocketLauncherDefId,
         gattlingGunRevSoundDefId = gattlingGunRevSoundDefId,

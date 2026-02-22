@@ -47,5 +47,5 @@ object NetClassIds {
         1038 to "DONATEEVENT",
     )
 
-    fun name(classId: Int): String = names[classId] ?: "UNKNOWN_$classId"
+    fun name(networkClassId: Int): String = names[networkClassId] ?: "UNKNOWN_$networkClassId"
 }

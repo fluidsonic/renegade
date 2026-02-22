@@ -10,7 +10,7 @@ import ccr.server.mix.ChunkReader
 class WeaponDefinitionClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val style: Int = 1,
     val model: String = "",
     val idleAnim: String = "",
@@ -48,10 +48,10 @@ class WeaponDefinitionClass(
     val iconOffsetX: Float = 0f,
     val iconOffsetY: Float = 0f,
     val humanFiringAnimation: String = "",
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        const val CLASS_ID: UInt = 0xB001u // CLASSID_MUNITIONS + 1
+        const val CHUNK_ID: UInt = 0x00040127u  // CHUNKID_WEAPON_DEF
     }
 }
 
@@ -102,14 +102,14 @@ fun parseWeaponDefinitionClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): WeaponDefinitionClass? {
     val varsReader = objDataReader.findChunk(CHUNKID_WEAPON_DEF_VARIABLES) ?: return null
 
     return WeaponDefinitionClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         style = varsReader.readMicroInt(MCID_STYLE) ?: 1,
         model = varsReader.readMicroString(MCID_MODEL) ?: "",
         idleAnim = varsReader.readMicroString(MCID_IDLE_ANIM) ?: "",

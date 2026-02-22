@@ -20,7 +20,7 @@ import ccr.server.mix.ChunkReader
 open class WheeledVehicleDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -52,7 +52,7 @@ open class WheeledVehicleDefClass(
     shiftDownRpm: Float = 2000f,
     val maxSteeringAngle: Float = 0.7853982f, // PI/4
 ) : MotorVehicleDefClass(
-    name, id, classId, modelName, isPreLit,
+    name, id, chunkId, modelName, isPreLit,
     mass, gravScale, elasticity, cinematicCollisionMode,
     aerodynamicDragCoefficient, collisionDisabled,
     springConstant, dampingConstant, springLength, tractionMultiplier,
@@ -99,7 +99,7 @@ open class WheeledVehicleDefClass(
 
     companion object {
         /** CLASSID_WHEELEDVEHICLEDEF = CLASSID_PHYSICS(0x9000) + 6 */
-        const val CLASS_ID: UInt = 0x9006u
+        const val CHUNK_ID: UInt = 0x00020509u  // PHYSICS_CHUNKID_WHEELEDVEHICLEDEF
 
         // Chunk IDs from wheelvehicle.cpp local enum
         const val CHUNK_MOTORVEHICLEDEF: UInt = 0x00990066u
@@ -163,13 +163,13 @@ open class WheeledVehicleDefClass(
         /**
          * Loads a WheeledVehicleDefClass from the OBJDATA chunk.
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): WheeledVehicleDefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): WheeledVehicleDefClass {
             val fields = parseFields(objDataChunk)
 
             return WheeledVehicleDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = fields.modelName,
                 isPreLit = fields.isPreLit,
                 mass = fields.mass,

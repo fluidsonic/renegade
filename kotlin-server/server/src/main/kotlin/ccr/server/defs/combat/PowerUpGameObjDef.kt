@@ -18,7 +18,7 @@ import ccr.server.mix.ChunkReader
 data class PowerUpGameObjDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val grantShieldType: Int = 0,
     val grantShieldStrength: Float = 0f,
     val grantShieldStrengthMax: Float = 0f,
@@ -37,8 +37,7 @@ data class PowerUpGameObjDef(
     val alwaysAllowGrant: Boolean = false,
 ) {
     companion object {
-        /** CLASSID_GAME_OBJECT_DEF_POWERUP = CLASSID_GAME_OBJECTS + 3 = 0x3003 */
-        const val CLASS_ID: UInt = 12291u
+        const val CHUNK_ID: UInt = 0x00040107u  // CHUNKID_GAME_OBJECT_DEF_POWERUP
     }
 }
 
@@ -65,21 +64,21 @@ private const val MICROCHUNKID_DEF_GRANT_HEALTH_MAX = 21
 
 /**
  * Parses a PowerUpGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parsePowerUpGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): PowerUpGameObjDef? {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return PowerUpGameObjDef(name = name, id = id, classId = classId)
+        ?: return PowerUpGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return PowerUpGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         grantShieldType = vars.readMicroInt(MICROCHUNKID_DEF_GRANT_SHIELD_TYPE) ?: 0,
         grantShieldStrength = vars.readMicroFloat(MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH) ?: 0f,
         grantShieldStrengthMax = vars.readMicroFloat(MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH_MAX) ?: 0f,

@@ -16,12 +16,12 @@ import ccr.server.mix.ChunkReader
 class ComCenterGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
-) : DefinitionClass(name, id, classId) {
+    chunkId: UInt,
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_GAME_OBJECT_DEF_COMCENTER = CLASSID_BUILDINGS + 8 = 0xD008 */
-        const val CLASS_ID: UInt = 0xD008u
+        const val CHUNK_ID: UInt = 0x00040144u  // CHUNKID_GAME_OBJECT_DEF_COMCENTER
     }
 }
 
@@ -33,7 +33,7 @@ fun parseComCenterGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): ComCenterGameObjDef {
-    return ComCenterGameObjDef(name = name, id = id, classId = classId)
+    return ComCenterGameObjDef(name = name, id = id, chunkId = chunkId)
 }

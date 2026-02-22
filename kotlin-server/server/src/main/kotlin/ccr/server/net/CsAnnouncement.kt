@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: CSAnnouncement — classId = NETCLASSID_CSANNOUNCEMENT = 1037
+// C++: CSAnnouncement — networkClassId = NETCLASSID_CSANNOUNCEMENT = 1037
 // Client→Server radio/announcement event.
 // Wire format (BIT_CREATION):
 //   ToId (int)

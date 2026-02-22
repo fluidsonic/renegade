@@ -10,7 +10,7 @@ import ccr.server.mix.ChunkReader
 data class EvaSettingsDefClass(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     // Objectives viewer
     val objectivesScreenRect: Rect4 = Rect4(0.063f, 0.25f, 0.938f, 0.75f),
     val objectivesTextRect: Rect4 = Rect4(0.1f, 0.260f, 0.906f, 0.555f),
@@ -28,8 +28,7 @@ data class EvaSettingsDefClass(
     val messagesIconPos: Vec2 = Vec2(0.016f, 0.021f),
 ) {
     companion object {
-        /** CLASSID_GLOBAL_SETTINGS_DEF_EVA = 0xF005 */
-        const val CLASS_ID: UInt = 61445u
+        const val CHUNK_ID: UInt = 0x00040604u  // CHUNKID_GLOBAL_SETTINGS_DEF_EVA
     }
 }
 
@@ -55,13 +54,13 @@ fun parseEvaSettingsDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): EvaSettingsDefClass? {
     val vars = objDataReader.findChunk(CHUNKID_EVA_VARIABLES)
-        ?: return EvaSettingsDefClass(name = name, id = id, classId = classId)
+        ?: return EvaSettingsDefClass(name = name, id = id, chunkId = chunkId)
 
     return EvaSettingsDefClass(
-        name = name, id = id, classId = classId,
+        name = name, id = id, chunkId = chunkId,
         objectivesScreenRect = vars.mcRect4(VARID_OBJECTIVESSCREENRECT)
             ?: Rect4(0.063f, 0.25f, 0.938f, 0.75f),
         objectivesTextRect = vars.mcRect4(VARID_OBJECTIVESTEXTRECT)

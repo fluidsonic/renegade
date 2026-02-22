@@ -13,7 +13,7 @@ import ccr.server.mix.ChunkReader
 class AudibleSoundDefinitionClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val priority: Float = 0.5f,
     val volume: Float = 1.0f,
     val volumeRandomizer: Float = 0.0f,
@@ -38,11 +38,11 @@ class AudibleSoundDefinitionClass(
     val sphereColorR: Float = 0.0f,
     val sphereColorG: Float = 0.75f,
     val sphereColorB: Float = 0.75f,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_SOUND = NEXT_SUPER_CLASSID(4) = 0x1000 + 4*0x1000 */
-        const val CLASS_ID: UInt = 0x5000u
+        const val CHUNK_ID: UInt = 0x00030000u  // CHUNKID_SOUND_DEF
 
         // AudibleSoundClass::SOUND_TYPE enum values
         const val TYPE_MUSIC: Int = 0
@@ -82,7 +82,7 @@ fun parseAudibleSoundDefinitionClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): AudibleSoundDefinitionClass? {
     val vars = objDataReader.findChunk(CHUNKID_VARIABLES)
         ?: return null
@@ -90,7 +90,7 @@ fun parseAudibleSoundDefinitionClass(
     return AudibleSoundDefinitionClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         priority = vars.readMicroFloat(VARID_PRIORITY) ?: 0.5f,
         volume = vars.readMicroFloat(VARID_VOLUME) ?: 1.0f,
         volumeRandomizer = vars.readMicroFloat(VARID_VOLUME_RND) ?: 0.0f,

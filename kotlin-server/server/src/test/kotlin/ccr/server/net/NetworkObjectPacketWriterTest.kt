@@ -11,7 +11,7 @@ class NetworkObjectPacketWriterTest {
 
     // ---- writeOccasionalUpdate ----
 
-    @Test fun `writeOccasionalUpdate - header layout - dirtyBits=0x03, no classId`() {
+    @Test fun `writeOccasionalUpdate - header layout - dirtyBits=0x03, no networkClassId`() {
         val team = Team(teamNumber = 0, score = 42f)
         val bs = BitStream()
         NetworkObjectPacketWriter.writeOccasionalUpdate(bs, team, networkId = 999)
@@ -19,7 +19,7 @@ class NetworkObjectPacketWriterTest {
         assertEquals(999, bs.getInt())                                // networkId
         assertEquals(0x03, bs.getByte().toInt() and 0xFF)             // dirtyBits = BIT_OCCASIONAL
         assertFalse(bs.getBool())                                      // isDeletePending = false
-        // No classId — BIT_CREATION (0x08) is not set
+        // No networkClassId — BIT_CREATION (0x08) is not set
         assertEquals(42f, bs.getFloat())                               // score from exportOccasional
     }
 
@@ -35,7 +35,7 @@ class NetworkObjectPacketWriterTest {
 
     // ---- writeFrequentUpdate ----
 
-    @Test fun `writeFrequentUpdate - header layout - dirtyBits=0x01, no classId`() {
+    @Test fun `writeFrequentUpdate - header layout - dirtyBits=0x01, no networkClassId`() {
         val team = Team(teamNumber = 0)
         val bs = BitStream()
         NetworkObjectPacketWriter.writeFrequentUpdate(bs, team, networkId = 888)
@@ -43,7 +43,7 @@ class NetworkObjectPacketWriterTest {
         assertEquals(888, bs.getInt())                                 // networkId
         assertEquals(0x01, bs.getByte().toInt() and 0xFF)              // dirtyBits = BIT_FREQUENT
         assertFalse(bs.getBool())                                       // isDeletePending = false
-        // No classId — BIT_CREATION not set. Team has no frequent data — nothing more to read.
+        // No networkClassId — BIT_CREATION not set. Team has no frequent data — nothing more to read.
     }
 
     @Test fun `writeFrequentUpdate - total bits for Team (no frequent data) = 41`() {

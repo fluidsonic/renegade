@@ -10,7 +10,7 @@ import ccr.server.mix.ChunkReader
 class ExplosionDefinitionClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val physDefId: Int = 0,
     val soundDefId: Int = 0,
     val damageRadius: Float = 0f,
@@ -23,10 +23,10 @@ class ExplosionDefinitionClass(
     val cameraShakeIntensity: Float = 0f,
     val cameraShakeRadius: Float = 25f,
     val cameraShakeDuration: Float = 1.5f,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        const val CLASS_ID: UInt = 0xB003u // CLASSID_MUNITIONS + 3
+        const val CHUNK_ID: UInt = 0x0004012Au  // CHUNKID_EXPLOSION_DEF
     }
 }
 
@@ -52,14 +52,14 @@ fun parseExplosionDefinitionClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): ExplosionDefinitionClass? {
     val varsReader = objDataReader.findChunk(CHUNKID_EXPLOSION_DEF_VARIABLES) ?: return null
 
     return ExplosionDefinitionClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         physDefId = varsReader.readMicroInt(MCID_PHYS_DEF_ID) ?: 0,
         soundDefId = varsReader.readMicroInt(MCID_SOUND_DEF_ID) ?: 0,
         damageRadius = varsReader.readMicroFloat(MCID_DAMAGE_RADIUS) ?: 0f,

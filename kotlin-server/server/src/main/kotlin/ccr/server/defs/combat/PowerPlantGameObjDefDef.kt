@@ -14,12 +14,12 @@ import ccr.server.mix.ChunkReader
 class PowerPlantGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
-) : DefinitionClass(name, id, classId) {
+    chunkId: UInt,
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_GAME_OBJECT_DEF_POWERPLANT = CLASSID_BUILDINGS + 3 = 0xD003 */
-        const val CLASS_ID: UInt = 0xD003u
+        const val CHUNK_ID: UInt = 0x0004013Au  // CHUNKID_GAME_OBJECT_DEF_POWERPLANT
     }
 }
 
@@ -31,7 +31,7 @@ fun parsePowerPlantGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): PowerPlantGameObjDef {
-    return PowerPlantGameObjDef(name = name, id = id, classId = classId)
+    return PowerPlantGameObjDef(name = name, id = id, chunkId = chunkId)
 }

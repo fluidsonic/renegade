@@ -11,7 +11,7 @@ import ccr.server.mix.ChunkReader
 open class RigidBodyDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -20,7 +20,7 @@ open class RigidBodyDefClass(
     cinematicCollisionMode: Int = CINEMATIC_COLLISION_PUSH,
     val aerodynamicDragCoefficient: Float = 0f,
     val collisionDisabled: Boolean = false,
-) : MoveablePhysDefClass(name, id, classId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
+) : MoveablePhysDefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
 
     internal data class ParsedFields(
         val modelName: String,
@@ -34,7 +34,7 @@ open class RigidBodyDefClass(
     )
 
     companion object {
-        const val CLASS_ID: UInt = 0x9005u
+        const val CHUNK_ID: UInt = 0x00020507u  // PHYSICS_CHUNKID_RIGIDBODYDEF
 
         // Chunk IDs from rbody.cpp local enum
         internal const val RIGIDBODYDEF_CHUNK_MOVEABLEPHYSDEF = 0x01106650u
@@ -82,13 +82,13 @@ open class RigidBodyDefClass(
          * [RIGIDBODYDEF_CHUNK_VARIABLES] → aerodynamicDragCoefficient, collisionDisabled
          * ```
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): RigidBodyDefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): RigidBodyDefClass {
             val fields = parseFields(objDataChunk)
 
             return RigidBodyDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = fields.modelName,
                 isPreLit = fields.isPreLit,
                 mass = fields.mass,

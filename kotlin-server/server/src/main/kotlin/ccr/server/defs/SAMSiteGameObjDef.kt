@@ -15,11 +15,11 @@ import ccr.server.mix.ChunkReader
 class SAMSiteGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
-) : DefinitionClass(name, id, classId) {
+    chunkId: UInt,
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        const val CLASS_ID: UInt = 0x3007u // CLASSID_GAME_OBJECT_DEF_SAMSITE
+        const val CHUNK_ID: UInt = 0x00040109u  // CHUNKID_GAME_OBJECT_DEF_SAMSITE
     }
 }
 
@@ -31,7 +31,7 @@ fun parseSAMSiteGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): SAMSiteGameObjDef {
-    return SAMSiteGameObjDef(name = name, id = id, classId = classId)
+    return SAMSiteGameObjDef(name = name, id = id, chunkId = chunkId)
 }

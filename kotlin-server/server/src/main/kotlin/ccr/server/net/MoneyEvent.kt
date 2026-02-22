@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cMoneyEvent — classId = NETCLASSID_MONEYEVENT = 1021
+// C++: cMoneyEvent — networkClassId = NETCLASSID_MONEYEVENT = 1021
 // Client→Server event for money transactions.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

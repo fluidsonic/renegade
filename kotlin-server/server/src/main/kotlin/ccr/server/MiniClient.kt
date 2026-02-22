@@ -223,8 +223,8 @@ private fun describePayload(pkt: Packet) {
         if (isDeletePending) sb.append(" DELETE")
 
         if ((dirtyBits and 0x08) != 0) {
-            val classId = bs.getInt()
-            sb.append(" classId=$classId(${NetClassIds.name(classId)})")
+            val networkClassId = bs.getInt()
+            sb.append(" networkClassId=$networkClassId(${NetClassIds.name(networkClassId)})")
         }
         println(sb.toString())
     } catch (e: Exception) {
@@ -258,7 +258,7 @@ private fun sendAck(socket: DatagramSocket, dest: InetSocketAddress, packetId: I
 }
 
 private fun sendClientControl(socket: DatagramSocket, dest: InetSocketAddress, localId: Int, reliableSendId: Int) {
-    // C++: cClientControl — classId=1018
+    // C++: cClientControl — networkClassId=1018
     // Export_Creation: ClientId (int)
     // Export_Frequent: SmartObjId (int) — -1 means no soldier yet
     // Total: 73 (header) + 32 + 32 = 137 bits (matches real client)
@@ -270,7 +270,7 @@ private fun sendClientControl(socket: DatagramSocket, dest: InetSocketAddress, l
         payload.addInt(netIdBase + 1)          // networkId
         payload.addByte(0x0F.toByte())         // dirtyBits = BIT_CREATION
         payload.addBool(false)                 // isDeletePending
-        payload.addInt(1018)                   // classId = CLIENTCONTROL
+        payload.addInt(1018)                   // networkClassId = CLIENTCONTROL
         payload.addInt(localId)                // ClientId (Export_Creation)
         payload.addInt(-1)                     // SmartObjId = -1 (Export_Frequent, no soldier)
     }
@@ -278,7 +278,7 @@ private fun sendClientControl(socket: DatagramSocket, dest: InetSocketAddress, l
 }
 
 private fun sendClientFps(socket: DatagramSocket, dest: InetSocketAddress, localId: Int, reliableSendId: Int) {
-    // C++: cClientFps — classId=1032
+    // C++: cClientFps — networkClassId=1032
     // Export_Creation: ClientId (int)
     // Export_Frequent: Fps (BYTE)
     // Total: 73 (header) + 32 + 8 = 113 bits (matches real client)
@@ -290,7 +290,7 @@ private fun sendClientFps(socket: DatagramSocket, dest: InetSocketAddress, local
         payload.addInt(netIdBase + 2)          // networkId
         payload.addByte(0x0F.toByte())         // dirtyBits = BIT_CREATION
         payload.addBool(false)                 // isDeletePending
-        payload.addInt(1032)                   // classId = CLIENTFPS
+        payload.addInt(1032)                   // networkClassId = CLIENTFPS
         payload.addInt(localId)                // ClientId (Export_Creation)
         payload.addByte(60.toByte())           // Fps = 60 (Export_Frequent)
     }
@@ -298,7 +298,7 @@ private fun sendClientFps(socket: DatagramSocket, dest: InetSocketAddress, local
 }
 
 private fun sendBioEvent(socket: DatagramSocket, dest: InetSocketAddress, localId: Int, reliableSendId: Int) {
-    // C++: cBioEvent is a cNetEvent with classId=1026
+    // C++: cBioEvent is a cNetEvent with networkClassId=1026
     // Export_Creation writes: SenderId, Nickname, TeamChoice, ClanID, MapName
     val pkt = Packet().apply {
         type = PacketType.RELIABLE
@@ -308,7 +308,7 @@ private fun sendBioEvent(socket: DatagramSocket, dest: InetSocketAddress, localI
         payload.addInt(2110000003)           // networkId (matching real client scheme)
         payload.addByte(0x0F.toByte())     // dirtyBits = BIT_CREATION
         payload.addBool(false)             // isDeletePending
-        payload.addInt(1026)               // classId = NETCLASSID_BIOEVENT
+        payload.addInt(1026)               // networkClassId = NETCLASSID_BIOEVENT
         // cBioEvent::Export_Creation fields:
         payload.addInt(localId)            // SenderId
         payload.addWideString("MiniClient") // Nickname

@@ -12,7 +12,7 @@ import java.nio.ByteOrder
 data class GlobalSettingsDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val deathSoundId: Int = 0,
     val evaObjectivesSoundId: Int = 0,
     val hudHelpTextSoundId: Int = 0,
@@ -42,7 +42,7 @@ data class GlobalSettingsDef(
     val mpStealthDistanceVehicle: Float = 25f,
 ) {
     companion object {
-        const val CLASS_ID: UInt = 61443u // 0xF003
+        const val CHUNK_ID: UInt = 0x00040602u  // CHUNKID_GLOBAL_SETTINGS_DEF_GENERAL
     }
 }
 
@@ -50,13 +50,13 @@ fun parseGlobalSettingsDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): GlobalSettingsDef? {
     val vars = objDataReader.findChunk(GLOBAL_CHUNKID_DEF_VARIABLES)
-        ?: return GlobalSettingsDef(name = name, id = id, classId = classId)
+        ?: return GlobalSettingsDef(name = name, id = id, chunkId = chunkId)
 
     return GlobalSettingsDef(
-        name = name, id = id, classId = classId,
+        name = name, id = id, chunkId = chunkId,
         deathSoundId = vars.mcInt(2) ?: 0,
         evaObjectivesSoundId = vars.mcInt(3) ?: 0,
         hudHelpTextSoundId = vars.mcInt(25) ?: 0, // MICROCHUNKID_DEF_HELP_TXT_SOUND
@@ -95,13 +95,13 @@ fun parseGlobalSettingsDef(
 data class HumanLoiterGlobalSettingsDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val activationDelay: Float = 20f,
     val loiterFrequency: Float = 10f,
     val loiterAnimList: List<String> = emptyList(),
 ) {
     companion object {
-        const val CLASS_ID: UInt = 61442u // 0xF002
+        const val CHUNK_ID: UInt = 0x00040601u  // CHUNKID_GLOBAL_SETTINGS_DEF_HUMAN_LOITER
     }
 }
 
@@ -109,16 +109,16 @@ fun parseHumanLoiterGlobalSettingsDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): HumanLoiterGlobalSettingsDef? {
     // Chunk IDs: CHUNKID_HL_DEF_PARENT=803001812, CHUNKID_HL_DEF_VARIABLES=803001813
     val vars = objDataReader.findChunk(803001813u)
-        ?: return HumanLoiterGlobalSettingsDef(name = name, id = id, classId = classId)
+        ?: return HumanLoiterGlobalSettingsDef(name = name, id = id, chunkId = chunkId)
 
     val anims = vars.mcStringList(3) // MICROCHUNKID_HL_DEF_LOITER_ANIM_LIST_ENTRY
 
     return HumanLoiterGlobalSettingsDef(
-        name = name, id = id, classId = classId,
+        name = name, id = id, chunkId = chunkId,
         activationDelay = vars.mcFloat(1) ?: 20f,
         loiterFrequency = vars.mcFloat(2) ?: 10f,
         loiterAnimList = anims,
@@ -146,7 +146,7 @@ data class Vec2(val x: Float, val y: Float)
 data class HUDGlobalSettingsDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     // Colors (Vector3)
     val nodColor: Vec3 = Vec3(1f, 0f, 0f),
     val gdiColor: Vec3 = Vec3(1f, 1f, 0f),
@@ -249,7 +249,7 @@ data class HUDGlobalSettingsDef(
     val damageDiagIndicatorUV: Rect4 = Rect4(1f, 60f, 47f, 106f),
 ) {
     companion object {
-        const val CLASS_ID: UInt = 61444u // 0xF004
+        const val CHUNK_ID: UInt = 0x00040603u  // CHUNKID_GLOBAL_SETTINGS_DEF_HUD
     }
 }
 
@@ -257,15 +257,15 @@ fun parseHUDGlobalSettingsDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): HUDGlobalSettingsDef? {
     // HUD Save/Load uses CHUNKID_HL_DEF_VARIABLES (803001813) — same as HumanLoiter
     val vars = objDataReader.findChunk(803001813u)
-        ?: return HUDGlobalSettingsDef(name = name, id = id, classId = classId)
+        ?: return HUDGlobalSettingsDef(name = name, id = id, chunkId = chunkId)
 
     // Micro-chunk IDs from enum (starts at 1)
     return HUDGlobalSettingsDef(
-        name = name, id = id, classId = classId,
+        name = name, id = id, chunkId = chunkId,
         nodColor = vars.mcVec3(1) ?: Vec3(1f, 0f, 0f),
         gdiColor = vars.mcVec3(2) ?: Vec3(1f, 1f, 0f),
         neutralColor = vars.mcVec3(3) ?: Vec3(1f, 1f, 1f),
@@ -371,7 +371,7 @@ fun parseHUDGlobalSettingsDef(
 data class HumanAnimOverrideDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val runEmptyHands: String = "",
     val walkEmptyHands: String = "",
     val runAtChest: String = "",
@@ -380,7 +380,7 @@ data class HumanAnimOverrideDef(
     val walkAtHip: String = "",
 ) {
     companion object {
-        const val CLASS_ID: UInt = 61447u // 0xF007
+        const val CHUNK_ID: UInt = 0x00040606u  // CHUNKID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE
     }
 }
 
@@ -388,14 +388,14 @@ fun parseHumanAnimOverrideDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): HumanAnimOverrideDef? {
     // CHUNKID_HAO_DEF_VARIABLES = 726011913
     val vars = objDataReader.findChunk(726011913u)
-        ?: return HumanAnimOverrideDef(name = name, id = id, classId = classId)
+        ?: return HumanAnimOverrideDef(name = name, id = id, chunkId = chunkId)
 
     return HumanAnimOverrideDef(
-        name = name, id = id, classId = classId,
+        name = name, id = id, chunkId = chunkId,
         runEmptyHands = vars.mcString(1) ?: "",
         walkEmptyHands = vars.mcString(2) ?: "",
         runAtChest = vars.mcString(3) ?: "",

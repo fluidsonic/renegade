@@ -61,7 +61,7 @@ data class ProjectorManagerDef(
 class StaticAnimPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     isNonOccluder: Boolean = true,
@@ -75,11 +75,11 @@ class StaticAnimPhysDefClass(
     val isCosmetic: Boolean = false,
     val animManagerDef: AnimCollisionManagerDef = AnimCollisionManagerDef(),
     val projectorManagerDef: ProjectorManagerDef = ProjectorManagerDef(),
-) : StaticPhysDefClass(name, id, classId, modelName, isPreLit, isNonOccluder) {
+) : StaticPhysDefClass(name, id, chunkId, modelName, isPreLit, isNonOccluder) {
 
     companion object {
         /** CLASSID_STATICANIMPHYSDEF = CLASSID_PHYSICS(0x9000) + 8 */
-        const val CLASS_ID: UInt = 0x9008u
+        const val CHUNK_ID: UInt = 0x0002050Au  // PHYSICS_CHUNKID_STATICANIMPHYSDEF
     }
 }
 
@@ -132,7 +132,7 @@ fun parseStaticAnimPhysDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): StaticAnimPhysDefClass {
 
     // -- Parse parent StaticPhysDefClass fields from nested parent chunk ------
@@ -188,7 +188,7 @@ fun parseStaticAnimPhysDefClass(
     return StaticAnimPhysDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         modelName = modelName,
         isPreLit = isPreLit,
         isNonOccluder = isNonOccluder,

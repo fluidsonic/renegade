@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
 
-// C++: CClientFps (Commando/clientfps.h) — classId = NETCLASSID_CLIENTFPS = 1031
+// C++: CClientFps (Commando/clientfps.h) — networkClassId = NETCLASSID_CLIENTFPS = 1031
 // C→S mirrored object to inform server of client framerate.
 // The server only imports (reads) this object; the client exports (writes) it.
 //

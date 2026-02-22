@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cClientGoodbyeEvent — classId = NETCLASSID_CLIENTGOODBYEEVENT = 1024
+// C++: cClientGoodbyeEvent — networkClassId = NETCLASSID_CLIENTGOODBYEEVENT = 1024
 // Client→Server event sent when a client disconnects gracefully.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

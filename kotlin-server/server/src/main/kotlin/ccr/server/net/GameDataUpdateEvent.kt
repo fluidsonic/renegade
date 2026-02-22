@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cGameDataUpdateEvent (gamedataupdateevent.cpp) — classId = NETCLASSID_GAMEDATAUPDATEEVENT = 1012
+// C++: cGameDataUpdateEvent (gamedataupdateevent.cpp) — networkClassId = NETCLASSID_GAMEDATAUPDATEEVENT = 1012
 // Sent after client finishes loading; triggers gameplay activation via Act().
 // gamedataupdateevent.h:27 declares TimeRemainingSeconds as INT (not float).
 class GameDataUpdateEvent(

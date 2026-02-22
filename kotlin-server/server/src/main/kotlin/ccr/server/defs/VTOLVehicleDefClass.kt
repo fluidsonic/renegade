@@ -17,7 +17,7 @@ private val DEG_TO_RAD: Float = (Math.PI / 180.0).toFloat()
 class VTOLVehicleDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -53,7 +53,7 @@ class VTOLVehicleDefClass(
     val rotorAcceleration: Float = 180f * DEG_TO_RAD,
     val rotorDeceleration: Float = 180f * DEG_TO_RAD,
 ) : VehiclePhysDefClass(
-    name, id, classId, modelName, isPreLit, mass, gravScale, elasticity,
+    name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity,
     cinematicCollisionMode, aerodynamicDragCoefficient, collisionDisabled,
     springConstant, dampingConstant, springLength, tractionMultiplier,
     lateralMomentArm, tractiveMomentArm, engineFlameLength, isFake,
@@ -61,7 +61,7 @@ class VTOLVehicleDefClass(
 
     companion object {
         /** CLASSID_VTOLVEHICLEDEF = CLASSID_PHYSICS + 13 = 0x900D */
-        const val CLASS_ID: UInt = 0x900Du
+        const val CHUNK_ID: UInt = 0x0002050Eu  // PHYSICS_CHUNKID_VTOLVEHICLEDEF
 
         // Chunk IDs from vtolvehicle.cpp local enum
         private const val VTOLVEHICLEDEF_CHUNK_VEHICLEPHYSDEF = 408000936u
@@ -101,7 +101,7 @@ class VTOLVehicleDefClass(
          * [VTOLVEHICLEDEF_CHUNK_VARIABLES] → VTOL-specific floats
          * ```
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): VTOLVehicleDefClass? {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): VTOLVehicleDefClass? {
             // Parse parent VehiclePhysDefClass fields
             val vehiclePhysChunk = objDataChunk.findChunk(VTOLVEHICLEDEF_CHUNK_VEHICLEPHYSDEF)
                 ?: return null
@@ -149,7 +149,7 @@ class VTOLVehicleDefClass(
             return VTOLVehicleDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = parentFields.modelName,
                 isPreLit = parentFields.isPreLit,
                 mass = parentFields.mass,

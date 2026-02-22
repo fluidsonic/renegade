@@ -16,12 +16,12 @@ import ccr.server.mix.ChunkReader
 class WarFactoryGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
-) : DefinitionClass(name, id, classId) {
+    chunkId: UInt,
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_GAME_OBJECT_DEF_WARFACTORY = CLASSID_BUILDINGS + 7 = 0xD007 */
-        const val CLASS_ID: UInt = 0xD007u
+        const val CHUNK_ID: UInt = 0x00040142u  // CHUNKID_GAME_OBJECT_DEF_WARFACTORY
     }
 }
 
@@ -33,7 +33,7 @@ fun parseWarFactoryGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): WarFactoryGameObjDef {
-    return WarFactoryGameObjDef(name = name, id = id, classId = classId)
+    return WarFactoryGameObjDef(name = name, id = id, chunkId = chunkId)
 }

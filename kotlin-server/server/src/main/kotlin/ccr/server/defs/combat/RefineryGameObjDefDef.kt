@@ -17,16 +17,16 @@ import ccr.server.mix.ChunkReader
 class RefineryGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val unloadTime: Float = 0f,
     val fundsGathered: Float = 0f,
     val fundsDistributedPerSec: Float = 0f,
     val harvesterDefId: Int = 0,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         /** CLASSID_GAME_OBJECT_DEF_REFINERY = CLASSID_BUILDINGS + 2 = 0xD002 */
-        const val CLASS_ID: UInt = 0xD002u
+        const val CHUNK_ID: UInt = 0x00040138u  // CHUNKID_GAME_OBJECT_DEF_REFINERY
     }
 }
 
@@ -41,21 +41,21 @@ private const val MICROCHUNKID_DEF_FUNDS_PER_SEC = 4
 
 /**
  * Parses a RefineryGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parseRefineryGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): RefineryGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return RefineryGameObjDef(name = name, id = id, classId = classId)
+        ?: return RefineryGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return RefineryGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         unloadTime = vars.readMicroFloat(MICROCHUNKID_DEF_UNLOAD_TIME) ?: 0f,
         fundsGathered = vars.readMicroFloat(MICROCHUNKID_DEF_FUNDS_GATHERED) ?: 0f,
         fundsDistributedPerSec = vars.readMicroFloat(MICROCHUNKID_DEF_FUNDS_PER_SEC) ?: 0f,

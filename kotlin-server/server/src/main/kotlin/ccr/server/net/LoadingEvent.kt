@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cLoadingEvent — classId = NETCLASSID_LOADINGEVENT = 1026
+// C++: cLoadingEvent — networkClassId = NETCLASSID_LOADINGEVENT = 1026
 // Client→Server event reporting whether the client is currently loading a map.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

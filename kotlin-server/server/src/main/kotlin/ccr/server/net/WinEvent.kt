@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cWinEvent — classId = NETCLASSID_WIN = 1003
+// C++: cWinEvent — networkClassId = NETCLASSID_WIN = 1003
 // BIT_CREATION:
 //   Winner (int)
 //   Loser (int)

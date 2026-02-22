@@ -27,7 +27,7 @@ data class TimedDecorationPhysDefClass(
 ) {
     companion object {
         /** CLASSID_TIMEDDECOPHYSDEF (wwphysids.h enum offset 10 from CLASSID_PHYSICS=0x9000) */
-        const val CLASS_ID: UInt = 0x900Au
+        const val CHUNK_ID: UInt = 0x0002050Bu  // PHYSICS_CHUNKID_TIMEDDECOPHYSDEF
 
         // Chunk IDs from timeddecophys.cpp
         private const val CHUNKID_PARENT = 0x01170003u

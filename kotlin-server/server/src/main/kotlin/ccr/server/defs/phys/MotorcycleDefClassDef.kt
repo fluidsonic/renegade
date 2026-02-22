@@ -20,7 +20,7 @@ import ccr.server.mix.ChunkReader
 class MotorcycleDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     mass: Float = 1f,
@@ -54,7 +54,7 @@ class MotorcycleDefClass(
     val leanK0: Float = 18.0f,
     val leanK1: Float = 5.0f,
 ) : WheeledVehicleDefClass(
-    name, id, classId, modelName, isPreLit,
+    name, id, chunkId, modelName, isPreLit,
     mass, gravScale, elasticity, cinematicCollisionMode,
     aerodynamicDragCoefficient, collisionDisabled,
     springConstant, dampingConstant, springLength, tractionMultiplier,
@@ -67,7 +67,7 @@ class MotorcycleDefClass(
 
     companion object {
         /** CLASSID_MOTORCYCLEDEF = CLASSID_PHYSICS(0x9000) + 2 */
-        const val CLASS_ID: UInt = 0x9002u
+        const val CHUNK_ID: UInt = 0x00020503u  // PHYSICS_CHUNKID_MOTORCYCLEDEF
 
         // Chunk IDs from motorcycle.cpp local enum
         const val CHUNK_WHEELEDVEHICLEDEF: UInt = 0x00516000u
@@ -92,7 +92,7 @@ class MotorcycleDefClass(
          * [CHUNK_VARIABLES] → leanK0, leanK1
          * ```
          */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, classId: UInt): MotorcycleDefClass {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): MotorcycleDefClass {
             // Parse parent chain via WheeledVehicleDefClass
             val wheeledVehicleChunk = objDataChunk.findChunk(CHUNK_WHEELEDVEHICLEDEF)
             val parentFields = if (wheeledVehicleChunk != null) {
@@ -116,7 +116,7 @@ class MotorcycleDefClass(
             return MotorcycleDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = parentFields.modelName,
                 isPreLit = parentFields.isPreLit,
                 mass = parentFields.mass,

@@ -30,14 +30,14 @@ class ScObeliskEventTest {
         assertEquals(100042, bs.getInt())
     }
 
-    @Test fun `full creation envelope - classId 1015`() {
+    @Test fun `full creation envelope - networkClassId 1015`() {
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, ScObeliskEvent(1, 0f, 0f, 0f, 3), networkId = 900001)
         // Skip: networkId(32) + dirtyBits(8) + isDeletePending(1) = 41 bits → read in chunks
         bs.getBits(32)  // networkId
         bs.getBits(8)   // dirtyBits
         bs.getBits(1)   // isDeletePending
-        assertEquals(1015, bs.getInt())  // classId
+        assertEquals(1015, bs.getInt())  // networkClassId
     }
 
     @Test fun `networkClassId is 1015`() {

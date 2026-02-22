@@ -14,7 +14,7 @@ import ccr.server.NetClassIds
 object PacketDecoder {
 
     /** Network class IDs that represent events (as opposed to game objects). */
-    val EVENT_CLASS_IDS = setOf(
+    val EVENT_NETWORK_CLASS_IDS = setOf(
         // S->C events (1001-1016)
         1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009,
         1012, 1013, 1014, 1015, 1016,
@@ -103,7 +103,7 @@ object PacketDecoder {
 
     /**
      * Decodes a network object payload from a RELIABLE/UNRELIABLE packet.
-     * Wire layout: [networkId:32][dirtyBits:8][isDeletePending:1][classId:32 if BIT_CREATION]
+     * Wire layout: [networkId:32][dirtyBits:8][isDeletePending:1][networkClassId:32 if BIT_CREATION]
      */
     fun decodeGameObjectPayload(
         bs: BitStream,
@@ -125,12 +125,12 @@ object PacketDecoder {
         val isFrequent = (dirtyBits and 0x01) != 0
 
         if (isCreation) {
-            val classId = bs.getInt()
-            val className = NetClassIds.name(classId)
-            sb.append(" classId=$classId($className)")
+            val networkClassId = bs.getInt()
+            val className = NetClassIds.name(networkClassId)
+            sb.append(" networkClassId=$networkClassId($className)")
 
             try {
-                when (classId) {
+                when (networkClassId) {
                     1010 -> { // TEAM
                         val teamNumber = bs.getInt()
                         sb.append("\n${indent}  TEAM: teamNumber=$teamNumber (${if (teamNumber == 0) "NOD" else "GDI"})")
@@ -303,9 +303,9 @@ object PacketDecoder {
     }
 
     /**
-     * Decodes a GAMEOBJ (classId=1000) creation packet.
+     * Decodes a GAMEOBJ (networkClassId=1000) creation packet.
      *
-     * Since classId=1000 covers ALL game objects (soldiers, vehicles, buildings, static objects),
+     * Since networkClassId=1000 covers ALL game objects (soldiers, vehicles, buildings, static objects),
      * and each subclass has a different export layout, we decode what we can and handle errors
      * gracefully. The C++ server uses a factory to dispatch to the correct subclass; we don't
      * have that factory here, so we try progressively more specific decoding.

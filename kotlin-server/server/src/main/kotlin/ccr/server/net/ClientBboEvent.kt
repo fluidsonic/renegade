@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cClientBboEvent — classId = NETCLASSID_CLIENTBBOEVENT = 1030
+// C++: cClientBboEvent — networkClassId = NETCLASSID_CLIENTBBOEVENT = 1030
 // Client→Server event reporting the client's bandwidth/backlog (BBO) value.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

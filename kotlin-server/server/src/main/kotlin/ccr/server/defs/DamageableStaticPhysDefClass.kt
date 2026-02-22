@@ -28,7 +28,7 @@ import java.nio.ByteOrder
 class DamageableStaticPhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     // PhysDefClass
     val modelName: String = "NULL",
     val isPreLit: Boolean = false,
@@ -60,7 +60,7 @@ class DamageableStaticPhysDefClass(
     val playTwitchesToCompletion: Boolean = false,
     // Embedded DefenseObjectDef
     val defenseObjectDef: DefenseObjectDef = DefenseObjectDef(),
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
         // Chunk IDs from damageablestaticphys.cpp
@@ -88,7 +88,7 @@ class DamageableStaticPhysDefClass(
         private const val BASE_VARID_INSTANCEID = 0x01
         private const val BASE_VARID_NAME = 0x03
 
-        fun load(classId: UInt, objDataChunk: ChunkReader): DamageableStaticPhysDefClass? {
+        fun load(chunkId: UInt, objDataChunk: ChunkReader): DamageableStaticPhysDefClass? {
             // DefinitionClass base (deep in parent chain)
             val baseVarsChunk = objDataChunk.findChunkRecursive(CHUNKID_BASE_VARIABLES) ?: return null
             val idBytes = baseVarsChunk.findMicroChunk(BASE_VARID_INSTANCEID) ?: return null
@@ -101,7 +101,7 @@ class DamageableStaticPhysDefClass(
             // Parse StaticAnimPhysDefClass parent chain
             val parentChunk = objDataChunk.findChunk(CHUNKID_STATICANIMPHYSDEF)
             val parentObj = if (parentChunk != null) {
-                parseStaticAnimPhysDefClass(parentChunk, name, id, classId)
+                parseStaticAnimPhysDefClass(parentChunk, name, id, chunkId)
             } else null
 
             // Own variables
@@ -142,7 +142,7 @@ class DamageableStaticPhysDefClass(
             return DamageableStaticPhysDefClass(
                 name = name,
                 id = id,
-                classId = classId,
+                chunkId = chunkId,
                 modelName = parentObj?.modelName ?: "NULL",
                 isPreLit = parentObj?.isPreLit ?: false,
                 isNonOccluder = parentObj?.isNonOccluder ?: true,

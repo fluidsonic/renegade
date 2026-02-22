@@ -25,7 +25,7 @@ import org.junit.jupiter.api.TestMethodOrder
  * Packet sequence follows the confirmed real join flow:
  *   S→C: ACCEPT_SC, TEAM NOD, TEAM GDI, GAMEOPTIONSEVENT
  *   C→S: CLIENTCONTROL, CLIENTFPS, BIOEVENT
- *   S→C: PLAYER, GAMEDATAUPDATEEVENT, SOLDIER (classId=1000)
+ *   S→C: PLAYER, GAMEDATAUPDATEEVENT, SOLDIER (networkClassId=1000)
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.MethodName::class)
@@ -64,12 +64,12 @@ class ServerJoinFlowTest {
 
     // ---- Helpers ----
 
-    /** Writes the standard network-object envelope (networkId + dirtyBits + isDeletePending + classId). */
-    private fun writeEnvelope(bs: BitStream, networkId: Int, dirtyBits: Int, classId: Int) {
+    /** Writes the standard network-object envelope (networkId + dirtyBits + isDeletePending + networkClassId). */
+    private fun writeEnvelope(bs: BitStream, networkId: Int, dirtyBits: Int, networkClassId: Int) {
         bs.addInt(networkId)
         bs.addByte(dirtyBits.toByte())
         bs.addBool(false)  // isDeletePending
-        bs.addInt(classId)
+        bs.addInt(networkClassId)
     }
 
     /** Writes a team packet (NOD or GDI) into [bs] and returns the bit count. */
@@ -77,7 +77,7 @@ class ServerJoinFlowTest {
         bs.addInt(networkId)         // networkId
         bs.addByte(0x0F)             // dirtyBits = BIT_CREATION (all tiers)
         bs.addBool(false)            // isDeletePending
-        bs.addInt(1010)              // classId = NETCLASSID_TEAM
+        bs.addInt(1010)              // networkClassId = NETCLASSID_TEAM
         // BIT_CREATION: teamNumber
         bs.addInt(teamNumber)        // TeamNumber
         // BIT_RARE: kills + deaths
@@ -141,7 +141,7 @@ class ServerJoinFlowTest {
         val networkId = r.getInt()
         val dirtyBits = r.getByte().toInt() and 0xFF
         r.getBool()            // isDeletePending
-        val classId = r.getInt()
+        val networkClassId = r.getInt()
         val teamNumber = r.getInt()   // Creation tier
         val kills = r.getInt()        // Rare
         val deaths = r.getInt()       // Rare
@@ -149,7 +149,7 @@ class ServerJoinFlowTest {
 
         assertEquals(NET_ID_NOD_TEAM, networkId, "NOD team networkId")
         assertEquals(0x0F, dirtyBits, "NOD team dirtyBits")
-        assertEquals(1010, classId, "NOD team classId")
+        assertEquals(1010, networkClassId, "NOD team networkClassId")
         assertEquals(0, teamNumber, "NOD teamNumber must be 0")
         assertEquals(0, kills, "NOD kills must be 0")
         assertEquals(0, deaths, "NOD deaths must be 0")
@@ -178,7 +178,7 @@ class ServerJoinFlowTest {
         r.getInt()                           // networkId
         r.getByte()                          // dirtyBits
         r.getBool()                          // isDeletePending
-        r.getInt()                           // classId
+        r.getInt()                           // networkClassId
         val teamNumber = r.getInt()
         assertEquals(1, teamNumber, "GDI teamNumber must be 1")
     }
@@ -233,9 +233,9 @@ class ServerJoinFlowTest {
         decoded.getInt()        // networkId
         decoded.getByte()       // dirtyBits
         decoded.getBool()       // isDeletePending
-        val classId = decoded.getInt()  // classId
+        val networkClassId = decoded.getInt()  // networkClassId
 
-        assertEquals(1008, classId, "GAMEOPTIONSEVENT classId must be 1008")
+        assertEquals(1008, networkClassId, "GAMEOPTIONSEVENT networkClassId must be 1008")
 
         // Tier 1 decode
         decoded.getInt()        // ipAddress
@@ -269,8 +269,8 @@ class ServerJoinFlowTest {
         r.getInt()   // networkId
         r.getByte()  // dirtyBits
         r.getBool()  // isDeletePending
-        val classId = r.getInt()
-        assertEquals(1011, classId, "PLAYER classId must be 1011")
+        val networkClassId = r.getInt()
+        assertEquals(1011, networkClassId, "PLAYER networkClassId must be 1011")
 
         // Creation tier: name (wide string)
         val name = r.getWideString(permitEmpty = true)
@@ -329,8 +329,8 @@ class ServerJoinFlowTest {
         r.getInt()               // networkId
         r.getByte()              // dirtyBits
         r.getBool()              // isDeletePending
-        val classId = r.getInt()
-        assertEquals(1012, classId, "GAMEDATAUPDATEEVENT classId must be 1012")
+        val networkClassId = r.getInt()
+        assertEquals(1012, networkClassId, "GAMEDATAUPDATEEVENT networkClassId must be 1012")
 
         val timeRemaining = r.getInt()
         val hostedGame = r.getInt()
@@ -338,7 +338,7 @@ class ServerJoinFlowTest {
         assertEquals(1, hostedGame, "GAMEDATAUPDATEEVENT hostedGameNumber must decode correctly")
     }
 
-    // ------ Step 10: SOLDIER (classId=1000) ------
+    // ------ Step 10: SOLDIER (networkClassId=1000) ------
 
     @Test
     fun `out - SOLDIER creation packet has correct bit count for NOD minigunner with pistol`() {
@@ -363,7 +363,7 @@ class ServerJoinFlowTest {
         assertTrue(bs.bitWritePosition > 0, "SOLDIER packet must have non-zero bit count")
 
         // Computed breakdown (all encoder-dependent values use C&C_Under extents):
-        //   Envelope:  32(netId) + 8(dirtyBits) + 1(isDeletePending) + 32(classId) = 73
+        //   Envelope:  32(netId) + 8(dirtyBits) + 1(isDeletePending) + 32(networkClassId) = 73
         //   Creation:  32(defId) + 13(posX) + 12(posY) + 10(posZ) + 32(facing) + 32(controlOwner) = 131
         //   Rare:      16+11*8=104(modelName) + 16+18*8=160(animName) + 32+32+32+32+32+32+1=193 + 32(soldierDefId) = 489
         //   Occasional: 1(isDead) + 11(health) + 11(shieldStr) + 4(shieldType) + 32(wepCount) + 32+32(pistol) = 123
@@ -404,9 +404,9 @@ class ServerJoinFlowTest {
         val networkId = decoded.getInt()
         val dirtyBits = decoded.getByte().toInt() and 0xFF
         decoded.getBool()               // isDeletePending
-        val classId = decoded.getInt()
+        val networkClassId = decoded.getInt()
 
-        assertEquals(1000, classId, "SOLDIER classId must be 1000")
+        assertEquals(1000, networkClassId, "SOLDIER networkClassId must be 1000")
         assertEquals(1_500_000_001, networkId, "SOLDIER networkId must match")
         assertEquals(0x0F, dirtyBits, "SOLDIER dirtyBits must be 0x0F (all tiers)")
 
@@ -432,19 +432,19 @@ class ServerJoinFlowTest {
     // IN tests — client → server packets
     // ============================================================
 
-    // ------ Step 5: CLIENTCONTROL (classId=1018) ------
+    // ------ Step 5: CLIENTCONTROL (networkClassId=1018) ------
 
     @Test
     fun `in - CLIENTCONTROL parses clientId correctly`() {
         // Build a minimal CLIENTCONTROL packet as the server handler reads it:
-        // networkId(32) + dirtyBits(8) + isDeletePending(1) + classId(32) + clientId(32)
+        // networkId(32) + dirtyBits(8) + isDeletePending(1) + networkClassId(32) + clientId(32)
         val bs = BitStream()
         val networkId = 2_110_000_001  // first client range ID
         val clientId = 1
         bs.addInt(networkId)
         bs.addByte(0x0F)         // BIT_CREATION
         bs.addBool(false)        // isDeletePending
-        bs.addInt(1018)          // classId = NETCLASSID_CLIENTCONTROL
+        bs.addInt(1018)          // networkClassId = NETCLASSID_CLIENTCONTROL
         bs.addInt(clientId)      // clientId
 
         // Build a RELIABLE packet with this payload
@@ -461,29 +461,29 @@ class ServerJoinFlowTest {
         val parsedDirty = snap.getByte().toInt() and 0xFF
         val parsedDelete = snap.getBool()
         val hasBitCreation = (parsedDirty and 0x08) != 0
-        val parsedClassId = snap.getInt()
+        val parsedNetworkClassId = snap.getInt()
         val parsedClientId = snap.getInt()
 
         assertEquals(networkId, parsedNetId, "CLIENTCONTROL networkId")
         assertEquals(0x0F, parsedDirty, "CLIENTCONTROL dirtyBits")
         assertFalse(parsedDelete, "CLIENTCONTROL isDeletePending must be false")
         assertTrue(hasBitCreation, "CLIENTCONTROL must have BIT_CREATION set")
-        assertEquals(1018, parsedClassId, "CLIENTCONTROL classId must be 1018")
+        assertEquals(1018, parsedNetworkClassId, "CLIENTCONTROL networkClassId must be 1018")
         assertEquals(clientId, parsedClientId, "CLIENTCONTROL clientId must round-trip correctly")
     }
 
-    // ------ Step 6: CLIENTFPS (classId=1032) ------
+    // ------ Step 6: CLIENTFPS (networkClassId=1032) ------
 
     @Test
     fun `in - CLIENTFPS parses clientId correctly`() {
         // Build a minimal CLIENTFPS packet as the server handler reads it:
-        // networkId(32) + dirtyBits(8) + isDeletePending(1) + classId(32) + clientId(32)
+        // networkId(32) + dirtyBits(8) + isDeletePending(1) + networkClassId(32) + clientId(32)
         val bs = BitStream()
         val clientId = 1
         bs.addInt(2_110_000_002)  // networkId
         bs.addByte(0x0F)          // BIT_CREATION
         bs.addBool(false)         // isDeletePending
-        bs.addInt(1032)           // classId = NETCLASSID_CLIENTFPS
+        bs.addInt(1032)           // networkClassId = NETCLASSID_CLIENTFPS
         bs.addInt(clientId)       // clientId
 
         val packet = Packet()
@@ -497,27 +497,27 @@ class ServerJoinFlowTest {
         snap.getInt()                         // networkId
         val dirtyBits = snap.getByte().toInt() and 0xFF
         snap.getBool()                        // isDeletePending
-        val classId = snap.getInt()
+        val networkClassId = snap.getInt()
         val parsedClientId = snap.getInt()
 
         assertEquals(0x0F, dirtyBits, "CLIENTFPS dirtyBits must be 0x0F")
-        assertEquals(1032, classId, "CLIENTFPS classId must be 1032")
+        assertEquals(1032, networkClassId, "CLIENTFPS networkClassId must be 1032")
         assertEquals(clientId, parsedClientId, "CLIENTFPS clientId must round-trip correctly")
     }
 
-    // ------ Step 7: BIOEVENT (classId=1026) ------
+    // ------ Step 7: BIOEVENT (networkClassId=1026) ------
 
     @Test
-    fun `in - BIOEVENT parses senderId and classId`() {
+    fun `in - BIOEVENT parses senderId and networkClassId`() {
         // C++ cBioEvent::Export_Creation: no additional fields beyond the creation envelope.
-        // The server handler for classId=1026 reads only networkId+dirtyBits+isDeletePending+classId.
+        // The server handler for networkClassId=1026 reads only networkId+dirtyBits+isDeletePending+networkClassId.
         // A minimal BIOEVENT from the client is 73 bits (32+8+1+32).
         val bs = BitStream()
         val networkId = 2_110_000_003
         bs.addInt(networkId)   // networkId
         bs.addByte(0x0F)       // dirtyBits = BIT_CREATION
         bs.addBool(false)      // isDeletePending
-        bs.addInt(1026)        // classId = NETCLASSID_BIOEVENT
+        bs.addInt(1026)        // networkClassId = NETCLASSID_BIOEVENT
 
         val packet = Packet()
         packet.type = PacketType.RELIABLE
@@ -539,11 +539,11 @@ class ServerJoinFlowTest {
         val parsedNetId = snap.getInt()
         val dirtyBits = snap.getByte().toInt() and 0xFF
         snap.getBool()              // isDeletePending
-        val classId = snap.getInt()
+        val networkClassId = snap.getInt()
 
         assertEquals(networkId, parsedNetId, "BIOEVENT networkId must round-trip")
         assertTrue((dirtyBits and 0x08) != 0, "BIOEVENT must have BIT_CREATION set")
-        assertEquals(1026, classId, "BIOEVENT classId must be 1026")
+        assertEquals(1026, networkClassId, "BIOEVENT networkClassId must be 1026")
     }
 
     @Test
@@ -551,12 +551,12 @@ class ServerJoinFlowTest {
         // Verify that a BIOEVENT payload passes all server-side guards in handleGamePacket:
         //   1. bitWritePosition >= 41 (minimum for peekGameEvent)
         //   2. BIT_CREATION (0x08) is set in dirtyBits
-        //   3. classId is 1026
+        //   3. networkClassId is 1026
         val bs = BitStream()
         bs.addInt(2_110_000_010)   // networkId
         bs.addByte(0x0F)           // dirtyBits
         bs.addBool(false)          // isDeletePending
-        bs.addInt(1026)            // classId = NETCLASSID_BIOEVENT
+        bs.addInt(1026)            // networkClassId = NETCLASSID_BIOEVENT
 
         assertTrue(bs.bitWritePosition >= 41,
             "BIOEVENT payload must be ≥41 bits to pass peekGameEvent guard")
@@ -568,10 +568,10 @@ class ServerJoinFlowTest {
         snap.getInt()                                    // networkId
         val dirtyBits = snap.getByte().toInt() and 0xFF
         snap.getBool()                                   // isDeletePending
-        val classId = snap.getInt()
+        val networkClassId = snap.getInt()
 
         assertTrue((dirtyBits and 0x08) != 0, "BIOEVENT must pass BIT_CREATION guard")
-        assertEquals(1026, classId, "BIOEVENT classId must be 1026 to trigger BIOEVENT handler")
+        assertEquals(1026, networkClassId, "BIOEVENT networkClassId must be 1026 to trigger BIOEVENT handler")
     }
 
     // ============================================================
@@ -580,7 +580,7 @@ class ServerJoinFlowTest {
 
     @Test
     fun `out - PLAYER BIT_RARE update encodes team change correctly`() {
-        // When a player changes team, the server sends a BIT_RARE update (dirty=0x07, no classId).
+        // When a player changes team, the server sends a BIT_RARE update (dirty=0x07, no networkClassId).
         val player = Player(id = 1, name = "", team = 1, isInGame = true)
         val netId = 2_000_000_050
         val bs = BitStream()

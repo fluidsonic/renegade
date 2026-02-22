@@ -39,7 +39,7 @@ class BuildingGameObjTest {
         // Rare: isDestroyed(1) + isPowerOn(1) + currentState(4) = 6
         private const val RARE_BITS = 1 + 1 + STATE_BITS  // 6
 
-        // Header: networkId(32) + dirtyBits(8) + isDeletePending(1) + classId(32) = 73
+        // Header: networkId(32) + dirtyBits(8) + isDeletePending(1) + networkClassId(32) = 73
         private const val HEADER_BITS = 73
 
         // Occasional: DamageableGameObj writes isDead(1)+health(11)+shieldStr(11)+shieldType(4)=27
@@ -79,7 +79,7 @@ class BuildingGameObjTest {
         currentState    = 0,   // HEALTH100_POWERON
     )
 
-    // ---- classId ----
+    // ---- networkClassId ----
 
     @Test
     fun `networkClassId is 1000`() {
@@ -248,15 +248,15 @@ class BuildingGameObjTest {
     // ---- full creation packet ----
 
     @Test
-    fun `full creation packet classId is 1000`() {
+    fun `full creation packet networkClassId is 1000`() {
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, defaultBuilding(), networkId = 300001)
 
         bs.getInt()                              // networkId
         bs.getByte()                             // dirtyBits
         bs.getBool()                             // isDeletePending
-        val classId = bs.getInt()
-        assertEquals(1000, classId)
+        val networkClassId = bs.getInt()
+        assertEquals(1000, networkClassId)
     }
 
     @Test
@@ -290,7 +290,7 @@ class BuildingGameObjTest {
         assertEquals(0x00030D41, bs.getInt())                       // networkId
         assertEquals(0x0F, bs.getByte().toInt() and 0xFF)           // dirtyBits = BIT_CREATION
         assertFalse(bs.getBool())                                    // isDeletePending
-        assertEquals(1000, bs.getInt())                             // classId
+        assertEquals(1000, bs.getInt())                             // networkClassId
 
         // exportCreation
         assertEquals(defId, bs.getInt())                            // definitionId

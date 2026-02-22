@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cSuicideEvent — classId = NETCLASSID_SUICIDEEVENT = 1019
+// C++: cSuicideEvent — networkClassId = NETCLASSID_SUICIDEEVENT = 1019
 // Client→Server event sent when a player kills themselves.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

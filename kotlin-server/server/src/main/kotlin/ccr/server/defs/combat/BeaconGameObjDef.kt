@@ -14,7 +14,7 @@ import java.nio.ByteOrder
 data class BeaconGameObjDef(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     val armingAnimationName: String = "",
     val broadcastToAllTime: Float = 5f,
     val armTime: Float = 10f,
@@ -34,7 +34,7 @@ data class BeaconGameObjDef(
     val isNuke: Int = 1,
 ) {
     companion object {
-        const val CLASS_ID: UInt = 0x3016u
+        const val CHUNK_ID: UInt = 0x00040136u  // CHUNKID_GAME_OBJECT_DEF_BEACON
     }
 }
 
@@ -60,7 +60,7 @@ private const val MICROCHUNKID_DEF_POST_DETONATE_TIME = 15
 private const val MICROCHUNKID_DEF_PRE_DETONATE_CINEMATIC_DELAY = 16
 private const val MICROCHUNKID_DEF_IS_NUKE = 17
 
-fun parseBeaconGameObjDef(objDataReader: ChunkReader, name: String, id: UInt, classId: UInt): BeaconGameObjDef {
+fun parseBeaconGameObjDef(objDataReader: ChunkReader, name: String, id: UInt, chunkId: UInt): BeaconGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
 
     var armingAnimationName = ""
@@ -106,7 +106,7 @@ fun parseBeaconGameObjDef(objDataReader: ChunkReader, name: String, id: UInt, cl
     return BeaconGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         armingAnimationName = armingAnimationName,
         broadcastToAllTime = broadcastToAllTime,
         armTime = armTime,

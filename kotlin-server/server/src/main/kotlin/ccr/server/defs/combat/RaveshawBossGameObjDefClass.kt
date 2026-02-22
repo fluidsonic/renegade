@@ -16,12 +16,11 @@ import ccr.server.mix.ChunkReader
 class RaveshawBossGameObjDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
-) : DefinitionClass(name, id, classId) {
+    chunkId: UInt,
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        /** CLASSID_GAME_OBJECT_DEF_RAVESHAW_BOSS = CLASSID_GAME_OBJECTS + 24 = 0x3018 */
-        const val CLASS_ID: UInt = 0x3018u
+        const val CHUNK_ID: UInt = 0x0004014Cu  // CHUNKID_GAME_OBJECT_DEF_RAVESHAW_BOSS
     }
 }
 
@@ -33,7 +32,7 @@ fun parseRaveshawBossGameObjDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): RaveshawBossGameObjDefClass {
-    return RaveshawBossGameObjDefClass(name = name, id = id, classId = classId)
+    return RaveshawBossGameObjDefClass(name = name, id = id, chunkId = chunkId)
 }

@@ -17,14 +17,13 @@ import ccr.server.mix.ChunkReader
 class SpecialEffectsGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val animationName: String = "",
     val soundDefId: Int = 0,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        /** CLASSID_GAME_OBJECT_DEF_SPECIAL_EFFECTS = CLASSID_GAME_OBJECTS + 19 = 0x3013 */
-        const val CLASS_ID: UInt = 0x3013u
+        const val CHUNK_ID: UInt = 0x00040130u  // CHUNKID_GAME_OBJECT_DEF_SPECIAL_EFFECTS
     }
 }
 
@@ -37,21 +36,21 @@ private const val VARID_DEF_SOUNDID = 2
 
 /**
  * Parses a SpecialEffectsGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parseSpecialEffectsGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): SpecialEffectsGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return SpecialEffectsGameObjDef(name = name, id = id, classId = classId)
+        ?: return SpecialEffectsGameObjDef(name = name, id = id, chunkId = chunkId)
 
     return SpecialEffectsGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         animationName = vars.readMicroString(VARID_DEF_ANIMATION_NAME) ?: "",
         soundDefId = vars.readMicroInt(VARID_DEF_SOUNDID) ?: 0,
     )

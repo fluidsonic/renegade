@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cPurchaseResponseEvent — classId = NETCLASSID_PURCHASERESPONSEEVENT = 1004
+// C++: cPurchaseResponseEvent — networkClassId = NETCLASSID_PURCHASERESPONSEEVENT = 1004
 // BIT_CREATION: [PurchaserId: int] [ResponseId: int]
 class PurchaseResponseEvent(
     val purchaserId: Int,

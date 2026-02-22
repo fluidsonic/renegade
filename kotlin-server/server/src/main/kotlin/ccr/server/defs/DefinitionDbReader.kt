@@ -7,7 +7,7 @@ import java.nio.ByteOrder
 data class DefinitionEntry(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
 )
 
 /**
@@ -18,7 +18,7 @@ data class DefinitionEntry(
  *   [CHUNKID_SAVELOAD_DEFMGR=0x101]
  *     [CHUNKID_VARIABLES=0x100]  ← skip
  *     [CHUNKID_OBJECTS=0x101]
- *       [<classId>] for each definition
+ *       [<chunkId>] for each definition
  *         [CHUNKID_VARIABLES=0x100]
  *           micro[0x01] = uint32 LE definition ID
  *           micro[0x03] = null-terminated name string
@@ -49,7 +49,7 @@ fun readDefinitions(ddbData: ByteArray): List<DefinitionEntry> {
 
     val entries = mutableListOf<DefinitionEntry>()
 
-    objectsChunk.forEachChunk { classId, _, defChunkReader ->
+    objectsChunk.forEachChunk { chunkId, _, defChunkReader ->
         // Factory wraps definition in OBJPOINTER + OBJDATA — navigate into OBJDATA first.
         val objDataChunk = defChunkReader.findChunk(SIMPLEFACTORY_CHUNKID_OBJDATA)
             ?: return@forEachChunk
@@ -77,7 +77,7 @@ fun readDefinitions(ddbData: ByteArray): List<DefinitionEntry> {
 
         if (name.isEmpty()) return@forEachChunk
 
-        entries += DefinitionEntry(name = name, id = id, classId = classId)
+        entries += DefinitionEntry(name = name, id = id, chunkId = chunkId)
     }
 
     return entries.sortedBy { it.name }

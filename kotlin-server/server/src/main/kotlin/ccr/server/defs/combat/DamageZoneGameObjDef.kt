@@ -17,17 +17,16 @@ import ccr.server.mix.ChunkReader
 class DamageZoneGameObjDef(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     val damageRate: Float = 10f,
     val damageWarhead: Int = 1,
     val colorR: Float = 0.7f,
     val colorG: Float = 0f,
     val colorB: Float = 0f,
-) : DefinitionClass(name, id, classId) {
+) : DefinitionClass(name, id, chunkId) {
 
     companion object {
-        /** CLASSID_GAME_OBJECT_DEF_DAMAGE_ZONE = CLASSID_GAME_OBJECTS + 18 = 0x3012 */
-        const val CLASS_ID: UInt = 0x3012u
+        const val CHUNK_ID: UInt = 0x0004012Eu  // CHUNKID_GAME_OBJECT_DEF_DAMAGE_ZONE
     }
 }
 
@@ -41,16 +40,16 @@ private const val MICROCHUNKID_DEF_DAMAGE_WARHEAD = 4
 
 /**
  * Parses a DamageZoneGameObjDef from the OBJDATA chunk.
- * [name], [id], and [classId] are already extracted by the definition DB reader.
+ * [name], [id], and [chunkId] are already extracted by the definition DB reader.
  */
 fun parseDamageZoneGameObjDef(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): DamageZoneGameObjDef {
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return DamageZoneGameObjDef(name = name, id = id, classId = classId)
+        ?: return DamageZoneGameObjDef(name = name, id = id, chunkId = chunkId)
 
     // Color is a Vector3 (3 floats, 12 bytes in one micro-chunk)
     val colorR = vars.readMicroFloatAt(MICROCHUNKID_DEF_ZONE_COLOR, 0) ?: 0.7f
@@ -60,7 +59,7 @@ fun parseDamageZoneGameObjDef(
     return DamageZoneGameObjDef(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         damageRate = vars.readMicroFloat(MICROCHUNKID_DEF_DAMAGE_RATE) ?: 10f,
         damageWarhead = vars.readMicroInt(MICROCHUNKID_DEF_DAMAGE_WARHEAD) ?: 1,
         colorR = colorR,

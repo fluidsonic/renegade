@@ -12,14 +12,14 @@ import ccr.server.mix.ChunkReader
 open class MoveablePhysDefClass(
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
     modelName: String = "NULL",
     isPreLit: Boolean = false,
     val mass: Float = 1f,
     val gravScale: Float = 1f,
     val elasticity: Float = 0.1f,
     val cinematicCollisionMode: Int = CINEMATIC_COLLISION_PUSH,
-) : DynamicPhysDefClass(name, id, classId, modelName, isPreLit) {
+) : DynamicPhysDefClass(name, id, chunkId, modelName, isPreLit) {
 
     internal data class ParsedFields(
         val modelName: String,

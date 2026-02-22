@@ -19,14 +19,14 @@ import java.nio.ByteOrder
 data class CharacterClassSettingsDefClass(
     val name: String,
     val id: UInt,
-    val classId: UInt,
+    val chunkId: UInt,
     /** costTable[classIndex][rankIndex][teamIndex] — purchase cost for a character. */
     val costTable: List<List<List<Int>>> = defaultTable(),
     /** definitionTable[classIndex][rankIndex][teamIndex] — soldier definition ID. */
     val definitionTable: List<List<List<Int>>> = defaultTable(),
 ) {
     companion object {
-        const val CLASS_ID: UInt = 0xF006u // CLASSID_GLOBAL_SETTINGS_DEF_CHAR_CLASS
+        const val CHUNK_ID: UInt = 0x00040605u  // CHUNKID_GLOBAL_SETTINGS_DEF_CHAR_CLASS
 
         const val CLASS_COUNT = 6
         const val RANK_COUNT = 4
@@ -59,7 +59,7 @@ fun parseCharacterClassSettingsDefClass(
     objDataReader: ChunkReader,
     name: String,
     id: UInt,
-    classId: UInt,
+    chunkId: UInt,
 ): CharacterClassSettingsDefClass? {
     val varsReader = objDataReader.findChunk(CHUNKID_VARIABLES) ?: return null
 
@@ -98,7 +98,7 @@ fun parseCharacterClassSettingsDefClass(
     return CharacterClassSettingsDefClass(
         name = name,
         id = id,
-        classId = classId,
+        chunkId = chunkId,
         costTable = costTable.map { cls -> cls.map { rank -> rank.toList() } },
         definitionTable = defTable.map { cls -> cls.map { rank -> rank.toList() } },
     )

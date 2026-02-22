@@ -5,7 +5,7 @@ import ccr.net.replication.NetworkObject
 
 // C++: messages.cpp Send_Object_Update — writes the wire envelope for a creation packet.
 // Wire layout for BIT_CREATION:
-//   [networkId:32][dirtyBits:8][isDeletePending:1][classId:32] + exportCreation
+//   [networkId:32][dirtyBits:8][isDeletePending:1][networkClassId:32] + exportCreation
 //   (RARE/OCCASIONAL/FREQUENT are empty for cNetEvent subclasses)
 //
 // Keeping envelope logic here (separate from the NetworkObject) mirrors the C++ architecture
@@ -19,7 +19,7 @@ object NetworkObjectPacketWriter {
         bs.addInt(networkId)
         bs.addByte(NetworkObject.BIT_CREATION.toByte())  // dirtyBits = 0x0F (BYTE, 8 bits)
         bs.addBool(false)                                 // isDeletePending
-        bs.addInt(obj.networkClassId)                     // classId (BIT_CREATION set)
+        bs.addInt(obj.networkClassId)                     // networkClassId (BIT_CREATION set)
         obj.exportCreation(bs)
         obj.exportRare(bs)
         obj.exportOccasional(bs)
@@ -28,12 +28,12 @@ object NetworkObjectPacketWriter {
 
     // Writes a rare-update packet for an existing NetworkObject (dirtyBits = BIT_RARE = 0x07).
     // C++: messages.cpp Send_Object_Update with BIT_RARE set (cascades: RARE|OCCASIONAL|FREQUENT).
-    // No classId is written — the object was already created by an earlier creation packet.
+    // No networkClassId is written — the object was already created by an earlier creation packet.
     fun writeRareUpdate(bs: BitStream, obj: NetworkObject, networkId: Int) {
         bs.addInt(networkId)
         bs.addByte(NetworkObject.BIT_RARE.toByte())  // dirtyBits = 0x07 (BYTE, 8 bits)
         bs.addBool(false)                             // isDeletePending
-        // No classId — BIT_CREATION (0x08) is not set
+        // No networkClassId — BIT_CREATION (0x08) is not set
         obj.exportRare(bs)
         obj.exportOccasional(bs)
         obj.exportFrequent(bs)
@@ -45,7 +45,7 @@ object NetworkObjectPacketWriter {
         bs.addInt(networkId)
         bs.addByte(NetworkObject.BIT_OCCASIONAL.toByte())  // dirtyBits = 0x03
         bs.addBool(false)                                   // isDeletePending
-        // No classId — BIT_CREATION (0x08) is not set
+        // No networkClassId — BIT_CREATION (0x08) is not set
         obj.exportOccasional(bs)
         obj.exportFrequent(bs)
     }
@@ -57,7 +57,7 @@ object NetworkObjectPacketWriter {
         bs.addInt(networkId)
         bs.addByte(NetworkObject.BIT_FREQUENT.toByte())  // dirtyBits = 0x01
         bs.addBool(false)                                 // isDeletePending
-        // No classId — BIT_CREATION (0x08) is not set
+        // No networkClassId — BIT_CREATION (0x08) is not set
         obj.exportFrequent(bs)
     }
 

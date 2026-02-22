@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: SCAnnouncement — classId = NETCLASSID_SCANNOUNCEMENT = 1016
+// C++: SCAnnouncement — networkClassId = NETCLASSID_SCANNOUNCEMENT = 1016
 // BIT_CREATION:
 //   ToId (int)
 //   FromId (int)

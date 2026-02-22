@@ -37,7 +37,7 @@ class ServerFpsTest {
         bs.getInt()   // networkId
         bs.getByte()  // dirtyBits
         bs.getBool()  // isDeletePending
-        val classId = bs.getInt()
-        assertEquals(obj.networkClassId, classId)
+        val networkClassId = bs.getInt()
+        assertEquals(obj.networkClassId, networkClassId)
     }
 }

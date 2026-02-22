@@ -31,8 +31,7 @@ data class PurchaseSettingsDefClass(
     val entries: List<PurchaseEntry> = List(MAX_ENTRIES) { PurchaseEntry() },
 ) {
     companion object {
-        /** CLASSID_GLOBAL_SETTINGS_DEF_PURCHASE (combatchunkid.h) */
-        const val CLASS_ID: UInt = 0xF008u
+        const val CHUNK_ID: UInt = 0x00040607u  // CHUNKID_GLOBAL_SETTINGS_DEF_PURCHASE
 
         // Team enum
         const val TEAM_GDI = 0
@@ -178,8 +177,7 @@ data class TeamPurchaseSettingsDefClass(
     val entries: List<TeamPurchaseEntry> = List(MAX_ENTRIES) { TeamPurchaseEntry() },
 ) {
     companion object {
-        /** CLASSID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE (combatchunkid.h) */
-        const val CLASS_ID: UInt = 0xF009u
+        const val CHUNK_ID: UInt = 0x00040608u  // CHUNKID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE
 
         const val TEAM_GDI = 0
         const val TEAM_NOD = 1

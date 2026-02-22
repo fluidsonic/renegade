@@ -11,10 +11,18 @@ object SpawnerLoader {
     fun load(spawnersChunk: ChunkReader): List<LoadedSpawner> {
         val spawners = mutableListOf<LoadedSpawner>()
 
-        spawnersChunk.forEachChunk { chunkId, _, spawnerChunk ->
-            if (chunkId != ChunkIds.SPAWNER_CHUNKID_PARENT) return@forEachChunk
+        // SpawnManager::Save writes one SPAWNER_CHUNKID_DATA wrapper per spawner, plus a
+        // SPAWNER_CHUNKID_VARIABLES_MGR chunk for the SpawnManager's own timer (skipped here).
+        // Inside each SPAWNER_CHUNKID_DATA wrapper, SpawnerClass::Save writes
+        // SPAWNER_CHUNKID_PARENT + SPAWNER_CHUNKID_VARIABLES.
+        spawnersChunk.forEachChunk { chunkId, _, dataChunk ->
+            if (chunkId != ChunkIds.SPAWNER_CHUNKID_DATA) return@forEachChunk
 
-            val varsChunk = spawnerChunk.findChunk(ChunkIds.SPAWNER_CHUNKID_VARIABLES) ?: return@forEachChunk
+            // Inside SPAWNER_CHUNKID_DATA, SpawnerClass writes two sibling chunks:
+            //   SPAWNER_CHUNKID_PARENT    — PersistClass data (not needed here)
+            //   SPAWNER_CHUNKID_VARIABLES — the actual spawner fields as micro-chunks
+            val varsChunk = dataChunk.findChunk(ChunkIds.SPAWNER_CHUNKID_VARIABLES)
+                ?: return@forEachChunk
 
             var id = 0
             var transform: Matrix3D? = null

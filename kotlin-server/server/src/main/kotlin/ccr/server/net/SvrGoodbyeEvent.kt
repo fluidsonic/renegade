@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cSvrGoodbyeEvent — classId = NETCLASSID_SVRGOODBYEEVENT = 1007
+// C++: cSvrGoodbyeEvent — networkClassId = NETCLASSID_SVRGOODBYEEVENT = 1007
 // BIT_CREATION: [IsQuickFullExitRequested: bool]
 class SvrGoodbyeEvent(
     val isQuickFullExitRequested: Boolean,

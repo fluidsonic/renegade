@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 
-// C++: cCsPingRequestEvent — classId = NETCLASSID_CSPINGREQUESTEVENT = 1032
+// C++: cCsPingRequestEvent — networkClassId = NETCLASSID_CSPINGREQUESTEVENT = 1032
 // Client→Server ping request event used to measure round-trip latency.
 // Wire format (BIT_CREATION):
 //   SenderId (int)

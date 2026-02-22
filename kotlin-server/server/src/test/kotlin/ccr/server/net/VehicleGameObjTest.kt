@@ -132,14 +132,14 @@ class VehicleGameObjTest {
     // ---- 2: full creation envelope ----
 
     @Test
-    fun `full creation envelope has classId 1000`() {
+    fun `full creation envelope has networkClassId 1000`() {
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, defaultVehicle(), networkId = 300001)
 
         assertEquals(300001, bs.getInt())                       // networkId
         assertEquals(0x0F, bs.getByte().toInt() and 0xFF)       // dirtyBits = BIT_CREATION
         assertFalse(bs.getBool())                               // isDeletePending
-        assertEquals(1000, bs.getInt())                         // classId
+        assertEquals(1000, bs.getInt())                         // networkClassId
     }
 
     // ---- 3: creation - locked vs unlocked ----
