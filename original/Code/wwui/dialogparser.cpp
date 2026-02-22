@@ -190,7 +190,22 @@ DialogParserClass::Parse_Template
 			//
 			if (ctrl_type == 0) {
 				::_wcsupr (text_buffer);
-				if (::wcsstr (text_buffer, u"TRACKBAR") != 0) {
+
+				// Standard Win32 control classes (needed when llvm-rc stores
+				// CONTROL class names as strings instead of ordinals)
+				if (::wcscmp (text_buffer, u"BUTTON") == 0) {
+					ctrl_type = BUTTON;
+				} else if (::wcscmp (text_buffer, u"EDIT") == 0) {
+					ctrl_type = EDIT;
+				} else if (::wcscmp (text_buffer, u"STATIC") == 0) {
+					ctrl_type = STATIC;
+				} else if (::wcscmp (text_buffer, u"COMBOBOX") == 0) {
+					ctrl_type = COMBOBOX;
+				} else if (::wcscmp (text_buffer, u"SCROLLBAR") == 0) {
+					ctrl_type = SCROLL_BAR;
+				} else if (::wcscmp (text_buffer, u"LISTBOX") == 0) {
+					ctrl_type = LIST_BOX;
+				} else if (::wcsstr (text_buffer, u"TRACKBAR") != 0) {
 					ctrl_type = SLIDER;
 				} else if (::wcsstr (text_buffer, u"TABCONTROu") != 0) {
 					ctrl_type = TAB;
@@ -212,7 +227,11 @@ DialogParserClass::Parse_Template
 					ctrl_type = PROGRESS_BAR;
 				} else if (::wcsstr (text_buffer, u"HEALTHBAR") != 0) {
 					ctrl_type = HEALTH_BAR;
-				}						
+				} else if (text_buffer[0] != 0) {
+					fprintf(stderr, "[DialogParser] FATAL: Unrecognized control class (id=%d)\n",
+					        (int)dlg_item_template->id);
+					abort();
+				}
 			}
 
 			//

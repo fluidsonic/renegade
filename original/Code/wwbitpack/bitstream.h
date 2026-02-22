@@ -120,7 +120,9 @@ class BitStreamClass : public cBitPacker
 				Add_Bits(scaled_value, entry.Get_Bit_Precision());
 
 			} else {
-				Add_Bits(*(reinterpret_cast<uint32_t *>(&value)), BIT_DEPTH(T));
+					uint32_t bits = 0;
+				memcpy(&bits, &value, sizeof(T));
+				Add_Bits(bits, BIT_DEPTH(T));
 			}
 
 			UncompressedSizeBytes += BYTE_DEPTH(T);
@@ -156,7 +158,7 @@ class BitStreamClass : public cBitPacker
 				uint32_t u_value;
 				Get_Bits(u_value, BIT_DEPTH(T));
 
-				value = *(reinterpret_cast<T *>(&u_value));
+				memcpy(&value, &u_value, sizeof(T));
 			}
 			return value;
 		}
