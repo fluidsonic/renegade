@@ -18,6 +18,7 @@ class WarFactoryGameObj(
     isPowerOn: Boolean = true,
     currentState: Int = 0,
     isBusy: Boolean = false,
+    playerType: Int = 0,
 ) : VehicleFactoryGameObj(
     definitionId   = definitionId,
     position       = position,
@@ -30,4 +31,5 @@ class WarFactoryGameObj(
     isPowerOn      = isPowerOn,
     currentState   = currentState,
     isBusy         = isBusy,
+    playerType     = playerType,
 )

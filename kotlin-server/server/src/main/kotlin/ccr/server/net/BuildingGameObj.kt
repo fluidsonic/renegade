@@ -21,6 +21,7 @@ open class BuildingGameObj(
     val isDestroyed: Boolean = false,
     val isPowerOn: Boolean = true,
     val currentState: Int = 0,   // BuildingStateClass::HEALTH100_POWERON
+    val playerType: Int = 0,
 ) : DamageableGameObj(definitionId, health, shieldStrength, shieldType) {
 
     // C++: BuildingGameObj::Export_Creation — calls DamageableGameObj::Export_Creation (empty chain),

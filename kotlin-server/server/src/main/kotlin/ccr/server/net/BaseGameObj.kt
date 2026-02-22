@@ -10,4 +10,8 @@ abstract class BaseGameObj(val definitionId: Int) : NetworkObject() {
 
     override val networkClassId: Int = 1000
     override fun delete() {}
+
+    init {
+        setObjectDirtyBit(BIT_CREATION, true)
+    }
 }

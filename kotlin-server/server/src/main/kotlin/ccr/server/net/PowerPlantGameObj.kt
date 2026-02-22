@@ -16,6 +16,7 @@ class PowerPlantGameObj(
     isDestroyed: Boolean = false,
     isPowerOn: Boolean = true,
     currentState: Int = 0,
+    playerType: Int = 0,
 ) : BuildingGameObj(
     definitionId   = definitionId,
     position       = position,
@@ -27,4 +28,5 @@ class PowerPlantGameObj(
     isDestroyed    = isDestroyed,
     isPowerOn      = isPowerOn,
     currentState   = currentState,
+    playerType     = playerType,
 )

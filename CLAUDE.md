@@ -22,6 +22,9 @@
 ## Workflow Meta-Rules
 - When the user writes **"remember X"**, immediately update `CLAUDE.md` with X — no need to ask for confirmation
 - **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
+- **Git merges must use `--ff-only`** — always rebase the feature branch onto the base branch first, then FF-merge
+- **Always create worktrees from the latest local `main`** — run `git pull` (or at least `git fetch`) on main before branching; stale branch points cause unnecessary rebase conflicts
+- **Worktree merge sequence**: (1) commit all changes in the worktree, (2) rebase the worktree branch onto latest local `main`, (3) `git worktree remove` the worktree, (4) delete the branch — in that order; you cannot delete a branch while its worktree still exists
 
 ## C++ Port — Known Patterns & Pitfalls
 
@@ -42,7 +45,7 @@
 - **All .h files use `#pragma once` exclusively** — no `#ifndef`/`#define` include guards anywhere
 - **`#include "global.h"` is the first include in every .h and .cpp file** — explicit, not transitive
 - PCH enabled: `target_precompile_headers(Commando PRIVATE "global.h")` in Code/Commando/CMakeLists.txt
-- `compat/macos_fix.mm` is excluded from PCH (Objective-C++ — `SKIP_PRECOMPILE_HEADERS ON`)
+- `compat/macos_fix.mm` is excluded from PCH (Objective-C++ — `SKIP_PRECOMPILE_HEADERS ON`); **no other file should use `SKIP_PRECOMPILE_HEADERS ON`** — the PCH only pre-compiles `global.h`, so defining implementation macros (e.g. `MINIAUDIO_IMPLEMENTATION`) before a `#include` in a `.cpp` works correctly without it
 - Source root `original/` is in the include path so `#include "global.h"` resolves from any TU
 - Exclusions (no `#include "global.h"` added): `compat/typesizes.h` (mid-file include in winnt.h), `tools/primitive-type-check/PrimitiveTypeCheck.h` (clang-tidy plugin), resource compiler headers (`resource.h`, `dialogresource.h`, `afxres.h` — processed by llvm-rc which lacks the include path)
 - **`Code/Scripts/vector.h`** forwards to `Code/wwlib/vector.h` — Scripts has its own copy; the old shared `#ifndef VECTOR_H` guard masked the duplication; now scripts CMakeLists adds `Code/` to include path so `#include "wwlib/vector.h"` works
@@ -69,6 +72,14 @@
 ### mempool.h — 64-bit pointer arithmetic
 - `BlockListHead` must be `uintptr_t*` (not `uint32_t*`) so that `+1` skips a full pointer width (8 bytes on arm64)
 - Original Windows code used `uint32*`; first object slot overlapped the block header on 64-bit → corruption on free
+
+### Audio backend — mss_impl.cpp (COMPLETE)
+- `compat/mss.h` has extern declarations only (no bodies); all ~106 `AIL_*` functions implemented in `compat/mss_impl.cpp` via miniaudio
+- `compat/miniaudio.h` is a vendored single-header library (CoreAudio backend); linked with `-framework CoreAudio -framework AudioToolbox`
+- Pool sizes: 64 2D samples (`HSAMPLE`), 32 3D samples (`H3DSAMPLE`), 16 streams (`HSTREAM`), 16 timers; handles are 1-based (0 and -1 are invalid sentinels)
+- 3D coordinate swizzle `[-Y, Z, X]` lives in `Sound3DClass::Update_Miles_Transform()` in WWAudio — the backend passes coords through as-is, do not add a swizzle there
+- `FilteredSoundClass` reverb (`AIL_set_sample_processor`, `AIL_set_filter_sample_preference`) is currently a no-op stub
+- See `docs/audio-system.md` for full architecture, class hierarchy, MSS function list, and coordinate transform details
 
 ### Intro movie startup (movie.cpp)
 - `MovieGameModeClass::Start_Movie()` hangs forever if the .BIK file is missing AND no CD drive (macOS has neither)

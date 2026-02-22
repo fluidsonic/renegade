@@ -118,7 +118,6 @@ class God(private val server: GameServer) {
         val playerNetId = NetworkObjectManager.getNewDynamicId()
         playerNetIds[rhostId] = playerNetId
         NetworkObjectManager.registerObject(player, playerNetId)
-        player.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
         playersByHost[rhostId] = player
         return player
     }
@@ -176,7 +175,6 @@ class God(private val server: GameServer) {
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(soldier, netId)
         soldiersByHost[rhostId] = soldier
-        soldier.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
 
         // Give starting credits on first spawn if configured
         if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5) {

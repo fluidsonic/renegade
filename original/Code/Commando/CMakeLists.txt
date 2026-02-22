@@ -87,7 +87,6 @@ target_precompile_headers(Commando PRIVATE "${CMAKE_SOURCE_DIR}/global.h")
 
 # macos_fix.mm is Objective-C++ — exclude it from the C++ PCH
 set_source_files_properties("${COMPAT_DIR}/macos_fix.mm" PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
-set_source_files_properties("${COMPAT_DIR}/mss_impl.cpp" PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 
 target_link_libraries(Commando PRIVATE
     Combat

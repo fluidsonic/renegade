@@ -18,6 +18,7 @@ open class VehicleFactoryGameObj(
     isPowerOn: Boolean = true,
     currentState: Int = 0,
     val isBusy: Boolean = false,
+    playerType: Int = 0,
 ) : BuildingGameObj(
     definitionId   = definitionId,
     position       = position,
@@ -29,6 +30,7 @@ open class VehicleFactoryGameObj(
     isDestroyed    = isDestroyed,
     isPowerOn      = isPowerOn,
     currentState   = currentState,
+    playerType     = playerType,
 ) {
     // C++: VehicleFactoryGameObj::Export_Rare — calls super then appends isBusy.
     override fun exportRare(packet: BitStream) {

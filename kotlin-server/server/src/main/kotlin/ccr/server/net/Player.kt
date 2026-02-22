@@ -22,6 +22,10 @@ class Player(
 
     override fun delete() {}  // transient, no cleanup
 
+    init {
+        setObjectDirtyBit(BIT_CREATION, true)
+    }
+
     // C++: cPlayer::Export_Creation (player.cpp:877) — writes only Name as a wide string.
     override fun exportCreation(packet: BitStream) {
         packet.addWideString(name)  // Add_Wide_Terminated_String

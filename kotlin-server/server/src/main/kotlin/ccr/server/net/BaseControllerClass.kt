@@ -39,6 +39,18 @@ class BaseControllerClass(
     // C++: Set_Delete_Pending is overridden to no-op — persists between levels
     override fun setDeletePending() {}
 
+    private val buildings = mutableListOf<BuildingGameObj>()
+
+    fun addBuilding(building: BuildingGameObj) {
+        buildings.add(building)
+    }
+
+    // C++: BaseControllerClass::Are_All_Buildings_Destroyed()
+    fun areAllBuildingsDestroyed(): Boolean {
+        if (buildings.isEmpty()) return false
+        return buildings.all { it.isDestroyed }
+    }
+
     // C++: BaseControllerClass::Export_Occasional — transmits all base state variables
     override fun exportOccasional(packet: BitStream) {
         packet.addFloat(operationTimeFactor)

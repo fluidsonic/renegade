@@ -19,6 +19,10 @@ class Team(
 
     override fun delete() {}
 
+    init {
+        setObjectDirtyBit(BIT_CREATION, true)
+    }
+
     // C++: cTeam::Export_Creation — writes TeamNumber as int
     override fun exportCreation(packet: BitStream) {
         packet.addInt(teamNumber)

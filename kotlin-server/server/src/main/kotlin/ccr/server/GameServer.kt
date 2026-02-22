@@ -38,6 +38,16 @@ import ccr.server.net.RequestKillEvent
 import ccr.server.net.SuicideEvent
 import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
+import ccr.server.level.ChunkIds
+import ccr.server.level.ldd.LoadedBuildingGameObj
+import ccr.server.net.BaseControllerClass
+import ccr.server.net.BuildingGameObj
+import ccr.server.net.ComCenterGameObj
+import ccr.server.net.PowerPlantGameObj
+import ccr.server.net.RefineryGameObj
+import ccr.server.net.SoldierFactoryGameObj
+import ccr.server.net.VehicleFactoryGameObj
+import ccr.server.net.WarFactoryGameObj
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -99,8 +109,9 @@ class GameServer(internal val config: ServerConfig) {
     // SpawnManager resolves multiplayer spawn locations from loaded spawners.
     internal var spawnManager: SpawnManager? = null
 
-    // BuildingManager creates building network objects and base controllers from LDD data.
-    internal var buildingManager: BuildingManager? = null
+    // Base controllers for NOD (playerType=0) and GDI (playerType=1) teams.
+    internal var baseControllerNod: BaseControllerClass? = null
+    internal var baseControllerGdi: BaseControllerClass? = null
 
     // God owns the player/soldier lifecycle (port of C++ cGod).
     internal val god = God(this)
@@ -131,24 +142,40 @@ class GameServer(internal val config: ServerConfig) {
             }
         }
 
-        // Initialise BuildingManager from loaded level (if buildings exist in the LDD)
+        // Initialise base controllers and building network objects from loaded level.
         loadedLevel?.also { level ->
-            if (level.dynamicData.gameObjects.any { it is ccr.server.level.ldd.LoadedBuildingGameObj }) {
-                buildingManager = BuildingManager(this@GameServer, level)
+            val loadedBuildings = level.dynamicData.gameObjects.filterIsInstance<LoadedBuildingGameObj>()
+            if (loadedBuildings.isNotEmpty()) {
+                val controllerNod = BaseControllerClass(playerType = 0)
+                val controllerGdi = BaseControllerClass(playerType = 1)
+                NetworkObjectManager.registerObject(controllerNod, NET_ID_BASE_CONTROLLER_NOD)
+                NetworkObjectManager.registerObject(controllerGdi, NET_ID_BASE_CONTROLLER_GDI)
+                controllerNod.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+                controllerGdi.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+                baseControllerNod = controllerNod
+                baseControllerGdi = controllerGdi
+
+                println("[BUILDING] found ${loadedBuildings.size} buildings in LDD")
+                for (lb in loadedBuildings) {
+                    val building = createBuilding(lb) ?: continue
+                    NetworkObjectManager.registerObject(building, lb.networkId)
+                    when (lb.playerType) {
+                        0 -> controllerNod.addBuilding(building)
+                        1 -> controllerGdi.addBuilding(building)
+                    }
+                    println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
+                }
+                println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
             }
         }
 
         // Register team singletons with static IDs. These persist for the lifetime of the server.
+        // Dirty bits are set by Team.init — no explicit call needed here.
         NetworkObjectManager.registerObject(teamNod, NET_ID_NOD_TEAM)
         NetworkObjectManager.registerObject(teamGdi, NET_ID_GDI_TEAM)
-        // Mark teams dirty for all clients so replicationTick() sends them when a client first joins
-        teamNod.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
-        teamGdi.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
 
         // Register ServerFps singleton (C++: cServerFps uses a static network ID)
         NetworkObjectManager.registerObject(serverFps, NET_ID_SERVER_FPS)
-        // ServerFps uses BIT_FREQUENT (classId=0, no factory — frequent-only updates)
-        serverFps.setObjectDirtyBit(NetworkObject.BIT_FREQUENT, true)
 
         connectionManager.applicationAcceptanceHandler = ::checkApplication
         connectionManager.connHandler = { id, host ->
@@ -315,8 +342,8 @@ class GameServer(internal val config: ServerConfig) {
             // Game-over detection (only check when players are in game and not already in intermission)
             if (!gameState.isIntermission && god.playerInGame.isNotEmpty()) {
                 val (gameOver, winType) = gameState.checkGameOver(
-                    isNodBaseDestroyed = buildingManager?.isBaseDestroyed(0) ?: false,
-                    isGdiBaseDestroyed = buildingManager?.isBaseDestroyed(1) ?: false,
+                    isNodBaseDestroyed = baseControllerNod?.areAllBuildingsDestroyed() ?: false,
+                    isGdiBaseDestroyed = baseControllerGdi?.areAllBuildingsDestroyed() ?: false,
                 )
                 if (gameOver) {
                     handleGameOver(winType)
@@ -863,6 +890,37 @@ class GameServer(internal val config: ServerConfig) {
             god.deleteSoldier(rhostId)
         }
         println("[GAME] core restart complete — hostedGameNumber=$hostedGameNumber")
+    }
+
+    private fun createBuilding(lb: LoadedBuildingGameObj): BuildingGameObj? {
+        val pos = Vector3(lb.transform.position.x, lb.transform.position.y, lb.transform.position.z)
+        val sphereCenter = Vector3(lb.collectionSphere.center.x, lb.collectionSphere.center.y, lb.collectionSphere.center.z)
+        val radius = lb.collectionSphere.radius
+
+        if (!ChunkIds.isBuilding(lb.factoryChunkId)) return null
+
+        return when (lb.factoryChunkId) {
+            ChunkIds.GAMEOBJ_BUILDING_POWERPLANT ->
+                PowerPlantGameObj(lb.definitionId, pos, sphereCenter, radius, isPowerOn = lb.isPowerOn, playerType = lb.playerType)
+
+            ChunkIds.GAMEOBJ_BUILDING_REFINERY ->
+                RefineryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+
+            ChunkIds.GAMEOBJ_BUILDING_SOLDIERFACTORY ->
+                SoldierFactoryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+
+            ChunkIds.GAMEOBJ_BUILDING_WARFACTORY ->
+                WarFactoryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+
+            ChunkIds.GAMEOBJ_BUILDING_AIRSTRIP,
+            ChunkIds.GAMEOBJ_BUILDING_VEHICLEFACTORY ->
+                VehicleFactoryGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+
+            ChunkIds.GAMEOBJ_BUILDING_COMCENTER ->
+                ComCenterGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+
+            else -> BuildingGameObj(lb.definitionId, pos, sphereCenter, radius, playerType = lb.playerType)
+        }
     }
 
     companion object {
