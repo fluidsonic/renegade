@@ -72,7 +72,7 @@ ParticleBufferClass::ParticleBufferClass
 	NewParticleQueueCount(0U),
 	RenderMode(render_mode),
 	FrameMode(frame_mode),
-	MaxAge(1000.0f * max_age),
+	MaxAge(static_cast<uint32_t>(1000.0f * max_age)),
 	LastUpdateTime(WW3D::Get_Sync_Time()),
 	IsEmitterDead(false),
 	MaxSize(0.0f),
@@ -1138,7 +1138,7 @@ void ParticleBufferClass::Prepare_LOD(CameraClass &camera)
 	float dist = (sphere.Center - cam).Length();
 	float bounding_sphere_projected_radius = 0.0f;
 	float particle_projected_radius = 0.0f;
-	if (dist) {
+	if (dist != 0.0f) {
 		float oo_dist = 1.0f / dist;
 		bounding_sphere_projected_radius = sphere.Radius * oo_dist;
 		particle_projected_radius = MaxSize * oo_dist;

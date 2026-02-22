@@ -60,7 +60,7 @@ void LightEnvironmentClass::InputLightStruct::Init_From_Point_Or_Spot_Light
 	double atten_start,atten_end;
 	light.Get_Far_Attenuation_Range(atten_start,atten_end);
 	
-	float atten = 1.0f - (dist - atten_start) / (atten_end - atten_start);
+	float atten = 1.0f - static_cast<float>((dist - atten_start) / (atten_end - atten_start));
 	atten = WWMath::Clamp(atten,0.0f,1.0f);
 
 	if (light.Get_Type() == LightClass::SPOT) {

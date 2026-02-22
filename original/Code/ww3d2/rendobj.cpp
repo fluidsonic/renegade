@@ -247,7 +247,7 @@ float RenderObjClass::Get_Screen_Size(CameraClass &camera)
 	const SphereClass & sphere = Get_Bounding_Sphere();
 	float dist = (sphere.Center - cam).Length();
 	float radius = 0.0f;
-	if (dist) {
+	if (dist != 0.0f) {
 		radius = sphere.Radius / dist;
 	}
 
@@ -1205,7 +1205,7 @@ void RenderObjClass::Save_Sub_Object_User_Lighting(ChunkSaveClass & csave,Render
 {
 	csave.Begin_Chunk(CHUNKID_SUBOBJ_NAME);
 	const char * name = sub_obj->Get_Name();
-	csave.Write(name,strlen(name) + 1);
+	csave.Write(name,static_cast<uint32_t>(strlen(name) + 1));
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(CHUNKD_SUBOBJ_BONE_INDEX);

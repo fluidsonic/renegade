@@ -200,7 +200,7 @@ static int Build_List_From_String
 		 (delimiter != NULL) &&
 		 (string_list != NULL))
 	{
-		int delim_len = ::strlen (delimiter);
+		int32_t delim_len = static_cast<int32_t>(::strlen (delimiter));
 
 		//
 		// Determine how many entries there will be in the list
@@ -603,7 +603,7 @@ void HMorphAnimClass::write_channel(ChunkSaveClass & csave,int channel)
 
 	const char * pose_name = PoseData[channel]->Get_Name();
 	csave.Begin_Chunk(W3D_CHUNK_MORPHANIM_POSENAME);
-	csave.Write(pose_name,strlen(pose_name) + 1);
+	csave.Write(pose_name,static_cast<uint32_t>(strlen(pose_name) + 1));
 	csave.End_Chunk();
 
 	csave.Begin_Chunk(W3D_CHUNK_MORPHANIM_KEYDATA);
@@ -668,7 +668,7 @@ void HMorphAnimClass::Insert_Morph_Key(const int channel, uint32_t morph_frame, 
 	MorphKeyData[channel].Add_Key(morph_frame,pose_frame);
 
 	// update the framecount to reflect the newly added key
-	FrameCount = WWMath::Max(morph_frame,FrameCount);
+	FrameCount = static_cast<int32_t>(WWMath::Max(morph_frame,FrameCount));
 }
 
 void HMorphAnimClass::Release_Keys(void)

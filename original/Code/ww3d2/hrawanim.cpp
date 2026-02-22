@@ -408,7 +408,7 @@ void HRawAnimClass::Get_Translation(Vector3& trans, int pividx, float frame ) co
 	}
 
 //	int frame0 = (int)frame;
-	int frame0=WWMath::Float_To_Long(frame-0.499999f);
+	int32_t frame0=static_cast<int32_t>(WWMath::Float_To_Long(frame-0.499999f));
 
 	int frame1 = frame0 + 1;
 
@@ -465,7 +465,7 @@ void HRawAnimClass::Get_Translation(Vector3& trans, int pividx, float frame ) co
 void HRawAnimClass::Get_Orientation(Quaternion& q, int pividx,float frame) const
 {
 //	int frame0 = (int)frame;
-	int frame0=WWMath::Float_To_Long(frame-0.499999f);
+	int32_t frame0=static_cast<int32_t>(WWMath::Float_To_Long(frame-0.499999f));
 	int frame1 = frame0 + 1;
 
 	float ratio = frame - (float)frame0;
@@ -517,7 +517,7 @@ void HRawAnimClass::Get_Transform(Matrix3D& mtx, int pividx, float frame ) const
 //		return;
 //	}
 
-	int frame0=WWMath::Float_To_Long(frame-0.499999f);
+	int32_t frame0=static_cast<int32_t>(WWMath::Float_To_Long(frame-0.499999f));
 
 	int frame1 = frame0 + 1;
 

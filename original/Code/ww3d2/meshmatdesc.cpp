@@ -120,7 +120,7 @@ bool UVBufferClass::Is_Equal_To(const UVBufferClass & that)
 
 void UVBufferClass::Update_CRC(void)
 {
-	CRC = CRC_Memory((unsigned char *)Get_Array(),Get_Count() * sizeof(Vector2));
+	CRC = static_cast<uint32_t>(CRC_Memory((unsigned char *)Get_Array(),Get_Count() * sizeof(Vector2)));
 }
 
 /**************************************************************************************************
@@ -557,7 +557,7 @@ void MeshMatDescClass::Install_UV_Array(int pass,int stage,Vector2 * uvs,int cou
 	/*
 	** Compute the crc of this uv array
 	*/
-	unsigned int crc = CRC_Memory((unsigned char *)uvs,count * sizeof(Vector2));
+	uint32_t crc = static_cast<uint32_t>(CRC_Memory((unsigned char *)uvs,count * sizeof(Vector2)));
 
 	/*
 	** See if there is an existing uv-array that matches the one just loaded
@@ -663,9 +663,9 @@ void MeshMatDescClass::Post_Load_Process(bool lighting_enabled,MeshModelClass * 
 			mtl->Get_Ambient(&single_ambient);
 			mtl->Get_Emissive(&single_emissive);
 
-			if (single_diffuse.X || single_diffuse.Y || single_diffuse.Z) diffuse_used=true;
-			if (single_ambient.X || single_ambient.Y || single_ambient.Z) ambient_used=true;
-			if (single_emissive.X || single_emissive.Y || single_emissive.Z) emissive_used=true;
+			if (single_diffuse.X != 0.0f || single_diffuse.Y != 0.0f || single_diffuse.Z != 0.0f) diffuse_used=true;
+			if (single_ambient.X != 0.0f || single_ambient.Y != 0.0f || single_ambient.Z != 0.0f) ambient_used=true;
+			if (single_emissive.X != 0.0f || single_emissive.Y != 0.0f || single_emissive.Z != 0.0f) emissive_used=true;
 			if (single_opacity!=1.0f) opacity_used=true;
 		}
 
@@ -692,9 +692,9 @@ void MeshMatDescClass::Post_Load_Process(bool lighting_enabled,MeshModelClass * 
 				single_opacity_used=false;
 			}
 
-			if (mtl_diffuse.X || mtl_diffuse.Y || mtl_diffuse.Z) diffuse_used=true;
-			if (mtl_ambient.X || mtl_ambient.Y || mtl_ambient.Z) ambient_used=true;
-			if (mtl_emissive.X || mtl_emissive.Y || mtl_emissive.Z) emissive_used=true;
+			if (mtl_diffuse.X != 0.0f || mtl_diffuse.Y != 0.0f || mtl_diffuse.Z != 0.0f) diffuse_used=true;
+			if (mtl_ambient.X != 0.0f || mtl_ambient.Y != 0.0f || mtl_ambient.Z != 0.0f) ambient_used=true;
+			if (mtl_emissive.X != 0.0f || mtl_emissive.Y != 0.0f || mtl_emissive.Z != 0.0f) emissive_used=true;
 			if (mtl_opacity!=1.0f) opacity_used=true;
 
 		}
@@ -852,9 +852,9 @@ void MeshMatDescClass::Post_Load_Process(bool lighting_enabled,MeshModelClass * 
 				mtl->Get_Ambient(&single_ambient);
 				mtl->Get_Emissive(&single_emissive);
 
-				if (single_diffuse.X || single_diffuse.Y || single_diffuse.Z) diffuse_used=true;
-				if (single_ambient.X || single_ambient.Y || single_ambient.Z) ambient_used=true;
-				if (single_emissive.X || single_emissive.Y || single_emissive.Z) emissive_used=true;
+				if (single_diffuse.X != 0.0f || single_diffuse.Y != 0.0f || single_diffuse.Z != 0.0f) diffuse_used=true;
+				if (single_ambient.X != 0.0f || single_ambient.Y != 0.0f || single_ambient.Z != 0.0f) ambient_used=true;
+				if (single_emissive.X != 0.0f || single_emissive.Y != 0.0f || single_emissive.Z != 0.0f) emissive_used=true;
 			}
 
 			for (int vidx=0; vidx<VertexCount; vidx++) {
@@ -866,9 +866,9 @@ void MeshMatDescClass::Post_Load_Process(bool lighting_enabled,MeshModelClass * 
 					mtl->Get_Emissive(&mtl_emissive);
 				}
 
-				if (mtl_diffuse.X || mtl_diffuse.Y || mtl_diffuse.Z) diffuse_used=true;
-				if (mtl_ambient.X || mtl_ambient.Y || mtl_ambient.Z) ambient_used=true;
-				if (mtl_emissive.X || mtl_emissive.Y || mtl_emissive.Z) emissive_used=true;
+				if (mtl_diffuse.X != 0.0f || mtl_diffuse.Y != 0.0f || mtl_diffuse.Z != 0.0f) diffuse_used=true;
+				if (mtl_ambient.X != 0.0f || mtl_ambient.Y != 0.0f || mtl_ambient.Z != 0.0f) ambient_used=true;
+				if (mtl_emissive.X != 0.0f || mtl_emissive.Y != 0.0f || mtl_emissive.Z != 0.0f) emissive_used=true;
 			}
 
 			if ((DCGSource[pass] != VertexMaterialClass::MATERIAL) && (ColorArray[0] != NULL)) {

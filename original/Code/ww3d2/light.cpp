@@ -485,8 +485,8 @@ WW3DErrorType LightClass::Save_W3D(ChunkSaveClass & csave)
 
 		W3dLightAttenuationStruct atten;
 		memset(&atten,0,sizeof(atten));
-		atten.Start = start;
-		atten.End = end;
+		atten.Start = static_cast<float>(start);
+		atten.End = static_cast<float>(end);
 		csave.Write(&atten,sizeof(atten));
 
 		csave.End_Chunk();
@@ -494,14 +494,14 @@ WW3DErrorType LightClass::Save_W3D(ChunkSaveClass & csave)
 
 	if (Get_Flag(FAR_ATTENUATION)) {
 		csave.Begin_Chunk(W3D_CHUNK_FAR_ATTENUATION);
-		
+
 		double start,end;
 		Get_Far_Attenuation_Range(start,end);
 
 		W3dLightAttenuationStruct atten;
 		memset(&atten,0,sizeof(atten));
-		atten.Start = start;
-		atten.End = end;
+		atten.Start = static_cast<float>(start);
+		atten.End = static_cast<float>(end);
 		csave.Write(&atten,sizeof(atten));
 
 		csave.End_Chunk();

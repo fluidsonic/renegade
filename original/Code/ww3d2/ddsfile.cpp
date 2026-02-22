@@ -25,7 +25,7 @@ DDSFileClass::DDSFileClass(const char* name,unsigned reduction_factor)
 {
 	strncpy(Name,name,sizeof(Name));
 	// The name could be given in .tga or .dds format, so ensure we're opening .dds...
-	int len=strlen(Name);
+	int32_t len=static_cast<int32_t>(strlen(Name));
 	Name[len-3]='d';
 	Name[len-2]='d';
 	Name[len-1]='s';
@@ -192,11 +192,11 @@ void DDSFileClass::Copy_Level_To_Surface(unsigned level,IDirect3DSurface8* d3d_s
 {
 	// Verify that the destination surface size matches the source surface size
 	D3DSURFACE_DESC surface_desc;
-	DX8_ErrorCode(d3d_surface->GetDesc(&surface_desc));
+	DX8_ErrorCode(static_cast<uint32_t>(d3d_surface->GetDesc(&surface_desc)));
 
 	// First lock the surface
 	D3DLOCKED_RECT locked_rect;
-	DX8_ErrorCode(d3d_surface->LockRect(&locked_rect,NULL,0));
+	DX8_ErrorCode(static_cast<uint32_t>(d3d_surface->LockRect(&locked_rect,NULL,0)));
 
 	Copy_Level_To_Surface(
 		level,
@@ -207,7 +207,7 @@ void DDSFileClass::Copy_Level_To_Surface(unsigned level,IDirect3DSurface8* d3d_s
 		locked_rect.Pitch);
 
 	// Finally, unlock the surface
-	DX8_ErrorCode(d3d_surface->UnlockRect());
+	DX8_ErrorCode(static_cast<uint32_t>(d3d_surface->UnlockRect()));
 }
 
 // ----------------------------------------------------------------------------

@@ -23,10 +23,10 @@ IDirect3DTexture8* MissingTexture::_Get_Missing_Texture()
 IDirect3DSurface8* MissingTexture::_Create_Missing_Surface()
 {
 	IDirect3DSurface8 *texture_surface = NULL;
-	DX8_ErrorCode(_MissingTexture->GetSurfaceLevel(0, &texture_surface));
+	DX8_ErrorCode(static_cast<uint32_t>(_MissingTexture->GetSurfaceLevel(0, &texture_surface)));
 	D3DSURFACE_DESC texture_surface_desc;
 	::ZeroMemory(&texture_surface_desc, sizeof(D3DSURFACE_DESC));
-	DX8_ErrorCode(texture_surface->GetDesc(&texture_surface_desc));
+	DX8_ErrorCode(static_cast<uint32_t>(texture_surface->GetDesc(&texture_surface_desc)));
 	
 	IDirect3DSurface8 *surface = NULL;	
 	DX8CALL(CreateImageSurface(
@@ -54,12 +54,12 @@ void MissingTexture::_Init()
 	rect.right=missing_image_width;
 	rect.top=0;
 	rect.bottom=missing_image_height;
-	DX8_ErrorCode(
+	DX8_ErrorCode(static_cast<uint32_t>(
 		tex->LockRect(
 			0,
 			&locked_rect,
 			&rect,
-			0));
+			0)));
 
 	unsigned x=0;
 	unsigned y=missing_image_height;
@@ -81,14 +81,14 @@ void MissingTexture::_Init()
 		}
 	}
 
-	DX8_ErrorCode(tex->UnlockRect(0));
+	DX8_ErrorCode(static_cast<uint32_t>(tex->UnlockRect(0)));
 
 	for (unsigned i=1;i<tex->GetLevelCount();++i) {
 		IDirect3DSurface8 *src,*dst;
-		DX8_ErrorCode(tex->GetSurfaceLevel(i-1,&src));
-		DX8_ErrorCode(tex->GetSurfaceLevel(i,&dst));
+		DX8_ErrorCode(static_cast<uint32_t>(tex->GetSurfaceLevel(i-1,&src)));
+		DX8_ErrorCode(static_cast<uint32_t>(tex->GetSurfaceLevel(i,&dst)));
 
-		DX8_ErrorCode(D3DXLoadSurfaceFromSurface(
+		DX8_ErrorCode(static_cast<uint32_t>(D3DXLoadSurfaceFromSurface(
 			dst,
 			NULL,	// palette
 			NULL,	// rect
@@ -96,7 +96,7 @@ void MissingTexture::_Init()
 			NULL,	// palette
 			NULL,	// rect
 			D3DX_FILTER_BOX,	// box is good for 2:1 filtering
-			0));
+			0)));
 
 		src->Release();
 		dst->Release();

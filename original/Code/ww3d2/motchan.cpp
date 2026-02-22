@@ -376,7 +376,7 @@ void	TimeCodedMotionChannelClass::Get_Vector(float frame,float * setvec)
 	
   uint32_t	tc0;
   
-  tc0 = frame;
+  tc0 = static_cast<uint32_t>(frame);
 	
   uint32_t pidx = get_index( tc0 );						
   uint32_t p2idx;
@@ -807,7 +807,7 @@ AdaptiveDeltaMotionChannelClass::AdaptiveDeltaMotionChannelClass(void) :
 			//ratio = ((ratio + 1.0f) / 128.0f); 
 			ratio/=((float) FILTER_TABLE_GEN_SIZE);
 
-			filtertable[i + FILTER_TABLE_GEN_START] = 1.0f - WWMath::Sin( DEG_TO_RAD(90.0f * ratio));
+			filtertable[i + FILTER_TABLE_GEN_START] = 1.0f - static_cast<float>(WWMath::Sin( DEG_TO_RAD(90.0f * ratio)));
 		}
 
 		table_valid = true;
@@ -1159,7 +1159,7 @@ float AdaptiveDeltaMotionChannelClass::getframe(uint32_t frame_idx, uint32_t vec
 void	AdaptiveDeltaMotionChannelClass::Get_Vector(float frame,float * setvec)
 {		
 
-	uint32_t frame1 = frame;
+	uint32_t frame1 = static_cast<uint32_t>(frame);
 	
 	float ratio = frame - frame1;
 
@@ -1176,7 +1176,7 @@ void	AdaptiveDeltaMotionChannelClass::Get_Vector(float frame,float * setvec)
 Quaternion AdaptiveDeltaMotionChannelClass::Get_QuatVector(float frame)
 {
 
-	uint32_t frame1 = frame;
+	uint32_t frame1 = static_cast<uint32_t>(frame);
 	uint32_t frame2 = frame1+1;
 	float ratio = frame - frame1;
 

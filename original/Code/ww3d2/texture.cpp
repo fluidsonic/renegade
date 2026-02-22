@@ -41,7 +41,7 @@ static int Calculate_Texture_Memory_Usage(const TextureClass* texture,int red_fa
 	if (!d3d_texture) return 0;
 	for (unsigned i=red_factor;i<d3d_texture->GetLevelCount();++i) {
 		D3DSURFACE_DESC desc;
-		DX8_ErrorCode(d3d_texture->GetLevelDesc(i,&desc));
+		DX8_ErrorCode(static_cast<uint32_t>(d3d_texture->GetLevelDesc(i,&desc)));
 		size+=desc.Size;
 	}
 	return size;
@@ -176,7 +176,7 @@ TextureClass::TextureClass(
 		break;
 	}
 
-	int len=strlen(name);
+	int32_t len=static_cast<int32_t>(strlen(name));
 	for (int i=0;i<len;++i) {
 		if (name[i]=='+') {
 			IsLightmap=true;
@@ -297,10 +297,10 @@ TextureClass::TextureClass(IDirect3DTexture8* d3d_texture)
 {
 	D3DTexture->AddRef();
 	IDirect3DSurface8* surface;
-	DX8_ErrorCode(D3DTexture->GetSurfaceLevel(0,&surface));
+	DX8_ErrorCode(static_cast<uint32_t>(D3DTexture->GetSurfaceLevel(0,&surface)));
 	D3DSURFACE_DESC d3d_desc;
 	::ZeroMemory(&d3d_desc, sizeof(D3DSURFACE_DESC));
-	DX8_ErrorCode(surface->GetDesc(&d3d_desc));
+	DX8_ErrorCode(static_cast<uint32_t>(surface->GetDesc(&d3d_desc)));
 	Width=d3d_desc.Width;
 	Height=d3d_desc.Height;
 	TextureFormat=D3DFormat_To_WW3DFormat(d3d_desc.Format);
@@ -479,7 +479,7 @@ SurfaceClass *TextureClass::Get_Surface_Level(unsigned int level)
 	}
 
 	IDirect3DSurface8 *d3d_surface = NULL;
-	DX8_ErrorCode(D3DTexture->GetSurfaceLevel(level, &d3d_surface));
+	DX8_ErrorCode(static_cast<uint32_t>(D3DTexture->GetSurfaceLevel(level, &d3d_surface)));
 	SurfaceClass *surface = new SurfaceClass(d3d_surface);
 	d3d_surface->Release();
 	return surface;
@@ -494,7 +494,7 @@ IDirect3DSurface8 *TextureClass::Get_D3D_Surface_Level(unsigned int level)
 	}
 
 	IDirect3DSurface8 *d3d_surface = NULL;
-	DX8_ErrorCode(D3DTexture->GetSurfaceLevel(level, &d3d_surface));
+	DX8_ErrorCode(static_cast<uint32_t>(D3DTexture->GetSurfaceLevel(level, &d3d_surface)));
 	return d3d_surface;
 }
 
@@ -606,10 +606,10 @@ void TextureClass::Apply_New_Surface(IDirect3DTexture8* d3d_texture,bool initial
 	if (initialized) Initialized=true;
 
 	IDirect3DSurface8* surface;
-	DX8_ErrorCode(D3DTexture->GetSurfaceLevel(0,&surface));
+	DX8_ErrorCode(static_cast<uint32_t>(D3DTexture->GetSurfaceLevel(0,&surface)));
 	D3DSURFACE_DESC d3d_desc;
 	::ZeroMemory(&d3d_desc, sizeof(D3DSURFACE_DESC));
-	DX8_ErrorCode(surface->GetDesc(&d3d_desc));
+	DX8_ErrorCode(static_cast<uint32_t>(surface->GetDesc(&d3d_desc)));
 	if (initialized) {
 		TextureFormat=D3DFormat_To_WW3DFormat(d3d_desc.Format);
 		Width=d3d_desc.Width;
@@ -999,7 +999,7 @@ void Save_Texture(TextureClass * texture,ChunkSaveClass & csave)
 	setup_texture_attributes(texture, &texinfo);
 
 	csave.Begin_Chunk(W3D_CHUNK_TEXTURE_NAME);
-	csave.Write(filename,strlen(filename)+1);
+	csave.Write(filename,static_cast<uint32_t>(strlen(filename)+1));
 	csave.End_Chunk();
 
 	if ((texinfo.Attributes != 0) || (texinfo.AnimType != 0) || (texinfo.FrameCount != 0)) {

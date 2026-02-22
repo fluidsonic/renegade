@@ -131,11 +131,11 @@ IndexBufferClass::WriteLockClass::WriteLockClass(IndexBufferClass* index_buffer_
 	switch (index_buffer->Type()) {
 	case BUFFER_TYPE_DX8:
 		DX8_Assert();
-		DX8_ErrorCode(static_cast<DX8IndexBufferClass*>(index_buffer)->Get_DX8_Index_Buffer()->Lock(
+		DX8_ErrorCode(static_cast<uint32_t>(static_cast<DX8IndexBufferClass*>(index_buffer)->Get_DX8_Index_Buffer()->Lock(
 			0,
 			index_buffer->Get_Index_Count()*sizeof(WORD),
 			(unsigned char**)&indices,
-			0));
+			0)));
 		break;
 	case BUFFER_TYPE_SORTING:
 		indices=static_cast<SortingIndexBufferClass*>(index_buffer)->index_buffer;
@@ -156,7 +156,7 @@ IndexBufferClass::WriteLockClass::~WriteLockClass()
 	switch (index_buffer->Type()) {
 	case BUFFER_TYPE_DX8:
 		DX8_Assert();
-		DX8_ErrorCode(static_cast<DX8IndexBufferClass*>(index_buffer)->index_buffer->Unlock());
+		DX8_ErrorCode(static_cast<uint32_t>(static_cast<DX8IndexBufferClass*>(index_buffer)->index_buffer->Unlock()));
 		break;
 	case BUFFER_TYPE_SORTING:
 		break;
@@ -177,11 +177,11 @@ IndexBufferClass::AppendLockClass::AppendLockClass(IndexBufferClass* index_buffe
 	switch (index_buffer->Type()) {
 	case BUFFER_TYPE_DX8:
 		DX8_Assert();
-		DX8_ErrorCode(static_cast<DX8IndexBufferClass*>(index_buffer)->index_buffer->Lock(
+		DX8_ErrorCode(static_cast<uint32_t>(static_cast<DX8IndexBufferClass*>(index_buffer)->index_buffer->Lock(
 			start_index*sizeof(unsigned short),
 			index_range*sizeof(unsigned short),
 			(unsigned char**)&indices,
-			0));	// Optional pointer to receive the buffer size
+			0)));	// Optional pointer to receive the buffer size
 		break;
 	case BUFFER_TYPE_SORTING:
 		indices=static_cast<SortingIndexBufferClass*>(index_buffer)->index_buffer+start_index;
@@ -199,7 +199,7 @@ IndexBufferClass::AppendLockClass::~AppendLockClass()
 	switch (index_buffer->Type()) {
 	case BUFFER_TYPE_DX8:
 		DX8_Assert();
-		DX8_ErrorCode(static_cast<DX8IndexBufferClass*>(index_buffer)->index_buffer->Unlock());
+		DX8_ErrorCode(static_cast<uint32_t>(static_cast<DX8IndexBufferClass*>(index_buffer)->index_buffer->Unlock()));
 		break;
 	case BUFFER_TYPE_SORTING:
 		break;
@@ -260,7 +260,7 @@ DX8IndexBufferClass::DX8IndexBufferClass(unsigned short index_count_,UsageType u
 	}
 
 	// If it still fails it is fatal
-	DX8_ErrorCode(ret);
+	DX8_ErrorCode(static_cast<uint32_t>(ret));
 }
 
 // ----------------------------------------------------------------------------
@@ -353,12 +353,12 @@ DynamicIBAccessClass::WriteLockClass::WriteLockClass(DynamicIBAccessClass* ib_ac
 	case BUFFER_TYPE_DYNAMIC_DX8:
 //		assert(!dynamic_dx8_index_buffer->Engine_Refs());
 		DX8_Assert();
-		DX8_ErrorCode(
+		DX8_ErrorCode(static_cast<uint32_t>(
 			static_cast<DX8IndexBufferClass*>(DynamicIBAccess->IndexBuffer)->Get_DX8_Index_Buffer()->Lock(
 			DynamicIBAccess->IndexBufferOffset*sizeof(WORD),
 			DynamicIBAccess->Get_Index_Count()*sizeof(WORD),
 			(unsigned char**)&Indices,
-			!DynamicIBAccess->IndexBufferOffset ? D3DLOCK_DISCARD : D3DLOCK_NOOVERWRITE));
+			!DynamicIBAccess->IndexBufferOffset ? D3DLOCK_DISCARD : D3DLOCK_NOOVERWRITE)));
 		break;
 	case BUFFER_TYPE_DYNAMIC_SORTING:
 		Indices=static_cast<SortingIndexBufferClass*>(DynamicIBAccess->IndexBuffer)->index_buffer;
@@ -375,7 +375,7 @@ DynamicIBAccessClass::WriteLockClass::~WriteLockClass()
 	switch (DynamicIBAccess->Get_Type()) {
 	case BUFFER_TYPE_DYNAMIC_DX8:
 		DX8_Assert();
-		DX8_ErrorCode(static_cast<DX8IndexBufferClass*>(DynamicIBAccess->IndexBuffer)->Get_DX8_Index_Buffer()->Unlock());
+		DX8_ErrorCode(static_cast<uint32_t>(static_cast<DX8IndexBufferClass*>(DynamicIBAccess->IndexBuffer)->Get_DX8_Index_Buffer()->Unlock()));
 		break;
 	case BUFFER_TYPE_DYNAMIC_SORTING:
 		break;

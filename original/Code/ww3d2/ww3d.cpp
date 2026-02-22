@@ -1020,7 +1020,7 @@ void WW3D::Sync(unsigned int sync_time)
  *=============================================================================================*/
 void WW3D::Set_Ext_Swap_Interval(long swap)
 {
-	DX8Wrapper::Set_Swap_Interval(swap);
+	DX8Wrapper::Set_Swap_Interval(static_cast<int32_t>(swap));
 }
 
 /***********************************************************************************************
@@ -1145,12 +1145,12 @@ void WW3D::Make_Screen_Shot( const char * filename_base )
 
 	D3DLOCKED_RECT lrect;
 
-	DX8_ErrorCode(fb->LockRect(&lrect,&bounds,D3DLOCK_READONLY));
+	DX8_ErrorCode(static_cast<uint32_t>(fb->LockRect(&lrect,&bounds,D3DLOCK_READONLY)));
 
 	unsigned int x,y,index,index2,width,height;
 
-	width=bounds.right-bounds.left;
-	height=bounds.bottom-bounds.top;
+	width=static_cast<uint32_t>(bounds.right-bounds.left);
+	height=static_cast<uint32_t>(bounds.bottom-bounds.top);
 
 	char *image=new char[3*width*height];
 

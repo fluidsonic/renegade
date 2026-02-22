@@ -67,7 +67,7 @@ ParticleEmitterClass::ParticleEmitterClass(float emit_rate, unsigned int burst_s
 	// The maximum number of particles is determined by the emission rate, burst size and lifetime.
 	// However, it is capped both by the particle cap and by the maximum buffer size, if these are
 	// active.
-	int max_num = BurstSize * emit_rate * (max_age + 1);
+	int32_t max_num = static_cast<int32_t>(BurstSize * emit_rate * (max_age + 1));
 	if (max_particles > 0) max_num = MIN(max_num, max_particles);
 	if (max_buffer_size > 0) max_num = MIN(max_num, max_buffer_size);
 	max_num = MAX(max_num, 2);	// max_num of 1 causes problems
@@ -225,7 +225,7 @@ ParticleEmitterClass::Create_From_Definition (const ParticleEmitterDefClass &def
 																definition.Get_Lifetime (),
 																ptexture,
 																shader, 
-																definition.Get_Max_Emissions (),
+																static_cast<int32_t>(definition.Get_Max_Emissions ()),
 																0,
 																false,
 																definition.Get_Render_Mode (),
@@ -531,7 +531,7 @@ void ParticleEmitterClass::Create_New_Particles(const Quaternion & curr_quat, co
 	// InheritedWorldSpaceEmitterVel is a global variable which is only used
 	// to pass this into the following Initialize_Particle() calls without
 	// having to set it as an argument for each call.
-	if (VelInheritFactor) {
+	if (VelInheritFactor != 0.0f) {
 		InheritedWorldSpaceEmitterVel = (curr_orig - PrevOrig) * (VelInheritFactor / fl_frametime);
 	} else {
 		InheritedWorldSpaceEmitterVel.Set(0.0, 0.0, 0.0);
@@ -608,11 +608,11 @@ void ParticleEmitterClass::Initialize_Particle(NewParticleStruct * newpart,
 	}
 
 	// Add outwards velocity to emitterspace velocity
-	if (OutwardVel) {
+	if (OutwardVel != 0.0f) {
 		// Find vector pointing outwards (from origin to creation position)
 		Vector3 outwards;
 		float pos_l2 = rand_pos.Length2();
-		if (pos_l2) {
+		if (pos_l2 != 0.0f) {
 			outwards = rand_pos * (OutwardVel * WWMath::Inv_Sqrt(pos_l2));
 		} else {
 			outwards.X = OutwardVel;

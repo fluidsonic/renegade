@@ -180,8 +180,8 @@ WW3DErrorType MeshModelClass::Load_W3D(ChunkLoadClass & cload)
 	
 	Reset(context->Header.NumTris,context->Header.NumVertices,1);
 	
-	namelen = strlen(context->Header.ContainerName);
-	namelen += strlen(context->Header.MeshName);
+	namelen = static_cast<int32_t>(strlen(context->Header.ContainerName));
+	namelen += static_cast<int32_t>(strlen(context->Header.MeshName));
 	namelen += 2;
 	W3dAttributes = context->Header.Attributes;	
 	SortLevel = context->Header.SortLevel;

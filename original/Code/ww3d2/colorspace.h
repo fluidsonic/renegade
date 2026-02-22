@@ -58,7 +58,7 @@ inline void HSV_To_RGB(Vector3 &rgb, const Vector3 &hsv)
 		if (h==360.0f) h=0.0f;
 
 		h/=60.0f;
-		i=WWMath::Floor(h);
+		i=static_cast<int32_t>(WWMath::Floor(h));
 		f=h-i;
 		p=v*(1.0f-s);
 		q=v*(1.0f-(s*f));

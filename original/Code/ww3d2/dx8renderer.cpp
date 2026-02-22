@@ -130,8 +130,8 @@ DEFINE_AUTO_POOL(MatPassTaskClass, 256);
 
 inline static bool Equal_Material(const VertexMaterialClass* mat1,const VertexMaterialClass* mat2)
 {
-	int crc0 = mat1 ? mat1->Get_CRC() : 0;
-	int crc1 = mat2 ? mat2->Get_CRC() : 0;
+	int32_t crc0 = mat1 ? static_cast<int32_t>(mat1->Get_CRC()) : 0;
+	int32_t crc1 = mat2 ? static_cast<int32_t>(mat2->Get_CRC()) : 0;
 	return (crc0 == crc1);
 }
 

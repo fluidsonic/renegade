@@ -709,7 +709,7 @@ WWINLINE void DX8Wrapper::Set_Alpha (const float alpha, unsigned int &color)
 {
 	unsigned char *component = (unsigned char*) &color;
 
-	component [3] = 255.0f * alpha;
+	component [3] = static_cast<uint8_t>(255.0f * alpha);
 }
 
 WWINLINE void DX8Wrapper::Get_Render_State(RenderStateStruct& state)

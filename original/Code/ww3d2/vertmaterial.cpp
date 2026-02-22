@@ -432,7 +432,7 @@ WW3DErrorType VertexMaterialClass::Load_W3D(ChunkLoadClass & cload)
 
 		char *extended_arg_buffer = new char[mapping0_arg_len + 10];
 		sprintf(extended_arg_buffer, "[Args]\n%s", mapping0_arg_buffer);
-		mapping0_arg_len = strlen(extended_arg_buffer) + 1;
+		mapping0_arg_len = static_cast<uint32_t>(strlen(extended_arg_buffer) + 1);
 
 		delete [] mapping0_arg_buffer;
 		mapping0_arg_buffer = NULL;
@@ -449,7 +449,7 @@ WW3DErrorType VertexMaterialClass::Load_W3D(ChunkLoadClass & cload)
 
 		char *extended_arg_buffer = new char[mapping1_arg_len + 20];
 		sprintf(extended_arg_buffer, "[Args]\n%s", mapping1_arg_buffer);
-		mapping1_arg_len = strlen(extended_arg_buffer) + 1;
+		mapping1_arg_len = static_cast<uint32_t>(strlen(extended_arg_buffer) + 1);
 
 		delete [] mapping1_arg_buffer;
 		mapping1_arg_buffer = NULL;

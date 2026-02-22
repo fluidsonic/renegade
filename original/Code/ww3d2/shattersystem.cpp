@@ -399,12 +399,12 @@ void PolygonClass::Compute_Plane(void)
 	ay /= (double)NumVerts;
 	az /= (double)NumVerts;
 
-	double len = WWMath::Sqrt(nx*nx + ny*ny + nz*nz);
+	double len = WWMath::Sqrt(static_cast<float>(nx*nx + ny*ny + nz*nz));
 	nx /= len;
 	ny /= len;
 	nz /= len;
 	
-	Plane.Set(Vector3(nx,ny,nz),Vector3(ax,ay,az));
+	Plane.Set(Vector3(static_cast<float>(nx),static_cast<float>(ny),static_cast<float>(nz)),Vector3(static_cast<float>(ax),static_cast<float>(ay),static_cast<float>(az)));
 }
 
 int PolygonClass::Which_Side(const PlaneClass & plane) const

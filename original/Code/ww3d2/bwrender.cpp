@@ -96,9 +96,9 @@ void BWRenderClass::Render_Triangle_Strip(const unsigned long* indices,int index
 	bool b=false;
 	for (int n=0;n<index_count;++n) {
 		b=!b;
-		int idx_1=indices[0];
-		int idx_2=indices[1];
-		int idx_3=indices[2];
+		int32_t idx_1=static_cast<int32_t>(indices[0]);
+		int32_t idx_2=static_cast<int32_t>(indices[1]);
+		int32_t idx_3=static_cast<int32_t>(indices[2]);
 		indices++;
 
 		if (Cull(vertices[idx_1],vertices[idx_2],vertices[idx_3])==b) continue;
@@ -113,7 +113,7 @@ void BWRenderClass::Render_Triangle_Strip(const unsigned long* indices,int index
 		if (corner_3[1]<corner_1[1]) Swap(corner_1,corner_3);
 		if (corner_3[1]<corner_2[1]) Swap(corner_2,corner_3);
 
-		Vector3i yci(WWMath::Float_To_Long(corner_1[1]),WWMath::Float_To_Long(corner_2[1]),WWMath::Float_To_Long(corner_3[1]));
+		Vector3i yci(static_cast<int32_t>(WWMath::Float_To_Long(corner_1[1])),static_cast<int32_t>(WWMath::Float_To_Long(corner_2[1])),static_cast<int32_t>(WWMath::Float_To_Long(corner_3[1])));
 		Vector3 xcf(corner_1[0],corner_2[0],corner_3[0]);
 
 		Render_Preprocessed_Triangle(xcf,yci);
@@ -124,9 +124,9 @@ void BWRenderClass::Render_Triangles(const unsigned long* indices,int index_coun
 {
 	index_count/=3;
 	for (int n=0;n<index_count;++n) {
-		int idx_1=*indices++;
-		int idx_2=*indices++;
-		int idx_3=*indices++;
+		int32_t idx_1=static_cast<int32_t>(*indices++);
+		int32_t idx_2=static_cast<int32_t>(*indices++);
+		int32_t idx_3=static_cast<int32_t>(*indices++);
 
 		if (Cull(vertices[idx_1],vertices[idx_2],vertices[idx_3])) continue;
 
@@ -140,7 +140,7 @@ void BWRenderClass::Render_Triangles(const unsigned long* indices,int index_coun
 		if (corner_3[1]<corner_1[1]) Swap(corner_1,corner_3);
 		if (corner_3[1]<corner_2[1]) Swap(corner_2,corner_3);
 
-		Vector3i yci(WWMath::Float_To_Long(corner_1[1]),WWMath::Float_To_Long(corner_2[1]),WWMath::Float_To_Long(corner_3[1]));
+		Vector3i yci(static_cast<int32_t>(WWMath::Float_To_Long(corner_1[1])),static_cast<int32_t>(WWMath::Float_To_Long(corner_2[1])),static_cast<int32_t>(WWMath::Float_To_Long(corner_3[1])));
 		Vector3 xcf(corner_1[0],corner_2[0],corner_3[0]);
 
 		Render_Preprocessed_Triangle(xcf,yci);
@@ -163,7 +163,7 @@ void BWRenderClass::Render_Preprocessed_Triangle(Vector3& xcf,Vector3i& yci)
 		}
 
 		while (ycnt>0) {
-			pixel_buffer.Set_H_Line(WWMath::Float_To_Long(x_left),WWMath::Float_To_Long(x_right),y);
+			pixel_buffer.Set_H_Line(static_cast<int32_t>(WWMath::Float_To_Long(x_left)),static_cast<int32_t>(WWMath::Float_To_Long(x_right)),y);
 
 			x_left+=x_step_1;
 			x_right+=x_step_2;
@@ -191,7 +191,7 @@ void BWRenderClass::Render_Preprocessed_Triangle(Vector3& xcf,Vector3i& yci)
 		float x_step_1=(xcf[2]-x_left)*one_per_ycnt;
 		float x_step_2=(xcf[2]-x_right)*one_per_ycnt;
 		while (ycnt>0) {
-			pixel_buffer.Set_H_Line(WWMath::Float_To_Long(x_left),WWMath::Float_To_Long(x_right),y);
+			pixel_buffer.Set_H_Line(static_cast<int32_t>(WWMath::Float_To_Long(x_left)),static_cast<int32_t>(WWMath::Float_To_Long(x_right)),y);
 			x_left+=x_step_1;
 			x_right+=x_step_2;
 			ycnt--;

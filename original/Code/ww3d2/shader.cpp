@@ -788,7 +788,7 @@ void ShaderClass::Apply()
 //	DX8Wrapper::Set_DX8_Render_State(D3DRS_DITHERENABLE,BOOL(Get_Dither_Mask()));
 
 	// CULLMODE
-	DX8Wrapper::Set_DX8_Render_State(D3DRS_CULLMODE,Get_Cull_Mode() ? _PolygonCullMode : D3DCULL_NONE);
+	DX8Wrapper::Set_DX8_Render_State(D3DRS_CULLMODE,static_cast<uint32_t>(Get_Cull_Mode() ? _PolygonCullMode : D3DCULL_NONE));
 
 	// NPATCHES
 	if (diff&ShaderClass::MASK_NPATCHENABLE) {

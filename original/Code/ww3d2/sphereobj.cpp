@@ -226,7 +226,7 @@ void SphereRenderObjClass::Generate_Shared_Mesh_Arrays (const AlphaVectorStruct 
 
 		for(int i=0; i < SPHERE_NUM_LOD; i++) {
 
-			SphereMeshArray[i].Generate(1.0f, size, size);
+			SphereMeshArray[i].Generate(1.0f, static_cast<int32_t>(size), static_cast<int32_t>(size));
 
 			size+=step;
 
@@ -516,7 +516,7 @@ void SphereRenderObjClass::Render(RenderInfoClass & rinfo)
 		screen_size = sqrtf(screen_size);
 
 		float lod     = screen_size * ((float) SPHERE_NUM_LOD);
-		int	lod_int = lod;
+		int32_t	lod_int = static_cast<int32_t>(lod);
 		lod-=lod_int;
 
 		if (lod >= 0.5f) lod_int++;

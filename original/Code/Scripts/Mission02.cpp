@@ -1527,7 +1527,7 @@ DECLARE_SCRIPT(M02_Objective_Zone, "")
 					if (controller)
 					{
 						float health = Commands->Get_Health (controller);
-						if (health)
+						if (health != 0.0f)
 						{
 							Commands->Stop_All_Conversations ();
 							int id = Commands->Create_Conversation("M02_SECONDARY_01_GUIDE", 100, 300, true);
@@ -1558,7 +1558,7 @@ DECLARE_SCRIPT(M02_Objective_Zone, "")
 					if (controller)
 					{
 						float health = Commands->Get_Health (controller);
-						if (health)
+						if (health != 0.0f)
 						{
 							Commands->Stop_All_Conversations ();
 							int id = Commands->Create_Conversation("M02_SECONDARY_01_GUIDE", 100, 300, true);
@@ -4591,7 +4591,7 @@ DECLARE_SCRIPT (M02_Nod_Apache, "Area_ID:int")
 			{
 				ActionParamsStruct params;
 				params.Set_Basic(this, 90, 0);
-				params.Set_Movement(Vector3(0,0,0), 0.2 + (0.1 * DIFFICULTY), 5.0f);
+				params.Set_Movement(Vector3(0,0,0), 0.2f + (0.1f * DIFFICULTY), 5.0f);
 				params.WaypathID = waypath_id;
 				params.WaypathSplined = true;
 				params.MovePathfind = false;

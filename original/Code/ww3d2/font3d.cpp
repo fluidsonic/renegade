@@ -278,10 +278,10 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 			UOffsetTable[ char_index ] = (float)((char_index % 16) * mono_pixel_width) / font_width;
 			VOffsetTable[ char_index ] = (float)((char_index / 16) * mono_pixel_height) / font_height;
 			UWidthTable[ char_index ] = mono_pixel_width / font_width;
-			CharWidthTable[ char_index ] = mono_pixel_width;
+			CharWidthTable[ char_index ] = static_cast<uint8_t>(mono_pixel_width);
 		}
 		VHeight = mono_pixel_height / font_height;
-		CharHeight = mono_pixel_height;
+		CharHeight = static_cast<uint8_t>(mono_pixel_height);
 
 		// convert the just created mon-spaced font to proportional (optional)
 

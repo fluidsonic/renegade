@@ -910,7 +910,7 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 			if (exceeded_texture_width) {
 				TextureStartX		= 0;
 				TextureOffset.I	= TextureStartX;
-				TextureOffset.J	+= char_height;
+				TextureOffset.J	+= static_cast<int32_t>(char_height);
 
 				//
 				//	Did the text extent completely off the texture?
@@ -938,7 +938,7 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 			//	Blit the character to the surface
 			//
 			Font->Blit_Char (ch, LockedPtr, LockedStride, TextureOffset.I, TextureOffset.J);
-			TextureOffset.I += char_spacing;
+			TextureOffset.I += static_cast<int32_t>(char_spacing);
 		}
 	}
 
@@ -1126,7 +1126,7 @@ FontCharsClass::Store_GDI_Char (WCHAR ch)
 	//
 	//	Get a pointer to the surface that this character should use
 	//
-	Update_Current_Buffer( char_size.cx );
+	Update_Current_Buffer( static_cast<int32_t>(char_size.cx) );
 	uint16_t *curr_buffer = BufferList[BufferList.Count () - 1];
 	curr_buffer += CurrPixelOffset;
 
@@ -1325,7 +1325,7 @@ FontCharsClass::Create_GDI_Font (const char *font_name)
 	//
 	TEXTMETRIC text_metric = { 0 };
 	::GetTextMetrics (MemDC, &text_metric);
-	CharHeight = text_metric.tmHeight;
+	CharHeight = static_cast<int32_t>(text_metric.tmHeight);
 
 	//
 	// Release our temporary screen DC

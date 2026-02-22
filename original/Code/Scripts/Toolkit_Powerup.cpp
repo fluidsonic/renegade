@@ -82,7 +82,7 @@ DECLARE_SCRIPT(M00_Soldier_Powerup_Grant, "")
 			float star_health = Commands->Get_Health( killer );
 			float star_health_max = Commands->Get_Max_Health( killer );
 			float star_health_percent = 0;
-			if ( star_health_max ) {
+			if ( star_health_max != 0.0f ) {
 				star_health_percent = star_health / star_health_max;
 			}
 
@@ -90,7 +90,7 @@ DECLARE_SCRIPT(M00_Soldier_Powerup_Grant, "")
 			float star_shield = Commands->Get_Shield_Strength( killer );
 			float star_shield_max = Commands->Get_Max_Shield_Strength( killer );
 			float star_shield_percent = 0;
-			if ( star_shield_max ) {
+			if ( star_shield_max != 0.0f ) {
 				star_shield_percent = star_shield / star_shield_max;
 			}
 
@@ -344,7 +344,7 @@ DECLARE_SCRIPT (M00_Tiberium_Refinery, "MoneyAmount:int,TimerLength:int")
 		if (timer_id == 1)
 		{
 			float health = Commands->Get_Health (obj);
-			if (health)
+			if (health != 0.0f)
 			{
 				Commands->Give_Money (obj, Get_Int_Parameter ("MoneyAmount"), true);
 				Commands->Start_Timer (obj, this, Get_Int_Parameter("TimerLength"), 1);

@@ -512,7 +512,7 @@ void Render2DClass::Render(void)
 		{
 			Vector3 temp(Vertices[i].X,Vertices[i].Y,ZValue);
 			*(Vector3*)(va+fi.Get_Location_Offset())=temp;
-			*(unsigned int*)(va+fi.Get_Diffuse_Offset())=Colors[i];
+			*(unsigned int*)(va+fi.Get_Diffuse_Offset())=static_cast<uint32_t>(Colors[i]);
 			*(Vector2*)(va+fi.Get_Tex_Offset(0))=UVCoordinates[i];
 			va+=fi.Get_FVF_Size();
 		}		

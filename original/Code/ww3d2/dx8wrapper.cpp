@@ -1286,7 +1286,7 @@ void DX8Wrapper::End_Scene(bool flip_frames)
 			}
 		}
 		else {
-			DX8_ErrorCode(hr);
+			DX8_ErrorCode(static_cast<uint32_t>(hr));
 		}
 	}
 
@@ -1815,7 +1815,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 	// Render target may return NOTAVAILABLE, in
 	// which case we return NULL.
 	if (rendertarget) {
-		unsigned ret=D3DXCreateTexture(
+		uint32_t ret=static_cast<uint32_t>(D3DXCreateTexture(
 			DX8Wrapper::_Get_D3D_Device8(),
 			width,
 			height,
@@ -1823,7 +1823,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 			D3DUSAGE_RENDERTARGET,
 			WW3DFormat_To_D3DFormat(format),
 			pool,
-			&texture);
+			&texture));
 
 		if (ret==D3DERR_NOTAVAILABLE) {
 			Non_Fatal_Log_DX8_ErrorCode(ret,__FILE__,__LINE__);
@@ -1838,7 +1838,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 			// Invalidate the mesh cache
 			WW3D::_Invalidate_Mesh_Cache();
 
-			ret=D3DXCreateTexture(
+			ret=static_cast<uint32_t>(D3DXCreateTexture(
 				DX8Wrapper::_Get_D3D_Device8(),
 				width,
 				height,
@@ -1846,7 +1846,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 				D3DUSAGE_RENDERTARGET,
 				WW3DFormat_To_D3DFormat(format),
 				pool,
-				&texture);
+				&texture));
 
 			if (SUCCEEDED(ret)) {
 			}
@@ -1867,7 +1867,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 	// We should never run out of video memory when allocating a non-rendertarget texture.
 	// However, it seems to happen sometimes when there are a lot of textures in memory and so
 	// if it happens we'll release assets and try again (anything is better than crashing).
-	unsigned ret=D3DXCreateTexture(
+	uint32_t ret=static_cast<uint32_t>(D3DXCreateTexture(
 		DX8Wrapper::_Get_D3D_Device8(),
 		width,
 		height,
@@ -1875,7 +1875,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 		0,
 		WW3DFormat_To_D3DFormat(format),
 		pool,
-		&texture);
+		&texture));
 
 	// If ran out of texture ram, try invalidating some textures and mesh cache.
 	if (ret==D3DERR_OUTOFVIDEOMEMORY) {
@@ -1885,7 +1885,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 		// Invalidate the mesh cache
 		WW3D::_Invalidate_Mesh_Cache();
 
-		ret=D3DXCreateTexture(
+		ret=static_cast<uint32_t>(D3DXCreateTexture(
 			DX8Wrapper::_Get_D3D_Device8(),
 			width,
 			height,
@@ -1893,7 +1893,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 			0,
 			WW3DFormat_To_D3DFormat(format),
 			pool,
-			&texture);
+			&texture));
 		if (SUCCEEDED(ret)) {
 		}
 		else {
@@ -1919,7 +1919,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 	// NOTE: It is possible to get the size and format of the original image file from this
 	// function as well, so if we later want to second-guess D3DX's format conversion decisions
 	// we can do so after this function is called..
-	unsigned result = D3DXCreateTextureFromFileExA(
+	uint32_t result = static_cast<uint32_t>(D3DXCreateTextureFromFileExA(
 		_Get_D3D_Device8(),
 		filename,
 		D3DX_DEFAULT,
@@ -1933,7 +1933,7 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 		0,
 		NULL,
 		NULL,
-		&texture);
+		&texture));
 
 	if (result != D3D_OK) {
 		return MissingTexture::_Get_Missing_Texture();
@@ -1969,12 +1969,12 @@ IDirect3DTexture8 * DX8Wrapper::_Create_DX8_Texture(
 	// Copy the surface to the texture
 	IDirect3DSurface8 *tex_surface = NULL;
 	texture->GetSurfaceLevel(0, &tex_surface);
-	DX8_ErrorCode(D3DXLoadSurfaceFromSurface(tex_surface, NULL, NULL, surface, NULL, NULL, D3DX_FILTER_BOX, 0));
+	DX8_ErrorCode(static_cast<uint32_t>(D3DXLoadSurfaceFromSurface(tex_surface, NULL, NULL, surface, NULL, NULL, D3DX_FILTER_BOX, 0)));
 	tex_surface->Release();
 
 	// Create mipmaps if needed
 	if (mip_level_count!=TextureClass::MIP_LEVELS_1) {
-		DX8_ErrorCode(D3DXFilterTexture(texture, NULL, 0, D3DX_FILTER_BOX));
+		DX8_ErrorCode(static_cast<uint32_t>(D3DXFilterTexture(texture, NULL, 0, D3DX_FILTER_BOX)));
 	}
 
 	return texture;
@@ -2126,7 +2126,7 @@ void DX8Wrapper::Set_Light(unsigned index,const LightClass &light)
 		dlight.Attenuation1=0.0f;
 	else
 		// this will cause the light to drop to half intensity at the first far attenuation
-		dlight.Attenuation1=(float) 1.0/a;
+		dlight.Attenuation1=1.0f/a;
 	dlight.Attenuation2=0.0f;
 
 	Set_Light(index,&dlight);
@@ -2228,7 +2228,7 @@ DX8Wrapper::Create_Render_Target (int width, int height, WW3DFormat format)
 	if (height > 0 && height < width) {
 		poweroftwosize = height;
 	}
-	poweroftwosize = ::Find_POT (poweroftwosize);
+	poweroftwosize = static_cast<float>(::Find_POT(static_cast<int32_t>(poweroftwosize)));
 
 	if (poweroftwosize>dx8caps.MaxTextureWidth) {
 		poweroftwosize=dx8caps.MaxTextureWidth;
@@ -2237,7 +2237,7 @@ DX8Wrapper::Create_Render_Target (int width, int height, WW3DFormat format)
 		poweroftwosize=dx8caps.MaxTextureHeight;
 	}
 
-	width = height = poweroftwosize;
+	width = height = static_cast<int32_t>(poweroftwosize);
 
 	//
 	//	Attempt to create the render target

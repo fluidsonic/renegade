@@ -416,8 +416,8 @@ struct EdgeStruct
 {
 	EdgeStruct(const GradientsStruct & grad,const Vector3 * verts,int top,int bottom)
 	{
-		Y = WWMath::Ceil(verts[top].Y);
-		Height = WWMath::Ceil(verts[bottom].Y) - Y;
+		Y = static_cast<int32_t>(WWMath::Ceil(verts[top].Y));
+		Height = static_cast<int32_t>(WWMath::Ceil(verts[bottom].Y)) - Y;
 		
 		float y_prestep = Y - verts[top].Y;
 		float real_height = verts[bottom].Y - verts[top].Y;
@@ -590,8 +590,8 @@ int IDBufferClass::Render_Occluder_Scanline(GradientsStruct & grads,EdgeStruct *
 		return 0;
 	}
 
-	int xstart = WWMath::Float_To_Long(WWMath::Max(WWMath::Ceil(left->X),1.0f));
-	int width = WWMath::Float_To_Long(WWMath::Ceil(right->X)) - xstart;
+	int32_t xstart = static_cast<int32_t>(WWMath::Float_To_Long(WWMath::Max(WWMath::Ceil(left->X),1.0f)));
+	int32_t width = static_cast<int32_t>(WWMath::Float_To_Long(WWMath::Ceil(right->X))) - xstart;
 	if (xstart + width > ResWidth) {
 		width = ResWidth - xstart;
 	}
@@ -639,8 +639,8 @@ int IDBufferClass::Render_Non_Occluder_Scanline(GradientsStruct & grads,EdgeStru
 		return 0;
 	}
 
-	int xstart = WWMath::Float_To_Long(WWMath::Max(WWMath::Ceil(left->X),1));
-	int width = WWMath::Float_To_Long(WWMath::Ceil(right->X)) - xstart;
+	int32_t xstart = static_cast<int32_t>(WWMath::Float_To_Long(WWMath::Max(WWMath::Ceil(left->X),1)));
+	int32_t width = static_cast<int32_t>(WWMath::Float_To_Long(WWMath::Ceil(right->X))) - xstart;
 	if (xstart + width > ResWidth) {
 		width = ResWidth - xstart;
 	}

@@ -908,7 +908,7 @@ void DazzleRenderObjClass::Render(RenderInfoClass & rinfo)
 
 			unsigned time_ms=WW3D::Get_Frame_Time();
 			if (time_ms==0) time_ms=1;
-			float weight=pow(params->ic.history_weight,time_ms);
+			float weight=static_cast<float>(pow(params->ic.history_weight,time_ms));
 
 			if (dazzle_intensity>0.0f) {
 				visibility = _VisibilityHandler->Compute_Dazzle_Visibility(rinfo,this,loc);
@@ -1061,7 +1061,7 @@ void DazzleRenderObjClass::Render_Dazzle(CameraClass* camera)
 			vertex->diffuse=color;
 		}
 
-		if (current_halo_intensity) {
+		if (current_halo_intensity != 0.0f) {
 			VertexFormatXYZNDUV2* vertex=verts+dazzle_vertex_count;
 			halo_vertex_count+=4;
 

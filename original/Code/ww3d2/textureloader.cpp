@@ -216,7 +216,7 @@ IDirect3DTexture8* Load_Compressed_Texture(
 
 	for (unsigned level=0;level<mips;++level) {
 		IDirect3DSurface8* d3d_surface=NULL;
-		DX8_ErrorCode(d3d_texture->GetSurfaceLevel(level/*-reduction_factor*/,&d3d_surface));
+		DX8_ErrorCode(static_cast<uint32_t>(d3d_texture->GetSurfaceLevel(level/*-reduction_factor*/,&d3d_surface)));
 		dds_file.Copy_Level_To_Surface(level,d3d_surface);
 		d3d_surface->Release();
 	}
@@ -359,12 +359,12 @@ IDirect3DTexture8* TextureLoader::Load_Thumbnail(const StringClass& filename)//,
 
 	// Lock all surfaces
 	for (level=0;level<sysmem_texture->GetLevelCount();++level) {
-		DX8_ErrorCode(
+		DX8_ErrorCode(static_cast<uint32_t>(
 			sysmem_texture->LockRect(
 				level,
 				&locked_rects[level],
 				NULL,
-				0));
+				0)));
 	}
 
 	unsigned char* src_surface=thumb->Peek_Bitmap();
@@ -394,7 +394,7 @@ IDirect3DTexture8* TextureLoader::Load_Thumbnail(const StringClass& filename)//,
 
 	// Unlock all surfaces
 	for (level=0;level<sysmem_texture->GetLevelCount();++level) {
-		DX8_ErrorCode(sysmem_texture->UnlockRect(level));
+		DX8_ErrorCode(static_cast<uint32_t>(sysmem_texture->UnlockRect(level)));
 	}
 	IDirect3DTexture8* d3d_texture = DX8Wrapper::_Create_DX8_Texture(
 		thumb->Get_Width(),
@@ -427,7 +427,7 @@ IDirect3DSurface8* TextureLoader::Load_Surface_Immediate(
 		IDirect3DTexture8* comp_tex=Load_Compressed_Texture(filename,0,TextureClass::MIP_LEVELS_1,WW3D_FORMAT_UNKNOWN);
 		if (comp_tex) {
 			IDirect3DSurface8* d3d_surface=NULL;
-			DX8_ErrorCode(comp_tex->GetSurfaceLevel(0,&d3d_surface));
+			DX8_ErrorCode(static_cast<uint32_t>(comp_tex->GetSurfaceLevel(0,&d3d_surface)));
 			comp_tex->Release();
 			return d3d_surface;
 		}
@@ -493,11 +493,11 @@ IDirect3DSurface8* TextureLoader::Load_Surface_Immediate(
 
 	IDirect3DSurface8* d3d_surface = DX8Wrapper::_Create_DX8_Surface(width,height,dest_format);
 	D3DLOCKED_RECT locked_rect;
-	DX8_ErrorCode(
+	DX8_ErrorCode(static_cast<uint32_t>(
 		d3d_surface->LockRect(
 			&locked_rect,
 			NULL,
-			0));
+			0)));
 
 	BitmapHandlerClass::Copy_Image(
 		(unsigned char*)locked_rect.pBits,
@@ -514,7 +514,7 @@ IDirect3DSurface8* TextureLoader::Load_Surface_Immediate(
 		targa.Header.CMapDepth>>3,
 		false);	// No mipmap
 
-	DX8_ErrorCode(d3d_surface->UnlockRect());
+	DX8_ErrorCode(static_cast<uint32_t>(d3d_surface->UnlockRect()));
 
 	if (converted_surface) delete[] converted_surface;
 
@@ -1282,12 +1282,12 @@ void TextureLoadTaskClass::Lock_Surfaces(void)
 	MipLevelCount = D3DTexture->GetLevelCount();
 	for (unsigned int i = 0; i < MipLevelCount; ++i) {
 		D3DLOCKED_RECT locked_rect;
-		DX8_ErrorCode(
+		DX8_ErrorCode(static_cast<uint32_t>(
 			D3DTexture->LockRect(
 				i,
 				&locked_rect,
 				NULL,
-				0));
+				0)));
 		LockedSurfacePtr[i]		= (unsigned char *)locked_rect.pBits;
 		LockedSurfacePitch[i]	= locked_rect.Pitch;
 	}
@@ -1297,7 +1297,7 @@ void TextureLoadTaskClass::Unlock_Surfaces(void)
 {
 	for (unsigned int i = 0; i < MipLevelCount; ++i) {
 		if (LockedSurfacePtr[i]) {
-			DX8_ErrorCode(D3DTexture->UnlockRect(i));
+			DX8_ErrorCode(static_cast<uint32_t>(D3DTexture->UnlockRect(i)));
 		}
 		LockedSurfacePtr[i] = NULL;
 	}

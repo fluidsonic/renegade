@@ -99,7 +99,7 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 	// First, try loading image from a DDS file
 	DDSFileClass dds_file(filename,reduction_factor);
 	if (dds_file.Is_Available() && dds_file.Load()) {
-		DateTime=dds_file.Get_Date_Time();
+		DateTime=static_cast<uint32_t>(dds_file.Get_Date_Time());
 
 		int len=Name.Get_Length();
 		Name[len-3]='d';
@@ -190,7 +190,7 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 		{
 			file_auto_ptr my_tga_file(_TheFileFactory,filename);
 			my_tga_file->Open();
-			DateTime=my_tga_file->Get_Date_Time();
+			DateTime=static_cast<uint32_t>(my_tga_file->Get_Date_Time());
 			my_tga_file->Close();
 		}
 
@@ -264,7 +264,7 @@ void ThumbnailManagerClass::Load()
 	if (thumb_file->Is_Available()) {
 		thumb_file->Open(FileClass::READ);
 
-		DateTime=thumb_file->Get_Date_Time();
+		DateTime=static_cast<uint32_t>(thumb_file->Get_Date_Time());
 
 		char tmp[4];
 		thumb_file->Read(tmp,4);
@@ -395,7 +395,7 @@ void ThumbnailManagerClass::Save(bool force)
 	for (ite.First();!ite.Is_Done();ite.Next()) {
 		ThumbnailClass* thumb=ite.Peek_Value();
 		const char* name=thumb->Get_Name();
-		int name_len=strlen(name);
+		int32_t name_len=static_cast<int32_t>(strlen(name));
 		int width=thumb->Get_Width();
 		int height=thumb->Get_Height();
 		int original_width=thumb->Get_Original_Texture_Width();
@@ -556,9 +556,9 @@ void ThumbnailManagerClass::Update_Thumbnail_File(const char* mix_file_name,bool
 		return;
 	}
 
-	uint32_t mix_date_time=mix_file->Get_Date_Time();
+	uint32_t mix_date_time=static_cast<uint32_t>(mix_file->Get_Date_Time());
 	if (thumb_file->Is_Available()) {
-		uint32_t thumb_date_time=thumb_file->Get_Date_Time();
+		uint32_t thumb_date_time=static_cast<uint32_t>(thumb_file->Get_Date_Time());
 		if (mix_date_time!=thumb_date_time) {
 			thumb_file->Delete();
 		}

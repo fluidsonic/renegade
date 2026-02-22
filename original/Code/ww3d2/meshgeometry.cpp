@@ -234,7 +234,7 @@ void MeshGeometryClass::Set_Name(const char * newname)
 		MeshName->Release_Ref();
 	}
 	if (newname) {
-		MeshName = NEW_REF(ShareBufferClass<char>,(strlen(newname)+1));
+		MeshName = NEW_REF(ShareBufferClass<char>,(static_cast<int32_t>(strlen(newname)+1)));
 		strcpy(MeshName->Get_Array(),newname);
 	}
 }
@@ -277,7 +277,7 @@ void MeshGeometryClass::Set_User_Text(char * usertext)
 		UserText->Release_Ref();
 	}
 	if (usertext) {
-		UserText = NEW_REF(ShareBufferClass<char>,(strlen(usertext)+1));
+		UserText = NEW_REF(ShareBufferClass<char>,(static_cast<int32_t>(strlen(usertext)+1)));
 		strcpy(UserText->Get_Array(),usertext);
 	}
 }
@@ -1402,8 +1402,8 @@ WW3DErrorType MeshGeometryClass::Load_W3D(ChunkLoadClass & cload)
 	
 	Reset_Geometry(header.NumTris,header.NumVertices);
 	
-	namelen = strlen(header.ContainerName);
-	namelen += strlen(header.MeshName);
+	namelen = static_cast<int32_t>(strlen(header.ContainerName));
+	namelen += static_cast<int32_t>(strlen(header.MeshName));
 	namelen += 2;
 	W3dAttributes = header.Attributes;	
 	SortLevel = header.SortLevel;

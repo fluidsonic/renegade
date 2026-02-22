@@ -216,7 +216,7 @@ static void Log_Textures(bool inited,unsigned& total_count, unsigned& total_mem)
 		D3DSURFACE_DESC desc;
 		IDirect3DTexture8* d3d_texture=tex->Peek_DX8_Texture();
 		if (!d3d_texture) continue;
-		DX8_ErrorCode(d3d_texture->GetLevelDesc(0,&desc));
+		DX8_ErrorCode(static_cast<uint32_t>(d3d_texture->GetLevelDesc(0,&desc)));
 
 		StringClass tex_format="Unknown";
 		switch (desc.Format) {
