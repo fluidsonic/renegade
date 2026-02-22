@@ -37,7 +37,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
 - **Git merges must use `--ff-only`** — always rebase the feature branch onto the base branch first, then FF-merge
 - **Always create worktrees from the latest local `main`** — run `git pull` (or at least `git fetch`) on main before branching; stale branch points cause unnecessary rebase conflicts
-- **Worktree merge sequence**: (1) commit all changes in the worktree, (2) rebase the worktree branch onto local `main`, (3) `git worktree remove` the worktree, (4) delete the branch — in that order; you cannot delete a branch while its worktree still exists
+- **Worktree merge sequence**: (1) commit all changes in the worktree, (2) rebase the worktree branch onto local `main`, (3) `git checkout main && git merge --ff-only <branch>`, (4) `git worktree remove` the worktree, (5) delete the branch — in that order; you cannot delete a branch while its worktree still exists
 - Write all documentation to `/docs/*.md` — update immediately when new information is discovered
 - Network protocol documentation must be maintained in real-time at `/docs/network.md` — update whenever new packet formats, field meanings, or wire format details are discovered
 - Write every accepted plan to `/plans/*.md` immediately once approved; make that behavior part of each plan itself
@@ -98,6 +98,10 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - Pool sizes: 64 2D samples (`HSAMPLE`), 32 3D samples (`H3DSAMPLE`), 16 streams (`HSTREAM`), 16 timers; handles are 1-based (0 and -1 are invalid sentinels)
 - 3D coordinate swizzle `[-Y, Z, X]` lives in `Sound3DClass::Update_Miles_Transform()` in WWAudio — the backend passes coords through as-is, do not add a swizzle there
 - `FilteredSoundClass` reverb (`AIL_set_sample_processor`, `AIL_set_filter_sample_preference`) is currently a no-op stub
+- `g_lock` is `PTHREAD_RECURSIVE_MUTEX_INITIALIZER` — must be recursive to match Windows `CRITICAL_SECTION`; several call chains nest `MMSLockClass` on the same thread (e.g. `Free_3D_Driver_List` → `Release_3D_Handles`)
+- `AIL_set_file_callbacks` open-callback convention: **return = file size (0 = failure), out-param = file handle** — the MSS convention, not return=handle
+- File callback and sample user-data types are `uintptr_t` / `void*` (not `U32`) — original 32-bit MSS used `U32` which truncates pointers on arm64
+- `AIL_WAV_info(data, info, buf_size)` takes an explicit `buf_size` — callers may pass a partial file read (e.g. 4096-byte stack buffer in `StreamSoundBufferClass::Load_From_File`); without it the parser reads past the buffer using the RIFF header's file-size field
 - See `docs/audio-system.md` for full architecture, class hierarchy, MSS function list, and coordinate transform details
 
 ### SDL2 input and cursor architecture
