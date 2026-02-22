@@ -36,6 +36,7 @@ class PowerUpGameObjDef(
     val grantAnimationName: String = "",
     val idleAnimationName: String = "",
     val alwaysAllowGrant: Boolean = false,
+    val physDefId: Int = 0,
 ) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040107u  // CHUNKID_GAME_OBJECT_DEF_POWERUP
@@ -44,6 +45,10 @@ class PowerUpGameObjDef(
 
 // Chunk IDs from powerup.cpp enum
 private const val CHUNKID_DEF_VARIABLES = 909991657u // CHUNKID_DEF_PARENT + 1
+private const val CHUNKID_DEF_PARENT        = 909991656u  // PowerUpGameObjDef parent wrapper
+private const val CHUNKID_SIMPLE_DEF_PARENT = 930991656u  // SimpleGameObjDef parent wrapper
+private const val CHUNKID_PHYSICAL_DEF_VARS = 909991657u  // PhysicalGameObjDef CHUNKID_DEF_VARIABLES
+private const val MICROCHUNKID_PHYS_ID      = 18          // PhysicalGameObjDef physDefId micro-chunk
 
 // Micro-chunk IDs from powerup.cpp enum
 private const val MICROCHUNKID_DEF_PERSISTENT = 2
@@ -73,13 +78,21 @@ fun parsePowerUpGameObjDef(
     id: UInt,
     chunkId: UInt,
 ): PowerUpGameObjDef {
+    val physDefId = objDataReader
+        .findChunk(CHUNKID_DEF_PARENT)
+        ?.findChunk(CHUNKID_SIMPLE_DEF_PARENT)
+        ?.findChunk(CHUNKID_PHYSICAL_DEF_VARS)
+        ?.readMicroInt(MICROCHUNKID_PHYS_ID)
+        ?: 0
+
     val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return PowerUpGameObjDef(name = name, id = id, chunkId = chunkId)
+        ?: return PowerUpGameObjDef(name = name, id = id, chunkId = chunkId, physDefId = physDefId)
 
     return PowerUpGameObjDef(
         name = name,
         id = id,
         chunkId = chunkId,
+        physDefId = physDefId,
         grantShieldType = vars.readMicroInt(MICROCHUNKID_DEF_GRANT_SHIELD_TYPE) ?: 0,
         grantShieldStrength = vars.readMicroFloat(MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH) ?: 0f,
         grantShieldStrengthMax = vars.readMicroFloat(MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH_MAX) ?: 0f,

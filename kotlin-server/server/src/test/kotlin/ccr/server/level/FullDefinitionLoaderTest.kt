@@ -250,4 +250,20 @@ class FullDefinitionLoaderTest {
         assertEquals("Beacon_Nuke", def.name)
         assertTrue(def is ccr.server.defs.combat.BeaconGameObjDef)
     }
+
+    @Test
+    fun `PowerUpGameObjDef parses physDefId from nested parent chain`() {
+        // Build: CHUNKID_DEF_PARENT(909991656) → SIMPLE_DEF_PARENT(930991656) → PHYSICAL_VARS(909991657) → micro[18]=12345
+        val physIdMicro   = buildMicroChunk(18, intToLeBytes(12345))
+        val physicalVars  = buildChunk(909991657u, physIdMicro, isContainer = false)
+        val simpleParent  = buildChunk(930991656u, physicalVars, isContainer = true)
+        val powerUpParent = buildChunk(909991656u, simpleParent, isContainer = true)
+
+        val ddb = buildDdbWithExtra(Triple(0x00040107u, 888u, "Health_Crate") to powerUpParent)
+        val registry = FullDefinitionLoader.load(ddb)
+
+        val def = registry.findById(888u) as? ccr.server.defs.combat.PowerUpGameObjDef
+        assertNotNull(def)
+        assertEquals(12345, def.physDefId)
+    }
 }
