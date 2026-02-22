@@ -4,6 +4,9 @@ class LoadingContext {
     private val warnings = mutableListOf<String>()
     private val errors   = mutableListOf<String>()
 
+    fun info(msg: String) {
+        println("[LEVEL] $msg")
+    }
     fun warn(msg: String) {
         warnings += msg
         println("[LEVEL-WARN] $msg")
