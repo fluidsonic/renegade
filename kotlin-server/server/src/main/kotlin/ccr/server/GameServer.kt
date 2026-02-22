@@ -32,7 +32,11 @@ import ccr.server.net.BackgroundMgr
 import ccr.server.net.WeatherMgr
 import ccr.server.net.CsAnnouncement
 import ccr.server.net.ScAnnouncement
+import ccr.server.net.CsTextObj
+import ccr.server.net.ScTextObj
+import ccr.server.net.CsDamageEvent
 import ccr.server.net.DonateEvent
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.net.PlayerKill
 import ccr.server.net.PurchaseRequestEvent
 import ccr.server.net.PurchaseResponseEvent
@@ -145,6 +149,9 @@ class GameServer(internal val config: ServerConfig) {
 
     // Client FPS tracking: rhostId → last reported fps value.
     private val clientFpsMap = mutableMapOf<Int, Int>()
+
+    // VendorClass — handles purchase terminal requests.
+    private val vendor by lazy { VendorClass(this) }
 
     suspend fun run() = coroutineScope {
         loadLevel()        // Load level data (definitions, world extents, spawners) from MIX files
@@ -579,6 +586,49 @@ class GameServer(internal val config: ServerConfig) {
         val host = connectionManager.getHost(rhostId) ?: return
 
         when (networkClassId) {
+            1019 -> {  // NETCLASSID_CSTEXTOBJ (chat, header=1018, wire=1019)
+                try {
+                    val msg = CsTextObj()
+                    msg.importCreation(snap)
+                    println("[GAME] CHAT from rhostId=$rhostId type=${msg.type} text='${msg.text}'")
+                    // TEXT_MESSAGE_PUBLIC=0, TEXT_MESSAGE_TEAM=1, TEXT_MESSAGE_PRIVATE=2
+                    val relay = ScTextObj(
+                        type = msg.type,
+                        senderId = msg.senderId,
+                        recipientId = msg.recipientId,
+                        isHostAdminMessage = msg.isHostAdminMessage,
+                        text = msg.text,
+                    )
+                    when (msg.type) {
+                        0 -> {  // PUBLIC — broadcast to all in-game
+                            for (clientId in god.playerInGame) {
+                                val clientHost = connectionManager.getHost(clientId) ?: continue
+                                sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+                            }
+                        }
+                        1 -> {  // TEAM — send to same team only
+                            val senderTeam = god.playerTeams[rhostId] ?: -1
+                            for (clientId in god.playerInGame) {
+                                if ((god.playerTeams[clientId] ?: -1) != senderTeam) continue
+                                val clientHost = connectionManager.getHost(clientId) ?: continue
+                                sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+                            }
+                        }
+                        2 -> {  // PRIVATE — send to sender and recipient only
+                            val recipientRhostId = god.playersByHost.entries.find { it.value.id == msg.recipientId }?.key
+                            for (clientId in listOfNotNull(rhostId, recipientRhostId)) {
+                                val clientHost = connectionManager.getHost(clientId) ?: continue
+                                sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+                            }
+                        }
+                        else -> {
+                            sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+                        }
+                    }
+                } catch (e: Exception) {
+                    println("[GAME] CSTEXTOBJ parse error from rhostId=$rhostId: $e")
+                }
+            }
             1018 -> {  // NETCLASSID_CLIENTCONTROL — sent BEFORE loading; do not spawn here
                 // Import_Creation reads ClientId. Spawning here would send a game-object
                 // packet to a client that hasn't loaded the world yet.  Wait for BioEvent.
@@ -628,6 +678,11 @@ class GameServer(internal val config: ServerConfig) {
                     // All object creation packets sent by replicationTick() on the next tick
                 }
             }
+            1025 -> {  // NETCLASSID_CLIENTGOODBYEEVENT (header=1024, wire=1025) — graceful disconnect
+                val senderId = snap.getInt()
+                println("[GAME] CLIENTGOODBYE from rhostId=$rhostId senderId=$senderId — removing player")
+                god.removePlayer(rhostId)
+            }
             1027 -> {  // NETCLASSID_LOADINGEVENT (loadingevent.cpp Import_Creation)
                 val senderId = snap.getInt()
                 val isLoading = snap.getBool()
@@ -660,11 +715,42 @@ class GameServer(internal val config: ServerConfig) {
                 val event = PurchaseRequestEvent()
                 event.importCreation(snap)
                 println("[GAME] PURCHASEREQUESTEVENT from rhostId=$rhostId senderId=${event.senderId} " +
-                    "type=${event.purchaseType} item=${event.itemIndex} altSkin=${event.altSkinIndex} (not yet implemented)")
-                // Send refusal (responseId=2 = PURCHASE_DENIED_BY_SERVER)
-                val response = PurchaseResponseEvent(purchaserId = event.senderId, responseId = 2)
-                sendGameNetObj(host) { bs ->
-                    NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId())
+                    "type=${event.purchaseType} item=${event.itemIndex} altSkin=${event.altSkinIndex}")
+                if (!gameState.isGameplayPermitted) {
+                    val response = PurchaseResponseEvent(purchaserId = event.senderId, responseId = 2)
+                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
+                    return
+                }
+                val result = vendor.handlePurchase(rhostId, event.purchaseType, event.itemIndex, event.altSkinIndex)
+                val response = PurchaseResponseEvent(purchaserId = event.senderId, responseId = result.responseId)
+                sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
+                if (result.responseId == VendorClass.RESPONSE_SUCCESS) {
+                    // Kill current soldier and respawn as purchased character
+                    god.deleteSoldier(rhostId)
+                    val playerTeam = god.playerTeams[rhostId] ?: 0
+                    val purchasedModelName = if (playerTeam == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
+                    god.createCommandoWithDef(rhostId, playerTeam, result.purchasedDefId, purchasedModelName)
+                }
+            }
+            1034 -> {  // NETCLASSID_CSDAMAGEEVENT (header=1033, wire=1034) — client reports damage dealt
+                if (!gameState.isGameplayPermitted) return
+                val event = CsDamageEvent()
+                event.importCreation(snap)
+                println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damagee=${event.damageeGoid} damage=${event.damage} warhead=${event.warhead}")
+                val target = gameObjManager.findObject(event.damageeGoid)
+                if (target != null) {
+                    val scaledDamage = ArmorWarheadManager.scaleDamage(event.damage, event.warhead, target.shieldType)
+                    target.applyDamage(scaledDamage)
+                    println("[GAME] applied damage=$scaledDamage to netId=${event.damageeGoid} health=${target.health}")
+                    if (target.isDead) {
+                        val victimRhostId = god.soldiersByHost.entries.find { it.value.networkId == event.damageeGoid }?.key
+                        if (victimRhostId != null) {
+                            broadcastPlayerKill(rhostId, victimRhostId)
+                            god.deleteSoldier(victimRhostId)
+                        }
+                    }
+                } else {
+                    println("[GAME] CSDAMAGEEVENT: target netId=${event.damageeGoid} not found in gameObjManager")
                 }
             }
             1035 -> {  // NETCLASSID_REQUESTKILLEVENT (wire 1034+1)

@@ -23,13 +23,13 @@ data class PurchaseEntry(
  *
  * C++ defaults: Team(TEAM_GDI=0), Type(TYPE_CLASSES=0), all arrays zeroed.
  */
-data class PurchaseSettingsDefClass(
-    val id: UInt,
-    val name: String,
+class PurchaseSettingsDefClass(
+    id: UInt,
+    name: String,
     val team: Int = TEAM_GDI,
     val type: Int = TYPE_CLASSES,
     val entries: List<PurchaseEntry> = List(MAX_ENTRIES) { PurchaseEntry() },
-) {
+) : DefinitionClass(name, id, CHUNK_ID) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040607u  // CHUNKID_GLOBAL_SETTINGS_DEF_PURCHASE
 

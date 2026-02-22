@@ -222,8 +222,12 @@ object FullDefinitionLoader {
             BuildingGameObjDef.CHUNK_ID ->
                 BuildingGameObjDef.load(objDataChunk, chunkId) ?: fallback
 
+            // ── Purchase Settings ────────────────────────────────────────────────────
+            PurchaseSettingsDefClass.CHUNK_ID ->             // 0x40607
+                PurchaseSettingsDefClass.load(objDataChunk) ?: fallback
+
             // ── Global Settings (0x40600 range) ─────────────────────────────────────
-            // FIXME: all are data classes — convert to DefinitionClass subclasses and parse properly
+            // FIXME: remaining are data classes — convert to DefinitionClass subclasses and parse properly
             0x00040600u,                                    // CHUNKID_GLOBAL_SETTINGS_DEF (wrapper)
             HumanLoiterGlobalSettingsDef.CHUNK_ID,          // 0x40601
             GlobalSettingsGeneralDef.CHUNK_ID,              // 0x40602
@@ -231,7 +235,6 @@ object FullDefinitionLoader {
             EvaSettingsDefClass.CHUNK_ID,                   // 0x40604
             CharacterClassSettingsDefClass.CHUNK_ID,        // 0x40605
             HumanAnimOverrideDef.CHUNK_ID,                  // 0x40606
-            PurchaseSettingsDefClass.CHUNK_ID,              // 0x40607
             TeamPurchaseSettingsDefClass.CHUNK_ID,          // 0x40608
             CNCModeSettingsDef.CHUNK_ID,                    // 0x40609
             -> fallback

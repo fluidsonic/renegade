@@ -2,6 +2,7 @@ package ccr.server
 
 import ccr.server.net.BaseGameObj
 import ccr.server.net.BuildingGameObj
+import ccr.server.net.DamageableGameObj
 import ccr.server.net.SoldierGameObj
 
 /**
@@ -41,6 +42,14 @@ class GameObjManager {
 
     fun getBuildingList(): List<BuildingGameObj> = buildingList
     fun getAllObjects(): List<BaseGameObj> = gameObjList
+
+    // C++: GameObjManager::Find_Object — find DamageableGameObj by network ID
+    fun findObject(networkId: Int): DamageableGameObj? {
+        for (obj in gameObjList) {
+            if (obj is DamageableGameObj && obj.networkId == networkId) return obj
+        }
+        return null
+    }
 
     // C++: GameObjManager::Init — called at Pre_Load_Level
     fun destroyAll() {

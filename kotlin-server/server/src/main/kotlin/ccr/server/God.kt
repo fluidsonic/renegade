@@ -189,6 +189,59 @@ class God(private val server: GameServer) {
         return soldier
     }
 
+    // ---- cGod::Create_Commando with explicit definition (for purchased characters) ----
+
+    /**
+     * Spawns a soldier using an explicit definition ID and model name (used by purchase terminal).
+     * Same as [createCommando] but skips starting credits (purchase already costs money).
+     *
+     * @param rhostId    remote host / client ID
+     * @param playerType 0=NOD, 1=GDI
+     * @param defId      soldier definition ID from PurchaseSettingsDefClass
+     * @param modelName  W3D model name for the character
+     * @return the spawned [SoldierGameObj], or null if spawn fails
+     */
+    fun createCommandoWithDef(rhostId: Int, playerType: Int, defId: Int, modelName: String): SoldierGameObj? {
+        if (defId == 0) {
+            println("[GOD] createCommandoWithDef: defId=0 for rhostId=$rhostId, skipping")
+            return null
+        }
+
+        val (position, facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType)
+            ?: Pair(Vector3(0f, 0f, 5f), 0f).also {
+                println("[GOD] WARNING: spawnManager is null, spawning at fallback origin (0, 0, 5)")
+            }
+
+        println("[GOD] spawned purchased soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
+            "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z})")
+
+        val weapons = if (server.pistolWeaponDefId != 0) {
+            listOf(WeaponEntry(server.pistolWeaponDefId, 100))
+        } else emptyList()
+
+        val soldier = SoldierGameObj(
+            definitionId = defId,
+            controlOwner = rhostId,
+            team         = playerType,
+            modelName    = modelName,
+            animName     = "S_A_HUMAN.H_A_AINM",
+            position     = position,
+            facing       = facing,
+            weapons      = weapons,
+        )
+        val netId = NetworkObjectManager.getNewDynamicId()
+        NetworkObjectManager.registerObject(soldier, netId)
+        soldiersByHost[rhostId] = soldier
+        server.gameObjManager.addStar(soldier)
+
+        // Bind player data (same as createCommando)
+        soldier.playerData = playersByHost[rhostId]
+
+        // No starting credits — purchase already costs money
+
+        return soldier
+    }
+
     // ---- cGod cleanup helpers ----
 
     /**
