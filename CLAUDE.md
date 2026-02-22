@@ -115,6 +115,14 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 ### mempool.h — 64-bit pointer arithmetic
 - `BlockListHead` must be `uintptr_t*` (not `uint32_t*`) so `+1` skips a full 8-byte pointer width (arm64), not 4 bytes — prevents first-object-slot/block-header overlap on free
 
+### Bink video — bink_impl.cpp
+- `compat/bink.h` has `extern` declarations only; implemented in `compat/bink_impl.cpp` via FFmpeg
+- FFmpeg (`/opt/homebrew/opt/ffmpeg`) linked dynamically: `-lavformat -lavcodec -lswscale -lswresample -lavutil`; rpath `/opt/homebrew/opt/ffmpeg/lib` set in `Code/Commando/CMakeLists.txt`
+- `BinkContext` struct: `BINK` as first member (so `HBINK` casts directly), wraps `AVFormatContext`, `AVCodecContext`, `SwsContext`, `SwrContext`, `ma_device`, `ma_pcm_rb`
+- **Pixel format**: `AV_PIX_FMT_BGR565LE` (not RGB) — `d3d8_gl.cpp` uploads D3DFMT_R5G6B5 as `GL_UNSIGNED_SHORT_5_6_5_REV` which has R in low bits, requiring B in high bits
+- **Audio**: `BinkDoFrame` drains audio packets (binkaudio_dct/rdft) and pushes decoded float-stereo frames into a `ma_pcm_rb` ring buffer; a `ma_device` started at `BinkOpen` time consumes it in callback; runs independently of the MSS `ma_engine`
+- Include `miniaudio.h` WITHOUT `MINIAUDIO_IMPLEMENTATION` — implementation is in `mss_impl.cpp`; declarations suffice for `ma_device` / `ma_pcm_rb` usage
+
 ### Audio backend — mss_impl.cpp
 - `compat/mss.h` has extern declarations only (no bodies); all ~106 `AIL_*` functions implemented in `compat/mss_impl.cpp` via miniaudio
 - `compat/miniaudio.h` is a vendored single-header library (CoreAudio backend); linked with `-framework CoreAudio -framework AudioToolbox`
