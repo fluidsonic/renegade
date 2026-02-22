@@ -88,8 +88,8 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
       void Increment_Total_Time(void);
       void Reset_Total_Time(void);
 
-		ULONG Get_Ip_Address(void) const {return IpAddress;}
-      void Set_Ip_Address(ULONG ip_address);
+		uint32_t Get_Ip_Address(void) const {return IpAddress;}
+      void Set_Ip_Address(uint32_t ip_address);
 
 		int Get_Fps(void) const {return Fps;}
       void Set_Fps(int fps);
@@ -157,7 +157,7 @@ class cPlayer : public PlayerDataClass, public NetworkObjectClass {
 		int					Ping;
 		DWORD					JoinTimeMs;
 		DWORD					TotalTimeMs;
-		ULONG					IpAddress;
+		uint32_t					IpAddress;
 		int					Fps;
 		DWORD					LastUpdateTimeMs;
 		int					FastSortKey;

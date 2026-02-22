@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "camera.h"
 #include "ww3d.h"
 #include "matrix4.h"
@@ -625,7 +626,7 @@ void CameraClass::Apply(void)
 	int width,height,bits;
 	bool windowed;
 	WW3D::Get_Render_Target_Resolution(width,height,bits,windowed);
-	
+
 	D3DVIEWPORT8 vp;
 	vp.X = (DWORD)(Viewport.Min.X * (float)width);
 	vp.Y = (DWORD)(Viewport.Min.Y * (float)height);
@@ -633,6 +634,33 @@ void CameraClass::Apply(void)
 	vp.Height = (DWORD)((Viewport.Max.Y - Viewport.Min.Y) * (float)height);
 	vp.MinZ = ZBufferMin;
 	vp.MaxZ = ZBufferMax;
+
+	static int _cam_apply_n = 0;
+	if (++_cam_apply_n <= 3) {
+		Vector3 pos = Get_Transform().Get_Translation();
+		fprintf(stderr, "[Camera::Apply] #%d pos=(%.1f,%.1f,%.1f) znear=%.1f zfar=%.1f\n",
+			_cam_apply_n, pos.X, pos.Y, pos.Z, ZNear, ZFar);
+		fprintf(stderr, "[Camera::Apply] viewport x=%d y=%d w=%d h=%d minZ=%.3f maxZ=%.3f (renderTarget=%dx%d)\n",
+			(int)vp.X, (int)vp.Y, (int)vp.Width, (int)vp.Height, vp.MinZ, vp.MaxZ, width, height);
+		fprintf(stderr, "[Camera::Apply] hfov=%.3f vfov=%.3f viewPlane=(%.3f,%.3f)-(%.3f,%.3f)\n",
+			ViewPlane.Max.X > 0 ? 2.0f * atanf(ViewPlane.Max.X) : 0.0f,
+			ViewPlane.Max.Y > 0 ? 2.0f * atanf(ViewPlane.Max.Y) : 0.0f,
+			ViewPlane.Min.X, ViewPlane.Min.Y, ViewPlane.Max.X, ViewPlane.Max.Y);
+		// Log the D3D projection matrix
+		Matrix4 d3dproj_dbg;
+		Get_D3D_Projection_Matrix(&d3dproj_dbg);
+		fprintf(stderr, "[Camera::Apply] d3dproj row0=(%.4f %.4f %.4f %.4f) row2=(%.4f %.4f %.4f %.4f) row3=(%.4f %.4f %.4f %.4f)\n",
+			d3dproj_dbg[0][0],d3dproj_dbg[0][1],d3dproj_dbg[0][2],d3dproj_dbg[0][3],
+			d3dproj_dbg[2][0],d3dproj_dbg[2][1],d3dproj_dbg[2][2],d3dproj_dbg[2][3],
+			d3dproj_dbg[3][0],d3dproj_dbg[3][1],d3dproj_dbg[3][2],d3dproj_dbg[3][3]);
+		// Log the view (camera inverse) transform
+		fprintf(stderr, "[Camera::Apply] viewTM pos=(%.3f,%.3f,%.3f) x=(%.3f,%.3f,%.3f) y=(%.3f,%.3f,%.3f) z=(%.3f,%.3f,%.3f)\n",
+			CameraInvTransform[0][3],CameraInvTransform[1][3],CameraInvTransform[2][3],
+			CameraInvTransform[0][0],CameraInvTransform[1][0],CameraInvTransform[2][0],
+			CameraInvTransform[0][1],CameraInvTransform[1][1],CameraInvTransform[2][1],
+			CameraInvTransform[0][2],CameraInvTransform[1][2],CameraInvTransform[2][2]);
+	}
+
 	DX8Wrapper::Set_Viewport(&vp);
 
 	Matrix4 d3dprojection;

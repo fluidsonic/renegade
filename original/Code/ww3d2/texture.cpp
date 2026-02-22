@@ -591,7 +591,7 @@ void TextureClass::Apply(unsigned int stage)
 
 void TextureClass::Apply_Null(unsigned int stage)
 {
-	// This function sets the render states for a "NULL" texture
+	// This function sets the render states for a "NULu" texture
 	DX8Wrapper::Set_DX8_Texture(stage, NULL);
 }
 

@@ -46,6 +46,8 @@ MainMenuDialogClass::MainMenuDialogClass (void)	:
 	LogoModel			= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_RENLOGO");
 	TitleTransModel	= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_TITLETRANS");
 	GizmoModel			= WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("IF_EVAGIZMO");
+	fprintf(stderr, "[mainmenu] LogoModel=%p TitleTransModel=%p GizmoModel=%p\n",
+		(void*)LogoModel, (void*)TitleTransModel, (void*)GizmoModel);
 
 	RegistryClass reg(APPLICATION_SUB_KEY_NAME_OPTIONS);
 	if (reg.Get_Int("DisableMenuAnim", 0) != 0) {
@@ -110,7 +112,11 @@ MainMenuDialogClass::On_Menu_Activate (bool onoff)
 
 			// Put the logo pack into the scene when reactivated.
 			if (LogoModel && LogoModel->Peek_Scene() == NULL) {
+				fprintf(stderr, "[mainmenu] On_Menu_Activate: adding LogoModel to scene\n");
 				Get_BackDrop()->Peek_Scene()->Add_Render_Object(LogoModel);
+			} else {
+				fprintf(stderr, "[mainmenu] On_Menu_Activate: LogoModel=%p scene=%p (skip)\n",
+					(void*)LogoModel, LogoModel ? (void*)LogoModel->Peek_Scene() : nullptr);
 			}
 
 			//
@@ -260,7 +266,7 @@ MainMenuDialogClass::Choose_Skirmish_Map (void)
 	//
 	// Look for any skirmish maps.
 	//
-	file_filter.Format("data\\skirmish*.mix");
+	file_filter.Format("data/skirmish*.mix");
 	keep_going = TRUE;
 	for (file_find = ::FindFirstFile (file_filter, &find_info);
 		 (file_find != INVALID_HANDLE_VALUE) && keep_going;
@@ -277,7 +283,7 @@ MainMenuDialogClass::Choose_Skirmish_Map (void)
 		//
 		// No skirmish maps found. Look for a C&C map.
 		//
-		file_filter.Format("data\\c&c_*.mix");
+		file_filter.Format("data/c&c_*.mix");
 		keep_going = TRUE;
 		for (file_find = ::FindFirstFile (file_filter, &find_info);
 			 (file_find != INVALID_HANDLE_VALUE) && keep_going;
@@ -435,14 +441,14 @@ MainMenuDialogClass::Update_Version_Number (void)
 	WideStringClass build_number(BuildInfoClass::Get_Build_Number_String(), true);
 	WideStringClass build_initials(BuildInfoClass::Get_Builder_Initials(), true);
 	WideStringClass build_date(BuildInfoClass::Get_Build_Date_String(), true);
-	version_string.Format (L"v%d.%.3d %s-%s %s", (version_major >> 16), (version_major & 0xFFFF), (const WCHAR*)build_initials, (const WCHAR*)build_number, (const WCHAR*)build_date);
+	version_string.Format (u"v%d.%.3d %s-%s %s", (version_major >> 16), (version_major & 0xFFFF), (const WCHAR*)build_initials, (const WCHAR*)build_number, (const WCHAR*)build_date);
 	Set_Dlg_Item_Text (IDC_VERSION_STATIC, version_string);
 }
 
 				//TRANSLATE_ME
-				//const WCHAR * title	= L"Unable to initialize LAN";
+				//const WCHAR * title	= u"Unable to initialize LAN";
 				//IDS_MP_UNABLE_INITIALIZE_LAN
-				//const WCHAR * text	= L"No LAN IP addresses found.";
+				//const WCHAR * text	= u"No LAN IP addresses found.";
 				//IDS_MP_NO_LAN_IP_ADDRESSES_FOUND
 
 				//DlgMsgBox::DoDialog(title, text);

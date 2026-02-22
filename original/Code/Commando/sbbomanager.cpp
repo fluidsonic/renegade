@@ -39,14 +39,14 @@ cSbboManager::Think
 	// spending way too much time doing network updates.
 	//
 
-	if (!IsEnabled) 
+	if (!IsEnabled)
 	{
 		return;
 	}
 
 	float total_time = AccumTimeSNetUpdate + AccumTimeSCombatThink;
 
-	if (AccumTimeSCombatThink > 0 && total_time > 2) 
+	if (AccumTimeSCombatThink > 0 && total_time > 2)
 	{
 		NetToCombatRatio = AccumTimeSNetUpdate / AccumTimeSCombatThink;
 		AccumTimeSNetUpdate = 0;
@@ -66,7 +66,7 @@ cSbboManager::Think
 
 		if (SlowSamples >= 10 && PoorRatios >= 10) {
 
-			ULONG sbbo = cNetwork::PServerConnection->Get_Bandwidth_Budget_Out();
+			uint32_t sbbo = cNetwork::PServerConnection->Get_Bandwidth_Budget_Out();
 			if (sbbo >= 64000)
 			{
 				sbbo *= 0.90;
@@ -78,7 +78,7 @@ cSbboManager::Think
 		}
 	}
 }
-			
+
 //-----------------------------------------------------------------------------
 void
 cSbboManager::Increment_Accum_Time_S_Net_Update
@@ -108,7 +108,7 @@ cSbboManager::Get_Net_To_Combat_Ratio
 	void
 )
 {
-	
+
 	return NetToCombatRatio;
 }
 

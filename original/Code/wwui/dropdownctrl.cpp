@@ -182,7 +182,7 @@ DropDownCtrlClass::Update_Client_Rect (void)
 	//
 	//	Determine what one character spacing would be
 	//
-	Vector2 char_size = TextRenderer.Get_Text_Extents (L"W");
+	Vector2 char_size = TextRenderer.Get_Text_Extents (u"W");
 
 	float border_width	= char_size.X + 2;
 	float border_height	= 2;

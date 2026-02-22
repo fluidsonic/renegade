@@ -101,7 +101,7 @@ EvaViewerTabClass::On_Init_Dialog (void)
 	} else {
 		
 		if (AffiliationCtrl != NULL) {
-			AffiliationCtrl->Set_Text (L"");
+			AffiliationCtrl->Set_Text (u"");
 		}		
 	}
 

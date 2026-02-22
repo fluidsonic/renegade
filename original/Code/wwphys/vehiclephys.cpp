@@ -32,7 +32,7 @@ const char		WHEEL_FLAG_STEERING						= 'S';			// wheel turns with steering
 const char		WHEEL_FLAG_INV_STEERING					= 'I';			// wheel turns opposite steering
 const char		WHEEL_FLAG_TILT_STEERING				= 'T';			// wheel turns when vehicle (bike) tilts
 const char		WHEEL_FLAG_ENGINE							= 'E';			// wheel is attached to engine
-const char		WHEEL_FLAG_LEFT_TRACK					= 'L';			// wheel is part of the left track
+const char		WHEEL_FLAG_LEFT_TRACK					= 'u';			// wheel is part of the left track
 const char		WHEEL_FLAG_RIGHT_TRACK					= 'R';			// wheel is part of the right track
 const char		WHEEL_FLAG_FAKE							= 'F';			// wheel is fake!
 

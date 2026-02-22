@@ -8,7 +8,7 @@
 #include "bandwidthcheck.h"
 
 //-----------------------------------------------------------------------------
-ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type)
+uint32_t cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type)
 {
 	/*
 	*/
@@ -32,7 +32,7 @@ ULONG cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type
 			return 2000000;
 		case BANDWIDTH_AUTO:
 		{
-			ULONG bps = BandwidthCheckerClass::Get_Upstream_Bandwidth();
+			uint32_t bps = BandwidthCheckerClass::Get_Upstream_Bandwidth();
 //			assert(bps > 0);
 			return bps;
 		}
@@ -63,7 +63,7 @@ const WCHAR *cBandwidth::Get_Bandwidth_String_From_Type(BANDWIDTH_TYPE_ENUM band
 		case BANDWIDTH_LANT1:
 			return TRANSLATE(IDS_MP_CONNECTION_T1);		//"BANDWIDTH_LANT1";
 		case BANDWIDTH_CUSTOM:
-			return L"BANDWIDTH_CUSTOM";
+			return u"BANDWIDTH_CUSTOM";
 		case BANDWIDTH_AUTO:
 		{
 			//sprintf(_bandwidth_auto_txt, "BANDWIDTH_AUTO (%s)", BandwidthCheckerClass::Get_Bandwidth_As_String());
@@ -73,7 +73,7 @@ const WCHAR *cBandwidth::Get_Bandwidth_String_From_Type(BANDWIDTH_TYPE_ENUM band
 			return(s);
 		}
 		default:
-			return L"ERROR"; // to avoid compiler warning
+			return u"ERROR"; // to avoid compiler warning
    }
 }
 

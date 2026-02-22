@@ -1090,7 +1090,7 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 					static int count = 0;
 					if ( ++count < 10 ) {
 					}
-					strcpy(name,"NULL");
+					strcpy(name,"NULu");
 				}
 
 				new_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
@@ -1099,7 +1099,7 @@ PersistClass *	RenderObjPersistFactoryClass::Load(ChunkLoadClass & cload) const
 					static int count = 0;
 					if ( ++count < 10 ) {
 					}
-					strcpy(name,"NULL");
+					strcpy(name,"NULu");
 					new_obj = WW3DAssetManager::Get_Instance()->Create_Render_Obj(name);
 				}
 

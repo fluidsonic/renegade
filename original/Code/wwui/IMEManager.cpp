@@ -490,7 +490,7 @@ bool IMEManager::ProcessMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 					{
 					if (mTypingCursorPos < IME_MAX_TYPING_LEN)
 						{
-						mTypingString[mTypingCursorPos] = (wchar_t)virtualKey;
+						mTypingString[mTypingCursorPos] = (char16_t)virtualKey;
 						++mTypingCursorPos;
 						mTypingString[mTypingCursorPos] = 0;
 						typingChanged = true;
@@ -727,7 +727,7 @@ void IMEManager::InputLanguageChanged(HKL hkl)
 		{
 		UINT descSize = ImmGetDescriptionW(hkl, NULL, 0);
 		++descSize;
-		wchar_t* descPtr = mIMEDescription.Get_Buffer(descSize);
+		char16_t* descPtr = mIMEDescription.Get_Buffer(descSize);
 
 		ImmGetDescriptionW(hkl, descPtr, descSize);
 		}
@@ -746,7 +746,7 @@ void IMEManager::InputLanguageChanged(HKL hkl)
 	#if(0)
 	mHilite = true;
 
-	static const wchar_t _TradChImeName[] = {0x6CE8,0x97F3,0x8F38,0x5165,0x6CD5,0x0020,0x0034,0x002E,0x0031,0x0020,0x7248,0x0000};
+	static const char16_t _TradChImeName[] = {0x6CE8,0x97F3,0x8F38,0x5165,0x6CD5,0x0020,0x0034,0x002E,0x0031,0x0020,0x7248,0x0000};
 
 	if (mIMEDescription.Compare(_TradChImeName) == 0)
 		{
@@ -981,7 +981,7 @@ void IMEManager::EndComposition(void)
 *
 ******************************************************************************/
 
-bool IMEManager::ReadCompositionString(HIMC imc, unsigned long flag, wchar_t* buffer, int length)
+bool IMEManager::ReadCompositionString(HIMC imc, unsigned long flag, char16_t* buffer, int length)
 	{
 	if (mUseUnicode)
 		{
@@ -994,7 +994,7 @@ bool IMEManager::ReadCompositionString(HIMC imc, unsigned long flag, wchar_t* bu
 			}
 		
 		// Terminate string
-		buffer[(size / sizeof(wchar_t))] = 0;
+		buffer[(size / sizeof(char16_t))] = 0;
 		}
 	else
 		{
@@ -1012,7 +1012,7 @@ bool IMEManager::ReadCompositionString(HIMC imc, unsigned long flag, wchar_t* bu
 		string[size] = 0;
 
 		// Convert to Unicode
-		MultiByteToWideChar(mCodePage, 0, (const char*)string, -1, buffer, (length / sizeof(wchar_t)));
+		MultiByteToWideChar(mCodePage, 0, (const char*)string, -1, buffer, (length / sizeof(char16_t)));
 		}
 
 	return true;
@@ -1036,7 +1036,7 @@ long IMEManager::ReadReadingAttr(HIMC imc, unsigned char* attr, int length)
 	if (mUseUnicode)
 		{
 		LONG size = ImmGetCompositionStringW(imc, GCS_COMPREADATTR, attr, length);
-		return (size / sizeof(wchar_t));
+		return (size / sizeof(char16_t));
 		}
 
 	// Read the string as multibyte ANSI
@@ -1079,7 +1079,7 @@ long IMEManager::ReadReadingClause(HIMC imc, unsigned long* clause, int length)
 	if (mUseUnicode)
 		{
 		LONG size = ImmGetCompositionStringW(imc, GCS_COMPREADCLAUSE, clause, length);
-		return (size / sizeof(wchar_t));
+		return (size / sizeof(char16_t));
 		}
 
 	// Read the string as multibyte ANSI
@@ -1396,7 +1396,7 @@ void IMEManager::CloseCandidate(unsigned long candList)
 *
 ******************************************************************************/
 
-unsigned long IMEManager::GetGuideline(wchar_t* outString, int length)
+unsigned long IMEManager::GetGuideline(char16_t* outString, int length)
 	{
 	unsigned long level = GL_LEVEL_NOGUIDELINE;
 
@@ -1410,8 +1410,8 @@ unsigned long IMEManager::GetGuideline(wchar_t* outString, int length)
 			{
 			if (mUseUnicode)
 				{
-				DWORD size = ImmGetGuideLineW(imc, GGL_STRING, outString, (length * sizeof(wchar_t)));
-				outString[size / sizeof(wchar_t)] = 0;
+				DWORD size = ImmGetGuideLineW(imc, GGL_STRING, outString, (length * sizeof(char16_t)));
+				outString[size / sizeof(char16_t)] = 0;
 				}
 			else
 				{
@@ -1456,7 +1456,7 @@ bool IMEManager::IMECharHandler(unsigned short dbcs)
 		}
 
 	// Convert char to unicode
-	wchar_t unicode = 0;
+	char16_t unicode = 0;
 	MultiByteToWideChar(mCodePage, 0, (const char*)&mbcs, -1, &unicode, 1);
 
 	UnicodeChar event(unicode);
@@ -1507,7 +1507,7 @@ bool IMEManager::CharHandler(unsigned short ch)
 
 	// Convert char to unicode.
 	unsigned long dbcs = (unsigned long)(((unsigned)msg.wParam << 8) | ch);
-	wchar_t unicode = 0;
+	char16_t unicode = 0;
 	MultiByteToWideChar(mCodePage, 0, (const char*)&dbcs, 2, &unicode, 1);
 
 	UnicodeChar event(unicode);

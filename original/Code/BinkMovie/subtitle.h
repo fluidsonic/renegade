@@ -3,7 +3,6 @@
 #define _SUBTITLE_H_
 
 #include "always.h"
-#include <wchar.h>
 
 class SubTitleClass
 {
@@ -54,10 +53,10 @@ public:
 	Alignment Get_Alignment(void) const { return mAlignment; }
 
 	// Set the caption text
-	void Set_Caption(wchar_t* string);
+	void Set_Caption(char16_t* string);
 
 	// Retrieve the caption text
-	const wchar_t* Get_Caption(void) const { return mCaption; }
+	const char16_t* Get_Caption(void) const { return mCaption; }
 
 private:
 	unsigned long mTimeStamp;
@@ -65,7 +64,7 @@ private:
 	unsigned long mRGBColor;
 	int mLinePosition;
 	Alignment mAlignment;
-	wchar_t* mCaption;
+	char16_t* mCaption;
 };
 
 #endif // _SUBTITLE_H_

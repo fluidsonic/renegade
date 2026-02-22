@@ -47,7 +47,7 @@ const float		DEFAULT_SPRING_LENGTH					= 1.0f;
 ** - 'E' Engine. this wheel is connected to the engine and should exert its force 
 ** - 'S' Steering: The position bone for this wheel rotates about its Z-axis for steering
 ** - 's' Inverse Steering: The position bone for this wheel rotates the opposite way
-** - 'L' Left Track: this wheel is part of the left track of a tracked vehicle
+** - 'u' Left Track: this wheel is part of the left track of a tracked vehicle
 ** - 'R' Right Track: this wheel is part of the right track of a tracked vehicle
 ** - 'F' Fake: just move, don't compute any forces
 */

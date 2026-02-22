@@ -37,9 +37,9 @@ const USHORT	cNetUtil::MAX_RESENDS													= 50;
 const USHORT	cNetUtil::MULTI_SENDS													= 10;
 const USHORT	cNetUtil::RESEND_TIMEOUT_LAN_MS										= 300;
 const USHORT	cNetUtil::RESEND_TIMEOUT_INTERNET_MS								= 500;
-const	ULONG		cNetUtil::CLIENT_CONNECTION_LOSS_TIMEOUT							= 15000;		// Milliseconds til client gives up on server
-const	ULONG		cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT							= 15000;		// Milliseconds til server gives up on client
-const	ULONG		cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE	= 45000;		// Milliseconds extra allowed til server gives up on loading client.
+const	uint32_t		cNetUtil::CLIENT_CONNECTION_LOSS_TIMEOUT							= 15000;		// Milliseconds til client gives up on server
+const	uint32_t		cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT							= 15000;		// Milliseconds til server gives up on client
+const	uint32_t		cNetUtil::SERVER_CONNECTION_LOSS_TIMEOUT_LOADING_ALLOWANCE	= 45000;		// Milliseconds extra allowed til server gives up on loading client.
 
 //int cNetUtil::DefaultMultiSends							= INVALID_VALUE;
 //int cNetUtil::DefaultMaxResends							= INVALID_VALUE;
@@ -260,7 +260,7 @@ void cNetUtil::Address_To_String(LPSOCKADDR_IN p_address, char * str, UINT len,
 }
 
 //-------------------------------------------------------------------------------
-LPCSTR cNetUtil::Address_To_String(ULONG ip)
+LPCSTR cNetUtil::Address_To_String(uint32_t ip)
 {
 	IN_ADDR in_addr;
 	in_addr.s_addr = ip;
@@ -599,7 +599,7 @@ void cNetUtil::Lan_Servicing(SOCKET & sock, LanPacketHandlerCallback p_callback)
 			//
 			// diagnostic
 			//
-			ULONG ip = packet.Get_From_Address_Wrapper()->FromAddress.sin_addr.s_addr;
+			uint32_t ip = packet.Get_From_Address_Wrapper()->FromAddress.sin_addr.s_addr;
 			*/
 
 			//packet.Set_Received_Length(retcode);

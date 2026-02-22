@@ -132,7 +132,7 @@ RadioCommandDisplayClass::Update (DISPLAY_TYPE type)
 		access_key = TRANSLATE (IDS_MENU_TEXT893);
 		range_start_index = 10;
 	} else {
-		access_key.Format (L"%s + %s", TRANSLATE (IDS_MENU_TEXT892), TRANSLATE (IDS_MENU_TEXT893));
+		access_key.Format (u"%s + %s", TRANSLATE (IDS_MENU_TEXT892), TRANSLATE (IDS_MENU_TEXT893));
 		range_start_index = 20;
 	}
 
@@ -147,7 +147,7 @@ RadioCommandDisplayClass::Update (DISPLAY_TYPE type)
 		}
 
 		WideStringClass command_key (0, true);
-		command_key.Format (L"%s + %d", (const WCHAR*)access_key, key_id);
+		command_key.Format (u"%s + %d", (const WCHAR*)access_key, key_id);
 		
 		//
 		//	Insert an item for this radio command

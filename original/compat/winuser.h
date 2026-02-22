@@ -548,10 +548,10 @@ typedef struct tagDLGITEMTEMPLATE {
 
 // Resource macros
 typedef LPTSTR LPCTSTR_RESOURCE;
-#define MAKEINTRESOURCE(i)  ((LPTSTR)((ULONG_PTR)((WORD)(i))))
-#define MAKEINTRESOURCEA(i) ((LPSTR)((ULONG_PTR)((WORD)(i))))
-#define MAKEINTRESOURCEW(i) ((LPWSTR)((ULONG_PTR)((WORD)(i))))
-#define IS_INTRESOURCE(r)   ((((ULONG_PTR)(r)) >> 16) == 0)
+#define MAKEINTRESOURCE(i)  ((LPTSTR)((uint32_t*)((WORD)(i))))
+#define MAKEINTRESOURCEA(i) ((LPSTR)((uint32_t*)((WORD)(i))))
+#define MAKEINTRESOURCEW(i) ((LPWSTR)((uint32_t*)((WORD)(i))))
+#define IS_INTRESOURCE(r)   ((((uint32_t*)(r)) >> 16) == 0)
 
 // Resource type constants
 #define RT_CURSOR           MAKEINTRESOURCE(1)
@@ -568,7 +568,7 @@ typedef LPTSTR LPCTSTR_RESOURCE;
 
 // Common control class names
 #define PROGRESS_CLASSA     "msctls_progress32"
-#define PROGRESS_CLASSW     L"msctls_progress32"
+#define PROGRESS_CLASSW     u"msctls_progress32"
 #define PROGRESS_CLASS      PROGRESS_CLASSA
 
 // Edit control notifications

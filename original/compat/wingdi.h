@@ -211,7 +211,7 @@ typedef struct tagLOGFONTW {
     BYTE  lfClipPrecision;
     BYTE  lfQuality;
     BYTE  lfPitchAndFamily;
-    wchar_t lfFaceName[32];
+    char16_t lfFaceName[32];
 } LOGFONTW, *LPLOGFONTW;
 
 // Font resource functions (Windows loads fonts from .fon/.ttf files)

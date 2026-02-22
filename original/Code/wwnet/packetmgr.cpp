@@ -269,11 +269,9 @@ int PacketManagerClass::Build_Delta_Packet_Patch(unsigned char *base_packet, uns
 
 			this_match = false;
 
-			if (*((long*)&base_packet[i]) == *((long*)&add_packet[i])) {
-				if (*((long*)&base_packet[i+4]) == *((long*)&add_packet[i+4])) {
-					chunks = true;
-					this_match = true;
-				}
+			if (*((uint32_t*)&base_packet[i]) == *((uint32_t*)&add_packet[i])) {
+				chunks = true;
+				this_match = true;
 			}
 
 			write_bit_pos = Add_Bit(this_match, build_delta_ptr, write_bit_pos);
@@ -420,10 +418,7 @@ int PacketManagerClass::Reconstruct_From_Delta(unsigned char *base_packet, unsig
 		** If the packet isn't an even number of chunks long then pull out an extra bit and throw it away. It should always be 0.
 		*/
 		if ((base_packet_size & 7) != 0) {
-//#ifdef WWDEBUG
-			unsigned char bitty =
-//#endif //WWDEBUG
-			Get_Bit(read_delta_ptr, read_bit_pos);
+			unsigned char bitty = Get_Bit(read_delta_ptr, read_bit_pos);
 			if (bitty != 0) {
 				return(0);
 			}
@@ -938,10 +933,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 		*/
 		if (delta_header->ChunkPack || delta_header->BytePack) {
 			int delta_size = 0;
-//#ifdef WWDEBUG
-			int bytes =
-//#endif //WWDEBUG
-				Reconstruct_From_Delta(&ReceiveBuffers[delta_base_index].ReceiveHoldingBuffer[0], &ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], (unsigned char *)delta_header, packet_size, delta_size);
+			int bytes = Reconstruct_From_Delta(&ReceiveBuffers[delta_base_index].ReceiveHoldingBuffer[0], &ReceiveBuffers[NumReceivePackets].ReceiveHoldingBuffer[0], (unsigned char *)delta_header, packet_size, delta_size);
 			if (bytes != packet_size) {
 				return(false);
 			}
@@ -984,7 +976,7 @@ bool PacketManagerClass::Break_Packet(unsigned char *packet, int original_packet
 	}
 
 	//if (NumReceivePackets > 20) {
-	//	
+	//
 	//}
 
 	return(true);

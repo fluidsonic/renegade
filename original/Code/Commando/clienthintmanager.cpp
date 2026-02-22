@@ -71,8 +71,8 @@ cClientHintManager::Think
 	VisTableClass * pvs = COMBAT_SCENE->Get_Vis_Table(my_position);
 
 	int		num_objects					= 0;
-	//ULONG		total_delay_ms				= 0;
-	//ULONG		maximum_delay_ms			= 0;
+	//uint32_t		total_delay_ms				= 0;
+	//uint32_t		maximum_delay_ms			= 0;
 	//int		longest_delayed_index	= -1;
 
 	int count = NetworkObjectMgrClass::Get_Object_Count();
@@ -115,7 +115,7 @@ cClientHintManager::Think
 					}
 
 #if (0)
-					ULONG delay_ms = time_now_ms - p_object->Get_Last_Clientside_Update_Time();
+					uint32_t delay_ms = time_now_ms - p_object->Get_Last_Clientside_Update_Time();
 
 					total_delay_ms += delay_ms;
 					num_objects++;

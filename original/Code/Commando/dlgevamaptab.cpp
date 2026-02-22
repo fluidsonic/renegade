@@ -83,7 +83,7 @@ EvaMapTabClass::On_Init_Dialog (void)
 				//	Now add a marker that represents this objective
 				//
 				int color = VRGB_TO_INT32 (objective->Type_To_Color ());
-				int item_index = map_ctrl->Add_Marker (L"", objective->Position, RectClass (32, 0, 64, 32), color);
+				int item_index = map_ctrl->Add_Marker (u"", objective->Position, RectClass (32, 0, 64, 32), color);
 				map_ctrl->Set_Marker_Data (item_index, (uint32)(uintptr_t)objective);
 			}
 		}
@@ -101,7 +101,7 @@ EvaMapTabClass::On_Init_Dialog (void)
 	//
 	ListCtrlClass *list_ctrl = (ListCtrlClass *)Get_Dlg_Item (IDC_OBJECT_DESC_LIST);
 	if (list_ctrl != NULL) {
-		list_ctrl->Add_Column (L"", 1.0F, Vector3 (1, 1, 1));
+		list_ctrl->Add_Column (u"", 1.0F, Vector3 (1, 1, 1));
 	}
 
 	ChildDialogClass::On_Init_Dialog ();
@@ -159,7 +159,7 @@ EvaMapTabClass::On_MapCtrl_Marker_Hilighted
 
 			string.Format (TRANSLATE (IDS_MENU_STATUS_FORMAT), objective->Status_To_Name ());
 			list_ctrl->Insert_Entry (2, string);
-			list_ctrl->Insert_Entry (3, L"");
+			list_ctrl->Insert_Entry (3, u"");
 
 			//
 			//	Lookup the translation object from the strings database

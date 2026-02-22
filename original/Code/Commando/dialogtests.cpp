@@ -560,12 +560,12 @@ StartSPGameDialogClass::On_TreeCtrl_Needs_Children (TreeCtrlClass *tree_ctrl, in
 	TreeItemClass *curr_parent = parent_item;
 	while ((curr_parent = curr_parent->Get_Parent ()) != NULL) {
 		WideStringClass temp_path = curr_parent->Get_Name ();
-		temp_path += L"\\";
+		temp_path += u"\\";
 		temp_path += full_path;
 		full_path = temp_path;
 	}
 
-	WideStringClass temp_path = L"c:\\";
+	WideStringClass temp_path = u"c:\\";
 	temp_path += full_path;
 	full_path = temp_path;
 
@@ -628,8 +628,8 @@ MPServerStartMenuClass::On_Init_Dialog (void)
 	//	Configure the combobox
 	//
 	//ComboBoxCtrlClass *type_combo = (ComboBoxCtrlClass *)Get_Dlg_Item (IDC_TEAM_COMBO);
-	//type_combo->Add_String (L"GDI");
-	//type_combo->Add_String (L"NOD");
+	//type_combo->Add_String (u"GDI");
+	//type_combo->Add_String (u"NOD");
 
 	//
 	//	Set the default focus
@@ -1094,7 +1094,7 @@ EditWheeledVehicleDialogClass::On_Init_Dialog (void)
 		Set_Dlg_Item_Float(IDC_SHIFT_DOWN_RPM_EDIT, VehicleDef->Get_Shift_Down_Rpm());
 
 		WideStringClass radius_text;
-		radius_text.Format(L"%10.4f",WheelRadius);
+		radius_text.Format(u"%10.4f",WheelRadius);
 		Set_Dlg_Item_Text(IDC_WHEEL_RADIUS,radius_text);
 
 	} else {
@@ -1205,7 +1205,7 @@ EditTrackedVehicleDialogClass::On_Init_Dialog (void)
 		Set_Dlg_Item_Float(IDC_TURN_TORQUE_SCALE_FACTOR_EDIT, VehicleDef->Get_Turn_Torque_Scale_Factor());
 
 		WideStringClass radius_text;
-		radius_text.Format(L"%10.4f",WheelRadius);
+		radius_text.Format(u"%10.4f",WheelRadius);
 		Set_Dlg_Item_Text(IDC_WHEEL_RADIUS,radius_text);
 
 	} else {

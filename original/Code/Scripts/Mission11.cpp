@@ -4858,7 +4858,7 @@ DECLARE_SCRIPT(M11_End_Mission_Switch_JDG, "")//this guys ID is M11_END_MISSION_
 	{
 		if (param == M01_START_ACTING_JDG)
 		{
-			Commands->Set_Animation ( obj, "DSP_MINICONSEL.DSP_MINICONSEL", false, NULL, 0, 13 );
+			Commands->Set_Animation ( obj, "DSP_MINICONSEL.DSP_MINICONSEu", false, NULL, 0, 13 );
 		}
 	}
 };
@@ -5282,7 +5282,7 @@ DECLARE_SCRIPT(M11_CeilingRepellers_Controller_JDG, "")//M11_FIRSTFLOOR_REPELER_
 					GameObject *controller = Commands->Create_Object("Invisible_Object", ropeA_v3);
 					Commands->Set_Facing ( controller, 75 );
 					Commands->Attach_Script(controller, "Test_Cinematic", "X11D_Repel_Part2.txt");
-					Commands->Set_Animation ( rope_A, "X11D_Rope.X11D_Rope_L", false);
+					Commands->Set_Animation ( rope_A, "X11D_Rope.X11D_Rope_u", false);
 
 					spawned_units++;
 
@@ -5298,7 +5298,7 @@ DECLARE_SCRIPT(M11_CeilingRepellers_Controller_JDG, "")//M11_FIRSTFLOOR_REPELER_
 					GameObject *controller = Commands->Create_Object("Invisible_Object", ropeB_v3);
 					Commands->Set_Facing ( controller, -10 );
 					Commands->Attach_Script(controller, "Test_Cinematic", "X11D_Repel_Part2.txt");
-					Commands->Set_Animation ( rope_B, "X11D_Rope.X11D_Rope_L", true);
+					Commands->Set_Animation ( rope_B, "X11D_Rope.X11D_Rope_u", true);
 
 					spawned_units++;
 
@@ -11113,7 +11113,7 @@ DECLARE_SCRIPT(M11_CeilingRepellers_Controller2_JDG, "")//106908
 					GameObject *controller = Commands->Create_Object("Invisible_Object", ropeC_v3);
 					//Commands->Set_Facing ( controller, 75 );
 					Commands->Attach_Script(controller, "Test_Cinematic", "X11D_Repel_Part4.txt");
-					Commands->Set_Animation ( rope_C, "X11D_Rope.X11D_Rope_L", false);
+					Commands->Set_Animation ( rope_C, "X11D_Rope.X11D_Rope_u", false);
 
 					spawned_units++;
 

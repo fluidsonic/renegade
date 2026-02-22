@@ -277,7 +277,7 @@ enum
 
 MotorVehicleDefClass::MotorVehicleDefClass(void) :
 	MaxEngineTorque(5.0f),
-	EngineTorqueCurveFilename("Vehicles\\PhysicsTables\\DefaultEngineTorque.tbl"),
+	EngineTorqueCurveFilename("Vehicles/PhysicsTables/DefaultEngineTorque.tbl"),
 	EngineTorqueCurve(NULL),
 	GearCount(4),
 	FinalDriveGearRatio(2.92f),
@@ -410,11 +410,13 @@ bool MotorVehicleDefClass::Load(ChunkLoadClass &cload)
 	if (!EngineTorqueCurveFilename.Is_Empty()) {
 
 		// strip the path off the filename
-		char * fname = const_cast<char*>(strrchr(EngineTorqueCurveFilename,'\\'));
-		if (fname == NULL) {
+		const char* lastFwd = strrchr(EngineTorqueCurveFilename, '/');
+		const char* lastBack = strrchr(EngineTorqueCurveFilename, '\\');
+		const char* lastSep = (lastBack > lastFwd) ? lastBack : lastFwd;
+		if (lastSep == NULL) {
 			EngineTorqueCurve = LookupTableMgrClass::Get_Table(EngineTorqueCurveFilename);
 		} else {
-			EngineTorqueCurve = LookupTableMgrClass::Get_Table(fname + 1);
+			EngineTorqueCurve = LookupTableMgrClass::Get_Table(lastSep + 1);
 		}
 	}
 	if (EngineTorqueCurve == NULL) {

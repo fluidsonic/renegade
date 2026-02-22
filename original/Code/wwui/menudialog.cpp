@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "menudialog.h"
 #include "menubackdrop.h"
 #include "render2d.h"
@@ -20,7 +21,7 @@ DynamicVectorClass<MenuDialogClass *>	MenuDialogClass::MenuStack;
 ////////////////////////////////////////////////////////////////
 MenuDialogClass::MenuDialogClass (int res_id)	:
 	DialogBaseClass (res_id)
-{	
+{
 	//
 	//	Add ourselves to the global stack of menus
 	//
@@ -57,7 +58,7 @@ MenuDialogClass::~MenuDialogClass (void)
 ////////////////////////////////////////////////////////////////
 void
 MenuDialogClass::Initialize (void)
-{	
+{
 	BackDrop = new MenuBackDropClass;
 	return ;
 }
@@ -86,23 +87,35 @@ MenuDialogClass::Shutdown (void)
 void
 MenuDialogClass::Render (void)
 {
+	static int _menu_render_n = 0;
+	bool _log = (++_menu_render_n <= 3);
+	if (_log) {
+		fprintf(stderr, "[MenuDialog::Render] #%d this=%p ActiveMenu=%p Transitioning=%p BackDrop=%p\n",
+			_menu_render_n, (void*)this, (void*)ActiveMenu,
+			(void*)DialogMgrClass::Peek_Transitioning_Dialog(),
+			(void*)BackDrop);
+	}
+
 	//
 	//	Don't render if we aren't the active menu
 	//
 	if (ActiveMenu == this || DialogMgrClass::Peek_Transitioning_Dialog () == this) {
 
+		if (_log) fprintf(stderr, "[MenuDialog::Render] calling BackDrop->Render()\n");
 		//
 		//	Render the background scene first
 		//
 		BackDrop->Render ();
 
+		if (_log) fprintf(stderr, "[MenuDialog::Render] calling DialogBaseClass::Render()\n");
 		//
 		//	Now, let the dialog subsystem render the controls and
 		// such...
 		//
 		DialogBaseClass::Render ();
+		if (_log) fprintf(stderr, "[MenuDialog::Render] done\n");
 	}
-	
+
 	return ;
 }
 
@@ -181,7 +194,7 @@ MenuDialogClass::On_Menu_Activate (bool onoff)
 ////////////////////////////////////////////////////////////////
 void
 MenuDialogClass::End_Dialog (void)
-{	
+{
 	//
 	//	Is this the last menu?  If so, send a notification
 	//
@@ -194,19 +207,14 @@ MenuDialogClass::End_Dialog (void)
 			//
 			//	Play the sound effect
 			//
-			StyleMgrClass::Play_Sound (StyleMgrClass::EVENT_MENU_BACK);			
+			StyleMgrClass::Play_Sound (StyleMgrClass::EVENT_MENU_BACK);
 		}
-	} 
+	}
 
 	DialogBaseClass::End_Dialog ();
 	return ;
 }
 
-////////////////////////////////////////////////////////////////
-//
-//	Replace_BackDrop
-//
-////////////////////////////////////////////////////////////////
 MenuBackDropClass *
 MenuDialogClass::Replace_BackDrop (MenuBackDropClass *backdrop)
 {

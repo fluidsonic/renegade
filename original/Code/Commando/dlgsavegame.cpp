@@ -258,7 +258,7 @@ SaveGameMenuClass::Save_Game (bool prompt)
 			//
 			//	Build a full filename
 			//
-			full_path = "save\\";
+			full_path = "save/";
 			full_path += filename;
 
 			//
@@ -321,7 +321,7 @@ SaveGameMenuClass::Get_Unique_Save_Filename (StringClass &filename)
 	bool done	= false;
 
 	while (!done) {
-		filename.Format ("save\\savegame%.2d.sav", slot ++);
+		filename.Format ("save/savegame%.2d.sav", slot ++);
 		
 		//
 		//	Check to see if this file exists
@@ -365,11 +365,11 @@ SaveGameMenuClass::Update_Text_Field (void)
 		if (list_ctrl->Get_Entry_Data (curr_sel, 0) != NULL) {
 			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, list_ctrl->Get_Entry_Text (curr_sel, 2));
 		} else {
-			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, L"");
+			Set_Dlg_Item_Text (IDC_FILENAME_EDIT, u"");
 		}
 
 	} else {
-		Set_Dlg_Item_Text (IDC_FILENAME_EDIT, L"");
+		Set_Dlg_Item_Text (IDC_FILENAME_EDIT, u"");
 	}
 
 	return ;
@@ -441,7 +441,7 @@ SaveGameMenuClass::Delete_Game (bool prompt)
 				//
 				//	Build a full path from which to delete the file
 				//
-				StringClass full_path = "data\\save\\";
+				StringClass full_path = "data/save/";
 				full_path += filename;
 				
 				//
@@ -483,7 +483,7 @@ SaveGameMenuClass::Reload_List (const char *current_filename)
 	//
 	//	Create an empty slot entry
 	//
-	int item_index = list_ctrl->Insert_Entry (0, L"");
+	int item_index = list_ctrl->Insert_Entry (0, u"");
 	if (item_index >= 0) {
 		list_ctrl->Set_Entry_Text (item_index, 2, TRANSLATE (IDS_MENU_EMPTY_SLOT));
 		list_ctrl->Set_Curr_Sel (item_index);
@@ -497,7 +497,7 @@ SaveGameMenuClass::Reload_List (const char *current_filename)
 	//	Build a list of all the saved games we know about
 	//
 	int index = 1;
-	for (file_find = ::FindFirstFile ("data\\save\\*.sav", &find_info);
+	for (file_find = ::FindFirstFile ("data/save/*.sav", &find_info);
 		 (file_find != INVALID_HANDLE_VALUE) && keep_going;
 		  keep_going = ::FindNextFile (file_find, &find_info))
 	{
@@ -521,8 +521,8 @@ SaveGameMenuClass::Reload_List (const char *current_filename)
 		//
 		WideStringClass time_string;
 		WideStringClass date_string;
-		time_string.Format (L"%d:%02d:%02d", system_time.wHour, system_time.wMinute, system_time.wSecond);
-		date_string.Format (L"%d/%d/%d", system_time.wMonth, system_time.wDay, system_time.wYear);
+		time_string.Format (u"%d:%02d:%02d", system_time.wHour, system_time.wMinute, system_time.wSecond);
+		date_string.Format (u"%d/%d/%d", system_time.wMonth, system_time.wDay, system_time.wYear);
 
 		//
 		//	Add this entry to the list control

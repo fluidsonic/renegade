@@ -824,9 +824,9 @@ void TextureLoader::Begin_Load_And_Queue(TextureLoadTaskClass *task)
 		// background load thread will service tasks in LIFO
 		// (last in, first out) order.
 
-		// NOTE: this was how the old code did it, with a 
+		// NOTE: this was how the old code did it, with a
 		// comment that mentioned good reasons for doing so,
-		// without actually listing the reasons. I suspect 
+		// without actually listing the reasons. I suspect
 		// it has something to do with visually important textures,
 		// like those in the foreground, starting their load last.
 		_BackgroundQueue.Push_Front(task);
@@ -1004,7 +1004,7 @@ void TextureLoadTaskClass::Deinit()
 
 bool TextureLoadTaskClass::Begin_Load(void)
 {
-
+	const char* path = (const char*)Texture->Get_Full_Path();
 	bool loaded = false;
 
 	// if allowed, begin a compressed load
@@ -1019,6 +1019,8 @@ bool TextureLoadTaskClass::Begin_Load(void)
 
 	// if not loaded, abort.
 	if (!loaded) {
+		fprintf(stderr, "[texload] Begin_Load: no file found for '%s' (compressed_allowed=%d)\n",
+		        path, (int)Texture->Is_Compression_Allowed());
 		return false;
 	}
 
@@ -1090,7 +1092,8 @@ void TextureLoadTaskClass::Finish_Load(void)
 
 void TextureLoadTaskClass::Apply_Missing_Texture(void)
 {
-
+	const char* path = Texture ? (const char*)Texture->Get_Full_Path() : "(null)";
+	fprintf(stderr, "[texload] MISSING TEXTURE: '%s'\n", path);
 	D3DTexture = MissingTexture::_Get_Missing_Texture();
 	Apply(true);
 }

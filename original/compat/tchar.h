@@ -50,52 +50,24 @@ typedef const char* LPCTSTR;
 #define _tremove        remove
 #define _trename        rename
 
-// Wide string functions - WCHAR = wchar_t so standard wcs* functions work directly
-#include <wchar.h>
-#include <wctype.h>
+// Wide string functions — WCHAR = char16_t, use c16s* functions
+#include "c16string.h"
 
-// wcstrim - trim leading and trailing whitespace in-place (not in POSIX)
-inline wchar_t* wcstrim(wchar_t* s) {
-    if (!s) return s;
-    size_t len = wcslen(s);
-    while (len > 0 && s[len-1] <= 32) len--;
-    s[len] = 0;
-    size_t start = 0;
-    while (s[start] && s[start] <= 32) start++;
-    if (start > 0) {
-        size_t i;
-        for (i = 0; s[start + i]; i++) s[i] = s[start + i];
-        s[i] = 0;
-    }
-    return s;
-}
+// wcstrim is declared in trim.h and defined in trim.cpp — no redefinition here.
 
 // _wcsupr / _wcslwr - not in POSIX
-inline wchar_t* _wcsupr(wchar_t* s) {
-    wchar_t* p = s;
-    while (*p) { *p = (wchar_t)towupper(*p); p++; }
-    return s;
-}
-inline wchar_t* _wcslwr(wchar_t* s) {
-    wchar_t* p = s;
-    while (*p) { *p = (wchar_t)towlower(*p); p++; }
-    return s;
-}
+inline char16_t* _wcsupr(char16_t* s) { return c16supr(s); }
+inline char16_t* _wcslwr(char16_t* s) { return c16slwr(s); }
 #define wcsupr  _wcsupr
 #define wcslwr  _wcslwr
 
-// Case-insensitive wide string comparison (Windows names)
-#ifndef wcsicmp
-#define wcsicmp   wcscasecmp
-#endif
-#ifndef wcsnicmp
-#define wcsnicmp  wcsncasecmp
-#endif
-#ifndef _wcsicmp
-#define _wcsicmp  wcscasecmp
-#endif
-#ifndef _wcsnicmp
-#define _wcsnicmp wcsncasecmp
+// Case-insensitive wide string comparison (Windows names) — char16_t versions
+#ifndef WCSICMP_COMPAT_DEFINED
+#define WCSICMP_COMPAT_DEFINED
+inline int wcsicmp (const char16_t* a, const char16_t* b)          { return c16sicmp(a, b); }
+inline int wcsnicmp(const char16_t* a, const char16_t* b, size_t n) { return c16snicmp(a, b, n); }
+inline int _wcsicmp (const char16_t* a, const char16_t* b)         { return c16sicmp(a, b); }
+inline int _wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16snicmp(a, b, n); }
 #endif
 
 // Char classification

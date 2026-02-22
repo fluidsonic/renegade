@@ -217,11 +217,8 @@ private:
 	csave.Begin_Chunk(id); \
 	{ \
 		int _cc = var.Get_Length() + 1; \
-		unsigned short *_u16 = new unsigned short[_cc]; \
 		const WCHAR *_buf = (const WCHAR *)var; \
-		for (int _i = 0; _i < _cc; _i++) _u16[_i] = (unsigned short)_buf[_i]; \
-		csave.Write(_u16, _cc * 2); \
-		delete[] _u16; \
+		csave.Write(_buf, _cc * sizeof(WCHAR)); \
 	} \
 	csave.End_Chunk(); }
 
@@ -246,12 +243,9 @@ private:
 #define READ_WIDESTRING_CHUNK(cload,id,var)		\
 	case (id):	{	\
 		int _bc = cload.Cur_Chunk_Length(); \
-		int _cc = _bc / 2; \
-		unsigned short *_u16 = new unsigned short[_cc]; \
-		cload.Read(_u16, _bc); \
+		int _cc = _bc / (int)sizeof(WCHAR); \
 		WCHAR *_buf = var.Get_Buffer(_cc); \
-		for (int _i = 0; _i < _cc; _i++) _buf[_i] = (WCHAR)_u16[_i]; \
-		delete[] _u16; \
+		cload.Read(_buf, _bc); \
 		break; \
 	}	\
 
@@ -291,11 +285,8 @@ private:
 	csave.Begin_Micro_Chunk(id); \
 	{ \
 		int _cc = var.Get_Length() + 1; \
-		unsigned short *_u16 = new unsigned short[_cc]; \
 		const WCHAR *_buf = (const WCHAR *)var; \
-		for (int _i = 0; _i < _cc; _i++) _u16[_i] = (unsigned short)_buf[_i]; \
-		csave.Write(_u16, _cc * 2); \
-		delete[] _u16; \
+		csave.Write(_buf, _cc * sizeof(WCHAR)); \
 	} \
 	csave.End_Micro_Chunk(); }
 
@@ -336,12 +327,9 @@ private:
 #define READ_MICRO_CHUNK_WIDESTRING(cload,id,var)		\
 	case (id):	{	\
 		int _bc = cload.Cur_Micro_Chunk_Length(); \
-		int _cc = _bc / 2; \
-		unsigned short *_u16 = new unsigned short[_cc]; \
-		cload.Read(_u16, _bc); \
+		int _cc = _bc / (int)sizeof(WCHAR); \
 		WCHAR *_buf = var.Get_Buffer(_cc); \
-		for (int _i = 0; _i < _cc; _i++) _buf[_i] = (WCHAR)_u16[_i]; \
-		delete[] _u16; \
+		cload.Read(_buf, _bc); \
 		break; \
 	}	\
 
@@ -357,12 +345,9 @@ private:
 #define LOAD_MICRO_CHUNK_WIDESTRING(cload,var)		\
 	{	\
 		int _bc = cload.Cur_Micro_Chunk_Length(); \
-		int _cc = _bc / 2; \
-		unsigned short *_u16 = new unsigned short[_cc]; \
-		cload.Read(_u16, _bc); \
+		int _cc = _bc / (int)sizeof(WCHAR); \
 		WCHAR *_buf = var.Get_Buffer(_cc); \
-		for (int _i = 0; _i < _cc; _i++) _buf[_i] = (WCHAR)_u16[_i]; \
-		delete[] _u16; \
+		cload.Read(_buf, _bc); \
 	}	\
 
 /*

@@ -16,9 +16,6 @@ typedef unsigned int        UINT32;
 typedef signed long long    INT64;
 typedef unsigned long long  UINT64;
 
-typedef long long           LONGLONG;
-typedef unsigned long long  ULONGLONG;
-
 // LARGE_INTEGER union
 typedef union _LARGE_INTEGER {
     struct {
@@ -29,7 +26,7 @@ typedef union _LARGE_INTEGER {
         DWORD LowPart;
         LONG  HighPart;
     } u;
-    LONGLONG QuadPart;
+    int64_t QuadPart;
 } LARGE_INTEGER, *PLARGE_INTEGER;
 
 typedef union _ULARGE_INTEGER {
@@ -41,7 +38,7 @@ typedef union _ULARGE_INTEGER {
         DWORD LowPart;
         DWORD HighPart;
     } u;
-    ULONGLONG QuadPart;
+    uint64_t QuadPart;
 } ULARGE_INTEGER, *PULARGE_INTEGER;
 
 typedef struct _CRITICAL_SECTION {
@@ -68,22 +65,16 @@ inline BOOL TryEnterCriticalSection(LPCRITICAL_SECTION cs) {
     return pthread_mutex_trylock(&cs->mutex) == 0;
 }
 
-// WCHAR as wchar_t so L"..." literals are type-compatible (compile-only goal;
-// runtime binary layout differs from Windows 2-byte wchar_t)
-#include <wchar.h>
+// WCHAR as char16_t (2-byte UTF-16, matching Windows wire format)
+// WCHAR_DEFINED is set by windef.h which is included first — this block is skipped.
 #ifndef WCHAR_DEFINED
 #define WCHAR_DEFINED
-typedef wchar_t  WCHAR;
+typedef char16_t WCHAR;
 typedef WCHAR*   PWSTR;
 typedef WCHAR*   LPWSTR;
 typedef const WCHAR* PCWSTR;
 typedef const WCHAR* LPCWSTR;
 #endif
-typedef WCHAR*   PWCHAR;
-typedef WCHAR*   LPWCH;
-typedef WCHAR*   PWCH;
-typedef const WCHAR* LPCWCH;
-typedef const WCHAR* PCWCH;
 
 // Unicode string macros
 #define UNICODE_NULL ((WCHAR)0)
@@ -180,5 +171,17 @@ typedef struct _IMAGE_DOS_HEADER {
 
 #define IMAGE_DOS_SIGNATURE  0x5A4D      // MZ
 #define IMAGE_NT_SIGNATURE   0x00004550  // PE\0\0
+
+// float32_t / float64_t are not in the macOS SDK — define them here
+#ifndef _FLOAT32_T
+#define _FLOAT32_T
+typedef float  float32_t;
+#endif
+#ifndef _FLOAT64_T
+#define _FLOAT64_T
+typedef double float64_t;
+#endif
+
+#include "typesizes.h"
 
 #endif // WINNT_H_COMPAT

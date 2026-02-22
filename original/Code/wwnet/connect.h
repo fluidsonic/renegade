@@ -83,17 +83,17 @@ class cConnection
 		cConnection();
 		~cConnection();
 
-      void Init_As_Client(ULONG server_ip, USHORT server_port, unsigned short my_port = 0);
+      void Init_As_Client(uint32_t server_ip, USHORT server_port, unsigned short my_port = 0);
       void Init_As_Server(USHORT server_port, int max_players,
-			bool is_dedicated_server, ULONG addr = 0);
+			bool is_dedicated_server, uint32_t addr = 0);
       void Connect_Cs(cPacket & app_data);
       void Send_Packet_To_Individual(cPacket & packet, int addressee, BYTE send_flags);
       bool Have_Id() const {return LocalId != ID_UNKNOWN;}
       bool Is_Established() const;
 		void Service_Read();
 		void Service_Send(bool is_urgent = false);
-		ULONG Get_Bandwidth_Budget_Out() const {return BandwidthBudgetOut;}
-		void Set_Bandwidth_Budget_Out(ULONG bw_budget);
+		uint32_t Get_Bandwidth_Budget_Out() const {return BandwidthBudgetOut;}
+		void Set_Bandwidth_Budget_Out(uint32_t bw_budget);
       void Destroy_Connection(int rhost_id);
 		void Init_Stats();
       double Get_Threshold_Priority(int rhost_id);
@@ -145,7 +145,7 @@ class cConnection
       void Init_As_Client(LPSOCKADDR_IN p_server_address, unsigned short my_port = 0);
       bool Demultiplex_R_Or_U_Packet(cPacket * p_packet, int rhost_id);
       void Send_Accept_Sc(int new_rhost_id);
-      bool Bind(USHORT port, ULONG addr = 0);
+      bool Bind(USHORT port, uint32_t addr = 0);
       bool Receive_Packet();
 		int Low_Level_Send_Wrapper(cPacket & packet, LPSOCKADDR_IN p_address);
       int Send_Wrapper(cPacket & packet, LPSOCKADDR_IN p_address);
@@ -184,7 +184,7 @@ class cConnection
       int MaximumLatencyMs;
       int RefusalPacketSendId; // server
       int HighestRefusalPacketRcvId; // client
-		ULONG BandwidthBudgetOut;
+		uint32_t BandwidthBudgetOut;
       SList<cPacket> PacketList;
 		int ServiceCount;
 		bool IsBadConnection;

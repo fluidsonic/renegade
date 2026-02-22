@@ -63,7 +63,7 @@ public:
 //	static void		Set_Shield_Absorbsion( ArmorType armor, WarheadType warhead, float percent );
 	static float	Get_Shield_Absorbsion( ArmorType armor, WarheadType warhead );
 
-	typedef enum { 
+	typedef enum {
 		SPECIAL_DAMAGE_TYPE_NONE,
 		SPECIAL_DAMAGE_TYPE_FIRE,
 		SPECIAL_DAMAGE_TYPE_CHEM,
@@ -187,12 +187,12 @@ public:
 	float				Get_Shield_Strength_Max(void) const ;
 
 	void				Set_Shield_Type( ArmorType type );
-	unsigned long	Get_Shield_Type( void ) const 		{ return ShieldType; }
+	ArmorType	Get_Shield_Type( void ) const 		{ return ShieldType; }
 
 	// Apply Damage
 	float			Apply_Damage( const OffenseObjectClass	& offense, float scale = 1.0f, int alternate_skin = -1 );
 	float			Do_Damage( const OffenseObjectClass	& offense, float scale = 1.0f, int alternate_skin = -1 );
-	
+
 	// Request_Damage
 	void			Request_Damage( const OffenseObjectClass & offense, float scale = 1.0f );
 

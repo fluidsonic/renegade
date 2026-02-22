@@ -83,7 +83,7 @@ void MultiHUDClass::Shutdown(void)
 }
 
 //-----------------------------------------------------------------------------
-void MultiHUDClass::Render_Text(WideStringClass & text, float x, float y, ULONG color)
+void MultiHUDClass::Render_Text(WideStringClass & text, float x, float y, uint32_t color)
 {
 	if (NameRenderer) {
 		//
@@ -284,7 +284,7 @@ void MultiHUDClass::Show_Player_Names(void)
 		} else {
 			PhysicalGameObj * p_blocker = ((CombatPhysObserverClass *)raytest.CollidedPhysObj->Get_Observer())->As_PhysicalGameObj();
 	      //if (p_blocker != p_smart_obj) {
-	      if ((p_blocker == NULL) || 
+	      if ((p_blocker == NULL) ||
 				 ((p_blocker != p_smart_obj) && (p_blocker != p_vehicle))) {
 			   //
 				// The ray failed to collide with the soldier in question
@@ -310,11 +310,11 @@ void MultiHUDClass::Show_Player_Names(void)
 			//
 			WideStringClass mvp_name = The_Game()->Get_Mvp_Name();
 			if (!p_player->Get_Name().Compare_No_Case(mvp_name.Peek_Buffer())) {
-				text += L"\n";
+				text += u"\n";
 				text += TRANSLATE(IDS_MP_MVP);
 				if (The_Game()->Get_Mvp_Count() > 1) {
 					WideStringClass consecutives_text;
-					consecutives_text.Format(L" * %d", The_Game()->Get_Mvp_Count());
+					consecutives_text.Format(u" * %d", The_Game()->Get_Mvp_Count());
 					text += consecutives_text;
 				}
 			}

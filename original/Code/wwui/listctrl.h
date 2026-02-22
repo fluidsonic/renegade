@@ -236,7 +236,7 @@ public:
 	//	Public constructors/destructors
 	////////////////////////////////////////////////////////////////
 	ListEntryClass (void) :
-		Name (L""),
+		Name (u""),
 		Color (1, 1, 1),
 		UserData (0)	{}
 

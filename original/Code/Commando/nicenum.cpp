@@ -2,7 +2,7 @@
 // Filename:     nicenum.cpp
 // Author:       Tom Spencer-Smith
 // Date:         Dec 1999
-// Description:  
+// Description:
 //
 
 #include "nicenum.h"
@@ -16,11 +16,11 @@
 //
 // Class statics
 //
-ULONG		cNicEnum::NicList[];
+uint32_t		cNicEnum::NicList[];
 USHORT	cNicEnum::NumNics			= 0;
 
 //----------------------------------------------------------------------------------
-void 
+void
 cNicEnum::Init
 (
 	void
@@ -29,7 +29,7 @@ cNicEnum::Init
 
 	WSADATA wsa_data;
 	int startup_rc = ::WSAStartup(MAKEWORD(1, 1), &wsa_data);
-	if (startup_rc != 0) 
+	if (startup_rc != 0)
 	{
 		return;
 	}
@@ -37,8 +37,8 @@ cNicEnum::Init
 	//
 	// Retrieve list of nic's
 	//
-	ULONG local_addresses[MAX_NICS];
-	ULONG num_addresses = Enumerate_Nics(local_addresses, MAX_NICS);
+	uint32_t local_addresses[MAX_NICS];
+	uint32_t num_addresses = Enumerate_Nics(local_addresses, MAX_NICS);
 
 	USHORT index	= 0;
 	USHORT class_1	= 0;
@@ -47,8 +47,8 @@ cNicEnum::Init
 	//
 	// First, extract the non-internet addressable nicks, ordered on general usage.
 	//
-	ULONG lan_addresses[MAX_NICS];
-	ULONG num_lan_addresses = 0;
+	uint32_t lan_addresses[MAX_NICS];
+	uint32_t num_lan_addresses = 0;
 
 	//
 	// First, scan for 10.*.*.* addresses
@@ -67,11 +67,11 @@ cNicEnum::Init
 	//
 	// Next, scan for 192.168.*.* addresses
 	//
-	for (index = 0; index < num_addresses; index++) 
+	for (index = 0; index < num_addresses; index++)
 	{
 		class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
 		class_2 = (::ntohl(local_addresses[index]) & 0x00ff0000) >> 16;
-		
+
 		if (class_1 == 192 && class_2 == 168)
 		{
 			lan_addresses[num_lan_addresses++] = local_addresses[index];
@@ -82,11 +82,11 @@ cNicEnum::Init
 	//
 	// Next, scan for 172.16-31.*.* addresses
 	//
-	for (index = 0; index < num_addresses; index++) 
+	for (index = 0; index < num_addresses; index++)
 	{
 		class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
 		class_2 = (::ntohl(local_addresses[index]) & 0x00ff0000) >> 16;
-		
+
 		if (class_1 == 172 && class_2 >= 16 && class_2 <= 31)
 		{
 			lan_addresses[num_lan_addresses++] = local_addresses[index];
@@ -97,11 +97,11 @@ cNicEnum::Init
 	//
 	// Finally, scan for 169.254.*.* addresses (IP autoconfiguration)
 	//
-	for (index = 0; index < num_addresses; index++) 
+	for (index = 0; index < num_addresses; index++)
 	{
 		class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
 		class_2 = (::ntohl(local_addresses[index]) & 0x00ff0000) >> 16;
-		
+
 		if (class_1 == 169 && class_2 == 254)
 		{
 			lan_addresses[num_lan_addresses++] = local_addresses[index];
@@ -110,19 +110,19 @@ cNicEnum::Init
 	}
 
 	//
-	// Next, copy the Internet addressable addresses. Weed out localhost and multicast 
+	// Next, copy the Internet addressable addresses. Weed out localhost and multicast
 	// addresses.
 	//
 
-	ULONG internet_addresses[MAX_NICS];
-	ULONG num_internet_addresses = 0;
+	uint32_t internet_addresses[MAX_NICS];
+	uint32_t num_internet_addresses = 0;
 
 	for (index = 0; index < num_addresses; index++)
 	{
 		if (local_addresses[index] != 0)
 		{
 			class_1 = (::ntohl(local_addresses[index]) & 0xff000000) >> 24;
-			
+
 			if (class_1 != 127 && class_1 != 224)
 			{
 				internet_addresses[num_internet_addresses++] = local_addresses[index];
@@ -147,9 +147,9 @@ cNicEnum::Init
 	// Initialize or update PreferredLanNic if required.
 	//
 	bool is_nic_valid = false;
-	for (index = 0; index < NumNics; index++) 
+	for (index = 0; index < NumNics; index++)
 	{
-		if ((ULONG) cUserOptions::PreferredLanNic.Get() == NicList[index])
+		if ((uint32_t) cUserOptions::PreferredLanNic.Get() == NicList[index])
 		{
 			is_nic_valid = true;
 			break;
@@ -158,7 +158,7 @@ cNicEnum::Init
 
 	if (!is_nic_valid)
 	{
-		if (NumNics > 0) 
+		if (NumNics > 0)
 		{
 			cUserOptions::PreferredLanNic.Set(NicList[0]);
 		}
@@ -172,11 +172,11 @@ cNicEnum::Init
 }
 
 //---------------------------------------------------------------------------
-ULONG 
+uint32_t
 cNicEnum::Enumerate_Nics
 (
-	ULONG *	addresses, 
-	ULONG		max_nics
+	uint32_t *	addresses,
+	uint32_t		max_nics
 )
 {
 
@@ -187,16 +187,16 @@ cNicEnum::Enumerate_Nics
 	int gethostname_rc = ::gethostname(local_host_name, sizeof(local_host_name));
 
 	//
-	// Resolve hostname for local adapter addresses. 
+	// Resolve hostname for local adapter addresses.
 	// This does a DNS lookup (name resolution)
 	//
 	LPHOSTENT p_hostent = ::gethostbyname(local_host_name);
-	if (p_hostent == NULL) 
+	if (p_hostent == NULL)
 	{
 	}
 
-	ULONG num_addresses = 0;
-	while (num_addresses < max_nics && p_hostent->h_addr_list[num_addresses] != NULL) 
+	uint32_t num_addresses = 0;
+	while (num_addresses < max_nics && p_hostent->h_addr_list[num_addresses] != NULL)
 	{
 		IN_ADDR in_addr;
 		::memcpy(&in_addr, p_hostent->h_addr_list[num_addresses], sizeof(in_addr));

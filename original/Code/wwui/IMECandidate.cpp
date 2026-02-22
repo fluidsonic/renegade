@@ -385,7 +385,7 @@ bool IMECandidate::IsStartFrom1(void) const
 *
 ******************************************************************************/
 
-const wchar_t* IMECandidate::GetCandidate(unsigned long index)
+const char16_t* IMECandidate::GetCandidate(unsigned long index)
 	{
 	if (index < GetCount())
 		{
@@ -418,11 +418,11 @@ const wchar_t* IMECandidate::GetCandidate(unsigned long index)
 
 		if (mUseUnicode)
 			{
-			return ((const wchar_t*)candString);
+			return ((const char16_t*)candString);
 			}
 
-		MultiByteToWideChar(mCodePage, 0, candString, -1, mTempString, (sizeof(mTempString) / sizeof(wchar_t)));
-		mTempString[(sizeof(mTempString) / sizeof(wchar_t)) - 1] = 0;
+		MultiByteToWideChar(mCodePage, 0, candString, -1, mTempString, (sizeof(mTempString) / sizeof(char16_t)));
+		mTempString[(sizeof(mTempString) / sizeof(char16_t)) - 1] = 0;
 		return mTempString;
 		}
 	

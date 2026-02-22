@@ -15,8 +15,7 @@ class WidgetRenderOpClass;
 ** This class contains the functions needed to embed a list of debug widgets into
 ** a class.  Just call Render_Debug_Widgets inside of your class's render function.
 ** It is important that all of the runtime cost of using this system goes away in
-** a release build.  When you derive a class from this class, if you are overriding
-** the Add_xxx methods bracket your implementations and declarations with #ifdef WWDEBUG
+** a release build.
 **
 ** Notes:
 ** Most of my current uses for this class are for "transient" things so I reset the list each
@@ -30,13 +29,13 @@ class WidgetUserClass
 public:
 
 	WidgetUserClass(void);
-	~WidgetUserClass(void);	
+	~WidgetUserClass(void);
 
 	/*
 	** Debug rendering of vectors, points, boxes, etc etc.  Each frame, these objects
 	** will be rendered during PhysClass::Render and then deleted.
 	*/
-	
+
 	void				Reset_Debug_Widget_List(void)																	{}
 	void				Add_Debug_Point(const Vector3 & p,const Vector3 & color)								{}
 	void				Add_Debug_Vector(const Vector3 & p,const Vector3 & v,const Vector3 & color)	{}
@@ -48,13 +47,6 @@ public:
 protected:
 
 	void				Add_Debug_Widget(WidgetRenderOpClass * op)												{}
-
-	/*
-	** Debug widget rendering list
-	** This member, which only exists when WWDEBUG is enabled, handles the rendering
-	** of any debug widgets that this object needs.
-	*/
-
 };
 
 #endif

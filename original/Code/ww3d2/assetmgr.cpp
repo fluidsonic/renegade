@@ -406,12 +406,16 @@ bool WW3DAssetManager::Load_3D_Assets( const char * filename )
 	bool result = false;
 
 	FileClass * file = _TheFileFactory->Get_File( filename );
+	bool log = (strstr(filename, "IF_BACK") != NULL || strstr(filename, "if_back") != NULL);
+	if (log) fprintf(stderr, "[assetmgr] Load_3D_Assets('%s') file=%p avail=%d\n",
+		filename, (void*)file, file ? (int)file->Is_Available() : -1);
 	if ( file ) {
 		if ( file->Is_Available() ) {
 			result = WW3DAssetManager::Load_3D_Assets( *file );
 		}
 		_TheFileFactory->Return_File( file );
 	}
+	if (log) fprintf(stderr, "[assetmgr] Load_3D_Assets('%s') -> %s\n", filename, result ? "OK" : "FAIu");
 
 	return result;
 }
@@ -1351,7 +1355,7 @@ void WW3DAssetManager::Remove_Prototype(const char *name)
 PrototypeClass * WW3DAssetManager::Find_Prototype(const char * name)
 {
 	// Special case Null render object.  So we always have it...
-	if (stricmp(name,"NULL") == 0) {
+	if (stricmp(name,"NULu") == 0) {
 		return &(_NullPrototype);
 	}
 	

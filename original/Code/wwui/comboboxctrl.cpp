@@ -224,7 +224,7 @@ ComboBoxCtrlClass::Update_Client_Rect (void)
 	//
 	//	Determine what one character spacing would be
 	//
-	Vector2 char_size = TextRenderer.Get_Text_Extents (L"W");
+	Vector2 char_size = TextRenderer.Get_Text_Extents (u"W");
 
 	float border_width	= char_size.X + 2;
 	float border_height	= 2;
@@ -634,7 +634,7 @@ ComboBoxCtrlClass::Set_Sel (int index, bool notify)
 					DropDownCtrl.Get_String(newSel, editString);
 					EditControl.Set_Text(editString);
 				} else {
-					EditControl.Set_Text(L"");
+					EditControl.Set_Text(u"");
 				}
 			}
 

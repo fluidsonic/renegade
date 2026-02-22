@@ -25,7 +25,7 @@
 **
 ** (gth, 08/31/2000) - renamed this class to BitStreamClass (from cTypeEncoder) and
 ** cleaned it up to become the interface that all game and library code uses to
-** package up their state variables for network transmission, converted to westwood 
+** package up their state variables for network transmission, converted to westwood
 ** naming convention since it is going to propogate to a lot of other code.
 */
 
@@ -41,7 +41,7 @@ class BitStreamClass : public cBitPacker
 		UINT Get_Compression_Pc() const;
 
       //
-      // For data which may include NULL's.
+      // For data which may include NULu's.
 		// Data will not be compressed.
       //
       void Add_Raw_Data(LPCSTR data, USHORT data_size);
@@ -61,26 +61,27 @@ class BitStreamClass : public cBitPacker
 		// You may permit or disallow empty strings to be passed.
       //
       void Add_Wide_Terminated_String(const WCHAR *string, bool permit_empty = false);
-		void Get_Wide_Terminated_String (WCHAR *buffer, USHORT buffer_len, bool permit_empty = false);		
+		void Get_Wide_Terminated_String (WCHAR *buffer, USHORT buffer_len, bool permit_empty = false);
 
 		//
-		// Bool is special-cased because we know that we can always 
+		// Bool is special-cased because we know that we can always
 		// represent it as 1 bit.
 		//
 		void Add(bool value);
 		bool Get(bool & value);
 
-		// 
-		// For all other data types that we want to support, call into our internal 
-		// template function.  
+		//
+		// For all other data types that we want to support, call into our internal
+		// template function.
 		//
 		enum {NO_ENCODER = -1};
 
 		void		Add(BYTE val,int type = NO_ENCODER)							{ Internal_Add(val,type); }
 		void		Add(USHORT val,int type = NO_ENCODER)						{ Internal_Add(val,type); }
+		void		Add(char16_t val,int type = NO_ENCODER)						{ Internal_Add((USHORT)val,type); }
 		void		Add(UINT val,int type = NO_ENCODER)							{ Internal_Add(val,type); }
-#if !(defined(__clang__) && !defined(_MSC_VER))  // skip on macOS: ULONG == UINT
-		void		Add(ULONG val,int type = NO_ENCODER)						{ Internal_Add(val,type); }
+#if !(defined(__clang__) && !defined(_MSC_VER))  // skip on macOS: uint32_t == UINT
+		void		Add(uint32_t val,int type = NO_ENCODER)						{ Internal_Add(val,type); }
 #endif
 		void		Add(char val,int type = NO_ENCODER)							{ Internal_Add(val,type); }
 		void		Add(int val,int type = NO_ENCODER)							{ Internal_Add(val,type); }
@@ -88,8 +89,8 @@ class BitStreamClass : public cBitPacker
 
 		BYTE		Get(BYTE & set_val,int type = NO_ENCODER)					{ return Internal_Get(set_val,type); }
 		USHORT	Get(USHORT & set_val,int type = NO_ENCODER)				{ return Internal_Get(set_val,type); }
-#if !(defined(__clang__) && !defined(_MSC_VER))  // skip on macOS: ULONG == UINT
-		ULONG		Get(ULONG & set_val,int type = NO_ENCODER)				{ return Internal_Get(set_val,type); }
+#if !(defined(__clang__) && !defined(_MSC_VER))  // skip on macOS: uint32_t == UINT
+		uint32_t		Get(uint32_t & set_val,int type = NO_ENCODER)				{ return Internal_Get(set_val,type); }
 #endif
 		UINT		Get(UINT & set_val,int type = NO_ENCODER)					{ return Internal_Get(set_val,type); }
 		char		Get(char & set_val,int type = NO_ENCODER)					{ return Internal_Get(set_val,type); }
@@ -97,7 +98,7 @@ class BitStreamClass : public cBitPacker
 		float		Get(float & set_val,int type = NO_ENCODER)				{ return Internal_Get(set_val,type); }
 
 	private:
-		
+
 		//
 		// Add/Get for remaining atomic data types.
 		// I really wish the following 3 methods were in the source file, but
@@ -112,11 +113,11 @@ class BitStreamClass : public cBitPacker
 				cEncoderTypeEntry & entry = cEncoderList::Get_Encoder_Type_Entry(type);
 
 				//
-				// If the following assert hits then the value of the type 
+				// If the following assert hits then the value of the type
 				// parameter is unknown.
 				//
 
-				ULONG scaled_value;
+				uint32_t scaled_value;
 				bool is_in_range = entry.Scale(value, scaled_value);
 				if (!is_in_range) {
 					//
@@ -126,12 +127,12 @@ class BitStreamClass : public cBitPacker
 				Add_Bits(scaled_value, entry.Get_Bit_Precision());
 
 			} else {
-				Add_Bits(*(reinterpret_cast<ULONG *>(&value)), BIT_DEPTH(T));
+				Add_Bits(*(reinterpret_cast<uint32_t *>(&value)), BIT_DEPTH(T));
 			}
 
 			UncompressedSizeBytes += BYTE_DEPTH(T);
 		}
-		
+
 		//------------------------------------------------------------------------------------
       template<class T> T Internal_Get(T & value, int type = NO_ENCODER) {
 
@@ -140,11 +141,11 @@ class BitStreamClass : public cBitPacker
 				cEncoderTypeEntry & entry = cEncoderList::Get_Encoder_Type_Entry(type);
 
 				//
-				// If the following assert hits then the value of the type 
+				// If the following assert hits then the value of the type
 				// parameter is unknown.
 				//
 
-				ULONG u_value;
+				uint32_t u_value;
 				Get_Bits(u_value, entry.Get_Bit_Precision());
 
 				double f_value = entry.Unscale(u_value);
@@ -159,7 +160,7 @@ class BitStreamClass : public cBitPacker
 				}
 
 			} else {
-				ULONG u_value;
+				uint32_t u_value;
 				Get_Bits(u_value, BIT_DEPTH(T));
 
 				value = *(reinterpret_cast<T *>(&u_value));

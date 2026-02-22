@@ -31,7 +31,7 @@ static void Create_Hash_Name(StringClass& name, const StringClass& thumb_name)
 		my_tga_file->Read(tga_memory,size);
 		my_tga_file->Close();
 
-		StringClass pth("data\\");
+		StringClass pth("data/");
 		pth+=filename;
 		RawFileClass tmp_tga_file(pth);
 		tmp_tga_file.Create();
@@ -53,7 +53,7 @@ ThumbnailClass::ThumbnailClass(
 	unsigned original_mip_level_count,
 	WW3DFormat original_format,
 	bool allocated,
-	unsigned long date_time)
+	uint32_t date_time)
 	:
 	Manager(manager),
 	Name(name),
@@ -232,7 +232,7 @@ ThumbnailClass::~ThumbnailClass()
 void ThumbnailManagerClass::Create_Thumbnails()
 {
 	SimpleFileFactoryClass ff;
-	ff.Set_Sub_Directory("Data\\");
+	ff.Set_Sub_Directory("Data/");
 
 	MixFileFactoryClass mix(MixFileName, &ff);
 	FileFactoryClass* old_file_factory=_TheFileFactory;
@@ -291,8 +291,8 @@ void ThumbnailManagerClass::Load()
 					int original_mip_level_count;
 					WW3DFormat original_format;
 					int name_len;
-					unsigned long date_time;
-					thumb_file->Read(&date_time,sizeof(unsigned long));
+					uint32_t date_time;
+					thumb_file->Read(&date_time,sizeof(uint32_t));
 					thumb_file->Read(&offset,sizeof(int));
 					thumb_file->Read(&width,sizeof(int));
 					thumb_file->Read(&height,sizeof(int));
@@ -401,7 +401,7 @@ void ThumbnailManagerClass::Save(bool force)
 		int original_height=thumb->Get_Original_Texture_Height();
 		int original_mip_level_count=thumb->Get_Original_Texture_Mip_Level_Count();
 		WW3DFormat original_format=thumb->Get_Original_Texture_Format();
-		unsigned long date_time=thumb->Get_Date_Time();
+		uint32_t date_time=thumb->Get_Date_Time();
 
 		thumb_file->Write(&date_time,sizeof(unsigned long));
 		thumb_file->Write(&offset,sizeof(int));
@@ -531,7 +531,7 @@ void ThumbnailManagerClass::Remove_From_Hash(ThumbnailClass* thumb)
 void ThumbnailManagerClass::Update_Thumbnail_File(const char* mix_file_name,bool display_message_box)
 {
 	SimpleFileFactoryClass ff;
-	ff.Set_Sub_Directory("Data\\");
+	ff.Set_Sub_Directory("Data/");
 
 	StringClass thumb_file_name(mix_file_name,true);
 	int len=thumb_file_name.Get_Length();
@@ -555,9 +555,9 @@ void ThumbnailManagerClass::Update_Thumbnail_File(const char* mix_file_name,bool
 		return;
 	}
 
-	unsigned long mix_date_time=mix_file->Get_Date_Time();
+	uint32_t mix_date_time=mix_file->Get_Date_Time();
 	if (thumb_file->Is_Available()) {
-		unsigned long thumb_date_time=thumb_file->Get_Date_Time();
+		uint32_t thumb_date_time=thumb_file->Get_Date_Time();
 		if (mix_date_time!=thumb_date_time) {
 			thumb_file->Delete();
 		}
@@ -617,7 +617,7 @@ void ThumbnailManagerClass::Pre_Init(bool display_message_box)
 	char cur_dir[256];
 	GetCurrentDirectory(sizeof(cur_dir),cur_dir);
 	StringClass new_dir(cur_dir,true);
-	new_dir+="\\Data";
+	new_dir+="/Data";
 	SetCurrentDirectory(new_dir);
 
 	WIN32_FIND_DATA find_data;

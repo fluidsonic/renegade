@@ -133,8 +133,8 @@ public:
 	void					Increment_Import_State_Count (void)				{ ImportStateCount ++; }
 	int					Get_Import_State_Count (void)						{ return ImportStateCount; }
 	void					Reset_Last_Clientside_Update_Time (void);
-	void					Set_Last_Clientside_Update_Time (ULONG time);
-	ULONG					Get_Last_Clientside_Update_Time (void)			{ return LastClientsideUpdateTime; }
+	void					Set_Last_Clientside_Update_Time (uint32_t time);
+	uint32_t					Get_Last_Clientside_Update_Time (void)			{ return LastClientsideUpdateTime; }
 	int					Get_Clientside_Update_Frequency(void);
 
 	//
@@ -199,8 +199,8 @@ private:
 
 	BYTE					ClientStatus[MAX_CLIENT_COUNT];
 	int					ImportStateCount;
-	ULONG					LastClientsideUpdateTime;
-	ULONG					ClientsideUpdateFrequencySampleStartTime;
+	uint32_t					LastClientsideUpdateTime;
+	uint32_t					ClientsideUpdateFrequencySampleStartTime;
 	int					ClientsideUpdateFrequencySampleCount;
 	int					ClientsideUpdateRate;
 	bool					IsDeletePending;

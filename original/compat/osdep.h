@@ -35,19 +35,14 @@
 #define _strnicmp strncasecmp
 #endif
 
-// Wide string case-insensitive comparison (Windows-specific names missing on macOS)
-#include <wchar.h>
-#ifndef wcsicmp
-#define wcsicmp   wcscasecmp
-#endif
-#ifndef wcsnicmp
-#define wcsnicmp  wcsncasecmp
-#endif
-#ifndef _wcsicmp
-#define _wcsicmp  wcscasecmp
-#endif
-#ifndef _wcsnicmp
-#define _wcsnicmp wcsncasecmp
+// Wide string case-insensitive comparison — char16_t versions via c16s* functions
+#include "c16string.h"
+#ifndef WCSICMP_COMPAT_DEFINED
+#define WCSICMP_COMPAT_DEFINED
+inline int wcsicmp (const char16_t* a, const char16_t* b)         { return c16sicmp(a, b); }
+inline int wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16snicmp(a, b, n); }
+inline int _wcsicmp (const char16_t* a, const char16_t* b)        { return c16sicmp(a, b); }
+inline int _wcsnicmp(const char16_t* a, const char16_t* b, size_t n){ return c16snicmp(a, b, n); }
 #endif
 
 // snprintf (available on macOS but sometimes used with _snprintf)

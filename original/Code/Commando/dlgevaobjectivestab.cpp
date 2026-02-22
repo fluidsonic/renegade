@@ -167,7 +167,7 @@ EvaObjectivesTabClass::Fill_Objectives_List (void)
 					//
 					//	Strip off the line delimiter (if necessary)
 					//
-					if (text.Get_Length () > 0 && text[text.Get_Length () - 1] == L'\n') {
+					if (text.Get_Length () > 0 && text[text.Get_Length () - 1] == u'\n') {
 						text.Erase (text.Get_Length () - 1, 1);
 					}
 

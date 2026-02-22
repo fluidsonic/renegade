@@ -40,7 +40,7 @@ ControlSaveLoadMenuClass::On_Init_Dialog (void)
 		//
 		//	Configure the column
 		//
-		list_ctrl->Add_Column (L"", 1.0F, Vector3 (1, 1, 1));		
+		list_ctrl->Add_Column (u"", 1.0F, Vector3 (1, 1, 1));		
 		
 		//
 		//	Loop over all the configurations
@@ -436,7 +436,7 @@ ControlSaveLoadMenuClass::On_ListCtrl_Sel_Change
 		//
 		//	Clear the name of the current configuration
 		//
-		Set_Dlg_Item_Text (IDC_NAME_EDIT, L"");
+		Set_Dlg_Item_Text (IDC_NAME_EDIT, u"");
 	}
 
 	//

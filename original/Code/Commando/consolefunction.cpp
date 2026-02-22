@@ -156,7 +156,7 @@ public:
 	virtual	const char * Get_Help( void )		{ return "SET_BW_BUDGET_OUT <bps> - set total bps budget out."; }
 
 	virtual	void Activate( const char * input ) {
-      ULONG bbo = (ULONG) ::atol(input);
+      uint32_t bbo = (uint32_t) ::atol(input);
 		if (bbo > 0) {
 
       	if (cNetwork::I_Am_Server()) {
@@ -520,7 +520,7 @@ public:
 		int recipient_id = atoi(input);
 
 		WideStringClass msg;
-		msg.Format(L"Hola amigo!");
+		msg.Format(u"Hola amigo!");
 
 		if (cNetwork::I_Am_Client()) {
 			cCsTextObj * p_message = new cCsTextObj;
@@ -1207,7 +1207,7 @@ public:
 		   Print(Get_Help());
 		} else {
 
-			ULONG ip = p_player->Get_Ip_Address();
+			uint32_t ip = p_player->Get_Ip_Address();
 			HOSTENT * p_host = ::gethostbyaddr((char *) &ip, sizeof(ip), AF_INET);
 			char resolved_ip[100] = "";
 			if (p_host != NULL) {

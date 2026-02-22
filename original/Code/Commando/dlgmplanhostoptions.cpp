@@ -170,7 +170,7 @@ MPLanHostOptionsMenuClass::On_Command (int ctrl_id, int message_id, DWORD param)
 							Start_Game(The_Game());
 						} else {
 							WideStringClass errorMsg(0, true);
-							errorMsg.Format(L"%s\n\n%s", TRANSLATE(IDS_MENU_TEXT330), (const WCHAR*)outMsg);
+							errorMsg.Format(u"%s\n\n%s", TRANSLATE(IDS_MENU_TEXT330), (const WCHAR*)outMsg);
 							DlgMsgBox::DoDialog(TRANSLATE(IDS_MENU_TEXT329), errorMsg);
 						}
 					}
@@ -276,9 +276,9 @@ MPLanHostBasicOptionsTabClass::On_Init_Dialog (void)
 
 	if (nic_combobox != NULL) {
 
-		ULONG * nics = cNicEnum::Get_Nics();
+		uint32_t * nics = cNicEnum::Get_Nics();
 		int nic_count = cNicEnum::Get_Num_Nics();
-		ULONG preferred_nick = cUserOptions::PreferredLanNic.Get();
+		uint32_t preferred_nick = cUserOptions::PreferredLanNic.Get();
 
 		int current_index = -1;
 
@@ -329,7 +329,7 @@ void MPLanHostBasicOptionsTabClass::InitSideChoiceCombo(int sidePref)
 
 	if (combo) {
 		//(gth) Renegade day 120 Patch: re-translate these strings each time!
-		struct {const wchar_t* TeamName; int TeamID;} _teams[] = {
+		struct {const char16_t* TeamName; int TeamID;} _teams[] = {
 			{TRANSLATE (IDS_MENU_AUTO_TEAM), PLAYERTYPE_RENEGADE},
 			{TRANSLATE (IDS_MENU_TEXT933), PLAYERTYPE_GDI},
 			{TRANSLATE (IDS_MENU_TEXT934), PLAYERTYPE_NOD},
@@ -390,7 +390,7 @@ MPLanHostBasicOptionsTabClass::On_Apply (void)
 		if (nic_combobox != NULL) {
 			int curr_sel = nic_combobox->Get_Curr_Sel ();
 			if (curr_sel >= 0) {
-				ULONG * nics = cNicEnum::Get_Nics();
+				uint32_t * nics = cNicEnum::Get_Nics();
 				cUserOptions::PreferredLanNic.Set(nics[curr_sel]);
 				The_Game()->Set_Ip_Address(nics[curr_sel]);
 			}
@@ -687,7 +687,7 @@ MPLanHostMapCycleOptionsTabClass::On_Init_Dialog (void)
 	//
 	ListCtrlClass *list_ctrl = (ListCtrlClass *)Get_Dlg_Item (IDC_AVAILABLE_MAP_LIST_CTRL);
 	if (list_ctrl != NULL) {
-		list_ctrl->Add_Column (L"", 1.0F, Vector3 (1, 1, 1));
+		list_ctrl->Add_Column (u"", 1.0F, Vector3 (1, 1, 1));
 	}
 
 	//
@@ -695,7 +695,7 @@ MPLanHostMapCycleOptionsTabClass::On_Init_Dialog (void)
 	//
 	list_ctrl = (ListCtrlClass *)Get_Dlg_Item (IDC_MAP_CYCLE_LIST_CTRL);
 	if (list_ctrl != NULL) {
-		list_ctrl->Add_Column (L"", 1.0F, Vector3 (1, 1, 1));
+		list_ctrl->Add_Column (u"", 1.0F, Vector3 (1, 1, 1));
 	}
 
 	//
@@ -844,7 +844,7 @@ MPLanHostMapCycleOptionsTabClass::Build_Mod_Package_List (void)
 	//
 	//	Add a default entry to the list
 	//
-	combobx_ctrl->Add_String (L"<None>");
+	combobx_ctrl->Add_String (u"<None>");
 
 	//
 	//	Loop over and add all the mod packages to the combobox
@@ -1177,9 +1177,9 @@ MPLanHostMapCycleOptionsTabClass::Build_Map_List (void)
 
 	StringClass file_filter;
 	if (The_Game()->Is_Cnc()) {
-		file_filter.Format("data\\c&c_*.mix");
+		file_filter.Format("data/c&c_*.mix");
 	} else {
-		file_filter.Format("data\\mp_*.mix");
+		file_filter.Format("data/mp_*.mix");
 	}
 
 	for (file_find = ::FindFirstFile (file_filter, &find_info);

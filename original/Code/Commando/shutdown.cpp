@@ -214,84 +214,6 @@ void Get_Compact_Detail_String(StringClass& str)
 	}
 }
 
-static class SysInfoCopyThreadClass : public ThreadClass
-{
-public:
-	StringClass String;
-	StringClass Filename;
-
-	SysInfoCopyThreadClass()
-		:
-		ThreadClass("SysInfoCopyThread", &Exception_Handler) {}
-
-	void Thread_Function()
-	{
-		DWORD written;
-		HANDLE file = CreateFile(Filename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
-				FILE_ATTRIBUTE_NORMAL, NULL);
-		if (INVALID_HANDLE_VALUE != file) {
-			WriteFile(file, String, strlen(String), &written, NULL);
-			CloseHandle(file);
-		}
-	}
-} SysInfoCopyThread;
-
-// For debug purposes, log system information to \\Mordane\marketin\transfer\users\Jani\SYSINFO
-static void Log_System_Information()
-{
-	if (!DX8Wrapper::Is_Initted()) {
-		return;
-	}
-	if (DX8Wrapper::Get_Current_Caps() == NULL) {
-		return;
-	}
-
-	char name[MAX_COMPUTERNAME_LENGTH + 1];
-	DWORD size = sizeof(name);
-	::GetComputerName(name, &size);
-
-	char user[UNLEN+1];
-	DWORD userlen=sizeof(user);
-	::GetUserName(user, &userlen);
-
-	StringClass string; // This will be a long string so don't allocate locally!
-	string.Format("Computer name: %s\r\nUser name: %s\r\n\r\n",name,user);
-	if (DX8Wrapper::Get_Current_Caps()) {
-		string+=DX8Wrapper::Get_Current_Caps()->Get_Log();
-	}
-	string+="\r\n";
-	string+="Compact tab-delimited version:\r\n";
-	StringClass tmp;	// This will be long so no local alloc needed
-
-	if (DX8Wrapper::Get_Current_Caps()) {
-		string+=DX8Wrapper::Get_Current_Caps()->Get_Compact_Log();
-	}
-	Get_Compact_Detail_String(tmp);
-	string+=tmp;
-	SystemInfoLog::Get_Compact_Log(tmp);
-	string+=tmp;
-	string+="\r\n";
-
-	Get_Detail_String(tmp);
-	string+=tmp;
-	string+="\r\n";
-
-	SystemInfoLog::Get_Log(tmp);
-	string+=tmp;
-
-	// Write log to network folder
-	DWORD written;
-	HANDLE file;
-
-	// Write log to local work folder
-	file = CreateFile("sysinfo.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
-			FILE_ATTRIBUTE_NORMAL, NULL);
-	if (INVALID_HANDLE_VALUE != file) {
-		WriteFile(file, string, strlen(string), &written, NULL);
-		CloseHandle(file);
-	}
-}
-
 /*
 **
 */
@@ -302,8 +224,6 @@ void Debug_Refs(void);
 */
 void Game_Shutdown(void)
 {
-	Log_System_Information();
-
 	BINKMovie::Shutdown();
 
 	CampaignManager::Shutdown();
@@ -390,10 +310,6 @@ void Game_Shutdown(void)
 	if ( registry.Is_Valid() ) {
 		registry.Set_Int( VALUE_NAME_APPLICATION_CRASH_VERSION, 0 );
 	}
-
-#ifdef FREEDEDICATEDSERVER
-	Copy_Logs(0);
-#endif //FREEDEDICATEDSERVER
 
 	return ;
 }

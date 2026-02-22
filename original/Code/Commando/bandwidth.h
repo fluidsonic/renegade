@@ -31,7 +31,7 @@ class	cBandwidth {
       cBandwidth(void);
       ~cBandwidth(void) {};
 
-		static ULONG						Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type);
+		static uint32_t						Get_Bandwidth_Bps_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type);
 		static const WCHAR *	Get_Bandwidth_String_From_Type(BANDWIDTH_TYPE_ENUM bandwidth_type);
 		static BANDWIDTH_TYPE_ENUM		Get_Bandwidth_Type_From_String(LPCSTR bandwidth_string);
 };

@@ -97,7 +97,7 @@ protected:
 	bool IsIMEAllowed(void) const;
 
 	void Set_IME_Typing_Text_Pos(void);
-	void Show_IME_Typing_Text(const wchar_t* text);
+	void Show_IME_Typing_Text(const char16_t* text);
 	void Hide_IME_Typing_Text(void);
 	void PositionCandidateList(void);
 

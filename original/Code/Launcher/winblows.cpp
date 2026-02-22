@@ -74,7 +74,7 @@ int Print_WM(UINT message,char *out)
   switch(message)
   {
     case WM_NULL:
-      sprintf(out,"WM_NULL");
+      sprintf(out,"WM_NULu");
       break;
     case WM_CREATE:
       sprintf(out,"WM_CREATE");

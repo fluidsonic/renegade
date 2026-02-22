@@ -106,8 +106,8 @@ void SimpleFileFactoryClass::Prepend_Sub_Directory( const char * sub_directory )
 	// Ensure sub_directory ends with a slash, and append a semicolon
 	char temp_sub_dir[1024];
 	strcpy(temp_sub_dir, sub_directory);
-	if (temp_sub_dir[sub_len - 1] != '\\') {
-		temp_sub_dir[sub_len] = '\\';
+	if (temp_sub_dir[sub_len - 1] != '/') {
+		temp_sub_dir[sub_len] = '/';
 		temp_sub_dir[sub_len + 1] = 0;
 		sub_len++;
 	}
@@ -139,8 +139,8 @@ void SimpleFileFactoryClass::Append_Sub_Directory( const char * sub_directory )
 	// Ensure sub_directory ends with a slash
 	char temp_sub_dir[1024];
 	strcpy(temp_sub_dir, sub_directory);
-	if (temp_sub_dir[sub_len - 1] != '\\') {
-		temp_sub_dir[sub_len] = '\\';
+	if (temp_sub_dir[sub_len - 1] != '/') {
+		temp_sub_dir[sub_len] = '/';
 		temp_sub_dir[sub_len + 1] = 0;
 		sub_len++;
 	}
@@ -193,7 +193,9 @@ FileClass * SimpleFileFactoryClass::Get_File( char const *filename )
 	// concatenated which may not produce reasonable results.
 	StringClass stripped_name(true);
 	if (IsStripPath) {
-		const char * ptr = ::strrchr( filename, '\\' );
+		const char* lastFwd = ::strrchr(filename, '/');
+		const char* lastBack = ::strrchr(filename, '\\');
+		const char* ptr = (lastBack > lastFwd) ? lastBack : lastFwd;
 
 		if (ptr != 0) {
 			ptr++;

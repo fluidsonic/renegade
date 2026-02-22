@@ -108,22 +108,22 @@ DECLARE_SCRIPT (MTU_Tutorial_Controller, "")
 		GameObject * course_gate = Commands->Find_Object (MTU_GATE_01);
 		if (course_gate)
 		{
-			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIL", 0);
+			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIu", 0);
 		}
 		course_gate = Commands->Find_Object (MTU_GATE_02);
 		if (course_gate)
 		{
-			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIL", 0);
+			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIu", 0);
 		}
 		course_gate = Commands->Find_Object (MTU_GATE_03);
 		if (course_gate)
 		{
-			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIL", 0);
+			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIu", 0);
 		}
 		course_gate = Commands->Find_Object (MTU_GATE_04);
 		if (course_gate)
 		{
-			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIL", 0);
+			Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIu", 0);
 		}
 	}
 
@@ -2285,12 +2285,12 @@ DECLARE_SCRIPT (MTU_Tutorial_Instructor, "")
 					GameObject * course_gate = Commands->Find_Object (MTU_GATE_01);
 					if (course_gate)
 					{
-						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIL", false, NULL, 0.0f, 2.0f);
+						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIu", false, NULL, 0.0f, 2.0f);
 					}
 					course_gate = Commands->Find_Object (MTU_GATE_02);
 					if (course_gate)
 					{
-						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIL", false, NULL, 0.0f, 2.0f);
+						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIu", false, NULL, 0.0f, 2.0f);
 					}
 					break;
 				}
@@ -2302,7 +2302,7 @@ DECLARE_SCRIPT (MTU_Tutorial_Instructor, "")
 					/*GameObject * course_gate = Commands->Find_Object (MTU_GATE_02);
 					if (course_gate)
 					{
-						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIL", false, NULL, 0.0f, 2.0f);
+						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIu", false, NULL, 0.0f, 2.0f);
 					}*/
 					break;
 				}
@@ -2327,7 +2327,7 @@ DECLARE_SCRIPT (MTU_Tutorial_Instructor, "")
 					GameObject * course_gate = Commands->Find_Object (MTU_GATE_03);
 					if (course_gate)
 					{
-						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIL", false, NULL, 0.0f, 2.0f);
+						Commands->Set_Animation (course_gate, "CHT_JAIL.CHT_JAIu", false, NULL, 0.0f, 2.0f);
 					}
 					break;
 				}
@@ -3256,7 +3256,7 @@ DECLARE_SCRIPT (MTU_GDI_Soldier, "")
 				GameObject * course_gate = Commands->Find_Object (MTU_GATE_04);
 				if (course_gate)
 				{
-					Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIL", 1);
+					Commands->Set_Animation_Frame (course_gate, "CHT_JAIL.CHT_JAIu", 1);
 					ActionParamsStruct params;
 					params.Set_Basic(this, 100, MTU_ACTION_GATEGUARD_OUTSIDE);
 					params.Set_Movement(Vector3(-20.148f,-19.637f,0.0f), WALK, 1.0f);

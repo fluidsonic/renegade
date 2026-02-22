@@ -27,8 +27,8 @@ inline HRESULT CoCreateInstance(const GUID& clsid, void* outer, DWORD context,
 
 // IStream (minimal stub for OLE streaming)
 struct IStream : public IUnknown {
-    virtual HRESULT Read(void* buf, ULONG cb, ULONG* read) = 0;
-    virtual HRESULT Write(const void* buf, ULONG cb, ULONG* written) = 0;
+    virtual HRESULT Read(void* buf, uint32_t cb, uint32_t* read) = 0;
+    virtual HRESULT Write(const void* buf, uint32_t cb, uint32_t* written) = 0;
     virtual HRESULT Seek(LARGE_INTEGER dlibMove, DWORD origin, ULARGE_INTEGER* pos) = 0;
     virtual HRESULT SetSize(ULARGE_INTEGER libNewSize) = 0;
     virtual HRESULT CopyTo(IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* read, ULARGE_INTEGER* written) = 0;

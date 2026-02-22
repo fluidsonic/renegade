@@ -5,27 +5,29 @@
 #include "rawfile.h"
 #include "win.h"
 #include "bittype.h"
+#include <stdint.h>
 
 /*
-**
+** On-disk format uses 32-bit integers (Windows DWORD/long).
+** On macOS arm64, sizeof(long)==8, so we must use int32_t for on-disk structs.
 */
 typedef struct
 {
 	char	signature[4];
-	long	header_offset;
-	long	names_offset;
+	int32_t	header_offset;
+	int32_t	names_offset;
 
 } MIXFILE_HEADER;
 
 typedef struct
 {
-	long	file_count;
+	int32_t	file_count;
 
 } MIXFILE_DATA_HEADER;
 
 /*
 **
-*/					
+*/
 MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactoryClass * factory )	:
 	FileCount (0),
 	NamesOffset (0),
@@ -34,7 +36,7 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 	Factory (NULL),
 	IsModified (false)
 {
-//	
+//
 	MixFilename	= mix_filename;
 	Factory		= factory;
 	FilenameList.Set_Growth_Step (1000);
@@ -71,7 +73,7 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 			file->Seek( header.header_offset, SEEK_SET );
 			IsValid = ( file->Read( &FileCount, sizeof( FileCount ) ) == sizeof( FileCount ) );
 		}
-		
+
 		//
 		//	Read the array of data headers
 		//
@@ -89,11 +91,14 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 			NamesOffset	= header.names_offset;
 		} else {
 			FileInfo.Resize(0);
-		}	
+		}
 
 		factory->Return_File( file );
 
+		fprintf(stderr, "[mixfile] '%s' -> IsValid=%d FileCount=%d\n",
+			mix_filename, (int)IsValid, (int)FileCount);
 	} else {
+		fprintf(stderr, "[mixfile] '%s' -> file NULL or unavailable\n", mix_filename);
 	}
 }
 
@@ -121,7 +126,7 @@ bool	MixFileFactoryClass::Build_Filename_List (DynamicVectorClass<StringClass> &
 		//
 		file->Seek (NamesOffset, SEEK_SET);
 		retval = true;
-		
+
 		//
 		//	Read the count of files
 		//
@@ -134,19 +139,19 @@ bool	MixFileFactoryClass::Build_Filename_List (DynamicVectorClass<StringClass> &
 			bool keep_going = true;
 			for (int index = 0; index < file_count && keep_going; index ++) {
 				keep_going = false;
-				
+
 				//
 				//	Get the length of the filename
 				//
 				uint8 name_len = 0;
 				if (file->Read( &name_len, sizeof( name_len ) ) == sizeof( name_len )) {
-					
+
 					//
 					//	Read the filename
 					//
 					StringClass filename;
 					if (file->Read( filename.Get_Buffer( name_len ), name_len ) == name_len ) {
-						
+
 						//
 						//	Add the filename to our list
 						//
@@ -171,12 +176,12 @@ FileClass * MixFileFactoryClass::Get_File( char const *filename )
 	if ( FileInfo.Length() == 0 ) {
 		return NULL;
 	}
-//	
+//
 
 	RawFileClass *file = NULL;
 
 	//	Create the key block that will be used to binary search for the file.
-	unsigned long crc = CRC_Stringi( filename );
+	uint32_t crc = (uint32_t)CRC_Stringi( filename );
 
 	//	Binary search for the file in this mixfile. If it is found, then create the file
 	FileInfoStruct * info = NULL;
@@ -195,17 +200,19 @@ FileClass * MixFileFactoryClass::Get_File( char const *filename )
 		   base = tryptr + 1;
 			stride -= pivot + 1;
 		}
-	}		
+	}
 
 	if ( info != NULL) {
-//		
 		file = (RawFileClass *)Factory->Get_File( MixFilename );
 		if ( file ) {
 			file->Bias( BaseOffset + info->Offset, info->Size );
 		}
-//		
 	} else {
-//		
+		static unsigned s_miss_count = 0;
+		if (++s_miss_count <= 50) {
+			fprintf(stderr, "[mixfile] MISS #%u in '%s': '%s' (crc=0x%08X)\n",
+				s_miss_count, (const char*)MixFilename, filename, (unsigned)crc);
+		}
 	}
 
 	return file;
@@ -325,7 +332,7 @@ MixFileFactoryClass::Flush_Changes (void)
 	//
 	//	Reset the lists
 	//
-	IsModified = false;	
+	IsModified = false;
 	PendingAddFileList.Delete_All ();
 	return ;
 }
@@ -340,7 +347,7 @@ MixFileFactoryClass::Get_Temp_Filename (const char *path, StringClass &full_path
 
 	StringClass temp_path	= path;
 	temp_path					+= "_tmpmix";
-	
+
 	//
 	//	Try to find a unique temp filename
 	//
@@ -376,7 +383,7 @@ MixFileCreator::MixFileCreator( const char * filename )
 	}
 }
 
-int MixFileCreator::File_Info_Compare(const void * a, const void * b) 
+int MixFileCreator::File_Info_Compare(const void * a, const void * b)
 {
 	unsigned int CRCA = ((FileInfoStruct*)a)->CRC;
 	unsigned int CRCB = ((FileInfoStruct*)b)->CRC;
@@ -406,7 +413,7 @@ MixFileCreator::~MixFileCreator( void )
 			MixFile->Write( &FileInfo[i].CRC, 4 );
 			MixFile->Write( &FileInfo[i].Offset, 4 );
 			MixFile->Write( &FileInfo[i].Size, 4 );
-//			
+//
 		}
 
 		// ---------------------------------------
@@ -535,7 +542,7 @@ void	Add_Files( const char * dir, MixFileCreator & mix )
 	HANDLE hfile_find;
 	WIN32_FIND_DATA find_info = {0};
 	StringClass path;
-	path.Format( "data\\makemix\\%s*.*", dir );
+	path.Format( "data/makemix/%s*.*", dir );
 
 	for (hfile_find = ::FindFirstFile( path, &find_info);
 		 (hfile_find != INVALID_HANDLE_VALUE) && bcontinue;
@@ -543,23 +550,23 @@ void	Add_Files( const char * dir, MixFileCreator & mix )
 		if ( find_info.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) {
 			if ( find_info.cFileName[0] != '.' ) {
 				StringClass	path;
-				path.Format( "%s%s\\", dir, find_info.cFileName );
+				path.Format( "%s%s/", dir, find_info.cFileName );
 				Add_Files( path, mix );
 			}
 		} else {
 			StringClass name;
 			name.Format( "%s%s", dir, find_info.cFileName );
 			StringClass	source;
-			source.Format( "makemix\\%s", (const char*)name );
+			source.Format( "makemix/%s", (const char*)name );
 			mix.Add_File( source, name );
-//			
+//
 		}
 	}
 }
 
 void	Setup_Mix_File( void )
 {
-	_SimpleFileFactory.Set_Sub_Directory( "DATA\\" );
+	_SimpleFileFactory.Set_Sub_Directory( "DATA/" );
 //	_SimpleFileFactory.Set_Strip_Path( true );
 
 	{

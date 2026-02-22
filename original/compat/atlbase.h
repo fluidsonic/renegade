@@ -10,8 +10,8 @@
 #define __IUnknown_INTERFACE_DEFINED__
 struct IUnknown {
     virtual HRESULT QueryInterface(const GUID& riid, void** ppvObject) = 0;
-    virtual ULONG AddRef() = 0;
-    virtual ULONG Release() = 0;
+    virtual uint32_t AddRef() = 0;
+    virtual uint32_t Release() = 0;
     virtual ~IUnknown() {}
 };
 #endif
@@ -47,12 +47,12 @@ extern CAtlModule* _pAtlModule;
 
 // USES_CONVERSION macro stub
 #define USES_CONVERSION
-#define A2W(x) (L"")
+#define A2W(x) (u"")
 #define W2A(x) ("")
 #define T2A(x) (x)
 #define A2T(x) (x)
 #define OLE2T(x) ("")
-#define T2OLE(x) (L"")
+#define T2OLE(x) (u"")
 
 // ATL string conversion macros
 #define CA2CT(x)  (x)

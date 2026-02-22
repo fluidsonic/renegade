@@ -1,4 +1,5 @@
 #include "hlod.h"
+#include <stdio.h>
 #include "assetmgr.h"
 #include "hmdldef.h"
 #include "w3derr.h"
@@ -1732,7 +1733,7 @@ void HLodClass::Include_NULL_Lod(bool include)
 {
 	if ((include == false) && Is_NULL_Lod_Included ()) {
 
-		// Free the 'NULL' object's stored information
+		// Free the 'NULu' object's stored information
 		int index = 0;
 		for (int model = 0; model < Lod[index].Count (); model++) {
 
@@ -1768,7 +1769,7 @@ void HLodClass::Include_NULL_Lod(bool include)
 	} else if (include && (Is_NULL_Lod_Included () == false)) {
 
 		// Tag the NULL render object onto the end
-		RenderObjClass *null_object = WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("NULL");
+		RenderObjClass *null_object = WW3DAssetManager::Get_Instance ()->Create_Render_Obj ("NULu");
 		if (null_object != NULL) {
 
 			// Resize the lod array
@@ -1915,6 +1916,13 @@ int HLodClass::Get_Num_Polys(void) const
 void HLodClass::Render(RenderInfoClass & rinfo)
 {
 	int i;
+
+	static int _hlod_log_n = 0;
+	if (_hlod_log_n < 5 && strstr(Get_Name(), "IF_B") != nullptr) {
+		_hlod_log_n++;
+		fprintf(stderr, "[hlod] Render(%s) not_hidden=%d lod=%d subobjs=%d\n",
+			Get_Name(), (int)Is_Not_Hidden_At_All(), CurLod, Lod[CurLod].Count());
+	}
 
 	if (Is_Not_Hidden_At_All() == false) {
 		return;

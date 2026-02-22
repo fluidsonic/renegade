@@ -70,10 +70,10 @@ typedef void* PGETFRAME;
 inline HRESULT AVIFileInit(void) { return S_OK; }
 inline void    AVIFileExit(void) {}
 inline HRESULT AVIFileOpen(PAVIFILE*, const char*, UINT, void*) { return E_NOTIMPL; }
-inline ULONG   AVIFileRelease(PAVIFILE) { return 0; }
+inline uint32_t   AVIFileRelease(PAVIFILE) { return 0; }
 inline HRESULT AVIFileGetStream(PAVIFILE, PAVISTREAM*, DWORD, LONG) { return E_NOTIMPL; }
 inline HRESULT AVIFileCreateStream(PAVIFILE, PAVISTREAM*, void*) { return E_NOTIMPL; }
-inline ULONG   AVIStreamRelease(PAVISTREAM) { return 0; }
+inline uint32_t   AVIStreamRelease(PAVISTREAM) { return 0; }
 inline HRESULT AVIStreamInfo(PAVISTREAM, LPAVISTREAMINFOA, LONG) { return E_NOTIMPL; }
 inline LONG    AVIStreamStart(PAVISTREAM) { return 0; }
 inline LONG    AVIStreamLength(PAVISTREAM) { return 0; }

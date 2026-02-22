@@ -72,6 +72,12 @@ DialogMgrClass::Initialize (const char *stylemgr_ini)
 void
 DialogMgrClass::Shutdown (void)
 {
+	Internal_Set_Active_Dialog (NULL);
+
+	TransitionDialog = NULL;
+	PendingActiveDialog	= NULL;
+	REF_PTR_RELEASE(Transition);
+
 	//
 	//	Remove all the dialogs from our list
 	//
@@ -81,8 +87,6 @@ DialogMgrClass::Shutdown (void)
 	StyleMgrClass::Shutdown ();
 	MouseMgrClass::Shutdown ();
 	ToolTipMgrClass::Shutdown ();
-
-	Set_Active_Dialog (NULL);
 
 	delete[] TestArray;
 	TestArray=NULL;
@@ -904,7 +908,7 @@ DialogMgrClass::Rollback (DialogBaseClass *dialog)
 	return ;
 }
 
-void DialogMgrClass::Show_IME_Message(const wchar_t* message, uint32 duration)
+void DialogMgrClass::Show_IME_Message(const char16_t* message, uint32 duration)
 {
 	if (mIMEMessage == NULL) {
 		mIMEMessage = new ToolTipClass;

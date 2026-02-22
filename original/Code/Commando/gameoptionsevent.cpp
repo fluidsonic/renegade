@@ -102,8 +102,8 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 	//
 	// TSS103001...n.b. need test that Find_Map_Name succeeds...
 	//
-	ULONG mod_name_crc = packet.Get(mod_name_crc);
-	ULONG map_name_crc = packet.Get(map_name_crc);
+	uint32_t mod_name_crc = packet.Get(mod_name_crc);
+	uint32_t map_name_crc = packet.Get(map_name_crc);
 
 	// Find the mod and map names from their CRC
 	StringClass mod_name(0, true);
@@ -121,7 +121,7 @@ cGameOptionsEvent::Import_Creation(BitStreamClass & packet)
 				act = false;
 			}
 			WideStringClass tval;
-			tval.Format(L"%s  %s", TRANSLATE(IDS_MP_CONNECTION_REFUSED_BY_APPLICATION), 
+			tval.Format(u"%s  %s", TRANSLATE(IDS_MP_CONNECTION_REFUSED_BY_APPLICATION),
 				TRANSLATE(IDS_MENU_MISSING_MAP));
 			DlgMPConnectionRefused::DoDialog(tval, false);
 		}

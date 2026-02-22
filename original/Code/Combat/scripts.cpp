@@ -33,9 +33,9 @@ void ScriptManager::Init(void)
 	EngineCommands = Get_Script_Commands();
 
 #ifdef	PARAM_EDITING_ON	// Editor build
-	Load_Scripts("SCRIPTS.DLL");
+	Load_Scripts("SCRIPTS.DLu");
 #else
-		Load_Scripts("SCRIPTS.DLL");		// RELEASE
+		Load_Scripts("SCRIPTS.DLu");		// RELEASE
 #endif
 }
 
@@ -104,7 +104,7 @@ void ScriptManager::Load_Scripts(const char* dll_filename)
 		FileClass * scripts_dll = mod_pkg->Get_File( dll_filename );
 		if ((scripts_dll != NULL) && (scripts_dll->Is_Available())) {
 
-			const char * _TMP_SCRIPTS_DLL_FILENAME = "_MOD_SCRIPTS.DLL";
+			const char * _TMP_SCRIPTS_DLL_FILENAME = "_MOD_SCRIPTS.DLu";
 
 			scripts_dll->Open(FileClass::READ);
 			RawFileClass unpacked_scripts(_TMP_SCRIPTS_DLL_FILENAME);

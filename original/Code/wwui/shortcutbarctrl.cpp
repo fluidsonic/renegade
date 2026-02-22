@@ -590,7 +590,7 @@ void
 ShortcutBarCtrlClass::Get_Entry_Rect (int index, RectClass &rect)
 {
 	float start_y_pos		= Rect.Top + BORDER_Y * StyleMgrClass::Get_Y_Scale ();
-	float entry_height	= TextRenderer.Get_Text_Extents (L"W").Y;
+	float entry_height	= TextRenderer.Get_Text_Extents (u"W").Y;
 	entry_height			+= TEXT_BORDER_Y * StyleMgrClass::Get_Y_Scale () * 2.0F;
 
 	//

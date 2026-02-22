@@ -120,7 +120,7 @@ bool ServerSettingsClass::Parse(bool apply)
 		** Make sure the master server settings file is there.
 		*/
 		char filename[MAX_PATH];
-		sprintf(filename, "data\\%s", master_settings);
+		sprintf(filename, "data/%s", master_settings);
 		file.Set_Name(filename);
 		if (!file.Is_Available()) {
 			ConsoleBox.Print("Error - server settings file '%s' not found - aborting\n", filename);

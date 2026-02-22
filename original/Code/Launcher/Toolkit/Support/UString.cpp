@@ -500,7 +500,7 @@ Int UString::Compare(const Char* s) const
 			}
 
 		// If the end of either string has been reached then terminate loop
-		if ((ws[index] == L'\0') || (s[index] == '\0'))
+		if ((ws[index] == u'\0') || (s[index] == '\0'))
 			{
 			break;
 			}
@@ -617,7 +617,7 @@ Int UString::CompareNoCase(const Char* s) const
 			}
 
 		// If the end of either string has been reached then terminate loop.
-		if ((ws[index] == L'\0') || (s[index] == '\0'))
+		if ((ws[index] == u'\0') || (s[index] == '\0'))
 			{
 			break;
 			}

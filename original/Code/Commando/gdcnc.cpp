@@ -293,7 +293,8 @@ void cGameDataCnc::Save_To_Server_Config(void)
 {
 	cGameData::Save_To_Server_Config(Get_Ini_Filename());
 
-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
+    INIClass * p_ini = Get_INI(Get_Ini_Filename());
+    if (p_ini == nullptr) p_ini = new INIClass(Get_Ini_Filename());
 
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsFriendlyFirePermitted",	IsFriendlyFirePermitted.Get());
 	p_ini->Put_Bool(	INI_SECTION_NAME, "DoMapsLoop",					DoMapsLoop);
@@ -315,7 +316,7 @@ void cGameDataCnc::Show_My_Money(void)
 		cPlayer * p_player = cNetwork::Get_My_Player_Object();
 		if (p_player != NULL) {
 			WideStringClass text(0,true);
-			text.Format(L"%s: %d",
+			text.Format(u"%s: %d",
 				TRANSLATION(IDS_MP_MONEY), (int) p_player->Get_Money());
 			Add_Bottom_Text(text);
 		}
@@ -350,8 +351,8 @@ void cGameDataCnc::Get_Description(WideStringClass & description)
 	//
 	cGameData::Get_Description(description);
 
-	const WideStringClass delimiter	= L"\t";
-	const WideStringClass newline		= L"\n";
+	const WideStringClass delimiter	= u"\t";
+	const WideStringClass newline		= u"\n";
 	const WideStringClass yes			= TRANSLATE(IDS_YES);
 	const WideStringClass no			= TRANSLATE(IDS_NO);
 
@@ -362,7 +363,7 @@ void cGameDataCnc::Get_Description(WideStringClass & description)
 	// Starting Credits
 	//
 	attribute = TRANSLATE(IDS_MENU_TEXT349);
-	value.Format(L"%d", StartingCredits);
+	value.Format(u"%d", StartingCredits);
 	description += (attribute + delimiter + value + newline);
 
 	//
@@ -415,7 +416,7 @@ bool cGameDataCnc::Is_Gameplay_Permitted(void)
 		//
 		// If your maxplayers is set to more than 1 then you must have an opponent.
 		//
-		permitted = 
+		permitted =
 			cPlayerManager::Tally_Team_Size(PLAYERTYPE_NOD) > 0 &&
 			cPlayerManager::Tally_Team_Size(PLAYERTYPE_GDI) > 0;
 	}
@@ -431,23 +432,23 @@ void cGameDataCnc::Get_Description(WideStringClass & description)
 	//
 	cGameData::Get_Description(description);
 
-	const WideStringClass newline	= L"\n";
-	const WideStringClass yes		= L"yes";
-	const WideStringClass no		= L"no";
+	const WideStringClass newline	= u"\n";
+	const WideStringClass yes		= u"yes";
+	const WideStringClass no		= u"no";
 
 	WideStringClass line(0, true);
 
-   line.Format(L"Starting Credits\t%d", StartingCredits);
+   line.Format(u"Starting Credits\t%d", StartingCredits);
 	IDS_MENU_TEXT349
 	description += line;
 	description += newline;
 
-   line.Format(L"Base Destruction Ends Game\t%s",		BaseDestructionEndsGame.Get() ? yes : no);
+   line.Format(u"Base Destruction Ends Game\t%s",		BaseDestructionEndsGame.Get() ? yes : no);
 	IDS_MENU_TEXT314
 	description += line;
 	description += newline;
 
-   line.Format(L"Beacon Placement Ends Game\t%s",		BeaconPlacementEndsGame.Get() ? yes : no);
+   line.Format(u"Beacon Placement Ends Game\t%s",		BeaconPlacementEndsGame.Get() ? yes : no);
 	IDS_MENU_TEXT315
 	description += line;
 	description += newline;

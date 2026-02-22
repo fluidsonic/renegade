@@ -33,7 +33,7 @@ public:
 
 	static void		Toggle();
 	static bool		Is_On();
-	static void		Render_Text(WideStringClass & text, float x, float y, ULONG color = 0xFFFFFFFF);
+	static void		Render_Text(WideStringClass & text, float x, float y, uint32_t color = 0xFFFFFFFF);
    static void		Show_Player_Names(void);
 
 	static void		Set_Bottom_Text_Y_Pos(float y)				{BottomTextYPos = y;}

@@ -1,4 +1,5 @@
 #include "menubackdrop.h"
+#include <stdio.h>
 #include "scene.h"
 #include "camera.h"
 #include "ww3d.h"
@@ -92,6 +93,11 @@ MenuBackDropClass::~MenuBackDropClass (void)
 void
 MenuBackDropClass::Render (void)
 {
+	static int _bd_render_n = 0;
+	if (_bd_render_n < 3) {
+		_bd_render_n++;
+		fprintf(stderr, "[backdrop] Render #%d model=%p\n", _bd_render_n, (void*)Model);
+	}
 	//
 	//	Simple render the scene
 	//
@@ -114,6 +120,7 @@ MenuBackDropClass::Set_Model (const char *name)
 	//	Load the new model
 	//
 	Model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj (name);
+	fprintf(stderr, "[backdrop] Set_Model(%s) -> model=%p\n", name, (void*)Model);
 	if (Model != NULL) {
 
 		//

@@ -682,7 +682,7 @@ void	Set_Model( GameObject * obj, const char * model_name )
 	}
 
 //	Matrix3D tm = pgobj->Get_Transform();
-	SCRIPT_TRACE((	"ST>Set_Model( %d, %s, %d )\n", obj->Get_ID(), model_name == NULL ? "NULL" : model_name ));
+	SCRIPT_TRACE((	"ST>Set_Model( %d, %s, %d )\n", obj->Get_ID(), model_name == NULL ? "NULu" : model_name ));
 	if (pgobj->As_SoldierGameObj() ) {
 		// For soldiers, call Set_Model, so the anim control will be updated
 		pgobj->As_SoldierGameObj()->Set_Model( model_name );
@@ -702,7 +702,7 @@ void	Set_Model( GameObject * obj, const char * model_name )
 void	Set_Animation( GameObject * obj, const char * anim_name, bool looping, const char * sub_obj_name, float start_frame, float end_frame, bool is_blended )
 {
 	SCRIPT_PTR_CHECK( obj );
-	SCRIPT_TRACE((	"ST>Set_Animation( %d, %s, %d )\n", obj->Get_ID(), anim_name == NULL ? "NULL" : anim_name, looping ));
+	SCRIPT_TRACE((	"ST>Set_Animation( %d, %s, %d )\n", obj->Get_ID(), anim_name == NULL ? "NULu" : anim_name, looping ));
 
 	PhysicalGameObj * pgobj = obj->As_PhysicalGameObj();
 	if ( pgobj == NULL ) {
@@ -804,7 +804,7 @@ void	Set_Animation( GameObject * obj, const char * anim_name, bool looping, cons
 void	Set_Animation_Frame( GameObject * obj, const char * anim_name, int frame )
 {
 	SCRIPT_PTR_CHECK( obj );
-	SCRIPT_TRACE((	"ST>Set_Animation_Frame( %d, %s, %d )\n", obj->Get_ID(), anim_name == NULL ? "NULL" : anim_name, frame ));
+	SCRIPT_TRACE((	"ST>Set_Animation_Frame( %d, %s, %d )\n", obj->Get_ID(), anim_name == NULL ? "NULu" : anim_name, frame ));
 
 	PhysicalGameObj * pgobj = obj->As_PhysicalGameObj();
 	if ( pgobj == NULL ) {
@@ -2268,7 +2268,7 @@ void	Attach_To_Object_Bone( GameObject * object, GameObject * host_object, const
 	if ( host_object == NULL ) {
 		SCRIPT_TRACE((	"ST>Attach_To_Object_Bone( %d, NULL )\n", object->Get_ID() ));
 	} else {
-		SCRIPT_TRACE((	"ST>Attach_To_Object_Bone( %d, %d, %s )\n", object->Get_ID(), host_object->Get_ID(), bone_name ? "NULL" : bone_name  ));
+		SCRIPT_TRACE((	"ST>Attach_To_Object_Bone( %d, %d, %s )\n", object->Get_ID(), host_object->Get_ID(), bone_name ? "NULu" : bone_name  ));
 	}
 
 	if ( object->As_PhysicalGameObj() ) {
@@ -3086,7 +3086,7 @@ void	Set_HUD_Help_Text( int string_id, const Vector3 &color )
 		//
 		//	Clear the help text
 		//
-		HUDInfo::Set_HUD_Help_Text( L"" );
+		HUDInfo::Set_HUD_Help_Text( u"" );
 	} else {
 
 		//

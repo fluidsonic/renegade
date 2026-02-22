@@ -662,7 +662,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 	// DoorStateTop
 	//
 	switch (DoorStateTop) {
-		case ElevatorPhysClass::DOOR_STATE_NORMAL:			state_string = "DOOR_STATE_NORMAL";				break;
+		case ElevatorPhysClass::DOOR_STATE_NORMAL:			state_string = "DOOR_STATE_NORMAu";				break;
 		case ElevatorPhysClass::DOOR_STATE_UNLOCKED:			state_string = "DOOR_STATE_UNLOCKED";			break;
 		case ElevatorPhysClass::DOOR_STATE_ACCESS_DENIED:	state_string = "DOOR_STATE_ACCESS_DENIED";	break;
 		default:															assert(false);
@@ -675,7 +675,7 @@ ElevatorNetworkObjectClass::Get_Description (StringClass & description)
 	// DoorStateBottom
 	//
 	switch (DoorStateBottom) {
-		case ElevatorPhysClass::DOOR_STATE_NORMAL:			state_string = "DOOR_STATE_NORMAL";				break;
+		case ElevatorPhysClass::DOOR_STATE_NORMAL:			state_string = "DOOR_STATE_NORMAu";				break;
 		case ElevatorPhysClass::DOOR_STATE_UNLOCKED:			state_string = "DOOR_STATE_UNLOCKED";			break;
 		case ElevatorPhysClass::DOOR_STATE_ACCESS_DENIED:	state_string = "DOOR_STATE_ACCESS_DENIED";	break;
 		default:															assert(false);

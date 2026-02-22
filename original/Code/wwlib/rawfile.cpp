@@ -163,7 +163,7 @@ void RawFileClass::Error(int, int, char const * )
  * HISTORY:                                                                                    *
  *   10/18/1994 JLB : Created.                                                                 *
  *=============================================================================================*/
-int RawFileClass::Transfer_Block_Size(void) 
+int RawFileClass::Transfer_Block_Size(void)
 {
 	return (int)((unsigned)UINT_MAX)-16L;
 }
@@ -510,7 +510,7 @@ void RawFileClass::Close(void)
 		*/
 		int closeok;
 		#ifdef _UNIX
-			closeok=(fclose(Handle)==0)?TRUE:FALSE;	
+			closeok=(fclose(Handle)==0)?TRUE:FALSE;
 		#else
 			closeok=CloseHandle(Handle);
 		#endif
@@ -591,7 +591,7 @@ int RawFileClass::Read(void * buffer, int size)
 		#else
 			readok=ReadFile(Handle, buffer, size, &(unsigned long&)bytesread, NULL);
 		#endif
-			
+
 
 		if (! readok) {
 			size -= bytesread;
@@ -791,13 +791,13 @@ int RawFileClass::Size(void)
 
       #ifdef _UNIX
 			fpos_t curpos,startpos,endpos;
-			fgetpos(Handle,&curpos);	
+			fgetpos(Handle,&curpos);
 
 			fseek(Handle,0,SEEK_SET);
-			fgetpos(Handle,&startpos);	
+			fgetpos(Handle,&startpos);
 
 			fseek(Handle,0,SEEK_END);
-			fgetpos(Handle,&endpos);	
+			fgetpos(Handle,&endpos);
 
 			size=endpos-startpos;
 			fsetpos(Handle,&curpos);
@@ -1067,33 +1067,14 @@ int RawFileClass::Raw_Seek(int pos, int dir)
 	*/
 	if (!Is_Open()) {
 		Error(EBADF, false, Filename);
-		return 0;	// Error() is a no-op stub; prevent fseek(NULL,...) crash
+		return Size();
 	}
 
-   #ifdef _UNIX
-      pos=fseek(Handle, pos, dir);
-   #else
-		switch (dir) {
-			case SEEK_SET:
-				dir = FILE_BEGIN;
-				break;
-
-			case SEEK_CUR:
-				dir = FILE_CURRENT;
-				break;
-
-			case SEEK_END:
-				dir = FILE_END;
-				break;
-		}
-		pos = SetFilePointer(Handle, pos, NULL, dir);
-	#endif
-
-	/*
-	**	If there was an error in the seek, then bail with an error condition.
-	*/
-	if (pos == 0xFFFFFFFF) {
+	pos = fseek(Handle, pos, dir) == -1;
+    if (pos == 0) pos = ftell(Handle);
+	if (pos == -1) {
 		Error(GetLastError(), false, Filename);
+		return Size();
 	}
 
 	/*
@@ -1118,7 +1099,7 @@ int RawFileClass::Raw_Seek(int pos, int dir)
 void RawFileClass::Attach (void *handle, int rights)
 {
 	Reset ();
-	
+
 	Rights = rights;
 	BiasStart = 0;
 	BiasLength = -1;
@@ -1151,6 +1132,6 @@ void RawFileClass::Detach (void)
 	BiasLength = -1;
 	Date = 0;
 	Time = 0;
-	Handle = NULL_HANDLE;	
+	Handle = NULL_HANDLE;
 }
 

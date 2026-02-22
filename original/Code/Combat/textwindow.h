@@ -157,7 +157,7 @@ public:
 	//	Public constructors/destructors
 	////////////////////////////////////////////////////////////////
 	TextItemClass (void) :
-		Name (L""),
+		Name (u""),
 		Color (1, 1, 1),
 		UserData (0)	{}
 

@@ -3,7 +3,7 @@
 // Project:      wwbitpack.lib
 // Author:       Tom Spencer-Smith
 // Date:         June 2000
-// Description:  
+// Description:
 //
 //-----------------------------------------------------------------------------
 #if defined(_MSV_VER)
@@ -23,8 +23,8 @@ class cEncoderTypeEntry
 		void Init(double min, double max, double resolution);
 		void Init(int num_bits);
 
-		bool Scale(double value, ULONG & scaled_value);
-		double Unscale(ULONG u_value);
+		bool Scale(double value, uint32_t & scaled_value);
+		double Unscale(uint32_t u_value);
 		double Clamp(double value);
 
 		UINT	Get_Bit_Precision()	const	{return BitPrecision;}

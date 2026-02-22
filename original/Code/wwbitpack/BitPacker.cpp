@@ -26,7 +26,7 @@ cBitPacker::cBitPacker() :
 }
 
 //-----------------------------------------------------------------------------
-cBitPacker::~cBitPacker() 
+cBitPacker::~cBitPacker()
 {
 	//delete [] Buffer;
 }
@@ -53,16 +53,16 @@ cBitPacker& cBitPacker::operator=(const cBitPacker& rhs)
 // If you use optimized Add_Bits() you need to also use optimize Get_Bits().
 //
 
-void cBitPacker::Add_Bits(ULONG value, UINT num_bits)
+void cBitPacker::Add_Bits(uint32_t value, UINT num_bits)
 {
 	//
-	// N.B. Presently you cannot use this class with an atomic type of more 
-	// than 4 bytes, such as a double. Hopefully you would be using a float 
+	// N.B. Presently you cannot use this class with an atomic type of more
+	// than 4 bytes, such as a double. Hopefully you would be using a float
 	// instead anyway.
 	//
 #if 0	// Old version
 
-	ULONG mask = 1 << (num_bits - 1);
+	uint32_t mask = 1 << (num_bits - 1);
 	while (mask > 0) {
 
 		//assert(BitWritePosition < BufferSize * 8);
@@ -92,7 +92,7 @@ void cBitPacker::Add_Bits(ULONG value, UINT num_bits)
 		UINT bit_count = 8 - bit_offset;
 		if (bit_count>num_bits) bit_count=num_bits;
 
-		ULONG bit_value = value;
+		uint32_t bit_value = value;
 		value <<= bit_count;					// Remove the copied bits
 		num_bits -= bit_count;
 		bit_value >>= (24+bit_offset);
@@ -117,7 +117,7 @@ void cBitPacker::Add_Bits(ULONG value, UINT num_bits)
 // This method needs optimization
 // 02-14-2002 Jani: Optimized. See Add_Bits() for notes.
 //
-void cBitPacker::Get_Bits(ULONG & value, UINT num_bits)
+void cBitPacker::Get_Bits(uint32_t & value, UINT num_bits)
 {
 #if 0	// Old version
 
@@ -129,7 +129,7 @@ void cBitPacker::Get_Bits(ULONG & value, UINT num_bits)
 		UINT bit_offset = BitReadPosition % 8;
 		bool b = (Buffer[byte_num] & (1 << bit_offset)) != 0;
 
-		value += (b << bit);	
+		value += (b << bit);
 
 		BitReadPosition++;
 	}
@@ -144,7 +144,7 @@ void cBitPacker::Get_Bits(ULONG & value, UINT num_bits)
 
 	UINT bit_count = 8 - bit_offset;
 	if (bit_count>num_bits) bit_count=num_bits;
-	value = (ULONG(Buffer[byte_num++]) << (bit_offset+24));
+	value = (uint32_t(Buffer[byte_num++]) << (bit_offset+24));
 	num_bits-=bit_count;
 
 	int shift;
@@ -178,7 +178,7 @@ void cBitPacker::Increment_Bit_Position(int num_bits)
 }
 
 //-----------------------------------------------------------------------------
-UINT cBitPacker::Get_Compressed_Size_Bytes() const 
+UINT cBitPacker::Get_Compressed_Size_Bytes() const
 {
 	return (int) ceil(BitWritePosition / 8.0f);
 }
@@ -187,7 +187,7 @@ UINT cBitPacker::Get_Compressed_Size_Bytes() const
 inline void cBitPacker::Advance_Bit_Position()
 {
 	BitWritePosition++;
-	
+
 	//
 	// If the following assert hits then our buffer is not large enough.
 	// We can advance BitWritePosition one bit past the end of the buffer, but

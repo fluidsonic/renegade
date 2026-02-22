@@ -143,7 +143,7 @@ const char * VisSampleClass::Get_Cur_Direction_Name(void) const
 
 	static char * _direction_names[] = 
 	{
-		"F","L","B","R","U","D"
+		"F","u","B","R","U","D"
 	};
 
 	return _direction_names[CurDirection];

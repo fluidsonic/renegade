@@ -277,7 +277,7 @@ CNCTeamInfoDialogClass::Populate_Player_List (void)
 			//
 			//	Make a new entry for this player
 			//			
-			int item_index = list_ctrl->Insert_Entry (index ++, L"");
+			int item_index = list_ctrl->Insert_Entry (index ++, u"");
 			if (item_index >= 0) {
 				WideStringClass displayName(0, true);
 				Build_Player_Display_Name(player, displayName);

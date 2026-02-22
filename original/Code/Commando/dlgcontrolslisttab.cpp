@@ -244,7 +244,7 @@ ControlsListTabClass::On_InputCtrl_Get_Key_Info
 			//	Clear the mapping.
 			//
 			Remap_Key (ctrl_id, function_id, 0);
-			key_name = L"";
+			key_name = u"";
 			(*game_key_id) = 0;
 		}
 	}

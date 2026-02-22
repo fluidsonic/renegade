@@ -44,7 +44,7 @@ MovieOptionsMenuClass::On_Init_Dialog (void)
 		RegistryClass registry (APPLICATION_SUB_KEY_NAME_MOVIES);
 		if (registry.Is_Valid ()) {
 
-			const char *INTRO_MOVIE	= "DATA\\MOVIES\\R_INTRO.BIK";
+			const char *INTRO_MOVIE	= "DATA/MOVIES/R_INTRO.BIK";
 						
 			//
 			//	Insert the renegade intro movie by default...
@@ -208,8 +208,8 @@ MovieOptionsMenuClass::Begin_Play_Movie (void)
 				//	Build a full-path to the movie on the CD
 				//
 				StringClass full_path = cd_path;
-				if (cd_path[cd_path.Get_Length () - 1] != '\\') {
-					full_path += "\\";
+				if (cd_path[cd_path.Get_Length () - 1] != '/') {
+					full_path += "/";
 				}
 				full_path += filename_only;
 				Play_Movie (full_path);
@@ -235,7 +235,7 @@ MovieOptionsMenuClass::Play_Movie (const char *filename)
 	
 	FontCharsClass* font = StyleMgrClass::Get_Font(StyleMgrClass::FONT_INGAME_SUBTITLE_TXT);
 
-	BINKMovie::Play (filename, "data\\subtitle.ini", font);
+	BINKMovie::Play (filename, "data/subtitle.ini", font);
 	
 	if (font) {
 		font->Release_Ref();
@@ -332,8 +332,8 @@ MovieOptionsMenuClass::HandleNotification (CDVerifyEvent &event)
 			//	Build a full-path to the movie on the CD
 			//
 			StringClass full_path = cd_path;
-			if (cd_path[cd_path.Get_Length () - 1] != '\\') {
-				full_path += "\\";
+			if (cd_path[cd_path.Get_Length () - 1] != '/') {
+				full_path += "/";
 			}
 			full_path += PendingMovieFilename;
 			Play_Movie (full_path);

@@ -456,7 +456,7 @@ TextWindowClass::Insert_Item (int index, const WCHAR *text)
 	//
 	for (int col_index = 1; col_index < Columns.Count (); col_index ++) {
 		TextColumnClass *column = Columns[col_index];
-		column->Insert_Item (index, L"");
+		column->Insert_Item (index, u"");
 	}
 
 	IsViewDirty = true;
@@ -714,7 +714,7 @@ TextWindowClass::Update_Row
 		//
 		//	Determine what text we should display
 		//		
-		const WCHAR *text	= L"";
+		const WCHAR *text	= u"";
 		Vector3 color (0 ,0, 0);		
 		text		= column->Get_Item_Text (item_index);
 		color		= column->Get_Item_Color (item_index);

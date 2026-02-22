@@ -312,7 +312,7 @@ CNCBattleInfoDialogClass::Populate_Player_List (ListCtrlClass *list_ctrl, int te
 			//
 			//	Make a new entry for this player
 			//			
-			int item_index = list_ctrl->Insert_Entry (index ++, L"");
+			int item_index = list_ctrl->Insert_Entry (index ++, u"");
 			if (item_index >= 0) {
 				WideStringClass displayName(0, true);
 				Build_Player_Display_Name(player, displayName);
@@ -338,9 +338,9 @@ CNCBattleInfoDialogClass::Populate_Player_List (ListCtrlClass *list_ctrl, int te
 				WideStringClass number_str;
 				float ktd_ratio = player->Get_Kill_To_Death_Ratio ();
 				if (ktd_ratio >= 0) {
-					number_str.Format(L"%-8.1f", ktd_ratio);
+					number_str.Format(u"%-8.1f", ktd_ratio);
 				} else {
-					number_str.Format(L"%-8s", L"-");
+					number_str.Format(u"%-8s", u"-");
 				}
 
 				list_ctrl->Set_Entry_Text (item_index, COL_KD, number_str);

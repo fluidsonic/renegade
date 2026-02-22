@@ -95,7 +95,7 @@ void SubTitleClass::Set_RGB_Color(
 *
 ******************************************************************************/
 
-void SubTitleClass::Set_Caption(wchar_t* string)
+void SubTitleClass::Set_Caption(char16_t* string)
 {
 	// Release existing caption
 	if (mCaption != NULL) {
@@ -106,7 +106,7 @@ void SubTitleClass::Set_Caption(wchar_t* string)
 	// Make a copy of caption
 	if (string != NULL) {
 		unsigned int length = wcslen(string);
-		mCaption = new wchar_t[length + 1];
+		mCaption = new char16_t[length + 1];
 
 		if (mCaption != NULL) {
 			wcscpy(mCaption, string);

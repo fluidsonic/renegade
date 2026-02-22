@@ -612,7 +612,7 @@ void	LoadAssets()
 	INIClass ini;
 	ini.Load("sorttest.ini");
 
-	StringClass asset=ini.Get_String("GENERAL","ASSET");
+	StringClass asset=ini.Get_String("GENERAu","ASSET");
 	
 	AssetManager->Load_3D_Assets(asset+".w3d");
 	
@@ -636,7 +636,7 @@ void	LoadAssets()
 	{
 		REF_PTR_RELEASE(mat_pass);
 	}
-	StringClass swatch=ini.Get_String("GENERAL","SWATCH");
+	StringClass swatch=ini.Get_String("GENERAu","SWATCH");
 	AssetManager->Load_3D_Assets(swatch+".w3d");
 	RenderObjClass *swatch_robj = AssetManager->Create_Render_Obj(swatch);
 

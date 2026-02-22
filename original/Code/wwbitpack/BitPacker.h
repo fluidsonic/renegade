@@ -34,8 +34,8 @@ class cBitPacker
 		void Flush() {BitReadPosition = BitWritePosition;}
 		bool Is_Flushed() const {return (BitReadPosition == BitWritePosition);}
 
-		void Add_Bits(ULONG value, UINT num_bits);
-		void Get_Bits(ULONG & value, UINT num_bits);
+		void Add_Bits(uint32_t value, UINT num_bits);
+		void Get_Bits(uint32_t & value, UINT num_bits);
 
 		void Set_Bit_Write_Position(UINT position);
 		UINT Get_Bit_Write_Position() const {return BitWritePosition;}

@@ -89,10 +89,10 @@ extern const char *VALUE_NAME_TEXTURE_FILTER_MODE;
 /*
 ** This defines the subdirectory where the game will load all data from
 */
-const char *	DATA_SUBDIRECTORY			= "DATA\\";
-const char *	SAVE_SUBDIRECTORY			= "DATA\\SAVE\\";
-const char *	CONFIG_SUBDIRECTORY		= "DATA\\CONFIG\\";
-const char *	MOVIES_SUBDIRECTORY		= "DATA\\MOVIES\\";
+const char *	DATA_SUBDIRECTORY			= "DATA/";
+const char *	SAVE_SUBDIRECTORY			= "DATA/SAVE/";
+const char *	CONFIG_SUBDIRECTORY		= "DATA/CONFIG/";
+const char *	MOVIES_SUBDIRECTORY		= "DATA/MOVIES/";
 
 #define	STRINGS_FILENAME					"STRINGS.TDB"
 #define	CONV_DB_FILENAME					"CONV10.CDB"
@@ -318,8 +318,8 @@ void	Construct_Directory_Structure(void)
 	StringClass data_dir(path,true);
 	data_dir += "data";
 
-	StringClass save_dir(data_dir + "\\save",true);
-	StringClass config_dir(data_dir + "\\config",true);
+	StringClass save_dir(data_dir + "/save",true);
+	StringClass config_dir(data_dir + "/config",true);
 
 	//
 	//	Create the data directory if necessary
@@ -368,12 +368,12 @@ static bool Create_Log_File_Name(const StringClass& folder, StringClass& filenam
 {
 	StringClass original(filename);
 	if (!use_numbering) {
-		filename.Format("%s\\%s",(const char*)folder,(const char*)original);
+		filename.Format("%s/%s",(const char*)folder,(const char*)original);
 		return true;
 	}
 	for (int i=0;i<999;++i) {
 		HANDLE file;
-		filename.Format("%s\\%3.3d%s",(const char*)folder,i,(const char*)original);
+		filename.Format("%s/%3.3d%s",(const char*)folder,i,(const char*)original);
 		file = CreateFile(filename, GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (file!=INVALID_HANDLE_VALUE) {
 			CloseHandle(file);
@@ -405,63 +405,6 @@ static void Copy_Log(const StringClass& folder,const char* filename,bool use_num
 				}
 			}
 		}
-	}
-}
-
-static class CopyThreadClass : public ThreadClass
-{
-public:
-	unsigned Version;
-
-	CopyThreadClass()
-		:
-		Version(0),
-		ThreadClass("LogCopyThread", &Exception_Handler) {}
-
-	void Thread_Function()
-	{
-		// Write log to network folder
-
-		char computer_name[MAX_COMPUTERNAME_LENGTH + 1];
-		DWORD size = sizeof(computer_name);
-		::GetComputerName(computer_name, &size);
-
-		RegistryClass reg(APPLICATION_SUB_KEY_NAME_DEBUG);
-		char path[MAX_PATH];
-		reg.Get_String("LogPath", path, sizeof(path), "\\\\tanya\\game\\projects\\renegade\\_error_logs");
-		strcat(path, "\\");
-
-		StringClass folder_name(0,true);
-		folder_name.Format("%s%d.%d",path,Version>>16,Version&0xffff);
-		if (!Verify_Log_Directory(folder_name)) return;
-		folder_name+="\\";
-		folder_name+=computer_name;
-		if (!Verify_Log_Directory(folder_name)) return;
-
-		Copy_Log(folder_name,"",true);		//"_logfile.txt",true);
-		Copy_Log(folder_name,"_asserts.txt",true);
-		Copy_Log(folder_name,"_except.txt",true);
-		Copy_Log(folder_name,"sysinfo.txt",false);
-	}
-} CopyThread;
-
-void Copy_Logs(unsigned version)
-{
-	RegistryClass registry( APPLICATION_SUB_KEY_NAME_DEBUG );
-	if ( registry.Is_Valid() ) {
-		if (registry.Get_Int( VALUE_NAME_DISABLE_LOG_COPYING,0 )) return;
-	}
-
-	if (CopyThread.Is_Running()) return;
-	CopyThread.Version=version;
-	CopyThread.Execute();
-
-	int time=TIMEGETTIME();
-	while (TIMEGETTIME()-time<5000) {
-		if (!CopyThread.Is_Running()) {
-			break;
-		}
-		Sleep(100);
 	}
 }
 
@@ -622,7 +565,7 @@ bool Game_Init(void)
 	WIN32_FIND_DATA find_info	= { 0 };
 	BOOL keep_going				= TRUE;
 	HANDLE file_find				= NULL;
-	for (file_find = ::FindFirstFile ("data\\*.mix", &find_info);
+	for (file_find = ::FindFirstFile ("data/*.mix", &find_info);
 		 (file_find != INVALID_HANDLE_VALUE) && keep_going;
 		  keep_going = ::FindNextFile (file_find, &find_info))
 	{

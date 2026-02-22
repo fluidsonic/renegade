@@ -23,22 +23,22 @@ class ThumbnailClass
 	unsigned OriginalTextureHeight;
 	unsigned OriginalTextureMipLevelCount;
 	WW3DFormat OriginalTextureFormat;
-	unsigned long DateTime;
+	uint32_t DateTime;
 	bool Allocated;	// if true, destructor will free the memory
 	ThumbnailManagerClass* Manager;
 
 	ThumbnailClass(
 		ThumbnailManagerClass* manager,
-		const char* name, 
-		unsigned char* bitmap, 
-		unsigned w, 
-		unsigned h, 
-		unsigned original_w, 
-		unsigned original_h, 
+		const char* name,
+		unsigned char* bitmap,
+		unsigned w,
+		unsigned h,
+		unsigned original_w,
+		unsigned original_h,
 		unsigned original_mip_level_count,
 		WW3DFormat original_format,
 		bool allocated,
-		unsigned long date_time);
+		uint32_t date_time);
 	ThumbnailClass(
 		ThumbnailManagerClass* manager,
 		const StringClass& filename);
@@ -53,7 +53,7 @@ public:
 	unsigned Get_Original_Texture_Height() const { return OriginalTextureHeight; }
 	unsigned Get_Original_Texture_Mip_Level_Count() const { return OriginalTextureMipLevelCount; }
 	WW3DFormat Get_Original_Texture_Format() const { return OriginalTextureFormat; }
-	unsigned long Get_Date_Time() const { return DateTime; }
+	uint32_t Get_Date_Time() const { return DateTime; }
 	const StringClass& Get_Name() const { return Name; }
 
 };
@@ -71,7 +71,7 @@ class ThumbnailManagerClass : public DLNodeClass<ThumbnailManagerClass>
 	HashTemplateClass<StringClass,ThumbnailClass*> ThumbnailHash;
 	unsigned char* ThumbnailMemory;
 	bool Changed;
-	unsigned long DateTime;
+	uint32_t DateTime;
 
 	static DLListClass<ThumbnailManagerClass> ThumbnailManagerList;
 

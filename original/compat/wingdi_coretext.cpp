@@ -62,11 +62,13 @@ struct FakeDC {
 // A dummy sentinel returned as "old object" when DC has no previously selected obj
 static struct { FakeGDITag tag; } s_dummy = { TAG_FONT };
 
-// ---- Copy CG (32-bit BGRA) → GDI (24-bit BGR), row-flipped for top-down DIB ----
+// ---- Copy CG (32-bit BGRA) → GDI (24-bit BGR) ----
+// CGBitmapContext memory layout is top-down: cg_buf row 0 = visual top of image.
+// The GDI caller requests a top-down DIB (biHeight < 0), so gdi_buf row 0 must
+// also be the visual top.  No row reversal is needed — copy rows straight through.
 static void sync_gdi_buf(FakeBitmap* bmp) {
     for (int row = 0; row < bmp->height; row++) {
-        // CG origin is bottom-left; GDI (top-down DIB) origin is top-left → flip rows
-        const uint8_t* src = bmp->cg_buf + (size_t)(bmp->height - 1 - row) * bmp->width * 4;
+        const uint8_t* src = bmp->cg_buf + (size_t)row * bmp->width * 4;
         uint8_t*       dst = bmp->gdi_buf + (size_t)row * bmp->gdi_stride;
         for (int col = 0; col < bmp->width; col++) {
             // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipFirst → BGRA memory order
@@ -394,6 +396,7 @@ BOOL ExtTextOutW(HDC hdc, int x, int y, UINT options,
             CGFloat cg_x   = (CGFloat)x;
             CGFloat cg_y   = (CGFloat)(bmp->height - y) - ascent;
 
+            // CGBitmapContext stores row 0 at the top of the visual image, but
             CGContextSetTextMatrix(ctx, CGAffineTransformIdentity);
             CGContextSetTextPosition(ctx, cg_x, cg_y);
             CTLineDraw(line, ctx);
@@ -667,7 +670,15 @@ int AddFontResourceA(LPCSTR lpFilename) {
     }
 
     if (!found) {
-        fprintf(stderr, "[AddFontResource] Not found: %s\n", lpFilename);
+        // Font file not found in any MIX archive or loose file.
+        // "ARI_____.TTF" (Arial MT) is intentionally absent from the MIX: it was
+        // a standard Windows system font in 2002 and Westwood never shipped it.
+        // macOS provides Arial natively via CoreText, so CreateFontA("Arial MT")
+        // resolves correctly through the "Arial MT" -> "Arial" mapping above.
+        // Any other missing font will also fall through to the system font resolver.
+        fprintf(stderr, "[AddFontResource] Not found in MIX archives: %s"
+                        " (expected for system fonts like Arial; CoreText will use system font)\n",
+                        lpFilename);
         return 0;
     }
 

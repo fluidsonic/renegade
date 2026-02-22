@@ -19,11 +19,11 @@ inline void* _thread_run(void* p) {
 }
 
 inline uintptr_t _beginthread(_beginthread_fn fn, unsigned stack_size, void* arg) {
-    pthread_t t;
+    pthread_t* t = (pthread_t*)malloc(sizeof(pthread_t));
     struct _ThreadData* td = (struct _ThreadData*)malloc(sizeof(struct _ThreadData));
     td->fn = fn; td->arg = arg;
-    if (pthread_create(&t, NULL, _thread_run, td) != 0) { free(td); return (uintptr_t)-1; }
-    pthread_detach(t);
+    if (pthread_create(t, NULL, _thread_run, td) != 0) { free(td); free(t); return (uintptr_t)-1; }
+    // Do NOT detach — caller joins via WaitForSingleObject then CloseHandle (which free()s this ptr)
     return (uintptr_t)t;
 }
 

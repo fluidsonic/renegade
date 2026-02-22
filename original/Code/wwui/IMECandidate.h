@@ -43,7 +43,7 @@ class IMECandidate
 		unsigned long GetSelection(void) const;
 
 		// Get the specified candidate string
-		const wchar_t* GetCandidate(unsigned long index);
+		const char16_t* GetCandidate(unsigned long index);
 
 		// Select a candidate from the list.
 		void SelectCandidate(unsigned long index);
@@ -65,7 +65,7 @@ class IMECandidate
 		CANDIDATELIST* mCandidates;
 
 		// Multibyte -> Unicode string conversion buffer
-		wchar_t mTempString[80];
+		char16_t mTempString[80];
 	};
 
 typedef enum

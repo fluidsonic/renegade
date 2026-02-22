@@ -7,7 +7,6 @@
 #include "ini.h"
 #include <assert.h>
 #include <string.h>
-#include <wchar.h>
 
 bool RegistryClass::IsLocked = false;
 

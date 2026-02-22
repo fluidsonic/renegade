@@ -20,8 +20,8 @@ extern class TranslateDBClass _TheTranslateDB;
 typedef DynamicVectorClass<TDBObjClass *>			TDB_OBJ_LIST;
 typedef DynamicVectorClass<TDBCategoryClass *>	TDB_CATEGORY_LIST;
 
-extern const WCHAR *	STRING_NOT_FOUND;
-extern const char *	ENGLISH_STRING_NOT_FOUND;
+extern const char16_t* STRING_NOT_FOUND;
+extern const char*     ENGLISH_STRING_NOT_FOUND;
 
 //////////////////////////////////////////////////////////////////////////
 // Useful macros
@@ -59,7 +59,7 @@ public:
 		FILTER_IF_EQUAL,
 		FILTER_IF_NOT_EQUAL,
 	} FILTER_OPT;
-	
+
 	//////////////////////////////////////////////////////////////
 	//	Public constructors/destructors
 	//////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ public:
 	static void						Update_Version (void);
 	static bool						Is_Loaded()									{return (m_ObjectList.Count () > 0);}
 
-	
+
 	//
 	// From SaveLoadSubSystemClass
 	//
@@ -97,8 +97,8 @@ public:
 	//
 	//	Data access
 	//
-	static const WCHAR *			Get_String (uint32 id);
-	static const WCHAR *			Get_String (const char *id_desc);
+	static const char16_t *			Get_String (uint32 id);
+	static const char16_t *			Get_String (const char *id_desc);
 	static const char *			Get_English_String (uint32 id);
 	WWINLINE static TDBObjClass *	Find_Object (uint32 id);
 	WWINLINE static TDBObjClass * Find_Object (const char *id_desc);
@@ -109,7 +109,7 @@ public:
 	static bool						Add_Object (TDBObjClass *new_obj);
 	static bool						Remove_Object (int index);
 	static void						Remove_All (void);
-	
+
 	//
 	//	Enumeration
 	//
@@ -134,13 +134,13 @@ public:
 	//
 	static void						Set_Current_Language (int lang_id)	{ m_LanguageID = lang_id; }
 	static uint32					Get_Current_Language (void)			{ return m_LanguageID; }
-	
+
 	//
 	//	Save/load options
 	//
 	static bool						Is_Single_Language_Export_Enabled (void)		{ return IsSingleLanguageExport; }
 	static void						Enable_Single_Language_Export (bool onoff)	{ IsSingleLanguageExport = onoff; }
-	
+
 	static void						Set_Export_Filter (FILTER_OPT filter, uint32 category_id);
 
 protected:
@@ -198,15 +198,15 @@ private:
 //////////////////////////////////////////////////////////////
 //	Get_String
 //////////////////////////////////////////////////////////////
-inline const WCHAR *
+inline const char16_t*
 TranslateDBClass::Get_String (uint32 id)
 {
 	// ID of 0 (zero) is a special case NULL string.
 	if (id == 0) {
 		return NULL;
 	}
-	
-	const WCHAR *string = STRING_NOT_FOUND;
+
+	const char16_t* string = STRING_NOT_FOUND;
 
 	//
 	//	Check to make sure the database is loaded
@@ -216,19 +216,19 @@ TranslateDBClass::Get_String (uint32 id)
 	//	Calculate which index this ID refers to
 	//
 	int index = (id - ID_MIN);
-	
+
 	//
 	//	Check to see if the requested ID is in the range
 	// of loaded string objects.
 	//
 	if (index >= 0 && index < m_ObjectList.Count ()) {
-		
+
 		//
 		//	Get the translation object
 		//
 		TDBObjClass *trans_obj = m_ObjectList[index];
 		if (trans_obj != NULL) {
-			
+
 			//
 			//	Get the string from the object and return it to the caller
 			//
@@ -242,7 +242,7 @@ TranslateDBClass::Get_String (uint32 id)
 //////////////////////////////////////////////////////////////
 //	Get_String
 //////////////////////////////////////////////////////////////
-inline const WCHAR *
+inline const char16_t *
 TranslateDBClass::Get_String (const char *id_desc)
 {
 	// NULL description is a special case NULL string.
@@ -250,7 +250,7 @@ TranslateDBClass::Get_String (const char *id_desc)
 		return NULL;
 	}
 
-	const WCHAR *string = STRING_NOT_FOUND;
+	const char16_t *string = STRING_NOT_FOUND;
 
 	//
 	//	Lookup the object based on its ID
@@ -294,13 +294,13 @@ TranslateDBClass::Get_English_String (uint32 id)
 	// of loaded string objects.
 	//
 	if (index >= 0 && index < m_ObjectList.Count ()) {
-		
+
 		//
 		//	Get the translation object
 		//
 		TDBObjClass *trans_obj = m_ObjectList[index];
 		if (trans_obj != NULL) {
-			
+
 			//
 			//	Get the string from the object and return it to the caller
 			//
@@ -316,7 +316,7 @@ TranslateDBClass::Get_English_String (uint32 id)
 //	Find_Object
 //
 //////////////////////////////////////////////////////////////
-WWINLINE TDBObjClass *	
+WWINLINE TDBObjClass *
 TranslateDBClass::Find_Object (const char *id_desc)
 {
 	StringClass lower_case_name(id_desc,true);
@@ -327,7 +327,7 @@ TranslateDBClass::Find_Object (const char *id_desc)
 //////////////////////////////////////////////////////////////
 //	Find_Object
 //////////////////////////////////////////////////////////////
-WWINLINE TDBObjClass *	
+WWINLINE TDBObjClass *
 TranslateDBClass::Find_Object (uint32 id)
 {
 	TDBObjClass *object = NULL;
@@ -337,7 +337,7 @@ TranslateDBClass::Find_Object (uint32 id)
 	//
 	int index = (id - ID_MIN);
 	if (index >= 0 && index < m_ObjectList.Count ()) {
-		
+
 		//
 		//	Get the translation object
 		//

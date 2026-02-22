@@ -2,9 +2,6 @@
 #include	"trim.h"
 #include	<string.h>
 
-#ifdef _UNIX
-#include	<wctype.h>
-#endif // _UNIX
 
 /*********************************************************************************************** 
  * strtrim -- Trim leading and trailing white space off of string.                             * 
@@ -48,24 +45,27 @@ char* strtrim(char* buffer)
 	return buffer;
 }
 
-wchar_t* wcstrim(wchar_t* buffer)
+
+char16_t* wcstrim(char16_t* buffer)
 {
 	if (buffer) {
 		/* Strip leading white space from the string. */
-		wchar_t* source = buffer;
+		char16_t* source = buffer;
 
 		while ((*source != 0) && ((unsigned int)*source <= 32)) {
 			++source;
 		}
-		
+
 		if (source != buffer) {
-			memmove(buffer, source, (wcslen(source) + 1) * sizeof(wchar_t));
+			int src_len = 0; while (source[src_len]) src_len++;
+			memmove(buffer, source, (src_len + 1) * sizeof(char16_t));
 		}
 
 		/* Clip trailing white space from the string. */
-		for (int index = wcslen(buffer) - 1; index >= 0; --index) {
+		int buf_len = 0; while (buffer[buf_len]) buf_len++;
+		for (int index = buf_len - 1; index >= 0; --index) {
 			if ((*source != 0) && ((unsigned int)buffer[index] <= 32)) {
-				buffer[index] = L'\0';
+				buffer[index] = u'\0';
 			} else {
 				break;
 			}

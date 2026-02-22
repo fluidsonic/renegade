@@ -13,7 +13,7 @@ const int CHAR_BUFFER_LEN		= 32768;
 // NOTE 0: Word wrap logic does not apply to Han characters (Chinese, Japanese & Korean).
 //			  Therefore treat each of these characters as a word which can be preceeded by a line break.
 // NOTE 1: This is a simplification. Some Korean characters should not be line break characters.
-#define IS_BREAK_CHAR(ch) ((ch == L' ') || ((ch >= 0x3000) && (ch <= 0xdfff)))
+#define IS_BREAK_CHAR(ch) ((ch == u' ') || ((ch >= 0x3000) && (ch <= 0xdfff)))
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -287,7 +287,7 @@ Render2DSentenceClass::Find_Row_Start( const WCHAR * text, int row_index )
 			//
 			const WCHAR *word	= text;
 			float word_width = Font->Get_Char_Spacing (ch);
-			while ((*word != 0) && ((*word > L' ') && !IS_BREAK_CHAR (*word))) {
+			while ((*word != 0) && ((*word > u' ') && !IS_BREAK_CHAR (*word))) {
 				word_width += Font->Get_Char_Spacing (*word++);
 			}
 
@@ -298,7 +298,7 @@ Render2DSentenceClass::Find_Row_Start( const WCHAR * text, int row_index )
 				is_wrapped = true;
 			}
 
-		} else if (ch == L'\n') {
+		} else if (ch == u'\n') {
 			is_wrapped = true;
 		}
 
@@ -315,7 +315,7 @@ Render2DSentenceClass::Find_Row_Start( const WCHAR * text, int row_index )
 			//
 			row_counter ++;
 			if (row_counter == row_index) {
-				retval = (ch == L' ' || ch == L'\n') ? text : text - 1;
+				retval = (ch == u' ' || ch == u'\n') ? text : text - 1;
 				break;
 			}
 		}
@@ -362,7 +362,7 @@ Render2DSentenceClass::Get_Formatted_Text_Extents (const WCHAR *text, int *row_c
 			//
 			const WCHAR *word	= text;
 			float word_width = Font->Get_Char_Spacing (ch);
-			while ((*word != 0) && ((*word > L' ') && !IS_BREAK_CHAR (*word))) {
+			while ((*word != 0) && ((*word > u' ') && !IS_BREAK_CHAR (*word))) {
 				word_width += Font->Get_Char_Spacing (*word++);
 			}
 
@@ -373,7 +373,7 @@ Render2DSentenceClass::Get_Formatted_Text_Extents (const WCHAR *text, int *row_c
 				is_wrapped = true;
 			}
 
-		} else if (ch == L'\n') {
+		} else if (ch == u'\n') {
 			is_wrapped = true;
 		}
 
@@ -846,7 +846,7 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 		float char_spacing = Font->Get_Char_Spacing (ch);
 
 		bool exceeded_texture_width	= ((TextureOffset.I + char_spacing) >= CurrTextureSize);
-		bool encountered_break_char	= (IS_BREAK_CHAR (ch) || ch == L'\n' || ch == 0 || ch == L'\t');
+		bool encountered_break_char	= (IS_BREAK_CHAR (ch) || ch == u'\n' || ch == 0 || ch == u'\t');
 
 		//
 		//	Do we need to record this portion of the sentence to its own chunk?
@@ -865,7 +865,7 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 			//
 			if (IS_BREAK_CHAR (ch)) {
 
-				if (ch == L' ') {
+				if (ch == u' ') {
 					Cursor.X += char_spacing;
 				}
 
@@ -878,8 +878,8 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 					//	Find the length of the next word
 					//
 					const WCHAR *word	= text;
-					float word_width	= (ch == L' ') ? 0 : char_spacing;
-					while ((*word != 0) && ((*word > L' ') && !IS_BREAK_CHAR (*word))) {
+					float word_width	= (ch == u' ') ? 0 : char_spacing;
+					while ((*word != 0) && ((*word > u' ') && !IS_BREAK_CHAR (*word))) {
 						word_width += Font->Get_Char_Spacing (*word++);
 					}
 
@@ -892,12 +892,12 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 					}
 				}
 
-			} else if (ch == L'\n') {
+			} else if (ch == u'\n') {
 				Cursor.X = 0;
 				Cursor.Y += char_height;
 			} else if (ch == 0) {
 				break;
-			} else if (ch == L'\t') {
+			} else if (ch == u'\t') {
 				float tab_spacing = (char_spacing * TabStop);
 				float tab_pos = (floor(Cursor.X / tab_spacing) * tab_spacing);
 				Cursor.X = (tab_pos + tab_spacing);
@@ -920,7 +920,7 @@ Render2DSentenceClass::Build_Sentence (const WCHAR *text)
 			}
 		}
 
-		if (ch != L'\n' && ch != L' ' && ch != L'\t') {
+		if (ch != u'\n' && ch != u' ' && ch != u'\t') {
 
 			//
 			//	Ensure the surface is locked

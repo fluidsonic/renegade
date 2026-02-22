@@ -66,7 +66,7 @@ void	InventoryClass::Add_Weapon( int id, int rounds, bool has_weapon )
 void	InventoryClass::Restore_Inventory( SoldierGameObj * soldier )
 {
 	DefenseObjectClass * def_obj = soldier->Get_Defense_Object();
-	if ( (unsigned long)ShieldType > def_obj->Get_Shield_Type() ) {
+	if ( ShieldType > def_obj->Get_Shield_Type() ) {
 		def_obj->Set_Shield_Type( ShieldType );
 	}
 	if ( ShieldStrengthMax > def_obj->Get_Shield_Strength_Max() ) {

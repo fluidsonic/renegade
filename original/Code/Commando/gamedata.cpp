@@ -79,7 +79,7 @@ WideStringClass			cGameData::WinText;
 //
 // hack
 //
-ULONG g_ip_override = INADDR_NONE;
+uint32_t g_ip_override = INADDR_NONE;
 
 //------------------------------------------------------------------------------------
 void cGameData::Onetime_Init(void)
@@ -131,9 +131,9 @@ cGameData::cGameData(void)	:
 	TimeLimitMinutes					= 0;
 	RadarMode							= RADAR_ALL;
 	IniFilename							= "";
-	Motd.Format(L"");
+	Motd.Format(u"");
 
-	Set_Password(						L"");
+	Set_Password(						u"");
    //Set_Owner(							"UNOWNED");
    Set_Owner(							cNetInterface::Get_Nickname());
 
@@ -307,7 +307,7 @@ void cGameData::Swap_Team_Sides(void)
 	// Inform the players
 	//
 	//WideStringClass text;
-	//text.Format(L"_TEAMS_SWAPPED_!_");
+	//text.Format(u"_TEAMS_SWAPPED_!_");
 	WideStringClass text = TRANSLATE(IDS_MP_TEAMS_SWAPPED);
 	cScTextObj * p_text_obj = new cScTextObj();
 	p_text_obj->Init(text, TEXT_MESSAGE_PUBLIC, false, HOST_TEXT_SENDER, -1);
@@ -349,7 +349,7 @@ void cGameData::Remix_Team_Sides(void)
 	// Inform the players
 	//
 	//WideStringClass text;
-	//text.Format(L"_TEAMS_REMIXED_!_");
+	//text.Format(u"_TEAMS_REMIXED_!_");
 	WideStringClass text = TRANSLATE(IDS_MP_TEAMS_REMIXED);
 	cScTextObj * p_text_obj = new cScTextObj();
 	p_text_obj->Init(text, TEXT_MESSAGE_PUBLIC, false, HOST_TEXT_SENDER, -1);
@@ -401,7 +401,7 @@ void cGameData::Rebalance_Team_Sides(void)
 		// Inform the players
 		//
 		//WideStringClass text;
-		//text.Format(L"_TEAMS_REBALANCED_!_");
+		//text.Format(u"_TEAMS_REBALANCED_!_");
 		WideStringClass text = TRANSLATE(IDS_MP_TEAMS_REBALANCED);
 		cScTextObj * p_text_obj = new cScTextObj();
 		p_text_obj->Init(text, TEXT_MESSAGE_PUBLIC, false, HOST_TEXT_SENDER, -1);
@@ -425,7 +425,7 @@ void cGameData::Set_Ip_And_Port(void)
 	Set_Ip_Address(local_address.sin_addr.s_addr);
 	*/
 
-	ULONG ip = cUserOptions::PreferredLanNic.Get();
+	uint32_t ip = cUserOptions::PreferredLanNic.Get();
 
 	if (g_ip_override != INADDR_NONE) {
 		ip = g_ip_override;
@@ -512,7 +512,7 @@ void cGameData::Set_Owner(const WideStringClass & owner)
 }
 
 //-----------------------------------------------------------------------------
-void cGameData::Set_Ip_Address(ULONG ip_address)
+void cGameData::Set_Ip_Address(uint32_t ip_address)
 {
 	IpAddress = ip_address;
 }
@@ -585,7 +585,7 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 	}
 
 #ifndef FREEDEDICATEDSERVER
-	if (GameModeManager::Find("WOL")->Is_Active()) {
+	if (GameModeManager::Find("WOu")->Is_Active()) {
 #endif //FREEDEDICATEDSERVER
 		if (IsPassworded.Is_True() && Is_QuickMatch_Server()) {
 			Debug_Say(("cGameData::Is_Valid_Settings: Quickmatch can not have passwords.\n" ));
@@ -659,7 +659,7 @@ bool cGameData::Is_Valid_Settings(WideStringClass& outMsg, bool check_as_server)
 				StringClass map_name = Get_Map_Cycle(i);
 				if (map_name.Get_Length()) {
 					char filename[_MAX_PATH];
-					sprintf(filename, "data\\%s", map_name.Peek_Buffer());
+					sprintf(filename, "data/%s", map_name.Peek_Buffer());
 					RawFileClass file(filename);
 					if (!file.Is_Available()) {
 						PRINT_CONFIG_ERROR;
@@ -744,7 +744,7 @@ void cGameData::Export_Tier_1_Data(cPacket & packet)
 //-----------------------------------------------------------------------------
 void cGameData::Import_Tier_1_Data(cPacket & packet)
 {
-	ULONG ip_address = packet.Get(ip_address);
+	uint32_t ip_address = packet.Get(ip_address);
    Set_Ip_Address(ip_address);
 
 	WideStringClass owner;
@@ -779,8 +779,8 @@ void cGameData::Import_Tier_1_Data(cPacket & packet)
 	//
 	//	Get the CRC of the map and the mod
 	//
-	ULONG map_name_crc =		packet.Get(map_name_crc);
-	ULONG mod_name_crc =		packet.Get(mod_name_crc);
+	uint32_t map_name_crc =		packet.Get(map_name_crc);
+	uint32_t mod_name_crc =		packet.Get(mod_name_crc);
 
 	//
 	//	Determine what the name of the mod and the map are from their CRC's
@@ -791,8 +791,8 @@ void cGameData::Import_Tier_1_Data(cPacket & packet)
 		Set_Mod_Name (mod_name);
 		Set_Map_Name (map_name);
 	} else {
-		ModName = L"";
-		MapName = L"";
+		ModName = u"";
+		MapName = u"";
 	}
 
 #endif // MULTIPLAYERDEMO
@@ -873,14 +873,18 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 	StringClass full_filename(config_file, true);
 
 	if (p_ini == NULL) {
-      full_filename.Format("data\\%s", config_file);
+      full_filename.Format("data/%s", config_file);
       FILE * file = fopen(full_filename, "w");
-	   fclose(file);
+      if (file) fclose(file);
 
-		p_ini = Get_INI(config_file);
+		p_ini = Get_INI(full_filename);
    }
 
 	LastServerConfigModTime = Get_Config_File_Mod_Time();
+
+	if (p_ini == NULL) {
+		return;
+	}
 
 	char		map_name[MAX_MAPNAME_SIZE];
 	char		mod_name[MAX_MAPNAME_SIZE];
@@ -1006,8 +1010,8 @@ void cGameData::Load_From_Server_Config(LPCSTR config_file)
 //-----------------------------------------------------------------------------
 void cGameData::Save_To_Server_Config(LPCSTR config_file)
 {
-
-   INIClass * p_ini = Get_INI(config_file);
+   auto p_ini = Get_INI(config_file);
+   if (p_ini == nullptr) p_ini = new INIClass(config_file);
 
 	//
 	// We can't overwrite entries, so clear them out first.
@@ -1328,7 +1332,7 @@ unsigned long cGameData::Get_Config_File_Mod_Time(void)
 	RawFileClass file(full_filename);
 
 	if (!file.Is_Available()) {
-      full_filename.Format("data\\%s", (const char*)IniFilename);
+      full_filename.Format("data/%s", (const char*)IniFilename);
 		file.Set_Name(full_filename);
    }
 
@@ -1526,7 +1530,7 @@ const char* cGameData::Get_Game_Type_Name(GameTypeEnum type)
 const char * cGameData::Get_Game_Type_Name(void) const
 {
 	WideStringClass wide_name;
-	wide_name.Format(L"%s", Get_Game_Name());
+	wide_name.Format(u"%s", Get_Game_Name());
 	StringClass name;
 	wide_name.Convert_To(name);
 
@@ -1720,7 +1724,7 @@ void cGameData::Get_Time_Limit_Text(WideStringClass& text)
    if (IsIntermission.Is_True()) {
 
       text.Format(
-			L"%s: %d",
+			u"%s: %d",
 			TRANSLATION(IDS_MP_NEXTGAME_COUNTDOWN),
 			cMathUtil::Round(Get_Intermission_Time_Remaining()));
 
@@ -1733,9 +1737,9 @@ void cGameData::Get_Time_Limit_Text(WideStringClass& text)
 		cMiscUtil::Seconds_To_Hms(TimeRemainingSeconds, hours, mins, seconds);
 
       WideStringClass time_string(0, true);
-      time_string.Format(L"%02d:%02d:%02d", hours, mins, seconds);
+      time_string.Format(u"%02d:%02d:%02d", hours, mins, seconds);
 
-		text.Format(L"%s: %s", TRANSLATION(IDS_MP_TIME_REMAINING), (const WCHAR*)time_string);
+		text.Format(u"%s: %s", TRANSLATION(IDS_MP_TIME_REMAINING), (const WCHAR*)time_string);
    }
 
 }
@@ -1800,7 +1804,7 @@ void cGameData::On_Game_Begin(void)
 	// Clear the MVP name
 	// Let MVP carry over into next game.
 	//
-	//MvpName.Format(L"");
+	//MvpName.Format(u"");
 	//MvpCount = 0;
 
 	//
@@ -2024,8 +2028,8 @@ void cGameData::Set_Game_Duration_S(DWORD seconds)
 //-----------------------------------------------------------------------------
 void cGameData::Get_Description(WideStringClass & description)
 {
-	const WideStringClass delimiter	= L"\t";
-	const WideStringClass newline		= L"\n";
+	const WideStringClass delimiter	= u"\t";
+	const WideStringClass newline		= u"\n";
 	const WideStringClass yes			= TRANSLATE(IDS_YES);
 	const WideStringClass no			= TRANSLATE(IDS_NO);
 
@@ -2050,7 +2054,7 @@ void cGameData::Get_Description(WideStringClass & description)
 	// Map Name
 	//
 	if (ModName.Is_Empty () == false) {
-		attribute = L"Mod Name:";
+		attribute = u"Mod Name:";
 		value = ModName;
 		description += (attribute + delimiter + value + newline);
 	}
@@ -2067,7 +2071,7 @@ void cGameData::Get_Description(WideStringClass & description)
 	//
 	attribute = TRANSLATE(IDS_MENU_TEXT298);
 	if (Is_Time_Limit()) {
-		value.Format(L"%d %s", TimeLimitMinutes, TRANSLATE(IDS_MP_MINUTES));
+		value.Format(u"%d %s", TimeLimitMinutes, TRANSLATE(IDS_MP_MINUTES));
 	} else {
 		value = TRANSLATE(IDS_MP_NONE);
 	}
@@ -2077,7 +2081,7 @@ void cGameData::Get_Description(WideStringClass & description)
 	// Max. Players
 	//
 	attribute = TRANSLATE(IDS_MENU_TEXT294);
-	value.Format(L"%d", MaxPlayers);
+	value.Format(u"%d", MaxPlayers);
 	description += (attribute + delimiter + value + newline);
 
 	//

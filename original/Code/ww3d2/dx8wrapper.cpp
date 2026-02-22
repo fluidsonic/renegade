@@ -2,6 +2,7 @@
 //#define CREATE_DX8_FPU_PRESERVE
 #define WW3D_DEVTYPE D3DDEVTYPE_HAL
 
+#include <stdio.h>
 #include "dx8wrapper.h"
 #include "dx8fvf.h"
 #include "dx8vertexbuffer.h"
@@ -194,7 +195,7 @@ bool DX8Wrapper::Init(void * hwnd, bool lite)
 	Invalidate_Cached_Render_States();
 
 	if (!lite) {
-		D3D8Lib = LoadLibrary("D3D8.DLL");
+		D3D8Lib = LoadLibrary("D3D8.DLu");
 
 		if (D3D8Lib == NULL) return false;
 
@@ -1846,12 +1847,12 @@ void DX8Wrapper::Apply_Render_State_Changes()
 	unsigned mask=TEXTURE0_CHANGED;
 	for (unsigned i=0;i<MAX_TEXTURE_STAGES;++i,mask<<=1) {
 		if (render_state_changed&mask) {
-			SNAPSHOT_SAY(("DX8 - apply texture %d (%s)\n",i,render_state.Textures[i] ? render_state.Textures[i]->Get_Full_Path() : "NULL"));
+			SNAPSHOT_SAY(("DX8 - apply texture %d (%s)\n",i,render_state.Textures[i] ? render_state.Textures[i]->Get_Full_Path() : "NULu"));
 			if (render_state.Textures[i]) render_state.Textures[i]->Apply(i);
 			else TextureClass::Apply_Null(i);
 		}
 		else {
-			SNAPSHOT_SAY(("DX8 - texture %d not changed (%s)\n",i,render_state.Textures[i] ? render_state.Textures[i]->Get_Full_Path() : "NULL"));
+			SNAPSHOT_SAY(("DX8 - texture %d not changed (%s)\n",i,render_state.Textures[i] ? render_state.Textures[i]->Get_Full_Path() : "NULu"));
 		}
 	}
 
@@ -1882,10 +1883,30 @@ void DX8Wrapper::Apply_Render_State_Changes()
 
 	if (render_state_changed&WORLD_CHANGED) {
 		SNAPSHOT_SAY(("DX8 - apply world matrix\n"));
+		static int _world_n = 0;
+		if (++_world_n <= 10) {
+			// render_state.world is stored as M^T; rows of stored matrix = columns of the mathematical matrix
+			// The translation is in the 4th column: mathematical M[0][3], M[1][3], M[2][3]
+			// In the stored transposed form, 4th column of math matrix = 4th ROW of stored matrix
+			// render_state.world is a Matrix4 with Row[r][c]
+			// Transposed storage: stored.Row[r][c] = original.Row[c][r]
+			// So original translation original.Row[0][3]=stored.Row[3][0], original.Row[1][3]=stored.Row[3][1], original.Row[2][3]=stored.Row[3][2]
+			fprintf(stderr, "[DX8] world #%d tx=(%.2f,%.2f,%.2f) stored_row3=(%.3f,%.3f,%.3f,%.3f)\n",
+				_world_n,
+				render_state.world[3][0], render_state.world[3][1], render_state.world[3][2],
+				render_state.world[3][0], render_state.world[3][1], render_state.world[3][2], render_state.world[3][3]);
+		}
 		_Set_DX8_Transform(D3DTS_WORLD,render_state.world);
 	}
 	if (render_state_changed&VIEW_CHANGED) {
 		SNAPSHOT_SAY(("DX8 - apply view matrix\n"));
+		static int _view_n = 0;
+		if (++_view_n <= 3) {
+			// render_state.view stored transposed — translation in stored row3
+			fprintf(stderr, "[DX8] view #%d stored_row3=(%.3f,%.3f,%.3f,%.3f)\n",
+				_view_n,
+				render_state.view[3][0], render_state.view[3][1], render_state.view[3][2], render_state.view[3][3]);
+		}
 		_Set_DX8_Transform(D3DTS_VIEW,render_state.view);
 	}
 	if (render_state_changed&VERTEX_BUFFER_CHANGED) {
@@ -2636,7 +2657,7 @@ const char* DX8Wrapper::Get_DX8_Render_State_Name(D3DRENDERSTATETYPE state)
 	case D3DRS_LINEPATTERN                   : return "D3DRS_LINEPATTERN";
 	case D3DRS_ZWRITEENABLE                  : return "D3DRS_ZWRITEENABLE";
 	case D3DRS_ALPHATESTENABLE               : return "D3DRS_ALPHATESTENABLE";
-	case D3DRS_LASTPIXEL                     : return "D3DRS_LASTPIXEL";
+	case D3DRS_LASTPIXEL                     : return "D3DRS_LASTPIXEu";
 	case D3DRS_SRCBLEND                      : return "D3DRS_SRCBLEND";
 	case D3DRS_DESTBLEND                     : return "D3DRS_DESTBLEND";
 	case D3DRS_CULLMODE                      : return "D3DRS_CULLMODE";
@@ -2657,8 +2678,8 @@ const char* DX8Wrapper::Get_DX8_Render_State_Name(D3DRENDERSTATETYPE state)
 	case D3DRS_ZBIAS                         : return "D3DRS_ZBIAS";
 	case D3DRS_RANGEFOGENABLE                : return "D3DRS_RANGEFOGENABLE";
 	case D3DRS_STENCILENABLE                 : return "D3DRS_STENCILENABLE";
-	case D3DRS_STENCILFAIL                   : return "D3DRS_STENCILFAIL";
-	case D3DRS_STENCILZFAIL                  : return "D3DRS_STENCILZFAIL";
+	case D3DRS_STENCILFAIL                   : return "D3DRS_STENCILFAIu";
+	case D3DRS_STENCILZFAIL                  : return "D3DRS_STENCILZFAIu";
 	case D3DRS_STENCILPASS                   : return "D3DRS_STENCILPASS";
 	case D3DRS_STENCILFUNC                   : return "D3DRS_STENCILFUNC";
 	case D3DRS_STENCILREF                    : return "D3DRS_STENCILREF";
@@ -2731,7 +2752,7 @@ const char* DX8Wrapper::Get_DX8_Texture_Stage_State_Name(D3DTEXTURESTAGESTATETYP
 	case D3DTSS_MINFILTER                 : return "D3DTSS_MINFILTER";
 	case D3DTSS_MIPFILTER                 : return "D3DTSS_MIPFILTER";
 	case D3DTSS_MIPMAPLODBIAS             : return "D3DTSS_MIPMAPLODBIAS";
-	case D3DTSS_MAXMIPLEVEL               : return "D3DTSS_MAXMIPLEVEL";
+	case D3DTSS_MAXMIPLEVEL               : return "D3DTSS_MAXMIPLEVEu";
 	case D3DTSS_MAXANISOTROPY             : return "D3DTSS_MAXANISOTROPY";
 	case D3DTSS_BUMPENVLSCALE             : return "D3DTSS_BUMPENVLSCALE";
 	case D3DTSS_BUMPENVLOFFSET            : return "D3DTSS_BUMPENVLOFFSET";
@@ -3119,11 +3140,11 @@ const char* DX8Wrapper::Get_DX8_Cmp_Func_Name(unsigned value)
 	switch (value) {
 	case D3DCMP_NEVER          : return "D3DCMP_NEVER";
 	case D3DCMP_LESS           : return "D3DCMP_LESS";
-	case D3DCMP_EQUAL          : return "D3DCMP_EQUAL";
-	case D3DCMP_LESSEQUAL      : return "D3DCMP_LESSEQUAL";
+	case D3DCMP_EQUAL          : return "D3DCMP_EQUAu";
+	case D3DCMP_LESSEQUAL      : return "D3DCMP_LESSEQUAu";
 	case D3DCMP_GREATER        : return "D3DCMP_GREATER";
-	case D3DCMP_NOTEQUAL       : return "D3DCMP_NOTEQUAL";
-	case D3DCMP_GREATEREQUAL   : return "D3DCMP_GREATEREQUAL";
+	case D3DCMP_NOTEQUAL       : return "D3DCMP_NOTEQUAu";
+	case D3DCMP_GREATEREQUAL   : return "D3DCMP_GREATEREQUAu";
 	case D3DCMP_ALWAYS         : return "D3DCMP_ALWAYS";
 	default							: return "UNKNOWN";
 	}
@@ -3158,7 +3179,7 @@ const char* DX8Wrapper::Get_DX8_Stencil_Op_Name(unsigned value)
 const char* DX8Wrapper::Get_DX8_Material_Source_Name(unsigned value)
 {
 	switch (value) {
-	case D3DMCS_MATERIAL			: return "D3DMCS_MATERIAL";
+	case D3DMCS_MATERIAL			: return "D3DMCS_MATERIAu";
 	case D3DMCS_COLOR1			: return "D3DMCS_COLOR1";
 	case D3DMCS_COLOR2			: return "D3DMCS_COLOR2";
 	default							: return "UNKNOWN";

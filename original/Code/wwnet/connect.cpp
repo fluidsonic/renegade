@@ -38,7 +38,6 @@ UINT cConnection::TotalUncompressedBytesSent		= 0;
 
 static const int		INVALID_RHOST_ID			= -1;
 
-//#ifdef WWDEBUG
 /***********************************************************************************************
  * Addr_As_String -- Get a human readable internet address                                     *
  *                                                                                             *
@@ -56,7 +55,7 @@ static const int		INVALID_RHOST_ID			= -1;
 char * Addr_As_String(sockaddr_in *addr)
 {
 	static char _string[128];
-	unsigned long _a = addr->sin_addr.s_addr;
+	uint32_t _a = addr->sin_addr.s_addr;
 	sprintf(_string, "%d.%d.%d.%d ; %d",
 		(int)(_a & 0xff),
 		(int)((_a >> 8) & 0xff),
@@ -65,7 +64,6 @@ char * Addr_As_String(sockaddr_in *addr)
 		ntohs(addr->sin_port));
 	return(_string);
 }
-//#endif //WWDEBUG
 
 //------------------------------------------------------------------------------------
 cConnection::cConnection() :
@@ -227,7 +225,7 @@ void cConnection::Init_As_Client(LPSOCKADDR_IN p_server_address, unsigned short 
 }
 
 //------------------------------------------------------------------------------------
-void cConnection::Init_As_Client(ULONG server_ip, USHORT server_port, unsigned short my_port)
+void cConnection::Init_As_Client(uint32_t server_ip, USHORT server_port, unsigned short my_port)
 {
 
    SOCKADDR_IN server_address;
@@ -244,7 +242,7 @@ void cConnection::Init_As_Client(ULONG server_ip, USHORT server_port, unsigned s
 
 //------------------------------------------------------------------------------------
 void cConnection::Init_As_Server(USHORT server_port, int max_players,
-	bool is_dedicated_server, ULONG addr)
+	bool is_dedicated_server, uint32_t addr)
 {
 
 	//assert(max_players < MAX_RHOSTS); // because MAX_RHOSTS is an array bound
@@ -290,7 +288,7 @@ void cConnection::Init_As_Server(USHORT server_port, int max_players,
 }
 
 //------------------------------------------------------------------------------------
-bool cConnection::Bind(USHORT port, ULONG addr)
+bool cConnection::Bind(USHORT port, uint32_t addr)
 {
 
 	//assert((!IsServer && port == 0) ||
@@ -952,7 +950,7 @@ memcpy(last_packet, packet.Get_Data(), last_packet_len);
 			//unsigned long bytes;
 			//int result = ioctlsocket(Sock, FIONREAD, &bytes);
 			//if (result == 0 && bytes != 0) {
-			//	
+			//
 			//}
 
 	}
@@ -1081,7 +1079,7 @@ int cConnection::Low_Level_Receive_Wrapper(cPacket & packet)
 		// diagnostic
 		//
 		if (ret_code > 0) {
-			ULONG ip = packet.Get_From_Address_Wrapper()->FromAddress.sin_addr.s_addr;
+			uint32_t ip = packet.Get_From_Address_Wrapper()->FromAddress.sin_addr.s_addr;
 		}
 		/**/
 	}
@@ -1763,7 +1761,7 @@ void cConnection::Service_Read()
 }
 
 //-----------------------------------------------------------------------------
-void cConnection::Set_Bandwidth_Budget_Out(ULONG bw_budget)
+void cConnection::Set_Bandwidth_Budget_Out(uint32_t bw_budget)
 {
 	//assert(bw_budget >= 0);
 	BandwidthBudgetOut = bw_budget;
@@ -1840,7 +1838,7 @@ void cConnection::Service_Send(bool is_urgent)
 			BandwidthBalancer.Adjust(this, IsDedicatedServer);
 		} else {
 
-			ULONG bps_per_rhost = (ULONG) (BandwidthBudgetOut / (float) num_real_remote_hosts);
+			uint32_t bps_per_rhost = (uint32_t) (BandwidthBudgetOut / (float) num_real_remote_hosts);
 
 			for (int rhost_id = MinRHost; rhost_id <= MaxRHost; rhost_id++) {
 				if (PRHost[rhost_id] != NULL) {

@@ -42,7 +42,7 @@ ServerSaveLoadMenuClass::On_Init_Dialog (void)
 		//
 		//	Configure the column
 		//
-		list_ctrl->Add_Column (L"", 1.0F, Vector3 (1, 1, 1));
+		list_ctrl->Add_Column (u"", 1.0F, Vector3 (1, 1, 1));
 
 		//
 		//	Loop over all the configurations
@@ -244,7 +244,7 @@ ServerSaveLoadMenuClass::Save_Config (bool prompt)
 					RenegadeDialogMgrClass::Do_Simple_Dialog(IDD_MP_INVALID_SERVER_CONFIG);
 #else
 					WideStringClass errorMsg(0, true);
-					errorMsg.Format(L"%s\n\n%s", TRANSLATE(IDS_MENU_TEXT330), (const WCHAR*)outMsg);
+					errorMsg.Format(u"%s\n\n%s", TRANSLATE(IDS_MENU_TEXT330), (const WCHAR*)outMsg);
 					DlgMsgBox::DoDialog(TRANSLATE(IDS_MENU_TEXT329), errorMsg);
 #endif
 				}
@@ -382,7 +382,7 @@ ServerSaveLoadMenuClass::On_ListCtrl_Sel_Change
 		//
 		//	Clear the name of the current configuration
 		//
-		Set_Dlg_Item_Text (IDC_NAME_EDIT, L"");
+		Set_Dlg_Item_Text (IDC_NAME_EDIT, u"");
 	}
 
 	//
@@ -634,12 +634,12 @@ void ServerSettingsManagerClass::Scan(void)
 	for (int i=2 ; i<MAX_SETTINGS_FILES ; i++) {
 
 		sprintf(file_name, DEFAULT_SERVER_SETTINGS_FILE_NAME, i);
-		sprintf(whole_file_name, "data\\%s", file_name);
+		sprintf(whole_file_name, "data/%s", file_name);
 		RawFileClass file(whole_file_name);
 		if (file.Is_Available()) {
 			INIClass *ini = Get_INI(file_name);
 			if (ini) {
-				description = ini->Get_Wide_String(description, "Settings", "wConfigName", L"");
+				description = ini->Get_Wide_String(description, "Settings", "wConfigName", u"");
 				if (description.Get_Length()) {
 					ServerSettingsList.Add(new ServerSettingsClass(file_name, description.Peek_Buffer(), i));
 				} else {
@@ -694,7 +694,7 @@ void ServerSettingsManagerClass::Load_Settings(ServerSettingsClass *settings)
 
 	if (settings && The_Game()) {
 		char filename[MAX_PATH];
-		sprintf(filename, "data\\%s", (const char*)settings->RawFileName);
+		sprintf(filename, "data/%s", (const char*)settings->RawFileName);
 		RawFileClass file(filename);
 		if (file.Is_Available()) {
 			The_Game()->Set_Ini_Filename(settings->RawFileName);
@@ -722,7 +722,7 @@ void ServerSettingsManagerClass::Delete_Configuration(ServerSettingsClass *setti
 {
 	if (!settings->Is_Default()) {
 		char filename[MAX_PATH];
-		sprintf(filename, "data\\%s", (const char*)settings->RawFileName);
+		sprintf(filename, "data/%s", (const char*)settings->RawFileName);
 		DeleteFile(filename);
 		for (int i=0 ; i<ServerSettingsList.Count() ; i++) {
 			if (strcmp(settings->RawFileName, ServerSettingsList[i]->RawFileName) == 0) {
@@ -753,7 +753,7 @@ void ServerSettingsManagerClass::Save_Configuration(ServerSettingsClass *setting
 
 	if (settings && The_Game()) {
 		char filename[MAX_PATH];
-		sprintf(filename, "data\\%s", (const char*)settings->RawFileName);
+		sprintf(filename, "data/%s", (const char*)settings->RawFileName);
 		RawFileClass file(filename);
 		if (!file.Is_Available()) {
 			file.Create();

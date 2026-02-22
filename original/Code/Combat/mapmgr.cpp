@@ -3,7 +3,7 @@
 #include "assetmgr.h"
 #include "saveload.h"
 
-//#define FORCE_DISABLE_VTOL  // remove this to allow VTOL's on maps that allow VTOLs
+//#define FORCE_DISABLE_VTOL  // remove this to allow VTOu's on maps that allow VTOLs
 
 ///////////////////////////////////////////////////////////////////////
 // Global singleton instance

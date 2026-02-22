@@ -93,8 +93,8 @@ typedef struct tagDISPPARAMS {
 #define __IUnknown_INTERFACE_DEFINED__
 struct IUnknown {
     virtual HRESULT QueryInterface(REFIID riid, void** ppv) = 0;
-    virtual ULONG AddRef() = 0;
-    virtual ULONG Release() = 0;
+    virtual uint32_t AddRef() = 0;
+    virtual uint32_t Release() = 0;
     virtual ~IUnknown() {}
 };
 #endif // __IUnknown_INTERFACE_DEFINED__

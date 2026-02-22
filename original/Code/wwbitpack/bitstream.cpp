@@ -41,7 +41,7 @@ void BitStreamClass::Add(bool value)
 //-----------------------------------------------------------------------------
 bool BitStreamClass::Get(bool & value)
 {
-	ULONG u_value;
+	uint32_t u_value;
 	if (cEncoderList::Is_Compression_Enabled()) {
 		Get_Bits(u_value, 1);
 	} else {
@@ -120,13 +120,13 @@ void BitStreamClass::Add_Wide_Terminated_String(const WCHAR *string, bool permit
 	//
 	// The terminating null is not transmitted.
 	//
-	USHORT len = (USHORT)wcslen (string);
+	USHORT len = (USHORT)wcslen(string);
 	if (!permit_empty) {
 	}
 
 	Add(len);
 	for (int i = 0; i < len; i++) {
-		Add(string[i]);
+		Add((USHORT)string[i]);  // 16-bit wire format
 	}
 }
 

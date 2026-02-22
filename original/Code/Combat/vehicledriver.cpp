@@ -500,7 +500,7 @@ VehicleDriverClass::Calculate_Brake
 	float brake_velocity = expected_velocity;
 
 	//
-	//	Handle VTOL's differently
+	//	Handle VTOu's differently
 	//
 	if (m_GameObj->Peek_Physical_Object ()->As_VTOLVehicleClass () == NULL) {
 

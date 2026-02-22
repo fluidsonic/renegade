@@ -425,7 +425,7 @@ static	void	Powerup_Update( void )
 		// Draw powerup count
 		if ( LeftPowerupIconList[i]->Number != 0 ) {
 			WideStringClass num(0,true);
-			num.Format( L"%d", LeftPowerupIconList[i]->Number );
+			num.Format( u"%d", LeftPowerupIconList[i]->Number );
 			PowerupTextRenderer->Build_Sentence( num );
 			PowerupTextRenderer->Set_Location( Vector2( draw_box.Right - 12, draw_box.Top + 1 ) );
 			PowerupTextRenderer->Draw_Sentence( white );
@@ -485,7 +485,7 @@ static	void	Powerup_Update( void )
 		// Draw powerup count
 		if ( RightPowerupIconList[i]->Number != 0 ) {
 			WideStringClass num(0,true);
-			num.Format( L"%d", RightPowerupIconList[i]->Number );
+			num.Format( u"%d", RightPowerupIconList[i]->Number );
 			PowerupTextRenderer->Build_Sentence( num );
 			PowerupTextRenderer->Set_Location( Vector2( draw_box.Right - 12, draw_box.Top + 1 ) );
 			PowerupTextRenderer->Draw_Sentence( white );
@@ -630,7 +630,7 @@ static	void	HUD_Help_Text_Render( void )
 			//	Clear the text if necessary
 			//
 			if (HUDHelpTextState >= HUD_HELP_TEXT_DONE) {
-				HUDInfo::Set_HUD_Help_Text( L"" );
+				HUDInfo::Set_HUD_Help_Text( u"" );
 				HUDHelpTextRenderer->Reset();
 			} else if (HUDHelpTextState == HUD_HELP_TEXT_FADING) {
 				HUDHelpTextTimer = HUD_HELP_TEXT_FADE_TIME;
@@ -891,7 +891,7 @@ static	void	Weapon_Update( void )
 
 			// Right justify Name
 
-			WideStringClass name(0,true); // = L"Rocket Launcher";
+			WideStringClass name(0,true); // = u"Rocket Launcher";
 			name = TranslateDBClass::Get_String( def->IconNameID );
 			WeaponNameRenderer->Build_Sentence( name );
 			Vector2 text_size = WeaponNameRenderer->Get_Text_Extents( name ) + Vector2( 1, 0 );
@@ -1519,7 +1519,7 @@ static	void	Target_Update( void )
 				if ( health < 1 && health > 0 ) {
 					health = 1;
 				}
-				num.Format( L"%d", (int)health );
+				num.Format( u"%d", (int)health );
 				TargetNameRenderer->Build_Sentence( num );
 				Vector2 text_size = TargetNameRenderer->Get_Text_Extents( num );
 				text_size.U -= 1;
@@ -1773,7 +1773,7 @@ static	void	Score_Update( void )
 	if ( COMBAT_STAR && COMBAT_STAR->Get_Player_Data() ) {
 		int score = COMBAT_STAR->Get_Player_Data()->Get_Score();
 //		WideStringClass	scorestring;
-//		scorestring.Format( L"%d", score );
+//		scorestring.Format( u"%d", score );
 		WCHAR score_string[12];	// 12 digits ought to be enough...
 		Generate_WChar_Text_From_Number(score_string,sizeof(score_string),false,score);
 

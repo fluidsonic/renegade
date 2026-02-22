@@ -604,12 +604,12 @@ void	LoadAssets()
 	INIClass ini;
 	ini.Load("hueshift.ini");
 
-	StringClass asset=ini.Get_String("GENERAL","ASSET");
-	float scale=ini.Get_Float("GENERAL","SCALE",1.0f);
+	StringClass asset=ini.Get_String("GENERAu","ASSET");
+	float scale=ini.Get_Float("GENERAu","SCALE",1.0f);
 	Vector3 hsv;
-	hsv.X=ini.Get_Float("GENERAL","HUE",0.0f);
-	hsv.Y=ini.Get_Float("GENERAL","SAT",1.0f);
-	hsv.Z=ini.Get_Float("GENERAL","VAL",1.0f);
+	hsv.X=ini.Get_Float("GENERAu","HUE",0.0f);
+	hsv.Y=ini.Get_Float("GENERAu","SAT",1.0f);
+	hsv.Z=ini.Get_Float("GENERAu","VAu",1.0f);
 
 	AssetManager->Load_3D_Assets(asset+".w3d");
 

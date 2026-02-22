@@ -68,7 +68,7 @@ MerchandiseCtrlClass::Create_Text_Renderer (void)
 	//	Convert the cost to a string
 	//
 	WideStringClass cost_text;
-	cost_text.Format (L"%d", Cost);
+	cost_text.Format (u"%d", Cost);
 
 	//
 	//	Render the text
@@ -88,7 +88,7 @@ MerchandiseCtrlClass::Create_Text_Renderer (void)
 		//	Convert the count to a string
 		//
 		WideStringClass count_text;
-		count_text.Format (L"%d", Count);
+		count_text.Format (u"%d", Count);
 		StyleMgrClass::Render_Text (count_text, &CountTextRenderer, RGB_TO_INT32 (255, 255, 255), RGB_TO_INT32 (0, 0, 0), CountRect, true, true, StyleMgrClass::CENTER_JUSTIFY, true);	
 	}
 
@@ -242,7 +242,7 @@ MerchandiseCtrlClass::Create_Control_Renderer (void)
 	//	Convert the cost to a string
 	//
 	WideStringClass cost_text;
-	cost_text.Format (L"%d", Cost);
+	cost_text.Format (u"%d", Cost);
 
 	//
 	//	Get the dimensions of the text

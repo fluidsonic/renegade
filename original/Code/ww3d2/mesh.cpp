@@ -1,5 +1,6 @@
 #include "mesh.h"
 #include <assert.h>
+#include <stdio.h>
 #include <string.h>
 #include "w3d_file.h"
 #include "assetmgr.h"
@@ -567,6 +568,10 @@ int MeshClass::Get_Num_Polys(void) const
  *=============================================================================================*/
 void MeshClass::Render(RenderInfoClass & rinfo)
 {
+	static int _mesh_log_n = 0;
+	bool _log_this = (_mesh_log_n < 100) && strstr(Get_Name(), "IF_B") != nullptr;
+	if (_log_this) { _mesh_log_n++; fprintf(stderr, "[mesh] Render(%s) not_hidden=%d\n", Get_Name(), (int)Is_Not_Hidden_At_All()); }
+
 	if (Is_Not_Hidden_At_All() == false) {
 		return;
 	}
@@ -596,17 +601,30 @@ void MeshClass::Render(RenderInfoClass & rinfo)
 
 		const FrustumClass & frustum=rinfo.Camera.Get_Frustum();
 
-		if (	Model->Get_Flag(MeshGeometryClass::SKIN) ||
-				CollisionMath::Overlap_Test(frustum,Get_Bounding_Box())!=CollisionMath::OUTSIDE ) 
+		const bool _in_frustum = Model->Get_Flag(MeshGeometryClass::SKIN) ||
+				CollisionMath::Overlap_Test(frustum,Get_Bounding_Box())!=CollisionMath::OUTSIDE;
+		if (_log_this) {
+			const AABoxClass& _bb = Get_Bounding_Box();
+			fprintf(stderr, "[mesh] Render(%s) frustum=%s bb_ctr=(%.0f,%.0f,%.0f) bb_ext=(%.0f,%.0f,%.0f)\n",
+				Get_Name(), _in_frustum ? "PASS" : "FAIL",
+				_bb.Center.X, _bb.Center.Y, _bb.Center.Z,
+				_bb.Extent.X, _bb.Extent.Y, _bb.Extent.Z);
+		}
+		if (_in_frustum)
 		{
 			bool rendered_something = false;
-			
+
 			/*
 			** If this mesh model has never been rendered, we need to generate the DX8 datastructures
 			*/
-			if (PolygonRendererList.Is_Empty()) {
+			const bool _was_empty = PolygonRendererList.Is_Empty();
+			if (_was_empty) {
 				Model->Register_For_Rendering();
 				TheDX8MeshRenderer.Register_Mesh_Type(this);
+			}
+			if (_log_this) {
+				fprintf(stderr, "[mesh] Render(%s) first_register=%d polylist_empty_after=%d\n",
+					Get_Name(), (int)_was_empty, (int)PolygonRendererList.Is_Empty());
 			}
 
 			/*

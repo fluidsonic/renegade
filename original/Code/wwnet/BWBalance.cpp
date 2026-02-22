@@ -326,8 +326,8 @@ void BandwidthBalancerClass::Adjust_Connection_Budget(cConnection *connection)
 	if (PacketManager.Get_Error_State() == PacketManagerClass::STATE_WS_BUFFERS_FULL) {
 		if (time - _last_time > 10000) {
 			_last_time = time;
-			ULONG bbo = connection->Get_Bandwidth_Budget_Out();
-			ULONG new_bbo = (bbo * 9) / 10;
+			uint32_t bbo = connection->Get_Bandwidth_Budget_Out();
+			uint32_t new_bbo = (bbo * 9) / 10;
 			connection->Set_Bandwidth_Budget_Out(new_bbo);
 		}
 	}

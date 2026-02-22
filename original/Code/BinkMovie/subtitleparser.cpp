@@ -3,25 +3,24 @@
 #include "straw.h"
 #include "readline.h"
 #include "trim.h"
-#include <wchar.h>
 #include <stdlib.h>
 
 // Subtitle control file parsing tokens
-#define BEGINMOVIE_TOKEN L"BeginMovie"
-#define ENDMOVIE_TOKEN   L"EndMovie"
-#define TIMEBIAS_TOKEN   L"TimeBias"
-#define TIME_TOKEN       L"Time"
-#define DURATION_TOKEN   L"Duration"
-#define POSITION_TOKEN   L"Position"
-#define COLOR_TOKEN      L"Color"
-#define TEXT_TOKEN       L"Text"
+#define BEGINMOVIE_TOKEN u"BeginMovie"
+#define ENDMOVIE_TOKEN   u"EndMovie"
+#define TIMEBIAS_TOKEN   u"TimeBias"
+#define TIME_TOKEN       u"Time"
+#define DURATION_TOKEN   u"Duration"
+#define POSITION_TOKEN   u"Position"
+#define COLOR_TOKEN      u"Color"
+#define TEXT_TOKEN       u"Text"
 
-unsigned long DecodeTimeString(wchar_t* string);
-void Parse_Time(wchar_t* string, SubTitleClass* subTitle);
-void Parse_Duration(wchar_t* string, SubTitleClass* subTitle);
-void Parse_Position(wchar_t* string, SubTitleClass* subTitle);
-void Parse_Color(wchar_t* string, SubTitleClass* subTitle);
-void Parse_Text(wchar_t* string, SubTitleClass* subTitle);
+unsigned long DecodeTimeString(char16_t* string);
+void Parse_Time(char16_t* string, SubTitleClass* subTitle);
+void Parse_Duration(char16_t* string, SubTitleClass* subTitle);
+void Parse_Position(char16_t* string, SubTitleClass* subTitle);
+void Parse_Color(char16_t* string, SubTitleClass* subTitle);
+void Parse_Text(char16_t* string, SubTitleClass* subTitle);
 
 SubTitleParserClass::TokenHook SubTitleParserClass::mTokenHooks[] =
 {
@@ -57,8 +56,8 @@ SubTitleParserClass::SubTitleParserClass(Straw& input)
 	// All Unicode plaintext files are prefixed with the byte-order mark U+FEFF
 	// or its mirror U+FFFE. This mark is  used to indicate the byte order of a
 	// text stream.
-	wchar_t byteOrderMark = 0;
-	mInput.Get(&byteOrderMark, sizeof(wchar_t));
+	char16_t byteOrderMark = 0;
+	mInput.Get(&byteOrderMark, sizeof(char16_t));
 
 	if (byteOrderMark != 0xFEFF) {
 	}
@@ -109,11 +108,11 @@ DynamicVectorClass<SubTitleClass*>* SubTitleParserClass::Get_Sub_Titles(const ch
 		if (subTitleCollection != NULL) {
 			for (;;) {
 				// Retrieve a line from the control file
-				wchar_t* string = Get_Next_Line();
+				char16_t* string = Get_Next_Line();
 
 				if ((string != NULL) && (wcslen(string) > 0)) {
 					// Check for subtitle entry markers
-					if ((string[0] == L'<') && (string[wcslen(string) - 1] == L'>')) {
+					if ((string[0] == u'<') && (string[wcslen(string) - 1] == u'>')) {
 						// Trim off markers
 						string++;
 						string[wcslen(string) - 1] = 0;
@@ -176,13 +175,13 @@ DynamicVectorClass<SubTitleClass*>* SubTitleParserClass::Get_Sub_Titles(const ch
 
 bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 {
-	// Convert the moviename into Unicode
-	wchar_t wideName[32];
-	mbstowcs(wideName, moviename, 32);
+	// Convert the moviename into Unicode (ASCII only — movie names are ASCII)
+	char16_t wideName[32];
+	{ int _i = 0; for (; _i < 31 && moviename[_i]; _i++) wideName[_i] = (char16_t)(unsigned char)moviename[_i]; wideName[_i] = 0; }
 
 	do {
 		// Retrieve line of text
-		wchar_t* string = Get_Next_Line();
+		char16_t* string = Get_Next_Line();
 
 		// Terminate if no string read.
 		if (string == NULL) {
@@ -192,7 +191,7 @@ bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 		// Look for begin movie token
 		if (wcsnicmp(string, BEGINMOVIE_TOKEN, wcslen(BEGINMOVIE_TOKEN)) == 0) {
 			// Get moviename following the token
-			wchar_t* ptr = wcschr(string, L' ');
+			char16_t* ptr = wcschr(string, u' ');
 
 			// Check for matching moviename
 			if (ptr != NULL) {
@@ -216,7 +215,7 @@ bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 * DESCRIPTION
 *
 * INPUTS
-*     wchar_t* string
+*     char16_t* string
 *     SubTitleClass* subTitle
 *
 * RESULTS
@@ -224,13 +223,13 @@ bool SubTitleParserClass::Find_Movie_Entry(const char* moviename)
 *
 ******************************************************************************/
 
-bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTitle)
+bool SubTitleParserClass::Parse_Sub_Title(char16_t* string, SubTitleClass* subTitle)
 {
 	// Parameter check
 
 	for (;;) {
 		// Find token separator
-		wchar_t* separator = wcschr(string, L'=');
+		char16_t* separator = wcschr(string, u'=');
 
 		if (separator == NULL) {
 			return false;
@@ -240,20 +239,20 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 		*separator++ = 0;
 
 		// Tokens are to the left of the separator
-		wchar_t* token = string;
+		char16_t* token = string;
 		wcstrim(token);
 
 		// Parameters are to the right of the separator
-		wchar_t* param = separator;
+		char16_t* param = separator;
 		wcstrim(param);
 
 		// Quoted parameters are treated as literals (ignore contents)
-		if (param[0] == L'"') {
+		if (param[0] == u'"') {
 			// Skip leading quote
 			param++;
 
 			// Use next quote to mark end of parameter
-			separator = wcschr(param, L'"');
+			separator = wcschr(param, u'"');
 
 			if (separator == NULL) {
 				return false;
@@ -266,7 +265,7 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 			// quote to terminate the tokens parameters
 			wcstrim(separator);
 			
-			if (*separator == L',') {
+			if (*separator == u',') {
 				separator++;
 			}
 
@@ -275,14 +274,15 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 		}
 		else {
 			// Look for separator to next token
-			separator = wcspbrk(param, L", ");
+			separator = wcspbrk(param, u", ");
 
 			if (separator != NULL) {
 				*separator++ = 0;
 				string = separator;
 			}
 			else {
-				string = L"";
+				static char16_t _empty[1] = {0};
+				string = _empty;
 			}
 		}
 
@@ -313,8 +313,8 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 * DESCRIPTION
 *
 * INPUTS
-*     wchar_t* token
-*     wchar_t* param
+*     char16_t* token
+*     char16_t* param
 *     SubTitleClass* subTitle
 *
 * RESULTS
@@ -322,7 +322,7 @@ bool SubTitleParserClass::Parse_Sub_Title(wchar_t* string, SubTitleClass* subTit
 *
 ******************************************************************************/
 
-void SubTitleParserClass::Parse_Token(wchar_t* token, wchar_t* param, SubTitleClass* subTitle)
+void SubTitleParserClass::Parse_Token(char16_t* token, char16_t* param, SubTitleClass* subTitle)
 {
 	// Parameter check
 
@@ -358,7 +358,7 @@ void SubTitleParserClass::Parse_Token(wchar_t* token, wchar_t* param, SubTitleCl
 *
 ******************************************************************************/
 
-wchar_t* SubTitleParserClass::Get_Next_Line(void)
+char16_t* SubTitleParserClass::Get_Next_Line(void)
 {
 	bool eof = false;
 
@@ -368,10 +368,10 @@ wchar_t* SubTitleParserClass::Get_Next_Line(void)
 		mLineNumber++;
 
 		// Remove whitespace
-		wchar_t* string = wcstrim(mBuffer);
+		char16_t* string = wcstrim(mBuffer);
 
 		// Skip comments and blank lines
-		if ((wcslen(string) > 0) && (string[0] != L';')) {
+		if ((wcslen(string) > 0) && (string[0] != u';')) {
 			return string;
 		}
 	}
@@ -380,32 +380,32 @@ wchar_t* SubTitleParserClass::Get_Next_Line(void)
 }
 
 // Convert a time string in the format hh:mm:ss:tt into 1/60 second ticks.
-unsigned long Decode_Time_String(wchar_t* string)
+unsigned long Decode_Time_String(char16_t* string)
 {
 	#define TICKS_PER_SECOND 60
 	#define TICKS_PER_MINUTE (60 * TICKS_PER_SECOND)
 	#define TICKS_PER_HOUR   (60 * TICKS_PER_MINUTE)
 
-	wchar_t buffer[12];
+	char16_t buffer[12];
 	wcsncpy(buffer, string, 12);
 	buffer[11] = 0;
 
-	wchar_t* ptr = &buffer[0];
+	char16_t* ptr = &buffer[0];
 
 	// Isolate hours part
-	wchar_t* separator = wcschr(ptr, L':');
+	char16_t* separator = wcschr(ptr, u':');
 	*separator++ = 0;
 	unsigned long hours = wcstoul(ptr, NULL, 10);
 
 	// Isolate minutes part
 	ptr = separator;
-	separator = wcschr(ptr, L':');
+	separator = wcschr(ptr, u':');
 	*separator++ = 0;
 	unsigned long minutes = wcstoul(ptr, NULL, 10);
 
 	// Isolate seconds part
 	ptr = separator;
-	separator = wcschr(ptr, L':');
+	separator = wcschr(ptr, u':');
 	*separator++ = 0;
 	unsigned long seconds = wcstoul(ptr, NULL, 10);
 
@@ -421,13 +421,13 @@ unsigned long Decode_Time_String(wchar_t* string)
 	return time;
 }
 
-void Parse_Time(wchar_t* param, SubTitleClass* subTitle)
+void Parse_Time(char16_t* param, SubTitleClass* subTitle)
 {
 	unsigned long time = Decode_Time_String(param);
 	subTitle->Set_Display_Time(time);
 }
 
-void Parse_Duration(wchar_t* param, SubTitleClass* subTitle)
+void Parse_Duration(char16_t* param, SubTitleClass* subTitle)
 {
 	unsigned long time = Decode_Time_String(param);
 
@@ -436,23 +436,23 @@ void Parse_Duration(wchar_t* param, SubTitleClass* subTitle)
 	}
 }
 
-void Parse_Position(wchar_t* param, SubTitleClass* subTitle)
+void Parse_Position(char16_t* param, SubTitleClass* subTitle)
 {
 	static struct
 	{
-		const wchar_t* Name;
+		const char16_t* Name;
 		SubTitleClass::Alignment Align;
 		} _alignLookup[] = {
-			{L"Left", SubTitleClass::Left},
-			{L"Right", SubTitleClass::Right},
-			{L"Center", SubTitleClass::Center},
+			{u"Left", SubTitleClass::Left},
+			{u"Right", SubTitleClass::Right},
+			{u"Center", SubTitleClass::Center},
 			{NULL, SubTitleClass::Center}
 	};
 
-	wchar_t* ptr = param;
+	char16_t* ptr = param;
 
 	// Line position
-	wchar_t* separator = wcschr(ptr, L':');
+	char16_t* separator = wcschr(ptr, u':');
 
 	if (separator != NULL) {
 		*separator++ = 0;
@@ -477,17 +477,17 @@ void Parse_Position(wchar_t* param, SubTitleClass* subTitle)
 	subTitle->Set_Alignment(align);
 }
 
-void Parse_Color(wchar_t* param, SubTitleClass* subTitle)
+void Parse_Color(char16_t* param, SubTitleClass* subTitle)
 {
 
-	wchar_t* ptr = param;
+	char16_t* ptr = param;
 
-	wchar_t* separator = wcschr(ptr, L':');
+	char16_t* separator = wcschr(ptr, u':');
 	*separator++ = 0;
 	unsigned char red = (unsigned char)wcstoul(ptr, NULL, 10);
 	
 	ptr = separator;
-	separator = wcschr(ptr, L':');
+	separator = wcschr(ptr, u':');
 	*separator++ = 0;
 	unsigned char green = (unsigned char)wcstoul(ptr, NULL, 10);
 
@@ -497,7 +497,7 @@ void Parse_Color(wchar_t* param, SubTitleClass* subTitle)
 	subTitle->Set_RGB_Color(red, green, blue);
 }
 
-void Parse_Text(wchar_t* param, SubTitleClass* subTitle)
+void Parse_Text(char16_t* param, SubTitleClass* subTitle)
 {
 
 	subTitle->Set_Caption(param);

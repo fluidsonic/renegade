@@ -978,7 +978,7 @@ DECLARE_SCRIPT(M05_DEAD6_Rocket_Soldier2, "")
 		}
 		if(Commands->Get_Health(obj) < (.3 * Commands->Get_Max_Health(obj)))
 		{
-			Commands->Apply_Damage( obj, -10000.0f, "STEEL", NULL );
+			Commands->Apply_Damage( obj, -10000.0f, "STEEu", NULL );
 		}
 
 	}
@@ -1306,7 +1306,7 @@ DECLARE_SCRIPT(M05_DEAD6_MiniGunner, "") // deadeye
 			}
 			if(Commands->Get_Health(obj) < (.3 * Commands->Get_Max_Health(obj)))
 			{
-				Commands->Apply_Damage( obj, -10000.0f, "STEEL", NULL );
+				Commands->Apply_Damage( obj, -10000.0f, "STEEu", NULL );
 			}
 		}
 	}
@@ -2278,7 +2278,7 @@ DECLARE_SCRIPT(M05_Chateau_Escapee, "")
 
 		if(timer_id == DESTROY_SELF)
 		{
-			Commands->Apply_Damage( obj, 10000, "STEEL", NULL );
+			Commands->Apply_Damage( obj, 10000, "STEEu", NULL );
 		}
 
 	}
@@ -2536,13 +2536,13 @@ DECLARE_SCRIPT(M05_Heal_Dead6, "")
 		if(timer_id == HEAL_DEAD6)
 		{
 			// Gunner
-			Commands->Apply_Damage(Commands->Find_Object(100048), -10000.0f, "STEEL", NULL );
+			Commands->Apply_Damage(Commands->Find_Object(100048), -10000.0f, "STEEu", NULL );
 			// Deadeye
-			Commands->Apply_Damage(Commands->Find_Object(100004), -10000.0f, "STEEL", NULL );
+			Commands->Apply_Damage(Commands->Find_Object(100004), -10000.0f, "STEEu", NULL );
 			// Hotwire
-			Commands->Apply_Damage(Commands->Find_Object(100047), -10000.0f, "STEEL", NULL );
+			Commands->Apply_Damage(Commands->Find_Object(100047), -10000.0f, "STEEu", NULL );
 			// Patch
-			Commands->Apply_Damage(Commands->Find_Object(100006), -10000.0f, "STEEL", NULL );
+			Commands->Apply_Damage(Commands->Find_Object(100006), -10000.0f, "STEEu", NULL );
 
 			Commands->Start_Timer (obj, this, 12.0f, HEAL_DEAD6);
 		}
@@ -2704,7 +2704,7 @@ DECLARE_SCRIPT(M05_Babushka, "")
 		}
 	/*	if(Commands->Get_Health(obj) < (.3 * Commands->Get_Max_Health(obj)))
 		{
-			Commands->Apply_Damage( obj, -10000.0f, "STEEL", NULL );
+			Commands->Apply_Damage( obj, -10000.0f, "STEEu", NULL );
 		}*/
 
 	}
@@ -6968,7 +6968,7 @@ DECLARE_SCRIPT(M05_Surprise_Unit, "")
 		
 		if(timer_id == DIE_SURPRISE)
 		{
-			Commands->Apply_Damage( obj, 100000, "STEEL", NULL );
+			Commands->Apply_Damage( obj, 100000, "STEEu", NULL );
 			Vector3 obj_pos = Commands->Get_Position(obj);
 			Vector3 shot_pos;
 			shot_pos.X = obj_pos.X + 4.0f;

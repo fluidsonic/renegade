@@ -1222,7 +1222,7 @@ void 	CombatGameModeClass::Think()
 		int time=TIMEGETTIME();
 		CombatManager::Request_Autosave( false );
 		SaveGameManager::Set_Description( TRANSLATE( IDS_SAVE_AUTOSAVE ) );
-		SaveGameManager::Save_Game( "save\\autosave.sav", &_CommandoSaveLoad, NULL );
+		SaveGameManager::Save_Game( "save/autosave.sav", &_CommandoSaveLoad, NULL );
 		time=TIMEGETTIME()-time;
 		Debug_Say(( "Autosaving Complete, took %d.%2.2d seconds\n",time/1000,(time/10)%100 ));
 	}
@@ -1352,8 +1352,8 @@ void	CombatGameModeClass::Quick_Save( void )
 		saveA = registry->Get_Bool( "QuicksaveA", saveA );
 	}
 
-#define	SAVEGAME_NAME_A	"save\\quicksaveA.sav"
-#define	SAVEGAME_NAME_B	"save\\quicksaveB.sav"
+#define	SAVEGAME_NAME_A	"save/quicksaveA.sav"
+#define	SAVEGAME_NAME_B	"save/quicksaveB.sav"
 
 	// Check for a missing file
    if ( !cMiscUtil::File_Exists(SAVEGAME_NAME_B) ) {

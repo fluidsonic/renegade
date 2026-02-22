@@ -42,6 +42,7 @@ add_executable(Commando MACOSX_BUNDLE
     "${COMPAT_DIR}/macos_fix.mm"
     "${COMPAT_DIR}/winres.cpp"
     "${COMPAT_DIR}/wingdi_coretext.cpp"
+    "${COMPAT_DIR}/winfile.cpp"
     "${CHAT_RES}"
 )
 

@@ -388,10 +388,10 @@ void DlgMPTeamSelect::ShowTimeRemaining(float remainingSeconds)
 	cMiscUtil::Seconds_To_Hms(remainingSeconds, hours, mins, seconds);
 
 	WideStringClass timeString(0, true);
-	timeString.Format(L"%02d:%02d:%02d", hours, mins, seconds);
+	timeString.Format(u"%02d:%02d:%02d", hours, mins, seconds);
 
 	WideStringClass text(0, true);
-	text.Format(L"%s: %s", TRANSLATION(IDS_MP_TIME_REMAINING), (const WCHAR*)timeString);
+	text.Format(u"%s: %s", TRANSLATION(IDS_MP_TIME_REMAINING), (const WCHAR*)timeString);
 	Set_Dlg_Item_Text(IDC_TIME_REMAINING_TEXT, (const WCHAR*)text);
 	}
 
@@ -530,7 +530,7 @@ void DlgMPTeamSelect::AddLANPlayerInfo(cPlayer* player)
 
 	ListCtrlClass* list = (ListCtrlClass*)Get_Dlg_Item(listID);
 
-	int itemIndex = list->Insert_Entry(list->Get_Entry_Count(), L"");
+	int itemIndex = list->Insert_Entry(list->Get_Entry_Count(), u"");
 
 	if (itemIndex >= 0)
 		{
@@ -539,7 +539,7 @@ void DlgMPTeamSelect::AddLANPlayerInfo(cPlayer* player)
 		list->Set_Entry_Int(itemIndex, COL_SCORE, player->Get_Score());
 
 		WideStringClass text(0, true);
-		text.Format(L"%d/%d", player->Get_Kills(), player->Get_Deaths());
+		text.Format(u"%d/%d", player->Get_Kills(), player->Get_Deaths());
 		list->Set_Entry_Text(itemIndex, COL_KD, text);
 
 		// If this is the player client the mark there name with a star

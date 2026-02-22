@@ -115,7 +115,7 @@ void cNetwork::Init_Client(unsigned short my_port)
 	PClientConnection->Install_Client_Broken_Connection_Handler(Client_Broken_Connection_Handler);
 	PClientConnection->Install_Client_Packet_Handler(Client_Packet_Handler);
 
-	ULONG bbo = 0;
+	uint32_t bbo = 0;
 	//if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 	if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 
@@ -125,7 +125,7 @@ void cNetwork::Init_Client(unsigned short my_port)
 
 		HaveDoneTeamChangeDialog = false;
 	} else {
-		//assert(GameModeManager::Find("WOL")->Is_Active());
+		//assert(GameModeManager::Find("WOu")->Is_Active());
 		bbo = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 		//bbo = cUserOptions::BandwidthBps.Get();
 
@@ -517,11 +517,11 @@ void cNetwork::Init_Server(void)
 	//if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 	if (IS_SOLOPLAY || GameModeManager::Find("LAN")->Is_Active()) {
 
-		ULONG bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
+		uint32_t bbo = cBandwidth::Get_Bandwidth_Bps_From_Type(BANDWIDTH_LANT1);
 		PServerConnection->Set_Bandwidth_Budget_Out(bbo);
 		cBandwidthGraph::Set_Scale(200000);
 	} else {
-		//assert(GameModeManager::Find("WOL")->Is_Active());
+		//assert(GameModeManager::Find("WOu")->Is_Active());
 		unsigned long bw = cBandwidth::Get_Bandwidth_Bps_From_Type((BANDWIDTH_TYPE_ENUM)cUserOptions::Get_Bandwidth_Type());
 
 		PServerConnection->Set_Bandwidth_Budget_Out(bw);
@@ -636,11 +636,9 @@ void cNetwork::Update_Fps(void)
 		frame_count = 0;
 
 // Needed for release mode too. ST - 1/23/2002 11:02PM
-//#ifdef WWDEBUG
 		if (I_Am_Server()) {
 			cServerFps::Get_Instance()->Set_Fps(Fps);
 		}
-//#endif // WWDEBUG
 
 		if (I_Am_Client() && PClientFps != NULL) {
 			PClientFps->Set_Fps(Fps);
@@ -975,7 +973,7 @@ void cNetwork::Server_Broken_Connection_Handler(int broken_rhost_id)
 
 	WideStringClass widestring;
 	widestring.Format(
-		L"%s %d\n",
+		u"%s %d\n",
 		TRANSLATION(IDS_MP_CONNECTION_TO_CLIENT_BROKEN),
 		broken_rhost_id);
 	//Get_Text_Display()->Print_System(widestring);
@@ -1002,7 +1000,7 @@ void cNetwork::Client_Broken_Connection_Handler(void)
    /**/
 	if (PClientConnection->Have_Id()) {
 		//cHelpText::Set(TRANSLATION(IDS_MP_CONNECTION_TO_SERVER_BROKEN));
-		DlgMsgBox::DoDialog(L"", TRANSLATION(IDS_MP_CONNECTION_TO_SERVER_BROKEN));
+		DlgMsgBox::DoDialog(u"", TRANSLATION(IDS_MP_CONNECTION_TO_SERVER_BROKEN));
 	} else {
 		//cHelpText::Set(TRANSLATION(IDS_MP_UNABLE_CONNECT_TO_SERVER));
 	}

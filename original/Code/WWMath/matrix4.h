@@ -265,7 +265,7 @@ WWINLINE void Matrix4::Init(const Vector4 & r0, const Vector4 & r1, const Vector
  * Note that the znear and zfar parameters are positive distances to the clipping planes       *
  * even though in the camera coordinate system, the clipping planes are at negative z          *
  * coordinates.  This holds for all of the projection initializations and is consistent        *
- * with OpenGL's convention.                                                                   *
+ * with OpenGu's convention.                                                                   *
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   11/5/99    gth : Created.                                                                 *
@@ -314,7 +314,7 @@ WWINLINE void Matrix4::Init_Ortho
  * Note that the znear and zfar parameters are positive distances to the clipping planes       *
  * even though in the camera coordinate system, the clipping planes are at negative z          *
  * coordinates.  This holds for all of the projection initializations and is consistent        *
- * with OpenGL's convention.                                                                   *
+ * with OpenGu's convention.                                                                   *
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   11/5/99    gth : Created.                                                                 *
@@ -358,7 +358,7 @@ WWINLINE void Matrix4::Init_Perspective(float hfov,float vfov,float znear,float 
  * Note that the znear and zfar parameters are positive distances to the clipping planes       *
  * even though in the camera coordinate system, the clipping planes are at negative z          *
  * coordinates.  This holds for all of the projection initializations and is consistent        *
- * with OpenGL's convention.                                                                   *
+ * with OpenGu's convention.                                                                   *
  *                                                                                             *
  * HISTORY:                                                                                    *
  *   11/5/99    gth : Created.                                                                 *

@@ -109,7 +109,7 @@ MPChatChildDialogClass::Process_Message (void)
 		//
 		//	Clear the edit control
 		//
-		Set_Dlg_Item_Text (IDC_MESSAGE_EDIT, L"");
+		Set_Dlg_Item_Text (IDC_MESSAGE_EDIT, u"");
 	}
 
 	return ;
@@ -150,7 +150,7 @@ bool MPChatChildDialogClass::Process_Commands(const WCHAR* message)
 const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& param)
 {
 	#define LOCAL_STRIP_WHITESPACE(str)	\
-		while (str[0] != 0 && str[0] == L' ') {++str;}
+		while (str[0] != 0 && str[0] == u' ') {++str;}
 
 	//	Strip off whitespace
 	LOCAL_STRIP_WHITESPACE(command);
@@ -158,7 +158,7 @@ const WCHAR* Get_Parameter_From_String(const WCHAR* command, WideStringClass& pa
 	const WCHAR* curr_pos = command;
 
 	//	Look for the first whitespace break
-	while (curr_pos[0] != 0 && curr_pos[0] != L' ') {
+	while (curr_pos[0] != 0 && curr_pos[0] != u' ') {
 		++curr_pos;
 	}
 
@@ -269,7 +269,7 @@ MPChatChildDialogClass::Auto_Complete_Name (void)
 					int hilight_end = caret_pos + (completed_name_len - typed_len);
 					edit_ctrl->Set_Sel (caret_pos, hilight_end);
 				} else {
-					CurrRecipientName = L"";
+					CurrRecipientName = u"";
 				}
 			}
 		}	
@@ -292,7 +292,7 @@ MPChatChildDialogClass::Complete_Player_Name (const WCHAR *typed_name, WideStrin
 	//	Require more then one character for any name starting with "R'.  This is
 	// so that Denzil's "reply to last page" code will work...
 	//
-	if (typed_len == 1 && (typed_name[0] == L'r' || typed_name[0] == L'R')) {
+	if (typed_len == 1 && (typed_name[0] == u'r' || typed_name[0] == u'R')) {
 		return ;
 	}
 
@@ -416,7 +416,7 @@ MPChatChildDialogClass::Find_Current_Command(const WCHAR* message, int& start_in
 		//
 		//	Look to see if there is a command designator preceding the caret.
 		//
-		const WCHAR *command_start = ::wcsrchr (message, L'/');
+		const WCHAR *command_start = ::wcsrchr (message, u'/');
 		if (command_start != NULL) {
 			start_index = command_start - message;
 			command_start ++;
@@ -425,7 +425,7 @@ MPChatChildDialogClass::Find_Current_Command(const WCHAR* message, int& start_in
 			//	Check to ensure there isn't a space between the designator
 			// and the caret
 			//
-			const WCHAR *first_space = ::wcschr (command_start, L' ');
+			const WCHAR *first_space = ::wcschr (command_start, u' ');
 			if (first_space == NULL) {
 				end_index = ::wcslen (message);
 				retval = true;
@@ -491,7 +491,7 @@ MPChatChildDialogClass::On_EditCtrl_Key_Down
 					//	Update the dialog with the user's name...
 					//
 					WideStringClass heading_text(0, true);
-					heading_text.Format (L"%s:", CurrRecipientName.Peek_Buffer ());
+					heading_text.Format (u"%s:", CurrRecipientName.Peek_Buffer ());
 					Set_Dlg_Item_Text (IDC_TYPE_STATIC, heading_text);
 
 					//

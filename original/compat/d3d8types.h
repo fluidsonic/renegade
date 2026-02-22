@@ -476,15 +476,14 @@ typedef GUID CLSID;
 typedef const IID& REFIID;
 typedef const CLSID& REFCLSID;
 #endif
-typedef DWORD ULONG;
 
 // IUnknown COM base (guard against redefinition with oaidl.h)
 #ifndef __IUnknown_INTERFACE_DEFINED__
 #define __IUnknown_INTERFACE_DEFINED__
 struct IUnknown {
     virtual HRESULT QueryInterface(REFIID riid, void** ppv) { return E_NOINTERFACE; }
-    virtual ULONG   AddRef()  { return 1; }
-    virtual ULONG   Release() { return 0; }
+    virtual uint32_t   AddRef()  { return 1; }
+    virtual uint32_t   Release() { return 0; }
     virtual ~IUnknown() {}
 };
 #endif // __IUnknown_INTERFACE_DEFINED__

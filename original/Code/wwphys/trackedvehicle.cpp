@@ -19,10 +19,10 @@
 
 static bool _is_left_track_name(const char * name) 
 {
-	const char * LEFT_TRACK_NAME0 = "V_TRACK-L";
-	const char * LEFT_TRACK_NAME1 = "V_TREAD-L";
-	const char * LEFT_TRACK_NAME2 = "V_TRACK_L";
-	const char * LEFT_TRACK_NAME3 = "V_TREAD_L";
+	const char * LEFT_TRACK_NAME0 = "V_TRACK-u";
+	const char * LEFT_TRACK_NAME1 = "V_TREAD-u";
+	const char * LEFT_TRACK_NAME2 = "V_TRACK_u";
+	const char * LEFT_TRACK_NAME3 = "V_TREAD_u";
 	
 	/*
 	** Track skins can only be sub-objects of a hierarchy so check the name

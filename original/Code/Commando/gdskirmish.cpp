@@ -30,7 +30,7 @@ cGameDataSkirmish::cGameDataSkirmish(void)	:
 
 	Load_From_Server_Config();
 	Save_To_Server_Config();
-	
+
 	//
 	// Reload again to avoid LastServerConfigModTime issues
 	//
@@ -46,7 +46,7 @@ cGameDataSkirmish::~cGameDataSkirmish(void)
 //-----------------------------------------------------------------------------
 cGameDataSkirmish& cGameDataSkirmish::operator=(const cGameDataSkirmish& rhs)
 {
-	// 
+	//
 	// Call the base class
 	//
 	cGameData::operator=(rhs);
@@ -182,7 +182,7 @@ void cGameDataSkirmish::Base_Destruction_Score_Tweaking(void)
 	const int BASE_DESTRUCTION_POINTS_REWARD = 5000;
 
 	//
-	// Base destroyer gets a points reward. 
+	// Base destroyer gets a points reward.
 	// If this isn't enough to beat other team, nudge score ahead by 1 point.
 	//
 
@@ -239,21 +239,24 @@ void cGameDataSkirmish::Load_From_Server_Config(void)
 	cGameData::Load_From_Server_Config(Get_Ini_Filename());
 
    INIClass * p_ini = Get_INI(Get_Ini_Filename());
+   if (p_ini == NULL) {
+      return;
+   }
 
    bool				b;
    int				i;
    //float				f;
 
-	
+
    i = p_ini->Get_Int(	INI_SECTION_NAME, "MaxPlayers",					Get_Max_Players());
 	Set_Max_Players(i);
-   
+
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsFriendlyFirePermitted",	IsFriendlyFirePermitted.Get());
 	IsFriendlyFirePermitted.Set(b);
 
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsTeamChangingAllowed",	IsTeamChangingAllowed.Get());
 	IsTeamChangingAllowed.Set(b);
-	
+
 	b = p_ini->Get_Bool(	INI_SECTION_NAME, "IsClanGame",					IsClanGame.Get());
 	IsClanGame.Set(b);
 
@@ -265,9 +268,9 @@ void cGameDataSkirmish::Load_From_Server_Config(void)
 
    i = p_ini->Get_Int(	INI_SECTION_NAME, "StartingCredits",				Get_Starting_Credits());
 	Set_Starting_Credits(i);
-	
 
-   
+
+
 	Release_INI(p_ini);
 	return ;
 }
@@ -277,7 +280,8 @@ void cGameDataSkirmish::Save_To_Server_Config(void)
 {
 	cGameData::Save_To_Server_Config(Get_Ini_Filename());
 
-   INIClass * p_ini = Get_INI(Get_Ini_Filename());
+	INIClass * p_ini = Get_INI(Get_Ini_Filename());
+	if (p_ini == nullptr) p_ini = new INIClass(Get_Ini_Filename());
 
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsFriendlyFirePermitted",	IsFriendlyFirePermitted.Get());
 	p_ini->Put_Bool(	INI_SECTION_NAME, "IsTeamChangingAllowed",	IsTeamChangingAllowed.Get());
@@ -293,12 +297,12 @@ void cGameDataSkirmish::Save_To_Server_Config(void)
 
 //-----------------------------------------------------------------------------
 void cGameDataSkirmish::Show_My_Money(void)
-{  
+{
 	if (cNetwork::I_Am_Client()) {
 		cPlayer * p_player = cNetwork::Get_My_Player_Object();
 		if (p_player != NULL) {
 			WideStringClass text(0,true);
-			text.Format(L"%s: %d", 
+			text.Format(u"%s: %d",
 				TRANSLATION(IDS_MP_MONEY), (int) p_player->Get_Money());
 			Add_Bottom_Text(text);
 		}
@@ -307,7 +311,7 @@ void cGameDataSkirmish::Show_My_Money(void)
 
 //-----------------------------------------------------------------------------
 void cGameDataSkirmish::Show_Game_Settings_Limits(void)
-{  
+{
 	/*
 	if (IsIntermission.Is_True()) {
 		return;
@@ -321,7 +325,7 @@ void cGameDataSkirmish::Show_Game_Settings_Limits(void)
 
 //-----------------------------------------------------------------------------
 void cGameDataSkirmish::Filter_Soldiers(void)
-{  
+{
 	//
 	// Remove any soldiers or spawners on your side, leaving only opponents.
 	//
@@ -338,14 +342,14 @@ void cGameDataSkirmish::Filter_Soldiers(void)
 		// Whoa, design now wants these... comment out this code.
 		//
 		for (
-			SLNode<SmartGameObj> * objnode = GameObjManager::Get_Smart_Game_Obj_List()->Head(); 
-			objnode != NULL; 
-			objnode = objnode->Next()) 
+			SLNode<SmartGameObj> * objnode = GameObjManager::Get_Smart_Game_Obj_List()->Head();
+			objnode != NULL;
+			objnode = objnode->Next())
 		{
 			SmartGameObj * p_smart_obj = objnode->Data();
 
-			if (	p_smart_obj->As_SoldierGameObj() != NULL && 
-					!p_smart_obj->Is_Delete_Pending() && 
+			if (	p_smart_obj->As_SoldierGameObj() != NULL &&
+					!p_smart_obj->Is_Delete_Pending() &&
 					!p_smart_obj->Has_Player() &&
 					p_smart_obj->Get_Player_Type() == my_team) {
 
@@ -375,11 +379,11 @@ void cGameDataSkirmish::Get_Description(WideStringClass & description)
 {
 	//
 	// Call base class
-	// 
+	//
 	cGameData::Get_Description(description);
 
-	const WideStringClass delimiter	= L"\t";
-	const WideStringClass newline		= L"\n";
+	const WideStringClass delimiter	= u"\t";
+	const WideStringClass newline		= u"\n";
 	const WideStringClass yes			= TRANSLATE(IDS_YES);
 	const WideStringClass no			= TRANSLATE(IDS_NO);
 
@@ -390,7 +394,7 @@ void cGameDataSkirmish::Get_Description(WideStringClass & description)
 	// Starting Credits
 	//
 	attribute = TRANSLATE(IDS_MENU_TEXT349);
-	value.Format(L"%d", StartingCredits);
+	value.Format(u"%d", StartingCredits);
 	description += (attribute + delimiter + value + newline);
 
 	//

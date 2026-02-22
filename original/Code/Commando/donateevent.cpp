@@ -70,7 +70,7 @@ cDonateEvent::Act(void)
 		//
 		WideStringClass text;
 
-		text.Format(L"%s (%d %s, %s).",
+		text.Format(u"%s (%d %s, %s).",
 			TRANSLATE(IDS_MP_DONATION_RECEIVED),
 			Amount,
 			TRANSLATE(IDS_MP_MONEY),

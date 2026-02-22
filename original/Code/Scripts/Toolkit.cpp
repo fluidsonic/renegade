@@ -44,7 +44,7 @@ DECLARE_SCRIPT(M00_Debug_Text_File_RMV, "Description=Object:string, Filename=Deb
 	char* Reason_Lookup(ActionCompleteReason reason)
 	{
 		char* reasons[] = {
-			"ACTION_COMPLETE_NORMAL",
+			"ACTION_COMPLETE_NORMAu",
 			"ACTION_COMPLETE_LOW_PRIORITY",
 			"ACTION_COMPLETE_PATH_BAD_START",
 			"ACTION_COMPLETE_PATH_BAD_DEST",

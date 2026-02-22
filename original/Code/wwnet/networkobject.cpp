@@ -516,7 +516,7 @@ void NetworkObjectClass::Reset_Last_Clientside_Update_Time(void)
 //
 //	10/19/2001 12:19PM ST
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void NetworkObjectClass::Set_Last_Clientside_Update_Time (ULONG time)
+void NetworkObjectClass::Set_Last_Clientside_Update_Time (uint32_t time)
 {
 	LastClientsideUpdateTime = time;
 	ClientsideUpdateFrequencySampleCount++;

@@ -11768,7 +11768,7 @@ DECLARE_SCRIPT(M01_Church_EvacController_JDG, "")//103394
 			
 			Commands->Attach_Script(troopbone, "M01_Evac_TroopBone_JDG", "");
 			Commands->Innate_Disable(sender);
-			Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_L" );
+			Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_u" );
 			if(troopbone)
 			{
 				Commands->Set_Animation ( troopbone, "XG_EV5_troopBN.XG_EV5_troopBN", false);
@@ -11906,7 +11906,7 @@ DECLARE_SCRIPT(M01_ChurchArea_Air_Evac_Chopper_JDG, "")
 		{
 			Commands->Debug_Message ( "**********************chopper has finished entry anim\n" );
 			Vector3 evacLocation = Commands->Get_Position ( obj );
-			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsL", true );
+			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsu", true );
 
 			GameObject * loveshackNun = Commands->Find_Object ( M01_CHURCH_LOVESHACK_NUN_ID ); 
 			GameObject * churchNun = Commands->Find_Object ( M01_CHURCH_INTERIOR_NUN_ID );
@@ -12588,7 +12588,7 @@ DECLARE_SCRIPT(M01_BarnArea_Air_Evac_Chopper_JDG, "")
 		{
 			Commands->Debug_Message ( "**********************chopper has finished entry anim\n" );
 			Vector3 evacLocation = Commands->Get_Position ( obj );
-			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsL", true );
+			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsu", true );
 
 			GameObject * barnCiv01 = Commands->Find_Object ( M01_BARN_PRISONER_01_ID );
 			GameObject * barnCiv02 = Commands->Find_Object ( M01_BARN_PRISONER_02_ID );
@@ -15346,7 +15346,7 @@ DECLARE_SCRIPT(M01_BarnArea_EvacMonitor_JDG, "")//M01_BARNAREA_EVAC_MONITOR_JDG
 			
 			Commands->Attach_Script(troopbone, "M01_Evac_TroopBone_JDG", "");
 			Commands->Innate_Disable(sender);
-			Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_L" );
+			Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_u" );
 			if(troopbone)
 			{
 				Commands->Set_Animation ( troopbone, "XG_EV5_troopBN.XG_EV5_troopBN", false);
@@ -17288,7 +17288,7 @@ DECLARE_SCRIPT(M01_GDIBaseCommander_Air_Evac_Chopper_JDG, "")
 		{
 			Commands->Debug_Message ( "**********************chopper has finished entry anim\n" );
 			Vector3 evacLocation = Commands->Get_Position ( obj );
-			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsL", true );
+			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsu", true );
 
 			GameObject * gdiBaseCommander = Commands->Find_Object ( 106050 );
 			if (gdiBaseCommander != NULL)
@@ -17468,7 +17468,7 @@ DECLARE_SCRIPT(M01_GDIBaseCommander_EvacController_JDG, "")//106694
 				
 				Commands->Attach_Script(troopbone, "M01_Evac_TroopBone_JDG", "");
 				Commands->Innate_Disable(sender);
-				Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_L" );
+				Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_u" );
 				if(troopbone)
 				{
 					Commands->Set_Animation ( troopbone, "XG_EV5_troopBN.XG_EV5_troopBN", false);
@@ -17588,7 +17588,7 @@ DECLARE_SCRIPT(M01_GDIBase_POWEncounter02_Controller_JDG, "")//M01_GDIBASE_POWSC
 			
 			Commands->Attach_Script(troopbone, "M01_Evac_TroopBone_JDG", "");
 			Commands->Innate_Disable(sender);
-			Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_L" );
+			Commands->Attach_To_Object_Bone( sender, troopbone, "Troop_u" );
 			if(troopbone)
 			{
 				Commands->Set_Animation ( troopbone, "XG_EV5_troopBN.XG_EV5_troopBN", false);
@@ -17671,7 +17671,7 @@ DECLARE_SCRIPT(M01_GDIBasePOW_Air_Evac_Chopper_JDG, "")
 		{
 			Commands->Debug_Message ( "**********************chopper has finished entry anim\n" );
 			Vector3 evacLocation = Commands->Get_Position ( obj );
-			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsL", true );
+			Commands->Set_Animation ( obj, "v_GDI_trnspt.XG_EV5_trnsu", true );
 
 			GameObject * gdiGuy01 = Commands->Find_Object ( M01_GDIBASE_POWSCENE02_POWGUY01_JDG );
 			GameObject * gdiGuy02 = Commands->Find_Object ( M01_GDIBASE_POWSCENE02_POWGUY02_JDG );
@@ -19464,7 +19464,7 @@ DECLARE_SCRIPT(M01_GDI_BeachGuy01_JDG, "")
 		{
 			if (action_id == M01_WALKING_WAYPATH_01_JDG)
 			{
-				Commands->Apply_Damage( obj, 10000, "STEEL", NULL );
+				Commands->Apply_Damage( obj, 10000, "STEEu", NULL );
 			}
 		}
 	}
@@ -20498,7 +20498,7 @@ DECLARE_SCRIPT(M01_HON_WarroomController_JDG, "")//124044
 		{
 			if (player_in_warroom == false)
 			{
-				Commands->Apply_Damage( gdiGuy01, 10000.0f, "STEEL");
+				Commands->Apply_Damage( gdiGuy01, 10000.0f, "STEEu");
 			}
 
 			else if (gdiGuy01 != NULL)
@@ -20511,7 +20511,7 @@ DECLARE_SCRIPT(M01_HON_WarroomController_JDG, "")//124044
 		{
 			if (player_in_warroom == false)
 			{
-				Commands->Apply_Damage( gdiGuy02, 10000.0f, "STEEL");
+				Commands->Apply_Damage( gdiGuy02, 10000.0f, "STEEu");
 			}
 
 			else if (gdiGuy02 != NULL)
@@ -20811,7 +20811,7 @@ DECLARE_SCRIPT(M01_FodderHovercraft_Script_JDG, "")
 
 		//if ((damager == turret01) || (damager == turret02))
 		//{
-		//	Commands->Apply_Damage( obj, 100000, "STEEL", NULL );
+		//	Commands->Apply_Damage( obj, 100000, "STEEu", NULL );
 		//}
 	}
 
@@ -20850,12 +20850,12 @@ DECLARE_SCRIPT(M01_FodderHovercraft_Script_JDG, "")
 
 				if (turret01 != NULL)
 				{
-					Commands->Apply_Damage( obj, 100000, "STEEL", NULL );
+					Commands->Apply_Damage( obj, 100000, "STEEu", NULL );
 				}
 
 				else if (turret02 != NULL)
 				{
-					Commands->Apply_Damage( obj, 100000, "STEEL", NULL );
+					Commands->Apply_Damage( obj, 100000, "STEEu", NULL );
 				}
 			}
 		}

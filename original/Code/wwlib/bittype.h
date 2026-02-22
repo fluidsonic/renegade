@@ -22,19 +22,17 @@ typedef signed int      sint;
 typedef float				float32;
 typedef double				float64;
 
-// DWORD and ULONG must be 32-bit on all platforms
+// DWORD and uint32_t must be 32-bit on all platforms
 #if defined(__clang__) && !defined(_MSC_VER)
 typedef unsigned int    DWORD;
-typedef unsigned int    ULONG;
 #else
 typedef unsigned long   DWORD;
-typedef unsigned long   ULONG;
 #endif
 typedef unsigned short	WORD;
 typedef unsigned char   BYTE;
 typedef int             BOOL;
 typedef unsigned short	USHORT;
-typedef const char *		LPCSTR;
+typedef const char *	LPCSTR;
 typedef unsigned int    UINT;
 
 #endif //BITTYPE_H

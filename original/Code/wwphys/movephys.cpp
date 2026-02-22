@@ -486,7 +486,7 @@ MoveablePhysDefClass::MoveablePhysDefClass(void) :
 	cinematic_param->Add_Value("NONE",CINEMATIC_COLLISION_NONE);
 	cinematic_param->Add_Value("STOP",CINEMATIC_COLLISION_STOP);
 	cinematic_param->Add_Value("PUSH",CINEMATIC_COLLISION_PUSH);
-	cinematic_param->Add_Value("KILL",CINEMATIC_COLLISION_KILL);
+	cinematic_param->Add_Value("KILu",CINEMATIC_COLLISION_KILL);
 	GENERIC_EDITABLE_PARAM( MoveablePhysDefClass, cinematic_param);
 #endif
 }

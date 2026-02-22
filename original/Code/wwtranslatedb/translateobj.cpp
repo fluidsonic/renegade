@@ -75,7 +75,7 @@ TDBObjClass::~TDBObjClass (void)
 //	operator=
 //
 /////////////////////////////////////////////////////////////////
-const TDBObjClass &	
+const TDBObjClass &
 TDBObjClass::operator= (const TDBObjClass &src)
 {
 	TranslatedStrings	= src.TranslatedStrings;
@@ -110,7 +110,7 @@ TDBObjClass::Save (ChunkSaveClass &csave)
 {
 	csave.Begin_Chunk (CHUNKID_BASE_CLASS);
 		PersistClass::Save (csave);
-	csave.End_Chunk ();	
+	csave.End_Chunk ();
 
 	csave.Begin_Chunk (CHUNKID_VARIABLES);
 		Save_Variables (csave);
@@ -125,7 +125,7 @@ TDBObjClass::Save (ChunkSaveClass &csave)
 	//	Are we saving all the translations or just the current one?
 	//
 	if (TranslateDBClass::Is_Single_Language_Export_Enabled ()) {
-		
+
 		//
 		//	If we don't have the requested language, save the english
 		//
@@ -133,7 +133,7 @@ TDBObjClass::Save (ChunkSaveClass &csave)
 		if (lang_id >= TranslatedStrings.Count ()) {
 			lang_id = TranslateDBClass::LANGID_ENGLISH;
 		}
-		
+
 		//
 		//	Save the string
 		//
@@ -141,7 +141,7 @@ TDBObjClass::Save (ChunkSaveClass &csave)
 		WRITE_WIDESTRING_CHUNK (csave, CHUNKID_TRANSLATED_STRING, string);
 
 	} else {
-	
+
 		//
 		//	Write each translated string to its own chunk
 		//
@@ -162,7 +162,7 @@ TDBObjClass::Save (ChunkSaveClass &csave)
 bool
 TDBObjClass::Load (ChunkLoadClass &cload)
 {
-	while (cload.Open_Chunk ()) {		
+	while (cload.Open_Chunk ()) {
 		switch (cload.Cur_Chunk_ID ()) {
 
 			READ_WWSTRING_CHUNK (cload, CHUNKID_ENGLISH_STRING, EnglishString);
@@ -170,19 +170,10 @@ TDBObjClass::Load (ChunkLoadClass &cload)
 			case CHUNKID_TRANSLATED_STRING:
 			{
 				//
-				//	Load the translated string from its chunk.
-				//	The file stores UTF-16 (2-byte units); wchar_t is 4 bytes on this
-				//	platform, so we read into a uint16_t buffer and zero-extend each unit.
+				//	Load the translated string from its chunk
 				//
 				WideStringClass string;
-				int byte_count = cload.Cur_Chunk_Length();
-				int char_count = byte_count / 2;  // number of UTF-16 code units (incl. null)
-				unsigned short *utf16 = new unsigned short[char_count];
-				cload.Read(utf16, byte_count);
-				WCHAR *buf = string.Get_Buffer(char_count);
-				for (int i = 0; i < char_count; i++)
-					buf[i] = (WCHAR)utf16[i];
-				delete[] utf16;
+				cload.Read (string.Get_Buffer((cload.Cur_Chunk_Length () + 1) / 2), cload.Cur_Chunk_Length ());
 
 				//
 				//	Add the translated string to our list
@@ -190,11 +181,11 @@ TDBObjClass::Load (ChunkLoadClass &cload)
 				TranslatedStrings.Add (string);
 			}
 			break;
-			
+
 			case CHUNKID_BASE_CLASS:
 				PersistClass::Load (cload);
 				break;
-			
+
 			case CHUNKID_VARIABLES:
 				Load_Variables (cload);
 				break;
@@ -213,15 +204,15 @@ TDBObjClass::Load (ChunkLoadClass &cload)
 /////////////////////////////////////////////////////////////////
 void
 TDBObjClass::Save_Variables (ChunkSaveClass &csave)
-{	
+{
 	//
 	//	Save each variable to its own micro chunk
 	//
 	WRITE_MICRO_CHUNK					(csave, VARID_ID,					ID);
-	WRITE_MICRO_CHUNK					(csave, VARID_SOUND_ID,			SoundID);	
+	WRITE_MICRO_CHUNK					(csave, VARID_SOUND_ID,			SoundID);
 	WRITE_MICRO_CHUNK					(csave, VARID_CATEGORY_ID,		CategoryID);
 	WRITE_MICRO_CHUNK_WWSTRING		(csave, VARID_ID_DESC,			IDDesc);
-	WRITE_MICRO_CHUNK_WWSTRING		(csave, VARID_ANIMATION_NAME,	AnimationName);	
+	WRITE_MICRO_CHUNK_WWSTRING		(csave, VARID_ANIMATION_NAME,	AnimationName);
 	return ;
 }
 
@@ -232,11 +223,11 @@ TDBObjClass::Save_Variables (ChunkSaveClass &csave)
 /////////////////////////////////////////////////////////////////
 void
 TDBObjClass::Load_Variables (ChunkLoadClass &cload)
-{	
+{
 	while (cload.Open_Micro_Chunk ()) {
-		switch (cload.Cur_Micro_Chunk_ID ()) {			
+		switch (cload.Cur_Micro_Chunk_ID ()) {
 			READ_MICRO_CHUNK					(cload, VARID_ID,					ID);
-			READ_MICRO_CHUNK					(cload, VARID_SOUND_ID,			SoundID);	
+			READ_MICRO_CHUNK					(cload, VARID_SOUND_ID,			SoundID);
 			READ_MICRO_CHUNK					(cload, VARID_CATEGORY_ID,		CategoryID);
 			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ID_DESC,			IDDesc);
 			READ_MICRO_CHUNK_WWSTRING		(cload, VARID_ENGLISH_STRING,	EnglishString);
@@ -244,20 +235,9 @@ TDBObjClass::Load_Variables (ChunkLoadClass &cload)
 
 			case VARID_STRING:
 			{
-				//
 				//	Load the translated string from its chunk.
-				//	The file stores UTF-16 (2-byte units); wchar_t is 4 bytes on this
-				//	platform, so we read into a uint16_t buffer and zero-extend each unit.
-				//
 				WideStringClass string;
-				int byte_count = cload.Cur_Micro_Chunk_Length();
-				int char_count = byte_count / 2;
-				unsigned short *utf16 = new unsigned short[char_count];
-				cload.Read(utf16, byte_count);
-				WCHAR *buf = string.Get_Buffer(char_count);
-				for (int i = 0; i < char_count; i++)
-					buf[i] = (WCHAR)utf16[i];
-				delete[] utf16;
+				cload.Read (string.Get_Buffer((cload.Cur_Micro_Chunk_Length () + 1) / 2), cload.Cur_Micro_Chunk_Length ());
 
 				//
 				//	Add the translated string to our list
@@ -398,6 +378,6 @@ TDBObjClass::Contains_Translation (uint32 lang_id)
 	if (TranslatedStrings.Count () > (int)lang_id) {
 		retval = (TranslatedStrings[lang_id].Get_Length () > 0);
 	}
-	
+
 	return retval;
 }

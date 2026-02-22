@@ -66,12 +66,12 @@ cWinEvent::Act(void)
 
 	WideStringClass champ_text;
 	champ_text.Format(
-		L"%s %s",
+		u"%s %s",
 		(const WCHAR*)The_Game()->Get_Team_Word(),
 		(const WCHAR*)cTeamManager::Get_Team_Name(Winner));
 
 	win_text.Format(
-		L"%s %s",
+		u"%s %s",
 		(const WCHAR*)champ_text,
 		TRANSLATION(IDS_MP_WIN_FORMATTING));
 
@@ -80,12 +80,12 @@ cWinEvent::Act(void)
 
 		if (Loser == PLAYER_ID_UNKNOWN) {
 			win_text.Format(
-				L"%s %s",
+				u"%s %s",
 				cPlayerManager::Get_Player_Name(Winner),
 				TRANSLATION(IDS_MP_WIN_FORMATTING));
 		} else {
 			win_text.Format(
-				L"%s %s %s",
+				u"%s %s %s",
 				cPlayerManager::Get_Player_Name(Winner),
 				TRANSLATION(IDS_MP_DEFEATS),
 				cPlayerManager::Get_Player_Name(Loser));
@@ -175,8 +175,8 @@ cWinEvent::Import_Creation(BitStreamClass & packet)
 	The_Game()->Set_Mvp_Count(mvp_count);
 
 #ifndef MULTIPLAYERDEMO
-	ULONG mod_name_crc = packet.Get(mod_name_crc);
-	ULONG map_name_crc = packet.Get(map_name_crc);
+	uint32_t mod_name_crc = packet.Get(mod_name_crc);
+	uint32_t map_name_crc = packet.Get(map_name_crc);
 
 	//
 	//	Try to find the map from its CRC

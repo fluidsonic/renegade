@@ -477,7 +477,7 @@ ListCtrlClass::Default_Sort_Callback (ListCtrlClass *list_ctrl, int item_index1,
 void
 ListCtrlClass::Update_Client_Rect (void)
 {
-	Vector2 header_size = HeaderRenderer.Get_Text_Extents (L"W");
+	Vector2 header_size = HeaderRenderer.Get_Text_Extents (u"W");
 
 	//
 	//	Set the client area
@@ -1556,7 +1556,7 @@ ListCtrlClass::Insert_Entry (int index, const WCHAR *text)
 	//
 	for (int col_index = 1; col_index < ColList.Count (); col_index ++) {
 		ListColumnClass *column = ColList[col_index];
-		column->Insert_Entry (index, L"");		
+		column->Insert_Entry (index, u"");		
 		column->Set_Entry_Color (index, new_color);
 	}
 
@@ -1582,7 +1582,7 @@ void
 ListCtrlClass::Update_Row_Height (int row_index)
 {
 	int border_height		= (ROW_SPACING * StyleMgrClass::Get_Y_Scale ());
-	float height			= (TextRenderer.Get_Text_Extents (L"W").Y + border_height);
+	float height			= (TextRenderer.Get_Text_Extents (u"W").Y + border_height);
 
 	//
 	//	Render each column in this row
@@ -1757,7 +1757,7 @@ ListCtrlClass::Set_Entry_Int (int index, int col_index, int value)
 	//	Convert the integer to a string
 	//
 	WideStringClass number_str;
-	number_str.Format (L"%d", value);
+	number_str.Format (u"%d", value);
 
 	//
 	//	Change the text entry in this cell

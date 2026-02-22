@@ -448,7 +448,7 @@ TreeCtrlClass::Update_Client_Rect (void)
 	//
 	const float ROW_SPACING	= 4.0F;
 	float border_height		= (ROW_SPACING * StyleMgrClass::Get_Y_Scale ());
-	RowHeight					= (TextRenderer.Get_Text_Extents (L"W").Y + border_height);
+	RowHeight					= (TextRenderer.Get_Text_Extents (u"W").Y + border_height);
 
 	//
 	//	Determine how many rows we can fit on a page

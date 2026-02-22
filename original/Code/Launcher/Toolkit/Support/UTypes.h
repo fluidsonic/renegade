@@ -20,10 +20,10 @@ typedef short Int16;
 typedef unsigned short UInt16;
 
 //! Signed 32bit value
-typedef long Int32;
+typedef int32_t Int32;
 
 //! Unsigned 32bit value
-typedef unsigned long UInt32;
+typedef uint32_t UInt32;
 
 //! Signed character (ASCII)
 typedef char Char;
@@ -32,16 +32,16 @@ typedef char Char;
 typedef unsigned char UChar;
 
 //! Wide character (Unicode)
-typedef unsigned short WChar;
+typedef char16_t WChar;
 
 //! 32bit floating point value
-typedef float Float32;
+typedef float32_t Float32;
 
 //! 64bit floating point value
-typedef double Float64;
+typedef float64_t Float64;
 
 //! Floating point value
-typedef Float32 Float;
+typedef float32_t Float;
 
 //! TriState
 typedef enum {OFF = false, ON = true, PENDING = -1} TriState;

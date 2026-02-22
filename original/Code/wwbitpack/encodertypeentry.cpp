@@ -3,7 +3,7 @@
 // Project:      wwbitpack.lib
 // Author:       Tom Spencer-Smith
 // Date:         June 2000
-// Description:  
+// Description:
 //
 //-----------------------------------------------------------------------------
 #include "encodertypeentry.h" // I WANNA BE FIRST!
@@ -23,11 +23,11 @@ cEncoderTypeEntry::cEncoderTypeEntry()
 }
 
 //-----------------------------------------------------------------------------
-bool cEncoderTypeEntry::Is_Valid() const 
+bool cEncoderTypeEntry::Is_Valid() const
 {
-	return 
-		((Max - Min > -MISCUTIL_EPSILON) && 
-		 (Resolution > -MISCUTIL_EPSILON) && 
+	return
+		((Max - Min > -MISCUTIL_EPSILON) &&
+		 (Resolution > -MISCUTIL_EPSILON) &&
 		 (BitPrecision >= 0));
 }
 
@@ -75,7 +75,7 @@ void cEncoderTypeEntry::Init(int num_bits)
 }
 
 //-----------------------------------------------------------------------------
-bool cEncoderTypeEntry::Scale(double value, ULONG & scaled_value)
+bool cEncoderTypeEntry::Scale(double value, uint32_t & scaled_value)
 {
 
 	bool is_in_range = Is_Value_In_Range(value);
@@ -84,14 +84,14 @@ bool cEncoderTypeEntry::Scale(double value, ULONG & scaled_value)
 		value = Clamp(value);
 	}
 
-	scaled_value = static_cast<ULONG>
+	scaled_value = static_cast<uint32_t>
 		(cMathUtil::Round((value - Min) / Resolution));
 
 	return is_in_range;
 }
 
 //-----------------------------------------------------------------------------
-double cEncoderTypeEntry::Unscale(ULONG u_value)
+double cEncoderTypeEntry::Unscale(uint32_t u_value)
 {
 
 	double value = Min + u_value * Resolution;
@@ -104,7 +104,7 @@ double cEncoderTypeEntry::Clamp(double value)
 {
 
 	double retval = value;
-	
+
 	if (retval < Min) {
 		retval = Min;
 	} else if (retval > Max) {
@@ -117,7 +117,7 @@ double cEncoderTypeEntry::Clamp(double value)
 //-----------------------------------------------------------------------------
 void cEncoderTypeEntry::Calc_Bit_Precision(double resolution)
 {
-	// 
+	//
 	// Calculate the minimum number of bits required to encode this type with
 	// the specified resolution.
 	//
@@ -133,7 +133,7 @@ void cEncoderTypeEntry::Calc_Bit_Precision(double resolution)
 		if (BitPrecision == 1) {
 			max_units++;
 		}
-	}	
+	}
 
 	Resolution = (Max - Min) / (double) (max_units - 1);
 

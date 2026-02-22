@@ -94,7 +94,7 @@ class	cGameData :
 		void				Set_Intermission_Time_Seconds(int time);
 		void				Set_Version_Number(int version_number) {VersionNumber = version_number;}
 		bool				Set_Current_Players(int current_players);
-		void				Set_Ip_Address(ULONG ip_address);
+		void				Set_Ip_Address(uint32_t ip_address);
 		void				Set_Port(int port);
 
 		void				Set_QuickMatch_Server(bool isServer)	{IsQuickMatchServer.Set(isServer);}
@@ -122,7 +122,7 @@ class	cGameData :
 		int				Get_Intermission_Time_Seconds(void) const {return IntermissionTimeSeconds;}
 		int				Get_Version_Number(void)			const {return VersionNumber;}
 		int				Get_Current_Players(void)			const	{return CurrentPlayers;}
-		ULONG				Get_Ip_Address(void)					const	{return IpAddress;}
+		uint32_t				Get_Ip_Address(void)					const	{return IpAddress;}
 		int				Get_Port(void)							const	{return Port;}
 		RadarModeEnum	Get_Radar_Mode(void)					const	{return RadarMode;}
 
@@ -319,7 +319,7 @@ class	cGameData :
 		int					VersionNumber; // for now use exe byte size
 		bool					DoExeVersionsMatch;
 		bool					DoStringVersionsMatch;
-		ULONG					IpAddress; // hosting address
+		uint32_t					IpAddress; // hosting address
 		int					Port;
 		StringClass			IniFilename;
 		RadarModeEnum		RadarMode;

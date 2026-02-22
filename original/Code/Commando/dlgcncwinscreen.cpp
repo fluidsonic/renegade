@@ -183,7 +183,7 @@ CNCWinScreenMenuClass::On_Init_Dialog (void)
 	mvp_text.Format (TRANSLATE (IDS_MENU_MVP_FORMAT), (const WCHAR *)The_Game ()->Get_Mvp_Name ());
 	if (!The_Game()->Get_Mvp_Name().Is_Empty() && The_Game()->Get_Mvp_Count() > 1) {
 		WideStringClass consecutives_text;
-		consecutives_text.Format(L" * %d", The_Game()->Get_Mvp_Count());
+		consecutives_text.Format(u" * %d", The_Game()->Get_Mvp_Count());
 		mvp_text += consecutives_text;
 	}
 	Set_Dlg_Item_Text (IDC_MVP_TEXT, mvp_text);
@@ -244,7 +244,7 @@ CNCWinScreenMenuClass::On_Init_Dialog (void)
 	// Set the text that shows the next map to be played.
 	//
 	if (The_Game()->Is_Map_Cycle_Over()) {
-		Set_Dlg_Item_Text (IDC_MENU_TEXT_NEXT_MAP, L"");
+		Set_Dlg_Item_Text (IDC_MENU_TEXT_NEXT_MAP, u"");
 	} else {
 		WideStringClass map_info(TRANSLATE(IDS_MENU_NEXT_MAP), true);
 
@@ -496,7 +496,7 @@ CNCWinScreenMenuClass::Populate_Player_Lists (int team_id, int list_ctrl1_id)
 		//
 		//	Make a new entry for this player
 		//
-		int item_index = list_ctrl->Insert_Entry (index, L"");
+		int item_index = list_ctrl->Insert_Entry (index, u"");
 		if (item_index >= 0) {
 
 			//

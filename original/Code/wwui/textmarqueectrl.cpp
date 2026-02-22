@@ -250,7 +250,7 @@ TextMarqueeCtrlClass::Build_Credit_Lines (void)
 			}
 
 	int default_color = StyleMgrClass::Get_Text_Color ();
-	CREDIT_LINE default_line (L"", 0, default_color);
+	CREDIT_LINE default_line (u"", 0, default_color);
 
 	//
 	//	Build an array of formatted text lines
@@ -315,16 +315,16 @@ TextMarqueeCtrlClass::Read_Tag (const WCHAR *text, CREDIT_LINE &line)
 {
 	int retval = -1;
 
-	const WCHAR *TAG_BOLD	= L"bold";
-	const WCHAR *TAG_COLOR	= L"color=";
+	const WCHAR *TAG_BOLD	= u"bold";
+	const WCHAR *TAG_COLOR	= u"color=";
 
-	if (text[0] == L'<') {
+	if (text[0] == u'<') {
 		for (int index = 1; text[index] != 0; index ++) {
 			
 			//
 			//	Is this the 'end-tag' bracket?
 			//
-			if (text[index] == L'>') {
+			if (text[index] == u'>') {
 
 				//
 				//	What type of specifier did we find?
@@ -362,7 +362,7 @@ TextMarqueeCtrlClass::Read_Tag (const WCHAR *text, CREDIT_LINE &line)
 					//
 					WCHAR *buffer = temp_buffer.Peek_Buffer ();
 					for (int color_index = 0; color_index < 3; color_index ++) {
-						WCHAR *comma_str  = ::wcschr (buffer, L',');
+						WCHAR *comma_str  = ::wcschr (buffer, u',');
 						if (comma_str != NULL) {
 							comma_str[0]			= 0;
 							color[color_index]	= ::_wtoi (buffer);
@@ -415,7 +415,7 @@ TextMarqueeCtrlClass::Read_Line (const WCHAR *text, CREDIT_LINE &line)
 		//
 		//	Check to see if this character ends the
 		//
-		if (ch == L'\n' || ch == 0) {			
+		if (ch == u'\n' || ch == 0) {			
 			int len = text - text_start;
 //			::lstrcpynW (line.Text.Get_Buffer (len + 1), text_start, len + 1);
 
@@ -424,7 +424,7 @@ TextMarqueeCtrlClass::Read_Line (const WCHAR *text, CREDIT_LINE &line)
 			buffer[len] = 0;
 		
 			keep_going = false;
-		} else if (ch == L'<') {
+		} else if (ch == u'<') {
 			
 			//
 			//	Did we find a tag?

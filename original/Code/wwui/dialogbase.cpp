@@ -554,7 +554,7 @@ DialogBaseClass::Set_Dlg_Item_Int (int id, int value)
 		//	Convert the value to a string
 		//
 		WideStringClass text;
-		text.Format (L"%d", value);
+		text.Format (u"%d", value);
 
 		//
 		//	Set the text of this control
@@ -589,7 +589,7 @@ DialogBaseClass::Get_Dlg_Item_Float (int id) const
 		//
 		//	Convert the text to an float
 		//
-		swscanf (text, L"%f", &retval);
+		swscanf (text, u"%f", &retval);
 	}
 
 	return retval;
@@ -613,7 +613,7 @@ DialogBaseClass::Set_Dlg_Item_Float (int id, float value)
 		//	Convert the value to a string
 		//
 		WideStringClass text;
-		text.Format (L"%.2f", value);
+		text.Format (u"%.2f", value);
 
 		//
 		//	Set the text of this control

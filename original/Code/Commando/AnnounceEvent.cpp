@@ -43,7 +43,7 @@ void CSAnnouncement::Init(int to_id, int announcementID, AnnouncementEnum type, 
 	//
 	//	Is this user "flooding" the server with text?
 	//
-	if (FloodProtectionMgrClass::Detect_Flooding (L"") == false)
+	if (FloodProtectionMgrClass::Detect_Flooding (u"") == false)
 		{
 
 		if (cNetwork::I_Am_Server())
@@ -230,7 +230,7 @@ void SCAnnouncement::Act(void)
 		    if (sender)
 					{
 					WideStringClass message(0, true);
-					message.Format(L"%s: %s", (const WCHAR*)sender->Get_Name(), string);
+					message.Format(u"%s: %s", (const WCHAR*)sender->Get_Name(), string);
 					CombatManager::Get_Message_Window()->Add_Message(message, sender->Get_Color());
 					}
 				else

@@ -1,5 +1,6 @@
 #ifndef	MIXFILE_H
 #define	MIXFILE_H
+#include <stdint.h>
 
 #ifndef	ALWAYS_H
 	#include "always.h"
@@ -63,9 +64,9 @@ private:
 		bool operator== (const FileInfoStruct &src)	{ return false; }
 		bool operator!= (const FileInfoStruct &src)	{ return true; }
 
-		unsigned long CRC;				// CRC code for embedded file.
-		unsigned long Offset;			// Offset from start of data section.
-		unsigned long Size;				// Size of data subfile.
+		uint32_t CRC;					// CRC code for embedded file (on-disk: 4 bytes).
+		uint32_t Offset;				// Offset from start of data section (on-disk: 4 bytes).
+		uint32_t Size;					// Size of data subfile (on-disk: 4 bytes).
 	};
 
 	struct AddInfoStruct {
@@ -110,10 +111,10 @@ private:
 		bool operator== (const FileInfoStruct &src)	{ return false; }
 		bool operator!= (const FileInfoStruct &src)	{ return true; }
 
-		unsigned long	CRC;				// CRC code for embedded file.
-		unsigned long	Offset;			// Offset from start of data section.
-		unsigned long	Size;				// Size of data subfile.
-		StringClass		Filename;
+		uint32_t	CRC;				// CRC code for embedded file (on-disk: 4 bytes).
+		uint32_t	Offset;				// Offset from start of data section (on-disk: 4 bytes).
+		uint32_t	Size;				// Size of data subfile (on-disk: 4 bytes).
+		StringClass	Filename;
 	};
 
 	DynamicVectorClass<FileInfoStruct>	FileInfo;

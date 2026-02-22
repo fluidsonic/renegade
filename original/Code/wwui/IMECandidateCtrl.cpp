@@ -236,7 +236,7 @@ void IMECandidateCtrl::CreateTextRenderer(void)
 			const WCHAR* text = mCandidate->GetCandidate(index);
 
 			WideStringClass entry(0, true);
-			entry.Format(L"%d. %s", ((index - mScrollPos) + selIndexBias), text);
+			entry.Format(u"%d. %s", ((index - mScrollPos) + selIndexBias), text);
 			
 			StyleMgrClass::Render_Text(entry, &mTextRenderer, textRect, true, true);
 
@@ -487,7 +487,7 @@ void IMECandidateCtrl::CalculateCandidatePageExtent(Vector2& outExtent, Vector2&
 				}
 			}
 
-		Vector2 charSize = mTextRenderer.Get_Text_Extents(L"W");
+		Vector2 charSize = mTextRenderer.Get_Text_Extents(u"W");
 
 		// The cell size is the maximum candidate size plus some spacing.
 		outCellSize.X = (maxCandWidth + (charSize.X * 3.0f));
@@ -570,7 +570,7 @@ void IMECandidateCtrl::On_LButton_Up(const Vector2& mousePos)
 	// Process candidate selection here
 	if (mCandidate && (sel >= 0))
 		{
-		const wchar_t* string = mCandidate->GetCandidate(sel);
+		const char16_t* string = mCandidate->GetCandidate(sel);
 		mCandidate->SelectCandidate((unsigned long)sel);
 		}
 	}

@@ -230,7 +230,7 @@ void cGod::Create_Ai_Player(void)
 	WideStringClass name;
 	do {
 		client_id--;
-		name.Format(L"Guard%d", -client_id);
+		name.Format(u"Guard%d", -client_id);
 	} while (cPlayerManager::Is_Player_Present(name));
 
 	Create_Player(client_id, name, -1);

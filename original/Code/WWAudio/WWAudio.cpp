@@ -51,7 +51,7 @@ const int	MAX_VIRTUAL_CHANNELS				= 100;
 //	INI names
 ////////////////////////////////////////////////////////////////////////////////////////////////
 const char *WWAUDIO_INI_FILENAME				= "WWAudio.ini";
-const char *WWAUDIO_INI_RELATIVE_PATHNAME	= "Data\\WWAudio.ini";
+const char *WWAUDIO_INI_RELATIVE_PATHNAME	= "Data/WWAudio.ini";
 const char *INI_DEFAULT_VOLUME_SECTION		= "Default Volume";
 const char *INI_MUSIC_VOLUME_ENTRY			= "MUSIC_VOLUME"; 
 const char *INI_SOUND_VOLUME_ENTRY			= "SOUND_VOLUME";

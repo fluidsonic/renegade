@@ -27,6 +27,7 @@ set(COMPAT_DIR "${CMAKE_SOURCE_DIR}/compat")
 # Global include directories: compat FIRST, then original include roots
 include_directories(
     BEFORE
+    "${CMAKE_SOURCE_DIR}"    # global.h lives at source root
     "${COMPAT_DIR}"
 )
 

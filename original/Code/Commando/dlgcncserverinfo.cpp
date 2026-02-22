@@ -83,8 +83,8 @@ CNCServerInfoDialogClass::On_Init_Dialog (void)
 		The_Game ()->Get_Description (description);
 		const WCHAR *buffer = description.Peek_Buffer ();
 
-		const WCHAR DELIMITER	= L'\t';
-		const WCHAR NEWLINE		= L'\n';
+		const WCHAR DELIMITER	= u'\t';
+		const WCHAR NEWLINE		= u'\n';
 
 		//
 		//	Fill the settings into the list control

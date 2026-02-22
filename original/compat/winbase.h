@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdexcept>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdarg.h>
@@ -89,7 +90,7 @@ inline BOOL GetModuleFileName(HMODULE mod, LPSTR buf, DWORD size) {
     return FALSE;
 }
 
-// GetCommandLine stub  
+// GetCommandLine stub
 inline LPSTR GetCommandLine() { return (LPSTR)""; }
 inline LPSTR GetCommandLineA() { return (LPSTR)""; }
 
@@ -517,11 +518,12 @@ typedef struct {
 typedef WIN32_FIND_DATA WIN32_FIND_DATAA;
 typedef LPWIN32_FIND_DATA LPWIN32_FIND_DATAA;
 
-inline HANDLE FindFirstFile(LPCSTR pattern, LPWIN32_FIND_DATA fd) { return INVALID_HANDLE_VALUE; }
-inline HANDLE FindFirstFileA(LPCSTR pattern, LPWIN32_FIND_DATA fd) { return INVALID_HANDLE_VALUE; }
-inline BOOL FindNextFile(HANDLE h, LPWIN32_FIND_DATA fd) { return FALSE; }
-inline BOOL FindNextFileA(HANDLE h, LPWIN32_FIND_DATA fd) { return FALSE; }
-inline BOOL FindClose(HANDLE h) { return FALSE; }
+// Implemented in compat/winfile.cpp using POSIX opendir/readdir/fnmatch
+HANDLE FindFirstFile(LPCSTR pattern, LPWIN32_FIND_DATA fd);
+HANDLE FindFirstFileA(LPCSTR pattern, LPWIN32_FIND_DATA fd);
+BOOL   FindNextFile(HANDLE h, LPWIN32_FIND_DATA fd);
+BOOL   FindNextFileA(HANDLE h, LPWIN32_FIND_DATA fd);
+BOOL   FindClose(HANDLE h);
 
 // Misc
 inline BOOL FlushFileBuffers(HANDLE h) { return TRUE; }
@@ -708,11 +710,11 @@ inline SIZE_T GlobalSize(HGLOBAL h) { return 0; }
 inline BOOL QueryPerformanceFrequency(LARGE_INTEGER* freq) {
     mach_timebase_info_data_t info;
     mach_timebase_info(&info);
-    if (freq) freq->QuadPart = (LONGLONG)(1000000000LL * info.denom / info.numer);
+    if (freq) freq->QuadPart = (int64_t)(1000000000ul * info.denom / info.numer);
     return TRUE;
 }
 inline BOOL QueryPerformanceCounter(LARGE_INTEGER* count) {
-    if (count) count->QuadPart = (LONGLONG)mach_absolute_time();
+    if (count) count->QuadPart = (int64_t)mach_absolute_time();
     return TRUE;
 }
 
@@ -815,34 +817,158 @@ inline int WideCharToMultiByte(UINT cp, DWORD flags, const WCHAR* src, int src_l
     return count + 1;
 }
 
-// _vsnwprintf (wide string printf)
-#include <wchar.h>
-inline int _vsnwprintf(wchar_t* buf, size_t count, const wchar_t* fmt, va_list va) {
-    return vswprintf(buf, count, fmt, va);
-}
-// Note: WCHAR = wchar_t now, so no second overload needed
+// _vsnwprintf — native char16_t printf, no wchar_t dependency.
+// Handles: %% %s %c %d %i %u %o %x %X %f %e %E %g %G %a %A %p
+// with flags (- + space 0 #), width (literal or *), precision (literal or *),
+// and length modifiers (h hh l ll I64 z t).
+// %s/%S reads char16_t* (WCHAR); numeric specifiers dispatch to snprintf internally.
+#include <stdio.h>
+#include <string.h>
+inline int _vsnwprintf(char16_t* buf, size_t count, const char16_t* fmt, va_list va) {
+    if (!fmt || count == 0) return 0;
+    size_t n = 0;
+#define _C16PUT(ch) do { if (n + 1 < count) buf[n] = (ch); ++n; } while (0)
+    for (const char16_t* p = fmt; *p; ) {
+        if (*p != u'%') { _C16PUT(*p++); continue; }
+        ++p;
+        if (!*p) break;
+        if (*p == u'%') { _C16PUT(u'%'); ++p; continue; }
 
-// Wide string to integer conversion
-inline int _wtoi(const wchar_t* s) { return s ? (int)wcstol(s, NULL, 10) : 0; }
-inline long _wtol(const wchar_t* s) { return s ? wcstol(s, NULL, 10) : 0; }
-inline long long _wtoi64(const wchar_t* s) { return s ? wcstoll(s, NULL, 10) : 0; }
+        // Build equivalent narrow specifier for snprintf dispatch
+        char ns[48]; int ni = 0;
+        ns[ni++] = '%';
 
-// Wide string sprintf wrappers
-inline int _swprintf(wchar_t* buf, const wchar_t* fmt, ...) {
-    va_list va; va_start(va, fmt); int r = vswprintf(buf, 4096, fmt, va); va_end(va); return r;
+        // Flags
+        bool ljust = false;
+        while (*p==u'-'||*p==u'+'||*p==u' '||*p==u'0'||*p==u'#') {
+            if (*p == u'-') ljust = true;
+            ns[ni++] = (char)*p++;
+        }
+
+        // Width (literal or *)
+        int width = 0;
+        if (*p == u'*') {
+            width = va_arg(va, int);
+            if (width < 0) {
+                if (!ljust) { memmove(ns+2, ns+1, (size_t)(ni-1)); ns[1] = '-'; ni++; }
+                ljust = true; width = -width;
+            }
+            ni += snprintf(ns+ni, (int)sizeof(ns)-ni, "%d", width);
+            ++p;
+        } else {
+            while (*p >= u'0' && *p <= u'9') { ns[ni++] = (char)*p; width = width*10 + (*p - u'0'); ++p; }
+        }
+
+        // Precision
+        int prec = -1;
+        if (*p == u'.') {
+            ns[ni++] = '.'; ++p;
+            if (*p == u'*') {
+                prec = va_arg(va, int);
+                if (prec < 0) prec = 0;
+                ni += snprintf(ns+ni, (int)sizeof(ns)-ni, "%d", prec);
+                ++p;
+            } else {
+                prec = 0;
+                while (*p >= u'0' && *p <= u'9') { ns[ni++] = (char)*p; prec = prec*10 + (*p - u'0'); ++p; }
+            }
+        }
+
+        // Length modifier (0=int, 1=h, 2=hh, 3=l, 4=ll, 5=z, 6=t)
+        int lmod = 0;
+        if (*p == u'h') {
+            ns[ni++] = 'h'; ++p;
+            if (*p == u'h') { ns[ni++] = 'h'; ++p; lmod = 2; } else lmod = 1;
+        } else if (*p == u'l') {
+            ns[ni++] = 'l'; ++p;
+            if (*p == u'l') { ns[ni++] = 'l'; ++p; lmod = 4; } else lmod = 3;
+        } else if (*p==u'I' && p[1]==u'6' && p[2]==u'4') {
+            ns[ni++] = 'l'; ns[ni++] = 'l'; p += 3; lmod = 4;  // MSVC %I64 → %ll
+        } else if (*p == u'z') { ns[ni++] = 'z'; ++p; lmod = 5; }
+          else if (*p == u't') { ns[ni++] = 't'; ++p; lmod = 6; }
+
+        char conv = *p ? (char)*p++ : 0;
+        ns[ni++] = conv; ns[ni] = 0;
+
+        if (conv == 's' || conv == 'S') {
+            // char16_t* string — handled natively, no wchar_t needed
+            const char16_t* s = va_arg(va, const char16_t*);
+            if (!s) s = u"(null)";
+            size_t slen = 0;
+            while (s[slen] && (prec < 0 || (int)slen < prec)) ++slen;
+            if (!ljust) for (int k = (int)slen; k < width; ++k) _C16PUT(u' ');
+            for (size_t k = 0; k < slen; ++k) _C16PUT(s[k]);
+            if ( ljust) for (int k = (int)slen; k < width; ++k) _C16PUT(u' ');
+        } else if (conv == 'c') {
+            _C16PUT((char16_t)va_arg(va, int));
+        } else {
+            // Numeric / pointer — format via snprintf, expand ASCII result to char16_t
+            char tmp[128]; int r = 0;
+            if (conv=='f'||conv=='e'||conv=='E'||conv=='g'||conv=='G'||conv=='a'||conv=='A')
+                r = snprintf(tmp, sizeof(tmp), ns, va_arg(va, double));
+            else if (conv == 'p')
+                r = snprintf(tmp, sizeof(tmp), ns, va_arg(va, void*));
+            else if (lmod == 4) r = snprintf(tmp, sizeof(tmp), ns, va_arg(va, long long));
+            else if (lmod == 3) r = snprintf(tmp, sizeof(tmp), ns, va_arg(va, long));
+            else if (lmod == 5) r = snprintf(tmp, sizeof(tmp), ns, va_arg(va, size_t));
+            else if (lmod == 6) r = snprintf(tmp, sizeof(tmp), ns, va_arg(va, ptrdiff_t));
+            else                r = snprintf(tmp, sizeof(tmp), ns, va_arg(va, int));
+            for (int k = 0; k < r; ++k) _C16PUT((char16_t)(unsigned char)tmp[k]);
+        }
+    }
+    buf[n < count ? n : count - 1] = 0;
+    return (int)n;
+#undef _C16PUT
 }
-// 3-argument overload: _swprintf(buf, count, fmt, ...) — used by code that already has the size
-inline int _swprintf(wchar_t* buf, size_t count, const wchar_t* fmt, ...) {
-    va_list va; va_start(va, fmt); int r = vswprintf(buf, count, fmt, va); va_end(va); return r;
+
+// Wide string to integer conversion — char16_t* (simple ASCII digit parsing)
+inline int _wtoi(const char16_t* s) {
+    if (!s) return 0;
+    int sign = 1, result = 0, i = 0;
+    while (s[i] == u' ') i++;
+    if (s[i] == u'-') { sign = -1; i++; } else if (s[i] == u'+') i++;
+    while (s[i] >= u'0' && s[i] <= u'9') { result = result * 10 + (s[i] - u'0'); i++; }
+    return sign * result;
 }
-inline int _snwprintf(wchar_t* buf, size_t count, const wchar_t* fmt, ...) {
-    va_list va; va_start(va, fmt); int r = vswprintf(buf, count, fmt, va); va_end(va); return r;
+inline long _wtol(const char16_t* s) { return (long)_wtoi(s); }
+inline long long _wtoi64(const char16_t* s) {
+    if (!s) return 0;
+    long long sign = 1, result = 0; int i = 0;
+    while (s[i] == u' ') i++;
+    if (s[i] == u'-') { sign = -1; i++; } else if (s[i] == u'+') i++;
+    while (s[i] >= u'0' && s[i] <= u'9') { result = result * 10 + (s[i] - u'0'); i++; }
+    return sign * result;
+}
+
+// Wide string sprintf wrappers — char16_t*
+inline int _swprintf(char16_t* buf, const char16_t* fmt, ...) {
+    va_list va; va_start(va, fmt); int r = _vsnwprintf(buf, 4096, fmt, va); va_end(va); return r;
+}
+inline int _swprintf(char16_t* buf, size_t count, const char16_t* fmt, ...) {
+    va_list va; va_start(va, fmt); int r = _vsnwprintf(buf, count, fmt, va); va_end(va); return r;
+}
+inline int _snwprintf(char16_t* buf, size_t count, const char16_t* fmt, ...) {
+    va_list va; va_start(va, fmt); int r = _vsnwprintf(buf, count, fmt, va); va_end(va); return r;
 }
 // Windows swprintf uses 2 args (buf, fmt, ...) unlike POSIX 3 args (buf, n, fmt, ...).
 // Map to our _swprintf wrapper.
 #ifndef swprintf
 #define swprintf _swprintf
 #endif
+
+// swscanf for char16_t* — converts to narrow string, then calls vsscanf
+// Only supports simple ASCII-compatible format strings like "%f", "%d"
+inline int swscanf(const char16_t* str, const char16_t* fmt, ...) {
+    char narrow_str[512]; int i;
+    for (i = 0; str[i] && i < 511; i++) narrow_str[i] = (char)str[i];
+    narrow_str[i] = 0;
+    char narrow_fmt[64];
+    for (i = 0; fmt[i] && i < 63; i++) narrow_fmt[i] = (char)fmt[i];
+    narrow_fmt[i] = 0;
+    va_list ap; va_start(ap, fmt);
+    int r = vsscanf(narrow_str, narrow_fmt, ap);
+    va_end(ap); return r;
+}
 
 // DebugBreak
 inline void DebugBreak() { __builtin_debugtrap(); }
@@ -912,7 +1038,7 @@ struct _EXCEPTION_RECORD {
     struct _EXCEPTION_RECORD *ExceptionRecord;
     void *ExceptionAddress;
     DWORD NumberParameters;
-    ULONG_PTR ExceptionInformation[15];
+    uint32_t* ExceptionInformation[15];
 };
 typedef struct _EXCEPTION_RECORD EXCEPTION_RECORD;
 #endif

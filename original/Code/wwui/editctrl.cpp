@@ -105,7 +105,7 @@ EditCtrlClass::Create_Text_Renderers (void)
 
 	// Draw the composition markers
 	if (mIME && mInComposition) {
-		const wchar_t* compString = mIME->GetCompositionString();
+		const char16_t* compString = mIME->GetCompositionString();
 		Vector2 compSize = TextRenderer.Get_Text_Extents(compString);
 
 		if (compSize.X > 0.0f) {
@@ -217,7 +217,7 @@ EditCtrlClass::Update_Client_Rect (void)
 	//
 	//	Determine what one character spacing would be
 	//
-	float char_width = TextRenderer.Get_Text_Extents (L"I").X;
+	float char_width = TextRenderer.Get_Text_Extents (u"I").X;
 
 	//
 	//	Shrink the client area
@@ -281,7 +281,7 @@ void EditCtrlClass::Get_Display_Text(WideStringClass &text)
 	int length = Title.Get_Length();
 
 	if (mIME && mInComposition) {
-		const wchar_t* compString = mIME->GetCompositionString();
+		const char16_t* compString = mIME->GetCompositionString();
 
 		if (compString) {
 			length += wcslen(compString);
@@ -293,10 +293,10 @@ void EditCtrlClass::Get_Display_Text(WideStringClass &text)
 	// If password then replace text with astrisks
 	if ((Style & ES_PASSWORD) != 0) {
 		int len = Title.Get_Length();
-		wchar_t* buffer = text.Peek_Buffer();
+		char16_t* buffer = text.Peek_Buffer();
 
 		for (int index = 0; index < len; ++index) {
-			buffer[index] = L'*';
+			buffer[index] = u'*';
 		}
 
 		buffer[len] = 0;
@@ -306,7 +306,7 @@ void EditCtrlClass::Get_Display_Text(WideStringClass &text)
 
 	// Insert IME composition at cursor position
 	if (mIME && mInComposition) {
-		const wchar_t* compString = mIME->GetCompositionString();
+		const char16_t* compString = mIME->GetCompositionString();
 
 		if (compString) {
 			WideStringClass temp(length, true);
@@ -903,7 +903,7 @@ void
 EditCtrlClass::On_Create (void)
 {
 	//TextColor.Set (0.35F, 1.0F, 0.35F);
-	//Set_Text (L"This is a test...");	
+	//Set_Text (u"This is a test...");	
 	return ;
 }
 
@@ -987,13 +987,13 @@ EditCtrlClass::Find_Word_Start (int pos, int increment)
 		//
 		//	Is this a space character?
 		//
-		bool is_space	= (Title[index] == L' ');
+		bool is_space	= (Title[index] == u' ');
 
 		//
 		//	If we've already found the word break and this is the
 		// start of a new word, then return its index to the caller
 		//
-		if (!is_space && ((index == 0) || (Title[index - 1] == L' '))) {
+		if (!is_space && ((index == 0) || (Title[index - 1] == u' '))) {
 			retval = index;
 			break;			
 		}		
@@ -1084,7 +1084,7 @@ void
 EditCtrlClass::Set_Int (int value)
 {
 	WideStringClass text(64, true);
-	text.Format (L"%d", value);
+	text.Format (u"%d", value);
 	Set_Text (text);
 	return ;
 }
@@ -1236,7 +1236,7 @@ bool EditCtrlClass::IsIMEAllowed(void) const
 
 void EditCtrlClass::Set_IME_Typing_Text_Pos(void)
 {
-	Vector2 charExtent = TextRenderer.Get_Text_Extents(L"W");
+	Vector2 charExtent = TextRenderer.Get_Text_Extents(u"W");
 	int caretPos = Get_Caret_Pos();
 
 	Vector2 pos;
@@ -1258,7 +1258,7 @@ void EditCtrlClass::Set_IME_Typing_Text_Pos(void)
 *
 ******************************************************************************/
 
-void EditCtrlClass::Show_IME_Typing_Text(const wchar_t* text)
+void EditCtrlClass::Show_IME_Typing_Text(const char16_t* text)
 {
 	mShowIMETypingText = (text && wcslen(text) > 0);
 
@@ -1266,7 +1266,7 @@ void EditCtrlClass::Show_IME_Typing_Text(const wchar_t* text)
 		Set_IME_Typing_Text_Pos();
 		mIMETypingTip.Set_Text(text);
 	} else {
-		mIMETypingTip.Set_Text(L"");
+		mIMETypingTip.Set_Text(u"");
 	}
 }
 
@@ -1285,7 +1285,7 @@ void EditCtrlClass::Show_IME_Typing_Text(const wchar_t* text)
 void EditCtrlClass::Hide_IME_Typing_Text(void)
 {
 	mShowIMETypingText = false;
-	mIMETypingTip.Set_Text(L"");
+	mIMETypingTip.Set_Text(u"");
 }
 #endif
 

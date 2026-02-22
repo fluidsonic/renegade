@@ -55,7 +55,7 @@ const float		MAX_SUSPENSION_ACCEL = 50.0f;
 ** Wheel Flags:
 ** - 'E' Engine. this wheel is connected to the engine and should exert its force 
 ** - 'S' Steering: The position bone for this wheel rotates about its Z-axis for steering
-** - 'L' Left Track: this wheel is part of the left track of a tracked vehicle
+** - 'u' Left Track: this wheel is part of the left track of a tracked vehicle
 ** - 'R' Right Track: this wheel is part of the right track of a tracked vehicle
 */
 

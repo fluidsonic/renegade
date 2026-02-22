@@ -108,7 +108,7 @@ DECLARE_SCRIPT(DLS_Invulnerable_Test, "")
 	void Created (GameObject * obj)
 	{
 		Commands->Set_Health( obj, 2);
-		Commands->Apply_Damage( obj, 50000.0f, "STEEL");
+		Commands->Apply_Damage( obj, 50000.0f, "STEEu");
 		
 	}
 
@@ -446,7 +446,7 @@ DECLARE_SCRIPT(DLS_Vehicle_Follow, "Debug_Mode=0:int")
 
 		if(timer_id == STAR_VISIBLE)
 		{
-			Commands->Apply_Damage( obj, 100000, "STEEL", NULL );
+			Commands->Apply_Damage( obj, 100000, "STEEu", NULL );
 			
 		}
 		
@@ -1975,7 +1975,7 @@ DECLARE_SCRIPT (MX0_Area4_Controller_DLS, "")
 		// Commands to destroy Mobile Artillery in front of base
 		if (type == MX0_A10_STRIKE)
 		{
-			Commands->Apply_Damage( Commands->Find_Object(mobile_artillery_id), 50000.0f, "STEEL");
+			Commands->Apply_Damage( Commands->Find_Object(mobile_artillery_id), 50000.0f, "STEEu");
 		}
 		// Finale concludes, mission success
 		if(type == MX0_MISSION_SUCCESS)
@@ -2284,11 +2284,11 @@ DECLARE_SCRIPT (MX0_Area4_Controller_DLS, "")
 		}
 		if(timer_id == DESTROY_SAM1)
 		{
-			Commands->Apply_Damage(Commands->Find_Object(1500015), 50000.0f, "STEEL");
+			Commands->Apply_Damage(Commands->Find_Object(1500015), 50000.0f, "STEEu");
 		}
 		if(timer_id == DESTROY_SAM2)
 		{
-			Commands->Apply_Damage(Commands->Find_Object(1500016), 50000.0f, "STEEL");
+			Commands->Apply_Damage(Commands->Find_Object(1500016), 50000.0f, "STEEu");
 		}
 
 		if(timer_id == A10_STRIKE)
@@ -2762,7 +2762,7 @@ DECLARE_SCRIPT (MX0_GDI_Killed_DLS, "Unit_ID=0:int")
 		// If damaged by the Obelisk Weapon
 		if((damager == Commands->Find_Object(1500020)) && (Commands->Find_Object(1500020)))
 		{
-			Commands->Apply_Damage( obj, 50000.0f, "STEEL");
+			Commands->Apply_Damage( obj, 50000.0f, "STEEu");
 		}
 	}
 
@@ -3240,7 +3240,7 @@ DECLARE_SCRIPT (MX0_Explosive_Barrels_DLS, "Logical_Sound=0:int, Radius:float")
 	{
 		if(sound.Type == Get_Int_Parameter("Logical_Sound"))
 		{
-			Commands->Apply_Damage( obj, 50000.0f, "STEEL");
+			Commands->Apply_Damage( obj, 50000.0f, "STEEu");
 		}
 	}
 

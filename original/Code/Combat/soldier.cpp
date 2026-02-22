@@ -3347,7 +3347,7 @@ float SoldierGameObj::Say_Dynamic_Dialogue
 		//
 		//	Check to see if this string is commented out.
 		//
-		if( string != NULL && string[0] == L'/' && string[1] == L'/' ) {
+		if( string != NULL && string[0] == u'/' && string[1] == u'/' ) {
 			string			+= 2;
 			display_text	= false;
 		}

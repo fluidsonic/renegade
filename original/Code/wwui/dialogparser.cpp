@@ -151,7 +151,7 @@ DialogParserClass::Parse_Template
 		//
 		buffer = Skip_Dlg_Field (buffer, dlg_title->Get_Buffer (96), 96);
 
-		WCHAR *string_id = ::wcsstr (dlg_title->Peek_Buffer (), L"IDS_");
+		WCHAR *string_id = ::wcsstr (dlg_title->Peek_Buffer (), u"IDS_");
 		if (string_id != NULL) {
 			WideStringClass wide_string_id = string_id;				
 			StringClass ascii_string_id;
@@ -190,27 +190,27 @@ DialogParserClass::Parse_Template
 			//
 			if (ctrl_type == 0) {
 				::_wcsupr (text_buffer);
-				if (::wcsstr (text_buffer, L"TRACKBAR") != 0) {
+				if (::wcsstr (text_buffer, u"TRACKBAR") != 0) {
 					ctrl_type = SLIDER;
-				} else if (::wcsstr (text_buffer, L"TABCONTROL") != 0) {
+				} else if (::wcsstr (text_buffer, u"TABCONTROu") != 0) {
 					ctrl_type = TAB;
-				} else if (::wcsstr (text_buffer, L"LISTVIEW") != 0) {
+				} else if (::wcsstr (text_buffer, u"LISTVIEW") != 0) {
 					ctrl_type = LIST_CTRL;
-				} else if (::wcsstr (text_buffer, L"MAP") != 0) {
+				} else if (::wcsstr (text_buffer, u"MAP") != 0) {
 					ctrl_type = MAP;
-				} else if (::wcsstr (text_buffer, L"VIEWER") != 0) {
+				} else if (::wcsstr (text_buffer, u"VIEWER") != 0) {
 					ctrl_type = VIEWER;
-				} else if (::wcsstr (text_buffer, L"HOTKEY") != 0) {
+				} else if (::wcsstr (text_buffer, u"HOTKEY") != 0) {
 					ctrl_type = HOTKEY;
-				} else if (::wcsstr (text_buffer, L"SHORTCUTBAR") != 0) {
+				} else if (::wcsstr (text_buffer, u"SHORTCUTBAR") != 0) {
 					ctrl_type = SHORTCUT_BAR;
-				} else if (::wcsstr (text_buffer, L"MERCHANDISE") != 0) {
+				} else if (::wcsstr (text_buffer, u"MERCHANDISE") != 0) {
 					ctrl_type = MERCHANDISE_CTRL;
-				} else if (::wcsstr (text_buffer, L"TREEVIEW") != 0) {
+				} else if (::wcsstr (text_buffer, u"TREEVIEW") != 0) {
 					ctrl_type = TREE_CTRL;
 				} else if (::wcsicmp(text_buffer, PROGRESS_CLASSW) == 0) {
 					ctrl_type = PROGRESS_BAR;
-				} else if (::wcsstr (text_buffer, L"HEALTHBAR") != 0) {
+				} else if (::wcsstr (text_buffer, u"HEALTHBAR") != 0) {
 					ctrl_type = HEALTH_BAR;
 				}						
 			}
@@ -220,7 +220,7 @@ DialogParserClass::Parse_Template
 			//			
 			buffer = Skip_Dlg_Field (buffer, text_buffer, 256);
 
-			WCHAR *string_id = ::wcsstr (text_buffer, L"IDS_");
+			WCHAR *string_id = ::wcsstr (text_buffer, u"IDS_");
 			if (string_id != NULL) {
 				WideStringClass wide_string_id = string_id;				
 				StringClass ascii_string_id;

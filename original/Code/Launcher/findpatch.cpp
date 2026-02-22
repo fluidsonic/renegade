@@ -42,12 +42,12 @@ int Find_Patch(OUT char *filename,int maxlen, ConfigFile &config)
       _chdir(gamePath);  // goto the directory with the game
 
       // should probably get the registry entry for the wchat install path
-      sprintf(string,"patches\\*.%s",extensions[i]);
+      sprintf(string,"patches/*.%s",extensions[i]);
       hFile=FindFirstFile(string,&findData);
       if (hFile!=INVALID_HANDLE_VALUE)
       {
         _getcwd(filename,MAX_PATH);
-        strcat(filename,"\\patches\\");
+        strcat(filename,"/patches/");
         strcat(filename,findData.cFileName);
         FindClose(hFile);
         return(skuIndex);
@@ -150,7 +150,7 @@ void Delete_Patches(ConfigFile &config)
     //
     // Delete everything in case a .exe patch had some data files it used.
     //
-    strcat(dir,"patches\\*.*");
+    strcat(dir,"patches/*.*");
 
     DBGMSG("DELPATCH: "<<dir);
 

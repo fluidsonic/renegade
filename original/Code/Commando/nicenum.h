@@ -11,19 +11,19 @@
 #include "bittype.h"
 
 //-----------------------------------------------------------------------------
-class cNicEnum 
+class cNicEnum
 {
 public:
 	static void			Init(void);
 	static USHORT		Get_Num_Nics(void)			{return NumNics;}
-	static ULONG *		Get_Nics(void)					{return NicList;}
+	static uint32_t *		Get_Nics(void)					{return NicList;}
 
 	enum					{MAX_NICS = 10};
 
 private:
-	static ULONG		Enumerate_Nics(ULONG * addresses, ULONG max_addresses);
+	static uint32_t		Enumerate_Nics(uint32_t * addresses, uint32_t max_addresses);
 
-	static ULONG		NicList[MAX_NICS];
+	static uint32_t		NicList[MAX_NICS];
 	static USHORT		NumNics;
 };
 
