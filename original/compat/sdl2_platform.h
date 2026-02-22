@@ -23,6 +23,16 @@ extern int SDL2_QuitRequested;
 // Focus state — updated by window focus events
 extern int SDL2_HasFocus;
 
+// Mouse capture state — set by click-to-capture, cleared on focus loss
+extern int SDL2_MouseCaptured;
+extern int SDL2_CaptureClickX;
+extern int SDL2_CaptureClickY;
+
+// Render gate — 0 when minimized or (fullscreen + no focus); 1 otherwise.
+// Use this to skip rendering rather than GameInFocus, which is also false
+// when the window is merely unfocused (windowed mode should still render).
+extern int SDL2_ShouldRender;
+
 // Initialise SDL2, create window (800x600) and OpenGL 2.1 context.
 // Returns 0 on success, -1 on failure.
 int  SDL2_Platform_Init(const char* title, int w, int h);

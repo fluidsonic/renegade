@@ -15,6 +15,7 @@
 #include "dialogtransition.h"
 #include "systimer.h"
 #include "tooltip.h"
+#include "sdl2_platform.h"
 #include <stdio.h>
 #include <typeinfo>
 
@@ -43,8 +44,6 @@ bool												DialogMgrClass::IsFlushing = false;
 
 ToolTipClass* DialogMgrClass::mIMEMessage = NULL;
 uint32_t DialogMgrClass::mIMEMessageTime = 0;
-
-static bool	GameWasInFocus;
 
 ////////////////////////////////////////////////////////////////
 //
@@ -414,13 +413,16 @@ DialogMgrClass::Render (void)
 			s_render_count, DialogList.Count(), (int)GameInFocus, (int)IsInMenuMode, (int)IsFirstRender);
 	}
 
-	if (!GameInFocus) {
-		GameWasInFocus=false;
+	if (!SDL2_ShouldRender) {
 		return;
 	}
-	if (!GameWasInFocus) {
-		DialogMgrClass::Reset();
-		GameWasInFocus=true;
+	{
+		static bool WasCaptured = false;
+		bool isCaptured = (SDL2_MouseCaptured != 0);
+		if (isCaptured && !WasCaptured) {
+			DialogMgrClass::Reset();
+		}
+		WasCaptured = isCaptured;
 	}
 
 	//

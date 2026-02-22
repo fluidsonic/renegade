@@ -13,6 +13,7 @@
 #include "vehicle.h"
 #include "combat.h"
 #include "ccamera.h"
+#include "sdl2_platform.h"
 
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -791,10 +792,12 @@ void	Input::Update( void )
 		return;
 	}
 
-	if (!GameInFocus) {
+	if (!SDL2_HasFocus) {
 		DirectInput::Unacquire();
 		return;
 	}
+
+	DirectInput::Acquire();
 
 	// Update Direct Input
 	DirectInput::Read();

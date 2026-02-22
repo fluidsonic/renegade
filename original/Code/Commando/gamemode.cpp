@@ -28,6 +28,7 @@
 #include "cnetwork.h"
 #include "dx8rendererdebugger.h"
 #include "consolemode.h"
+#include "sdl2_platform.h"
 
 /*
 ** The gamemode list
@@ -182,7 +183,7 @@ void	GameModeManager::Render( void )
 		DX8RendererDebugger::Update();
 
 		bool do_pscene = (COMBAT_SCENE != NULL) && !cNetwork::I_Am_Only_Server();
-		if (!GameInFocus) do_pscene=false;	// Don't render the game scene if the applicationisn't active
+		if (!SDL2_ShouldRender) do_pscene = false;
 		if (do_pscene) {
 
 			//
@@ -199,7 +200,7 @@ void	GameModeManager::Render( void )
 			WW3D::Begin_Render (clear, clear, BackgroundMgrClass::Get_Clear_Color());
 		}
 
-		if (GameInFocus) {
+		if (SDL2_ShouldRender) {
 			for (	SLNode<GameModeClass> *game_mode_node = GameModeList.Head();
 					game_mode_node != NULL;
 					game_mode_node = game_mode_node->Next()) {
@@ -235,8 +236,7 @@ void	GameModeManager::Render( void )
 		}
 		*/
 
-		// Only update the movie when the application is active
-		if (GameInFocus) {
+		if (SDL2_ShouldRender) {
 			BINKMovie::Render();
 		}
 

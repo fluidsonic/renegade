@@ -135,7 +135,6 @@ class RenegadeUIInputClass : public WWUIInputClass
 	Exit_Menu_Mode (void)
 	{
 		Input::Menu_Enable (false);
-		DirectInput::Eat_Mouse_Held_States ();
 		return ;
 	}
 

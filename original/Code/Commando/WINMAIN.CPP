@@ -727,8 +727,6 @@ void On_Focus_Loss(void)
  *=============================================================================================*/
 void On_Focus_Restore(void)
 {
-	DirectInput::Acquire();
-
 	GameModeManager::Hide_Render_Frames(1);	// Hide the first rendered frame
 }
 

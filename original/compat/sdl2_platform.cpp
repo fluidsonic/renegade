@@ -12,6 +12,22 @@ static SDL_GLContext  s_glcontext = NULL;
 int SDL2_MouseWheelDelta = 0;
 int SDL2_QuitRequested   = 0;
 int SDL2_HasFocus        = 1;   // window starts focused
+int SDL2_MouseCaptured   = 0;
+int SDL2_CaptureClickX   = 0;
+int SDL2_CaptureClickY   = 0;
+int SDL2_ShouldRender    = 1;   // 0 when minimized or fullscreen+unfocused
+
+static int s_minimized = 0;
+
+// Recompute SDL2_ShouldRender from current state.
+// Must be called whenever minimized or focus state changes.
+static void update_should_render(void)
+{
+    int fullscreen = s_window
+        ? (int)(SDL_GetWindowFlags(s_window) & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP))
+        : 0;
+    SDL2_ShouldRender = !s_minimized && (!fullscreen || SDL2_HasFocus);
+}
 
 int SDL2_Platform_Init(const char* title, int w, int h)
 {
@@ -67,6 +83,12 @@ int SDL2_Platform_Init(const char* title, int w, int h)
 
     fprintf(stderr, "[SDL2] Window created %dx%d, GL context ready\n", w, h);
     GameInFocus = true;   // window starts with focus; DialogMgrClass::Render guards on this
+
+    SDL_ShowCursor(SDL_DISABLE);
+    // The invisible cursor rect is dispatched asynchronously; pump events now so
+    // AppKit rebuilds cursor rects before the first frame — avoids a visible cursor
+    // during the (potentially long) game initialization phase.
+    SDL_PumpEvents();
     return 0;
 }
 
@@ -115,6 +137,8 @@ void SDL2_Platform_PollEvents(void)
                 if (!SDL2_HasFocus) {
                     SDL2_HasFocus = 1;
                     GameInFocus = true;
+                    SDL_ShowCursor(SDL_DISABLE);
+                    update_should_render();
                     On_Focus_Restore();
                 }
                 break;
@@ -122,8 +146,22 @@ void SDL2_Platform_PollEvents(void)
                 if (SDL2_HasFocus) {
                     SDL2_HasFocus = 0;
                     GameInFocus = false;
+                    if (SDL2_MouseCaptured) {
+                        SDL_SetRelativeMouseMode(SDL_FALSE);
+                        SDL2_MouseCaptured = 0;
+                    }
+                    SDL_ShowCursor(SDL_ENABLE);
+                    update_should_render();
                     On_Focus_Loss();
                 }
+                break;
+            case SDL_WINDOWEVENT_MINIMIZED:
+                s_minimized = 1;
+                update_should_render();
+                break;
+            case SDL_WINDOWEVENT_RESTORED:
+                s_minimized = 0;
+                update_should_render();
                 break;
             default:
                 break;
@@ -132,6 +170,22 @@ void SDL2_Platform_PollEvents(void)
 
         case SDL_MOUSEWHEEL:
             SDL2_MouseWheelDelta += event.wheel.y;
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            fprintf(stderr, "[SDL2] MOUSEBUTTONDOWN btn=%d pos=(%d,%d) captured=%d focus=%d\n",
+                event.button.button, event.button.x, event.button.y,
+                SDL2_MouseCaptured, SDL2_HasFocus);
+            if (!SDL2_MouseCaptured && SDL2_HasFocus) {
+                SDL2_CaptureClickX = event.button.x;
+                SDL2_CaptureClickY = event.button.y;
+                int rc = SDL_SetRelativeMouseMode(SDL_TRUE);
+                if (rc == 0) {
+                    SDL2_MouseCaptured = 1;
+                } else {
+                    fprintf(stderr, "[SDL2] SDL_SetRelativeMouseMode failed: %s\n", SDL_GetError());
+                }
+            }
             break;
 
         default:

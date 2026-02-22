@@ -68,7 +68,7 @@ public:
 	static void Read( void );
 	static void Flush( void );
 
-	static void Acquire(void);
+	static void Acquire(void);   // detects SDL2_MouseCaptured transitions; call every frame when focused
 	static void Unacquire(void);
 
 	/*
@@ -82,8 +82,6 @@ public:
 	/*
 	**
 	*/
-	static	void	Eat_Mouse_Held_States (void);
-
 	// Still non-buffered
 	static	long	Get_Joystick_Axis_State( JoystickAxis axis );
 
@@ -120,8 +118,6 @@ private:
 	static	float						ButtonLastHitTime[NUM_KEYBOARD_BUTTONS];
 
 	static	Vector3					CursorPos;
-	static	bool						EatMouseHeld;
-
 	static	void *					DirectInputLibrary;
 
 	static	int						LastKeyPressed;

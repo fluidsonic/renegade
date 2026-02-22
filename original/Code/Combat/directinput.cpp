@@ -18,13 +18,13 @@ long    DirectInput::DIMouseAxis[NUM_MOUSE_AXIS];
 char    DirectInput::DIJoystickButtons[NUM_MOUSE_BUTTONS];
 float   DirectInput::ButtonLastHitTime[NUM_KEYBOARD_BUTTONS];
 Vector3 DirectInput::CursorPos(0, 0, 0);
-bool    DirectInput::EatMouseHeld  = false;
 bool    DirectInput::Captured      = false;
 void*   DirectInput::DirectInputLibrary = NULL;
 int     DirectInput::LastKeyPressed     = 0;
 
 // Previous-frame keyboard state (for HIT/RELEASED transition detection)
 static Uint8 s_prevKeyState[SDL_NUM_SCANCODES];
+
 
 // ---------------------------------------------------------------------------
 // SDL_SCANCODE → DIK translation table
@@ -160,8 +160,8 @@ void DirectInput::Init(void)
     // Do NOT enable relative mouse mode here — the game starts in menu mode where
     // absolute mouse coordinates are needed.  Relative mode is enabled by Acquire()
     // when gameplay starts (Input::MenuMode == false).
+    // Cursor visibility is owned by sdl2_platform.cpp — do not call SDL_ShowCursor here.
     SDL_SetRelativeMouseMode(SDL_FALSE);
-    SDL_ShowCursor(SDL_ENABLE);
 
     Captured = false;
 }
@@ -170,7 +170,6 @@ void DirectInput::Init(void)
 void DirectInput::Shutdown(void)
 {
     SDL_SetRelativeMouseMode(SDL_FALSE);
-    SDL_ShowCursor(SDL_ENABLE);
     Captured = false;
 }
 
@@ -184,23 +183,47 @@ void DirectInput::Flush(void)
 }
 
 // ---------------------------------------------------------------------------
+// Acquire input. Call every frame when the window has focus.
+// Detects SDL2_MouseCaptured transitions and re-seeds cursor position accordingly.
 void DirectInput::Acquire(void)
 {
-    if (!Captured) {
-        Flush();
-        // Relative mouse mode (cursor capture) is only appropriate during gameplay.
-        // The menu phase uses absolute mouse coords; relative mode is enabled by
-        // the gameplay path explicitly rather than here on every focus restore.
-        Captured = true;
+    static int s_prevCaptureState = -1; // -1 = never acquired
+    int captureState = SDL2_MouseCaptured;
+
+    if (Captured && captureState == s_prevCaptureState) {
+        return; // no state change
     }
+
+    Flush();
+
+    if (captureState) {
+        // Entering captured (relative) mode — seed cursor from the click position.
+        // The capture click is allowed through: ReadMouse will see prevButtons=0
+        // and sdlButtons with LMASK set (if button still held) → generates HIT.
+        CursorPos.X = (float)SDL2_CaptureClickX;
+        CursorPos.Y = (float)SDL2_CaptureClickY;
+        fprintf(stderr, "[DInput] Acquire: relative mode, cursor seeded at (%d,%d)\n",
+            SDL2_CaptureClickX, SDL2_CaptureClickY);
+    } else {
+        // Pre-capture (absolute) mode — seed from current OS cursor position
+        int mx = 0, my = 0;
+        SDL_GetMouseState(&mx, &my);
+        CursorPos.X = (float)mx;
+        CursorPos.Y = (float)my;
+        fprintf(stderr, "[DInput] Acquire: absolute mode, cursor seeded at (%d,%d)\n", mx, my);
+    }
+
+    SDL_GetRelativeMouseState(nullptr, nullptr); // flush accumulated deltas
+    Captured = true;
+    s_prevCaptureState = captureState;
 }
 
 // ---------------------------------------------------------------------------
 void DirectInput::Unacquire(void)
 {
     if (Captured) {
+        fprintf(stderr, "[DInput] Unacquire\n");
         SDL_SetRelativeMouseMode(SDL_FALSE);
-        SDL_ShowCursor(SDL_ENABLE);
         Captured = false;
     }
 }
@@ -258,23 +281,56 @@ void DirectInput::ReadMouse(void)
         DIMouseAxis[i] = 0;
     }
 
-    // Relative mouse deltas
+    static Uint32 prevButtons = 0;
+
+    if (!SDL2_MouseCaptured) {
+        // Pre-capture: absolute cursor tracking with full button events.
+        // The game's software cursor (MouseMgrClass) follows CursorPos.
+        // Button events are required for menu interaction.
+        int mx = 0, my = 0;
+        Uint32 sdlButtons = SDL_GetMouseState(&mx, &my);
+        CursorPos.X = (float)mx;
+        CursorPos.Y = (float)my;
+
+        DIMouseAxis[MOUSE_Z_AXIS] = SDL2_MouseWheelDelta * 120;
+        SDL2_MouseWheelDelta = 0;
+
+        struct { Uint32 mask; int idx; } btns[] = {
+            { SDL_BUTTON_LMASK, 0 },
+            { SDL_BUTTON_RMASK, 1 },
+            { SDL_BUTTON_MMASK, 2 },
+        };
+        for (int i = 0; i < 3; i++) {
+            bool wasDown = (prevButtons & btns[i].mask) != 0;
+            bool isDown  = (sdlButtons  & btns[i].mask) != 0;
+            if (isDown && !wasDown) {
+                DIMouseButtons[btns[i].idx] |= DI_BUTTON_HIT | DI_BUTTON_HELD;
+                fprintf(stderr, "[DInput] pre-capture button[%d] HIT\n", i);
+            } else if (isDown) {
+                DIMouseButtons[btns[i].idx] |= DI_BUTTON_HELD;
+            } else if (!isDown && wasDown) {
+                DIMouseButtons[btns[i].idx] |= DI_BUTTON_RELEASED;
+                DIMouseButtons[btns[i].idx] &= ~DI_BUTTON_HELD;
+            }
+        }
+        prevButtons = sdlButtons;
+
+        // Drain relative accumulator so no stale deltas fire on first captured frame
+        SDL_GetRelativeMouseState(nullptr, nullptr);
+        return;
+    }
+
+    // Captured mode: raw relative deltas, full button dispatch
     int dx = 0, dy = 0;
     Uint32 sdlButtons = SDL_GetRelativeMouseState(&dx, &dy);
 
     DIMouseAxis[MOUSE_X_AXIS] = dx;
     DIMouseAxis[MOUSE_Y_AXIS] = dy;
-
-    // Mouse wheel from platform event accumulator
-    DIMouseAxis[MOUSE_Z_AXIS] = SDL2_MouseWheelDelta * 120; // match DInput wheel scale
+    DIMouseAxis[MOUSE_Z_AXIS] = SDL2_MouseWheelDelta * 120;
     SDL2_MouseWheelDelta = 0;
 
-    // Cursor position tracking
-    CursorPos.X += (float)(dx * 2);
-    CursorPos.Y += (float)(dy * 2);
-
-    // Button transitions (SDL uses mask bits: SDL_BUTTON_LMASK, RMASK, MMASK)
-    static Uint32 prevButtons = 0;
+    CursorPos.X += (float)dx;
+    CursorPos.Y += (float)dy;
 
     struct { Uint32 mask; int idx; } btns[] = {
         { SDL_BUTTON_LMASK, 0 },  // BUTTON_MOUSE_LEFT
@@ -288,21 +344,16 @@ void DirectInput::ReadMouse(void)
 
         if (isDown && !wasDown) {
             DIMouseButtons[btns[i].idx] |= DI_BUTTON_HIT | DI_BUTTON_HELD;
+            fprintf(stderr, "[DInput] button[%d] HIT\n", i);
         } else if (isDown) {
             DIMouseButtons[btns[i].idx] |= DI_BUTTON_HELD;
         } else if (!isDown && wasDown) {
             DIMouseButtons[btns[i].idx] |= DI_BUTTON_RELEASED;
             DIMouseButtons[btns[i].idx] &= ~DI_BUTTON_HELD;
-            EatMouseHeld = false;
         }
     }
     prevButtons = sdlButtons;
 
-    // "Eat" left mouse button if requested
-    if (EatMouseHeld) {
-        DIMouseButtons[BUTTON_MOUSE_LEFT & 0xFF] &= ~(DI_BUTTON_HELD | DI_BUTTON_HIT);
-        DIMouseButtons[BUTTON_MOUSE_LEFT & 0xFF] |= DI_BUTTON_RELEASED;
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -315,22 +366,10 @@ void DirectInput::ReadJoystick(void)
 // ---------------------------------------------------------------------------
 void DirectInput::Read(void)
 {
-    if (Captured) {
-        ReadKeyboard();
-        ReadMouse();
-        ReadJoystick();
-        Update_Double_Clicks();
-    }
-}
-
-// ---------------------------------------------------------------------------
-void DirectInput::Eat_Mouse_Held_States(void)
-{
-    if ((DIMouseButtons[BUTTON_MOUSE_LEFT & 0xFF] & DI_BUTTON_HELD) ||
-        (DIMouseButtons[BUTTON_MOUSE_LEFT & 0xFF] & DI_BUTTON_HIT))
-    {
-        EatMouseHeld = true;
-    }
+    ReadKeyboard();
+    ReadMouse();
+    ReadJoystick();
+    Update_Double_Clicks();
 }
 
 // ---------------------------------------------------------------------------
