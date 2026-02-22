@@ -27,6 +27,7 @@ class VendorClass(private val server: GameServer) {
     data class PurchaseResult(
         val responseId: Int,
         val purchasedDefId: Int = 0,
+        val isVehiclePurchase: Boolean = false,
     )
 
     /**
@@ -126,6 +127,6 @@ class VendorClass(private val server: GameServer) {
         println("[VENDOR] purchase success: rhostId=$rhostId type=$purchaseType index=$itemIndex " +
             "defId=$defId cost=$cost remaining=${player.money}")
 
-        return PurchaseResult(RESPONSE_SUCCESS, purchasedDefId = defId)
+        return PurchaseResult(RESPONSE_SUCCESS, purchasedDefId = defId, isVehiclePurchase = isVehiclePurchase)
     }
 }

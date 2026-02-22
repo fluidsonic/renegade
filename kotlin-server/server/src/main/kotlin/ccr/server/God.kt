@@ -3,8 +3,10 @@ package ccr.server
 import ccr.math.Vector3
 import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
+import ccr.server.defs.VehicleGameObjDef
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
+import ccr.server.net.VehicleGameObj
 import ccr.server.net.WeaponEntry
 
 /**
@@ -31,6 +33,7 @@ class God(private val server: GameServer) {
     // Player/soldier state (moved from GameServer)
     val playersByHost = mutableMapOf<Int, Player>()
     val soldiersByHost = mutableMapOf<Int, SoldierGameObj>()
+    val vehiclesByNetId = mutableMapOf<Int, VehicleGameObj>()  // networkId → VehicleGameObj
     val playerTeams = mutableMapOf<Int, Int>()   // rhostId → team (0=NOD, 1=GDI)
     val playerInGame = mutableSetOf<Int>()        // rhostIds where IsInGame=true
     val playerNetIds = mutableMapOf<Int, Int>()   // rhostId → networkId of cPlayer object
@@ -240,6 +243,46 @@ class God(private val server: GameServer) {
         // No starting credits — purchase already costs money
 
         return soldier
+    }
+
+    // ---- Vehicle spawning ----
+
+    /**
+     * Spawns a VehicleGameObj when a vehicle factory completes generation.
+     * Registers it with NetworkObjectManager and dirty-bit replication.
+     *
+     * @param buyerRhostId  host ID of the purchasing player (used for team + logging)
+     * @param defId         vehicle definition ID from PurchaseSettingsDefClass
+     * @param spawnPosition world position to spawn at (near the factory delivery pad)
+     * @return the spawned [VehicleGameObj], or null if defId is 0
+     */
+    fun createVehicle(buyerRhostId: Int, defId: Int, spawnPosition: Vector3): VehicleGameObj? {
+        if (defId == 0) return null
+
+        val def = server.loadedLevel?.definitions?.all()
+            ?.filterIsInstance<VehicleGameObjDef>()
+            ?.find { it.definition.id.toInt() == defId }
+
+        val vehicleType = def?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
+        val seatCount   = def?.numSeats ?: 1
+        val playerType  = playerTeams[buyerRhostId] ?: 0
+
+        val vehicle = VehicleGameObj(
+            definitionId     = defId,
+            position         = spawnPosition,
+            vehicleType      = vehicleType,
+            seatCount        = seatCount,
+            team             = playerType,
+            vehicleDelivered = true,
+        )
+        val netId = NetworkObjectManager.getNewDynamicId()
+        NetworkObjectManager.registerObject(vehicle, netId)
+        vehiclesByNetId[netId] = vehicle
+        server.gameObjManager.add(vehicle)
+
+        println("[GOD] vehicle spawned: defId=$defId netId=$netId team=${if (playerType == 0) "NOD" else "GDI"} " +
+            "seats=$seatCount pos=(${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z}) buyer=$buyerRhostId")
+        return vehicle
     }
 
     // ---- cGod cleanup helpers ----

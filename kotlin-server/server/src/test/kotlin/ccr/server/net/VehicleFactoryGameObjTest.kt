@@ -31,7 +31,7 @@ class VehicleFactoryGameObjTest {
                 sphereCenter = ZERO,
                 sphereRadius = 10f,
             )
-            if (isBusy) factory.requestVehicle(1, 999f)
+            if (isBusy) factory.requestVehicle(1, 999f, buyerRhostId = -1)
             return factory
         }
     }

@@ -28,20 +28,20 @@ class VehicleGameObj(
     targeting: Vector3 = Vector3(position.x + 1f, position.y + 1f, position.z + 1f),
     controlOwner: Int = 0,
     team: Int = 0,
-    // Vehicle-specific fields
-    val vehicleType: Int = VEHICLE_TYPE_CAR,
-    val seatCount: Int = 1,
-    val lockOwnerId: Int = 0,
-    val lockTimer: Float = 0f,
-    val vehicleDelivered: Boolean = false,
-    val isEngineOn: Boolean = true,
-    val quaternion: Quaternion = Quaternion.IDENTITY,
-    val velocity: Vector3 = Vector3(0f, 0f, 0f),
-    val angularVelocity: Vector3 = Vector3(0f, 0f, 0f),
-    val totalRounds: Int = 0,
-    val driverIsGunner: Boolean = false,
-    val seatOccupantIds: List<Int> = emptyList(),
-    val isHidden: Boolean = false,
+    // Vehicle-specific constructor params (no val/var — properties declared in class body)
+    vehicleType: Int = VEHICLE_TYPE_CAR,
+    seatCount: Int = 1,
+    lockOwnerId: Int = 0,
+    lockTimer: Float = 0f,
+    vehicleDelivered: Boolean = false,
+    isEngineOn: Boolean = true,
+    quaternion: Quaternion = Quaternion.IDENTITY,
+    velocity: Vector3 = Vector3(0f, 0f, 0f),
+    angularVelocity: Vector3 = Vector3(0f, 0f, 0f),
+    totalRounds: Int = 0,
+    driverIsGunner: Boolean = false,
+    seatOccupantIds: List<Int> = emptyList(),
+    isHidden: Boolean = false,
 ) : SmartGameObj(
     definitionId    = definitionId,
     position        = position,
@@ -62,6 +62,24 @@ class VehicleGameObj(
         const val VEHICLE_TYPE_FLYING = 3
         const val VEHICLE_TYPE_TURRET = 4
     }
+
+    // Definitional (immutable — set at construction from definition data)
+    val vehicleType: Int = vehicleType
+    val seatCount: Int = seatCount
+
+    // Mutable runtime state
+    var lockOwnerId: Int = lockOwnerId
+    var lockTimer: Float = lockTimer
+    var vehicleDelivered: Boolean = vehicleDelivered
+    var isEngineOn: Boolean = isEngineOn
+    var quaternion: Quaternion = quaternion
+    var velocity: Vector3 = velocity
+    var angularVelocity: Vector3 = angularVelocity
+    var totalRounds: Int = totalRounds
+    var driverIsGunner: Boolean = driverIsGunner
+    var isHidden: Boolean = isHidden
+    // One slot per seat; -1 means empty. Initialised from constructor param or filled with -1.
+    val seatOccupantIds: MutableList<Int> = MutableList(seatCount) { seatOccupantIds.getOrElse(it) { -1 } }
 
     // C++: VehicleGameObj::Export_Creation — calls SmartGameObj chain, then writes lock state.
     // SmartGameObj::Export_Creation → PhysicalGameObj (definitionId + position + facing) → controlOwner

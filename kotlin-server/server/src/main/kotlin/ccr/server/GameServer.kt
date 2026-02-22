@@ -194,6 +194,12 @@ class GameServer(internal val config: ServerConfig) {
                     if (controller != null) {
                         building.cncInitialize(controller)
                     }
+                    // Wire vehicle factory delivery callback so purchased vehicles spawn in-world
+                    if (building is VehicleFactoryGameObj) {
+                        building.onVehicleReady = { defId, buyerRhostId ->
+                            god.createVehicle(buyerRhostId, defId, building.position)
+                        }
+                    }
                     gameObjManager.add(building)
                     gameObjManager.addBuilding(building)
                     println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
@@ -725,11 +731,28 @@ class GameServer(internal val config: ServerConfig) {
                 val response = PurchaseResponseEvent(purchaserId = event.senderId, responseId = result.responseId)
                 sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
                 if (result.responseId == VendorClass.RESPONSE_SUCCESS) {
-                    // Kill current soldier and respawn as purchased character
-                    god.deleteSoldier(rhostId)
-                    val playerTeam = god.playerTeams[rhostId] ?: 0
-                    val purchasedModelName = if (playerTeam == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
-                    god.createCommandoWithDef(rhostId, playerTeam, result.purchasedDefId, purchasedModelName)
+                    if (result.isVehiclePurchase) {
+                        // Route to vehicle factory — find the team's available factory and start the timer
+                        val playerTeam = god.playerTeams[rhostId] ?: 0
+                        val baseController = if (playerTeam == 0) baseControllerNod else baseControllerGdi
+                        val factory = gameObjManager.getAllObjects()
+                            .filterIsInstance<VehicleFactoryGameObj>()
+                            .find { it.baseController === baseController && !it.isBusy && !it.isDestroyed }
+                        if (factory != null) {
+                            factory.requestVehicle(result.purchasedDefId, 12.0f, rhostId)
+                            println("[GAME] vehicle order queued: defId=${result.purchasedDefId} factory=${factory.networkId} buyer=$rhostId")
+                        } else {
+                            // Factory became unavailable between vendor check and now — log only
+                            // (VendorClass already checked canGenerateVehicles so this is very rare)
+                            println("[GAME] no available vehicle factory for team=$playerTeam (race condition)")
+                        }
+                    } else {
+                        // Kill current soldier and respawn as purchased character
+                        god.deleteSoldier(rhostId)
+                        val playerTeam = god.playerTeams[rhostId] ?: 0
+                        val purchasedModelName = if (playerTeam == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
+                        god.createCommandoWithDef(rhostId, playerTeam, result.purchasedDefId, purchasedModelName)
+                    }
                 }
             }
             1034 -> {  // NETCLASSID_CSDAMAGEEVENT (header=1033, wire=1034) — client reports damage dealt

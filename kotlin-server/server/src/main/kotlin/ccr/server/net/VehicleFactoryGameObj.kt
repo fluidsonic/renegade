@@ -34,6 +34,13 @@ open class VehicleFactoryGameObj(
     var isBusy: Boolean = false; protected set
     private var endTimer: Float = UNINITIALIZED_TIMER
 
+    // Pending order — set by requestVehicle(), consumed by onGenerationComplete()
+    var pendingDefId: Int = 0; private set
+    var pendingBuyerRhostId: Int = -1; private set
+
+    // Called when vehicle generation completes: (defId, buyerRhostId) → spawn the vehicle
+    var onVehicleReady: ((defId: Int, buyerRhostId: Int) -> Unit)? = null
+
     // C++: VehicleFactoryGameObj::CnC_Initialize — register vehicle capability
     override fun cncInitialize(base: BaseControllerClass) {
         super.cncInitialize(base)
@@ -51,22 +58,27 @@ open class VehicleFactoryGameObj(
         if (endTimer > UNINITIALIZED_TIMER) {
             endTimer -= deltaSeconds
             if (endTimer < 0f) {
-                onGenerationComplete()
                 endTimer = UNINITIALIZED_TIMER
+                onGenerationComplete()
             }
         }
         super.think(deltaSeconds)
     }
 
-    fun requestVehicle(definitionId: Int, generationTime: Float) {
+    fun requestVehicle(definitionId: Int, generationTime: Float, buyerRhostId: Int) {
         if (!isBusy && definitionId != 0) {
             isBusy = true
+            pendingDefId = definitionId
+            pendingBuyerRhostId = buyerRhostId
             endTimer = generationTime  // C++ default: 12.0f * operationTimeFactor
             setObjectDirtyBit(ccr.net.replication.NetworkObject.BIT_RARE, true)
         }
     }
 
     private fun onGenerationComplete() {
+        onVehicleReady?.invoke(pendingDefId, pendingBuyerRhostId)
+        pendingDefId = 0
+        pendingBuyerRhostId = -1
         isBusy = false
         setObjectDirtyBit(ccr.net.replication.NetworkObject.BIT_RARE, true)
     }
