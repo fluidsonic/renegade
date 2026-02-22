@@ -102,8 +102,8 @@ object FullDefinitionLoader {
             // FIXME: CinematicGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
             CinematicGameObjDef.CHUNK_ID -> fallback
 
-            // FIXME: BeaconGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
-            BeaconGameObjDef.CHUNK_ID -> fallback
+            BeaconGameObjDef.CHUNK_ID ->
+                parseBeaconGameObjDef(objDataChunk, name, id, chunkId)
 
             // ScriptZoneGameObjDef → DefinitionClass
             ScriptZoneGameObjDef.CHUNK_ID ->

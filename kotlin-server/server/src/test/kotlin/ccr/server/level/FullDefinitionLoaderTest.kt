@@ -235,4 +235,19 @@ class FullDefinitionLoaderTest {
         assertEquals("PowerUp_Health", def.name)
         assertTrue(def is ccr.server.defs.combat.PowerUpGameObjDef)
     }
+
+    @Test
+    fun `BeaconGameObjDef dispatches to typed subclass`() {
+        // 0x00040136 = CHUNKID_GAME_OBJECT_DEF_BEACON
+        // parseBeaconGameObjDef needs CHUNKID_DEF_VARIABLES=35193910 (0x02190436) inside OBJDATA
+        val beaconVars = buildChunk(35193910u, byteArrayOf(), isContainer = false)
+        val ddb = buildDdbWithExtra(Triple(0x00040136u, 1001u, "Beacon_Nuke") to beaconVars)
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(1001u)
+        assertNotNull(def)
+        assertEquals("Beacon_Nuke", def.name)
+        assertTrue(def is ccr.server.defs.combat.BeaconGameObjDef)
+    }
 }

@@ -1,5 +1,6 @@
 package ccr.server.defs.combat
 
+import ccr.server.defs.DefinitionClass
 import ccr.server.mix.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -11,10 +12,10 @@ import java.nio.ByteOrder
  * PreDetonateCinematicDelay(0), DetonateTime(30), PostDetonateTime(10),
  * ArmedSoundDefID(0), IsNuke(true/1).
  */
-data class BeaconGameObjDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class BeaconGameObjDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val armingAnimationName: String = "",
     val broadcastToAllTime: Float = 5f,
     val armTime: Float = 10f,
@@ -32,7 +33,7 @@ data class BeaconGameObjDef(
     val postDetonateCinematicDefId: Int = 0,
     val explosionDefId: Int = 0,
     val isNuke: Int = 1,
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040136u  // CHUNKID_GAME_OBJECT_DEF_BEACON
     }
