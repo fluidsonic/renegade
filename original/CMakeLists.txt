@@ -38,7 +38,6 @@ add_compile_options(
     -Wno-microsoft-include
     -Wno-nonportable-include-path
     -Wno-deprecated-declarations
-    -Wno-unused-value
     -Wno-format
     -Wno-parentheses-equality
     -Wno-tautological-compare

@@ -3341,7 +3341,7 @@ DECLARE_SCRIPT (M10_Flyover_Controller, "")
 
 	void Created (GameObject *obj)
 	{
-		last, last2, last3 = 100;
+		last = last2 = last3 = 100;
 		count = 2;
 		already_entered = false;
 	}

@@ -7,7 +7,7 @@ extern "C"
 {
 #endif
 
-#define DebugPrint
+#define DebugPrint(...) ((void)0)
 
 #ifdef __cplusplus
 }
