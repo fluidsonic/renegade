@@ -56,12 +56,12 @@ class NetworkObjectPacketWriterTest {
 
     // ---- writeDeletion ----
 
-    @Test fun `writeDeletion - header layout - dirtyBits=0x0F, isDeletePending=true`() {
+    @Test fun `writeDeletion - header layout - dirtyBits=0x00, isDeletePending=true`() {
         val bs = BitStream()
         NetworkObjectPacketWriter.writeDeletion(bs, networkId = 777)
 
         assertEquals(777, bs.getInt())                                 // networkId
-        assertEquals(0x0F, bs.getByte().toInt() and 0xFF)              // dirtyBits = BIT_CREATION
+        assertEquals(0x00, bs.getByte().toInt() and 0xFF)              // dirtyBits = 0 (no tier data)
         assertTrue(bs.getBool())                                        // isDeletePending = true
     }
 

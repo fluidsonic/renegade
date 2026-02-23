@@ -418,12 +418,13 @@ open class God(private val server: GameServer) {
         val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
             as? VehicleGameObjDefWrapper
         val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
-        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
+        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 2  // C++ default: NumSeats = 2
+        val modelName   = resolveModelName(wrapper)
         val playerType  = playerTeams[buyerRhostId] ?: 0
 
         val vehicle = VehicleGameObj(
             definitionId     = defId,
-            modelName        = resolveModelName(wrapper),
+            modelName        = modelName,
             position         = spawnPosition,
             vehicleType      = vehicleType,
             seatCount        = seatCount,
@@ -435,8 +436,11 @@ open class God(private val server: GameServer) {
         vehiclesByNetId[netId] = vehicle
         server.gameObjManager.add(vehicle)
 
-        println("[GOD] vehicle spawned: defId=$defId netId=$netId team=${if (playerType == 0) "NOD" else "GDI"} " +
-            "seats=$seatCount pos=(${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z}) buyer=$buyerRhostId")
+        println("[GOD] vehicle spawned: defId=$defId netId=$netId " +
+            "def=${if (wrapper != null) "FOUND" else "MISSING"} " +
+            "model='$modelName' type=$vehicleType seats=$seatCount " +
+            "team=${if (playerType == 0) "NOD" else "GDI"} " +
+            "pos=(${spawnPosition.x}, ${spawnPosition.y}, ${spawnPosition.z}) buyer=$buyerRhostId")
         return vehicle
     }
 
@@ -562,11 +566,12 @@ open class God(private val server: GameServer) {
         val wrapper = server.loadedLevel?.definitions?.findById(lv.definitionId.toUInt())
             as? VehicleGameObjDefWrapper
         val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
-        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
+        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 2  // C++ default: NumSeats = 2
+        val modelName   = resolveModelName(wrapper)
         val position = lv.transform.position.let { Vector3(it.x, it.y, it.z) }
         val vehicle = VehicleGameObj(
             definitionId     = lv.definitionId,
-            modelName        = resolveModelName(wrapper),
+            modelName        = modelName,
             position         = position,
             team             = lv.playerType,
             vehicleType      = vehicleType,
@@ -578,6 +583,8 @@ open class God(private val server: GameServer) {
         vehiclesByNetId[lv.networkId] = vehicle
         server.gameObjManager.add(vehicle)
         println("[GOD] level vehicle: defId=${lv.definitionId} netId=${lv.networkId} " +
+            "def=${if (wrapper != null) "FOUND" else "MISSING"} " +
+            "model='$modelName' type=$vehicleType seats=$seatCount " +
             "team=${if (lv.playerType == 0) "NOD" else "GDI"} " +
             "pos=(${position.x}, ${position.y}, ${position.z})")
         return vehicle

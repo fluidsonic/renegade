@@ -63,10 +63,11 @@ object NetworkObjectPacketWriter {
 
     // Writes a deletion packet (isDeletePending=true).
     // C++: Send_Object_Update with isDeletePending; client deletes the object on receipt.
+    // dirtyBits = 0x00: no tier data follows; client sees isDeletePending and calls Set_Delete_Pending()
+    // without attempting to read any Import_ data. Matches C++ server behavior.
     fun writeDeletion(bs: BitStream, networkId: Int) {
         bs.addInt(networkId)
-        bs.addByte(NetworkObject.BIT_CREATION.toByte())  // dirtyBits = 0x0F (client checks isDeletePending first)
-        bs.addBool(true)                                  // isDeletePending = true
-        // No additional data — client deletes immediately on seeing isDeletePending
+        bs.addByte(0x00)  // dirtyBits = 0 — no tier data, no classId
+        bs.addBool(true)  // isDeletePending = true
     }
 }
