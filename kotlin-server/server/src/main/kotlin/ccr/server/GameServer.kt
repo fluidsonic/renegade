@@ -497,15 +497,15 @@ class GameServer(internal val config: ServerConfig) {
                 if ((bits and 0x08) != 0) {
                     // BIT_CREATION — send full creation reliably
                     sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, obj, obj.networkId) }
-                    obj.setObjectDirtyBits(clientId, 0)
+                    obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
                 } else if ((bits and 0x04) != 0) {
                     // BIT_RARE — send rare+occasional+frequent reliably
                     sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeRareUpdate(bs, obj, obj.networkId) }
-                    obj.setObjectDirtyBits(clientId, 0)
+                    obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
                 } else if ((bits and 0x02) != 0) {
                     // BIT_OCCASIONAL — send occasional+frequent reliably
                     sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeOccasionalUpdate(bs, obj, obj.networkId) }
-                    obj.setObjectDirtyBits(clientId, 0)
+                    obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
                 } else if ((bits and 0x01) != 0) {
                     // BIT_FREQUENT only — skip own soldier; gate others through FlowController
                     if (!isOwnSoldier) {
@@ -974,14 +974,13 @@ class GameServer(internal val config: ServerConfig) {
     // These are CClientControl frequent updates: the client sends its soldier's position/state
     // every tick. C++: clientcontrol.cpp:114-134 reads SmartObjId → Import_Control_Cs + Import_State_Cs.
     //
-    // On-foot wire format (after header consumed by handleGamePacket):
-    //   smartObjId(32), in_vehicle(bool)=false, has_weapon(bool), [weaponDefId(32)+rounds(32)],
-    //   position(3×BITPACK_WORLD), humanState, humanSubState, isSpecialDamage(bool),
-    //   onHostBone(bool), targeting(3×BITPACK_WORLD), continuousBoolBits, 4×analog
-    //
-    // In-vehicle wire format:
-    //   smartObjId(32), in_vehicle(bool)=true,
-    //   onHostBone(bool), targeting(3×BITPACK_WORLD), continuousBoolBits, 4×analog
+    // C→S wire format (after header consumed by handleGamePacket):
+    //   smartObjId(32),
+    //   oneTimeBoolBits(BITPACK_ONE_TIME_BOOLEAN_BITS=23),
+    //   continuousBoolBits(BITPACK_CONTINUOUS_BOOLEAN_BITS=4),
+    //   4×analog(BITPACK_ANALOG_VALUES),
+    //   isSniping(bool), checking(bool), [if checking: antiCheatCrc(32)],
+    //   relativeTargeting(3×BITPACK_WORLD)
     private fun handleFrequentUpdate(snap: BitStream, rhostId: Int) {
         val smartObjId = try { snap.getInt() } catch (e: Exception) { return }
         if (smartObjId == -1) return  // no controlled object
@@ -993,97 +992,31 @@ class GameServer(internal val config: ServerConfig) {
         }
 
         try {
-            val inVehicle = snap.getBool()
-
-            if (inVehicle) {
-                // ---- In-vehicle path ----
-                // C++: SoldierGameObj::Import_Frequent when in_vehicle=true:
-                //   calls SmartGameObj::Import_Frequent (on_host_bone + targeting + control)
-                snap.getBool()  // on_host_bone (discard)
-                val tx = snap.getFloat(BITPACK_WORLD_POSITION_X)
-                val ty = snap.getFloat(BITPACK_WORLD_POSITION_Y)
-                val tz = snap.getFloat(BITPACK_WORLD_POSITION_Z)
-                val contBits = snap.getByte(BITPACK_CONTINUOUS_BOOLEAN_BITS).toInt() and 0xFF
-                val fwd  = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_MOVE_FORWARD
-                val left = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_MOVE_LEFT
-                val up   = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_MOVE_UP
-                val turn = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_TURN_LEFT
-
-                soldier.targeting          = Vector3(tx, ty, tz)
-                soldier.continuousBoolBits = contBits
-                soldier.analogMoveForward  = fwd
-                soldier.analogMoveLeft     = left
-                soldier.analogMoveUp       = up
-                soldier.analogTurnLeft     = turn
-                soldier.inVehicle          = true
-                // Player can detonate remote C4 while riding in a vehicle
-                soldier.detonateC4 = (contBits and 2) != 0 && isC4Weapon(soldier.currentWeaponDefId)
-
-                // Entry detection: client reports in_vehicle=true but we haven't recorded entry yet
-                if (rhostId !in god.playerVehicles) {
-                    val nearest = god.vehiclesByNetId.values
-                        .filter { it.seatOccupantIds.getOrElse(0) { -1 } == -1 }
-                        .minByOrNull { v ->
-                            val dx = v.position.x - soldier.position.x
-                            val dy = v.position.y - soldier.position.y
-                            val dz = v.position.z - soldier.position.z
-                            dx * dx + dy * dy + dz * dz
-                        }
-                    if (nearest != null) {
-                        val dx = nearest.position.x - soldier.position.x
-                        val dy = nearest.position.y - soldier.position.y
-                        val dz = nearest.position.z - soldier.position.z
-                        val distSq = dx * dx + dy * dy + dz * dz
-                        if (distSq <= 100f) {  // 10 m radius
-                            god.enterVehicle(rhostId, nearest)
-                        }
-                    }
-                }
-
-                // Forward soldier in-vehicle state to other clients
-                for (otherId in god.playerInGame) {
-                    if (otherId != rhostId) {
-                        soldier.setObjectDirtyBit(otherId, NetworkObject.BIT_FREQUENT, true)
-                    }
-                }
-                return
-            }
-
-            // ---- Exit detection: was in a vehicle, now on foot ----
-            if (rhostId in god.playerVehicles) {
-                god.exitVehicle(rhostId)
-            }
-
-            // ---- On-foot path ----
-            val hasWeapon = snap.getBool()
-            if (hasWeapon) {
-                val weaponDefId = snap.getInt()
-                snap.getInt()  // totalRounds
-                soldier.currentWeaponDefId = weaponDefId
-            }
-
-            val x = snap.getFloat(BITPACK_WORLD_POSITION_X)
-            val y = snap.getFloat(BITPACK_WORLD_POSITION_Y)
-            val z = snap.getFloat(BITPACK_WORLD_POSITION_Z)
-            snap.getInt(BITPACK_HUMAN_STATE)      // human_state (not yet used server-side)
-            snap.getInt(BITPACK_HUMAN_SUB_STATE)  // human_sub_state
-            snap.getBool()                         // is_special_damage
-
-            // ArmedGameObj via super chain: on_host_bone + targeting
-            snap.getBool()  // on_host_bone (PhysicalGameObj)
-            val tx = snap.getFloat(BITPACK_WORLD_POSITION_X)
-            val ty = snap.getFloat(BITPACK_WORLD_POSITION_Y)
-            val tz = snap.getFloat(BITPACK_WORLD_POSITION_Z)
-
-            // SmartGameObj control: continuousBoolBits + 4 analog floats
+            // --- ControlClass::Import_Cs ---
+            val oneTimeBits = snap.getInt(BITPACK_ONE_TIME_BOOLEAN_BITS)
             val contBits = snap.getByte(BITPACK_CONTINUOUS_BOOLEAN_BITS).toInt() and 0xFF
-            val fwd  = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_MOVE_FORWARD
-            val left = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_MOVE_LEFT
-            val up   = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_MOVE_UP
-            val turn = snap.getFloat(BITPACK_ANALOG_VALUES)  // ANALOG_TURN_LEFT
+            val fwd  = snap.getFloat(BITPACK_ANALOG_VALUES)
+            val left = snap.getFloat(BITPACK_ANALOG_VALUES)
+            val up   = snap.getFloat(BITPACK_ANALOG_VALUES)
+            val turn = snap.getFloat(BITPACK_ANALOG_VALUES)
 
-            // Update soldier's authoritative state on the server
-            soldier.position           = Vector3(x, y, z)
+            // --- SoldierGameObj::Import_State_Cs ---
+            val isSniping = snap.getBool()
+            val checking = snap.getBool()
+            if (checking) {
+                snap.getInt()  // anti-cheat CRC — discard
+            }
+
+            // --- ArmedGameObj::Import_State_Cs --- (RELATIVE targeting)
+            val relTx = snap.getFloat(BITPACK_WORLD_POSITION_X)
+            val relTy = snap.getFloat(BITPACK_WORLD_POSITION_Y)
+            val relTz = snap.getFloat(BITPACK_WORLD_POSITION_Z)
+            // Reconstruct absolute: target = relative + server-known position
+            val tx = relTx + soldier.position.x
+            val ty = relTy + soldier.position.y
+            val tz = relTz + soldier.position.z
+
+            // Update soldier state
             soldier.targeting          = Vector3(tx, ty, tz)
             soldier.continuousBoolBits = contBits
             soldier.analogMoveForward  = fwd
@@ -1292,6 +1225,7 @@ class GameServer(internal val config: ServerConfig) {
                     println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
                 }
                 println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
+                gameObjManager.updateBuildingCollectionSpheres(level.definitions)
             }
 
             // Instantiate pre-placed vehicles from LDD (harvesters, decorative vehicles, etc.)
