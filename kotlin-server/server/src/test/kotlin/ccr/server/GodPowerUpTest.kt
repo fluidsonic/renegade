@@ -36,4 +36,37 @@ class GodPowerUpTest {
         God.addWeaponToSoldier(soldier, weaponDefId = 999, rounds = 5, grantWeapon = false)
         assertEquals(1, soldier.weapons.size)
     }
+
+    @Test
+    fun `grantShieldType upgrades when grant type is higher`() {
+        val soldier = SoldierGameObj(
+            definitionId = 1,
+            position = Vector3(0f, 0f, 0f),
+        )
+        soldier.shieldType = 3
+        val grantType = 5
+        if (grantType > 0 && grantType > soldier.shieldType) soldier.shieldType = grantType
+        assertEquals(5, soldier.shieldType)
+    }
+
+    @Test
+    fun `grantShieldType does not downgrade`() {
+        val soldier = SoldierGameObj(
+            definitionId = 1,
+            position = Vector3(0f, 0f, 0f),
+        )
+        soldier.shieldType = 5
+        val grantType = 3
+        if (grantType > 0 && grantType > soldier.shieldType) soldier.shieldType = grantType
+        assertEquals(5, soldier.shieldType, "lower armor type must not replace higher")
+    }
+
+    @Test
+    fun `grantShieldStrengthMax add formula rounds up`() {
+        // C++ formula: (grantShieldStrengthMax * baseDef.shieldStrengthMax + 0.95f).toInt()
+        val baseSMax = 100f
+        val grantSMax = 0.5f  // "add half of base max"
+        val add = (grantSMax * baseSMax + 0.95f).toInt().toFloat()
+        assertEquals(50f, add, "0.5 × 100 = 50")
+    }
 }

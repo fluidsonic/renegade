@@ -462,18 +462,43 @@ open class God(private val server: GameServer) {
         val def = server.loadedLevel?.definitions?.findById(powerUpDefId.toUInt())
             as? PowerUpGameObjDef ?: return
 
-        // TODO: grantShieldType — upgrades soldier's armor type when GrantShieldType > current;
-        //   C++: powerup.cpp line 268; requires mutable shieldType field and armor type comparison
-        // TODO: grantShieldStrengthMax — increases max shield by (GrantShieldStrengthMax * baseDef.shieldMax);
-        //   C++: powerup.cpp line 277; requires looking up SoldierGameObjDef.defenseObjectDef.shieldStrengthMax
+        // grantShieldType — upgrades soldier's armor type when grant type is higher than current
+        // C++: powerup.cpp line 268
+        if (def.grantShieldType > 0 && def.grantShieldType > soldier.shieldType) {
+            soldier.shieldType = def.grantShieldType
+            soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+        }
+
+        // grantShieldStrengthMax — increases max shield by (grantShieldStrengthMax * baseDef.shieldStrengthMax)
+        // C++: powerup.cpp line 277; rounds up via (int)(add + 0.95f)
+        if (def.grantShieldStrengthMax > 0f) {
+            val baseDef = (server.loadedLevel?.definitions?.findById(soldier.definitionId.toUInt())
+                as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
+            if (baseDef != null) {
+                val add = (def.grantShieldStrengthMax * baseDef.shieldStrengthMax + 0.95f).toInt().toFloat()
+                soldier.shieldStrengthMax += add
+                soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+            }
+        }
+
         if (def.grantShieldStrength != 0f && soldier.shieldStrength < soldier.shieldStrengthMax) {
             soldier.shieldStrength = (soldier.shieldStrength + def.grantShieldStrength)
                 .coerceAtMost(soldier.shieldStrengthMax)
             soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
         }
 
-        // TODO: grantHealthMax — increases max health by (GrantHealthMax * baseDef.healthMax);
-        //   C++: powerup.cpp line 321; same pattern as grantShieldStrengthMax
+        // grantHealthMax — increases max health by (grantHealthMax * baseDef.healthMax)
+        // C++: powerup.cpp line 321; rounds up via (int)(add + 0.95f)
+        if (def.grantHealthMax > 0f) {
+            val baseDef = (server.loadedLevel?.definitions?.findById(soldier.definitionId.toUInt())
+                as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
+            if (baseDef != null) {
+                val add = (def.grantHealthMax * baseDef.healthMax + 0.95f).toInt().toFloat()
+                soldier.healthMax += add
+                soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+            }
+        }
+
         if (def.grantHealth != 0f && soldier.health < soldier.healthMax) {
             soldier.health = (soldier.health + def.grantHealth).coerceAtMost(soldier.healthMax)
             soldier.setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
