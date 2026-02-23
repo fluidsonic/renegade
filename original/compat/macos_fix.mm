@@ -1,5 +1,5 @@
 /*
- * macos_fix.mm — Pre-initializes NSApplication to bypass ARM64 CoreAnalytics crashes.
+ * macos_fix.mm — Installs ARM64 CoreAnalytics crash workarounds before SDL2 initialises.
  *
  * Apple's CoreAnalytics has a bug on ARM64: nlohmann::basic_json::dump() executes
  * `ldadd` against a 4-byte-aligned address, but ldadd requires 8-byte alignment,
@@ -10,9 +10,16 @@
  *   1. Install a SIGBUS/BUS_ADRALN handler that silently skips alignment-faulting
  *      instructions (works outside lldb)
  *   2. Swizzle the two known ObjC telemetry entry-points to no-ops (works under lldb)
- *   3. Pre-call [NSApplication sharedApplication] in a __attribute__((constructor))
- *      — with both defences active — so NSApp is already initialised before SDL2 runs
- *   4. SDL2's Cocoa_RegisterApp finds NSApp != nil and skips re-initialisation entirely
+ *
+ * We intentionally do NOT pre-call [NSApplication sharedApplication] here.
+ * SDL2 creates its own SDLApplication subclass (which overrides terminate: to push
+ * SDL_QUIT instead of calling exit()) and must be allowed to do so.  Pre-initialising
+ * NSApp with a plain NSApplication would prevent SDL2 from installing its subclass,
+ * causing dock Quit and Cmd-Q to have no effect.
+ *
+ * The ObjC swizzles (steps 1-2) modify class definitions, not instances — they work
+ * before NSApp exists.  sdl2_platform.cpp wraps SDL_Init() with the SIGBUS handler
+ * as belt-and-suspenders while NSApp is being created by SDL2.
  *
  * windef.h guards `typedef int BOOL` with #ifdef __OBJC__ so this translation unit
  * gets the correct ObjC `typedef bool BOOL` from objc/objc.h.
@@ -83,8 +90,7 @@ extern "C" void macos_activate_app(void)
 }
 
 // ---------------------------------------------------------------------------
-// ObjC swizzles + NSApp pre-initialisation
-// All three steps run from a single constructor so NSApp is ready before main().
+// ObjC swizzles — run from a constructor before SDL2 initialises.
 // ---------------------------------------------------------------------------
 
 __attribute__((constructor))
@@ -122,21 +128,12 @@ static void preinit_nsapp(void)
         }
     }
 
-    // Step 3: Pre-initialise NSApplication.
-    //   SDL2's Cocoa_RegisterApp checks `if (NSApp == nil)` before calling
-    //   [NSApplication sharedApplication].  By creating it here — with the SIGBUS
-    //   handler and swizzles in place — any remaining CoreAnalytics crash paths are
-    //   silently skipped, and SDL2 will find NSApp already set and do nothing.
-    if (NSApp == nil) {
-        fprintf(stderr, "[macos_fix] Pre-initialising NSApplication...\n");
-        [NSApplication sharedApplication];
-        fprintf(stderr, "[macos_fix] NSApplication ready (NSApp=%p)\n", (void*)NSApp);
-    }
-
-    // Step 4: NSApp is fully initialised — alignment-fault workaround no longer needed.
+    // Step 3: Swizzles are class-level and do not require NSApp — remove the SIGBUS
+    // handler now.  sdl2_platform.cpp re-installs it around SDL_Init() as
+    // belt-and-suspenders while SDL2 creates its SDLApplication instance.
     remove_sigbus_handler();
 
-    // Step 5: Disable the macOS press-and-hold accent picker for this process.
+    // Step 4: Disable the macOS press-and-hold accent picker for this process.
     // Without this, holding any key while the Cocoa text-input machinery is
     // active (which SDL2 leaves enabled by default) shows the accent popup
     // instead of repeating the key.  The NSUserDefaults write is process-local;
