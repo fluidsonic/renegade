@@ -415,6 +415,8 @@ class GameServer(internal val config: ServerConfig) {
 
             // GameObjManager.think() — drives building Think() loops (refinery trickle, war factory timer, etc.)
             gameObjManager.think(frameDeltaSeconds)
+            // C++: combat.cpp:611 — Post_Think() follows immediately after Think()
+            gameObjManager.postThink()
 
             // SpawnManager.think() — ticks powerup spawner countdown timers
             spawnManager?.think(frameDeltaSeconds)
