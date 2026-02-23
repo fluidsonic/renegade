@@ -147,4 +147,22 @@ class BitStreamTest {
         assertEquals(4, s.bitWritePosition)
         assertEquals(7.toByte(), s.getByte(encoderType = 0))
     }
+
+    @Test
+    fun `addInt with signed negative value and encoder round trips correctly`() {
+        // BITPACK_BUILDING_STATE: range -1 to 10, resolution 1.0
+        EncoderRegistry.setPrecision(BITPACK_BUILDING_STATE, -1.0, 10.0, 1.0)
+        val s = BitStream()
+        s.addInt(-1, BITPACK_BUILDING_STATE)
+        assertEquals(-1, s.getInt(BITPACK_BUILDING_STATE))
+    }
+
+    @Test
+    fun `addInt with encoder rounds correctly instead of truncating`() {
+        // BITPACK_HEALTH: range 0 to 2000, resolution 1.0
+        EncoderRegistry.setPrecision(BITPACK_HEALTH, 0.0, 2000.0, 1.0)
+        val s = BitStream()
+        s.addInt(1, BITPACK_HEALTH)
+        assertEquals(1, s.getInt(BITPACK_HEALTH))
+    }
 }

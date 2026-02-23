@@ -36,7 +36,13 @@ class BitStream : BitPacker() {
     // ---- Byte (8 bits) ----
 
     fun addByte(value: Byte, encoderType: Int = NO_ENCODER) {
-        internalAdd(value.toLong() and 0xFF, 8, encoderType, 1)
+        if (EncoderRegistry.isCompressionEnabled && encoderType != NO_ENCODER) {
+            val entry = EncoderRegistry.getEntry(encoderType)
+            addBits(entry.scale(value.toDouble()), entry.bitPrecision)
+        } else {
+            addBits(value.toLong() and 0xFF, 8)
+        }
+        uncompressedSizeBytes += 1
     }
 
     fun getByte(encoderType: Int = NO_ENCODER): Byte {
@@ -46,7 +52,13 @@ class BitStream : BitPacker() {
     // ---- Short / UShort (16 bits) ----
 
     fun addShort(value: Short, encoderType: Int = NO_ENCODER) {
-        internalAdd(value.toLong() and 0xFFFF, 16, encoderType, 2)
+        if (EncoderRegistry.isCompressionEnabled && encoderType != NO_ENCODER) {
+            val entry = EncoderRegistry.getEntry(encoderType)
+            addBits(entry.scale(value.toDouble()), entry.bitPrecision)
+        } else {
+            addBits(value.toLong() and 0xFFFF, 16)
+        }
+        uncompressedSizeBytes += 2
     }
 
     fun getShort(encoderType: Int = NO_ENCODER): Short {
@@ -56,7 +68,13 @@ class BitStream : BitPacker() {
     // ---- Int (32 bits) ----
 
     fun addInt(value: Int, encoderType: Int = NO_ENCODER) {
-        internalAdd(value.toLong() and 0xFFFFFFFFL, 32, encoderType, 4)
+        if (EncoderRegistry.isCompressionEnabled && encoderType != NO_ENCODER) {
+            val entry = EncoderRegistry.getEntry(encoderType)
+            addBits(entry.scale(value.toDouble()), entry.bitPrecision)
+        } else {
+            addBits(value.toLong() and 0xFFFFFFFFL, 32)
+        }
+        uncompressedSizeBytes += 4
     }
 
     fun getInt(encoderType: Int = NO_ENCODER): Int {
@@ -197,7 +215,7 @@ class BitStream : BitPacker() {
         return if (EncoderRegistry.isCompressionEnabled && encoderType != NO_ENCODER) {
             val entry = EncoderRegistry.getEntry(encoderType)
             val scaled = getBits(entry.bitPrecision)
-            entry.unscale(scaled).toLong()
+            Math.round(entry.unscale(scaled))
         } else {
             getBits(fullBits)
         }
