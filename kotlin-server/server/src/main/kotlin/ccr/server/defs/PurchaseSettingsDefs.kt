@@ -161,9 +161,9 @@ data class TeamPurchaseEntry(
  * C++ defaults: Team(TEAM_GDI=0), BeaconNameID(0), BeaconDefinitionID(0),
  *               BeaconCost(0), SupplyNameID(0), all arrays zeroed.
  */
-data class TeamPurchaseSettingsDefClass(
-    val id: UInt,
-    val name: String,
+class TeamPurchaseSettingsDefClass(
+    id: UInt,
+    name: String,
     val team: Int = TeamPurchaseSettingsDefClass.TEAM_GDI,
     // Beacon settings
     val beaconDefinitionId: Int = 0,
@@ -175,7 +175,7 @@ data class TeamPurchaseSettingsDefClass(
     val supplyTextureName: String = "",
     // Enlisted character entries
     val entries: List<TeamPurchaseEntry> = List(MAX_ENTRIES) { TeamPurchaseEntry() },
-) {
+) : DefinitionClass(name, id, CHUNK_ID) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040608u  // CHUNKID_GLOBAL_SETTINGS_DEF_TEAM_PURCHASE
 

@@ -7,10 +7,10 @@ import ccr.server.mix.ChunkReader
  *
  * All fields are RectClass (4 floats) or Vector2 (2 floats) for UI layout.
  */
-data class EvaSettingsDefClass(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class EvaSettingsDefClass(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     // Objectives viewer
     val objectivesScreenRect: Rect4 = Rect4(0.063f, 0.25f, 0.938f, 0.75f),
     val objectivesTextRect: Rect4 = Rect4(0.1f, 0.260f, 0.906f, 0.555f),
@@ -26,7 +26,7 @@ data class EvaSettingsDefClass(
     val messagesBackgroundUVRect: Rect4 = Rect4(2f, 1f, 126f, 32f),
     val messagesTextureSize: Vec2 = Vec2(128f, 128f),
     val messagesIconPos: Vec2 = Vec2(0.016f, 0.021f),
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040604u  // CHUNKID_GLOBAL_SETTINGS_DEF_EVA
     }

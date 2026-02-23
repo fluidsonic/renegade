@@ -1,5 +1,6 @@
 package ccr.server.defs.combat
 
+import ccr.server.defs.DefinitionClass
 import ccr.server.defs.forEachMicroChunk
 import ccr.server.mix.ChunkReader
 import java.nio.ByteBuffer
@@ -16,15 +17,15 @@ import java.nio.ByteOrder
  * Rank indices:  0=Enlisted, 1=Officer, 2=SpecialForces, 3=Boss
  * Team indices:  0=GDI, 1=NOD
  */
-data class CharacterClassSettingsDefClass(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class CharacterClassSettingsDefClass(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     /** costTable[classIndex][rankIndex][teamIndex] — purchase cost for a character. */
     val costTable: List<List<List<Int>>> = defaultTable(),
     /** definitionTable[classIndex][rankIndex][teamIndex] — soldier definition ID. */
     val definitionTable: List<List<List<Int>>> = defaultTable(),
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040605u  // CHUNKID_GLOBAL_SETTINGS_DEF_CHAR_CLASS
 

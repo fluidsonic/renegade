@@ -8,10 +8,10 @@ import ccr.server.mix.ChunkReader
  * C++ defaults: AnnouncementInterval(30), all string/sound IDs = 0,
  *   radioCmds[30] = 0, radioCmdIcons[30] = ""
  */
-data class CNCModeSettingsDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class CNCModeSettingsDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val announcementInterval: Int = 30,
     // Per-team EVA string IDs (index 0 = Nod, 1 = GDI)
     val nodPowerOfflineId: Int = 0,
@@ -37,7 +37,7 @@ data class CNCModeSettingsDef(
     // Radio commands (30 string DB IDs) and icons (30 texture filenames)
     val radioCmds: List<Int> = List(30) { 0 },
     val radioCmdIcons: List<String> = List(30) { "" },
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040609u  // CHUNKID_GLOBAL_SETTINGS_DEF_CNCMODE
     }
