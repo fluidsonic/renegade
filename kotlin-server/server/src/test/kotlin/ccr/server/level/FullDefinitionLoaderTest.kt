@@ -266,4 +266,25 @@ class FullDefinitionLoaderTest {
         assertNotNull(def)
         assertEquals(12345, def.physDefId)
     }
+
+    @Test
+    fun `C4GameObjDef dispatches to typed subclass`() {
+        val ddb = buildDdb(Triple(0x00040103u, 500u, "Tossed_C4"))
+        val registry = FullDefinitionLoader.load(ddb)
+        assertEquals(1, registry.size)
+        val def = registry.findById(500u)
+        assertNotNull(def)
+        assertTrue(def is ccr.server.defs.combat.C4GameObjDef)
+        assertEquals("Tossed_C4", def.name)
+    }
+
+    @Test
+    fun `SimpleGameObjDef dispatches to typed subclass`() {
+        val ddb = buildDdb(Triple(0x0004010Bu, 501u, "Simple_Obj"))
+        val registry = FullDefinitionLoader.load(ddb)
+        assertEquals(1, registry.size)
+        val def = registry.findById(501u)
+        assertNotNull(def)
+        assertTrue(def is ccr.server.defs.combat.SimpleGameObjDef)
+    }
 }

@@ -80,8 +80,8 @@ object FullDefinitionLoader {
             SpawnerDefClass.CHUNK_ID ->
                 parseSpawnerDefClass(objDataChunk, name, id, chunkId) ?: fallback
 
-            // FIXME: C4GameObjDef is a data class — convert to DefinitionClass subclass and parse properly
-            C4GameObjDef.CHUNK_ID -> fallback
+            C4GameObjDef.CHUNK_ID ->
+                parseC4GameObjDef(objDataChunk, name, id, chunkId)
 
             SoldierGameObjDef.CHUNK_ID -> {
                 val parsed = SoldierGameObjDef.load(objDataChunk)
@@ -89,8 +89,8 @@ object FullDefinitionLoader {
                 else fallback
             }
 
-            // FIXME: SimpleGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
-            SimpleGameObjDef.CHUNK_ID -> fallback
+            SimpleGameObjDef.CHUNK_ID ->
+                parseSimpleGameObjDef(objDataChunk, name, id, chunkId)
 
             PowerUpGameObjDef.CHUNK_ID ->
                 parsePowerUpGameObjDef(objDataChunk, name, id, chunkId)
@@ -105,8 +105,8 @@ object FullDefinitionLoader {
                 else fallback
             }
 
-            // FIXME: CinematicGameObjDef is a data class — convert to DefinitionClass subclass and parse properly
-            CinematicGameObjDef.CHUNK_ID -> fallback
+            CinematicGameObjDef.CHUNK_ID ->
+                parseCinematicGameObjDef(objDataChunk, name, id, chunkId)
 
             BeaconGameObjDef.CHUNK_ID ->
                 parseBeaconGameObjDef(objDataChunk, name, id, chunkId)

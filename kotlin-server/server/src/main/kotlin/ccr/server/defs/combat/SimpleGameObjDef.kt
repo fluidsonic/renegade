@@ -1,5 +1,6 @@
 package ccr.server.defs.combat
 
+import ccr.server.defs.DefinitionClass
 import ccr.server.defs.readMicroBool
 import ccr.server.defs.readMicroInt
 import ccr.server.mix.ChunkReader
@@ -10,14 +11,14 @@ import ccr.server.mix.ChunkReader
  * C++ defaults: IsEditorObject(false), IsHiddenObject(false),
  *               PlayerTerminalType(PlayerTerminalClass::TYPE_NONE = -1)
  */
-data class SimpleGameObjDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class SimpleGameObjDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val isEditorObject: Boolean = false,
     val isHiddenObject: Boolean = false,
     val playerTerminalType: Int = -1,
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x0004010Bu  // CHUNKID_GAME_OBJECT_DEF_SIMPLE
     }

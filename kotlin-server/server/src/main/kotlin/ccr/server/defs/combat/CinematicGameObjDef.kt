@@ -1,5 +1,6 @@
 package ccr.server.defs.combat
 
+import ccr.server.defs.DefinitionClass
 import ccr.server.defs.readMicroBool
 import ccr.server.defs.readMicroInt
 import ccr.server.defs.readMicroString
@@ -11,17 +12,17 @@ import ccr.server.mix.ChunkReader
  * C++ hierarchy: CinematicGameObjDef : ArmedGameObjDef
  * C++ defaults: SoundDefID(0), AutoFireWeapon(false), DestroyAfterAnimation(true), CameraRelative(false)
  */
-data class CinematicGameObjDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class CinematicGameObjDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val soundDefId: Int = 0,
     val soundBoneName: String = "",
     val animationName: String = "",
     val autoFireWeapon: Boolean = false,
     val destroyAfterAnimation: Boolean = true,
     val cameraRelative: Boolean = false,
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x0004012Cu  // CHUNKID_GAME_OBJECT_DEF_CINEMATIC
     }

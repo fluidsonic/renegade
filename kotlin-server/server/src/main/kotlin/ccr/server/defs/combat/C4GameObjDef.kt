@@ -1,5 +1,6 @@
 package ccr.server.defs.combat
 
+import ccr.server.defs.DefinitionClass
 import ccr.server.mix.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -9,12 +10,12 @@ import java.nio.ByteOrder
  *
  * C++ default: ThrowVelocity(5)
  */
-data class C4GameObjDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class C4GameObjDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val throwVelocity: Float = 5f,
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040103u  // CHUNKID_GAME_OBJECT_DEF_C4
     }
