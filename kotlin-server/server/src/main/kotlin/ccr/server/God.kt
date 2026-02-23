@@ -231,7 +231,8 @@ open class God(private val server: GameServer) {
         println("[GOD] spawned soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
             "pos=(${position.x}, ${position.y}, ${position.z})")
 
-        val modelName = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
+        val fallbackModel = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
+        val modelName = resolveSoldierModelName(defId).ifEmpty { fallbackModel }
         val weapons = buildWeaponsForSoldier(defId)
 
         val soldier = SoldierGameObj(
@@ -263,16 +264,17 @@ open class God(private val server: GameServer) {
     // ---- cGod::Create_Commando with explicit definition (for purchased characters) ----
 
     /**
-     * Spawns a soldier using an explicit definition ID and model name (used by purchase terminal).
+     * Spawns a soldier using an explicit definition ID (used by purchase terminal).
      * Same as [createCommando] but skips starting credits (purchase already costs money).
+     * The model name is resolved from the SoldierGameObjDef's physDefId chain, with a
+     * team-based fallback if the def is not found.
      *
      * @param rhostId    remote host / client ID
      * @param playerType 0=NOD, 1=GDI
      * @param defId      soldier definition ID from PurchaseSettingsDefClass
-     * @param modelName  W3D model name for the character
      * @return the spawned [SoldierGameObj], or null if spawn fails
      */
-    fun createCommandoWithDef(rhostId: Int, playerType: Int, defId: Int, modelName: String): SoldierGameObj? {
+    fun createCommandoWithDef(rhostId: Int, playerType: Int, defId: Int): SoldierGameObj? {
         if (defId == 0) {
             println("[GOD] createCommandoWithDef: defId=0 for rhostId=$rhostId, skipping")
             return null
@@ -282,6 +284,9 @@ open class God(private val server: GameServer) {
             ?: Pair(Vector3(0f, 0f, 5f), 0f).also {
                 println("[GOD] WARNING: spawnManager is null, spawning at fallback origin (0, 0, 5)")
             }
+
+        val fallbackModel = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
+        val modelName = resolveSoldierModelName(defId).ifEmpty { fallbackModel }
 
         println("[GOD] spawned purchased soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
             "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z})")
@@ -382,6 +387,20 @@ open class God(private val server: GameServer) {
         if (physDefId == 0) return ""
         val physDef = server.loadedLevel?.definitions?.findById(physDefId.toUInt()) as? PhysDefClass
         return physDef?.modelName ?: ""
+    }
+
+    /**
+     * Resolves the W3D model name for a soldier definition.
+     * Mirrors C++ cGod::Create_Commando: looks up SoldierGameObjDef.physical.physDefId → PhysDefClass.modelName.
+     * Returns empty string if the chain is broken.
+     */
+    private fun resolveSoldierModelName(defId: Int): String {
+        val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
+            as? SoldierGameObjDefWrapper ?: return ""
+        val physDefId = wrapper.soldierDef.physical.physDefId
+        if (physDefId == 0) return ""
+        return (server.loadedLevel?.definitions?.findById(physDefId.toUInt())
+            as? PhysDefClass)?.modelName ?: ""
     }
 
     /**

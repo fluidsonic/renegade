@@ -5,6 +5,7 @@ import ccr.server.defs.combat.PowerUpGameObjDef
 import ccr.server.defs.combat.SpawnerDefClass
 import ccr.server.level.LoadedLevel
 import ccr.server.level.ldd.LoadedSpawner
+import ccr.server.net.PowerUpGameObj
 
 /**
  * Encapsulates spawn location logic for multiplayer spawning.
@@ -29,6 +30,7 @@ class SpawnManager(level: LoadedLevel) {
         val powerUpDef: PowerUpGameObjDef,
         val spawnDelay: Float,
         var timer: Float,
+        var liveObject: PowerUpGameObj? = null,
     )
 
     private val spawners: List<ResolvedSpawner>
@@ -37,7 +39,7 @@ class SpawnManager(level: LoadedLevel) {
     // Callback invoked when a powerup spawner's timer fires.
     // Arguments: spawn position, PowerUpGameObjDef to create.
     // GameServer sets this after constructing SpawnManager.
-    var onCreatePowerUp: ((position: Vector3, def: PowerUpGameObjDef) -> Unit)? = null
+    var onCreatePowerUp: ((position: Vector3, def: PowerUpGameObjDef) -> PowerUpGameObj?)? = null
 
     init {
         val rawSpawners = level.dynamicData.spawners
@@ -117,16 +119,23 @@ class SpawnManager(level: LoadedLevel) {
         if (powerUpSpawners.isEmpty()) return
 
         for (state in powerUpSpawners) {
+            // C++: timer only counts down when no live object exists
+            val live = state.liveObject
+            if (live != null && !live.isDeletePending) continue  // still alive → freeze timer
+
+            state.liveObject = null  // clear stale reference
+
             state.timer -= deltaSeconds
-            // Matches C++ Check_Auto_Spawn (spawn.cpp:591-604): fires at most once per tick.
-            // Uses if (not while) to prevent burst spawning during lag spikes.
-            if (state.timer <= 0f) {
-                // Reset timer first, then fire
-                state.timer = state.spawnDelay
-                val pos = state.spawner.transform.position
-                println("[SPAWN] powerup spawner fired: '${state.powerUpDef.name}' at (${pos.x}, ${pos.y}, ${pos.z})")
-                onCreatePowerUp?.invoke(Vector3(pos.x, pos.y, pos.z), state.powerUpDef)
+            if (state.timer > 0f) continue
+
+            val pos = state.spawner.transform.position
+            println("[SPAWN] powerup spawner fired: '${state.powerUpDef.name}' at (${pos.x}, ${pos.y}, ${pos.z})")
+            val spawned = onCreatePowerUp?.invoke(Vector3(pos.x, pos.y, pos.z), state.powerUpDef)
+            if (spawned != null) {
+                state.liveObject = spawned
+                state.timer = state.spawnDelay  // reset timer only after successful spawn
             }
+            // if spawned == null: timer stays ≤ 0, retry next tick immediately
         }
     }
 

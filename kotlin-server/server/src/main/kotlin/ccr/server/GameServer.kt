@@ -837,8 +837,7 @@ class GameServer(internal val config: ServerConfig) {
                         // Kill current soldier and respawn as purchased character
                         god.deleteSoldier(rhostId)
                         val playerTeam = god.playerTeams[rhostId] ?: 0
-                        val purchasedModelName = if (playerTeam == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
-                        god.createCommandoWithDef(rhostId, playerTeam, result.purchasedDefId, purchasedModelName)
+                        god.createCommandoWithDef(rhostId, playerTeam, result.purchasedDefId)
                     }
                 }
             }
@@ -1628,7 +1627,7 @@ class GameServer(internal val config: ServerConfig) {
      * @param position  world position from the spawner's transform
      * @param def       the PowerUpGameObjDef describing what to grant
      */
-    internal fun createPowerUp(position: Vector3, def: PowerUpGameObjDef) {
+    internal fun createPowerUp(position: Vector3, def: PowerUpGameObjDef): PowerUpGameObj? {
         val modelName = if (def.physDefId != 0)
             (loadedLevel?.definitions?.findById(def.physDefId.toUInt()) as? PhysDefClass)?.modelName ?: ""
         else ""
@@ -1646,6 +1645,7 @@ class GameServer(internal val config: ServerConfig) {
         gameObjManager.add(powerUp)
 
         println("[POWERUP] spawned '${def.name}' netId=$netId at (${position.x}, ${position.y}, ${position.z})")
+        return powerUp
     }
 
     private fun initEncoders() {
