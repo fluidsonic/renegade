@@ -54,22 +54,27 @@ class NetworkObjectPacketWriterTest {
         assertEquals(41, bs.bitWritePosition)
     }
 
-    // ---- writeDeletion ----
+    // ---- isDeletePending combined with dirty bits ----
 
-    @Test fun `writeDeletion - header layout - dirtyBits=0x00, isDeletePending=true`() {
+    @Test fun `writeOccasionalUpdate - isDeletePending=true sets flag in header`() {
+        val team = Team(teamNumber = 0, score = 7f)
         val bs = BitStream()
-        NetworkObjectPacketWriter.writeDeletion(bs, networkId = 777)
+        NetworkObjectPacketWriter.writeOccasionalUpdate(bs, team, networkId = 555, isDeletePending = true)
 
-        assertEquals(777, bs.getInt())                                 // networkId
-        assertEquals(0x00, bs.getByte().toInt() and 0xFF)              // dirtyBits = 0 (no tier data)
+        assertEquals(555, bs.getInt())                                 // networkId
+        assertEquals(0x03, bs.getByte().toInt() and 0xFF)              // dirtyBits = BIT_OCCASIONAL
         assertTrue(bs.getBool())                                        // isDeletePending = true
+        assertEquals(7f, bs.getFloat())                                 // score — payload still present
     }
 
-    @Test fun `writeDeletion - total bits = 41 (header only, no payload)`() {
-        // Header: 32 + 8 + 1 = 41. No additional data after isDeletePending.
+    @Test fun `writeFrequentUpdate - isDeletePending=true sets flag in header`() {
+        val team = Team(teamNumber = 0)
         val bs = BitStream()
-        NetworkObjectPacketWriter.writeDeletion(bs, networkId = 1)
-        assertEquals(41, bs.bitWritePosition)
+        NetworkObjectPacketWriter.writeFrequentUpdate(bs, team, networkId = 444, isDeletePending = true)
+
+        assertEquals(444, bs.getInt())                                 // networkId
+        assertEquals(0x01, bs.getByte().toInt() and 0xFF)              // dirtyBits = BIT_FREQUENT
+        assertTrue(bs.getBool())                                        // isDeletePending = true
     }
 
     // ---- bit constant verification ----

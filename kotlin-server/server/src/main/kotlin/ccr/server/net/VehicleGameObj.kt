@@ -138,6 +138,7 @@ class VehicleGameObj(
         velocity = Vector3(fwdX * speed, fwdY * speed, fwdZ * speed)
 
         isEngineOn = speed != 0f || turnDelta != 0f
+        super.think(deltaSeconds)
     }
 
     // C++: VehicleGameObj::Export_Creation — calls SmartGameObj chain, then writes lock state.

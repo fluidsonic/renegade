@@ -35,6 +35,7 @@ class BeaconGameObj(
 
     // C++: BeaconGameObj::Think — drives arming countdown then detonation countdown.
     override fun think(deltaSeconds: Float) {
+        super.think(deltaSeconds)
         thinkInternal(deltaSeconds)
     }
 
@@ -72,8 +73,6 @@ class BeaconGameObj(
             return
         }
 
-        // Remove from manager and mark pending BEFORE AoE so this object is not damaged by its own explosion
-        server.gameObjManager.remove(this)
         setDeletePending()
 
         val explosionDefId = def.explosionDefId
@@ -91,7 +90,6 @@ class BeaconGameObj(
 
     // C++: BeaconGameObj removed without detonation (owner disconnect, defuse, etc.).
     fun cancel() {
-        serverRef?.gameObjManager?.remove(this)
         setDeletePending()
     }
 

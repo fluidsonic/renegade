@@ -22,6 +22,9 @@ class GameObjManager {
     // C++: SList<SoldierGameObj> StarGameObjList — human-controlled soldiers
     private val starList = mutableListOf<SoldierGameObj>()
 
+    // C++: Is_Cinematic_Freeze_Active
+    var isCinematicFreezeActive: Boolean = false
+
     // C++: GameObjManager::Add — called when registering an object
     fun add(obj: BaseGameObj) { gameObjList.add(0, obj) }  // prepend like C++ SList
     fun remove(obj: BaseGameObj) { gameObjList.remove(obj) }
@@ -32,10 +35,22 @@ class GameObjManager {
     fun addStar(s: SoldierGameObj) { starList.add(s) }
     fun removeStar(s: SoldierGameObj) { starList.remove(s) }
 
-    // C++: GameObjManager::Think — iterate all, call Think()
+    // C++: GameObjManager::Think — iterate all, call Think() (gameobjmanager.cpp:212-248)
     fun think(deltaSeconds: Float) {
         for (obj in gameObjList.toList()) {
+            if (isCinematicFreezeActive && obj.enableCinematicFreeze) continue
+            if (obj.isHibernating()) continue
             obj.think(deltaSeconds)
+        }
+    }
+
+    // C++: GameObjManager::Post_Think — iterate all, call Post_Think() (gameobjmanager.cpp:255-278)
+    fun postThink() {
+        for (obj in gameObjList.toList()) {
+            if (isCinematicFreezeActive && obj.enableCinematicFreeze) continue
+            if (!obj.isHibernating() && obj.isPostThinkAllowed) {
+                obj.postThink()
+            }
         }
     }
 

@@ -51,6 +51,7 @@ class C4GameObj(
 
     // C++: C4GameObj::Think — drives timed countdown and remote detonation trigger.
     override fun think(deltaSeconds: Float) {
+        super.think(deltaSeconds)
         if (isDeletePending) return
         age += deltaSeconds
         val ammoDef = ammoDefinition ?: return
@@ -74,8 +75,6 @@ class C4GameObj(
 
     // C++: C4GameObj::Detonate — applies building damage, broadcasts explosion event, marks for deletion.
     fun detonate() {
-        // Remove from manager and mark pending BEFORE AoE so this object is not damaged by its own explosion
-        serverRef?.gameObjManager?.remove(this)
         setDeletePending()
 
         val server = serverRef ?: return
@@ -94,7 +93,6 @@ class C4GameObj(
 
     // C++: C4GameObj::Defuse — removes C4 without damage or explosion.
     fun defuse() {
-        serverRef?.gameObjManager?.remove(this)
         setDeletePending()
     }
 

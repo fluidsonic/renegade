@@ -444,21 +444,11 @@ class GameServer(internal val config: ServerConfig) {
                 }
             }
 
-            // Push dirty object state to all in-game clients
+            // Push dirty object state to all in-game clients.
+            // Delete-pending objects are combined into the same packet as their final state update,
+            // matching C++ Send_Object_Update which writes dirty bits + isDeletePending in one call.
+            // After sending, delete-pending objects are unregistered.
             replicationTick()
-
-            // Centralized delete-pending: broadcast deletion + unregister any objects marked for deletion
-            NetworkObjectManager.getAllObjects()
-                .filter { it.isDeletePending }
-                .forEach { obj ->
-                    for (clientId in god.playerInGame) {
-                        val clientHost = connectionManager.getHost(clientId) ?: continue
-                        sendGameNetObj(clientHost) { bs ->
-                            NetworkObjectPacketWriter.writeDeletion(bs, obj.networkId)
-                        }
-                    }
-                    NetworkObjectManager.unregisterObject(obj)
-                }
 
             // Clean up C4 objects that have been marked for deletion
             god.c4Objects.removeAll { it.isDeletePending }
@@ -482,43 +472,64 @@ class GameServer(internal val config: ServerConfig) {
 
     // Scans all registered NetworkObjects and pushes dirty state to connected in-game clients.
     // C++: messages.cpp Send_Object_Update loop in cGod/cNetwork::Service.
-    // Reliable for RARE/OCCASIONAL; unreliable for FREQUENT-only.
+    // Mirrors C++: isDeletePending is combined with the current dirty bits in ONE packet per client,
+    // never as a separate follow-up packet. Reliable for RARE/OCCASIONAL/delete; unreliable for
+    // FREQUENT-only (BIT_FREQUENT + delete is promoted to reliable). After sending to all clients,
+    // delete-pending objects are unregistered.
     // Never sends a soldier's FREQUENT update to its own controlling player (client is authoritative).
     private fun replicationTick() {
         val objects = NetworkObjectManager.getAllObjects()
+        val toUnregister = mutableListOf<NetworkObject>()
+
         for (obj in objects) {
+            val delPending = obj.isDeletePending
+
             for (clientId in god.playerInGame) {
                 val bits = obj.getObjectDirtyBits(clientId).toInt() and 0xFF
-                if (bits == 0) continue
+                if (bits == 0 && !delPending) continue
 
                 val host = connectionManager.getHost(clientId) ?: continue
-
-                // Determine the soldier's controlling client to skip self-updates
                 val isOwnSoldier = (obj is SoldierGameObj) && (obj.controlOwner == clientId)
 
                 if ((bits and 0x08) != 0) {
                     // BIT_CREATION — send full creation reliably
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, obj, obj.networkId) }
+                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, obj, obj.networkId, delPending) }
                     obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
                 } else if ((bits and 0x04) != 0) {
                     // BIT_RARE — send rare+occasional+frequent reliably
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeRareUpdate(bs, obj, obj.networkId) }
+                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeRareUpdate(bs, obj, obj.networkId, delPending) }
                     obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
                 } else if ((bits and 0x02) != 0) {
                     // BIT_OCCASIONAL — send occasional+frequent reliably
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeOccasionalUpdate(bs, obj, obj.networkId) }
+                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeOccasionalUpdate(bs, obj, obj.networkId, delPending) }
                     obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
                 } else if ((bits and 0x01) != 0) {
-                    // BIT_FREQUENT only — skip own soldier; gate others through FlowController
-                    if (!isOwnSoldier) {
+                    if (delPending) {
+                        // BIT_FREQUENT + delete — promote to reliable, combining both in one packet
+                        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId, delPending) }
+                    } else if (!isOwnSoldier) {
+                        // BIT_FREQUENT only — skip own soldier; gate others through FlowController
                         val fc = flowControllers[clientId]
                         if (fc == null || fc.shouldSend(50.0f)) {
                             sendUnreliable(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId) }
                         }
                     }
                     obj.setObjectDirtyBits(clientId, 0)
+                } else {
+                    // bits == 0 and delPending — header-only deletion packet (no payload)
+                    sendGameNetObj(host) { bs ->
+                        bs.addInt(obj.networkId)
+                        bs.addByte(0x00.toByte())
+                        bs.addBool(true)
+                    }
                 }
             }
+
+            if (delPending) toUnregister.add(obj)
+        }
+
+        for (obj in toUnregister) {
+            NetworkObjectManager.unregisterObject(obj)
         }
     }
 

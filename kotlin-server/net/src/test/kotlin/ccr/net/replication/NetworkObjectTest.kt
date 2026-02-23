@@ -47,10 +47,17 @@ class NetworkObjectTest {
 
     @Test
     fun `setObjectDirtyBit all clients marks all clients dirty`() {
-        val obj = TestNetworkObject()
-        obj.setObjectDirtyBit(NetworkObject.BIT_FREQUENT, true)
-        for (i in 0 until NetworkObject.MAX_CLIENT_COUNT) {
-            assertTrue(obj.isClientDirty(i))
+        NetworkObject.isServer = true
+        try {
+            val obj = TestNetworkObject()
+            obj.setObjectDirtyBit(NetworkObject.BIT_FREQUENT, true)
+            // setObjectDirtyBit(dirtyBit, on) marks clients 1..MAX_CLIENT_COUNT-1;
+            // client 0 is the server slot and is intentionally skipped.
+            for (i in 1 until NetworkObject.MAX_CLIENT_COUNT) {
+                assertTrue(obj.isClientDirty(i))
+            }
+        } finally {
+            NetworkObject.isServer = false
         }
     }
 
@@ -104,11 +111,19 @@ class NetworkObjectTest {
     @Test
     fun `manager restoreDirtyBits marks all objects as creation-dirty for client`() {
         NetworkObjectManager.reset()
-        val obj = TestNetworkObject()
-        obj.networkId = NetworkObjectManager.getNewDynamicId()
-        NetworkObjectManager.registerObject(obj)
-        NetworkObjectManager.restoreDirtyBits(clientId = 3)
-        assertTrue(obj.getObjectDirtyBit(3, NetworkObject.BIT_CREATION))
+        NetworkObject.isServer = true
+        try {
+            val obj = TestNetworkObject()
+            obj.networkId = NetworkObjectManager.getNewDynamicId()
+            // setObjectDirtyBit(BIT_CREATION, true) populates all client slots including the
+            // template slot (MAX_CLIENT_COUNT-1) which restoreDirtyBits copies from.
+            obj.setObjectDirtyBit(NetworkObject.BIT_CREATION, true)
+            NetworkObjectManager.registerObject(obj)
+            NetworkObjectManager.restoreDirtyBits(clientId = 3)
+            assertTrue(obj.getObjectDirtyBit(3, NetworkObject.BIT_CREATION))
+        } finally {
+            NetworkObject.isServer = false
+        }
     }
 
     @Test

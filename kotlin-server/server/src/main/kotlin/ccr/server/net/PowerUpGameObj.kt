@@ -29,6 +29,7 @@ class PowerUpGameObj(
 
     // C++: PowerUpGameObj::Think — checks bounding-box overlap with soldiers, calls Grant() on hit.
     override fun think(deltaSeconds: Float) {
+        super.think(deltaSeconds)
         if (isDeletePending || granted) return
         val server = serverRef ?: return
         val soldiers = server.god.soldiersByHost.values.toList()

@@ -274,7 +274,6 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 ### GameObjManager — ticking game objects
 - `gameObjManager.add(obj)` registers any `BaseGameObj` for `think()` ticks; `GameObjManager.think(deltaSeconds)` iterates `gameObjList` and calls `obj.think()` on every registered object
 - New ticking objects must `override fun think(deltaSeconds: Float)` (declared `open` in `BaseGameObj`)
-- **The delete-pending loop does NOT call `gameObjManager.remove()`** — objects with custom `think()` MUST guard with `if (isDeletePending) return` at the top, or explicitly call `gameObjManager.remove(this)` before `setDeletePending()`
 
 ### Game loop architecture (God, GameState, BuildingManager)
 - `God(server)` owns player/soldier lifecycle; all player state maps live in God (`playersByHost`, `soldiersByHost`, `playerTeams`, `playerInGame`, `playerNetIds`)

@@ -1,17 +1,29 @@
 package ccr.net.replication
 
+import ccr.math.Vector3
+import ccr.net.timeGetTime
 import ccr.net.bitstream.BitStream
 
 // C++: NetworkObjectClass in wwnet/networkobject.h
 // Base class for all objects that transmit state updates across the network.
 // Uses a 4-tier dirty bit system for per-client update tracking.
 
+private const val CLIENT_SIDE_UPDATE_FREQUENCY_SAMPLE_PERIOD = 10_000  // C++: (1000 * 10) ms
+
 // C++: PACKET_TIER_ENUM
-enum class PacketTier {
-    CREATION,    // Full creation data — cascades: sets RARE, OCCASIONAL, FREQUENT
-    RARE,        // Rarely changing data — cascades: sets OCCASIONAL, FREQUENT
-    OCCASIONAL,  // Occasionally changing data — cascades: sets FREQUENT
-    FREQUENT,    // Frequently changing data
+const val PACKET_TIER_COUNT = 4
+enum class PacketTier(val value: Int) {
+    CREATION(0),    // Full creation data — cascades: sets RARE, OCCASIONAL, FREQUENT
+    RARE(1),        // Rarely changing data — cascades: sets OCCASIONAL, FREQUENT
+    OCCASIONAL(2),  // Occasionally changing data — cascades: sets FREQUENT
+    FREQUENT(3),    // Frequently changing data
+}
+
+// C++: PerClientUpdateInfoStruct
+class PerClientUpdateInfo {
+    var lastUpdateTime: UInt = 0u       // C++: unsigned long LastUpdateTime
+    var updateRate: UShort = 0u         // C++: unsigned short UpdateRate
+    var clientHintCount: Byte = 0       // C++: BYTE ClientHintCount
 }
 
 abstract class NetworkObject {
@@ -27,13 +39,10 @@ abstract class NetworkObject {
         const val BIT_CREATION: Int   = 0x0F
 
         const val MAX_CLIENT_COUNT = 128
-    }
 
-    // The highest dirty bit level this object should be sent with on first
-    // replication to a new client. Matches C++ pattern where BaseGameObj sets
-    // BIT_CREATION, but NetworkObjectClass-only singletons (BaseControllerClass,
-    // ServerFps) never get BIT_CREATION because they have no factory (classId=0).
-    open val creationDirtyBit: Int = BIT_CREATION
+        // C++: static bool IsServer
+        var isServer: Boolean = false
+    }
 
     // C++: NetworkID
     var networkId: Int = 0
@@ -50,13 +59,66 @@ abstract class NetworkObject {
     var appPacketType: Byte = 0
 
     // C++: FrequentExportPacketSize
-    var frequentExportPacketSize: Byte = 0
+    var frequentExportPacketSize: UByte = 0u
 
     // C++: UnreliableOverride — send frequent updates unreliably if true
     var unreliableOverride: Boolean = false
 
+    // C++: PerClientUpdateInfoStruct UpdateInfo[MAX_CLIENT_COUNT]
+    private val updateInfo = Array(MAX_CLIENT_COUNT) { PerClientUpdateInfo() }
+
+    // client-only: C++: ImportStateCount
+    private var importStateCount: Int = 0
+
+    // client-only: C++: LastClientsideUpdateTime
+    private var lastClientsideUpdateTime: UInt = 0u
+
+    // client-only: C++: ClientsideUpdateFrequencySampleStartTime
+    private var clientsideUpdateFrequencySampleStartTime: UInt = timeGetTime()
+
+    // client-only: C++: ClientsideUpdateFrequencySampleCount
+    private var clientsideUpdateFrequencySampleCount: Int = 0
+
+    // client-only: C++: ClientsideUpdateRate
+    private var clientsideUpdateRate: Int = 0
+
+    // C++: LastObjectIdIDamaged
+    var lastObjectIdIDamaged: Int = -1
+
+    // C++: LastObjectIdIGotDamagedBy
+    var lastObjectIdIGotDamagedBy: Int = -1
+
+    // C++: CachedPriority (private in C++)
+    private var cachedPriority: Float = 0f
+
+    // C++: CachedPriority_2[MAX_CLIENT_COUNT]
+    private val cachedPriority2 = FloatArray(MAX_CLIENT_COUNT)
+
+    init {
+        if (isServer) {
+            // C++: constructor body — matches Set_Network_ID(Get_New_Dynamic_ID())
+            val newId = NetworkObjectManager.getNewDynamicId()
+            setNetworkId(newId)
+        }
+        clearObjectDirtyBits()
+    }
+
     // C++: Get_Network_Class_ID — identifies the object type for the factory
-    abstract val networkClassId: Int
+    open val networkClassId: Int get() = 0
+
+    // C++: Set_Network_ID — unregisters, changes ID, re-registers
+    fun setNetworkId(id: Int) {
+        require(id > 0)
+        NetworkObjectManager.unregisterObject(this)
+        networkId = id
+        NetworkObjectManager.registerObject(this)
+    }
+
+    // C++: ~NetworkObjectClass destructor — unregisters from manager
+    // FIXME: not called yet — wire into deletion pipeline to match C++ destructor auto-unregister
+    open fun destruct() {
+        NetworkObjectManager.unregisterObject(this)
+    }
 
     // C++: Import_Creation / Export_Creation — full creation state
     open fun importCreation(packet: BitStream) {}
@@ -77,18 +139,38 @@ abstract class NetworkObject {
     // C++: Network_Think — called each network tick
     open fun networkThink() {}
 
-    // C++: Set_Delete_Pending
+    // C++: Set_Delete_Pending — marks for deletion and registers with manager
     open fun setDeletePending() {
         isDeletePending = true
+        NetworkObjectManager.registerObjectForDeletion(this)
     }
 
     // C++: Delete — pure virtual; override to clean up the object
+    // FIXME: should be called via destruct() pipeline, not directly
     abstract fun delete()
 
-    // C++: Set_Object_Dirty_Bit(dirty_bit, onoff) — marks all clients dirty
+    // C++: Get_Vis_ID
+    open fun getVisId(): Int = -1
+
+    // C++: Get_World_Position(Vector3&) — Kotlin-idiomatic nullable return
+    open fun getWorldPosition(): Vector3? = null
+
+    // C++: Get_Filter_Distance
+    open fun getFilterDistance(): Float = 10000.0f
+
+    // C++: Is_Tagged
+    open fun isTagged(): Boolean = false
+
+    // C++: Get_Description(StringClass&) — Kotlin-idiomatic String return
+    open fun getDescription(): String = ""
+
+    // C++: Set_Object_Dirty_Bit(dirty_bit, onoff) — marks clients 1..MAX dirty
+    // N.B. Client 0 is actually the server — skip it
     open fun setObjectDirtyBit(dirtyBit: Int, on: Boolean) {
-        for (i in 0 until MAX_CLIENT_COUNT) {
-            setObjectDirtyBit(i, dirtyBit, on)
+        if (!isServer) return
+        for (i in 1 ..< MAX_CLIENT_COUNT) {
+            if (on) clientStatus[i] = (clientStatus[i].toInt() or dirtyBit).toByte()
+            else    clientStatus[i] = (clientStatus[i].toInt() and dirtyBit.inv()).toByte()
         }
     }
 
@@ -99,9 +181,14 @@ abstract class NetworkObject {
                                  else (cur and dirtyBit.inv()).toByte()
     }
 
-    // C++: Clear_Object_Dirty_Bits
+    // C++: Clear_Object_Dirty_Bits — also resets per-client update info
     open fun clearObjectDirtyBits() {
         clientStatus.fill(0)
+        for (info in updateInfo) {
+            info.lastUpdateTime = 0u
+            info.updateRate = 50u
+            info.clientHintCount = 0
+        }
     }
 
     // C++: Get_Object_Dirty_Bit — checks whether all bits in dirtyBit are set
@@ -120,4 +207,129 @@ abstract class NetworkObject {
 
     // C++: Is_Client_Dirty — true if any dirty bit is set for this client
     open fun isClientDirty(clientId: Int): Boolean = clientStatus[clientId] != 0.toByte()
+
+    // --- Client hint count ---
+
+    // C++: Reset_Client_Hint_Count
+    fun resetClientHintCount(clientId: Int) {
+        require(clientId >= 0 && clientId < MAX_CLIENT_COUNT)
+        updateInfo[clientId].clientHintCount = 0
+    }
+
+    // C++: Increment_Client_Hint_Count
+    fun incrementClientHintCount(clientId: Int) {
+        require(clientId >= 0 && clientId < MAX_CLIENT_COUNT)
+        if (updateInfo[clientId].clientHintCount < 255)
+            updateInfo[clientId].clientHintCount++
+    }
+
+    // C++: Hint_To_All_Clients
+    fun hintToAllClients() {
+        for (i in 0 until MAX_CLIENT_COUNT) incrementClientHintCount(i)
+    }
+
+    // C++: Get_Client_Hint_Count
+    fun getClientHintCount(clientId: Int): Byte {
+        require(clientId >= 0 && clientId < MAX_CLIENT_COUNT)
+        return updateInfo[clientId].clientHintCount
+    }
+
+    // --- Import state count (client-only) ---
+
+    // client-only: C++: Reset_Import_State_Count
+    fun resetImportStateCount() { importStateCount = 0 }
+
+    // client-only: C++: Increment_Import_State_Count
+    fun incrementImportStateCount() { importStateCount++ }
+
+    // client-only: C++: Get_Import_State_Count
+    fun getImportStateCount(): Int = importStateCount
+
+    // --- Clientside update time/frequency (client-only) ---
+
+    // client-only: C++: Reset_Last_Clientside_Update_Time
+    fun resetLastClientsideUpdateTime() {
+        lastClientsideUpdateTime = 0u
+        clientsideUpdateFrequencySampleStartTime = timeGetTime()
+        clientsideUpdateFrequencySampleCount = 0
+    }
+
+    // client-only: C++: Set_Last_Clientside_Update_Time
+    fun setLastClientsideUpdateTime(time: UInt) {
+        lastClientsideUpdateTime = time
+        clientsideUpdateFrequencySampleCount++
+    }
+
+    // client-only: C++: Get_Last_Clientside_Update_Time
+    fun getLastClientsideUpdateTime(): UInt = lastClientsideUpdateTime
+
+    // client-only: C++: Get_Clientside_Update_Frequency (rolling 10s average)
+    fun getClientsideUpdateFrequency(): Int {
+        val time = timeGetTime()
+        if (time - clientsideUpdateFrequencySampleStartTime > CLIENT_SIDE_UPDATE_FREQUENCY_SAMPLE_PERIOD.toUInt()) {
+            var rate = 10000
+            if (clientsideUpdateFrequencySampleCount != 0) {
+                rate = ((time - clientsideUpdateFrequencySampleStartTime) / clientsideUpdateFrequencySampleCount.toUInt()).toInt()
+                clientsideUpdateFrequencySampleStartTime = time
+                clientsideUpdateFrequencySampleCount = 0
+            }
+            clientsideUpdateRate = rate
+        }
+        return clientsideUpdateRate
+    }
+
+    // --- Per-client update time and rate ---
+
+    // C++: Get_Last_Update_Time
+    fun getLastUpdateTime(clientId: Int): UInt {
+        require(clientId > 0 && clientId <= MAX_CLIENT_COUNT)
+        return updateInfo[clientId].lastUpdateTime
+    }
+
+    // C++: Set_Last_Update_Time
+    fun setLastUpdateTime(clientId: Int, time: UInt) {
+        require(clientId > 0 && clientId <= MAX_CLIENT_COUNT)
+        updateInfo[clientId].lastUpdateTime = time
+    }
+
+    // C++: Get_Update_Rate
+    fun getUpdateRate(clientId: Int): UShort {
+        require(clientId > 0 && clientId <= MAX_CLIENT_COUNT)
+        return updateInfo[clientId].updateRate
+    }
+
+    // C++: Set_Update_Rate
+    fun setUpdateRate(clientId: Int, rate: UShort) {
+        require(clientId > 0 && clientId <= MAX_CLIENT_COUNT)
+        updateInfo[clientId].updateRate = rate
+    }
+
+    // --- Ownership ---
+
+    // C++: Belongs_To_Client
+    fun belongsToClient(clientId: Int): Boolean {
+        require(clientId > 0)
+        val idMin = NetworkObjectManager.NETID_CLIENT_OBJECT_MIN + (clientId - 1) * 100000
+        val idMax = idMin + 100000 - 1
+        return networkId in idMin..idMax
+    }
+
+    // --- Priority caching ---
+
+    // C++: Set_Cached_Priority
+    fun setCachedPriority(priority: Float) {
+        require(priority >= 0f && priority <= 1f)
+        cachedPriority = priority
+    }
+
+    // C++: Get_Cached_Priority (virtual)
+    open fun getCachedPriority(): Float = cachedPriority
+
+    // C++: Set_Cached_Priority_2
+    fun setCachedPriority2(clientId: Int, priority: Float) {
+        cachedPriority2[clientId] = priority
+    }
+
+    // C++: Get_Cached_Priority_2
+    fun getCachedPriority2(clientId: Int): Float = cachedPriority2[clientId]
 }

@@ -8,11 +8,11 @@ private const val NETID_DYNAMIC_OBJECT_MIN = 1_500_000_000  // 600M slots for se
 private const val NETID_DYNAMIC_OBJECT_MAX = 2_100_000_000
 private const val NETID_STATIC_OBJECT_MIN  = 2_100_000_001  // 10M slots for static level objects
 private const val NETID_STATIC_OBJECT_MAX  = 2_110_000_000
-private const val NETID_CLIENT_OBJECT_MIN  = 2_110_000_001  // 100K slots per client, 128 clients
-private const val NETID_CLIENT_OBJECT_MAX  = 2_122_800_001
-private const val CLIENT_ID_RANGE          = 100_000
 
 object NetworkObjectManager {
+    const val NETID_CLIENT_OBJECT_MIN = 2_110_000_001   // C++: NETID_CLIENT_OBJECT_MIN
+    const val NETID_CLIENT_OBJECT_MAX = 2_122_800_001   // C++: NETID_CLIENT_OBJECT_MAX
+
     // C++: _ObjectList — sorted by NetworkID for binary search
     private val objectList = mutableListOf<NetworkObject>()
 
@@ -28,31 +28,37 @@ object NetworkObjectManager {
     // C++: _IsLevelLoading
     var isLevelLoading: Boolean = false
 
-    // C++: Register_Object — adds object to the list, assigns or confirms its ID
+    // C++: Register_Object — inserts into sorted list only if ID != 0 and not already present
     fun registerObject(obj: NetworkObject) {
-        objectList.add(obj)
-        objectList.sortBy { it.networkId }
+        val objectId = obj.networkId
+        if (objectId != 0) {
+            if (objectList.none { it.networkId == objectId }) {
+                objectList.add(obj)
+                objectList.sortBy { it.networkId }
+            }
+        }
     }
 
-    // Register with explicit ID — sets networkId (internal set within net module) then registers.
-    // Used by server-side code which cannot set networkId directly from outside this module.
+    // Register with explicit ID — delegates to setNetworkId (unregister + reassign + register).
     fun registerObject(obj: NetworkObject, networkId: Int) {
-        obj.networkId = networkId
-        objectList.add(obj)
-        objectList.sortBy { it.networkId }
+        obj.setNetworkId(networkId)
     }
 
     // Returns a snapshot of all registered objects for iteration.
     fun getAllObjects(): List<NetworkObject> = objectList.toList()
 
-    // C++: Unregister_Object — removes object from the list
+    // C++: Unregister_Object — removes object only if ID != 0
     fun unregisterObject(obj: NetworkObject) {
-        objectList.remove(obj)
+        if (obj.networkId != 0) {
+            objectList.remove(obj)
+        }
     }
 
-    // C++: Register_Object_For_Deletion
+    // C++: Register_Object_For_Deletion — adds only if not already present
     fun registerObjectForDeletion(obj: NetworkObject) {
-        deletePendingList.add(obj)
+        if (!deletePendingList.contains(obj)) {
+            deletePendingList.add(obj)
+        }
     }
 
     // C++: Think — called each network tick
@@ -62,23 +68,25 @@ object NetworkObjectManager {
         }
     }
 
-    // C++: Delete_Pending — deletes all objects registered for deletion
+    // C++: Delete_Pending — skips if level loading; only deletes objects that are still pending
     fun deletePending() {
+        if (isLevelLoading) return
         for (obj in deletePendingList) {
-            unregisterObject(obj)
-            obj.delete()
+            if (obj.isDeletePending) {
+                obj.delete()
+            }
         }
         deletePendingList.clear()
     }
 
-    // C++: Delete_Client_Objects — removes all objects owned by the given client
+    // C++: Delete_Client_Objects — marks each client-owned object as delete pending
     fun deleteClientObjects(clientId: Int) {
-        val rangeMin = NETID_CLIENT_OBJECT_MIN + (clientId - 1) * CLIENT_ID_RANGE
-        val rangeMax = rangeMin + CLIENT_ID_RANGE
-        val toDelete = objectList.filter { it.networkId in rangeMin until rangeMax }
-        for (obj in toDelete) {
-            objectList.remove(obj)
-            obj.delete()
+        val rangeMin = NETID_CLIENT_OBJECT_MIN + (clientId - 1) * 100000
+        val rangeMax = rangeMin + 100000
+        for (obj in objectList) {
+            if (obj.networkId in rangeMin until rangeMax) {
+                obj.setDeletePending()
+            }
         }
     }
 
@@ -89,10 +97,11 @@ object NetworkObjectManager {
         }
     }
 
-    // C++: Restore_Dirty_Bits — marks all objects as fully dirty for a reconnecting client
+    // C++: Restore_Dirty_Bits — copies slot MAX_CLIENT_COUNT-1 (template slot) to the given client
     fun restoreDirtyBits(clientId: Int) {
         for (obj in objectList) {
-            obj.setObjectDirtyBit(clientId, obj.creationDirtyBit, true)
+            val genericBits = obj.getObjectDirtyBits(NetworkObject.MAX_CLIENT_COUNT - 1)
+            obj.setObjectDirtyBits(clientId, genericBits)
         }
     }
 
@@ -107,11 +116,13 @@ object NetworkObjectManager {
     // C++: Get_Object
     fun getObject(index: Int): NetworkObject = objectList[index]
 
-    // C++: Get_New_Dynamic_ID — allocates the next server-side dynamic ID
+    // C++: Get_New_Dynamic_ID — skips IDs already in use, then returns next
     fun getNewDynamicId(): Int {
+        while (findObject(newDynamicId) != null) {
+            newDynamicId++
+        }
         val id = newDynamicId
-        newDynamicId = if (newDynamicId < NETID_DYNAMIC_OBJECT_MAX) newDynamicId + 1
-                       else NETID_DYNAMIC_OBJECT_MIN
+        newDynamicId++
         return id
     }
 
@@ -124,9 +135,8 @@ object NetworkObjectManager {
     }
 
     // C++: Init_New_Client_ID — sets the ID counter to the start of a client's range
-    // Client IDs start at NETID_CLIENT_OBJECT_MIN + (clientId - 1) * CLIENT_ID_RANGE
     fun initNewClientId(clientId: Int) {
-        newClientId = NETID_CLIENT_OBJECT_MIN + (clientId - 1) * CLIENT_ID_RANGE
+        newClientId = NETID_CLIENT_OBJECT_MIN + (clientId - 1) * 100000
     }
 
     // C++: Get_New_Client_ID — allocates the next ID in the current client's range
@@ -134,7 +144,9 @@ object NetworkObjectManager {
 
     // C++: Reset_Import_State_Counts
     fun resetImportStateCounts() {
-        // Stub: ImportStateCount is per-object and not yet tracked here
+        for (obj in objectList) {
+            obj.resetImportStateCount()
+        }
     }
 
     // For testing — clears all state
