@@ -537,13 +537,32 @@ class GameServer(internal val config: ServerConfig) {
         for ((rhostId, packets) in pendingOutbox) {
             val datagrams = PacketCombiner.combine(packets)
             if (datagrams.isNotEmpty()) {
-                val sizes = datagrams.joinToString(", ") { "${it.data.size}B" }
-                println("[NET] → combined ${packets.size} packets for host $rhostId into ${datagrams.size} datagram(s) ($sizes)")
+                val details = datagrams.joinToString(", ") { dg -> "${dg.data.size}B[${describeDatagramGroups(dg.data)}]" }
+                println("[NET] → combined ${packets.size} packets for host $rhostId into ${datagrams.size} datagram(s): $details")
             }
             enqueueWithCrc(datagrams)
             bytesSentThisTick[rhostId] = datagrams.sumOf { it.data.size }
         }
         pendingOutbox.clear()
+    }
+
+    // Decodes the group headers in a combined datagram for logging.
+    // Format: "N×SzB+" = N packets of Sz bytes, MorePackets=1 (more groups follow in this datagram).
+    //         "N×SzB"  = N packets of Sz bytes, MorePackets=0 (last group in datagram).
+    private fun describeDatagramGroups(data: ByteArray): String {
+        val groups = mutableListOf<String>()
+        var pos = 0
+        while (pos + 2 <= data.size) {
+            val header = (data[pos].toInt() and 0xFF) or ((data[pos + 1].toInt() and 0xFF) shl 8)
+            val n = header and 0x1F
+            val sz = (header shr 5) and 0x3FF
+            val more = (header shr 15) and 1 == 1
+            if (n <= 0 || sz <= 0) break
+            groups.add("${n}×${sz}B${if (more) "+" else ""}")
+            pos += 2 + sz + (n - 1) * (1 + sz)
+            if (!more) break
+        }
+        return if (groups.isEmpty()) "?" else groups.joinToString(" ")
     }
 
     // ---- Physics tick ----
@@ -1131,9 +1150,7 @@ class GameServer(internal val config: ServerConfig) {
         p.senderId = 0                   // server ID
         writePayload(p.payload)
         val wireData = Packet.buildWirePacket(p)
-        val payloadBits = p.payload.bitWritePosition
-        val hexDump = wireData.joinToString(" ") { "%02x".format(it) }
-        println("[GAME] → RELIABLE id=${p.id} to host ${host.id} (${wireData.size}B wire, ${payloadBits}b payload): $hexDump")
+        println("[GAME] → id=${p.id} host=${host.id} (${wireData.size}B): ${peekGameEvent(p)}")
         host.reliable.enqueue(p, wireData)
         pendingOutbox.getOrPut(host.id) { mutableListOf() }.add(host.address to wireData)
     }
