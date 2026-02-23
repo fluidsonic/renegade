@@ -9,10 +9,10 @@ import java.nio.ByteOrder
 // CLASSID_GLOBAL_SETTINGS_DEF_GENERAL = 0xF003
 // =====================================================================================
 
-data class GlobalSettingsGeneralDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class GlobalSettingsGeneralDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val deathSoundId: Int = 0,
     val evaObjectivesSoundId: Int = 0,
     val hudHelpTextSoundId: Int = 0,
@@ -40,7 +40,7 @@ data class GlobalSettingsGeneralDef(
     val stealthDistanceVehicle: Float = 25f,
     val mpStealthDistanceHuman: Float = 15f,
     val mpStealthDistanceVehicle: Float = 25f,
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040602u  // CHUNKID_GLOBAL_SETTINGS_DEF_GENERAL
     }
@@ -92,14 +92,14 @@ fun parseGlobalSettingsGeneralDef(
 // CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_LOITER = 0xF002
 // =====================================================================================
 
-data class HumanLoiterGlobalSettingsDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class HumanLoiterGlobalSettingsDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val activationDelay: Float = 20f,
     val loiterFrequency: Float = 10f,
     val loiterAnimList: List<String> = emptyList(),
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040601u  // CHUNKID_GLOBAL_SETTINGS_DEF_HUMAN_LOITER
     }
@@ -143,10 +143,10 @@ data class Rect4(val left: Float, val top: Float, val right: Float, val bottom: 
 /** 2-component float vector (C++ Vector2). */
 data class Vec2(val x: Float, val y: Float)
 
-data class HUDGlobalSettingsDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class HUDGlobalSettingsDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     // Colors (Vector3)
     val nodColor: Vec3 = Vec3(1f, 0f, 0f),
     val gdiColor: Vec3 = Vec3(1f, 1f, 0f),
@@ -247,7 +247,7 @@ data class HUDGlobalSettingsDef(
     // Damage indicators
     val damageIndicatorUV: Rect4 = Rect4(31f, 1f, 51f, 59f),
     val damageDiagIndicatorUV: Rect4 = Rect4(1f, 60f, 47f, 106f),
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040603u  // CHUNKID_GLOBAL_SETTINGS_DEF_HUD
     }
@@ -368,17 +368,17 @@ fun parseHUDGlobalSettingsDef(
 // CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE = 0xF007
 // =====================================================================================
 
-data class HumanAnimOverrideDef(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
+class HumanAnimOverrideDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
     val runEmptyHands: String = "",
     val walkEmptyHands: String = "",
     val runAtChest: String = "",
     val walkAtChest: String = "",
     val runAtHip: String = "",
     val walkAtHip: String = "",
-) {
+) : DefinitionClass(name, id, chunkId) {
     companion object {
         const val CHUNK_ID: UInt = 0x00040606u  // CHUNKID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE
     }
