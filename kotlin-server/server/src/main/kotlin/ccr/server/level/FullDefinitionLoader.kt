@@ -233,17 +233,32 @@ object FullDefinitionLoader {
                 PurchaseSettingsDefClass.load(objDataChunk) ?: fallback
 
             // ── Global Settings (0x40600 range) ─────────────────────────────────────
-            // FIXME: remaining are data classes — convert to DefinitionClass subclasses and parse properly
-            0x00040600u,                                    // CHUNKID_GLOBAL_SETTINGS_DEF (wrapper)
-            HumanLoiterGlobalSettingsDef.CHUNK_ID,          // 0x40601
-            GlobalSettingsGeneralDef.CHUNK_ID,              // 0x40602
-            HUDGlobalSettingsDef.CHUNK_ID,                  // 0x40603
-            EvaSettingsDefClass.CHUNK_ID,                   // 0x40604
-            CharacterClassSettingsDefClass.CHUNK_ID,        // 0x40605
-            HumanAnimOverrideDef.CHUNK_ID,                  // 0x40606
-            TeamPurchaseSettingsDefClass.CHUNK_ID,          // 0x40608
-            CNCModeSettingsDef.CHUNK_ID,                    // 0x40609
-            -> fallback
+
+            0x00040600u -> fallback                         // CHUNKID_GLOBAL_SETTINGS_DEF (wrapper only)
+
+            HumanLoiterGlobalSettingsDef.CHUNK_ID ->
+                parseHumanLoiterGlobalSettingsDef(objDataChunk, name, id, chunkId) ?: fallback
+
+            GlobalSettingsGeneralDef.CHUNK_ID ->
+                parseGlobalSettingsGeneralDef(objDataChunk, name, id, chunkId) ?: fallback
+
+            HUDGlobalSettingsDef.CHUNK_ID ->
+                parseHUDGlobalSettingsDef(objDataChunk, name, id, chunkId) ?: fallback
+
+            EvaSettingsDefClass.CHUNK_ID ->
+                parseEvaSettingsDefClass(objDataChunk, name, id, chunkId) ?: fallback
+
+            CharacterClassSettingsDefClass.CHUNK_ID ->
+                parseCharacterClassSettingsDefClass(objDataChunk, name, id, chunkId) ?: fallback
+
+            HumanAnimOverrideDef.CHUNK_ID ->
+                parseHumanAnimOverrideDef(objDataChunk, name, id, chunkId) ?: fallback
+
+            TeamPurchaseSettingsDefClass.CHUNK_ID ->
+                TeamPurchaseSettingsDefClass.load(objDataChunk) ?: fallback
+
+            CNCModeSettingsDef.CHUNK_ID ->
+                parseCNCModeSettingsDef(objDataChunk, name, id, chunkId) ?: fallback
 
             // ── Editor-only objects (CHUNKID_COMMANDO_EDITOR_BEGIN range 0x50000) ────
             // These appear in Objects.DDB but have no gameplay role on the server.

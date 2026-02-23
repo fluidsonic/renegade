@@ -287,4 +287,17 @@ class FullDefinitionLoaderTest {
         assertNotNull(def)
         assertTrue(def is ccr.server.defs.combat.SimpleGameObjDef)
     }
+
+    @Test
+    fun `global settings defs dispatch to typed subclasses`() {
+        // GlobalSettingsGeneralDef.CHUNK_ID = 0x00040602u
+        val ddb = buildDdb(Triple(0x00040602u, 600u, "General_Settings"))
+        val registry = FullDefinitionLoader.load(ddb)
+
+        assertEquals(1, registry.size)
+        val def = registry.findById(600u)
+        assertNotNull(def)
+        assertTrue(def is ccr.server.defs.GlobalSettingsGeneralDef)
+        assertEquals("General_Settings", def.name)
+    }
 }
