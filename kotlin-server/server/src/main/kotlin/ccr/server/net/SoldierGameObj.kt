@@ -35,6 +35,9 @@ class SoldierGameObj(
     // C++: cGod stores reference to cPlayer so buildings can award money via playerData
     var playerData: Player? = null
 
+    // C++: WeaponBagClass::Get_Index — index of the currently selected weapon in the bag.
+    var selectedWeaponIndex: Int = 0
+
     // True when this soldier is riding inside a vehicle.
     // C++: SoldierGameObj::Export_Frequent writes in_vehicle (bool) then branches.
     var inVehicle: Boolean = false
@@ -88,12 +91,12 @@ class SoldierGameObj(
             super.exportFrequent(packet)   // SmartGameObj → ArmedGameObj → PhysicalGameObj
             return
         }
-        val hasWeapon = weapons.isNotEmpty()
-        packet.addBool(hasWeapon)                              // has_weapon
-        if (hasWeapon) {
+        val currentWeapon = weapons.getOrNull(selectedWeaponIndex) ?: weapons.getOrNull(0)
+        packet.addBool(currentWeapon != null)                  // has_weapon
+        if (currentWeapon != null) {
             // C++: current weapon id + total rounds (from WeaponBagClass::Export)
-            packet.addInt(weapons[0].definitionId)
-            packet.addInt(weapons[0].totalRounds)
+            packet.addInt(currentWeapon.definitionId)
+            packet.addInt(currentWeapon.totalRounds)
         }
         packet.addFloat(position.x, BITPACK_WORLD_POSITION_X)
         packet.addFloat(position.y, BITPACK_WORLD_POSITION_Y)

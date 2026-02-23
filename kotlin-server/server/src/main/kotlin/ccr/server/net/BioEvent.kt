@@ -31,7 +31,7 @@ class BioEvent(
 
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
-        nickname = packet.getWideString()
+        nickname = packet.getWideString(permitEmpty = true)
         teamChoice = packet.getInt()
         clanId = packet.getInt()
         mapName = packet.getTerminatedString()

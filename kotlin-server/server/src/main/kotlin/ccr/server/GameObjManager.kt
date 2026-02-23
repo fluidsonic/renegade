@@ -1,5 +1,7 @@
 package ccr.server
 
+import ccr.server.defs.BuildingGameObjDef
+import ccr.server.level.DefinitionRegistry
 import ccr.server.net.BaseGameObj
 import ccr.server.net.BuildingGameObj
 import ccr.server.net.DamageableGameObj
@@ -49,6 +51,28 @@ class GameObjManager {
             if (obj is DamageableGameObj && obj.networkId == networkId) return obj
         }
         return null
+    }
+
+    // C++: GameObjManager::Update_Building_Collection_Spheres (gameobjmanager.cpp:513-563)
+    // O(n²) pass: for each building, shrinks radius to min(50, distance to nearest same-prefix building).
+    fun updateBuildingCollectionSpheres(definitions: DefinitionRegistry) {
+        for (building in buildingList) {
+            val def = definitions.findById(building.definitionId.toUInt()) as? BuildingGameObjDef ?: continue
+            val prefix = def.meshPrefix
+            if (prefix.isEmpty()) continue
+            var maxRadius = 50f
+            for (other in buildingList) {
+                if (other === building) continue
+                val otherDef = definitions.findById(other.definitionId.toUInt()) as? BuildingGameObjDef ?: continue
+                if (!otherDef.meshPrefix.equals(prefix, ignoreCase = true)) continue
+                val dx = building.position.x - other.position.x
+                val dy = building.position.y - other.position.y
+                val dz = building.position.z - other.position.z
+                val dist = kotlin.math.sqrt(dx * dx + dy * dy + dz * dz)
+                maxRadius = minOf(maxRadius, dist)
+            }
+            building.sphereRadius = maxRadius
+        }
     }
 
     // C++: GameObjManager::Init — called at Pre_Load_Level

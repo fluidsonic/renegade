@@ -15,7 +15,7 @@ open class BuildingGameObj(
     definitionId: Int,
     val position: Vector3,
     val sphereCenter: Vector3,
-    val sphereRadius: Float,
+    var sphereRadius: Float,
     health: Float = 5000f,
     shieldStrength: Float = 0f,
     shieldType: Int = 0,
