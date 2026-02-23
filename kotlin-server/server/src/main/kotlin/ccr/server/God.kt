@@ -820,6 +820,31 @@ open class God(private val server: GameServer) {
     }
 
     /**
+     * Clears round-specific tracking state in God after all soldiers have been deleted.
+     * Called by handleCoreRestart() and unloadLevel() to prevent stale references
+     * from carrying over into the next round / next map.
+     */
+    internal fun clearRoundState() {
+        // Defuse/cancel any C4 and beacons not already cleaned up by deleteSoldier()
+        // (e.g. timed C4 owned by no live player, or anything that slipped through)
+        c4Objects.filter { !it.isDeletePending }.forEach { it.defuse() }
+        beaconObjects.filter { !it.isDeletePending }.forEach { it.cancel() }
+        c4Objects.clear()
+        beaconObjects.clear()
+
+        // Respawn timers — clear so no player is locked out at the start of a new round
+        respawnTimers.clear()
+
+        // Rate-limit maps — clear so old timestamps don't block first placements
+        lastC4PlaceMs.clear()
+        lastBeaconPlaceMs.clear()
+
+        // Player vehicle references — clear stale associations
+        // (vehicles themselves are cleaned up separately by unloadLevel/handleCoreRestart)
+        playerVehicles.clear()
+    }
+
+    /**
      * Starts (or resets) the respawn cooldown timer for [rhostId].
      * [think] will not call [createCommando] while this timer is active.
      * Exposed as `internal` so tests can inject a cooldown directly.

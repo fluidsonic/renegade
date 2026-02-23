@@ -1161,6 +1161,7 @@ class GameServer(internal val config: ServerConfig) {
         for (rhostId in god.playerInGame.toList()) {
             god.deleteSoldier(rhostId)
         }
+        god.clearRoundState()           // clear anything deleteSoldier() left behind
 
         // Reset buildings and base controllers for new round
         baseControllerNod?.reset()
@@ -1285,6 +1286,7 @@ class GameServer(internal val config: ServerConfig) {
     }
 
     private fun unloadLevel() {
+        god.clearRoundState()   // clear tracking lists before objects are destroyed
         println("[SERVER] unloading level '$currentMapName'")
 
         // Unregister door network objects
@@ -1357,6 +1359,11 @@ class GameServer(internal val config: ServerConfig) {
         // Load and initialize the new level
         loadLevel(nextMapName)
         initializeLevel()
+
+        // Re-sync all still-connected in-game clients for new level objects
+        for (rhostId in god.playerInGame) {
+            NetworkObjectManager.restoreDirtyBits(rhostId)
+        }
 
         println("[GAME] map rotation complete — now on '$nextMapName', hostedGameNumber=$hostedGameNumber")
     }
