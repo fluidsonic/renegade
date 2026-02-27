@@ -12,7 +12,6 @@ import kotlin.math.roundToInt
 //      and tracked for change detection in Network_Think.
 abstract class StaticNetworkObject : NetworkObject() {
     override val networkClassId: Int = 0
-    val creationDirtyBit: Int = NetworkObject.BIT_RARE
     override fun delete() {}
     override fun setDeletePending() {}  // static objects cannot be deleted
 
