@@ -20,8 +20,57 @@ open class PowerUpGameObjDef(
     grantHealthMax: Float = 0f,
     persistent: Boolean = false,
     alwaysAllowGrant: Boolean = false,
-    physDefId: Int = 0,                      // C++: int PhysDefID (inherited via PhysicalGameObjDef)
-) : SimpleGameObjDef(name, id, chunkId, physDefId = physDefId) {
+    // SimpleGameObjDef fields (forwarded)
+    isEditorObject: Boolean = false,
+    isHiddenObject: Boolean = false,
+    playerTerminalType: Int = -1,
+    // PhysicalGameObjDef fields (forwarded)
+    physDefId: Int = 0,
+    type: Int = 0,
+    radarBlipType: Int = 0,
+    bullseyeOffsetZ: Float = 0f,
+    animation: String = "",
+    killedExplosion: Int = 0,
+    defaultHibernationEnable: Boolean = false,
+    allowInnateConversations: Boolean = false,
+    oratorType: Int = 0,
+    useCreationEffect: Boolean = false,
+    // DamageableGameObjDef fields (forwarded)
+    defenseObjectDef: DefenseObjectDefClass = DefenseObjectDefClass(),
+    infoIconTextureFilename: String = "",
+    translatedNameId: Int = 0,
+    notTargetable: Boolean = false,
+    defaultPlayerType: Int = -2,
+    encyclopediaType: Int = 0,
+    encyclopediaId: Int = 0,
+    // ScriptableGameObjDef fields (forwarded)
+    scriptNameList: List<String> = emptyList(),
+    scriptParameterList: List<String> = emptyList(),
+) : SimpleGameObjDef(
+    name, id, chunkId,
+    isEditorObject = isEditorObject,
+    isHiddenObject = isHiddenObject,
+    playerTerminalType = playerTerminalType,
+    physDefId = physDefId,
+    type = type,
+    radarBlipType = radarBlipType,
+    bullseyeOffsetZ = bullseyeOffsetZ,
+    animation = animation,
+    killedExplosion = killedExplosion,
+    defaultHibernationEnable = defaultHibernationEnable,
+    allowInnateConversations = allowInnateConversations,
+    oratorType = oratorType,
+    useCreationEffect = useCreationEffect,
+    defenseObjectDef = defenseObjectDef,
+    infoIconTextureFilename = infoIconTextureFilename,
+    translatedNameId = translatedNameId,
+    notTargetable = notTargetable,
+    defaultPlayerType = defaultPlayerType,
+    encyclopediaType = encyclopediaType,
+    encyclopediaId = encyclopediaId,
+    scriptNameList = scriptNameList,
+    scriptParameterList = scriptParameterList,
+) {
 
     // C++: int GrantShieldType (initialized to 0)
     var grantShieldType: Int = grantShieldType
@@ -260,30 +309,43 @@ open class PowerUpGameObjDef(
         const val MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH_MAX   = 20
         const val MICROCHUNKID_DEF_GRANT_HEALTH_MAX            = 21
 
-        // C++: SimpleGameObjDef parent wrapper chunk ID used for physDefId lookup
-        private const val CHUNKID_SIMPLE_DEF_PARENT        = 930991656   // SimpleGameObjDef CHUNKID_DEF_PARENT
-        private const val CHUNKID_PHYSICAL_DEF_VARIABLES   = 909991657   // PhysicalGameObjDef CHUNKID_DEF_VARIABLES
-        private const val MICROCHUNKID_PHYS_ID              = 18          // PhysicalGameObjDef MICROCHUNKID_DEF_PHYS_ID
-
         fun load(objDataReader: ccr.server.mix.ChunkReader, name: String, id: UInt, chunkId: UInt): PowerUpGameObjDef {
             val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES.toUInt())
 
-            // C++: PowerUpGameObjDef::Load opens CHUNKID_DEF_PARENT which contains SimpleGameObjDef::Load,
-            // which in turn opens its own CHUNKID_DEF_PARENT(930991656) containing PhysicalGameObjDef::Load.
-            // PhysicalGameObjDef stores physDefId inside its CHUNKID_DEF_VARIABLES(909991657) micro-chunk 18.
-            var physDefId = 0
+            // Navigate into PowerUp parent to load the full SimpleGameObjDef chain
+            // (physDefId, type, damageable fields, scriptable fields, etc.)
             val powerUpParent = objDataReader.findChunk(CHUNKID_DEF_PARENT.toUInt())
-            if (powerUpParent != null) {
-                val simpleParent = powerUpParent.findChunk(CHUNKID_SIMPLE_DEF_PARENT.toUInt())
-                if (simpleParent != null) {
-                    val physVars = simpleParent.findChunk(CHUNKID_PHYSICAL_DEF_VARIABLES.toUInt())
-                    if (physVars != null) {
-                        physDefId = physVars.readMicroInt(MICROCHUNKID_PHYS_ID) ?: 0
-                    }
-                }
+            val base = if (powerUpParent != null) {
+                SimpleGameObjDef.load(powerUpParent, name, id, chunkId)
+            } else {
+                SimpleGameObjDef(name = name, id = id, chunkId = chunkId)
             }
 
-            val def = PowerUpGameObjDef(name = name, id = id, chunkId = chunkId, physDefId = physDefId)
+            val def = PowerUpGameObjDef(
+                name = name, id = id, chunkId = chunkId,
+                physDefId = base.physDefId,
+                isEditorObject = base.isEditorObject,
+                isHiddenObject = base.isHiddenObject,
+                playerTerminalType = base.playerTerminalType,
+                type = base.type,
+                radarBlipType = base.radarBlipType,
+                bullseyeOffsetZ = base.bullseyeOffsetZ,
+                animation = base.animation,
+                killedExplosion = base.killedExplosion,
+                defaultHibernationEnable = base.defaultHibernationEnable,
+                allowInnateConversations = base.allowInnateConversations,
+                oratorType = base.oratorType,
+                useCreationEffect = base.useCreationEffect,
+                defenseObjectDef = base.defenseObjectDef,
+                infoIconTextureFilename = base.infoIconTextureFilename,
+                translatedNameId = base.translatedNameId,
+                notTargetable = base.notTargetable,
+                defaultPlayerType = base.defaultPlayerType,
+                encyclopediaType = base.encyclopediaType,
+                encyclopediaId = base.encyclopediaId,
+                scriptNameList = base.scriptNameList,
+                scriptParameterList = base.scriptParameterList,
+            )
             if (vars != null) {
                 def.grantShieldType = vars.readMicroInt(MICROCHUNKID_DEF_GRANT_SHIELD_TYPE) ?: 0
                 def.grantShieldStrength = vars.readMicroFloat(MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH) ?: 0f

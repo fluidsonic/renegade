@@ -36,8 +36,6 @@ import ccr.server.net.WeaponBagClass
 open class God(private val server: GameServer) {
 
     companion object {
-        const val RESPAWN_DELAY_SECONDS = 3.0f
-
         /**
          * Adds a weapon to a soldier's weapon bag, or tops up rounds if already owned.
          * C++: WeaponBagClass::Add_Weapon — new weapon = add entry; already owned = add rounds.
@@ -90,9 +88,6 @@ open class God(private val server: GameServer) {
     val beaconObjects = mutableListOf<BeaconGameObj>()
     private val lastBeaconPlaceMs = mutableMapOf<Int, Long>()  // rhostId → last placement time
 
-    // Respawn cooldown timers: rhostId → remaining seconds before next spawn is permitted
-    private val respawnTimers = mutableMapOf<Int, Float>()
-
     // ---- cGod::Think (god.cpp:91-168) ----
 
     /**
@@ -125,19 +120,10 @@ open class God(private val server: GameServer) {
         }
 
         // MP respawn loop: create a commando for every in-game player without a soldier
+        // C++: cGod::Think spawns immediately — respawn delay screen is handled client-side
         if (state == State.MULTIPLAYER) {
-            // Decrement respawn timers
-            val timerIter = respawnTimers.iterator()
-            while (timerIter.hasNext()) {
-                val entry = timerIter.next()
-                entry.setValue(entry.value - deltaSeconds)
-                if (entry.value <= 0f) timerIter.remove()
-            }
-
             for (rhostId in playerInGame.toList()) {  // toList() to avoid ConcurrentModificationException
                 if (rhostId !in soldiersByHost) {
-                    // Skip if still in respawn cooldown
-                    if (respawnTimers.containsKey(rhostId)) continue
                     val player = playersByHost[rhostId] ?: continue
                     createCommando(player)
                 }
@@ -248,10 +234,8 @@ open class God(private val server: GameServer) {
         soldiersByHost[rhostId] = soldier
         server.gameObjManager.addStar(soldier)
 
-        // FIXME: Player is not PlayerDataClass — setPlayerData() requires a PlayerDataClass, but we only
-        // have a Player (NetworkObject subclass). The C++ cPlayer implements PlayerDataClass; here they are
-        // separate. Binding is deferred until Player extends or wraps PlayerDataClass.
-        // soldier.setPlayerData(playersByHost[rhostId])
+        // C++: cGod::Create_Commando — Set_Player_Data links the soldier back to the player
+        soldier.setPlayerData(playersByHost[rhostId])
 
         // Give starting credits on first spawn if configured
         if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5f) {
@@ -305,8 +289,8 @@ open class God(private val server: GameServer) {
         soldiersByHost[rhostId] = soldier
         server.gameObjManager.addStar(soldier)
 
-        // FIXME: Player is not PlayerDataClass — same as createCommando; deferred.
-        // soldier.setPlayerData(playersByHost[rhostId])
+        // C++: cGod::Create_Commando — Set_Player_Data links the soldier back to the player
+        soldier.setPlayerData(playersByHost[rhostId])
 
         // No starting credits — purchase already costs money
 
@@ -824,7 +808,6 @@ open class God(private val server: GameServer) {
         val soldier = soldiersByHost.remove(rhostId) ?: return
         server.gameObjManager.removeStar(soldier)
         soldier.setDeletePending()
-        startRespawnCooldown(rhostId)
         println("[GOD] marked soldier delete-pending for host $rhostId netId=${soldier.networkId}")
     }
 
@@ -841,9 +824,6 @@ open class God(private val server: GameServer) {
         c4Objects.clear()
         beaconObjects.clear()
 
-        // Respawn timers — clear so no player is locked out at the start of a new round
-        respawnTimers.clear()
-
         // Rate-limit maps — clear so old timestamps don't block first placements
         lastC4PlaceMs.clear()
         lastBeaconPlaceMs.clear()
@@ -852,21 +832,6 @@ open class God(private val server: GameServer) {
         // (vehicles themselves are cleaned up separately by unloadLevel/handleCoreRestart)
         playerVehicles.clear()
     }
-
-    /**
-     * Starts (or resets) the respawn cooldown timer for [rhostId].
-     * [think] will not call [createCommando] while this timer is active.
-     * Exposed as `internal` so tests can inject a cooldown directly.
-     */
-    internal fun startRespawnCooldown(rhostId: Int) {
-        respawnTimers[rhostId] = RESPAWN_DELAY_SECONDS
-    }
-
-    /**
-     * Returns the remaining respawn cooldown in seconds for [rhostId], or 0 if no cooldown is active.
-     * Exposed as `internal` for test inspection.
-     */
-    internal fun respawnTimerRemaining(rhostId: Int): Float = respawnTimers[rhostId] ?: 0f
 
     /**
      * Full cleanup when a client disconnects:

@@ -19,7 +19,12 @@ class Player(
     @get:JvmName("deathsField") @set:JvmName("setDeathsField")
     var deaths: Int = 0,
     var money: Float = 0f,
-) : NetworkObject() {
+) : NetworkObject(), PlayerDataClass {
+
+    // C++: cPlayer inherits PlayerDataClass — the soldier currently controlled by this player.
+    // @JvmName avoids JVM name clash with the Kotlin-generated getGameObj()/setGameObj() accessors.
+    @get:JvmName("gameObjField") @set:JvmName("setGameObjField")
+    override var gameObj: SmartGameObj? = null
 
     override val networkClassId: Int = 1011  // NETCLASSID_PLAYER
 

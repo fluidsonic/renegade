@@ -197,6 +197,9 @@ object FullDefinitionLoader {
             ElevatorPhysDefClass.CHUNK_ID ->
                 ElevatorPhysDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 
+            DamageableStaticPhysDefClass.CHUNK_ID ->
+                DamageableStaticPhysDefClass.load(chunkId, objDataChunk) ?: fallback
+
             // ── Buildings (0xD000 range) ────────────────────────────────────────────
 
             RefineryGameObjDef.CHUNK_ID ->

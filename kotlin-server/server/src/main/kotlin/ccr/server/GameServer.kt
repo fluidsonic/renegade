@@ -800,6 +800,8 @@ class GameServer(internal val config: ServerConfig) {
                     // Soldier spawning happens via god.think() on the next tick
                     // All object creation packets sent by replicationTick() on the next tick
                 }
+                // Matches C++ cBioEvent::Act() which calls Set_Delete_Pending() at the end
+                sendGameNetObj(host) { bs -> bs.addInt(networkId); bs.addByte(0x00.toByte()); bs.addBool(true) }
             }
             1025 -> {  // NETCLASSID_CLIENTGOODBYEEVENT (header=1024, wire=1025) — graceful disconnect
                 val senderId = snap.getInt()
@@ -825,6 +827,8 @@ class GameServer(internal val config: ServerConfig) {
                 println("[GAME] CSPINGREQUESTEVENT from rhostId=$rhostId senderId=$senderId pingNumber=$pingNumber → ScPingResponseEvent")
                 val response = ScPingResponseEvent(pingNumber)
                 sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
+                // Matches C++ cCsPingRequestEvent::Act() which calls Set_Delete_Pending() at the end
+                sendGameNetObj(host) { bs -> bs.addInt(networkId); bs.addByte(0x00.toByte()); bs.addBool(true) }
             }
             1020 -> {  // NETCLASSID_SUICIDEEVENT (wire 1019+1)
                 val senderId = snap.getInt()

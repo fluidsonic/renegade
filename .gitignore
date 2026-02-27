@@ -1,5 +1,4 @@
 .DS_Store
-.tmp/
 .worktrees/
 client-orig/
 client/

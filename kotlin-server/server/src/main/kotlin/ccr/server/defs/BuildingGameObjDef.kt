@@ -37,6 +37,12 @@ open class BuildingGameObjDef(
     translatedNameId: Int = 0,
     notTargetable: Boolean = false,
     defaultPlayerType: Int = PLAYERTYPE_NEUTRAL,
+    encyclopediaType: Int = 0,
+    encyclopediaId: Int = 0,
+
+    // ScriptableGameObjDef (forwarded through DamageableGameObjDef)
+    scriptNameList: List<String> = emptyList(),
+    scriptParameterList: List<String> = emptyList(),
 
     // BuildingGameObjDef own fields
     val meshPrefix: String = "",                                      // C++: StringClass MeshPrefix
@@ -55,6 +61,10 @@ open class BuildingGameObjDef(
     translatedNameId = translatedNameId,
     notTargetable = notTargetable,
     defaultPlayerType = defaultPlayerType,
+    encyclopediaType = encyclopediaType,
+    encyclopediaId = encyclopediaId,
+    scriptNameList = scriptNameList,
+    scriptParameterList = scriptParameterList,
 ) {
 
     // C++: int Get_Damage_Report(int team) const
@@ -163,6 +173,8 @@ open class BuildingGameObjDef(
             val dmgVars = objDataChunk.findChunkRecursive(CHUNKID_DAMAGEABLE_DEF_VARIABLES)
             val translatedNameId = dmgVars?.mcInt(MCID_DMG_TRANSLATED_NAME_ID) ?: 0
             val infoIconTexture = dmgVars?.mcString(MCID_DMG_INFO_ICON_TEXTURE_FILENAME) ?: ""
+            val encyclopediaType = dmgVars?.mcInt(MCID_DMG_ENCY_TYPE) ?: 0
+            val encyclopediaId = dmgVars?.mcInt(MCID_DMG_ENCY_ID) ?: 0
             val notTargetable = dmgVars?.mcBool(MCID_DMG_NOT_TARGETABLE) ?: false
             var defaultPlayerType = dmgVars?.mcInt(MCID_DMG_DEFAULT_PLAYER_TYPE) ?: PLAYERTYPE_NEUTRAL
 
@@ -172,6 +184,26 @@ open class BuildingGameObjDef(
                 loadDefenseObjectDef(defenseChunk)
             } else {
                 DefenseObjectDefClass()
+            }
+
+            // --- ScriptableGameObjDef ---
+            val scriptVars = objDataChunk.findChunkRecursive(CHUNKID_SCRIPTABLE_DEF_VARIABLES)
+            val scriptNames = mutableListOf<String>()
+            val scriptParams = mutableListOf<String>()
+            if (scriptVars != null) {
+                var pendingName: String? = null
+                scriptVars.forEachMicroChunk { id, bytes ->
+                    when (id) {
+                        MCID_SCRIPT_NAME -> {
+                            pendingName = readNullTermString(bytes)
+                        }
+                        MCID_SCRIPT_PARAMETERS -> {
+                            scriptNames.add(pendingName ?: "")
+                            scriptParams.add(readNullTermString(bytes))
+                            pendingName = null
+                        }
+                    }
+                }
             }
 
             // --- BuildingGameObjDef ---
@@ -200,6 +232,10 @@ open class BuildingGameObjDef(
                 translatedNameId = translatedNameId,
                 notTargetable = notTargetable,
                 defaultPlayerType = defaultPlayerType,
+                encyclopediaType = encyclopediaType,
+                encyclopediaId = encyclopediaId,
+                scriptNameList = scriptNames,
+                scriptParameterList = scriptParams,
                 meshPrefix = meshPrefix,
                 mctSkin = mctSkin,
                 buildingType = buildingType,

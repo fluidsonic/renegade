@@ -3,7 +3,6 @@ package ccr.server
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
 import kotlin.test.Test
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class GodRespawnCooldownTest {
@@ -34,31 +33,10 @@ class GodRespawnCooldownTest {
     }
 
     @Test
-    fun `respawn is suppressed during cooldown period`() {
-        val rhostId = 1
-        val (god, _) = makeGod(rhostId, 0)
-
-        // Start cooldown — simulates deleteSoldier starting the timer
-        god.startRespawnCooldown(rhostId)
-
-        // Tick with 1.0s — timer is 3s, so createCommando must NOT be called
-        god.think(1.0f)
-        assertFalse(god.createCommandoCalled, "createCommando must not be called during cooldown (1s elapsed)")
-
-        // Tick another 1.5s (total 2.5s) — still in cooldown
-        god.think(1.5f)
-        assertFalse(god.createCommandoCalled, "createCommando must not be called during cooldown (2.5s elapsed)")
-
-        // Tick another 1.0s (total 3.5s) — cooldown expired, createCommando should be called
-        god.think(1.0f)
-        assertTrue(god.createCommandoCalled, "createCommando must be called after 3+ seconds")
-    }
-
-    @Test
     fun `no cooldown on first spawn (new player)`() {
         val rhostId = 2
         val (god, _) = makeGod(rhostId, 1)
-        // No startRespawnCooldown called — first spawn has no cooldown
+        // No delay — C++ cGod::Think() spawns immediately; respawn delay is client-side only
 
         god.think(0.016f)  // one frame
         assertTrue(god.createCommandoCalled, "first spawn must not have a cooldown")

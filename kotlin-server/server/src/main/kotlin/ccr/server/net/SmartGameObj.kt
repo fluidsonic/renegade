@@ -68,9 +68,9 @@ abstract class SmartGameObj : ArmedGameObj() {
 
     // C++: void Set_Player_Data(PlayerDataClass*)
     fun setPlayerData(data: PlayerDataClass?) {
-        playerData?.setGameObj(null)
+        playerData?.gameObj = null
         playerData = data
-        playerData?.setGameObj(this)
+        playerData?.gameObj = this
     }
 
     // C++: bool Has_Player() { return ControlOwner != SERVER_CONTROL_OWNER; }
@@ -455,7 +455,7 @@ abstract class SmartGameObj : ArmedGameObj() {
         super.onPostLoad()
         // StealthEffect != NULL: physObj!!.addEffectToMe(stealthEffect) — StealthEffectClass not yet ported
         registerListener()
-        // PlayerData != NULL: setPlayerData(playerData) — PlayerDataClass not yet ported
+        // PlayerData != NULL: setPlayerData(playerData) — not needed in server (player data set at spawn time)
     }
 
     // C++: SmartGameObj::Export_State_Cs

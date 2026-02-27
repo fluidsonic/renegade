@@ -1,20 +1,12 @@
 package ccr.server.net
 
 // C++: PlayerDataClass (playerdata.h / playerdata.cpp) — minimal server port
-class PlayerDataClass {
+// Converted to interface so cPlayer (Player.kt) can extend both NetworkObjectClass and PlayerDataClass.
+interface PlayerDataClass {
 
-    // C++: GameObjReference GameObj
-    // @JvmName avoids clash with fun getGameObj() / fun setGameObj() below
-    @get:JvmName("gameObjField") @set:JvmName("setGameObjField")
-    var gameObj: SmartGameObj? = null
-
-    // C++: void Set_GameObj(SmartGameObj*)
-    fun setGameObj(obj: SmartGameObj?) { gameObj = obj }
-
-    // C++: SmartGameObj* Get_GameObj()
-    fun getGameObj(): SmartGameObj? = gameObj
+    // C++: GameObjReference GameObj — the soldier this player data is attached to
+    var gameObj: SmartGameObj?
 
     // C++: void Stats_Add_Powerup() — increments the player's powerup pickup counter
-    // FIXME: real implementation updates persistent stats when PlayerDataClass is fully ported
     fun statsAddPowerup() {}
 }

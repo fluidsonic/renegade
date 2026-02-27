@@ -76,6 +76,7 @@ object StaticObjectLoader {
     private val KNOWN_FACTORY_IDS = setOf(
         ChunkIds.PHYSICS_CHUNKID_DOORPHYS,
         ChunkIds.PHYSICS_CHUNKID_ELEVATORPHYS,
+        ChunkIds.PHYSICS_CHUNKID_DAMAGEABLESTATICPHYS,
     )
 
     private fun parseStaticObject(objectWrapperChunk: ChunkReader): StaticPhysObject? {

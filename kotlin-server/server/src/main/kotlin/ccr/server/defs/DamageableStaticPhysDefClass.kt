@@ -63,6 +63,9 @@ class DamageableStaticPhysDefClass(
 ) : DefinitionClass(name, id, chunkId) {
 
     companion object {
+        /** Persist factory chunk ID for DamageableStaticPhysDefClass in the DDB. */
+        const val CHUNK_ID: UInt = 0x00020C02u  // PHYSICS_CHUNKID_DAMAGEABLESTATICPHYSDEF
+
         // Chunk IDs from damageablestaticphys.cpp
         private val CHUNKID_STATICANIMPHYSDEF = 7311734u
         private val CHUNKID_VARIABLES = 7311735u
