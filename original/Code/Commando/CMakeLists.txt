@@ -46,6 +46,7 @@ add_executable(Commando MACOSX_BUNDLE
     "${COMPAT_DIR}/winfile.cpp"
     "${COMPAT_DIR}/mss_impl.cpp"
     "${COMPAT_DIR}/bink_impl.cpp"
+    "${COMPAT_DIR}/d3dx8_impl.cpp"
     "${CHAT_RES}"
 )
 

@@ -52,6 +52,17 @@ static U32  (*g_file_read_cb )(uintptr_t, void*, U32)   = nullptr;
 // Sample structs
 // ---------------------------------------------------------------------------
 
+struct SampleFilter {
+    bool            active       = false;
+    ma_hpf_node     hpf          = {};
+    bool            hpf_initialized = false;
+    ma_delay_node   delay        = {};
+    bool            delay_initialized = false;
+    float           reverb_level  = 0.3f;
+    float           reflect_time  = 0.01f;
+    float           decay_time    = 0.535f;
+};
+
 struct Sample2D {
     bool     in_use              = false;
     bool     sound_initialized   = false;
@@ -65,6 +76,7 @@ struct Sample2D {
     int32_t  current_rate        = 44100;
     int32_t  native_rate         = 44100;
     void* user_data[USER_DATA_SLOTS] = {};
+    SampleFilter filter          = {};
 };
 static Sample2D g_samples[MAX_2D_SAMPLES];
 
@@ -239,6 +251,18 @@ static void update_3d_vol(Sample3D* s) {
 }
 
 static void uninit_sample2d(Sample2D* s) {
+    // Uninit filter nodes before the sound so graph detach happens cleanly
+    if (s->filter.active) {
+        if (s->filter.delay_initialized) {
+            ma_delay_node_uninit(&s->filter.delay, nullptr);
+            s->filter.delay_initialized = false;
+        }
+        if (s->filter.hpf_initialized) {
+            ma_hpf_node_uninit(&s->filter.hpf, nullptr);
+            s->filter.hpf_initialized = false;
+        }
+        s->filter.active = false;
+    }
     if (s->sound_initialized)   { ma_sound_uninit(&s->sound);     s->sound_initialized   = false; }
     if (s->decoder_initialized) { ma_decoder_uninit(&s->decoder); s->decoder_initialized = false; }
 }
@@ -599,11 +623,93 @@ void* AIL_sample_user_data(HSAMPLE s, INT32 index) {
 }
 
 void AIL_set_sample_processor(HSAMPLE s, INT32 proc_type, HPROVIDER hp) {
-    (void)s; (void)proc_type; (void)hp;
+    (void)hp;
+    if (proc_type != DP_FILTER) return;
+    Sample2D* smp = get_sample(s);
+    if (!smp || !smp->sound_initialized) {
+        fprintf(stderr, "[audio] set_sample_processor: handle=%u not ready\n", (uint32_t)s);
+        return;
+    }
+    if (smp->filter.active) {
+        // Already has a filter — uninit old nodes first
+        if (smp->filter.delay_initialized) {
+            ma_delay_node_uninit(&smp->filter.delay, nullptr);
+            smp->filter.delay_initialized = false;
+        }
+        if (smp->filter.hpf_initialized) {
+            ma_hpf_node_uninit(&smp->filter.hpf, nullptr);
+            smp->filter.hpf_initialized = false;
+        }
+        smp->filter.active = false;
+        // Re-attach sound directly to engine endpoint to restore default routing
+        ma_node_graph* graph = ma_engine_get_node_graph(&g_engine);
+        ma_node_attach_output_bus(&smp->sound, 0u, ma_node_graph_get_endpoint(graph), 0u);
+    }
+
+    ma_uint32 channels   = ma_engine_get_channels(&g_engine);
+    ma_uint32 sampleRate = ma_engine_get_sample_rate(&g_engine);
+
+    // Clamp reflect_time to at least 1 frame
+    ma_uint32 delayFrames = (ma_uint32)(smp->filter.reflect_time * (float)sampleRate);
+    if (delayFrames < 1u) delayFrames = 1u;
+
+    // Init HPF node: cutoff at 2000 Hz to produce tinny quality
+    ma_hpf_node_config hpfCfg = ma_hpf_node_config_init(channels, sampleRate, 2000.0, 1u);
+    ma_node_graph* graph = ma_engine_get_node_graph(&g_engine);
+    ma_result hpfRes = ma_hpf_node_init(graph, &hpfCfg, nullptr, &smp->filter.hpf);
+    if (hpfRes != MA_SUCCESS) {
+        fprintf(stderr, "[audio] set_sample_processor: hpf_node_init FAILED result=%d\n", (int32_t)hpfRes);
+        return;
+    }
+    smp->filter.hpf_initialized = true;
+
+    // Init delay node: reflect_time delay, decay_time feedback, reverb_level wet mix
+    ma_delay_node_config delayCfg = ma_delay_node_config_init(channels, sampleRate, delayFrames, smp->filter.decay_time);
+    ma_result delayRes = ma_delay_node_init(graph, &delayCfg, nullptr, &smp->filter.delay);
+    if (delayRes != MA_SUCCESS) {
+        fprintf(stderr, "[audio] set_sample_processor: delay_node_init FAILED result=%d\n", (int32_t)delayRes);
+        ma_hpf_node_uninit(&smp->filter.hpf, nullptr);
+        smp->filter.hpf_initialized = false;
+        return;
+    }
+    smp->filter.delay_initialized = true;
+    ma_delay_node_set_wet(&smp->filter.delay, smp->filter.reverb_level);
+    ma_delay_node_set_dry(&smp->filter.delay, 1.0f - smp->filter.reverb_level);
+
+    // Rewire graph: sound → hpf → delay → engine endpoint
+    // Step 1: sound output → hpf input
+    ma_node_attach_output_bus(&smp->sound, 0u, &smp->filter.hpf, 0u);
+    // Step 2: hpf output → delay input
+    ma_node_attach_output_bus(&smp->filter.hpf, 0u, &smp->filter.delay, 0u);
+    // Step 3: delay output → engine endpoint
+    ma_node_attach_output_bus(&smp->filter.delay, 0u, ma_node_graph_get_endpoint(graph), 0u);
+
+    smp->filter.active = true;
+    fprintf(stderr, "[audio] set_sample_processor: handle=%u filter active (channels=%u rate=%u delayFrames=%u wet=%.2f decay=%.2f)\n",
+        (uint32_t)s, (uint32_t)channels, (uint32_t)sampleRate, (uint32_t)delayFrames,
+        (double)smp->filter.reverb_level, (double)smp->filter.decay_time);
 }
 
 void AIL_set_filter_sample_preference(HSAMPLE s, const char* name, void* val) {
-    (void)s; (void)name; (void)val;
+    Sample2D* smp = get_sample(s);
+    if (!smp || !name || !val) return;
+    float fval = *(const float*)val;
+    if (strcmp(name, "Reverb level") == 0) {
+        smp->filter.reverb_level = fval;
+        if (smp->filter.active && smp->filter.delay_initialized) {
+            ma_delay_node_set_wet(&smp->filter.delay, fval);
+            ma_delay_node_set_dry(&smp->filter.delay, 1.0f - fval);
+        }
+    } else if (strcmp(name, "Reverb reflect time") == 0) {
+        // Cannot change delay length after node init — just store for future re-init
+        smp->filter.reflect_time = fval;
+    } else if (strcmp(name, "Reverb decay time") == 0) {
+        smp->filter.decay_time = fval;
+        if (smp->filter.active && smp->filter.delay_initialized) {
+            ma_delay_node_set_decay(&smp->filter.delay, fval);
+        }
+    }
+    // Unknown preference names are silently ignored
 }
 
 // ---------------------------------------------------------------------------
@@ -624,7 +730,15 @@ S32 AIL_enumerate_3D_providers(HPROENUM* next, HPROVIDER* p, char** name) {
 }
 
 S32 AIL_enumerate_filters(HPROENUM* next, HPROVIDER* p, char** name) {
-    (void)next; (void)p; (void)name;
+    static char filter_name[] = "Reverb";
+    if (!next || !p || !name) return 0;
+    if (*next == HPROENUM_FIRST) {
+        fprintf(stderr, "[audio] enumerate_filters: returning \"%s\"\n", filter_name);
+        *p    = (HPROVIDER)1u;
+        *name = filter_name;
+        *next = 1u;
+        return 1;
+    }
     return 0;
 }
 

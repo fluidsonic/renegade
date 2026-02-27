@@ -66,18 +66,14 @@ inline HRESULT D3DXCreateTexture(
     return pDevice->CreateTexture(Width, Height, MipLevels, Usage, Format, Pool, ppTexture);
 }
 
-// D3DXCreateTextureFromFileExA stub
-inline HRESULT D3DXCreateTextureFromFileExA(
+// D3DXCreateTextureFromFileExA — implemented in compat/d3dx8_impl.cpp
+HRESULT D3DXCreateTextureFromFileExA(
     void* pDevice, const char* pSrcFile,
     UINT Width, UINT Height, UINT MipLevels, DWORD Usage,
     D3DFORMAT Format, D3DPOOL Pool,
     DWORD Filter, DWORD MipFilter, DWORD ColorKey,
     D3DXIMAGE_INFO* pSrcInfo, void* pPalette,
-    IDirect3DTexture8** ppTexture)
-{
-    if (ppTexture) *ppTexture = NULL;
-    return E_NOTIMPL;
-}
+    IDirect3DTexture8** ppTexture);
 
 // D3DXCreateCubeTextureFromFileExA stub
 inline HRESULT D3DXCreateCubeTextureFromFileExA(
@@ -92,18 +88,12 @@ inline HRESULT D3DXCreateCubeTextureFromFileExA(
     return E_NOTIMPL;
 }
 
-// D3DXLoadSurfaceFromSurface stub
-inline HRESULT D3DXLoadSurfaceFromSurface(
+// D3DXLoadSurfaceFromSurface — implemented in compat/d3dx8_impl.cpp
+HRESULT D3DXLoadSurfaceFromSurface(
     IDirect3DSurface8* pDestSurface, const void* pDestPalette, const RECT* pDestRect,
     IDirect3DSurface8* pSrcSurface, const void* pSrcPalette, const RECT* pSrcRect,
-    DWORD Filter, DWORD ColorKey)
-{
-    return E_NOTIMPL;
-}
+    DWORD Filter, DWORD ColorKey);
 
-// D3DXFilterTexture stub
-inline HRESULT D3DXFilterTexture(IDirect3DBaseTexture8* pTexture, const void* pPalette,
-    UINT SrcLevel, DWORD Filter)
-{
-    return E_NOTIMPL;
-}
+// D3DXFilterTexture — implemented in compat/d3dx8_impl.cpp
+HRESULT D3DXFilterTexture(IDirect3DBaseTexture8* pTexture, const void* pPalette,
+    UINT SrcLevel, DWORD Filter);
