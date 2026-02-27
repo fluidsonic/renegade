@@ -66,6 +66,12 @@ class GameDataTest {
             baseDestructionEndsGame = true,
             beaconPlacementEndsGame = false,
             startingCredits = 500,
+            radarMode = 0,
+            intermissionTimeSeconds = 0,
+            minQualifyingTimeMinutes = 0,
+            isClientTrusted = false,
+            remixTeams = false,
+            driverIsAlwaysGunner = false,
         )
         val gameData = GameData(config, localIp = 0)
 

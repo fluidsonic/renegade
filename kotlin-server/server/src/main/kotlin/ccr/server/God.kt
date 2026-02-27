@@ -5,7 +5,6 @@ import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
-import ccr.server.defs.BaseGameObjDef
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
 import ccr.server.defs.PhysDefClass
 import ccr.server.defs.SoldierGameObjDef
@@ -13,7 +12,6 @@ import ccr.server.defs.VehicleGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.BeaconGameObjDef
 import ccr.server.defs.PowerUpGameObjDef
-import ccr.server.level.ldd.LoadedVehicleGameObj
 import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
 import ccr.server.net.Player
@@ -218,10 +216,17 @@ open class God(private val server: Network) {
             "pos=(${position.x}, ${position.y}, ${position.z})")
 
         val fallbackModel = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
-        val modelName = resolveSoldierModelName(defId).ifEmpty { fallbackModel }
+        // FIXME: replace with W3D HLod name lookup once W3D loading is implemented
+        val soldierDef = server.loadedLevel?.definitions?.findById(defId.toUInt()) as? SoldierGameObjDef
+        val physDefId = soldierDef?.physical?.physDefId ?: 0
+        val rawModel = if (physDefId != 0) {
+            (server.loadedLevel?.definitions?.findById(physDefId.toUInt()) as? PhysDefClass)?.modelName ?: ""
+        } else ""
+        val modelName = rawModel.substringAfterLast('\\').substringAfterLast('/').substringBeforeLast('.')
+            .ifEmpty { fallbackModel }
 
         val soldier = SoldierGameObj()
-        server.loadedLevel?.definitions?.findById(defId.toUInt())?.let { soldier.definition = it as? BaseGameObjDef }
+        soldierDef?.let { soldier.definition = it }
         soldier.controlOwner = rhostId
         soldier.playerType   = playerType
         soldier.modelName    = modelName
@@ -270,13 +275,20 @@ open class God(private val server: Network) {
             }
 
         val fallbackModel = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
-        val modelName = resolveSoldierModelName(defId).ifEmpty { fallbackModel }
+        // FIXME: replace with W3D HLod name lookup once W3D loading is implemented
+        val soldierDef2 = server.loadedLevel?.definitions?.findById(defId.toUInt()) as? SoldierGameObjDef
+        val physDefId2 = soldierDef2?.physical?.physDefId ?: 0
+        val rawModel2 = if (physDefId2 != 0) {
+            (server.loadedLevel?.definitions?.findById(physDefId2.toUInt()) as? PhysDefClass)?.modelName ?: ""
+        } else ""
+        val modelName = rawModel2.substringAfterLast('\\').substringAfterLast('/').substringBeforeLast('.')
+            .ifEmpty { fallbackModel }
 
         println("[GOD] spawned purchased soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
             "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z})")
 
         val soldier = SoldierGameObj()
-        server.loadedLevel?.definitions?.findById(defId.toUInt())?.let { soldier.definition = it as? BaseGameObjDef }
+        soldierDef2?.let { soldier.definition = it }
         soldier.controlOwner = rhostId
         soldier.playerType   = playerType
         soldier.modelName    = modelName
@@ -390,20 +402,6 @@ open class God(private val server: Network) {
         // e.g. "V_NOD_TURRET" — not the full DDB path "vehicles\nod turret\v_nod_turret.w3d".
         // Extract the base filename, strip the extension, and uppercase to match C++ behaviour.
         return raw.substringAfterLast('\\').substringAfterLast('/').substringBeforeLast('.').uppercase()
-    }
-
-    /**
-     * Resolves the W3D model name for a soldier definition.
-     * Mirrors C++ cGod::Create_Commando: looks up SoldierGameObjDef.physical.physDefId → PhysDefClass.modelName.
-     * Returns empty string if the chain is broken.
-     */
-    private fun resolveSoldierModelName(defId: Int): String {
-        val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
-            as? SoldierGameObjDef ?: return ""
-        val physDefId = wrapper.physical.physDefId
-        if (physDefId == 0) return ""
-        return (server.loadedLevel?.definitions?.findById(physDefId.toUInt())
-            as? PhysDefClass)?.modelName ?: ""
     }
 
     /**
@@ -555,39 +553,6 @@ open class God(private val server: Network) {
                 println("[GOD] equipment grant: rhostId=$rhostId weapon clips refilled")
             }
         }
-    }
-
-    /**
-     * Instantiates a pre-placed vehicle from the level's LDD data.
-     * Unlike [createVehicle] (purchased), uses the LDD-assigned network ID.
-     * C++: cGod equivalent of loading SaveGame objects for vehicles.
-     */
-    fun createLevelVehicle(lv: LoadedVehicleGameObj): VehicleGameObj? {
-        if (lv.definitionId == 0) return null
-        val wrapper = server.loadedLevel?.definitions?.findById(lv.definitionId.toUInt())
-            as? VehicleGameObjDef
-        val vehicleType = wrapper?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
-        val seatCount   = wrapper?.numSeats ?: 2  // C++ default: NumSeats = 2
-        val modelName   = resolveModelName(wrapper)
-        val position = lv.transform.position.let { Vector3(it.x, it.y, it.z) }
-        val vehicle = VehicleGameObj()
-        wrapper?.let { vehicle.definition = it }
-        vehicle.modelName       = modelName
-        vehicle.position        = position
-        vehicle.playerType      = lv.playerType
-        vehicle.vehicleDelivered = true
-        vehicle.controlOwner    = 0
-        vehicle.seatOccupants.clear()
-        repeat(seatCount) { vehicle.seatOccupants.add(null) }
-        NetworkObjectManager.registerObject(vehicle, lv.networkId)
-        vehiclesByNetId[lv.networkId] = vehicle
-        server.gameObjManager.add(vehicle)
-        println("[GOD] level vehicle: defId=${lv.definitionId} netId=${lv.networkId} " +
-            "def=${if (wrapper != null) "FOUND" else "MISSING"} " +
-            "model='$modelName' type=$vehicleType seats=$seatCount " +
-            "team=${if (lv.playerType == 0) "NOD" else "GDI"} " +
-            "pos=(${position.x}, ${position.y}, ${position.z})")
-        return vehicle
     }
 
     // ---- Vehicle entry/exit ----

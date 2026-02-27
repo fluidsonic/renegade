@@ -1,11 +1,15 @@
 package ccr.server.level.ldd
 
 import ccr.server.level.ChunkIds
-import ccr.server.level.Matrix3D
+import ccr.server.level.DefinitionRegistry
 import ccr.server.mix.ChunkReader
+import ccr.server.net.BuildingGameObj
+import ccr.server.net.SimpleGameObj
+import ccr.server.net.VehicleGameObj
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class LddParserTest {
@@ -19,20 +23,6 @@ class LddParserTest {
         assertTrue(result.levelScripts.isEmpty())
         assertEquals("", result.mapFilename)
         assertEquals(0, result.missionDescriptionId)
-    }
-
-    @Test
-    fun `LoadedGameObject sealed hierarchy works`() {
-        val transform = Matrix3D.IDENTITY
-        val soldier = LoadedSoldierGameObj(100, transform, 5)
-        assertTrue(soldier is LoadedGameObject)
-        assertEquals(100, soldier.definitionId)
-        assertEquals(5, soldier.networkId)
-
-        val building = LoadedBuildingGameObj(200, transform, 10, playerType = 1)
-        assertTrue(building is LoadedGameObject)
-        assertEquals(200, building.definitionId)
-        assertEquals(1, building.playerType)
     }
 
     @Test
@@ -51,38 +41,43 @@ class LddParserTest {
     @Test
     fun `GameObjectFactory creates correct types from empty objdata`() {
         val emptyObjData = ChunkReader(ByteArray(0))
+        val factory = GameObjectFactory(DefinitionRegistry())
 
-        val building = GameObjectFactory.load(ChunkIds.GAMEOBJ_BUILDING, emptyObjData)
-        assertTrue(building is LoadedBuildingGameObj)
+        val building = factory.load(ChunkIds.GAMEOBJ_BUILDING, emptyObjData)
+        assertTrue(building is BuildingGameObj)
         assertEquals(0, building.definitionId)
 
-        val soldier = GameObjectFactory.load(ChunkIds.GAMEOBJ_SOLDIER, emptyObjData)
-        assertTrue(soldier is LoadedSoldierGameObj)
+        // Soldiers are spawned by god, not created by the factory
+        val soldier = factory.load(ChunkIds.GAMEOBJ_SOLDIER, emptyObjData)
+        assertNull(soldier)
 
-        val vehicle = GameObjectFactory.load(ChunkIds.GAMEOBJ_VEHICLE, emptyObjData)
-        assertTrue(vehicle is LoadedVehicleGameObj)
+        val vehicle = factory.load(ChunkIds.GAMEOBJ_VEHICLE, emptyObjData)
+        assertTrue(vehicle is VehicleGameObj)
 
-        val simple = GameObjectFactory.load(ChunkIds.GAMEOBJ_SIMPLE, emptyObjData)
-        assertTrue(simple is LoadedSimpleGameObj)
+        val simple = factory.load(ChunkIds.GAMEOBJ_SIMPLE, emptyObjData)
+        assertTrue(simple is SimpleGameObj)
 
-        val zone = GameObjectFactory.load(ChunkIds.GAMEOBJ_SCRIPTZONE, emptyObjData)
-        assertTrue(zone is LoadedScriptZoneGameObj)
+        // Script zones and other unsupported types return null
+        val zone = factory.load(ChunkIds.GAMEOBJ_SCRIPTZONE, emptyObjData)
+        assertNull(zone)
 
-        val unknown = GameObjectFactory.load(0xDEADu, emptyObjData)
-        assertTrue(unknown is UnknownGameObj)
-        assertEquals(0xDEADu, (unknown as UnknownGameObj).factoryChunkId)
+        // Unknown chunk IDs return null
+        val unknown = factory.load(0xDEADu, emptyObjData)
+        assertNull(unknown)
     }
 
     @Test
     fun `GameObjectFactory creates building subtypes`() {
         val emptyObjData = ChunkReader(ByteArray(0))
+        val factory = GameObjectFactory(DefinitionRegistry())
 
-        val refinery = GameObjectFactory.load(ChunkIds.GAMEOBJ_BUILDING_REFINERY, emptyObjData)
-        assertTrue(refinery is LoadedBuildingGameObj)
-        assertEquals(ChunkIds.GAMEOBJ_BUILDING_REFINERY, (refinery as LoadedBuildingGameObj).factoryChunkId)
+        val building = factory.load(ChunkIds.GAMEOBJ_BUILDING, emptyObjData)
+        assertTrue(building is BuildingGameObj)
 
-        val warfactory = GameObjectFactory.load(ChunkIds.GAMEOBJ_BUILDING_WARFACTORY, emptyObjData)
-        assertTrue(warfactory is LoadedBuildingGameObj)
-        assertEquals(ChunkIds.GAMEOBJ_BUILDING_WARFACTORY, (warfactory as LoadedBuildingGameObj).factoryChunkId)
+        val refinery = factory.load(ChunkIds.GAMEOBJ_BUILDING_REFINERY, emptyObjData)
+        assertTrue(refinery is BuildingGameObj)
+
+        val warfactory = factory.load(ChunkIds.GAMEOBJ_BUILDING_WARFACTORY, emptyObjData)
+        assertTrue(warfactory is BuildingGameObj)
     }
 }

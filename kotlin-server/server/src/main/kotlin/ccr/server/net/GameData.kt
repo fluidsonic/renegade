@@ -30,16 +30,16 @@ class GameData(config: ServerConfig, localIp: Int) {
 
     // Tier 2 fields (static from config)
     val timeLimitMinutes: Int = config.timeLimitMinutes
-    val radarMode: Int = 0
-    val intermissionTimeSeconds: Int = 0
-    val minQualifyingTimeMinutes: Int = 0
+    val radarMode: Int = config.radarMode
+    val intermissionTimeSeconds: Int = config.intermissionTimeSeconds
+    val minQualifyingTimeMinutes: Int = config.minQualifyingTimeMinutes
     val isFriendlyFirePermitted: Boolean = false
     val isFreeWeapons: Boolean = false
-    val isClientTrusted: Boolean = false
-    val remixTeams: Boolean = false
+    val isClientTrusted: Boolean = config.isClientTrusted
+    val remixTeams: Boolean = config.remixTeams
     // Is_Cnc() = true: extra booleans
     val canRepairBuildings: Boolean = true
-    val driverIsAlwaysGunner: Boolean = false
+    val driverIsAlwaysGunner: Boolean = config.driverIsAlwaysGunner
     val spawnWeapons: Boolean = false
     val motd: String = ""
     val baseDestructionEndsGame: Boolean = config.baseDestructionEndsGame

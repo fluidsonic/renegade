@@ -44,7 +44,7 @@ class LevelLoader(
         if (lddData == null) context.warn("$baseName.ldd not found in map mix")
 
         val staticDeferred  = async { if (lsdData != null) LsdParser.parse(lsdData)  else LevelStaticData() }
-        val dynamicDeferred = async { if (lddData != null) LddParser.parse(lddData) else LevelDynamicData() }
+        val dynamicDeferred = async { if (lddData != null) LddParser.parse(lddData, registry) else LevelDynamicData() }
 
         val staticData  = staticDeferred.await()
         val dynamicData = dynamicDeferred.await()

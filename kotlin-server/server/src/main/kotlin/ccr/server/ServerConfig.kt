@@ -27,10 +27,10 @@ data class ServerConfig(
     val password: String = "",
     val isDedicated: Boolean = false,
     val isPassworded: Boolean = false,
-    val isTeamChangingAllowed: Boolean = true,
+    val isTeamChangingAllowed: Boolean = false,
     val isLaddered: Boolean = false,
     val isClanGame: Boolean = false,
-    val timeLimitMinutes: Int = 0,
+    val timeLimitMinutes: Int = 30,
     val baseDestructionEndsGame: Boolean = true,
     val beaconPlacementEndsGame: Boolean = true,
     val startingCredits: Int = 0,
@@ -59,7 +59,12 @@ data class ServerConfig(
     // CnC_Nod_Minigunner_0 = 0x04e22811, CnC_GDI_MiniGunner_0 = 0x04e22803.
     val nodSoldierDefId: Int = 81930257,   // 0x04e22811  CnC_Nod_Minigunner_0
     val gdiSoldierDefId: Int = 81930243,   // 0x04e22803  CnC_GDI_MiniGunner_0
-    val intermissionTimeSeconds: Int = 30,
+    val intermissionTimeSeconds: Int = 15,
+    val radarMode: Int = 1,
+    val minQualifyingTimeMinutes: Int = 2,
+    val isClientTrusted: Boolean = true,
+    val remixTeams: Boolean = true,
+    val driverIsAlwaysGunner: Boolean = true,
     val mapList: List<String> = emptyList(),
     val mapCycleLoops: Boolean = false,   // C++: cGameData::DoMapsLoop
 ) {
@@ -88,7 +93,7 @@ data class ServerConfig(
             password            = ini.getString(SECTION, "Password"),
             isDedicated         = ini.getBool(SECTION, "IsDedicated"),
             isPassworded        = ini.getBool(SECTION, "IsPassworded"),
-            isTeamChangingAllowed = ini.getBool(SECTION, "IsTeamChangingAllowed", true),
+            isTeamChangingAllowed = ini.getBool(SECTION, "IsTeamChangingAllowed", false),
             isLaddered          = ini.getBool(SECTION, "IsLaddered"),
             isClanGame          = ini.getBool(SECTION, "IsClanGame"),
             timeLimitMinutes    = ini.getInt(SECTION, "TimeLimitMinutes"),
@@ -107,7 +112,12 @@ data class ServerConfig(
             armorTypeCount      = ini.getInt(SECTION, "ArmorTypeCount", 8),
             nodSoldierDefId     = ini.getInt(SECTION, "NodSoldierDefId", 81930257),
             gdiSoldierDefId     = ini.getInt(SECTION, "GdiSoldierDefId", 81930243),
-            intermissionTimeSeconds = ini.getInt(SECTION, "IntermissionTimeSeconds", 30),
+            intermissionTimeSeconds = ini.getInt(SECTION, "IntermissionTimeSeconds", 15),
+            radarMode              = ini.getInt(SECTION, "RadarMode", 1),
+            minQualifyingTimeMinutes = ini.getInt(SECTION, "MinQualifyingTimeMinutes", 2),
+            isClientTrusted        = ini.getBool(SECTION, "IsClientTrusted", true),
+            remixTeams             = ini.getBool(SECTION, "RemixTeams", true),
+            driverIsAlwaysGunner   = ini.getBool(SECTION, "DriverIsAlwaysGunner", true),
             mapCycleLoops = ini.getBool(SECTION, "MapCycleLoops"),
             mapList = buildList {
                 for (i in 1..32) {

@@ -41,20 +41,12 @@ import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectFactoryManager
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.level.ChunkIds
-import ccr.server.level.ldd.LoadedBuildingGameObj
-import ccr.server.level.ldd.LoadedVehicleGameObj
 import ccr.server.net.BaseControllerClass
 import ccr.server.net.BuildingGameObj
-import ccr.server.net.ComCenterGameObj
-import ccr.server.net.PowerPlantGameObj
-import ccr.server.net.RefineryGameObj
-import ccr.server.net.SoldierFactoryGameObj
-import ccr.server.net.VehicleFactoryGameObj
-import ccr.server.net.WarFactoryGameObj
+import ccr.server.net.VehicleGameObj
 import ccr.physics.scene.PhysicsScene
 import ccr.server.level.PhysicsSceneBuilder
 import ccr.server.defs.AmmoDefinitionClass
-import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.PhysDefClass
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.DoorPhysDefClass
@@ -968,8 +960,8 @@ class Network(internal val config: ServerConfig) {
         // Force gameContext initialisation so baseControllers array is ready before buildings use it.
         val ctx = gameContext
         loadedLevel?.also { level ->
-            val loadedBuildings = level.dynamicData.gameObjects.filterIsInstance<LoadedBuildingGameObj>()
-            if (loadedBuildings.isNotEmpty()) {
+            val levelBuildings = level.dynamicData.gameObjects.filterIsInstance<BuildingGameObj>()
+            if (levelBuildings.isNotEmpty()) {
                 val controllerNod = BaseControllerClass(playerType = 0)
                 val controllerGdi = BaseControllerClass(playerType = 1)
                 NetworkObjectManager.registerObject(controllerNod, NET_ID_BASE_CONTROLLER_NOD)
@@ -981,31 +973,29 @@ class Network(internal val config: ServerConfig) {
                 ctx.baseControllers[0] = controllerNod
                 ctx.baseControllers[1] = controllerGdi
 
-                println("[BUILDING] found ${loadedBuildings.size} buildings in LDD")
-                for (lb in loadedBuildings) {
-                    val building = createBuilding(lb) ?: continue
-                    NetworkObjectManager.registerObject(building, lb.networkId)
-                    val controller = when (lb.playerType) {
+                println("[BUILDING] found ${levelBuildings.size} buildings in LDD")
+                for (building in levelBuildings) {
+                    // Buildings are already registered with NetworkObjectManager and GameObjManager by the factory.
+                    // Wire up the base controller (cncInitialize sets BaseController pointer and adds BuildingMonitor).
+                    val controller = when (building.playerType) {
                         0 -> { controllerNod.addBuilding(building); controllerNod }
                         1 -> { controllerGdi.addBuilding(building); controllerGdi }
                         else -> null
                     }
                     if (controller != null) building.cncInitialize(controller)
-                    gameObjManager.add(building)
-                    gameObjManager.addBuilding(building)
-                    println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
+                    println("[BUILDING] registered ${building::class.simpleName} networkId=${building.networkId} defId=${building.definitionId} playerType=${building.playerType}")
                 }
-                println("[BUILDING] registered ${loadedBuildings.size} buildings, 2 base controllers")
+                println("[BUILDING] registered ${levelBuildings.size} buildings, 2 base controllers")
                 gameObjManager.updateBuildingCollectionSpheres(level.definitions)
             }
 
-            // Instantiate pre-placed vehicles from LDD (harvesters, decorative vehicles, etc.)
-            // C++: cGod loads all VehicleGameObj save-data entries during level init
-            val loadedVehicles = level.dynamicData.gameObjects.filterIsInstance<LoadedVehicleGameObj>()
-            for (lv in loadedVehicles) {
-                god.createLevelVehicle(lv)
+            // Pre-placed vehicles from LDD are already registered with NetworkObjectManager and GameObjManager
+            // by the factory. Register them in god.vehiclesByNetId so vehicle-entry tracking works.
+            val levelVehicles = level.dynamicData.gameObjects.filterIsInstance<VehicleGameObj>()
+            for (vehicle in levelVehicles) {
+                god.vehiclesByNetId[vehicle.networkId] = vehicle
             }
-            println("[LEVEL] ${loadedVehicles.size} level vehicles instantiated")
+            println("[LEVEL] ${levelVehicles.size} level vehicles instantiated")
         }
 
         // Post-load validation: check for duplicate network IDs
@@ -1135,44 +1125,6 @@ class Network(internal val config: ServerConfig) {
         println("[GAME] map rotation complete — now on '$nextMapName', hostedGameNumber=$hostedGameNumber")
     }
 
-    private fun createBuilding(lb: LoadedBuildingGameObj): BuildingGameObj? {
-        val pos = Vector3(lb.transform.position.x, lb.transform.position.y, lb.transform.position.z)
-        val sphereCenter = Vector3(lb.collectionSphere.center.x, lb.collectionSphere.center.y, lb.collectionSphere.center.z)
-        val radius = lb.collectionSphere.radius
-
-        if (!ChunkIds.isBuilding(lb.factoryChunkId)) return null
-
-        val building: BuildingGameObj = when (lb.factoryChunkId) {
-            ChunkIds.GAMEOBJ_BUILDING_POWERPLANT    -> PowerPlantGameObj()
-            ChunkIds.GAMEOBJ_BUILDING_REFINERY      -> RefineryGameObj()
-            ChunkIds.GAMEOBJ_BUILDING_SOLDIERFACTORY -> SoldierFactoryGameObj()
-            ChunkIds.GAMEOBJ_BUILDING_WARFACTORY    -> WarFactoryGameObj()
-            ChunkIds.GAMEOBJ_BUILDING_AIRSTRIP,
-            ChunkIds.GAMEOBJ_BUILDING_VEHICLEFACTORY -> VehicleFactoryGameObj()
-            ChunkIds.GAMEOBJ_BUILDING_COMCENTER     -> ComCenterGameObj()
-            else                                    -> BuildingGameObj()
-        }
-
-        // Apply definition (loads mctSkin, etc.)
-        val def = loadedLevel?.definitions?.findById(lb.definitionId.toUInt()) as? BuildingGameObjDef
-        if (def != null) building.init(def)
-
-        // Set position (also updates collectionSphere.center)
-        building.setPosition(pos)
-        building.collectionSphere = ccr.server.level.Sphere(sphereCenter, radius)
-
-        // Defence state from LDD
-        val health = lb.defense.healthMax.takeIf { it > 0f } ?: 5000f
-        building.health    = health
-        building.healthMax = health
-        building.shieldType = lb.defense.skinSaveId
-        if (lb.defense.shieldStrength > 0f) building.shieldStrength = lb.defense.shieldStrength
-
-        building.isPowerOn  = lb.isPowerOn
-        building.playerType = lb.playerType
-
-        return building
-    }
 
     companion object {
         // C++ networkobjectmgr.h ID ranges:

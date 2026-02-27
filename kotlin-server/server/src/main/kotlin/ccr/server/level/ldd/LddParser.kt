@@ -2,10 +2,10 @@ package ccr.server.level.ldd
 
 import ccr.server.defs.readMicroInt
 import ccr.server.level.ChunkIds
+import ccr.server.level.DefinitionRegistry
 import ccr.server.level.LevelDynamicData
 import ccr.server.mix.ChunkReader
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
+import ccr.server.net.BaseGameObj
 
 object LddParser {
 
@@ -15,13 +15,14 @@ object LddParser {
     private const val MICRO_SCRIPT_NAME = 1               // MICROCHUNKID_NAME
     private const val MICRO_SCRIPT_PARAM = 2              // MICROCHUNKID_PARAM
 
-    fun parse(lddData: ByteArray): LevelDynamicData {
+    fun parse(lddData: ByteArray, definitions: DefinitionRegistry = DefinitionRegistry()): LevelDynamicData {
         if (lddData.isEmpty()) return LevelDynamicData()
 
         val reader = ChunkReader(lddData)
+        val factory = GameObjectFactory(definitions)
 
         var levelInfo: LevelInfo? = null
-        val gameObjects = mutableListOf<LoadedGameObject>()
+        val gameObjects = mutableListOf<BaseGameObj>()
         val spawners = mutableListOf<LoadedSpawner>()
         val scripts = mutableListOf<ScriptAttachment>()
         var nextDynamicId = 0
@@ -39,7 +40,7 @@ object LddParser {
                             subReader.forEachChunk { combatId, _, combatReader ->
                                 when (combatId) {
                                     ChunkIds.CHUNKID_GAMEOBJMANAGER -> {
-                                        parseGameObjects(combatReader, gameObjects)
+                                        parseGameObjects(combatReader, gameObjects, factory)
                                         // CHUNKID_GAMEOBJ_VARIABLES has the same numeric value as
                                         // CHUNKID_GAMEOBJMANAGER — it is a sub-chunk inside the manager
                                         // container that stores nextDynamicId (micro 1).
@@ -69,14 +70,15 @@ object LddParser {
         )
     }
 
-    private fun parseGameObjects(gameobjReader: ChunkReader, out: MutableList<LoadedGameObject>) {
+    private fun parseGameObjects(gameobjReader: ChunkReader, out: MutableList<BaseGameObj>, factory: GameObjectFactory) {
         // GameObjManager::Save nests the object list inside CHUNKID_GAMEOBJ_OBJECTS (gameobjmanager.cpp)
         val objectsChunk = gameobjReader.findChunk(ChunkIds.CHUNKID_GAMEOBJ_OBJECTS) ?: return
         objectsChunk.forEachChunk { factoryId, _, factoryChunkReader ->
             val objData = factoryChunkReader.findChunk(ChunkIds.SIMPLEFACTORY_CHUNKID_OBJDATA)
                 ?: return@forEachChunk
             try {
-                out.add(GameObjectFactory.load(factoryId, objData))
+                val obj = factory.load(factoryId, objData)
+                if (obj != null) out.add(obj)
             } catch (e: Exception) {
                 System.err.println("[WARN] Failed to parse game object (factory=0x${factoryId.toString(16)}): ${e.message}")
             }
