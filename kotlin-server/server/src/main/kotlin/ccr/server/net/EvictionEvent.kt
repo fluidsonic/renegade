@@ -11,5 +11,6 @@ class EvictionEvent(
 
     override fun exportCreation(packet: BitStream) {
         packet.addInt(evictionCode)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

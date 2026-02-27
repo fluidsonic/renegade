@@ -33,12 +33,18 @@ class SimpleNetworkObjectFactory(override val classId: Int) : NetworkObjectFacto
     // prepPacket inherited from interface — default no-op body
 }
 
+// C→S typed factory — creates actual instances for server-side processing.
+// Registered at wire classId (header + 1) because the Renegade client sends +1 offset.
+class CsEventFactory(override val classId: Int, private val supplier: () -> NetworkObject) : NetworkObjectFactory {
+    override fun create(packet: BitStream): NetworkObject = supplier()
+}
+
 // C++: static factory instances registered in constructors (one per NetworkObjectClass subclass)
 // Kotlin equivalent: explicit registration called at server startup.
 object NetworkObjectFactories {
     private var registered = false
 
-    // Call once at server startup to register all S→C factory instances.
+    // Call once at server startup to register all factory instances.
     // C++: done automatically via static constructor chains; here done explicitly.
     fun register() {
         if (registered) return
@@ -51,10 +57,35 @@ object NetworkObjectFactories {
         // In C++, classId=0 objects have no Prep_Packet — this matches that behavior.
         NetworkObjectFactoryManager.register(SimpleNetworkObjectFactory(0))
 
-        // classId=1001–1038: all event/object classIds — no extra packet data (no Prep_Packet)
-        // Registers both S→C (1001–1016) and C→S (1017–1038) classIds.
-        for (classId in 1001..1038) {
+        // S→C event classIds (1001–1016): server never creates from incoming — keep no-op factories
+        for (classId in 1001..1016) {
             NetworkObjectFactoryManager.register(SimpleNetworkObjectFactory(classId))
         }
+
+        // C→S event/object factories — wire classId = header + 1
+        // The Renegade client sends classId at +1 offset from the netclassids.h constant.
+        NetworkObjectFactoryManager.register(CsEventFactory(1018) { ClientControl() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1019) { CsTextObj() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1020) { SuicideEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1021) { ChangeTeamEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1022) { MoneyEvent() })
+        // 1023 = WarpEvent (C→S, header=1022, wire=1023 — currently unhandled, register no-op)
+        NetworkObjectFactoryManager.register(SimpleNetworkObjectFactory(1023))
+        NetworkObjectFactoryManager.register(CsEventFactory(1024) { PurchaseRequestEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1025) { ClientGoodbyeEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1026) { BioEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1027) { LoadingEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1028) { GodModeEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1029) { VipModeEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1030) { ScoreEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1031) { ClientBboEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1032) { ClientFps() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1033) { CsPingRequestEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1034) { CsDamageEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1035) { RequestKillEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1036) { CsConsoleCommandEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1037) { CsHint() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1038) { CsAnnouncement() })
+        NetworkObjectFactoryManager.register(CsEventFactory(1039) { DonateEvent() })
     }
 }

@@ -1,6 +1,8 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.server.GameServer
+import ccr.server.combat.ArmorWarheadManager
 
 // C++: cCsDamageEvent — networkClassId = NETCLASSID_CSDAMAGEEVENT = 1033
 // Client→Server event reporting damage dealt by this client.
@@ -33,5 +35,26 @@ class CsDamageEvent(
         damageeGoid = packet.getInt()
         damage = packet.getFloat()
         warhead = packet.getInt()
+    }
+
+    override fun act(server: GameServer, rhostId: Int) {
+        if (!server.gameState.isGameplayPermitted) { setDeletePending(); return }
+        println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damagee=$damageeGoid damage=$damage warhead=$warhead")
+        val target = server.gameObjManager.findObject(damageeGoid)
+        if (target != null) {
+            val scaledDamage = ArmorWarheadManager.scaleDamage(damage, warhead, target.shieldType)
+            target.applyDamage(scaledDamage)
+            println("[GAME] applied damage=$scaledDamage to netId=$damageeGoid health=${target.health}")
+            if (target.isDead) {
+                val victimRhostId = server.god.soldiersByHost.entries.find { it.value.networkId == damageeGoid }?.key
+                if (victimRhostId != null) {
+                    server.broadcastPlayerKill(rhostId, victimRhostId)
+                    server.god.deleteSoldier(victimRhostId)
+                }
+            }
+        } else {
+            println("[GAME] CSDAMAGEEVENT: target netId=$damageeGoid not found in gameObjManager")
+        }
+        setDeletePending()
     }
 }

@@ -11,5 +11,6 @@ class SvrGoodbyeEvent(
 
     override fun exportCreation(packet: BitStream) {
         packet.addBool(isQuickFullExitRequested)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

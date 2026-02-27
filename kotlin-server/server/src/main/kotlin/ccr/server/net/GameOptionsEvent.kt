@@ -18,5 +18,6 @@ class GameOptionsEvent(private val gameData: GameData) : NetEvent() {
         packet.addInt(gameData.hostedGameNumber)         // HostedGameNumber
         packet.addInt(gameData.modNameCrc)               // ModNameCRC (repeated)
         packet.addInt(gameData.mapNameCrc)               // MapNameCRC (repeated)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

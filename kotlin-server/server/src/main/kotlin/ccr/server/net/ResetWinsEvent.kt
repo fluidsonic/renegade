@@ -1,5 +1,6 @@
 package ccr.server.net
 
+import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
 
 // C++: ResetWinsEvent (bioevent.cpp) — signal-only event, classId=1006
@@ -7,4 +8,8 @@ import ccr.net.replication.NetworkObject
 class ResetWinsEvent : NetworkObject() {
     override val networkClassId: Int = 1006
     override fun delete() {}  // transient event, no cleanup
+
+    override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
+    }
 }

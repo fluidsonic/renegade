@@ -39,5 +39,6 @@ class WinEvent(
         packet.addInt(mvpCount)
         packet.addInt(modNameCrc)
         packet.addInt(mapNameCrc)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.server.GameServer
 
 // C++: cScoreEvent — networkClassId = NETCLASSID_SCOREEVENT = 1029
 // Client→Server event for score adjustments.
@@ -21,5 +22,10 @@ class ScoreEvent(
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
         amount = packet.getInt()
+    }
+
+    override fun act(server: GameServer, rhostId: Int) {
+        println("[GAME] SCOREEVENT from rhostId=$rhostId senderId=$senderId amount=$amount (ignored — no god mode)")
+        setDeletePending()
     }
 }

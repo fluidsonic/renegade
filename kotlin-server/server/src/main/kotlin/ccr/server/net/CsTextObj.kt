@@ -1,6 +1,8 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.net.replication.NetworkObjectManager
+import ccr.server.GameServer
 
 // C++: cCsTextObj (cstextobj.h/.cpp) — networkClassId = NETCLASSID_CSTEXTOBJ = 1018
 // Client→Server chat message.
@@ -31,5 +33,45 @@ class CsTextObj(
         type = packet.getByte().toInt() and 0xFF
         text = packet.getWideString(permitEmpty = true)
         recipientId = packet.getInt()
+    }
+
+    override fun act(server: GameServer, rhostId: Int) {
+        println("[GAME] CHAT from rhostId=$rhostId type=$type text='$text'")
+        // TEXT_MESSAGE_PUBLIC=0, TEXT_MESSAGE_TEAM=1, TEXT_MESSAGE_PRIVATE=2
+        val relay = ScTextObj(
+            type = type,
+            senderId = senderId,
+            recipientId = recipientId,
+            isHostAdminMessage = false,
+            text = text,
+        )
+        when (type) {
+            0 -> {  // PUBLIC — broadcast to all in-game
+                for (clientId in server.god.playerInGame) {
+                    val clientHost = server.connectionManager.getHost(clientId) ?: continue
+                    server.sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+                }
+            }
+            1 -> {  // TEAM — send to same team only
+                val senderTeam = server.god.playerTeams[rhostId] ?: -1
+                for (clientId in server.god.playerInGame) {
+                    if ((server.god.playerTeams[clientId] ?: -1) != senderTeam) continue
+                    val clientHost = server.connectionManager.getHost(clientId) ?: continue
+                    server.sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+                }
+            }
+            2 -> {  // PRIVATE — send to sender and recipient only
+                val recipientRhostId = server.god.playersByHost.entries.find { it.value.id == recipientId }?.key
+                for (clientId in listOfNotNull(rhostId, recipientRhostId)) {
+                    val clientHost = server.connectionManager.getHost(clientId) ?: continue
+                    server.sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+                }
+            }
+            else -> {
+                val host = server.connectionManager.getHost(rhostId) ?: run { setDeletePending(); return }
+                server.sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
+            }
+        }
+        setDeletePending()
     }
 }

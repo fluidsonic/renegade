@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.server.GameServer
 
 // C++: cLoadingEvent — networkClassId = NETCLASSID_LOADINGEVENT = 1026
 // Client→Server event reporting whether the client is currently loading a map.
@@ -21,5 +22,11 @@ class LoadingEvent(
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
         isLoading = packet.getBool()
+    }
+
+    override fun act(server: GameServer, rhostId: Int) {
+        if (isLoading) server.loadingHosts.add(rhostId) else server.loadingHosts.remove(rhostId)
+        println("[GAME] LOADINGEVENT from rhostId=$rhostId senderId=$senderId isLoading=$isLoading")
+        setDeletePending()
     }
 }

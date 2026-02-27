@@ -12,5 +12,6 @@ class ConsoleCommandEvent(
 
     override fun exportCreation(packet: BitStream) {
         packet.addTerminatedString(command)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

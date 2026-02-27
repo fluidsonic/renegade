@@ -25,5 +25,6 @@ class ScTextObj(
         packet.addInt(recipientId)
         packet.addBool(isHostAdminMessage)
         packet.addWideString(text)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

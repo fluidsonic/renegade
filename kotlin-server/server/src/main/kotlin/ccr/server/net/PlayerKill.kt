@@ -13,5 +13,6 @@ class PlayerKill(
     override fun exportCreation(packet: BitStream) {
         packet.addInt(killerId)
         packet.addInt(victimId)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

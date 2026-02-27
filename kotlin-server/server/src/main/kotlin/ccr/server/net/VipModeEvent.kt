@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.server.GameServer
 
 // C++: cVipModeEvent — networkClassId = NETCLASSID_VIPMODEEVENT = 1028
 // Client→Server event for toggling VIP mode via password.
@@ -21,5 +22,10 @@ class VipModeEvent(
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
         password = packet.getTerminatedString(permitEmpty = true)
+    }
+
+    override fun act(server: GameServer, rhostId: Int) {
+        println("[GAME] VIPMODEEVENT from rhostId=$rhostId senderId=$senderId (ignored — debug-only)")
+        setDeletePending()
     }
 }

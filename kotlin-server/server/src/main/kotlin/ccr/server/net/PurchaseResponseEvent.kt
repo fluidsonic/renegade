@@ -13,5 +13,6 @@ class PurchaseResponseEvent(
     override fun exportCreation(packet: BitStream) {
         packet.addInt(purchaserId)
         packet.addInt(responseId)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

@@ -23,5 +23,6 @@ class ScObeliskEvent(
         packet.addFloat(posY, BITPACK_WORLD_POSITION_Y)
         packet.addFloat(posZ, BITPACK_WORLD_POSITION_Z)
         packet.addInt(ownerId)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.server.GameServer
 
 // C++: cCsHint — networkClassId = NETCLASSID_CSHINT = 1036
 // Client→Server event carrying a hint/objective notification from the client.
@@ -21,5 +22,10 @@ class CsHint(
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
         subjectId = packet.getInt()
+    }
+
+    override fun act(server: GameServer, rhostId: Int) {
+        println("[GAME] CSHINT from rhostId=$rhostId senderId=$senderId subjectId=$subjectId (ignored)")
+        setDeletePending()
     }
 }

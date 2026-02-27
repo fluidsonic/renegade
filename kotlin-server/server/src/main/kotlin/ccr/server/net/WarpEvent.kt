@@ -16,6 +16,7 @@ class WarpEvent(
     override fun exportCreation(packet: BitStream) {
         packet.addInt(senderId)
         packet.addWideString(playerName, permitEmpty = true)
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 
     override fun importCreation(packet: BitStream) {

@@ -22,37 +22,23 @@ import ccr.server.net.GameDataUpdateEvent
 import ccr.server.net.GameOptionsEvent
 import ccr.server.net.NetworkObjectPacketWriter
 import ccr.server.net.Player
-import ccr.server.net.ScPingResponseEvent
 import ccr.server.net.ServerFps
 import ccr.server.net.SoldierGameObj
 import ccr.server.net.Team
 import ccr.server.net.WinEvent
 import ccr.server.net.BackgroundMgr
+import ccr.server.net.NetEvent
 import ccr.server.net.NetworkObjectFactories
 import ccr.server.net.WeatherMgr
-import ccr.server.net.CsAnnouncement
-import ccr.server.net.ScAnnouncement
-import ccr.server.net.CsTextObj
-import ccr.server.net.ScTextObj
-import ccr.server.net.CsDamageEvent
-import ccr.server.net.ClientBboEvent
-import ccr.server.net.CsConsoleCommandEvent
-import ccr.server.net.CsHint
-import ccr.server.net.DonateEvent
-import ccr.server.net.GodModeEvent
-import ccr.server.net.MoneyEvent
-import ccr.server.net.ScoreEvent
-import ccr.server.net.VipModeEvent
+import ccr.server.net.ClientControl
+import ccr.server.net.ClientFps
 import ccr.server.combat.ArmorWarheadManager
 import ccr.server.net.PlayerKill
-import ccr.server.net.PurchaseRequestEvent
-import ccr.server.net.PurchaseResponseEvent
-import ccr.server.net.RequestKillEvent
 import ccr.server.net.ResetWinsEvent
-import ccr.server.net.SuicideEvent
 import ccr.net.flow.BandwidthBudget
 import ccr.net.flow.FlowController
 import ccr.net.replication.NetworkObject
+import ccr.net.replication.NetworkObjectFactoryManager
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.level.ChunkIds
 import ccr.server.level.ldd.LoadedBuildingGameObj
@@ -120,7 +106,7 @@ class GameServer(internal val config: ServerConfig) {
 
     // Nicknames for players currently in acceptance: populated in checkApplication,
     // consumed in BIOEVENT handler so that we can include the name in the Player network object.
-    private val playerNicknames = mutableMapOf<java.net.InetSocketAddress, String>()
+    internal val playerNicknames = mutableMapOf<java.net.InetSocketAddress, String>()
 
     // C++: cGameData::HostedGameNumber — increments each time a new game starts on this server.
     private var hostedGameNumber = 1
@@ -196,10 +182,10 @@ class GameServer(internal val config: ServerConfig) {
     // C++: cConnection bandwidth management
     private val bandwidthBudget = BandwidthBudget(if (config.bandwidthBps > 0) config.bandwidthBps else 1_500_000)
     // Per-host flow controllers (C++: Adjust_Flow_If_Necessary in rhost.cpp)
-    private val flowControllers = mutableMapOf<Int, FlowController>()
+    internal val flowControllers = mutableMapOf<Int, FlowController>()
 
     // Tracks rhostIds of clients currently in a loading state (LOADINGEVENT).
-    private val loadingHosts = mutableSetOf<Int>()
+    internal val loadingHosts = mutableSetOf<Int>()
 
     // C++: cServerFps singleton — informs clients of server framerate.
     private val serverFps = ServerFps()
@@ -210,10 +196,10 @@ class GameServer(internal val config: ServerConfig) {
     private var frameDeltaSeconds: Float = 0f
 
     // Client FPS tracking: rhostId → last reported fps value.
-    private val clientFpsMap = mutableMapOf<Int, Int>()
+    internal val clientFpsMap = mutableMapOf<Int, Int>()
 
     // VendorClass — handles purchase terminal requests.
-    private val vendor by lazy { VendorClass(this) }
+    internal val vendor by lazy { VendorClass(this) }
 
     suspend fun run() = coroutineScope {
         // C++: factory classes registered via static constructors; here we do it explicitly at startup
@@ -248,7 +234,7 @@ class GameServer(internal val config: ServerConfig) {
             flowControllers.remove(id)
             god.removePlayer(id)
         }
-        connectionManager.serverPacketHandler = ::handleGamePacket
+        connectionManager.serverPacketHandler = ::dispatchCsPacket
         println("[SERVER] listening on UDP port ${config.gamePort} (RCON: ${config.rconPort})")
 
         launch(Dispatchers.IO)   { transport.ioLoop() }
@@ -473,8 +459,11 @@ class GameServer(internal val config: ServerConfig) {
             // Push dirty object state to all in-game clients.
             // Delete-pending objects are combined into the same packet as their final state update,
             // matching C++ Send_Object_Update which writes dirty bits + isDeletePending in one call.
-            // After sending, delete-pending objects are unregistered.
+            // After sending, delete-pending objects are cleaned up by deletePending() below.
             replicationTick()
+
+            // C++: Delete_Pending() — destroys objects after replication has sent notifications
+            NetworkObjectManager.deletePending()
 
             // Clean up C4 objects that have been marked for deletion
             god.c4Objects.removeAll { it.isDeletePending }
@@ -505,7 +494,6 @@ class GameServer(internal val config: ServerConfig) {
     // Never sends a soldier's FREQUENT update to its own controlling player (client is authoritative).
     private fun replicationTick() {
         val objects = NetworkObjectManager.getAllObjects()
-        val toUnregister = mutableListOf<NetworkObject>()
 
         for (obj in objects) {
             val delPending = obj.isDeletePending
@@ -551,11 +539,6 @@ class GameServer(internal val config: ServerConfig) {
                 }
             }
 
-            if (delPending) toUnregister.add(obj)
-        }
-
-        for (obj in toUnregister) {
-            NetworkObjectManager.unregisterObject(obj)
         }
     }
 
@@ -672,11 +655,13 @@ class GameServer(internal val config: ServerConfig) {
 
     // ---- Game event handlers ----
 
-    // C++: pkthandlers.cpp / neteventhandlers.cpp — dispatches incoming game events by networkClassId.
-    private fun handleGamePacket(packet: Packet, rhostId: Int) {
+    // C++: Server_Packet_Handler (messages.cpp) — generic C→S packet dispatch.
+    // Reads the NetworkObject envelope header, creates via factory if BIT_CREATION,
+    // imports dirty-bit layers, and calls act() on NetEvent subclasses.
+    private fun dispatchCsPacket(packet: Packet, rhostId: Int) {
         val bs = packet.payload
         if (bs.bitWritePosition < 41) {
-            println("[GAME] handleGamePacket: rhostId=$rhostId too short (${bs.bitWritePosition} bits), skipping")
+            println("[GAME] dispatchCsPacket: rhostId=$rhostId too short (${bs.bitWritePosition} bits), skipping")
             return
         }
 
@@ -688,318 +673,50 @@ class GameServer(internal val config: ServerConfig) {
         val networkId = snap.getInt()
         val dirtyBits = snap.getByte().toInt() and 0xFF
         val isDeletePending = snap.getBool()
-        if ((dirtyBits and 0x08) == 0) {
-            // Not a creation packet — handle as a frequent update (CClientControl position data)
-            handleFrequentUpdate(snap, rhostId)
-            return
+
+        var obj = NetworkObjectManager.findObject(networkId)
+
+        if ((dirtyBits and 0x08) != 0) {
+            // BIT_CREATION — read classId, create via factory
+            val classId = snap.getInt()
+            val factory = NetworkObjectFactoryManager.getFactory(classId)
+            if (factory != null) {
+                obj = factory.create(snap)
+                if (obj != null) {
+                    // Wire up server reference for persistent C→S objects
+                    if (obj is ClientControl) {
+                        obj.server = this
+                        obj.rhostId = rhostId
+                    }
+                    if (obj is ClientFps) {
+                        obj.server = this
+                        obj.rhostId = rhostId
+                    }
+                    NetworkObjectManager.registerObject(obj, networkId)
+                    obj.importCreation(snap)
+                    if (obj is NetEvent) {
+                        obj.act(this, rhostId)
+                    }
+                } else {
+                    println("[GAME] factory.create returned null for classId=$classId netId=$networkId")
+                }
+            } else {
+                println("[GAME] no factory for classId=$classId netId=$networkId from rhostId=$rhostId")
+            }
         }
 
-        val networkClassId = snap.getInt()
-        val host = connectionManager.getHost(rhostId) ?: return
-
-        when (networkClassId) {
-            1019 -> {  // NETCLASSID_CSTEXTOBJ (chat, header=1018, wire=1019)
-                try {
-                    val msg = CsTextObj()
-                    msg.importCreation(snap)
-                    println("[GAME] CHAT from rhostId=$rhostId type=${msg.type} text='${msg.text}'")
-                    // TEXT_MESSAGE_PUBLIC=0, TEXT_MESSAGE_TEAM=1, TEXT_MESSAGE_PRIVATE=2
-                    val relay = ScTextObj(
-                        type = msg.type,
-                        senderId = msg.senderId,
-                        recipientId = msg.recipientId,
-                        isHostAdminMessage = false,
-                        text = msg.text,
-                    )
-                    when (msg.type) {
-                        0 -> {  // PUBLIC — broadcast to all in-game
-                            for (clientId in god.playerInGame) {
-                                val clientHost = connectionManager.getHost(clientId) ?: continue
-                                sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
-                            }
-                        }
-                        1 -> {  // TEAM — send to same team only
-                            val senderTeam = god.playerTeams[rhostId] ?: -1
-                            for (clientId in god.playerInGame) {
-                                if ((god.playerTeams[clientId] ?: -1) != senderTeam) continue
-                                val clientHost = connectionManager.getHost(clientId) ?: continue
-                                sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
-                            }
-                        }
-                        2 -> {  // PRIVATE — send to sender and recipient only
-                            val recipientRhostId = god.playersByHost.entries.find { it.value.id == msg.recipientId }?.key
-                            for (clientId in listOfNotNull(rhostId, recipientRhostId)) {
-                                val clientHost = connectionManager.getHost(clientId) ?: continue
-                                sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
-                            }
-                        }
-                        else -> {
-                            sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId()) }
-                        }
-                    }
-                } catch (e: Exception) {
-                    println("[GAME] CSTEXTOBJ parse error from rhostId=$rhostId: $e")
-                }
-            }
-            1018 -> {  // NETCLASSID_CLIENTCONTROL — sent BEFORE loading; do not spawn here
-                // Import_Creation reads ClientId. Spawning here would send a game-object
-                // packet to a client that hasn't loaded the world yet.  Wait for BioEvent.
-                val clientId = snap.getInt()  // Import_Creation: ClientId
-                println("[GAME] CLIENTCONTROL from rhostId=$rhostId clientId=$clientId")
-            }
-            1021 -> {  // NETCLASSID_CHANGETEAMEVENT (changeteamevent.cpp Import_Creation)
-                // Client sends only SenderId. Act() toggles NOD(0)↔GDI(1).
-                val senderId = snap.getInt()
-                if (!config.isTeamChangingAllowed) {
-                    println("[GAME] CHANGETEAMEVENT from rhostId=$rhostId: team changing is disabled, ignored")
-                    return
-                }
-                val currentTeam = god.playerTeams[rhostId] ?: 0
-                val newTeam = if (currentTeam == 0) 1 else 0
-                god.playerTeams[rhostId] = newTeam
-                god.playersByHost[rhostId]?.team = newTeam  // sync stored player object
-                println("[GAME] CHANGETEAMEVENT from rhostId=$rhostId senderId=$senderId: ${if (currentTeam == 0) "NOD" else "GDI"} → ${if (newTeam == 0) "NOD" else "GDI"}")
-                // Kill existing soldier so god.think() respawns with the new team
-                god.deleteSoldier(rhostId)
-                sendPlayerRareUpdate(host, rhostId)
-            }
-            1026 -> {  // NETCLASSID_BIOEVENT — sent after Load_Level() in gameinitmgr.cpp
-                // cBioEvent::Act() on the original server: creates cPlayer (Is_In_Game defaults true),
-                // then sends cGameDataUpdateEvent.  cGod::Think() then spawns the soldier because
-                // Is_Active && Is_In_Game are both true.  This is the correct post-load trigger.
-                if (rhostId !in god.playerInGame) {
-                    println("[GAME] BIOEVENT from rhostId=$rhostId → entering game (post-load)")
-                    god.playerInGame.add(rhostId)
-                    flowControllers[rhostId] = FlowController()
-
-                    // Mark all registered objects dirty for this new client.
-                    // C++: Tell_Client_About_Dynamic_Objects sets per-client dirty bits for all objects.
-                    // replicationTick() will send everything on the next tick.
-                    NetworkObjectManager.restoreDirtyBits(rhostId)
-
-                    // Teams were already sent in sendConnectionObjects — clear their dirty bits
-                    teamNod.setObjectDirtyBits(rhostId, 0)
-                    teamGdi.setObjectDirtyBits(rhostId, 0)
-
-                    // Create player — sets BIT_CREATION for all clients via setObjectDirtyBit
-                    val nickname = playerNicknames.remove(host.address) ?: "Player$rhostId"
-                    god.createPlayer(rhostId, nickname)
-
-                    // Store player IP for server-side tracking (not sent over network)
-                    val ipBytes = host.address.address.address
-                    if (ipBytes.size == 4) {
-                        val ipInt = ((ipBytes[0].toInt() and 0xFF) shl 24) or
-                                    ((ipBytes[1].toInt() and 0xFF) shl 16) or
-                                    ((ipBytes[2].toInt() and 0xFF) shl 8) or
-                                    (ipBytes[3].toInt() and 0xFF)
-                        god.playersByHost[rhostId]?.ipAddress = ipInt
-                    }
-
-                    // One-shot event to signal the client that gameplay can proceed
-                    sendGameDataUpdateEvent(host)
-                    // Soldier spawning happens via god.think() on the next tick
-                    // All object creation packets sent by replicationTick() on the next tick
-                }
-                // Matches C++ cBioEvent::Act() which calls Set_Delete_Pending() at the end
-                sendGameNetObj(host) { bs -> bs.addInt(networkId); bs.addByte(0x00.toByte()); bs.addBool(true) }
-            }
-            1025 -> {  // NETCLASSID_CLIENTGOODBYEEVENT (header=1024, wire=1025) — graceful disconnect
-                val senderId = snap.getInt()
-                println("[GAME] CLIENTGOODBYE from rhostId=$rhostId senderId=$senderId — removing player")
-                flowControllers.remove(rhostId)
-                god.removePlayer(rhostId)
-            }
-            1027 -> {  // NETCLASSID_LOADINGEVENT (loadingevent.cpp Import_Creation)
-                val senderId = snap.getInt()
-                val isLoading = snap.getBool()
-                if (isLoading) loadingHosts.add(rhostId) else loadingHosts.remove(rhostId)
-                println("[GAME] LOADINGEVENT from rhostId=$rhostId senderId=$senderId isLoading=$isLoading")
-            }
-            1032 -> {  // NETCLASSID_CLIENTFPS — Import_Creation reads ClientId only; fps is in frequent updates
-                val clientId = snap.getInt()
-                println("[GAME] CLIENTFPS from rhostId=$rhostId clientId=$clientId")
-            }
-            1033 -> {  // NETCLASSID_CSPINGREQUESTEVENT — Act() sends ScPingResponseEvent back
-                // C++: cCsPingRequestEvent::Import_Creation reads SenderId + PingNumber, then Act().
-                // Act() creates cScPingResponseEvent(PingNumber) and sends it to the requesting client.
-                val senderId = snap.getInt()
-                val pingNumber = snap.getInt()
-                println("[GAME] CSPINGREQUESTEVENT from rhostId=$rhostId senderId=$senderId pingNumber=$pingNumber → ScPingResponseEvent")
-                val response = ScPingResponseEvent(pingNumber)
-                sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
-                // Matches C++ cCsPingRequestEvent::Act() which calls Set_Delete_Pending() at the end
-                sendGameNetObj(host) { bs -> bs.addInt(networkId); bs.addByte(0x00.toByte()); bs.addBool(true) }
-            }
-            1020 -> {  // NETCLASSID_SUICIDEEVENT (wire 1019+1)
-                val senderId = snap.getInt()
-                println("[GAME] SUICIDEEVENT from rhostId=$rhostId senderId=$senderId")
-                if (!gameState.isGameplayPermitted) return
-                if (rhostId in god.soldiersByHost) {
-                    broadcastPlayerKill(-1, rhostId)
-                    god.deleteSoldier(rhostId)
-                }
-            }
-            1024 -> {  // NETCLASSID_PURCHASEREQUESTEVENT (wire 1023+1)
-                val event = PurchaseRequestEvent()
-                event.importCreation(snap)
-                println("[GAME] PURCHASEREQUESTEVENT from rhostId=$rhostId senderId=${event.senderId} " +
-                    "type=${event.purchaseType} item=${event.itemIndex} altSkin=${event.altSkinIndex}")
-                if (!gameState.isGameplayPermitted) {
-                    val response = PurchaseResponseEvent(purchaserId = event.senderId, responseId = 2)
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
-                    return
-                }
-                val result = vendor.handlePurchase(rhostId, event.purchaseType, event.itemIndex, event.altSkinIndex)
-                val response = PurchaseResponseEvent(purchaserId = event.senderId, responseId = result.responseId)
-                sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
-                if (result.responseId == VendorClass.RESPONSE_SUCCESS) {
-                    if (result.isVehiclePurchase) {
-                        // Route to vehicle factory — find the team's available factory and start the timer
-                        val playerTeam = god.playerTeams[rhostId] ?: 0
-                        val baseController = if (playerTeam == 0) baseControllerNod else baseControllerGdi
-                        val factory = gameObjManager.getAllObjects()
-                            .filterIsInstance<VehicleFactoryGameObj>()
-                            .find { it.baseController === baseController && !it.isBusy && !it.isDestroyed }
-                        if (factory != null) {
-                            factory.requestVehicle(result.purchasedDefId, 12.0f, god.soldiersByHost[rhostId])
-                            println("[GAME] vehicle order queued: defId=${result.purchasedDefId} factory=${factory.networkId} buyer=$rhostId")
-                        } else {
-                            // Factory became unavailable between vendor check and now — log only
-                            // (VendorClass already checked canGenerateVehicles so this is very rare)
-                            println("[GAME] no available vehicle factory for team=$playerTeam (race condition)")
-                        }
-                    } else if (result.isEquipmentPurchase) {
-                        // C++: PowerUpGameObjDef::Grant() — update existing soldier, no respawn
-                        god.grantPowerUp(rhostId, result.purchasedDefId)
-                    } else {
-                        // Kill current soldier and respawn as purchased character
-                        god.deleteSoldier(rhostId)
-                        val playerTeam = god.playerTeams[rhostId] ?: 0
-                        god.createCommandoWithDef(rhostId, playerTeam, result.purchasedDefId)
-                    }
-                }
-            }
-            1034 -> {  // NETCLASSID_CSDAMAGEEVENT (header=1033, wire=1034) — client reports damage dealt
-                if (!gameState.isGameplayPermitted) return
-                val event = CsDamageEvent()
-                event.importCreation(snap)
-                println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damagee=${event.damageeGoid} damage=${event.damage} warhead=${event.warhead}")
-                val target = gameObjManager.findObject(event.damageeGoid)
-                if (target != null) {
-                    val scaledDamage = ArmorWarheadManager.scaleDamage(event.damage, event.warhead, target.shieldType)
-                    target.applyDamage(scaledDamage)
-                    println("[GAME] applied damage=$scaledDamage to netId=${event.damageeGoid} health=${target.health}")
-                    if (target.isDead) {
-                        val victimRhostId = god.soldiersByHost.entries.find { it.value.networkId == event.damageeGoid }?.key
-                        if (victimRhostId != null) {
-                            broadcastPlayerKill(rhostId, victimRhostId)
-                            god.deleteSoldier(victimRhostId)
-                        }
-                    }
-                } else {
-                    println("[GAME] CSDAMAGEEVENT: target netId=${event.damageeGoid} not found in gameObjManager")
-                }
-            }
-            1035 -> {  // NETCLASSID_REQUESTKILLEVENT (wire 1034+1)
-                val event = RequestKillEvent()
-                event.importCreation(snap)
-                println("[GAME] REQUESTKILLEVENT from rhostId=$rhostId objectId=${event.objectId}")
-                // Only allow self-kill: check if the requested object is this player's soldier
-                val soldier = god.soldiersByHost[rhostId]
-                if (soldier != null && soldier.networkId == event.objectId) {
-                    broadcastPlayerKill(-1, rhostId)
-                    god.deleteSoldier(rhostId)
-                }
-            }
-            1038 -> {  // NETCLASSID_CSANNOUNCEMENT (wire 1037+1)
-                try {
-                    val announcement = CsAnnouncement()
-                    announcement.importCreation(snap)
-                    println("[GAME] CSANNOUNCEMENT from rhostId=$rhostId fromId=${announcement.fromId} " +
-                        "toId=${announcement.toId} announcementId=${announcement.announcementId} " +
-                        "radioCmdId=${announcement.radioCmdId} type=${announcement.type}")
-                    // Relay to all in-game clients as ScAnnouncement
-                    val relay = ScAnnouncement(
-                        toId = announcement.toId,
-                        fromId = announcement.fromId,
-                        announcementId = announcement.announcementId,
-                        radioCmdId = announcement.radioCmdId,
-                        type = announcement.type,
-                    )
-                    for (clientId in god.playerInGame) {
-                        val clientHost = connectionManager.getHost(clientId) ?: continue
-                        sendGameNetObj(clientHost) { bs ->
-                            NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId())
-                        }
-                    }
-                } catch (e: Exception) {
-                    println("[GAME] CSANNOUNCEMENT parse error from rhostId=$rhostId: $e")
-                }
-            }
-            1039 -> {  // NETCLASSID_DONATEEVENT (wire 1038+1)
-                if (!gameState.isGameplayPermitted) return
-                val event = DonateEvent()
-                event.importCreation(snap)
-                val sender = god.playersByHost.values.find { it.id == event.senderId }
-                val recipient = god.playersByHost.values.find { it.id == event.recipientId }
-                if (sender != null && recipient != null) {
-                    val amount = event.amount.toFloat().coerceAtMost(sender.money)
-                    if (amount > 0) {
-                        sender.addMoney(-amount)
-                        recipient.addMoney(amount)
-                        println("[GAME] DONATEEVENT from rhostId=$rhostId: ${sender.name} donated $amount credits to ${recipient.name}")
-                    } else {
-                        println("[GAME] DONATEEVENT from rhostId=$rhostId: insufficient funds (has ${sender.money}, tried ${event.amount})")
-                    }
-                } else {
-                    println("[GAME] DONATEEVENT from rhostId=$rhostId: sender=${event.senderId} or recipient=${event.recipientId} not found")
-                }
-            }
-            1022 -> {  // NETCLASSID_MONEYEVENT (header=1021, wire=1022) — requires god mode; ignored
-                val event = MoneyEvent()
-                event.importCreation(snap)
-                println("[GAME] MONEYEVENT from rhostId=$rhostId senderId=${event.senderId} amount=${event.amount} (ignored — no god mode)")
-            }
-            1028 -> {  // NETCLASSID_GODMODEEVENT (header=1027, wire=1028) — WWDEBUG only; ignored
-                val event = GodModeEvent()
-                event.importCreation(snap)
-                println("[GAME] GODMODEEVENT from rhostId=$rhostId senderId=${event.senderId} (ignored — debug-only)")
-            }
-            1029 -> {  // NETCLASSID_VIPMODEEVENT (header=1028, wire=1029) — WWDEBUG only; ignored
-                val event = VipModeEvent()
-                event.importCreation(snap)
-                println("[GAME] VIPMODEEVENT from rhostId=$rhostId senderId=${event.senderId} (ignored — debug-only)")
-            }
-            1030 -> {  // NETCLASSID_SCOREEVENT (header=1029, wire=1030) — requires god mode; ignored
-                val event = ScoreEvent()
-                event.importCreation(snap)
-                println("[GAME] SCOREEVENT from rhostId=$rhostId senderId=${event.senderId} amount=${event.amount} (ignored — no god mode)")
-            }
-            1031 -> {  // NETCLASSID_CLIENTBBOEVENT (header=1030, wire=1031) — client bandwidth/backlog report
-                val event = ClientBboEvent()
-                event.importCreation(snap)
-                println("[GAME] CLIENTBBOEVENT from rhostId=$rhostId senderId=${event.senderId} bbo=${event.bbo}")
-                // C++: rhost->Set_Maximum_Bps(Bbo) — no BPS cap in Kotlin server yet
-            }
-            1036 -> {  // NETCLASSID_CSCONSOLECOMMANDEVENT (header=1035, wire=1036) — remote console command
-                val event = CsConsoleCommandEvent()
-                event.importCreation(snap)
-                println("[GAME] CSCONSOLECOMMANDEVENT from rhostId=$rhostId command=${event.command} (no console dispatch)")
-            }
-            1037 -> {  // NETCLASSID_CSHINT (header=1036, wire=1037) — hint/objective notification; ignored
-                val event = CsHint()
-                event.importCreation(snap)
-                println("[GAME] CSHINT from rhostId=$rhostId senderId=${event.senderId} subjectId=${event.subjectId} (ignored)")
-            }
-            else -> println("[GAME] unhandled networkClassId=$networkClassId netId=$networkId from rhostId=$rhostId")
+        if (obj != null) {
+            if ((dirtyBits and 0x04) != 0) obj.importRare(snap)
+            if ((dirtyBits and 0x02) != 0) obj.importOccasional(snap)
+            if ((dirtyBits and 0x01) != 0) obj.importFrequent(snap)
+            if (isDeletePending) obj.setDeletePending()
         }
     }
-
     // Broadcasts a PlayerKill event to all in-game clients and updates scoring.
     // C++: cPlayerKill (playerkill.cpp) — S→C event sent when a player dies.
     // killerId = rhostId of killer (-1 = no killer / suicide).
     // victimId = rhostId of victim.
-    private fun broadcastPlayerKill(killerId: Int, victimId: Int) {
+    internal fun broadcastPlayerKill(killerId: Int, victimId: Int) {
         // Update player scores
         if (killerId >= 0) {
             god.playersByHost[killerId]?.incrementScore(1f)
@@ -1030,7 +747,7 @@ class GameServer(internal val config: ServerConfig) {
     // Sends a PLAYER BIT_RARE update (no networkClassId — not a creation packet).
     // C++: cPlayer::Export_Rare + Export_Occasional + Export_Frequent.
     // dirtyBits=0x07 = BIT_RARE|BIT_OCCASIONAL|BIT_FREQUENT (not BIT_CREATION).
-    private fun sendPlayerRareUpdate(host: RemoteHost, rhostId: Int) {
+    internal fun sendPlayerRareUpdate(host: RemoteHost, rhostId: Int) {
         val netId = god.playerNetIds[rhostId] ?: run {
             println("[GAME] sendPlayerRareUpdate: no playerNetId for rhostId=$rhostId, skipping")
             return
@@ -1043,98 +760,10 @@ class GameServer(internal val config: ServerConfig) {
         println("[GAME] sent PLAYER BIT_RARE to host $rhostId: team=${if (player.team == 0) "NOD" else "GDI"} inGame=${player.isInGame} netId=$netId")
     }
 
-    // Handles an UNRELIABLE game packet that is NOT a creation (no BIT_CREATION).
-    // These are CClientControl frequent updates: the client sends its soldier's position/state
-    // every tick. C++: clientcontrol.cpp:114-134 reads SmartObjId → Import_Control_Cs + Import_State_Cs.
-    //
-    // C→S wire format (after header consumed by handleGamePacket):
-    //   smartObjId(32),
-    //   oneTimeBoolBits(BITPACK_ONE_TIME_BOOLEAN_BITS=23),
-    //   continuousBoolBits(BITPACK_CONTINUOUS_BOOLEAN_BITS=4),
-    //   4×analog(BITPACK_ANALOG_VALUES),
-    //   isSniping(bool), checking(bool), [if checking: antiCheatCrc(32)],
-    //   relativeTargeting(3×BITPACK_WORLD)
-    private fun handleFrequentUpdate(snap: BitStream, rhostId: Int) {
-        val smartObjId = try { snap.getInt() } catch (e: Exception) { return }
-        if (smartObjId == -1) return  // no controlled object
-
-        val soldier = god.soldiersByHost[rhostId] ?: return
-        if (soldier.networkId != smartObjId) {
-            // SmartObjId doesn't match — client may not be controlling their soldier yet
-            return
-        }
-
-        try {
-            // --- ControlClass::Import_Cs ---
-            val oneTimeBits = snap.getInt(BITPACK_ONE_TIME_BOOLEAN_BITS)
-            val contBits = snap.getByte(BITPACK_CONTINUOUS_BOOLEAN_BITS).toInt() and 0xFF
-            val fwd  = snap.getFloat(BITPACK_ANALOG_VALUES)
-            val left = snap.getFloat(BITPACK_ANALOG_VALUES)
-            val up   = snap.getFloat(BITPACK_ANALOG_VALUES)
-            val turn = snap.getFloat(BITPACK_ANALOG_VALUES)
-
-            // --- SoldierGameObj::Import_State_Cs ---
-            val isSniping = snap.getBool()
-            val checking = snap.getBool()
-            if (checking) {
-                snap.getInt()  // anti-cheat CRC — discard
-            }
-
-            // --- ArmedGameObj::Import_State_Cs --- (RELATIVE targeting)
-            val relTx = snap.getFloat(BITPACK_WORLD_POSITION_X)
-            val relTy = snap.getFloat(BITPACK_WORLD_POSITION_Y)
-            val relTz = snap.getFloat(BITPACK_WORLD_POSITION_Z)
-            // Reconstruct absolute: target = relative + server-known position
-            val tx = relTx + soldier.position.x
-            val ty = relTy + soldier.position.y
-            val tz = relTz + soldier.position.z
-
-            // Update soldier state via ControlClass API (the new hierarchy uses control object)
-            soldier.targeting = Vector3(tx, ty, tz)
-            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.WEAPON_FIRE_PRIMARY,
-                (contBits and 1) != 0)
-            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.WEAPON_FIRE_SECONDARY,
-                (contBits and 2) != 0)
-            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.WALK,
-                (contBits and 4) != 0)
-            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.CROUCH,
-                (contBits and 8) != 0)
-            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.MOVE_FORWARD, fwd)
-            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.MOVE_LEFT,    left)
-            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.MOVE_UP,      up)
-            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.TURN_LEFT,    turn)
-
-            // C4 detonation: bit 1 = BOOLEAN_WEAPON_FIRE_SECONDARY (alt-fire / remote trigger)
-            val weaponFirePrimary   = (contBits and 1) != 0
-            val weaponFireSecondary = (contBits and 2) != 0
-            val currentWeaponDefId  = soldier.getWeapon()?.definitionId ?: 0
-            soldier.detonateC4 = weaponFireSecondary && isC4Weapon(currentWeaponDefId)
-            if (weaponFirePrimary && isC4Weapon(currentWeaponDefId)) {
-                god.createC4(rhostId, soldier, System.currentTimeMillis())
-            }
-            if (weaponFirePrimary && isBeaconWeapon(currentWeaponDefId)) {
-                val ammoDef = getAmmoDefForWeapon(currentWeaponDefId)
-                if (ammoDef != null) {
-                    god.createBeacon(rhostId, soldier, ammoDef, System.currentTimeMillis())
-                }
-            }
-
-            // Mark BIT_FREQUENT dirty for all other in-game clients so the replication tick
-            // will forward the position update unreliably
-            for (otherId in god.playerInGame) {
-                if (otherId != rhostId) {
-                    soldier.setObjectDirtyBit(otherId, NetworkObject.BIT_FREQUENT, true)
-                }
-            }
-        } catch (e: Exception) {
-            // Malformed packet — discard silently
-        }
-    }
-
     // C++: gamedataupdateevent.cpp Export_Creation — sent after client finishes loading.
     // Signals the client that gameplay can proceed (activates combat mode via Act()).
     // C++ server sends timeRemainingSeconds and hostedGameNumber.
-    private fun sendGameDataUpdateEvent(host: RemoteHost) {
+    internal fun sendGameDataUpdateEvent(host: RemoteHost) {
         val timeRemaining = gameState.timeRemainingSeconds.toInt()
         val event = GameDataUpdateEvent(
             timeRemainingSeconds = timeRemaining,

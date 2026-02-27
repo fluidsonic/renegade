@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
+import ccr.server.GameServer
 
 // C++: CClientFps (Commando/clientfps.h) — networkClassId = NETCLASSID_CLIENTFPS = 1031
 // C→S mirrored object to inform server of client framerate.
@@ -19,6 +20,12 @@ class ClientFps(
     override val networkClassId: Int = 1031
     override fun delete() {}
 
+    // Server reference — set by dispatchCsPacket after factory creation.
+    var server: GameServer? = null
+    // Server-trusted host ID (set by dispatchCsPacket from the packet source).
+    // Used for all lookups instead of clientId (which is client-supplied in importCreation).
+    var rhostId: Int = 0
+
     override fun exportCreation(packet: BitStream) {
         packet.addInt(clientId)
     }
@@ -35,5 +42,7 @@ class ClientFps(
     // C++: Import_Frequent reads Fps as BYTE (8-bit unsigned)
     override fun importFrequent(packet: BitStream) {
         fps = packet.getByte().toInt() and 0xFF
+        val srv = server ?: return
+        srv.clientFpsMap[rhostId] = fps
     }
 }

@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.server.GameServer
 
 // C++: cClientGoodbyeEvent — networkClassId = NETCLASSID_CLIENTGOODBYEEVENT = 1024
 // Client→Server event sent when a client disconnects gracefully.
@@ -17,5 +18,12 @@ class ClientGoodbyeEvent(
 
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
+    }
+
+    override fun act(server: GameServer, rhostId: Int) {
+        println("[GAME] CLIENTGOODBYE from rhostId=$rhostId senderId=$senderId — removing player")
+        server.flowControllers.remove(rhostId)
+        server.god.removePlayer(rhostId)
+        setDeletePending()
     }
 }

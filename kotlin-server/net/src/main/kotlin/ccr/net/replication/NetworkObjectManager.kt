@@ -74,6 +74,7 @@ object NetworkObjectManager {
         for (obj in deletePendingList) {
             if (obj.isDeletePending) {
                 obj.delete()
+                unregisterObject(obj)
             }
         }
         deletePendingList.clear()

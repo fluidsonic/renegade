@@ -24,5 +24,6 @@ class ScAnnouncement(
         packet.addInt(announcementId)
         packet.addInt(radioCmdId)
         packet.addByte(type.toByte())
+        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }
