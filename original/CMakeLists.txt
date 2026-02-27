@@ -11,7 +11,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type" FORCE)
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3 -fno-omit-frame-pointer -fsanitize=address" CACHE STRING "" FORCE)
 set(CMAKE_C_FLAGS_DEBUG   "-O0 -g3 -fno-omit-frame-pointer -fsanitize=address" CACHE STRING "" FORCE)
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG "-fsanitize=address" CACHE STRING "" FORCE)
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG    "-fsanitize=address" CACHE STRING "" FORCE)
+set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "-fsanitize=address" CACHE STRING "" FORCE)
 
 set(ORIG_SRC "${CMAKE_SOURCE_DIR}/Code")
 
