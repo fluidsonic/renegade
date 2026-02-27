@@ -2,6 +2,9 @@ package ccr.server.net
 
 import ccr.net.bitstream.*
 import ccr.net.protocol.*
+import ccr.server.NetClassIds
+import ccr.server.level.FullDefinitionLoader
+import ccr.server.mix.MixReader
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -47,6 +50,22 @@ class ProxyComparisonTest {
             EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)
             EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_CS, 8)
             EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_SC, 6)
+
+            // Load definition registry so classId=1000 packets dispatch to the correct
+            // decoder (vehicle vs soldier vs building) instead of always falling back to soldier.
+            // Tests run with cwd = kotlin-server/server/; project root is two levels up.
+            val dataCandidates = listOf("../../data", "../data", "data")
+            val alwaysMix = dataCandidates.firstNotNullOfOrNull { dataPath ->
+                listOf("always.dbs", "always2.dat", "always.dat").firstNotNullOfOrNull { fileName ->
+                    val file = File(dataPath, fileName)
+                    if (!file.exists()) return@firstNotNullOfOrNull null
+                    try { MixReader(file.readBytes()) } catch (_: Exception) { null }
+                }
+            }
+            val ddbData = alwaysMix?.readFile("objects.ddb")
+            if (ddbData != null) {
+                PacketDecoder.definitionRegistry = FullDefinitionLoader.load(ddbData)
+            }
         }
     }
 
@@ -352,6 +371,169 @@ class ProxyComparisonTest {
             for (line in pkt.decoded.lines()) println("  $line")
             val hex = pkt.rawBytes.take(64).joinToString(" ") { "%02x".format(it) }
             println("  hex: $hex${if (pkt.rawBytes.size > 64) "..." else ""}")
+        }
+    }
+
+    /** Analyzes the event lifecycle in the Kotlin server log — detects S→C events missing DELETE_PENDING. */
+    @Test
+    fun `analyze kotlin event lifecycle`() {
+        val lines = loadLog("proxy_log_kotlin.txt") ?: run {
+            println("SKIP: .tmp/proxy_log_kotlin.txt not found")
+            return
+        }
+
+        val entries = parseProxyLog(lines)
+        val scPackets = extractDecodedPackets(entries)
+
+        // One-shot S→C event classIds that must have DELETE_PENDING (exclude 1000=GAMEOBJ, 1010=TEAM, 1011=PLAYER)
+        val oneShortEventClassIds = (1001..1016).toSet() - setOf(1010, 1011)
+
+        // --- Track lifecycle from S→C packets ---
+        // networkId -> (classId, creationSeen, deletePendingSeen)
+        data class LifecycleEntry(
+            val networkId: Int,
+            val classId: Int,
+            val direction: String,
+            var creationSeen: Boolean,
+            var deletePendingSeen: Boolean,
+        )
+
+        val scLifecycle = mutableMapOf<Int, LifecycleEntry>()
+
+        for (pkt in scPackets) {
+            if (pkt.networkId == -1) continue
+            if (pkt.packetType != PacketType.RELIABLE.name && pkt.packetType != PacketType.UNRELIABLE.name) continue
+
+            val existing = scLifecycle[pkt.networkId]
+            val classId = if (pkt.networkClassId != -1) pkt.networkClassId else existing?.classId ?: -1
+            val creationSeen = pkt.networkClassId != -1 || (existing?.creationSeen ?: false)
+
+            // Parse isDeletePending directly from the raw payload
+            val isDeletePending = try {
+                val bs = PacketDecoder.clonePayload(Packet.parseWirePacket(pkt.rawBytes, pkt.rawBytes.size))
+                bs.getInt()  // networkId
+                bs.getByte() // dirty
+                bs.getBool() // isDeletePending
+            } catch (_: Exception) { false }
+
+            val deletePendingSeen = isDeletePending || (existing?.deletePendingSeen ?: false)
+
+            scLifecycle[pkt.networkId] = LifecycleEntry(
+                networkId = pkt.networkId,
+                classId = classId,
+                direction = "S->C",
+                creationSeen = creationSeen,
+                deletePendingSeen = deletePendingSeen,
+            )
+        }
+
+        // --- Track C→S networkIds from raw entries ---
+        val csNetworkIds = mutableMapOf<Int, LifecycleEntry>()
+
+        for (entry in entries) {
+            if (entry.direction != "CLIENT->SERVER") continue
+            if (!WrapperCrc.verify(entry.rawBytes, entry.rawBytes.size)) continue
+
+            val packets = PacketCombiner.split(entry.rawBytes, entry.rawBytes.size, offset = 4, deltaFormat = true)
+            for (incoming in packets) {
+                val packet = try {
+                    Packet.parseWirePacket(incoming.data, incoming.length)
+                } catch (_: Exception) { continue }
+
+                if (packet.type != PacketType.RELIABLE && packet.type != PacketType.UNRELIABLE) continue
+                if (packet.bitLength < 41) continue
+
+                try {
+                    val bs = PacketDecoder.clonePayload(packet)
+                    val networkId = bs.getInt()
+                    val dirty = bs.getByte().toInt() and 0xFF
+                    bs.getBool() // isDeletePending (C->S doesn't use it the same way, but consume the bit)
+                    val classId = if ((dirty and 0x08) != 0) bs.getInt() else -1
+
+                    // Check if the server sent DELETE_PENDING for this networkId (from S->C lifecycle)
+                    val serverDeletePending = scLifecycle[networkId]?.deletePendingSeen ?: false
+
+                    val existing = csNetworkIds[networkId]
+                    csNetworkIds[networkId] = LifecycleEntry(
+                        networkId = networkId,
+                        classId = if (classId != -1) classId else existing?.classId ?: -1,
+                        direction = "C->S",
+                        creationSeen = (classId != -1) || (existing?.creationSeen ?: false),
+                        deletePendingSeen = serverDeletePending || (existing?.deletePendingSeen ?: false),
+                    )
+                } catch (_: Exception) {}
+            }
+        }
+
+        // Merge C->S entries (only those not already in S->C lifecycle)
+        val allLifecycle = mutableMapOf<Int, LifecycleEntry>()
+        allLifecycle.putAll(scLifecycle)
+        for ((netId, csEntry) in csNetworkIds) {
+            if (netId !in allLifecycle) {
+                allLifecycle[netId] = csEntry
+            }
+        }
+
+        // --- Print lifecycle summary table ---
+        println()
+        println("=== Event Lifecycle Analysis ===")
+        for (entry in allLifecycle.values.sortedBy { it.networkId }) {
+            val classLabel = if (entry.classId != -1) "${entry.classId}(${NetClassIds.name(entry.classId)})" else "UNKNOWN"
+            val status = when {
+                entry.direction == "S->C" && entry.classId in oneShortEventClassIds && entry.creationSeen && !entry.deletePendingSeen -> "MISSING_DELETE"
+                entry.classId == 1000 || entry.classId == 1010 || entry.classId == 1011 -> "PERSISTENT"
+                entry.classId !in oneShortEventClassIds && entry.direction == "S->C" -> "PERSISTENT"
+                else -> "OK"
+            }
+            println(
+                "netId=%-12d  class=%-35s  dir=%-5s  created=%-5s  deletePending=%-5s  %s".format(
+                    entry.networkId,
+                    classLabel,
+                    entry.direction,
+                    entry.creationSeen,
+                    entry.deletePendingSeen,
+                    status,
+                )
+            )
+        }
+
+        // --- Print first 50 S→C reliable post-bioevent packets ---
+        val postBioReliable = scPackets.filter { it.phase == "post-bioevent" && it.packetType == PacketType.RELIABLE.name }
+        println()
+        println("=== First 50 S→C packets post-BIOEVENT ===")
+        for ((i, pkt) in postBioReliable.take(50).withIndex()) {
+            val classLabel = if (pkt.networkClassId != -1) "${pkt.networkClassId}(${NetClassIds.name(pkt.networkClassId)})" else ""
+            val deleteFlag = try {
+                val bs = PacketDecoder.clonePayload(Packet.parseWirePacket(pkt.rawBytes, pkt.rawBytes.size))
+                bs.getInt()  // networkId
+                bs.getByte() // dirty
+                if (bs.getBool()) " DELETE_PENDING" else ""
+            } catch (_: Exception) { "" }
+            val classIdStr = if (classLabel.isNotEmpty()) " classId=$classLabel" else ""
+            val dirtyHex = try {
+                val bs = PacketDecoder.clonePayload(Packet.parseWirePacket(pkt.rawBytes, pkt.rawBytes.size))
+                bs.getInt()  // networkId
+                "0x%02X".format(bs.getByte().toInt() and 0xFF)
+            } catch (_: Exception) { "?" }
+            println("[#$i] RELIABLE id=${pkt.reliableId}  netId=${pkt.networkId} dirty=$dirtyHex$classIdStr$deleteFlag")
+        }
+
+        // --- Print freeze suspects ---
+        val freezeSuspects = allLifecycle.values.filter { entry ->
+            entry.direction == "S->C" &&
+                entry.classId in oneShortEventClassIds &&
+                entry.creationSeen &&
+                !entry.deletePendingSeen
+        }.sortedBy { it.networkId }
+
+        println()
+        println("=== FREEZE SUSPECTS (S->C events missing DELETE_PENDING) ===")
+        if (freezeSuspects.isEmpty()) {
+            println("None found — all S->C events have DELETE_PENDING")
+        } else {
+            for (entry in freezeSuspects) {
+                println("netId=${entry.networkId} classId=${entry.classId}(${NetClassIds.name(entry.classId)}) — likely freeze culprit")
+            }
         }
     }
 }

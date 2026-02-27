@@ -38,6 +38,15 @@ tasks.register<JavaExec>("miniClient") {
     systemProperty("exeKey", findProperty("exeKey") ?: "0")
 }
 
+tasks.register<JavaExec>("dumpDefinitions") {
+    group = "diagnostics"
+    description = "Load all definitions from always MIX and print id/type/name, then exit"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("ccr.server.DumpDefinitionsKt")
+    workingDir = rootDir.parentFile  // project root (ccr/)
+    systemProperty("renegadeDataPath", findProperty("dataPath") ?: "data")
+}
+
 tasks.register<JavaExec>("liveProxy") {
     group = "tools"
     description = "Live UDP proxy with real-time packet decoding between Renegade client and C++ server"
@@ -47,6 +56,7 @@ tasks.register<JavaExec>("liveProxy") {
     systemProperty("localPort",  findProperty("localPort")  ?: "4848")
     systemProperty("remoteHost", findProperty("remoteHost") ?: "127.0.0.1")
     systemProperty("remotePort", findProperty("remotePort") ?: "4849")
+    systemProperty("dataPath",   findProperty("dataPath")   ?: "data")
     findProperty("logFile")?.let { systemProperty("logFile", it) }
 }
 

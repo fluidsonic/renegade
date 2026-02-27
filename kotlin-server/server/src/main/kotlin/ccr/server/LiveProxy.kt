@@ -2,6 +2,8 @@ package ccr.server
 
 import ccr.net.bitstream.*
 import ccr.net.protocol.*
+import ccr.server.level.FullDefinitionLoader
+import ccr.server.mix.MixReader
 import ccr.server.net.PacketDecoder
 import java.io.File
 import java.io.PrintWriter
@@ -27,6 +29,7 @@ fun main() {
     val logFilePath = System.getProperty("logFile")
 
     setupEncoders()
+    loadDefinitionRegistry()
 
     val remoteAddr = InetSocketAddress(remoteHost, remotePort)
     val proxySocket = DatagramSocket(localPort)
@@ -147,6 +150,43 @@ fun main() {
     }
 
     proxySocket.close()
+}
+
+/**
+ * Loads the definition registry from always.dbs (or always2.dat / always.dat) and
+ * assigns it to [PacketDecoder.definitionRegistry] so classId=1000 creation packets
+ * are dispatched to the correct decoder (vehicle vs soldier vs building).
+ *
+ * Data path: resolved from system property "dataPath" (default: "data").
+ */
+private fun loadDefinitionRegistry() {
+    val dataPath = System.getProperty("dataPath") ?: "data"
+    val dataDir = File(dataPath)
+
+    val alwaysMix = listOf("always.dbs", "always2.dat", "always.dat").firstNotNullOfOrNull { fileName ->
+        val file = File(dataDir, fileName)
+        if (!file.exists()) return@firstNotNullOfOrNull null
+        try {
+            MixReader(file.readBytes())
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    if (alwaysMix == null) {
+        println("[LiveProxy] WARNING: no always MIX found under ${dataDir.absolutePath} — classId=1000 packets will fall back to soldier decoder")
+        return
+    }
+
+    val ddbData = alwaysMix.readFile("objects.ddb")
+    if (ddbData == null) {
+        println("[LiveProxy] WARNING: objects.ddb not found in always MIX — classId=1000 packets will fall back to soldier decoder")
+        return
+    }
+
+    val registry = FullDefinitionLoader.load(ddbData)
+    PacketDecoder.definitionRegistry = registry
+    println("[LiveProxy] loaded ${registry.size} definitions — vehicle/soldier/building dispatch enabled")
 }
 
 /**
