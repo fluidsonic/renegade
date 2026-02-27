@@ -52,26 +52,8 @@ SpawnerDefClass::SpawnerDefClass( void ) :
 	ApplySpawnMaterialEffect( true ),
 	IsMultiplayWeaponSpawner( false )
 {
-	DEFIDLIST_PARAM( SpawnerDefClass, SpawnDefinitionIDList, CLASSID_GAME_OBJECTS );
 
 
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_INT, SpawnMax );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_FLOAT, SpawnDelay );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_FLOAT, SpawnDelayVariation );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, IsPrimary );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, IsSoldierStartup );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, GotoSpawnerPos );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_FLOAT, GotoSpawnerPosPriority );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, TeleportFirstSpawn );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, StartsDisabled );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, KillHibernatingSpawn );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, ApplySpawnMaterialEffect );
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_BOOL, IsMultiplayWeaponSpawner );
-
-	GENERIC_DEFID_PARAM( SpawnerDefClass, SpecialEffectsObjID, CLASSID_GAME_OBJECT_DEF_SPECIAL_EFFECTS);
-	EDITABLE_PARAM( SpawnerDefClass, ParameterClass::TYPE_FLOAT, PostVisualSpawnDelay );
-
-	SCRIPTLIST_PARAM (SpawnerDefClass, "Scripts", ScriptNameList, ScriptParameterList);
 }
 
 uint32_t	SpawnerDefClass::Get_Class_ID( void ) const

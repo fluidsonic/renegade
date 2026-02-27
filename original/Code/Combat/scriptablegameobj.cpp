@@ -28,7 +28,6 @@
 */
 ScriptableGameObjDef::ScriptableGameObjDef( void )
 {
-	SCRIPTLIST_PARAM (ScriptableGameObjDef, "Scripts", ScriptNameList, ScriptParameterList);
 }
 
 enum	{

@@ -368,10 +368,6 @@ TrackedVehicleDefClass::TrackedVehicleDefClass(void) :
 	TurnTorqueScaleFactor(1.0f)
 {
 	// make our parameters editable
-	FLOAT_EDITABLE_PARAM(TrackedVehicleDefClass, MaxEngineTorque, 0.0f, 100000.0f);
-	FLOAT_EDITABLE_PARAM(TrackedVehicleDefClass, TrackUScaleFactor, -1000.0f, 1000.0f);
-	FLOAT_EDITABLE_PARAM(TrackedVehicleDefClass, TrackVScaleFactor, -1000.0f, 1000.0f);
-	FLOAT_EDITABLE_PARAM(TrackedVehicleDefClass, TurnTorqueScaleFactor, 0.0f, 1.0f);
 }
 
 uint32_t TrackedVehicleDefClass::Get_Class_ID (void) const	

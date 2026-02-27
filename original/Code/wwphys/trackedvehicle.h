@@ -110,7 +110,6 @@ public:
 	void											Set_Turn_Torque_Scale_Factor(float k) { TurnTorqueScaleFactor = k; }
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(TrackedVehicleDefClass,VehiclePhysDefClass);
 
 protected:
 

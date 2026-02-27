@@ -39,7 +39,6 @@ public:
 
 	bool Is_Nuke(void) const {return (IsNuke != 0);}
 
-	DECLARE_EDITABLE (BeaconGameObjDef, SimpleGameObjDef);
 
 protected:
 

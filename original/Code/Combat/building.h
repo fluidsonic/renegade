@@ -74,7 +74,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( BuildingGameObjDef, DamageableGameObjDef );
 	
 	void										Set_Type (BuildingConstants::BuildingType type) { Type = type; }
 	BuildingConstants::BuildingType				Get_Type (void) const	{ return Type; }

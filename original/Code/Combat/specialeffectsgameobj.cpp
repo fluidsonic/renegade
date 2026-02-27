@@ -48,9 +48,6 @@ enum
 SpecialEffectsGameObjDef::SpecialEffectsGameObjDef (void)	:
 	SoundDefID (0)
 {
-	MODEL_DEF_PARAM(SpecialEffectsGameObjDef, PhysDefID, "TimedDecorationPhysDef");
-	EDITABLE_PARAM (SpecialEffectsGameObjDef, ParameterClass::TYPE_STRING,					AnimationName);
-	EDITABLE_PARAM (SpecialEffectsGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID,	SoundDefID);
 	return ;
 }
 

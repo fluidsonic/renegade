@@ -21,7 +21,6 @@ class RaveshawBossGameObjDefClass : public SoldierGameObjDef
 {
 public:
 
-	DECLARE_EDITABLE (RaveshawBossGameObjDefClass, SoldierGameObjDef);
 
 	//////////////////////////////////////////////////////////////////////
 	//	Public constructors/destructors

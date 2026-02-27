@@ -113,20 +113,6 @@ BeaconGameObjDef::BeaconGameObjDef (void)	:
 	//
 	//	Editable support
 	//
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_STRING,					ArmingAnimationName);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_FLOAT,					BroadcastToAllTime);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_FLOAT,					ArmTime);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_FLOAT,					DisarmTime);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_FLOAT,					PreDetonateCinematicDelay);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_FLOAT,					DetonateTime);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_FLOAT,					PostDetonateTime);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID,	ArmedSoundDefID);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,			ArmingTextID);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,			ArmingInterruptedTextID);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,			DisarmingTextID);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,			DisarmingInterruptedTextID);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,			DisarmedTextID);
-	EDITABLE_PARAM (BeaconGameObjDef, ParameterClass::TYPE_BOOL,					IsNuke);
 
 
 	return ;

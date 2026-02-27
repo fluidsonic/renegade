@@ -323,7 +323,6 @@ public:
 	void											Set_Aerodynamic_Drag(float new_drag) { AerodynamicDragCoefficient = new_drag; }
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(RigidBodyDefClass,MoveablePhysDefClass);
 
 protected:
 

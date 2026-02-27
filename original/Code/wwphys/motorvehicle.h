@@ -148,7 +148,6 @@ public:
 	void				Set_Shift_Down_Rpm(float rpm)							{ ShiftDownRpm = rpm; ShiftDownAvel = RPM_TO_RADS(ShiftDownRpm); }
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(MotorVehicleDefClass,VehiclePhysDefClass);
 
 protected:
 

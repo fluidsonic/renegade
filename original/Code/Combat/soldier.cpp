@@ -93,20 +93,7 @@ SoldierGameObjDef::SoldierGameObjDef( void ) :
 	HumanLoiterCollectionDefID( 0 ),
 	DeathSoundPresetID( 0 )
 {
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_ANGLE, TurnRate );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_FLOAT, JumpVelocity );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_FLOAT, SkeletonHeight );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_FLOAT, SkeletonWidth );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_BOOL, UseInnateBehavior );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_FLOAT, InnateAggressiveness );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_FLOAT, InnateTakeCoverProbability );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_BOOL, InnateIsStationary );
-	EDITABLE_PARAM( SoldierGameObjDef, ParameterClass::TYPE_FILENAME,	FirstPersonHands );
-	GENERIC_DEFID_PARAM( SoldierGameObjDef, HumanAnimOverrideDefID, CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_ANIM_OVERRIDE );
-	GENERIC_DEFID_PARAM( SoldierGameObjDef, HumanLoiterCollectionDefID, CLASSID_GLOBAL_SETTINGS_DEF_HUMAN_LOITER );
-	GENERIC_DEFID_PARAM( SoldierGameObjDef, DeathSoundPresetID, CLASSID_SOUND );
 
-	MODEL_DEF_PARAM( SoldierGameObjDef, PhysDefID, "HumanPhysDef" );
 
 	//
 	//	We want soldiers to use innate conversations by default
@@ -1852,7 +1839,6 @@ void SoldierGameObj::Apply_Control( void )
 //------------------------------------------------------------------------------------
 void	SoldierGameObj::Handle_Legs( void )
 {
-
 
 
 	bool do_steps = false;

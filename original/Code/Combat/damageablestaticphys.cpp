@@ -67,22 +67,8 @@ DamageableStaticPhysDefClass::DamageableStaticPhysDefClass(void) :
 	DeadTwitchEnd(0),
 	PlayTwitchesToCompletion(false)
 {
-	PARAM_SEPARATOR(DamageableStaticPhysDefClass, "Damage Behavior Controls");
 
-	EDITABLE_PARAM(DamageableStaticPhysDefClass, ParameterClass::TYPE_EXPLOSIONDEFINITIONID,	KilledExplosion);
 	
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, LiveLoopStart, 0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, LiveLoopEnd, 0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, LiveTwitchStart, 0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, LiveTwitchEnd,0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, DeathTransitionStart,0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, DeathTransitionEnd,0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, DeadLoopStart,0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, DeadLoopEnd,0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, DeadTwitchStart,0, 999);
-	INT_EDITABLE_PARAM(DamageableStaticPhysDefClass, DeadTwitchEnd,0, 999);
-	EDITABLE_PARAM(DamageableStaticPhysDefClass,ParameterClass::TYPE_BOOL,PlayTwitchesToCompletion);
-
 	DEFENSEOBJECTDEF_EDITABLE_PARAMS(DamageableStaticPhysDefClass, DefenseObjectDef);
 }
 

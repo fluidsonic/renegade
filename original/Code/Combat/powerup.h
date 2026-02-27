@@ -23,7 +23,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( PowerUpGameObjDef, SimpleGameObjDef );
 
 	// Grant returns true if anything was granted that the grantee didn't already have
 	bool											Grant( SmartGameObj * obj, PowerUpGameObj * p_powerup = NULL, bool hud_display = true ) const ;

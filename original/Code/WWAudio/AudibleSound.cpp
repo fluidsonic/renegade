@@ -1484,36 +1484,12 @@ AudibleSoundDefinitionClass::AudibleSoundDefinitionClass (void)
 	//
 	//	Audible sound params
 	//
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_SOUND_FILENAME, m_Filename, "Filename");
-	INT_EDITABLE_PARAM   (AudibleSoundDefinitionClass, m_VirtualChannel, 0, 100);
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_FLOAT, m_DropOffRadius, "Drop-off Radius");
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_FLOAT, m_MaxVolRadius, "Max-Vol Radius");
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_BOOL, m_Is3D, "Is 3D Sound");
-	INT_EDITABLE_PARAM   (AudibleSoundDefinitionClass, m_LoopCount, 0, 1000000);
-	FLOAT_EDITABLE_PARAM (AudibleSoundDefinitionClass, m_Volume, 0, 1.0F);
-	NAMED_FLOAT_UNITS_PARAM (AudibleSoundDefinitionClass, m_VolumeRandomizer, 0, 1.0F, "", "Volume Random (+/-)");
-	FLOAT_EDITABLE_PARAM (AudibleSoundDefinitionClass, m_Pan, 0, 1.0F);
-	FLOAT_EDITABLE_PARAM (AudibleSoundDefinitionClass, m_Priority, 0, 1.0F);
 
-	ENUM_PARAM (AudibleSoundDefinitionClass, m_Type, (	"Sound Effect", AudibleSoundClass::TYPE_SOUND_EFFECT,
-																		"Music", AudibleSoundClass::TYPE_MUSIC,
-																		"Dialog", AudibleSoundClass::TYPE_DIALOG,
-																		"Cinematic", AudibleSoundClass::TYPE_CINEMATIC, 0));
-
-	FLOAT_EDITABLE_PARAM (AudibleSoundDefinitionClass, m_StartOffset, 0, 1.0F);
-	FLOAT_EDITABLE_PARAM (AudibleSoundDefinitionClass, m_PitchFactor, 0, 1.0F);
-	NAMED_FLOAT_UNITS_PARAM (AudibleSoundDefinitionClass, m_PitchFactorRandomizer, 0, 1.0F, "", "Pitch Factor Random (+/-)");
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_STRING, m_DisplayText, "Display Text");
 
 	//
 	//	Logical sound params
 	//
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_BOOL, m_CreateLogical, "Create Logical Sound");
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_FLOAT, m_LogicalDropOffRadius, "Logical Drop-off Radius");
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_FLOAT, m_LogicalNotifyDelay, "Logical Notif Delay");
 
-
-	NAMED_EDITABLE_PARAM (AudibleSoundDefinitionClass, ParameterClass::TYPE_COLOR, m_AttenuationSphereColor, "Sphere Color");
 
 	return ;
 }

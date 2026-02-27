@@ -28,7 +28,6 @@ public:
 
 //	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( ArmedGameObjDef, PhysicalGameObjDef );
 
 protected:
 	float											WeaponTiltRate;

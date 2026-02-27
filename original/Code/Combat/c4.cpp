@@ -33,7 +33,6 @@ DECLARE_DEFINITION_FACTORY(C4GameObjDef, CLASSID_GAME_OBJECT_DEF_C4, "C4") _C4Ga
 C4GameObjDef::C4GameObjDef( void ) :
 	ThrowVelocity( 5 )
 {
-	EDITABLE_PARAM (C4GameObjDef, ParameterClass::TYPE_FLOAT,	ThrowVelocity);
 }
 
 uint32_t	C4GameObjDef::Get_Class_ID (void) const	

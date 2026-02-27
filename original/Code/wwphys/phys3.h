@@ -288,7 +288,6 @@ public:
 	virtual bool								Load(ChunkLoadClass &cload);
 
 		//	Editable interface requirements
-	DECLARE_EDITABLE(Phys3DefClass,MoveablePhysDefClass);
 
 protected:
 

@@ -35,7 +35,6 @@ public:
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
 
-	DECLARE_EDITABLE( SmartGameObjDef, ArmedGameObjDef );
 
 protected:
 	float											SightRange;

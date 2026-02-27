@@ -30,13 +30,6 @@ CinematicGameObjDef::CinematicGameObjDef( void ) :
 	DestroyAfterAnimation( true ),
 	CameraRelative( false )
 {
-	MODEL_DEF_PARAM( CinematicGameObjDef, PhysDefID, "DynamicAnimPhysDef" );
-	EDITABLE_PARAM( CinematicGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID,	SoundDefID );
-	EDITABLE_PARAM( CinematicGameObjDef, ParameterClass::TYPE_STRING,	SoundBoneName );
-	FILENAME_PARAM( CinematicGameObjDef, AnimationName, "Animation", ".W3D" );
-	EDITABLE_PARAM( CinematicGameObjDef, ParameterClass::TYPE_BOOL,	AutoFireWeapon );
-	EDITABLE_PARAM( CinematicGameObjDef, ParameterClass::TYPE_BOOL,	DestroyAfterAnimation );
-	EDITABLE_PARAM( CinematicGameObjDef, ParameterClass::TYPE_BOOL,	CameraRelative );
 }
 
 uint32_t	CinematicGameObjDef::Get_Class_ID (void) const	

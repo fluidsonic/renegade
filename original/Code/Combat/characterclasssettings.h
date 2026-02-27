@@ -75,7 +75,6 @@ public:
 	//
 	//	Editable support
 	//
-	DECLARE_EDITABLE (CharacterClassSettingsDefClass, DefinitionClass);
 
 protected:
 	

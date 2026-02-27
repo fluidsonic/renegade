@@ -89,7 +89,6 @@ public:
 	virtual bool								Is_Valid_Config (StringClass &message);
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(DynamicPhysDefClass,PhysDefClass);
 
 protected:
 

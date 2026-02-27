@@ -46,7 +46,6 @@ class CNCModeSettingsDef :
 		const char *Get_Radio_Command_Emot_Icon(int num) const;
 
 		// Editable support
-		DECLARE_EDITABLE(CNCModeSettingsDef, DefinitionClass);
 
 	protected:
 		static CNCModeSettingsDef* _mInstance;

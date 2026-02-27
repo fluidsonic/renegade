@@ -40,7 +40,6 @@ public:
 	int		Get_Phys_Def_ID( void ) const	{ return PhysDefID; }
 	int		Get_Orator_Type( void ) const	{ return OratorType; }
 
-	DECLARE_EDITABLE( PhysicalGameObjDef, DamageableGameObjDef );
 
 protected:
 	int											Type;					

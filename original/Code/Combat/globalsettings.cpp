@@ -38,40 +38,9 @@ GlobalSettingsDef::GlobalSettingsDef( void ) :
 	MPStealthDistanceVehicle( 25.0f )
 
 {
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_SOUNDDEFINITIONID, DeathSoundID);
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_SOUNDDEFINITIONID, EVAObjectivesSoundID);
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_SOUNDDEFINITIONID, HUDHelpTextSoundID);	
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, MaxConversationDist);
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, MaxCombatConversationDist);
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, SoldierWalkSpeed );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, SoldierCrouchSpeed );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, FallingDamageMinDistance );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, FallingDamageMaxDistance );
 
 //	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_INT, FallingDamageWarhead );
 
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDICharactersTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDIVehiclesTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDIEquipmentTexture );
-
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseNODCharactersTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseNODVehiclesTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseNODEquipmentTexture );
-
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDIMUTCharactersTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDIMUTVehiclesTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseGDIMUTEquipmentTexture );
-
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseNODMUTCharactersTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseNODMUTVehiclesTexture );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FILENAME, PurchaseNODMUTEquipmentTexture );
-
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_STRINGSDB_ID, EncyclopediaEventStringID );
-
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, StealthDistanceHuman );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, StealthDistanceVehicle );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, MPStealthDistanceHuman );
-	EDITABLE_PARAM(GlobalSettingsDef, ParameterClass::TYPE_FLOAT, MPStealthDistanceVehicle );
 
 	GlobalSettings = this;
 }
@@ -262,9 +231,6 @@ HumanLoiterGlobalSettingsDef::HumanLoiterGlobalSettingsDef( void ) :
 	ActivationDelay( 20 ),
 	LoiterFrequency( 10 )
 {
-	EDITABLE_PARAM( HumanLoiterGlobalSettingsDef, ParameterClass::TYPE_FLOAT, ActivationDelay );
-	EDITABLE_PARAM( HumanLoiterGlobalSettingsDef, ParameterClass::TYPE_FLOAT, LoiterFrequency );
-	EDITABLE_PARAM( HumanLoiterGlobalSettingsDef, ParameterClass::TYPE_FILENAMELIST, LoiterAnimList);
 }
 
 HumanLoiterGlobalSettingsDef::~HumanLoiterGlobalSettingsDef( void )
@@ -594,111 +560,6 @@ HUDGlobalSettingsDef::HUDGlobalSettingsDef( void ) :
 {
 	Instance = this;
 
-	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Colors" );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, NodColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, GDIColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, NeutralColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, MutantColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, RenegadeColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, PrimaryObjectiveColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, SecondaryObjectiveColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, TertiaryObjectiveColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, HealthHighColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, HealthMedColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, HealthLowColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, EnemyColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, FriendlyColor );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_COLOR, NoRelationColor );
-
-	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Star Info" );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_FLOAT,		InfoTextureSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBracketSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBracketOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  StarBracketUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBracketTopSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBracketTopOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  StarBracketTopUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBracketTopArmedSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBracketTopArmedOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  StarBracketTopArmedUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBarSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBarOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  StarBarUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBarEndSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarBarEndOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  StarBarEndUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarHealthSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarHealthOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  StarHealthUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarShieldSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarShieldOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  StarShieldUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarWeaponIconSize );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, StarWeaponIconOffset );
-
-	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Target Info" );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetBracketSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetBracketOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  TargetBracketUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetIconSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetIconOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetNameBarSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetNameBarOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  TargetNameBarUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetNameOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetBarSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetBarOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  TargetBarUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetBarEndSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetBarEndOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  TargetBarEndUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetHealthSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetHealthOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  TargetHealthUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetShieldSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, TargetShieldOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  TargetShieldUV	);
-
-	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Damage Indicators" );
-   EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  DamageIndicatorUV );
-   EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  DamageDiagIndicatorUV );
-
-	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Radar" );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_FLOAT,		RadarTextureSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, RadarOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_FLOAT,	  RadarRadius	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, RadarFrameSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarFrameUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, RadarCompassOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, RadarCompassSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarCompassBaseUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_VECTOR2, RadarCompassUVOffset	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarHumanBlipUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarVehicleBlipUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarStationaryBlipUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarObjectiveBlipUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarBlipBracketUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  RadarSweepUV	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_SOUNDDEFINITIONID,  RadarOnSoundID );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_SOUNDDEFINITIONID,  RadarOffSoundID );
-
-	PARAM_SEPARATOR( HUDGlobalSettingsDef, "Sniper" );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_FLOAT,		SniperTextureSize	);
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperView );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperViewUV );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperScanLineUV );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperBlackCoverUV );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperTiltBar );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_FLOAT,	  SniperTiltBarRate );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperTiltBarUV );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperTurnBar );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_FLOAT,	  SniperTurnBarRate );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperTurnBarUV );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperDistanceGraph );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperDistanceGraphUV );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_FLOAT,	  SniperDistanceGraphMax );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperZoomGraph );
-	EDITABLE_PARAM( HUDGlobalSettingsDef, ParameterClass::TYPE_RECT,	  SniperZoomGraphUV );
 
 }
 
@@ -1067,12 +928,6 @@ DECLARE_DEFINITION_FACTORY(HumanAnimOverrideDef, CLASSID_GLOBAL_SETTINGS_DEF_HUM
 
 HumanAnimOverrideDef::HumanAnimOverrideDef( void ) 
 {
-	EDITABLE_PARAM( HumanAnimOverrideDef, ParameterClass::TYPE_STRING, RunEmptyHands );
-	EDITABLE_PARAM( HumanAnimOverrideDef, ParameterClass::TYPE_STRING, WalkEmptyHands );
-	EDITABLE_PARAM( HumanAnimOverrideDef, ParameterClass::TYPE_STRING, RunAtChest );
-	EDITABLE_PARAM( HumanAnimOverrideDef, ParameterClass::TYPE_STRING, WalkAtChest );
-	EDITABLE_PARAM( HumanAnimOverrideDef, ParameterClass::TYPE_STRING, RunAtHip );
-	EDITABLE_PARAM( HumanAnimOverrideDef, ParameterClass::TYPE_STRING, WalkAtHip );
 }
 
 uint32_t	HumanAnimOverrideDef::Get_Class_ID (void) const	

@@ -67,7 +67,6 @@ public:
 	float											Get_Lifetime(void) { return Lifetime; }
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(TimedDecorationPhysDefClass,DecorationPhysDefClass);
 
 protected:
 

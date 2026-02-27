@@ -20,7 +20,6 @@ DECLARE_DEFINITION_FACTORY(SAMSiteGameObjDef, CLASSID_GAME_OBJECT_DEF_SAMSITE, "
 
 SAMSiteGameObjDef::SAMSiteGameObjDef( void )
 {
-	MODEL_DEF_PARAM( SAMSiteGameObjDef, PhysDefID, "DecorationPhysDef" );
 }
 
 uint32_t	SAMSiteGameObjDef::Get_Class_ID (void) const	

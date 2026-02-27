@@ -476,9 +476,6 @@ MoveablePhysDefClass::MoveablePhysDefClass(void) :
 	CinematicCollisionMode(CINEMATIC_COLLISION_PUSH)
 {
 	// make our parameters editable!
-	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, Mass, 0.01f, 100000.0f);
-	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, GravScale, 0.0f, 10.0f);
-	FLOAT_EDITABLE_PARAM(MoveablePhysDefClass, Elasticity, 0.0f, 1.0f);
 
 }
 

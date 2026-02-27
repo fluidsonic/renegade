@@ -106,7 +106,6 @@ public:
 	//
 	//	Editable interface requirements
 	//
-	DECLARE_EDITABLE (AccessiblePhysDefClass, StaticAnimPhysDefClass);
 
 protected:
 

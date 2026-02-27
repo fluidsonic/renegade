@@ -298,23 +298,8 @@ MotorVehicleDefClass::MotorVehicleDefClass(void) :
 	ShiftDownAvel = RPM_TO_RADS(ShiftDownRpm);
 
 	// make our parameters editable
-	FLOAT_UNITS_PARAM(MotorVehicleDefClass, MaxEngineTorque, 0.01f, 100000.0f,"N*m");	
-	FILENAME_PARAM(MotorVehicleDefClass, EngineTorqueCurveFilename, "Table Files", ".tbl");
 
-	INT_EDITABLE_PARAM(MotorVehicleDefClass,GearCount,1,6);
 	
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,GearRatio[0],1.0f,100.0f);
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,GearRatio[1],1.0f,100.0f);
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,GearRatio[2],1.0f,100.0f);
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,GearRatio[3],1.0f,100.0f);
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,GearRatio[4],1.0f,100.0f);
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,GearRatio[5],1.0f,100.0f);
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,FinalDriveGearRatio,0.0f,100.0f);
-
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,DriveTrainInertia,0.001f,100000.0f);
-
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,ShiftUpRpm,1.0f,100000.0f);
-	FLOAT_EDITABLE_PARAM(MotorVehicleDefClass,ShiftDownRpm,1.0f,100000.0f);
 }
 
 MotorVehicleDefClass::~MotorVehicleDefClass(void)

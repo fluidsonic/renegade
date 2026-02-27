@@ -120,7 +120,6 @@ public:
 	/*
 	** Editable interface requirements
 	*/
-	DECLARE_EDITABLE(VTOLVehicleDefClass,VehiclePhysDefClass);
 
 protected:
 

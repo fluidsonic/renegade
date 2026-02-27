@@ -98,7 +98,6 @@ Physics Class Hierarchy (Pre-Apr 98):
                       WheeledPhysClass           TrackedPhysClass          HoverPhysClass
 
   
-
 Physics Class Hierarchy (Apr 98):
 ---------------------------------
 
@@ -721,7 +720,6 @@ public:
 	bool								Get_Is_Pre_Lit()					{ return IsPreLit; }
 	
 	//	Editable interface requirements
-	DECLARE_EDITABLE(PhysDefClass,DefinitionClass);
 
 protected:
 	

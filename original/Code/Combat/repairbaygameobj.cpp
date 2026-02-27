@@ -83,7 +83,6 @@ RepairBayGameObjDef::RepairBayGameObjDef (void)	:
 	//
 	//	Editable support
 	//	
-	EDITABLE_PARAM (RepairBayGameObjDef, ParameterClass::TYPE_FLOAT,	RepairPerSec);
 
 	
 	return ;

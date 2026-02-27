@@ -44,7 +44,6 @@ public:
 	virtual bool								Is_Valid_Config (StringClass &message) { return true; }
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( ScriptZoneGameObjDef, ScriptableGameObjDef );
 
 	const Vector3 &							Get_Color (void) const { return Color; }
 

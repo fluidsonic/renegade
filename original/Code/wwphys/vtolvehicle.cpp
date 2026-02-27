@@ -423,20 +423,6 @@ VTOLVehicleDefClass::VTOLVehicleDefClass(void) :
 	RotorDeceleration(DEG_TO_RADF(180.0f))	
 {
 	// make our parameters editable
-	FLOAT_UNITS_PARAM(VTOLVehicleDefClass,MaxVerticalAcceleration, 0.0f, 100000.0f,"m/s^2");
-	FLOAT_UNITS_PARAM(VTOLVehicleDefClass,MaxHorizontalAcceleration, 0.0f, 100000.0f,"m/s^2");
-	ANGLE_EDITABLE_PARAM(VTOLVehicleDefClass,MaxFuselagePitch,DEG_TO_RADF(0.01f),DEG_TO_RADF(50.0f));
-	ANGLE_EDITABLE_PARAM(VTOLVehicleDefClass,MaxFuselageRoll,DEG_TO_RADF(0.01f),DEG_TO_RADF(50.0f));
-	FLOAT_EDITABLE_PARAM(VTOLVehicleDefClass,PitchControllerGain,0.0f,10000.0f);
-	FLOAT_EDITABLE_PARAM(VTOLVehicleDefClass,PitchControllerDamping,0.0f,10000.0f);
-	FLOAT_EDITABLE_PARAM(VTOLVehicleDefClass,RollControllerGain,0.0f,10000.0f);
-	FLOAT_EDITABLE_PARAM(VTOLVehicleDefClass,RollControllerDamping,0.0f,10000.0f);
-	ANGLE_EDITABLE_PARAM(VTOLVehicleDefClass,MaxYawVelocity,DEG_TO_RADF(0.01f),DEG_TO_RADF(360.0f));
-	FLOAT_EDITABLE_PARAM(VTOLVehicleDefClass,YawControllerGain,0.0f,10000.0f);
-	ANGLE_EDITABLE_PARAM(VTOLVehicleDefClass,MaxEngineRotation,DEG_TO_RADF(0.01f),DEG_TO_RADF(50.0f));
-	ANGLE_EDITABLE_PARAM(VTOLVehicleDefClass,RotorSpeed,DEG_TO_RADF(0.01f),DEG_TO_RADF(640.0f));		
-	ANGLE_EDITABLE_PARAM(VTOLVehicleDefClass,RotorAcceleration,DEG_TO_RADF(0.01f),DEG_TO_RADF(640.0f));
-	ANGLE_EDITABLE_PARAM(VTOLVehicleDefClass,RotorDeceleration,DEG_TO_RADF(0.01f),DEG_TO_RADF(640.0f));
 }
 
 uint32_t VTOLVehicleDefClass::Get_Class_ID (void) const	

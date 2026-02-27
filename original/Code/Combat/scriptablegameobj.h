@@ -37,7 +37,6 @@ public:
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
 
-	DECLARE_EDITABLE( ScriptableGameObjDef, BaseGameObjDef );
 
 protected:
 	DynamicVectorClass<StringClass>		ScriptNameList;

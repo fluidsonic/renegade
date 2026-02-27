@@ -227,9 +227,6 @@ void RBodyHistoryClass::StateSnapshotStruct::Lerp(const StateSnapshotStruct & a,
 }
 
 
-
-
-
 /***********************************************************************************************
 **
 ** RigidBodyClass Implementation
@@ -1911,7 +1908,6 @@ RigidBodyDefClass::RigidBodyDefClass(void) :
 	CollisionDisabled(false)
 {
 	// make our parameters editable
-	FLOAT_EDITABLE_PARAM(RigidBodyDefClass, AerodynamicDragCoefficient, 0.0f, 100.0f);
 }
 
 uint32_t RigidBodyDefClass::Get_Class_ID (void) const

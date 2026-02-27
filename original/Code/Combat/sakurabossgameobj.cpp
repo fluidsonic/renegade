@@ -213,17 +213,8 @@ SakuraBossGameObjDef::SakuraBossGameObjDef (void)	:
 	RocketDestroyedExplosionID (0),
 	RocketDoorOpenSoundID (0)
 {	
-	PARAM_SEPARATOR (SakuraBossGameObjDef, "Rocket Launcher Defense Settings");
 	DEFENSEOBJECTDEF_EDITABLE_PARAMS (SakuraBossGameObjDef, RocketsDefense);
-	PARAM_SEPARATOR (SakuraBossGameObjDef, "");
 
-	PARAM_SEPARATOR (SakuraBossGameObjDef, "Weapons");	
-	EDITABLE_PARAM (SakuraBossGameObjDef, ParameterClass::TYPE_WEAPONOBJDEFINITIONID,	RocketLauncherDefID);
-	EDITABLE_PARAM (SakuraBossGameObjDef, ParameterClass::TYPE_WEAPONOBJDEFINITIONID,	GattlingGunDefID);
-	EDITABLE_PARAM (SakuraBossGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID,			GattlingGunRevSoundDefID);	
-	EDITABLE_PARAM (SakuraBossGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID,			RocketDoorOpenSoundID);		
-	EDITABLE_PARAM (SakuraBossGameObjDef, ParameterClass::TYPE_EXPLOSIONDEFINITIONID,	RocketDestroyedExplosionID);
-	PARAM_SEPARATOR (SakuraBossGameObjDef, "");
 	return ;
 }
 

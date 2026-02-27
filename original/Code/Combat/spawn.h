@@ -28,7 +28,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( SpawnerDefClass, DefinitionClass );
 
 	const DynamicVectorClass<int>	&		Get_Spawn_Definition_ID_List (void) const { return SpawnDefinitionIDList; }
 

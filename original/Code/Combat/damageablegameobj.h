@@ -17,7 +17,6 @@ public:
 	virtual bool								Save( ChunkSaveClass &csave );
 	virtual bool								Load( ChunkLoadClass &cload );
 
-	DECLARE_EDITABLE( DamageableGameObjDef, ScriptableGameObjDef );
 
 	int											Get_Name_ID (void) const	{ return TranslatedNameID; }
 

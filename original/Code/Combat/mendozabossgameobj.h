@@ -20,7 +20,6 @@ class MendozaBossGameObjDefClass : public SoldierGameObjDef
 {
 public:
 
-	DECLARE_EDITABLE (MendozaBossGameObjDefClass, SoldierGameObjDef);
 
 	//////////////////////////////////////////////////////////////////////
 	//	Public constructors/destructors

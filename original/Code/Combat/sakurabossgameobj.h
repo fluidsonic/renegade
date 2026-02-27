@@ -20,7 +20,6 @@ class SakuraBossGameObjDef : public VehicleGameObjDef
 {
 public:
 
-	DECLARE_EDITABLE (SakuraBossGameObjDef, VehicleGameObjDef);
 
 	////////////////////////////////////////////////////////////////
 	//	Public constructors/destructors

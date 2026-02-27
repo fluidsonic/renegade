@@ -104,37 +104,11 @@ VehicleGameObjDef::VehicleGameObjDef( void ) :
 		EngineSound[i] = 0;
 	}
 
-	MODEL_DEF_PARAM( VehicleGameObjDef, PhysDefID, "DynamicPhysDef" );
-
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_STRING, 	TypeName );
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_STRING, 	Fire0Anim );
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_STRING, 	Fire1Anim );
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_STRING, 	Profile );
-
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_FLOAT, 	TurnRadius );
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_FLOAT, 	SquishVelocity );
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_BOOL,		Aim2D );
-
-
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_BOOL, 	OccupantsVisible );
 
 	// engine sounds
-	FLOAT_EDITABLE_PARAM(VehicleGameObjDef, EngineSoundMaxPitchFactor, 1.0F, 10.0F);
-	NAMED_EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID, EngineSound[ENGINE_SOUND_STATE_STARTING],"Engine Start Sound");
-	NAMED_EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID, EngineSound[ENGINE_SOUND_STATE_RUNNING],"Engine Running Loop");
-	NAMED_EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID, EngineSound[ENGINE_SOUND_STATE_STOPPING],"Engine Stop Sound");
 //	NAMED_EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_SOUNDDEFINITIONID, EngineSound[ENGINE_SOUND_STATE_OFF],"Engine Off Sound");
 
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_BOOL,		SightDownMuzzle );
 
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,		VehicleNameID );
-
-	EDITABLE_PARAM( VehicleGameObjDef, ParameterClass::TYPE_INT,		NumSeats );
-
-	EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, GDIDamageReportID);
-	EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, NodDamageReportID);
-	EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, GDIDestroyReportID);
-	EDITABLE_PARAM(VehicleGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, NodDestroyReportID);
 }
 
 VehicleGameObjDef::~VehicleGameObjDef( void )

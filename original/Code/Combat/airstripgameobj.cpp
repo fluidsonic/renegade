@@ -66,9 +66,6 @@ AirStripGameObjDef::AirStripGameObjDef (void)	:
 	//
 	//	Editable support
 	//		
-	EDITABLE_PARAM (AirStripGameObjDef, ParameterClass::TYPE_FLOAT,		CinematicLengthToDropOff);
-	EDITABLE_PARAM (AirStripGameObjDef, ParameterClass::TYPE_INT,			CinematicSlotIndex);
-	EDITABLE_PARAM (AirStripGameObjDef, ParameterClass::TYPE_FLOAT,		CinematicLengthToVehicleDisplay);	
 
 
 	return ;

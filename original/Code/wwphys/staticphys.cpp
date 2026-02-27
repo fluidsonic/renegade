@@ -16,7 +16,6 @@
 #include "renegadeterrainpatch.h"
 
 
- 
 /***********************************************************************************************
 **
 ** StaticPhysClass Implementation
@@ -613,7 +612,6 @@ enum
 StaticPhysDefClass::StaticPhysDefClass(void) :
 	IsNonOccluder(true)
 {
-	EDITABLE_PARAM(StaticPhysDefClass, ParameterClass::TYPE_BOOL, IsNonOccluder);
 }
 
 uint32_t StaticPhysDefClass::Get_Class_ID (void) const

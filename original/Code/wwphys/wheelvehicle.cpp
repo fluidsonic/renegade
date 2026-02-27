@@ -219,7 +219,6 @@ WheeledVehicleDefClass::WheeledVehicleDefClass(void) :
 	MaxSteeringAngle(DEFAULT_MAX_STEER_ANGLE)
 {
 	// make our parameters editable!
-	ANGLE_EDITABLE_PARAM(WheeledVehicleDefClass, MaxSteeringAngle, DEG_TO_RADF(0.0f), DEG_TO_RADF(90.0f));
 }
 
 uint32_t WheeledVehicleDefClass::Get_Class_ID (void) const	

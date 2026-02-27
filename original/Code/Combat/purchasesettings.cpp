@@ -74,14 +74,10 @@ PurchaseSettingsDefClass::PurchaseSettingsDefClass (void)	:
 		//
 		StringClass name;
 		name.Format ("Entry %d", index + 1);
-		PARAM_SEPARATOR (PurchaseSettingsDefClass, (const char *)name);
 
 		//
 		//	Add fields for the cost, texture, and object
 		//
-		NAMED_EDITABLE_PARAM (PurchaseSettingsDefClass, ParameterClass::TYPE_STRINGSDB_ID,	NameList[index], "Name");
-		NAMED_EDITABLE_PARAM (PurchaseSettingsDefClass, ParameterClass::TYPE_INT,				CostList[index], "Cost");
-		NAMED_EDITABLE_PARAM (PurchaseSettingsDefClass, ParameterClass::TYPE_STRING,			TextureList[index], "Texture");
 
 
 	}

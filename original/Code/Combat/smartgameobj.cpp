@@ -41,10 +41,6 @@ SmartGameObjDef::SmartGameObjDef( void ) :
 	SightArc( DEG_TO_RADF( 0 ) ),
 	ListenerScale( 1 )
 {
-	EDITABLE_PARAM( SmartGameObjDef, ParameterClass::TYPE_FLOAT,	SightRange );
-	EDITABLE_PARAM( SmartGameObjDef, ParameterClass::TYPE_ANGLE,	SightArc );
-	EDITABLE_PARAM( SmartGameObjDef, ParameterClass::TYPE_FLOAT,	ListenerScale );
-	EDITABLE_PARAM( SmartGameObjDef, ParameterClass::TYPE_BOOL,		IsStealthUnit );
 }
 
 enum	{

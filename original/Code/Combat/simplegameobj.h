@@ -21,7 +21,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( SimpleGameObjDef, PhysicalGameObjDef );
 
 	// Accessors
 	PlayerTerminalClass::TYPE				Get_Player_Terminal_Type( void ) const	{ return PlayerTerminalType; }

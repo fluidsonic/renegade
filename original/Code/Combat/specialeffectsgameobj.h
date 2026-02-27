@@ -19,7 +19,6 @@ class SpecialEffectsGameObjDef : public PhysicalGameObjDef
 {
 public:
 	
-	DECLARE_EDITABLE (SpecialEffectsGameObjDef, PhysicalGameObjDef);
 	
 	////////////////////////////////////////////////////////////////
 	//	Public constructors/destructors

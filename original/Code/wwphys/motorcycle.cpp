@@ -187,8 +187,6 @@ MotorcycleDefClass::MotorcycleDefClass(void) :
 	LeanK1(5.0f)
 {	
 	// make our parameters editable!
-	FLOAT_EDITABLE_PARAM(MotorcycleDefClass, LeanK0, 0.01f, 100000.0f);
-	FLOAT_EDITABLE_PARAM(MotorcycleDefClass, LeanK1, 0.01f, 100000.0f);
 }
 
 uint32_t MotorcycleDefClass::Get_Class_ID (void) const	

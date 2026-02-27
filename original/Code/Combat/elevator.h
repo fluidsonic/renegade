@@ -40,7 +40,6 @@ public:
 
 	const OBBoxClass &						Get_Zone (ELEVATOR_ZONE id) const	{ return CallZones[id]; }
 
-	DECLARE_EDITABLE( ElevatorPhysDefClass, AccessiblePhysDefClass );
 
 protected:
 

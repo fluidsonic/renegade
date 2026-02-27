@@ -69,7 +69,6 @@ public:
 	//
 	//	Editable support
 	//
-	DECLARE_EDITABLE (TeamPurchaseSettingsDefClass, DefinitionClass);
 
 protected:
 

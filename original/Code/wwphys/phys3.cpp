@@ -2396,9 +2396,6 @@ Phys3DefClass::Phys3DefClass(void) :
 	StepHeight(DEFAULT_STEP_HEIGHT)
 {
 	// make our parameters editable!
-	EDITABLE_PARAM(Phys3DefClass, ParameterClass::TYPE_FLOAT, NormSpeed);
-	ANGLE_EDITABLE_PARAM(Phys3DefClass, SlideAngle, DEG_TO_RADF(0.0f), DEG_TO_RADF(90.0f));
-	FLOAT_EDITABLE_PARAM(Phys3DefClass, StepHeight, 0.0f, 10.0f);	
 }
 
 const PersistFactoryClass & Phys3DefClass::Get_Factory (void) const

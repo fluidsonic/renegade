@@ -36,7 +36,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( DoorPhysDefClass, AccessiblePhysDefClass );
 
 	const OBBoxClass &						Get_Trigger_Zone1 (void) const { return TriggerZone1; }
 	const OBBoxClass &						Get_Trigger_Zone2 (void) const { return TriggerZone2; }

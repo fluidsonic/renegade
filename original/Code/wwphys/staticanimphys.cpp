@@ -400,8 +400,6 @@ StaticAnimPhysDefClass::StaticAnimPhysDefClass(void) :
 	IsCosmetic(false)
 {
 	// Add the misc flags to the editable interface
-	EDITABLE_PARAM(StaticAnimPhysDefClass, ParameterClass::TYPE_BOOL, IsCosmetic);
-	EDITABLE_PARAM(StaticAnimPhysDefClass, ParameterClass::TYPE_BOOL, DoesCollideInPathfind);
 
 	// Make the animation manager variables editable
 	ANIMCOLLISIONMANAGERDEF_EDITABLE_PARAMS( StaticAnimPhysDefClass , AnimManagerDef );
@@ -410,13 +408,6 @@ StaticAnimPhysDefClass::StaticAnimPhysDefClass(void) :
 	PROJECTORMANAGERDEF_EDITABLE_PARAMS( StaticAnimPhysDefClass , ProjectorManagerDef );
 
 	// make the shadow parameters editable
-  	PARAM_SEPARATOR(StaticAnimPhysDefClass, "Shadow Settings");
-	EDITABLE_PARAM(StaticAnimPhysDefClass, ParameterClass::TYPE_BOOL, ShadowDynamicObjs);
-	EDITABLE_PARAM(StaticAnimPhysDefClass, ParameterClass::TYPE_BOOL, ShadowIsAdditive);
-	EDITABLE_PARAM(StaticAnimPhysDefClass, ParameterClass::TYPE_BOOL, ShadowIgnoresZRotation);
-	FLOAT_EDITABLE_PARAM(StaticAnimPhysDefClass, ShadowNearZ, 1.0f, 100.0f);
-	FLOAT_EDITABLE_PARAM(StaticAnimPhysDefClass, ShadowFarZ, 1.0f, 100.0f);
-	FLOAT_EDITABLE_PARAM(StaticAnimPhysDefClass, ShadowIntensity, 0.0f, 1.0f);
 
 }
 

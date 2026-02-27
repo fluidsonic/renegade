@@ -38,9 +38,6 @@ const char		WHEEL_FLAG_RIGHT_TRACK					= 'R';			// wheel is part of the right tr
 const char		WHEEL_FLAG_FAKE							= 'F';			// wheel is fake!
 
 																
-																						
-																						
-																						
 /***********************************************************************************************
 **
 ** VehiclePhysClass Implementation
@@ -720,14 +717,6 @@ VehiclePhysDefClass::VehiclePhysDefClass(void) :
 	IsFake(false)
 {
 	// make our parameters editable!
-	EDITABLE_PARAM(VehiclePhysDefClass, ParameterClass::TYPE_BOOL, IsFake);	
-	FLOAT_UNITS_PARAM(VehiclePhysDefClass, SpringConstant, 0.0f, 100000.0f,"N/m");
-	FLOAT_UNITS_PARAM(VehiclePhysDefClass, DampingConstant, 0.0f, 100000.0f,"N/(m/s)");
-	FLOAT_UNITS_PARAM(VehiclePhysDefClass, SpringLength, 0.0f, 100.0f,"m");
-	FLOAT_EDITABLE_PARAM(VehiclePhysDefClass, TractionMultiplier, 0.5f, 5.0f);
-	FLOAT_UNITS_PARAM(VehiclePhysDefClass, LateralMomentArm, 0.0f, 10.0f,"m");
-	FLOAT_UNITS_PARAM(VehiclePhysDefClass, TractiveMomentArm, 0.0f, 10.0f,"m");
-	FLOAT_UNITS_PARAM(VehiclePhysDefClass, EngineFlameLength, 0.0f, 100.0f,"m");
 }
 
 VehiclePhysDefClass::~VehiclePhysDefClass(void)

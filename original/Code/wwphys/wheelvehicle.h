@@ -88,7 +88,6 @@ public:
 	void											Set_Max_Steering_Angle(float a)		{ MaxSteeringAngle = a; }
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(WheeledVehicleDefClass,MotorVehicleDefClass);
 
 protected:
 

@@ -51,9 +51,6 @@ ScriptZoneGameObjDef::ScriptZoneGameObjDef( void ) :
 	ZoneType( TYPE_DEFAULT ),
 	IsEnvironmentZone( false )
 {
-	EDITABLE_PARAM( ScriptZoneGameObjDef, ParameterClass::TYPE_COLOR, Color );
-	EDITABLE_PARAM( ScriptZoneGameObjDef, ParameterClass::TYPE_BOOL, CheckStarsOnly );
-	EDITABLE_PARAM( ScriptZoneGameObjDef, ParameterClass::TYPE_BOOL, IsEnvironmentZone );
 
 	//
 	//	Configure the zone type parameter

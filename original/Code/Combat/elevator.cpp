@@ -55,24 +55,7 @@ ElevatorPhysDefClass::ElevatorPhysDefClass( void ) :
 		CallZones[index].Extent	= Vector3( 1, 1, 1 );
 	}
 
-	ZONE_PARAM(ElevatorPhysDefClass, CallZones[ZONE_LOWER_CALL],	"LowerCallZone" );
-	ZONE_PARAM(ElevatorPhysDefClass, CallZones[ZONE_LOWER_INSIDE], "LowerInsideZone" );
-	ZONE_PARAM(ElevatorPhysDefClass, CallZones[ZONE_UPPER_CALL],	"UpperCallZone" );
-	ZONE_PARAM(ElevatorPhysDefClass, CallZones[ZONE_UPPER_INSIDE],	"UpperInsideZone" );
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_FLOAT, CloseDelay );
 
-	PARAM_SEPARATOR(ElevatorPhysDefClass, "Frame Numbers");
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_FLOAT,					DoorClosedTop_FrameNum );
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_FLOAT,					DoorOpeningBottom_FrameNum );
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_FLOAT,					ElevatorStartTop_FrameNum );
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_FLOAT,					ElevatorStoppedBottom_FrameNum );
-	
-	PARAM_SEPARATOR(ElevatorPhysDefClass, "Sounds");
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	DoorOpenSoundDefID );	
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	DoorCloseSoundDefID );
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	DoorUnlockSoundDefID );
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	DoorAccessDeniedSoundDefID );
-	EDITABLE_PARAM(ElevatorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	ElevatorMovingSoundDefID );
 }
 
 uint32_t	ElevatorPhysDefClass::Get_Class_ID (void) const	

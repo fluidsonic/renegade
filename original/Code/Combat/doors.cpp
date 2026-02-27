@@ -31,14 +31,6 @@ DoorPhysDefClass::DoorPhysDefClass( void ) :
 	AccessDeniedSoundDefID( 0 ),
 	DoorOpensForVehicles( false )
 {
-	ZONE_PARAM(DoorPhysDefClass, TriggerZone1, "TriggerZone1" );
-	ZONE_PARAM(DoorPhysDefClass, TriggerZone2, "TriggerZone2" );
-	EDITABLE_PARAM(DoorPhysDefClass, ParameterClass::TYPE_FLOAT, CloseDelay );
-	EDITABLE_PARAM(DoorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	OpenSoundDefID);
-	EDITABLE_PARAM(DoorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	CloseSoundDefID);
-	EDITABLE_PARAM(DoorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	UnlockSoundDefID);
-	EDITABLE_PARAM(DoorPhysDefClass, ParameterClass::TYPE_SOUNDDEFINITIONID,	AccessDeniedSoundDefID);
-	EDITABLE_PARAM(DoorPhysDefClass, ParameterClass::TYPE_BOOL,	DoorOpensForVehicles);
 }
 
 uint32_t	DoorPhysDefClass::Get_Class_ID (void) const

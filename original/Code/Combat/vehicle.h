@@ -53,7 +53,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( VehicleGameObjDef, SmartGameObjDef );
 
 	TRANSITION_DATA_LIST *					Get_Transition_List( void ) { return &Transitions; }
 	const TRANSITION_DATA_LIST &			Get_Transition_List( void ) const { return Transitions; }

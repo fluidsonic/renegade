@@ -48,7 +48,6 @@ public:
 	virtual bool								Load(ChunkLoadClass & cload);
 	virtual const PersistFactoryClass &	Get_Factory(void) const;
 
-	DECLARE_EDITABLE( ShakeableStaticPhysDefClass, StaticAnimPhysDefClass );
 
 protected:
 

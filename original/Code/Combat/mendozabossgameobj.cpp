@@ -139,8 +139,6 @@ MendozaBossGameObjDefClass::MendozaBossGameObjDefClass (void)
 {
 	UseInnateBehavior = false;
 
-	PARAM_SEPARATOR (MendozaBossGameObjDefClass, "Boss Settings");
-	PARAM_SEPARATOR (MendozaBossGameObjDefClass, "");
 	return ;
 }
 

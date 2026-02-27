@@ -15,12 +15,8 @@ DamageableGameObjDef::DamageableGameObjDef( void ) :
 	DefaultPlayerType( PLAYERTYPE_NEUTRAL )
 {
 	DEFENSEOBJECTDEF_EDITABLE_PARAMS( DamageableGameObjDef, DefenseObjectDef );
-	EDITABLE_PARAM( DamageableGameObjDef, ParameterClass::TYPE_STRINGSDB_ID,	TranslatedNameID );
-	FILENAME_PARAM( DamageableGameObjDef, InfoIconTextureFilename, "InfoIconTextureFilename", ".TGA" );
 
 
-	EDITABLE_PARAM( DamageableGameObjDef, ParameterClass::TYPE_INT,	EncyclopediaID );
-	EDITABLE_PARAM( DamageableGameObjDef, ParameterClass::TYPE_BOOL,	NotTargetable );
 	return ;
 }
 

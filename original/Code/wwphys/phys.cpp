@@ -533,7 +533,6 @@ PhysDefClass::PhysDefClass(void) :
 	ModelName ("NULL"),
 	IsPreLit(false)
 {
-	FILENAME_PARAM(PhysDefClass,ModelName, "Westwood 3D Files", ".w3d");
 }
 
 bool PhysDefClass::Is_Valid_Config (StringClass &message)

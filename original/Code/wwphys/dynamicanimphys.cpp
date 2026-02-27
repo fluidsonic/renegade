@@ -202,10 +202,6 @@ DynamicAnimPhysDefClass::DynamicAnimPhysDefClass(void) :
 {
 	// Make the animation manager variables editable
 	ANIMCOLLISIONMANAGERDEF_EDITABLE_PARAMS( DynamicAnimPhysDefClass , AnimManagerDef );
-  	PARAM_SEPARATOR(DynamicAnimPhysDefClass, "Shadow Settings");
-	EDITABLE_PARAM(DynamicAnimPhysDefClass,ParameterClass::TYPE_BOOL, CastsShadows);
-	FLOAT_UNITS_PARAM(DynamicAnimPhysDefClass,ShadowNearZ, -1.0f,1000.0f, "meters (-1 for default)") 
-	FLOAT_UNITS_PARAM(DynamicAnimPhysDefClass,ShadowFarZ, -1.0f,1000.0f, "meters (-1 for default)") 
 }
 
 uint32_t DynamicAnimPhysDefClass::Get_Class_ID (void) const	

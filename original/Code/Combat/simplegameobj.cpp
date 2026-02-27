@@ -22,9 +22,6 @@ SimpleGameObjDef::SimpleGameObjDef( void ) :
 	IsHiddenObject( false ),
 	PlayerTerminalType( PlayerTerminalClass::TYPE_NONE )
 {
-	MODEL_DEF_PARAM( SimpleGameObjDef, PhysDefID, "PhysDef" );
-	EDITABLE_PARAM( SimpleGameObjDef, ParameterClass::TYPE_BOOL, IsEditorObject );
-	EDITABLE_PARAM( SimpleGameObjDef, ParameterClass::TYPE_BOOL, IsHiddenObject );
 
 
 	return ;

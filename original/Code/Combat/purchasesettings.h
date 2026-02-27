@@ -84,7 +84,6 @@ public:
 	//
 	//	Editable support
 	//
-	DECLARE_EDITABLE (PurchaseSettingsDefClass, DefinitionClass);
 
 protected:
 

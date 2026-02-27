@@ -147,7 +147,6 @@ public:
 	virtual bool								Load(ChunkLoadClass &cload);
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(StaticPhysDefClass,PhysDefClass);
 
 protected:
 

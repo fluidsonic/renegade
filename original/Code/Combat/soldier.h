@@ -47,7 +47,6 @@ public:
 
 	DialogueClass *							Get_Dialog_List( void )			{ return DialogList; }
 
-	DECLARE_EDITABLE( SoldierGameObjDef, SmartGameObjDef );
 
 protected:
 	float											TurnRate;

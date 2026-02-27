@@ -26,7 +26,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( WeaponDefinitionClass, DefinitionClass );
 
 	bool operator == ( const WeaponDefinitionClass & vector) const  { return false; }
 	bool operator != ( const WeaponDefinitionClass & vector) const  { return true; }
@@ -88,7 +87,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( AmmoDefinitionClass, DefinitionClass );
 
 	bool operator == ( const AmmoDefinitionClass & vector) const { return false; }
 	bool operator != ( const AmmoDefinitionClass & vector) const	{ return true; }

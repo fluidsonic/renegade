@@ -67,16 +67,11 @@ TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
 	//
 	//	Add the beacon parameters
 	//
-	NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRINGSDB_ID,	BeaconNameID, "Beacon Name");
-	NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRING,			BeaconTextureName, "Beacon Texture");
-	NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_INT,				BeaconCost, "Beacon Cost");	
 
 
 	//
 	//	Add the supply parameters
 	//
-	NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRINGSDB_ID,	SupplyNameID,			"Supply Name");
-	NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRING,			SupplyTextureName,	"Supply Texture");
 
 	//
 	//	Add the enlisted parameters
@@ -88,13 +83,10 @@ TeamPurchaseSettingsDefClass::TeamPurchaseSettingsDefClass (void)	:
 		//
 		StringClass name;
 		name.Format ("Enlisted %d", index + 1);
-		PARAM_SEPARATOR (TeamPurchaseSettingsDefClass, (const char *)name);
 
 		//
 		//	Add fields for the texture and object
 		//
-		NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRINGSDB_ID,	NameList[index], "Name");
-		NAMED_EDITABLE_PARAM (TeamPurchaseSettingsDefClass, ParameterClass::TYPE_STRING,			TextureList[index], "Texture");
 
 
 	}

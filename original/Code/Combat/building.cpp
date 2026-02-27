@@ -79,17 +79,12 @@ BuildingGameObjDef::BuildingGameObjDef (void)	:
 	GDIDestroyReportID(0),
 	NodDestroyReportID(0)
 {
-	EDITABLE_PARAM( BuildingGameObjDef, ParameterClass::TYPE_STRING,	MeshPrefix );
 
 
 //
 //	Configure the building type parameter
 //
 
-	EDITABLE_PARAM(BuildingGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, GDIDamageReportID);
-	EDITABLE_PARAM(BuildingGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, NodDamageReportID);
-	EDITABLE_PARAM(BuildingGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, GDIDestroyReportID);
-	EDITABLE_PARAM(BuildingGameObjDef, ParameterClass::TYPE_STRINGSDB_ID, NodDestroyReportID);
 }
 
 /////////////////////////////////////////////////////////////////////////////

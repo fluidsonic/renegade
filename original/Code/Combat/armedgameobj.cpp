@@ -21,16 +21,6 @@ ArmedGameObjDef::ArmedGameObjDef( void ) :
 	SecondaryWeaponDefID( 0 ),
 	WeaponRounds( -1 )
 {
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_ANGLE,	WeaponTiltRate );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_ANGLE,	WeaponTiltMin );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_ANGLE,	WeaponTiltMax );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_ANGLE,	WeaponTurnRate );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_ANGLE,	WeaponTurnMin );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_ANGLE,	WeaponTurnMax );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_ANGLE,	WeaponError );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_WEAPONOBJDEFINITIONID,	WeaponDefID );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_INT,		WeaponRounds );
-	EDITABLE_PARAM( ArmedGameObjDef, ParameterClass::TYPE_WEAPONOBJDEFINITIONID,	SecondaryWeaponDefID );
 }
 
 enum	{

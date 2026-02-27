@@ -208,8 +208,6 @@ RaveshawBossGameObjDefClass::RaveshawBossGameObjDefClass (void)
 {
 	UseInnateBehavior = false;
 
-	PARAM_SEPARATOR (RaveshawBossGameObjDefClass, "Boss Settings");
-	PARAM_SEPARATOR (RaveshawBossGameObjDefClass, "");
 	return ;
 }
 

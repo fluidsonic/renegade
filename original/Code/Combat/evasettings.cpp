@@ -83,22 +83,7 @@ EvaSettingsDefClass::EvaSettingsDefClass (void)	:
 	MessagesTextureSize (DEF_MESSAGESTEXTURESIZE),
 	MessagesIconPos (DEF_MESSAGESICONPOS)
 {
-	PARAM_SEPARATOR (EvaSettingsDefClass, "Objectives Viewer");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, ObjectivesScreenRect, "Screen Rect (normalized pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, ObjectivesTextRect, "Text Rect (normalized pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_VECTOR2, ObjectivesTextureSize, "Texture Size (pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, ObjectivesEndcapUVRect, "Endcap UV Rect (pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, ObjectivesFadeoutUVRect, "Fadeout UV Rect (pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, ObjectivesBackgroundUVRect, "Background UV Rect (pixels)");
 	
-	PARAM_SEPARATOR (EvaSettingsDefClass, "Messages Window");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, MessagesScreenRect, "Screen Rect (normalized pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, MessagesTextRect, "Text Rect (normalized pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_VECTOR2, MessagesIconPos, "Icon Position (normalized pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_VECTOR2, MessagesTextureSize, "Texture Size (pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, MessagesEndcapUVRect, "Endcap UV Rect (pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, MessagesFadeoutUVRect, "Fadeout UV Rect (pixels)");
-	NAMED_EDITABLE_PARAM (EvaSettingsDefClass, ParameterClass::TYPE_RECT, MessagesBackgroundUVRect, "Background UV Rect (pixels)");	
 	
 	EvaSettings = this;
 	return ;

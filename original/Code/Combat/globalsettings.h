@@ -22,7 +22,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( GlobalSettingsDef, DefinitionClass );
 
 	static GlobalSettingsDef *		Get_Global_Settings (void)					{ return GlobalSettings; }	
 	int									Get_Death_Sound_ID (void) const				{ return DeathSoundID; }
@@ -118,7 +117,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( HumanLoiterGlobalSettingsDef, DefinitionClass );
 
 	float		Get_Activation_Delay( void )	{ return ActivationDelay; }
 	const char *	Pick_Animation( void );
@@ -152,7 +150,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( HUDGlobalSettingsDef, DefinitionClass );
 
 	static	const HUDGlobalSettingsDef *	Get_Instance( void )		{ return Instance; }
 
@@ -294,7 +291,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( HumanAnimOverrideDef, DefinitionClass );
 
 	StringClass									RunEmptyHands;
 	StringClass									WalkEmptyHands;

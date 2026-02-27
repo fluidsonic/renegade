@@ -57,7 +57,6 @@ public:
 	//
 	//	Editable support
 	//
-	DECLARE_EDITABLE (EvaSettingsDefClass, DefinitionClass);
 
 protected:
 	

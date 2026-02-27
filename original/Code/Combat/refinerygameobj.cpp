@@ -67,9 +67,6 @@ RefineryGameObjDef::RefineryGameObjDef (void)	:
 	//
 	//	Editable support
 	//	
-	EDITABLE_PARAM (RefineryGameObjDef, ParameterClass::TYPE_FLOAT,	UnloadTime);
-	EDITABLE_PARAM (RefineryGameObjDef, ParameterClass::TYPE_FLOAT,	FundsGathered);
-	EDITABLE_PARAM (RefineryGameObjDef, ParameterClass::TYPE_FLOAT,	FundsDistributedPerSec);	
 
 
 	return ;

@@ -144,7 +144,6 @@ public:
 	void											Set_Grav_Scale(float new_g){ GravScale = new_g; }
 
 	//	Editable interface requirements
-	DECLARE_EDITABLE(MoveablePhysDefClass,DynamicPhysDefClass);
 
 protected:
 

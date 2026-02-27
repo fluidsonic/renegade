@@ -166,7 +166,6 @@ AccessiblePhysClass::Load_Variables (ChunkLoadClass &cload)
 AccessiblePhysDefClass::AccessiblePhysDefClass (void) :
 	LockCode (0)
 {
-	EDITABLE_PARAM (AccessiblePhysDefClass, ParameterClass::TYPE_INT, LockCode);
 	return ;
 }
 

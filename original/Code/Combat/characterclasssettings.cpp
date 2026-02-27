@@ -178,7 +178,6 @@ CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void)
 			//
 			StringClass name;
 			name.Format ("Class %s (%s)", CHAR_CLASS_NAMES[class_index], CHAR_TEAM_NAMES[team_index]);
-			PARAM_SEPARATOR (CharacterClassSettingsDefClass, (const char *)name);
 
 			//
 			// Add a pair of parameters for each rank
@@ -186,7 +185,6 @@ CharacterClassSettingsDefClass::CharacterClassSettingsDefClass (void)
 			for (int rank_index = 0; rank_index < RANK_COUNT; rank_index ++) {
 
 				name.Format ("%s Cost", CHAR_RANK_NAMES[rank_index]);				
-				NAMED_EDITABLE_PARAM (CharacterClassSettingsDefClass, ParameterClass::TYPE_INT, CostTable[class_index][rank_index][team_index], (const char *)name);
 
 				name.Format ("%s Object", CHAR_RANK_NAMES[rank_index]);
 

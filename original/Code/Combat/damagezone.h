@@ -22,7 +22,6 @@ public:
 	virtual bool								Load( ChunkLoadClass &cload );
 	virtual const PersistFactoryClass &	Get_Factory( void ) const;
 
-	DECLARE_EDITABLE( DamageZoneGameObjDef, BaseGameObjDef );
 
 	const Vector3 &							Get_Color (void) const { return Color; }
 
