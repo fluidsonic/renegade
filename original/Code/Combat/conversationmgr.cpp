@@ -990,52 +990,55 @@ ConversationMgrClass::Think (void)
 	//	Stop any non-key conversations that are playing (if there is a key conversation playing)
 	//
 	if (is_key) {
-		bool release_key_conv = false;
-		int index = ActiveConversationList.Count ();
-		while (index --) {
-			ActiveConversationClass *active_conversation = ActiveConversationList[index];
-			if (active_conversation->Peek_Conversation ()->Is_Key () == false || release_key_conv) {
+		DynamicVectorClass<ActiveConversationClass *> snapshot (ActiveConversationList);
+		for (int32_t i = 0; i < snapshot.Count (); i ++) {
+			if (snapshot[i] != NULL) snapshot[i]->Add_Ref ();
+		}
 
-				//
-				//	Stop any non-key conversation
-				//
-				active_conversation->Stop_Conversation ();
-				
-				//
-				//	Remove the conversation from the list
-				//
-				ActiveConversationList.Delete (index);
-				REF_PTR_RELEASE (active_conversation);
+		bool release_key_conv = false;
+		int32_t i = snapshot.Count ();
+		while (i --) {
+			ActiveConversationClass *conv = snapshot[i];
+			if (conv == NULL) continue;
+			if (conv->Peek_Conversation ()->Is_Key () == false || release_key_conv) {
+				conv->Stop_Conversation ();
 			} else {
 				release_key_conv = true;
 			}
+		}
+
+		for (int32_t i = 0; i < snapshot.Count (); i ++) {
+			if (snapshot[i] != NULL) snapshot[i]->Release_Ref ();
 		}
 	}
 
 	//
 	//	Loop over all the remaining active conversations
 	//
-	int count = ActiveConversationList.Count ();
-	for (int index = 0; index < count; index ++) {
-		ActiveConversationClass *active_conversation = ActiveConversationList[index];
-		
-		//
-		//	Let this conversation process
-		//
-		bool remove_from_list = true;
-		if (active_conversation != NULL) {
-			active_conversation->Think ();
-			remove_from_list = active_conversation->Is_Finished ();
-		}
+	// Snapshot + AddRef so callbacks (e.g. Stop_All_Conversations) can't free
+	// conversations out from under us.
+	DynamicVectorClass<ActiveConversationClass *> snapshot2 (ActiveConversationList);
+	for (int32_t i = 0; i < snapshot2.Count (); i ++) {
+		if (snapshot2[i] != NULL) snapshot2[i]->Add_Ref ();
+	}
 
-		//
-		//	Remove this conversation from our control (if necessary)
-		//
-		if (remove_from_list) {
-			ActiveConversationList.Delete (index);
-			REF_PTR_RELEASE (active_conversation);
-			index --;
-			count --;
+	for (int32_t i = 0; i < snapshot2.Count (); i ++) {
+		ActiveConversationClass *conv = snapshot2[i];
+		if (conv != NULL && !conv->Is_Finished ()) {
+			conv->Think ();
+		}
+	}
+
+	for (int32_t i = 0; i < snapshot2.Count (); i ++) {
+		if (snapshot2[i] != NULL) snapshot2[i]->Release_Ref ();
+	}
+
+	// Remove finished conversations from the real list.
+	for (int32_t i = ActiveConversationList.Count () - 1; i >= 0; i --) {
+		ActiveConversationClass *conv = ActiveConversationList[i];
+		if (conv == NULL || conv->Is_Finished ()) {
+			ActiveConversationList.Delete (i);
+			REF_PTR_RELEASE (conv);
 		}
 	}
 
