@@ -10,24 +10,37 @@ data class WeaponEntry(val definitionId: Int, val totalRounds: Int)
 // Minimal server-side port — client-side rendering/firing logic not ported.
 class WeaponClass(
     val definitionId: Int,                 // C++: Definition->Get_ID()
-    // @JvmName avoids clash with fun setTotalRounds() below
-    @get:JvmName("totalRoundsField") @set:JvmName("setTotalRoundsField")
-    var totalRounds: Int = 0,              // C++: Get_Total_Rounds() / Set_Total_Rounds()
+    clipRoundsInit: Int = 0,               // initializes ClipRounds (mirrors C++ constructor)
 ) {
     // C++: int ClipRounds
-    var clipRounds: Int = 0
+    var clipRounds: Int = clipRoundsInit
 
-    // C++: int InventoryRounds
+    // C++: int InventoryRounds  (-1 = unlimited)
     var inventoryRounds: Int = 0
 
     // C++: ArmedGameObj* Owner (widened to PhysicalGameObj to allow PowerUpGameObj backpacks)
     var owner: PhysicalGameObj? = null
 
     // C++: void Set_Total_Rounds(int num)
-    fun setTotalRounds(num: Int) { totalRounds = num }
+    // Simplified server-side: no Definition available, so we store in clipRounds
+    // (InventoryRounds stays 0 unless unlimited — mirrors C++ Set_Total_Rounds with InventoryRounds=0)
+    fun setTotalRounds(num: Int) {
+        if (num == -1) {
+            inventoryRounds = -1
+        } else {
+            inventoryRounds = 0
+            clipRounds = num
+        }
+    }
 
     // C++: void Add_Rounds(int num)
-    fun addRounds(num: Int) { totalRounds += num }
+    fun addRounds(num: Int) {
+        if (num < 0) {
+            inventoryRounds = -1
+        } else if (inventoryRounds >= 0) {
+            clipRounds += num
+        }
+    }
 
     // C++: bool Is_Ammo_Maxed() — FIXME: needs WeaponDefinitionClass for max rounds
     fun isAmmoMaxed(): Boolean = false
@@ -60,7 +73,8 @@ class WeaponClass(
     fun getId(): Int = definitionId
 
     // C++: int Get_Total_Rounds() const
-    fun getTotalRounds(): Int = totalRounds
+    // Returns -1 if InventoryRounds < 0 (unlimited), else ClipRounds + InventoryRounds
+    fun getTotalRounds(): Int = if (inventoryRounds < 0) -1 else clipRounds + inventoryRounds
 
     // C++: const char* Get_Name() — delegates to definition->Get_Name(); stub returns defId as string
     fun getName(): String = "weapon_$definitionId"

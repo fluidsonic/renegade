@@ -56,7 +56,7 @@ open class God(private val server: Network) {
             val existing = (1 until bag.getCount()).mapNotNull { bag.peekWeapon(it) }
                 .firstOrNull { it.definitionId == weaponDefId }
             if (existing != null) {
-                existing.setTotalRounds((existing.totalRounds + rounds).coerceAtMost(maxRounds))
+                existing.setTotalRounds((existing.getTotalRounds() + rounds).coerceAtMost(maxRounds))
             } else if (grantWeapon) {
                 bag.addWeapon(weaponDefId, rounds.coerceAtMost(maxRounds))
             }
@@ -537,7 +537,7 @@ open class God(private val server: Network) {
                 val wDef = definitions?.findById(weapon.definitionId.toUInt()) as? WeaponDefinitionClass
                 if (wDef != null && wDef.canReceiveGenericCnCAmmo && wDef.clipSize > 0) {
                     weapon.setTotalRounds(
-                        (weapon.totalRounds + wDef.clipSize * def.grantWeaponRounds)
+                        (weapon.getTotalRounds() + wDef.clipSize * def.grantWeaponRounds)
                             .coerceAtMost(wDef.maxInventoryRounds)
                     )
                     refilled = true

@@ -44,7 +44,7 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
     // C++: WeaponClass* Add_Weapon(int id, int rounds, bool give_weapon)
     // Adds a real weapon at index 1+ (never at index 0 which is the null sentinel)
     fun addWeapon(id: Int, rounds: Int = 0, giveWeapon: Boolean = true): WeaponClass {
-        val weapon = WeaponClass(definitionId = id, totalRounds = rounds)
+        val weapon = WeaponClass(definitionId = id, clipRoundsInit = rounds)
         weapon.owner = owner
         weaponList.add(weapon)
         if (giveWeapon) isChanged = true
@@ -127,7 +127,7 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
         for (i in 1 until weaponList.size) {
             val w = weaponList[i]!!  // index 1+ is always a real WeaponClass
             packet.addInt(w.definitionId)
-            packet.addInt(w.totalRounds)
+            packet.addInt(w.getTotalRounds())
         }
     }
 
@@ -138,7 +138,7 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
             val defId = packet.getInt()
             val rounds = packet.getInt()
             val existing = weaponList.find { it != null && it.definitionId == defId }
-            if (existing != null) existing.totalRounds = rounds
+            if (existing != null) existing.setTotalRounds(rounds)
         }
     }
 

@@ -208,7 +208,7 @@ open class SoldierGameObj() : SmartGameObj() {
     val weapons: List<WeaponEntry>
         get() = (1 until weaponBag.getCount()).map { i ->
             val w = weaponBag.peekWeapon(i)!!  // index 1+ is always a real WeaponClass
-            WeaponEntry(definitionId = w.definitionId, totalRounds = w.totalRounds)
+            WeaponEntry(definitionId = w.definitionId, totalRounds = w.getTotalRounds())
         }
 
     // C++: ~SoldierGameObj()
@@ -1382,7 +1382,7 @@ open class SoldierGameObj() : SmartGameObj() {
         packet.addBool(hasWeapon)
         if (hasWeapon) {
             packet.addInt(p_weapon!!.definitionId)
-            packet.addInt(p_weapon.totalRounds)
+            packet.addInt(p_weapon.getTotalRounds())
         }
 
         // C++: position — use the 'position' field directly (physObj may be null in tests)
