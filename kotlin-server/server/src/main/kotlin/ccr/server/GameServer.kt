@@ -34,7 +34,14 @@ import ccr.server.net.ScAnnouncement
 import ccr.server.net.CsTextObj
 import ccr.server.net.ScTextObj
 import ccr.server.net.CsDamageEvent
+import ccr.server.net.ClientBboEvent
+import ccr.server.net.CsConsoleCommandEvent
+import ccr.server.net.CsHint
 import ccr.server.net.DonateEvent
+import ccr.server.net.GodModeEvent
+import ccr.server.net.MoneyEvent
+import ccr.server.net.ScoreEvent
+import ccr.server.net.VipModeEvent
 import ccr.server.combat.ArmorWarheadManager
 import ccr.server.net.PlayerKill
 import ccr.server.net.PurchaseRequestEvent
@@ -930,6 +937,42 @@ class GameServer(internal val config: ServerConfig) {
                 } else {
                     println("[GAME] DONATEEVENT from rhostId=$rhostId: sender=${event.senderId} or recipient=${event.recipientId} not found")
                 }
+            }
+            1022 -> {  // NETCLASSID_MONEYEVENT (header=1021, wire=1022) — requires god mode; ignored
+                val event = MoneyEvent()
+                event.importCreation(snap)
+                println("[GAME] MONEYEVENT from rhostId=$rhostId senderId=${event.senderId} amount=${event.amount} (ignored — no god mode)")
+            }
+            1028 -> {  // NETCLASSID_GODMODEEVENT (header=1027, wire=1028) — WWDEBUG only; ignored
+                val event = GodModeEvent()
+                event.importCreation(snap)
+                println("[GAME] GODMODEEVENT from rhostId=$rhostId senderId=${event.senderId} (ignored — debug-only)")
+            }
+            1029 -> {  // NETCLASSID_VIPMODEEVENT (header=1028, wire=1029) — WWDEBUG only; ignored
+                val event = VipModeEvent()
+                event.importCreation(snap)
+                println("[GAME] VIPMODEEVENT from rhostId=$rhostId senderId=${event.senderId} (ignored — debug-only)")
+            }
+            1030 -> {  // NETCLASSID_SCOREEVENT (header=1029, wire=1030) — requires god mode; ignored
+                val event = ScoreEvent()
+                event.importCreation(snap)
+                println("[GAME] SCOREEVENT from rhostId=$rhostId senderId=${event.senderId} amount=${event.amount} (ignored — no god mode)")
+            }
+            1031 -> {  // NETCLASSID_CLIENTBBOEVENT (header=1030, wire=1031) — client bandwidth/backlog report
+                val event = ClientBboEvent()
+                event.importCreation(snap)
+                println("[GAME] CLIENTBBOEVENT from rhostId=$rhostId senderId=${event.senderId} bbo=${event.bbo}")
+                // C++: rhost->Set_Maximum_Bps(Bbo) — no BPS cap in Kotlin server yet
+            }
+            1036 -> {  // NETCLASSID_CSCONSOLECOMMANDEVENT (header=1035, wire=1036) — remote console command
+                val event = CsConsoleCommandEvent()
+                event.importCreation(snap)
+                println("[GAME] CSCONSOLECOMMANDEVENT from rhostId=$rhostId command=${event.command} (no console dispatch)")
+            }
+            1037 -> {  // NETCLASSID_CSHINT (header=1036, wire=1037) — hint/objective notification; ignored
+                val event = CsHint()
+                event.importCreation(snap)
+                println("[GAME] CSHINT from rhostId=$rhostId senderId=${event.senderId} subjectId=${event.subjectId} (ignored)")
             }
             else -> println("[GAME] unhandled networkClassId=$networkClassId netId=$networkId from rhostId=$rhostId")
         }
