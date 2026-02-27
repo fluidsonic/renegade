@@ -1587,9 +1587,9 @@ void SoldierGameObj::Apply_Control( void )
 				Vector3 pos;
 				Get_Position( &pos );
 				if ( Is_Crouched() ) {
-					DIAG_LOG(( "COEN", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
+					DIAG_LOG(( "COEN", "%1.2f; %1.2f; %1.2f", (double)pos.X, (double)pos.Y, (double)pos.Z ));
 				} else {
-					DIAG_LOG(( "COEX", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
+					DIAG_LOG(( "COEX", "%1.2f; %1.2f; %1.2f", (double)pos.X, (double)pos.Y, (double)pos.Z ));
 				}
 			}
 		}
@@ -1658,7 +1658,7 @@ void SoldierGameObj::Apply_Control( void )
 				weapon_name = Get_Weapon()->Get_Definition()->Get_Name();
 				ammo = Get_Weapon()->Get_Total_Rounds();
 			}
-			DIAG_LOG(( "ROUS", "%1.2f; %1.2f; %1.2f; %1.2f; %1.2f; %s; %d", pos.X, pos.Y, pos.Z, defense->Get_Shield_Strength(), defense->Get_Health(), weapon_name, ammo ));
+			DIAG_LOG(( "ROUS", "%1.2f; %1.2f; %1.2f; %1.2f; %1.2f; %s; %d", (double)pos.X, (double)pos.Y, (double)pos.Z, (double)defense->Get_Shield_Strength(), (double)defense->Get_Health(), weapon_name, ammo ));
 		}
 	}
 
@@ -1697,7 +1697,7 @@ void SoldierGameObj::Apply_Control( void )
 				weapon_name = Get_Weapon()->Get_Definition()->Get_Name();
 				ammo = Get_Weapon()->Get_Total_Rounds();
 			}
-			DIAG_LOG(( "JUUS", "%1.2f; %1.2f; %1.2f; %1.2f; %1.2f; %s; %d", pos.X, pos.Y, pos.Z, defense->Get_Shield_Strength(), defense->Get_Health(), weapon_name, ammo ));
+			DIAG_LOG(( "JUUS", "%1.2f; %1.2f; %1.2f; %1.2f; %1.2f; %s; %d", (double)pos.X, (double)pos.Y, (double)pos.Z, (double)defense->Get_Shield_Strength(), (double)defense->Get_Health(), weapon_name, ammo ));
 		}
 	}
 
@@ -1731,9 +1731,9 @@ void SoldierGameObj::Apply_Control( void )
 			Vector3 pos;
 			Get_Position( &pos );
 			if ( !was_walking ) {
-				DIAG_LOG(( "WAEN", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
+				DIAG_LOG(( "WAEN", "%1.2f; %1.2f; %1.2f", (double)pos.X, (double)pos.Y, (double)pos.Z ));
 			} else {
-				DIAG_LOG(( "WAEX", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
+				DIAG_LOG(( "WAEX", "%1.2f; %1.2f; %1.2f", (double)pos.X, (double)pos.Y, (double)pos.Z ));
 			}
 			was_walking = Control.Get_Boolean( ControlClass::BOOLEAN_WALK );
 		}
@@ -1743,7 +1743,7 @@ void SoldierGameObj::Apply_Control( void )
 	if ( this == COMBAT_STAR && Control.Get_Boolean( ControlClass::BOOLEAN_ACTION ) ) {
 		Vector3 pos;
 		COMBAT_STAR->Get_Position( &pos );
-		DIAG_LOG(( "ACPR", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
+		DIAG_LOG(( "ACPR", "%1.2f; %1.2f; %1.2f", (double)pos.X, (double)pos.Y, (double)pos.Z ));
 	}
 
 	if (	CombatManager::I_Am_Server() ||
@@ -2035,7 +2035,7 @@ void	SoldierGameObj::Think( void )
 				ExplosionDefinitionClass * def = (ExplosionDefinitionClass *)DefinitionMgrClass::Find_Typed_Definition( explosion_name, CLASSID_DEF_EXPLOSION );
 				if ( def != NULL) {
 					Vector3 pos = Get_Bullseye_Position();
-					ExplosionManager::Create_Explosion_At( def->Get_ID(), pos, NULL );
+					ExplosionManager::Create_Explosion_At( static_cast<int32_t>(def->Get_ID()), pos, NULL );
 				}
 			}
 		}
@@ -2195,7 +2195,7 @@ void	SoldierGameObj::Think( void )
 				ray.Compute_Point(res.Fraction,&point);
 
 				SurfaceEffectsManager::Update_Persistant_Emitter(	WaterWake,
-																					res.SurfaceType,
+																					static_cast<int32_t>(res.SurfaceType),
 																					hit_type,
 																					Matrix3D(point));
 				in_water = true;
@@ -2747,7 +2747,7 @@ bool	SoldierGameObj::Internal_Set_Targeting( const Vector3 & target_pos, bool do
 			float max_change = Get_Turn_Rate() * TimeManager::Get_Frame_Seconds();
 
 			// Turn more slowly when turning a small amount
-			if ( WWMath::Fabs( change ) < DEG_TO_RAD( 20 ) ) {
+			if ( (double)WWMath::Fabs( change ) < DEG_TO_RAD( 20 ) ) {
 				max_change *= 0.3f;
 			}
 
@@ -2939,7 +2939,7 @@ float SoldierGameObj::Say_Dynamic_Dialogue
 	//
 	//	Lookup the translation object from the strings database
 	//
-	TDBObjClass *translate_obj = TranslateDBClass::Find_Object( text_id );
+	TDBObjClass *translate_obj = TranslateDBClass::Find_Object( static_cast<uint32_t>(text_id) );
 	if (translate_obj != NULL) {
 
 		const WCHAR *string		= translate_obj->Get_String ();
@@ -3261,7 +3261,7 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 				Vector3 relative_direction = Get_Transform().Inverse_Rotate_Vector( direction );
 				// Convert direction into 0 .. 7
 				float angle = ::WWMath::Atan2 ( relative_direction.Y, -relative_direction.X);
-				int dir = (int)(8.0f * angle / DEG_TO_RAD( 360 ) + 8.5f);
+				int dir = (int)(8.0 * (double)angle / DEG_TO_RAD( 360 ) + 8.5);
 				CombatManager::Show_Star_Damage_Direction( dir & 7 );
 			}
 		}
@@ -3283,7 +3283,7 @@ void	SoldierGameObj::Apply_Damage_Extended( const OffenseObjectClass & damager, 
 		}
 		const char * body_part = ( collision_box_name != NULL ) ? collision_box_name : "";
 		float armor = Get_Defense_Object()->Get_Shield_Strength();
-	   DIAG_LOG(( "DRCE", "%s; %d; %s; %1.2f; %1.2f; %1.2f; %1.2f; %1.2f", weapon_name, hitter_id, body_part, armor, health, pos.X, pos.Y, pos.Z ));
+	   DIAG_LOG(( "DRCE", "%s; %d; %s; %1.2f; %1.2f; %1.2f; %1.2f; %1.2f", weapon_name, hitter_id, body_part, (double)armor, (double)health, (double)pos.X, (double)pos.Y, (double)pos.Z ));
 	}
 
 	if (( damager.Get_Owner() == COMBAT_STAR ) && ( COMBAT_STAR != NULL )) {

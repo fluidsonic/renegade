@@ -49,6 +49,8 @@ enum	{
 */
 bool	CombatSaveLoadClass::Save( ChunkSaveClass &csave )
 {
+	extern void Force_Link_TransitionGameObjModule();
+	Force_Link_TransitionGameObjModule();
 
 	csave.Begin_Chunk( CHUNKID_GAMEOBJMANAGER );
 	GameObjManager::Save( csave );

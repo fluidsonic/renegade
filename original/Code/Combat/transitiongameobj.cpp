@@ -23,7 +23,7 @@ uint32_t	TransitionGameObjDef::Get_Class_ID (void) const
 	return CLASSID_GAME_OBJECT_DEF_TRANSITION; 
 }
 
-PersistClass *	TransitionGameObjDef::Create( void ) const 
+PersistClass *	TransitionGameObjDef::Create( void ) const
 {
 	TransitionGameObj * obj = new TransitionGameObj;
 	obj->Init( *this );
@@ -296,3 +296,8 @@ void	TransitionGameObj::Set_Ladder_Index( int ladder_index )
 
 	return ;
 }
+
+// Force-link stub: the linker drops this TU from libCombat.a because no other
+// object directly references TransitionGameObj symbols. This stub is called
+// from combatsaveload.cpp to guarantee the TU is included.
+void Force_Link_TransitionGameObjModule() {}

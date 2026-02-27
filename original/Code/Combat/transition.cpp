@@ -226,8 +226,9 @@ bool	TransitionInstanceClass::Check( SoldierGameObj *obj, bool action_trigger )
 	obj->Get_Position( &pos );
 
 	// make sure we are in the zone
-	if ( CollisionMath::Overlap_Test( Zone, pos ) == CollisionMath::OUTSIDE ) {
-		return false;		// not inside
+	{
+		auto overlap = CollisionMath::Overlap_Test( Zone, pos );
+		if (overlap == CollisionMath::OUTSIDE) return false;		// not inside
 	}
 
 	// ignore triggers when transitioning
@@ -519,7 +520,7 @@ void	TransitionInstanceClass::End( SoldierGameObj *obj,
 			if ( obj == COMBAT_STAR ) {
 				Vector3 pos;
 				obj->Get_Position( &pos );
-				DIAG_LOG(( "LAEX", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
+				DIAG_LOG(( "LAEX", "%1.2f; %1.2f; %1.2f", (double)pos.X, (double)pos.Y, (double)pos.Z ));
 			}
 			break;
 
@@ -530,7 +531,7 @@ void	TransitionInstanceClass::End( SoldierGameObj *obj,
 			if ( obj == COMBAT_STAR ) {
 				Vector3 pos;
 				obj->Get_Position( &pos );
-				DIAG_LOG(( "LAEN", "%1.2f; %1.2f; %1.2f", pos.X, pos.Y, pos.Z ));
+				DIAG_LOG(( "LAEN", "%1.2f; %1.2f; %1.2f", (double)pos.X, (double)pos.Y, (double)pos.Z ));
 			}
 			break;
 
