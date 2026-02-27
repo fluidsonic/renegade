@@ -41,12 +41,6 @@ class Player(
     // C++: cPlayer::Invulnerable (public cBoolean field) — default false
     var invulnerable: Boolean = false
 
-    // C++: cPlayer::WolRank — default -1 (unranked)
-    var wolRank: Int = -1
-
-    // C++: cPlayer::NumWolGames — default 0
-    var numWolGames: Int = 0
-
     init {
         setObjectDirtyBit(BIT_CREATION, true)
     }
@@ -67,8 +61,8 @@ class Player(
         packet.addBool(isInGame)         // IsInGame
         packet.addBool(invulnerable)     // Invulnerable
         packet.addBool(isActive)         // IsActive
-        packet.addInt(wolRank)           // WolRank
-        packet.addInt(numWolGames)       // NumWolGames
+        packet.addInt(0)                 // was: WolRank (removed — WOL service defunct)
+        packet.addInt(0)                 // was: NumWolGames (removed — WOL service defunct)
     }
 
     // C++: cPlayer::Export_Occasional (player.cpp:971) — calls PlayerDataClass::Export_Occasional

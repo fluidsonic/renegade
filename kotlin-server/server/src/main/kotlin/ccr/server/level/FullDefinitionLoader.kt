@@ -126,13 +126,13 @@ object FullDefinitionLoader {
             SakuraBossGameObjDef.CHUNK_ID ->
                 SakuraBossGameObjDef.load(objDataChunk, name, id, chunkId) ?: fallback
 
-            // MendozaBossGameObjDefClass → DefinitionClass
+            // MendozaBossGameObjDefClass → SoldierGameObjDefWrapper
             MendozaBossGameObjDefClass.CHUNK_ID ->
-                MendozaBossGameObjDefClass.load(objDataChunk, name, id, chunkId)
+                MendozaBossGameObjDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 
-            // RaveshawBossGameObjDefClass → DefinitionClass
+            // RaveshawBossGameObjDefClass → SoldierGameObjDefWrapper
             RaveshawBossGameObjDefClass.CHUNK_ID ->
-                RaveshawBossGameObjDefClass.load(objDataChunk, name, id, chunkId)
+                RaveshawBossGameObjDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 
             // ── Munitions (0xB000 range) ────────────────────────────────────────────
 

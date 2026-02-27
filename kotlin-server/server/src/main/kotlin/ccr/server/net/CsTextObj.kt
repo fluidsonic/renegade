@@ -4,18 +4,18 @@ import ccr.net.bitstream.BitStream
 
 // C++: cCsTextObj (cstextobj.h/.cpp) — networkClassId = NETCLASSID_CSTEXTOBJ = 1018
 // Client→Server chat message.
-// Wire format (Export_Creation from cstextobj.cpp:124-137):
+// Wire format (Export_Creation / Import_Creation from cstextobj.cpp):
 //   SenderId (int)
 //   Type (BYTE) — TextMessageEnum value
 //   Text (wideString)
-//   RecipientId (int)
-//   IsHostAdminMessage (bool)
+//   Recipient (int)
+// Note: IsHostAdminMessage does NOT appear in cCsTextObj (1018); it only exists
+// in the S→C cScTextObj (1001). Reading it here would corrupt the packet stream.
 class CsTextObj(
     var senderId: Int = 0,
     var type: Int = 0,
     var text: String = "",
     var recipientId: Int = -1,
-    var isHostAdminMessage: Boolean = false,
 ) : NetEvent() {
     override val networkClassId: Int = 1018
 
@@ -24,7 +24,6 @@ class CsTextObj(
         packet.addByte(type.toByte())
         packet.addWideString(text, permitEmpty = true)
         packet.addInt(recipientId)
-        packet.addBool(isHostAdminMessage)
     }
 
     override fun importCreation(packet: BitStream) {
@@ -32,6 +31,5 @@ class CsTextObj(
         type = packet.getByte().toInt() and 0xFF
         text = packet.getWideString(permitEmpty = true)
         recipientId = packet.getInt()
-        isHostAdminMessage = packet.getBool()
     }
 }

@@ -705,7 +705,7 @@ class GameServer(internal val config: ServerConfig) {
                         type = msg.type,
                         senderId = msg.senderId,
                         recipientId = msg.recipientId,
-                        isHostAdminMessage = msg.isHostAdminMessage,
+                        isHostAdminMessage = false,
                         text = msg.text,
                     )
                     when (msg.type) {

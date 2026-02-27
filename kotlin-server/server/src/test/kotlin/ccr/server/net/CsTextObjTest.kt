@@ -10,7 +10,6 @@ class CsTextObjTest {
             type = 2,
             senderId = 10,
             recipientId = 20,
-            isHostAdminMessage = true,
             text = "Hello World",
         )
         val bs = BitStream()
@@ -20,12 +19,11 @@ class CsTextObjTest {
         assertEquals(2, parsed.type)
         assertEquals(10, parsed.senderId)
         assertEquals(20, parsed.recipientId)
-        assertEquals(true, parsed.isHostAdminMessage)
         assertEquals("Hello World", parsed.text)
     }
 
     @Test fun `creation round-trip - empty text`() {
-        val event = CsTextObj(type = 0, senderId = 5, recipientId = 0, isHostAdminMessage = false, text = "")
+        val event = CsTextObj(type = 0, senderId = 5, recipientId = 0, text = "")
         val bs = BitStream()
         event.exportCreation(bs)
         val parsed = CsTextObj()
