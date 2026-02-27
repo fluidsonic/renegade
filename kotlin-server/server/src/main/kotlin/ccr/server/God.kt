@@ -5,20 +5,21 @@ import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
+import ccr.server.defs.BaseGameObjDef
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
 import ccr.server.defs.PhysDefClass
 import ccr.server.defs.SoldierGameObjDefWrapper
 import ccr.server.defs.VehicleGameObjDefWrapper
 import ccr.server.defs.WeaponDefinitionClass
-import ccr.server.defs.combat.BeaconGameObjDef
-import ccr.server.defs.combat.PowerUpGameObjDef
+import ccr.server.defs.BeaconGameObjDef
+import ccr.server.defs.PowerUpGameObjDef
 import ccr.server.level.ldd.LoadedVehicleGameObj
 import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
 import ccr.server.net.VehicleGameObj
-import ccr.server.net.WeaponEntry
+import ccr.server.net.WeaponBagClass
 
 /**
  * Port of C++ cGod (god.cpp) — owns the player/soldier lifecycle.
@@ -53,14 +54,13 @@ open class God(private val server: GameServer) {
             grantWeapon: Boolean,
             maxRounds: Int = Int.MAX_VALUE,
         ) {
-            val existing = soldier.weapons.indexOfFirst { it.definitionId == weaponDefId }
-            if (existing >= 0) {
-                val old = soldier.weapons[existing]
-                soldier.weapons[existing] = old.copy(
-                    totalRounds = (old.totalRounds + rounds).coerceAtMost(maxRounds),
-                )
+            val bag = soldier.weaponBag
+            val existing = (0 until bag.getCount()).map { bag.peekWeapon(it) }
+                .firstOrNull { it.definitionId == weaponDefId }
+            if (existing != null) {
+                existing.setTotalRounds((existing.totalRounds + rounds).coerceAtMost(maxRounds))
             } else if (grantWeapon) {
-                soldier.weapons.add(WeaponEntry(weaponDefId, rounds.coerceAtMost(maxRounds)))
+                bag.addWeapon(weaponDefId, rounds.coerceAtMost(maxRounds))
             }
         }
     }
@@ -233,25 +233,25 @@ open class God(private val server: GameServer) {
 
         val fallbackModel = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
         val modelName = resolveSoldierModelName(defId).ifEmpty { fallbackModel }
-        val weapons = buildWeaponsForSoldier(defId)
 
-        val soldier = SoldierGameObj(
-            definitionId = defId,
-            controlOwner = rhostId,
-            team         = playerType,
-            modelName    = modelName,
-            animName     = "S_A_HUMAN.H_A_AINM",
-            position     = position,
-            facing       = facing,
-            weapons      = weapons,
-        )
+        val soldier = SoldierGameObj()
+        server.loadedLevel?.definitions?.findById(defId.toUInt())?.let { soldier.definition = it as? BaseGameObjDef }
+        soldier.controlOwner = rhostId
+        soldier.playerType   = playerType
+        soldier.modelName    = modelName
+        soldier.animName     = "S_A_HUMAN.H_A_AINM"
+        soldier.position     = position
+        soldier.facing       = facing
+        buildWeaponsForSoldier(defId, soldier.weaponBag)
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(soldier, netId)
         soldiersByHost[rhostId] = soldier
         server.gameObjManager.addStar(soldier)
 
-        // Bind the player's data object so buildings (Refinery) can award money
-        soldier.playerData = playersByHost[rhostId]
+        // FIXME: Player is not PlayerDataClass — setPlayerData() requires a PlayerDataClass, but we only
+        // have a Player (NetworkObject subclass). The C++ cPlayer implements PlayerDataClass; here they are
+        // separate. Binding is deferred until Player extends or wraps PlayerDataClass.
+        // soldier.setPlayerData(playersByHost[rhostId])
 
         // Give starting credits on first spawn if configured
         if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5f) {
@@ -291,25 +291,22 @@ open class God(private val server: GameServer) {
         println("[GOD] spawned purchased soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
             "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z})")
 
-        val weapons = buildWeaponsForSoldier(defId)
-
-        val soldier = SoldierGameObj(
-            definitionId = defId,
-            controlOwner = rhostId,
-            team         = playerType,
-            modelName    = modelName,
-            animName     = "S_A_HUMAN.H_A_AINM",
-            position     = position,
-            facing       = facing,
-            weapons      = weapons,
-        )
+        val soldier = SoldierGameObj()
+        server.loadedLevel?.definitions?.findById(defId.toUInt())?.let { soldier.definition = it as? BaseGameObjDef }
+        soldier.controlOwner = rhostId
+        soldier.playerType   = playerType
+        soldier.modelName    = modelName
+        soldier.animName     = "S_A_HUMAN.H_A_AINM"
+        soldier.position     = position
+        soldier.facing       = facing
+        buildWeaponsForSoldier(defId, soldier.weaponBag)
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(soldier, netId)
         soldiersByHost[rhostId] = soldier
         server.gameObjManager.addStar(soldier)
 
-        // Bind player data (same as createCommando)
-        soldier.playerData = playersByHost[rhostId]
+        // FIXME: Player is not PlayerDataClass — same as createCommando; deferred.
+        // soldier.setPlayerData(playersByHost[rhostId])
 
         // No starting credits — purchase already costs money
 
@@ -330,11 +327,24 @@ open class God(private val server: GameServer) {
      *
      * Falls back to pistol + C4 when the definition cannot be found.
      */
-    private fun buildWeaponsForSoldier(defId: Int): MutableList<WeaponEntry> {
+    /**
+     * Populates [bag] with weapons for a newly spawned soldier from its definition.
+     *
+     * Mirrors C++ ArmedGameObj::Copy_Settings(): reads WeaponDefID and
+     * SecondaryWeaponDefID from the preset definition and inserts them in
+     * ascending keyNumber order (WeaponBagClass::Add_Weapon sorted insertion).
+     *
+     * Timed C4 is always appended if not already present, since scripts that
+     * normally grant it are not yet executed server-side.
+     *
+     * Falls back to pistol + C4 when the definition cannot be found.
+     */
+    private fun buildWeaponsForSoldier(defId: Int, bag: WeaponBagClass) {
         val registry = server.loadedLevel?.definitions
         val wrapper = registry?.findById(defId.toUInt()) as? SoldierGameObjDefWrapper
 
-        val weapons = mutableListOf<WeaponEntry>()
+        data class WeaponEntry(val defId: Int, val rounds: Int)
+        val entries = mutableListOf<WeaponEntry>()
 
         if (wrapper != null) {
             val armed = wrapper.soldierDef.armed
@@ -347,36 +357,38 @@ open class God(private val server: GameServer) {
                     (registry.findById(armed.weaponDefId.toUInt()) as? WeaponDefinitionClass)
                         ?.maxInventoryRounds ?: 100
                 }
-                weapons.add(WeaponEntry(armed.weaponDefId, rounds))
+                entries.add(WeaponEntry(armed.weaponDefId, rounds))
             }
 
             // Secondary weapon
             if (armed.secondaryWeaponDefId != 0) {
                 val rounds = (registry.findById(armed.secondaryWeaponDefId.toUInt()) as? WeaponDefinitionClass)
                     ?.maxInventoryRounds ?: 100
-                weapons.add(WeaponEntry(armed.secondaryWeaponDefId, rounds))
+                entries.add(WeaponEntry(armed.secondaryWeaponDefId, rounds))
             }
         } else {
             // Fallback when def not found: give pistol
             if (server.pistolWeaponDefId != 0) {
-                weapons.add(WeaponEntry(server.pistolWeaponDefId, 100))
+                entries.add(WeaponEntry(server.pistolWeaponDefId, 100))
             }
         }
 
         // Timed C4 is granted by scripts in C++; hardcode it here until scripts are executed
-        if (server.timedC4WeaponDefId != 0 && weapons.none { it.definitionId == server.timedC4WeaponDefId }) {
-            weapons.add(WeaponEntry(server.timedC4WeaponDefId, 1))
+        if (server.timedC4WeaponDefId != 0 && entries.none { it.defId == server.timedC4WeaponDefId }) {
+            entries.add(WeaponEntry(server.timedC4WeaponDefId, 1))
         }
 
         // Sort by keyNumber ascending — matches C++ WeaponBagClass::Add_Weapon sorted insertion
         if (registry != null) {
-            weapons.sortBy { entry ->
-                (registry.findById(entry.definitionId.toUInt()) as? WeaponDefinitionClass)?.keyNumber
+            entries.sortBy { entry ->
+                (registry.findById(entry.defId.toUInt()) as? WeaponDefinitionClass)?.keyNumber
                     ?: Float.MAX_VALUE
             }
         }
 
-        return weapons
+        for (entry in entries) {
+            bag.addWeapon(entry.defId, entry.rounds)
+        }
     }
 
     // ---- Vehicle spawning ----
@@ -422,15 +434,15 @@ open class God(private val server: GameServer) {
         val modelName   = resolveModelName(wrapper)
         val playerType  = playerTeams[buyerRhostId] ?: 0
 
-        val vehicle = VehicleGameObj(
-            definitionId     = defId,
-            modelName        = modelName,
-            position         = spawnPosition,
-            vehicleType      = vehicleType,
-            seatCount        = seatCount,
-            team             = playerType,
-            vehicleDelivered = true,
-        )
+        val vehicle = VehicleGameObj()
+        wrapper?.let { vehicle.definition = it }
+        vehicle.modelName       = modelName
+        vehicle.position        = spawnPosition
+        vehicle.playerType      = playerType
+        vehicle.vehicleDelivered = true
+        // Resize seat list to match definition
+        vehicle.seatOccupants.clear()
+        repeat(seatCount) { vehicle.seatOccupants.add(null) }
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(vehicle, netId)
         vehiclesByNetId[netId] = vehicle
@@ -454,16 +466,15 @@ open class God(private val server: GameServer) {
             as? VehicleGameObjDefWrapper
         val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
         val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
-        val vehicle = VehicleGameObj(
-            definitionId     = defId,
-            modelName        = resolveModelName(wrapper),
-            position         = spawnPosition,
-            vehicleType      = vehicleType,
-            seatCount        = seatCount,
-            team             = team,
-            vehicleDelivered = true,
-            controlOwner     = 0,
-        )
+        val vehicle = VehicleGameObj()
+        wrapper?.let { vehicle.definition = it }
+        vehicle.modelName       = resolveModelName(wrapper)
+        vehicle.position        = spawnPosition
+        vehicle.playerType      = team
+        vehicle.vehicleDelivered = true
+        vehicle.controlOwner    = 0
+        vehicle.seatOccupants.clear()
+        repeat(seatCount) { vehicle.seatOccupants.add(null) }
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(vehicle, netId)
         vehiclesByNetId[netId] = vehicle
@@ -495,8 +506,7 @@ open class God(private val server: GameServer) {
         // grantShieldStrengthMax — increases max shield by (grantShieldStrengthMax * baseDef.shieldStrengthMax)
         // C++: powerup.cpp line 277; rounds up via (int)(add + 0.95f)
         if (def.grantShieldStrengthMax > 0f) {
-            val baseDef = (server.loadedLevel?.definitions?.findById(soldier.definitionId.toUInt())
-                as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
+            val baseDef = (soldier.definition as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
             if (baseDef != null) {
                 val add = (def.grantShieldStrengthMax * baseDef.shieldStrengthMax + 0.95f).toInt().toFloat()
                 soldier.shieldStrengthMax += add
@@ -513,8 +523,7 @@ open class God(private val server: GameServer) {
         // grantHealthMax — increases max health by (grantHealthMax * baseDef.healthMax)
         // C++: powerup.cpp line 321; rounds up via (int)(add + 0.95f)
         if (def.grantHealthMax > 0f) {
-            val baseDef = (server.loadedLevel?.definitions?.findById(soldier.definitionId.toUInt())
-                as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
+            val baseDef = (soldier.definition as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
             if (baseDef != null) {
                 val add = (def.grantHealthMax * baseDef.healthMax + 0.95f).toInt().toFloat()
                 soldier.healthMax += add
@@ -538,13 +547,14 @@ open class God(private val server: GameServer) {
         } else if (def.grantWeaponClips && def.grantWeaponRounds > 0) {
             val definitions = server.loadedLevel?.definitions
             var refilled = false
-            for (i in soldier.weapons.indices) {
-                val entry = soldier.weapons[i]
-                val wDef = definitions?.findById(entry.definitionId.toUInt()) as? WeaponDefinitionClass
+            val bag = soldier.weaponBag
+            for (i in 0 until bag.getCount()) {
+                val weapon = bag.peekWeapon(i)
+                val wDef = definitions?.findById(weapon.definitionId.toUInt()) as? WeaponDefinitionClass
                 if (wDef != null && wDef.canReceiveGenericCnCAmmo && wDef.clipSize > 0) {
-                    soldier.weapons[i] = entry.copy(
-                        totalRounds = (entry.totalRounds + wDef.clipSize * def.grantWeaponRounds)
-                            .coerceAtMost(wDef.maxInventoryRounds),
+                    weapon.setTotalRounds(
+                        (weapon.totalRounds + wDef.clipSize * def.grantWeaponRounds)
+                            .coerceAtMost(wDef.maxInventoryRounds)
                     )
                     refilled = true
                 }
@@ -569,16 +579,15 @@ open class God(private val server: GameServer) {
         val seatCount   = wrapper?.vehicleDef?.numSeats ?: 2  // C++ default: NumSeats = 2
         val modelName   = resolveModelName(wrapper)
         val position = lv.transform.position.let { Vector3(it.x, it.y, it.z) }
-        val vehicle = VehicleGameObj(
-            definitionId     = lv.definitionId,
-            modelName        = modelName,
-            position         = position,
-            team             = lv.playerType,
-            vehicleType      = vehicleType,
-            seatCount        = seatCount,
-            vehicleDelivered = true,
-            controlOwner     = 0,
-        )
+        val vehicle = VehicleGameObj()
+        wrapper?.let { vehicle.definition = it }
+        vehicle.modelName       = modelName
+        vehicle.position        = position
+        vehicle.playerType      = lv.playerType
+        vehicle.vehicleDelivered = true
+        vehicle.controlOwner    = 0
+        vehicle.seatOccupants.clear()
+        repeat(seatCount) { vehicle.seatOccupants.add(null) }
         NetworkObjectManager.registerObject(vehicle, lv.networkId)
         vehiclesByNetId[lv.networkId] = vehicle
         server.gameObjManager.add(vehicle)
@@ -600,10 +609,10 @@ open class God(private val server: GameServer) {
      */
     fun enterVehicle(rhostId: Int, vehicle: VehicleGameObj) {
         val soldier = soldiersByHost[rhostId] ?: return
-        vehicle.seatOccupantIds[0] = soldier.networkId
+        // Set first seat occupant (driver seat = 0)
+        if (vehicle.seatOccupants.isEmpty()) vehicle.seatOccupants.add(null)
+        vehicle.seatOccupants[0] = soldier
         vehicle.controlOwner = rhostId
-        vehicle.driver = soldier
-        soldier.inVehicle = true
         playerVehicles[rhostId] = vehicle
 
         // BIT_RARE for vehicle — seat occupant changed; all clients need to know
@@ -628,11 +637,10 @@ open class God(private val server: GameServer) {
         val vehicle = playerVehicles.remove(rhostId) ?: return
         val soldier = soldiersByHost[rhostId]
 
-        vehicle.seatOccupantIds[0] = -1
+        if (vehicle.seatOccupants.isNotEmpty()) vehicle.seatOccupants[0] = null
         vehicle.controlOwner = 0
-        vehicle.driver = null
-        vehicle.isEngineOn = false
-        vehicle.velocity = Vector3(0f, 0f, 0f)
+        vehicle.enableEngine(false)
+        vehicle.setVelocity(Vector3(0f, 0f, 0f))
 
         if (soldier != null) {
             // Place the soldier 2 units to the side of the vehicle
@@ -641,7 +649,6 @@ open class God(private val server: GameServer) {
                 vehicle.position.y + 2f,
                 vehicle.position.z,
             )
-            soldier.inVehicle = false
 
             // BIT_FREQUENT for soldier — on-foot again; other clients need updated position
             for (clientId in playerInGame) {
@@ -670,7 +677,7 @@ open class God(private val server: GameServer) {
         // Rate limit: 1 C4 per second per player
         if (nowMs - (lastC4PlaceMs[rhostId] ?: 0L) < 1000L) return null
 
-        val ammoDef = server.getAmmoDefForWeapon(soldier.currentWeaponDefId) ?: return null
+        val ammoDef = server.getAmmoDefForWeapon(soldier.getWeapon()?.definitionId ?: 0) ?: return null
         if (ammoDef.ammoType != AMMO_TYPE_C4_REMOTE && ammoDef.ammoType != AMMO_TYPE_C4_TIMED) return null
 
         // Find nearest alive enemy building within 15m (225 = 15²)
@@ -712,11 +719,10 @@ open class God(private val server: GameServer) {
 
         // Set runtime fields
         c4.ammoDefinition = ammoDef
-        c4.ownerRhostId   = rhostId
-        c4.stuckBuilding  = nearest
-        c4.serverRef      = server
         c4.detonationMode = 1
         c4.timer          = if (ammoDef.ammoType == AMMO_TYPE_C4_TIMED) ammoDef.c4TriggerTime1 else 0f
+        // FIXME: c4.ownerRhostId — not a field on new C4GameObj; track per-owner C4 via c4Objects list only
+        // FIXME: c4.stuckBuilding / c4.serverRef — not fields on new C4GameObj; building damage handled by stuckObject + detonate()
 
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(c4, netId)
@@ -741,7 +747,7 @@ open class God(private val server: GameServer) {
         val teamC4 = c4Objects.filter { c4 ->
             !c4.isDeletePending &&
             c4.ammoDefinition?.ammoType == AMMO_TYPE_C4_REMOTE &&
-            (playerTeams[c4.ownerRhostId] ?: -1) == team
+            (playerTeams[c4.getOwner()?.controlOwner ?: -1] ?: -1) == team
         }
         if (teamC4.size > C4GameObj.C4_LIMIT) {
             teamC4.maxByOrNull { it.age }?.defuse()
@@ -762,19 +768,16 @@ open class God(private val server: GameServer) {
         val beaconDef = server.loadedLevel?.definitions?.findById(ammoDef.beaconDefId.toUInt())
             as? BeaconGameObjDef ?: return null
 
-        val beacon = BeaconGameObj(
-            definitionId = beaconDef.id.toInt(),
-            position     = soldier.position.copy(),
-            modelName    = ammoDef.modelFilename,
-            initialState = BeaconGameObj.STATE_ARMING,
-            initialOwnerId = soldier.networkId,
-        )
-
-        // Set runtime fields
-        beacon.beaconDef     = beaconDef
-        beacon.serverRef     = server
-        beacon.ownerRhostId  = rhostId
-        beacon.armTimer      = beaconDef.armTime
+        val beacon = BeaconGameObj()
+        beacon.definition    = beaconDef
+        beacon.position      = soldier.position.copy()
+        beacon.modelName     = ammoDef.modelFilename
+        beacon.state         = BeaconGameObj.STATE_ARMING
+        beacon.stateTimer    = beaconDef.armTime
+        // Link owner so BeaconGameObj can read owner's controlOwner for identification
+        beacon.owner.set(soldier)
+        // FIXME: beacon.serverRef / beacon.ownerRhostId / beacon.beaconDef / beacon.armTimer — not fields on new BeaconGameObj
+        // State and timer set above directly; definition accessed via beacon.getDefinition() after registration
 
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(beacon, netId)
@@ -807,11 +810,17 @@ open class God(private val server: GameServer) {
             exitVehicle(rhostId)
         }
         // Defuse all remote C4 owned by this player (timed C4 continues to tick after disconnect)
-        c4Objects.filter { !it.isDeletePending && it.ownerRhostId == rhostId && it.ammoDefinition?.ammoType == AMMO_TYPE_C4_REMOTE }
+        // Identify ownership via the C4's owner soldier's controlOwner (rhostId)
+        c4Objects.filter { !it.isDeletePending && it.getOwner()?.controlOwner == rhostId && it.ammoDefinition?.ammoType == AMMO_TYPE_C4_REMOTE }
             .forEach { it.defuse() }
-        // Cancel all beacons owned by this player
-        beaconObjects.filter { !it.isDeletePending && it.ownerRhostId == rhostId }
-            .forEach { it.cancel() }
+        // Cancel all beacons owned by this player.
+        // Identify ownership via the owner soldier's controlOwner (live path) or
+        // ownerRhostId fallback (test / secondary-constructor path where owner ref is null).
+        beaconObjects.filter {
+            !it.isDeletePending &&
+            (it.getOwner()?.controlOwner == rhostId ||
+             (it.getOwner() == null && it.ownerRhostId == rhostId))
+        }.forEach { it.setDeletePending() }
         val soldier = soldiersByHost.remove(rhostId) ?: return
         server.gameObjManager.removeStar(soldier)
         soldier.setDeletePending()
@@ -828,7 +837,7 @@ open class God(private val server: GameServer) {
         // Defuse/cancel any C4 and beacons not already cleaned up by deleteSoldier()
         // (e.g. timed C4 owned by no live player, or anything that slipped through)
         c4Objects.filter { !it.isDeletePending }.forEach { it.defuse() }
-        beaconObjects.filter { !it.isDeletePending }.forEach { it.cancel() }
+        beaconObjects.filter { !it.isDeletePending }.forEach { it.setDeletePending() }
         c4Objects.clear()
         beaconObjects.clear()
 

@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.net.replication.NetworkObject
+import ccr.net.replication.NetworkObjectManager
 import ccr.server.GameObjManager
 import ccr.server.defs.BaseGameObjDef
 
@@ -11,6 +12,9 @@ abstract class BaseGameObj : NetworkObject() {
 
     // C++: const BaseGameObjDef* Definition (initialized to NULL)
     var definition: BaseGameObjDef? = null
+
+    // Convenience accessor for the definition's integer ID (0 if no definition assigned yet)
+    val definitionId: Int get() = definition?.id?.toInt() ?: 0
 
     // C++: IsPostThinkAllowed (initialized to false)
     var isPostThinkAllowed: Boolean = false
@@ -29,7 +33,7 @@ abstract class BaseGameObj : NetworkObject() {
 
     // C++: virtual bool Save(ChunkSaveClass & csave)
     open fun save(csave: ChunkSaveClass): Boolean {
-        csave.beginChunk(CHUNKID_VARIABLES)
+        csave.beginChunk(CHUNKID_BASEGAMEOBJ_VARIABLES)
         csave.writeMicroChunk(MICROCHUNKID_IS_PENDING_DELETE, isDeletePending)
         csave.writeMicroChunk(MICROCHUNKID_DEFINITION_ID, definition!!.id.toInt())
         csave.writeMicroChunk(MICROCHUNKID_INSTANCE_ID, networkId)
@@ -52,6 +56,7 @@ abstract class BaseGameObj : NetworkObject() {
             }
             cload.closeMicroChunk()
         }
+        // Note: curChunkId is CHUNKID_BASEGAMEOBJ_VARIABLES — still a single chunk, just renamed
         cload.closeChunk()
         if (id == 0) {
             if (networkId == 0) setNetworkId(NetworkObjectManager.getNewDynamicId())
@@ -67,8 +72,7 @@ abstract class BaseGameObj : NetworkObject() {
     }
 
     // C++: virtual void Delete() { delete this; }
-    // FIXME: should call destruct() to mirror delete this → ~BaseGameObj()
-    override fun delete() {}
+    override fun delete() { destruct() }
 
     // C++: ~BaseGameObj() — calls GameObjManager::Remove(this)
     // FIXME: not called yet — wire into deletion pipeline
@@ -88,8 +92,11 @@ abstract class BaseGameObj : NetworkObject() {
     // C++: virtual bool Is_Hibernating() { return false; }
     open fun isHibernating(): Boolean = false
 
+    // C++: virtual void On_Post_Load() {}
+    open fun onPostLoad() {}
+
     companion object {
-        private const val CHUNKID_VARIABLES                    = 910991407
+        internal const val CHUNKID_BASEGAMEOBJ_VARIABLES        = 910991407
         private const val MICROCHUNKID_DEFINITION_ID           = 2
         private const val MICROCHUNKID_INSTANCE_ID             = 3
         private const val MICROCHUNKID_IS_PENDING_DELETE       = 4

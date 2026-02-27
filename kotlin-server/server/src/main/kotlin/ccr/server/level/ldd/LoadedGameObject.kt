@@ -1,9 +1,9 @@
 package ccr.server.level.ldd
 
+import ccr.math.Vector3
 import ccr.server.level.Matrix3D
 import ccr.server.level.OBBox
 import ccr.server.level.Sphere
-import ccr.server.level.Vector3
 
 // ─── Shared instance-state data classes ────────────────────────────────────────
 

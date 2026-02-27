@@ -9,4 +9,4 @@ class VehicleGameObjDefWrapper(
     id: UInt,
     chunkId: UInt,
     val vehicleDef: VehicleGameObjDef,
-) : DefinitionClass(name, id, chunkId)
+) : BaseGameObjDef(name, id, chunkId)

@@ -164,11 +164,10 @@ abstract class NetworkObject {
     // C++: Get_Description(StringClass&) — Kotlin-idiomatic String return
     open fun getDescription(): String = ""
 
-    // C++: Set_Object_Dirty_Bit(dirty_bit, onoff) — marks clients 1..MAX dirty
-    // N.B. Client 0 is actually the server — skip it
+    // C++: Set_Object_Dirty_Bit(dirty_bit, onoff) — marks all clients dirty (0..MAX-1)
+    // C++ has no isServer guard and includes client 0 (the server slot is index 0 internally).
     open fun setObjectDirtyBit(dirtyBit: Int, on: Boolean) {
-        if (!isServer) return
-        for (i in 1 ..< MAX_CLIENT_COUNT) {
+        for (i in 0 ..< MAX_CLIENT_COUNT) {
             if (on) clientStatus[i] = (clientStatus[i].toInt() or dirtyBit).toByte()
             else    clientStatus[i] = (clientStatus[i].toInt() and dirtyBit.inv()).toByte()
         }

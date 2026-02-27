@@ -29,7 +29,7 @@ class WeatherMgr(
     val precipitationOverrideCount: Int = 0,
 ) : NetworkObject() {
     override val networkClassId: Int = 0
-    override val creationDirtyBit = BIT_RARE
+    val creationDirtyBit = BIT_RARE
     override fun delete() {}
     override fun setDeletePending() {}  // singleton manager, never deleted
 

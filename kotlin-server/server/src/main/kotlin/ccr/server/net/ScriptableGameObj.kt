@@ -14,6 +14,8 @@ abstract class ScriptableGameObj : BaseGameObj() {
     protected var observerCreatedPending: Boolean = false
 
     // C++: GameObjObserverList Observers
+    // @JvmName avoids clash with explicit fun getObservers() below
+    @get:JvmName("observersMutableList")
     protected val observers: MutableList<GameObjObserverClass> = mutableListOf()
 
     // C++: DynamicVectorClass<GameObjObserverTimerClass*> ObserverTimerList
@@ -85,7 +87,7 @@ abstract class ScriptableGameObj : BaseGameObj() {
         referenceableGameObj.save(csave)
         csave.endChunk()
 
-        csave.beginChunk(CHUNKID_VARIABLES)
+        csave.beginChunk(CHUNKID_SCRIPTABLE_VARIABLES)
         // FIXME: write referenceableGameObj this-pointer via MICROCHUNKID_REFERENCEABLE_PTR when pointer remap is ported
         for (observer in observers) {
             csave.writeMicroChunk(MICROCHUNKID_GAME_OBJ_OBSERVER_PTR, observer)
@@ -115,12 +117,12 @@ abstract class ScriptableGameObj : BaseGameObj() {
             when (cload.curChunkId) {
                 CHUNKID_PARENT        -> super.load(cload)
                 CHUNKID_REFERENCEABLE -> referenceableGameObj.load(cload)
-                CHUNKID_VARIABLES -> {
+                CHUNKID_SCRIPTABLE_VARIABLES -> {
                     while (cload.openMicroChunk()) {
                         when (cload.curMicroChunkId) {
                             // FIXME: MICROCHUNKID_REFERENCEABLE_PTR — pointer remap not ported
                             MICROCHUNKID_OBSERVER_CREATED_PENDING -> { observerCreatedPending = cload.readBool() }
-                            MICROCHUNKID_GAME_OBJ_OBSERVER_PTR    -> { observers.add(cload.readPtr()) }
+                            MICROCHUNKID_GAME_OBJ_OBSERVER_PTR    -> { observers.add(cload.readPtr() as GameObjObserverClass) }
                             else -> error("Unrecognized ScriptableGameObj variable chunk ID: ${cload.curMicroChunkId}")
                         }
                         cload.closeMicroChunk()
@@ -233,8 +235,11 @@ abstract class ScriptableGameObj : BaseGameObj() {
     // C++: const GameObjObserverList & Get_Observers()
     fun getObservers(): List<GameObjObserverClass> = observers
 
+    // C++: virtual void Get_Information(StringClass&) — base returns empty string
+    open fun getInformation(): String = ""
+
     // C++: virtual void On_Post_Load()
-    open fun onPostLoad() {
+    override open fun onPostLoad() {
         super.onPostLoad()
         // FIXME: remove NULL observers after pointer remap — wire when pointer remap system is ported
         // FIXME: only set if CombatManager::Is_First_Load() — wire when CombatManager is ported
@@ -261,7 +266,7 @@ abstract class ScriptableGameObj : BaseGameObj() {
 
     companion object {
         private const val CHUNKID_PARENT          = 627001122
-        private const val CHUNKID_VARIABLES       = 627001123
+        internal const val CHUNKID_SCRIPTABLE_VARIABLES = 627001123
         private const val CHUNKID_REFERENCEABLE   = 627001124
         private const val CHUNKID_CUSTOM_TIMER    = 627001125
         private const val CHUNKID_OBSERVER_TIMER  = 627001126

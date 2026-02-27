@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.math.Vector3
-import ccr.server.defs.combat.PowerUpGameObjDef
+import ccr.server.defs.PowerUpGameObjDef
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

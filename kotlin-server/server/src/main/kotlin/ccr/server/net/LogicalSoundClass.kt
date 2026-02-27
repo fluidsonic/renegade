@@ -7,9 +7,13 @@ import ccr.math.Vector3
 class LogicalSoundClass {
 
     // C++: uint32 m_TypeMask
+    // @JvmName avoids clash with fun getTypeMask() below
+    @get:JvmName("typeMaskField") @set:JvmName("setTypeMaskField")
     var typeMask: Int = 0
 
     // C++: Vector3 m_Position
+    // @JvmName avoids clash with fun getPosition() below
+    @get:JvmName("positionField") @set:JvmName("setPositionField")
     var position: Vector3 = Vector3()
 
     // C++: RefCountClass* m_UserObj — stores creator reference

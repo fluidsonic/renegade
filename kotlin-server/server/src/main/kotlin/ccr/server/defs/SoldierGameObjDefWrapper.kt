@@ -9,4 +9,4 @@ class SoldierGameObjDefWrapper(
     id: UInt,
     chunkId: UInt,
     val soldierDef: SoldierGameObjDef,
-) : DefinitionClass(name, id, chunkId)
+) : BaseGameObjDef(name, id, chunkId)

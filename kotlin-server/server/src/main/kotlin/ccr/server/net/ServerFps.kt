@@ -15,7 +15,7 @@ class ServerFps : NetworkObject() {
 
     // C++: Get_Network_Class_ID() not overridden → returns 0 (base class default)
     override val networkClassId: Int = 0
-    override val creationDirtyBit = BIT_FREQUENT
+    val creationDirtyBit = BIT_FREQUENT
 
     override fun delete() {}
 

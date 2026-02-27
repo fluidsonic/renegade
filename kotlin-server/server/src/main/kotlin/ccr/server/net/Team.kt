@@ -47,10 +47,12 @@ class Team(
 
     // C++: cTeam::Export_Frequent — empty
 
+    // C++: cTeam::Reset() — zeroes stats and marks BIT_RARE dirty
     fun reset() {
         kills = 0
         deaths = 0
         score = 0f
+        setObjectDirtyBit(NetworkObject.BIT_RARE, true)
     }
 
     fun incrementScore(amount: Float) {

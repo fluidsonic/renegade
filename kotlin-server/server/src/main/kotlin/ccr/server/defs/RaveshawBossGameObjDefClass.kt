@@ -1,6 +1,5 @@
-package ccr.server.defs.combat
+package ccr.server.defs
 
-import ccr.server.defs.DefinitionClass
 import ccr.server.mix.ChunkReader
 
 /**
@@ -21,18 +20,14 @@ class RaveshawBossGameObjDefClass(
 
     companion object {
         const val CHUNK_ID: UInt = 0x0004014Cu  // CHUNKID_GAME_OBJECT_DEF_RAVESHAW_BOSS
-    }
-}
 
-/**
- * Parses a RaveshawBossGameObjDefClass from the OBJDATA chunk.
- * No additional persisted fields.
- */
-fun parseRaveshawBossGameObjDefClass(
-    objDataReader: ChunkReader,
-    name: String,
-    id: UInt,
-    chunkId: UInt,
-): RaveshawBossGameObjDefClass {
-    return RaveshawBossGameObjDefClass(name = name, id = id, chunkId = chunkId)
+        fun load(
+            objDataReader: ChunkReader,
+            name: String,
+            id: UInt,
+            chunkId: UInt,
+        ): RaveshawBossGameObjDefClass {
+            return RaveshawBossGameObjDefClass(name = name, id = id, chunkId = chunkId)
+        }
+    }
 }

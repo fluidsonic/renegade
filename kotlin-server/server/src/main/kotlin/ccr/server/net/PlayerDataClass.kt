@@ -4,6 +4,8 @@ package ccr.server.net
 class PlayerDataClass {
 
     // C++: GameObjReference GameObj
+    // @JvmName avoids clash with fun getGameObj() / fun setGameObj() below
+    @get:JvmName("gameObjField") @set:JvmName("setGameObjField")
     var gameObj: SmartGameObj? = null
 
     // C++: void Set_GameObj(SmartGameObj*)
@@ -11,4 +13,8 @@ class PlayerDataClass {
 
     // C++: SmartGameObj* Get_GameObj()
     fun getGameObj(): SmartGameObj? = gameObj
+
+    // C++: void Stats_Add_Powerup() — increments the player's powerup pickup counter
+    // FIXME: real implementation updates persistent stats when PlayerDataClass is fully ported
+    fun statsAddPowerup() {}
 }

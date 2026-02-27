@@ -545,6 +545,7 @@ class SoldierGameObjTest {
             modelName = NOD_MODEL_NAME,
             animName = PROD_ANIM_NAME,
             position = Vector3(5f, 10f, 3f),
+            health = 100f,                                           // must be > 0 so isDead=false
         )
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, soldier, networkId = 1_500_000_001)
@@ -572,7 +573,7 @@ class SoldierGameObjTest {
         assertEquals(defId, bs.getInt())                            // soldier.definitionId
 
         // exportOccasional
-        assertFalse(bs.getBool())                                    // isDead
+        assertFalse(bs.getBool())                                    // isDead (health > 0 → false)
         bs.getFloat(BITPACK_HEALTH)
         bs.getFloat(BITPACK_SHIELD_STRENGTH)
         bs.getInt(BITPACK_SHIELD_TYPE)

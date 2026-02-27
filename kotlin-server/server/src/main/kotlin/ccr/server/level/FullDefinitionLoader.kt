@@ -1,7 +1,6 @@
 package ccr.server.level
 
 import ccr.server.defs.*
-import ccr.server.defs.combat.*
 import ccr.server.defs.phys.*
 import ccr.server.mix.ChunkReader
 import java.nio.ByteBuffer
@@ -74,14 +73,14 @@ object FullDefinitionLoader {
 
             // SAMSiteGameObjDef → DefinitionClass
             SAMSiteGameObjDef.CHUNK_ID ->
-                parseSAMSiteGameObjDef(objDataChunk, name, id, chunkId)
+                SAMSiteGameObjDef.load(objDataChunk, name, id, chunkId)
 
             // SpawnerDefClass → DefinitionClass
             SpawnerDefClass.CHUNK_ID ->
-                parseSpawnerDefClass(objDataChunk, name, id, chunkId) ?: fallback
+                SpawnerDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 
             C4GameObjDef.CHUNK_ID ->
-                parseC4GameObjDef(objDataChunk, name, id, chunkId)
+                C4GameObjDef.load(objDataChunk, name, id, chunkId)
 
             SoldierGameObjDef.CHUNK_ID -> {
                 val parsed = SoldierGameObjDef.load(objDataChunk)
@@ -90,10 +89,10 @@ object FullDefinitionLoader {
             }
 
             SimpleGameObjDef.CHUNK_ID ->
-                parseSimpleGameObjDef(objDataChunk, name, id, chunkId)
+                SimpleGameObjDef.load(objDataChunk, name, id, chunkId)
 
             PowerUpGameObjDef.CHUNK_ID ->
-                parsePowerUpGameObjDef(objDataChunk, name, id, chunkId)
+                PowerUpGameObjDef.load(objDataChunk, name, id, chunkId)
 
             // TransitionGameObjDef → DefinitionClass
             TransitionGameObjDef.CHUNK_ID ->
@@ -106,34 +105,34 @@ object FullDefinitionLoader {
             }
 
             CinematicGameObjDef.CHUNK_ID ->
-                parseCinematicGameObjDef(objDataChunk, name, id, chunkId)
+                CinematicGameObjDef.load(objDataChunk, name, id, chunkId)
 
             BeaconGameObjDef.CHUNK_ID ->
-                parseBeaconGameObjDef(objDataChunk, name, id, chunkId)
+                BeaconGameObjDef.load(objDataChunk, name, id, chunkId)
 
             // ScriptZoneGameObjDef → DefinitionClass
             ScriptZoneGameObjDef.CHUNK_ID ->
-                parseScriptZoneGameObjDef(objDataChunk, name, id, chunkId)
+                ScriptZoneGameObjDef.load(objDataChunk, name, id, chunkId)
 
             // DamageZoneGameObjDef → DefinitionClass
             DamageZoneGameObjDef.CHUNK_ID ->
-                parseDamageZoneGameObjDef(objDataChunk, name, id, chunkId)
+                DamageZoneGameObjDef.load(objDataChunk, name, id, chunkId)
 
             // SpecialEffectsGameObjDef → DefinitionClass
             SpecialEffectsGameObjDef.CHUNK_ID ->
-                parseSpecialEffectsGameObjDef(objDataChunk, name, id, chunkId)
+                SpecialEffectsGameObjDef.load(objDataChunk, name, id, chunkId)
 
             // SakuraBossGameObjDef → DefinitionClass
             SakuraBossGameObjDef.CHUNK_ID ->
-                parseSakuraBossGameObjDef(objDataChunk, name, id, chunkId) ?: fallback
+                SakuraBossGameObjDef.load(objDataChunk, name, id, chunkId) ?: fallback
 
             // MendozaBossGameObjDefClass → DefinitionClass
             MendozaBossGameObjDefClass.CHUNK_ID ->
-                parseMendozaBossGameObjDefClass(objDataChunk, name, id, chunkId)
+                MendozaBossGameObjDefClass.load(objDataChunk, name, id, chunkId)
 
             // RaveshawBossGameObjDefClass → DefinitionClass
             RaveshawBossGameObjDefClass.CHUNK_ID ->
-                parseRaveshawBossGameObjDefClass(objDataChunk, name, id, chunkId)
+                RaveshawBossGameObjDefClass.load(objDataChunk, name, id, chunkId)
 
             // ── Munitions (0xB000 range) ────────────────────────────────────────────
 
@@ -193,36 +192,36 @@ object FullDefinitionLoader {
                 parseDynamicAnimPhysDefClass(objDataChunk, name, id, chunkId)
 
             DoorPhysDefClass.CHUNK_ID ->
-                parseDoorPhysDefClass(objDataChunk, name, id, chunkId)
+                DoorPhysDefClass.load(objDataChunk, name, id, chunkId)
 
             ElevatorPhysDefClass.CHUNK_ID ->
-                parseElevatorPhysDefClass(objDataChunk, name, id, chunkId) ?: fallback
+                ElevatorPhysDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 
             // ── Buildings (0xD000 range) ────────────────────────────────────────────
 
             RefineryGameObjDef.CHUNK_ID ->
-                parseRefineryGameObjDef(objDataChunk, name, id, chunkId)
+                RefineryGameObjDef.load(objDataChunk, name, id, chunkId)
 
             PowerPlantGameObjDef.CHUNK_ID ->
-                parsePowerPlantGameObjDef(objDataChunk, name, id, chunkId)
+                PowerPlantGameObjDef.load(objDataChunk, name, id, chunkId)
 
             SoldierFactoryGameObjDef.CHUNK_ID ->
-                parseSoldierFactoryGameObjDef(objDataChunk, name, id, chunkId)
+                SoldierFactoryGameObjDef.load(objDataChunk, name, id, chunkId)
 
             VehicleFactoryGameObjDef.CHUNK_ID ->
-                parseVehicleFactoryGameObjDef(objDataChunk, name, id, chunkId)
+                VehicleFactoryGameObjDef.load(objDataChunk, name, id, chunkId)
 
             AirStripGameObjDef.CHUNK_ID ->
-                parseAirStripGameObjDef(objDataChunk, name, id, chunkId)
+                AirStripGameObjDef.load(objDataChunk, name, id, chunkId)
 
             WarFactoryGameObjDef.CHUNK_ID ->
-                parseWarFactoryGameObjDef(objDataChunk, name, id, chunkId)
+                WarFactoryGameObjDef.load(objDataChunk, name, id, chunkId)
 
             ComCenterGameObjDef.CHUNK_ID ->
-                parseComCenterGameObjDef(objDataChunk, name, id, chunkId)
+                ComCenterGameObjDef.load(objDataChunk, name, id, chunkId)
 
             RepairBayGameObjDef.CHUNK_ID ->
-                parseRepairBayGameObjDef(objDataChunk, name, id, chunkId)
+                RepairBayGameObjDef.load(objDataChunk, name, id, chunkId)
 
             // BuildingGameObjDef → DefinitionClass (generic building not covered by a subtype)
             BuildingGameObjDef.CHUNK_ID ->
@@ -249,7 +248,7 @@ object FullDefinitionLoader {
                 parseEvaSettingsDefClass(objDataChunk, name, id, chunkId) ?: fallback
 
             CharacterClassSettingsDefClass.CHUNK_ID ->
-                parseCharacterClassSettingsDefClass(objDataChunk, name, id, chunkId) ?: fallback
+                CharacterClassSettingsDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 
             HumanAnimOverrideDef.CHUNK_ID ->
                 parseHumanAnimOverrideDef(objDataChunk, name, id, chunkId) ?: fallback

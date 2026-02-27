@@ -2,8 +2,8 @@ package ccr.server
 
 import ccr.math.Vector3
 import ccr.server.defs.DefinitionClass
-import ccr.server.defs.combat.PowerUpGameObjDef
-import ccr.server.defs.combat.SpawnerDefClass
+import ccr.server.defs.PowerUpGameObjDef
+import ccr.server.defs.SpawnerDefClass
 import ccr.server.level.DefinitionRegistry
 import ccr.server.level.LevelDynamicData
 import ccr.server.level.LevelStaticData

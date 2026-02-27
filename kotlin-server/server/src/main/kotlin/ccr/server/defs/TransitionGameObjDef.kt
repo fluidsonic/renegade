@@ -111,7 +111,7 @@ class TransitionGameObjDef(
     id: UInt,
     chunkId: UInt,
     val transitions: List<TransitionDataClass> = emptyList(),
-) : DefinitionClass(name, id, chunkId) {
+) : BaseGameObjDef(name, id, chunkId) {
 
     companion object {
         const val CHUNK_ID: UInt = 0x00040125u  // CHUNKID_GAME_OBJECT_DEF_TRANSITION

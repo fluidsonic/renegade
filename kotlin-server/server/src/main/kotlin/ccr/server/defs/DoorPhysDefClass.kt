@@ -1,7 +1,5 @@
-package ccr.server.defs.combat
+package ccr.server.defs
 
-import ccr.server.defs.AccessiblePhysDefClass
-import ccr.server.defs.DefinitionClass
 import ccr.server.defs.phys.AnimCollisionManagerDef
 import ccr.server.defs.phys.ProjectorManagerDef
 import ccr.server.defs.phys.parseStaticAnimPhysDefClass
@@ -73,6 +71,106 @@ class DoorPhysDefClass(
     companion object {
         /** CLASSID_DOORPHYSDEF = CLASSID_PHYSICS(0x9000) + 0x80 */
         const val CHUNK_ID: UInt = 0x00020C00u  // PHYSICS_CHUNKID_DOORPHYSDEF
+
+        // Chunk IDs from doors.cpp local enum (line 70)
+        private const val CHUNKID_DEF_VARIABLES = 320001903u
+        private const val CHUNKID_DEF_PARENT    = 320001904u
+
+        // Micro-chunk IDs from doors.cpp enum (sequential from 2; 1 is obsolete TRIGGER_RADIUS)
+        private const val MICRO_CLOSE_DELAY               = 2
+        private const val MICRO_TRIGGER_ZONE1             = 3
+        private const val MICRO_OLD_LOCK_CODE             = 4
+        private const val MICRO_OPEN_SOUND_DEF_ID         = 5
+        private const val MICRO_CLOSE_SOUND_DEF_ID        = 6
+        private const val MICRO_UNLOCK_SOUND_DEF_ID       = 7
+        private const val MICRO_ACCESS_DENIED_SOUND_DEF_ID = 8
+        private const val MICRO_TRIGGER_ZONE2             = 9
+        private const val MICRO_DOOR_OPENS_FOR_VEHICLES   = 10
+
+        fun load(
+            objDataReader: ChunkReader,
+            name: String,
+            id: UInt,
+            chunkId: UInt,
+        ): DoorPhysDefClass {
+            // Parse AccessiblePhysDefClass parent chain
+            val accessibleChunk = objDataReader.findChunk(CHUNKID_DEF_PARENT)
+
+            // StaticAnimPhysDefClass fields (nested inside Accessible -> StaticAnimPhysDef parent)
+            val staticAnimChunk = accessibleChunk?.findChunk(AccessiblePhysDefClass.CHUNKID_DEF_PARENT)
+            val parentObj = if (staticAnimChunk != null) {
+                parseStaticAnimPhysDefClass(staticAnimChunk, name, id, chunkId)
+            } else null
+
+            // LockCode from AccessiblePhysDefClass variables
+            val parentLockCode = accessibleChunk?.findChunk(AccessiblePhysDefClass.CHUNKID_DEF_VARIABLES)
+                ?.let { vars ->
+                    val bytes = vars.findMicroChunk(AccessiblePhysDefClass.VARID_DEF_LOCKCODE) ?: return@let null
+                    if (bytes.size < 4) return@let null
+                    ByteBuffer.wrap(bytes, 0, 4).order(ByteOrder.LITTLE_ENDIAN).int
+                }
+
+            // Door-specific fields
+            val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
+                ?: return DoorPhysDefClass(
+                    name = name, id = id, chunkId = chunkId,
+                    modelName = parentObj?.modelName ?: "NULL",
+                    isPreLit = parentObj?.isPreLit ?: false,
+                    isNonOccluder = parentObj?.isNonOccluder ?: true,
+                    shadowDynamicObjs = parentObj?.shadowDynamicObjs ?: false,
+                    shadowIsAdditive = parentObj?.shadowIsAdditive ?: false,
+                    shadowIgnoresZRotation = parentObj?.shadowIgnoresZRotation ?: true,
+                    shadowNearZ = parentObj?.shadowNearZ ?: 0.5f,
+                    shadowFarZ = parentObj?.shadowFarZ ?: 5.0f,
+                    shadowIntensity = parentObj?.shadowIntensity ?: 0.5f,
+                    doesCollideInPathfind = parentObj?.doesCollideInPathfind ?: false,
+                    isCosmetic = parentObj?.isCosmetic ?: false,
+                    animManagerDef = parentObj?.animManagerDef ?: AnimCollisionManagerDef(),
+                    projectorManagerDef = parentObj?.projectorManagerDef ?: ProjectorManagerDef(),
+                    lockCode = parentLockCode ?: 0,
+                )
+
+            val closeDelay           = vars.microChunkFloat(MICRO_CLOSE_DELAY) ?: 2f
+            val triggerZone1         = vars.microChunkFloatArray(MICRO_TRIGGER_ZONE1, 15)
+            val triggerZone2         = vars.microChunkFloatArray(MICRO_TRIGGER_ZONE2, 15)
+            val oldLockCode          = vars.microChunkInt(MICRO_OLD_LOCK_CODE)
+            val openSoundDefId       = vars.microChunkInt(MICRO_OPEN_SOUND_DEF_ID) ?: 0
+            val closeSoundDefId      = vars.microChunkInt(MICRO_CLOSE_SOUND_DEF_ID) ?: 0
+            val unlockSoundDefId     = vars.microChunkInt(MICRO_UNLOCK_SOUND_DEF_ID) ?: 0
+            val accessDeniedSoundDefId = vars.microChunkInt(MICRO_ACCESS_DENIED_SOUND_DEF_ID) ?: 0
+            val doorOpensForVehicles = vars.microChunkBool(MICRO_DOOR_OPENS_FOR_VEHICLES) ?: false
+
+            // LockCode: prefer parent AccessiblePhysDef value, fall back to legacy OLD_LOCK_CODE
+            val lockCode = parentLockCode ?: oldLockCode ?: 0
+
+            return DoorPhysDefClass(
+                name = name,
+                id = id,
+                chunkId = chunkId,
+                modelName = parentObj?.modelName ?: "NULL",
+                isPreLit = parentObj?.isPreLit ?: false,
+                isNonOccluder = parentObj?.isNonOccluder ?: true,
+                shadowDynamicObjs = parentObj?.shadowDynamicObjs ?: false,
+                shadowIsAdditive = parentObj?.shadowIsAdditive ?: false,
+                shadowIgnoresZRotation = parentObj?.shadowIgnoresZRotation ?: true,
+                shadowNearZ = parentObj?.shadowNearZ ?: 0.5f,
+                shadowFarZ = parentObj?.shadowFarZ ?: 5.0f,
+                shadowIntensity = parentObj?.shadowIntensity ?: 0.5f,
+                doesCollideInPathfind = parentObj?.doesCollideInPathfind ?: false,
+                isCosmetic = parentObj?.isCosmetic ?: false,
+                animManagerDef = parentObj?.animManagerDef ?: AnimCollisionManagerDef(),
+                projectorManagerDef = parentObj?.projectorManagerDef ?: ProjectorManagerDef(),
+                lockCode = lockCode,
+                closeDelay = closeDelay,
+                triggerZone1 = triggerZone1,
+                triggerZone2 = triggerZone2,
+                openSoundDefId = openSoundDefId,
+                closeSoundDefId = closeSoundDefId,
+                unlockSoundDefId = unlockSoundDefId,
+                accessDeniedSoundDefId = accessDeniedSoundDefId,
+                doorOpensForVehicles = doorOpensForVehicles,
+            )
+        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -122,111 +220,8 @@ class DoorPhysDefClass(
 private fun FloatArray?.contentEqualsNullable(other: FloatArray?): Boolean =
     if (this == null) other == null else other != null && contentEquals(other)
 
-// Chunk IDs from doors.cpp local enum (line 70)
-private const val CHUNKID_DEF_VARIABLES = 320001903u
-private const val CHUNKID_DEF_PARENT = 320001904u
-
-// Micro-chunk IDs from doors.cpp enum (sequential from 2; 1 is obsolete TRIGGER_RADIUS)
-private const val MICRO_CLOSE_DELAY = 2
-private const val MICRO_TRIGGER_ZONE1 = 3
-private const val MICRO_OLD_LOCK_CODE = 4
-private const val MICRO_OPEN_SOUND_DEF_ID = 5
-private const val MICRO_CLOSE_SOUND_DEF_ID = 6
-private const val MICRO_UNLOCK_SOUND_DEF_ID = 7
-private const val MICRO_ACCESS_DENIED_SOUND_DEF_ID = 8
-private const val MICRO_TRIGGER_ZONE2 = 9
-private const val MICRO_DOOR_OPENS_FOR_VEHICLES = 10
-
-/**
- * Parses a DoorPhysDefClass from the OBJDATA chunk reader.
- */
-fun parseDoorPhysDefClass(
-    objDataReader: ChunkReader,
-    name: String,
-    id: UInt,
-    chunkId: UInt,
-): DoorPhysDefClass {
-    // Parse AccessiblePhysDefClass parent chain
-    val accessibleChunk = objDataReader.findChunk(CHUNKID_DEF_PARENT)
-
-    // StaticAnimPhysDefClass fields (nested inside Accessible -> StaticAnimPhysDef parent)
-    val staticAnimChunk = accessibleChunk?.findChunk(AccessiblePhysDefClass.CHUNKID_DEF_PARENT)
-    val parentObj = if (staticAnimChunk != null) {
-        parseStaticAnimPhysDefClass(staticAnimChunk, name, id, chunkId)
-    } else null
-
-    // LockCode from AccessiblePhysDefClass variables
-    val parentLockCode = accessibleChunk?.findChunk(AccessiblePhysDefClass.CHUNKID_DEF_VARIABLES)
-        ?.let { vars ->
-            val bytes = vars.findMicroChunk(AccessiblePhysDefClass.VARID_DEF_LOCKCODE) ?: return@let null
-            if (bytes.size < 4) return@let null
-            ByteBuffer.wrap(bytes, 0, 4).order(ByteOrder.LITTLE_ENDIAN).int
-        }
-
-    // Door-specific fields
-    val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
-        ?: return DoorPhysDefClass(
-            name = name, id = id, chunkId = chunkId,
-            modelName = parentObj?.modelName ?: "NULL",
-            isPreLit = parentObj?.isPreLit ?: false,
-            isNonOccluder = parentObj?.isNonOccluder ?: true,
-            shadowDynamicObjs = parentObj?.shadowDynamicObjs ?: false,
-            shadowIsAdditive = parentObj?.shadowIsAdditive ?: false,
-            shadowIgnoresZRotation = parentObj?.shadowIgnoresZRotation ?: true,
-            shadowNearZ = parentObj?.shadowNearZ ?: 0.5f,
-            shadowFarZ = parentObj?.shadowFarZ ?: 5.0f,
-            shadowIntensity = parentObj?.shadowIntensity ?: 0.5f,
-            doesCollideInPathfind = parentObj?.doesCollideInPathfind ?: false,
-            isCosmetic = parentObj?.isCosmetic ?: false,
-            animManagerDef = parentObj?.animManagerDef ?: AnimCollisionManagerDef(),
-            projectorManagerDef = parentObj?.projectorManagerDef ?: ProjectorManagerDef(),
-            lockCode = parentLockCode ?: 0,
-        )
-
-    val closeDelay = vars.microChunkFloat(MICRO_CLOSE_DELAY) ?: 2f
-    val triggerZone1 = vars.microChunkFloatArray(MICRO_TRIGGER_ZONE1, 15)
-    val triggerZone2 = vars.microChunkFloatArray(MICRO_TRIGGER_ZONE2, 15)
-    val oldLockCode = vars.microChunkInt(MICRO_OLD_LOCK_CODE)
-    val openSoundDefId = vars.microChunkInt(MICRO_OPEN_SOUND_DEF_ID) ?: 0
-    val closeSoundDefId = vars.microChunkInt(MICRO_CLOSE_SOUND_DEF_ID) ?: 0
-    val unlockSoundDefId = vars.microChunkInt(MICRO_UNLOCK_SOUND_DEF_ID) ?: 0
-    val accessDeniedSoundDefId = vars.microChunkInt(MICRO_ACCESS_DENIED_SOUND_DEF_ID) ?: 0
-    val doorOpensForVehicles = vars.microChunkBool(MICRO_DOOR_OPENS_FOR_VEHICLES) ?: false
-
-    // LockCode: prefer parent AccessiblePhysDef value, fall back to legacy OLD_LOCK_CODE
-    val lockCode = parentLockCode ?: oldLockCode ?: 0
-
-    return DoorPhysDefClass(
-        name = name,
-        id = id,
-        chunkId = chunkId,
-        modelName = parentObj?.modelName ?: "NULL",
-        isPreLit = parentObj?.isPreLit ?: false,
-        isNonOccluder = parentObj?.isNonOccluder ?: true,
-        shadowDynamicObjs = parentObj?.shadowDynamicObjs ?: false,
-        shadowIsAdditive = parentObj?.shadowIsAdditive ?: false,
-        shadowIgnoresZRotation = parentObj?.shadowIgnoresZRotation ?: true,
-        shadowNearZ = parentObj?.shadowNearZ ?: 0.5f,
-        shadowFarZ = parentObj?.shadowFarZ ?: 5.0f,
-        shadowIntensity = parentObj?.shadowIntensity ?: 0.5f,
-        doesCollideInPathfind = parentObj?.doesCollideInPathfind ?: false,
-        isCosmetic = parentObj?.isCosmetic ?: false,
-        animManagerDef = parentObj?.animManagerDef ?: AnimCollisionManagerDef(),
-        projectorManagerDef = parentObj?.projectorManagerDef ?: ProjectorManagerDef(),
-        lockCode = lockCode,
-        closeDelay = closeDelay,
-        triggerZone1 = triggerZone1,
-        triggerZone2 = triggerZone2,
-        openSoundDefId = openSoundDefId,
-        closeSoundDefId = closeSoundDefId,
-        unlockSoundDefId = unlockSoundDefId,
-        accessDeniedSoundDefId = accessDeniedSoundDefId,
-        doorOpensForVehicles = doorOpensForVehicles,
-    )
-}
-
 // ---------------------------------------------------------------------------
-// Micro-chunk reader helpers
+// Micro-chunk reader helpers (private to this file)
 // ---------------------------------------------------------------------------
 
 private fun ChunkReader.microChunkInt(id: Int): Int? {

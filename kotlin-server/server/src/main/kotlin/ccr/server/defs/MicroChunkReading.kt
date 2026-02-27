@@ -35,11 +35,11 @@ fun ChunkReader.readMicroFloatAt(id: Int, byteOffset: Int): Float? {
     return ByteBuffer.wrap(bytes, byteOffset, 4).order(ByteOrder.LITTLE_ENDIAN).float
 }
 
-fun ChunkReader.readMicroVector3(id: Int): ccr.server.level.Vector3? {
+fun ChunkReader.readMicroVector3(id: Int): ccr.math.Vector3? {
     val bytes = findMicroChunk(id) ?: return null
     if (bytes.size < 12) return null
     val bb = ByteBuffer.wrap(bytes, 0, 12).order(ByteOrder.LITTLE_ENDIAN)
-    return ccr.server.level.Vector3(bb.float, bb.float, bb.float)
+    return ccr.math.Vector3(bb.float, bb.float, bb.float)
 }
 
 fun ChunkReader.readMicroMatrix3D(id: Int): ccr.server.level.Matrix3D? {
@@ -57,7 +57,7 @@ fun ChunkReader.readMicroOBBox(id: Int): ccr.server.level.OBBox? {
     val basis = FloatArray(9) { bb.float }
     val cx = bb.float; val cy = bb.float; val cz = bb.float
     val ex = bb.float; val ey = bb.float; val ez = bb.float
-    return ccr.server.level.OBBox(basis, ccr.server.level.Vector3(cx, cy, cz), ccr.server.level.Vector3(ex, ey, ez))
+    return ccr.server.level.OBBox(basis, ccr.math.Vector3(cx, cy, cz), ccr.math.Vector3(ex, ey, ez))
 }
 
 fun ChunkReader.readMicroSphere(id: Int): ccr.server.level.Sphere? {
@@ -66,7 +66,7 @@ fun ChunkReader.readMicroSphere(id: Int): ccr.server.level.Sphere? {
     val bb = ByteBuffer.wrap(bytes, 0, 16).order(ByteOrder.LITTLE_ENDIAN)
     val cx = bb.float; val cy = bb.float; val cz = bb.float
     val radius = bb.float
-    return ccr.server.level.Sphere(ccr.server.level.Vector3(cx, cy, cz), radius)
+    return ccr.server.level.Sphere(ccr.math.Vector3(cx, cy, cz), radius)
 }
 
 fun ChunkReader.readMicroWideString(id: Int): String? {

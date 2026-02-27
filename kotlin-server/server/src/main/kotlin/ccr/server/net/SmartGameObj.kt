@@ -5,6 +5,7 @@ import ccr.math.degToRadF
 import ccr.net.bitstream.*
 import ccr.physics.PhysController
 import ccr.physics.moveable.MoveablePhysClass
+import ccr.server.GameObjManager
 import ccr.server.defs.SmartGameObjDef
 
 // C++: SmartGameObj (smartgameobj.cpp)
@@ -36,7 +37,7 @@ abstract class SmartGameObj : ArmedGameObj() {
     val action: ActionClass = ActionClass()
 
     // C++: int ControlOwner
-    var controlOwner: Int = 0
+    open var controlOwner: Int = SERVER_CONTROL_OWNER
 
     // C++: PlayerDataClass* PlayerData
     var playerData: PlayerDataClass? = null
@@ -50,11 +51,6 @@ abstract class SmartGameObj : ArmedGameObj() {
 
     // C++: LogicalListenerClass* Listener
     private var listener: LogicalListenerClass? = null
-
-    // C++: static float GlobalSightRangeScale
-    companion object {
-        var globalSightRangeScale: Float = 1.0f
-    }
 
     // C++: void Import_Control_Cs(BitStreamClass& packet)
     fun importControlCs(packet: BitStream) = control.importCs(packet)
@@ -113,13 +109,13 @@ abstract class SmartGameObj : ArmedGameObj() {
     fun resetController() { controller.reset() }
 
     // C++: void Init(const SmartGameObjDef&)
-    fun init(definition: SmartGameObjDef) {
-        super.init(definition)
+    open fun init(definition: SmartGameObjDef) {
+        super<ArmedGameObj>.init(definition)
         copySettings(definition)
     }
 
     // C++: void Copy_Settings(const SmartGameObjDef&)
-    fun copySettings(definition: SmartGameObjDef) {
+    open fun copySettings(definition: SmartGameObjDef) {
         check(physObj != null)
         (physObj as? MoveablePhysClass)?.controller = controller
         registerListener()
@@ -136,8 +132,8 @@ abstract class SmartGameObj : ArmedGameObj() {
     }
 
     // C++: void Re_Init(const SmartGameObjDef&)
-    fun reInit(definition: SmartGameObjDef) {
-        super.reInit(definition)
+    open fun reInit(definition: SmartGameObjDef) {
+        super<ArmedGameObj>.reInit(definition)
         listener?.removeFromScene()
         stealthEffect = null  // C++: REF_PTR_RELEASE(StealthEffect) — GC handles in Kotlin
         copySettings(definition)
@@ -167,7 +163,7 @@ abstract class SmartGameObj : ArmedGameObj() {
         super.save(csave)
         csave.endChunk()
 
-        csave.beginChunk(CHUNKID_VARIABLES)
+        csave.beginChunk(CHUNKID_SMART_VARIABLES)
         csave.writeMicroChunk(MICROCHUNKID_CONTROL_ENABLED,       controlEnabled)
         csave.writeMicroChunk(MICROCHUNKID_CONTROL_OWNER,         controlOwner)
         csave.writeMicroChunk(MICROCHUNKID_IS_ENEMY_SEEN_ENABLED, isEnemySeenEnabled)
@@ -200,7 +196,7 @@ abstract class SmartGameObj : ArmedGameObj() {
         while (cload.openChunk()) {
             when (cload.curChunkId) {
                 CHUNKID_ARMEDGAMEOBJ_PARENT -> super.load(cload)
-                CHUNKID_VARIABLES -> {
+                CHUNKID_SMART_VARIABLES -> {
                     while (cload.openMicroChunk()) {
                         when (cload.curMicroChunkId) {
                             MICROCHUNKID_CONTROL_ENABLED       -> controlEnabled       = cload.readBool()
@@ -254,7 +250,10 @@ abstract class SmartGameObj : ArmedGameObj() {
     }
 
     companion object {
-        private const val CHUNKID_VARIABLES            = 910991114
+        // C++: static float GlobalSightRangeScale
+        var globalSightRangeScale: Float = 1.0f
+
+        private const val CHUNKID_SMART_VARIABLES       = 910991114
         private const val CHUNKID_CONTROL              = 910991115
         private const val CHUNKID_CONTROLLER           = 910991116
         private const val CHUNKID_ACTION               = 910991117

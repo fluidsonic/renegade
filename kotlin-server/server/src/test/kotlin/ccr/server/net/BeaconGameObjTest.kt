@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.net.bitstream.*
-import ccr.server.defs.combat.BeaconGameObjDef
+import ccr.server.defs.BeaconGameObjDef
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

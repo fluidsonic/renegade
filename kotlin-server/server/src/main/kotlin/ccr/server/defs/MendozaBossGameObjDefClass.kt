@@ -1,6 +1,5 @@
-package ccr.server.defs.combat
+package ccr.server.defs
 
-import ccr.server.defs.DefinitionClass
 import ccr.server.mix.ChunkReader
 
 /**
@@ -21,18 +20,14 @@ class MendozaBossGameObjDefClass(
 
     companion object {
         const val CHUNK_ID: UInt = 0x0004014Au  // CHUNKID_GAME_OBJECT_DEF_MENDOZA_BOSS
-    }
-}
 
-/**
- * Parses a MendozaBossGameObjDefClass from the OBJDATA chunk.
- * No additional persisted fields.
- */
-fun parseMendozaBossGameObjDefClass(
-    objDataReader: ChunkReader,
-    name: String,
-    id: UInt,
-    chunkId: UInt,
-): MendozaBossGameObjDefClass {
-    return MendozaBossGameObjDefClass(name = name, id = id, chunkId = chunkId)
+        fun load(
+            objDataReader: ChunkReader,
+            name: String,
+            id: UInt,
+            chunkId: UInt,
+        ): MendozaBossGameObjDefClass {
+            return MendozaBossGameObjDefClass(name = name, id = id, chunkId = chunkId)
+        }
+    }
 }

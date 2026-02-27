@@ -33,5 +33,7 @@ data class Vector3(
     companion object {
         val ZERO = Vector3(0f, 0f, 0f)
         val ONE = Vector3(1f, 1f, 1f)
+        // C++: static float Dot_Product(const Vector3& a, const Vector3& b)
+        fun dotProduct(a: Vector3, b: Vector3): Float = a.dot(b)
     }
 }

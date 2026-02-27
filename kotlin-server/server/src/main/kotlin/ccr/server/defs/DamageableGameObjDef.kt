@@ -10,4 +10,6 @@ open class DamageableGameObjDef(
     val translatedNameId: Int = 0,                                         // C++: int TranslatedNameID
     val notTargetable: Boolean = false,                                     // C++: bool NotTargetable
     val defaultPlayerType: Int = -2,                                        // C++: int DefaultPlayerType (PLAYERTYPE_NEUTRAL)
-) : BaseGameObjDef(name, id, chunkId)
+    val encyclopediaType: Int = 0,                                          // C++: int EncyclopediaType
+    val encyclopediaId: Int = 0,                                            // C++: int EncyclopediaID
+) : ScriptableGameObjDef(name, id, chunkId)

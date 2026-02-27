@@ -3,7 +3,8 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 
 // C++: WeaponBagClass (weaponbag.h / weaponbag.cpp)
-class WeaponBagClass(val owner: ArmedGameObj) {
+// owner is PhysicalGameObj (not ArmedGameObj) to allow non-armed owners like PowerUpGameObj
+class WeaponBagClass(val owner: PhysicalGameObj) {
 
     // C++: DynamicVectorClass<WeaponClass*> WeaponList
     private val weaponList: MutableList<WeaponClass> = mutableListOf()
@@ -73,6 +74,38 @@ class WeaponBagClass(val owner: ArmedGameObj) {
     // C++: bool Is_Weapon_Owned(int weapon_id)
     fun isWeaponOwned(weaponId: Int): Boolean = weaponList.any { it.definitionId == weaponId }
 
+    // C++: bool Is_Ammo_Full(int weapon_id) — true if the weapon exists and is at max ammo
+    // FIXME: full check requires WeaponDefinitionClass for max-rounds cap; stub returns false (never full)
+    fun isAmmoFull(weaponId: Int): Boolean = false
+
+    // C++: void Select_Weapon(int weapon_id) — select by definition ID
+    fun selectWeaponId(weaponId: Int) {
+        val index = weaponList.indexOfFirst { it.definitionId == weaponId }
+        if (index >= 0) selectIndex(index)
+    }
+
+    // C++: void Deselect() — deselect current weapon (set index to 0)
+    fun deselect() {
+        weaponIndex = 0
+        isChanged = true
+        hudIsChanged = true
+    }
+
+    // C++: bool Move_Contents(WeaponBagClass*) — move all weapons from src into this bag
+    fun moveContents(src: WeaponBagClass?): Boolean {
+        if (src == null) return false
+        var moved = false
+        for (w in src.weaponList.toList()) {
+            addWeapon(w, true)
+            moved = true
+        }
+        src.clearWeapons()
+        return moved
+    }
+
+    // C++: WeaponBagClass* Get_Weapon_Bag() — returns self (for ArmedGameObj interface compatibility)
+    fun getWeaponBag(): WeaponBagClass = this
+
     // C++: void Force_Changed()
     fun forceChanged() { isChanged = true }
 
@@ -102,4 +135,10 @@ class WeaponBagClass(val owner: ArmedGameObj) {
             if (existing != null) existing.totalRounds = rounds
         }
     }
+
+    // C++: bool Save(ChunkSaveClass&) — stub
+    fun save(csave: ChunkSaveClass): Boolean = TODO("stub")
+
+    // C++: bool Load(ChunkLoadClass&) — stub
+    fun load(cload: ChunkLoadClass): Boolean = TODO("stub")
 }

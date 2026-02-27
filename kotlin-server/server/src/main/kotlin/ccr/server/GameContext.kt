@@ -6,10 +6,12 @@ import ccr.server.net.BaseControllerClass
  * Session-scoped container for all "global" game state.
  * Passed explicitly to subsystems that need it — avoids singletons, enables testing.
  * Port of the pattern used by C++ global accessors (The_Game(), GameObjManager, etc.).
+ *
+ * Note: GameObjManager is a Kotlin object (singleton) and is accessed directly as
+ * GameObjManager.X() — it is not a field here.
  */
 class GameContext(
     val config: ServerConfig,
-    val gameObjManager: GameObjManager,
     val gameState: GameState,
 ) {
     // C++: BaseControllerClass::CurrentBases[PLAYERTYPE] — indexed 0=NOD, 1=GDI

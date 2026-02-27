@@ -3,6 +3,7 @@ package ccr.server.net
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.server.defs.ArmedGameObjDef
+import ccr.server.defs.PhysicalGameObjDef
 
 // C++: ArmedGameObj (armedgameobj.cpp)
 // C++ hierarchy: PhysicalGameObj → ArmedGameObj
@@ -24,7 +25,8 @@ abstract class ArmedGameObj : PhysicalGameObj() {
 
     // C++: void Init(const ArmedGameObjDef&)
     fun init(definition: ArmedGameObjDef) {
-        super.init(definition)
+        val physDef: ccr.server.defs.PhysicalGameObjDef = definition
+        super<PhysicalGameObj>.init(physDef)
         copySettings(definition)
     }
 
@@ -39,7 +41,8 @@ abstract class ArmedGameObj : PhysicalGameObj() {
 
     // C++: void Re_Init(const ArmedGameObjDef&)
     fun reInit(definition: ArmedGameObjDef) {
-        super.reInit(definition)
+        val physDef: ccr.server.defs.PhysicalGameObjDef = definition
+        super<PhysicalGameObj>.reInit(physDef)
         copySettings(definition)
     }
 
@@ -64,7 +67,7 @@ abstract class ArmedGameObj : PhysicalGameObj() {
     }
 
     // C++: virtual const Matrix3D& Get_Muzzle(int index) — FIXME: requires model/bone system
-    // open fun getMuzzle(index: Int): Matrix3D
+    open fun getMuzzle(index: Int = 0): ccr.math.Matrix3D = getTransform()
 
     // C++: void Start_Recoil(int muzzle_index, float recoil_scale, float recoil_time)
     // WWASSERT(muzzle_index >= 0 && muzzle_index < MAX_MUZZLES)
@@ -91,7 +94,7 @@ abstract class ArmedGameObj : PhysicalGameObj() {
         super.save(csave)
         csave.endChunk()
 
-        csave.beginChunk(CHUNKID_VARIABLES)
+        csave.beginChunk(CHUNKID_ARMED_VARIABLES)
         csave.writeMicroChunk(MICROCHUNKID_TARGETING_POS, targeting)
         csave.endChunk()
 
@@ -107,7 +110,7 @@ abstract class ArmedGameObj : PhysicalGameObj() {
         while (cload.openChunk()) {
             when (cload.curChunkId) {
                 CHUNKID_PARENT    -> super.load(cload)
-                CHUNKID_VARIABLES -> {
+                CHUNKID_ARMED_VARIABLES -> {
                     while (cload.openMicroChunk()) {
                         when (cload.curMicroChunkId) {
                             MICROCHUNKID_TARGETING_POS -> targeting = cload.readVector3()
@@ -126,10 +129,10 @@ abstract class ArmedGameObj : PhysicalGameObj() {
     }
 
     companion object {
-        private const val MAX_MUZZLES       = 4
-        private const val CHUNKID_PARENT    = 418001841
-        private const val CHUNKID_VARIABLES = 418001842
-        private const val CHUNKID_WEAPONBAG = 418001843
+        private const val MAX_MUZZLES           = 4
+        private const val CHUNKID_PARENT        = 418001841
+        internal const val CHUNKID_ARMED_VARIABLES = 418001842  // C++: CHUNKID_VARIABLES in ArmedGameObj
+        private const val CHUNKID_WEAPONBAG     = 418001843
 
         private const val MICROCHUNKID_TARGETING_POS = 1
     }

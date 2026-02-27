@@ -162,7 +162,7 @@ class FullDefinitionLoaderTest {
         val def = registry.findById(400u)
         assertNotNull(def)
         assertEquals("SpawnPoint", def.name)
-        assertTrue(def is ccr.server.defs.combat.SpawnerDefClass)
+        assertTrue(def is ccr.server.defs.SpawnerDefClass)
     }
 
     @Test
@@ -205,7 +205,7 @@ class FullDefinitionLoaderTest {
         val def = registry.findById(700u)
         assertNotNull(def)
         assertEquals("Refinery", def.name)
-        assertTrue(def is ccr.server.defs.combat.RefineryGameObjDef)
+        assertTrue(def is ccr.server.defs.RefineryGameObjDef)
     }
 
     @Test
@@ -233,7 +233,7 @@ class FullDefinitionLoaderTest {
         val def = registry.findById(999u)
         assertNotNull(def)
         assertEquals("PowerUp_Health", def.name)
-        assertTrue(def is ccr.server.defs.combat.PowerUpGameObjDef)
+        assertTrue(def is ccr.server.defs.PowerUpGameObjDef)
     }
 
     @Test
@@ -248,7 +248,7 @@ class FullDefinitionLoaderTest {
         val def = registry.findById(1001u)
         assertNotNull(def)
         assertEquals("Beacon_Nuke", def.name)
-        assertTrue(def is ccr.server.defs.combat.BeaconGameObjDef)
+        assertTrue(def is ccr.server.defs.BeaconGameObjDef)
     }
 
     @Test
@@ -262,7 +262,7 @@ class FullDefinitionLoaderTest {
         val ddb = buildDdbWithExtra(Triple(0x00040107u, 888u, "Health_Crate") to powerUpParent)
         val registry = FullDefinitionLoader.load(ddb)
 
-        val def = registry.findById(888u) as? ccr.server.defs.combat.PowerUpGameObjDef
+        val def = registry.findById(888u) as? ccr.server.defs.PowerUpGameObjDef
         assertNotNull(def)
         assertEquals(12345, def.physDefId)
     }
@@ -274,7 +274,7 @@ class FullDefinitionLoaderTest {
         assertEquals(1, registry.size)
         val def = registry.findById(500u)
         assertNotNull(def)
-        assertTrue(def is ccr.server.defs.combat.C4GameObjDef)
+        assertTrue(def is ccr.server.defs.C4GameObjDef)
         assertEquals("Tossed_C4", def.name)
     }
 
@@ -285,7 +285,7 @@ class FullDefinitionLoaderTest {
         assertEquals(1, registry.size)
         val def = registry.findById(501u)
         assertNotNull(def)
-        assertTrue(def is ccr.server.defs.combat.SimpleGameObjDef)
+        assertTrue(def is ccr.server.defs.SimpleGameObjDef)
     }
 
     @Test

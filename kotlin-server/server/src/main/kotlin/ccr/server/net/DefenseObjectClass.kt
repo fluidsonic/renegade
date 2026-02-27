@@ -8,14 +8,22 @@ import kotlin.math.roundToInt
 class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
 
     // C++: safe_float Health, HealthMax
+    // @JvmName avoids clash with fun setHealth() / fun setHealthMax() below
+    @get:JvmName("healthField") @set:JvmName("setHealthField")
     var health: Float = health
+    @get:JvmName("healthMaxField") @set:JvmName("setHealthMaxField")
     var healthMax: Float = health
 
     // C++: safe_float ShieldStrength, ShieldStrengthMax
+    // @JvmName avoids clash with fun setShieldStrength() / fun setShieldStrengthMax() below
+    @get:JvmName("shieldStrengthField") @set:JvmName("setShieldStrengthField")
     var shieldStrength: Float = 0f
+    @get:JvmName("shieldStrengthMaxField") @set:JvmName("setShieldStrengthMaxField")
     var shieldStrengthMax: Float = 0f
 
     // C++: SafeArmorType ShieldType
+    // @JvmName avoids clash with fun setShieldType() below
+    @get:JvmName("shieldTypeField") @set:JvmName("setShieldTypeField")
     var shieldType: Int = 0
 
     // C++: safe_float DamagePoints, DeathPoints
@@ -61,6 +69,10 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
 
     // C++: void Set_Shield_Type(ArmorType)
     fun setShieldType(type: Int) { shieldType = type }
+
+    // C++: bool Is_Soft() — returns true if the object uses a "soft" armor type (non-armored)
+    // ArmorWarheadManager::Is_Soft(skin) — stub: treat all objects as non-soft (armored)
+    fun isSoft(): Boolean = false
 
     // C++: float Apply_Damage(const OffenseObjectClass& offense, float scale, int alternate_skin)
     fun applyDamage(offense: OffenseObjectClass, scale: Float = 1.0f, alternateSkin: Int = -1): Float {

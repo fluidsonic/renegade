@@ -23,7 +23,7 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
 
     // C++: Get_Network_Class_ID() not overridden → returns 0 (base class default)
     override val networkClassId: Int = 0
-    override val creationDirtyBit = BIT_OCCASIONAL
+    val creationDirtyBit = BIT_OCCASIONAL
 
     override fun delete() {}
 
@@ -85,6 +85,11 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
         enableRadar(enable)
     }
 
+    // C++: BaseControllerClass::On_Building_Damaged
+    fun onBuildingDamaged(building: BuildingGameObj) {
+        // C++: notify observers, update stats — stub; no logic needed server-side
+    }
+
     // C++: BaseControllerClass::On_Building_Destroyed
     fun onBuildingDestroyed(building: BuildingGameObj) {
         if (areAllBuildingsDestroyed()) {
@@ -96,19 +101,29 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
     fun distributeFundsToEachTeammate(funds: Int, starList: List<SoldierGameObj>) {
         if (funds <= 0) return
         for (soldier in starList) {
-            if (soldier.team == playerType) {
+            if (soldier.playerType == playerType) {
                 soldier.playerData?.addMoney(funds.toFloat())
             }
         }
+    }
+
+    // C++: BaseControllerClass::On_Vehicle_Generated
+    fun onVehicleGenerated(vehicle: VehicleGameObj) {
+        // C++: notify vehicle-generated — stub; no logic needed server-side
+    }
+
+    // C++: BaseControllerClass::On_Vehicle_Delivered
+    fun onVehicleDelivered(vehicle: VehicleGameObj) {
+        // C++: notify vehicle-delivered — stub; no logic needed server-side
     }
 
     // C++: BaseControllerClass::Request_Harvester — ask the war/vehicle factory to build a harvester
     fun requestHarvester(defId: Int): Boolean {
         if (defId == 0) return false
         val factory = buildings.filterIsInstance<VehicleFactoryGameObj>()
-            .firstOrNull { it.isAvailable }
+            .firstOrNull { it.isAvailable() }
         if (factory != null) {
-            factory.requestVehicle(defId, 8f * operationTimeFactor, HARVESTER_BUYER_ID)
+            factory.requestVehicle(defId, 8f * operationTimeFactor, null)
             return true
         }
         return false
@@ -152,5 +167,8 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
     companion object {
         /** Sentinel buyerRhostId used to distinguish harvester requests from player purchases. */
         const val HARVESTER_BUYER_ID: Int = -1
+
+        // C++: BaseControllerClass::Find_Base(int player_type) — finds the base controller for a team
+        fun findBase(playerType: Int): BaseControllerClass? = null
     }
 }

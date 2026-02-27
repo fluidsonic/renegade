@@ -1,7 +1,10 @@
 package ccr.server.net
 
+import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.server.GameObjManager
+import ccr.server.defs.PhysicalGameObjDef
 
 // C++: PhysicalGameObj : public DamageableGameObj, public CombatPhysObserverClass
 abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
@@ -10,6 +13,8 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     var physObj: PhysClass? = null
 
     // C++: AnimControlClass* AnimControl (initialized to NULL)
+    // @JvmName avoids clash with explicit getAnimControl()/setAnimControl() methods below
+    @get:JvmName("animControlField") @set:JvmName("setAnimControlField")
     var animControl: AnimControlClass? = null
 
     // C++: BYTE ServerUpdateSkips
@@ -261,9 +266,9 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     }
 
     // C++: virtual void Apply_Damage(const OffenseObjectClass & damager, float scale, int alternate_skin)
-    open fun applyDamage(damager: OffenseObjectClass, scale: Float = 1f, alternateSkin: Int = -1) {
+    override open fun applyDamage(damager: OffenseObjectClass, scale: Float, alternateSkin: Int) {
         if (!CombatManager.canDamage(damager.getOwner(), this)) return
-        super.applyDamage(damager, scale)
+        super.applyDamage(damager, scale, alternateSkin)
     }
 
     // C++: virtual void Apply_Damage_Extended(...)
@@ -276,7 +281,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         if (getPhysicalDefinition().killedExplosion != 0) {
             val pos = getPosition()
             val zRot = getTransform().getZRotation()
-            val tm = Matrix3D(pos).also { it.rotateZ(zRot) }
+            val tm = Matrix3D(m03 = pos.x, m13 = pos.y, m23 = pos.z).also { it.rotateZ(zRot) }
             ExplosionManager.createExplosionAt(getPhysicalDefinition().killedExplosion, tm, damager.getOwner())
             // C++: if (damager.Get_Owner() == COMBAT_STAR) EncyclopediaMgrClass::Reveal_Object(this)
             // FIXME: wire EncyclopediaMgrClass::Reveal_Object when ported
@@ -292,20 +297,8 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
             resetRadarBlipColorType()
         }
 
-    // C++: int Get_Radar_Blip_Shape_Type()
-    fun getRadarBlipShapeType(): Int = radarBlipShapeType
-
-    // C++: void Set_Radar_Blip_Shape_Type(int type)
-    fun setRadarBlipShapeType(type: Int) { radarBlipShapeType = type }
-
     // C++: void Reset_Radar_Blip_Shape_Type()
     fun resetRadarBlipShapeType() { radarBlipShapeType = getPhysicalDefinition().radarBlipType }
-
-    // C++: int Get_Radar_Blip_Color_Type()
-    fun getRadarBlipColorType(): Int = radarBlipColorType
-
-    // C++: void Set_Radar_Blip_Color_Type(int type)
-    fun setRadarBlipColorType(type: Int) { radarBlipColorType = type }
 
     // C++: void Reset_Radar_Blip_Color_Type()
     fun resetRadarBlipColorType() {
@@ -317,12 +310,6 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
             else                -> RadarManager.BLIP_COLOR_TYPE_NEUTRAL
         }
     }
-
-    // C++: float Get_Radar_Blip_Intensity()
-    fun getRadarBlipIntensity(): Float = radarBlipIntensity
-
-    // C++: void Set_Radar_Blip_Intensity(float val)
-    fun setRadarBlipIntensity(value: Float) { radarBlipIntensity = value }
 
     // C++: void Reset_Server_Skips(BYTE value)
     fun resetServerSkips(value: UByte) { serverUpdateSkips = value }
@@ -382,7 +369,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
             val wasComplete = anim.isComplete()
             anim.update(TimeManager.getFrameSeconds())
             if (!wasComplete && anim.isComplete()) {
-                if (this !is SmartGameObj || !getAction().isAnimating()) {
+                if (this !is SmartGameObj || !action.isAnimating()) {
                     for (observer in getObservers()) {
                         observer.animationComplete(this, anim.getAnimationName())
                     }
@@ -415,7 +402,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         super.save(csave)
         csave.endChunk()
 
-        csave.beginChunk(CHUNKID_VARIABLES)
+        csave.beginChunk(CHUNKID_PHYSICAL_VARIABLES)
         // FIXME: MICROCHUNKID_PHYS_OBSERVER_PTR — pointer remap not ported
         // FIXME: MICROCHUNKID_PHYSICAL_OBJECT — pointer remap not ported
         csave.writeMicroChunk(MICROCHUNKID_HIBERNATION_TIMER, hibernationTimer)
@@ -452,7 +439,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
                 CHUNKID_PARENT          -> super.load(cload)
                 LEGACY_CHUNKID_PARENT_OLD -> super.load(cload)  // C++: ScriptableGameObj::Load
                 LEGACY_CHUNKID_DEFENSE  -> defenseObject.load(cload)
-                CHUNKID_VARIABLES -> {
+                CHUNKID_PHYSICAL_VARIABLES -> {
                     while (cload.openMicroChunk()) {
                         when (cload.curMicroChunkId) {
                             // FIXME: MICROCHUNKID_PHYS_OBSERVER_PTR — pointer remap not ported
@@ -488,7 +475,10 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     }
 
     // Server-port direct fields — derived from PhysObj in C++
+    // @JvmName avoids clash with override fun getPosition() / fun getFacing() below
+    @get:JvmName("positionField") @set:JvmName("setPositionField")
     var position: Vector3 = Vector3()
+    @get:JvmName("facingField") @set:JvmName("setFacingField")
     var facing: Float = 0f
     var modelName: String = ""
     var animName: String = ""
@@ -498,7 +488,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         const val HIBERNATION_DELAY = 30f
 
         // C++: physicalgameobj.cpp enum (starting at 910991145)
-        private const val CHUNKID_VARIABLES                              = 910991146
+        internal const val CHUNKID_PHYSICAL_VARIABLES                    = 910991146
         private const val LEGACY_CHUNKID_DEFENSE                        = 910991148
         private const val LEGACY_CHUNKID_PARENT_OLD                     = 910991152
         private const val CHUNKID_ANIM_CONTROL                          = 910991153
@@ -539,11 +529,11 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // we include it here since our NetworkObjectPacketWriter has no factory layer).
     override fun exportCreation(packet: BitStream) {
         super.exportCreation(packet)
-        val pos = getPosition()
-        packet.addFloat(pos.x, BITPACK_WORLD_POSITION_X)
-        packet.addFloat(pos.y, BITPACK_WORLD_POSITION_Y)
-        packet.addFloat(pos.z, BITPACK_WORLD_POSITION_Z)
-        packet.addFloat(getFacing())
+        packet.addInt(definitionId)
+        packet.addFloat(position.x, BITPACK_WORLD_POSITION_X)
+        packet.addFloat(position.y, BITPACK_WORLD_POSITION_Y)
+        packet.addFloat(position.z, BITPACK_WORLD_POSITION_Z)
+        packet.addFloat(facing)
     }
 
     override fun importCreation(packet: BitStream) {
@@ -560,11 +550,11 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: PhysicalGameObj::Export_Rare
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)
-        packet.addTerminatedString(physObj!!.peekModel()!!.getName(), permitEmpty = true)
-        packet.addTerminatedString(animControl?.getAnimationName() ?: "", permitEmpty = true)
-        packet.addInt(animControl?.getCurrentFrame() ?: 0)
-        packet.addInt(animControl?.getTargetFrame() ?: 0)
-        packet.addInt(animControl?.getMode() ?: 0)
+        packet.addTerminatedString(physObj?.peekModel()?.getName() ?: modelName, permitEmpty = true)
+        packet.addTerminatedString(animName, permitEmpty = true)
+        packet.addInt(0)  // currFrame — no real animation system on server
+        packet.addInt(0)  // targetFrame
+        packet.addInt(0)  // animMode
         packet.addInt(hostGameObj.get()?.networkId ?: 0)
         packet.addInt(hostGameObjBone)
         packet.addInt(playerType)
@@ -577,11 +567,11 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: PhysicalGameObj::Import_Rare
     override fun importRare(packet: BitStream) {
         super.importRare(packet)
-        val modelName = packet.getTerminatedString(256, true)
+        val modelName = packet.getTerminatedString(true)
         if (!physObj!!.peekModel()!!.getName().equals(modelName, ignoreCase = true)) {
             physObj!!.setModelByName(modelName)
         }
-        val animationName = packet.getTerminatedString(256, true)
+        val animationName = packet.getTerminatedString(true)
         val currFrame  = packet.getInt()
         val targetFrame = packet.getInt()
         val animMode   = packet.getInt()

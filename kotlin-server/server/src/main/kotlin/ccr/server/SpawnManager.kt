@@ -1,8 +1,8 @@
 package ccr.server
 
 import ccr.math.Vector3
-import ccr.server.defs.combat.PowerUpGameObjDef
-import ccr.server.defs.combat.SpawnerDefClass
+import ccr.server.defs.PowerUpGameObjDef
+import ccr.server.defs.SpawnerDefClass
 import ccr.server.level.LoadedLevel
 import ccr.server.level.ldd.LoadedSpawner
 import ccr.server.net.PowerUpGameObj

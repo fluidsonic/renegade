@@ -92,7 +92,7 @@ abstract class DamageableGameObj : ScriptableGameObj() {
         super.save(csave)
         csave.endChunk()
 
-        csave.beginChunk(CHUNKID_VARIABLES)
+        csave.beginChunk(CHUNKID_DAMAGEABLE_VARIABLES)
         csave.writeMicroChunk(MICROCHUNKID_PLAYER_TYPE, playerType)
         csave.writeMicroChunk(MICROCHUNKID_IS_HEALTH_BAR_DISPLAYED, isHealthBarDisplayed)
         csave.endChunk()
@@ -109,7 +109,7 @@ abstract class DamageableGameObj : ScriptableGameObj() {
         while (cload.openChunk()) {
             when (cload.curChunkId) {
                 CHUNKID_PARENT        -> super.load(cload)
-                CHUNKID_VARIABLES     -> {
+                CHUNKID_DAMAGEABLE_VARIABLES -> {
                     while (cload.openMicroChunk()) {
                         when (cload.curMicroChunkId) {
                             MICROCHUNKID_PLAYER_TYPE              -> playerType          = cload.readInt()
@@ -130,14 +130,15 @@ abstract class DamageableGameObj : ScriptableGameObj() {
     companion object {
         private const val CHUNKID_PARENT        = 207011212
         private const val CHUNKID_DEFENSEOBJECT = 207011213
-        private const val CHUNKID_VARIABLES     = 207011214
+        internal const val CHUNKID_DAMAGEABLE_VARIABLES = 207011214
 
         private const val MICROCHUNKID_PLAYER_TYPE             = 1
         private const val MICROCHUNKID_IS_HEALTH_BAR_DISPLAYED = 2
     }
 
     // C++: DefenseObjectClass::IsDead
-    val isDead: Boolean get() = defenseObject.health <= 0f
+    // open so SoldierGameObj can override with a state-machine-based check
+    open val isDead: Boolean get() = defenseObject.health <= 0f
 
     // C++: virtual bool Is_Targetable() const
     open fun isTargetable(): Boolean = !getDamageableDefinition().notTargetable
@@ -164,6 +165,8 @@ abstract class DamageableGameObj : ScriptableGameObj() {
         val oldShield = defenseObject.shieldStrength
         defenseObject.applyDamage(damager, scale, alternateSkin)
         val diff = oldHealth + oldShield - defenseObject.health - defenseObject.shieldStrength
+        // C++: Set_Object_Dirty_Bit(BIT_OCCASIONAL, true) after health/shield changes
+        if (diff != 0f) setObjectDirtyBit(BIT_OCCASIONAL, true)
         for (observer in observers) observer.damaged(this, damager.owner, diff)
         if (defenseObject.health <= 0f) {
             for (observer in observers) observer.killed(this, damager.owner)

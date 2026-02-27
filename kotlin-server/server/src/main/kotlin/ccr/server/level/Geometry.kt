@@ -1,5 +1,7 @@
 package ccr.server.level
 
+import ccr.math.Vector3
+
 /**
  * Oriented bounding box — C++ OBBoxClass (wwmath/obbox.h).
  * basis: 9 floats (3x3 rotation matrix, row-major)

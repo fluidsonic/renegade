@@ -8,11 +8,11 @@ import ccr.server.defs.readMicroOBBox
 import ccr.server.defs.readMicroSphere
 import ccr.server.defs.readMicroString
 import ccr.server.defs.readMicroVector3
+import ccr.math.Vector3
 import ccr.server.level.ChunkIds
 import ccr.server.level.Matrix3D
 import ccr.server.level.OBBox
 import ccr.server.level.Sphere
-import ccr.server.level.Vector3
 import ccr.server.level.toFloat32
 import ccr.server.level.toInt32
 import ccr.server.mix.ChunkReader

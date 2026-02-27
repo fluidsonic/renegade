@@ -1,6 +1,6 @@
 package ccr.server.net
 
-import ccr.net.bitstream.BitStream
+import ccr.net.bitstream.*
 
 // C++: ControlClass (control.h / control.cpp)
 class ControlClass {
@@ -126,6 +126,18 @@ class ControlClass {
         packet.addFloat(analogValues[AnalogControl.MOVE_LEFT.ordinal],    BITPACK_ANALOG_VALUES)
         packet.addFloat(analogValues[AnalogControl.MOVE_UP.ordinal],      BITPACK_ANALOG_VALUES)
         packet.addFloat(analogValues[AnalogControl.TURN_LEFT.ordinal],    BITPACK_ANALOG_VALUES)
+    }
+
+    // C++: void Copy_From(const ControlClass&) — copy all state from another control
+    fun copyFrom(other: ControlClass) {
+        oneTimeBooleanBits    = other.oneTimeBooleanBits
+        continuousBooleanBits = other.continuousBooleanBits
+        pendingOneTimeBooleanBits    = other.pendingOneTimeBooleanBits
+        pendingContinuousBooleanBits = other.pendingContinuousBooleanBits
+        analogValues[0] = other.analogValues[0]
+        analogValues[1] = other.analogValues[1]
+        analogValues[2] = other.analogValues[2]
+        analogValues[3] = other.analogValues[3]
     }
 
     // C++: void Import_Sc(BitStreamClass& packet) — #if 01 branch

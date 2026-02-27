@@ -21,6 +21,12 @@ class ActionClass {
 
     // C++: bool Is_Animating() — used in PhysicalGameObj::postThink
     fun isAnimating(): Boolean = false
+
+    // C++: void Reset(int priority) — clears current action code if priority sufficient
+    fun reset(priority: Int) {
+        // Server-side stub: action execution not needed; just clear the action code
+        actionCode = null
+    }
 }
 
 // C++: ActionParamsStruct (actionparams.h) — minimal port
@@ -28,6 +34,24 @@ class ActionParamsStruct {
     var observerId: Int = 0
     var priority: Int = 0
     var waypathId: Int = 0
+
+    // C++: SmartGameObj* AttackObject
+    var attackObject: SmartGameObj? = null
+
+    // C++: float AttackRange
+    var attackRange: Float = 0f
+
+    // C++: Vector3 MoveLocation
+    var moveLocation: ccr.math.Vector3 = ccr.math.Vector3()
+
+    // C++: float MoveArrivedDistance
+    var moveArrivedDistance: Float = 0f
+
+    // C++: void Set_Movement(const Vector3& loc, float speed, float arrived_dist)
+    fun setMovement(loc: ccr.math.Vector3, speed: Float, arrivedDist: Float) {
+        moveLocation = loc
+        moveArrivedDistance = arrivedDist
+    }
 }
 
 // C++: ActionCodeClass — base class for action implementations

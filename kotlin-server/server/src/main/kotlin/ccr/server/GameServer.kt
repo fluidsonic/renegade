@@ -26,7 +26,6 @@ import ccr.server.net.ScPingResponseEvent
 import ccr.server.net.ServerFps
 import ccr.server.net.SoldierGameObj
 import ccr.server.net.Team
-import ccr.server.net.WeaponEntry
 import ccr.server.net.WinEvent
 import ccr.server.net.BackgroundMgr
 import ccr.server.net.WeatherMgr
@@ -63,9 +62,9 @@ import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.PhysDefClass
 import ccr.server.defs.WeaponDefinitionClass
-import ccr.server.defs.combat.DoorPhysDefClass
-import ccr.server.defs.combat.PowerUpGameObjDef
-import ccr.server.defs.combat.RefineryGameObjDef
+import ccr.server.defs.DoorPhysDefClass
+import ccr.server.defs.PowerUpGameObjDef
+import ccr.server.defs.RefineryGameObjDef
 import ccr.math.OBBox
 import ccr.math.Matrix3D as MathMatrix3D
 import ccr.physics.static.DoorPhysClass
@@ -166,11 +165,13 @@ class GameServer(internal val config: ServerConfig) {
     internal val gameState = GameState(config)
 
     // GameObjManager — owns all BaseGameObj instances and drives their Think() loops.
-    internal val gameObjManager = GameObjManager()
+    // GameObjManager is a Kotlin object (singleton); expose as a property for callers that
+    // hold a GameServer reference (God.kt, ExplosionHelper.kt, etc.).
+    internal val gameObjManager: GameObjManager get() = GameObjManager
 
     // GameContext — session-scoped container for shared game state (lazy to allow gameState init first).
     internal val gameContext: GameContext by lazy {
-        GameContext(config = config, gameObjManager = gameObjManager, gameState = gameState)
+        GameContext(config = config, gameState = gameState)
     }
 
     // Periodic GameDataUpdateEvent resend (once per second) to keep clients' timer in sync.
@@ -836,7 +837,7 @@ class GameServer(internal val config: ServerConfig) {
                             .filterIsInstance<VehicleFactoryGameObj>()
                             .find { it.baseController === baseController && !it.isBusy && !it.isDestroyed }
                         if (factory != null) {
-                            factory.requestVehicle(result.purchasedDefId, 12.0f, rhostId)
+                            factory.requestVehicle(result.purchasedDefId, 12.0f, god.soldiersByHost[rhostId])
                             println("[GAME] vehicle order queued: defId=${result.purchasedDefId} factory=${factory.networkId} buyer=$rhostId")
                         } else {
                             // Factory became unavailable between vendor check and now — log only
@@ -1028,23 +1029,31 @@ class GameServer(internal val config: ServerConfig) {
             val ty = relTy + soldier.position.y
             val tz = relTz + soldier.position.z
 
-            // Update soldier state
-            soldier.targeting          = Vector3(tx, ty, tz)
-            soldier.continuousBoolBits = contBits
-            soldier.analogMoveForward  = fwd
-            soldier.analogMoveLeft     = left
-            soldier.analogMoveUp       = up
-            soldier.analogTurnLeft     = turn
+            // Update soldier state via ControlClass API (the new hierarchy uses control object)
+            soldier.targeting = Vector3(tx, ty, tz)
+            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.WEAPON_FIRE_PRIMARY,
+                (contBits and 1) != 0)
+            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.WEAPON_FIRE_SECONDARY,
+                (contBits and 2) != 0)
+            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.WALK,
+                (contBits and 4) != 0)
+            soldier.control.setBoolean(ccr.server.net.ControlClass.BooleanControl.CROUCH,
+                (contBits and 8) != 0)
+            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.MOVE_FORWARD, fwd)
+            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.MOVE_LEFT,    left)
+            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.MOVE_UP,      up)
+            soldier.control.setAnalog(ccr.server.net.ControlClass.AnalogControl.TURN_LEFT,    turn)
 
             // C4 detonation: bit 1 = BOOLEAN_WEAPON_FIRE_SECONDARY (alt-fire / remote trigger)
             val weaponFirePrimary   = (contBits and 1) != 0
             val weaponFireSecondary = (contBits and 2) != 0
-            soldier.detonateC4 = weaponFireSecondary && isC4Weapon(soldier.currentWeaponDefId)
-            if (weaponFirePrimary && isC4Weapon(soldier.currentWeaponDefId)) {
+            val currentWeaponDefId  = soldier.getWeapon()?.definitionId ?: 0
+            soldier.detonateC4 = weaponFireSecondary && isC4Weapon(currentWeaponDefId)
+            if (weaponFirePrimary && isC4Weapon(currentWeaponDefId)) {
                 god.createC4(rhostId, soldier, System.currentTimeMillis())
             }
-            if (weaponFirePrimary && isBeaconWeapon(soldier.currentWeaponDefId)) {
-                val ammoDef = getAmmoDefForWeapon(soldier.currentWeaponDefId)
+            if (weaponFirePrimary && isBeaconWeapon(currentWeaponDefId)) {
+                val ammoDef = getAmmoDefForWeapon(currentWeaponDefId)
                 if (ammoDef != null) {
                     god.createBeacon(rhostId, soldier, ammoDef, System.currentTimeMillis())
                 }
@@ -1167,7 +1176,7 @@ class GameServer(internal val config: ServerConfig) {
         baseControllerNod?.reset()
         baseControllerGdi?.reset()
         for (building in gameObjManager.getBuildingList()) {
-            building.resetToFull()
+            building.setNormalizedHealth(1.0f)
         }
 
         println("[GAME] core restart complete — hostedGameNumber=$hostedGameNumber")
@@ -1204,35 +1213,12 @@ class GameServer(internal val config: ServerConfig) {
                 for (lb in loadedBuildings) {
                     val building = createBuilding(lb) ?: continue
                     NetworkObjectManager.registerObject(building, lb.networkId)
-                    building.gameContext = ctx
                     val controller = when (lb.playerType) {
                         0 -> { controllerNod.addBuilding(building); controllerNod }
                         1 -> { controllerGdi.addBuilding(building); controllerGdi }
                         else -> null
                     }
                     if (controller != null) building.cncInitialize(controller)
-                    // Wire vehicle factory delivery callback so purchased vehicles spawn in-world
-                    if (building is VehicleFactoryGameObj) {
-                        val baseCtrl = when (lb.playerType) {
-                            0 -> controllerNod
-                            1 -> controllerGdi
-                            else -> null
-                        }
-                        building.onVehicleReady = { defId, buyerRhostId ->
-                            if (buyerRhostId == ccr.server.net.BaseControllerClass.HARVESTER_BUYER_ID) {
-                                // Harvester delivery — find the refinery that requested it
-                                val refinery = baseCtrl?.getBuildings()
-                                    ?.filterIsInstance<ccr.server.net.RefineryGameObj>()
-                                    ?.firstOrNull { !it.isDestroyed && it.harvesterVehicle == null && it.harvesterDefId == defId }
-                                if (refinery != null) {
-                                    val vehicle = god.createHarvester(building.playerType, defId, refinery.position)
-                                    if (vehicle != null) refinery.harvesterVehicle = vehicle
-                                }
-                            } else {
-                                god.createVehicle(buyerRhostId, defId, building.position)
-                            }
-                        }
-                    }
                     gameObjManager.add(building)
                     gameObjManager.addBuilding(building)
                     println("[BUILDING] registered ${building::class.simpleName} networkId=${lb.networkId} defId=${lb.definitionId} playerType=${lb.playerType}")
@@ -1375,46 +1361,35 @@ class GameServer(internal val config: ServerConfig) {
 
         if (!ChunkIds.isBuilding(lb.factoryChunkId)) return null
 
-        val health = lb.defense.healthMax.takeIf { it > 0f } ?: 5000f
-        val shieldType = lb.defense.skinSaveId
-        val mctSkinSaveId = (loadedLevel?.definitions?.findById(lb.definitionId.toUInt())
-            as? BuildingGameObjDef)?.mctSkin ?: 0
-
-        val building = when (lb.factoryChunkId) {
-            ChunkIds.GAMEOBJ_BUILDING_POWERPLANT ->
-                PowerPlantGameObj(lb.definitionId, pos, sphereCenter, radius,
-                    health = health, shieldType = shieldType, isPowerOn = lb.isPowerOn, playerType = lb.playerType)
-
-            ChunkIds.GAMEOBJ_BUILDING_REFINERY -> {
-                val refinery = RefineryGameObj(lb.definitionId, pos, sphereCenter, radius,
-                    health = health, shieldType = shieldType, playerType = lb.playerType)
-                val refDef = loadedLevel?.definitions?.findById(lb.definitionId.toUInt())
-                    as? RefineryGameObjDef
-                refinery.harvesterDefId = refDef?.harvesterDefId ?: 0
-                refinery
-            }
-
-            ChunkIds.GAMEOBJ_BUILDING_SOLDIERFACTORY ->
-                SoldierFactoryGameObj(lb.definitionId, pos, sphereCenter, radius,
-                    health = health, shieldType = shieldType, playerType = lb.playerType)
-
-            ChunkIds.GAMEOBJ_BUILDING_WARFACTORY ->
-                WarFactoryGameObj(lb.definitionId, pos, sphereCenter, radius,
-                    health = health, shieldType = shieldType, playerType = lb.playerType)
-
+        val building: BuildingGameObj = when (lb.factoryChunkId) {
+            ChunkIds.GAMEOBJ_BUILDING_POWERPLANT    -> PowerPlantGameObj()
+            ChunkIds.GAMEOBJ_BUILDING_REFINERY      -> RefineryGameObj()
+            ChunkIds.GAMEOBJ_BUILDING_SOLDIERFACTORY -> SoldierFactoryGameObj()
+            ChunkIds.GAMEOBJ_BUILDING_WARFACTORY    -> WarFactoryGameObj()
             ChunkIds.GAMEOBJ_BUILDING_AIRSTRIP,
-            ChunkIds.GAMEOBJ_BUILDING_VEHICLEFACTORY ->
-                VehicleFactoryGameObj(lb.definitionId, pos, sphereCenter, radius,
-                    health = health, shieldType = shieldType, playerType = lb.playerType)
-
-            ChunkIds.GAMEOBJ_BUILDING_COMCENTER ->
-                ComCenterGameObj(lb.definitionId, pos, sphereCenter, radius,
-                    health = health, shieldType = shieldType, playerType = lb.playerType)
-
-            else -> BuildingGameObj(lb.definitionId, pos, sphereCenter, radius,
-                health = health, shieldType = shieldType, playerType = lb.playerType)
+            ChunkIds.GAMEOBJ_BUILDING_VEHICLEFACTORY -> VehicleFactoryGameObj()
+            ChunkIds.GAMEOBJ_BUILDING_COMCENTER     -> ComCenterGameObj()
+            else                                    -> BuildingGameObj()
         }
-        building.mctSkinSaveId = mctSkinSaveId
+
+        // Apply definition (loads mctSkin, etc.)
+        val def = loadedLevel?.definitions?.findById(lb.definitionId.toUInt()) as? BuildingGameObjDef
+        if (def != null) building.init(def)
+
+        // Set position (also updates collectionSphere.center)
+        building.setPosition(pos)
+        building.collectionSphere = ccr.server.level.Sphere(sphereCenter, radius)
+
+        // Defence state from LDD
+        val health = lb.defense.healthMax.takeIf { it > 0f } ?: 5000f
+        building.health    = health
+        building.healthMax = health
+        building.shieldType = lb.defense.skinSaveId
+        if (lb.defense.shieldStrength > 0f) building.shieldStrength = lb.defense.shieldStrength
+
+        building.isPowerOn  = lb.isPowerOn
+        building.playerType = lb.playerType
+
         return building
     }
 
@@ -1652,13 +1627,10 @@ class GameServer(internal val config: ServerConfig) {
             (loadedLevel?.definitions?.findById(def.physDefId.toUInt()) as? PhysDefClass)?.modelName ?: ""
         else ""
 
-        val powerUp = PowerUpGameObj(
-            definitionId  = def.id.toInt(),
-            position      = position,
-            modelName     = modelName,
-        )
-        powerUp.powerUpDef = def
-        powerUp.serverRef  = this
+        val powerUp = PowerUpGameObj()
+        powerUp.definition = def
+        powerUp.position   = position
+        powerUp.modelName  = modelName
 
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(powerUp, netId)
