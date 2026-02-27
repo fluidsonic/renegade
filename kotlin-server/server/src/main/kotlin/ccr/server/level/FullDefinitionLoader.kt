@@ -42,12 +42,24 @@ object FullDefinitionLoader {
             if (idBytes.size < 4) return@forEachChunk
             val id = ByteBuffer.wrap(idBytes, 0, 4).order(ByteOrder.LITTLE_ENDIAN).int.toUInt()
 
-            val nameBytes = variablesChunk.findMicroChunk(VARID_NAME) ?: return@forEachChunk
-            val nullIdx = nameBytes.indexOfFirst { it == 0.toByte() }
-            val name = String(nameBytes, 0, if (nullIdx < 0) nameBytes.size else nullIdx, Charsets.ISO_8859_1)
-            if (name.isEmpty()) return@forEachChunk
+            val nameBytes = variablesChunk.findMicroChunk(VARID_NAME)
+            val name = if (nameBytes != null) {
+                val nullIdx = nameBytes.indexOfFirst { it == 0.toByte() }
+                String(nameBytes, 0, if (nullIdx < 0) nameBytes.size else nullIdx, Charsets.ISO_8859_1)
+            } else {
+                ""
+            }
 
             val def = dispatch(chunkId, name, id, objDataChunk)
+
+            // Physics definitions (RigidBodyDefClass, VehiclePhysDefClass, etc.) have an empty
+            // name in their DefinitionClass variables — they are looked up by numeric ID only.
+            // Register them as long as dispatch produced a typed subclass.
+            // Skip plain DefinitionClass fallbacks with empty names: those are unrecognized
+            // chunk types (e.g. TwiddlerClass, editor objects) that share IDs with named defs
+            // and would silently overwrite them in the registry.
+            if (name.isEmpty() && def::class == DefinitionClass::class) return@forEachChunk
+
             registry.register(def)
         }
 
@@ -256,6 +268,11 @@ object FullDefinitionLoader {
             CNCModeSettingsDef.CHUNK_ID ->
                 parseCNCModeSettingsDef(objDataChunk, name, id, chunkId) ?: fallback
 
+            // ── Physics types not stored in DefinitionRegistry (no PhysDefClass hierarchy) ─
+            // TimedDecorationPhysDefClass is a data class without DefinitionClass ancestry;
+            // it cannot be looked up by physDefId. Has empty names; filtered out by register guard.
+            TimedDecorationPhysDefClass.CHUNK_ID -> fallback   // 0x0002050B
+
             // ── Editor-only objects (CHUNKID_COMMANDO_EDITOR_BEGIN range 0x50000) ────
             // These appear in Objects.DDB but have no gameplay role on the server.
             0x00050003u,  // CHUNKID_WAYPATH_DEF
@@ -263,9 +280,15 @@ object FullDefinitionLoader {
             0x00050018u,  // CHUNKID_PATHFIND_START_DEF
             -> fallback
 
-            // ── Unknown chunkId — log error and fall back ────────────────────────────
+            // ── Unknown chunkId — log error (only for named defs) and fall back ────────
             else -> {
-                System.err.println("[ERROR] FullDefinitionLoader: unknown chunkId=0x${chunkId.toString(16)} name=\"$name\" id=$id")
+                // Empty-named defs with unknown chunkIds are harmless: they are unrecognised
+                // auxiliary objects (TwiddlerClass, obsolete editor types, etc.) that are
+                // filtered out by the register guard after dispatch returns the fallback.
+                // Only log an error for named defs so we can discover missing dispatch cases.
+                if (name.isNotEmpty()) {
+                    System.err.println("[ERROR] FullDefinitionLoader: unknown chunkId=0x${chunkId.toString(16)} name=\"$name\" id=$id")
+                }
                 fallback
             }
         }
