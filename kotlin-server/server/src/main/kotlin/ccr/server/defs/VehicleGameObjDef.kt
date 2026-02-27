@@ -1,8 +1,6 @@
 package ccr.server.defs
 
 import ccr.server.mix.ChunkReader
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 
 /**
  * Vehicle type enum matching C++ VehicleType in vehicle.h.
@@ -68,9 +66,10 @@ private infix fun FloatArray?.contentEqualsNullable(other: FloatArray?): Boolean
 //   CHUNKID_DEF_VARIABLES    = 930991657  -> vehicle-specific micro-chunks
 //   CHUNKID_DEF_TRANSITION   = 930991658  -> TransitionDataClass (0..n)
 // ---------------------------------------------------------------------------
-data class VehicleGameObjDef(
-    // DefinitionClass
-    val definition: DefinitionData,
+open class VehicleGameObjDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
 
     // ScriptableGameObjDef
     val scriptable: ScriptableGameObjDefData,
@@ -110,7 +109,8 @@ data class VehicleGameObjDef(
     val gdiDestroyReportId: Int = 0,
     val nodDestroyReportId: Int = 0,
     val transitions: List<TransitionData> = emptyList(),
-) {
+) : BaseGameObjDef(name, id, chunkId) {
+
     companion object {
         const val CHUNK_ID: UInt = 0x00040129u  // CHUNKID_GAME_OBJECT_DEF_VEHICLE
 
@@ -147,7 +147,46 @@ data class VehicleGameObjDef(
          * Loads a VehicleGameObjDef from the OBJDATA chunk for a vehicle definition.
          * [objDataChunk] should be the ChunkReader for the SIMPLEFACTORY_CHUNKID_OBJDATA content.
          */
-        fun load(objDataChunk: ChunkReader): VehicleGameObjDef? {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): VehicleGameObjDef? =
+            parseFields(objDataChunk)?.let { fields ->
+                VehicleGameObjDef(
+                    name = name, id = id, chunkId = chunkId,
+                    scriptable = fields.scriptable,
+                    damageable = fields.damageable,
+                    physical = fields.physical,
+                    armed = fields.armed,
+                    smart = fields.smart,
+                    type = fields.type,
+                    typeName = fields.typeName,
+                    fire0Anim = fields.fire0Anim,
+                    fire1Anim = fields.fire1Anim,
+                    profile = fields.profile,
+                    turnRadius = fields.turnRadius,
+                    occupantsVisible = fields.occupantsVisible,
+                    engineSoundMaxPitchFactor = fields.engineSoundMaxPitchFactor,
+                    engineStartSound = fields.engineStartSound,
+                    engineRunSound = fields.engineRunSound,
+                    engineStopSound = fields.engineStopSound,
+                    engineOffSound = fields.engineOffSound,
+                    sightDownMuzzle = fields.sightDownMuzzle,
+                    aim2D = fields.aim2D,
+                    squishVelocity = fields.squishVelocity,
+                    vehicleNameId = fields.vehicleNameId,
+                    numSeats = fields.numSeats,
+                    gdiDamageReportId = fields.gdiDamageReportId,
+                    nodDamageReportId = fields.nodDamageReportId,
+                    gdiDestroyReportId = fields.gdiDestroyReportId,
+                    nodDestroyReportId = fields.nodDestroyReportId,
+                    transitions = fields.transitions,
+                )
+            }
+
+        /**
+         * Parses all VehicleGameObjDef fields from an OBJDATA chunk without constructing
+         * the final object. Used by subclass loaders (SakuraBoss) that need to extract
+         * the fields and call their own constructors.
+         */
+        internal fun parseFields(objDataChunk: ChunkReader): ParsedVehicleFields? {
             // --- VehicleGameObjDef layer ---
             var smartParentChunk: ChunkReader? = null
             var type = 0
@@ -232,13 +271,9 @@ data class VehicleGameObjDef(
 
             // --- BaseGameObjDef layer (wraps DefinitionClass) ---
             val baseChunk = baseParentChunk ?: return null
-            val definitionChunk = baseChunk.findChunk(BASEGAMEOBJ_CHUNKID_DEF_PARENT_V) ?: return null
+            baseChunk.findChunk(BASEGAMEOBJ_CHUNKID_DEF_PARENT) ?: return null
 
-            // --- DefinitionClass layer ---
-            val definitionData = DefinitionData.load(definitionChunk) ?: return null
-
-            return VehicleGameObjDef(
-                definition = definitionData,
+            return ParsedVehicleFields(
                 scriptable = scriptableData,
                 damageable = damageableData,
                 physical = physData,
@@ -307,27 +342,40 @@ data class VehicleGameObjDef(
     }
 }
 
-// --- Helpers (duplicated from SoldierGameObjDef.kt since they are file-private there) ---
-
-private const val BASEGAMEOBJ_CHUNKID_DEF_PARENT_V = 1111991123u
-
-private fun ByteArray.toLeInt(): Int =
-    ByteBuffer.wrap(this, 0, 4.coerceAtMost(size)).order(ByteOrder.LITTLE_ENDIAN).int
-
-private fun ByteArray.toLeFloat(): Float =
-    ByteBuffer.wrap(this, 0, 4.coerceAtMost(size)).order(ByteOrder.LITTLE_ENDIAN).float
-
-private fun ByteArray.toBool(): Boolean = isNotEmpty() && this[0] != 0.toByte()
-
-private fun ByteArray.toNullTerminatedString(): String {
-    val nullIndex = indexOfFirst { it == 0.toByte() }
-    val len = if (nullIndex < 0) size else nullIndex
-    return String(this, 0, len, Charsets.ISO_8859_1)
-}
+/** Internal parsed-fields holder used by VehicleGameObjDef subclass loaders. */
+internal data class ParsedVehicleFields(
+    val scriptable: ScriptableGameObjDefData,
+    val damageable: DamageableGameObjDefData,
+    val physical: PhysicalGameObjDefData,
+    val armed: ArmedGameObjDefData,
+    val smart: SmartGameObjDefData,
+    val type: VehicleType,
+    val typeName: String,
+    val fire0Anim: String,
+    val fire1Anim: String,
+    val profile: String,
+    val turnRadius: Float,
+    val occupantsVisible: Boolean,
+    val engineSoundMaxPitchFactor: Float,
+    val engineStartSound: Int,
+    val engineRunSound: Int,
+    val engineStopSound: Int,
+    val engineOffSound: Int,
+    val sightDownMuzzle: Boolean,
+    val aim2D: Boolean,
+    val squishVelocity: Float,
+    val vehicleNameId: Int,
+    val numSeats: Int,
+    val gdiDamageReportId: Int,
+    val nodDamageReportId: Int,
+    val gdiDestroyReportId: Int,
+    val nodDestroyReportId: Int,
+    val transitions: List<TransitionData>,
+)
 
 private fun ByteArray.toLeFloatArray(count: Int): FloatArray? {
     val needed = count * 4
     if (size < needed) return null
-    val buf = ByteBuffer.wrap(this, 0, needed).order(ByteOrder.LITTLE_ENDIAN)
+    val buf = java.nio.ByteBuffer.wrap(this, 0, needed).order(java.nio.ByteOrder.LITTLE_ENDIAN)
     return FloatArray(count) { buf.float }
 }

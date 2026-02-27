@@ -8,8 +8,8 @@ import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.BaseGameObjDef
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
 import ccr.server.defs.PhysDefClass
-import ccr.server.defs.SoldierGameObjDefWrapper
-import ccr.server.defs.VehicleGameObjDefWrapper
+import ccr.server.defs.SoldierGameObjDef
+import ccr.server.defs.VehicleGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.BeaconGameObjDef
 import ccr.server.defs.PowerUpGameObjDef
@@ -33,7 +33,7 @@ import ccr.server.net.WeaponBagClass
  *
  * Single-player stubs are included for structural parity with C++ but are no-ops in this MP server.
  */
-open class God(private val server: GameServer) {
+open class God(private val server: Network) {
 
     companion object {
         /**
@@ -71,7 +71,7 @@ open class God(private val server: GameServer) {
 
     var state: State = State.UNINITIALIZED
 
-    // Player/soldier state (moved from GameServer)
+    // Player/soldier state (moved from Network)
     val playersByHost = mutableMapOf<Int, Player>()
     val soldiersByHost = mutableMapOf<Int, SoldierGameObj>()
     val vehiclesByNetId = mutableMapOf<Int, VehicleGameObj>()  // networkId → VehicleGameObj
@@ -137,7 +137,7 @@ open class God(private val server: GameServer) {
      * Creates (or re-activates) a cPlayer network object for a connecting client.
      * Uses the team already stored in [playerTeams] (assigned at connection time).
      * Registers with [NetworkObjectManager] and stores in [playersByHost].
-     * Callers (GameServer) are responsible for sending the creation packet over the network.
+     * Callers (Network) are responsible for sending the creation packet over the network.
      *
      * @return the created [Player] object
      */
@@ -325,13 +325,13 @@ open class God(private val server: GameServer) {
      */
     private fun buildWeaponsForSoldier(defId: Int, bag: WeaponBagClass) {
         val registry = server.loadedLevel?.definitions
-        val wrapper = registry?.findById(defId.toUInt()) as? SoldierGameObjDefWrapper
+        val wrapper = registry?.findById(defId.toUInt()) as? SoldierGameObjDef
 
         data class WeaponEntry(val defId: Int, val rounds: Int)
         val entries = mutableListOf<WeaponEntry>()
 
         if (wrapper != null) {
-            val armed = wrapper.soldierDef.armed
+            val armed = wrapper.armed
 
             // Primary weapon
             if (armed.weaponDefId != 0) {
@@ -377,9 +377,9 @@ open class God(private val server: GameServer) {
 
     // ---- Vehicle spawning ----
 
-    private fun resolveModelName(wrapper: VehicleGameObjDefWrapper?): String {
+    private fun resolveModelName(wrapper: VehicleGameObjDef?): String {
         if (wrapper == null) return ""
-        val physDefId = wrapper.vehicleDef.physical.physDefId
+        val physDefId = wrapper.physical.physDefId
         if (physDefId == 0) return ""
         val physDef = server.loadedLevel?.definitions?.findById(physDefId.toUInt()) as? PhysDefClass
         return physDef?.modelName ?: ""
@@ -392,8 +392,8 @@ open class God(private val server: GameServer) {
      */
     private fun resolveSoldierModelName(defId: Int): String {
         val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
-            as? SoldierGameObjDefWrapper ?: return ""
-        val physDefId = wrapper.soldierDef.physical.physDefId
+            as? SoldierGameObjDef ?: return ""
+        val physDefId = wrapper.physical.physDefId
         if (physDefId == 0) return ""
         return (server.loadedLevel?.definitions?.findById(physDefId.toUInt())
             as? PhysDefClass)?.modelName ?: ""
@@ -412,9 +412,9 @@ open class God(private val server: GameServer) {
         if (defId == 0) return null
 
         val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
-            as? VehicleGameObjDefWrapper
-        val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
-        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 2  // C++ default: NumSeats = 2
+            as? VehicleGameObjDef
+        val vehicleType = wrapper?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
+        val seatCount   = wrapper?.numSeats ?: 2  // C++ default: NumSeats = 2
         val modelName   = resolveModelName(wrapper)
         val playerType  = playerTeams[buyerRhostId] ?: 0
 
@@ -447,9 +447,9 @@ open class God(private val server: GameServer) {
     fun createHarvester(team: Int, defId: Int, spawnPosition: Vector3): VehicleGameObj? {
         if (defId == 0) return null
         val wrapper = server.loadedLevel?.definitions?.findById(defId.toUInt())
-            as? VehicleGameObjDefWrapper
-        val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
-        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 1
+            as? VehicleGameObjDef
+        val vehicleType = wrapper?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
+        val seatCount   = wrapper?.numSeats ?: 1
         val vehicle = VehicleGameObj()
         wrapper?.let { vehicle.definition = it }
         vehicle.modelName       = resolveModelName(wrapper)
@@ -490,7 +490,7 @@ open class God(private val server: GameServer) {
         // grantShieldStrengthMax — increases max shield by (grantShieldStrengthMax * baseDef.shieldStrengthMax)
         // C++: powerup.cpp line 277; rounds up via (int)(add + 0.95f)
         if (def.grantShieldStrengthMax > 0f) {
-            val baseDef = (soldier.definition as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
+            val baseDef = (soldier.definition as? SoldierGameObjDef)?.damageable?.defenseObjectDef
             if (baseDef != null) {
                 val add = (def.grantShieldStrengthMax * baseDef.shieldStrengthMax + 0.95f).toInt().toFloat()
                 soldier.shieldStrengthMax += add
@@ -507,7 +507,7 @@ open class God(private val server: GameServer) {
         // grantHealthMax — increases max health by (grantHealthMax * baseDef.healthMax)
         // C++: powerup.cpp line 321; rounds up via (int)(add + 0.95f)
         if (def.grantHealthMax > 0f) {
-            val baseDef = (soldier.definition as? SoldierGameObjDefWrapper)?.soldierDef?.damageable?.defenseObjectDef
+            val baseDef = (soldier.definition as? SoldierGameObjDef)?.damageable?.defenseObjectDef
             if (baseDef != null) {
                 val add = (def.grantHealthMax * baseDef.healthMax + 0.95f).toInt().toFloat()
                 soldier.healthMax += add
@@ -558,9 +558,9 @@ open class God(private val server: GameServer) {
     fun createLevelVehicle(lv: LoadedVehicleGameObj): VehicleGameObj? {
         if (lv.definitionId == 0) return null
         val wrapper = server.loadedLevel?.definitions?.findById(lv.definitionId.toUInt())
-            as? VehicleGameObjDefWrapper
-        val vehicleType = wrapper?.vehicleDef?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
-        val seatCount   = wrapper?.vehicleDef?.numSeats ?: 2  // C++ default: NumSeats = 2
+            as? VehicleGameObjDef
+        val vehicleType = wrapper?.type?.value ?: VehicleGameObj.VEHICLE_TYPE_CAR
+        val seatCount   = wrapper?.numSeats ?: 2  // C++ default: NumSeats = 2
         val modelName   = resolveModelName(wrapper)
         val position = lv.transform.position.let { Vector3(it.x, it.y, it.z) }
         val vehicle = VehicleGameObj()

@@ -4,7 +4,7 @@ import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.server.GameObjManager
-import ccr.server.defs.SoldierGameObjDef as SoldierGameObjDefWrapper
+import ccr.server.defs.SoldierGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 
 // C++: SoldierGameObj : public SmartGameObj (soldier.cpp / soldier.h)
@@ -294,7 +294,7 @@ open class SoldierGameObj() : SmartGameObj() {
 
     // C++: void Copy_Settings(const SoldierGameObjDef & definition)
     override fun copySettings(definition: ccr.server.defs.SmartGameObjDef) {
-        val soldierDef = definition as? SoldierGameObjDefWrapper ?: return
+        val soldierDef = definition as? SoldierGameObjDef ?: return
 
         // C++: HumanState.Init(Peek_Human_Phys())
         humanState.init(peekHumanPhys())
@@ -340,13 +340,13 @@ open class SoldierGameObj() : SmartGameObj() {
         prepareSpeechFramework()
 
         // C++: SoldierGameObj::Init calls Setup_Innate_Weapons via ArmedGameObj::Copy_Settings
-        // SoldierGameObjDefWrapper doesn't extend ArmedGameObjDef, so weapon setup must be done here.
+        // SoldierGameObjDef doesn't extend ArmedGameObjDef, so weapon setup must be done here.
         setupInnateWeapons(soldierDef)
     }
 
     // C++: ArmedGameObj::Copy_Settings — adds weapons from def's WeaponDefID / SecondaryWeaponDefID
     // SoldierGameObjDef uses composition: weapon fields are in def.armed.weaponDefId etc.
-    private fun setupInnateWeapons(def: SoldierGameObjDefWrapper) {
+    private fun setupInnateWeapons(def: SoldierGameObjDef) {
         // Only run if real weapons haven't been added yet (count > 1 since index 0 is always null sentinel)
         if (weaponBag.getCount() > 1) return
         weaponBag.clearWeapons()
@@ -407,8 +407,8 @@ open class SoldierGameObj() : SmartGameObj() {
     }
 
     // C++: const SoldierGameObjDef & Get_Definition() const
-    fun getSoldierDefinition(): SoldierGameObjDefWrapper {
-        return definition as SoldierGameObjDefWrapper
+    fun getSoldierDefinition(): SoldierGameObjDef {
+        return definition as SoldierGameObjDef
     }
 
     // -------------------------------------------------------------------------
@@ -1341,7 +1341,7 @@ open class SoldierGameObj() : SmartGameObj() {
         if (definitionId != currentDefId) {
             val def = DefinitionMgrClass.findDefinition(definitionId)
             if (def != null && def.chunkId.toInt() == CLASSID_GAME_OBJECT_DEF_SOLDIER) {
-                val soldierDef = def as? SoldierGameObjDefWrapper
+                val soldierDef = def as? SoldierGameObjDef
                 if (soldierDef != null) {
                     reInit(soldierDef)
                 }

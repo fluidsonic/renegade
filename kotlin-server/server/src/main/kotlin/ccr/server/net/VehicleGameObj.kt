@@ -7,7 +7,7 @@ import ccr.math.degToRadF
 import ccr.net.bitstream.*
 import ccr.net.replication.NetworkObject
 import ccr.server.GameObjManager
-import ccr.server.defs.VehicleGameObjDefWrapper
+import ccr.server.defs.VehicleGameObjDef
 
 // C++: VehicleGameObj : public SmartGameObj
 // Full hierarchy: NetworkObject → BaseGameObj → ScriptableGameObj → DamageableGameObj
@@ -211,12 +211,12 @@ open class VehicleGameObj() : SmartGameObj() {
     }
 
     // C++: void Init(const VehicleGameObjDef & definition)
-    fun init(definition: VehicleGameObjDefWrapper) {
+    fun init(definition: VehicleGameObjDef) {
         driverIsGunner = defaultDriverIsGunner
         super.init(definition)
 
         // C++: SeatOccupants.Resize(definition.NumSeats) + zero-fill
-        val numSeats = definition.vehicleDef.numSeats
+        val numSeats = definition.numSeats
         seatOccupants.clear()
         repeat(numSeats) { seatOccupants.add(null) }
 
@@ -226,13 +226,13 @@ open class VehicleGameObj() : SmartGameObj() {
         updateDamageMeshes()
 
         // C++: if (type == VEHICLE_TYPE_TURRET) Set_App_Packet_Type(APPPACKETTYPE_TURRET)
-        if (definition.vehicleDef.type.value == VEHICLE_TYPE_TURRET) {
+        if (definition.type.value == VEHICLE_TYPE_TURRET) {
             setAppPacketType(APPPACKETTYPE_TURRET)
         }
     }
 
     // C++: const VehicleGameObjDef & Get_Definition() const
-    fun getDefinition(): VehicleGameObjDefWrapper = definition as VehicleGameObjDefWrapper
+    fun getDefinition(): VehicleGameObjDef = definition as VehicleGameObjDef
 
     // -------------------------------------------------------------------------
     // Save / Load
@@ -298,7 +298,7 @@ open class VehicleGameObj() : SmartGameObj() {
                 CHUNKID_SEAT_LIST -> {
                     // C++: raw pointer array for each seat.
                     // if (num_seats == 0 || num_seats != Get_Definition().NumSeats) → legacy, use def size
-                    val defNumSeats = (definition as? VehicleGameObjDefWrapper)?.vehicleDef?.numSeats ?: 0
+                    val defNumSeats = (definition as? VehicleGameObjDef)?.numSeats ?: 0
                     if (numSeats == 0 || numSeats != defNumSeats) {
                         // C++: break (legacy) — seats already zero-filled above, skip chunk
                         seatOccupants.clear()
@@ -343,8 +343,8 @@ open class VehicleGameObj() : SmartGameObj() {
         }
 
         // C++: if (type == VEHICLE_TYPE_TURRET) Set_App_Packet_Type(APPPACKETTYPE_TURRET)
-        val def = definition as? VehicleGameObjDefWrapper
-        if (def != null && def.vehicleDef.type.value == VEHICLE_TYPE_TURRET) {
+        val def = definition as? VehicleGameObjDef
+        if (def != null && def.type.value == VEHICLE_TYPE_TURRET) {
             setAppPacketType(APPPACKETTYPE_TURRET)
         }
     }
@@ -400,15 +400,15 @@ open class VehicleGameObj() : SmartGameObj() {
 
         // C++: Weapon fire animation
         val weapon = getWeapon()
-        val def = definition as? VehicleGameObjDefWrapper
-        if (weapon != null && def != null && def.vehicleDef.fire0Anim.isNotEmpty()) {
+        val def = definition as? VehicleGameObjDef
+        if (weapon != null && def != null && def.fire0Anim.isNotEmpty()) {
             weapon.resetAnimUpdate()
             when (weapon.getAnimState()) {
                 WEAPON_ANIM_NOT_FIRING -> setAnimation(null)
-                WEAPON_ANIM_FIRING_0   -> setAnimation(def.vehicleDef.fire0Anim)
+                WEAPON_ANIM_FIRING_0   -> setAnimation(def.fire0Anim)
                 WEAPON_ANIM_FIRING_1   -> {
-                    val fire1 = def.vehicleDef.fire1Anim
-                    setAnimation(if (fire1.isNotEmpty()) fire1 else def.vehicleDef.fire0Anim)
+                    val fire1 = def.fire1Anim
+                    setAnimation(if (fire1.isNotEmpty()) fire1 else def.fire0Anim)
                 }
             }
         }
@@ -542,7 +542,7 @@ open class VehicleGameObj() : SmartGameObj() {
             }
         }
 
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         val weaponTurnRate = def.armed.weaponTurnRate
 
         val maxMoveTurn = weaponTurnRate * TimeManager.getFrameSeconds()
@@ -590,11 +590,11 @@ open class VehicleGameObj() : SmartGameObj() {
     }
 
     // C++: virtual bool Use_2D_Aiming() { return Get_Definition().Aim2D; }
-    fun use2DAiming(): Boolean = getDefinition().vehicleDef.aim2D
+    fun use2DAiming(): Boolean = getDefinition().aim2D
 
     // C++: virtual Matrix3D Get_Look_Transform()
     override fun getLookTransform(): ccr.math.Matrix3D {
-        return if (getDefinition().vehicleDef.sightDownMuzzle) {
+        return if (getDefinition().sightDownMuzzle) {
             getMuzzle()
         } else {
             super.getLookTransform()
@@ -612,10 +612,10 @@ open class VehicleGameObj() : SmartGameObj() {
     // (In Kotlin, use `this is VehicleGameObj` at call sites — no explicit method needed)
 
     // C++: virtual bool Is_Aircraft() { return type == VEHICLE_TYPE_FLYING; }
-    fun isAircraft(): Boolean = getDefinition().vehicleDef.type.value == VEHICLE_TYPE_FLYING
+    fun isAircraft(): Boolean = getDefinition().type.value == VEHICLE_TYPE_FLYING
 
     // C++: virtual bool Is_Turret() { return type == VEHICLE_TYPE_TURRET; }
-    fun isTurret(): Boolean = getDefinition().vehicleDef.type.value == VEHICLE_TYPE_TURRET
+    fun isTurret(): Boolean = getDefinition().type.value == VEHICLE_TYPE_TURRET
 
     // C++: virtual int Get_Player_Type() const — override via computed property getter
     // NOTE: `seatOccupants` is a non-null val but may be JVM-null during superclass construction
@@ -640,7 +640,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: void Add_Occupant(SoldierGameObj* occupant) — adds to lowest empty seat
     fun addOccupant(occupant: SoldierGameObj) {
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         for (i in 0 until def.numSeats) {
             if (seatOccupants.getOrNull(i) == null) {
                 addOccupant(occupant, i)
@@ -669,7 +669,7 @@ open class VehicleGameObj() : SmartGameObj() {
         setObjectDirtyBit(NetworkObject.BIT_RARE, true)
 
         // C++: choose vehicle anim based on vehicle type
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         val animName = if (def.type.value == VEHICLE_TYPE_BIKE) {
             "S_A_HUMAN.H_A_V20A"
         } else {
@@ -709,7 +709,7 @@ open class VehicleGameObj() : SmartGameObj() {
             return
         }
 
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         // C++: if OccupantsVisible == false → unhide occupant model
         if (!def.occupantsVisible) {
             val model = seatOccupants[seatNum]?.peekModel()
@@ -800,7 +800,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: void Passenger_Entering()
     fun passengerEntering() {
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         val anim = "V_${def.typeName}L1.M_${def.typeName}CL"
         setAnimation(anim)
         getAnimControl()?.setMode(ANIM_MODE_ONCE)
@@ -808,7 +808,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: void Passenger_Exiting()
     fun passengerExiting() {
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         val anim = "V_${def.typeName}L1.M_${def.typeName}OP"
         setAnimation(anim)
         getAnimControl()?.setMode(ANIM_MODE_ONCE)
@@ -906,7 +906,7 @@ open class VehicleGameObj() : SmartGameObj() {
         packet.addInt(totalRoundsVal)
 
         // Determine vehicle type: from definition if available, else from direct override field
-        val vehicleTypeVal = (definition as? ccr.server.defs.VehicleGameObjDefWrapper)?.vehicleDef?.type?.value
+        val vehicleTypeVal = (definition as? ccr.server.defs.VehicleGameObjDef)?.type?.value
             ?: vehicleTypeOverride
 
         when (vehicleTypeVal) {
@@ -969,7 +969,7 @@ open class VehicleGameObj() : SmartGameObj() {
         val rounds = packet.getInt()
         getWeapon()?.setTotalRounds(rounds)
 
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         when (def.type.value) {
             VEHICLE_TYPE_BIKE,
             VEHICLE_TYPE_CAR,
@@ -1097,7 +1097,7 @@ open class VehicleGameObj() : SmartGameObj() {
     // C++: virtual ExpirationReactionType Object_Expired(PhysClass* observed_obj)
     override fun objectExpired(observedObj: PhysClass): ExpirationReactionType {
         // C++: Only on the server
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         if (def.physical.killedExplosion != 0 && !isDeletePending) {
             val pos = getPosition()
             ExplosionManager.serverExplode(def.physical.killedExplosion, pos, null)
@@ -1165,7 +1165,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: virtual float Get_Filter_Distance() const
     override fun getFilterDistance(): Float {
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         if (def.type.value == VEHICLE_TYPE_TURRET) {
             val weapon = getWeapon()
             var range = def.smart.sightRange
@@ -1200,14 +1200,14 @@ open class VehicleGameObj() : SmartGameObj() {
     // -------------------------------------------------------------------------
 
     // C++: const char* Get_Profile() { return Get_Definition().Profile; }
-    fun getProfile(): String = getDefinition().vehicleDef.profile
+    fun getProfile(): String = getDefinition().profile
 
     // -------------------------------------------------------------------------
     // Turn radius
     // -------------------------------------------------------------------------
 
     // C++: float Get_Turn_Radius() const { return Get_Definition().TurnRadius; }
-    fun getTurnRadius(): Float = getDefinition().vehicleDef.turnRadius
+    fun getTurnRadius(): Float = getDefinition().turnRadius
 
     // -------------------------------------------------------------------------
     // Vehicle name
@@ -1215,7 +1215,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: const WCHAR* Get_Vehicle_Name()
     fun getVehicleName(): String? {
-        val nameId = getDefinition().vehicleDef.vehicleNameId
+        val nameId = getDefinition().vehicleNameId
         if (nameId != 0) {
             return TranslateDBClass.getString(nameId)
         }
@@ -1270,7 +1270,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: void Create_And_Destroy_Transitions()
     private fun createAndDestroyTransitions() {
-        val def = getDefinition().vehicleDef
+        val def = getDefinition()
         // C++: manage enter transitions
         val shouldHaveEnter = (occupiedSeats < def.numSeats) && transitionsEnabled
         if (shouldHaveEnter != hasEnterTransitions) {

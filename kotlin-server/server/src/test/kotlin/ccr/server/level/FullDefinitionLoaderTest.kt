@@ -135,9 +135,9 @@ class FullDefinitionLoaderTest {
     }
 
     @Test
-    fun `data class definitions fall through to base DefinitionClass`() {
-        // 0x3001 = SoldierGameObjDef (data class, not DefinitionClass subclass)
-        // Should fall through to the else branch → base DefinitionClass
+    fun `incomplete SoldierGameObjDef falls through to base DefinitionClass`() {
+        // 0x3001 = CHUNKID_GAME_OBJECT_DEF_SOLDIER — but DDB has no SoldierGameObjDef chunks,
+        // so SoldierGameObjDef.load() returns null and we fall back to base DefinitionClass.
         val ddb = buildDdb(Triple(0x3001u, 300u, "Soldier"))
         val registry = FullDefinitionLoader.load(ddb)
 

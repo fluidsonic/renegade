@@ -82,11 +82,8 @@ object FullDefinitionLoader {
             C4GameObjDef.CHUNK_ID ->
                 C4GameObjDef.load(objDataChunk, name, id, chunkId)
 
-            SoldierGameObjDef.CHUNK_ID -> {
-                val parsed = SoldierGameObjDef.load(objDataChunk)
-                if (parsed != null) SoldierGameObjDefWrapper(name, id, chunkId, parsed)
-                else fallback
-            }
+            SoldierGameObjDef.CHUNK_ID ->
+                SoldierGameObjDef.load(objDataChunk, name, id, chunkId) ?: fallback
 
             SimpleGameObjDef.CHUNK_ID ->
                 SimpleGameObjDef.load(objDataChunk, name, id, chunkId)
@@ -98,11 +95,8 @@ object FullDefinitionLoader {
             TransitionGameObjDef.CHUNK_ID ->
                 TransitionGameObjDef.load(chunkId, objDataChunk) ?: fallback
 
-            VehicleGameObjDef.CHUNK_ID -> {
-                val parsed = VehicleGameObjDef.load(objDataChunk)
-                if (parsed != null) VehicleGameObjDefWrapper(name, id, chunkId, parsed)
-                else fallback
-            }
+            VehicleGameObjDef.CHUNK_ID ->
+                VehicleGameObjDef.load(objDataChunk, name, id, chunkId) ?: fallback
 
             CinematicGameObjDef.CHUNK_ID ->
                 CinematicGameObjDef.load(objDataChunk, name, id, chunkId)
@@ -126,11 +120,11 @@ object FullDefinitionLoader {
             SakuraBossGameObjDef.CHUNK_ID ->
                 SakuraBossGameObjDef.load(objDataChunk, name, id, chunkId) ?: fallback
 
-            // MendozaBossGameObjDefClass → SoldierGameObjDefWrapper
+            // MendozaBossGameObjDefClass → SoldierGameObjDef
             MendozaBossGameObjDefClass.CHUNK_ID ->
                 MendozaBossGameObjDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 
-            // RaveshawBossGameObjDefClass → SoldierGameObjDefWrapper
+            // RaveshawBossGameObjDefClass → SoldierGameObjDef
             RaveshawBossGameObjDefClass.CHUNK_ID ->
                 RaveshawBossGameObjDefClass.load(objDataChunk, name, id, chunkId) ?: fallback
 

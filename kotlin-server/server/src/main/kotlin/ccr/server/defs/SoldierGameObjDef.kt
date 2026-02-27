@@ -11,15 +11,15 @@ private const val DEG_TO_RAD_360 = 6.2831855f // Float.fromBits(0x40C90FDB) — 
 // Helpers to extract typed values from micro-chunk byte arrays
 // ---------------------------------------------------------------------------
 
-private fun ByteArray.toLeInt(): Int =
+internal fun ByteArray.toLeInt(): Int =
     ByteBuffer.wrap(this, 0, 4.coerceAtMost(size)).order(ByteOrder.LITTLE_ENDIAN).int
 
-private fun ByteArray.toLeFloat(): Float =
+internal fun ByteArray.toLeFloat(): Float =
     ByteBuffer.wrap(this, 0, 4.coerceAtMost(size)).order(ByteOrder.LITTLE_ENDIAN).float
 
-private fun ByteArray.toBool(): Boolean = isNotEmpty() && this[0] != 0.toByte()
+internal fun ByteArray.toBool(): Boolean = isNotEmpty() && this[0] != 0.toByte()
 
-private fun ByteArray.toNullTerminatedString(): String {
+internal fun ByteArray.toNullTerminatedString(): String {
     val nullIndex = indexOfFirst { it == 0.toByte() }
     val len = if (nullIndex < 0) size else nullIndex
     return String(this, 0, len, Charsets.ISO_8859_1)
@@ -53,7 +53,7 @@ data class DefinitionData(
 // ---------------------------------------------------------------------------
 // No own fields, just delegates.
 
-private const val BASEGAMEOBJ_CHUNKID_DEF_PARENT = 1111991123u
+internal const val BASEGAMEOBJ_CHUNKID_DEF_PARENT = 1111991123u
 
 // ---------------------------------------------------------------------------
 // ScriptableGameObjDef
@@ -485,9 +485,10 @@ data class Dialogue(
 //   14=oratorType, 15=humanAnimOverrideDefID, 16=deathSoundPresetID,
 //   17=humanLoiterCollectionDefID
 // ---------------------------------------------------------------------------
-data class SoldierGameObjDef(
-    // DefinitionClass
-    val definition: DefinitionData,
+open class SoldierGameObjDef(
+    name: String,
+    id: UInt,
+    chunkId: UInt,
 
     // ScriptableGameObjDef
     val scriptable: ScriptableGameObjDefData,
@@ -518,7 +519,8 @@ data class SoldierGameObjDef(
     val humanLoiterCollectionDefId: Int = 0,
     val deathSoundPresetId: Int = 0,
     val dialogList: List<Dialogue> = emptyList(),
-) {
+) : BaseGameObjDef(name, id, chunkId) {
+
     companion object {
         const val CHUNK_ID: UInt = 0x0004010Fu  // CHUNKID_GAME_OBJECT_DEF_SOLDIER
 
@@ -548,7 +550,37 @@ data class SoldierGameObjDef(
          * Loads a SoldierGameObjDef from the OBJDATA chunk for a soldier definition.
          * [objDataChunk] should be the ChunkReader for the SIMPLEFACTORY_CHUNKID_OBJDATA content.
          */
-        fun load(objDataChunk: ChunkReader): SoldierGameObjDef? {
+        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): SoldierGameObjDef? =
+            parseFields(objDataChunk)?.let { fields ->
+                SoldierGameObjDef(
+                    name = name, id = id, chunkId = chunkId,
+                    scriptable = fields.scriptable,
+                    damageable = fields.damageable,
+                    physical = fields.physical,
+                    armed = fields.armed,
+                    smart = fields.smart,
+                    turnRate = fields.turnRate,
+                    jumpVelocity = fields.jumpVelocity,
+                    skeletonHeight = fields.skeletonHeight,
+                    skeletonWidth = fields.skeletonWidth,
+                    useInnateBehavior = fields.useInnateBehavior,
+                    innateAggressiveness = fields.innateAggressiveness,
+                    innateTakeCoverProbability = fields.innateTakeCoverProbability,
+                    innateIsStationary = fields.innateIsStationary,
+                    firstPersonHands = fields.firstPersonHands,
+                    humanAnimOverrideDefId = fields.humanAnimOverrideDefId,
+                    humanLoiterCollectionDefId = fields.humanLoiterCollectionDefId,
+                    deathSoundPresetId = fields.deathSoundPresetId,
+                    dialogList = fields.dialogList,
+                )
+            }
+
+        /**
+         * Parses all SoldierGameObjDef fields from an OBJDATA chunk without constructing
+         * the final object. Used by subclass loaders (MendozaBoss, RaveshawBoss) that need
+         * to extract the fields and call their own constructors.
+         */
+        internal fun parseFields(objDataChunk: ChunkReader): ParsedSoldierFields? {
             // --- SoldierGameObjDef layer ---
             var smartParentChunk: ChunkReader? = null
             var turnRate = DEG_TO_RAD_360
@@ -613,17 +645,9 @@ data class SoldierGameObjDef(
 
             // --- ScriptableGameObjDef layer ---
             val scriptableChunk = scriptableParentChunk ?: return null
-            val (scriptableData, baseParentChunk) = ScriptableGameObjDefData.load(scriptableChunk) ?: return null
+            val (scriptableData, _) = ScriptableGameObjDefData.load(scriptableChunk) ?: return null
 
-            // --- BaseGameObjDef layer (wraps DefinitionClass) ---
-            val baseChunk = baseParentChunk ?: return null
-            val definitionChunk = baseChunk.findChunk(BASEGAMEOBJ_CHUNKID_DEF_PARENT) ?: return null
-
-            // --- DefinitionClass layer ---
-            val definitionData = DefinitionData.load(definitionChunk) ?: return null
-
-            return SoldierGameObjDef(
-                definition = definitionData,
+            return ParsedSoldierFields(
                 scriptable = scriptableData,
                 damageable = damageableData,
                 physical = physData,
@@ -646,3 +670,25 @@ data class SoldierGameObjDef(
         }
     }
 }
+
+/** Internal parsed-fields holder used by SoldierGameObjDef subclass loaders. */
+internal data class ParsedSoldierFields(
+    val scriptable: ScriptableGameObjDefData,
+    val damageable: DamageableGameObjDefData,
+    val physical: PhysicalGameObjDefData,
+    val armed: ArmedGameObjDefData,
+    val smart: SmartGameObjDefData,
+    val turnRate: Float,
+    val jumpVelocity: Float,
+    val skeletonHeight: Float,
+    val skeletonWidth: Float,
+    val useInnateBehavior: Boolean,
+    val innateAggressiveness: Float,
+    val innateTakeCoverProbability: Float,
+    val innateIsStationary: Boolean,
+    val firstPersonHands: String,
+    val humanAnimOverrideDefId: Int,
+    val humanLoiterCollectionDefId: Int,
+    val deathSoundPresetId: Int,
+    val dialogList: List<Dialogue>,
+)

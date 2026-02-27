@@ -14,11 +14,11 @@ import ccr.server.mix.ChunkReader
  *   [CHUNKID_DEF_VARIABLES = 0x09070459]            -> sakura-specific micro-chunks
  *   [CHUNKID_DEF_ROCKET_DEFENSEOBJ_DEF = 0x0907045A] -> DefenseObjectDefClass for rockets
  */
-class SakuraBossGameObjDef(
+class SakuraBossGameObjDef internal constructor(
     name: String,
     id: UInt,
     chunkId: UInt,
-    vehicleDef: VehicleGameObjDef,
+    fields: ParsedVehicleFields,
     // SakuraBoss-specific fields — defaults match C++ constructor
     val gattlingGunDefId: Int = 0,
     val rocketLauncherDefId: Int = 0,
@@ -26,7 +26,36 @@ class SakuraBossGameObjDef(
     val rocketDoorOpenSoundId: Int = 0,
     val rocketDestroyedExplosionId: Int = 0,
     val rocketsDefense: DefenseObjectDefClass = DefenseObjectDefClass(),
-) : VehicleGameObjDefWrapper(name, id, chunkId, vehicleDef) {
+) : VehicleGameObjDef(
+    name = name, id = id, chunkId = chunkId,
+    scriptable = fields.scriptable,
+    damageable = fields.damageable,
+    physical = fields.physical,
+    armed = fields.armed,
+    smart = fields.smart,
+    type = fields.type,
+    typeName = fields.typeName,
+    fire0Anim = fields.fire0Anim,
+    fire1Anim = fields.fire1Anim,
+    profile = fields.profile,
+    turnRadius = fields.turnRadius,
+    occupantsVisible = fields.occupantsVisible,
+    engineSoundMaxPitchFactor = fields.engineSoundMaxPitchFactor,
+    engineStartSound = fields.engineStartSound,
+    engineRunSound = fields.engineRunSound,
+    engineStopSound = fields.engineStopSound,
+    engineOffSound = fields.engineOffSound,
+    sightDownMuzzle = fields.sightDownMuzzle,
+    aim2D = fields.aim2D,
+    squishVelocity = fields.squishVelocity,
+    vehicleNameId = fields.vehicleNameId,
+    numSeats = fields.numSeats,
+    gdiDamageReportId = fields.gdiDamageReportId,
+    nodDamageReportId = fields.nodDamageReportId,
+    gdiDestroyReportId = fields.gdiDestroyReportId,
+    nodDestroyReportId = fields.nodDestroyReportId,
+    transitions = fields.transitions,
+) {
 
     companion object {
         const val CHUNK_ID: UInt = 0x00040132u  // CHUNKID_GAME_OBJECT_DEF_SAKURA_BOSS
@@ -62,7 +91,7 @@ class SakuraBossGameObjDef(
         ): SakuraBossGameObjDef? {
             // --- VehicleGameObjDef parent chain ---
             val vehicleParentChunk = objDataReader.findChunk(CHUNKID_DEF_PARENT) ?: return null
-            val vehicleDef = VehicleGameObjDef.load(vehicleParentChunk) ?: return null
+            val fields = VehicleGameObjDef.parseFields(vehicleParentChunk) ?: return null
 
             // --- SakuraBoss-specific variables ---
             val varsReader = objDataReader.findChunk(CHUNKID_DEF_VARIABLES)
@@ -80,7 +109,7 @@ class SakuraBossGameObjDef(
                 name = name,
                 id = id,
                 chunkId = chunkId,
-                vehicleDef = vehicleDef,
+                fields = fields,
                 gattlingGunDefId = gattlingGunDefId,
                 rocketLauncherDefId = rocketLauncherDefId,
                 gattlingGunRevSoundDefId = gattlingGunRevSoundDefId,
