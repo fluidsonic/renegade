@@ -168,7 +168,7 @@ open class SoldierGameObj() : SmartGameObj() {
 
     // Secondary constructor for tests and server-side spawning — bypasses the full Init() pipeline.
     // Creates a soldier with the given parameters, setting up direct fields (position, modelName, etc.)
-    // and populating the weapon bag (slot 0 = fists placeholder, slots 1+ = real weapons).
+    // and populating the weapon bag (null at slot 0 = no-weapon sentinel, real weapons at slots 1+).
     constructor(
         definitionId: Int,
         controlOwner: Int = 0,
@@ -195,9 +195,8 @@ open class SoldierGameObj() : SmartGameObj() {
         defenseObject.healthMax = health
         defenseObject.shieldStrength = shieldStrength
         defenseObject.shieldStrengthMax = shieldStrength
-        // Set up weapon bag: slot 0 = fists (defId=0), slots 1+ = real weapons
-        weaponBag.clearWeapons()
-        weaponBag.addWeapon(0, 0, giveWeapon = false) // fists placeholder at slot 0
+        // Set up weapon bag: null sentinel at slot 0, real weapons at slots 1+
+        weaponBag.clearWeapons()  // clears and re-adds null sentinel at index 0
         for (entry in weapons) {
             weaponBag.addWeapon(entry.definitionId, entry.totalRounds)
         }
@@ -208,7 +207,7 @@ open class SoldierGameObj() : SmartGameObj() {
     // Computed property: real weapons (slots 1+) in the weapon bag as WeaponEntry list
     val weapons: List<WeaponEntry>
         get() = (1 until weaponBag.getCount()).map { i ->
-            val w = weaponBag.peekWeapon(i)
+            val w = weaponBag.peekWeapon(i)!!  // index 1+ is always a real WeaponClass
             WeaponEntry(definitionId = w.definitionId, totalRounds = w.totalRounds)
         }
 
@@ -348,8 +347,8 @@ open class SoldierGameObj() : SmartGameObj() {
     // C++: ArmedGameObj::Copy_Settings — adds weapons from def's WeaponDefID / SecondaryWeaponDefID
     // SoldierGameObjDef uses composition: weapon fields are in def.armed.weaponDefId etc.
     private fun setupInnateWeapons(def: SoldierGameObjDefWrapper) {
-        // Only run if weapon bag is empty (God.kt may have already populated it for MP soldiers)
-        if (weaponBag.getCount() > 0) return
+        // Only run if real weapons haven't been added yet (count > 1 since index 0 is always null sentinel)
+        if (weaponBag.getCount() > 1) return
         weaponBag.clearWeapons()
         val armed = def.armed
         if (armed.weaponDefId != 0) {
@@ -1376,10 +1375,10 @@ open class SoldierGameObj() : SmartGameObj() {
         }
 
         // C++: has_weapon + weapon id + rounds
-        // C++: has_weapon = (WeaponBag && WeaponBag->Get_Index()) — non-zero index means a weapon is selected
-        // Index 0 is fists (no real weapon); only index 1+ means a real weapon is selected.
+        // C++: has_weapon = (WeaponBag && WeaponBag->Get_Index()) — non-null weapon means selected
+        // Index 0 is null sentinel (no weapon); getWeapon() returns null when index 0 is selected.
         val p_weapon = getWeapon()
-        val hasWeapon = (p_weapon != null && weaponBag.getIndex() != 0)
+        val hasWeapon = (p_weapon != null)
         packet.addBool(hasWeapon)
         if (hasWeapon) {
             packet.addInt(p_weapon!!.definitionId)

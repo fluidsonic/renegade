@@ -305,6 +305,18 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - `AmmoDefinitionClass.warhead` is the warhead save ID; `BuildingGameObj.shieldType` is the normal armor save ID; `BuildingGameObj.mctSkinSaveId` is the MCT alternate armor save ID (from `BuildingGameObjDef.mctSkin`)
 - `IniFile` (ccr.server.mix) — simple section-based INI parser: `getString/getInt/getFloat/entryCount/getEntry`, case-insensitive, `;` comments
 
+### Network Object Factory Pipeline
+- `NetworkObjectFactory` interface in `ccr.net.replication` — matches C++ `NetworkObjectFactoryClass`; has `classId`, `prepPacket(obj, bs)`, `create(bs)`
+- `NetworkObjectFactoryManager` object in `ccr.net.replication` — singleton registry mapping classId → factory; use `register()`, `getFactory()`
+- `NetworkGameObjectFactory` (classId=1000) in `ccr.server.net` — `prepPacket` writes `definitionId:32`; `create` consumes it (server-only, returns null)
+- `SimpleNetworkObjectFactory(classId)` — no-op prepPacket; used for event classIds 1001–1038 and classId=0 singletons
+- `NetworkObjectFactories.register()` — call at server startup (already called in `GameServer.run()`); idempotent
+- Wire format: `[networkId:32][dirtyBits:8][isDeletePending:1][classId:32][factory_data][exportCreation][exportRare][exportOccasional][exportFrequent]`
+  - For classId=1000 (game objects): factory_data = `[definitionId:32]`
+  - For classId=0, 1001–1038: factory_data = (empty)
+- `NetworkFactoriesExtension` (JUnit5 auto-discovery) — ensures factories are registered for all server tests automatically; no per-test `@ExtendWith` needed
+- Factory writes definitionId BETWEEN classId header and Export_Creation — matches C++ `messages.cpp:987–999`; `basegameobj.cpp:54–106`
+
 ### Live proxy (diagnostic tool)
 - `gradlew :server:liveProxy -PlocalPort=4849 -PremoteHost=127.0.0.1 -PremotePort=4848 -PlogFile=.tmp/proxy_log.txt`
 - Forwards client↔server traffic and decodes every packet in real-time

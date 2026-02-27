@@ -7,7 +7,8 @@ import ccr.net.bitstream.BitStream
 class WeaponBagClass(val owner: PhysicalGameObj) {
 
     // C++: DynamicVectorClass<WeaponClass*> WeaponList
-    private val weaponList: MutableList<WeaponClass> = mutableListOf()
+    // Index 0 is always NULL (no-weapon sentinel), matching C++: WeaponList.Add(NULL) in constructor
+    private val weaponList: MutableList<WeaponClass?> = mutableListOf(null)
 
     // C++: int WeaponIndex
     var weaponIndex: Int = 0
@@ -21,11 +22,11 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
     var hudIsChanged: Boolean = false
         private set
 
-    // C++: int Get_Count()
+    // C++: int Get_Count() — includes NULL at index 0
     fun getCount(): Int = weaponList.size
 
-    // C++: WeaponClass* Peek_Weapon(int index)
-    fun peekWeapon(index: Int): WeaponClass = weaponList[index]
+    // C++: WeaponClass* Peek_Weapon(int index) — returns null for index 0 (no-weapon sentinel)
+    fun peekWeapon(index: Int): WeaponClass? = weaponList[index]
 
     // C++: WeaponClass* Get_Weapon()
     fun getWeapon(): WeaponClass? = weaponList.getOrNull(weaponIndex)
@@ -41,6 +42,7 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
     }
 
     // C++: WeaponClass* Add_Weapon(int id, int rounds, bool give_weapon)
+    // Adds a real weapon at index 1+ (never at index 0 which is the null sentinel)
     fun addWeapon(id: Int, rounds: Int = 0, giveWeapon: Boolean = true): WeaponClass {
         val weapon = WeaponClass(definitionId = id, totalRounds = rounds)
         weapon.owner = owner
@@ -57,22 +59,24 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
         return weapon
     }
 
-    // C++: void Remove_Weapon(int index)
+    // C++: void Remove_Weapon(int index) — index 0 (null sentinel) cannot be removed
     fun removeWeapon(index: Int) {
+        require(index > 0) { "Cannot remove index 0 (null sentinel)" }
         weaponList.removeAt(index)
         if (weaponIndex >= weaponList.size) weaponIndex = (weaponList.size - 1).coerceAtLeast(0)
         isChanged = true
     }
 
-    // C++: void Clear_Weapons()
+    // C++: void Clear_Weapons() — removes all real weapons, re-adds NULL at index 0
     fun clearWeapons() {
         weaponList.clear()
+        weaponList.add(null)  // C++: WeaponList.Add(NULL) — restore null sentinel at index 0
         weaponIndex = 0
         isChanged = true
     }
 
     // C++: bool Is_Weapon_Owned(int weapon_id)
-    fun isWeaponOwned(weaponId: Int): Boolean = weaponList.any { it.definitionId == weaponId }
+    fun isWeaponOwned(weaponId: Int): Boolean = weaponList.any { it != null && it.definitionId == weaponId }
 
     // C++: bool Is_Ammo_Full(int weapon_id) — true if the weapon exists and is at max ammo
     // FIXME: full check requires WeaponDefinitionClass for max-rounds cap; stub returns false (never full)
@@ -80,7 +84,7 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
 
     // C++: void Select_Weapon(int weapon_id) — select by definition ID
     fun selectWeaponId(weaponId: Int) {
-        val index = weaponList.indexOfFirst { it.definitionId == weaponId }
+        val index = weaponList.indexOfFirst { it != null && it.definitionId == weaponId }
         if (index >= 0) selectIndex(index)
     }
 
@@ -91,11 +95,12 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
         hudIsChanged = true
     }
 
-    // C++: bool Move_Contents(WeaponBagClass*) — move all weapons from src into this bag
+    // C++: bool Move_Contents(WeaponBagClass*) — move all real weapons (index 1+) from src into this bag
     fun moveContents(src: WeaponBagClass?): Boolean {
         if (src == null) return false
         var moved = false
-        for (w in src.weaponList.toList()) {
+        for (i in 1 until src.weaponList.size) {
+            val w = src.weaponList[i] ?: continue
             addWeapon(w, true)
             moved = true
         }
@@ -116,12 +121,13 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
     fun hudResetChanged() { hudIsChanged = false }
 
     // C++: void Export_Weapon_List(BitStreamClass& packet)
+    // Writes (Count()-1) weapons (real weapons only, skipping null at index 0)
     fun exportWeaponList(packet: BitStream) {
-        // C++: writes (Count()-1) then for each weapon from slot 1: id(32) + totalRounds(32)
-        packet.addInt(weaponList.size - 1)
+        packet.addInt(weaponList.size - 1)  // C++: writes Count()-1
         for (i in 1 until weaponList.size) {
-            packet.addInt(weaponList[i].definitionId)
-            packet.addInt(weaponList[i].totalRounds)
+            val w = weaponList[i]!!  // index 1+ is always a real WeaponClass
+            packet.addInt(w.definitionId)
+            packet.addInt(w.totalRounds)
         }
     }
 
@@ -131,7 +137,7 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
         for (i in 0 until count) {
             val defId = packet.getInt()
             val rounds = packet.getInt()
-            val existing = weaponList.find { it.definitionId == defId }
+            val existing = weaponList.find { it != null && it.definitionId == defId }
             if (existing != null) existing.totalRounds = rounds
         }
     }

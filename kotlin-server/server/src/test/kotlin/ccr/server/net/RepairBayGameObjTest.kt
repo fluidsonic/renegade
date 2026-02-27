@@ -51,8 +51,8 @@ class RepairBayGameObjTest {
         obj.exportCreation(bs)
 
         // Skip BuildingGameObj creation fields:
-        // definitionId(32) + pos(13+13+13) + sphereCenter(13+13+13) + radius(9) = 119 bits
-        bs.getInt()                            // definitionId
+        // pos(13+13+13) + sphereCenter(13+13+13) + radius(9) = 87 bits
+        // (definitionId is written by factory.prepPacket, not exportCreation)
         bs.getFloat(BITPACK_WORLD_POSITION_X)  // position.x
         bs.getFloat(BITPACK_WORLD_POSITION_Y)  // position.y
         bs.getFloat(BITPACK_WORLD_POSITION_Z)  // position.z

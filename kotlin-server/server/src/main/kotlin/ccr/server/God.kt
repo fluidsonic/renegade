@@ -55,7 +55,7 @@ open class God(private val server: GameServer) {
             maxRounds: Int = Int.MAX_VALUE,
         ) {
             val bag = soldier.weaponBag
-            val existing = (0 until bag.getCount()).map { bag.peekWeapon(it) }
+            val existing = (1 until bag.getCount()).mapNotNull { bag.peekWeapon(it) }
                 .firstOrNull { it.definitionId == weaponDefId }
             if (existing != null) {
                 existing.setTotalRounds((existing.totalRounds + rounds).coerceAtMost(maxRounds))
@@ -548,8 +548,8 @@ open class God(private val server: GameServer) {
             val definitions = server.loadedLevel?.definitions
             var refilled = false
             val bag = soldier.weaponBag
-            for (i in 0 until bag.getCount()) {
-                val weapon = bag.peekWeapon(i)
+            for (i in 1 until bag.getCount()) {
+                val weapon = bag.peekWeapon(i) ?: continue  // index 0 is null sentinel
                 val wDef = definitions?.findById(weapon.definitionId.toUInt()) as? WeaponDefinitionClass
                 if (wDef != null && wDef.canReceiveGenericCnCAmmo && wDef.clipSize > 0) {
                     weapon.setTotalRounds(

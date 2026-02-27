@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
+import ccr.net.replication.NetworkObjectFactoryManager
 
 // C++: messages.cpp Send_Object_Update — writes the wire envelope for a network object packet.
 // Wire layout:
@@ -23,6 +24,10 @@ object NetworkObjectPacketWriter {
         bs.addByte(NetworkObject.BIT_CREATION.toByte())  // dirtyBits = 0x0F (BYTE, 8 bits)
         bs.addBool(isDeletePending)
         bs.addInt(obj.networkClassId)                     // networkClassId (BIT_CREATION set)
+        // C++: factory->Prep_Packet(object, packet) — writes definitionId for game objects (classId=1000)
+        val factory = NetworkObjectFactoryManager.getFactory(obj.networkClassId)
+        requireNotNull(factory) { "No factory registered for classId=${obj.networkClassId}" }
+        factory.prepPacket(obj, bs)
         obj.exportCreation(bs)
         obj.exportRare(bs)
         obj.exportOccasional(bs)

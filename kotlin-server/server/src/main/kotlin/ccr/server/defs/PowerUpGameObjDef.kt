@@ -178,8 +178,8 @@ open class PowerUpGameObjDef(
         } else if (grantWeaponClips) {
             // Loop over all weapons in the bag — grant rounds to those that accept generic CnC ammo
             val bag = obj.weaponBag
-            for (i in 0 until bag.getCount()) {
-                val weapon = bag.peekWeapon(i)
+            for (i in 1 until bag.getCount()) {
+                val weapon = bag.peekWeapon(i) ?: continue  // index 0 is null sentinel
                 if (weapon.canReceiveGenericCncAmmo) {
                     val clipRounds = weapon.getClipSize()
                     weapon.addRounds(clipRounds * grantWeaponRounds)

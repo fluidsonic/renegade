@@ -525,11 +525,10 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     fun setTransform(tm: Matrix3D) { physObj!!.setTransform(tm) }
 
     // C++: PhysicalGameObj::Export_Creation — position + facing.
-    // definitionId is written here (C++: factory writes it via Prep_Packet before Export_Creation;
-    // we include it here since our NetworkObjectPacketWriter has no factory layer).
+    // definitionId is written by NetworkGameObjectFactory.prepPacket() before Export_Creation is called.
     override fun exportCreation(packet: BitStream) {
         super.exportCreation(packet)
-        packet.addInt(definitionId)
+        // C++: definitionId written by factory.Prep_Packet() — not here
         packet.addFloat(position.x, BITPACK_WORLD_POSITION_X)
         packet.addFloat(position.y, BITPACK_WORLD_POSITION_Y)
         packet.addFloat(position.z, BITPACK_WORLD_POSITION_Z)

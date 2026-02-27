@@ -744,9 +744,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
         // C++: DamageableGameObj::Export_Creation(packet)
         super.exportCreation(packet)
 
-        // definitionId is written first (factory writes it via Prep_Packet in C++;
-        // we include it here since our NetworkObjectPacketWriter has no factory layer).
-        packet.addInt(definitionId)
+        // C++: definitionId written by NetworkGameObjectFactory.prepPacket() before Export_Creation
 
         // C++: packet.Add(position.X/Y/Z, BITPACK_WORLD_POSITION_X/Y/Z)
         packet.addFloat(position.x, BITPACK_WORLD_POSITION_X)

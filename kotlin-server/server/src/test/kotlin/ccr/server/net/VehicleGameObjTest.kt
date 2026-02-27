@@ -155,14 +155,14 @@ class VehicleGameObjTest {
 
     @Test
     fun `creation - lockOwnerId 0 means no lockTimer written`() {
-        // Base: PhysicalGameObj(definitionId+pos.xyz+facing) + SmartGameObj(controlOwner) + VehicleGameObj(lockOwnerId)
-        // = 32 + 13+13+13 + 32 + 32 + 32 = 167 bits (when unlocked)
+        // Base: PhysicalGameObj(pos.xyz+facing) + SmartGameObj(controlOwner) + VehicleGameObj(lockOwnerId)
+        // = 13+13+13 + 32 + 32 + 32 = 135 bits (when unlocked; definitionId now written by factory.prepPacket)
         val bs = BitStream()
         defaultVehicle(lockOwnerId = 0).exportCreation(bs)
 
-        val expectedBits = 32 + 3 * POS_BITS + 32 + 32 + 32  // defId + pos + facing + controlOwner + lockOwnerId
+        val expectedBits = 3 * POS_BITS + 32 + 32 + 32  // pos + facing + controlOwner + lockOwnerId
         assertEquals(expectedBits, bs.bitWritePosition)
-        assertEquals(167, bs.bitWritePosition)
+        assertEquals(135, bs.bitWritePosition)
     }
 
     @Test
@@ -171,8 +171,8 @@ class VehicleGameObjTest {
         defaultVehicle(lockOwnerId = 7, lockTimer = 4.0f).exportCreation(bs)
 
         // same as unlocked + LOCK_BITS
-        assertEquals(167 + LOCK_BITS, bs.bitWritePosition)
-        assertEquals(174, bs.bitWritePosition)
+        assertEquals(135 + LOCK_BITS, bs.bitWritePosition)
+        assertEquals(142, bs.bitWritePosition)
     }
 
     // ---- 4: rare - empty seats write -1 ----
@@ -406,7 +406,6 @@ class VehicleGameObjTest {
         val bs = BitStream()
         vehicle.exportCreation(bs)
 
-        bs.getInt()                                  // definitionId
         bs.getFloat(BITPACK_WORLD_POSITION_X)
         bs.getFloat(BITPACK_WORLD_POSITION_Y)
         bs.getFloat(BITPACK_WORLD_POSITION_Z)

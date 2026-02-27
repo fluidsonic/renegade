@@ -28,6 +28,7 @@ import ccr.server.net.SoldierGameObj
 import ccr.server.net.Team
 import ccr.server.net.WinEvent
 import ccr.server.net.BackgroundMgr
+import ccr.server.net.NetworkObjectFactories
 import ccr.server.net.WeatherMgr
 import ccr.server.net.CsAnnouncement
 import ccr.server.net.ScAnnouncement
@@ -211,6 +212,8 @@ class GameServer(internal val config: ServerConfig) {
     private val vendor by lazy { VendorClass(this) }
 
     suspend fun run() = coroutineScope {
+        // C++: factory classes registered via static constructors; here we do it explicitly at startup
+        NetworkObjectFactories.register()
         loadLevel()        // Load level data (definitions, world extents, spawners) from MIX files
         initializeLevel()  // Set up encoders, SpawnManager, buildings and base controllers
 

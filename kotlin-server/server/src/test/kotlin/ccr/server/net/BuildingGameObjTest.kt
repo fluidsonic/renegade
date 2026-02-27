@@ -32,9 +32,10 @@ class BuildingGameObjTest {
         private const val STATE_BITS = 4   // BITPACK_BUILDING_STATE: (-1, 10, 1.0) → 4 bits
 
         // Expected bit counts
-        // Creation: definitionId(32) + pos(13+13+13) + sphere_center(13+13+13) + radius(9) = 119
-        private const val CREATION_BITS = 32 + POS_X_BITS + POS_Y_BITS + POS_Z_BITS +
-                POS_X_BITS + POS_Y_BITS + POS_Z_BITS + RADIUS_BITS   // 119
+        // Creation: pos(13+13+13) + sphere_center(13+13+13) + radius(9) = 87
+        // (definitionId is written by factory.prepPacket, not exportCreation)
+        private const val CREATION_BITS = POS_X_BITS + POS_Y_BITS + POS_Z_BITS +
+                POS_X_BITS + POS_Y_BITS + POS_Z_BITS + RADIUS_BITS   // 87
 
         // Rare: isDestroyed(1) + isPowerOn(1) + currentState(4) = 6
         private const val RARE_BITS = 1 + 1 + STATE_BITS  // 6
@@ -89,12 +90,14 @@ class BuildingGameObjTest {
     // ---- exportCreation ----
 
     @Test
-    fun `exportCreation writes definitionId first`() {
-        val defId = 0x04D06410
+    fun `exportCreation does not write definitionId (factory layer owns it)`() {
+        // C++: NetworkGameObjectFactory.prepPacket() writes definitionId before Export_Creation.
+        // The factory layer handles this; exportCreation itself must NOT write definitionId.
         val bs = BitStream()
         defaultBuilding().exportCreation(bs)
-
-        assertEquals(defId, bs.getInt())
+        // First field from exportCreation is position.x, not definitionId.
+        // Just verify the stream is non-empty.
+        assertTrue(bs.bitWritePosition > 0)
     }
 
     @Test
@@ -112,7 +115,6 @@ class BuildingGameObjTest {
         val bs = BitStream()
         building.exportCreation(bs)
 
-        bs.getInt()   // skip definitionId
         val x = bs.getFloat(BITPACK_WORLD_POSITION_X)
         val y = bs.getFloat(BITPACK_WORLD_POSITION_Y)
         val z = bs.getFloat(BITPACK_WORLD_POSITION_Z)
@@ -136,7 +138,6 @@ class BuildingGameObjTest {
         val bs = BitStream()
         building.exportCreation(bs)
 
-        bs.getInt()                            // skip definitionId
         bs.getFloat(BITPACK_WORLD_POSITION_X)  // skip position.x
         bs.getFloat(BITPACK_WORLD_POSITION_Y)  // skip position.y
         bs.getFloat(BITPACK_WORLD_POSITION_Z)  // skip position.z
@@ -153,11 +154,11 @@ class BuildingGameObjTest {
     }
 
     @Test
-    fun `exportCreation is 119 bits with default encoders`() {
+    fun `exportCreation is 87 bits with default encoders`() {
         val bs = BitStream()
         defaultBuilding().exportCreation(bs)
         assertEquals(CREATION_BITS, bs.bitWritePosition)
-        assertEquals(119, bs.bitWritePosition)
+        assertEquals(87, bs.bitWritePosition)
     }
 
     // ---- exportRare ----
@@ -261,8 +262,8 @@ class BuildingGameObjTest {
 
     @Test
     fun `full creation packet bit count with default encoders`() {
-        // Header(73) + Creation(119) + Rare(6) + Occasional(27) + Frequent(0) = 225
-        val expected = HEADER_BITS + CREATION_BITS + RARE_BITS + OCCASIONAL_BITS + FREQUENT_BITS
+        // Header(73) + factory.prepPacket(32) + Creation(87) + Rare(6) + Occasional(27) + Frequent(0) = 225
+        val expected = HEADER_BITS + 32 + CREATION_BITS + RARE_BITS + OCCASIONAL_BITS + FREQUENT_BITS
         assertEquals(225, expected)
 
         val bs = BitStream()

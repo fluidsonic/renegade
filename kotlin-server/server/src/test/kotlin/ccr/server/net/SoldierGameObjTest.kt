@@ -41,7 +41,7 @@ class SoldierGameObjTest {
 
         // Expected section sizes with default ±500 encoders
         private const val HEADER_BITS = 73 // networkId(32) + dirtyBits(8) + isDeletePending(1) + networkClassId(32)
-        private const val CREATION_BITS = 32 + POS_X_BITS + POS_Y_BITS + POS_Z_BITS + 32 + 32 // 135
+        private const val CREATION_BITS = POS_X_BITS + POS_Y_BITS + POS_Z_BITS + 32 + 32 // 103 (exportCreation only; factory prepPacket adds +32)
         private const val FREQUENT_BITS = 1 + 1 + POS_X_BITS + POS_Y_BITS + POS_Z_BITS +
                 HUMAN_STATE_BITS + HUMAN_SUB_STATE_BITS + 1 + // SoldierGameObj part
                 1 + // PhysicalGameObj on_host_bone
@@ -132,7 +132,6 @@ class SoldierGameObjTest {
         val bs = BitStream()
         soldier.exportCreation(bs)
 
-        assertEquals(defId, bs.getInt())            // definitionId
         // Positions are quantized — read back and accept rounding
         val x = bs.getFloat(BITPACK_WORLD_POSITION_X)
         val y = bs.getFloat(BITPACK_WORLD_POSITION_Y)
@@ -351,7 +350,7 @@ class SoldierGameObjTest {
     @Test
     fun `full creation packet bit count with default encoders`() {
         // Header(73) + Creation(135) + Rare(329) + Occasional(59) + Frequent(131) = 727
-        val expected = HEADER_BITS + CREATION_BITS + expectedRareBits("s_a_human") +
+        val expected = HEADER_BITS + 32 + CREATION_BITS + expectedRareBits("s_a_human") +
                 expectedOccasionalBits(0) + FREQUENT_BITS
         assertEquals(727, expected)
 
