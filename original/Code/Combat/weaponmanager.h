@@ -2,6 +2,7 @@
 
 #include "global.h"
 
+#include "rect.h"
 
 #include "wwstring.h"
 
