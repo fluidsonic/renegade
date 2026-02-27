@@ -35,6 +35,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - **Visual/runtime verification is required for C++ fixes** — a successful build is NOT sufficient to call a fix complete; the game must be run interactively and the fix confirmed visually before declaring done or merging
 
 ## Workflow Meta-Rules
+- **Never use the `commit-commands:commit` skill** — commit directly with git commands instead
 - When the user writes **"remember X"**, immediately update `CLAUDE.md` with X — no need to ask for confirmation
 - **Minimize work for the user** — always run build commands, tests, and verifications yourself rather than giving the user commands to paste; only hand off commands that require interactive UI (e.g. running the game for visual confirmation)
 - **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
