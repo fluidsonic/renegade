@@ -10,7 +10,7 @@ class EvictionEvent(
     override val networkClassId: Int = 1009
 
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addInt(evictionCode)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

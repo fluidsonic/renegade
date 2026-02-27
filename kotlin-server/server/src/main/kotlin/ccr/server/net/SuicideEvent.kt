@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cSuicideEvent — networkClassId = NETCLASSID_SUICIDEEVENT = 1019
 // Client→Server event sent when a player kills themselves.
@@ -20,7 +20,7 @@ class SuicideEvent(
         senderId = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] SUICIDEEVENT from rhostId=$rhostId senderId=$senderId")
         if (server.gameState.isGameplayPermitted) {
             if (rhostId in server.god.soldiersByHost) {

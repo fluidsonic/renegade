@@ -10,7 +10,7 @@ class SvrGoodbyeEvent(
     override val networkClassId: Int = 1007
 
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addBool(isQuickFullExitRequested)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

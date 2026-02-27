@@ -9,7 +9,7 @@ import ccr.server.defs.PurchaseSettingsDefClass
  * PurchaseSettingsDefClass for the player's team and purchase type, validates
  * factory availability and funds, then deducts cost and returns the result.
  */
-class VendorClass(private val server: GameServer) {
+class VendorClass(private val server: Network) {
 
     companion object {
         // Purchase type constants (matches C++ CYCLED_ITEM_TYPE enum in purchasesettings.h)

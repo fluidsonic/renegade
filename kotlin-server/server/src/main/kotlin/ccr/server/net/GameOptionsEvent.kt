@@ -11,6 +11,7 @@ class GameOptionsEvent(private val gameData: GameData) : NetEvent() {
 
     // C++: cGameOptionsEvent::Export_Creation (gameoptionsevent.cpp:62-85)
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         gameData.exportTier1(packet)
         gameData.exportTier2(packet)
         // Event-specific fields (gameoptionsevent.cpp):
@@ -18,6 +19,5 @@ class GameOptionsEvent(private val gameData: GameData) : NetEvent() {
         packet.addInt(gameData.hostedGameNumber)         // HostedGameNumber
         packet.addInt(gameData.modNameCrc)               // ModNameCRC (repeated)
         packet.addInt(gameData.mapNameCrc)               // MapNameCRC (repeated)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

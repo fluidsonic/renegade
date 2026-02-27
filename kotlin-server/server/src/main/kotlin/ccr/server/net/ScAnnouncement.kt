@@ -19,11 +19,11 @@ class ScAnnouncement(
     override val networkClassId: Int = 1016
 
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addInt(toId)
         packet.addInt(fromId)
         packet.addInt(announcementId)
         packet.addInt(radioCmdId)
         packet.addByte(type.toByte())
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

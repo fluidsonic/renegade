@@ -11,8 +11,8 @@ class PlayerKill(
     override val networkClassId: Int = 1002
 
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addInt(killerId)
         packet.addInt(victimId)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

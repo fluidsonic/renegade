@@ -1,8 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.net.replication.NetworkObjectManager
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cCsPingRequestEvent — networkClassId = NETCLASSID_CSPINGREQUESTEVENT = 1032
 // Client→Server ping request event used to measure round-trip latency.
@@ -25,11 +24,11 @@ class CsPingRequestEvent(
         pingNumber = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] CSPINGREQUESTEVENT from rhostId=$rhostId senderId=$senderId pingNumber=$pingNumber → ScPingResponseEvent")
         val host = server.connectionManager.getHost(rhostId) ?: run { setDeletePending(); return }
         val response = ScPingResponseEvent(pingNumber)
-        server.sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
+        server.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
         setDeletePending()
     }
 }

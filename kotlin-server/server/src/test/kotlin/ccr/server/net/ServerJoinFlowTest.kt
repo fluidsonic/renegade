@@ -31,12 +31,12 @@ import org.junit.jupiter.api.TestMethodOrder
 @TestMethodOrder(MethodOrderer.MethodName::class)
 class ServerJoinFlowTest {
 
-    // ---- Constants matching GameServer internals ----
+    // ---- Constants matching Network internals ----
 
     private val NET_ID_NOD_TEAM = 2_100_000_004
     private val NET_ID_GDI_TEAM = 2_100_000_005
 
-    // ---- Encoder setup (mirrors GameServer.initEncoders for C&C_Under) ----
+    // ---- Encoder setup (mirrors Network.initEncoders for C&C_Under) ----
 
     @BeforeAll
     fun setupEncoders() {
@@ -342,7 +342,7 @@ class ServerJoinFlowTest {
 
     @Test
     fun `out - SOLDIER creation packet has correct bit count for NOD minigunner with pistol`() {
-        // NOD minigunner setup matching GameServer.spawnSoldier for C&C_Under
+        // NOD minigunner setup matching Network.spawnSoldier for C&C_Under
         val defId = 81930257  // CnC_Nod_Minigunner_0 (0x04e22811) — from ServerConfig defaults
         val pistolDefId = 0x04E3F3B4  // Weapon_Pistol_Player (typical value; test encodes + decodes)
         val soldier = SoldierGameObj(

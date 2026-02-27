@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cNetEvent (netevent.h:11) — base class for one-shot network events.
 // cNetEvent extends NetworkObjectClass but has no persistent state (no RARE/OCCASIONAL/FREQUENT data).
@@ -13,5 +13,5 @@ abstract class NetEvent : NetworkObject() {
 
     // C++: cNetEvent::Act() — called server-side after Import_Creation for C→S events.
     // Subclasses override to implement their server-side behavior.
-    open fun act(server: GameServer, rhostId: Int) {}
+    open fun act(server: Network, rhostId: Int) {}
 }

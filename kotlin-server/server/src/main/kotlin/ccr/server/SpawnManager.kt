@@ -38,7 +38,7 @@ class SpawnManager(level: LoadedLevel) {
 
     // Callback invoked when a powerup spawner's timer fires.
     // Arguments: spawn position, PowerUpGameObjDef to create.
-    // GameServer sets this after constructing SpawnManager.
+    // Network sets this after constructing SpawnManager.
     var onCreatePowerUp: ((position: Vector3, def: PowerUpGameObjDef) -> PowerUpGameObj?)? = null
 
     init {

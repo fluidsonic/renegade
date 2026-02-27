@@ -20,11 +20,11 @@ class ScTextObj(
     override val networkClassId: Int = 1001
 
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addByte(type.toByte())
         packet.addInt(senderId)
         packet.addInt(recipientId)
         packet.addBool(isHostAdminMessage)
         packet.addWideString(text)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

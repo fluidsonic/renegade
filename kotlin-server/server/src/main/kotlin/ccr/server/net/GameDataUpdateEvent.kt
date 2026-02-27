@@ -14,8 +14,8 @@ class GameDataUpdateEvent(
 
     // C++: cGameDataUpdateEvent::Export_Creation (gamedataupdateevent.cpp:62-70)
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addInt(timeRemainingSeconds)  // INT (not float!) — bug fix vs original inline code
         packet.addInt(hostedGameNumber)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

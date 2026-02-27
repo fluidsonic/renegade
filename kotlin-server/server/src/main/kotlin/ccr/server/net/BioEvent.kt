@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.BitStream
 import ccr.net.flow.FlowController
 import ccr.net.replication.NetworkObjectManager
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cBioEvent (Commando/bioevent.h) — networkClassId = NETCLASSID_BIOEVENT = 1025
 // C→S event object for transmitting initial player bio data on join.
@@ -40,7 +40,7 @@ class BioEvent(
         mapName = packet.getTerminatedString()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         if (rhostId !in server.god.playerInGame) {
             println("[GAME] BIOEVENT from rhostId=$rhostId → entering game (post-load)")
             server.god.playerInGame.add(rhostId)
@@ -48,10 +48,10 @@ class BioEvent(
 
             // Mark all registered objects dirty for this new client.
             // C++: Tell_Client_About_Dynamic_Objects sets per-client dirty bits for all objects.
-            // replicationTick() will send everything on the next tick.
+            // tellClientAboutDynamicObjects() will send everything on the next tick.
             NetworkObjectManager.restoreDirtyBits(rhostId)
 
-            // Teams were already sent in sendConnectionObjects — clear their dirty bits
+            // Teams were already sent in connectionHandler — clear their dirty bits
             server.teamNod.setObjectDirtyBits(rhostId, 0)
             server.teamGdi.setObjectDirtyBits(rhostId, 0)
 
@@ -73,7 +73,7 @@ class BioEvent(
             // One-shot event to signal the client that gameplay can proceed
             server.sendGameDataUpdateEvent(server.connectionManager.getHost(rhostId)!!)
             // Soldier spawning happens via god.think() on the next tick
-            // All object creation packets sent by replicationTick() on the next tick
+            // All object creation packets sent by tellClientAboutDynamicObjects() on the next tick
         }
         setDeletePending()
     }

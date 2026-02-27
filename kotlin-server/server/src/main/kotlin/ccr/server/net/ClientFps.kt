@@ -2,7 +2,7 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: CClientFps (Commando/clientfps.h) — networkClassId = NETCLASSID_CLIENTFPS = 1031
 // C→S mirrored object to inform server of client framerate.
@@ -20,9 +20,9 @@ class ClientFps(
     override val networkClassId: Int = 1031
     override fun delete() {}
 
-    // Server reference — set by dispatchCsPacket after factory creation.
-    var server: GameServer? = null
-    // Server-trusted host ID (set by dispatchCsPacket from the packet source).
+    // Server reference — set by serverPacketHandler after factory creation.
+    var server: Network? = null
+    // Server-trusted host ID (set by serverPacketHandler from the packet source).
     // Used for all lookups instead of clientId (which is client-supplied in importCreation).
     var rhostId: Int = 0
 

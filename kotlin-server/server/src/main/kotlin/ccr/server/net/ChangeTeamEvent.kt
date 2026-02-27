@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cChangeTeamEvent — networkClassId = NETCLASSID_CHANGETEAMEVENT = 1020
 // Client→Server event sent when a player requests a team change.
@@ -20,7 +20,7 @@ class ChangeTeamEvent(
         senderId = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         if (!server.config.isTeamChangingAllowed) {
             println("[GAME] CHANGETEAMEVENT from rhostId=$rhostId: team changing is disabled, ignored")
             setDeletePending(); return

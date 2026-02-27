@@ -10,6 +10,7 @@ class ResetWinsEvent : NetworkObject() {
     override fun delete() {}  // transient event, no cleanup
 
     override fun exportCreation(packet: BitStream) {
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
+        // No payload — signal-only event
     }
 }

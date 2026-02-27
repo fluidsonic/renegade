@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cClientBboEvent — networkClassId = NETCLASSID_CLIENTBBOEVENT = 1030
 // Client→Server event reporting the client's bandwidth/backlog (BBO) value.
@@ -24,7 +24,7 @@ class ClientBboEvent(
         bbo = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] CLIENTBBOEVENT from rhostId=$rhostId senderId=$senderId bbo=$bbo")
         // C++: rhost->Set_Maximum_Bps(Bbo) — no BPS cap in Kotlin server yet
         setDeletePending()

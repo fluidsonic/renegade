@@ -3,7 +3,7 @@ package ccr.server
 /**
  * Port of C++ cGameData game-state logic.
  * Tracks countdown timer, intermission, and game-over conditions.
- * Called every network tick from GameServer.networkTickLoop().
+ * Called every network tick from Network.serverThink().
  */
 class GameState(private val config: ServerConfig) {
 
@@ -27,7 +27,7 @@ class GameState(private val config: ServerConfig) {
     // --- Game-over flag (set externally by map rotation or RCON) ---
     var manualGameOver: Boolean = false
 
-    // --- Player count (updated each tick by GameServer) ---
+    // --- Player count (updated each tick by Network) ---
     var currentPlayers: Int = 0
 
     // Called every network tick. deltaMs = milliseconds since last tick.
@@ -40,7 +40,7 @@ class GameState(private val config: ServerConfig) {
             if (intermissionTimeRemaining <= 0f) {
                 isIntermission = false
                 intermissionTimeRemaining = 0f
-                // Caller (GameServer) handles the actual core restart
+                // Caller (Network) handles the actual core restart
                 pendingCoreRestart = true
             }
             return

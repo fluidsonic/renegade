@@ -1,8 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.net.replication.NetworkObjectManager
-import ccr.server.GameServer
+import ccr.server.Network
 import ccr.server.VendorClass
 
 // C++: cPurchaseRequestEvent — networkClassId = NETCLASSID_PURCHASEREQUESTEVENT = 1023
@@ -34,20 +33,20 @@ class PurchaseRequestEvent(
         altSkinIndex = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] PURCHASEREQUESTEVENT from rhostId=$rhostId senderId=$senderId " +
             "type=$purchaseType item=$itemIndex altSkin=$altSkinIndex")
         val host = server.connectionManager.getHost(rhostId) ?: run { setDeletePending(); return }
 
         if (!server.gameState.isGameplayPermitted) {
             val response = PurchaseResponseEvent(purchaserId = senderId, responseId = 2)
-            server.sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
+            server.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
             setDeletePending(); return
         }
 
         val result = server.vendor.handlePurchase(rhostId, purchaseType, itemIndex, altSkinIndex)
         val response = PurchaseResponseEvent(purchaserId = senderId, responseId = result.responseId)
-        server.sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, NetworkObjectManager.getNewDynamicId()) }
+        server.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
 
         if (result.responseId == VendorClass.RESPONSE_SUCCESS) {
             if (result.isVehiclePurchase) {

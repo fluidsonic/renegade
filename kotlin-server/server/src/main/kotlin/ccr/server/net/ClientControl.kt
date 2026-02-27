@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.net.bitstream.*
 import ccr.net.replication.NetworkObject
 import ccr.math.Vector3
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: CClientControl (Combat/clientcontrol.h) — networkClassId = NETCLASSID_CLIENTCONTROL = 1017
 // C→S mirrored object to represent client control and targeting data.
@@ -21,9 +21,9 @@ class ClientControl(
     override val networkClassId: Int = 1017
     override fun delete() {}
 
-    // Server reference — set by dispatchCsPacket after factory creation.
-    var server: GameServer? = null
-    // Server-trusted host ID (set by dispatchCsPacket from the packet source).
+    // Server reference — set by serverPacketHandler after factory creation.
+    var server: Network? = null
+    // Server-trusted host ID (set by serverPacketHandler from the packet source).
     // Used for all lookups instead of clientId (which is client-supplied in importCreation).
     var rhostId: Int = 0
 

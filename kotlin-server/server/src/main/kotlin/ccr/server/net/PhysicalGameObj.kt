@@ -551,9 +551,11 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         super.exportRare(packet)
         packet.addTerminatedString(physObj?.peekModel()?.getName() ?: modelName, permitEmpty = true)
         packet.addTerminatedString(animName, permitEmpty = true)
-        packet.addInt(0)  // currFrame — no real animation system on server
-        packet.addInt(0)  // targetFrame
-        packet.addInt(0)  // animMode
+        // C++: when AnimControl == NULL, curr_frame=0, target_frame=0, anim_mode=ANIM_MODE_TARGET(3).
+        // The server has no real animation system — always send the C++ NULL-AnimControl defaults.
+        packet.addInt(0)              // currFrame
+        packet.addInt(0)             // targetFrame
+        packet.addInt(ANIM_MODE_TARGET) // animMode — C++: ANIM_MODE_TARGET=3 when AnimControl==NULL
         packet.addInt(hostGameObj.get()?.networkId ?: 0)
         packet.addInt(hostGameObjBone)
         packet.addInt(playerType)

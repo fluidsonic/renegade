@@ -10,7 +10,7 @@ class GodRespawnCooldownTest {
     /**
      * Minimal God subclass that overrides createCommando to track whether it was called.
      */
-    private class TrackingGod(server: GameServer) : God(server) {
+    private class TrackingGod(server: Network) : God(server) {
         var createCommandoCalled = false
         override fun createCommando(rhostId: Int, playerType: Int): SoldierGameObj? {
             createCommandoCalled = true
@@ -18,9 +18,9 @@ class GodRespawnCooldownTest {
         }
     }
 
-    private fun makeGod(rhostId: Int, team: Int): Pair<TrackingGod, GameServer> {
+    private fun makeGod(rhostId: Int, team: Int): Pair<TrackingGod, Network> {
         val config = ServerConfig(mapName = "", gamePort = 4848, rconPort = 4849)
-        val server = GameServer(config)
+        val server = Network(config)
         val god = TrackingGod(server)
 
         god.state = God.State.MULTIPLAYER

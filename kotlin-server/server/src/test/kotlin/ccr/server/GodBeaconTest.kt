@@ -15,13 +15,13 @@ class GodBeaconTest {
      * Minimal God subclass that overrides createCommando as a no-op.
      * Mirrors TrackingGod in GodRespawnCooldownTest.
      */
-    private class TestGod(server: GameServer) : God(server) {
+    private class TestGod(server: Network) : God(server) {
         override fun createCommando(rhostId: Int, playerType: Int): SoldierGameObj? = null
     }
 
-    private fun makeGod(rhostId: Int = 1, team: Int = 0): Pair<TestGod, GameServer> {
+    private fun makeGod(rhostId: Int = 1, team: Int = 0): Pair<TestGod, Network> {
         val config = ServerConfig(mapName = "", gamePort = 4848, rconPort = 4849)
-        val server = GameServer(config)
+        val server = Network(config)
         val god = TestGod(server)
 
         god.state = God.State.MULTIPLAYER

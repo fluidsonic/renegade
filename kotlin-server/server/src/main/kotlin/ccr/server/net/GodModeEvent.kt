@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cGodModeEvent — networkClassId = NETCLASSID_GODMODEEVENT = 1027
 // Client→Server event for toggling god mode via password.
@@ -24,7 +24,7 @@ class GodModeEvent(
         password = packet.getTerminatedString(permitEmpty = true)
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] GODMODEEVENT from rhostId=$rhostId senderId=$senderId (ignored — debug-only)")
         setDeletePending()
     }

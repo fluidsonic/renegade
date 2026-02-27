@@ -38,7 +38,7 @@ class GameOptionsEventTest {
         // Read header
         assertEquals(100003, bs.getInt())         // networkId
         assertEquals(0x0F, bs.getByte().toInt() and 0xFF)  // dirtyBits
-        assertEquals(false, bs.getBool())          // isDeletePending
+        assertEquals(false, bs.getBool())          // isDeletePending — false in creation packet (set during exportCreation, sent next tick)
         assertEquals(1008, bs.getInt())            // networkClassId
 
         // Read tier 1

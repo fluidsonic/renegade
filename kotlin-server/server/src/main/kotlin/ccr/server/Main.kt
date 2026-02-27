@@ -21,6 +21,6 @@ fun main(args: Array<String>) {
     if (config.rconPassword.isNotEmpty()) println("RCON enabled on port ${config.rconPort}")
 
     runBlocking {
-        GameServer(config).run()
+        Network(config).run()
     }
 }

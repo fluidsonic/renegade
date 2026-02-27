@@ -29,6 +29,7 @@ class WinEvent(
     override val networkClassId: Int = 1003
 
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addInt(winner)
         packet.addInt(loser)
         packet.addInt(hostedGameNumber)
@@ -39,6 +40,5 @@ class WinEvent(
         packet.addInt(mvpCount)
         packet.addInt(modNameCrc)
         packet.addInt(mapNameCrc)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cDonateEvent — networkClassId = NETCLASSID_DONATEEVENT = 1038
 // Client→Server event for donating credits to another player.
@@ -28,7 +28,7 @@ class DonateEvent(
         recipientId = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         if (!server.gameState.isGameplayPermitted) { setDeletePending(); return }
         val sender = server.god.playersByHost.values.find { it.id == senderId }
         val recipient = server.god.playersByHost.values.find { it.id == recipientId }

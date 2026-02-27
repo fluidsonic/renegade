@@ -61,6 +61,11 @@ object NetworkObjectManager {
         }
     }
 
+    // Returns a snapshot of all objects pending deletion.
+    // Used by the server's serverSendDeleteNotifications() / tellClientAboutDeleteNotifications()
+    // to send header-only delete packets before deletePending() removes the objects from objectList.
+    fun getDeletePendingObjects(): List<NetworkObject> = deletePendingList.toList()
+
     // C++: Think — called each network tick
     fun think() {
         for (obj in objectList) {

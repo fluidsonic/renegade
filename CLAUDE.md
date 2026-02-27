@@ -176,6 +176,9 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 
 ## Kotlin Server — Design Philosophy
 - **Stay close to the C++ code** — class names, function names, field names, and code structure should mirror the C++ original as closely as possible; Kotlin idioms are fine but don't invent abstractions that don't exist in C++
+- **Always check the C++ original (`original/`) BEFORE fixing any Kotlin bug** — never reason from first principles about what the correct behavior should be; find the equivalent C++ code and mirror it exactly; this applies to every fix, no matter how obvious it seems
+- **Before writing or modifying any Kotlin function, find the exact C++ counterpart in `original/` and use its name and call structure** — no invented names, no invented abstractions; if a Kotlin function exists whose name has no C++ counterpart, rename it; if a C++ function has no Kotlin counterpart, it is missing and must be added
+- **ALL C++ lookups must search `original/` only — never `original-untouched/`**; agents must be explicitly told: "your search path is `original/` only, never search under `original-untouched/`"
 
 ## Kotlin Server — Known Patterns & Pitfalls
 

@@ -2,10 +2,9 @@ package ccr.server.net
 
 import ccr.math.LineSeg
 import ccr.math.Vector3
-import ccr.net.replication.NetworkObjectManager
 import ccr.physics.collision.RayCollisionTest
 import ccr.physics.scene.PhysicsScene
-import ccr.server.GameServer
+import ccr.server.Network
 import ccr.server.combat.ArmorWarheadManager
 import ccr.server.defs.ExplosionDefinitionClass
 import kotlin.math.sqrt
@@ -19,7 +18,7 @@ import kotlin.math.sqrt
 object ExplosionHelper {
 
     /**
-     * Core damage loop — accepts Any list for testability (no GameServer needed in tests).
+     * Core damage loop — accepts Any list for testability (no Network needed in tests).
      * Objects that are not DamageableGameObj, are dead, or are delete-pending are skipped.
      */
     fun applyDamageToObjects(
@@ -85,7 +84,7 @@ object ExplosionHelper {
         posY: Float,
         posZ: Float,
         ownerId: Int,
-        server: GameServer,
+        server: Network,
     ) {
         val explosionDef = server.loadedLevel?.definitions?.findById(explosionDefId.toUInt())
             as? ExplosionDefinitionClass ?: return
@@ -108,8 +107,8 @@ object ExplosionHelper {
         )
         for (clientId in server.god.playerInGame) {
             val host = server.connectionManager.getHost(clientId) ?: continue
-            server.sendGameNetObj(host) { bs ->
-                NetworkObjectPacketWriter.writeCreation(bs, explosion, NetworkObjectManager.getNewDynamicId())
+            server.serverSendPacket(host) { bs ->
+                NetworkObjectPacketWriter.writeCreation(bs, explosion, explosion.networkId)
             }
         }
     }

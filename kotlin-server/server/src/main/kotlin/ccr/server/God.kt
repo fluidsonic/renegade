@@ -377,12 +377,19 @@ open class God(private val server: Network) {
 
     // ---- Vehicle spawning ----
 
+    // FIXME: resolveModelName should be replaced by a real W3D implementation — the model name
+    // should come from the loaded W3D model's HLod chunk name (via Peek_Physical_Object()->Peek_Model()->Get_Name()),
+    // not by string-manipulating the DDB definition path.
     private fun resolveModelName(wrapper: VehicleGameObjDef?): String {
         if (wrapper == null) return ""
         val physDefId = wrapper.physical.physDefId
         if (physDefId == 0) return ""
         val physDef = server.loadedLevel?.definitions?.findById(physDefId.toUInt()) as? PhysDefClass
-        return physDef?.modelName ?: ""
+        val raw = physDef?.modelName ?: return ""
+        // C++: Peek_Physical_Object()->Peek_Model()->Get_Name() returns the W3D HLod chunk name,
+        // e.g. "V_NOD_TURRET" — not the full DDB path "vehicles\nod turret\v_nod_turret.w3d".
+        // Extract the base filename, strip the extension, and uppercase to match C++ behaviour.
+        return raw.substringAfterLast('\\').substringAfterLast('/').substringBeforeLast('.').uppercase()
     }
 
     /**

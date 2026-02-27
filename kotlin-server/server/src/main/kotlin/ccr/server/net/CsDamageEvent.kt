@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 import ccr.server.combat.ArmorWarheadManager
 
 // C++: cCsDamageEvent — networkClassId = NETCLASSID_CSDAMAGEEVENT = 1033
@@ -37,7 +37,7 @@ class CsDamageEvent(
         warhead = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         if (!server.gameState.isGameplayPermitted) { setDeletePending(); return }
         println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damagee=$damageeGoid damage=$damage warhead=$warhead")
         val target = server.gameObjManager.findObject(damageeGoid)

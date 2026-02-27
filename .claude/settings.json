@@ -5,7 +5,7 @@
 	},
 	"permissions": {
 		"allow": [
-			"Bash(**/gradlew *)",
+			"Bash(*/gradlew *)",
 			"Edit(/CLAUDE.md)",
 			"Edit(/docs/**)",
 			"Edit(/plans/**)",
@@ -32,7 +32,9 @@
 		],
 		"deny": [
 			"Edit(/.claude/worktrees/**)",
-			"Write(/.claude/worktrees/**)"
+			"Edit(/.worktree/**/.worktree/**)",
+			"Write(/.claude/worktrees/**)",
+			"Write(/.worktree/**/.worktree/**)"
 		]
 	},
 	"sandbox": {
@@ -40,7 +42,7 @@
 		"autoAllowBashIfSandboxed": true,
 		"enabled": true,
 		"excludedCommands": [
-			"**/gradlew *",
+			"*/gradlew *",
 			"*git * merge *",
 			"*git * merge",
 			"*git * worktree*",

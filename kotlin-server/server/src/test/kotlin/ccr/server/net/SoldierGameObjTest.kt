@@ -49,7 +49,7 @@ class SoldierGameObjTest {
                 CONT_BOOL_BITS + 4 * ANALOG_BITS // SmartGameObj control
         // = 131
 
-        // Production soldier constants matching GameServer.spawnSoldier exactly.
+        // Production soldier constants matching Network.spawnSoldier exactly.
         // NOD: model "c_ag_nod_mg" (11 chars), GDI: model "c_ag_gdi_mg" (11 chars)
         // Both use animName "S_A_HUMAN.H_A_AINM" (18 chars).
         const val PROD_ANIM_NAME = "S_A_HUMAN.H_A_AINM"  // 18 chars
@@ -62,7 +62,7 @@ class SoldierGameObjTest {
         const val PROD_FULL_CREATION_BITS = 887
 
         @BeforeAll @JvmStatic fun setupEncoders() {
-            // Must match GameServer.initEncoders() defaults (fallback when no map LSD extents)
+            // Must match Network.initEncoders() defaults (fallback when no map LSD extents)
             EncoderRegistry.setPrecision(BITPACK_WORLD_POSITION_X, -500.0, 500.0, 0.2)
             EncoderRegistry.setPrecision(BITPACK_WORLD_POSITION_Y, -500.0, 500.0, 0.2)
             EncoderRegistry.setPrecision(BITPACK_WORLD_POSITION_Z, -500.0, 500.0, 0.2)
@@ -168,7 +168,7 @@ class SoldierGameObjTest {
         assertEquals("", bs.getTerminatedString(permitEmpty = true))            // anim_name (empty)
         assertEquals(0, bs.getInt())                                             // curr_frame
         assertEquals(0, bs.getInt())                                             // target_frame
-        assertEquals(0, bs.getInt())                                             // anim_mode
+        assertEquals(3, bs.getInt())                                             // anim_mode = ANIM_MODE_TARGET(3), C++ default when AnimControl==NULL
         assertEquals(0, bs.getInt())                                             // host_model_id
         assertEquals(0, bs.getInt())                                             // host_bone
         // playerType = team (SmartGameObj overrides Get_Player_Type)
@@ -426,7 +426,7 @@ class SoldierGameObjTest {
         assertEquals(bs.bitWritePosition, bs.bitReadPosition)
     }
 
-    // ---- Production soldier tests (matching spawnSoldier in GameServer) ----
+    // ---- Production soldier tests (matching spawnSoldier in Network) ----
 
     @Test
     fun `animName defaults to empty string`() {

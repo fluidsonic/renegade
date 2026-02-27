@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cMoneyEvent — networkClassId = NETCLASSID_MONEYEVENT = 1021
 // Client→Server event for money transactions.
@@ -24,7 +24,7 @@ class MoneyEvent(
         amount = packet.getInt()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] MONEYEVENT from rhostId=$rhostId senderId=$senderId amount=$amount (ignored — no god mode)")
         setDeletePending()
     }

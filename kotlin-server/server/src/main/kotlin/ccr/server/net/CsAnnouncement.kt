@@ -1,8 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.net.replication.NetworkObjectManager
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: CSAnnouncement — networkClassId = NETCLASSID_CSANNOUNCEMENT = 1037
 // Client→Server radio/announcement event.
@@ -37,7 +36,7 @@ class CsAnnouncement(
         type = packet.getByte().toInt() and 0xFF
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] CSANNOUNCEMENT from rhostId=$rhostId fromId=$fromId " +
             "toId=$toId announcementId=$announcementId " +
             "radioCmdId=$radioCmdId type=$type")
@@ -51,8 +50,8 @@ class CsAnnouncement(
         )
         for (clientId in server.god.playerInGame) {
             val clientHost = server.connectionManager.getHost(clientId) ?: continue
-            server.sendGameNetObj(clientHost) { bs ->
-                NetworkObjectPacketWriter.writeCreation(bs, relay, NetworkObjectManager.getNewDynamicId())
+            server.serverSendPacket(clientHost) { bs ->
+                NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId)
             }
         }
         setDeletePending()

@@ -1,7 +1,7 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.GameServer
+import ccr.server.Network
 
 // C++: cCsConsoleCommandEvent — networkClassId = NETCLASSID_CSCONSOLECOMMANDEVENT = 1035
 // Client→Server event carrying a console command string from the client.
@@ -20,7 +20,7 @@ class CsConsoleCommandEvent(
         command = packet.getTerminatedString()
     }
 
-    override fun act(server: GameServer, rhostId: Int) {
+    override fun act(server: Network, rhostId: Int) {
         println("[GAME] CSCONSOLECOMMANDEVENT from rhostId=$rhostId command=$command (no console dispatch)")
         setDeletePending()
     }

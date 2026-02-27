@@ -11,7 +11,7 @@ class ScPingResponseEvent(val pingNumber: Int) : NetEvent() {
 
     // C++: cScPingResponseEvent::Export_Creation — writes only PingNumber.
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addInt(pingNumber)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }

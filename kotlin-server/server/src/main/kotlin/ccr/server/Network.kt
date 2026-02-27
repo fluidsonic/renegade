@@ -83,7 +83,7 @@ import java.net.InetSocketAddress
  * its own channels. RconServer and LanBroadcastResponder own their sockets.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class GameServer(internal val config: ServerConfig) {
+class Network(internal val config: ServerConfig) {
 
     private val gameThread = newSingleThreadContext("game-thread")
     private val transport = UdpTransport(config.gamePort)
@@ -95,7 +95,7 @@ class GameServer(internal val config: ServerConfig) {
         port = config.rconPort,
         password = config.rconPassword,
         remoteAdminAllowed = config.remoteAdminAllowed,
-        welcomeMessage = buildWelcomeMessage(),
+        welcomeMessage = showWelcomeMessage(),
         commandHandler = ::handleRconCommand,
     )
 
@@ -104,7 +104,7 @@ class GameServer(internal val config: ServerConfig) {
     // Milliseconds per network tick
     private val tickIntervalMs: Long = 1000L / config.netUpdateRate.coerceAtLeast(1)
 
-    // Nicknames for players currently in acceptance: populated in checkApplication,
+    // Nicknames for players currently in acceptance: populated in applicationAcceptanceHandler,
     // consumed in BIOEVENT handler so that we can include the name in the Player network object.
     internal val playerNicknames = mutableMapOf<java.net.InetSocketAddress, String>()
 
@@ -161,7 +161,7 @@ class GameServer(internal val config: ServerConfig) {
 
     // GameObjManager — owns all BaseGameObj instances and drives their Think() loops.
     // GameObjManager is a Kotlin object (singleton); expose as a property for callers that
-    // hold a GameServer reference (God.kt, ExplosionHelper.kt, etc.).
+    // hold a Network reference (God.kt, ExplosionHelper.kt, etc.).
     internal val gameObjManager: GameObjManager get() = GameObjManager
 
     // GameContext — session-scoped container for shared game state (lazy to allow gameState init first).
@@ -202,6 +202,10 @@ class GameServer(internal val config: ServerConfig) {
     internal val vendor by lazy { VendorClass(this) }
 
     suspend fun run() = coroutineScope {
+        // C++: cNetwork::Init_Server() — first thing it does is Set_Is_Server(true) so that
+        // NetworkObjectClass constructors auto-register with a new dynamic ID.
+        NetworkObject.isServer = true
+
         // C++: factory classes registered via static constructors; here we do it explicitly at startup
         NetworkObjectFactories.register()
         loadLevel()        // Load level data (definitions, world extents, spawners) from MIX files
@@ -223,23 +227,21 @@ class GameServer(internal val config: ServerConfig) {
         // Register ServerFps singleton (C++: cServerFps uses a static network ID)
         NetworkObjectManager.registerObject(serverFps, NET_ID_SERVER_FPS)
 
-        connectionManager.applicationAcceptanceHandler = ::checkApplication
+        connectionManager.applicationAcceptanceHandler = ::applicationAcceptanceHandler
         connectionManager.connHandler = { id, host ->
             println("[CONNECT] client $id connected from ${host.address} bps=${host.maximumBps}")
-            sendConnectionObjects(id, host)
+            connectionHandler(id, host)
         }
         connectionManager.disconnectHandler = { id ->
             println("[CONNECT] client $id disconnected")
-            loadingHosts.remove(id)
-            flowControllers.remove(id)
-            god.removePlayer(id)
+            serverBrokenConnectionHandler(id)
         }
-        connectionManager.serverPacketHandler = ::dispatchCsPacket
+        connectionManager.serverPacketHandler = ::serverPacketHandler
         println("[SERVER] listening on UDP port ${config.gamePort} (RCON: ${config.rconPort})")
 
         launch(Dispatchers.IO)   { transport.ioLoop() }
         launch(gameThread)       { processInbound() }
-        launch(gameThread)       { networkTickLoop() }
+        launch(gameThread)       { serverThink() }
         launch(Dispatchers.IO)   { rconServer.run() }
         launch(Dispatchers.IO)   { lanResponder.broadcastLoop() }
     }
@@ -348,9 +350,14 @@ class GameServer(internal val config: ServerConfig) {
         }
     }
 
-    // ---- Network tick ----
+    // ---- Network tick — C++: cNetwork::Update() → Server_Think() ----
 
-    private suspend fun networkTickLoop() {
+    // C++: cNetwork::Update() drives the server loop. Server_Think() is the server-side body
+    // called from within Update(). Here these are unified into a single suspend loop matching
+    // the same call order: cGod::Think → End_Game_Test → Server_Update_Dynamic_Objects →
+    // Server_Send_Delete_Notifications → Delete_Pending.
+    // Kotlin note: `serverThink` merges C++ cNetwork::Update() + Server_Think() into one coroutine.
+    private suspend fun serverThink() {
         var lastTickMs = System.currentTimeMillis()
         while (true) {
             val nowMs = System.currentTimeMillis()
@@ -396,47 +403,31 @@ class GameServer(internal val config: ServerConfig) {
                 }
             }
 
-            // Game-over detection (only check when players are in game and not already in intermission)
-            if (!gameState.isIntermission && god.playerInGame.isNotEmpty()) {
-                val (gameOver, winType) = gameState.checkGameOver(
-                    isNodBaseDestroyed = baseControllerNod?.areAllBuildingsDestroyed() ?: false,
-                    isGdiBaseDestroyed = baseControllerGdi?.areAllBuildingsDestroyed() ?: false,
-                )
-                if (gameOver) {
-                    handleGameOver(winType)
-                }
-            }
+            // C++: cNetwork::End_Game_Test() — game-over detection
+            endGameTest()
 
-            // Core restart after intermission: rotate to next map or same-map restart
+            // C++: cNetwork::Intermission_Over_Processing() — core restart after intermission
             if (gameState.pendingCoreRestart) {
                 gameState.pendingCoreRestart = false
-                val nextMap = mapRotation.nextName()
-                if (nextMap != null) {
-                    mapRotation = mapRotation.advance()
-                    handleMapRotation(nextMap)
-                } else {
-                    mapRotation = mapRotation.advance()  // reset index to 0 for next cycle
-                    handleCoreRestart()
-                }
+                intermissionOverProcessing()
             }
 
-            // God.think() — handles respawn loop (creates soldiers for soldierless in-game players)
-            // C++: cGod::Think() runs before GameObjManager::Think()
+            // C++: Server_Think() step 1 — cGod::Think()
             god.think(frameDeltaSeconds)
 
-            // GameObjManager.think() — drives building Think() loops (refinery trickle, war factory timer, etc.)
+            // C++: CombatManager::Think() step — GameObjManager::Think()
             gameObjManager.think(frameDeltaSeconds)
 
-            // C++: PhysicsSceneClass runs inline between Think and Post_Think (combat.cpp)
+            // C++: CombatManager::Think() step — COMBAT_SCENE->Update() (physics)
             physicsScene?.update(frameDeltaSeconds)
 
-            // C++: combat.cpp:611 — Post_Think() follows immediately after Think()
+            // C++: CombatManager::Think() step — GameObjManager::Post_Think()
             gameObjManager.postThink()
 
-            // SpawnManager.think() — ticks powerup spawner countdown timers
+            // C++: CombatManager::Think() step — SpawnManager::Update()
             spawnManager?.think(frameDeltaSeconds)
 
-            // Update measured FPS and push to clients
+            // C++: cNetwork::Update() — Update_Fps()
             updateFps(nowMs)
 
             // Tick door state machines and detect state changes for network replication
@@ -456,21 +447,29 @@ class GameServer(internal val config: ServerConfig) {
                 }
             }
 
-            // Push dirty object state to all in-game clients.
-            // Delete-pending objects are combined into the same packet as their final state update,
-            // matching C++ Send_Object_Update which writes dirty bits + isDeletePending in one call.
-            // After sending, delete-pending objects are cleaned up by deletePending() below.
-            replicationTick()
+            // C++: Server_Think() step 3 — Receiver->Server_Update_Dynamic_Objects()
+            // Pushes dirty object state to all in-game clients.
+            // For delete-pending objects the isDeletePending flag is combined with dirty bits
+            // in the same packet, matching C++ Send_Object_Update.
+            for (clientId in god.playerInGame) {
+                tellClientAboutDynamicObjects(clientId)
+            }
 
-            // C++: Delete_Pending() — destroys objects after replication has sent notifications
+            // C++: Server_Think() step 4 — Receiver->Server_Send_Delete_Notifications()
+            // Sends header-only deletion packets for all objects marked delete-pending.
+            for (clientId in god.playerInGame) {
+                tellClientAboutDeleteNotifications(clientId)
+            }
+
+            // C++: cNetwork::Update() — NetworkObjectMgrClass::Delete_Pending()
             NetworkObjectManager.deletePending()
 
             // Clean up C4 objects that have been marked for deletion
             god.c4Objects.removeAll { it.isDeletePending }
             god.beaconObjects.removeAll { it.isDeletePending }
 
-            // Flush per-tick packet outbox: combines buffered packets into fewer datagrams per host
-            flushOutbox()
+            // C++: cNetwork::Flush() — flush per-tick packet outbox
+            flush()
 
             // Adjust per-host flow controllers with bytes sent this tick
             val connectedCount = connectionManager.getConnectedCount()
@@ -483,62 +482,76 @@ class GameServer(internal val config: ServerConfig) {
         }
     }
 
-    // ---- Replication tick ----
+    // ---- Tell_Client_About_Dynamic_Objects ----
 
-    // Scans all registered NetworkObjects and pushes dirty state to connected in-game clients.
-    // C++: messages.cpp Send_Object_Update loop in cGod/cNetwork::Service.
-    // Mirrors C++: isDeletePending is combined with the current dirty bits in ONE packet per client,
-    // never as a separate follow-up packet. Reliable for RARE/OCCASIONAL/delete; unreliable for
-    // FREQUENT-only (BIT_FREQUENT + delete is promoted to reliable). After sending to all clients,
-    // delete-pending objects are unregistered.
+    // C++: cNetwork::Tell_Client_About_Dynamic_Objects(int client_id, Vector3& dest_pos)
+    // Scans all registered NetworkObjects and pushes dirty state to a single in-game client.
+    // Reliable for CREATION/RARE/OCCASIONAL; unreliable for FREQUENT-only.
+    // For objects already marked delete-pending (from game logic), isDeletePending is combined with
+    // dirty bits in ONE packet (matching C++ Send_Object_Update writing both fields).
+    // Objects with zero dirty bits (including delete-pending ones) are skipped — they are handled
+    // exclusively by tellClientAboutDeleteNotifications in the next step.
     // Never sends a soldier's FREQUENT update to its own controlling player (client is authoritative).
-    private fun replicationTick() {
+    private fun tellClientAboutDynamicObjects(clientId: Int) {
         val objects = NetworkObjectManager.getAllObjects()
 
         for (obj in objects) {
             val delPending = obj.isDeletePending
+            val bits = obj.getObjectDirtyBits(clientId).toInt() and 0xFF
+            // C++: Tell_Client_About_Dynamic_Objects only sends objects with dirty bits.
+            // Delete-pending objects with zero dirty bits are handled exclusively by
+            // tellClientAboutDeleteNotifications — do NOT handle them here.
+            if (bits == 0) continue
 
-            for (clientId in god.playerInGame) {
-                val bits = obj.getObjectDirtyBits(clientId).toInt() and 0xFF
-                if (bits == 0 && !delPending) continue
+            val host = connectionManager.getHost(clientId) ?: continue
+            val isOwnSoldier = (obj is SoldierGameObj) && (obj.controlOwner == clientId)
 
-                val host = connectionManager.getHost(clientId) ?: continue
-                val isOwnSoldier = (obj is SoldierGameObj) && (obj.controlOwner == clientId)
-
-                if ((bits and 0x08) != 0) {
-                    // BIT_CREATION — send full creation reliably
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, obj, obj.networkId, delPending) }
-                    obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
-                } else if ((bits and 0x04) != 0) {
-                    // BIT_RARE — send rare+occasional+frequent reliably
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeRareUpdate(bs, obj, obj.networkId, delPending) }
-                    obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
-                } else if ((bits and 0x02) != 0) {
-                    // BIT_OCCASIONAL — send occasional+frequent reliably
-                    sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeOccasionalUpdate(bs, obj, obj.networkId, delPending) }
-                    obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
-                } else if ((bits and 0x01) != 0) {
-                    if (delPending) {
-                        // BIT_FREQUENT + delete — promote to reliable, combining both in one packet
-                        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId, delPending) }
-                    } else if (!isOwnSoldier) {
-                        // BIT_FREQUENT only — skip own soldier; gate others through FlowController
-                        val fc = flowControllers[clientId]
-                        if (fc == null || fc.shouldSend(50.0f)) {
-                            sendUnreliable(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId) }
-                        }
-                    }
-                    obj.setObjectDirtyBits(clientId, 0)
-                } else {
-                    // bits == 0 and delPending — header-only deletion packet (no payload)
-                    sendGameNetObj(host) { bs ->
-                        bs.addInt(obj.networkId)
-                        bs.addByte(0x00.toByte())
-                        bs.addBool(true)
+            if ((bits and 0x08) != 0) {
+                // BIT_CREATION — send full creation reliably
+                serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, obj, obj.networkId, delPending) }
+                obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
+            } else if ((bits and 0x04) != 0) {
+                // BIT_RARE — send rare+occasional+frequent reliably
+                serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeRareUpdate(bs, obj, obj.networkId, delPending) }
+                obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
+            } else if ((bits and 0x02) != 0) {
+                // BIT_OCCASIONAL — send occasional+frequent reliably
+                serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeOccasionalUpdate(bs, obj, obj.networkId, delPending) }
+                obj.setObjectDirtyBits(clientId, (bits and 0x01).toByte())  // preserve BIT_FREQUENT
+            } else if ((bits and 0x01) != 0) {
+                if (delPending) {
+                    // BIT_FREQUENT + delete — promote to reliable, combining both in one packet
+                    serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId, delPending) }
+                } else if (!isOwnSoldier) {
+                    // BIT_FREQUENT only — skip own soldier; gate others through FlowController
+                    val fc = flowControllers[clientId]
+                    if (fc == null || fc.shouldSend(50.0f)) {
+                        sendUnreliable(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId) }
                     }
                 }
+                obj.setObjectDirtyBits(clientId, 0)
             }
+        }
+    }
 
+    // C++: cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
+    // Loops over all NetworkObjects; for each that Is_Delete_Pending(), sends a header-only
+    // reliable packet: [networkId:32][dirtyBits:0x00:8][isDeletePending:true:1].
+    // This is the SOLE sender of deletion packets for objects with zero dirty bits.
+    // Objects with dirty bits + isDeletePending were already sent by tellClientAboutDynamicObjects
+    // (with the isDeletePending flag set in the dirty-bit packet), but they also get a header-only
+    // deletion packet here — matching C++ which calls Send_Object_Update unconditionally for all
+    // delete-pending objects in this second pass.
+    private fun tellClientAboutDeleteNotifications(clientId: Int) {
+        val host = connectionManager.getHost(clientId) ?: return
+        for (obj in NetworkObjectManager.getAllObjects()) {
+            if (obj.isDeletePending) {
+                serverSendPacket(host) { bs ->
+                    bs.addInt(obj.networkId)
+                    bs.addByte(0x00.toByte())
+                    bs.addBool(true)
+                }
+            }
         }
     }
 
@@ -554,7 +567,9 @@ class GameServer(internal val config: ServerConfig) {
         pendingOutbox.getOrPut(host.id) { mutableListOf() }.add(host.address to wireData)
     }
 
-    private fun flushOutbox() {
+    // C++: cNetwork::Flush() — force-sends all buffered packets immediately.
+    // Combines buffered per-tick packets into fewer datagrams per host and enqueues them.
+    private fun flush() {
         bytesSentThisTick.clear()
         for ((rhostId, packets) in pendingOutbox) {
             val datagrams = PacketCombiner.combine(packets)
@@ -624,8 +639,8 @@ class GameServer(internal val config: ServerConfig) {
     // C++: cNetwork::Connection_Handler — sends initial game state to a newly connected client.
     // Sends ONLY Teams and GameOptionsEvent (matching C++ Connection_Handler).
     // All other objects (buildings, base controllers, ServerFps, players) are sent by
-    // replicationTick() after the client sends BIOEVENT and enters the game.
-    private fun sendConnectionObjects(rhostId: Int, host: RemoteHost) {
+    // tellClientAboutDynamicObjects() after the client sends BIOEVENT and enters the game.
+    private fun connectionHandler(rhostId: Int, host: RemoteHost) {
         // Auto-assign team to balance NOD/GDI. CHANGETEAMEVENT toggles NOD↔GDI.
         val assignedTeam = god.choosePlayerType()
         god.playerTeams[rhostId] = assignedTeam
@@ -633,8 +648,8 @@ class GameServer(internal val config: ServerConfig) {
 
         // NOD team (teamNumber=0) and GDI team (teamNumber=1)
         // C++: cTeam dirty=BIT_CREATION(0x0F) — all 4 tiers sent on initial creation
-        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, teamNod, NET_ID_NOD_TEAM) }
-        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, teamGdi, NET_ID_GDI_TEAM) }
+        serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, teamNod, NET_ID_NOD_TEAM) }
+        serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, teamGdi, NET_ID_GDI_TEAM) }
 
         // Clear team dirty bits for this client — already sent manually above;
         // restoreDirtyBits() in BIOEVENT would otherwise re-mark them.
@@ -646,22 +661,22 @@ class GameServer(internal val config: ServerConfig) {
         // cNetEvent subclass has no RARE/OCCASIONAL/FREQUENT state, so those tiers write nothing.
         gameData.currentPlayers = connectionManager.getConnectedCount()
         val gameOptionsEvent = GameOptionsEvent(gameData)
-        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, gameOptionsEvent, NetworkObjectManager.getNewDynamicId()) }
+        serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, gameOptionsEvent, gameOptionsEvent.networkId) }
 
         // Player creation is NOT sent here. C++ sends it in cBioEvent::Act() after the client
         // finishes loading. See BIOEVENT handler (networkClassId=1026).
-        // Buildings, base controllers, and ServerFps are sent by replicationTick() after BIOEVENT.
+        // Buildings, base controllers, and ServerFps are sent by tellClientAboutDynamicObjects() after BIOEVENT.
     }
 
     // ---- Game event handlers ----
 
-    // C++: Server_Packet_Handler (messages.cpp) — generic C→S packet dispatch.
+    // C++: cNetwork::Server_Packet_Handler (messages.cpp) — generic C→S packet dispatch.
     // Reads the NetworkObject envelope header, creates via factory if BIT_CREATION,
     // imports dirty-bit layers, and calls act() on NetEvent subclasses.
-    private fun dispatchCsPacket(packet: Packet, rhostId: Int) {
+    private fun serverPacketHandler(packet: Packet, rhostId: Int) {
         val bs = packet.payload
         if (bs.bitWritePosition < 41) {
-            println("[GAME] dispatchCsPacket: rhostId=$rhostId too short (${bs.bitWritePosition} bits), skipping")
+            println("[GAME] serverPacketHandler: rhostId=$rhostId too short (${bs.bitWritePosition} bits), skipping")
             return
         }
 
@@ -737,8 +752,8 @@ class GameServer(internal val config: ServerConfig) {
 
         for (clientId in god.playerInGame) {
             val clientHost = connectionManager.getHost(clientId) ?: continue
-            sendGameNetObj(clientHost) { bs ->
-                NetworkObjectPacketWriter.writeCreation(bs, event, NetworkObjectManager.getNewDynamicId())
+            serverSendPacket(clientHost) { bs ->
+                NetworkObjectPacketWriter.writeCreation(bs, event, event.networkId)
             }
         }
         println("[GAME] broadcastPlayerKill: killer=$killerId victim=$victimId")
@@ -756,7 +771,7 @@ class GameServer(internal val config: ServerConfig) {
             println("[GAME] sendPlayerRareUpdate: no player object for rhostId=$rhostId, skipping")
             return
         }
-        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeRareUpdate(bs, player, netId) }
+        serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeRareUpdate(bs, player, netId) }
         println("[GAME] sent PLAYER BIT_RARE to host $rhostId: team=${if (player.team == 0) "NOD" else "GDI"} inGame=${player.isInGame} netId=$netId")
     }
 
@@ -769,10 +784,10 @@ class GameServer(internal val config: ServerConfig) {
             timeRemainingSeconds = timeRemaining,
             hostedGameNumber = hostedGameNumber,
         )
-        sendGameNetObj(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, event, NetworkObjectManager.getNewDynamicId()) }
+        serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, event, event.networkId) }
     }
 
-    // Measures actual server tick rate and updates serverFps once per second.
+    // C++: cNetwork::Update_Fps() — measures actual tick rate and updates cServerFps once per second.
     private fun updateFps(nowMs: Long) {
         fpsFrameCount++
         val interval = nowMs - lastFpsUpdateMs
@@ -784,9 +799,10 @@ class GameServer(internal val config: ServerConfig) {
         }
     }
 
+    // C++: cNetwork::Server_Send_Packet(packet, mode, recipient) — sends a packet to a specific client.
     // Builds a RELIABLE packet, enqueues it in the host's reliable channel, and sends it immediately.
     // The packet ID is pre-assigned from host.reliable.nextSendId so the wire bytes are consistent.
-    internal fun sendGameNetObj(host: RemoteHost, writePayload: (BitStream) -> Unit) {
+    internal fun serverSendPacket(host: RemoteHost, writePayload: (BitStream) -> Unit) {
         val p = Packet()
         p.type = PacketType.RELIABLE
         p.id = host.reliable.nextSendId  // enqueue() will assign this same ID
@@ -798,7 +814,61 @@ class GameServer(internal val config: ServerConfig) {
         pendingOutbox.getOrPut(host.id) { mutableListOf() }.add(host.address to wireData)
     }
 
-    // ---- Game-over / intermission ----
+    // C++: cNetwork::Server_Send_Packet_To_All_Connected(packet, mode) — sends a packet to ALL connected rhosts.
+    // Unlike Server_Send_Packet(ALL), this sends to every rhost (not just in-game players).
+    internal fun serverSendPacketToAllConnected(writePayload: (BitStream) -> Unit) {
+        for (rhostId in 1..config.maxPlayers) {
+            val host = connectionManager.getHost(rhostId) ?: continue
+            serverSendPacket(host, writePayload)
+        }
+    }
+
+    // ---- End_Game_Test / Intermission_Over_Processing ----
+
+    // C++: cNetwork::End_Game_Test() — checks for game-over conditions and triggers the win event.
+    // Called from Server_Think() once per tick.
+    private fun endGameTest() {
+        // Sort players by score once per second (C++: End_Game_Test sort)
+        val nowMs = System.currentTimeMillis()
+        if (nowMs - lastScoreSortMs >= 1000L) {
+            lastScoreSortMs = nowMs
+            // Note: In the full C++ implementation this sorts teams and players
+            // by score for display. Full sort implementation would update rankingByScore maps here.
+        }
+
+        // Re-send GameDataUpdateEvent once per second to keep clients' timer in sync
+        if (nowMs - lastGameDataUpdateMs >= 1000L && god.playerInGame.isNotEmpty()) {
+            lastGameDataUpdateMs = nowMs
+            for (clientId in god.playerInGame) {
+                val clientHost = connectionManager.getHost(clientId) ?: continue
+                sendGameDataUpdateEvent(clientHost)
+            }
+        }
+
+        // Game-over detection (only check when players are in game and not already in intermission)
+        if (!gameState.isIntermission && god.playerInGame.isNotEmpty()) {
+            val (gameOver, winType) = gameState.checkGameOver(
+                isNodBaseDestroyed = baseControllerNod?.areAllBuildingsDestroyed() ?: false,
+                isGdiBaseDestroyed = baseControllerGdi?.areAllBuildingsDestroyed() ?: false,
+            )
+            if (gameOver) {
+                handleGameOver(winType)
+            }
+        }
+    }
+
+    // C++: cNetwork::Intermission_Over_Processing() — called when intermission ends; restarts the
+    // game (same map) or rotates to the next map in the cycle.
+    private suspend fun intermissionOverProcessing() {
+        val nextMap = mapRotation.nextName()
+        if (nextMap != null) {
+            mapRotation = mapRotation.advance()
+            handleMapRotation(nextMap)
+        } else {
+            mapRotation = mapRotation.advance()  // reset index to 0 for next cycle
+            handleCoreRestart()
+        }
+    }
 
     private fun handleGameOver(winType: Int) {
         println("[GAME] game over winType=$winType")
@@ -835,7 +905,7 @@ class GameServer(internal val config: ServerConfig) {
         )
         for (clientId in god.playerInGame) {
             val clientHost = connectionManager.getHost(clientId) ?: continue
-            sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, winEvent, NetworkObjectManager.getNewDynamicId()) }
+            serverSendPacket(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, winEvent, winEvent.networkId) }
         }
 
         // Record game result for clients joining during intermission
@@ -851,11 +921,10 @@ class GameServer(internal val config: ServerConfig) {
 
         // Send ResetWinsEvent to all in-game clients (C++: bioevent.cpp core restart handler)
         val resetWinsEvent = ResetWinsEvent()
-        val resetId = NetworkObjectManager.getNewDynamicId()
         for (clientId in god.playerInGame) {
             val host = connectionManager.getHost(clientId) ?: continue
-            sendGameNetObj(host) { bs ->
-                NetworkObjectPacketWriter.writeCreation(bs, resetWinsEvent, resetId)
+            serverSendPacket(host) { bs ->
+                NetworkObjectPacketWriter.writeCreation(bs, resetWinsEvent, resetWinsEvent.networkId)
             }
         }
 
@@ -1344,11 +1413,7 @@ class GameServer(internal val config: ServerConfig) {
         powerUp.position   = position
         powerUp.modelName  = modelName
 
-        val netId = NetworkObjectManager.getNewDynamicId()
-        NetworkObjectManager.registerObject(powerUp, netId)
-        gameObjManager.add(powerUp)
-
-        println("[POWERUP] spawned '${def.name}' netId=$netId at (${position.x}, ${position.y}, ${position.z})")
+        println("[POWERUP] spawned '${def.name}' netId=${powerUp.networkId} at (${position.x}, ${position.y}, ${position.z})")
         return powerUp
     }
 
@@ -1428,9 +1493,12 @@ class GameServer(internal val config: ServerConfig) {
         return extents
     }
 
-    // ---- Application acceptance ----
+    // ---- Application_Acceptance_Handler ----
 
-    private fun checkApplication(
+    // C++: cNetwork::Application_Acceptance_Handler(packet) — validates connecting client's credentials.
+    // Called by the connection layer before accepting a new client; returns REFUSAL_CLIENT_ACCEPTED
+    // if the client is allowed in, or a specific REFUSAL_* code otherwise.
+    private fun applicationAcceptanceHandler(
         packet: ccr.net.protocol.Packet,
         address: java.net.InetSocketAddress,
     ): ccr.net.protocol.RefusalCode {
@@ -1443,7 +1511,7 @@ class GameServer(internal val config: ServerConfig) {
             val clientPassword = packet.payload.getWideString(permitEmpty = true)
             val clientExeKey = packet.payload.getInt()
             val bitsConsumed = packet.payload.bitReadPosition - readStart
-            println("[CONNECT] checkApplication from $address: nickname='$nickname' password='$clientPassword' exeKey=0x${clientExeKey.toString(16)} bitsConsumed=$bitsConsumed payloadBits=${packet.bitLength}")
+            println("[CONNECT] applicationAcceptanceHandler from $address: nickname='$nickname' password='$clientPassword' exeKey=0x${clientExeKey.toString(16)} bitsConsumed=$bitsConsumed payloadBits=${packet.bitLength}")
 
             if (nickname.isEmpty()) {
                 println("[CONNECT] → REFUSED: empty nickname")
@@ -1468,6 +1536,82 @@ class GameServer(internal val config: ServerConfig) {
             ccr.net.protocol.RefusalCode.VERSION_MISMATCH
         }
     }
+
+    // ---- Server_Broken_Connection_Handler / Cleanup_After_Client / Remove_Player ----
+
+    // C++: cNetwork::Server_Broken_Connection_Handler(broken_rhost_id) — called by the net library
+    // when a reliable packet fails after many attempts. Cleans up the disconnected client.
+    private fun serverBrokenConnectionHandler(rhostId: Int) {
+        println("[CONNECT] connection broken for host $rhostId")
+        loadingHosts.remove(rhostId)
+        flowControllers.remove(rhostId)
+        cleanupAfterClient(rhostId)
+    }
+
+    // C++: cNetwork::Cleanup_After_Client(client_id) — called when a client disconnects (gracefully
+    // or via broken connection). Removes all objects and state associated with the client.
+    private fun cleanupAfterClient(clientId: Int) {
+        removePlayer(clientId)
+    }
+
+    // C++: cNetwork::Delete_Player_Objects(client_id) — deletes all network objects owned by the client.
+    // In C++ this calls cPlayerManager::Delete_Network_Objects_For_Player.
+    private fun deletePlayerObjects(clientId: Int) {
+        god.deleteSoldier(clientId)
+    }
+
+    // C++: cNetwork::Remove_Player(player_id) — full disconnect cleanup: remove player and their soldier.
+    private fun removePlayer(playerId: Int) {
+        god.removePlayer(playerId)
+    }
+
+    // C++: cNetwork::Server_Kill_Connection(client_id) — forcibly terminates a client connection.
+    // Used by kick/eviction logic to remove a misbehaving or kicked player.
+    internal fun serverKillConnection(clientId: Int) {
+        flowControllers.remove(clientId)
+        god.removePlayer(clientId)
+    }
+
+    // C++: cNetwork::Test_For_Team_Defaulting(p_player) — if the player has no team assigned,
+    // assigns them to the team with fewer players (auto-balance on join).
+    private fun testForTeamDefaulting(player: ccr.server.net.Player) {
+        // Team assignment is handled by god.choosePlayerType() during connectionHandler.
+        // This stub mirrors the C++ method; actual logic lives in God.choosePlayerType().
+    }
+
+    // C++: cNetwork::Enable_Waiting_Players() — marks all players waiting for intermission as
+    // in-game once intermission ends, and sends GameDataUpdateEvent to each.
+    private fun enableWaitingPlayers() {
+        for (clientId in god.playerInGame.toList()) {
+            val host = connectionManager.getHost(clientId) ?: continue
+            sendGameDataUpdateEvent(host)
+        }
+    }
+
+    // C++: cNetwork::Get_Distance_Priority(pos1, pos2) — computes a [0..1] priority for network
+    // object updates based on the distance between the viewer and the object. Closer = higher priority.
+    internal fun getDistancePriority(pos1: Vector3, pos2: Vector3): Float {
+        val gap = pos2 - pos1
+        val d = gap.length()
+        val maxDistance = 1000f   // C++: The_Game()->Get_Maximum_World_Distance()
+        val range1 = maxDistance / 25.0f
+        val range2 = maxDistance / 5.0f
+        val range3 = maxDistance + 1
+        return when {
+            d < range1 -> ((range1 - d) / range1 * 0.499f + 0.50f)
+            d < range2 -> ((range2 - d) / (range2 - range1) * 0.40f + 0.10f)
+            d < range3 -> ((range3 - d) / (range3 - range2) * 0.10f + 0.00f)
+            else       -> 0f
+        }
+    }
+
+    // C++: cNetwork::Save(csave) — saves player manager state for level handoff.
+    // Not needed in the Kotlin server (stateless between rounds), provided for completeness.
+    internal fun save(): Boolean = true
+
+    // C++: cNetwork::Load(cload) — restores player manager state after level load.
+    // Not needed in the Kotlin server (players re-register via BIOEVENT), provided for completeness.
+    internal fun load(): Boolean = true
 
     // ---- RCON commands ----
 
@@ -1513,11 +1657,10 @@ class GameServer(internal val config: ServerConfig) {
                     if (targetHost == null) "Player $targetId not found."
                     else {
                         val eviction = EvictionEvent(evictionCode = 0)
-                        sendGameNetObj(targetHost) { bs ->
-                            NetworkObjectPacketWriter.writeCreation(bs, eviction, NetworkObjectManager.getNewDynamicId())
+                        serverSendPacket(targetHost) { bs ->
+                            NetworkObjectPacketWriter.writeCreation(bs, eviction, eviction.networkId)
                         }
-                        flowControllers.remove(targetId)
-                        god.removePlayer(targetId)
+                        serverKillConnection(targetId)
                         "Kicked player $targetId."
                     }
                 }
@@ -1537,7 +1680,8 @@ class GameServer(internal val config: ServerConfig) {
         }
     }
 
-    private fun buildWelcomeMessage(): String = buildString {
+    // C++: cNetwork::Show_Welcome_Message() — returns the welcome banner text shown when a player connects.
+    private fun showWelcomeMessage(): String = buildString {
         append("=== ${config.serverName} ===\n")
         if (config.gameTitle.isNotEmpty()) append("${config.gameTitle}\n")
         append("Type 'help' for available commands.\n")

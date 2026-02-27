@@ -18,11 +18,11 @@ class ScObeliskEvent(
     override val networkClassId: Int = 1015
 
     override fun exportCreation(packet: BitStream) {
+        setDeletePending()  // C++: one-shot event — Export_Creation calls Set_Delete_Pending()
         packet.addInt(defId)
         packet.addFloat(posX, BITPACK_WORLD_POSITION_X)
         packet.addFloat(posY, BITPACK_WORLD_POSITION_Y)
         packet.addFloat(posZ, BITPACK_WORLD_POSITION_Z)
         packet.addInt(ownerId)
-        setDeletePending()  // C++: Export_Creation calls Set_Delete_Pending — one-shot event
     }
 }
