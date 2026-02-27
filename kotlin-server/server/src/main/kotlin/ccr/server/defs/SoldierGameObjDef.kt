@@ -118,6 +118,17 @@ data class DefenseObjectDef(
     val damagePoints: Float = 0f,
     val deathPoints: Float = 0f,
 ) {
+    fun toDefenseObjectDefClass() = DefenseObjectDefClass(
+        health = health,
+        healthMax = healthMax,
+        skin = skinSaveId,
+        shieldStrength = shieldStrength,
+        shieldStrengthMax = shieldStrengthMax,
+        shieldType = shieldTypeSaveId,
+        damagePoints = damagePoints,
+        deathPoints = deathPoints,
+    )
+
     companion object {
         private const val DEFENSEOBJECTDEF_CHUNK_VARIABLES = 7311607u
         private const val VARIABLE_HEALTH = 0x00

@@ -48,6 +48,7 @@ import ccr.server.net.PlayerKill
 import ccr.server.net.PurchaseRequestEvent
 import ccr.server.net.PurchaseResponseEvent
 import ccr.server.net.RequestKillEvent
+import ccr.server.net.ResetWinsEvent
 import ccr.server.net.SuicideEvent
 import ccr.net.flow.BandwidthBudget
 import ccr.net.flow.FlowController
@@ -185,6 +186,9 @@ class GameServer(internal val config: ServerConfig) {
     // Periodic GameDataUpdateEvent resend (once per second) to keep clients' timer in sync.
     private var lastGameDataUpdateMs: Long = 0L
 
+    // Score sort timer (once per second, C++: End_Game_Test sort)
+    private var lastScoreSortMs: Long = 0L
+
     // Per-tick outbox: packets buffered during tick, flushed together at end of tick
     private val pendingOutbox = mutableMapOf<Int, MutableList<Pair<InetSocketAddress, ByteArray>>>()
     private val bytesSentThisTick = mutableMapOf<Int, Int>()
@@ -250,7 +254,6 @@ class GameServer(internal val config: ServerConfig) {
         launch(Dispatchers.IO)   { transport.ioLoop() }
         launch(gameThread)       { processInbound() }
         launch(gameThread)       { networkTickLoop() }
-        launch(gameThread)       { physicsTickLoop() }
         launch(Dispatchers.IO)   { rconServer.run() }
         launch(Dispatchers.IO)   { lanResponder.broadcastLoop() }
     }
@@ -391,6 +394,13 @@ class GameServer(internal val config: ServerConfig) {
             gameState.think(tickDeltaMs)
             gameState.currentPlayers = connectionManager.getConnectedCount()
 
+            // Sort players by score once per second (C++: End_Game_Test sort)
+            if (nowMs - lastScoreSortMs >= 1000L) {
+                lastScoreSortMs = nowMs
+                // Note: In the full C++ implementation this sorts teams and players
+                // by score for display. Full sort implementation would update rankingByScore maps here.
+            }
+
             // Re-send GameDataUpdateEvent once per second to keep clients' timer in sync
             if (nowMs - lastGameDataUpdateMs >= 1000L && god.playerInGame.isNotEmpty()) {
                 lastGameDataUpdateMs = nowMs
@@ -424,8 +434,16 @@ class GameServer(internal val config: ServerConfig) {
                 }
             }
 
+            // God.think() — handles respawn loop (creates soldiers for soldierless in-game players)
+            // C++: cGod::Think() runs before GameObjManager::Think()
+            god.think(frameDeltaSeconds)
+
             // GameObjManager.think() — drives building Think() loops (refinery trickle, war factory timer, etc.)
             gameObjManager.think(frameDeltaSeconds)
+
+            // C++: PhysicsSceneClass runs inline between Think and Post_Think (combat.cpp)
+            physicsScene?.update(frameDeltaSeconds)
+
             // C++: combat.cpp:611 — Post_Think() follows immediately after Think()
             gameObjManager.postThink()
 
@@ -434,9 +452,6 @@ class GameServer(internal val config: ServerConfig) {
 
             // Update measured FPS and push to clients
             updateFps(nowMs)
-
-            // God.think() — handles respawn loop (creates soldiers for soldierless in-game players)
-            god.think(frameDeltaSeconds)
 
             // Tick door state machines and detect state changes for network replication
             if (doorObjects.isNotEmpty()) {
@@ -587,21 +602,6 @@ class GameServer(internal val config: ServerConfig) {
             if (!more) break
         }
         return if (groups.isEmpty()) "?" else groups.joinToString(" ")
-    }
-
-    // ---- Physics tick ----
-
-    // C++: wwphys PhysicsSceneClass runs at ~30 Hz
-    private suspend fun physicsTickLoop() {
-        val intervalMs = 1000L / 30
-        var lastTickMs = System.currentTimeMillis()
-        while (true) {
-            delay(intervalMs)
-            val nowMs = System.currentTimeMillis()
-            val dt = ((nowMs - lastTickMs) / 1000f).coerceAtMost(0.1f)
-            lastTickMs = nowMs
-            physicsScene?.update(dt)
-        }
     }
 
     // ---- Game event peek (for logging) ----
@@ -784,6 +784,16 @@ class GameServer(internal val config: ServerConfig) {
                     // Create player — sets BIT_CREATION for all clients via setObjectDirtyBit
                     val nickname = playerNicknames.remove(host.address) ?: "Player$rhostId"
                     god.createPlayer(rhostId, nickname)
+
+                    // Store player IP for server-side tracking (not sent over network)
+                    val ipBytes = host.address.address.address
+                    if (ipBytes.size == 4) {
+                        val ipInt = ((ipBytes[0].toInt() and 0xFF) shl 24) or
+                                    ((ipBytes[1].toInt() and 0xFF) shl 16) or
+                                    ((ipBytes[2].toInt() and 0xFF) shl 8) or
+                                    (ipBytes[3].toInt() and 0xFF)
+                        god.playersByHost[rhostId]?.ipAddress = ipInt
+                    }
 
                     // One-shot event to signal the client that gameplay can proceed
                     sendGameDataUpdateEvent(host)
@@ -1195,6 +1205,9 @@ class GameServer(internal val config: ServerConfig) {
             sendGameNetObj(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, winEvent, NetworkObjectManager.getNewDynamicId()) }
         }
 
+        // Record game result for clients joining during intermission
+        gameState.recordGameResult(winType, winner, loser)
+
         // Start intermission
         gameState.startIntermission()
         println("[GAME] intermission started (${config.intermissionTimeSeconds}s)")
@@ -1202,6 +1215,17 @@ class GameServer(internal val config: ServerConfig) {
 
     private fun handleCoreRestart() {
         println("[GAME] core restart — resetting scores and game state")
+
+        // Send ResetWinsEvent to all in-game clients (C++: bioevent.cpp core restart handler)
+        val resetWinsEvent = ResetWinsEvent()
+        val resetId = NetworkObjectManager.getNewDynamicId()
+        for (clientId in god.playerInGame) {
+            val host = connectionManager.getHost(clientId) ?: continue
+            sendGameNetObj(host) { bs ->
+                NetworkObjectPacketWriter.writeCreation(bs, resetWinsEvent, resetId)
+            }
+        }
+
         hostedGameNumber++
         teamNod.reset()
         teamGdi.reset()
@@ -1280,6 +1304,15 @@ class GameServer(internal val config: ServerConfig) {
                 god.createLevelVehicle(lv)
             }
             println("[LEVEL] ${loadedVehicles.size} level vehicles instantiated")
+        }
+
+        // Post-load validation: check for duplicate network IDs
+        val allObjects = NetworkObjectManager.getAllObjects()
+        val ids = allObjects.map { it.networkId }
+        val seen = mutableSetOf<Int>()
+        val duplicates = ids.filter { !seen.add(it) }.toSet()
+        if (duplicates.isNotEmpty()) {
+            println("[WARN] Duplicate network IDs found after level load: $duplicates")
         }
 
         // Register doors from LSD static objects

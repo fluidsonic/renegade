@@ -23,7 +23,10 @@ open class ScriptZoneGameObjDef(
     val checkStarsOnly: Boolean = true,
     // C++: bool IsEnvironmentZone (initialized to false)
     val isEnvironmentZone: Boolean = false,
-) : ScriptableGameObjDef(name, id, chunkId) {
+    // ScriptableGameObjDef fields (forwarded)
+    scriptNameList: List<String> = emptyList(),
+    scriptParameterList: List<String> = emptyList(),
+) : ScriptableGameObjDef(name, id, chunkId, scriptNameList, scriptParameterList) {
 
     // C++: ZoneConstants::ZoneType Get_Type() const { return ZoneType; }
     fun getType(): Int = zoneType
@@ -52,9 +55,8 @@ open class ScriptZoneGameObjDef(
 
         fun load(objDataReader: ChunkReader, name: String, id: UInt, chunkId: UInt): ScriptZoneGameObjDef {
             val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES.toUInt())
-                ?: return ScriptZoneGameObjDef(name = name, id = id, chunkId = chunkId)
 
-            val colorBytes = vars.findMicroChunk(MICROCHUNKID_DEF_ZONE_COLOR)
+            val colorBytes = vars?.findMicroChunk(MICROCHUNKID_DEF_ZONE_COLOR)
             val color = if (colorBytes != null && colorBytes.size >= 12) {
                 val buf = ByteBuffer.wrap(colorBytes, 0, 12).order(ByteOrder.LITTLE_ENDIAN)
                 Vector3(buf.getFloat(0), buf.getFloat(4), buf.getFloat(8))
@@ -62,17 +64,22 @@ open class ScriptZoneGameObjDef(
                 Vector3(0f, 0.7f, 0f)
             }
 
-            val checkStarsOnly = vars.findMicroChunk(MICROCHUNKID_DEF_CHECK_STARS_ONLY)?.let {
+            val checkStarsOnly = vars?.findMicroChunk(MICROCHUNKID_DEF_CHECK_STARS_ONLY)?.let {
                 if (it.isNotEmpty()) it[0] != 0.toByte() else null
             } ?: true
 
-            val zoneType = vars.findMicroChunk(MICROCHUNKID_DEF_ZONE_TYPE)?.let {
+            val zoneType = vars?.findMicroChunk(MICROCHUNKID_DEF_ZONE_TYPE)?.let {
                 if (it.size >= 4) ByteBuffer.wrap(it, 0, 4).order(ByteOrder.LITTLE_ENDIAN).int else null
             } ?: 0
 
-            val isEnvironmentZone = vars.findMicroChunk(MICROCHUNKID_DEF_IS_ENVIRONMENT_ZONE)?.let {
+            val isEnvironmentZone = vars?.findMicroChunk(MICROCHUNKID_DEF_IS_ENVIRONMENT_ZONE)?.let {
                 if (it.isNotEmpty()) it[0] != 0.toByte() else null
             } ?: false
+
+            // Navigate ScriptZone parent → ScriptableGameObjDef::Save to load script lists
+            val szParent = objDataReader.findChunk(CHUNKID_DEF_PARENT.toUInt())
+            val (scriptableData, _) = szParent?.let { ScriptableGameObjDefData.load(it) }
+                ?: (ScriptableGameObjDefData(emptyList()) to null)
 
             return ScriptZoneGameObjDef(
                 name = name,
@@ -82,6 +89,9 @@ open class ScriptZoneGameObjDef(
                 checkStarsOnly = checkStarsOnly,
                 zoneType = zoneType,
                 isEnvironmentZone = isEnvironmentZone,
+                // ScriptableGameObjDef fields
+                scriptNameList = scriptableData.scripts.map { it.name },
+                scriptParameterList = scriptableData.scripts.map { it.parameters },
             )
         }
     }

@@ -38,6 +38,9 @@ class Player(
     // C++: cPlayer::Ping — default -1 (unknown)
     var ping: Int = -1
 
+    // Server-side only: IP address of the player (not exported over network)
+    var ipAddress: Int = 0
+
     // C++: cPlayer::Invulnerable (public cBoolean field) — default false
     var invulnerable: Boolean = false
 

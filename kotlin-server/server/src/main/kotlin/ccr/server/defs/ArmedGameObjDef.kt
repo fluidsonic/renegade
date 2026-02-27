@@ -15,4 +15,33 @@ open class ArmedGameObjDef(
     val weaponTurnMin: Float = -10000f,   // C++: float WeaponTurnMin
     val weaponTurnMax: Float = 10000f,    // C++: float WeaponTurnMax
     val weaponError: Float = 0f,          // C++: float WeaponError
-) : PhysicalGameObjDef(name, id, chunkId)
+    // PhysicalGameObjDef fields (forwarded)
+    type: Int = 0,
+    radarBlipType: Int = 0,
+    bullseyeOffsetZ: Float = 0f,
+    animation: String = "",
+    physDefId: Int = 0,
+    killedExplosion: Int = 0,
+    defaultHibernationEnable: Boolean = false,
+    allowInnateConversations: Boolean = false,
+    oratorType: Int = 0,
+    useCreationEffect: Boolean = false,
+    // DamageableGameObjDef fields (forwarded)
+    defenseObjectDef: DefenseObjectDefClass = DefenseObjectDefClass(),
+    infoIconTextureFilename: String = "",
+    translatedNameId: Int = 0,
+    notTargetable: Boolean = false,
+    defaultPlayerType: Int = -2,
+    encyclopediaType: Int = 0,
+    encyclopediaId: Int = 0,
+    // ScriptableGameObjDef fields (forwarded)
+    scriptNameList: List<String> = emptyList(),
+    scriptParameterList: List<String> = emptyList(),
+) : PhysicalGameObjDef(
+    name, id, chunkId,
+    type, radarBlipType, bullseyeOffsetZ, animation, physDefId,
+    killedExplosion, defaultHibernationEnable, allowInnateConversations, oratorType, useCreationEffect,
+    defenseObjectDef, infoIconTextureFilename, translatedNameId,
+    notTargetable, defaultPlayerType, encyclopediaType, encyclopediaId,
+    scriptNameList, scriptParameterList,
+)

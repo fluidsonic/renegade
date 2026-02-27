@@ -877,6 +877,13 @@ open class God(private val server: GameServer) {
     fun removePlayer(rhostId: Int) {
         deleteSoldier(rhostId)
 
+        // Clean up any vehicles still assigned to this player (controlOwner == rhostId)
+        // that are not currently being driven (already cleaned up by deleteSoldier → exitVehicle)
+        val ownedVehicles = vehiclesByNetId.values.filter {
+            it.controlOwner == rhostId && rhostId !in playerVehicles
+        }
+        ownedVehicles.forEach { it.setDeletePending() }
+
         // Mark player inactive and delete-pending; centralized loop broadcasts deletion and unregisters
         val player = playersByHost[rhostId]
         if (player != null) {

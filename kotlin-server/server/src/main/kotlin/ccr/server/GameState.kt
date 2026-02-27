@@ -89,6 +89,20 @@ class GameState(private val config: ServerConfig) {
         timeRemainingSeconds = 0f
     }
 
+    // Last game result (used by BIOEVENT handler to inform clients joining during intermission)
+    var lastWinType: Int = 0
+        private set
+    var lastWinner: Int = -1
+        private set
+    var lastLoser: Int = -1
+        private set
+
+    fun recordGameResult(winType: Int, winner: Int, loser: Int) {
+        lastWinType = winType
+        lastWinner = winner
+        lastLoser = loser
+    }
+
     /** Resets the game state for a new match (called at core restart). */
     fun reset() {
         timeRemainingSeconds = if (config.timeLimitMinutes > 0) config.timeLimitMinutes * 60f else 0f

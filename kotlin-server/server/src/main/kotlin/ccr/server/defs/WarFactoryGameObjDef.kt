@@ -14,15 +14,41 @@ import ccr.server.mix.ChunkReader
  */
 // C++: class WarFactoryGameObjDef : public VehicleFactoryGameObjDef
 class WarFactoryGameObjDef(
+    // BuildingGameObjDef base
     name: String,
     id: UInt,
     chunkId: UInt,
+    defenseObjectDef: DefenseObjectDefClass = DefenseObjectDefClass(),
+    infoIconTextureFilename: String = "",
+    translatedNameId: Int = 0,
+    notTargetable: Boolean = false,
+    defaultPlayerType: Int = PLAYERTYPE_NEUTRAL,
+    meshPrefix: String = "",
+    mctSkin: Int = 0,
+    buildingType: Int = BuildingGameObjDef.BUILDING_TYPE_NONE,
+    gdiDamageReportId: Int = 0,
+    nodDamageReportId: Int = 0,
+    gdiDestroyReportId: Int = 0,
+    nodDestroyReportId: Int = 0,
+    // VehicleFactoryGameObjDef fields
     padClearingWarhead: Int = 25,
     totalBuildingTime: Float = 12f,
 ) : VehicleFactoryGameObjDef(
     name = name,
     id = id,
     chunkId = chunkId,
+    defenseObjectDef = defenseObjectDef,
+    infoIconTextureFilename = infoIconTextureFilename,
+    translatedNameId = translatedNameId,
+    notTargetable = notTargetable,
+    defaultPlayerType = defaultPlayerType,
+    meshPrefix = meshPrefix,
+    mctSkin = mctSkin,
+    buildingType = buildingType,
+    gdiDamageReportId = gdiDamageReportId,
+    nodDamageReportId = nodDamageReportId,
+    gdiDestroyReportId = gdiDestroyReportId,
+    nodDestroyReportId = nodDestroyReportId,
     padClearingWarhead = padClearingWarhead,
     totalBuildingTime = totalBuildingTime,
 ) {
@@ -39,22 +65,10 @@ class WarFactoryGameObjDef(
         private const val CHUNKID_DEF_PARENT    = 0x02200638u
         private const val CHUNKID_DEF_VARIABLES = 0x02200639u
 
-        // Micro-chunk IDs from VehicleFactoryGameObjDef (vehiclefactorygameobj.cpp)
-        // enum { ..., MICROCHUNKID_DEF_PADCLEARINGWARHEAD = 2, MICROCHUNKID_DEF_TOTALBUILDINGTIME = 3 }
-        private const val MICROCHUNKID_DEF_PADCLEARINGWARHEAD = 2
-        private const val MICROCHUNKID_DEF_TOTALBUILDINGTIME  = 3
-
         /**
          * Parses a WarFactoryGameObjDef from the OBJDATA chunk.
-         * No definition-specific fields to extract beyond what VehicleFactoryGameObjDef provides.
-         *
-         * Save layout:
-         *   CHUNKID_DEF_PARENT(0x02200638) → VehicleFactoryGameObjDef::Save
-         *     CHUNKID_DEF_PARENT(0x02200638) → BuildingGameObjDef::Save (and parents)
-         *     CHUNKID_DEF_VARIABLES(0x02200639) → micro 2=padClearingWarhead, 3=totalBuildingTime
-         *   CHUNKID_DEF_VARIABLES(0x02200639) → (empty — no WarFactory-specific fields)
-         *
-         * [name], [id], and [chunkId] are already extracted by the definition DB reader.
+         * Delegates all parsing to VehicleFactoryGameObjDef.load() then wraps the result.
+         * No WarFactory-specific fields are persisted.
          */
         fun load(
             objDataReader: ChunkReader,
@@ -62,20 +76,30 @@ class WarFactoryGameObjDef(
             id: UInt,
             chunkId: UInt,
         ): WarFactoryGameObjDef {
-            // Navigate into CHUNKID_DEF_PARENT to access VehicleFactoryDef's CHUNKID_DEF_VARIABLES
-            val vehicleFactoryParent = objDataReader.findChunk(CHUNKID_DEF_PARENT)
-            val vehicleFactoryVars = vehicleFactoryParent?.findChunk(CHUNKID_DEF_VARIABLES)
-
-            val padClearingWarhead = vehicleFactoryVars?.readMicroInt(MICROCHUNKID_DEF_PADCLEARINGWARHEAD) ?: 25
-            val totalBuildingTime  = vehicleFactoryVars?.readMicroFloat(MICROCHUNKID_DEF_TOTALBUILDINGTIME) ?: 12f
-
+            val base = VehicleFactoryGameObjDef.load(objDataReader, chunkId)
+                ?: return WarFactoryGameObjDef(name = name, id = id, chunkId = chunkId)
             return WarFactoryGameObjDef(
-                name = name,
-                id = id,
+                name = base.name,
+                id = base.id,
                 chunkId = chunkId,
-                padClearingWarhead = padClearingWarhead,
-                totalBuildingTime = totalBuildingTime,
+                defenseObjectDef = base.defenseObjectDef,
+                infoIconTextureFilename = base.infoIconTextureFilename,
+                translatedNameId = base.translatedNameId,
+                notTargetable = base.notTargetable,
+                defaultPlayerType = base.defaultPlayerType,
+                meshPrefix = base.meshPrefix,
+                mctSkin = base.mctSkin,
+                buildingType = base.buildingType,
+                gdiDamageReportId = base.gdiDamageReportId,
+                nodDamageReportId = base.nodDamageReportId,
+                gdiDestroyReportId = base.gdiDestroyReportId,
+                nodDestroyReportId = base.nodDestroyReportId,
+                padClearingWarhead = base.padClearingWarhead,
+                totalBuildingTime = base.totalBuildingTime,
             )
         }
     }
+
+    override fun toString(): String =
+        "WarFactoryGameObjDef(id=$id, name='$name', padClearingWarhead=$padClearingWarhead, totalBuildingTime=$totalBuildingTime)"
 }

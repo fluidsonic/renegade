@@ -21,10 +21,39 @@ import ccr.server.mix.ChunkReader
  *   CHUNKID_DEF_VARIABLES = 0x02211154
  */
 class SoldierFactoryGameObjDef(
+    // BuildingGameObjDef base
     name: String,
     id: UInt,
     chunkId: UInt,
-) : BuildingGameObjDef(name, id, chunkId) {
+    defenseObjectDef: DefenseObjectDefClass = DefenseObjectDefClass(),
+    infoIconTextureFilename: String = "",
+    translatedNameId: Int = 0,
+    notTargetable: Boolean = false,
+    defaultPlayerType: Int = PLAYERTYPE_NEUTRAL,
+    meshPrefix: String = "",
+    mctSkin: Int = 0,
+    buildingType: Int = BuildingGameObjDef.BUILDING_TYPE_NONE,
+    gdiDamageReportId: Int = 0,
+    nodDamageReportId: Int = 0,
+    gdiDestroyReportId: Int = 0,
+    nodDestroyReportId: Int = 0,
+) : BuildingGameObjDef(
+    name = name,
+    id = id,
+    chunkId = chunkId,
+    defenseObjectDef = defenseObjectDef,
+    infoIconTextureFilename = infoIconTextureFilename,
+    translatedNameId = translatedNameId,
+    notTargetable = notTargetable,
+    defaultPlayerType = defaultPlayerType,
+    meshPrefix = meshPrefix,
+    mctSkin = mctSkin,
+    buildingType = buildingType,
+    gdiDamageReportId = gdiDamageReportId,
+    nodDamageReportId = nodDamageReportId,
+    gdiDestroyReportId = gdiDestroyReportId,
+    nodDestroyReportId = nodDestroyReportId,
+) {
 
     companion object {
         // C++: CHUNKID_GAME_OBJECT_DEF_SOLDIER_FACTORY (combatchunkid.h)
@@ -38,7 +67,28 @@ class SoldierFactoryGameObjDef(
         private const val MICROCHUNKID_DEF_UNUSED = 1
 
         fun load(objDataReader: ChunkReader, name: String, id: UInt, chunkId: UInt): SoldierFactoryGameObjDef {
-            return SoldierFactoryGameObjDef(name = name, id = id, chunkId = chunkId)
+            val base = BuildingGameObjDef.load(objDataReader, chunkId)
+                ?: return SoldierFactoryGameObjDef(name = name, id = id, chunkId = chunkId)
+            return SoldierFactoryGameObjDef(
+                name = base.name,
+                id = base.id,
+                chunkId = chunkId,
+                defenseObjectDef = base.defenseObjectDef,
+                infoIconTextureFilename = base.infoIconTextureFilename,
+                translatedNameId = base.translatedNameId,
+                notTargetable = base.notTargetable,
+                defaultPlayerType = base.defaultPlayerType,
+                meshPrefix = base.meshPrefix,
+                mctSkin = base.mctSkin,
+                buildingType = base.buildingType,
+                gdiDamageReportId = base.gdiDamageReportId,
+                nodDamageReportId = base.nodDamageReportId,
+                gdiDestroyReportId = base.gdiDestroyReportId,
+                nodDestroyReportId = base.nodDestroyReportId,
+            )
         }
     }
+
+    override fun toString(): String =
+        "SoldierFactoryGameObjDef(id=$id, name='$name', type=$buildingType, meshPrefix='$meshPrefix')"
 }

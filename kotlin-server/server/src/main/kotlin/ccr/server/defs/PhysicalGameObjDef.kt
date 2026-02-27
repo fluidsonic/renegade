@@ -15,4 +15,20 @@ open class PhysicalGameObjDef(
     val allowInnateConversations: Boolean = false, // C++: bool AllowInnateConversations
     val oratorType: Int = 0,                      // C++: int OratorType
     val useCreationEffect: Boolean = false,       // C++: bool UseCreationEffect
-) : DamageableGameObjDef(name, id, chunkId)
+    // DamageableGameObjDef fields (forwarded)
+    defenseObjectDef: DefenseObjectDefClass = DefenseObjectDefClass(),
+    infoIconTextureFilename: String = "",
+    translatedNameId: Int = 0,
+    notTargetable: Boolean = false,
+    defaultPlayerType: Int = -2,
+    encyclopediaType: Int = 0,
+    encyclopediaId: Int = 0,
+    // ScriptableGameObjDef fields (forwarded)
+    scriptNameList: List<String> = emptyList(),
+    scriptParameterList: List<String> = emptyList(),
+) : DamageableGameObjDef(
+    name, id, chunkId,
+    defenseObjectDef, infoIconTextureFilename, translatedNameId,
+    notTargetable, defaultPlayerType, encyclopediaType, encyclopediaId,
+    scriptNameList, scriptParameterList,
+)

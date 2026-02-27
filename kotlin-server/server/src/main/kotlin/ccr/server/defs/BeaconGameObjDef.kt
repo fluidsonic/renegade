@@ -58,7 +58,60 @@ open class BeaconGameObjDef(
 
     // C++: StringClass ArmingAnimationName (initialized to "")
     val armingAnimationName: String = "",
-) : SimpleGameObjDef(name, id, chunkId) {
+
+    // SimpleGameObjDef fields (forwarded)
+    isEditorObject: Boolean = false,
+    isHiddenObject: Boolean = false,
+    playerTerminalType: Int = -1,
+    // PhysicalGameObjDef fields (forwarded)
+    physDefId: Int = 0,
+    type: Int = 0,
+    radarBlipType: Int = 0,
+    bullseyeOffsetZ: Float = 0f,
+    animation: String = "",
+    killedExplosion: Int = 0,
+    defaultHibernationEnable: Boolean = false,
+    allowInnateConversations: Boolean = false,
+    oratorType: Int = 0,
+    useCreationEffect: Boolean = false,
+    // DamageableGameObjDef fields (forwarded)
+    defenseObjectDef: DefenseObjectDefClass = DefenseObjectDefClass(),
+    infoIconTextureFilename: String = "",
+    translatedNameId: Int = 0,
+    notTargetable: Boolean = false,
+    defaultPlayerType: Int = -2,
+    encyclopediaType: Int = 0,
+    encyclopediaId: Int = 0,
+    // ScriptableGameObjDef fields (forwarded)
+    scriptNameList: List<String> = emptyList(),
+    scriptParameterList: List<String> = emptyList(),
+) : SimpleGameObjDef(
+    name = name,
+    id = id,
+    chunkId = chunkId,
+    isEditorObject = isEditorObject,
+    isHiddenObject = isHiddenObject,
+    playerTerminalType = playerTerminalType,
+    physDefId = physDefId,
+    type = type,
+    radarBlipType = radarBlipType,
+    bullseyeOffsetZ = bullseyeOffsetZ,
+    animation = animation,
+    killedExplosion = killedExplosion,
+    defaultHibernationEnable = defaultHibernationEnable,
+    allowInnateConversations = allowInnateConversations,
+    oratorType = oratorType,
+    useCreationEffect = useCreationEffect,
+    defenseObjectDef = defenseObjectDef,
+    infoIconTextureFilename = infoIconTextureFilename,
+    translatedNameId = translatedNameId,
+    notTargetable = notTargetable,
+    defaultPlayerType = defaultPlayerType,
+    encyclopediaType = encyclopediaType,
+    encyclopediaId = encyclopediaId,
+    scriptNameList = scriptNameList,
+    scriptParameterList = scriptParameterList,
+) {
 
     // C++: bool Is_Nuke() const { return (IsNuke != 0); }
     fun isNuke(): Boolean = isNuke != 0
@@ -92,28 +145,62 @@ open class BeaconGameObjDef(
 
         fun load(objDataReader: ChunkReader, name: String, id: UInt, chunkId: UInt): BeaconGameObjDef {
             val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES.toUInt())
-                ?: return BeaconGameObjDef(name = name, id = id, chunkId = chunkId)
+
+            // Navigate into Beacon parent to load SimpleGameObjDef chain
+            val beaconParent = objDataReader.findChunk(CHUNKID_DEF_PARENT.toUInt())
+            val base = if (beaconParent != null) {
+                SimpleGameObjDef.load(beaconParent, name, id, chunkId)
+            } else {
+                SimpleGameObjDef(name = name, id = id, chunkId = chunkId)
+            }
+
             return BeaconGameObjDef(
                 name = name,
                 id = id,
                 chunkId = chunkId,
-                armingAnimationName = vars.readMicroString(MICROCHUNKID_DEF_ARMING_ANIM_NAME) ?: "",
-                broadcastToAllTime = vars.readMicroFloat(MICROCHUNKID_DEF_BROADCAST_TIME) ?: 5f,
-                armTime = vars.readMicroFloat(MICROCHUNKID_DEF_ARM_TIME) ?: 10f,
-                disarmTime = vars.readMicroFloat(MICROCHUNKID_DEF_DISARM_TIME) ?: 10f,
-                preDetonateCinematicDelay = vars.readMicroFloat(MICROCHUNKID_DEF_PRE_DETONATE_CINEMATIC_DELAY) ?: 0f,
-                detonateTime = vars.readMicroFloat(MICROCHUNKID_DEF_DETONATE_TIME) ?: 30f,
-                postDetonateTime = vars.readMicroFloat(MICROCHUNKID_DEF_POST_DETONATE_TIME) ?: 10f,
-                armedSoundDefId = vars.readMicroInt(MICROCHUNKID_DEF_ARMED_SOUNDID) ?: 0,
-                disarmingTextId = vars.readMicroInt(MICROCHUNKID_DEF_DISARMING_TEXTID) ?: 0,
-                disarmedTextId = vars.readMicroInt(MICROCHUNKID_DEF_DISARMED_TEXTID) ?: 0,
-                armingTextId = vars.readMicroInt(MICROCHUNKID_DEF_ARMING_TEXTID) ?: 0,
-                armingInterruptedTextId = vars.readMicroInt(MICROCHUNKID_DEF_ARM_INTERRUPT_TEXTID) ?: 0,
-                disarmingInterruptedTextId = vars.readMicroInt(MICROCHUNKID_DEF_DISARM_INTERRUPT_TEXTID) ?: 0,
-                preDetonateCinematicDefId = vars.readMicroInt(MICROCHUNKID_DEF_PRE_CINEMATIC_DEFID) ?: 0,
-                postDetonateCinematicDefId = vars.readMicroInt(MICROCHUNKID_DEF_POST_CINEMATIC_DEFID) ?: 0,
-                explosionDefId = vars.readMicroInt(MICROCHUNKID_DEF_EXPLOSION_DEFID) ?: 0,
-                isNuke = vars.readMicroInt(MICROCHUNKID_DEF_IS_NUKE) ?: 1,
+                armingAnimationName = vars?.readMicroString(MICROCHUNKID_DEF_ARMING_ANIM_NAME) ?: "",
+                broadcastToAllTime = vars?.readMicroFloat(MICROCHUNKID_DEF_BROADCAST_TIME) ?: 5f,
+                armTime = vars?.readMicroFloat(MICROCHUNKID_DEF_ARM_TIME) ?: 10f,
+                disarmTime = vars?.readMicroFloat(MICROCHUNKID_DEF_DISARM_TIME) ?: 10f,
+                preDetonateCinematicDelay = vars?.readMicroFloat(MICROCHUNKID_DEF_PRE_DETONATE_CINEMATIC_DELAY) ?: 0f,
+                detonateTime = vars?.readMicroFloat(MICROCHUNKID_DEF_DETONATE_TIME) ?: 30f,
+                postDetonateTime = vars?.readMicroFloat(MICROCHUNKID_DEF_POST_DETONATE_TIME) ?: 10f,
+                armedSoundDefId = vars?.readMicroInt(MICROCHUNKID_DEF_ARMED_SOUNDID) ?: 0,
+                disarmingTextId = vars?.readMicroInt(MICROCHUNKID_DEF_DISARMING_TEXTID) ?: 0,
+                disarmedTextId = vars?.readMicroInt(MICROCHUNKID_DEF_DISARMED_TEXTID) ?: 0,
+                armingTextId = vars?.readMicroInt(MICROCHUNKID_DEF_ARMING_TEXTID) ?: 0,
+                armingInterruptedTextId = vars?.readMicroInt(MICROCHUNKID_DEF_ARM_INTERRUPT_TEXTID) ?: 0,
+                disarmingInterruptedTextId = vars?.readMicroInt(MICROCHUNKID_DEF_DISARM_INTERRUPT_TEXTID) ?: 0,
+                preDetonateCinematicDefId = vars?.readMicroInt(MICROCHUNKID_DEF_PRE_CINEMATIC_DEFID) ?: 0,
+                postDetonateCinematicDefId = vars?.readMicroInt(MICROCHUNKID_DEF_POST_CINEMATIC_DEFID) ?: 0,
+                explosionDefId = vars?.readMicroInt(MICROCHUNKID_DEF_EXPLOSION_DEFID) ?: 0,
+                isNuke = vars?.readMicroInt(MICROCHUNKID_DEF_IS_NUKE) ?: 1,
+                // SimpleGameObjDef own fields
+                isEditorObject = base.isEditorObject,
+                isHiddenObject = base.isHiddenObject,
+                playerTerminalType = base.playerTerminalType,
+                // PhysicalGameObjDef fields
+                physDefId = base.physDefId,
+                type = base.type,
+                radarBlipType = base.radarBlipType,
+                bullseyeOffsetZ = base.bullseyeOffsetZ,
+                animation = base.animation,
+                killedExplosion = base.killedExplosion,
+                defaultHibernationEnable = base.defaultHibernationEnable,
+                allowInnateConversations = base.allowInnateConversations,
+                oratorType = base.oratorType,
+                useCreationEffect = base.useCreationEffect,
+                // DamageableGameObjDef fields
+                defenseObjectDef = base.defenseObjectDef,
+                infoIconTextureFilename = base.infoIconTextureFilename,
+                translatedNameId = base.translatedNameId,
+                notTargetable = base.notTargetable,
+                defaultPlayerType = base.defaultPlayerType,
+                encyclopediaType = base.encyclopediaType,
+                encyclopediaId = base.encyclopediaId,
+                // ScriptableGameObjDef fields
+                scriptNameList = base.scriptNameList,
+                scriptParameterList = base.scriptParameterList,
             )
         }
     }
