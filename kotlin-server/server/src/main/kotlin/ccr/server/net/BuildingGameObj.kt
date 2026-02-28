@@ -429,13 +429,13 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
                     // Aggregate
                     if (namePrefixMatchesThisBuilding(objName)) {
                         val objPos = model.getBoundingBox().center
-                        val dist2 = (collectionSphere.center - objPos).length2()
+                        val dist2 = (collectionSphere.center - objPos).lengthSquared()
                         val radius2 = collectionSphere.radius * collectionSphere.radius
 
                         if (dist2 <= radius2) {
                             val existingBuilding = (obj.getObserver() as? CombatPhysObserverClass) as? BuildingGameObj
                             if (existingBuilding != null) {
-                                val existingDist2 = (existingBuilding.collectionSphere.center - objPos).length2()
+                                val existingDist2 = (existingBuilding.collectionSphere.center - objPos).lengthSquared()
                                 if (dist2 < existingDist2) {
                                     existingBuilding.removeAggregate(obj as BuildingAggregateClass)
                                     addAggregate(obj as BuildingAggregateClass)
@@ -449,13 +449,13 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
                     // Mesh
                     if (namePrefixMatchesThisBuilding(objName)) {
                         val objPos = model.getBoundingBox().center
-                        val dist2 = (collectionSphere.center - objPos).length2()
+                        val dist2 = (collectionSphere.center - objPos).lengthSquared()
                         val radius2 = collectionSphere.radius * collectionSphere.radius
 
                         if (dist2 <= radius2) {
                             val existingBuilding = (obj.getObserver() as? CombatPhysObserverClass) as? BuildingGameObj
                             if (existingBuilding != null) {
-                                val existingDist2 = (existingBuilding.collectionSphere.center - objPos).length2()
+                                val existingDist2 = (existingBuilding.collectionSphere.center - objPos).lengthSquared()
                                 if (dist2 < existingDist2) {
                                     existingBuilding.removeMesh(staticPhys)
                                     addMesh(staticPhys)
@@ -473,7 +473,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
                 val lightPhys = light.asLightPhysClass() ?: continue
                 if (namePrefixMatchesThisBuilding(lightPhys.getName())) {
                     val lightPos = lightPhys.getPosition()
-                    val dist2 = (collectionSphere.center - lightPos).length2()
+                    val dist2 = (collectionSphere.center - lightPos).lengthSquared()
                     if (dist2 <= collectionSphere.radius * collectionSphere.radius) {
                         addLight(lightPhys)
                     }
@@ -617,7 +617,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
                 for (i in tris.indices) {
                     val polyCenter = (verts[tris[i][0]] + verts[tris[i][1]] + verts[tris[i][2]]) * (1f / 3f)
                     val delta = polyCenter - pos
-                    val dist2 = delta.length2()
+                    val dist2 = delta.lengthSquared()
                     if (dist2 < distance2) distance2 = dist2
                 }
             }

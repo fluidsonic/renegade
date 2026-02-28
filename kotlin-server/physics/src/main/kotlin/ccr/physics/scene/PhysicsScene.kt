@@ -8,6 +8,7 @@ import ccr.physics.collision.CollisionGroupMatrix
 import ccr.physics.collision.RayCollisionTest
 import ccr.physics.spatial.PhysGrid
 import ccr.physics.spatial.StaticAABTree
+import ccr.physics.static.StaticPhysClass
 
 class PhysicsScene {
     val staticTree = StaticAABTree()
@@ -114,5 +115,18 @@ class PhysicsScene {
         // SOLDIER_GHOST doesn't collide with SOLDIER or BULLET
         collisionMatrix.disableCollision(CollisionGroup.SOLDIER_GHOST, CollisionGroup.SOLDIER)
         collisionMatrix.disableCollision(CollisionGroup.SOLDIER_GHOST, CollisionGroup.BULLET)
+    }
+
+    /**
+     * C++: PhysicsSceneClass::Find_Static_Object(int id) — searches static objects by instanceId.
+     * Returns the matching StaticPhysClass or null if not found.
+     */
+    fun findStaticObject(instanceId: Int): StaticPhysClass? {
+        for (obj in staticObjects) {
+            if (obj.instanceId.toInt() == instanceId) {
+                return obj as? StaticPhysClass
+            }
+        }
+        return null
     }
 }

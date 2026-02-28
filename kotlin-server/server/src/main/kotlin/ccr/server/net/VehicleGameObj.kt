@@ -172,7 +172,7 @@ open class VehicleGameObj() : SmartGameObj() {
         val physObj = peekPhysicalObject()
         if (physObj != null && CombatManager.getScene() != null) {
             // Make sure the exiters don't hit me
-            physObj.setCollisionGroup(UNCOLLIDEABLE_GROUP)
+            physObj.collisionGroup = UNCOLLIDEABLE_GROUP
             // Eject all occupants around the vehicle so they don't intersect
             val vehiclePos = physObj.getPosition()
             for (i in seatOccupants.indices) {

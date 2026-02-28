@@ -6,7 +6,7 @@ package ccr.server.net
 class WarFactoryGameObj() : VehicleFactoryGameObj() {
 
     // C++: int CreationAnimationID (initialized to 0 in constructor initializer list)
-    protected var creationAnimationID: Int = 0
+    protected var creationAnimationID: UInt = 0u
 
     // C++: float CreationFinishedTimer (initialized to UNITIALIZED_TIMER in constructor initializer list)
     protected var creationFinishedTimer: Float = UNINITIALIZED_TIMER
@@ -91,15 +91,15 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
         var closest2 = 99999.0f
         val scene = CombatManager.getScene()
         if (scene != null) {
-            for (obj in scene.getStaticObjects()) {
+            for (obj in scene.staticObjects) {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
-                val model = animPhysObj.peekModel() ?: continue
+                val model = animPhysObj.model ?: continue
 
                 val name = model.getName().uppercase()
                 if (name.contains("WEP#CONSTRUCT")) {
                     val animPos = animPhysObj.getPosition()
                     val diff = animPos - pos
-                    val dist2 = diff.length2()
+                    val dist2 = diff.lengthSquared()
                     if (dist2 < closest2) {
                         closest2 = dist2
                         creationAnimationID = animPhysObj.getId()
@@ -196,7 +196,7 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
         val scene = CombatManager.getScene()
         val staticPhysObj = scene?.findStaticObject(creationAnimationID)
         if (staticPhysObj != null) {
-            val animPhysObj = staticPhysObj.asStaticAnimPhysClass()
+            val animPhysObj = staticPhysObj as? StaticAnimPhysClass
             if (animPhysObj != null) {
                 // C++: Calculate how long to wait before we start playing the end animations
                 val animMgr = animPhysObj.getAnimationManager()

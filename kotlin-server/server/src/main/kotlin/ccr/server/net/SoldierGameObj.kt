@@ -787,7 +787,7 @@ open class SoldierGameObj() : SmartGameObj() {
             val vel = peekHumanPhys()?.getVelocity() ?: Vector3()
 
             if (peekHumanPhys()?.getContactSurfaceType() == SURFACE_TYPE_UNDERWATER_DIRT &&
-                vel.length2() > 0.1f
+                vel.lengthSquared() > 0.1f
             ) {
                 // FIXME: COMBAT_SCENE->Cast_Ray for water surface — raycast not yet fully wired
                 // For now skip the raycast portion
@@ -1145,7 +1145,7 @@ open class SoldierGameObj() : SmartGameObj() {
             val damagerData: PlayerDataClass? =
                 (damagerOwner as? SoldierGameObj)?.playerData as? PlayerDataClass
 
-            if (direction.length2() > WWMATH_EPSILON) {
+            if (direction.lengthSquared() > WWMATH_EPSILON) {
                 when (ouchType) {
                     HumanStateClass.HEAD_FROM_BEHIND, HumanStateClass.HEAD_FROM_FRONT -> {
                         playerData?.statsAddHeadHit()

@@ -33,6 +33,9 @@ class WeaponClass(
         }
     }
 
+    fun isLoaded() =
+        clipRounds > 0
+
     // C++: void Add_Rounds(int num)
     fun addRounds(num: Int) {
         if (num < 0) {

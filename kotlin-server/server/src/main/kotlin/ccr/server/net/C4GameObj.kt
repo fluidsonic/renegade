@@ -152,7 +152,7 @@ class C4GameObj(
         super.init(definition)
         // C++: Peek_Physical_Object()->Set_Collision_Group(TERRAIN_AND_BULLET_COLLISION_GROUP)
         // C++: Peek_Physical_Object()->Set_Collision_Group(DEFAULT_COLLISION_GROUP)
-        physObj?.setCollisionGroup(DEFAULT_COLLISION_GROUP)
+        physObj?.collisionGroup = DEFAULT_COLLISION_GROUP
     }
 
     // C++: const C4GameObjDef & Get_Definition() const
@@ -181,7 +181,7 @@ class C4GameObj(
         stuck = false
         stuckMct = false
         stuckToObject = false
-        physObj?.setCollisionGroup(DEFAULT_COLLISION_GROUP)
+        physObj?.collisionGroup = DEFAULT_COLLISION_GROUP
         ownerBackup = null
 
         if (ownerObj != null) {
@@ -299,7 +299,7 @@ class C4GameObj(
                     stuckStaticAnimObj = staticAnim
 
                     stuckBone = 0
-                    val staticModel = staticAnim.peekModel()
+                    val staticModel = staticAnim.model
                     if (staticModel != null) {
                         stuckBone = staticModel.getSubObjectBoneIndex(event.collidedRenderObj)
                         val myPos = getPosition()

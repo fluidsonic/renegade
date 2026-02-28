@@ -2,8 +2,9 @@ package ccr.server.net
 
 import ccr.math.Matrix3D
 import ccr.math.Vector3
-import ccr.net.replication.NetworkObjectManager
 import ccr.server.defs.DefinitionClass
+import ccr.physics.PhysClass as RealPhysClass
+import ccr.physics.scene.PhysicsScene
 
 // ---------------------------------------------------------------------------
 // Serialisation stubs — C++ wwsaveload chunk/micro-chunk I/O
@@ -139,63 +140,57 @@ class CastResultStruct {
     val startInside: Boolean = false
 }
 
-// C++: PhysClass abstract stub — real impl is ccr.physics.PhysClass
-// These stubs are used by server net code that needs the C++ interface.
-// Note: ccr.physics.PhysClass (the real one) is imported explicitly where needed.
-open class PhysClass {
-    open fun getPosition(): Vector3 = Vector3()
-    fun setPosition(pos: Vector3): Unit = Unit
-    fun getFacing(): Float = 0f
-    open fun getTransform(): Matrix3D = Matrix3D()
-    fun setTransform(tm: Matrix3D): Unit = Unit
-    fun peekModel(): RenderObjClass? = null
-    fun setModelByName(name: String): Unit = Unit
-    fun setCollisionGroup(group: Int): Unit = Unit
-    fun setObserver(observer: CombatPhysObserverClass?): Unit = Unit
-    fun getVisObjectId(): Int = -1
-    fun isInScene(): Boolean = false
-    fun getCollisionGroup(): Int = 0
-    fun getContactSurfaceType(): Int = 0
-    fun getObserver(): PhysObserverClass? = null
+// C++: PhysClass server stub — extends the real ccr.physics.PhysClass so that server-stub
+// instances (HumanPhysClass bridge, PhysDefClass-created stubs) can be stored in physObj
+// (typed as ccr.physics.PhysClass) alongside real physics objects (VehiclePhysClass, etc.).
+//
+// Methods that are purely server-specific (peekModel, setObserver, getObserver, getFactory,
+// intersectionTest, addToScene, removeFromScene) remain here.  All other methods are
+// inherited from the real ccr.physics.PhysClass.
+open class PhysClass : RealPhysClass() {
+    // abstract var transform is satisfied by DynamicPhysClass in the real hierarchy; here we
+    // provide a concrete backing field so the server-stub instances are instantiable.
+    private var _transform: Matrix3D = Matrix3D.IDENTITY
+    override var transform: Matrix3D
+        get() = _transform
+        set(v) { _transform = v }
+
+    // Server-specific observer storage.  The real ccr.physics.PhysClass.observer is typed as
+    // ccr.physics.PhysObserver which is incompatible with the server's CombatPhysObserverClass
+    // interface (different method signatures / parameter types).  We keep a parallel field.
+    var combatObserver: CombatPhysObserverClass? = null
+
+    // Server-specific methods — not present in ccr.physics.PhysClass (would need server types).
+    override fun peekModel(): RenderObjClass? = model as? RenderObjClass
+    fun setObserver(observer: CombatPhysObserverClass?) { combatObserver = observer }
+    fun getObserver(): PhysObserverClass? = combatObserver
     fun getFactory(): PhysFactoryClass? = null
-    // As_* casts
-    open fun asMoveablePhysClass(): MoveablePhysClass? = null
-    open fun asProjectileClass(): ProjectilePhysClass? = null
-    open fun asStaticPhysClass(): StaticPhysClass? = null
-    open fun asStaticAnimPhysClass(): StaticAnimPhysClass? = null
-    open fun asHumanPhysClass(): HumanPhysClass? = null
-    open fun asVehiclePhysClass(): ccr.physics.vehicle.VehiclePhysClass? = null
-    open fun asSound3DClass(): Sound3DClass? = null
-    open fun asLightPhysClass(): LightPhysClass? = null
-    open fun incIgnoreCounter(): Unit = Unit
-    open fun decIgnoreCounter(): Unit = Unit
     fun intersectionTest(test: PhysAABoxIntersectionTestClass): Boolean = false
-    open fun enableUserControl(enable: Boolean): Unit = Unit
-    open fun addEffectToMe(effect: Any): Unit = Unit
     open fun addToScene(scene: Any): Unit = Unit
     open fun removeFromScene(): Unit = Unit
-    open fun isEnabled(): Boolean = false
-    var scene: ccr.physics.scene.PhysicsScene? = null
+
+    // asVehiclePhysClass() is inherited from the real PhysClass with the same return type — no override needed.
+    // The stub-specific As_* methods that conflict in return type are intentionally omitted:
+    // callers should use the real As_*() returns (ccr.physics.*) or the peekHumanPhys()/etc helpers.
+    open fun asSound3DClass(): Sound3DClass? = null
 }
 
 // C++: MoveablePhysClass : public PhysClass
 open class MoveablePhysClass : PhysClass() {
-    override fun asMoveablePhysClass(): MoveablePhysClass = this
-    fun setVelocity(vel: Vector3): Unit = Unit
+    open fun setVelocity(vel: Vector3): Unit = Unit
     open fun getVelocity(): Vector3 = Vector3()
     open fun getAngularVelocity(): Vector3 = Vector3()
-    fun cinematicMoveTo(tm: Matrix3D): Unit = Unit
+    open fun cinematicMoveTo(tm: Matrix3D): Unit = Unit
     override fun addEffectToMe(effect: Any): Unit = Unit
-    fun removeEffectFromMe(effect: Any): Unit = Unit
-    fun computeApproximateRideHeight(): Float = 0f
-    fun getSquishVelocity(): Float = 0f
-    fun setGravityMultiplier(multiplier: Float): Unit = Unit
+    open fun removeEffectFromMe(effect: Any): Unit = Unit
+    open fun computeApproximateRideHeight(): Float = 0f
+    open fun getSquishVelocity(): Float = 0f
+    open fun setGravityMultiplier(multiplier: Float): Unit = Unit
     override fun enableUserControl(enable: Boolean): Unit = Unit
 }
 
 // C++: StaticPhysClass : public PhysClass
 open class StaticPhysClass : PhysClass() {
-    override fun asStaticPhysClass(): StaticPhysClass = this
     fun getStaticLights(): List<Any> = TODO("stub")
     fun getStaticObjects(): List<Any> = TODO("stub")
     fun enableIsStateDirty(enable: Boolean): Unit {}
@@ -207,7 +202,7 @@ open class StaticPhysClass : PhysClass() {
 
 // C++: StaticAnimPhysClass : public StaticPhysClass
 open class StaticAnimPhysClass : StaticPhysClass() {
-    override fun asStaticAnimPhysClass(): StaticAnimPhysClass = this
+    // asStaticAnimPhysClass() intentionally not overridden (return type clash with real hierarchy).
     fun getAnimState(): Int = TODO("stub")
     fun setCurrentState(state: Int): Unit = TODO("stub")
     fun getStateFlag(flag: Int): Boolean = TODO("stub")
@@ -228,7 +223,7 @@ open class StaticAnimPhysClass : StaticPhysClass() {
 
 // C++: HumanPhysClass : public MoveablePhysClass
 open class HumanPhysClass : MoveablePhysClass() {
-    override fun asHumanPhysClass(): HumanPhysClass = this
+    // asHumanPhysClass() intentionally not overridden (return type clash with real hierarchy).
     open fun getLegMode(): Boolean = false
     open fun setLadderIndex(index: Int): Unit = Unit
     open fun isSubStateAdjustable(): Boolean = false
@@ -244,29 +239,9 @@ open class HumanPhysClass : MoveablePhysClass() {
     fun enableEngine(enable: Boolean): Unit = Unit
 }
 
-// ---------------------------------------------------------------------------
-// VehiclePhysProxy — thin server-side wrapper around a real VehiclePhysClass.
-// Extends stub PhysClass so it can be stored in PhysicalGameObj.physObj.
-// ---------------------------------------------------------------------------
-
-/**
- * Wraps a real [ccr.physics.vehicle.VehiclePhysClass] instance so it can be stored in
- * [PhysicalGameObj.physObj] (which is typed as the server stub [PhysClass]).
- *
- * All vehicle-physics access goes through [asVehiclePhysClass] which returns the real class.
- * Other stub-PhysClass methods (setCollisionGroup, getPosition, etc.) delegate to the real object
- * where supported, or are no-ops for server-only functionality not in the physics module.
- */
-class VehiclePhysProxy(
-    val realPhys: ccr.physics.vehicle.VehiclePhysClass
-) : PhysClass() {
-    override fun asVehiclePhysClass(): ccr.physics.vehicle.VehiclePhysClass = realPhys
-    override fun getPosition(): Vector3 = realPhys.position
-}
-
 // C++: ProjectileClass (physics stub)
 open class ProjectilePhysClass : MoveablePhysClass() {
-    override fun asProjectileClass(): ProjectilePhysClass = this
+    // asProjectileClass() intentionally not overridden (return type clash with real hierarchy).
 }
 
 // C++: Sound3DClass physics stub
@@ -281,7 +256,7 @@ open class Sound3DClass {
 
 // C++: LightPhysClass : public StaticPhysClass
 open class LightPhysClass : StaticPhysClass() {
-    override fun asLightPhysClass(): LightPhysClass = this
+    // asLightPhysClass() intentionally not overridden (return type clash with real hierarchy).
     fun setDisabled(disabled: Boolean): Unit = Unit
     fun getGroupId(): Int = TODO("stub")
     override fun getName(): String = TODO("stub")
@@ -366,29 +341,6 @@ class AnimCollisionManagerClass {
 // ---------------------------------------------------------------------------
 // Physics scene stub (C++ server-side, NOT ccr.physics.scene.PhysicsScene)
 // ---------------------------------------------------------------------------
-
-// C++: PhysicsSceneClass — server-side physics scene
-class PhysicsSceneClass {
-    fun removeObject(obj: PhysClass?): Unit = Unit
-    fun addDynamicObject(obj: PhysClass): Unit = Unit
-    fun getLevelMin(): Vector3 = Vector3()
-    fun getLevelMax(): Vector3 = Vector3()
-    fun collectObjects(box: Any, dynamic: Boolean, includeAll: Boolean, results: MutableList<PhysClass>): Unit = Unit
-    // Convenience overload that returns a list directly
-    fun collectObjects(box: Any, dynamic: Boolean, includeAll: Boolean): List<PhysClass> = emptyList()
-    fun castRay(ray: PhysRayCollisionTestClass): Boolean = false
-    fun collectStaticObjects(pos: Vector3, radius: Float, results: MutableList<Any>): Unit = Unit
-    fun findStaticObject(name: String): StaticPhysClass? = null
-    fun findStaticObject(id: Int): StaticPhysClass? = null
-    // C++: Get_Static_Objects() iterates all static objects
-    fun getStaticObjects(): List<StaticPhysClass> = emptyList()
-    // C++: Get_Static_Lights() iterates all static light objects
-    fun getStaticLights(): List<LightPhysClass> = emptyList()
-
-    companion object {
-        fun getInstance(): PhysicsSceneClass = PhysicsSceneClass()
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Human state / soldier animation stubs
@@ -599,7 +551,7 @@ class GameObjCustomTimerClass(
 // C++: CombatManager (combatmanager.h)
 object CombatManager {
     fun areObserversActive(): Boolean = true
-    fun getScene(): PhysicsSceneClass? = null
+    fun getScene(): PhysicsScene? = null
     fun canDamage(attacker: Any?, target: Any?): Boolean = true
     fun getTheStar(): DamageableGameObj? = null
     fun getCombatStar(): SoldierGameObj? = null
@@ -871,57 +823,6 @@ const val ANIM_MODE_ONCE   = 1
 const val ANIM_MODE_STOP   = 2
 const val ANIM_MODE_TARGET = 3
 
-const val SERVER_CONTROL_OWNER = -2
-
-const val BOOLEAN_ACTION                 = 9
-const val BOOLEAN_CROUCH                 = 10
-const val BOOLEAN_DIVE_FORWARD           = 5
-const val BOOLEAN_DIVE_BACKWARD          = 6
-const val BOOLEAN_DIVE_LEFT              = 7
-const val BOOLEAN_DIVE_RIGHT             = 8
-const val BOOLEAN_DROP_FLAG              = 11
-const val BOOLEAN_JUMP                   = 0
-const val BOOLEAN_ONE_TIME_FIRST         = 0
-const val BOOLEAN_VEHICLE_TOGGLE_GUNNER  = 12
-const val BOOLEAN_WALK                   = 13
-const val BOOLEAN_WEAPON_FIRE_PRIMARY    = 14
-const val BOOLEAN_WEAPON_USE             = 4
-
-const val ANALOG_MOVE_FORWARD = 0
-const val ANALOG_MOVE_LEFT    = 1
-const val ANALOG_MOVE_UP      = 2
-const val ANALOG_TURN_LEFT    = 3
-
-const val STEALTH_BROKEN_FRACTION = 0.75f
-
-// C++: physcontroller chunk IDs (physcontroller.h)
-const val PHYSCONTROLLER_CHUNK_VARIABLES    = 0x00660015
-const val PHYSCONTROLLER_VARIABLE_MOVEVECTOR = 0x01
-const val PHYSCONTROLLER_VARIABLE_TURNLEFT   = 0x02
-const val MICROCHUNKID_CONTROLLER_PTR        = 1
-const val MICROCHUNKID_CONTROL_OWNER         = 2
-const val MICROCHUNKID_CONTROL_ENABLED       = 3
-const val MICROCHUNKID_STEALTH_ENABLED       = 4
-const val MICROCHUNKID_STEALTH_POWERUP_TIMER = 5
-const val MICROCHUNKID_STEALTH_FIRING_TIMER  = 6
-const val MICROCHUNKID_PLAYER_DATA           = 7
-const val MICROCHUNKID_IS_ENEMY_SEEN_ENABLED = 8
-const val MICROCHUNKID_MOVING_SOUND_TIMER    = 9
-
-const val CHUNKID_ARMEDGAMEOBJ_PARENT = 418001841
-const val CHUNKID_CONTROL             = 627001201
-const val CHUNKID_CONTROLLER          = 627001202
-const val CHUNKID_ACTION              = 627001203
-const val CHUNKID_STEALTH_EFFECT      = 627001204
-
-// Soldier AI states
-const val AI_STATE_IDLE    = 0
-const val AI_STATE_PATROL  = 1
-const val AI_STATE_ATTACK  = 2
-
-// Building aggregate physics chunk ID
-const val PHYSICS_CHUNKID_BUILDINGAGGREGATE = 0xDC3000u
-
 // C++: BitPackResolution class stub
 class BitPackResolution(val bits: Int) {
     companion object {
@@ -1039,60 +940,6 @@ fun createAnimationName(animBase: String, modelName: String): String {
     return "$model.$animBase"
 }
 
-// ---------------------------------------------------------------------------
-// HumanStateClass additional state constants
-// ---------------------------------------------------------------------------
-
-// These extend HumanStateClass.companion in CombatTypeStubs
-// C++: Additional soldier states from soldier.h / humanstate.h
-const val HUMAN_STATE_UPRIGHT   = 0
-const val HUMAN_STATE_CROUCH    = 1
-const val HUMAN_STATE_DEATH     = 2
-const val HUMAN_STATE_IN_VEHICLE = 3
-const val HUMAN_STATE_OUCH_FIRE = 4
-const val HUMAN_STATE_LADDER    = 5
-const val HUMAN_STATE_DIVE      = 6
-const val HUMAN_STATE_TRANSITION = 7
-const val HUMAN_STATE_ANIMATION  = 8
-const val HUMAN_STATE_ON_FIRE    = 9
-const val HUMAN_STATE_ON_CHEM    = 10
-const val HUMAN_STATE_ON_CNC_FIRE = 11
-const val HUMAN_STATE_ON_CNC_CHEM = 12
-const val HUMAN_STATE_ON_ELECTRIC = 13
-const val HUMAN_STATE_DESTROY    = 14
-const val HUMAN_STATE_TRANSITION_COMPLETE = 15
-const val HUMAN_STATE_AIRBORNE   = 16
-const val HUMAN_STATE_SNIPING    = 17
-
-// C++: HumanStateClass sub-states for DIVE
-const val HUMAN_SUB_STATE_NONE     = 0
-const val HUMAN_SUB_STATE_FORWARD  = 1
-const val HUMAN_SUB_STATE_BACKWARD = 2
-const val HUMAN_SUB_STATE_LEFT     = 3
-const val HUMAN_SUB_STATE_RIGHT    = 4
-const val HUMAN_SNIPING_FLAG       = 1
-
-// ---------------------------------------------------------------------------
-// HumanStateClass extended methods
-// ---------------------------------------------------------------------------
-
-// Extend HumanStateClass with additional methods needed by SoldierGameObj
-fun HumanStateClass.init(physObj: HumanPhysClass?): Unit = Unit
-fun HumanStateClass.setHumanAnimOverride(defId: Int): Unit = Unit
-fun HumanStateClass.setHumanLoiterCollection(defId: Int): Unit = Unit
-fun HumanStateClass.reset(): Unit = Unit
-fun HumanStateClass.setState(state: Int, subState: Int = 0): Unit = Unit
-fun HumanStateClass.setStateTimer(timer: Float): Unit = Unit
-fun HumanStateClass.getStateTimer(): Float = 0f
-fun HumanStateClass.save(csave: ChunkSaveClass): Unit = Unit
-fun HumanStateClass.load(cload: ChunkLoadClass): Unit = Unit
-fun HumanStateClass.updateState(physObj: HumanPhysClass? = null): Unit = Unit
-fun HumanStateClass.postThink(): Unit = Unit
-fun HumanStateClass.getStyle(): Int = 0
-fun HumanStateClass.getModelName(): String = ""
-fun HumanStateClass.isModelUpdateNeeded(): Boolean = false
-fun HumanStateClass.resetModelUpdate(): Unit = Unit
-
 // Extend HumanStateClass companion with all state constants
 // C++: HumanStateClass::StateType enum and sub-state flags
 val HumanStateClass.Companion.UPRIGHT: Int get() = 0
@@ -1124,13 +971,6 @@ val HumanStateClass.Companion.SUB_STATE_SLOW: Int get() = 8
 val HumanStateClass.Companion.CROUCHED_FLAG: Int get() = 2
 val HumanStateClass.Companion.SNIPING_FLAG: Int get() = 1
 val HumanStateClass.Companion.STATE_COUNT: Int get() = 20
-
-// ---------------------------------------------------------------------------
-// TransitionCompletionDataStruct — additional save/load
-// ---------------------------------------------------------------------------
-
-fun TransitionCompletionDataStruct.save(csave: ChunkSaveClass): Unit = Unit
-fun TransitionCompletionDataStruct.load(cload: ChunkLoadClass): Unit = Unit
 
 // ---------------------------------------------------------------------------
 // WeatherMgrClass singleton
@@ -1218,80 +1058,6 @@ class PersistFactoryClass {
 }
 
 // ---------------------------------------------------------------------------
-// ControlClass — BooleanControl and AnalogControl access
-// ---------------------------------------------------------------------------
-
-fun ControlClass.getBoolean(control: ControlClass.BooleanControl): Boolean = false
-fun ControlClass.getAnalog(control: ControlClass.AnalogControl): Float = 0f
-fun ControlClass.setBoolean(control: ControlClass.BooleanControl, value: Boolean): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// Vector3 — operator minus and length2
-// ---------------------------------------------------------------------------
-
-operator fun Vector3.minus(other: Vector3): Vector3 = Vector3(x - other.x, y - other.y, z - other.z)
-operator fun Vector3.times(scalar: Float): Vector3 = Vector3(x * scalar, y * scalar, z * scalar)
-fun Vector3.length2(): Float = x * x + y * y + z * z
-fun Vector3.length(): Float = kotlin.math.sqrt(length2())
-
-// ---------------------------------------------------------------------------
-// SmartGameObj — additional methods
-// ---------------------------------------------------------------------------
-
-// C++: HumanStateClass::Get_Information — appends state info to string builder
-fun HumanStateClass.getInformation(sb: StringBuilder): Unit = Unit
-
-// C++: SoldierObserverClass::Get_Information — appends observer info to string builder
-fun SoldierObserverClass.getInformation(sb: StringBuilder): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — setActionStatusValue
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.setActionStatusValue(value: Int): Unit = Unit
-fun SoldierGameObj.doesBeaconPlacementEndsGame(): Boolean = false
-fun SoldierGameObj.enableUserControl(enable: Boolean): Unit = Unit
-
-// PlayerDataClass stats methods (called on PlayerDataClass, not SoldierGameObj)
-fun PlayerDataClass.statsAddGameTime(delta: Float): Unit = Unit
-fun PlayerDataClass.statsSetFinalHealth(health: Float): Unit = Unit
-fun PlayerDataClass.statsAddVehicleTime(delta: Float): Unit = Unit
-fun PlayerDataClass.statsAddVehicleDestroyed(): Unit = Unit
-fun PlayerDataClass.statsAddBuildingDestroyed(): Unit = Unit
-fun PlayerDataClass.statsAddSquish(): Unit = Unit
-fun PlayerDataClass.getPunishTimer(): Float = 0f
-fun PlayerDataClass.incPunishTimer(delta: Float): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// PhysicalGameObj — additional methods
-// ---------------------------------------------------------------------------
-
-fun PhysicalGameObj.isUnitInZone(zoneType: Int): Boolean = false
-fun PhysicalGameObj.enableUserControl(enable: Boolean): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// AirStripGameObj helpers
-// ---------------------------------------------------------------------------
-
-// generatingVehicleId — on VehicleFactoryGameObj or similar
-// These are fields accessed on AirStripGameObj, handled by declaring them in stubs
-
-// ---------------------------------------------------------------------------
-// BuildingGameObj — additional stub methods
-// ---------------------------------------------------------------------------
-
-fun BuildingAggregateClass.getStaticObjects(): List<StaticPhysClass> = emptyList()
-fun BuildingAggregateClass.getStaticLights(): List<LightPhysClass> = emptyList()
-
-// C++: StaticPhysClass::Get_Static_Objects (different from BuildingAgg version)
-fun StaticPhysClass.getStaticObjects(): List<StaticPhysClass> = emptyList()
-
-// C++: LightPhysClass::Get_Static_Lights (stub)
-fun StaticPhysClass.getStaticLights(): List<LightPhysClass> = emptyList()
-
-// MapMgrClass — already has findBase/getBeaconZone as object methods above
-
-// ---------------------------------------------------------------------------
 // MessageWindowClass (getMessageWindow)
 // ---------------------------------------------------------------------------
 
@@ -1302,319 +1068,11 @@ class MessageWindowClass {
     fun addMessage(message: String, color: Vector3, extra: Any?, duration: Float): Unit = Unit
 }
 
-object MessageWindow {
-    fun getMessageWindow(): MessageWindowClass = MessageWindowClass()
-    fun getInstance(): MessageWindowClass = MessageWindowClass()
-}
-
-// C++: getMessageWindow() — free function
-fun getMessageWindow(): MessageWindowClass = MessageWindowClass()
-
-// ---------------------------------------------------------------------------
-// WW3DAssetManager — extended
-// ---------------------------------------------------------------------------
-
-// WW3DAssetManager — createRenderObjFromFilename/getRenderObjNameFromFilename are already on the object above
-
-// ---------------------------------------------------------------------------
-// PlayerDataClass — additional methods
-// ---------------------------------------------------------------------------
-
-fun PlayerDataClass.getPlayerType(): Int = 0
-fun PlayerDataClass.setPlayerType(type: Int): Unit = Unit
-fun PlayerDataClass.getName(): String = ""
-fun PlayerDataClass.getId(): Int = 0
-fun PlayerDataClass.getOwner(): SoldierGameObj? = null
-fun PlayerDataClass.getAction(): Any? = null
-fun PlayerDataClass.getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
-fun PlayerDataClass.getMoveForward(): Float = 0f
-fun PlayerDataClass.getMoveLeft(): Float = 0f
-fun PlayerDataClass.setMoveForward(v: Float): Unit = Unit
-fun PlayerDataClass.setMoveLeft(v: Float): Unit = Unit
-fun PlayerDataClass.isAvailable(): Boolean = false
-fun PlayerDataClass.setTargetParameter(key: String, value: Any?): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// WeaponClass — additional methods
-// ---------------------------------------------------------------------------
-
-fun WeaponClass.getId(): Int = definitionId
-fun WeaponClass.getPlayerType(): Int = 0
-fun WeaponClass.setPlayerType(type: Int): Unit = Unit
-fun WeaponClass.getTotalTime(): Float = 0f
-fun WeaponClass.isFiring(): Boolean = false
-fun WeaponClass.getStyle(): Int = 0
-fun WeaponClass.getWeaponBag(): WeaponBagClass? = null
-fun WeaponClass.stopFiringSound(): Unit = Unit
-fun WeaponClass.updateWeapon(isChanged: Boolean): Unit = Unit
-fun WeaponClass.isLoaded(): Boolean = getTotalRounds() > 0
-fun WeaponClass.findTypedDefinition(): Any? = null
-fun WeaponClass.findAmmoDefinition(): Any? = null
-fun WeaponClass.getFloat(key: String): Float = 0f
-fun WeaponClass.getUInt(): UInt = 0u
-
-// ---------------------------------------------------------------------------
-// WeaponDefinitionClass — additional
-// ---------------------------------------------------------------------------
-
-fun ccr.server.defs.WeaponDefinitionClass.getId(): Int = this.id.toInt()
-fun ccr.server.defs.WeaponDefinitionClass.getPlayerType(): Int = 0
-fun ccr.server.defs.WeaponDefinitionClass.getTotalRounds(): Int = 0
-fun ccr.server.defs.WeaponDefinitionClass.explosionDefId(): Int = 0
-fun ccr.server.defs.WeaponDefinitionClass.stuckOffsetX(): Float = 0f
-fun ccr.server.defs.WeaponDefinitionClass.stuckOffsetY(): Float = 0f
-fun ccr.server.defs.WeaponDefinitionClass.stuckOffsetZ(): Float = 0f
-val ccr.server.defs.WeaponDefinitionClass.explosionDefId: Int get() = 0
-val ccr.server.defs.WeaponDefinitionClass.stuckOffsetX: Float get() = 0f
-val ccr.server.defs.WeaponDefinitionClass.stuckOffsetY: Float get() = 0f
-val ccr.server.defs.WeaponDefinitionClass.stuckOffsetZ: Float get() = 0f
-
-// ---------------------------------------------------------------------------
-// ScriptableGameObj — additional methods
-// ---------------------------------------------------------------------------
-
-fun ScriptableGameObj.getOwner(): SoldierGameObj? = null
-fun ScriptableGameObj.getName(): String = ""
-fun ScriptableGameObj.getPlayerType(): Int = (this as? DamageableGameObj)?.playerType ?: 0
-fun ScriptableGameObj.getId(): Int = networkId
-fun ScriptableGameObj.getDefinition(): ccr.server.defs.BaseGameObjDef? = definition
-fun ScriptableGameObj.getAction(): ActionClass? = null
-fun ScriptableGameObj.getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
-
-// ---------------------------------------------------------------------------
-// ArmedGameObj — additional methods
-// ---------------------------------------------------------------------------
-
-fun ArmedGameObj.getWeaponBag(): WeaponBagClass = weaponBag
-fun ArmedGameObj.getOwner(): SoldierGameObj? = null
-
-// ---------------------------------------------------------------------------
-// VehicleGameObj — additional
-// ---------------------------------------------------------------------------
-
-fun VehicleGameObj.getId(): Int = networkId
-fun VehicleGameObj.createObject(defId: Int, tm: Matrix3D): ScriptableGameObj? = null
-fun VehicleGameObj.serverExplode(defId: Int, tm: Matrix3D, owner: Any?): Unit = Unit
-fun VehicleGameObj.getOwner(): SoldierGameObj? = null
-fun VehicleGameObj.getName(): String = ""
-
-// ---------------------------------------------------------------------------
-// BaseControllerClass — additional
-// ---------------------------------------------------------------------------
-
-// C++: BaseControllerClass::Distribute_Funds(team, amount)
-// team field is on BaseControllerClass — handled as a var in BaseControllerClass.kt
-
-// ---------------------------------------------------------------------------
-// WarFactoryGameObj / AirStripGameObj — generatingVehicleId field
-// ---------------------------------------------------------------------------
-
-// C++: VehicleFactoryGameObj::GeneratingVehicleID — ID of vehicle being generated
-// This field is already in VehicleFactoryGameObj.kt; if AirStripGameObj needs it,
-// it should be declared there. We provide the stub concept here.
-
-// ---------------------------------------------------------------------------
-// StaticAnimPhysClass — additional
-// ---------------------------------------------------------------------------
-
-fun StaticAnimPhysClass.setAnimation(animName: String): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// Explosion / server-side effects
-// ---------------------------------------------------------------------------
-
-// C++: serverExplode (server_explosion.h)
-fun serverExplode(defId: Int, tm: Matrix3D, owner: Any?): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// CollisionMath — proxy to ccr.physics.collision
-// ---------------------------------------------------------------------------
-
 // C++: CollisionMath namespace — stub for server-side collision queries
 object CollisionMath {
     fun overlapTest(box: ccr.server.defs.OBBoxClass, pos: Vector3): ccr.physics.collision.OverlapType =
         ccr.physics.collision.OverlapType.OUTSIDE
 }
-
-// ---------------------------------------------------------------------------
-// HumanPhysClass — additional method stubs
-// ---------------------------------------------------------------------------
-
-fun HumanPhysClass.enableUserControl(enable: Boolean): Unit = Unit
-fun HumanPhysClass.setTransform(tm: Matrix3D): Unit = Unit
-fun HumanPhysClass.getTranslation(): Vector3 = getPosition()
-fun HumanPhysClass.isInScene(): Boolean = false
-fun HumanPhysClass.remove(): Unit = Unit
-fun HumanPhysClass.addToScene(scene: PhysicsSceneClass): Unit = Unit
-fun HumanPhysClass.setTranslation(pos: Vector3): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// MeshClass — classId constant (RenderObjClass sub-type ID)
-// ---------------------------------------------------------------------------
-
-// CLASSID_MESH is now RenderObjClass.companion.CLASSID_MESH; keep top-level alias
-const val CLASSID_MESH = 1
-
-// MeshClass.getPolygonArray returns array of triangle indices
-fun MeshClass.getPolygonCountArray(): IntArray = intArrayOf()
-
-// ---------------------------------------------------------------------------
-// SmartGameObj.getOwner() and similar
-// ---------------------------------------------------------------------------
-
-fun SmartGameObj.getOwner(): SoldierGameObj? = null
-fun SmartGameObj.getName(): String = ""
-fun SmartGameObj.getId(): Int = networkId
-fun SmartGameObj.getPlayerType(): Int = playerType
-fun SmartGameObj.getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
-fun SmartGameObj.isGameplayPermitted(): Boolean = true
-fun SmartGameObj.peekAnimation(): Animatable3DObjClass? = null
-fun SmartGameObj.getTargetingPos(): Vector3 = targeting
-
-// ---------------------------------------------------------------------------
-// HarvesterClass — save/load
-// ---------------------------------------------------------------------------
-
-fun HarvesterClass.save(csave: ChunkSaveClass): Unit = Unit
-fun HarvesterClass.load(cload: ChunkLoadClass): Unit = Unit
-fun HarvesterClass.getInstance(): HarvesterClass? = null
-fun HarvesterClass.setTiberiumRegion(region: Any?): Unit = Unit
-fun HarvesterClass.addMoney(amount: Float): Unit = Unit
-
-// C++: HarvesterClass.getInstance() companion
-class HarvesterClassCompanion {
-    fun getInstance(): HarvesterClass? = null
-}
-
-// ---------------------------------------------------------------------------
-// GameObjObserverClass — additional methods
-// ---------------------------------------------------------------------------
-
-fun GameObjObserverClass.getOwner(): ScriptableGameObj? = null
-
-// ---------------------------------------------------------------------------
-// DefenseObjectClass — save/load
-// ---------------------------------------------------------------------------
-
-fun ccr.server.net.DefenseObjectClass.save(csave: ChunkSaveClass): Boolean = true
-fun ccr.server.net.DefenseObjectClass.load(cload: ChunkLoadClass): Boolean = true
-
-// ---------------------------------------------------------------------------
-// DefinitionMgrClass — findAmmoDefinition
-// ---------------------------------------------------------------------------
-
-// DefinitionMgrClass — findAmmoDefinition/findTypedDefinition already on object above
-
-// ---------------------------------------------------------------------------
-// AnimCollisionManagerClass — wrap/unwrap
-// ---------------------------------------------------------------------------
-
-fun AnimCollisionManagerClass.wrap(): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// MoveablePhysClass — additional
-// ---------------------------------------------------------------------------
-
-fun MoveablePhysClass.moveContents(delta: Vector3): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// PhysicalGameObj helpers
-// ---------------------------------------------------------------------------
-
-fun PhysicalGameObj.getTargetingPos(): Vector3 = (this as? ArmedGameObj)?.targeting ?: Vector3()
-fun PhysicalGameObj.getOwner(): SoldierGameObj? = null
-fun PhysicalGameObj.getName(): String = ""
-fun PhysicalGameObj.getId(): Int = networkId
-fun PhysicalGameObj.getPlayerType(): Int = playerType
-fun PhysicalGameObj.isGameplayPermitted(): Boolean = true
-fun PhysicalGameObj.getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
-
-// ---------------------------------------------------------------------------
-// AudibleSoundClass — additional
-// ---------------------------------------------------------------------------
-
-fun AudibleSoundClass.setPitchFactor(factor: Float): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// GameObjReference — save/load
-// ---------------------------------------------------------------------------
-
-fun GameObjReference.save(csave: ChunkSaveClass): Unit = Unit
-fun GameObjReference.load(cload: ChunkLoadClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// ActionClass — save/load
-// ---------------------------------------------------------------------------
-
-fun ActionClass.save(csave: ChunkSaveClass): Unit = Unit
-fun ActionClass.load(cload: ChunkLoadClass): Unit = Unit
-fun ActionClass.reset(priority: Int): Unit = Unit
-fun ActionClass.attack(params: ActionParamsStruct): Unit = Unit
-fun ActionClass.goto(params: ActionParamsStruct): Unit = Unit
-fun ActionClass.end(): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// StaticNetworkObject (server port)
-// ---------------------------------------------------------------------------
-
-// C++: Stats tracking — stub
-object StatsManager {
-    fun statsAddGameTime(soldierNetId: Int, delta: Float): Unit = Unit
-    fun statsSetFinalHealth(soldierNetId: Int, health: Float): Unit = Unit
-    fun statsAddVehicleTime(soldierNetId: Int, delta: Float): Unit = Unit
-    fun statsAddVehicleDestroyed(soldierNetId: Int): Unit = Unit
-    fun statsAddBuildingDestroyed(soldierNetId: Int): Unit = Unit
-}
-
-// ---------------------------------------------------------------------------
-// Additional constants needed by SoldierGameObj
-// ---------------------------------------------------------------------------
-
-const val ANIM_MODE_LOOP_ONCE = 4
-const val ANIM_MODE_MANUAL = 5
-
-// C++: ANIMATE_TARGET anim mode
-const val ANIMATE_TARGET = ANIM_MODE_TARGET
-
-// C++: ControlClass boolean controls
-const val BOOLEAN_DUCK = 10
-const val BOOLEAN_SPRINT = 15
-
-// C++: SoldierGameObj collision group
-const val SOLDIER_COLLISION_GROUP = 4
-
-// C++: DialogMax
-const val DIALOG_MAX = 10
-
-// ---------------------------------------------------------------------------
-// VehicleFactoryGameObj — generatingVehicleId
-// This is typically a field on VehicleFactoryGameObj; exposed as a stub extension
-// ---------------------------------------------------------------------------
-
-// handled in VehicleFactoryGameObj.kt directly
-
-// ---------------------------------------------------------------------------
-// StealthEffectClass — save/load
-// ---------------------------------------------------------------------------
-
-fun StealthEffectClass.save(csave: ChunkSaveClass): Unit = Unit
-fun StealthEffectClass.load(cload: ChunkLoadClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// LogicalListenerClass — save/load
-// ---------------------------------------------------------------------------
-
-fun LogicalListenerClass.save(csave: ChunkSaveClass): Unit = Unit
-fun LogicalListenerClass.load(cload: ChunkLoadClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// PhysicalGameObjDef — needed for ArmedGameObj
-// ---------------------------------------------------------------------------
-// (This is a real class in ccr.server.defs — just ensure it's accessible via import)
-
-// ---------------------------------------------------------------------------
-// ControlClass — additional free function
-// ---------------------------------------------------------------------------
 
 val ControlClass.Companion.BOOLEAN_JUMP: ControlClass.BooleanControl get() = ControlClass.BooleanControl.JUMP
 val ControlClass.Companion.BOOLEAN_WEAPON_NEXT: ControlClass.BooleanControl get() = ControlClass.BooleanControl.WEAPON_NEXT
@@ -1637,372 +1095,10 @@ val ControlClass.Companion.ANALOG_MOVE_LEFT: ControlClass.AnalogControl get() = 
 val ControlClass.Companion.ANALOG_MOVE_UP: ControlClass.AnalogControl get() = ControlClass.AnalogControl.MOVE_UP
 val ControlClass.Companion.ANALOG_TURN_LEFT: ControlClass.AnalogControl get() = ControlClass.AnalogControl.TURN_LEFT
 
-// ---------------------------------------------------------------------------
-// PhysController — set/get move/turn helpers
-// ---------------------------------------------------------------------------
-
-fun ccr.physics.PhysController.setMoveForward(v: Float) { moveForward = v }
-fun ccr.physics.PhysController.setMoveLeft(v: Float) { moveLeft = v }
-fun ccr.physics.PhysController.setMoveUp(v: Float) { moveUp = v }
-fun ccr.physics.PhysController.setTurnLeft(v: Float) { turnLeft = v }
-fun ccr.physics.PhysController.getMoveForward(): Float = moveForward
-fun ccr.physics.PhysController.getMoveLeft(): Float = moveLeft
-fun ccr.physics.PhysController.getMoveUp(): Float = moveUp
-
-// ---------------------------------------------------------------------------
-// HumanStateClass — additional methods
-// ---------------------------------------------------------------------------
-
-fun HumanStateClass.updateWeapon(weapon: WeaponClass?, isChanged: Boolean): Unit = Unit
-fun HumanStateClass.startScriptedAnimation(animName: String, looping: Boolean, arg3: Boolean = false): Unit = Unit
-fun HumanStateClass.stopScriptedAnimation(): Unit = Unit
-fun HumanStateClass.startTransitionAnimation(data: TransitionDataClass?): Unit = Unit
-fun HumanStateClass.forceAnimation(animName: String, mode: Int = 0): Unit = Unit
-fun HumanStateClass.isSubStateAdjustable(): Boolean = false
-fun HumanStateClass.getStateFlag(flag: Int): Boolean = false
-fun HumanStateClass.toggleStateFlag(flag: Int): Unit = Unit
-fun HumanStateClass.setTurnVelocity(v: Float): Unit = Unit
-fun HumanStateClass.getLegMode(): Boolean = false
-fun HumanStateClass.networkStateUpdate(): Unit = Unit
-fun HumanStateClass.getCollisionBox(): AABoxClass? = null
-fun HumanStateClass.isInterruptable(): Boolean = false
-fun HumanStateClass.stopConversation(): Unit = Unit
-fun HumanStateClass.getNumFrames(): Int = 0
-
 val HumanStateClass.Companion.LAND: Int get() = 18
 val HumanStateClass.Companion.LADDER_ENTER_TOP: Int get() = 0
 val HumanStateClass.Companion.LADDER_ENTER_BOTTOM: Int get() = 1
 val HumanStateClass.Companion.VEHICLE_ENTER: Int get() = 0
-
-// ---------------------------------------------------------------------------
-// GlobalSettingsDef — getSoldierCrouchSpeed/getSoldierWalkSpeed/getMpStealth
-// ---------------------------------------------------------------------------
-
-// GlobalSettingsDef.getGlobalSettings() — forward to GlobalSettingsDefClass
-fun GlobalSettingsDef.getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
-
-fun GlobalSettingsDefClass.getSoldierCrouchSpeed(): Float = 0.5f
-fun GlobalSettingsDefClass.getSoldierWalkSpeed(): Float = 0.7f
-fun GlobalSettingsDefClass.getMpStealthDistanceHuman(): Float = 20f
-fun GlobalSettingsDefClass.getMpStealthDistanceVehicle(): Float = 30f
-
-// ---------------------------------------------------------------------------
-// TransitionManager — check method
-// ---------------------------------------------------------------------------
-
-fun TransitionManager.check(soldier: SoldierGameObj, actionTriggered: Boolean): Boolean = false
-fun TransitionManager.startTransition(soldier: SoldierGameObj, data: TransitionDataClass?, vehicleId: Int, seatIndex: Int): Unit = Unit
-
-fun HumanPhysClass.getContactSurfaceType(): Int = 0
-fun HumanPhysClass.getVelocity(): Vector3 = Vector3()
-fun HumanPhysClass.setCollisionGroup(group: Int): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// PhysClass — setCollisionGroup / getObserver
-// ---------------------------------------------------------------------------
-
-fun PhysClass.setCollisionGroup(group: Int): Unit = Unit
-fun PhysClass.getObserver(): Any? = null
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — additional methods
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.wantsPowerups(): Boolean = true
-fun SoldierGameObj.networkStateUpdate(): Unit = Unit
-fun SoldierGameObj.peekCarrierObject(): Any? = null
-fun SoldierGameObj.getVisTable(): Any? = null
-fun SoldierGameObj.getOuchType(mode: Int): Int = 0
-fun SoldierGameObj.getRenderObjNameFromFilename(filename: String): String =
-    WW3DAssetManager.getRenderObjNameFromFilename(filename)
-fun SoldierGameObj.getElectrocutionEffect(): TransitionEffectClass? = null
-fun SoldierGameObj.getCanSnipe(): Boolean = false
-
-// ---------------------------------------------------------------------------
-// WeaponClass — additional
-// ---------------------------------------------------------------------------
-
-fun WeaponClass.getRange(): Float = 0f
-fun WeaponClass.getCanSnipe(): Boolean = false
-fun WeaponClass.getSpecialDamageExplosion(): String = ""
-fun WeaponClass.getSpecialDamageScale(): Float = 1f
-val WeaponClass.definitionId: Int get() = 0
-
-// ---------------------------------------------------------------------------
-// WeaponBagClass — isChanged/resetChanged (already in WeaponBagClass.kt — no extensions needed)
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// AnimControlClass and subtypes — additional
-// ---------------------------------------------------------------------------
-
-fun HumanAnimControlClass.generateIdleAnimation(delayMs: Int, blendTime: Float): Unit = Unit
-
-fun RenderObjClass.setAnimation(anim: Any?, blendTime: Float, mode: Int): Unit = Unit
-fun RenderObjClass.peekAnimation(): HAnimClass? = null
-fun RenderObjClass.isInScene(): Boolean = false
-fun RenderObjClass.remove(): Unit = Unit
-fun RenderObjClass.addRenderObject(child: RenderObjClass): Unit = Unit
-fun RenderObjClass.enableRemoveOnComplete(enable: Boolean): Unit = Unit
-fun RenderObjClass.setHidden(hidden: Boolean): Unit = Unit
-fun RenderObjClass.setTransform(tm: Matrix3D): Unit = Unit
-fun RenderObjClass.getTranslation(): Vector3 = Vector3()
-
-// ---------------------------------------------------------------------------
-// WWMath — wrap function
-// ---------------------------------------------------------------------------
-
-fun WWMath.wrap(v: Float, min: Float, max: Float): Float {
-    val range = max - min
-    if (range <= 0f) return min
-    var result = v
-    while (result < min) result += range
-    while (result > max) result -= range
-    return result
-}
-
-const val DEG_TO_RADF_NEG_180 = -kotlin.math.PI.toFloat()
-const val DEG_TO_RADF_POS_180 =  kotlin.math.PI.toFloat()
-
-// ---------------------------------------------------------------------------
-// ConversationMgrClass — getConversation, findObject
-// ---------------------------------------------------------------------------
-
-fun ConversationMgrClass.getConversation(id: Int): Any? = null
-fun ConversationMgrClass.findObject(id: Int): Any? = null
-
-// ---------------------------------------------------------------------------
-// ActiveConversationClass — additional methods
-// ---------------------------------------------------------------------------
-
-fun ActiveConversationClass.isBusy(): Boolean = false
-fun ActiveConversationClass.play(obj: Any?): Unit = Unit
-fun ActiveConversationClass.getDuration(): Float = 0f
-fun ActiveConversationClass.getConversation(): Any? = null
-fun ActiveConversationClass.getParameters(): Any? = null
-
-// ---------------------------------------------------------------------------
-// DynamicSpeechAnimClass — constructor and methods
-// ---------------------------------------------------------------------------
-
-fun DynamicSpeechAnimClass.play(sound: AudibleSoundClass?): Unit = Unit
-fun DynamicSpeechAnimClass.getDuration(): Float = 0f
-
-// ---------------------------------------------------------------------------
-// ScriptZoneGameObj — isInZone
-// ---------------------------------------------------------------------------
-
-fun ScriptZoneGameObj.isInZone(obj: PhysicalGameObj, box: Any?): Boolean = false
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — applyControl / generateControl helpers
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.isOnLadder(): Boolean = false
-fun SoldierGameObj.isCrouched(): Boolean = false
-fun SoldierGameObj.isSniping(): Boolean = false
-fun SoldierGameObj.isHumanControlled(): Boolean = controlOwner > 0
-fun SoldierGameObj.getTurnRate(): Float = 1f
-fun SoldierGameObj.getBullseyePosition(): Vector3 = getPosition()
-fun SoldierGameObj.getTransform(): Matrix3D = Matrix3D.IDENTITY
-fun SoldierGameObj.clearControl(): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — adjustSkeleton
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.adjustSkeleton(height: Float, width: Float): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj helpers — miscellaneous
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.prepareSpeechFramework(): Unit = Unit
-fun SoldierGameObj.resetRenderObjs(): Unit = Unit
-fun SoldierGameObj.isControlledByMe(): Boolean = false
-fun SoldierGameObj.isSafeToDisableGhostCollision(pos: Vector3): Boolean = true
-fun SoldierGameObj.enableGhostCollision(enable: Boolean): Unit = Unit
-fun SoldierGameObj.updateLockedFacing(): Unit = Unit
-fun SoldierGameObj.handleLegs(): Unit = Unit
-fun SoldierGameObj.getState(): Int = HumanStateClass.UPRIGHT
-fun SoldierGameObj.isTargetable(): Boolean = true
-
-// ---------------------------------------------------------------------------
-// SoldierObserverClass / insertObserver — stub
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.insertObserver(obs: GameObjObserverClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — transition completion
-// ---------------------------------------------------------------------------
-
-val TransitionCompletionDataStruct.type: Int get() = 0
-val TransitionCompletionDataStruct.vehicle: VehicleGameObj? get() = null
-
-// ---------------------------------------------------------------------------
-// ScriptableGameObj — additional
-// ---------------------------------------------------------------------------
-
-fun ScriptableGameObj.insertObserver(obs: GameObjObserverClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// PhysicalGameObj — additional helpers
-// ---------------------------------------------------------------------------
-
-fun PhysicalGameObj.peekHumanPhys(): HumanPhysClass? = null
-fun PhysicalGameObj.peekPhysicalObject(): PhysClass? = null
-fun PhysicalGameObj.getPosition(): Vector3 = Vector3()
-fun PhysicalGameObj.setWeaponModel(model: RenderObjClass?): Unit = Unit
-fun PhysicalGameObj.getTransform(): Matrix3D = Matrix3D.IDENTITY
-fun PhysicalGameObj.setTransform(tm: Matrix3D): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// CLASSID constants
-// ---------------------------------------------------------------------------
-
-const val CLASSID_DEF_EXPLOSION = 0x4004
-const val CLASSID_DEF_WEAPON    = 0x3005
-
-// ---------------------------------------------------------------------------
-// VehicleGameObj — additional
-// ---------------------------------------------------------------------------
-
-fun VehicleGameObj.removeOccupant(soldier: SoldierGameObj): Unit = Unit
-fun VehicleGameObj.toggleDriverIsGunner(): Unit = Unit
-fun VehicleGameObj.getAnimState(): Int = 0
-fun VehicleGameObj.copyFrom(other: VehicleGameObj): Unit = Unit
-fun VehicleGameObj.computeApproximateRideHeight(): Float = 0f
-fun VehicleGameObj.getObj(): Any? = null
-fun VehicleGameObj.translated(): Boolean = false
-fun VehicleGameObj.onVehicleDelivered(): Unit = Unit
-fun VehicleGameObj.getOrientation(): Float = 0f
-fun VehicleGameObj.normalize(): Float = 0f
-fun VehicleGameObj.networkInterpolateStateUpdate(): Unit = Unit
-fun VehicleGameObj.asStaticAnimPhysClass(): StaticAnimPhysClass? = null
-fun VehicleGameObj.getAnimationManager(): Any? = null
-
-// ---------------------------------------------------------------------------
-// AirStripGameObj — endTimer field
-// ---------------------------------------------------------------------------
-// AirStripGameObj uses VehicleFactoryGameObj.endTimer directly (no separate field)
-
-// ---------------------------------------------------------------------------
-// HumanPhysClass — peekModel
-// ---------------------------------------------------------------------------
-
-fun HumanPhysClass.peekModel(): RenderObjClass? = null
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — getDescription override annotation fix
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.getDescription(): String = ""
-
-// GameObjManager.removeStar / addStar already exist in GameObjManager object
-
-// PhysicsSceneClass.removeObject(PhysClass?) is already a member method
-
-// ---------------------------------------------------------------------------
-// Matrix3D.IDENTITY constant
-// ---------------------------------------------------------------------------
-
-val Matrix3D.Companion.IDENTITY: Matrix3D get() = Matrix3D()
-
-// ---------------------------------------------------------------------------
-// SurfaceEffectsManager — 4-argument updatePersistantEmitter with Matrix3D
-// ---------------------------------------------------------------------------
-
-fun SurfaceEffectsManager.updatePersistantEmitter(
-    emitter: PersistantSurfaceEmitterClass?,
-    surfaceType: Int,
-    hitterType: Int,
-    tm: Matrix3D
-): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// HumanStateClass — additional methods
-// ---------------------------------------------------------------------------
-
-// C++: HumanStateClass::startTransitionAnimation(animName, looping)
-fun HumanStateClass.startTransitionAnimation(animName: String, looping: Boolean): Unit = Unit
-
-// C++: HumanStateClass::forceAnimation(animName, looping)
-fun HumanStateClass.forceAnimation(animName: String, looping: Boolean): Unit = Unit
-
-// C++: HumanStateClass::updateAiming(tilt, roll)
-fun HumanStateClass.updateAiming(tilt: Float, roll: Float): Unit = Unit
-
-// C++: HumanStateClass::isLocked()
-fun HumanStateClass.isLocked(): Boolean = false
-
-// C++: HumanStateClass::resetLoiterDelay
-fun HumanStateClass.resetLoiterDelay(): Unit = Unit
-
-// C++: HumanStateClass::setLoitersAllowed
-fun HumanStateClass.setLoitersAllowed(allowed: Boolean): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// MoveablePhysClass — asElevatorPhysClass
-// ---------------------------------------------------------------------------
-
-open class ElevatorPhysClass : MoveablePhysClass()
-fun MoveablePhysClass.asElevatorPhysClass(): ElevatorPhysClass? = this as? ElevatorPhysClass
-fun PhysClass.peekCarrierObject(): MoveablePhysClass? = null
-
-// ---------------------------------------------------------------------------
-// PVS / visibility table — getBit
-// ---------------------------------------------------------------------------
-
-class VisTableClass {
-    fun getBit(visObjectId: Int): Boolean = false
-}
-
-fun PhysicsSceneClass.getVisTable(position: Vector3): VisTableClass? = null
-
-// ---------------------------------------------------------------------------
-// CollisionMath — OUTSIDE sentinel value
-// ---------------------------------------------------------------------------
-
-val CollisionMath.OUTSIDE: ccr.physics.collision.OverlapType get() = ccr.physics.collision.OverlapType.OUTSIDE
-
-// ---------------------------------------------------------------------------
-// HUDInfo — getInfoObject, setActionStatusValue, displayActionStatusBar
-// ---------------------------------------------------------------------------
-
-fun HUDInfo.getInfoObject(): DamageableGameObj? = null
-fun HUDInfo.setActionStatusValue(percent: Float): Unit = Unit
-fun HUDInfo.displayActionStatusBar(show: Boolean): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// SmartGameObj — getPlayerData
-// ---------------------------------------------------------------------------
-
-fun SmartGameObj.getPlayerData(): Any? = null
-
-// ---------------------------------------------------------------------------
-// DefenseObjectClass — isRepair
-// ---------------------------------------------------------------------------
-
-fun ccr.server.net.DefenseObjectClass.isRepair(offense: OffenseObjectClass): Boolean = false
-
-// ---------------------------------------------------------------------------
-// PlayerDataClass — stats kill methods
-// ---------------------------------------------------------------------------
-
-fun PlayerDataClass.statsAddHeadHit(): Unit = Unit
-fun PlayerDataClass.statsAddHeadShot(): Unit = Unit
-fun PlayerDataClass.statsAddTorsoHit(): Unit = Unit
-fun PlayerDataClass.statsAddTorsoShot(): Unit = Unit
-fun PlayerDataClass.statsAddArmHit(): Unit = Unit
-fun PlayerDataClass.statsAddArmShot(): Unit = Unit
-fun PlayerDataClass.statsAddLegHit(): Unit = Unit
-fun PlayerDataClass.statsAddLegShot(): Unit = Unit
-fun PlayerDataClass.statsAddCrotchHit(): Unit = Unit
-fun PlayerDataClass.statsAddCrotchShot(): Unit = Unit
-fun PlayerDataClass.statsAddAllyKilled(): Unit = Unit
-fun PlayerDataClass.statsAddEnemyKilled(): Unit = Unit
-fun PlayerDataClass.statsAddKillFromVehicle(): Unit = Unit
 
 // ---------------------------------------------------------------------------
 // HumanStateClass — body zone (hit zone) constants
@@ -2027,97 +1123,11 @@ fun HumanStateClass.getOuchType(direction: Vector3, collisionBoxName: String?): 
     HumanStateClass.TORSO_FROM_FRONT
 
 // ---------------------------------------------------------------------------
-// BonesManager — getBoneDamageScale
-// ---------------------------------------------------------------------------
-
-fun BonesManager.getBoneDamageScale(boneName: String): Float = 1f
-
-// ---------------------------------------------------------------------------
 // CombatMaterialEffectManager — getHealthEffect, getElectrocutionEffect
 // ---------------------------------------------------------------------------
 
 // MaterialEffectClass is a concrete subtype of TransitionEffectClass
 class MaterialEffectClass : TransitionEffectClass()
-
-fun CombatMaterialEffectManager.getHealthEffect(): TransitionEffectClass? = null
-fun CombatMaterialEffectManager.getElectrocutionEffect(): TransitionEffectClass? = null
-fun MoveablePhysClass.addEffectToMe(effect: TransitionEffectClass): Unit = Unit
-fun MoveablePhysClass.removeEffectFromMe(effect: TransitionEffectClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// WeaponClass — additional methods
-// ---------------------------------------------------------------------------
-
-fun WeaponClass.isModelUpdateNeeded(): Boolean = false
-fun WeaponClass.resetModelUpdate(): Unit = Unit
-fun WeaponClass.resetAnimUpdate(): Unit = Unit
-fun WeaponClass.getAnimState(): Int = 0
-fun WeaponClass.getModelName(): String? = null
-fun WeaponClass.setModel(model: RenderObjClass): Unit = Unit
-fun WeaponClass.getNextWeapon(): WeaponClass? = null
-fun WeaponClass.getBackModelName(): String? = null
-fun WeaponClass.getName(): String = ""
-fun WeaponClass.getConversation(): Int = 0
-fun WeaponClass.isReloading(): Boolean = false
-
-// ---------------------------------------------------------------------------
-// WeaponBagClass — getNextWeapon
-// ---------------------------------------------------------------------------
-
-fun WeaponBagClass.getNextWeapon(): WeaponClass? = null
-
-// ---------------------------------------------------------------------------
-// RenderObjClass — getContainer
-// ---------------------------------------------------------------------------
-
-fun RenderObjClass.getContainer(): RenderObjClass? = null
-
-// ---------------------------------------------------------------------------
-// WWMath — fastAsin, atan2, lerp, sqrt
-// ---------------------------------------------------------------------------
-
-fun WWMath.fastAsin(v: Float): Float = kotlin.math.asin(v.coerceIn(-1f, 1f))
-fun WWMath.atan2(y: Float, x: Float): Float = kotlin.math.atan2(y, x)
-fun WWMath.lerp(a: Float, b: Float, t: Float): Float = a + (b - a) * t
-fun WWMath.sqrt(v: Float): Float = kotlin.math.sqrt(v)
-
-const val DEG_TO_RADF_NEG_90 = -kotlin.math.PI.toFloat() / 2f
-const val DEG_20_RAD = kotlin.math.PI.toFloat() * 20f / 180f
-
-// ---------------------------------------------------------------------------
-// WeaponDefinitionClass (ccr.server.defs) — aGiveWeaponsWeapon, getName
-// ---------------------------------------------------------------------------
-
-val ccr.server.defs.WeaponDefinitionClass.aGiveWeaponsWeapon: Boolean get() = false
-fun ccr.server.defs.WeaponDefinitionClass.getName(): String = ""
-
-// ---------------------------------------------------------------------------
-// HumanPhysClass — getNormalizedSpeed, setNormalizedSpeed
-// ---------------------------------------------------------------------------
-
-fun HumanPhysClass.getNormalizedSpeed(): Float = 10.0f
-fun HumanPhysClass.setNormalizedSpeed(speed: Float): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// ActionParamsClass — moveLocation, moveArrivedDistance (now real var fields on ActionParamsStruct)
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// FreeRandom — getFloat(min, max)
-// ---------------------------------------------------------------------------
-
-fun FreeRandom.getFloat(min: Float, max: Float): Float = min + kotlin.random.Random.nextFloat() * (max - min)
-
-// ---------------------------------------------------------------------------
-// WWAudioClass — createContinuousSound, addToScene, removeFromScene, getDuration
-// ---------------------------------------------------------------------------
-
-fun WWAudioClass.createContinuousSound(soundDefId: Int): AudibleSoundClass? = null
-fun AudibleSoundClass.addToScene(): Unit = Unit
-fun AudibleSoundClass.removeFromScene(): Unit = Unit
-fun AudibleSoundClass.getDuration(): Float = 0f
-fun AudibleSoundClass.setTransform(tm: Matrix3D): Unit = Unit
-fun AudibleSoundClass.play(): Unit = Unit
 
 // ---------------------------------------------------------------------------
 // BackgroundMgrClass — overrideSkyTint, overrideClouds, overrideLightning, restoreAll
@@ -2151,40 +1161,6 @@ val WeatherMgrClass.PRECIPITATION_RAIN: Int get() = 0
 val WeatherMgrClass.PRECIPITATION_ASH: Int get() = 1
 
 // ---------------------------------------------------------------------------
-// BaseControllerClass — findBase static method + beacon notifications
-// ---------------------------------------------------------------------------
-
-fun BaseControllerClass.onBeaconArmed(beacon: BeaconGameObj): Unit = Unit
-fun BaseControllerClass.onBeaconDisarmed(beacon: BeaconGameObj): Unit = Unit
-fun BaseControllerClass.onBeaconWarning(beacon: BeaconGameObj): Unit = Unit
-fun BaseControllerClass.getBeaconZone(): AABoxClass = AABoxClass()
-
-// ---------------------------------------------------------------------------
-// CollisionMath — overlapTest(AABoxClass, Vector3) for point-in-box test
-// ---------------------------------------------------------------------------
-
-fun CollisionMath.overlapTest(box: AABoxClass, point: Vector3): ccr.physics.collision.OverlapType =
-    ccr.physics.collision.OverlapType.OUTSIDE
-
-fun CollisionMath.overlapTest(box: ccr.server.defs.OBBoxClass, point: Vector3): ccr.physics.collision.OverlapType =
-    ccr.physics.collision.OverlapType.OUTSIDE
-
-fun CollisionMath.overlapTest(box: AABoxClass, box2: AABoxClass): ccr.physics.collision.OverlapType =
-    ccr.physics.collision.OverlapType.OUTSIDE
-
-// ---------------------------------------------------------------------------
-// SimpleGameObj — setPlayerType (delegates to playerType field)
-// ---------------------------------------------------------------------------
-
-fun SimpleGameObj.setPlayerType(type: Int) { playerType = type }
-
-// ---------------------------------------------------------------------------
-// BuildingGameObj — findClosestPoly with dist2 output array
-// ---------------------------------------------------------------------------
-
-fun BuildingGameObj.findClosestPoly(pos: Vector3, dist2Out: FloatArray): Unit { dist2Out[0] = Float.MAX_VALUE }
-
-// ---------------------------------------------------------------------------
 // ExplosionDefinitionClass — stub
 // ---------------------------------------------------------------------------
 
@@ -2194,220 +1170,5 @@ class ExplosionDefinitionClass {
     val damageWarhead: Int = 0
 }
 
-// ---------------------------------------------------------------------------
-// CombatManager — getMessageWindow, isServer, doesBeaconPlacementEndsGame
-// ---------------------------------------------------------------------------
-
-fun CombatManager.getMessageWindow(): MessageWindowClass? = null
-fun CombatManager.isServer(): Boolean = true
-fun CombatManager.doesBeaconPlacementEndsGame(): Boolean = false
-
-// MessageWindowClass — addMessage overload with all params
-fun MessageWindowClass.addMessage(message: String, color: Vector3, extra: Any?, duration: Float): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// PhysicsSceneClass — addRenderObject
-// ---------------------------------------------------------------------------
-
-fun PhysicsSceneClass.addRenderObject(obj: RenderObjClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// ConversationMgrClass — startConversation with obj, id, immediate
-// ---------------------------------------------------------------------------
-
-fun ConversationMgrClass.startConversation(obj: ScriptableGameObj, conversationId: Int, immediate: Boolean): ActiveConversationClass? = null
-
-// ActiveConversationClass — isInterruptable, stopConversation
-fun ActiveConversationClass.isInterruptable(): Boolean = false
-fun ActiveConversationClass.stopConversation(reason: Int): Unit = Unit
-
-const val ACTION_COMPLETE_CONVERSATION_INTERRUPTED = 3
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — AI state constants
-// ---------------------------------------------------------------------------
-
-const val AI_STATE_SEARCH          = 3
-const val AI_STATE_SECONDARY_IDLE  = 4
-
-// Soldier innate event bit masks
-const val SOLDIER_INNATE_EVENT_BULLET_HEARD    = 0x01
-const val SOLDIER_INNATE_EVENT_GUNSHOT_HEARD   = 0x02
-const val SOLDIER_INNATE_EVENT_FOOTSTEP_HEARD  = 0x04
-const val SOLDIER_INNATE_EVENT_ENEMY_SEEN      = 0x08
-const val SOLDIER_INNATE_ACTIONS               = 0x10
-
-const val SOLDIER_HEIGHT_FOR_LOOK = 1.0f
-const val SOLDIER_GHOST_COLLISION_GROUP = 5
-const val HUMAN_HALF_HEIGHT = 0.9f
-val PERSONAL_SPACE_BOX_SIZE = Vector3(0.4f, 0.4f, HUMAN_HALF_HEIGHT)
-
-// Surface type constants
-const val SURFACE_TYPE_DEFAULT         = 0
-const val SURFACE_TYPE_UNDERWATER_DIRT = 13
-
-// Bullet collision group
-const val BULLET_COLLISION_GROUP = 2
-
-// Tilt speed constant
-const val TILT_DOWN_SPEED = 2f
-
-// Weapon hold styles
-const val WEAPON_HOLD_STYLE_C4     = 3
-const val WEAPON_HOLD_STYLE_BEACON = 4
-
-// Dialog triggers
-const val DIALOG_ON_TAKE_DAMAGE_FROM_ENEMY  = 1
-const val DIALOG_ON_TAKE_DAMAGE_FROM_FRIEND = 2
-
-// Misc math constants
-const val WWMATH_EPSILON = 0.001f
-
-// ---------------------------------------------------------------------------
-// DialogueClass — getConversation
-// ---------------------------------------------------------------------------
-
-fun DialogueClass.getConversation(): Int = 0
-
-// ---------------------------------------------------------------------------
-// ActionClass — getParameters, isBusy
-// ---------------------------------------------------------------------------
-
-fun ActionClass.getParameters(): ActionParamsStruct = ActionParamsStruct()
-fun ActionClass.isBusy(): Boolean = false
-
-// ---------------------------------------------------------------------------
-// WW3DAssetManager — createRenderObjFromFilename as SoldierGameObj member
-// (SoldierGameObj calls createRenderObjFromFilename as a local method)
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.createRenderObjFromFilename(filename: String): RenderObjClass? =
-    WW3DAssetManager.createRenderObjFromFilename(filename)
-
-// ---------------------------------------------------------------------------
-// ObjectLibraryManager — createObject returns ScriptableGameObj
-// ---------------------------------------------------------------------------
-
-fun ObjectLibraryManager.createObject(defId: Int): ScriptableGameObj? = null
-fun ObjectLibraryManager.createObject(name: String): ScriptableGameObj? = null
-
-// ---------------------------------------------------------------------------
-// BeaconGameObj — getControl for SoldierGameObj
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.getControl(): ControlClass = ControlClass()
-
-// ---------------------------------------------------------------------------
-// HumanPhysClass — networkStateUpdate with position/velocity, setPosition, etc.
-// ---------------------------------------------------------------------------
-
-fun HumanPhysClass.networkStateUpdate(position: Vector3, velocity: Vector3): Unit = Unit
-fun HumanPhysClass.setPosition(pos: Vector3): Unit = Unit
-fun HumanPhysClass.setVelocity(vel: Vector3): Unit = Unit
-fun HumanPhysClass.canTeleport(tm: Matrix3D): Boolean = false
-fun HumanPhysClass.getCollisionBox(): AABoxClass = AABoxClass(Vector3(), Vector3(0.3f, 0.3f, 1f))
-
-
-// TransitionInstanceClass companion object with end() is defined in the class itself above
-
-// ---------------------------------------------------------------------------
-// FreeRandom — zero-arg getFloat()
-// ---------------------------------------------------------------------------
-
-fun FreeRandom.getFloat(): Float = kotlin.random.Random.nextFloat()
-
-// ---------------------------------------------------------------------------
-// GlobalSettingsDefClass — getDeathSoundId
-// ---------------------------------------------------------------------------
-
-fun GlobalSettingsDefClass.getDeathSoundId(): Int = 0
-
-// ---------------------------------------------------------------------------
-// SoldierGameObjDef (ccr.server.defs) — killedExplosion property
-// ---------------------------------------------------------------------------
-
-val ccr.server.defs.SoldierGameObjDef.killedExplosion: Int get() = 0
-
-// ---------------------------------------------------------------------------
-// WeaponBagClass — selectWeaponId, deselect are now methods in WeaponBagClass.kt
-// (extension stubs removed to avoid conflicting overloads)
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
-// Matrix3D — times(Vector3) operator for C++ Matrix3D * Vector3
-// ---------------------------------------------------------------------------
-
-operator fun Matrix3D.times(v: Vector3): Vector3 = Vector3(
-    m00 * v.x + m01 * v.y + m02 * v.z + m03,
-    m10 * v.x + m11 * v.y + m12 * v.z + m13,
-    m20 * v.x + m21 * v.y + m22 * v.z + m23,
-)
-
-// ---------------------------------------------------------------------------
-// Vector3 — companion dotProduct
-// ---------------------------------------------------------------------------
-
-fun Vector3.Companion.dotProduct(a: Vector3, b: Vector3): Float = a.x * b.x + a.y * b.y + a.z * b.z
-
-// ---------------------------------------------------------------------------
-// VehicleGameObj — getSquishVelocity
-// ---------------------------------------------------------------------------
-
-fun VehicleGameObj.getSquishVelocity(): Float = 3f
-
-// ---------------------------------------------------------------------------
-// SoldierGameObj — reInit overload for SoldierGameObjDef (defs alias)
-// ---------------------------------------------------------------------------
-
-fun SoldierGameObj.reInit(def: ccr.server.defs.SoldierGameObjDef): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// VehicleGameObj — setPlayerType (already has playerType var; need explicit setter)
-// ---------------------------------------------------------------------------
-
-fun VehicleGameObj.setPlayerType(type: Int) { playerType = type }
-
-// ---------------------------------------------------------------------------
-// ControlClass — copyFrom
-// ---------------------------------------------------------------------------
-
-fun ControlClass.copyFrom(other: ControlClass): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// Quaternion — normalize (in-place, returns self for chaining)
-// ---------------------------------------------------------------------------
-
-fun ccr.math.Quaternion.normalize(): ccr.math.Quaternion = normalized()
-
-// ---------------------------------------------------------------------------
-// BaseControllerClass — onVehicleDelivered(VehicleGameObj)
-// ---------------------------------------------------------------------------
-
-fun BaseControllerClass.onVehicleDelivered(vehicle: VehicleGameObj): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// AnimControlClass — getNumFrames (for anim.getNumFrames() in SoldierGameObj)
-// ---------------------------------------------------------------------------
-
-fun AnimControlClass.getNumFrames(): Int = 0
-
-// ---------------------------------------------------------------------------
-// PhysAABoxIntersectionTestClass — constructor with nullable AABoxClass
-// ---------------------------------------------------------------------------
-
 fun PhysAABoxIntersectionTestClass(box: AABoxClass?, collisionGroup: Int, collisionType: Int): PhysAABoxIntersectionTestClass =
     PhysAABoxIntersectionTestClass(box ?: AABoxClass(), collisionGroup, collisionType)
-
-// ---------------------------------------------------------------------------
-// DamageableGameObj — isEnemy with nullable param
-// ---------------------------------------------------------------------------
-
-fun DamageableGameObj.isEnemy(obj: DamageableGameObj?): Boolean =
-    if (obj == null) false else isEnemy(obj)
-
-// ---------------------------------------------------------------------------
-// SmartGameObj / ActionClass — getAction returning ActionClass
-// ---------------------------------------------------------------------------
-
-fun SmartGameObj.getActionObj(): ActionClass? = null
-

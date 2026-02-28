@@ -71,6 +71,10 @@ abstract class PhysClass {
     /** Definition object containing constants shared between instances (matches C++ Definition). */
     var definition: Any? = null  // TODO: replace with PhysDefClass when added to physics module
 
+    /** C++: RenderObjClass* Model — the render object attached to this physics object. */
+    @get:JvmName("modelField") @set:JvmName("setModelField")
+    var model: Any? = null  // TODO: replace with RenderObjClass when added to physics module
+
     abstract var transform: Matrix3D
 
     var collisionGroup: Int
@@ -122,6 +126,57 @@ abstract class PhysClass {
     open fun castRay(test: RayCollisionTest): Boolean = false
     open fun castAABox(test: AABoxCollisionTest): Boolean = false
     open fun castOBBox(test: OBBoxCollisionTest): Boolean = false
+
+    // C++ convenience methods mirrored from PhysClass interface.
+    // These exist so the server module can call them on ccr.physics.PhysClass without casting.
+    // Note: getTransform()/setTransform() and getCollisionGroup()/setCollisionGroup() are intentionally
+    // absent here — they would clash with the JVM getters/setters generated for the `transform` and
+    // `collisionGroup` properties.  Server code uses the Kotlin property syntax directly.
+
+    /** C++: Get_Position() — returns the world-space translation of the transform. */
+    open fun getPosition(): Vector3 = transform.translation
+
+    /** C++: Set_Position() — no-op stub; MoveablePhysClass overrides via its position property. */
+    open fun setPosition(pos: Vector3) {}
+
+    /** C++: Get_Facing() — returns Z-axis rotation of the transform (stub returns 0). */
+    open fun getFacing(): Float = 0f
+
+    /** C++: Get_Vis_Object_ID() — returns the vis object ID as Int. */
+    open fun getVisObjectId(): Int = visObjectId.toInt()
+
+    /** C++: Is_In_Scene() — true when assigned to a PhysicsScene. */
+    open fun isInScene(): Boolean = scene != null
+
+    /** C++: Get_Contact_Surface_Type() — stub returns 0. */
+    open fun getContactSurfaceType(): Int = 0
+
+    /** C++: Is_Enabled() — inverse of isDisabled flag. */
+    open fun isEnabled(): Boolean = !isDisabled
+
+    /** C++: Add_Effect_To_Me() — no-op stub. */
+    open fun addEffectToMe(effect: Any) {}
+
+    /** C++: Enable_User_Control() — sets/clears the USERCONTROL flag. */
+    open fun enableUserControl(enable: Boolean) {
+        flags = if (enable) flags or USERCONTROL else flags and USERCONTROL.inv()
+    }
+
+    fun getId() =
+        instanceId
+
+    /** C++: Peek_Model() — returns the attached render object without ref-counting. */
+    open fun peekModel(): Any? = model
+
+    /** C++: Set_Model() — virtual; attaches a render object to this physics object. */
+    open fun setModel(model: Any?) { this.model = model }
+
+    /** C++: Set_Model_By_Name() — no-op stub (server has no render objects). */
+    open fun setModelByName(name: String) {}
+
+    /** C++: Inc_Ignore_Counter() / Dec_Ignore_Counter(). */
+    open fun incIgnoreCounter() { ignoreCount = (ignoreCount + 1).coerceAtMost(0xF) }
+    open fun decIgnoreCounter() { ignoreCount = (ignoreCount - 1).coerceAtLeast(0) }
 
     /** World-space bounding box for this object. Used by spatial structures (AABTree, PhysGrid). */
     open fun worldBoundingBox(): AABox {

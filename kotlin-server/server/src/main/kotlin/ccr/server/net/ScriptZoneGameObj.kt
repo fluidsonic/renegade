@@ -94,7 +94,7 @@ class ScriptZoneGameObj : ScriptableGameObj() {
         } else {
             // C++: Collect_Objects(BoundingBox, false, true, &objs_in_zone)
             val scene = CombatManager.getScene()
-            val objsInZone: List<PhysClass> = scene?.collectObjects(boundingBox, false, true) ?: emptyList()
+            val objsInZone: List<PhysClass> = scene?.collectObjects(boundingBox, false, true).orEmpty()
             for (physObj in objsInZone) {
                 val observer = physObj.getObserver()
                 val smartObj = if (observer is CombatPhysObserverClass) {

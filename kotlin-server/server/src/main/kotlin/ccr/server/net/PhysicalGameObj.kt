@@ -5,12 +5,15 @@ import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.server.GameObjManager
 import ccr.server.defs.PhysicalGameObjDef
+import ccr.physics.PhysClass as RealPhysClass
 
 // C++: PhysicalGameObj : public DamageableGameObj, public CombatPhysObserverClass
 abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: PhysClass* PhysObj (initialized to NULL)
-    var physObj: PhysClass? = null
+    // Typed as the real ccr.physics.PhysClass so both server-stub instances (HumanPhysClass
+    // bridge) and real physics objects (VehiclePhysClass) can be stored without a proxy.
+    var physObj: RealPhysClass? = null
 
     // C++: AnimControlClass* AnimControl (initialized to NULL)
     // @JvmName avoids clash with explicit getAnimControl()/setAnimControl() methods below
@@ -90,9 +93,9 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         }
         check(physObj == null)
         val poDef = DefinitionMgrClass.findDefinition(definition.physDefId) as PhysDefClass
-        val newPhysObj = poDef.create() as PhysClass
+        val newPhysObj = poDef.create()  // server-stub PhysClass (which extends real ccr.physics.PhysClass)
         check(newPhysObj != null)
-        newPhysObj.setCollisionGroup(DEFAULT_COLLISION_GROUP)
+        newPhysObj.collisionGroup = DEFAULT_COLLISION_GROUP
         newPhysObj.setObserver(this)
         CombatManager.getScene()?.addDynamicObject(newPhysObj)
         physObj = newPhysObj
@@ -141,7 +144,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: virtual void Object_Shattered_Something(PhysClass*, PhysClass*, int surface_type)
     override fun objectShatteredSomething(observedObj: PhysClass, shatteredObj: PhysClass, surfaceType: Int) {
-        val tm = observedObj.getTransform()
+        val tm = observedObj.transform
         SurfaceEffectsManager.applyEffect(surfaceType, SurfaceEffectsManager.HITTER_TYPE_BULLET, tm)
     }
 
@@ -155,7 +158,11 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     fun getServerSkips(): UByte = serverUpdateSkips
 
     // C++: WWINLINE PhysClass* Peek_Physical_Object() const { return PhysObj; }
-    fun peekPhysicalObject(): PhysClass? = physObj
+    // Returns physObj cast to the server-stub PhysClass so callers can use server-stub methods.
+    // Real physics objects (VehiclePhysClass) extend the server-stub PhysClass via the hierarchy:
+    // real PhysClass ← server-stub PhysClass ← server-stub HumanPhysClass/etc.
+    // Real VehiclePhysClass does NOT extend server-stub, so this cast returns null for vehicles.
+    fun peekPhysicalObject(): PhysClass? = physObj as? PhysClass
 
     // C++: bool Is_Soft()
     fun isSoft(): Boolean = defenseObject.isSoft()
@@ -173,7 +180,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     open fun getBullseyePosition(): Vector3 = getPosition()
 
     // C++: void Set_Collision_Group(int group)
-    fun setCollisionGroup(group: Int) { physObj!!.setCollisionGroup(group) }
+    fun setCollisionGroup(group: Int) { physObj!!.collisionGroup = group }
 
     // C++: virtual ExpirationReactionType Object_Expired(PhysClass * observed_obj)
     override fun objectExpired(observedObj: PhysClass): ExpirationReactionType {
@@ -182,7 +189,8 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     }
 
     // C++: WWINLINE RenderObjClass* Peek_Model() { return Peek_Physical_Object()->Peek_Model(); }
-    fun peekModel(): RenderObjClass? = physObj?.peekModel()
+    // Works for all physObj types — peekModel() is now on the real ccr.physics.PhysClass base.
+    fun peekModel(): RenderObjClass? = physObj?.peekModel() as? RenderObjClass
 
     // C++: void Hide_Muzzle_Flashes(bool hide = true)
     fun hideMuzzleFlashes(hide: Boolean = true) {
@@ -211,9 +219,11 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
             setAnimControl(SimpleAnimControlClass())
         }
         if (!animationName.isNullOrEmpty()) {
+            val physStub = physObj as? PhysClass
+            val model = physStub?.peekModel()
             val animName = if ('.' in animationName) animationName
-                           else createAnimationName(animationName, physObj!!.peekModel()!!.getName())
-            animControl!!.setModel(physObj!!.peekModel()!!)
+                           else createAnimationName(animationName, model?.getName() ?: "")
+            animControl!!.setModel(model)
             animControl!!.setAnimation(animName, 0, frameOffset)
             animControl!!.setMode(if (looping) ANIM_MODE_LOOP else ANIM_MODE_ONCE)
             animControl!!.update(0f)
@@ -227,9 +237,11 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
             setAnimControl(SimpleAnimControlClass())
         }
         if (!animationName.isNullOrEmpty()) {
+            val physStub = physObj as? PhysClass
+            val model = physStub?.peekModel()
             val animName = if ('.' in animationName) animationName
-                           else createAnimationName(animationName, physObj!!.peekModel()!!.getName())
-            animControl!!.setModel(physObj!!.peekModel()!!)
+                           else createAnimationName(animationName, model?.getName() ?: "")
+            animControl!!.setModel(model)
             animControl!!.setAnimation(animName, 0)
             animControl!!.setMode(ANIM_MODE_STOP, frame)
             setObjectDirtyBit(BIT_RARE, true)
@@ -245,7 +257,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         }
         hostGameObj.set(host)
         if (host != null) {
-            hostGameObjBone = host.physObj!!.peekModel()!!.getBoneIndex(boneName)
+            hostGameObjBone = (host.physObj as? PhysClass)?.peekModel()!!.getBoneIndex(boneName)
             teleportToHostBone()
         }
         setObjectDirtyBit(BIT_RARE, true)
@@ -254,13 +266,13 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: void Teleport_To_Host_Bone()
     fun teleportToHostBone() {
         val host = hostGameObj.get() as? PhysicalGameObj ?: return
-        val model = host.physObj?.peekModel() ?: return
+        val model = (host.physObj as? PhysClass)?.peekModel() ?: return
         val newTransform = model.getBoneTransform(hostGameObjBone)
         physObj?.let { phys ->
             phys.asMoveablePhysClass()?.let { moveable ->
                 moveable.setVelocity(Vector3())
                 moveable.cinematicMoveTo(newTransform)
-            } ?: phys.setTransform(newTransform)
+            } ?: run { phys.transform = newTransform }
         }
         resetHibernating()
     }
@@ -392,7 +404,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: virtual void On_Post_Load()
     override fun onPostLoad() {
         check(physObj != null)
-        physObj!!.setObserver(this)
+        (physObj as? PhysClass)?.setObserver(this)
         hideMuzzleFlashes()
         super.onPostLoad()
     }
@@ -520,10 +532,10 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     fun getFacing(): Float = physObj!!.getFacing()
 
     // C++: const Matrix3D & Get_Transform() const
-    fun getTransform(): Matrix3D = physObj!!.getTransform()
+    fun getTransform(): Matrix3D = physObj!!.transform
 
     // C++: void Set_Transform(const Matrix3D & tm)
-    fun setTransform(tm: Matrix3D) { physObj!!.setTransform(tm) }
+    fun setTransform(tm: Matrix3D) { physObj!!.transform = tm }
 
     // C++: PhysicalGameObj::Export_Creation — position + facing.
     // definitionId is written by NetworkGameObjectFactory.prepPacket() before Export_Creation is called.
@@ -550,7 +562,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: PhysicalGameObj::Export_Rare
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)
-        packet.addTerminatedString(physObj?.peekModel()?.getName() ?: modelName, permitEmpty = true)
+        packet.addTerminatedString(physObj?.model?.getName() ?: modelName, permitEmpty = true)
         packet.addTerminatedString(animName, permitEmpty = true)
         // C++: when AnimControl == NULL, curr_frame=0, target_frame=0, anim_mode=ANIM_MODE_TARGET(3).
         // The server has no real animation system — always send the C++ NULL-AnimControl defaults.
@@ -570,8 +582,9 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     override fun importRare(packet: BitStream) {
         super.importRare(packet)
         val modelName = packet.getTerminatedString(true)
-        if (!physObj!!.peekModel()!!.getName().equals(modelName, ignoreCase = true)) {
-            physObj!!.setModelByName(modelName)
+        val physStub = physObj as? PhysClass
+        if (physStub?.peekModel()?.getName()?.equals(modelName, ignoreCase = true) != true) {
+            physStub?.setModelByName(modelName)
         }
         val animationName = packet.getTerminatedString(true)
         val currFrame  = packet.getInt()

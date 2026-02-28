@@ -43,7 +43,7 @@ abstract class VehiclePhysClass : RigidBodyClass() {
      * the vehicle's center of mass and the ground, based on suspension spring length.
      * Used when spawning vehicles to avoid embedding them in terrain.
      */
-    fun computeApproximateRideHeight(): Float = springLength
+    override fun computeApproximateRideHeight(): Float = springLength
 
     /**
      * C++: VehiclePhysClass::Network_Interpolate_State_Update — updates physics state from a

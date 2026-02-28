@@ -27,6 +27,12 @@ data class Matrix3D(
         z = m20 * v.x + m21 * v.y + m22 * v.z,
     )
 
+    operator fun times(v: Vector3): Vector3 = Vector3(
+        m00 * v.x + m01 * v.y + m02 * v.z + m03,
+        m10 * v.x + m11 * v.y + m12 * v.z + m13,
+        m20 * v.x + m21 * v.y + m22 * v.z + m23,
+    )
+
     fun withTranslation(t: Vector3) = copy(m03 = t.x, m13 = t.y, m23 = t.z)
 
     fun getZRotation(): Float = kotlin.math.atan2(m10, m00)

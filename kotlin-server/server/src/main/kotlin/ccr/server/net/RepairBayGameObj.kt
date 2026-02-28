@@ -179,7 +179,7 @@ class RepairBayGameObj() : BuildingGameObj() {
                 if (animPhysObj.getDefinition()?.id == getRepairBayDefinition().repairingStaticAnimDefId.toUInt()) {
                     val animPos = Vector3(0f, 0f, 0f)
                     animPhysObj.getPosition(animPos)
-                    val dist2 = (animPos - pos).length2()
+                    val dist2 = (animPos - pos).lengthSquared()
                     if (dist2 < closest2) {
                         closest2 = dist2
                         repairAnimationID = animPhysObj.getId()

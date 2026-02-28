@@ -121,15 +121,19 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
     }
 
     // C++: BaseControllerClass::Request_Harvester — ask the war/vehicle factory to build a harvester
-    fun requestHarvester(defId: Int): Boolean {
-        if (defId == 0) return false
+    fun requestHarvester(definitionId: Int): Boolean {
+        require(definitionId > 0) { "`definitionId` must be positive." }
+
         val factory = buildings.filterIsInstance<VehicleFactoryGameObj>()
-            .firstOrNull { it.isAvailable() }
-        if (factory != null) {
-            factory.requestVehicle(defId, 8f * operationTimeFactor, null)
-            return true
+            .filter { it.isAvailable() }
+            .randomOrNull()
+        if (factory == null) {
+            System.err.println("No available vehicle factories to request harvester for player type $playerType.")
+            return false
         }
-        return false
+
+        factory.requestVehicle(definitionId, 8f * operationTimeFactor, null)
+        return true
     }
 
     // C++: BaseControllerClass::Destroy_Base (forced)

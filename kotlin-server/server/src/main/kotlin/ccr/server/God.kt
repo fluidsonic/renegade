@@ -15,7 +15,6 @@ import ccr.server.defs.PowerUpGameObjDef
 import ccr.physics.vehicle.WheeledVehicleClass
 import ccr.server.net.BeaconGameObj
 import ccr.server.net.C4GameObj
-import ccr.server.net.VehiclePhysProxy
 import ccr.server.net.PhysicalGameObj
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
@@ -534,7 +533,7 @@ open class God(private val server: Network) {
         val vehiclePhys = WheeledVehicleClass()
         vehiclePhys.isFake = true
         vehiclePhys.position = spawnPosition
-        vehicle.physObj = VehiclePhysProxy(vehiclePhys)
+        vehicle.physObj = vehiclePhys
 
         // Resize seat list to match definition
         vehicle.seatOccupants.clear()
@@ -578,7 +577,7 @@ open class God(private val server: Network) {
         val vehiclePhys = WheeledVehicleClass()
         vehiclePhys.isFake = true
         vehiclePhys.position = spawnPosition
-        vehicle.physObj = VehiclePhysProxy(vehiclePhys)
+        vehicle.physObj = vehiclePhys
 
         vehicle.seatOccupants.clear()
         repeat(seatCount) { vehicle.seatOccupants.add(null) }
