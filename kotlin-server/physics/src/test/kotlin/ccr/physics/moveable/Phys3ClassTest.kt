@@ -31,7 +31,7 @@ class Phys3ClassTest {
         val obj = ConcretePhys3()
         obj.position = Vector3(0f, 0f, 10f)
         scene.addDynamicObject(obj)
-        obj.currentMode = Phys3Class.MovementMode.BALLISTIC
+        obj.moveMode = Phys3Class.MoveMode.BALLISTIC_MOVE
         repeat(100) { obj.timestep(0.01f) }
         assertTrue(obj.velocity.z < -5f, "velocity.z=${obj.velocity.z}, expected < -5 after 1s freefall")
     }

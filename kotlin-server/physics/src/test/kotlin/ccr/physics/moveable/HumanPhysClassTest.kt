@@ -12,12 +12,12 @@ class HumanPhysClassTest {
         human.groundState = GroundState(true, 0, 0f, Vector3(0f, 0f, 1f), Vector3(1f, 0f, 0f))
         human.controller = PhysController().also { it.moveUp = 1f }
         val ctrl = human.controller!!
-        if (ctrl.moveUp > 0f && human.groundState.onGround && !human.isJumping) {
+        if (ctrl.moveUp > 0f && human.groundState.onGround && !human.justJumped) {
             human.velocity = Vector3(human.velocity.x, human.velocity.y, human.jumpSpeed)
-            human.isJumping = true
+            human.justJumped = true
         }
         assertTrue(abs(human.velocity.z - human.jumpSpeed) < 0.01f, "velocity.z=${human.velocity.z}")
-        assertTrue(human.isJumping)
+        assertTrue(human.justJumped)
     }
 
     @Test

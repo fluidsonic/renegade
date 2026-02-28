@@ -13,28 +13,50 @@ abstract class Phys3Class : MoveablePhysClass() {
         // Mirrors C++ phys3.cpp constants (lines 325-326).
         const val GROUND_DISTANCE = 0.1f
         const val GROUND_EPSILON = GROUND_DISTANCE / 5.0f  // = 0.02f
+
+        // Chunk IDs sourced from phys3.cpp Save()
+        const val PHYS3_CHUNK_MOVEABLEPHYS: Int = 0x00483200
+        const val PHYS3_CHUNK_VARIABLES: Int = 0x00483201
+
+        // Micro-chunk IDs
+        const val PHYS3_VARIABLE_COLLISION_AABOX: Int = 0x00
+        const val PHYS3_VARIABLE_ONGROUND: Int = 0x01
+        const val PHYS3_VARIABLE_INCOLLISION: Int = 0x02
+        const val PHYS3_VARIABLE_HEADING: Int = 0x03
+        const val PHYS3_VARIABLE_NORMSPEED: Int = 0x04
+        const val PHYS3_VARIABLE_SLIDEANGLE: Int = 0x05
+        const val PHYS3_VARIABLE_SLIDENORMALZ: Int = 0x06
+        const val PHYS3_VARIABLE_SLIDEANGLETAN: Int = 0x07
+        const val PHYS3_VARIABLE_STEPHEIGHT: Int = 0x08
+        const val PHYS3_VARIABLE_MOVEMODE: Int = 0x09
+        const val PHYS3_VARIABLE_POSITION: Int = 0x0A
+        const val PHYS3_VARIABLE_VELOCITY: Int = 0x0B
     }
 
-    enum class MovementMode { USER_OVERRIDE, BALLISTIC, SLIDE, NORMAL, COLLIDE }
+    // Matches C++ Phys3Class::MoveModeType enum (phys3.h:184-191)
+    enum class MoveMode { USER_OVERRIDE, BALLISTIC_MOVE, SLIDE_MOVE, NORMAL_MOVE, COLLIDE_MOVE }
 
-    // Object-space collision box (mirrors C++ Phys3Class::CollisionBox).
-    // collisionBoxCenter is the offset from the physics position to the box center.
-    // C++ default: Center=(0,0,1), Extent=(1,1,1).
+    // Object-space collision box (mirrors C++ Phys3Class::CollisionBox, AABoxClass with Center+Extent).
     // Kotlin: extent=(0.3,0.3,0.9), center=(0,0,0.9) -- box bottom at feet, top 1.8 units up.
-    var collisionBoxCenter: Vector3 = Vector3(0f, 0f, 0.9f)
-    var collisionBoxExtent: Vector3 = Vector3(0.3f, 0.3f, 0.9f)
-    var normSpeed: Float = 3.0f
-    /** cos(SlideAngle). C++ default: cos(45deg) = ~0.707. Matches C++ SlideNormalZ. */
-    var slideAngleCos: Float = 0.707f
-    var stepHeight: Float = 0.3f
+    var collisionBox: AABox = AABox(Vector3(0f, 0f, 0.9f), Vector3(0.3f, 0.3f, 0.9f))
+    var onGround: Boolean = false           // C++ Phys3Class::OnGround — Is_In_Contact() flag
+    var inCollision: Boolean = false        // C++ Phys3Class::InCollision
+    var heading: Float = 0f                 // C++ Phys3Class::Heading — yaw in radians
+    var normSpeed: Float = 3.0f             // C++ Phys3Class::NormSpeed
+    var slideAngle: Float = 0.7854f         // C++ Phys3Class::SlideAngle — radians (default ~45 deg)
+    var slideNormalZ: Float = 0.707f        // C++ Phys3Class::SlideNormalZ — cos(SlideAngle)
+    var slideAngleTan: Float = 1.0f         // C++ Phys3Class::SlideAngleTan — tan(SlideAngle)
+    var stepHeight: Float = 0.3f            // C++ Phys3Class::StepHeight
+    var moveMode: MoveMode = MoveMode.NORMAL_MOVE  // C++ Phys3Class::MoveMode
     var groundState: GroundState = GroundState.NOT_ON_GROUND
-    var currentMode: MovementMode = MovementMode.NORMAL
+
+    override fun asPhys3Class(): Phys3Class = this
 
     /** Compute the world-space collision box. Mirrors C++ Compute_WS_Collision_Box. */
-    fun computeWSCollisionBox(): AABox = AABox(position + collisionBoxCenter, collisionBoxExtent)
+    fun computeWSCollisionBox(): AABox = AABox(position + collisionBox.center, collisionBox.extent)
 
     /** Compute the world-space collision box at an arbitrary position. */
-    fun computeWSCollisionBoxAt(pos: Vector3): AABox = AABox(pos + collisionBoxCenter, collisionBoxExtent)
+    fun computeWSCollisionBoxAt(pos: Vector3): AABox = AABox(pos + collisionBox.center, collisionBox.extent)
 
     /**
      * Mirrors C++ Phys3Class::Can_Teleport(test_tm, check_dyn_only=true).
@@ -72,13 +94,13 @@ abstract class Phys3Class : MoveablePhysClass() {
 
         // Mode transitions — mirrors C++ Timestep lines 1048-1066.
         if (!groundState.onGround) {
-            currentMode = MovementMode.BALLISTIC
+            moveMode = MoveMode.BALLISTIC_MOVE
             ballisticMove(dt, sc)
-        } else if (groundState.normal.z < slideAngleCos) {
-            currentMode = MovementMode.SLIDE
+        } else if (groundState.normal.z < slideNormalZ) {
+            moveMode = MoveMode.SLIDE_MOVE
             slideMove(dt, sc)
         } else {
-            currentMode = MovementMode.NORMAL
+            moveMode = MoveMode.NORMAL_MOVE
             normalMove(dt, sc)
         }
         println("[PHYS] timestep END   pos=$position vel=$velocity onGround=${groundState.onGround}")
@@ -99,7 +121,6 @@ abstract class Phys3Class : MoveablePhysClass() {
         // Only snap when we moved upward or horizontally (could have stepped or gone over a crest)
         if (deltaZ + deltaXY <= 0f) return
 
-        val slideAngleTan = kotlin.math.sqrt(1f - slideAngleCos * slideAngleCos) / slideAngleCos
         val snapDist = deltaZ + deltaXY * slideAngleTan + GROUND_DISTANCE
 
         val box = computeWSCollisionBox()
@@ -108,11 +129,11 @@ abstract class Phys3Class : MoveablePhysClass() {
 
         if (!hit || test.result.fraction <= 0f || test.result.fraction > 1f) {
             // Case 3: ground not within snap distance — soldier is airborne
-            currentMode = MovementMode.BALLISTIC
+            moveMode = MoveMode.BALLISTIC_MOVE
             return
         }
 
-        if (test.result.normal.z > slideAngleCos) {
+        if (test.result.normal.z > slideNormalZ) {
             // Case 1: walkable slope — snap down to GROUND_EPSILON above surface
             val snapDown = snapDist * test.result.fraction
             if (snapDown > GROUND_EPSILON) {
@@ -261,7 +282,7 @@ abstract class Phys3Class : MoveablePhysClass() {
 
         // Try step-over for low walls: lift box by stepHeight, retry remaining move
         val remaining = move * (1f - frac)
-        val stepBox = AABox(position + collisionBoxCenter + Vector3(0f, 0f, stepHeight), collisionBoxExtent)
+        val stepBox = AABox(position + collisionBox.center + Vector3(0f, 0f, stepHeight), collisionBox.extent)
         val stepTest = AABoxCollisionTest(stepBox, remaining)
         if (!scene.castAABox(stepTest) || stepTest.result.fraction >= 1f) {
             position = position + Vector3(0f, 0f, stepHeight) + remaining

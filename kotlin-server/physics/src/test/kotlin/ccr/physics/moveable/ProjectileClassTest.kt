@@ -35,7 +35,7 @@ class ProjectileClassTest {
     @Test
     fun defaultValues() {
         val proj = ProjectileClass()
-        assertEquals(5.0f, proj.lifetime)
+        assertEquals(2.0f, proj.lifetime)  // C++ default from projectile.cpp:46
         assertEquals(0, proj.bounceCount)
         assertEquals(0, proj.maxBounces)
         assertTrue(proj.needsTimestep())

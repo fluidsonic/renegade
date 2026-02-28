@@ -5,17 +5,22 @@ import ccr.math.Vector3
 import ccr.physics.collision.RayCollisionTest
 
 open class ProjectileClass : MoveablePhysClass() {
-    enum class OrientationMode { VELOCITY, TUMBLE, FIXED }
 
-    var lifetime: Float = 5.0f
+    // Matches C++ ProjectileClass orientation enum (projectile.h:98-103)
+    enum class OrientationMode { ALIGNED, FIXED, TUMBLING, ALIGNED_FIXED }
+
+    var collidesOnMove: Boolean = true              // C++ ProjectileClass::CollidesOnMove
+    var orientationMode: OrientationMode = OrientationMode.ALIGNED  // C++ ProjectileClass::OrientationMode
+    var tumbleAxis: Vector3 = Vector3(1f, 0f, 0f)  // C++ ProjectileClass::TumbleAxis (default 1,0,0)
+    var tumbleRate: Float = 0.1745f                 // C++ ProjectileClass::TumbleRate (DEG_TO_RADF(10))
+    var lifetime: Float = 2.0f                      // C++ ProjectileClass::Lifetime (default 2.0f)
+    var bounceCount: Int = 0                        // C++ ProjectileClass::BounceCount
     var elapsed: Float = 0f
-    var bounceCount: Int = 0
     var maxBounces: Int = 0
     var gravity: Float = 1.0f
-    var tumbleRate: Float = 0f
-    var tumbleAxis: Vector3 = Vector3(0f, 0f, 1f)
-    var orientationMode: OrientationMode = OrientationMode.VELOCITY
     private var expired = false
+
+    override fun asProjectileClass(): ProjectileClass = this
 
     override fun needsTimestep(): Boolean = true
 
@@ -64,14 +69,17 @@ open class ProjectileClass : MoveablePhysClass() {
 
         // Update orientation
         when (orientationMode) {
-            OrientationMode.VELOCITY -> {
+            OrientationMode.ALIGNED -> {
                 // Keep transform oriented along velocity direction
                 transform = transform.withTranslation(position)
             }
-            OrientationMode.TUMBLE -> {
+            OrientationMode.TUMBLING -> {
                 transform = transform.withTranslation(position)
             }
             OrientationMode.FIXED -> {}
+            OrientationMode.ALIGNED_FIXED -> {
+                transform = transform.withTranslation(position)
+            }
         }
 
         elapsed += dt
@@ -79,5 +87,21 @@ open class ProjectileClass : MoveablePhysClass() {
             expired = true
             observer?.objectExpired()
         }
+    }
+
+    companion object {
+        // Chunk IDs sourced from projectile.cpp Save()
+        const val PROJECTILE_CHUNK_MOVEABLEPHYS: Int = 0x03308765      // parent class data
+        const val PROJECTILE_CHUNK_VARIABLES: Int = 0x03308766
+
+        // Micro-chunk IDs
+        const val PROJECTILE_VARIABLE_POSITION: Int = 0x00
+        const val PROJECTILE_VARIABLE_VELOCITY: Int = 0x01
+        const val PROJECTILE_VARIABLE_COLLIDESONMOVE: Int = 0x02
+        const val PROJECTILE_VARIABLE_ORIENTATIONMODE: Int = 0x03
+        const val PROJECTILE_VARIABLE_TUMBLEAXIS: Int = 0x04
+        const val PROJECTILE_VARIABLE_TUMBLERATE: Int = 0x05
+        const val PROJECTILE_VARIABLE_LIFETIME: Int = 0x06
+        const val PROJECTILE_VARIABLE_BOUNCECOUNT: Int = 0x07
     }
 }
