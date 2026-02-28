@@ -78,7 +78,7 @@ open class RenderObjClass {
     fun isBoneCaptured(boneIndex: Int): Boolean = TODO("stub")
     fun setParentTransform(tm: Matrix3D): Unit = TODO("stub")
     fun getOrientation(): ccr.math.Quaternion = TODO("stub")
-    fun getHTree(): HTreeClass? = TODO("stub")
+    fun getHTree(): HTreeClass? = null
     // As_* casts
     open fun asMeshClass(): MeshClass? = null
     open fun asAnimatable3DObjClass(): Animatable3DObjClass? = null
@@ -702,26 +702,6 @@ object MapMgrClass {
     fun findBase(playerType: Int): Any? = null
     fun getBeaconZone(playerType: Int): Any? = null
     fun areVtolVehiclesEnabled(): Boolean = true
-}
-
-// C++: WW3DAssetManager (ww3d2/assetmgr.h)
-object WW3DAssetManager {
-    fun getInstance(): WW3DAssetManager = this
-    fun createRenderObjFromFilename(filename: String): RenderObjClass? = null
-    fun getRenderObjNameFromFilename(filename: String): String = ""
-    // C++: Get_HAnim(name) — returns animation object; getTotalTime() called on it
-    fun getHAnim(name: String): HAnimClass? = null
-}
-
-// C++: HAnimClass — animation asset stub
-class HAnimClass {
-    fun getTotalTime(): Float = TODO("stub")
-}
-
-// C++: HTreeClass — skeleton/bone hierarchy (htree.h)
-class HTreeClass {
-    fun getName(): String = ""
-    fun getNumBones(): Int = 0
 }
 
 // C++: BonesManager

@@ -65,7 +65,7 @@ open class SpecialEffectsGameObj() : PhysicalGameObj() {
         if (animName.isNotEmpty()) {
             // C++: HAnimClass* animation = WW3DAssetManager::Get_Instance()->Get_HAnim(anim_name)
             //      if (animation != NULL) { LifeRemaining = animation->Get_Total_Time(); ... }
-            val animation = WW3DAssetManager.getInstance().getHAnim(animName)
+            val animation = WW3DAssetManager.getInstance()?.getHAnim(animName)
             if (animation != null) {
                 lifeRemaining = animation.getTotalTime()
                 (model as? Animatable3DObjClass)?.setAnimation(animation, 0f, RenderObjClass.ANIM_MODE_ONCE)
