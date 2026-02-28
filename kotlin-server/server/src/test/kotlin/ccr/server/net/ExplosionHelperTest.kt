@@ -21,7 +21,7 @@ class ExplosionHelperTest {
             ccr.net.bitstream.EncoderRegistry.setPrecision(ccr.net.bitstream.BITPACK_HEALTH, 0.0, 2000.0, 1.0)
             ccr.net.bitstream.EncoderRegistry.setPrecision(ccr.net.bitstream.BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)
             ccr.net.bitstream.EncoderRegistry.setPrecision(ccr.net.bitstream.BITPACK_SHIELD_TYPE, 0.0, 8.0, 1.0)
-            ccr.net.bitstream.EncoderRegistry.setPrecision(ccr.net.bitstream.BITPACK_HUMAN_STATE, 0.0, 16.0, 1.0)
+            ccr.net.bitstream.EncoderRegistry.setPrecision(ccr.net.bitstream.BITPACK_HUMAN_STATE, 0.0, 19.0, 1.0)    // humanstate.h: LOCKED_ANIMATION=19
             ccr.net.bitstream.EncoderRegistry.setPrecision(ccr.net.bitstream.BITPACK_ANALOG_VALUES, -1.0, 1.0, 0.01)
         }
     }

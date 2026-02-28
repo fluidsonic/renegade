@@ -346,6 +346,7 @@ class AnimCollisionManagerClass {
 // Human state / soldier animation stubs
 // ---------------------------------------------------------------------------
 
+<<<<<<< HEAD
 // C++: HumanStateClass (soldier.h)
 class HumanStateClass {
     private var _state: Int = UPRIGHT
@@ -421,6 +422,9 @@ class HumanStateClass {
         const val LADDER    = 5
     }
 }
+=======
+// NOTE: HumanStateClass is defined in HumanStateClass.kt — not a stub.
+>>>>>>> f7bb8f8 (feat: port HumanStateClass from C++ — full 1:1 migration)
 
 // C++: TransitionDataClass — data for vehicle/object transition animations
 class TransitionDataClass {

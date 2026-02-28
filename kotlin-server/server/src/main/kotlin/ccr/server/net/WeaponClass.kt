@@ -94,8 +94,8 @@ class WeaponClass(
     var targetPos: Vector3 = Vector3()
     fun setTarget(pos: Vector3) { targetPos = pos }
 
-    // C++: int Get_Style() — weapon hold style (C4, beacon, gun, etc.)
-    fun getStyle(): Int = WEAPON_HOLD_STYLE_DEFAULT
+    // C++: int Get_Style() — returns the weapon hold style (WeaponHoldStyleType)
+    fun getStyle(): Int = HumanStateClass.WEAPON_HOLD_STYLE_EMPTY_HANDS
 
     // C++: bool Is_Firing() — true when weapon fire animation is active
     fun isFiring(): Boolean = isPrimaryTriggered || isSecondaryTriggered
@@ -121,12 +121,23 @@ class WeaponClass(
     // C++: float Get_Range() — weapon effective range
     fun getRange(): Float = 0f
 
-    companion object {
-        // C++: WeaponClass::HoldStyleType enum (weapons.h)
-        const val WEAPON_HOLD_STYLE_DEFAULT = 0
-        const val WEAPON_HOLD_STYLE_C4      = 4
-        const val WEAPON_HOLD_STYLE_BEACON  = 5
+    // C++: float Get_Recoil_Time() — duration of recoil animation
+    fun getRecoilTime(): Float = 0f
 
+    // C++: float Get_Recoil_Scale() — scale factor on recoil motion
+    fun getRecoilScale(): Float = 1f
+
+    // C++: void Set_Safety(bool on) — enable/disable weapon safety
+    private var safetyOn: Boolean = false
+    fun setSafety(on: Boolean) { safetyOn = on }
+
+    // C++: bool Is_Safety_Set() — true if safety is engaged
+    fun isSafetySet(): Boolean = safetyOn
+
+    // C++: PhysicalGameObj* Get_Owner() — returns the weapon's owning game object
+    // Note: accessed via `weapon.owner` property directly (Kotlin generates getOwner() JVM getter)
+
+    companion object {
         // C++: WeaponClass::AnimStateType enum (weapons.h)
         const val WEAPON_ANIM_NOT_FIRING = 0
         const val WEAPON_ANIM_FIRING_0   = 1

@@ -16,7 +16,7 @@ import kotlin.test.assertFalse
  * - WORLD_POSITION_X/Y/Z: (-500, 500, 0.2) → 13 bits each
  * - HEALTH/SHIELD_STRENGTH: (0, 2000) → 11 bits each
  * - SHIELD_TYPE: (0, 8) → 4 bits
- * - HUMAN_STATE: (0, 12) → 4 bits
+ * - HUMAN_STATE: (0, 19) → 5 bits
  * - HUMAN_SUB_STATE: (0, 511) → 9 bits
  * - CONTINUOUS_BOOLEAN_BITS: 4 bits (raw)
  * - ANALOG_VALUES: (-1, 1, 0.01) → 8 bits
@@ -34,7 +34,7 @@ class SoldierGameObjTest {
         private const val HEALTH_BITS = 11
         private const val SHIELD_BITS = 11
         private const val SHIELD_TYPE_BITS = 4
-        private const val HUMAN_STATE_BITS = 4
+        private const val HUMAN_STATE_BITS = 5  // max=19 (LOCKED_ANIMATION) needs 5 bits
         private const val HUMAN_SUB_STATE_BITS = 9
         private const val CONT_BOOL_BITS = 4
         private const val ANALOG_BITS = 8
@@ -47,7 +47,7 @@ class SoldierGameObjTest {
                 1 + // PhysicalGameObj on_host_bone
                 POS_X_BITS + POS_Y_BITS + POS_Z_BITS + // ArmedGameObj targeting
                 CONT_BOOL_BITS + 4 * ANALOG_BITS // SmartGameObj control
-        // = 131
+        // = 132 (was 131 when HUMAN_STATE_BITS=4; LOCKED_ANIMATION=19 requires 5 bits)
 
         // Production soldier constants matching Network.spawnSoldier exactly.
         // NOD: model "c_ag_nod_mg" (11 chars), GDI: model "c_ag_gdi_mg" (11 chars)
@@ -58,8 +58,9 @@ class SoldierGameObjTest {
         // Rare bits for any production soldier (both models are the same length):
         //   model (16 + 11*8 = 104) + anim (16 + 18*8 = 160) + 6×int(192) + hud_pokable(1) + defId(32) = 489
         const val PROD_RARE_BITS = 489
-        // Full creation packet: header(73) + creation(135) + rare(489) + occasional(59) + frequent(131) = 887
-        const val PROD_FULL_CREATION_BITS = 887
+        // Full creation packet: header(73) + creation(135) + rare(489) + occasional(59) + frequent(132) = 888
+        // (was 887 when HUMAN_STATE_BITS=4; LOCKED_ANIMATION=19 requires 5 bits)
+        const val PROD_FULL_CREATION_BITS = 888
 
         @BeforeAll @JvmStatic fun setupEncoders() {
             // Must match Network.initEncoders() defaults (fallback when no map LSD extents)
@@ -69,7 +70,7 @@ class SoldierGameObjTest {
             EncoderRegistry.setPrecision(BITPACK_HEALTH, 0.0, 2000.0, 1.0)
             EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)
             EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE, 0.0, 8.0, 1.0)
-            EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE, 0.0, 12.0, 1.0)
+            EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE, 0.0, 19.0, 1.0)    // humanstate.h: LOCKED_ANIMATION=19
             EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)
             EncoderRegistry.setPrecision(BITPACK_CONTINUOUS_BOOLEAN_BITS, 4)
             EncoderRegistry.setPrecision(BITPACK_ANALOG_VALUES, -1.0, 1.0, 0.01)
@@ -282,17 +283,18 @@ class SoldierGameObjTest {
     }
 
     @Test
-    fun `exportFrequent is 131 bits with default encoders`() {
-        // SoldierGameObj: in_vehicle(1) + has_weapon(1) + pos(13+13+13) + humanState(4) +
-        //   humanSubState(9) + is_special_damage(1) = 55
+    fun `exportFrequent is 132 bits with default encoders`() {
+        // SoldierGameObj: in_vehicle(1) + has_weapon(1) + pos(13+13+13) + humanState(5) +
+        //   humanSubState(9) + is_special_damage(1) = 56
         // PhysicalGameObj: on_host_bone(1)
         // ArmedGameObj: targeting(13+13+13) = 39
         // SmartGameObj: continuousBool(4) + 4×analog(8) = 36
-        // Total: 55 + 1 + 39 + 36 = 131
+        // Total: 56 + 1 + 39 + 36 = 132
+        // (was 131 when HUMAN_STATE_BITS=4; LOCKED_ANIMATION=19 requires 5 bits)
         val bs = BitStream()
         defaultSoldier().exportFrequent(bs)
         assertEquals(FREQUENT_BITS, bs.bitWritePosition)
-        assertEquals(131, bs.bitWritePosition)
+        assertEquals(132, bs.bitWritePosition)
     }
 
     @Test
@@ -349,10 +351,11 @@ class SoldierGameObjTest {
 
     @Test
     fun `full creation packet bit count with default encoders`() {
-        // Header(73) + Creation(135) + Rare(329) + Occasional(59) + Frequent(131) = 727
+        // Header(73) + Creation(135) + Rare(329) + Occasional(59) + Frequent(132) = 728
+        // (was 727 when HUMAN_STATE_BITS=4; LOCKED_ANIMATION=19 requires 5 bits)
         val expected = HEADER_BITS + 32 + CREATION_BITS + expectedRareBits("s_a_human") +
                 expectedOccasionalBits(0) + FREQUENT_BITS
-        assertEquals(727, expected)
+        assertEquals(728, expected)
 
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, defaultSoldier(), networkId = 200001)
@@ -500,8 +503,8 @@ class SoldierGameObjTest {
     @Test
     fun `full creation packet bit count for production NOD soldier`() {
         // NOD production soldier: model "c_ag_nod_mg" (11 chars), anim "S_A_HUMAN.H_A_AINM" (18 chars)
-        // Header(73) + Creation(135) + Rare(489) + Occasional(59) + Frequent(131) = 887
-        assertEquals(887, PROD_FULL_CREATION_BITS)
+        // Header(73) + Creation(135) + Rare(489) + Occasional(59) + Frequent(132) = 888
+        assertEquals(888, PROD_FULL_CREATION_BITS)
 
         val soldier = SoldierGameObj(
             definitionId = 0x04e22811,

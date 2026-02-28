@@ -56,7 +56,7 @@ class ServerJoinFlowTest {
         EncoderRegistry.setPrecision(BITPACK_HEALTH, 0.0, 2000.0, 1.0)
         EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)
         EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE, 0.0, 8.0, 1.0)  // armorTypeCount=8 default
-        EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE, 0.0, 12.0, 1.0)
+        EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE, 0.0, 19.0, 1.0)    // humanstate.h: LOCKED_ANIMATION=19
         EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)
         EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_CS, 8)
         EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_SC, 6)
@@ -367,12 +367,13 @@ class ServerJoinFlowTest {
         //   Creation:  32(defId) + 13(posX) + 12(posY) + 10(posZ) + 32(facing) + 32(controlOwner) = 131
         //   Rare:      16+11*8=104(modelName) + 16+18*8=160(animName) + 32+32+32+32+32+32+1=193 + 32(soldierDefId) = 489
         //   Occasional: 1(isDead) + 11(health) + 11(shieldStr) + 4(shieldType) + 32(wepCount) + 32+32(pistol) = 123
-        //   Frequent:   1(inVehicle) + 1(hasWeapon) + 32+32(curWeapon) + 13+12+10(pos) + 4(humanState)
+        //   Frequent:   1(inVehicle) + 1(hasWeapon) + 32+32(curWeapon) + 13+12+10(pos) + 5(humanState)
         //               + 9(humanSubState) + 1(isSpecialDmg) + 1(onHostBone) + 13+12+10(tgtPos)
-        //               + 4(contBool) + 8+8+8+8(analogs) = 187
-        //   Total: 73 + 131 + 489 + 123 + 187 = 1003
-        assertEquals(1003, bs.bitWritePosition,
-            "SOLDIER creation payload must be 1003 bits (C&C_Under encoders, 1 pistol, NOD minigunner)")
+        //               + 4(contBool) + 8+8+8+8(analogs) = 188
+        //   Total: 73 + 131 + 489 + 123 + 188 = 1004
+        //   (was 1003 when humanState=4 bits; LOCKED_ANIMATION=19 requires 5 bits)
+        assertEquals(1004, bs.bitWritePosition,
+            "SOLDIER creation payload must be 1004 bits (C&C_Under encoders, 1 pistol, NOD minigunner)")
     }
 
     @Test

@@ -655,7 +655,7 @@ open class SoldierGameObj() : SmartGameObj() {
         run {
             val weapon = getWeapon()
             if (weapon != null &&
-                weapon.getStyle() == WEAPON_HOLD_STYLE_C4 &&
+                weapon.getStyle() == HumanStateClass.WEAPON_HOLD_STYLE_C4 &&
                 weapon.isFiring() &&
                 getState() == HumanStateClass.UPRIGHT
             ) {
@@ -676,7 +676,7 @@ open class SoldierGameObj() : SmartGameObj() {
             // C++: Remove C4 from hand if empty
             val weapon = getWeapon()
             if (weapon != null && weaponRenderModel != null) {
-                if (weapon.getStyle() == WEAPON_HOLD_STYLE_C4 || weapon.getStyle() == WEAPON_HOLD_STYLE_BEACON) {
+                if (weapon.getStyle() == HumanStateClass.WEAPON_HOLD_STYLE_C4 || weapon.getStyle() == HumanStateClass.WEAPON_HOLD_STYLE_BEACON) {
                     weaponRenderModel!!.setHidden(!weapon.isLoaded())
                 } else {
                     weaponRenderModel!!.setHidden(false)
@@ -989,7 +989,7 @@ open class SoldierGameObj() : SmartGameObj() {
         detonateC4 = false
         val currentWeapon = getWeapon()
         if (currentWeapon != null && control.getBoolean(ControlClass.BOOLEAN_WEAPON_USE)) {
-            if (currentWeapon.getStyle() == WEAPON_HOLD_STYLE_C4) {
+            if (currentWeapon.getStyle() == HumanStateClass.WEAPON_HOLD_STYLE_C4) {
                 detonateC4 = true
             }
             if (currentWeapon.getCanSnipe()) {
@@ -2817,10 +2817,6 @@ open class SoldierGameObj() : SmartGameObj() {
         const val SURFACE_TYPE_DEFAULT          = 0   // C++: SURFACE_TYPE_DEFAULT
         const val SURFACE_TYPE_LIGHT_METAL      = 6   // C++: SURFACE_TYPE_LIGHT_METAL
         const val SURFACE_TYPE_WATER_PERMEABLE  = 23  // C++: SURFACE_TYPE_WATER_PERMEABLE
-
-        // Weapon styles
-        const val WEAPON_HOLD_STYLE_C4     = 4   // C++: WEAPON_HOLD_STYLE_C4
-        const val WEAPON_HOLD_STYLE_BEACON = 5   // C++: WEAPON_HOLD_STYLE_BEACON
 
         // Class IDs
         const val CLASSID_DEF_EXPLOSION = 0x8007 // C++: CLASSID_DEF_EXPLOSION

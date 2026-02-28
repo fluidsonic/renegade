@@ -210,7 +210,7 @@ private fun setupEncoders() {
     EncoderRegistry.setPrecision(BITPACK_HEALTH, 0.0, 2000.0, 1.0)
     EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)
     EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE, 0.0, 15.0, 1.0)  // armorTypeCount=15
-    EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE, 0.0, 12.0, 1.0)
+    EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE, 0.0, 19.0, 1.0)    // humanstate.h: LOCKED_ANIMATION=19
     EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)
     EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_CS, 8)
     EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_SC, 6)
