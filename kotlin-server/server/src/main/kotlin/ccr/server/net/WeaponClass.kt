@@ -262,6 +262,15 @@ class WeaponClass(val definition: WeaponDefinitionClass) {
     // C++: const char* Get_Back_Model_Name() — returns the model name for the back-of-soldier slot
     fun getBackModelName(): String = definition.backModel
 
+    // C++: bool Is_Model_Update_Needed() — true when the weapon model needs to be re-attached
+    fun isModelUpdateNeeded(): Boolean = false
+
+    // C++: void Reset_Model_Update() — clears the model-update-needed flag
+    fun resetModelUpdate() {}
+
+    // C++: const char* Get_Model_Name() — returns the render model name for this weapon
+    fun getModelName(): String = definition.model
+
     // C++: void Stop_Firing_Sound()
     // Server-side: FiringSound is client-only audio — no-op on the server.
     // The field firingSound is not tracked server-side (audio state is never replicated).
