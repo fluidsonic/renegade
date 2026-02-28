@@ -956,36 +956,9 @@ class MaterialEffectClass : TransitionEffectClass()
 
 fun CombatMaterialEffectManager.getHealthEffect(): TransitionEffectClass? = null
 fun CombatMaterialEffectManager.getElectrocutionEffect(): TransitionEffectClass? = null
-fun MoveablePhysClass.addEffectToMe(effect: TransitionEffectClass): Unit = Unit
-fun MoveablePhysClass.removeEffectFromMe(effect: TransitionEffectClass): Unit = Unit
-
 // ---------------------------------------------------------------------------
 // WeaponClass — additional methods
 // ---------------------------------------------------------------------------
-
-fun WeaponClass.isModelUpdateNeeded(): Boolean = false
-fun WeaponClass.resetModelUpdate(): Unit = Unit
-fun WeaponClass.resetAnimUpdate(): Unit = Unit
-fun WeaponClass.getAnimState(): Int = 0
-fun WeaponClass.getModelName(): String? = null
-fun WeaponClass.setModel(model: RenderObjClass): Unit = Unit
-fun WeaponClass.getNextWeapon(): WeaponClass? = null
-fun WeaponClass.getBackModelName(): String? = null
-fun WeaponClass.getName(): String = ""
-fun WeaponClass.getConversation(): Int = 0
-fun WeaponClass.isReloading(): Boolean = false
-
-// ---------------------------------------------------------------------------
-// WeaponBagClass — getNextWeapon
-// ---------------------------------------------------------------------------
-
-fun WeaponBagClass.getNextWeapon(): WeaponClass? = null
-
-// ---------------------------------------------------------------------------
-// RenderObjClass — getContainer
-// ---------------------------------------------------------------------------
-
-fun RenderObjClass.getContainer(): RenderObjClass? = null
 
 // ---------------------------------------------------------------------------
 // WWMath — fastAsin, atan2, lerp, sqrt
@@ -1009,9 +982,6 @@ fun ccr.server.defs.WeaponDefinitionClass.getName(): String = ""
 // ---------------------------------------------------------------------------
 // HumanPhysClass — getNormalizedSpeed, setNormalizedSpeed
 // ---------------------------------------------------------------------------
-
-fun HumanPhysClass.getNormalizedSpeed(): Float = 10.0f
-fun HumanPhysClass.setNormalizedSpeed(speed: Float): Unit = Unit
 
 // ---------------------------------------------------------------------------
 // ActionParamsClass — moveLocation, moveArrivedDistance (now real var fields on ActionParamsStruct)
