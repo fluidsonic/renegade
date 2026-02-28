@@ -1121,7 +1121,7 @@ open class VehicleGameObj() : SmartGameObj() {
     fun isLocked(): Boolean = lockOwner.get() != null && lockTimer > 0f
 
     // C++: ScriptableGameObj* Get_Lock_Owner() { return LockOwner.Get_Ptr(); }
-    fun getLockOwner(): ScriptableGameObj? = lockOwner.get() as? ScriptableGameObj
+    fun getLockOwner(): ScriptableGameObj? = lockOwner.get()
 
     // -------------------------------------------------------------------------
     // DriverIsGunner
@@ -1139,7 +1139,7 @@ open class VehicleGameObj() : SmartGameObj() {
     // C++: virtual float Get_Stealth_Fade_Distance() const
     override fun getStealthFadeDistance(): Float {
         // C++: IS_MISSION ? singleplayer : multiplayer stealth distance
-        return GlobalSettingsDef.getGlobalSettings()?.getMpStealthDistanceVehicle() ?: super.getStealthFadeDistance()
+        return GlobalSettingsDef.getGlobalSettings().getMpStealthDistanceVehicle()
     }
 
     // -------------------------------------------------------------------------
@@ -1429,7 +1429,7 @@ open class VehicleGameObj() : SmartGameObj() {
     private fun setSubobjectVisibility(model: RenderObjClass, boneIndex: Int, show: Boolean) {
         val count = model.getNumSubObjectsOnBone(boneIndex)
         for (i in 0 until count) {
-            val subObj = model.getSubObjectOnBone(i, boneIndex) ?: continue
+            val subObj = model.getSubObjectOnBone(i, boneIndex)
             subObj.setHidden(!show)
         }
     }
