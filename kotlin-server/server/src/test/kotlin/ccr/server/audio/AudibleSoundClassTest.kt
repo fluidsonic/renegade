@@ -116,9 +116,46 @@ class AudibleSoundClassTest {
     }
 
     @Test
+    fun `volume field accessor`() {
+        val sound = AudibleSoundClass()
+        sound.volume = 0.75f
+        assertEquals(0.75f, sound.volume)
+    }
+
+    @Test
     fun `each sound gets unique id`() {
         val a = AudibleSoundClass()
         val b = AudibleSoundClass()
         assertTrue(a.id != b.id)
+    }
+
+    @Test
+    fun `asAudibleSoundClass returns this`() {
+        val sound = AudibleSoundClass()
+        assertTrue(sound.asAudibleSoundClass() === sound)
+    }
+
+    @Test
+    fun `setTransform updates position`() {
+        val sound = AudibleSoundClass()
+        sound.setPosition(ccr.math.Vector3(1f, 2f, 3f))
+        assertEquals(1f, sound.getPosition().x)
+        assertEquals(2f, sound.getPosition().y)
+        assertEquals(3f, sound.getPosition().z)
+    }
+
+    @Test
+    fun `Sound3D subclass asSound3DClass returns this`() {
+        val sound = Sound3DClass()
+        assertTrue(sound.asSound3DClass() === sound)
+        assertTrue(sound.asAudibleSoundClass() === sound)
+    }
+
+    @Test
+    fun `FilteredSoundClass asFilteredSoundClass returns this`() {
+        val sound = FilteredSoundClass()
+        assertTrue(sound.asFilteredSoundClass() === sound)
+        assertTrue(sound.asSoundPseudo3DClass() === sound)
+        assertTrue(sound.asSound3DClass() === sound)
     }
 }

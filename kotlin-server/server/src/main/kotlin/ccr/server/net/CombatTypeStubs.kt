@@ -4,8 +4,18 @@ import ccr.math.Matrix3D
 import ccr.math.OBBox as MathOBBox
 import ccr.math.Vector3
 import ccr.physics.PhysClass
-import ccr.physics.static.StaticPhysClass
+import ccr.physics.moveable.HumanPhysClass
+import ccr.physics.moveable.MoveablePhysClass
 import ccr.physics.scene.PhysicsScene
+import ccr.physics.static.StaticPhysClass
+import ccr.server.defs.DefinitionClass
+import ccr.server.defs.BeaconGameObjDef
+import ccr.server.defs.BuildingGameObjDef
+import ccr.server.defs.C4GameObjDef
+import ccr.server.defs.CinematicGameObjDef
+import ccr.server.defs.PhysicalGameObjDef
+import ccr.server.defs.PowerUpGameObjDef
+import ccr.server.defs.SimpleGameObjDef
 import ccr.server.defs.Dialogue
 import ccr.server.level.ChunkIds
 
@@ -933,6 +943,182 @@ object CollisionMath {
     }
 }
 
+// ---------------------------------------------------------------------------
+// HumanPhysClass — additional method stubs
+// ---------------------------------------------------------------------------
+
+fun HumanPhysClass.enableUserControl(enable: Boolean): Unit = Unit
+fun HumanPhysClass.setTransform(tm: Matrix3D): Unit = Unit
+fun HumanPhysClass.getTranslation(): Vector3 = getPosition()
+fun HumanPhysClass.isInScene(): Boolean = false
+fun HumanPhysClass.remove(): Unit = Unit
+fun HumanPhysClass.addToScene(scene: PhysicsScene): Unit = Unit
+fun HumanPhysClass.setTranslation(pos: Vector3): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// MeshClass — classId constant (RenderObjClass sub-type ID)
+// ---------------------------------------------------------------------------
+
+// CLASSID_MESH is now RenderObjClass.companion.CLASSID_MESH; keep top-level alias
+const val CLASSID_MESH = 1
+
+// MeshClass.getPolygonArray returns array of triangle indices
+fun MeshClass.getPolygonCountArray(): IntArray = intArrayOf()
+
+// ---------------------------------------------------------------------------
+// SmartGameObj.getOwner() and similar
+// ---------------------------------------------------------------------------
+
+fun SmartGameObj.getOwner(): SoldierGameObj? = null
+fun SmartGameObj.getName(): String = ""
+fun SmartGameObj.getId(): Int = networkId
+fun SmartGameObj.getPlayerType(): Int = playerType
+fun SmartGameObj.getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
+fun SmartGameObj.isGameplayPermitted(): Boolean = true
+fun SmartGameObj.peekAnimation(): Animatable3DObjClass? = null
+fun SmartGameObj.getTargetingPos(): Vector3 = targeting
+
+// ---------------------------------------------------------------------------
+// HarvesterClass — save/load
+// ---------------------------------------------------------------------------
+
+fun HarvesterClass.save(csave: ChunkSaveClass): Unit = Unit
+fun HarvesterClass.load(cload: ChunkLoadClass): Unit = Unit
+fun HarvesterClass.getInstance(): HarvesterClass? = null
+fun HarvesterClass.setTiberiumRegion(region: Any?): Unit = Unit
+fun HarvesterClass.addMoney(amount: Float): Unit = Unit
+
+// C++: HarvesterClass.getInstance() companion
+class HarvesterClassCompanion {
+    fun getInstance(): HarvesterClass? = null
+}
+
+// ---------------------------------------------------------------------------
+// GameObjObserverClass — additional methods
+// ---------------------------------------------------------------------------
+
+fun GameObjObserverClass.getOwner(): ScriptableGameObj? = null
+
+// ---------------------------------------------------------------------------
+// DefenseObjectClass — save/load
+// ---------------------------------------------------------------------------
+
+fun ccr.server.net.DefenseObjectClass.save(csave: ChunkSaveClass): Boolean = true
+fun ccr.server.net.DefenseObjectClass.load(cload: ChunkLoadClass): Boolean = true
+
+// ---------------------------------------------------------------------------
+// DefinitionMgrClass — findAmmoDefinition
+// ---------------------------------------------------------------------------
+
+// DefinitionMgrClass — findAmmoDefinition/findTypedDefinition already on object above
+
+// ---------------------------------------------------------------------------
+// AnimCollisionManagerClass — wrap/unwrap
+// ---------------------------------------------------------------------------
+
+fun AnimCollisionManagerClass.wrap(): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// MoveablePhysClass — additional
+// ---------------------------------------------------------------------------
+
+fun MoveablePhysClass.moveContents(delta: Vector3): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// PhysicalGameObj helpers
+// ---------------------------------------------------------------------------
+
+fun PhysicalGameObj.getTargetingPos(): Vector3 = (this as? ArmedGameObj)?.targeting ?: Vector3()
+fun PhysicalGameObj.getOwner(): SoldierGameObj? = null
+fun PhysicalGameObj.getName(): String = ""
+fun PhysicalGameObj.getId(): Int = networkId
+fun PhysicalGameObj.getPlayerType(): Int = playerType
+fun PhysicalGameObj.isGameplayPermitted(): Boolean = true
+fun PhysicalGameObj.getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
+
+// AudibleSoundClass.setPitchFactor — implemented as a real method on AudibleSoundClass in ccr.server.audio
+
+// ---------------------------------------------------------------------------
+// GameObjReference — save/load
+// ---------------------------------------------------------------------------
+
+fun GameObjReference.save(csave: ChunkSaveClass): Unit = Unit
+fun GameObjReference.load(cload: ChunkLoadClass): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// ActionClass — save/load
+// ---------------------------------------------------------------------------
+
+fun ActionClass.save(csave: ChunkSaveClass): Unit = Unit
+fun ActionClass.load(cload: ChunkLoadClass): Unit = Unit
+fun ActionClass.reset(priority: Int): Unit = Unit
+fun ActionClass.attack(params: ActionParamsStruct): Unit = Unit
+fun ActionClass.goto(params: ActionParamsStruct): Unit = Unit
+fun ActionClass.end(): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// StaticNetworkObject (server port)
+// ---------------------------------------------------------------------------
+
+// C++: Stats tracking — stub
+object StatsManager {
+    fun statsAddGameTime(soldierNetId: Int, delta: Float): Unit = Unit
+    fun statsSetFinalHealth(soldierNetId: Int, health: Float): Unit = Unit
+    fun statsAddVehicleTime(soldierNetId: Int, delta: Float): Unit = Unit
+    fun statsAddVehicleDestroyed(soldierNetId: Int): Unit = Unit
+    fun statsAddBuildingDestroyed(soldierNetId: Int): Unit = Unit
+}
+
+// ---------------------------------------------------------------------------
+// Additional constants needed by SoldierGameObj
+// ---------------------------------------------------------------------------
+
+const val ANIM_MODE_LOOP_ONCE = 4
+const val ANIM_MODE_MANUAL = 5
+
+// C++: ANIMATE_TARGET anim mode
+const val ANIMATE_TARGET = ANIM_MODE_TARGET
+
+// C++: ControlClass boolean controls
+const val BOOLEAN_DUCK = 10
+const val BOOLEAN_SPRINT = 15
+
+// C++: SoldierGameObj collision group
+const val SOLDIER_COLLISION_GROUP = 4
+
+// C++: DialogMax
+const val DIALOG_MAX = 10
+
+// ---------------------------------------------------------------------------
+// VehicleFactoryGameObj — generatingVehicleId
+// This is typically a field on VehicleFactoryGameObj; exposed as a stub extension
+// ---------------------------------------------------------------------------
+
+// handled in VehicleFactoryGameObj.kt directly
+
+// ---------------------------------------------------------------------------
+// StealthEffectClass — save/load
+// ---------------------------------------------------------------------------
+
+fun StealthEffectClass.save(csave: ChunkSaveClass): Unit = Unit
+fun StealthEffectClass.load(cload: ChunkLoadClass): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// LogicalListenerClass — save/load
+// ---------------------------------------------------------------------------
+
+fun LogicalListenerClass.save(csave: ChunkSaveClass): Unit = Unit
+fun LogicalListenerClass.load(cload: ChunkLoadClass): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// PhysicalGameObjDef — needed for ArmedGameObj
+// ---------------------------------------------------------------------------
+// (This is a real class in ccr.server.defs — just ensure it's accessible via import)
+
+// ---------------------------------------------------------------------------
+// ControlClass — additional free function
+// ---------------------------------------------------------------------------
+
 val ControlClass.Companion.BOOLEAN_JUMP: ControlClass.BooleanControl get() = ControlClass.BooleanControl.JUMP
 val ControlClass.Companion.BOOLEAN_WEAPON_NEXT: ControlClass.BooleanControl get() = ControlClass.BooleanControl.WEAPON_NEXT
 val ControlClass.Companion.BOOLEAN_WEAPON_PREV: ControlClass.BooleanControl get() = ControlClass.BooleanControl.WEAPON_PREV
@@ -963,9 +1149,36 @@ class MaterialEffectClass : TransitionEffectClass()
 
 fun CombatMaterialEffectManager.getHealthEffect(): TransitionEffectClass? = null
 fun CombatMaterialEffectManager.getElectrocutionEffect(): TransitionEffectClass? = null
+fun MoveablePhysClass.addEffectToMe(effect: TransitionEffectClass): Unit = Unit
+fun MoveablePhysClass.removeEffectFromMe(effect: TransitionEffectClass): Unit = Unit
+
 // ---------------------------------------------------------------------------
 // WeaponClass — additional methods
 // ---------------------------------------------------------------------------
+
+fun WeaponClass.isModelUpdateNeeded(): Boolean = false
+fun WeaponClass.resetModelUpdate(): Unit = Unit
+fun WeaponClass.resetAnimUpdate(): Unit = Unit
+fun WeaponClass.getAnimState(): Int = 0
+fun WeaponClass.getModelName(): String? = null
+fun WeaponClass.setModel(model: RenderObjClass): Unit = Unit
+fun WeaponClass.getNextWeapon(): WeaponClass? = null
+fun WeaponClass.getBackModelName(): String? = null
+fun WeaponClass.getName(): String = ""
+fun WeaponClass.getConversation(): Int = 0
+fun WeaponClass.isReloading(): Boolean = false
+
+// ---------------------------------------------------------------------------
+// WeaponBagClass — getNextWeapon
+// ---------------------------------------------------------------------------
+
+fun WeaponBagClass.getNextWeapon(): WeaponClass? = null
+
+// ---------------------------------------------------------------------------
+// RenderObjClass — getContainer
+// ---------------------------------------------------------------------------
+
+fun RenderObjClass.getContainer(): RenderObjClass? = null
 
 // ---------------------------------------------------------------------------
 // WWMath — fastAsin, atan2, lerp, sqrt
@@ -990,20 +1203,20 @@ fun ccr.server.defs.WeaponDefinitionClass.getName(): String = ""
 // HumanPhysClass — getNormalizedSpeed, setNormalizedSpeed
 // ---------------------------------------------------------------------------
 
+fun HumanPhysClass.getNormalizedSpeed(): Float = 10.0f
+fun HumanPhysClass.setNormalizedSpeed(speed: Float): Unit = Unit
+
 // ---------------------------------------------------------------------------
 // ActionParamsClass — moveLocation, moveArrivedDistance (now real var fields on ActionParamsStruct)
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// WWAudioClass — createContinuousSound, addToScene, removeFromScene, getDuration
+// FreeRandom — getFloat(min, max)
 // ---------------------------------------------------------------------------
 
-fun WWAudioClass.createContinuousSound(soundDefId: Int): AudibleSoundClass? = null
-fun AudibleSoundClass.addToScene(): Unit = Unit
-fun AudibleSoundClass.removeFromScene(): Unit = Unit
-fun AudibleSoundClass.getDuration(): Float = 0f
-fun AudibleSoundClass.setTransform(tm: Matrix3D): Unit = Unit
-fun AudibleSoundClass.play(): Unit = Unit
+fun FreeRandom.getFloat(min: Float, max: Float): Float = min + kotlin.random.Random.nextFloat() * (max - min)
+
+// WWAudioClass / AudibleSoundClass methods are now real implementations in ccr.server.audio
 
 // ---------------------------------------------------------------------------
 // BackgroundMgrClass — overrideSkyTint, overrideClouds, overrideLightning, restoreAll

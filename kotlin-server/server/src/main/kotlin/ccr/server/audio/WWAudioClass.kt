@@ -3,29 +3,12 @@ package ccr.server.audio
 import ccr.math.Matrix3D
 import ccr.server.defs.AudibleSoundDefinitionClass
 import ccr.server.level.DefinitionRegistry
+import kotlin.random.Random
 
 // C++: WWAudioClass (WWAudio/WWAudio.h)
 // Singleton audio manager. On the server it manages no real audio hardware,
 // but maintains the sound scene for gameplay-relevant audio state.
 class WWAudioClass(val definitions: DefinitionRegistry) {
-
-    companion object {
-        private var instance: WWAudioClass? = null
-
-        // C++: static WWAudioClass* Get_Instance()
-        fun getInstance(): WWAudioClass? = instance
-
-        // C++: static void Init(...)
-        fun init(definitions: DefinitionRegistry) {
-            instance = WWAudioClass(definitions)
-        }
-
-        // C++: static void Shutdown()
-        fun shutdown() {
-            instance?.soundScene?.flushScene()
-            instance = null
-        }
-    }
 
     // C++: SoundSceneClass* m_SoundScene
     val soundScene = SoundSceneClass()
@@ -78,11 +61,15 @@ class WWAudioClass(val definitions: DefinitionRegistry) {
         sound.virtualChannel = def.virtualChannel
 
         // Volume with randomizer
-        val volumeRnd = (Math.random().toFloat() * 2f - 1f) * def.volumeRandomizer
+        val volumeRnd = if (def.volumeRandomizer > 0f) {
+            (Random.nextFloat() * 2f - 1f) * def.volumeRandomizer
+        } else 0f
         sound.volume = (def.volume + volumeRnd).coerceIn(0f, 1f)
 
         // Pitch with randomizer
-        val pitchRnd = (Math.random().toFloat() * 2f - 1f) * def.pitchFactorRandomizer
+        val pitchRnd = if (def.pitchFactorRandomizer > 0f) {
+            (Random.nextFloat() * 2f - 1f) * def.pitchFactorRandomizer
+        } else 0f
         sound.pitchFactor = def.pitchFactor + pitchRnd
 
         if (sound is Sound3DClass) {
@@ -91,5 +78,32 @@ class WWAudioClass(val definitions: DefinitionRegistry) {
         }
 
         return sound
+    }
+
+    companion object {
+        private var instance: WWAudioClass? = null
+
+        // No-op instance returned when no level is loaded (no audio definitions available).
+        // Returns null for all factory methods — callers are expected to handle null returns.
+        private val noopInstance: WWAudioClass = WWAudioClass(DefinitionRegistry())
+
+        // C++: static WWAudioClass* Get_Instance()
+        // Returns the initialized instance if available, or a no-op instance when no level is loaded.
+        // The no-op instance returns null for all sound factory calls (no definitions available).
+        fun getInstance(): WWAudioClass = instance ?: noopInstance
+
+        // C++: static void Init(...)
+        fun init(definitions: DefinitionRegistry) {
+            instance = WWAudioClass(definitions)
+        }
+
+        // C++: static void Shutdown()
+        fun shutdown() {
+            instance?.soundScene?.flushScene()
+            instance = null
+        }
+
+        // Returns true if the singleton is initialized (level is loaded with definitions)
+        fun isInitialized(): Boolean = instance != null
     }
 }

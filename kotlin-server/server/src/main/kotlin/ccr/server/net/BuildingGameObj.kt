@@ -366,7 +366,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
             // C++: CurrentAnnouncement = WWAudioClass::Get_Instance()->Create_Sound(sound_def_id)
             currentAnnouncement = WWAudioClass.getInstance()?.createSound(soundDefId)
             currentAnnouncement?.let { snd ->
-                duration = snd.getDuration() / 1000.0f
+                duration = snd.getDuration().toFloat() / 1000.0f
 
                 if (!broadcast) {
                     snd.setDropOffRadius(announcementSphere.radius)

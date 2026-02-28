@@ -122,11 +122,19 @@ open class AudibleSoundClass : SoundSceneObjClass() {
         if (startPlaying) play()
     }
 
+    // C++: virtual void Add_To_Scene(bool start_playing = true) — default convenience
+    fun addToScene() = addToScene(true)
+
     // C++: virtual void Remove_From_Scene()
     override fun removeFromScene() {
         scene?.removeSound(this)
         scene = null
         stop()
+    }
+
+    // Overload: setTransform accepting a Vector3 (position only) — matches C++ usage in BeaconGameObj etc.
+    fun setTransform(center: Vector3) {
+        _transform = _transform.withTranslation(center)
     }
 
     // -------------------------------------------------------------------------
@@ -195,8 +203,12 @@ open class AudibleSoundClass : SoundSceneObjClass() {
     // C++: const char* Get_String() — returns display text from definition
     fun getString(): String? = definition?.displayText
 
-    // Overload: setTransform accepting a Vector3 (position only) — matches C++ usage in BeaconGameObj etc.
-    fun setTransform(center: Vector3) {
-        _transform = _transform.withTranslation(center)
-    }
+    // C++: void Set_Pitch_Factor(float pitch)
+    fun setPitchFactor(pitch: Float) { pitchFactor = pitch }
+
+    // C++: float Get_Pitch_Factor()
+    fun getPitchFactor(): Float = pitchFactor
+
+    // C++: int Get_Sound_ID() — returns definition ID (sound asset identifier)
+    fun getSoundId(): Int = definition?.id?.toInt() ?: 0
 }

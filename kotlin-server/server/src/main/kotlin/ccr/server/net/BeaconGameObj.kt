@@ -561,7 +561,7 @@ class BeaconGameObj() : SimpleGameObj() {
         if (soundDefId > 0) {
             messageSound = WWAudioClass.getInstance()?.createSound(soundDefId)
             messageSound?.let { sound ->
-                duration = sound.getDuration() / 1000.0f
+                duration = sound.getDuration().toFloat() / 1000.0f
                 sound.setTransform(getTransform())
                 sound.addToScene()
                 displayText = !sound.isSoundCulled()

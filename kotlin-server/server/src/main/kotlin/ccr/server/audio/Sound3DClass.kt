@@ -27,5 +27,6 @@ open class Sound3DClass : AudibleSoundClass() {
     // C++: void Make_Static()
     fun makeStatic() { isStatic = true }
 
+    // C++: virtual Sound3DClass* As_Sound3DClass()
     override fun asSound3DClass(): Sound3DClass = this
 }

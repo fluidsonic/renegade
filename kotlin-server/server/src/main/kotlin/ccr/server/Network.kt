@@ -58,6 +58,7 @@ import ccr.server.core.crcStringi
 import ccr.server.net.DoorNetworkObject
 import ccr.server.net.PowerUpGameObj
 import ccr.server.net.ScTextObj
+import ccr.server.audio.WWAudioClass
 import ccr.server.net.SimpleGameObj
 import ccr.server.net.DefinitionMgrClass
 import ccr.server.net.TimeManager
@@ -1128,6 +1129,9 @@ class Network(internal val config: ServerConfig) {
         tossedC4DefId = 0
         beaconWeaponDefId = 0
 
+        // Shut down audio system — flush all sounds
+        WWAudioClass.shutdown()
+
         println("[SERVER] level unloaded")
     }
 
@@ -1252,7 +1256,7 @@ class Network(internal val config: ServerConfig) {
         println("[SERVER] loaded ${defs.size} definitions via LevelLoader")
 
         // Initialize audio manager with the definition registry
-        ccr.server.audio.WWAudioClass.init(defs)
+        WWAudioClass.init(defs)
 
         defs.findByName("CnC_Nod_Minigunner_0")?.let {
             nodSoldierDefId = it.id.toInt()

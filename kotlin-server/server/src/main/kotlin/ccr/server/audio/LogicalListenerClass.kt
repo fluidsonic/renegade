@@ -19,6 +19,8 @@ class LogicalListenerClass : SoundSceneObjClass() {
     // Backing fields for abstract position/transform
     private var _transform: Matrix3D = Matrix3D.IDENTITY
 
+    private var _dropOffRadius: Float = 0f
+
     // -------------------------------------------------------------------------
     // SoundSceneObjClass abstract method implementations
     // -------------------------------------------------------------------------
@@ -29,8 +31,8 @@ class LogicalListenerClass : SoundSceneObjClass() {
     override fun setPosition(pos: Vector3) { _transform = _transform.withTranslation(pos) }
     override fun cullSound(cull: Boolean) {}
     override fun isSoundCulled(): Boolean = false
-    override fun setDropOffRadius(radius: Float) {}
-    override fun getDropOffRadius(): Float = 0f
+    override fun setDropOffRadius(radius: Float) { _dropOffRadius = radius }
+    override fun getDropOffRadius(): Float = _dropOffRadius
 
     // C++: virtual void Add_To_Scene(bool start_playing = true)
     override fun addToScene(startPlaying: Boolean) {
@@ -38,6 +40,9 @@ class LogicalListenerClass : SoundSceneObjClass() {
         sc.addLogicalListener(this)
         scene = sc
     }
+
+    // C++: virtual void Add_To_Scene(bool start_playing = true) — default convenience
+    fun addToScene() = addToScene(true)
 
     // C++: virtual void Remove_From_Scene()
     override fun removeFromScene() {

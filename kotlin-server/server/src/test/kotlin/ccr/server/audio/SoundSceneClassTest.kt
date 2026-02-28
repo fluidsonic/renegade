@@ -65,6 +65,29 @@ class SoundSceneClassTest {
     }
 
     @Test
+    fun `addStaticSound and removeStaticSound`() {
+        val scene = SoundSceneClass()
+        val sound = AudibleSoundClass()
+        scene.addStaticSound(sound)
+        assertTrue(scene.staticSounds.contains(sound))
+        scene.removeStaticSound(sound)
+        assertFalse(scene.staticSounds.contains(sound))
+    }
+
+    @Test
+    fun `removeLogicalSound removes from both lists`() {
+        val scene = SoundSceneClass()
+        val sound1 = LogicalSoundClass()
+        val sound2 = LogicalSoundClass()
+        scene.addLogicalSound(sound1)
+        scene.addSingleShotLogicalSound(sound2)
+        scene.removeLogicalSound(sound1)
+        scene.removeLogicalSound(sound2)
+        assertFalse(scene.logicalSounds.contains(sound1))
+        assertFalse(scene.singleShotLogicalSounds.contains(sound2))
+    }
+
+    @Test
     fun `flushScene clears all lists`() {
         val scene = SoundSceneClass()
         scene.addSound(AudibleSoundClass())
