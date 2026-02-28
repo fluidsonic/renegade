@@ -1,6 +1,8 @@
 package ccr.server
 
 import ccr.math.Vector3
+import ccr.server.defs.WeaponDefinitionClass
+import ccr.server.level.DefinitionRegistry
 import ccr.server.net.SoldierGameObj
 import ccr.server.net.WeaponEntry
 import kotlin.test.Test
@@ -8,11 +10,37 @@ import kotlin.test.assertEquals
 
 class GodPowerUpTest {
 
-    private fun makeSoldier(vararg weapons: WeaponEntry) = SoldierGameObj(
-        definitionId = 1,
-        position = Vector3(0f, 0f, 0f),
-        weapons = mutableListOf(*weapons),
-    )
+    /** Creates a DefinitionRegistry containing a stub WeaponDefinitionClass for each given ID. */
+    private fun makeTestRegistry(vararg weaponIds: Int): DefinitionRegistry {
+        val registry = DefinitionRegistry()
+        for (id in weaponIds) {
+            registry.register(WeaponDefinitionClass(
+                name = "weapon_$id",
+                id = id.toUInt(),
+                chunkId = 0u,
+                maxInventoryRounds = 9999,
+            ))
+        }
+        return registry
+    }
+
+    private fun makeSoldier(vararg weapons: WeaponEntry): SoldierGameObj {
+        // Collect all weapon IDs needed — both initial weapons and any that tests may add later.
+        // The registry covers IDs 101, 202, 999 so that addWeaponToSoldier can resolve definitions.
+        val allIds = weapons.map { it.definitionId }.toIntArray() + intArrayOf(101, 202, 999)
+        val registry = makeTestRegistry(*allIds)
+        val soldier = SoldierGameObj(
+            definitionId = 1,
+            position = Vector3(0f, 0f, 0f),
+        )
+        soldier.weaponBag.definitions = registry
+        soldier.weaponBag.clearWeapons()
+        for (entry in weapons) {
+            soldier.weaponBag.addWeapon(entry.definitionId, entry.totalRounds)
+        }
+        if (weapons.isNotEmpty()) soldier.weaponBag.selectIndex(1)
+        return soldier
+    }
 
     @Test
     fun `addWeaponToSoldier adds new weapon when not owned`() {

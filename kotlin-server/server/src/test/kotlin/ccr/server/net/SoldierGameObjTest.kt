@@ -2,6 +2,8 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.server.defs.WeaponDefinitionClass
+import ccr.server.level.DefinitionRegistry
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -86,6 +88,51 @@ class SoldierGameObjTest {
         facing        = 0f,
         health        = 100f,
     )
+
+    /** Creates a DefinitionRegistry containing a stub WeaponDefinitionClass for each given ID. */
+    private fun makeTestRegistry(vararg weaponIds: Int): DefinitionRegistry {
+        val registry = DefinitionRegistry()
+        for (id in weaponIds) {
+            registry.register(WeaponDefinitionClass(
+                name = "weapon_$id",
+                id = id.toUInt(),
+                chunkId = 0u,
+                maxInventoryRounds = 9999,
+            ))
+        }
+        return registry
+    }
+
+    /**
+     * Creates a SoldierGameObj with the given parameters and populates its weapon bag
+     * from the supplied WeaponEntry list.  A DefinitionRegistry with stub definitions
+     * for each weapon ID is set on the bag so that addWeapon(id, rounds) can resolve
+     * the definition.
+     */
+    private fun soldierWithWeapons(
+        definitionId: Int,
+        controlOwner: Int = 0,
+        team: Int = 0,
+        modelName: String = "s_a_human",
+        position: Vector3 = Vector3(0f, 0f, 5f),
+        weapons: List<WeaponEntry> = emptyList(),
+    ): SoldierGameObj {
+        val registry = makeTestRegistry(*weapons.map { it.definitionId }.toIntArray())
+        val soldier = SoldierGameObj(
+            definitionId = definitionId,
+            controlOwner = controlOwner,
+            team = team,
+            modelName = modelName,
+            position = position,
+        )
+        soldier.weaponBag.definitions = registry
+        soldier.weaponBag.clearWeapons()
+        for (entry in weapons) {
+            soldier.weaponBag.addWeapon(entry.definitionId, entry.totalRounds)
+        }
+        if (weapons.isNotEmpty()) soldier.weaponBag.selectIndex(1)
+        return soldier
+    }
 
     // Calculates expected exportRare bit count for a given model name and anim name.
     // Fixed fields: 6×int(192) + hud_pokable(1) + soldier.defId(32) = 225
@@ -299,13 +346,13 @@ class SoldierGameObjTest {
 
     @Test
     fun `exportOccasional writes one weapon`() {
-        val soldier = SoldierGameObj(
+        val soldier = soldierWithWeapons(
             definitionId = 0x04e22811,
             controlOwner = 1,
             team = 0,
             modelName = "s_a_human",
             position = Vector3(0f, 0f, 5f),
-            weapons = mutableListOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
+            weapons = listOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
         )
         val bs = BitStream()
         soldier.exportOccasional(bs)
@@ -325,13 +372,13 @@ class SoldierGameObjTest {
 
     @Test
     fun `exportFrequent writes weapon data when has weapon`() {
-        val soldier = SoldierGameObj(
+        val soldier = soldierWithWeapons(
             definitionId = 0x04e22811,
             controlOwner = 1,
             team = 0,
             modelName = "s_a_human",
             position = Vector3(0f, 0f, 5f),
-            weapons = mutableListOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
+            weapons = listOf(WeaponEntry(definitionId = 12345, totalRounds = 100)),
         )
         val bs = BitStream()
         soldier.exportFrequent(bs)

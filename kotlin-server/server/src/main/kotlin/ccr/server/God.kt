@@ -54,7 +54,7 @@ open class God(private val server: Network) {
         ) {
             val bag = soldier.weaponBag
             val existing = (1 until bag.getCount()).mapNotNull { bag.peekWeapon(it) }
-                .firstOrNull { it.definitionId == weaponDefId }
+                .firstOrNull { it.getId() == weaponDefId }
             if (existing != null) {
                 existing.setTotalRounds((existing.getTotalRounds() + rounds).coerceAtMost(maxRounds))
             } else if (grantWeapon) {
@@ -251,6 +251,7 @@ open class God(private val server: Network) {
         // first Export_Occasional sends correct values.
         soldierDef?.let { soldier.defenseObject.init(it.defenseObjectDef, soldier) }
 
+        soldier.weaponBag.definitions = server.loadedLevel?.definitions
         buildWeaponsForSoldier(defId, soldier.weaponBag)
         if (soldier.weaponBag.getCount() > 1) {
             soldier.weaponBag.selectIndex(1)
@@ -386,6 +387,7 @@ open class God(private val server: Network) {
      */
     private fun buildWeaponsForSoldier(defId: Int, bag: WeaponBagClass) {
         val registry = server.loadedLevel?.definitions
+        bag.definitions = registry
         val wrapper = registry?.findById(defId.toUInt()) as? SoldierGameObjDef
 
         // C++: ArmedGameObj::Copy_Settings passes WeaponRounds to Add_Weapon.
@@ -473,13 +475,13 @@ open class God(private val server: Network) {
         println("[GOD] buildWeaponsForSoldier defId=0x${defId.toUInt().toString(16)} entries=${entries.size}: ${entries.map { "0x${it.defId.toUInt().toString(16)}(rounds=${it.rounds},unlim=${it.unlimited})" }}")
         for (entry in entries) {
             val weapon = bag.addWeapon(entry.defId, entry.rounds)
-            if (entry.unlimited) weapon.inventoryRounds = -1
+            if (entry.unlimited) weapon?.inventoryRounds = -1
         }
         // Auto-select the first weapon (index 1; index 0 is the null sentinel)
         if (bag.getCount() > 1 && bag.getIndex() == 0) {
             bag.selectIndex(1)
         }
-        println("[GOD] weapon bag: count=${bag.getCount()} selectedIdx=${bag.getIndex()} weapon=${bag.getWeapon()?.definitionId?.let { "0x${it.toUInt().toString(16)}" }}")
+        println("[GOD] weapon bag: count=${bag.getCount()} selectedIdx=${bag.getIndex()} weapon=${bag.getWeapon()?.getId()?.let { "0x${it.toUInt().toString(16)}" }}")
     }
 
     // ---- Vehicle spawning ----
@@ -656,7 +658,7 @@ open class God(private val server: Network) {
             val bag = soldier.weaponBag
             for (i in 1 until bag.getCount()) {
                 val weapon = bag.peekWeapon(i) ?: continue  // index 0 is null sentinel
-                val wDef = definitions?.findById(weapon.definitionId.toUInt()) as? WeaponDefinitionClass
+                val wDef = definitions?.findById(weapon.getId().toUInt()) as? WeaponDefinitionClass
                 if (wDef != null && wDef.canReceiveGenericCnCAmmo && wDef.clipSize > 0) {
                     weapon.setTotalRounds(
                         (weapon.getTotalRounds() + wDef.clipSize * def.grantWeaponRounds)
@@ -750,7 +752,7 @@ open class God(private val server: Network) {
         // Rate limit: 1 C4 per second per player
         if (nowMs - (lastC4PlaceMs[rhostId] ?: 0L) < 1000L) return null
 
-        val ammoDef = server.getAmmoDefForWeapon(soldier.getWeapon()?.definitionId ?: 0) ?: return null
+        val ammoDef = server.getAmmoDefForWeapon(soldier.getWeapon()?.getId() ?: 0) ?: return null
         if (ammoDef.ammoType != AMMO_TYPE_C4_REMOTE && ammoDef.ammoType != AMMO_TYPE_C4_TIMED) return null
 
         // Find nearest alive enemy building within 15m (225 = 15²)

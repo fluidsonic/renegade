@@ -209,7 +209,7 @@ open class SoldierGameObj() : SmartGameObj() {
     val weapons: List<WeaponEntry>
         get() = (1 until weaponBag.getCount()).map { i ->
             val w = weaponBag.peekWeapon(i)!!  // index 1+ is always a real WeaponClass
-            WeaponEntry(definitionId = w.definitionId, totalRounds = w.getTotalRounds())
+            WeaponEntry(definitionId = w.getId(), totalRounds = w.getTotalRounds())
         }
 
     // C++: ~SoldierGameObj()
@@ -1395,7 +1395,11 @@ open class SoldierGameObj() : SmartGameObj() {
         val hasWeapon = (p_weapon != null)
         packet.addBool(hasWeapon)
         if (hasWeapon) {
+<<<<<<< HEAD
             packet.addInt(p_weapon.definitionId)
+=======
+            packet.addInt(p_weapon!!.getId())
+>>>>>>> ac7c5bd (refactor: WeaponClass takes WeaponDefinitionClass instead of definitionId)
             packet.addInt(p_weapon.getTotalRounds())
         }
 

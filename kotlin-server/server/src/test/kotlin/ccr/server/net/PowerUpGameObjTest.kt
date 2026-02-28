@@ -2,6 +2,8 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.server.defs.PowerUpGameObjDef
+import ccr.server.defs.WeaponDefinitionClass
+import ccr.server.level.DefinitionRegistry
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -58,6 +60,9 @@ class PowerUpGameObjTest {
             modelName    = "c_ag_nod_mg",
             position     = Vector3(0f, 0f, 0f),
         )
+        val registry = DefinitionRegistry()
+        registry.register(WeaponDefinitionClass(name = "weapon_999", id = 999u, chunkId = 0u))
+        soldier.weaponBag.definitions = registry
         assertEquals(0, soldier.weapons.size)
 
         val def = PowerUpGameObjDef(

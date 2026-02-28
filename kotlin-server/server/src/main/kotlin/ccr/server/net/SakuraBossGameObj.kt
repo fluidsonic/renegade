@@ -5,6 +5,7 @@ import ccr.math.Vector3
 import ccr.math.degToRadF
 import ccr.server.defs.DefenseObjectDefClass
 import ccr.server.defs.SakuraBossGameObjDef
+import ccr.server.defs.WeaponDefinitionClass
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.max
@@ -316,14 +317,14 @@ open class SakuraBossGameObj : VehicleGameObj() {
         // C++: Create the gatling gun
         // C++: WeaponManager::Find_Weapon_Definition / new WeaponClass — client-side weapon creation skipped server-side
         if (def.gattlingGunDefId != 0) {
-            gattlingGun = WeaponClass(definitionId = def.gattlingGunDefId)
+            gattlingGun = WeaponClass(WeaponDefinitionClass(name = "weapon_${def.gattlingGunDefId}", id = def.gattlingGunDefId.toUInt(), chunkId = 0u))
             gattlingGun!!.owner = this
         }
 
         // C++: Create the rocket launchers
         if (def.rocketLauncherDefId != 0) {
-            rockerLauncherLeft  = WeaponClass(definitionId = def.rocketLauncherDefId)
-            rockerLauncherRight = WeaponClass(definitionId = def.rocketLauncherDefId)
+            rockerLauncherLeft  = WeaponClass(WeaponDefinitionClass(name = "weapon_${def.rocketLauncherDefId}", id = def.rocketLauncherDefId.toUInt(), chunkId = 0u))
+            rockerLauncherRight = WeaponClass(WeaponDefinitionClass(name = "weapon_${def.rocketLauncherDefId}", id = def.rocketLauncherDefId.toUInt(), chunkId = 0u))
             rockerLauncherLeft!!.owner  = this
             rockerLauncherRight!!.owner = this
         }
@@ -413,13 +414,13 @@ open class SakuraBossGameObj : VehicleGameObj() {
         val def = getSakuraBossDefinition()
 
         if (def.gattlingGunDefId != 0) {
-            gattlingGun = WeaponClass(definitionId = def.gattlingGunDefId)
+            gattlingGun = WeaponClass(WeaponDefinitionClass(name = "weapon_${def.gattlingGunDefId}", id = def.gattlingGunDefId.toUInt(), chunkId = 0u))
             gattlingGun!!.owner = this
         }
 
         if (def.rocketLauncherDefId != 0) {
-            rockerLauncherLeft  = WeaponClass(definitionId = def.rocketLauncherDefId)
-            rockerLauncherRight = WeaponClass(definitionId = def.rocketLauncherDefId)
+            rockerLauncherLeft  = WeaponClass(WeaponDefinitionClass(name = "weapon_${def.rocketLauncherDefId}", id = def.rocketLauncherDefId.toUInt(), chunkId = 0u))
+            rockerLauncherRight = WeaponClass(WeaponDefinitionClass(name = "weapon_${def.rocketLauncherDefId}", id = def.rocketLauncherDefId.toUInt(), chunkId = 0u))
             rockerLauncherLeft!!.owner  = this
             rockerLauncherRight!!.owner = this
         }
@@ -650,8 +651,8 @@ open class SakuraBossGameObj : VehicleGameObj() {
             ROCKET_STATE_FIRING -> {
                 // C++: Pick a random amount of time to fire at the player
                 rocketLauncherStateTimeLeft = randomFloat(2.0f, 6.0f)
-                rockerLauncherLeft?.setTarget(targetPos)
-                rockerLauncherRight?.setTarget(targetPos)
+                rockerLauncherLeft?.let { it.target = targetPos }
+                rockerLauncherRight?.let { it.target = targetPos }
                 // C++: Start launching rockets at the player
                 if ((availableWeapons and WEAPON_ROCKETS_LEFT) != 0) {
                     rockerLauncherLeft?.setPrimaryTriggered(true)
@@ -687,8 +688,8 @@ open class SakuraBossGameObj : VehicleGameObj() {
                 }
             }
             ROCKET_STATE_FIRING -> {
-                rockerLauncherLeft?.setTarget(targetPos)
-                rockerLauncherRight?.setTarget(targetPos)
+                rockerLauncherLeft?.let { it.target = targetPos }
+                rockerLauncherRight?.let { it.target = targetPos }
 
                 rocketLauncherStateTimeLeft -= TimeManager.getFrameSeconds()
                 if (rocketLauncherStateTimeLeft <= 0) {

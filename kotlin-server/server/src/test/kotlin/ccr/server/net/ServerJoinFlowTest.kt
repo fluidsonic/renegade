@@ -6,6 +6,8 @@ import ccr.net.protocol.Packet
 import ccr.net.protocol.PacketType
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.ServerConfig
+import ccr.server.defs.WeaponDefinitionClass
+import ccr.server.level.DefinitionRegistry
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -87,6 +89,52 @@ class ServerJoinFlowTest {
         bs.addFloat(0f)              // Score
         // BIT_FREQUENT: nothing
         return bs.bitWritePosition
+    }
+
+    /** Creates a DefinitionRegistry containing a stub WeaponDefinitionClass for each given ID. */
+    private fun makeTestRegistry(vararg weaponIds: Int): DefinitionRegistry {
+        val registry = DefinitionRegistry()
+        for (id in weaponIds) {
+            registry.register(WeaponDefinitionClass(
+                name = "weapon_$id",
+                id = id.toUInt(),
+                chunkId = 0u,
+                maxInventoryRounds = 9999,
+            ))
+        }
+        return registry
+    }
+
+    /**
+     * Creates a SoldierGameObj and populates its weapon bag from the supplied WeaponEntry list.
+     * A DefinitionRegistry with stub definitions for each weapon ID is set on the bag so that
+     * addWeapon(id, rounds) can resolve the definition.
+     */
+    private fun soldierWithWeapons(
+        definitionId: Int,
+        controlOwner: Int = 0,
+        team: Int = 0,
+        modelName: String = "",
+        animName: String = "",
+        position: Vector3 = Vector3(0f, 0f, 0f),
+        weapons: List<WeaponEntry> = emptyList(),
+    ): SoldierGameObj {
+        val registry = makeTestRegistry(*weapons.map { it.definitionId }.toIntArray())
+        val soldier = SoldierGameObj(
+            definitionId = definitionId,
+            controlOwner = controlOwner,
+            team = team,
+            modelName = modelName,
+            animName = animName,
+            position = position,
+        )
+        soldier.weaponBag.definitions = registry
+        soldier.weaponBag.clearWeapons()
+        for (entry in weapons) {
+            soldier.weaponBag.addWeapon(entry.definitionId, entry.totalRounds)
+        }
+        if (weapons.isNotEmpty()) soldier.weaponBag.selectIndex(1)
+        return soldier
     }
 
     // ============================================================
@@ -345,14 +393,14 @@ class ServerJoinFlowTest {
         // NOD minigunner setup matching Network.spawnSoldier for C&C_Under
         val defId = 81930257  // CnC_Nod_Minigunner_0 (0x04e22811) — from ServerConfig defaults
         val pistolDefId = 0x04E3F3B4  // Weapon_Pistol_Player (typical value; test encodes + decodes)
-        val soldier = SoldierGameObj(
+        val soldier = soldierWithWeapons(
             definitionId = defId,
             controlOwner  = 1,
             team          = 0,
             modelName     = "c_ag_nod_mg",
             animName      = "S_A_HUMAN.H_A_AINM",
             position      = Vector3(0f, 0f, 5f),
-            weapons       = mutableListOf(WeaponEntry(pistolDefId, 100)),
+            weapons       = listOf(WeaponEntry(pistolDefId, 100)),
         )
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, soldier, 1_500_000_001)
@@ -380,14 +428,14 @@ class ServerJoinFlowTest {
     fun `out - SOLDIER creation packet decodes definitionId, model, anim, position, and weapon`() {
         val defId = 81930257
         val pistolDefId = 0x1234ABCD
-        val soldier = SoldierGameObj(
+        val soldier = soldierWithWeapons(
             definitionId  = defId,
             controlOwner  = 1,
             team          = 0,
             modelName     = "c_ag_nod_mg",
             animName      = "S_A_HUMAN.H_A_AINM",
             position      = Vector3(0f, 0f, 5f),
-            weapons       = mutableListOf(WeaponEntry(pistolDefId, 100)),
+            weapons       = listOf(WeaponEntry(pistolDefId, 100)),
         )
         val bs = BitStream()
         NetworkObjectPacketWriter.writeCreation(bs, soldier, 1_500_000_001)

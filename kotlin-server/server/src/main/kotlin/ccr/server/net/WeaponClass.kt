@@ -1,35 +1,149 @@
 package ccr.server.net
 
 import ccr.math.Vector3
+import ccr.server.defs.AmmoDefinitionClass
+import ccr.server.defs.WeaponDefinitionClass
+import ccr.server.level.DefinitionRegistry
 
 // Simple value type for weapon slot data — used by SoldierGameObj.weapons computed property
 // and secondary constructors in tests.
 data class WeaponEntry(val definitionId: Int, val totalRounds: Int)
 
+// C++: enum WeaponStateType (weapons.h)
+enum class WeaponStateType {
+    STATE_IDLE, STATE_READY, STATE_CHARGE, STATE_FIRE_PRIMARY, STATE_FIRE_SECONDARY,
+    STATE_RELOAD, STATE_START_SWITCH, STATE_END_SWITCH
+}
+
 // C++: WeaponClass (weapons.h / weapons.cpp)
-// Minimal server-side port — client-side rendering/firing logic not ported.
-class WeaponClass(
-    val definitionId: Int,                 // C++: Definition->Get_ID()
-    clipRoundsInit: Int = 0,               // initializes ClipRounds (mirrors C++ constructor)
-) {
+class WeaponClass(val definition: WeaponDefinitionClass) {
+
+    // C++: AmmoDefinitionClass* PrimaryAmmoDefinition
+    var primaryAmmoDefinition: AmmoDefinitionClass? = null
+        private set
+
+    // C++: AmmoDefinitionClass* SecondaryAmmoDefinition
+    var secondaryAmmoDefinition: AmmoDefinitionClass? = null
+        private set
+
     // C++: int ClipRounds
-    var clipRounds: Int = clipRoundsInit
+    var clipRounds: Int = 0
 
     // C++: int InventoryRounds  (-1 = unlimited)
     var inventoryRounds: Int = 0
 
-    // C++: ArmedGameObj* Owner (widened to PhysicalGameObj to allow PowerUpGameObj backpacks)
-    var owner: PhysicalGameObj? = null
+    // C++: bool WeaponExists
+    var weaponExists: Boolean = true
+
+    // C++: int C4DetonationMode
+    var c4DetonationMode: Int = 1
+
+    // C++: WeaponStateType State
+    var state: WeaponStateType = WeaponStateType.STATE_IDLE
+
+    // C++: float StateTimer
+    var stateTimer: Float = 0f
+
+    // C++: bool DidFire
+    var didFire: Boolean = false
+
+    // C++: bool IsPrimaryTriggered
+    var isPrimaryTriggered: Boolean = false
+        private set
+
+    // C++: bool IsSecondaryTriggered
+    var isSecondaryTriggered: Boolean = false
+        private set
+
+    // C++: bool LastFrameIsPrimaryTriggered
+    var lastFrameIsPrimaryTriggered: Boolean = false
+
+    // C++: bool LastFrameIsSecondaryTriggered
+    var lastFrameIsSecondaryTriggered: Boolean = false
+
+    // C++: int TotalRoundsFired
+    var totalRoundsFired: Int = 0
+
+    // C++: bool SafetySet
+    var safetySet: Boolean = false
+
+    // C++: bool LockTriggers
+    var lockTriggers: Boolean = false
+
+    // C++: float EmptySoundTimer
+    var emptySoundTimer: Float = 0f
+
+    // C++: float BurstDelayTimer
+    var burstDelayTimer: Float = 0f
+
+    // C++: int BurstCount
+    var burstCount: Int = 0
+
+    // C++: float BulletBumpTime
+    var bulletBumpTime: Float = 0f
+
+    // C++: ArmedGameObj* Owner
+    var owner: ArmedGameObj? = null
+
+    // C++: Vector3 Target
+    var target: Vector3 = Vector3()
+
+    // C++: WeaponClass::Init(DefinitionMgrClass* def_mgr)
+    fun init(registry: DefinitionRegistry?) {
+        primaryAmmoDefinition = registry?.findById(definition.primaryAmmoDefID.toUInt()) as? AmmoDefinitionClass
+        secondaryAmmoDefinition = registry?.findById(definition.secondaryAmmoDefID.toUInt()) as? AmmoDefinitionClass
+    }
+
+    // C++: int Get_ID() const
+    fun getId(): Int = definition.id.toInt()
+
+    // C++: const char* Get_Name()
+    fun getName(): String = definition.name
+
+    // C++: int Get_Style()
+    fun getStyle(): Int = definition.style
+
+    // C++: float Get_Key_Number()
+    fun getKeyNumber(): Float = definition.keyNumber
+
+    // C++: bool Can_Snipe()
+    fun getCanSnipe(): Boolean = definition.canSnipe
+
+    // C++: float Get_Rating()
+    fun getRating(): Float = definition.rating
+
+    // C++: float Get_Recoil_Time()
+    fun getRecoilTime(): Float = definition.recoilTime
+
+    // C++: float Get_Recoil_Scale()
+    fun getRecoilScale(): Float = definition.recoilScale
+
+    // C++: int Get_Clip_Size()
+    fun getClipSize(): Int = definition.clipSize
+
+    // C++: bool Can_Receive_Generic_CnC_Ammo()
+    val canReceiveGenericCncAmmo: Boolean get() = definition.canReceiveGenericCnCAmmo
+
+    // C++: float Get_Effective_Range()
+    fun getEffectiveRange(): Float = primaryAmmoDefinition?.effectiveRange ?: 0f
+
+    // C++: float Get_Primary_Fire_Rate()
+    fun getPrimaryFireRate(): Float = primaryAmmoDefinition?.rateOfFire ?: 1f
+
+    // C++: float Get_Range()
+    fun getRange(): Float = primaryAmmoDefinition?.range ?: 0f
 
     // C++: void Set_Total_Rounds(int num)
-    // Simplified server-side: no Definition available, so we store in clipRounds
-    // (InventoryRounds stays 0 unless unlimited — mirrors C++ Set_Total_Rounds with InventoryRounds=0)
     fun setTotalRounds(num: Int) {
         if (num == -1) {
             inventoryRounds = -1
+            clipRounds = 0
         } else {
-            inventoryRounds = 0
-            clipRounds = num
+            val clipSize = definition.clipSize.coerceAtLeast(1)
+            val maxInv = definition.maxInventoryRounds
+            val total = num.coerceAtMost(maxInv + clipSize)
+            clipRounds = total.coerceAtMost(clipSize)
+            inventoryRounds = (total - clipRounds).coerceAtLeast(0)
         }
     }
 
@@ -41,53 +155,107 @@ class WeaponClass(
         if (num < 0) {
             inventoryRounds = -1
         } else if (inventoryRounds >= 0) {
-            clipRounds += num
+            val clipSize = definition.clipSize.coerceAtLeast(1)
+            val maxInv = definition.maxInventoryRounds
+            // Fill clip first, then inventory
+            val clipSpace = (clipSize - clipRounds).coerceAtLeast(0)
+            val toClip = num.coerceAtMost(clipSpace)
+            clipRounds += toClip
+            val remaining = num - toClip
+            inventoryRounds = (inventoryRounds + remaining).coerceAtMost(maxInv)
         }
     }
 
-    // C++: bool Is_Ammo_Maxed() — FIXME: needs WeaponDefinitionClass for max rounds
-    fun isAmmoMaxed(): Boolean = false
+    // C++: bool Is_Ammo_Maxed()
+    fun isAmmoMaxed(): Boolean {
+        if (inventoryRounds < 0) return true  // unlimited
+        return inventoryRounds >= definition.maxInventoryRounds
+    }
 
-    // C++: bool Can_Receive_Generic_CnC_Ammo() — true if weapon accepts generic clip powerups
-    // FIXME: real check reads WeaponDefinitionClass::CanReceiveGenericCNCAmmo; stub returns false
-    val canReceiveGenericCncAmmo: Boolean get() = false
+    // C++: bool Is_Loaded()
+    fun isLoaded(): Boolean = clipRounds != 0
 
-    // C++: int Get_Clip_Size() — rounds granted per clip powerup pickup
-    // FIXME: real value comes from WeaponDefinitionClass::ClipSize; stub returns 0
-    fun getClipSize(): Int = 0
+    // C++: bool Is_Reload_OK()
+    fun isReloadOk(): Boolean = inventoryRounds != 0
 
-    // C++: bool IsPrimaryTriggered, IsSecondaryTriggered
-    // @JvmName avoids clash with fun setPrimaryTriggered() / fun setSecondaryTriggered() below
-    @get:JvmName("isPrimaryTriggeredField") @set:JvmName("setIsPrimaryTriggeredField")
-    var isPrimaryTriggered: Boolean = false
-    @get:JvmName("isSecondaryTriggeredField") @set:JvmName("setIsSecondaryTriggeredField")
-    var isSecondaryTriggered: Boolean = false
+    // C++: bool Is_Reload_Needed()
+    fun isReloadNeeded(): Boolean = !isLoaded() && isReloadOk()
 
-    // C++: void Set_Primary_Triggered(bool)
-    fun setPrimaryTriggered(value: Boolean) { isPrimaryTriggered = value }
+    // C++: void Do_Reload()
+    fun doReload() {
+        if (inventoryRounds < 0) {
+            clipRounds = definition.clipSize
+            return
+        }
+        val clipSize = definition.clipSize
+        val needed = clipSize - clipRounds
+        val moved = needed.coerceAtMost(inventoryRounds)
+        clipRounds += moved
+        inventoryRounds -= moved
+    }
 
-    // C++: void Set_Secondary_Triggered(bool)
-    fun setSecondaryTriggered(value: Boolean) { isSecondaryTriggered = value }
-
-    // C++: bool Is_Triggered() — true if either primary or secondary trigger is active
-    fun isTriggered(): Boolean = isPrimaryTriggered || isSecondaryTriggered
-
-    // C++: int Get_ID() const — delegates to definition->Get_ID()
-    fun getId(): Int = definitionId
+    // C++: void Decrement_Rounds(int rounds = 1)
+    fun decrementRounds(rounds: Int = 1) {
+        if (inventoryRounds >= 0) {
+            clipRounds = (clipRounds - rounds).coerceAtLeast(0)
+        }
+    }
 
     // C++: int Get_Total_Rounds() const
-    // Returns -1 if InventoryRounds < 0 (unlimited), else ClipRounds + InventoryRounds
     fun getTotalRounds(): Int = if (inventoryRounds < 0) -1 else clipRounds + inventoryRounds
 
-    // C++: const char* Get_Name() — delegates to definition->Get_Name(); stub returns defId as string
-    fun getName(): String = "weapon_$definitionId"
+    // C++: void Set_Primary_Triggered(bool)
+    fun setPrimaryTriggered(value: Boolean) {
+        if (!lockTriggers) isPrimaryTriggered = value
+    }
 
-    // C++: bool Is_Reloading() — true when weapon is in reload animation cycle; stub returns false
-    fun isReloading(): Boolean = false
+    // C++: void Set_Secondary_Triggered(bool)
+    fun setSecondaryTriggered(value: Boolean) {
+        if (!lockTriggers) isSecondaryTriggered = value
+    }
 
-    // C++: void Update() — firing state machine, burst logic, muzzle flashes
-    // FIXME: full implementation requires WeaponDefinitionClass, AmmoDefinitionClass, TimeManager — not yet ported
+    // C++: bool Is_Triggered()
+    fun isTriggered(): Boolean = isPrimaryTriggered || isSecondaryTriggered
+
+    // C++: bool Does_Weapon_Exist()
+    fun doesWeaponExist(): Boolean = weaponExists
+
+    // C++: bool Is_Firing()
+    fun isFiring(): Boolean = didFire
+
+    // C++: bool Is_Reloading()
+    fun isReloading(): Boolean = state == WeaponStateType.STATE_RELOAD
+
+    // C++: bool Is_Switching()
+    fun isSwitching(): Boolean = state == WeaponStateType.STATE_START_SWITCH || state == WeaponStateType.STATE_END_SWITCH
+
+    // C++: void Select()
+    fun select() { state = WeaponStateType.STATE_START_SWITCH }
+
+    // C++: void Deselect()
+    fun deselect() {
+        isPrimaryTriggered = false
+        isSecondaryTriggered = false
+        state = WeaponStateType.STATE_IDLE
+    }
+
+    // C++: void Force_Reload()
+    fun forceReload() { state = WeaponStateType.STATE_RELOAD }
+
+    // C++: void Next_C4_Detonation_Mode()
+    fun nextC4DetonationMode() {
+        c4DetonationMode = if (c4DetonationMode >= 3) 1 else c4DetonationMode + 1
+    }
+
+    // C++: void Set_Safety(bool)
+    fun setSafety(value: Boolean) { safetySet = value }
+
+    // C++: bool Is_Safety_Set()
+    fun isSafetySet(): Boolean = safetySet
+
+    // C++: void Update()
     fun update() {}
+<<<<<<< HEAD
 
     // C++: void Set_Target(const Vector3& pos) — sets world-space target position for projectile aim
     // FIXME: actual targeting logic not ported; server-side stub stores target for AI state tracking
@@ -156,4 +324,6 @@ class WeaponClass(
         const val WEAPON_HOLD_STYLE_HANDS_DOWN     = 9
         const val NUM_WEAPON_HOLD_STYLES           = 10
     }
+=======
+>>>>>>> ac7c5bd (refactor: WeaponClass takes WeaponDefinitionClass instead of definitionId)
 }
