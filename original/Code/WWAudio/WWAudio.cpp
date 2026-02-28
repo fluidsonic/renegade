@@ -128,17 +128,11 @@ WWAudioClass::WWAudioClass (bool lite)
 
 	m_ForceDisable = lite;
 
-	fprintf(stderr, "[audio] WWAudioClass ctor: lite=%s\n", lite ? "true" : "false");
-
 	//
 	// Start Miles Sound System
 	//
 	if (!lite) {
-		MSSERROR startup_err = AIL_startup ();
-		fprintf(stderr, "[audio] WWAudioClass ctor: AIL_startup result=%d (%s)\n",
-			(int32_t)startup_err, (startup_err == MSS_NO_ERROR) ? "OK" : "ERROR");
-	} else {
-		fprintf(stderr, "[audio] WWAudioClass ctor: skipping AIL_startup (lite=true)\n");
+		AIL_startup ();
 	}
 	_theInstance = this;
 	_TimerSyncEvent = ::CreateEvent (NULL, TRUE, FALSE, "WWAUDIO_TIMER_SYNC");
@@ -159,7 +153,6 @@ WWAudioClass::WWAudioClass (bool lite)
 	// Create a new sound scene to manage our 3D sounds...
 	if (!lite) {
 		m_SoundScene = new SoundSceneClass;
-		fprintf(stderr, "[audio] WWAudioClass ctor: SoundScene=%p\n", (void*)m_SoundScene);
 	}
 
 	m_Max3DBufferSize = static_cast<int32_t>(m_Max3DBufferSize * 2.0F);
@@ -719,9 +712,6 @@ WWAudioClass::Create_Sound_Effect (FileClass &file, const char *string_id)
 AudibleSoundClass *
 WWAudioClass::Create_Sound_Effect (const char *filename)
 {
-	fprintf(stderr, "[audio] Create_Sound_Effect: \"%s\" disabled=%s\n",
-		filename ? filename : "(null)", Is_Disabled() ? "true" : "false");
-
 	// Assume failure
 	AudibleSoundClass *sound_obj = NULL;
 	if (Is_Disabled () == false) {
@@ -731,10 +721,6 @@ WWAudioClass::Create_Sound_Effect (const char *filename)
 
 			// Create a file object and pass it onto the appropriate function
 			FileClass *file = Get_File (filename);
-			bool found = (file != nullptr);
-			bool available = found && file->Is_Available();
-			fprintf(stderr, "[audio] Create_Sound_Effect: \"%s\" found=%s available=%s\n",
-				filename, found ? "true" : "false", available ? "true" : "false");
 			if (file && file->Is_Available()) {
 				sound_obj = Create_Sound_Effect (*file, filename);
 			} else {
@@ -744,8 +730,6 @@ WWAudioClass::Create_Sound_Effect (const char *filename)
 		}
 	}
 
-	fprintf(stderr, "[audio] Create_Sound_Effect: \"%s\" -> %p\n",
-		filename ? filename : "(null)", (void*)sound_obj);
 	// Return a pointer to the sound effect
 	return sound_obj;
 }
@@ -1400,12 +1384,6 @@ WWAudioClass::Reprioritize_Playlist (void)
 void
 WWAudioClass::On_Frame_Update (unsigned int milliseconds)
 {
-	static bool s_first_frame = true;
-	if (s_first_frame) {
-		fprintf(stderr, "[audio] On_Frame_Update: first call — update loop is running\n");
-		s_first_frame = false;
-	}
-
 	//
 	// Free any sounds we completed last frame
 	//
@@ -2266,9 +2244,6 @@ WWAudioClass::Is_Disabled (void) const
 void
 WWAudioClass::Initialize (const char *registry_subkey_name)
 {
-	fprintf(stderr, "[audio] Initialize: Is_Disabled=%s subkey=\"%s\"\n",
-		Is_Disabled() ? "true" : "false", registry_subkey_name ? registry_subkey_name : "(null)");
-
 	if (Is_Disabled () == false) {
 
 		//
@@ -2856,9 +2831,6 @@ WWAudioClass::Load_From_Registry (const char *subkey_name)
 			m_AreSoundEffectsEnabled, m_IsMusicEnabled, m_IsDialogEnabled, m_IsCinematicSoundEnabled,
 			m_SoundVolume, m_MusicVolume, m_DialogVolume, m_CinematicVolume, m_SpeakerType))
 	{
-		fprintf(stderr, "[audio] Load_From_Registry: loaded OK — music=%.2f sound=%.2f dialog=%.2f cinematic=%.2f device=\"%s\"\n",
-			m_MusicVolume, m_SoundVolume, m_DialogVolume, m_CinematicVolume, (const char*)device_name);
-
 		//
 		//	Close any open devices
 		//
@@ -2868,26 +2840,19 @@ WWAudioClass::Load_From_Registry (const char *subkey_name)
 		//
 		//	Open the 2D device as specified
 		//
-		DRIVER_TYPE_2D dev2d = Open_2D_Device (is_stereo, bits, hertz);
-		fprintf(stderr, "[audio] Load_From_Registry: Open_2D_Device result=%d\n", (int32_t)dev2d);
+		Open_2D_Device (is_stereo, bits, hertz);
 
 		//
 		//	Find and open the 3D device specified
 		//
 		Build_3D_Driver_List ();
-		fprintf(stderr, "[audio] Load_From_Registry: Build_3D_Driver_List done, count=%d\n", m_Driver3DList.Count());
-		bool sel3d = Select_3D_Device (device_name);
-		fprintf(stderr, "[audio] Load_From_Registry: Select_3D_Device(\"%s\") result=%s\n",
-			(const char*)device_name, sel3d ? "OK" : "FAILED");
+		Select_3D_Device (device_name);
 		retval = true;
 
 		//
 		//	Select the speaker type
 		//
 		Set_Speaker_Type (m_SpeakerType);
-	} else {
-		fprintf(stderr, "[audio] Load_From_Registry: registry section \"%s\" not found — using defaults\n",
-			subkey_name ? subkey_name : "(null)");
 	}
 
 	m_RealMusicVolume = m_MusicVolume;
@@ -2925,8 +2890,6 @@ WWAudioClass::Load_From_Registry
 	//	Attempt to open the registry key
 	//
 	RegistryClass registry (subkey_name);
-	fprintf(stderr, "[audio] Load_From_Registry(inner): subkey=\"%s\" valid=%s\n",
-		subkey_name ? subkey_name : "(null)", registry.Is_Valid() ? "yes" : "no");
 	if (registry.Is_Valid ()) {
 
 		int defaultmusicvolume, defaultsoundvolume, defaultdialogvolume, defaultcinematicvolume;
@@ -3082,15 +3045,11 @@ WWAudioClass::File_Open_Callback (char const *filename, uintptr_t *file_handle)
 
 	FileClass *file = Get_Instance ()->Get_File (filename);
 	if (file == NULL || !file->Open ()) {
-		fprintf(stderr, "[audio] File_Open_Callback: \"%s\" NOT FOUND or failed to open\n",
-			filename ? filename : "(null)");
 		return 0;
 	}
 
 	*file_handle = (uintptr_t)file;
 	U32 size = (U32)file->Size ();
-	fprintf(stderr, "[audio] File_Open_Callback: \"%s\" ptr=%p size=%u\n",
-		filename, (void*)file, size);
 	return size;
 }
 

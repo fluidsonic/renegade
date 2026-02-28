@@ -18,22 +18,23 @@ class ChangeTeamEvent(
 
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        if (!server.config.isTeamChangingAllowed) {
-            println("[GAME] CHANGETEAMEVENT from rhostId=$rhostId: team changing is disabled, ignored")
+    override fun act() {
+        if (!network.config.isTeamChangingAllowed) {
+            println("[GAME] CHANGETEAMEVENT from senderId=$senderId: team changing is disabled, ignored")
             setDeletePending(); return
         }
-        val currentTeam = server.god.playerTeams[rhostId] ?: 0
+        val currentTeam = network.god.playerTeams[senderId] ?: 0
         val newTeam = if (currentTeam == 0) 1 else 0
-        server.god.playerTeams[rhostId] = newTeam
-        server.god.playersByHost[rhostId]?.team = newTeam
-        println("[GAME] CHANGETEAMEVENT from rhostId=$rhostId: ${if (currentTeam == 0) "NOD" else "GDI"} → ${if (newTeam == 0) "NOD" else "GDI"}")
+        network.god.playerTeams[senderId] = newTeam
+        network.god.playersByHost[senderId]?.team = newTeam
+        println("[GAME] CHANGETEAMEVENT from senderId=$senderId: ${if (currentTeam == 0) "NOD" else "GDI"} → ${if (newTeam == 0) "NOD" else "GDI"}")
         // Kill existing soldier so god.think() respawns with the new team
-        server.god.deleteSoldier(rhostId)
-        val host = server.connectionManager.getHost(rhostId)
-        if (host != null) server.sendPlayerRareUpdate(host, rhostId)
+        network.god.deleteSoldier(senderId)
+        val host = network.connectionManager.getHost(senderId)
+        if (host != null) network.sendPlayerRareUpdate(host, senderId)
         setDeletePending()
     }
 }

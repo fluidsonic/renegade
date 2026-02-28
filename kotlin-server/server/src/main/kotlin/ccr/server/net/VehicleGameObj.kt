@@ -6,6 +6,7 @@ import ccr.math.Vector3
 import ccr.math.degToRadF
 import ccr.net.bitstream.*
 import ccr.net.replication.NetworkObject
+import ccr.physics.vehicle.VehiclePhysClass
 import ccr.server.GameObjManager
 import ccr.server.defs.VehicleGameObjDef
 
@@ -914,45 +915,27 @@ open class VehicleGameObj() : SmartGameObj() {
             VEHICLE_TYPE_TANK,
             VEHICLE_TYPE_CAR,
             VEHICLE_TYPE_FLYING -> {
-                val vehiclePhys = physObj?.asVehiclePhysClass()
-                if (vehiclePhys != null) {
-                    val pos = vehiclePhys.getPosition()
-                    val q = vehiclePhys.getOrientation()
-                    val vel = vehiclePhys.getVelocity()
-                    val angVel = vehiclePhys.getAngularVelocity()
-                    val engineOn = vehiclePhys.isEngineEnabled()
+                val vehiclePhys = physObj as VehiclePhysClassStub
+                val pos = vehiclePhys.getPosition()
+                val q = vehiclePhys.getOrientation()
+                val vel = vehiclePhys.getVelocity()
+                val angVel = vehiclePhys.getAngularVelocity()
+                val engineOn = vehiclePhys.isEngineEnabled()
 
-                    packet.addBool(engineOn)
-                    packet.addFloat(pos.x, BITPACK_WORLD_POSITION_X)
-                    packet.addFloat(pos.y, BITPACK_WORLD_POSITION_Y)
-                    packet.addFloat(pos.z, BITPACK_WORLD_POSITION_Z)
-                    packet.addFloat(q.x, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(q.y, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(q.z, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(q.w, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(vel.x, BITPACK_VEHICLE_VELOCITY)
-                    packet.addFloat(vel.y, BITPACK_VEHICLE_VELOCITY)
-                    packet.addFloat(vel.z, BITPACK_VEHICLE_VELOCITY)
-                    packet.addFloat(angVel.x, BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                    packet.addFloat(angVel.y, BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                    packet.addFloat(angVel.z, BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                } else {
-                    // No physObj — use direct override fields (secondary constructor path)
-                    packet.addBool(isEngineOn)
-                    packet.addFloat(position.x, BITPACK_WORLD_POSITION_X)
-                    packet.addFloat(position.y, BITPACK_WORLD_POSITION_Y)
-                    packet.addFloat(position.z, BITPACK_WORLD_POSITION_Z)
-                    packet.addFloat(quaternion.x, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(quaternion.y, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(quaternion.z, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(quaternion.w, BITPACK_VEHICLE_QUATERNION)
-                    packet.addFloat(velocity.x, BITPACK_VEHICLE_VELOCITY)
-                    packet.addFloat(velocity.y, BITPACK_VEHICLE_VELOCITY)
-                    packet.addFloat(velocity.z, BITPACK_VEHICLE_VELOCITY)
-                    packet.addFloat(angularVelocity.x, BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                    packet.addFloat(angularVelocity.y, BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                    packet.addFloat(angularVelocity.z, BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                }
+                packet.addBool(engineOn)
+                packet.addFloat(pos.x, BITPACK_WORLD_POSITION_X)
+                packet.addFloat(pos.y, BITPACK_WORLD_POSITION_Y)
+                packet.addFloat(pos.z, BITPACK_WORLD_POSITION_Z)
+                packet.addFloat(q.x, BITPACK_VEHICLE_QUATERNION)
+                packet.addFloat(q.y, BITPACK_VEHICLE_QUATERNION)
+                packet.addFloat(q.z, BITPACK_VEHICLE_QUATERNION)
+                packet.addFloat(q.w, BITPACK_VEHICLE_QUATERNION)
+                packet.addFloat(vel.x, BITPACK_VEHICLE_VELOCITY)
+                packet.addFloat(vel.y, BITPACK_VEHICLE_VELOCITY)
+                packet.addFloat(vel.z, BITPACK_VEHICLE_VELOCITY)
+                packet.addFloat(angVel.x, BITPACK_VEHICLE_ANGULAR_VELOCITY)
+                packet.addFloat(angVel.y, BITPACK_VEHICLE_ANGULAR_VELOCITY)
+                packet.addFloat(angVel.z, BITPACK_VEHICLE_ANGULAR_VELOCITY)
             }
             VEHICLE_TYPE_TURRET -> {
                 // C++: nothing extra for turrets

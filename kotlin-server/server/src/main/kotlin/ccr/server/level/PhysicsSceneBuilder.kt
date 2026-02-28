@@ -15,23 +15,40 @@ object PhysicsSceneBuilder {
     fun build(
         staticObjects: List<StaticPhysObject>,
         mapMix: MixReader,
-        alwaysMix: MixReader?,
+        alwaysMixes: List<MixReader>,
     ): PhysicsScene {
         val scene = PhysicsScene()
 
-        // Collect unique model names and parse each W3D file once
-        val modelNames = staticObjects.map { it.modelName }.toSet()
+        println("[PHYSBUILD] staticObjects.size=${staticObjects.size}")
+
+        // Extract the W3D filename from the render-object name.
+        // The render-object name stored in the LSD may be a qualified name like
+        // "TT_FIELD_A.TT_FIELD_A_COL" — C++ strips the sub-object suffix before
+        // appending ".w3d" (see Filename_From_Asset_Name in rendobj.cpp).
+        fun w3dFileNameFor(renderObjName: String): String =
+            renderObjName.substringBefore('.') + ".w3d"
+
+        // Collect unique W3D filenames (many render-obj names may share one file)
+        val fileNames = staticObjects.map { w3dFileNameFor(it.modelName) }.toSet()
+        println("[PHYSBUILD] unique render-obj names (${staticObjects.map { it.modelName }.toSet().size}): ${staticObjects.map { it.modelName }.toSet().take(20)}")
+        println("[PHYSBUILD] unique W3D files (${fileNames.size}): ${fileNames.take(20)}")
+        // Map: w3d filename → parsed W3dFile
         val w3dCache = mutableMapOf<String, ccr.server.level.w3d.W3dFile>()
-        for (name in modelNames) {
-            val data = mapMix.readFile("$name.w3d") ?: alwaysMix?.readFile("$name.w3d") ?: continue
-            w3dCache[name] = W3dFileParser.parse(data)
+        for (fileName in fileNames) {
+            val data = mapMix.readFile(fileName) ?: alwaysMixes.firstNotNullOfOrNull { it.readFile(fileName) }
+            if (data == null) {
+                println("[PHYSBUILD] W3D NOT FOUND: $fileName")
+                continue
+            }
+            val w3d = W3dFileParser.parse(data)
+            w3dCache[fileName] = w3d
         }
 
         var objectCount = 0
         var triangleCount = 0
 
         for (obj in staticObjects) {
-            val w3d = w3dCache[obj.modelName] ?: continue
+            val w3d = w3dCache[w3dFileNameFor(obj.modelName)] ?: continue
             val worldTransform = toMathMatrix3D(obj.transform)
 
             val collisionMeshes = w3d.meshes.filter { mesh ->
@@ -60,7 +77,21 @@ object PhysicsSceneBuilder {
             triangleCount += allTriangles.size
         }
 
+        scene.buildStaticTree()
         println("[LEVEL] Loaded $objectCount static collision objects, $triangleCount triangles")
+
+        // Diagnostic: count triangles near NOD spawn (-50.535, 147.584)
+        val spawnX = -50.535f; val spawnY = 147.584f
+        var nearCount = 0
+        for (obj in scene.staticObjects) {
+            if (obj is StaticPhysClass) {
+                for (tri in obj.triangles) {
+                    if (tri.v0.x in (spawnX-20f)..(spawnX+20f) && tri.v0.y in (spawnY-20f)..(spawnY+20f)) { nearCount++; break }
+                }
+            }
+        }
+        println("[PHYSBUILD] triangles near NOD spawn (-50.535, 147.584): $nearCount objects")
+
         return scene
     }
 

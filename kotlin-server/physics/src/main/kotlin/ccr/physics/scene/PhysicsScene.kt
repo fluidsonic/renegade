@@ -21,7 +21,11 @@ class PhysicsScene {
     }
 
     fun addStaticObject(obj: PhysClass) {
+        if (obj is ccr.physics.static.StaticPhysClass && obj.triangles.isEmpty()) return
         staticObjects.add(obj)
+    }
+
+    fun buildStaticTree() {
         staticTree.build(staticObjects)
     }
 
@@ -59,9 +63,29 @@ class PhysicsScene {
     }
 
     fun castAABox(test: AABoxCollisionTest): Boolean {
+        println("[PHYSSCENE] castAABox staticObjects=${staticObjects.size} staticTreeNodes=${staticTree.nodeCount()} dynamicObjects=${dynamicObjects.size}")
         var hit = staticTree.castAABox(test)
         if (dynamicGrid.castAABox(test)) hit = true
         return hit
+    }
+
+    /**
+     * Intersection test: checks if a static AABox overlaps any dynamic objects in the scene.
+     * Mirrors C++ PhysicsSceneClass::Intersection_Test with check_dyn_only=true.
+     * Used by Can_Teleport to ensure a spawn point isn't occupied by another dynamic object.
+     *
+     * @param box the world-space axis-aligned box to test
+     * @param ignoreObj optional object to exclude from the test (the teleporting object itself)
+     * @return true if any dynamic object overlaps the box
+     */
+    fun intersectionTestDynamic(box: AABox, ignoreObj: PhysClass? = null): Boolean {
+        val candidates = dynamicGrid.collectObjects(box)
+        for (obj in candidates) {
+            if (obj === ignoreObj) continue
+            val objBox = obj.worldBoundingBox()
+            if (box.overlaps(objBox)) return true
+        }
+        return false
     }
 
     fun collectObjects(box: AABox): List<PhysClass> {
@@ -69,6 +93,16 @@ class PhysicsScene {
         result.addAll(staticTree.collectObjects(box))
         result.addAll(dynamicGrid.collectObjects(box))
         return result
+    }
+
+    /**
+     * Returns the bounding box of the static level geometry.
+     * C++: PhysicsSceneClass::Get_Level_Extents — returns StaticCullingSystem->Get_Bounding_Box().
+     * Returns null if no static tree has been built yet.
+     */
+    fun getLevelExtents(): AABox? {
+        val root = staticTree.rootBounds() ?: return null
+        return root
     }
 
     fun initDefaultCollisionGroups() {

@@ -47,6 +47,7 @@
 #include "dlgcncwinscreen.h"
 #include "consolemode.h"
 #include "CDKeyAuth.h"
+#include "netclassids.h"
 
 static int LastSortedSecond;
 
@@ -826,6 +827,52 @@ void cNetwork::Tell_Client_About_Delete_Notifications(int client_id)
 
 }
 
+static const char* Net_Class_ID_Name(uint32_t id) {
+    switch (id) {
+        case 0:    return "none";
+        case 1000: return "GAMEOBJ";
+        case 1001: return "SCTEXTOBJ";
+        case 1002: return "PLAYERKILL";
+        case 1003: return "WIN";
+        case 1004: return "PURCHASERESPONSEEVENT";
+        case 1005: return "CONSOLECOMMANDEVENT";
+        case 1006: return "RESETWINSEVENT";
+        case 1007: return "SVRGOODBYEEVENT";
+        case 1008: return "GAMEOPTIONSEVENT";
+        case 1009: return "EVICTIONEVENT";
+        case 1010: return "TEAM";
+        case 1011: return "PLAYER";
+        case 1012: return "GAMEDATAUPDATEEVENT";
+        case 1013: return "SCPINGRESPONSEEVENT";
+        case 1014: return "SCEXPLOSIONEVENT";
+        case 1015: return "SCOBELISKEVENT";
+        case 1016: return "SCANNOUNCEMENT";
+        case 1017: return "CLIENTCONTROL";
+        case 1018: return "CSTEXTOBJ";
+        case 1019: return "SUICIDEEVENT";
+        case 1020: return "CHANGETEAMEVENT";
+        case 1021: return "MONEYEVENT";
+        case 1022: return "WARPEVENT";
+        case 1023: return "PURCHASEREQUESTEVENT";
+        case 1024: return "CLIENTGOODBYEEVENT";
+        case 1025: return "BIOEVENT";
+        case 1026: return "LOADINGEVENT";
+        case 1027: return "GODMODEEVENT";
+        case 1028: return "VIPMODEEVENT";
+        case 1029: return "SCOREEVENT";
+        case 1030: return "CLIENTBBOEVENT";
+        case 1031: return "CLIENTFPS";
+        case 1032: return "CSPINGREQUESTEVENT";
+        case 1033: return "CSDAMAGEEVENT";
+        case 1034: return "REQUESTKILLEVENT";
+        case 1035: return "CSCONSOLECOMMANDEVENT";
+        case 1036: return "CSHINT";
+        case 1037: return "CSANNOUNCEMENT";
+        case 1038: return "DONATEEVENT";
+        default:   return "?";
+    }
+}
+
 //-----------------------------------------------------------------------------
 int
 cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
@@ -953,6 +1000,16 @@ cNetwork::Send_Object_Update(NetworkObjectClass *object, int client_id)
 		} else {
 			Client_Send_Packet(packet, mode);
 		}
+
+        uint32_t log_classid = object->Get_Object_Dirty_Bit(client_id, NetworkObjectClass::BIT_CREATION)
+            ? static_cast<uint32_t>(object->Get_Network_Class_ID()) : 0u;
+        fprintf(stderr, "[net-out] id=%u dirty=0x%02X classId=%u(%s) del=%d %s bits=%d\n",
+            static_cast<uint32_t>(object->Get_Network_ID()),
+            static_cast<uint32_t>(object->Get_Object_Dirty_Bits(client_id)),
+            log_classid, Net_Class_ID_Name(log_classid),
+            static_cast<int32_t>(object->Is_Delete_Pending()),
+            client_id > 0 ? "S->C" : "C->S",
+            bits_sent);
 	}
 
 	//

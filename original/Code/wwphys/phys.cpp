@@ -93,6 +93,10 @@ void PhysClass::Init(const PhysDefClass & def)
 {
 	Definition = &def;
 	Flags = DEFAULT_FLAGS;
+	if (def.ModelName.Is_Empty()) {
+		fprintf(stderr, "[PHYS] Init: ModelName is empty for def '%s' (id=%u) -- no model\n",
+			(const char *)def.Get_Name(), def.Get_ID());
+	}
 	if (!def.ModelName.Is_Empty()) {
 
 		RenderObjClass * model = NULL;
@@ -104,6 +108,8 @@ void PhysClass::Init(const PhysDefClass & def)
 		}
 
 		if ( model == NULL ) {
+			fprintf(stderr, "[PHYS] Init: failed to load model '%s' -- Model will be null\n",
+				(const char *)def.ModelName);
 		}
 
 		Set_Model(model);
@@ -140,6 +146,8 @@ void PhysClass::Set_Model_By_Name(const char * model_type_name)
 {
 	RenderObjClass * model = WW3DAssetManager::Get_Instance()->Create_Render_Obj(model_type_name);
 	if ( model == NULL ) {
+		fprintf(stderr, "[PHYS] Set_Model_By_Name: failed to load model '%s' -- Model will be null\n",
+			model_type_name);
 	}
 
 	Set_Model(model);

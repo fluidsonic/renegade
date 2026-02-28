@@ -39,6 +39,23 @@ object ChunkIds {
     const val PHYSICS_CHUNKID_STATIC_DATA_SUBSYSTEM    = 0x00020000u
     const val PHYSICS_CHUNKID_STATIC_OBJECTS_SUBSYSTEM = 0x00020001u
 
+    // ─── LDD physics dynamic data subsystem (physdynamicsavesystem.cpp, wwphysids.h) ─
+    // PHYSICS_CHUNKID_DYNAMIC_DATA_SUBSYSTEM = CHUNKID_WWPHYS_BEGIN + 0x50 = 0x00020050
+    const val PHYSICS_CHUNKID_DYNAMIC_DATA_SUBSYSTEM = 0x00020050u
+    // PDSSC_CHUNKID_SCENE (physdynamicsavesystem.h) = 0x00007001
+    const val PDSSC_CHUNKID_SCENE                    = 0x00007001u
+    // PSCENE_DD_CHUNK_DYNAMIC_OBJECTS / _OBJECT (pscene_saveload.cpp) = 0x00890100 / 0x00890101
+    const val PSCENE_DD_CHUNK_DYNAMIC_OBJECTS        = 0x00890100u
+    const val PSCENE_DD_CHUNK_DYNAMIC_OBJECT         = 0x00890101u
+    // PHYSICS_CHUNKID_DECORATIONPHYS = CHUNKID_WWPHYS_BEGIN + 0x100 = 0x00020100
+    const val PHYSICS_CHUNKID_DECORATIONPHYS         = 0x00020100u
+    // DECOPHYS_CHUNK_DYNAMICPHYS (decophys.cpp) = 0x005060001
+    const val DECOPHYS_CHUNK_DYNAMICPHYS             = 0x05060001u
+    // DYNAMICPHYS_CHUNK_PHYS (dynamicphys.cpp) = 813001100 = 0x3075698C
+    const val DYNAMICPHYS_CHUNK_PHYS                 = 0x3075698Cu
+    // PhysicalGameObj CHUNKID_VARIABLES (physicalgameobj.cpp) = 910991145 + 1 = 910991146 = 0x364C9F2A
+    const val PHYSICALGAMEOBJ_CHUNKID_VARIABLES      = 910991146u
+
     // ─── WWAudio subsystem (SoundChunkIDs.h, saveloadids.h) ─────────────────────
     const val WWAUDIO_CHUNKID                          = 0x00030000u  // Range start
     const val WWAUDIO_SOUND3D                          = 0x00030003u  // CHUNKID_SOUND3D
@@ -89,11 +106,23 @@ object ChunkIds {
     const val RENDOBJFACTORY_CHUNKID_VARIABLES   = 0x00555040u
 
     // ─── Physics persist chunk IDs (wwphysids.h, CHUNKID_WWPHYS_BEGIN=0x00020000) ─
+    // Sequential from CHUNKID_WWPHYS_BEGIN + 0x100:
+    //   0x100=DECORATIONPHYS, 0x101=HUMANPHYS, 0x102=LIGHTPHYS, 0x103=MOTORCYCLE,
+    //   0x104=MOTORVEHICLE, 0x105=PHYS3, 0x106=PROJECTILE, 0x107=RENDEROBJPHYS,
+    //   0x108=RIGIDBODY, 0x109=STATICPHYS, 0x10A=WHEELEDVEHICLE, 0x10B=STATICANIMPHYS,
+    //   0x10C=TIMEDDECORATIONPHYS, 0x10D=VEHICLEPHYS, 0x10E=TRACKEDVEHICLE,
+    //   0x10F=VTOLVEHICLE, 0x110=WAYPATH, 0x111=WAYPOINT, 0x112=DYNAMICANIMPHYS,
+    //   0x113=SHAKEABLESTATICPHYS, 0x114=ACCESSIBLEPHYS
+    const val PHYSICS_CHUNKID_STATICPHYS            = 0x00020109u
+    const val PHYSICS_CHUNKID_STATICANIMPHYS        = 0x0002010Bu  // StaticAnimPhysClass
+    const val PHYSICS_CHUNKID_SHAKEABLESTATICPHYS   = 0x00020113u
+    const val PHYSICS_CHUNKID_ACCESSIBLEPHYS        = 0x00020114u  // AccessiblePhysClass
     const val PHYSICS_CHUNKID_WAYPATH      = 0x00020110u
     const val PHYSICS_CHUNKID_WAYPOINT     = 0x00020111u
     const val PHYSICS_CHUNKID_DOORPHYS              = 0x00020A00u
     const val PHYSICS_CHUNKID_ELEVATORPHYS          = 0x00020A01u
     const val PHYSICS_CHUNKID_DAMAGEABLESTATICPHYS  = 0x00020A02u
+    const val PHYSICS_CHUNKID_BUILDINGAGGREGATE     = 0x00020A03u
 
     // ─── Game object persist factory IDs (combatchunkid.h) ─────────────────────
     const val GAMEOBJ_C4               = 0x00040102u

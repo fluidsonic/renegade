@@ -115,7 +115,10 @@ void Game_Shutdown(void)
 	CampaignManager::Shutdown();
 
 	SystemSettings::Shutdown();
-	CombatManager::Shutdown();
+
+	GameModeManager::Destroy_All();      // destroys game objects, detaches observers
+	NetworkObjectMgrClass::Shutdown();   // cleans up network object list
+	CombatManager::Shutdown();           // now ScriptManager::Shutdown() frees already-detached scripts
 
 	//Analyze_Soldier_Bandwidth();
 
@@ -127,9 +130,6 @@ void Game_Shutdown(void)
 	cTeamManager::Onetime_Shutdown();
 	cGameData::Onetime_Shutdown();
 	cBandwidthGraph::Onetime_Shutdown();
-
-	GameModeManager::Destroy_All();
-	NetworkObjectMgrClass::Shutdown();
   EncyclopediaMgrClass::Shutdown();
 	RenegadeDialogMgrClass::Shutdown();
 

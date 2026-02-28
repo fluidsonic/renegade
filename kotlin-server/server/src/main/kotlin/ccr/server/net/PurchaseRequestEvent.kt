@@ -1,7 +1,6 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.Network
 import ccr.server.VendorClass
 
 // C++: cPurchaseRequestEvent — networkClassId = NETCLASSID_PURCHASEREQUESTEVENT = 1023
@@ -31,34 +30,35 @@ class PurchaseRequestEvent(
         purchaseType = packet.getInt()
         itemIndex = packet.getInt()
         altSkinIndex = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] PURCHASEREQUESTEVENT from rhostId=$rhostId senderId=$senderId " +
+    override fun act() {
+        println("[GAME] PURCHASEREQUESTEVENT from senderId=$senderId " +
             "type=$purchaseType item=$itemIndex altSkin=$altSkinIndex")
-        val host = server.connectionManager.getHost(rhostId) ?: run { setDeletePending(); return }
+        val host = network.connectionManager.getHost(senderId) ?: run { setDeletePending(); return }
 
-        if (!server.gameState.isGameplayPermitted) {
+        if (!network.gameState.isGameplayPermitted) {
             val response = PurchaseResponseEvent(purchaserId = senderId, responseId = 2)
-            server.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
+            network.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
             setDeletePending(); return
         }
 
-        val result = server.vendor.handlePurchase(rhostId, purchaseType, itemIndex, altSkinIndex)
+        val result = network.vendor.handlePurchase(senderId, purchaseType, itemIndex, altSkinIndex)
         val response = PurchaseResponseEvent(purchaserId = senderId, responseId = result.responseId)
-        server.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
+        network.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
 
         if (result.responseId == VendorClass.RESPONSE_SUCCESS) {
             if (result.isVehiclePurchase) {
                 // Route to vehicle factory — find the team's available factory and start the timer
-                val playerTeam = server.god.playerTeams[rhostId] ?: 0
-                val baseController = if (playerTeam == 0) server.baseControllerNod else server.baseControllerGdi
-                val factory = server.gameObjManager.getAllObjects()
+                val playerTeam = network.god.playerTeams[senderId] ?: 0
+                val baseController = if (playerTeam == 0) network.baseControllerNod else network.baseControllerGdi
+                val factory = network.gameObjManager.getAllObjects()
                     .filterIsInstance<VehicleFactoryGameObj>()
                     .find { it.baseController === baseController && !it.isBusy && !it.isDestroyed }
                 if (factory != null) {
-                    factory.requestVehicle(result.purchasedDefId, 12.0f, server.god.soldiersByHost[rhostId])
-                    println("[GAME] vehicle order queued: defId=${result.purchasedDefId} factory=${factory.networkId} buyer=$rhostId")
+                    factory.requestVehicle(result.purchasedDefId, 12.0f, network.god.soldiersByHost[senderId])
+                    println("[GAME] vehicle order queued: defId=${result.purchasedDefId} factory=${factory.networkId} buyer=$senderId")
                 } else {
                     // Factory became unavailable between vendor check and now — log only
                     // (VendorClass already checked canGenerateVehicles so this is very rare)
@@ -66,12 +66,12 @@ class PurchaseRequestEvent(
                 }
             } else if (result.isEquipmentPurchase) {
                 // C++: PowerUpGameObjDef::Grant() — update existing soldier, no respawn
-                server.god.grantPowerUp(rhostId, result.purchasedDefId)
+                network.god.grantPowerUp(senderId, result.purchasedDefId)
             } else {
                 // Kill current soldier and respawn as purchased character
-                server.god.deleteSoldier(rhostId)
-                val playerTeam = server.god.playerTeams[rhostId] ?: 0
-                server.god.createCommandoWithDef(rhostId, playerTeam, result.purchasedDefId)
+                network.god.deleteSoldier(senderId)
+                val playerTeam = network.god.playerTeams[senderId] ?: 0
+                network.god.createCommandoWithDef(senderId, playerTeam, result.purchasedDefId)
             }
         }
         setDeletePending()

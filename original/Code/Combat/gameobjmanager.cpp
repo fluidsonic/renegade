@@ -91,9 +91,12 @@ bool	GameObjManager::Load( ChunkLoadClass &cload )
 
 			case CHUNKID_OBJECTS:
 				while (cload.Open_Chunk()) {
-					PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( cload.Cur_Chunk_ID() );
+					uint32_t chunk_id = cload.Cur_Chunk_ID();
+					PersistFactoryClass * factory = SaveLoadSystemClass::Find_Persist_Factory( chunk_id );
 					if ( factory ) {
 						factory->Load( cload );
+					} else {
+						fprintf(stderr, "[LEVEL] GameObjManager: no factory for chunkId=0x%08X\n", chunk_id);
 					}
 					cload.Close_Chunk();
 				}

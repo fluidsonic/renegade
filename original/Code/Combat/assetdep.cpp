@@ -36,15 +36,15 @@ AssetDependencyManager::Save_Always_Dependencies (const char *path, ASSET_LIST &
 	//
 	//	Get a pointer to the file object
 	//
-	StringClass filename(path + StringClass ("\\") + StringClass (ALWAYS_FILENAME),true);
-	FileClass * file		= _TheWritingFileFactory->Get_File (filename);	
+	StringClass filename(path + StringClass ("/") + StringClass (ALWAYS_FILENAME),true);
+	FileClass * file		= _TheWritingFileFactory->Get_File (filename);
 	if (file != NULL) {
 
 		//
 		//	Open or create the file
 		//
 		file->Open (FileClass::WRITE);
-		
+
 		//
 		//	Save the asset list to the file
 		//
@@ -57,7 +57,7 @@ AssetDependencyManager::Save_Always_Dependencies (const char *path, ASSET_LIST &
 		file->Close ();
 		_TheWritingFileFactory->Return_File (file);
 	}
-	
+
 	return ;
 }
 
@@ -79,7 +79,7 @@ AssetDependencyManager::Save_Level_Dependencies (const char *full_path, ASSET_LI
 		//	Open or create the file
 		//
 		file->Open (FileClass::WRITE);
-		
+
 		//
 		//	Save the asset list to the file
 		//
@@ -92,7 +92,7 @@ AssetDependencyManager::Save_Level_Dependencies (const char *full_path, ASSET_LI
 		file->Close ();
 		_TheWritingFileFactory->Return_File (file);
 	}
-	
+
 	return ;
 }
 

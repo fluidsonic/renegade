@@ -17,15 +17,18 @@ class ClientBboEvent(
     override fun exportCreation(packet: BitStream) {
         packet.addInt(senderId)
         packet.addInt(bbo)
+
+        setDeletePending()
     }
 
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
         bbo = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] CLIENTBBOEVENT from rhostId=$rhostId senderId=$senderId bbo=$bbo")
+    override fun act() {
+        println("[GAME] CLIENTBBOEVENT from senderId=$senderId bbo=$bbo")
         // C++: rhost->Set_Maximum_Bps(Bbo) — no BPS cap in Kotlin server yet
         setDeletePending()
     }

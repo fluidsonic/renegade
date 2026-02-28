@@ -550,7 +550,10 @@ inline HMODULE LoadLibrary(LPCSTR name) {
     // D3D8 is handled entirely in the compat layer.
     if (strstr(lower, "d3d8")) return _WINCOMPAT_D3D8_HANDLE;
     // Try loading as-is first (e.g., the caller already has a .dylib path).
-    HMODULE h = (HMODULE)dlopen(name, RTLD_LAZY | RTLD_GLOBAL);
+    // RTLD_NODELETE: keep the dylib resident even after dlclose(), matching Windows DLL
+    // semantics. Without it, dlclose()+dlopen() across level transitions unloads and
+    // reloads the image, causing ASan to double-register every global it contains.
+    HMODULE h = (HMODULE)dlopen(name, RTLD_LAZY | RTLD_GLOBAL | RTLD_NODELETE);
     if (h) return h;
     // If the name ends in .dll, try the macOS equivalent (.dylib).
     const char *dot = strstr(lower, ".dll");
@@ -559,7 +562,7 @@ inline HMODULE LoadLibrary(LPCSTR name) {
         int base_len = (int)(dot - lower);
         strncpy(dylib_name, name, static_cast<size_t>(base_len));
         strcpy(dylib_name + base_len, ".dylib");
-        h = (HMODULE)dlopen(dylib_name, RTLD_LAZY | RTLD_GLOBAL);
+        h = (HMODULE)dlopen(dylib_name, RTLD_LAZY | RTLD_GLOBAL | RTLD_NODELETE);
         if (h) return h;
     }
     return NULL;  // Caller can check for NULL and handle gracefully.
@@ -1000,7 +1003,11 @@ inline int lstrlenA(LPCSTR s) { return lstrlen(s); }
 #define lstrcpy(d,s)        strcpy((d),(s))
 #define lstrcat(d,s)        strcat((d),(s))
 #define lstrcmpi(a,b)       strcasecmp((a),(b))
-#define lstrcpyn(d,s,n)     strncpy((d),(s),(size_t)(n))
+static inline char* lstrcpyn_impl(char* d, const char* s, int32_t n) {
+    if (n > 0) { strncpy(d, s, (size_t)(n - 1)); d[n - 1] = '\0'; }
+    return d;
+}
+#define lstrcpyn(d,s,n)     lstrcpyn_impl((d),(s),(n))
 #define lstrcmp(a,b)        strcmp((a),(b))
 #endif
 

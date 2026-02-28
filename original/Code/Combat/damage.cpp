@@ -103,7 +103,7 @@ void	ArmorWarheadManager::Init( void )
 		for ( armor_num = 0; armor_num < ArmorNames.Count(); armor_num++ ) {
 			int id = armorINI->Get_Int(	SECTION_ARMOR_SAVE_IDS, ArmorNames[armor_num], -100 );
 			if ( id == -100 ) {
-				Debug_Say(( "Missing Armor_Save_ID for %s\n", ArmorNames[armor_num] ));
+				Debug_Say(( "Missing Armor_Save_ID for %s\n", (const char *)ArmorNames[armor_num] ));
 			}
 			ArmorSaveIDs[ armor_num ] = id;
 		}
@@ -113,7 +113,7 @@ void	ArmorWarheadManager::Init( void )
 		for ( warhead_num = 0; warhead_num < WarheadNames.Count(); warhead_num++ ) {
 			int id = armorINI->Get_Int(	SECTION_WARHEAD_SAVE_IDS, WarheadNames[warhead_num], -100 );
 			if ( id == -100 ) {
-				Debug_Say(( "Missing Warhead_Save_ID for %s\n", WarheadNames[warhead_num] ));
+				Debug_Say(( "Missing Warhead_Save_ID for %s\n", (const char *)WarheadNames[warhead_num] ));
 			}
 			WarheadSaveIDs[ warhead_num ] = id;
 		}

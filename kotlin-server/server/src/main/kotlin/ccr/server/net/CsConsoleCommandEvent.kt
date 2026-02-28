@@ -18,10 +18,11 @@ class CsConsoleCommandEvent(
 
     override fun importCreation(packet: BitStream) {
         command = packet.getTerminatedString()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] CSCONSOLECOMMANDEVENT from rhostId=$rhostId command=$command (no console dispatch)")
+    override fun act() {
+        println("[GAME] CSCONSOLECOMMANDEVENT command=$command (no console dispatch)")
         setDeletePending()
     }
 }

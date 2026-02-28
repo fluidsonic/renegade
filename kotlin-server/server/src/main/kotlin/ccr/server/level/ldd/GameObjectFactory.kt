@@ -30,6 +30,13 @@ import ccr.server.net.WarFactoryGameObj
 
 class GameObjectFactory(private val definitions: DefinitionRegistry) {
 
+    /**
+     * Physics transform map built from the PHYSICS_CHUNKID_DYNAMIC_DATA_SUBSYSTEM chunk.
+     * Maps raw pointer value (PHYS_VARIABLE_CULLABLE_PTR correlation key) to Matrix3D transform.
+     * Set by LddParser before game objects are parsed.
+     */
+    var physTransformMap: Map<Int, Matrix3D> = emptyMap()
+
     // ─── Chunk ID constants (from C++ source) ──────────────────────────────────
 
     // BaseGameObj (basegameobj.cpp)
@@ -56,6 +63,12 @@ class GameObjectFactory(private val definitions: DefinitionRegistry) {
     private val MICRO_SHIELD_TYPE              = 8
     private val MICRO_DAMAGE_POINTS            = 13
     private val MICRO_DEATH_POINTS             = 14
+
+    // PhysicalGameObj (physicalgameobj.cpp)
+    // enum: XXXCHUNKID_PARENT_OLD_OLD=910991145, CHUNKID_VARIABLES=910991146 (= +1)
+    // micro: MICROCHUNKID_PHYSICAL_OBJECT = 10 (0x0A) — raw pointer to the PhysClass instance
+    private val PHYSICALGAMEOBJ_CHUNKID_VARIABLES = ChunkIds.PHYSICALGAMEOBJ_CHUNKID_VARIABLES
+    private val MICRO_PHYSICAL_OBJECT             = 0x0A
 
     // BuildingGameObj (building.cpp)
     private val BUILDING_CHUNKID_VARIABLES     = 207011121u
@@ -251,16 +264,37 @@ class GameObjectFactory(private val definitions: DefinitionRegistry) {
     private fun extractSimpleGameObj(reader: ChunkReader, defId: Int, networkId: Int): SimpleGameObj? {
         val dmg = extractDamageableFields(reader)
 
-        val physChunk = reader.findChunkRecursive(910991146u)
-        val transform = physChunk?.readMicroMatrix3D(1) ?: Matrix3D.IDENTITY
-        // Matrix3D.position returns ccr.server.level.Vector3; convert to ccr.math.Vector3
-        val levelPos = transform.position
-        val pos = Vector3(levelPos.x, levelPos.y, levelPos.z)
+        // SimpleGameObj physics data (transform) is saved via pointer remapping through a
+        // separate PHYSICS_CHUNKID_DYNAMIC_DATA_SUBSYSTEM chunk in the LDD file.
+        // PhysicalGameObj::Save writes the raw PhysObj pointer as micro 0x0A inside
+        // PHYSICALGAMEOBJ_CHUNKID_VARIABLES; PhysClass::Save writes the same pointer as
+        // PHYS_VARIABLE_CULLABLE_PTR (micro 0x00) inside PHYS_CHUNK_VARIABLES in the physics
+        // subsystem. physTransformMap (built by LddParser from the physics subsystem) maps
+        // this 4-byte pointer to the Matrix3D transform.
+        val physVarsChunk = reader.findChunkRecursive(PHYSICALGAMEOBJ_CHUNKID_VARIABLES)
+        val physObjPtr = physVarsChunk?.readMicroInt(MICRO_PHYSICAL_OBJECT)
 
-        // Resolve model name via PhysDefClass chain (no uppercase for simple objects)
+        val transform = if (physObjPtr != null) physTransformMap[physObjPtr] else null
+        val levelPos = transform?.position
+        val pos = if (levelPos != null) Vector3(levelPos.x, levelPos.y, levelPos.z)
+                  else Vector3(0f, 0f, 0f)
+        // C++: Matrix3D::Get_Z_Rotation() = atan2(Row[1][0], Row[0][0]) = atan2(elements[4], elements[0])
+        val facing = if (transform != null)
+            kotlin.math.atan2(transform.elements[4], transform.elements[0])
+        else 0f
+
         val wrapper = definitions.findById(defId.toUInt()) as? SimpleGameObjDef
+
+        // Resolve model name via PhysDefClass chain (no uppercase for simple objects).
+        // C++: SimpleGameObj::On_Post_Load() calls Set_Model_By_Name("NULL") for editor objects,
+        // so Export_Rare sends "NULL" → client renders nothing.
         val physDefId = wrapper?.physDefId ?: 0
-        val modelName = if (physDefId != 0) resolvePhysDefModelName(physDefId) else ""
+        val modelName = if (wrapper?.isEditorObject == true) "NULL"
+                        else if (physDefId != 0) resolvePhysDefModelName(physDefId) else ""
+
+        println("[SIMPLE] defId=$defId networkId=$networkId physPtr=0x${physObjPtr?.toString(16) ?: "null"} " +
+            "transform=${if (transform != null) "FOUND pos=(${pos.x},${pos.y},${pos.z}) facing=${"%.3f".format(facing)}" else "NOT_FOUND"} " +
+            "wrapper=${if (wrapper != null) "FOUND" else "MISSING"} modelName='$modelName' playerTerminalType=${wrapper?.playerTerminalType ?: -1}")
 
         val obj = SimpleGameObj()
         if (wrapper != null) {
@@ -269,6 +303,7 @@ class GameObjectFactory(private val definitions: DefinitionRegistry) {
         }
         obj.modelName  = modelName
         obj.position   = pos
+        obj.facing     = facing
         obj.playerType = dmg.playerType
 
         // In C++, purchase terminal scripts enable this at runtime.

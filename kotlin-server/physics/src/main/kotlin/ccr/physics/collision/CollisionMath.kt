@@ -189,38 +189,77 @@ object CollisionMath {
         return collide(LineSeg(localP0, localP1), localBox, res)
     }
 
-    /** Swept AABB vs static triangle. */
+    /** Swept AABB vs static triangle.
+     *
+     * Uses the Minkowski sum approach: cast the box center as a segment against the
+     * Minkowski sum of the triangle and the inverted box.  The Minkowski sum is tested
+     * with SAT using:
+     *   - the triangle normal (1 axis)
+     *   - 3 box face normals (X, Y, Z axes) projected on the contact plane
+     *   - 9 edge–edge cross product axes (3 triangle edges × 3 box axes)
+     *
+     * This is equivalent to how the C++ PhysAABoxCollisionTestClass works internally.
+     */
     fun collide(box: AABox, move: Vector3, tri: Triangle, res: CastResult): Boolean {
         val center = box.center
         val e = box.extent
         val n = tri.normal
-        // Project box extent onto triangle normal
+
+        // ---- Step 1: find t when box face first contacts the triangle plane ----
         val boxRadius = e.x * abs(n.x) + e.y * abs(n.y) + e.z * abs(n.z)
         val d0 = n.dot(center) - n.dot(tri.v0)
         val d1 = n.dot(center + move) - n.dot(tri.v0)
-        // Check if both endpoints are on same side beyond box radius
+        // If both endpoints are on the same side and farther than boxRadius, no collision.
         if (d0 > boxRadius && d1 > boxRadius) return false
         if (d0 < -boxRadius && d1 < -boxRadius) return false
-        // Find time of contact with expanded plane
         val enterDist = if (d0 > 0f) boxRadius else -boxRadius
         val denom = d0 - d1
-        if (abs(denom) < EPSILON) return false
+        if (abs(denom) < EPSILON) {
+            // Moving parallel to the plane — only a hit if already overlapping (d0 between -r and r).
+            // Treat as no collision (box is sliding along the plane, not penetrating).
+            return false
+        }
         val t = (d0 - enterDist) / denom
         if (t < 0f || t > res.fraction) return false
-        // Check if the contact center is within the expanded triangle bounds
+
+        // ---- Step 2: SAT on the contact plane to verify the box actually overlaps the triangle ----
+        // At time t the box center is at contactCenter.  We test the 2D "shadow" of the box
+        // against the Minkowski sum of the triangle's edges using the 9 edge-cross axes and the
+        // 3 box face normals projected onto the triangle plane.
         val contactCenter = center + move * t
-        val expandedMin = Vector3(
-            minOf(tri.v0.x, tri.v1.x, tri.v2.x) - e.x,
-            minOf(tri.v0.y, tri.v1.y, tri.v2.y) - e.y,
-            minOf(tri.v0.z, tri.v1.z, tri.v2.z) - e.z,
-        )
-        val expandedMax = Vector3(
-            maxOf(tri.v0.x, tri.v1.x, tri.v2.x) + e.x,
-            maxOf(tri.v0.y, tri.v1.y, tri.v2.y) + e.y,
-            maxOf(tri.v0.z, tri.v1.z, tri.v2.z) + e.z,
-        )
-        val expandedBox = AABox.fromMinMax(expandedMin, expandedMax)
-        if (!expandedBox.contains(contactCenter)) return false
+
+        // Translate triangle vertices into contact-center space
+        val v0 = tri.v0 - contactCenter
+        val v1 = tri.v1 - contactCenter
+        val v2 = tri.v2 - contactCenter
+
+        val boxAxes = arrayOf(Vector3(1f, 0f, 0f), Vector3(0f, 1f, 0f), Vector3(0f, 0f, 1f))
+        val triEdges = arrayOf(v1 - v0, v2 - v1, v0 - v2)
+
+        // Check 9 edge-cross axes
+        for (edge in triEdges) {
+            for (boxAxis in boxAxes) {
+                val axis = boxAxis.cross(edge)
+                if (axis.lengthSquared() < EPSILON * EPSILON) continue
+                val p0 = axis.dot(v0); val p1 = axis.dot(v1); val p2 = axis.dot(v2)
+                val pMin = minOf(p0, p1, p2); val pMax = maxOf(p0, p1, p2)
+                // Box projected onto axis: radius = sum of |axis . boxAxis_i| * extent_i
+                val rad = e.x * abs(axis.x) + e.y * abs(axis.y) + e.z * abs(axis.z)
+                if (pMin > rad || pMax < -rad) return false
+            }
+        }
+
+        // Check 3 box face axes (X, Y, Z)
+        val extentComponents = floatArrayOf(e.x, e.y, e.z)
+        for (axisIdx in 0..2) {
+            val boxAxis = boxAxes[axisIdx]
+            val p0 = boxAxis.dot(v0); val p1 = boxAxis.dot(v1); val p2 = boxAxis.dot(v2)
+            val pMin = minOf(p0, p1, p2); val pMax = maxOf(p0, p1, p2)
+            val rad = extentComponents[axisIdx]
+            if (pMin > rad || pMax < -rad) return false
+        }
+
+        // All axes pass — genuine contact
         res.fraction = t
         res.normal = if (d0 > 0f) n else -n
         if (res.computeContactPoint) res.contactPoint = contactCenter

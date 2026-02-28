@@ -334,7 +334,7 @@ bool	ScriptManager::Load( ChunkLoadClass & cload )
 					LOAD_MICRO_CHUNK_WWSTRING( cload, name );
 					script = Create_Script( name );
 					if ( script == NULL ) {
-						Debug_Say(( "Script %s not found \n", name ));
+						Debug_Say(( "Script %s not found \n", (const char *)name ));
 					}
 
 					// A Missing script is not fatal

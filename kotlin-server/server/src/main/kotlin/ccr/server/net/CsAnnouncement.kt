@@ -34,10 +34,11 @@ class CsAnnouncement(
         announcementId = packet.getInt()
         radioCmdId = packet.getInt()
         type = packet.getByte().toInt() and 0xFF
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] CSANNOUNCEMENT from rhostId=$rhostId fromId=$fromId " +
+    override fun act() {
+        println("[GAME] CSANNOUNCEMENT fromId=$fromId " +
             "toId=$toId announcementId=$announcementId " +
             "radioCmdId=$radioCmdId type=$type")
         // Relay to all in-game clients as ScAnnouncement
@@ -48,9 +49,9 @@ class CsAnnouncement(
             radioCmdId = radioCmdId,
             type = type,
         )
-        for (clientId in server.god.playerInGame) {
-            val clientHost = server.connectionManager.getHost(clientId) ?: continue
-            server.serverSendPacket(clientHost) { bs ->
+        for (clientId in network.god.playerInGame) {
+            val clientHost = network.connectionManager.getHost(clientId) ?: continue
+            network.serverSendPacket(clientHost) { bs ->
                 NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId)
             }
         }

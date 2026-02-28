@@ -135,21 +135,18 @@ struct MssVfsFile {
 static ma_result mss_vfs_open(ma_vfs* pVFS, const char* pFilePath, ma_uint32 openMode, ma_vfs_file* pFile) {
     (void)pVFS;
     if (!g_file_open_cb || openMode != MA_OPEN_MODE_READ) {
-        fprintf(stderr, "[audio] vfs_open: no callback or wrong mode for \"%s\"\n", pFilePath ? pFilePath : "(null)");
         return MA_ERROR;
     }
     // MSS convention: open_cb returns file size (0=failure), writes file handle into *param.
     uintptr_t handle = 0;
     U32 size = g_file_open_cb(pFilePath, &handle);
     if (handle == 0) {
-        fprintf(stderr, "[audio] vfs_open: FAILED \"%s\"\n", pFilePath ? pFilePath : "(null)");
         return MA_ERROR;
     }
     MssVfsFile* f = (MssVfsFile*)malloc(sizeof(MssVfsFile));
     if (!f) { g_file_close_cb(handle); return MA_ERROR; }
     f->handle = handle; f->size = size; f->pos = 0u;
     *pFile = f;
-    fprintf(stderr, "[audio] vfs_open: OK \"%s\" size=%u handle=%p\n", pFilePath, size, (void*)handle);
     return MA_SUCCESS;
 }
 
@@ -169,8 +166,6 @@ static ma_result mss_vfs_read(ma_vfs* pVFS, ma_vfs_file file, void* pDst, size_t
     U32 n = g_file_read_cb(f->handle, pDst, (U32)sizeInBytes);
     f->pos += n;
     if (pBytesRead) *pBytesRead = (size_t)n;
-    static int32_t s_read_log = 0;
-    if (s_read_log++ < 5) fprintf(stderr, "[audio] vfs_read: requested=%zu got=%u pos=%u\n", sizeInBytes, n, f->pos);
     return MA_SUCCESS;
 }
 
@@ -296,18 +291,16 @@ static void* timer_thread_func(void* arg) {
 // ---------------------------------------------------------------------------
 
 MSSERROR AIL_startup() {
-    if (g_engine_initialized) { fprintf(stderr, "[audio] AIL_startup: already initialized\n"); return MSS_NO_ERROR; }
+    if (g_engine_initialized) { return MSS_NO_ERROR; }
     ma_engine_config cfg = ma_engine_config_init();
     cfg.listenerCount = 1;
     ma_result res = ma_engine_init(&cfg, &g_engine);
-    fprintf(stderr, "[audio] AIL_startup: ma_engine_init result=%d (%s)\n", (int32_t)res, (res == MA_SUCCESS) ? "SUCCESS" : "FAILED");
     if (res != MA_SUCCESS) return MSS_ERROR;
     g_engine_initialized = true;
     return MSS_NO_ERROR;
 }
 
 void AIL_shutdown() {
-    fprintf(stderr, "[audio] AIL_shutdown\n");
     if (!g_engine_initialized) return;
     for (int32_t i = 0; i < MAX_TIMERS; i++) g_timers[i].running = false;
     for (int32_t i = 0; i < MAX_2D_SAMPLES; i++) { uninit_sample2d(&g_samples[i]); g_samples[i].in_use = false; }
@@ -360,11 +353,9 @@ HSAMPLE AIL_allocate_sample_handle(HDIGDRIVER h) {
         if (!g_samples[i].in_use) {
             g_samples[i] = Sample2D{};
             g_samples[i].in_use = true;
-            fprintf(stderr, "[audio] allocate_2d_sample: handle=%d\n", i + 1);
             return (HSAMPLE)(uint32_t)(i + 1);
         }
     }
-    fprintf(stderr, "[audio] allocate_2d_sample: POOL FULL\n");
     return (HSAMPLE)-1;
 }
 
@@ -436,14 +427,10 @@ void AIL_set_named_sample_file(HSAMPLE s, const char* name, const void* data, UI
     (void)flags;
     Sample2D* smp = get_sample(s);
     if (!smp || !data || len == 0u) {
-        fprintf(stderr, "[audio] set_sample_file: handle=%u name=\"%s\" INVALID (smp=%p data=%p len=%u)\n",
-            (uint32_t)s, name ? name : "(null)", (void*)smp, data, len);
         return;
     }
     uninit_sample2d(smp);
     ma_result dec_res = ma_decoder_init_memory(data, (size_t)len, nullptr, &smp->decoder);
-    fprintf(stderr, "[audio] set_sample_file: handle=%u name=\"%s\" len=%u decoder=%s\n",
-        (uint32_t)s, name ? name : "(null)", len, (dec_res == MA_SUCCESS) ? "OK" : "FAILED");
     if (dec_res != MA_SUCCESS) return;
     smp->decoder_initialized = true;
     ma_uint32 rate = 44100u;
@@ -452,8 +439,6 @@ void AIL_set_named_sample_file(HSAMPLE s, const char* name, const void* data, UI
     smp->current_rate = smp->native_rate;
     ma_result snd_res = ma_sound_init_from_data_source(&g_engine, &smp->decoder,
             MA_SOUND_FLAG_NO_SPATIALIZATION, nullptr, &smp->sound);
-    fprintf(stderr, "[audio] set_sample_file: handle=%u sound_init=%s rate=%u\n",
-        (uint32_t)s, (snd_res == MA_SUCCESS) ? "OK" : "FAILED", (uint32_t)rate);
     if (snd_res != MA_SUCCESS) {
         ma_decoder_uninit(&smp->decoder);
         smp->decoder_initialized = false;
@@ -475,8 +460,6 @@ void AIL_set_sample_type(HSAMPLE s, INT32 format, UINT32 flags) {
 
 void AIL_start_sample(HSAMPLE s) {
     Sample2D* smp = get_sample(s);
-    fprintf(stderr, "[audio] start_sample: handle=%u sound_initialized=%s\n",
-        (uint32_t)s, (smp && smp->sound_initialized) ? "true" : "false");
     if (!smp || !smp->sound_initialized) return;
     ma_sound_seek_to_pcm_frame(&smp->sound, 0u);
     ma_sound_set_looping(&smp->sound, (smp->loop_count == 0) ? MA_TRUE : MA_FALSE);
@@ -485,7 +468,6 @@ void AIL_start_sample(HSAMPLE s) {
 }
 
 void AIL_stop_sample(HSAMPLE s) {
-    fprintf(stderr, "[audio] stop_sample: handle=%u\n", (uint32_t)s);
     Sample2D* smp = get_sample(s);
     if (!smp || !smp->sound_initialized) return;
     ma_sound_stop(&smp->sound);
@@ -498,7 +480,6 @@ void AIL_resume_sample(HSAMPLE s) {
 }
 
 void AIL_end_sample(HSAMPLE s) {
-    fprintf(stderr, "[audio] end_sample: handle=%u\n", (uint32_t)s);
     Sample2D* smp = get_sample(s);
     if (!smp) return;
     uninit_sample2d(smp);
@@ -506,31 +487,25 @@ void AIL_end_sample(HSAMPLE s) {
 }
 
 INT32 AIL_sample_status(HSAMPLE s) {
-    static int32_t s_status_log = 0;
     Sample2D* smp = get_sample(s);
-    INT32 status;
     if (!smp || !smp->sound_initialized) {
-        status = SMP_DONE;
+        return SMP_DONE;
     } else if (ma_sound_is_playing(&smp->sound)) {
-        status = SMP_PLAYING;
+        return SMP_PLAYING;
     } else if (ma_sound_at_end(&smp->sound) && smp->loop_remaining > 0) {
         smp->loop_remaining--;
         ma_sound_seek_to_pcm_frame(&smp->sound, 0u);
         ma_sound_start(&smp->sound);
-        status = SMP_PLAYING;
+        return SMP_PLAYING;
     } else {
-        status = ma_sound_at_end(&smp->sound) ? SMP_DONE : SMP_STOPPED;
+        return ma_sound_at_end(&smp->sound) ? SMP_DONE : SMP_STOPPED;
     }
-    if (s_status_log++ < 5) fprintf(stderr, "[audio] sample_status: handle=%u -> %d\n", (uint32_t)s, status);
-    return status;
 }
 
 void AIL_set_sample_volume(HSAMPLE s, INT32 vol) {
     Sample2D* smp = get_sample(s);
     if (!smp) return;
     if (smp->volume == vol) return;
-    fprintf(stderr, "[audio] set_sample_volume: handle=%u vol=%d (%.3f)\n",
-        (uint32_t)s, vol, miles_vol_to_ma(vol));
     smp->volume = vol;
     if (smp->sound_initialized) ma_sound_set_volume(&smp->sound, miles_vol_to_ma(vol));
 }
@@ -627,7 +602,6 @@ void AIL_set_sample_processor(HSAMPLE s, INT32 proc_type, HPROVIDER hp) {
     if (proc_type != DP_FILTER) return;
     Sample2D* smp = get_sample(s);
     if (!smp || !smp->sound_initialized) {
-        fprintf(stderr, "[audio] set_sample_processor: handle=%u not ready\n", (uint32_t)s);
         return;
     }
     if (smp->filter.active) {
@@ -658,7 +632,6 @@ void AIL_set_sample_processor(HSAMPLE s, INT32 proc_type, HPROVIDER hp) {
     ma_node_graph* graph = ma_engine_get_node_graph(&g_engine);
     ma_result hpfRes = ma_hpf_node_init(graph, &hpfCfg, nullptr, &smp->filter.hpf);
     if (hpfRes != MA_SUCCESS) {
-        fprintf(stderr, "[audio] set_sample_processor: hpf_node_init FAILED result=%d\n", (int32_t)hpfRes);
         return;
     }
     smp->filter.hpf_initialized = true;
@@ -667,7 +640,6 @@ void AIL_set_sample_processor(HSAMPLE s, INT32 proc_type, HPROVIDER hp) {
     ma_delay_node_config delayCfg = ma_delay_node_config_init(channels, sampleRate, delayFrames, smp->filter.decay_time);
     ma_result delayRes = ma_delay_node_init(graph, &delayCfg, nullptr, &smp->filter.delay);
     if (delayRes != MA_SUCCESS) {
-        fprintf(stderr, "[audio] set_sample_processor: delay_node_init FAILED result=%d\n", (int32_t)delayRes);
         ma_hpf_node_uninit(&smp->filter.hpf, nullptr);
         smp->filter.hpf_initialized = false;
         return;
@@ -685,9 +657,6 @@ void AIL_set_sample_processor(HSAMPLE s, INT32 proc_type, HPROVIDER hp) {
     ma_node_attach_output_bus(&smp->filter.delay, 0u, ma_node_graph_get_endpoint(graph), 0u);
 
     smp->filter.active = true;
-    fprintf(stderr, "[audio] set_sample_processor: handle=%u filter active (channels=%u rate=%u delayFrames=%u wet=%.2f decay=%.2f)\n",
-        (uint32_t)s, (uint32_t)channels, (uint32_t)sampleRate, (uint32_t)delayFrames,
-        (double)smp->filter.reverb_level, (double)smp->filter.decay_time);
 }
 
 void AIL_set_filter_sample_preference(HSAMPLE s, const char* name, void* val) {
@@ -720,7 +689,6 @@ S32 AIL_enumerate_3D_providers(HPROENUM* next, HPROVIDER* p, char** name) {
     static char provider_name[] = "miniaudio 3D";
     if (!next || !p || !name) return 0;
     if (*next == HPROENUM_FIRST) {
-        fprintf(stderr, "[audio] enumerate_3d_providers: returning \"%s\"\n", provider_name);
         *p = (HPROVIDER)1u;
         *name = provider_name;
         *next = 1u;
@@ -733,7 +701,6 @@ S32 AIL_enumerate_filters(HPROENUM* next, HPROVIDER* p, char** name) {
     static char filter_name[] = "Reverb";
     if (!next || !p || !name) return 0;
     if (*next == HPROENUM_FIRST) {
-        fprintf(stderr, "[audio] enumerate_filters: returning \"%s\"\n", filter_name);
         *p    = (HPROVIDER)1u;
         *name = filter_name;
         *next = 1u;
@@ -743,7 +710,6 @@ S32 AIL_enumerate_filters(HPROENUM* next, HPROVIDER* p, char** name) {
 }
 
 MSSERROR AIL_open_3D_provider(HPROVIDER p)  {
-    fprintf(stderr, "[audio] open_3d_provider: handle=%u -> OK\n", (uint32_t)p);
     (void)p; return MSS_NO_ERROR;
 }
 void     AIL_close_3D_provider(HPROVIDER p) { (void)p; }
@@ -765,7 +731,6 @@ INT32 AIL_3D_room_type(HPROVIDER p) {
 // ---------------------------------------------------------------------------
 
 H3DPOBJECT AIL_3D_open_listener(HPROVIDER p) {
-    fprintf(stderr, "[audio] 3d_open_listener: -> handle=%u\n", (uint32_t)LISTENER_HANDLE);
     (void)p;
     return LISTENER_HANDLE;
 }
@@ -780,11 +745,9 @@ H3DSAMPLE AIL_allocate_3D_sample_handle(HPROVIDER p) {
         if (!g_samples3d[i].in_use) {
             g_samples3d[i] = Sample3D{};
             g_samples3d[i].in_use = true;
-            fprintf(stderr, "[audio] allocate_3d_sample: handle=%d\n", i + 1);
             return (H3DSAMPLE)(uint32_t)(i + 1);
         }
     }
-    fprintf(stderr, "[audio] allocate_3d_sample: POOL FULL\n");
     return 0u;
 }
 
@@ -798,21 +761,16 @@ void AIL_release_3D_sample_handle(H3DSAMPLE s) {
 U32 AIL_set_3D_sample_file(H3DSAMPLE s, void* data) {
     Sample3D* smp = get_sample3d(s);
     if (!smp || !data) {
-        fprintf(stderr, "[audio] set_3d_sample_file: handle=%u INVALID (smp=%p data=%p)\n",
-            (uint32_t)s, (void*)smp, data);
         return 0u;
     }
     const uint8_t* buf = (const uint8_t*)data;
     bool is_riff = (buf[0] == 'R' && buf[1] == 'I' && buf[2] == 'F' && buf[3] == 'F');
-    fprintf(stderr, "[audio] set_3d_sample_file: handle=%u RIFF=%s\n", (uint32_t)s, is_riff ? "yes" : "no");
     if (!is_riff) return 0u;
     uint32_t riff_size;
     memcpy(&riff_size, buf + 4u, 4u);
     size_t total = (size_t)riff_size + 8u;
     uninit_sample3d(smp);
     ma_result dec_res = ma_decoder_init_memory(data, total, nullptr, &smp->decoder);
-    fprintf(stderr, "[audio] set_3d_sample_file: handle=%u total_bytes=%zu decoder=%s\n",
-        (uint32_t)s, total, (dec_res == MA_SUCCESS) ? "OK" : "FAILED");
     if (dec_res != MA_SUCCESS) return 0u;
     smp->decoder_initialized = true;
     ma_uint32 rate = 44100u;
@@ -820,8 +778,6 @@ U32 AIL_set_3D_sample_file(H3DSAMPLE s, void* data) {
     smp->native_rate  = (int32_t)rate;
     smp->current_rate = smp->native_rate;
     ma_result snd_res = ma_sound_init_from_data_source(&g_engine, &smp->decoder, 0u, nullptr, &smp->sound);
-    fprintf(stderr, "[audio] set_3d_sample_file: handle=%u sound_init=%s\n",
-        (uint32_t)s, (snd_res == MA_SUCCESS) ? "OK" : "FAILED");
     if (snd_res != MA_SUCCESS) {
         ma_decoder_uninit(&smp->decoder);
         smp->decoder_initialized = false;
@@ -858,8 +814,6 @@ void AIL_set_3D_sample_type(H3DSAMPLE s, INT32 format, UINT32 flags) {
 
 void AIL_start_3D_sample(H3DSAMPLE s) {
     Sample3D* smp = get_sample3d(s);
-    fprintf(stderr, "[audio] start_3d_sample: handle=%u sound_initialized=%s\n",
-        (uint32_t)s, (smp && smp->sound_initialized) ? "true" : "false");
     if (!smp || !smp->sound_initialized) return;
     ma_sound_seek_to_pcm_frame(&smp->sound, 0u);
     ma_sound_set_looping(&smp->sound, (smp->loop_count == 0) ? MA_TRUE : MA_FALSE);
@@ -927,7 +881,6 @@ void AIL_set_3D_sample_volume(H3DSAMPLE s, INT32 vol) {
     Sample3D* smp = get_sample3d(s);
     if (!smp) return;
     if (smp->volume == vol) return;
-    fprintf(stderr, "[audio] set_3d_sample_volume: handle=%u vol=%d\n", (uint32_t)s, vol);
     smp->volume = vol;
     update_3d_vol(smp);
 }
@@ -1040,11 +993,9 @@ void AIL_set_3D_sample_effects_level(H3DSAMPLE s, float level) {
 
 void AIL_set_3D_position(H3DPOBJECT o, float x, float y, float z) {
     if (o == LISTENER_HANDLE) {
-        fprintf(stderr, "[audio] set_3d_position: LISTENER (%.2f, %.2f, %.2f)\n", x, y, z);
         if (g_engine_initialized) ma_engine_listener_set_position(&g_engine, 0u, x, y, z);
         return;
     }
-    fprintf(stderr, "[audio] set_3d_position: handle=%u (%.2f, %.2f, %.2f)\n", (uint32_t)o, x, y, z);
     Sample3D* smp = get_sample3d((H3DSAMPLE)o);
     if (smp && smp->sound_initialized) ma_sound_set_position(&smp->sound, x, y, z);
 }
@@ -1077,7 +1028,6 @@ void AIL_set_3D_orientation(H3DPOBJECT o, float fx, float fy, float fz, float ux
 
 static HSTREAM open_stream_internal(const char* fname) {
     if (!fname) return (HSTREAM)-1;
-    fprintf(stderr, "[audio] open_stream: \"%s\" (vfs=%s)\n", fname, g_file_open_cb ? "yes" : "no");
     for (int32_t i = 0; i < MAX_STREAMS; i++) {
         if (!g_streams[i].in_use) {
             Stream* str = &g_streams[i];
@@ -1088,7 +1038,6 @@ static HSTREAM open_stream_internal(const char* fname) {
                 res = ma_decoder_init_vfs(&g_mss_vfs, fname, nullptr, &str->decoder);
             else
                 res = ma_decoder_init_file(fname, nullptr, &str->decoder);
-            fprintf(stderr, "[audio] open_stream: \"%s\" decoder=%s\n", fname, (res == MA_SUCCESS) ? "OK" : "FAILED");
             if (res != MA_SUCCESS) { str->in_use = false; return (HSTREAM)-1; }
             str->decoder_initialized = true;
             ma_uint32 rate = 44100u;
@@ -1097,8 +1046,6 @@ static HSTREAM open_stream_internal(const char* fname) {
             str->current_rate = str->native_rate;
             res = ma_sound_init_from_data_source(&g_engine, &str->decoder,
                 MA_SOUND_FLAG_NO_SPATIALIZATION, nullptr, &str->sound);
-            fprintf(stderr, "[audio] open_stream: \"%s\" sound_init=%s handle=%d\n",
-                fname, (res == MA_SUCCESS) ? "OK" : "FAILED", i + 1);
             if (res != MA_SUCCESS) {
                 ma_decoder_uninit(&str->decoder);
                 str->decoder_initialized = false;
@@ -1111,7 +1058,6 @@ static HSTREAM open_stream_internal(const char* fname) {
             return (HSTREAM)(uint32_t)(i + 1);
         }
     }
-    fprintf(stderr, "[audio] open_stream: POOL FULL for \"%s\"\n", fname);
     return (HSTREAM)-1;
 }
 
@@ -1134,8 +1080,6 @@ void AIL_close_stream(HSTREAM s) {
 
 void AIL_start_stream(HSTREAM s) {
     Stream* str = get_stream(s);
-    fprintf(stderr, "[audio] start_stream: handle=%u sound_initialized=%s\n",
-        (uint32_t)s, (str && str->sound_initialized) ? "true" : "false");
     if (!str || !str->sound_initialized) return;
     ma_sound_seek_to_pcm_frame(&str->sound, 0u);
     ma_sound_set_looping(&str->sound, (str->loop_count == 0) ? MA_TRUE : MA_FALSE);
@@ -1246,8 +1190,6 @@ void AIL_set_file_callbacks(
     S32  (*seek_cb)(uintptr_t, S32, U32),
     U32  (*read_cb)(uintptr_t, void*, U32))
 {
-    fprintf(stderr, "[audio] set_file_callbacks: open=%p close=%p seek=%p read=%p\n",
-        (void*)open_cb, (void*)close_cb, (void*)seek_cb, (void*)read_cb);
     g_file_open_cb  = open_cb;
     g_file_close_cb = close_cb;
     g_file_seek_cb  = seek_cb;
@@ -1264,11 +1206,9 @@ HTIMER AIL_register_timer(void* fn) {
             g_timers[i] = Timer{};
             g_timers[i].in_use = true;
             g_timers[i].cb     = (AILTIMERCB)fn;
-            fprintf(stderr, "[audio] register_timer: slot=%d fn=%p\n", i, fn);
             return (HTIMER)(uint32_t)(i + 1);
         }
     }
-    fprintf(stderr, "[audio] register_timer: POOL FULL\n");
     return (HTIMER)-1;
 }
 
@@ -1284,7 +1224,6 @@ void AIL_start_timer(HTIMER t) {
     if (t == 0u || t == (HTIMER)-1) return;
     size_t idx = (size_t)t - 1u;
     if (idx >= (size_t)MAX_TIMERS || !g_timers[idx].in_use || g_timers[idx].running) return;
-    fprintf(stderr, "[audio] start_timer: slot=%zu period_ms=%u\n", idx, g_timers[idx].period_ms);
     g_timers[idx].running = true;
     pthread_t th;
     pthread_create(&th, nullptr, timer_thread_func, &g_timers[idx]);

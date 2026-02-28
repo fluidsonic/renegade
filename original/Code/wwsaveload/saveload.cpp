@@ -35,11 +35,14 @@ bool SaveLoadSystemClass::Load (ChunkLoadClass &cload,bool auto_post_load)
 	// Load each chunk we encounter and link the manager into the PostLoad list
 	while (cload.Open_Chunk ()) {
 		SaveLoadStatus::Inc_Status_Count();		// Count the sub systems loaded
-		SaveLoadSubSystemClass *sys = Find_Sub_System(cload.Cur_Chunk_ID ());
+		uint32_t chunk_id = cload.Cur_Chunk_ID();
+		SaveLoadSubSystemClass *sys = Find_Sub_System(chunk_id);
 		if (sys != NULL) {
-//
+			fprintf(stderr, "[SSL] Load subsystem chunkId=0x%08X name='%s'\n", chunk_id, sys->Name());
 			INIT_SUB_STATUS(sys->Name());
 			ok &= sys->Load(cload);
+		} else {
+			fprintf(stderr, "[SSL] Load: no subsystem for chunkId=0x%08X -- skipped\n", chunk_id);
 		}
 		cload.Close_Chunk();
 	}

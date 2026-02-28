@@ -644,7 +644,7 @@ static void	Aquire_Weapon_Assets( const WeaponClass * weapon )
 //			Debug_Say(( "Loading Weapon Anim %s\n", anim_name ));
 			WeaponAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( anim_name );
 			if ( WeaponAnims[i] == NULL ) {
-				Debug_Say(( "Missing Weapon Anim %s\n", anim_name ));
+				Debug_Say(( "Missing Weapon Anim %s\n", (const char *)anim_name ));
 			}
 
 			// Get Hands Anims
@@ -652,7 +652,7 @@ static void	Aquire_Weapon_Assets( const WeaponClass * weapon )
 //			Debug_Say(( "Loading Hands Anim %s\n", anim_name ));
 			HandsAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( anim_name );
 			if ( HandsAnims[i] == NULL ) {
-				Debug_Say(( "Missing Hands Anim %s\n", anim_name ));
+				Debug_Say(( "Missing Hands Anim %s\n", (const char *)anim_name ));
 				HandsAnims[i] = WW3DAssetManager::Get_Instance()->Get_HAnim( "F_SKELETON.F_HA_PIST_IDLE" );
 			}
 		}

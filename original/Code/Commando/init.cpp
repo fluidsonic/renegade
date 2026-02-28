@@ -1,4 +1,5 @@
 #include "global.h"
+#include <mach-o/dyld.h>
 #include "init.h"
 #include "wwmath.h"
 #include "ww3d.h"
@@ -416,6 +417,20 @@ bool Game_Init(void)
 	RenegadeBaseFileFactory.Set_Sub_Directory( DATA_SUBDIRECTORY );
 	RenegadeBaseFileFactory.Append_Sub_Directory( SAVE_SUBDIRECTORY );
 	RenegadeBaseFileFactory.Append_Sub_Directory( CONFIG_SUBDIRECTORY );
+	// Resolve .app bundle Resources directory at runtime
+	// (WW3D2_REQUIRED_ASSETS_DIR is "../Resources" relative to the executable)
+	{
+		char exe[4096];
+		uint32_t sz = sizeof(exe);
+		if (_NSGetExecutablePath(exe, &sz) == 0) {
+			char *slash = strrchr(exe, '/');
+			if (slash) {
+				snprintf(slash + 1, sizeof(exe) - (size_t)(slash + 1 - exe),
+					"%s", WW3D2_REQUIRED_ASSETS_DIR);
+				RenegadeBaseFileFactory.Append_Sub_Directory(exe);
+			}
+		}
+	}
 
 	_TheSimpleFileFactory->Set_Sub_Directory( DATA_SUBDIRECTORY );
 	_TheSimpleFileFactory->Append_Sub_Directory( SAVE_SUBDIRECTORY );

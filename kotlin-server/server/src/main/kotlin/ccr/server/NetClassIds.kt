@@ -3,48 +3,92 @@ package ccr.server
 // C++: Combat/netclassids.h — network class IDs for game objects and events.
 // Used to decode the class ID from the RELIABLE/UNRELIABLE payload header for logging.
 object NetClassIds {
+    // S→C objects (1000–1017)
+    const val NETCLASSID_GAMEOBJ               = 1000
+    const val NETCLASSID_SCTEXTOBJ             = 1001
+    const val NETCLASSID_PLAYERKILL            = 1002
+    const val NETCLASSID_WIN                   = 1003
+    const val NETCLASSID_PURCHASERESPONSEEVENT = 1004
+    const val NETCLASSID_CONSOLECOMMANDEVENT   = 1005
+    const val NETCLASSID_RESETWINSEVENT        = 1006
+    const val NETCLASSID_SVRGOODBYEEVENT       = 1007
+    const val NETCLASSID_GAMEOPTIONSEVENT      = 1008
+    const val NETCLASSID_EVICTIONEVENT         = 1009
+    const val NETCLASSID_TEAM                  = 1010
+    const val NETCLASSID_PLAYER                = 1011
+    const val NETCLASSID_GAMEDATAUPDATEEVENT   = 1012
+    const val NETCLASSID_SCPINGRESPONSEEVENT   = 1013
+    const val NETCLASSID_SCEXPLOSIONEVENT      = 1014
+    const val NETCLASSID_SCOBELISKEVENT        = 1015
+    const val NETCLASSID_SCANNOUNCEMENT        = 1016
+    const val NETCLASSID_GAMESPYSCCHALLENGEEVENT = 1017
+
+    // C→S objects (1018–1039)
+    const val NETCLASSID_CLIENTCONTROL         = 1018
+    const val NETCLASSID_CSTEXTOBJ             = 1019
+    const val NETCLASSID_SUICIDEEVENT          = 1020
+    const val NETCLASSID_CHANGETEAMEVENT       = 1021
+    const val NETCLASSID_MONEYEVENT            = 1022
+    const val NETCLASSID_WARPEVENT             = 1023
+    const val NETCLASSID_PURCHASEREQUESTEVENT  = 1024
+    const val NETCLASSID_CLIENTGOODBYEEVENT    = 1025
+    const val NETCLASSID_BIOEVENT              = 1026
+    const val NETCLASSID_LOADINGEVENT          = 1027
+    const val NETCLASSID_GODMODEEVENT          = 1028
+    const val NETCLASSID_VIPMODEEVENT          = 1029
+    const val NETCLASSID_SCOREEVENT            = 1030
+    const val NETCLASSID_CLIENTBBOEVENT        = 1031
+    const val NETCLASSID_CLIENTFPS             = 1032
+    const val NETCLASSID_CSPINGREQUESTEVENT    = 1033
+    const val NETCLASSID_CSDAMAGEEVENT         = 1034
+    const val NETCLASSID_REQUESTKILLEVENT      = 1035
+    const val NETCLASSID_CSCONSOLECOMMANDEVENT = 1036
+    const val NETCLASSID_CSHINT                = 1037
+    const val NETCLASSID_CSANNOUNCEMENT        = 1038
+    const val NETCLASSID_DONATEEVENT           = 1039
+
     private val names = mapOf(
-        // S->C objects (1000-1016)
-        1000 to "GAMEOBJ",
-        1001 to "SCTEXTOBJ",
-        1002 to "PLAYERKILL",
-        1003 to "WIN",
-        1004 to "PURCHASERESPONSEEVENT",
-        1005 to "CONSOLECOMMANDEVENT",
-        1006 to "RESETWINSEVENT",
-        1007 to "SVRGOODBYEEVENT",
-        1008 to "GAMEOPTIONSEVENT",
-        1009 to "EVICTIONEVENT",
-        1010 to "TEAM",
-        1011 to "PLAYER",
-        1012 to "GAMEDATAUPDATEEVENT",
-        1013 to "SCPINGRESPONSEEVENT",
-        1014 to "SCEXPLOSIONEVENT",
-        1015 to "SCOBELISKEVENT",
-        1016 to "SCANNOUNCEMENT",
-        // C->S objects (1017-1038)
-        1017 to "CLIENTCONTROL",
-        1018 to "CSTEXTOBJ",
-        1019 to "SUICIDEEVENT",
-        1020 to "CHANGETEAMEVENT",
-        1021 to "MONEYEVENT",
-        1022 to "WARPEVENT",
-        1023 to "PURCHASEREQUESTEVENT",
-        1024 to "CLIENTGOODBYEEVENT",
-        1025 to "BIOEVENT",
-        1026 to "LOADINGEVENT",
-        1027 to "GODMODEEVENT",
-        1028 to "VIPMODEEVENT",
-        1029 to "SCOREEVENT",
-        1030 to "CLIENTBBOEVENT",
-        1031 to "CLIENTFPS",
-        1032 to "CSPINGREQUESTEVENT",
-        1033 to "CSDAMAGEEVENT",
-        1034 to "REQUESTKILLEVENT",
-        1035 to "CSCONSOLECOMMANDEVENT",
-        1036 to "CSHINT",
-        1037 to "CSANNOUNCEMENT",
-        1038 to "DONATEEVENT",
+        // S→C objects (1000–1016)
+        NETCLASSID_GAMEOBJ               to "GAMEOBJ",
+        NETCLASSID_SCTEXTOBJ             to "SCTEXTOBJ",
+        NETCLASSID_PLAYERKILL            to "PLAYERKILL",
+        NETCLASSID_WIN                   to "WIN",
+        NETCLASSID_PURCHASERESPONSEEVENT to "PURCHASERESPONSEEVENT",
+        NETCLASSID_CONSOLECOMMANDEVENT   to "CONSOLECOMMANDEVENT",
+        NETCLASSID_RESETWINSEVENT        to "RESETWINSEVENT",
+        NETCLASSID_SVRGOODBYEEVENT       to "SVRGOODBYEEVENT",
+        NETCLASSID_GAMEOPTIONSEVENT      to "GAMEOPTIONSEVENT",
+        NETCLASSID_EVICTIONEVENT         to "EVICTIONEVENT",
+        NETCLASSID_TEAM                  to "TEAM",
+        NETCLASSID_PLAYER                to "PLAYER",
+        NETCLASSID_GAMEDATAUPDATEEVENT   to "GAMEDATAUPDATEEVENT",
+        NETCLASSID_SCPINGRESPONSEEVENT   to "SCPINGRESPONSEEVENT",
+        NETCLASSID_SCEXPLOSIONEVENT      to "SCEXPLOSIONEVENT",
+        NETCLASSID_SCOBELISKEVENT        to "SCOBELISKEVENT",
+        NETCLASSID_SCANNOUNCEMENT        to "SCANNOUNCEMENT",
+        // C→S objects (1017–1038)
+        NETCLASSID_CLIENTCONTROL         to "CLIENTCONTROL",
+        NETCLASSID_CSTEXTOBJ             to "CSTEXTOBJ",
+        NETCLASSID_SUICIDEEVENT          to "SUICIDEEVENT",
+        NETCLASSID_CHANGETEAMEVENT       to "CHANGETEAMEVENT",
+        NETCLASSID_MONEYEVENT            to "MONEYEVENT",
+        NETCLASSID_WARPEVENT             to "WARPEVENT",
+        NETCLASSID_PURCHASEREQUESTEVENT  to "PURCHASEREQUESTEVENT",
+        NETCLASSID_CLIENTGOODBYEEVENT    to "CLIENTGOODBYEEVENT",
+        NETCLASSID_BIOEVENT              to "BIOEVENT",
+        NETCLASSID_LOADINGEVENT          to "LOADINGEVENT",
+        NETCLASSID_GODMODEEVENT          to "GODMODEEVENT",
+        NETCLASSID_VIPMODEEVENT          to "VIPMODEEVENT",
+        NETCLASSID_SCOREEVENT            to "SCOREEVENT",
+        NETCLASSID_CLIENTBBOEVENT        to "CLIENTBBOEVENT",
+        NETCLASSID_CLIENTFPS             to "CLIENTFPS",
+        NETCLASSID_CSPINGREQUESTEVENT    to "CSPINGREQUESTEVENT",
+        NETCLASSID_CSDAMAGEEVENT         to "CSDAMAGEEVENT",
+        NETCLASSID_REQUESTKILLEVENT      to "REQUESTKILLEVENT",
+        NETCLASSID_CSCONSOLECOMMANDEVENT to "CSCONSOLECOMMANDEVENT",
+        NETCLASSID_CSHINT                to "CSHINT",
+        NETCLASSID_CSANNOUNCEMENT        to "CSANNOUNCEMENT",
+        NETCLASSID_DONATEEVENT           to "DONATEEVENT",
     )
 
     fun name(networkClassId: Int): String = names[networkClassId] ?: "UNKNOWN_$networkClassId"

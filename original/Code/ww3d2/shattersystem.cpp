@@ -745,13 +745,14 @@ void ShatterSystem::Init(void)
 	htree_name.Format(SHATTER_PATTERN_FORMAT,0);
 
 	HTreeClass * htree = WW3DAssetManager::Get_Instance()->Get_HTree(htree_name);
+
 	while (htree != NULL) {
 		if ((htree->Num_Pivots() > 1) && (htree->Num_Pivots() < MAX_MESH_FRAGMENTS)) {
 			int leaf_counter = 0;
 			htree->Base_Update(Matrix3D(1));
-			ShatterPatterns.Add(new BSPClass(htree,1,leaf_counter));			
+			ShatterPatterns.Add(new BSPClass(htree,1,leaf_counter));
 		}
-		
+
 		/*
 		** Try to load the next tree
 		*/
@@ -780,7 +781,7 @@ void ShatterSystem::Shutdown(void)
 void ShatterSystem::Shatter_Mesh(MeshClass * mesh,const Vector3 & point,const Vector3 & direction)
 {
 	if (ShatterPatterns.Count() == 0) {
-		return ;
+		return;
 	}
 
 	int ivert,ipoly;
@@ -801,18 +802,22 @@ void ShatterSystem::Shatter_Mesh(MeshClass * mesh,const Vector3 & point,const Ve
 	** - it uses only one texture per pass
 	*/
 	MeshModelClass * model = mesh->Get_Model();
+
 	if (model->Get_Pass_Count() > MeshMatDescClass::MAX_PASSES) {
 		REF_PTR_RELEASE(model);
 		return;
 	}
 	for (ipass=0; ipass<model->Get_Pass_Count(); ipass++) {
-		if (model->Has_Material_Array(ipass) || model->Has_Shader_Array(ipass)) {
+		bool has_mat_array = model->Has_Material_Array(ipass);
+		bool has_shd_array = model->Has_Shader_Array(ipass);
+		if (has_mat_array || has_shd_array) {
 			REF_PTR_RELEASE(model);
 			return;
 		}
-		
+
 		for (istage=0; istage<MeshMatDescClass::MAX_TEX_STAGES; istage++) {
-			if (model->Has_Texture_Array(ipass,istage)) {
+			bool has_tex_array = model->Has_Texture_Array(ipass,istage);
+			if (has_tex_array) {
 				REF_PTR_RELEASE(model);
 				return;
 			}

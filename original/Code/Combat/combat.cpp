@@ -165,6 +165,7 @@ void	CombatManager::Init( bool render_available )
 */
 void	CombatManager::Shutdown( void )
 {
+	Set_Observers_Active(false);
 //	Debug_Say(("CombatManager::Shutdown\n"));
 	ScreenFadeManager::Shutdown();
 	HUDClass::Shutdown();
@@ -324,6 +325,8 @@ public:
 			GenericDataSafeClass::Set_Preferred_Thread(GetCurrentThreadId());
 
 		CombatManager::Inc_Load_Progress();
+
+		fprintf(stderr, "[LEVEL] loading map '%s'\n", (const char *)_load_map_name);
 
 		//	Reload the definition databases (to support level-specific temp ddb's)
 		INIT_STATUS("Free definition databases");

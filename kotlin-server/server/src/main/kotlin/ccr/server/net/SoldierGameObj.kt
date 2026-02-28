@@ -1332,8 +1332,7 @@ open class SoldierGameObj() : SmartGameObj() {
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)
         // C++: packet.Add(definition_id) — adds definition ID
-        val definitionId = definition?.id?.toInt() ?: 0
-        packet.addInt(definitionId)
+        packet.addInt(checkNotNull(definition).id.toInt())
     }
 
     // C++: virtual void Import_Rare(BitStreamClass&)
@@ -1362,6 +1361,7 @@ open class SoldierGameObj() : SmartGameObj() {
     override fun exportOccasional(packet: BitStream) {
         super.exportOccasional(packet)
         // C++: WeaponBag->Export_Weapon_List(packet)
+        System.err.println("SWBAG_POS bitPos=${packet.bitWritePosition}")
         weaponBag.exportWeaponList(packet)
     }
 
@@ -1610,12 +1610,15 @@ open class SoldierGameObj() : SmartGameObj() {
     var realPhysObj: ccr.physics.moveable.HumanPhysClass? = null
 
     // Bridge: a stub HumanPhysClass whose member methods delegate to realPhysObj.
+    // wirePhysics() in God.kt assigns this to physObj so that PhysicalGameObj.getPosition()
+    // (which does physObj!!.getPosition()) works without requiring a full Copy_Settings() call.
     // Extension functions on HumanPhysClass (setVelocity, setPosition, networkStateUpdate,
     // canTeleport(Matrix3D), getCollisionBox, getNormalizedSpeed, setNormalizedSpeed) are
     // already no-ops in the stubs and do not need bridging here.
-    private val humanPhysBridge by lazy { object : HumanPhysClass() {
-        // The `?: 0f` null branch is unreachable in practice: peekHumanPhys() only returns
-        // this bridge when realPhysObj != null, so realPhysObj will always be non-null here.
+    internal val humanPhysBridge by lazy { object : HumanPhysClass() {
+        // The `?: position` null branch is unreachable in practice: wirePhysics() only assigns
+        // this bridge to physObj after setting realPhysObj, so realPhysObj will always be non-null.
+        override fun getPosition(): Vector3 = realPhysObj?.position ?: position
         override fun getHeading(): Float = realPhysObj?.heading ?: 0f
         override fun setHeading(heading: Float) { realPhysObj?.heading = heading }
         override fun getVelocity(): Vector3 = realPhysObj?.velocity?.copy() ?: Vector3(0f, 0f, 0f)

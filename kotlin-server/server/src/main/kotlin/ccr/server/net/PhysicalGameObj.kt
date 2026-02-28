@@ -378,11 +378,12 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         }
 
         // "Going to hell" check — object fell below level bounds
-        val scene = CombatManager.getScene()
-        if (scene != null) {
+        // C++: PhysicalGameObj::Post_Think() (physicalgameobj.cpp:665-674)
+        // Uses physObj->scene (the real PhysicsScene) rather than the CombatManager stub.
+        val levelExtents = physObj?.scene?.getLevelExtents()
+        if (levelExtents != null) {
             val pos = getPosition()
-            val min = scene.getLevelMin()
-            if (pos.z < min.z - 20f) {
+            if (pos.z < levelExtents.min.z - 20f) {
                 setDeletePending()
             }
         }
@@ -549,8 +550,8 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: PhysicalGameObj::Export_Rare
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)
-        packet.addTerminatedString(physObj?.peekModel()?.getName() ?: modelName, permitEmpty = true)
-        packet.addTerminatedString(animName, permitEmpty = true)
+        packet.addTerminatedString(physObj?.peekModel()?.getName() ?: modelName, permitEmpty = false)
+        packet.addTerminatedString(animName, permitEmpty = this !is SoldierGameObj)
         // C++: when AnimControl == NULL, curr_frame=0, target_frame=0, anim_mode=ANIM_MODE_TARGET(3).
         // The server has no real animation system — always send the C++ NULL-AnimControl defaults.
         packet.addInt(0)              // currFrame

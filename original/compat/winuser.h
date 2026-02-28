@@ -417,7 +417,7 @@ inline int CompareStringW(LCID Locale, DWORD dwCmpFlags, LPCWSTR lpString1, int 
     if (!lpString1 || !lpString2) return CSTR_EQUAL;
     int r = (cchCount1 == -1 && cchCount2 == -1)
         ? ((dwCmpFlags & NORM_IGNORECASE) ? wcscasecmp(lpString1, lpString2) : wcscmp(lpString1, lpString2))
-        : wcsncmp(lpString1, lpString2, (cchCount1 < cchCount2 ? cchCount1 : cchCount2));
+        : wcsncmp(lpString1, lpString2, static_cast<size_t>(cchCount1 < cchCount2 ? cchCount1 : cchCount2));
     return r < 0 ? CSTR_LESS_THAN : r > 0 ? CSTR_GREATER_THAN : CSTR_EQUAL;
 }
 inline int CompareStringA(LCID Locale, DWORD dwCmpFlags, LPCSTR s1, int c1, LPCSTR s2, int c2) {
@@ -458,11 +458,11 @@ inline int LoadString(HINSTANCE inst, UINT id, LPSTR buf, int size) {
     return 0;
 }
 
-// Keyboard state stubs
+// Keyboard state (implemented in sdl2_platform.cpp)
 typedef BYTE* PBYTE;
-inline SHORT GetKeyState(int nVirtKey) { return 0; }
-inline SHORT GetAsyncKeyState(int vKey) { return 0; }
-inline BOOL  GetKeyboardState(PBYTE lpKeyState) { return FALSE; }
+SHORT GetKeyState(int nVirtKey);
+SHORT GetAsyncKeyState(int vKey);
+BOOL  GetKeyboardState(PBYTE lpKeyState);
 inline UINT  MapVirtualKey(UINT uCode, UINT uMapType) { return 0; }
 inline UINT  MapVirtualKeyA(UINT uCode, UINT uMapType) { return 0; }
 

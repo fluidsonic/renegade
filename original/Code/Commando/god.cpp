@@ -248,7 +248,7 @@ SoldierGameObj * cGod::Create_Commando(int client_id, int player_type/*, int mod
 		SpawnerClass * p_spawner = SpawnManager::Get_Primary_Spawner();
 		if (p_spawner != NULL) {
 			const DynamicVectorClass<int>	& def_list = p_spawner->Get_Definition().Get_Spawn_Definition_ID_List();
-			PhysicalGameObjDef * p_def = (PhysicalGameObjDef *)DefinitionMgrClass::Find_Definition(def_list[0]);
+			PhysicalGameObjDef * p_def = (PhysicalGameObjDef *)DefinitionMgrClass::Find_Definition(static_cast<uint32_t>(def_list[0]));
 			if (p_def != NULL) {
 				preset_name.Format("%s", p_def->Get_Name());
 			}
@@ -392,12 +392,13 @@ void cGod::Star_Killed( void )
 		popup->Start_Dialog();
 		popup->Release_Ref();
 	} else if ( State == GOD_STATE_MULTIPLAYER ) {
-
-		if (GameModeManager::Find ("Combat")->Is_Active ()) {
-			if (GameModeManager::Find ("Menu")->Is_Active ()) {
-				GameModeManager::Find ("Menu")->Deactivate ();
+		GameModeClass *combat_mode = GameModeManager::Find("Combat");
+		if (combat_mode != NULL && combat_mode->Is_Active()) {
+			GameModeClass *menu_mode = GameModeManager::Find("Menu");
+			if (menu_mode != NULL && menu_mode->Is_Active()) {
+				menu_mode->Deactivate();
 			} else {
-				DialogMgrClass::Flush_Dialogs ();
+				DialogMgrClass::Flush_Dialogs();
 			}
 		}
 	}

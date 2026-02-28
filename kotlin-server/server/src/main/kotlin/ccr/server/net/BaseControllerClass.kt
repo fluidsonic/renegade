@@ -29,6 +29,10 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
     // C++: Set_Delete_Pending is overridden to no-op — persists between levels
     override fun setDeletePending() {}
 
+    // Back-reference to the Network instance — set by Network.kt after cncInitialize.
+    // Used by VehicleFactoryGameObj.createVehicle() to reach God.createHarvester/createVehicle.
+    var network: ccr.server.Network? = null
+
     // All fields start at C++ Initialize() defaults
     var operationTimeFactor: Float = 1f; private set
     var isBasePowered: Boolean = true; private set

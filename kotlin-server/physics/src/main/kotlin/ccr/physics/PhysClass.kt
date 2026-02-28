@@ -1,6 +1,8 @@
 package ccr.physics
 
+import ccr.math.AABox
 import ccr.math.Matrix3D
+import ccr.math.Vector3
 import ccr.physics.collision.AABoxCollisionTest
 import ccr.physics.collision.OBBoxCollisionTest
 import ccr.physics.collision.RayCollisionTest
@@ -73,4 +75,11 @@ abstract class PhysClass {
     open fun castRay(test: RayCollisionTest): Boolean = false
     open fun castAABox(test: AABoxCollisionTest): Boolean = false
     open fun castOBBox(test: OBBoxCollisionTest): Boolean = false
+
+    /** World-space bounding box for this object. Used by spatial structures (AABTree, PhysGrid). */
+    open fun worldBoundingBox(): AABox {
+        val t = transform.translation
+        val pad = Vector3(1f, 1f, 1f)
+        return AABox.fromMinMax(t - pad, t + pad)
+    }
 }

@@ -171,7 +171,7 @@ abstract class ArmedGameObj : PhysicalGameObj() {
         setTargeting(rel + myPos)
     }
 
-    // C++: ArmedGameObj::Export_Frequent
+    // C++: ArmedGameObj::Export_Frequent — calls PhysicalGameObj::Export_Frequent then writes targeting.
     override fun exportFrequent(packet: BitStream) {
         super.exportFrequent(packet)
         packet.addFloat(targeting.x, BITPACK_WORLD_POSITION_X)
@@ -179,11 +179,13 @@ abstract class ArmedGameObj : PhysicalGameObj() {
         packet.addFloat(targeting.z, BITPACK_WORLD_POSITION_Z)
     }
 
-    // C++: ArmedGameObj::Import_Frequent
+    // C++: ArmedGameObj::Import_Frequent — calls PhysicalGameObj::Import_Frequent then reads targeting.
     override fun importFrequent(packet: BitStream) {
         super.importFrequent(packet)
-        targeting.x = packet.getFloat(BITPACK_WORLD_POSITION_X)
-        targeting.y = packet.getFloat(BITPACK_WORLD_POSITION_Y)
-        targeting.z = packet.getFloat(BITPACK_WORLD_POSITION_Z)
+        targeting = Vector3(
+            packet.getFloat(BITPACK_WORLD_POSITION_X),
+            packet.getFloat(BITPACK_WORLD_POSITION_Y),
+            packet.getFloat(BITPACK_WORLD_POSITION_Z),
+        )
     }
 }

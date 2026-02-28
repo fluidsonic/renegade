@@ -38,6 +38,7 @@ class cBitPacker
 
 		void Set_Bit_Write_Position(UINT position);
 		UINT Get_Bit_Write_Position() const {return BitWritePosition;}
+		UINT Get_Bit_Read_Position() const {return BitReadPosition;}
 
 	protected:
       cBitPacker& operator=(const cBitPacker& rhs);

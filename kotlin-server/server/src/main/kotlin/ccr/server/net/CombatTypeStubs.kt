@@ -183,7 +183,7 @@ open class MoveablePhysClass : PhysClass() {
     override fun asMoveablePhysClass(): MoveablePhysClass = this
     fun setVelocity(vel: Vector3): Unit = Unit
     open fun getVelocity(): Vector3 = Vector3()
-    fun getAngularVelocity(): Vector3 = Vector3()
+    open fun getAngularVelocity(): Vector3 = Vector3()
     fun cinematicMoveTo(tm: Matrix3D): Unit = Unit
     override fun addEffectToMe(effect: Any): Unit = Unit
     fun removeEffectFromMe(effect: Any): Unit = Unit
@@ -246,18 +246,27 @@ open class HumanPhysClass : MoveablePhysClass() {
 
 // C++: VehiclePhysClass stub (different from ccr.physics.vehicle.VehiclePhysClass)
 open class VehiclePhysClassStub : MoveablePhysClass() {
+    // Stored position/velocity for vehicles without real physics
+    private var storedPosition: Vector3 = Vector3()
+    private var storedVelocity: Vector3 = Vector3()
+    private var storedAngularVelocity: Vector3 = Vector3()
+    private var engineEnabled: Boolean = false
+    fun setStoredPosition(pos: Vector3) { storedPosition = pos }
+    override fun getPosition(): Vector3 = storedPosition
+    override fun getVelocity(): Vector3 = storedVelocity
+    override fun getAngularVelocity(): Vector3 = storedAngularVelocity
     override fun asVehiclePhysClass(): VehiclePhysClassStub = this
     fun getNormalizedSpeed(): Float = 10.0f
     fun setNormalizedSpeed(speed: Float): Unit = Unit
     fun setTurnVelocity(vel: Float): Unit = Unit
-    fun isEngineEnabled(): Boolean = false
-    fun enableEngine(enable: Boolean): Unit = Unit
-    fun getPitchFactor(): Float = TODO("stub")
-    fun setPitchFactor(f: Float): Unit = TODO("stub")
-    fun getOrientation(): ccr.math.Quaternion = TODO("stub")
+    fun isEngineEnabled(): Boolean = engineEnabled
+    fun enableEngine(enable: Boolean) { engineEnabled = enable }
+    fun getPitchFactor(): Float = 0f
+    fun setPitchFactor(f: Float): Unit = Unit
+    fun getOrientation(): ccr.math.Quaternion = ccr.math.Quaternion.IDENTITY
     fun networkInterpolateStateUpdate(
         pos: Vector3, q: ccr.math.Quaternion, vel: Vector3, angVel: Vector3, dt: Float
-    ): Unit = TODO("stub")
+    ): Unit = Unit
     open fun asVTOLVehicleClass(): VTOLVehicleClass? = null
 }
 
@@ -1345,7 +1354,6 @@ fun getMessageWindow(): MessageWindowClass = MessageWindowClass()
 fun PlayerDataClass.getPlayerType(): Int = 0
 fun PlayerDataClass.setPlayerType(type: Int): Unit = Unit
 fun PlayerDataClass.getName(): String = ""
-fun PlayerDataClass.addMoney(amount: Float): Unit = Unit
 fun PlayerDataClass.getId(): Int = 0
 fun PlayerDataClass.getOwner(): SoldierGameObj? = null
 fun PlayerDataClass.getAction(): Any? = null

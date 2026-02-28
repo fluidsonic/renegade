@@ -274,7 +274,7 @@ WW3DFormat Get_Valid_Texture_Format(WW3DFormat format, bool is_compression_allow
 	}
 
 	if (format==WW3D_FORMAT_R8G8B8) {
-		format=WW3D_FORMAT_X8R8G8B8;
+		format=WW3D_FORMAT_A8R8G8B8;
 	}
 
 	WW3D::Get_Device_Resolution(w,h,bits,windowed);

@@ -214,6 +214,10 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 	//
 	NetworkObjectClass *object = NetworkObjectMgrClass::Find_Object (network_obj_id);
 
+	fprintf(stderr, "[NET] incoming netId=%d dirty=0x%02X del=%d existing=%s\n",
+		network_obj_id, (int)dirty_bits, (int)is_delete_pending,
+		object ? "yes" : "no");
+
 	//
 	//	Do we need to create this object?
 	//
@@ -228,6 +232,8 @@ void cNetwork::Client_Packet_Handler(cPacket & packet)
 		//	Create the network object
 		//
 		int net_classid = packet.Get (net_classid);
+		fprintf(stderr, "[NET] creation netId=%d classId=%d existing=%s\n",
+			network_obj_id, net_classid, object ? "yes" : "no");
 		if (object == NULL) {
 			object = Create_Network_Object (packet, net_classid, network_obj_id);
 		}

@@ -534,8 +534,8 @@ void SurfaceClass::FindBB(Vector2i *min,Vector2i*max)
 	int x,y;
 	unsigned int size=PixelSize(sd);
 	Vector2i realmin=*max;
-	Vector2i realmax=*min;	
-	
+	Vector2i realmax=*min;
+
 	// the assumption here is that whenever a pixel has alpha it's in the MSB
 	for (y = min->J; y < max->J; y++) {
 		for (x = min->I; x < max->I; x++) {
@@ -605,19 +605,19 @@ bool SurfaceClass::Is_Transparent_Column(unsigned int column)
 
 	DX8_ErrorCode(static_cast<uint32_t>(D3DSurface->LockRect(&lock_rect,&rect,D3DLOCK_READONLY)));
 
-	int y;	
-	
+	int y;
+
 	// the assumption here is that whenever a pixel has alpha it's in the MSB
 	for (y = 0; y < (int) sd.Height; y++)
 	{
 		// HY - this is not endian safe
 		unsigned char *alpha=(unsigned char*) ((uintptr_t)lock_rect.pBits+y*lock_rect.Pitch);
-		unsigned char myalpha=alpha[size-1];		
-		myalpha=(myalpha>>(8-alphabits)) & mask;		
+		unsigned char myalpha=alpha[size-1];
+		myalpha=(myalpha>>(8-alphabits)) & mask;
 		if (myalpha) {
 			DX8_ErrorCode(static_cast<uint32_t>(D3DSurface->UnlockRect()));
-			return false;			
-		}		
+			return false;
+		}
 	}
 
 	DX8_ErrorCode(static_cast<uint32_t>(D3DSurface->UnlockRect()));

@@ -22,10 +22,11 @@ class CsHint(
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
         subjectId = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] CSHINT from rhostId=$rhostId senderId=$senderId subjectId=$subjectId (ignored)")
+    override fun act() {
+        println("[GAME] CSHINT from senderId=$senderId subjectId=$subjectId (ignored)")
         setDeletePending()
     }
 }

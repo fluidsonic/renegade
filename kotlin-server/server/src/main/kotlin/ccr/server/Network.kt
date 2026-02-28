@@ -23,7 +23,6 @@ import ccr.server.net.GameOptionsEvent
 import ccr.server.net.NetworkObjectPacketWriter
 import ccr.server.net.Player
 import ccr.server.net.ServerFps
-import ccr.server.net.SoldierGameObj
 import ccr.server.net.Team
 import ccr.server.net.WinEvent
 import ccr.server.net.BackgroundMgr
@@ -57,6 +56,9 @@ import ccr.math.Matrix3D as MathMatrix3D
 import ccr.physics.static.DoorPhysClass
 import ccr.server.net.DoorNetworkObject
 import ccr.server.net.PowerUpGameObj
+import ccr.server.net.ScTextObj
+import ccr.server.net.SimpleGameObj
+import ccr.server.net.TimeManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -166,6 +168,9 @@ class Network(internal val config: ServerConfig) {
 
     // Score sort timer (once per second, C++: End_Game_Test sort)
     private var lastScoreSortMs: Long = 0L
+
+    // FIXME: debug — remove after verifying soldier positions update
+    private var lastDebugPosBroadcast: Long = 0L
 
     // Per-tick outbox: packets buffered during tick, flushed together at end of tick
     private val pendingOutbox = mutableMapOf<Int, MutableList<Pair<InetSocketAddress, ByteArray>>>()
@@ -359,6 +364,8 @@ class Network(internal val config: ServerConfig) {
             // Update frame delta seconds for use by think() loops
             frameDeltaSeconds = tickDeltaMs / 1000f
             gameContext.frameDeltaSeconds = frameDeltaSeconds
+            // C++: TimeManager::Set_Frame_Seconds() — called at top of each game loop tick
+            TimeManager.setFrameSeconds(frameDeltaSeconds)
 
             // Send keepalives
             for ((host, kp) in connectionManager.getKeepalives(nowMs)) {
@@ -431,6 +438,26 @@ class Network(internal val config: ServerConfig) {
                 }
             }
 
+            // FIXME: debug — broadcast each player's position via chat every second
+            if (nowMs - lastDebugPosBroadcast >= 1000L) {
+                lastDebugPosBroadcast = nowMs
+                for ((rhostId, soldier) in god.soldiersByHost) {
+                    val pos = soldier.position
+                    val text = "pos=(%.1f, %.1f, %.1f)".format(pos.x, pos.y, pos.z)
+                    val msg = ScTextObj(
+                        type = 0,
+                        senderId = -1,
+                        recipientId = -1,
+                        isHostAdminMessage = false,
+                        text = text,
+                    )
+                    val host = connectionManager.getHost(rhostId) ?: continue
+                    serverSendPacket(host) { bs ->
+                        NetworkObjectPacketWriter.writeCreation(bs, msg, msg.networkId)
+                    }
+                }
+            }
+
             // Mark driven vehicles BIT_FREQUENT dirty — gameObjManager.think() already advanced
             // their position via VehicleGameObj.think(). All clients need the updated position.
             for ((_, vehicle) in god.playerVehicles) {
@@ -483,7 +510,8 @@ class Network(internal val config: ServerConfig) {
     // dirty bits in ONE packet (matching C++ Send_Object_Update writing both fields).
     // Objects with zero dirty bits (including delete-pending ones) are skipped — they are handled
     // exclusively by tellClientAboutDeleteNotifications in the next step.
-    // Never sends a soldier's FREQUENT update to its own controlling player (client is authoritative).
+    // C++: the controlling client's own soldier IS included — at priority 0.8f — so the server's
+    // authoritative position reaches the client as a correction echo.
     private fun tellClientAboutDynamicObjects(clientId: Int) {
         val objects = NetworkObjectManager.getAllObjects()
 
@@ -496,7 +524,6 @@ class Network(internal val config: ServerConfig) {
             if (bits == 0) continue
 
             val host = connectionManager.getHost(clientId) ?: continue
-            val isOwnSoldier = (obj is SoldierGameObj) && (obj.controlOwner == clientId)
 
             if ((bits and 0x08) != 0) {
                 // BIT_CREATION — send full creation reliably
@@ -514,8 +541,11 @@ class Network(internal val config: ServerConfig) {
                 if (delPending) {
                     // BIT_FREQUENT + delete — promote to reliable, combining both in one packet
                     serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId, delPending) }
-                } else if (!isOwnSoldier) {
-                    // BIT_FREQUENT only — skip own soldier; gate others through FlowController
+                } else {
+                    // BIT_FREQUENT only — gate through FlowController.
+                    // C++: own soldier is included but at higher priority (0.8f) — the server
+                    // sends the authoritative position back to the controlling client as a
+                    // server-side correction echo. Never skip the controlling client.
                     val fc = flowControllers[clientId]
                     if (fc == null || fc.shouldSend(50.0f)) {
                         sendUnreliable(host) { bs -> NetworkObjectPacketWriter.writeFrequentUpdate(bs, obj, obj.networkId) }
@@ -656,7 +686,7 @@ class Network(internal val config: ServerConfig) {
         serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, gameOptionsEvent, gameOptionsEvent.networkId) }
 
         // Player creation is NOT sent here. C++ sends it in cBioEvent::Act() after the client
-        // finishes loading. See BIOEVENT handler (networkClassId=1026).
+        // finishes loading. See BIOEVENT handler (networkClassId=NETCLASSID_BIOEVENT=1025).
         // Buildings, base controllers, and ServerFps are sent by tellClientAboutDynamicObjects() after BIOEVENT.
     }
 
@@ -690,20 +720,12 @@ class Network(internal val config: ServerConfig) {
             if (factory != null) {
                 obj = factory.create(snap)
                 if (obj != null) {
-                    // Wire up server reference for persistent C→S objects
-                    if (obj is ClientControl) {
-                        obj.server = this
-                        obj.rhostId = rhostId
-                    }
-                    if (obj is ClientFps) {
-                        obj.server = this
-                        obj.rhostId = rhostId
-                    }
+                    // Wire up server reference for event and persistent C→S objects
+                    if (obj is NetEvent) { obj.network = this; obj.rhostId = rhostId }
+                    if (obj is ClientControl) obj.network = this
+                    if (obj is ClientFps) obj.network = this
                     NetworkObjectManager.registerObject(obj, networkId)
                     obj.importCreation(snap)
-                    if (obj is NetEvent) {
-                        obj.act(this, rhostId)
-                    }
                 } else {
                     println("[GAME] factory.create returned null for classId=$classId netId=$networkId")
                 }
@@ -982,7 +1004,10 @@ class Network(internal val config: ServerConfig) {
                         1 -> { controllerGdi.addBuilding(building); controllerGdi }
                         else -> null
                     }
-                    if (controller != null) building.cncInitialize(controller)
+                    if (controller != null) {
+                        controller.network = this
+                        building.cncInitialize(controller)
+                    }
                     println("[BUILDING] registered ${building::class.simpleName} networkId=${building.networkId} defId=${building.definitionId} playerType=${building.playerType}")
                 }
                 println("[BUILDING] registered ${levelBuildings.size} buildings, 2 base controllers")
@@ -1155,10 +1180,13 @@ class Network(internal val config: ServerConfig) {
     private suspend fun loadLevel(mapName: String = currentMapName) {
         val dataDir = if (config.dataPath.isNotEmpty()) File(config.dataPath) else File(".")
 
-        // Find always MIX (Renegade loads Always2.dat, Always.dbs, Always.dat in init.cpp)
-        val alwaysMix = listOf("always.dbs", "always2.dat", "always.dat").firstNotNullOfOrNull { fileName ->
+        // Load ALL always archives — C++ loads Always2.dat + Always.dbs + Always.dat in init.cpp.
+        // always.dbs has definitions; always.dat (552 MB) has all W3D geometry.
+        // We need all of them; use the first one (always.dbs) as the primary for LevelLoader,
+        // and pass the full list to PhysicsSceneBuilder so W3D lookups search all archives.
+        val alwaysMixes = listOf("always.dbs", "always2.dat", "always.dat").mapNotNull { fileName ->
             val file = File(dataDir, fileName)
-            if (!file.exists()) return@firstNotNullOfOrNull null
+            if (!file.exists()) return@mapNotNull null
             try {
                 MixReader(file.readBytes()).also {
                     println("[SERVER] opened $fileName (${it.fileCount()} files in archive)")
@@ -1168,6 +1196,7 @@ class Network(internal val config: ServerConfig) {
                 null
             }
         }
+        val alwaysMix = alwaysMixes.firstOrNull()
 
         if (mapName.isEmpty()) {
             println("[SERVER] no MapName configured, skipping level load")
@@ -1192,7 +1221,7 @@ class Network(internal val config: ServerConfig) {
         val level = LevelLoader(alwaysMix, mapMix, baseName).load()
         loadedLevel = level
 
-        physicsScene = PhysicsSceneBuilder.build(level.staticData.staticObjects, mapMix, alwaysMix)
+        physicsScene = PhysicsSceneBuilder.build(level.staticData.staticObjects, mapMix, alwaysMixes)
 
         // Extract soldier/weapon definition IDs from the loaded registry
         val defs = level.definitions
@@ -1357,7 +1386,10 @@ class Network(internal val config: ServerConfig) {
      */
     internal fun createPowerUp(position: Vector3, def: PowerUpGameObjDef): PowerUpGameObj? {
         val modelName = if (def.physDefId != 0)
-            (loadedLevel?.definitions?.findById(def.physDefId.toUInt()) as? PhysDefClass)?.modelName ?: ""
+            (loadedLevel?.definitions?.findById(def.physDefId.toUInt()) as? PhysDefClass)
+                ?.modelName
+                ?.substringAfterLast('\\')?.substringAfterLast('/')?.substringBeforeLast('.')
+                ?: ""
         else ""
 
         val powerUp = PowerUpGameObj()
@@ -1399,7 +1431,10 @@ class Network(internal val config: ServerConfig) {
         EncoderRegistry.setPrecision(BITPACK_ANALOG_VALUES, -1.0, 1.0, 0.01)      // control.cpp
         EncoderRegistry.setPrecision(BITPACK_HEALTH,          0.0, 2000.0, 1.0)   // damage.cpp
         EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)   // damage.cpp
-        EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE,     0.0, config.armorTypeCount.toDouble(), 1.0) // damage.cpp
+        // C++: DefenseObjectClass::Set_Precision → Set_Precision(BITPACK_SHIELD_TYPE, 0, Get_Num_Armor_Types())
+        // Use actual loaded armor type count, falling back to config if armor.ini wasn't loaded.
+        val armorTypeCount = if (ArmorWarheadManager.numArmorTypes > 0) ArmorWarheadManager.numArmorTypes else config.armorTypeCount
+        EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE,     0.0, armorTypeCount.toDouble(), 1.0) // damage.cpp
         EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE,     0.0, 19.0,  1.0)    // humanstate.h: LOCKED_ANIMATION=19
         EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)    // humanstate.cpp: (1<<9)-1=511
         EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_CS, 8)                 // control.cpp: CONTROL_TURN_RIGHT+1=8

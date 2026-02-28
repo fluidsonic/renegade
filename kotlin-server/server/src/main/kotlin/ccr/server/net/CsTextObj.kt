@@ -32,10 +32,11 @@ class CsTextObj(
         type = packet.getByte().toInt() and 0xFF
         text = packet.getWideString(permitEmpty = true)
         recipientId = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] CHAT from rhostId=$rhostId type=$type text='$text'")
+    override fun act() {
+        println("[GAME] CHAT from senderId=$senderId type=$type text='$text'")
         // TEXT_MESSAGE_PUBLIC=0, TEXT_MESSAGE_TEAM=1, TEXT_MESSAGE_PRIVATE=2
         val relay = ScTextObj(
             type = type,
@@ -46,29 +47,29 @@ class CsTextObj(
         )
         when (type) {
             0 -> {  // PUBLIC — broadcast to all in-game
-                for (clientId in server.god.playerInGame) {
-                    val clientHost = server.connectionManager.getHost(clientId) ?: continue
-                    server.serverSendPacket(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
+                for (clientId in network.god.playerInGame) {
+                    val clientHost = network.connectionManager.getHost(clientId) ?: continue
+                    network.serverSendPacket(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
                 }
             }
             1 -> {  // TEAM — send to same team only
-                val senderTeam = server.god.playerTeams[rhostId] ?: -1
-                for (clientId in server.god.playerInGame) {
-                    if ((server.god.playerTeams[clientId] ?: -1) != senderTeam) continue
-                    val clientHost = server.connectionManager.getHost(clientId) ?: continue
-                    server.serverSendPacket(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
+                val senderTeam = network.god.playerTeams[senderId] ?: -1
+                for (clientId in network.god.playerInGame) {
+                    if ((network.god.playerTeams[clientId] ?: -1) != senderTeam) continue
+                    val clientHost = network.connectionManager.getHost(clientId) ?: continue
+                    network.serverSendPacket(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
                 }
             }
             2 -> {  // PRIVATE — send to sender and recipient only
-                val recipientRhostId = server.god.playersByHost.entries.find { it.value.id == recipientId }?.key
-                for (clientId in listOfNotNull(rhostId, recipientRhostId)) {
-                    val clientHost = server.connectionManager.getHost(clientId) ?: continue
-                    server.serverSendPacket(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
+                val recipientRhostId = network.god.playersByHost.entries.find { it.value.id == recipientId }?.key
+                for (clientId in listOfNotNull(senderId, recipientRhostId)) {
+                    val clientHost = network.connectionManager.getHost(clientId) ?: continue
+                    network.serverSendPacket(clientHost) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
                 }
             }
             else -> {
-                val host = server.connectionManager.getHost(rhostId) ?: run { setDeletePending(); return }
-                server.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
+                val host = network.connectionManager.getHost(senderId) ?: run { setDeletePending(); return }
+                network.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, relay, relay.networkId) }
             }
         }
         setDeletePending()

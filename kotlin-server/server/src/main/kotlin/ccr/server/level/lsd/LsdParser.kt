@@ -62,6 +62,7 @@ object LsdParser {
             }
         }
 
+        println("[LSD] parsed ${staticObjects.size} static objects, ${staticLights.size} static lights, ${staticSounds.size} sounds")
         return LevelStaticData(
             worldExtents = worldExtents,
             sunlightColor = sunlight,

@@ -35,25 +35,30 @@ class CsDamageEvent(
         damageeGoid = packet.getInt()
         damage = packet.getFloat()
         warhead = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        if (!server.gameState.isGameplayPermitted) { setDeletePending(); return }
+    override fun act() {
+        if (!network.gameState.isGameplayPermitted) { setDeletePending(); return }
+        println("[GAME] CSDAMAGEEVENT from senderId=$senderId damager=$damagerGoid damagee=$damageeGoid damage=$damage warhead=$warhead")
         // C++: cCsDamageEvent::Act — both target and damager must be PhysicalGameObj;
         // damager must also be an ArmedGameObj, otherwise damage is silently rejected.
-        val target = server.gameObjManager.findPhysicalGameObj(damageeGoid)
+        val target = network.gameObjManager.findPhysicalGameObj(damageeGoid)
         if (target != null) {
-            val damager = server.gameObjManager.findPhysicalGameObj(damagerGoid)
-            if (damager !is ArmedGameObj) { setDeletePending(); return }
-            println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damager=$damagerGoid damagee=$damageeGoid damage=$damage warhead=$warhead")
-            val scaledDamage = ArmorWarheadManager.scaleDamage(damage, warhead, target.shieldType)
-            target.applyDamage(scaledDamage)
+            val damager = network.gameObjManager.findPhysicalGameObj(damagerGoid)
+	        if (damager !is ArmedGameObj) { setDeletePending(); return }
+	        println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damager=$damagerGoid damagee=$damageeGoid damage=$damage warhead=$warhead")
+	        val scaledDamage = ArmorWarheadManager.scaleDamage(damage, warhead, target.shieldType)
+	        target.applyDamage(scaledDamage)
+            val offense = OffenseObjectClass(scaledDamage, warhead, damager)
+            offense.forceServerDamage = true
+            target.applyDamageExtended(offense)
             println("[GAME] applied damage=$scaledDamage to netId=$damageeGoid health=${target.health}")
             if (target.isDead) {
-                val victimRhostId = server.god.soldiersByHost.entries.find { it.value.networkId == damageeGoid }?.key
+                val victimRhostId = network.god.soldiersByHost.entries.find { it.value.networkId == damageeGoid }?.key
                 if (victimRhostId != null) {
-                    server.broadcastPlayerKill(rhostId, victimRhostId)
-                    server.god.deleteSoldier(victimRhostId)
+                    network.broadcastPlayerKill(senderId, victimRhostId)
+                    network.god.deleteSoldier(victimRhostId)
                 }
             }
         }

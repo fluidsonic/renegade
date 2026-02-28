@@ -39,21 +39,8 @@ void Stop_Main_Loop(int exitCode)
 	ExitCode = exitCode;
 }
 
-static unsigned long s_frame_count = 0;
-
 void _Game_Main_Loop_Loop(void)
 {
-	s_frame_count++;
-
-	if (s_frame_count == 1) {
-		fprintf(stderr, "[loop] First frame reached — main loop is running\n");
-	}
-
-	// Periodic status log every 5 seconds (approx 300 frames at 60fps)
-	if (s_frame_count % 300 == 0) {
-		fprintf(stderr, "[loop] Frame %lu — game loop running\n", s_frame_count);
-	}
-
 	// Poll events first so SDL_QUIT is detected before this frame's render/swap.
 	Windows_Message_Handler();
 
@@ -61,9 +48,6 @@ void _Game_Main_Loop_Loop(void)
 
    TimeManager::Update();
 
-	if (s_frame_count <= 3) {
-		fprintf(stderr, "[loop] frame %lu: Input::Update\n", s_frame_count);
-	}
    Input::Update();
 
 {
@@ -74,17 +58,11 @@ void _Game_Main_Loop_Loop(void)
 }
 
 {
-	if (s_frame_count <= 3) {
-		fprintf(stderr, "[loop] frame %lu: GameModeManager::Think / GameInitMgrClass::Think\n", s_frame_count);
-	}
    GameModeManager::Think();
 	GameInitMgrClass::Think();
 }
 
 {
-	if (s_frame_count <= 3) {
-		fprintf(stderr, "[loop] frame %lu: DialogMgrClass::On_Frame_Update\n", s_frame_count);
-	}
    DialogMgrClass::On_Frame_Update ();
 }
 
@@ -106,9 +84,6 @@ void _Game_Main_Loop_Loop(void)
 		cNetwork::Update();
 	}
 
-	if (s_frame_count <= 3) {
-		fprintf(stderr, "[loop] frame %lu: GameModeManager::Render\n", s_frame_count);
-	}
 	GameModeManager::Render();
 
 {

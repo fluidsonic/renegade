@@ -114,22 +114,24 @@ LookupTableClass * LookupTableMgrClass::Get_Table(const char * name,bool try_to_
 	if (try_to_load) {
 
 		FileClass * file = _TheFileFactory->Get_File(name);
-		if (file && file->Open()) {
-			
-			ChunkLoadClass cload(file);
+		if (file) {
+			bool opened = file->Open();
+			if (opened) {
+				ChunkLoadClass cload(file);
 
-			Curve1DClass * curve = NULL;
-			Load_Table_Desc(cload,&curve);
-			if (curve != NULL) {
-				new_table = NEW_REF(LookupTableClass,());
-				new_table->Init(name,curve);
-				Add_Table(new_table);
-				delete curve;
+				Curve1DClass * curve = NULL;
+				Load_Table_Desc(cload,&curve);
+				if (curve != NULL) {
+					new_table = NEW_REF(LookupTableClass,());
+					new_table->Init(name,curve);
+					Add_Table(new_table);
+					delete curve;
+				}
 			}
 		}
 		_TheFileFactory->Return_File(file);
 	}
-	
+
 	return new_table;  // constructor ref is returned to user.
 }
 

@@ -212,8 +212,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - Authoritative source: `Code/Combat/netclassids.h` — sequential enum starting at 1000
 - S→C IDs: 1000–1016 (no 1017 GameSpy — removed); C→S IDs: 1017–1038
 - CLIENTCONTROL=1017, BIOEVENT=1025, CLIENTFPS=1031 — these are the header values
-- **GameServer.kt handlers use +1 from the header for ALL C→S events** (e.g. BIOEVENT handled at 1026, not 1025)
-- This is intentional — the actual Renegade binary sends IDs at +1 offset; don't "fix" GameServer.kt to match the header
+- C→S class IDs in factories match `netclassids.h` exactly — no offset; use `NetClassIds.*` constants directly
 - Many singletons have classId=0 (no `Get_Network_Class_ID()` override): ServerFps, BaseControllerClass, all StaticNetworkObject subclasses, BackgroundMgr, WeatherMgr
 - These are identified by well-known `networkId` values at runtime, not classId
 - `NetClassIds.kt` at `server/src/main/kotlin/ccr/server/NetClassIds.kt` — maps ID→name for logging
@@ -247,7 +246,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - **Deletion via `setDeletePending()`**: centralized delete-pending loop in `networkTickLoop` broadcasts deletion to all in-game clients and unregisters. Don't manually send `writeDeletion` packets.
 - Reliable: BIT_CREATION / BIT_RARE / BIT_OCCASIONAL updates → `sendGameNetObj` (reliable channel)
 - Unreliable: BIT_FREQUENT-only updates → `sendUnreliable` (no ACK, no retry)
-- Never send a soldier's BIT_FREQUENT update to its own `controlOwner` — client is authoritative for its own position
+- BIT_FREQUENT IS sent to the controlling client for their own soldier — C++ gives it priority=0.8f (walking) or 0.1f (in vehicle) and sends the echo; the server's authoritative position must reach the controlling client as a correction
 
 ### CClientControl frequent update wire format (C→S, UNRELIABLE)
 - Header: networkId(32) + dirtyBits(8) + isDeletePending(1); no classId when BIT_CREATION not set
@@ -293,6 +292,11 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - `god.createCommando(rhostId, playerType)` — creates/registers SoldierGameObj, sets `BIT_CREATION` dirty; `replicationTick()` handles sending to all in-game hosts
 - `god.deleteSoldier(rhostId)` — calls `setDeletePending()`; centralized delete-pending loop broadcasts deletion
 - `god.removePlayer(rhostId)` — full disconnect cleanup: deleteSoldier + player object removal
+- `buildWeaponsForSoldier(defId, bag)` — two-phase weapon granting:
+  1. **Definition weapons** from `ArmedGameObjDef` (`weaponDefId` + `secondaryWeaponDefId`)
+  2. **Script-granted weapons** from `M00_GrantPowerup_Created` scripts on the preset — each script's parameter is a `PowerUpGameObjDef` preset name; its `grantWeaponId` is added to the bag
+- C++ flow: `Copy_Settings()` adds def weapons, then `Start_Observers()` fires `Created` on attached scripts which call `Give_PowerUp(obj, preset_name)`
+- The Kotlin server interprets `M00_GrantPowerup_Created` scripts directly instead of executing them — no script engine needed
 
 ### GameObjManager — ticking game objects
 - `gameObjManager.add(obj)` registers any `BaseGameObj` for `think()` ticks; `GameObjManager.think(deltaSeconds)` iterates `gameObjList` and calls `obj.think()` on every registered object

@@ -10,6 +10,7 @@
 #include "matinfo.h"
 #include "definitionclassids.h"
 #include "networkobjectfactory.h"
+#include "definitionmgr.h"
 
 //////////////////////////////////////////////////////////////
 //	NetworkGameObjectFactoryClass
@@ -49,6 +50,12 @@ NetworkGameObjectFactoryClass::Create (cPacket &packet) const
 	//	Lookup the definition for this object
 	//
 	DefinitionClass *definition = DefinitionMgrClass::Find_Definition (definition_id);
+
+	if (definition == nullptr) {
+		fprintf(stderr, "[DEFMGR] Find_Definition(%d) returned null\n", definition_id);
+	}
+	// FIXME: throw when definition is not found
+	assert (definition != nullptr);
 
 	//
 	//	Create the new object

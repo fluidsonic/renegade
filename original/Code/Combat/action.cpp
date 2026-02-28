@@ -378,7 +378,7 @@ public:
 		SmartGameObj *	obj = Action->Get_Action_Obj();
 
 		if ( obj->Get_Anim_Control()->Get_Animation_Name()[0] == 0 ) {
-			Debug_Say(( "Not playing an anim when we should be playing %s\n", Action->Get_Parameters().SafeAnimationName ));
+			Debug_Say(( "Not playing an anim when we should be playing %s\n", (const char *)Action->Get_Parameters().SafeAnimationName ));
 			Action->Done( ACTION_COMPLETE_NORMAL );
 			return ACTION_DONE;
 		}

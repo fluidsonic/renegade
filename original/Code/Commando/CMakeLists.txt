@@ -95,6 +95,24 @@ target_precompile_headers(Commando PRIVATE "${CMAKE_SOURCE_DIR}/global.h")
 # macos_fix.mm is Objective-C++ — exclude it from the C++ PCH
 set_source_files_properties("${COMPAT_DIR}/macos_fix.mm" PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 
+# RequiredAssets → Contents/Resources/ in the app bundle
+file(GLOB REQUIRED_ASSETS "${ORIG_SRC}/ww3d2/RequiredAssets/*")
+set_source_files_properties(${REQUIRED_ASSETS} PROPERTIES
+    MACOSX_PACKAGE_LOCATION "Resources")
+target_sources(Commando PRIVATE ${REQUIRED_ASSETS})
+
+# Path to Resources dir relative to the executable (Contents/MacOS/)
+target_compile_definitions(Commando PRIVATE
+    WW3D2_REQUIRED_ASSETS_DIR="../Resources")
+
+# Force-load static libraries that rely on self-registering static initializers
+# (persist factories, definition factories, etc.) — the linker would otherwise
+# drop TUs with no externally-referenced symbols.
+target_link_options(Commando PRIVATE
+    -Wl,-force_load,$<TARGET_FILE:Combat>
+    -Wl,-force_load,$<TARGET_FILE:wwsaveload>
+)
+
 target_link_libraries(Commando PRIVATE
     Combat
     SControl

@@ -4,12 +4,13 @@ import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectFactory
 import ccr.net.replication.NetworkObjectFactoryManager
+import ccr.server.NetClassIds
 
 // C++: NetworkGameObjectFactoryClass (basegameobj.cpp:54-106)
 // Factory for all BaseGameObj-derived objects (networkClassId = NETCLASSID_GAMEOBJ = 1000).
 // Writes/reads definitionId so the client can instantiate the correct game object subtype.
 class NetworkGameObjectFactory : NetworkObjectFactory {
-    override val classId: Int = 1000  // NETCLASSID_GAMEOBJ
+    override val classId: Int = NetClassIds.NETCLASSID_GAMEOBJ
 
     // C++: Prep_Packet — writes definition ID before Export_Creation so client knows which type to create
     override fun prepPacket(obj: NetworkObject, packet: BitStream) {
@@ -20,8 +21,9 @@ class NetworkGameObjectFactory : NetworkObjectFactory {
     // C++: Create — reads definitionId and creates via DefinitionMgrClass (client-side only)
     // Server-only mode: never called on server
     override fun create(packet: BitStream): NetworkObject? {
-        packet.getInt()  // consume definitionId from stream
-        return null       // client-side creation not implemented
+        val definitionId = packet.getInt()
+        // FIXME: look up definition by ID and create the appropriate game object instance
+        throw NotImplementedError("NetworkGameObjectFactory.create: no definition found for definitionId=$definitionId")
     }
 }
 
@@ -34,7 +36,6 @@ class SimpleNetworkObjectFactory(override val classId: Int) : NetworkObjectFacto
 }
 
 // C→S typed factory — creates actual instances for server-side processing.
-// Registered at wire classId (header + 1) because the Renegade client sends +1 offset.
 class CsEventFactory(override val classId: Int, private val supplier: () -> NetworkObject) : NetworkObjectFactory {
     override fun create(packet: BitStream): NetworkObject = supplier()
 }
@@ -57,35 +58,34 @@ object NetworkObjectFactories {
         // In C++, classId=0 objects have no Prep_Packet — this matches that behavior.
         NetworkObjectFactoryManager.register(SimpleNetworkObjectFactory(0))
 
-        // S→C event classIds (1001–1016): server never creates from incoming — keep no-op factories
-        for (classId in 1001..1016) {
+        // S→C event classIds (NETCLASSID_SCTEXTOBJ..NETCLASSID_SCANNOUNCEMENT):
+        // server never creates from incoming — keep no-op factories.
+        for (classId in NetClassIds.NETCLASSID_SCTEXTOBJ..NetClassIds.NETCLASSID_SCANNOUNCEMENT) {
             NetworkObjectFactoryManager.register(SimpleNetworkObjectFactory(classId))
         }
 
-        // C→S event/object factories — wire classId = header + 1
-        // The Renegade client sends classId at +1 offset from the netclassids.h constant.
-        NetworkObjectFactoryManager.register(CsEventFactory(1018) { ClientControl() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1019) { CsTextObj() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1020) { SuicideEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1021) { ChangeTeamEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1022) { MoneyEvent() })
-        // 1023 = WarpEvent (C→S, header=1022, wire=1023 — currently unhandled, register no-op)
-        NetworkObjectFactoryManager.register(SimpleNetworkObjectFactory(1023))
-        NetworkObjectFactoryManager.register(CsEventFactory(1024) { PurchaseRequestEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1025) { ClientGoodbyeEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1026) { BioEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1027) { LoadingEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1028) { GodModeEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1029) { VipModeEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1030) { ScoreEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1031) { ClientBboEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1032) { ClientFps() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1033) { CsPingRequestEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1034) { CsDamageEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1035) { RequestKillEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1036) { CsConsoleCommandEvent() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1037) { CsHint() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1038) { CsAnnouncement() })
-        NetworkObjectFactoryManager.register(CsEventFactory(1039) { DonateEvent() })
+        // C→S event/object factories — one per netclassids.h constant, no offset
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CLIENTCONTROL)         { ClientControl() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CSTEXTOBJ)             { CsTextObj() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_SUICIDEEVENT)          { SuicideEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CHANGETEAMEVENT)       { ChangeTeamEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_MONEYEVENT)            { MoneyEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_WARPEVENT)             { WarpEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_PURCHASEREQUESTEVENT)  { PurchaseRequestEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CLIENTGOODBYEEVENT)    { ClientGoodbyeEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_BIOEVENT)              { BioEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_LOADINGEVENT)          { LoadingEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_GODMODEEVENT)          { GodModeEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_VIPMODEEVENT)          { VipModeEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_SCOREEVENT)            { ScoreEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CLIENTBBOEVENT)        { ClientBboEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CLIENTFPS)             { ClientFps() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CSPINGREQUESTEVENT)    { CsPingRequestEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CSDAMAGEEVENT)         { CsDamageEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_REQUESTKILLEVENT)      { RequestKillEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CSCONSOLECOMMANDEVENT) { CsConsoleCommandEvent() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CSHINT)                { CsHint() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_CSANNOUNCEMENT)        { CsAnnouncement() })
+        NetworkObjectFactoryManager.register(CsEventFactory(NetClassIds.NETCLASSID_DONATEEVENT)           { DonateEvent() })
     }
 }

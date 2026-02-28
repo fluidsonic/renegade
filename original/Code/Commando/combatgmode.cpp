@@ -942,12 +942,10 @@ void CombatGameModeClass::Spawn_Point_Validation(void)
 		for (int spawn_type = PLAYERTYPE_RENEGADE; spawn_type <= PLAYERTYPE_LAST; spawn_type++) {
 
 			if ( !SpawnManager::Spawner_Exists( spawn_type ) ) {
-				Debug_Say(("  Error: No spawn point(s) of type %s found.\n",
-					Playertype_To_String(spawn_type)));
+				Debug_Say(("  Error: No spawn point(s) of type %d found.\n", (int)spawn_type));
 				is_spawners_valid = false;
 			} else {
-				Debug_Say(("  Spawn point(s) of type %s found.\n",
-					Playertype_To_String(spawn_type)));
+				Debug_Say(("  Spawn point(s) of type %d found.\n", (int)spawn_type));
 			}
 		}
 

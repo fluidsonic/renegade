@@ -519,7 +519,47 @@ open class SoldierGameObjDef(
     val humanLoiterCollectionDefId: Int = 0,
     val deathSoundPresetId: Int = 0,
     val dialogList: List<Dialogue> = emptyList(),
-) : BaseGameObjDef(name, id, chunkId) {
+) : SmartGameObjDef(
+    name, id, chunkId,
+    // SmartGameObjDef own fields
+    sightRange = smart.sightRange,
+    sightArc = smart.sightArc,
+    listenerScale = smart.listenerScale,
+    isStealthUnit = smart.isStealthUnit,
+    // ArmedGameObjDef fields
+    weaponDefId = armed.weaponDefId,
+    secondaryWeaponDefId = armed.secondaryWeaponDefId,
+    weaponRounds = armed.weaponRounds,
+    weaponTiltRate = armed.weaponTiltRate,
+    weaponTiltMin = armed.weaponTiltMin,
+    weaponTiltMax = armed.weaponTiltMax,
+    weaponTurnRate = armed.weaponTurnRate,
+    weaponTurnMin = armed.weaponTurnMin,
+    weaponTurnMax = armed.weaponTurnMax,
+    weaponError = armed.weaponError,
+    // PhysicalGameObjDef fields
+    type = physical.type,
+    radarBlipType = physical.radarBlipType,
+    bullseyeOffsetZ = physical.bullseyeOffsetZ,
+    animation = physical.animation,
+    physDefId = physical.physDefId,
+    killedExplosion = physical.killedExplosion,
+    defaultHibernationEnable = physical.defaultHibernationEnable,
+    allowInnateConversations = physical.allowInnateConversations,
+    oratorType = physical.oratorType,
+    useCreationEffect = physical.useCreationEffect,
+    // DamageableGameObjDef fields
+    defenseObjectDef = damageable.defenseObjectDef.toDefenseObjectDefClass(),
+    infoIconTextureFilename = damageable.infoIconTextureFilename,
+    translatedNameId = damageable.translatedNameId,
+    notTargetable = damageable.notTargetable,
+    defaultPlayerType = damageable.defaultPlayerType,
+    encyclopediaType = damageable.encyclopediaType,
+    encyclopediaId = damageable.encyclopediaId,
+    // ScriptableGameObjDef fields
+    scriptNameList = scriptable.scripts.map { it.name },
+    scriptParameterList = scriptable.scripts.map { it.parameters },
+) {
 
     companion object {
         const val CHUNK_ID: UInt = 0x0004010Fu  // CHUNKID_GAME_OBJECT_DEF_SOLDIER

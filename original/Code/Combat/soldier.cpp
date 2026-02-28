@@ -853,6 +853,14 @@ void	SoldierGameObj::Import_Creation( BitStreamClass &packet )
 {
 	SmartGameObj::Import_Creation( packet );
 
+	if (Is_Controlled_By_Me()) {
+		Vector3 pos;
+		Get_Position(&pos);
+		fprintf(stderr, "SCREAT id=%d ctrlOwner=%d pos=%.2f,%.2f,%.2f\n",
+			Get_Network_ID(), Get_Control_Owner(),
+			(double)pos.X, (double)pos.Y, (double)pos.Z);
+	}
+
 	//TSS091001
 	//
 
@@ -901,6 +909,11 @@ void	SoldierGameObj::Import_Rare( BitStreamClass &packet )
 	//
 	//	Did our definition change?
 	//
+	if (Is_Controlled_By_Me()) {
+		fprintf(stderr, "SRARE id=%d defId=%u\n",
+			Get_Network_ID(), definition_id);
+	}
+
 	if (definition_id != Get_Definition ().Get_ID ()) {
 		DefinitionClass *definition = DefinitionMgrClass::Find_Definition (definition_id);
 
@@ -951,7 +964,33 @@ void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 	//
 	// Weapon list
 	//
+	fprintf(stderr, "SWBAG_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	WeaponBag->Import_Weapon_List(packet);
+
+	if (Is_Controlled_By_Me()) {
+		char bag_buf[512] = "";
+		int bag_pos = 0;
+		for (int32_t i = 1; i < WeaponBag->Get_Count(); i++) {
+			WeaponClass *w = WeaponBag->Peek_Weapon(i);
+			if (w != nullptr) {
+				const char *sep = i > 1 ? "|" : "";
+				int32_t written;
+				if (w->Get_Definition() != nullptr) {
+					written = snprintf(bag_buf + bag_pos, sizeof(bag_buf) - static_cast<size_t>(bag_pos),
+						"%s%d:%d", sep, w->Get_ID(), w->Get_Total_Rounds());
+				} else {
+					written = snprintf(bag_buf + bag_pos, sizeof(bag_buf) - static_cast<size_t>(bag_pos),
+						"%s?:??", sep);
+				}
+				if (written > 0) bag_pos += written;
+			}
+		}
+		fprintf(stderr, "SOCC id=%d hp=%.2f sh=%.2f bag=%s\n",
+			Get_Network_ID(),
+			(double)Get_Defense_Object()->Get_Health(),
+			(double)Get_Defense_Object()->Get_Shield_Strength(),
+			bag_buf);
+	}
 
 	/*
 	//
@@ -1044,6 +1083,9 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	if (in_vehicle)
 	{
 		// Just get control info
+		if (Is_Controlled_By_Me()) {
+			fprintf(stderr, "SFREQ id=%d inVhcl=1\n", Get_Network_ID());
+		}
 		SmartGameObj::Import_Frequent(packet);
 		return;
 	}
@@ -1053,11 +1095,13 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	// What weapon is being held?
 	// (gth) moved this back into frequent to fix the game, re-optimize later
 	//
+	int weapon_id = -1;
+	int rounds = -1;
 	bool has_weapon = packet.Get(has_weapon);
    if (has_weapon) {
 
-		int weapon_id = packet.Get(weapon_id);
-		int rounds = packet.Get(rounds);
+		weapon_id = packet.Get(weapon_id);
+		rounds = packet.Get(rounds);
 		if ((Get_Weapon() == NULL) || (weapon_id != Get_Weapon()->Get_ID())) {
 			WeaponBag->Select_Weapon_ID(weapon_id);
 		}
@@ -1103,7 +1147,7 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	//
 	// Velocity (if airborne)
 	//
-	Vector3 velocity;
+	Vector3 velocity(0.f, 0.f, 0.f);
 	if (state == HumanStateClass::AIRBORNE) {
 		packet.Get(velocity.X);
 		packet.Get(velocity.Y);
@@ -1111,6 +1155,13 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	}
 
 	if (HumanState.Is_Locked()) {
+		if (Is_Controlled_By_Me()) {
+			fprintf(stderr, "SFREQ id=%d locked pos=%.2f,%.2f,%.2f st=%d/%d vel=%.2f,%.2f,%.2f\n",
+				Get_Network_ID(),
+				(double)sc_position.X, (double)sc_position.Y, (double)sc_position.Z,
+				h_state, sub_state,
+				(double)velocity.X, (double)velocity.Y, (double)velocity.Z);
+		}
       packet.Flush();
 		return;
 	}
@@ -1133,6 +1184,36 @@ void	SoldierGameObj::Import_Frequent( BitStreamClass & packet )
 	}
 	if ( mode != SpecialDamageMode ) {
 		Set_Special_Damage_Mode( (ArmorWarheadManager::SpecialDamageType)mode );
+	}
+
+	if (Is_Controlled_By_Me()) {
+		// Build bag string
+		char bag_buf[512] = "";
+		int bag_pos = 0;
+		for (int32_t i = 1; i < WeaponBag->Get_Count(); i++) {
+			WeaponClass *w = WeaponBag->Peek_Weapon(i);
+			if (w != nullptr) {
+				const char *sep = i > 1 ? "|" : "";
+				int32_t written;
+				if (w->Get_Definition() != nullptr) {
+					written = snprintf(bag_buf + bag_pos, sizeof(bag_buf) - static_cast<size_t>(bag_pos),
+						"%s%d:%d", sep, w->Get_ID(), w->Get_Total_Rounds());
+				} else {
+					written = snprintf(bag_buf + bag_pos, sizeof(bag_buf) - static_cast<size_t>(bag_pos),
+						"%s?:??", sep);
+				}
+				if (written > 0) bag_pos += written;
+			}
+		}
+		fprintf(stderr, "SFREQ id=%d wpn=%d/%d pos=%.2f,%.2f,%.2f st=%d/%d vel=%.2f,%.2f,%.2f nm=%s spDmg=%d bag=%s\n",
+			Get_Network_ID(),
+			weapon_id, rounds,
+			(double)sc_position.X, (double)sc_position.Y, (double)sc_position.Z,
+			h_state, sub_state,
+			(double)velocity.X, (double)velocity.Y, (double)velocity.Z,
+			trans_name,
+			mode,
+			bag_buf);
 	}
 
    if (Get_State() == HumanStateClass::DIVE)	{

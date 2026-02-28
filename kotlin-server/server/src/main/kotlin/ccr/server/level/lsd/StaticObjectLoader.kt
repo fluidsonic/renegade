@@ -72,11 +72,28 @@ object StaticObjectLoader {
         return result
     }
 
-    /** Known factory chunk IDs we can parse. */
+    /** Known factory chunk IDs we can parse.
+     *
+     * These are all static physics types that use the PhysClass save format:
+     *   STATICPHYS (0x20109) — main terrain/floor/wall geometry
+     *   SHAKEABLESTATICPHYS (0x20113) — static objects that can shake/animate
+     *   DOORPHYS, ELEVATORPHYS, DAMAGEABLESTATICPHYS — building-interior physics
+     *
+     * All share the same OBJDATA layout:
+     *   STATICPHYS_CHUNK_PHYS → PhysClass::Save
+     *     PHYS_CHUNK_VARIABLES → micro 0x06=definitionId, 0x07=instanceId
+     *     PHYS_CHUNK_MODEL → WW3D_PERSIST_CHUNKID_RENDEROBJ → RENDOBJFACTORY_CHUNKID_VARIABLES
+     *       → micro 0x01=modelName, 0x02=transform
+     */
     private val KNOWN_FACTORY_IDS = setOf(
+        ChunkIds.PHYSICS_CHUNKID_STATICPHYS,
+        ChunkIds.PHYSICS_CHUNKID_STATICANIMPHYS,
+        ChunkIds.PHYSICS_CHUNKID_SHAKEABLESTATICPHYS,
+        ChunkIds.PHYSICS_CHUNKID_ACCESSIBLEPHYS,
         ChunkIds.PHYSICS_CHUNKID_DOORPHYS,
         ChunkIds.PHYSICS_CHUNKID_ELEVATORPHYS,
         ChunkIds.PHYSICS_CHUNKID_DAMAGEABLESTATICPHYS,
+        ChunkIds.PHYSICS_CHUNKID_BUILDINGAGGREGATE,
     )
 
     private fun parseStaticObject(objectWrapperChunk: ChunkReader): StaticPhysObject? {

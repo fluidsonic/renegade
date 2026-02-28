@@ -601,7 +601,14 @@ template <class T> T max(T a, T b) { if (a > b) { return a; } else { return b; }
 // Section 16: Debug
 // ─────────────────────────────────────────────────────────────────────────────
 #include <cassert>
-#define Debug_Say(...) ((void)0)
+#include <cstdarg>
+static inline void DebugSayImpl(const char* fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+}
+#define Debug_Say(x) DebugSayImpl x
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Section 17: Exception stubs

@@ -13,7 +13,9 @@ import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.BeaconGameObjDef
 import ccr.server.defs.PowerUpGameObjDef
 import ccr.server.net.BeaconGameObj
+import ccr.server.net.VehiclePhysClassStub
 import ccr.server.net.C4GameObj
+import ccr.server.net.PhysicalGameObj
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
 import ccr.server.net.VehicleGameObj
@@ -207,13 +209,22 @@ open class God(private val server: Network) {
             return null
         }
 
-        val (position, facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType)
+        // C++: Create_Commando creates the soldier (with physics) BEFORE querying spawn location,
+        // then passes the soldier's physics to Get_Multiplayer_Spawn_Location for Can_Teleport checks.
+        // We create a temporary HumanPhysClass for the same purpose.
+        val humanPhys = ccr.physics.moveable.HumanPhysClass()
+        val scene = server.physicsScene
+        if (scene != null) {
+            scene.addDynamicObject(humanPhys)
+        }
+
+        val (position, facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType, humanPhys)
             ?: Pair(Vector3(0f, 0f, 5f), 0f).also {
                 println("[GOD] WARNING: spawnManager is null, spawning at fallback origin (0, 0, 5)")
             }
 
         println("[GOD] spawned soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
-            "pos=(${position.x}, ${position.y}, ${position.z})")
+            "pos=(${position.x}, ${position.y}, ${position.z}) facing=$facing")
 
         val fallbackModel = if (playerType == 0) "c_ag_nod_mg" else "c_ag_gdi_mg"
         // FIXME: replace with W3D HLod name lookup once W3D loading is implemented
@@ -233,16 +244,34 @@ open class God(private val server: Network) {
         soldier.animName     = "S_A_HUMAN.H_A_AINM"
         soldier.position     = position
         soldier.facing       = facing
+
+        // C++: DamageableGameObj::Copy_Settings → DefenseObject.Init(def.DefenseObjectDef, this)
+        // Initializes health, healthMax, skin, shieldStrength, shieldStrengthMax, shieldType,
+        // damagePoints, deathPoints from the definition. Must be done before registration so the
+        // first Export_Occasional sends correct values.
+        soldierDef?.let { soldier.defenseObject.init(it.defenseObjectDef, soldier) }
+
         buildWeaponsForSoldier(defId, soldier.weaponBag)
+        if (soldier.weaponBag.getCount() > 1) {
+            soldier.weaponBag.selectIndex(1)
+        }
+        // Wake soldier from hibernation so physics ticks immediately after spawn
+        soldier.hibernationTimer = PhysicalGameObj.HIBERNATION_DELAY
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(soldier, netId)
         soldiersByHost[rhostId] = soldier
-        server.gameObjManager.addStar(soldier)
+        // Note: addStar is handled by SoldierGameObj.controlOwner setter — no explicit call needed.
 
         // C++: cGod::Create_Commando — Set_Player_Data links the soldier back to the player
         soldier.setPlayerData(playersByHost[rhostId])
 
-        wirePhysics(soldier, position, facing)
+        // Wire the HumanPhysClass we already created and added to the scene.
+        // Position and heading are set to the chosen spawn location.
+        humanPhys.position = position
+        humanPhys.heading = facing
+        humanPhys.controller = soldier.controller
+        soldier.realPhysObj = humanPhys
+        soldier.physObj = soldier.humanPhysBridge
 
         // Give starting credits on first spawn if configured
         if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5f) {
@@ -271,7 +300,14 @@ open class God(private val server: Network) {
             return null
         }
 
-        val (position, facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType)
+        // C++: soldier physics created before spawn location query for Can_Teleport check
+        val humanPhys = ccr.physics.moveable.HumanPhysClass()
+        val scene = server.physicsScene
+        if (scene != null) {
+            scene.addDynamicObject(humanPhys)
+        }
+
+        val (position, facing) = server.spawnManager?.getMultiplayerSpawnLocation(playerType, humanPhys)
             ?: Pair(Vector3(0f, 0f, 5f), 0f).also {
                 println("[GOD] WARNING: spawnManager is null, spawning at fallback origin (0, 0, 5)")
             }
@@ -287,7 +323,7 @@ open class God(private val server: Network) {
             .ifEmpty { fallbackModel }
 
         println("[GOD] spawned purchased soldier for rhostId=$rhostId team=${if (playerType == 0) "NOD" else "GDI"} " +
-            "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z})")
+            "defId=$defId model=$modelName pos=(${position.x}, ${position.y}, ${position.z}) facing=$facing")
 
         val soldier = SoldierGameObj()
         soldierDef2?.let { soldier.definition = it }
@@ -297,102 +333,133 @@ open class God(private val server: Network) {
         soldier.animName     = "S_A_HUMAN.H_A_AINM"
         soldier.position     = position
         soldier.facing       = facing
+
+        // C++: DamageableGameObj::Copy_Settings → DefenseObject.Init(def.DefenseObjectDef, this)
+        soldierDef2?.let { soldier.defenseObject.init(it.defenseObjectDef, soldier) }
+
         buildWeaponsForSoldier(defId, soldier.weaponBag)
+        if (soldier.weaponBag.getCount() > 1) {
+            soldier.weaponBag.selectIndex(1)
+        }
+        // Wake soldier from hibernation so physics ticks immediately after spawn
+        soldier.hibernationTimer = PhysicalGameObj.HIBERNATION_DELAY
         val netId = NetworkObjectManager.getNewDynamicId()
         NetworkObjectManager.registerObject(soldier, netId)
         soldiersByHost[rhostId] = soldier
-        server.gameObjManager.addStar(soldier)
+        // Note: addStar is handled by SoldierGameObj.controlOwner setter — no explicit call needed.
 
         // C++: cGod::Create_Commando — Set_Player_Data links the soldier back to the player
         soldier.setPlayerData(playersByHost[rhostId])
 
-        wirePhysics(soldier, position, facing)
+        // Wire the HumanPhysClass we already created and added to the scene.
+        humanPhys.position = position
+        humanPhys.heading = facing
+        humanPhys.controller = soldier.controller
+        soldier.realPhysObj = humanPhys
+        soldier.physObj = soldier.humanPhysBridge
 
         // No starting credits — purchase already costs money
 
         return soldier
     }
 
-    // ---- Physics wiring ----
-
-    // Mirrors C++ PhysDef::Create() + COMBAT_SCENE->Add_Dynamic_Object().
-    private fun wirePhysics(soldier: SoldierGameObj, position: Vector3, facing: Float) {
-        val humanPhys = ccr.physics.moveable.HumanPhysClass()
-        humanPhys.position = position
-        humanPhys.heading = facing
-        humanPhys.controller = soldier.controller
-        val scene = server.physicsScene
-        if (scene != null) {
-            scene.addDynamicObject(humanPhys)
-            soldier.realPhysObj = humanPhys
-        } else {
-            println("[GOD] WARNING: physicsScene is null, soldier physics will not be simulated")
-        }
-    }
-
     // ---- Weapon list builder ----
 
     /**
-     * Builds the weapon list for a newly spawned soldier from its definition.
-     *
-     * Mirrors C++ ArmedGameObj::Copy_Settings(): reads WeaponDefID and
-     * SecondaryWeaponDefID from the preset definition and inserts them in
-     * ascending keyNumber order (WeaponBagClass::Add_Weapon sorted insertion).
-     *
-     * Timed C4 is always appended if not already present, since scripts that
-     * normally grant it are not yet executed server-side.
-     *
-     * Falls back to pistol + C4 when the definition cannot be found.
-     */
-    /**
      * Populates [bag] with weapons for a newly spawned soldier from its definition.
      *
-     * Mirrors C++ ArmedGameObj::Copy_Settings(): reads WeaponDefID and
-     * SecondaryWeaponDefID from the preset definition and inserts them in
-     * ascending keyNumber order (WeaponBagClass::Add_Weapon sorted insertion).
+     * Two-phase weapon granting, matching C++ ArmedGameObj::Copy_Settings() +
+     * Start_Observers():
      *
-     * Timed C4 is always appended if not already present, since scripts that
-     * normally grant it are not yet executed server-side.
+     * 1. **Definition weapons** — reads WeaponDefID and SecondaryWeaponDefID from
+     *    the ArmedGameObjDef and inserts them (C++ Copy_Settings).
+     * 2. **Script-granted weapons** — iterates the preset's attached scripts and
+     *    interprets `M00_GrantPowerup_Created` entries.  Each such script has a
+     *    single parameter — the name of a PowerUpGameObjDef whose grantWeaponId
+     *    is applied via `Give_PowerUp`.  In C++ this happens when
+     *    `Start_Observers()` fires the `Created` callback on every attached script.
      *
-     * Falls back to pistol + C4 when the definition cannot be found.
+     * All weapons are sorted by keyNumber ascending before insertion, matching
+     * C++ WeaponBagClass::Add_Weapon sorted insertion order.
+     *
+     * Falls back to pistol when the definition cannot be found.
      */
     private fun buildWeaponsForSoldier(defId: Int, bag: WeaponBagClass) {
         val registry = server.loadedLevel?.definitions
         val wrapper = registry?.findById(defId.toUInt()) as? SoldierGameObjDef
 
-        data class WeaponEntry(val defId: Int, val rounds: Int)
+        // C++: ArmedGameObj::Copy_Settings passes WeaponRounds to Add_Weapon.
+        // Add_Weapon → Add_Rounds(WeaponRounds): when rounds < 0 (the default -1),
+        //   ClipRounds = ClipSize  (fill the clip from the weapon definition)
+        //   InventoryRounds = -1  (unlimited ammo)
+        // unlimited: true mirrors C++ InventoryRounds = -1 path; rounds holds the clip fill count.
+        data class WeaponEntry(val defId: Int, val rounds: Int, val unlimited: Boolean = false)
         val entries = mutableListOf<WeaponEntry>()
 
         if (wrapper != null) {
             val armed = wrapper.armed
 
+            // Phase 1: Definition weapons (ArmedGameObj::Copy_Settings)
+
             // Primary weapon
             if (armed.weaponDefId != 0) {
-                val rounds = if (armed.weaponRounds >= 0) {
-                    armed.weaponRounds
+                if (armed.weaponRounds >= 0) {
+                    entries.add(WeaponEntry(armed.weaponDefId, armed.weaponRounds, unlimited = false))
                 } else {
-                    (registry.findById(armed.weaponDefId.toUInt()) as? WeaponDefinitionClass)
-                        ?.maxInventoryRounds ?: 100
+                    // C++: Add_Rounds(-1) → ClipRounds = ClipSize, InventoryRounds = -1
+                    val wDef = registry.findById(armed.weaponDefId.toUInt()) as? WeaponDefinitionClass
+                    val clipRounds = wDef?.clipSize ?: 0
+                    entries.add(WeaponEntry(armed.weaponDefId, clipRounds, unlimited = true))
                 }
-                entries.add(WeaponEntry(armed.weaponDefId, rounds))
             }
 
-            // Secondary weapon
+            // Secondary weapon — uses same weaponRounds field from ArmedGameObjDef
             if (armed.secondaryWeaponDefId != 0) {
-                val rounds = (registry.findById(armed.secondaryWeaponDefId.toUInt()) as? WeaponDefinitionClass)
-                    ?.maxInventoryRounds ?: 100
-                entries.add(WeaponEntry(armed.secondaryWeaponDefId, rounds))
+                if (armed.weaponRounds >= 0) {
+                    entries.add(WeaponEntry(armed.secondaryWeaponDefId, armed.weaponRounds, unlimited = false))
+                } else {
+                    val wDef = registry.findById(armed.secondaryWeaponDefId.toUInt()) as? WeaponDefinitionClass
+                    val clipRounds = wDef?.clipSize ?: 0
+                    entries.add(WeaponEntry(armed.secondaryWeaponDefId, clipRounds, unlimited = true))
+                }
+            }
+
+            // Phase 2: Script-granted weapons (Start_Observers → Created callbacks)
+            // C++: M00_GrantPowerup_Created (Test_DAY.cpp) — on Created, calls
+            //   Give_PowerUp(obj, Get_Parameter("WeaponDef"), false)
+            // The parameter is the preset name of a PowerUpGameObjDef.
+            for (script in wrapper.scriptable.scripts) {
+                if (script.name != "M00_GrantPowerup_Created") continue
+                val powerupName = script.parameters.trim()
+                if (powerupName.isEmpty()) continue
+
+                val powerupDef = registry.findByName(powerupName) as? PowerUpGameObjDef
+                if (powerupDef == null) {
+                    println("[GOD] buildWeaponsForSoldier: script '$powerupName' powerup def not found")
+                    continue
+                }
+
+                if (powerupDef.grantWeaponId != 0) {
+                    // PowerUpGameObjDef::Grant adds weapon with grantWeaponRounds
+                    // grantWeapon=true means grant the weapon itself (not just ammo)
+                    if (entries.none { it.defId == powerupDef.grantWeaponId }) {
+                        val wDef = registry.findById(powerupDef.grantWeaponId.toUInt()) as? WeaponDefinitionClass
+                        val rounds = if (powerupDef.grantWeaponRounds > 0) {
+                            powerupDef.grantWeaponRounds
+                        } else {
+                            wDef?.clipSize ?: 0
+                        }
+                        entries.add(WeaponEntry(powerupDef.grantWeaponId, rounds))
+                    }
+                }
             }
         } else {
-            // Fallback when def not found: give pistol
+            // Fallback when def not found: give pistol with unlimited ammo
             if (server.pistolWeaponDefId != 0) {
-                entries.add(WeaponEntry(server.pistolWeaponDefId, 100))
+                val wDef = registry?.findById(server.pistolWeaponDefId.toUInt()) as? WeaponDefinitionClass
+                val clipRounds = wDef?.clipSize ?: 0
+                entries.add(WeaponEntry(server.pistolWeaponDefId, clipRounds, unlimited = true))
             }
-        }
-
-        // Timed C4 is granted by scripts in C++; hardcode it here until scripts are executed
-        if (server.timedC4WeaponDefId != 0 && entries.none { it.defId == server.timedC4WeaponDefId }) {
-            entries.add(WeaponEntry(server.timedC4WeaponDefId, 1))
         }
 
         // Sort by keyNumber ascending — matches C++ WeaponBagClass::Add_Weapon sorted insertion
@@ -403,9 +470,16 @@ open class God(private val server: Network) {
             }
         }
 
+        println("[GOD] buildWeaponsForSoldier defId=0x${defId.toUInt().toString(16)} entries=${entries.size}: ${entries.map { "0x${it.defId.toUInt().toString(16)}(rounds=${it.rounds},unlim=${it.unlimited})" }}")
         for (entry in entries) {
-            bag.addWeapon(entry.defId, entry.rounds)
+            val weapon = bag.addWeapon(entry.defId, entry.rounds)
+            if (entry.unlimited) weapon.inventoryRounds = -1
         }
+        // Auto-select the first weapon (index 1; index 0 is the null sentinel)
+        if (bag.getCount() > 1 && bag.getIndex() == 0) {
+            bag.selectIndex(1)
+        }
+        println("[GOD] weapon bag: count=${bag.getCount()} selectedIdx=${bag.getIndex()} weapon=${bag.getWeapon()?.definitionId?.let { "0x${it.toUInt().toString(16)}" }}")
     }
 
     // ---- Vehicle spawning ----
@@ -450,6 +524,15 @@ open class God(private val server: Network) {
         vehicle.position        = spawnPosition
         vehicle.playerType      = playerType
         vehicle.vehicleDelivered = true
+
+        // C++: DamageableGameObj::Copy_Settings → DefenseObject.Init(def.DefenseObjectDef, this)
+        wrapper?.let { vehicle.defenseObject.init(it.damageable.defenseObjectDef.toDefenseObjectDefClass(), vehicle) }
+
+        // Wire a stub VehiclePhysClass so exportFrequent can read position/orientation.
+        val vehiclePhys = VehiclePhysClassStub()
+        vehiclePhys.setStoredPosition(spawnPosition)
+        vehicle.physObj = vehiclePhys
+
         // Resize seat list to match definition
         vehicle.seatOccupants.clear()
         repeat(seatCount) { vehicle.seatOccupants.add(null) }
@@ -483,6 +566,16 @@ open class God(private val server: Network) {
         vehicle.playerType      = team
         vehicle.vehicleDelivered = true
         vehicle.controlOwner    = 0
+
+        // C++: DamageableGameObj::Copy_Settings → DefenseObject.Init(def.DefenseObjectDef, this)
+        wrapper?.let { vehicle.defenseObject.init(it.damageable.defenseObjectDef.toDefenseObjectDefClass(), vehicle) }
+
+        // Wire a stub VehiclePhysClass so exportFrequent can read position/orientation.
+        // C++: Copy_Settings creates PhysObj from PhysDefID; we use a stub with spawn position.
+        val vehiclePhys = VehiclePhysClassStub()
+        vehiclePhys.setStoredPosition(spawnPosition)
+        vehicle.physObj = vehiclePhys
+
         vehicle.seatOccupants.clear()
         repeat(seatCount) { vehicle.seatOccupants.add(null) }
         val netId = NetworkObjectManager.getNewDynamicId()

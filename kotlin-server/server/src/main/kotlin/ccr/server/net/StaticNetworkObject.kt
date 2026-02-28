@@ -47,12 +47,19 @@ class DoorNetworkObject(
         packet.addInt(door.state, BITPACK_DOOR_STATE)
     }
 
-    // C++: DoorNetworkObjectClass::Network_Think — marks BIT_RARE dirty on state change
+    // C++: DoorNetworkObjectClass::Network_Think — marks BIT_RARE dirty on state change,
+    // but only for OPENING_DOOR, CLOSING_DOOR, and ACCESS_DENIED (not OPENED or CLOSED).
+    // C++: if (DoorState != door->State) { DoorState = door->State;
+    //        if (STATE_OPENING || STATE_CLOSING || STATE_ACCESS_DENIED) Set_Object_Dirty_Bit(BIT_RARE, true); }
     override fun networkThink() {
         val current = door.state
         if (current != lastSentState) {
             lastSentState = current
-            setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+            if (current == ccr.physics.static.DoorPhysClass.STATE_OPENING_DOOR ||
+                current == ccr.physics.static.DoorPhysClass.STATE_CLOSING_DOOR ||
+                current == ccr.physics.static.DoorPhysClass.STATE_ACCESS_DENIED) {
+                setObjectDirtyBit(NetworkObject.BIT_RARE, true)
+            }
         }
     }
 }

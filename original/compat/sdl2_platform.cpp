@@ -403,6 +403,15 @@ void SDL2_Platform_PollEvents(void)
                 On_Key_Down(vk);
                 SDL_PumpEvents();  // refresh keyboard state after potentially long KEYDOWN handlers
             }
+            // Mimic Windows TranslateMessage(): generate WM_CHAR for control keys.
+            // SDL_TEXTINPUT only fires for printable chars, but the console input
+            // system (Input::Console_Add_Key) needs these as WM_CHAR.
+            switch (event.key.keysym.sym) {
+                case SDLK_RETURN:    On_Char(0x0D); break;
+                case SDLK_ESCAPE:    On_Char(0x1B); break;
+                case SDLK_BACKSPACE: On_Char(0x08); break;
+                case SDLK_TAB:       On_Char(0x09); break;
+            }
             break;
         }
 

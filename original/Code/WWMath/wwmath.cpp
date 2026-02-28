@@ -2,6 +2,8 @@
 #include "wwmath.h"
 #include "lookuptable.h"
 
+extern void Force_Link_CatmullRomSplineModule(void);
+
 // TODO: convert to use loouptablemanager...
 float _FastAcosTable[ARC_TABLE_SIZE];
 float _FastAsinTable[ARC_TABLE_SIZE];
@@ -10,6 +12,7 @@ float _FastInvSinTable[SIN_TABLE_SIZE];
 
 void		WWMath::Init(void)
 {
+	Force_Link_CatmullRomSplineModule();
 	LookupTableMgrClass::Init();
 
 	for (int a=0;a<ARC_TABLE_SIZE;++a) {

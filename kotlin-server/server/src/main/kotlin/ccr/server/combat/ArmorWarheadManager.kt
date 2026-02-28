@@ -13,6 +13,10 @@ object ArmorWarheadManager {
     private var armorIdToIndex   = mutableMapOf<Int, Int>()
     private var warheadIdToIndex = mutableMapOf<Int, Int>()
 
+    // C++: Get_Num_Armor_Types() / Get_Num_Warhead_Types() — used for BITPACK_SHIELD_TYPE encoder precision
+    var numArmorTypes: Int = 0
+        private set
+
     // C++: ArmorWarheadManager::Init — parse armor.ini bytes.
     fun init(bytes: ByteArray) {
         val ini = IniFile(bytes)
@@ -23,6 +27,7 @@ object ArmorWarheadManager {
         val nw = warheadNames.size
         if (na == 0 || nw == 0) return
 
+        numArmorTypes = na
         numWarheads = nw
         multipliers = FloatArray(na * nw) { 1.0f }
 

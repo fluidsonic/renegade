@@ -499,7 +499,7 @@ void BulletClass::Init( const BulletDataClass & data, float progress_time, const
 
 		// If no name is given, lets create the NULL render obj
 		if ( model == NULL ) {
-			Debug_Say(( "Bullet Not Found \"%s\" \n", BulletData.AmmoDefinition->ModelName ));
+			Debug_Say(( "Bullet Not Found \"%s\" \n", (const char *)BulletData.AmmoDefinition->ModelName ));
 			model = WW3DAssetManager::Get_Instance ()->Create_Render_Obj( "NULL" );
 
 		}
@@ -508,7 +508,7 @@ void BulletClass::Init( const BulletDataClass & data, float progress_time, const
 
 		if (model) {
 			if ( BulletData.AmmoDefinition->ModelName.Compare_No_Case( model->Get_Name() ) != 0 ) {
-				Debug_Say(( "Possible bullet twiddler!!  %s %s\n", BulletData.AmmoDefinition->ModelName, model->Get_Name() ));
+				Debug_Say(( "Possible bullet twiddler!!  %s %s\n", (const char *)BulletData.AmmoDefinition->ModelName, (const char *)model->Get_Name() ));
 			}
 //			ModelNameCRC = CRC_Stringi( model->Get_Name() );
 			ModelNameCRC = CRC_Stringi( BulletData.AmmoDefinition->ModelName );

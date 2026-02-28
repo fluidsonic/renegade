@@ -3,7 +3,7 @@
 // Project:      wwutil
 // Author:       Tom Spencer-Smith
 // Date:         June 1998
-// Description:  
+// Description:
 //
 //-----------------------------------------------------------------------------
 #include "global.h"
@@ -16,7 +16,7 @@
 #include "ffactory.h"
 
 //
-// cMiscUtil statics 
+// cMiscUtil statics
 //
 
 //---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ LPCSTR cMiscUtil::Get_Text_Time(void)
 	long time_now = ::time(NULL);
    char * time_str = ::ctime(&time_now);
    time_str[::strlen(time_str) - 1] = 0; // remove \n
-   return time_str; 
+   return time_str;
 }
 
 //---------------------------------------------------------------------------
@@ -106,7 +106,7 @@ bool cMiscUtil::Is_Whitespace(char c)
 
 //-----------------------------------------------------------------------------
 void cMiscUtil::Trim_Trailing_Whitespace(char * text)
-{	
+{
 
 	int length = static_cast<int32_t>(::strlen(text));
 	while (length > 0 && Is_Whitespace(text[length - 1])) {
@@ -118,7 +118,7 @@ void cMiscUtil::Trim_Trailing_Whitespace(char * text)
 void cMiscUtil::Get_File_Id_String(LPCSTR filename, StringClass & str)
 {
 
-//	
+//
 
    //
    // Get size
@@ -152,7 +152,7 @@ void cMiscUtil::Get_File_Id_String(LPCSTR filename, StringClass & str)
    //
    char * p_start = &working_filename[strlen(working_filename)];
    int num_chars = 1;
-   while (p_start > working_filename && *(p_start - 1) != '\\') {
+   while (p_start > working_filename && *(p_start - 1) != '\\' && *(p_start - 1) != '/') {
       p_start--;
       num_chars++;
    }
@@ -189,7 +189,7 @@ int cMiscUtil::Get_Exe_Key(void)
    int succeeded;
 	succeeded = ::GetModuleFileName(NULL, filename, sizeof(filename));
 	::strupr(filename);
-      
+
    //
    // Get size
    //
@@ -241,7 +241,7 @@ int cMiscUtil::Get_Exe_Key(void)
    int succeeded;
 	succeeded = ::GetModuleFileName(NULL, filename, sizeof(filename));
 	::strupr(filename);
-      
+
 	StringClass string;
 	Get_File_Id_String(filename, string);
 

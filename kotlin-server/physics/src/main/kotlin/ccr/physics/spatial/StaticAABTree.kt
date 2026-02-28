@@ -10,6 +10,22 @@ class StaticAABTree {
     private var objects: List<PhysClass> = emptyList()
     private var root: AABTreeNode? = null
 
+    /** Returns the bounding box of the root node, or null if the tree is empty. */
+    fun rootBounds(): AABox? = root?.bounds
+
+    /** Returns the total number of nodes in the tree (for diagnostics). */
+    fun nodeCount(): Int {
+        val r = root ?: return 0
+        return countNodes(r)
+    }
+
+    private fun countNodes(node: AABTreeNode): Int {
+        var count = 1
+        node.front?.let { count += countNodes(it) }
+        node.back?.let { count += countNodes(it) }
+        return count
+    }
+
     fun build(objects: List<PhysClass>) {
         this.objects = objects
         if (objects.isEmpty()) {
@@ -21,11 +37,10 @@ class StaticAABTree {
 
     private fun computeBounds(indices: List<Int>): AABox {
         if (indices.isEmpty()) return AABox(Vector3.ZERO, Vector3.ZERO)
-        val positions = indices.map { objects[it].transform.translation }
-        val mn = Vector3(positions.minOf { it.x }, positions.minOf { it.y }, positions.minOf { it.z })
-        val mx = Vector3(positions.maxOf { it.x }, positions.maxOf { it.y }, positions.maxOf { it.z })
-        val pad = Vector3(1f, 1f, 1f)
-        return AABox.fromMinMax(mn - pad, mx + pad)
+        val boxes = indices.map { objects[it].worldBoundingBox() }
+        val mn = Vector3(boxes.minOf { it.min.x }, boxes.minOf { it.min.y }, boxes.minOf { it.min.z })
+        val mx = Vector3(boxes.maxOf { it.max.x }, boxes.maxOf { it.max.y }, boxes.maxOf { it.max.z })
+        return AABox.fromMinMax(mn, mx)
     }
 
     private fun buildNode(indices: MutableList<Int>): AABTreeNode {
@@ -40,13 +55,18 @@ class StaticAABTree {
             else -> 2
         }
         val sorted = indices.sortedBy { idx ->
-            val t = objects[idx].transform.translation
-            when (axis) { 0 -> t.x; 1 -> t.y; else -> t.z }
+            val c = objects[idx].worldBoundingBox().center
+            when (axis) { 0 -> c.x; 1 -> c.y; else -> c.z }
         }
         val mid = sorted.size / 2
+        // Guard: if the partition doesn't actually split the set (one side is empty),
+        // fall back to a leaf — mirrors C++ Build_Tree's FrontCount+BackCount != polycount check.
+        if (mid == 0 || mid == sorted.size) {
+            return AABTreeNode(bounds, objectIndices = sorted.toIntArray())
+        }
         val splitPos = sorted[mid].let { idx ->
-            val t = objects[idx].transform.translation
-            when (axis) { 0 -> t.x; 1 -> t.y; else -> t.z }
+            val c = objects[idx].worldBoundingBox().center
+            when (axis) { 0 -> c.x; 1 -> c.y; else -> c.z }
         }
         val node = AABTreeNode(bounds, splitAxis = axis, splitDist = splitPos)
         node.front = buildNode(sorted.subList(0, mid).toMutableList())

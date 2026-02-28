@@ -1,7 +1,6 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
-import ccr.server.Network
 
 // C++: cRequestKillEvent — networkClassId = NETCLASSID_REQUESTKILLEVENT = 1034
 // Client→Server event requesting the server kill a specific game object.
@@ -18,15 +17,16 @@ class RequestKillEvent(
 
     override fun importCreation(packet: BitStream) {
         objectId = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] REQUESTKILLEVENT from rhostId=$rhostId objectId=$objectId")
-        // Only allow self-kill: check if the requested object is this player's soldier
-        val soldier = server.god.soldiersByHost[rhostId]
-        if (soldier != null && soldier.networkId == objectId) {
-            server.broadcastPlayerKill(-1, rhostId)
-            server.god.deleteSoldier(rhostId)
+    override fun act() {
+        println("[GAME] REQUESTKILLEVENT objectId=$objectId")
+        // Reverse-lookup: find which host owns the soldier with this networkId
+        val entry = network.god.soldiersByHost.entries.find { it.value.networkId == objectId }
+        if (entry != null) {
+            network.broadcastPlayerKill(-1, entry.key)
+            network.god.deleteSoldier(entry.key)
         }
         setDeletePending()
     }

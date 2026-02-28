@@ -335,6 +335,7 @@ class RefineryGameObj() : BuildingGameObj() {
                 // C++: int funds = int(logical_seconds * FundsPerSecond); funds = min(funds, (int)TotalFunds)
                 var funds = (logicalSeconds * fundsPerSecond).toInt()
                 funds = minOf(funds, totalFunds.toInt())
+                println("[REFINERY] docked: logicalSeconds=$logicalSeconds fundsPerSecond=$fundsPerSecond funds=$funds totalFunds=$totalFunds baseController=${baseController != null}")
                 if (funds > 0) {
                     totalFunds -= funds.toFloat()
                     // C++: BaseController->Distribute_Funds_To_Each_Teammate(funds)
@@ -379,9 +380,9 @@ class RefineryGameObj() : BuildingGameObj() {
                     }
 
                     // C++: BaseController->Distribute_Funds_To_Each_Teammate((int)funds)
-                    baseController?.distributeFundsToEachTeammate(
-                        funds.toInt(), GameObjManager.getStarList()
-                    )
+                    val fundsInt = funds.toInt()
+                    println("[REFINERY] periodic: funds=$fundsInt baseController=${baseController != null} stars=${GameObjManager.getStarList().size}")
+                    baseController?.distributeFundsToEachTeammate(fundsInt, GameObjManager.getStarList())
                 }
             }
 

@@ -22,13 +22,14 @@ class CsPingRequestEvent(
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
         pingNumber = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] CSPINGREQUESTEVENT from rhostId=$rhostId senderId=$senderId pingNumber=$pingNumber → ScPingResponseEvent")
-        val host = server.connectionManager.getHost(rhostId) ?: run { setDeletePending(); return }
+    override fun act() {
+        println("[GAME] CSPINGREQUESTEVENT from senderId=$senderId pingNumber=$pingNumber → ScPingResponseEvent")
+        val host = network.connectionManager.getHost(senderId) ?: run { setDeletePending(); return }
         val response = ScPingResponseEvent(pingNumber)
-        server.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
+        network.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, response, response.networkId) }
         setDeletePending()
     }
 }

@@ -28,6 +28,11 @@ object NetworkObjectPacketWriter {
         val factory = NetworkObjectFactoryManager.getFactory(obj.networkClassId)
         requireNotNull(factory) { "No factory registered for classId=${obj.networkClassId}" }
         factory.prepPacket(obj, bs)
+        // Diagnostic: log creation packet details for SimpleGameObj so we can trace purchase terminal visibility.
+        val simpleObj = obj as? SimpleGameObj
+        if (simpleObj != null) {
+            System.err.println("[SIMPLE-CREATE] netId=$networkId defId=${simpleObj.definitionId} classId=${obj.networkClassId} isDeletePending=$isDeletePending")
+        }
         obj.exportCreation(bs)
         obj.exportRare(bs)
         obj.exportOccasional(bs)

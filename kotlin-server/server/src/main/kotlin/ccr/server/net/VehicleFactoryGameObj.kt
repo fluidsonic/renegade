@@ -339,19 +339,21 @@ open class VehicleFactoryGameObj() : BuildingGameObj() {
         if (generatingVehicleID == 0) return null
 
         // C++: PhysicalGameObj* physical_obj = ObjectLibraryManager::Create_Object(GeneratingVehicleID)
-        val physicalObj = ObjectLibraryManager.createObject(generatingVehicleID) as? PhysicalGameObj
-            ?: return null
+        // Kotlin server: delegate to God.createHarvester / God.createVehicle instead of
+        // ObjectLibraryManager::Create_Object (which is a stub returning null).
+        val god = baseController?.network?.god ?: return null
+        val spawnPosition = creationTm.translation
 
-        // C++: if (!MapMgrClass::Are_VTOL_Vehicles_Enabled() && physical_obj->Peek_Physical_Object()->As_VTOLVehicleClass())
-        if (!MapMgrClass.areVtolVehiclesEnabled() && (physicalObj.peekPhysicalObject() as? VehiclePhysClassStub)?.asVTOLVehicleClass() != null) {
-            physicalObj.setDeletePending()
-            return null
-        }
-
-        val vehicleObj = physicalObj.asVehicleGameObj() ?: return null
-
-        // C++: vehicle->Start_Observers()
-        vehicleObj.startObservers()
+        val purchaserSoldier = purchaser.get() as? SoldierGameObj
+        val vehicleObj: VehicleGameObj? = if (purchaserSoldier == null) {
+            // No purchaser — harvester spawned by BaseControllerClass::Request_Harvester
+            god.createHarvester(playerType, generatingVehicleID, spawnPosition)
+        } else {
+            // Player-purchased vehicle — find the buyer's rhostId by reverse-lookup in soldiersByHost
+            val buyerRhostId = god.soldiersByHost.entries
+                .firstOrNull { it.value === purchaserSoldier }?.key ?: -1
+            god.createVehicle(buyerRhostId, generatingVehicleID, spawnPosition)
+        } ?: return null
 
         // C++: Vehicle = vehicle
         vehicle.set(vehicleObj)

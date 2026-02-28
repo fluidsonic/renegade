@@ -6,7 +6,8 @@
 /*
 ** Force-Link this module because the linker can't detect that we actually need it...
 */
- 
+void Force_Link_CatmullRomSplineModule(void) {}
+
 /*
 ** Save-Load stuff
 */

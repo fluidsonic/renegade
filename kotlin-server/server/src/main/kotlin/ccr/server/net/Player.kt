@@ -140,7 +140,7 @@ class Player(
         setDeaths(deaths + 1)
     }
 
-    fun addMoney(amount: Float) {
+    override fun addMoney(amount: Float) {
         money += amount
         setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
     }

@@ -206,6 +206,9 @@ BuildingGameObjDef::Load (ChunkLoadClass &cload)
 		}
 	}
 
+	fprintf(stderr, "[BUILDING] loaded def id=%u name='%s'\n",
+		Get_ID(), (const char *)Get_Name());
+
 	return true;
 }
 
@@ -420,6 +423,10 @@ BuildingGameObj::Load (ChunkLoadClass &cload)
 	if (CollectionSphere.Center.X == 0 && CollectionSphere.Center.Y == 0 && CollectionSphere.Center.Z == 0) {
 		CollectionSphere.Center = Position;
 	}
+
+	fprintf(stderr, "[BUILDING] loaded instance defId=%u networkId=%d pos=(%.1f,%.1f,%.1f)\n",
+		Get_Definition().Get_ID(), Get_Network_ID(),
+		(double)Position.X, (double)Position.Y, (double)Position.Z);
 
 	return true;
 }

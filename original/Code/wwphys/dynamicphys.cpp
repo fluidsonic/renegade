@@ -84,12 +84,11 @@ void DynamicPhysClass::Internal_Update_Visibility_Status(void)
 	/*
 	** Update our VIS-ID
 	*/
-	VisObjectID = PhysicsSceneClass::Get_Instance()->Get_Dynamic_Object_Vis_ID(Model->Get_Bounding_Box(),&VisNodeID);
-	if ((int)VisObjectID >= PhysicsSceneClass::Get_Instance()->Get_Vis_Table_Size()) {
-		
-		int size = PhysicsSceneClass::Get_Instance()->Get_Vis_Table_Size();
-//		int id = PhysicsSceneClass::Get_Instance()->Get_Dynamic_Object_Vis_ID(Model->Get_Bounding_Box(),&VisNodeID);
+	PhysicsSceneClass *phys_scene = PhysicsSceneClass::Get_Instance();
+	if (phys_scene == nullptr) return;
 
+	VisObjectID = phys_scene->Get_Dynamic_Object_Vis_ID(Model->Get_Bounding_Box(),&VisNodeID);
+	if ((int)VisObjectID >= phys_scene->Get_Vis_Table_Size()) {
 		VisObjectID = 0;
 	}
 

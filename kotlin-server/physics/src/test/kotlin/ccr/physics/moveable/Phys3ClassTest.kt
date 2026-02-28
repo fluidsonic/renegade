@@ -40,7 +40,9 @@ class Phys3ClassTest {
     fun groundDetection() {
         val scene = makeScene()
         val obj = ConcretePhys3()
-        obj.position = Vector3(0f, 0f, 0.9f)
+        // With collisionBoxCenter=(0,0,0.9) and extent=(0,0,0.9), box bottom is at position.z + 0.
+        // Place the object so the box bottom is at z=0.05 (just above the floor at z=0).
+        obj.position = Vector3(0f, 0f, 0.05f)
         scene.addDynamicObject(obj)
         obj.checkGround(scene)
         assertTrue(obj.groundState.onGround, "Should detect ground near z=0")

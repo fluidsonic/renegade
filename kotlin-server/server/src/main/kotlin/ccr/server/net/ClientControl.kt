@@ -21,11 +21,8 @@ class ClientControl(
     override val networkClassId: Int = 1017
     override fun delete() {}
 
-    // Server reference — set by serverPacketHandler after factory creation.
-    var server: Network? = null
-    // Server-trusted host ID (set by serverPacketHandler from the packet source).
-    // Used for all lookups instead of clientId (which is client-supplied in importCreation).
-    var rhostId: Int = 0
+    // Server reference — set by Network packet handler after factory creation.
+    lateinit var network: Network
 
     override fun exportCreation(packet: BitStream) {
         packet.addInt(clientId)
@@ -45,8 +42,7 @@ class ClientControl(
         smartObjId = try { packet.getInt() } catch (e: Exception) { return }
         if (smartObjId == -1) return  // no controlled object
 
-        val srv = server ?: run { packet.flush(); return }
-        val soldier = srv.god.soldiersByHost[rhostId] ?: run { packet.flush(); return }
+        val soldier = network.god.soldiersByHost[clientId] ?: run { packet.flush(); return }
         if (soldier.networkId != smartObjId) {
             // SmartObjId doesn't match — client may not be controlling their soldier yet
             packet.flush()
@@ -78,6 +74,11 @@ class ClientControl(
             val ty = relTy + soldier.position.y
             val tz = relTz + soldier.position.z
 
+            // Debug: log control values when movement is non-zero
+            if (fwd != 0f || left != 0f || turn != 0f) {
+                println("[CTRL] clientId=$clientId fwd=$fwd left=$left up=$up turn=$turn contBits=$contBits")
+            }
+
             // Update soldier state via ControlClass API (the new hierarchy uses control object)
             soldier.targeting = Vector3(tx, ty, tz)
             soldier.control.setBoolean(ControlClass.BooleanControl.WEAPON_FIRE_PRIMARY,
@@ -97,21 +98,24 @@ class ClientControl(
             val weaponFirePrimary   = (contBits and 1) != 0
             val weaponFireSecondary = (contBits and 2) != 0
             val currentWeaponDefId  = soldier.getWeapon()?.definitionId ?: 0
-            soldier.detonateC4 = weaponFireSecondary && srv.isC4Weapon(currentWeaponDefId)
-            if (weaponFirePrimary && srv.isC4Weapon(currentWeaponDefId)) {
-                srv.god.createC4(rhostId, soldier, System.currentTimeMillis())
+            soldier.detonateC4 = weaponFireSecondary && network.isC4Weapon(currentWeaponDefId)
+            if (weaponFirePrimary && network.isC4Weapon(currentWeaponDefId)) {
+                network.god.createC4(clientId, soldier, System.currentTimeMillis())
             }
-            if (weaponFirePrimary && srv.isBeaconWeapon(currentWeaponDefId)) {
-                val ammoDef = srv.getAmmoDefForWeapon(currentWeaponDefId)
+            if (weaponFirePrimary && network.isBeaconWeapon(currentWeaponDefId)) {
+                val ammoDef = network.getAmmoDefForWeapon(currentWeaponDefId)
                 if (ammoDef != null) {
-                    srv.god.createBeacon(rhostId, soldier, ammoDef, System.currentTimeMillis())
+                    network.god.createBeacon(clientId, soldier, ammoDef, System.currentTimeMillis())
                 }
             }
 
+            // C++: PhysicalGameObj::Import_State_Cs always resets hibernation (physicalgameobj.cpp:603)
+            soldier.resetHibernating()
+
             // Mark BIT_FREQUENT dirty for all other in-game clients so the replication tick
             // will forward the position update unreliably
-            for (otherId in srv.god.playerInGame) {
-                if (otherId != rhostId) {
+            for (otherId in network.god.playerInGame) {
+                if (otherId != clientId) {
                     soldier.setObjectDirtyBit(otherId, NetworkObject.BIT_FREQUENT, true)
                 }
             }

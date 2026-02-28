@@ -18,12 +18,13 @@ class ClientGoodbyeEvent(
 
     override fun importCreation(packet: BitStream) {
         senderId = packet.getInt()
+        actIfWiredUp()
     }
 
-    override fun act(server: Network, rhostId: Int) {
-        println("[GAME] CLIENTGOODBYE from rhostId=$rhostId senderId=$senderId — removing player")
-        server.flowControllers.remove(rhostId)
-        server.god.removePlayer(rhostId)
+    override fun act() {
+        println("[GAME] CLIENTGOODBYE from senderId=$senderId — removing player")
+        network.flowControllers.remove(senderId)
+        network.god.removePlayer(senderId)
         setDeletePending()
     }
 }

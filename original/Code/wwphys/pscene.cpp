@@ -1734,10 +1734,22 @@ void PhysicsSceneClass::Shatter_Mesh
 	LookupTableClass * vel_table = LookupTableMgrClass::Get_Table("ShatterVel.tbl");
 	LookupTableClass * avel_table = LookupTableMgrClass::Get_Table("ShatterAVel.tbl");
 
+	if (vel_table == nullptr || avel_table == nullptr) {
+		if (vel_table) vel_table->Release_Ref();
+		if (avel_table) avel_table->Release_Ref();
+		return;
+	}
+
 	/*
 	** Clip the mesh into fragments
 	*/
 	ShatterSystem::Shatter_Mesh(mesh,impact_point,impact_normal);
+
+	int frag_count = ShatterSystem::Get_Fragment_Count();
+
+	if (frag_count == 0) {
+		return;
+	}
 
 	/*
 	** Wake up any dynamic objects in the area

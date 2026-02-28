@@ -186,6 +186,8 @@ void	SaveGameManager::Load_Game( const char * filename )
 {
 
 	Debug_Say(( "Load Game %s\n", filename ));
+	fprintf(stderr, "[LEVEL] Load_Game '%s' I_Am_Server=%d\n",
+		filename, (int)CombatManager::I_Am_Server());
 	CurrentGameFilename = filename;
 
 	FileClass * file = _TheFileFactory->Get_File( filename );
@@ -215,6 +217,8 @@ void	SaveGameManager::Load_Game( const char * filename )
 				StringClass temp_ddb(MapFilename,true);
 				temp_ddb.Erase( MapFilename.Get_Length()-4, 4 );
 				temp_ddb	+= ".ddb";
+				fprintf(stderr, "[LEVEL] MapFilename='%s' temp_ddb='%s'\n",
+					(const char *)MapFilename, (const char *)temp_ddb);
 				Load_Definitions(temp_ddb);
 				}
 
@@ -225,7 +229,10 @@ void	SaveGameManager::Load_Game( const char * filename )
 
 			case CHUNKID_LEVEL_DATA:
 				if (CombatManager::I_Am_Server()) {
+					fprintf(stderr, "[LEVEL] loading CHUNKID_LEVEL_DATA (server)\n");
 					SaveLoadSystemClass::Load( cload, false );
+				} else {
+					fprintf(stderr, "[LEVEL] skipping CHUNKID_LEVEL_DATA (client)\n");
 				}
 				break;
 
@@ -412,7 +419,7 @@ bool SaveGameManager::Peek_Map_Name( const char * filename, StringClass &map_nam
 */
 void	SaveGameManager::Save_Level( void )
 {
-	Debug_Say(( "Save Level %s\n", MapFilename ));
+	Debug_Say(( "Save Level %s\n", (const char *)MapFilename ));
 	Save_Save_Load_System(	MapFilename,
 									&_PhysStaticDataSaveSystem,
 									&_PhysStaticObjectsSaveSystem,
@@ -425,7 +432,7 @@ void	SaveGameManager::Save_Level( void )
 
 void	SaveGameManager::Load_Level( void )
 {
-	Debug_Say(( "Load Level %s\n", MapFilename ));
+	Debug_Say(( "Load Level %s\n", (const char *)MapFilename ));
 	Load_Save_Load_System( MapFilename, false );	// false = no automatic post load processing (needs to be called explicitly)
 }
 
@@ -474,12 +481,17 @@ void	SaveGameManager::Load_Save_Load_System( const char * filename, bool auto_po
 {
 	FileClass * file = _TheFileFactory->Get_File( filename );
 	if ( file != NULL ) {
-		file->Open( FileClass::READ );
-		ChunkLoadClass cload(file);
-		SaveLoadSystemClass::Load( cload, auto_post_load );
-		file->Close();
+		if ( file->Open( FileClass::READ ) ) {
+			fprintf(stderr, "[LEVEL] Load_Save_Load_System opened '%s'\n", filename);
+			ChunkLoadClass cload(file);
+			SaveLoadSystemClass::Load( cload, auto_post_load );
+			file->Close();
+		} else {
+			fprintf(stderr, "[LEVEL] failed to open file '%s' (Get_File succeeded but Open failed)\n", filename);
+		}
 		_TheFileFactory->Return_File(file);
 	} else {
+		fprintf(stderr, "[LEVEL] failed to open file '%s' (Get_File returned null)\n", filename);
 		Debug_Say(( "Failed to load file %s\n", filename ));
 //		assert( file );
 	}

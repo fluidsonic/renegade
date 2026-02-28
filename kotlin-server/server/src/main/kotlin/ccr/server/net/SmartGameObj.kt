@@ -406,8 +406,14 @@ abstract class SmartGameObj : ArmedGameObj() {
     // C++: virtual void Get_Velocity(Vector3& vel) { vel.Set(0,0,0); }
     open fun getVelocity(): Vector3 = Vector3(0f, 0f, 0f)
 
-    // C++: virtual void Apply_Control() — subclasses override to move object
-    open fun applyControl() {}
+    // C++: virtual void Apply_Control() — transfers analog values from control to physics controller
+    open fun applyControl() {
+        controller.reset()
+        controller.turnLeft    = control.getAnalog(ControlClass.AnalogControl.TURN_LEFT)
+        controller.moveUp      = control.getAnalog(ControlClass.AnalogControl.MOVE_UP)
+        controller.moveForward = control.getAnalog(ControlClass.AnalogControl.MOVE_FORWARD)
+        controller.moveLeft    = control.getAnalog(ControlClass.AnalogControl.MOVE_LEFT)
+    }
 
     // C++: virtual bool Is_Visible() { return true; }
     open fun isVisible(): Boolean = true
@@ -483,12 +489,14 @@ abstract class SmartGameObj : ArmedGameObj() {
     }
 
     // C++: SmartGameObj::Export_Frequent
+    // C++ order: ArmedGameObj::Export_Frequent(packet) THEN Export_Control_Sc(packet).
     override fun exportFrequent(packet: BitStream) {
         super.exportFrequent(packet)
         exportControlSc(packet)
     }
 
     // C++: SmartGameObj::Import_Frequent
+    // C++ order: ArmedGameObj::Import_Frequent(packet) THEN Import_Control_Sc(packet).
     override fun importFrequent(packet: BitStream) {
         super.importFrequent(packet)
         importControlSc(packet)

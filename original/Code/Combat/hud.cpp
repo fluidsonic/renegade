@@ -1705,7 +1705,7 @@ static	void	Score_Update( void )
 //		WideStringClass	scorestring;
 //		scorestring.Format( u"%d", score );
 		WCHAR score_string[12];	// 12 digits ought to be enough...
-		Generate_WChar_Text_From_Number(score_string,sizeof(score_string),false,score);
+		Generate_WChar_Text_From_Number(score_string,sizeof(score_string)/sizeof(score_string[0]),false,score);
 
 		Vector2 position = Render2DClass::Get_Screen_Resolution().Center();
 		position.Y = Render2DClass::Get_Screen_Resolution().Bottom;

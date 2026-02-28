@@ -33,6 +33,23 @@ abstract class Phys3Class : MoveablePhysClass() {
     /** Compute the world-space collision box. Mirrors C++ Compute_WS_Collision_Box. */
     fun computeWSCollisionBox(): AABox = AABox(position + collisionBoxCenter, collisionBoxExtent)
 
+    /** Compute the world-space collision box at an arbitrary position. */
+    fun computeWSCollisionBoxAt(pos: Vector3): AABox = AABox(pos + collisionBoxCenter, collisionBoxExtent)
+
+    /**
+     * Mirrors C++ Phys3Class::Can_Teleport(test_tm, check_dyn_only=true).
+     * Checks if this object can occupy the specified position without overlapping
+     * any dynamic objects in the scene.
+     *
+     * @param testPos the position to test
+     * @return true if the position is clear (no dynamic object intersections)
+     */
+    fun canTeleport(testPos: Vector3): Boolean {
+        val sc = scene ?: return true  // no scene = assume safe
+        val box = computeWSCollisionBoxAt(testPos)
+        return !sc.intersectionTestDynamic(box, this)
+    }
+
     /**
      * Mirrors C++ Phys3Class::Timestep.
      *
@@ -64,6 +81,46 @@ abstract class Phys3Class : MoveablePhysClass() {
             currentMode = MovementMode.NORMAL
             normalMove(dt, sc)
         }
+        println("[PHYS] timestep END   pos=$position vel=$velocity onGround=${groundState.onGround}")
+    }
+
+    /**
+     * After a ground move, snap the soldier back down to the ground surface.
+     * Mirrors C++ Phys3Class::Snap_To_Ground.
+     *
+     * The snap distance accounts for the Z displacement of the actual move plus the
+     * horizontal distance (to follow slopes) plus GROUND_DISTANCE to ensure we
+     * actually touch the ground.
+     */
+    fun snapToGround(actualMove: Vector3, scene: PhysicsScene) {
+        val deltaZ = actualMove.z
+        val deltaXY = kotlin.math.sqrt(actualMove.x * actualMove.x + actualMove.y * actualMove.y)
+
+        // Only snap when we moved upward or horizontally (could have stepped or gone over a crest)
+        if (deltaZ + deltaXY <= 0f) return
+
+        val slideAngleTan = kotlin.math.sqrt(1f - slideAngleCos * slideAngleCos) / slideAngleCos
+        val snapDist = deltaZ + deltaXY * slideAngleTan + GROUND_DISTANCE
+
+        val box = computeWSCollisionBox()
+        val test = AABoxCollisionTest(box, Vector3(0f, 0f, -snapDist))
+        val hit = scene.castAABox(test)
+
+        if (!hit || test.result.fraction <= 0f || test.result.fraction > 1f) {
+            // Case 3: ground not within snap distance — soldier is airborne
+            currentMode = MovementMode.BALLISTIC
+            return
+        }
+
+        if (test.result.normal.z > slideAngleCos) {
+            // Case 1: walkable slope — snap down to GROUND_EPSILON above surface
+            val snapDown = snapDist * test.result.fraction
+            if (snapDown > GROUND_EPSILON) {
+                position = Vector3(position.x, position.y, position.z - (snapDown - GROUND_EPSILON))
+            }
+            println("[PHYS] snapToGround snapped down ${snapDown - GROUND_EPSILON}")
+        }
+        // Case 2: non-walkable slope — don't snap (slide mode handles it)
     }
 
     /**
@@ -81,8 +138,16 @@ abstract class Phys3Class : MoveablePhysClass() {
      * 3. If no hit: OnGround = false, SurfaceType = SURFACE_TYPE_DEFAULT
      */
     fun checkGround(scene: PhysicsScene) {
-        val box = computeWSCollisionBox()
-        val checkDist = GROUND_DISTANCE
+        // WORKAROUND: Lift the cast box by GROUND_EPSILON before sweeping.
+        // Our CollisionMath.collide(box, move, tri) has a SAT bug at t=0: when the box bottom
+        // is flush with a triangle, the contact-center lies outside the box extent and the SAT
+        // rejects the hit. C++ doesn't need this because its swept-box test handles t=0 correctly.
+        // The lift ensures t > 0, making the SAT check pass. The extra lift is added to the cast
+        // distance so the total reach is unchanged.
+        val wsBox = computeWSCollisionBox()
+        val liftAmount = GROUND_EPSILON
+        val checkDist = GROUND_DISTANCE + liftAmount
+        val box = AABox(wsBox.center + Vector3(0f, 0f, liftAmount), wsBox.extent)
         val move = Vector3(0f, 0f, -checkDist)
         val test = AABoxCollisionTest(box, move)
         val hitAny = scene.castAABox(test)
@@ -194,7 +259,7 @@ abstract class Phys3Class : MoveablePhysClass() {
         val safeMove = move * maxOf(0f, frac - 0.001f)
         position = pos + safeMove
 
-        // Try step-over for low walls
+        // Try step-over for low walls: lift box by stepHeight, retry remaining move
         val remaining = move * (1f - frac)
         val stepBox = AABox(position + collisionBoxCenter + Vector3(0f, 0f, stepHeight), collisionBoxExtent)
         val stepTest = AABoxCollisionTest(stepBox, remaining)

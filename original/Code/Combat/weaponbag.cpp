@@ -338,7 +338,10 @@ void WeaponBagClass::Import_Weapon_List(BitStreamClass & packet)
 	for (int weapon = 0; weapon < weapon_count; weapon++) {
 		weapon_id = packet.Get(weapon_id);
 		int total_rounds = packet.Get(total_rounds);
-		Add_Weapon(weapon_id, 0);
+		WeaponClass * added = Add_Weapon(weapon_id, 0);
+		if (added == NULL) {
+			fprintf(stderr, "[weapon] Import_Weapon_List: unknown defId=%d — skipping\n", weapon_id);
+		}
 
 		WeaponClass * found_weapon = NULL;
 		for( int i = 1; i < WeaponList.Count(); i++ ) {

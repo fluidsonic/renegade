@@ -20,11 +20,8 @@ class ClientFps(
     override val networkClassId: Int = 1031
     override fun delete() {}
 
-    // Server reference — set by serverPacketHandler after factory creation.
-    var server: Network? = null
-    // Server-trusted host ID (set by serverPacketHandler from the packet source).
-    // Used for all lookups instead of clientId (which is client-supplied in importCreation).
-    var rhostId: Int = 0
+    // Server reference — set by Network packet handler after factory creation.
+    lateinit var network: Network
 
     override fun exportCreation(packet: BitStream) {
         packet.addInt(clientId)
@@ -42,7 +39,8 @@ class ClientFps(
     // C++: Import_Frequent reads Fps as BYTE (8-bit unsigned)
     override fun importFrequent(packet: BitStream) {
         fps = packet.getByte().toInt() and 0xFF
-        val srv = server ?: return
-        srv.clientFpsMap[rhostId] = fps
+        if (::network.isInitialized) {
+            network.clientFpsMap[clientId] = fps
+        }
     }
 }

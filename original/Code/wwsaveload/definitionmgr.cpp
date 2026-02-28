@@ -127,6 +127,11 @@ DefinitionMgrClass::Find_Definition (uint32_t id, bool twiddle)
 		definition = ((TwiddlerClass *)definition)->Twiddle ();
 	}
 
+	if (definition == nullptr) {
+		fprintf(stderr, "[DEFMGR] Find_Definition(%u) not found — _DefinitionCount=%d\n",
+			id, _DefinitionCount);
+	}
+
 	return definition;
 }
 
@@ -488,6 +493,8 @@ void
 DefinitionMgrClass::Register_Definition (DefinitionClass *definition)
 {
 	if (definition != NULL && definition->m_DefinitionMgrLink == -1 && definition->Get_ID () != 0) {
+		fprintf(stderr, "[DEFMGR] Register_Definition id=%u count=%d\n",
+			definition->Get_ID(), _DefinitionCount + 1);
 		//
 		//	Make sure the definition array is large enough
 		//
@@ -636,6 +643,7 @@ DefinitionMgrClass::Save
 bool
 DefinitionMgrClass::Load (ChunkLoadClass &cload)
 {
+	int count_before = _DefinitionCount;
 	bool retval = true;
 
 	while (cload.Open_Chunk ()) {
@@ -659,6 +667,9 @@ DefinitionMgrClass::Load (ChunkLoadClass &cload)
 
 		cload.Close_Chunk ();
 	}
+
+	fprintf(stderr, "[DEFMGR] Load() added %d definitions (total now %d)\n",
+		_DefinitionCount - count_before, _DefinitionCount);
 
 	return retval;
 }
@@ -726,18 +737,23 @@ DefinitionMgrClass::Load_Objects (ChunkLoadClass &cload)
 		//
 		//	Load this definition from the chunk (if possible)
 		//
-		PersistFactoryClass *factory = SaveLoadSystemClass::Find_Persist_Factory (cload.Cur_Chunk_ID ());
+		uint32_t chunk_id = cload.Cur_Chunk_ID();
+		PersistFactoryClass *factory = SaveLoadSystemClass::Find_Persist_Factory (chunk_id);
 		if (factory != NULL) {
-			
+
 			DefinitionClass *definition = (DefinitionClass *)factory->Load (cload);
 			if (definition != NULL) {
 
 				//
 				//	Add this definition to our array
-				//				
+				//
 				Prepare_Definition_Array ();
-				_SortedDefinitionArray[_DefinitionCount ++] = definition;				
+				_SortedDefinitionArray[_DefinitionCount ++] = definition;
+			} else {
+				fprintf(stderr, "[DEFMGR] Load_Objects: factory->Load returned null for chunkId=0x%08X\n", chunk_id);
 			}
+		} else {
+			fprintf(stderr, "[DEFMGR] Load_Objects: no factory for chunkId=0x%08X -- definition skipped\n", chunk_id);
 		}
 
 		cload.Close_Chunk ();

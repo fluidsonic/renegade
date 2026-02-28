@@ -68,7 +68,7 @@ SurfaceClass *Font3DDataClass::Minimize_Font_Image( SurfaceClass *surface )
    int new_height = new_width;
 	//  create a new 4 bit alpha image to build into
 	// We dont support non-homogeneous copies just yet
-	SurfaceClass	*new_surface = NEW_REF(SurfaceClass,(new_width, new_height,WW3D_FORMAT_A4R4G4B4));
+	SurfaceClass	*new_surface = NEW_REF(SurfaceClass,(static_cast<uint32_t>(new_width), static_cast<uint32_t>(new_height),WW3D_FORMAT_A4R4G4B4));
 	//SurfaceClass	*new_surface0 = NEW_REF(SurfaceClass,(new_width, new_height,sd.Format));
 
 	// fill with transparent black	
@@ -83,10 +83,10 @@ SurfaceClass *Font3DDataClass::Minimize_Font_Image( SurfaceClass *surface )
 
 		// find the lop left coordinate and the height and width of the char's bounding box
 		// (must convert the normalized uv tables to pixels and round off)
-		int src_x = (int)(UOffsetTable[ char_index ] * current_width + 0.5);
-		int src_y = (int)(VOffsetTable[ char_index ] * current_height + 0.5);
-		int width = (int)(UWidthTable[ char_index ] * current_width + 0.5);
-		int height = (int)(VHeight * current_height + 0.5);
+		int src_x = (int)(UOffsetTable[ char_index ] * current_width + 0.5f);
+		int src_y = (int)(VOffsetTable[ char_index ] * current_height + 0.5f);
+		int width = (int)(UWidthTable[ char_index ] * current_width + 0.5f);
+		int height = (int)(VHeight * current_height + 0.5f);
 
 		// if the character has any visible pixels at all...
 		if (width != 0) {
@@ -105,7 +105,7 @@ SurfaceClass *Font3DDataClass::Minimize_Font_Image( SurfaceClass *surface )
 
 			// blit from original image to new image
 
-			new_surface->Copy(new_x, new_y,src_x,src_y,width,height,surface);											
+			new_surface->Copy(static_cast<uint32_t>(new_x), static_cast<uint32_t>(new_y), static_cast<uint32_t>(src_x), static_cast<uint32_t>(src_y), static_cast<uint32_t>(width), static_cast<uint32_t>(height), surface);
 
 		}
 
@@ -157,24 +157,24 @@ SurfaceClass *Font3DDataClass::Make_Proportional( SurfaceClass	*surface )
 
 		// find the current bounding box
 		// (must convert the normalized uv tables to pixels and round off)
-		int x0 = (int)(UOffsetTable[ char_index ] * width + 0.5);
-		int y0 = (int)(VOffsetTable[ char_index ] * height + 0.5);
-		int x1 = x0 + (int)(UWidthTable[ char_index ] * width + 0.5);
-		int y1 = y0 + (int)(VHeight * height + 0.5);
+		int x0 = (int)(UOffsetTable[ char_index ] * width + 0.5f);
+		int y0 = (int)(VOffsetTable[ char_index ] * height + 0.5f);
+		int x1 = x0 + (int)(UWidthTable[ char_index ] * width + 0.5f);
+		int y1 = y0 + (int)(VHeight * height + 0.5f);
 
 		//	find minimum bounding box by finding the minimum and maximum non-0 x pixel location
 		Vector2i minb(x0,y0);
 		Vector2i maxb(x1,y1);
 
 		surface->FindBB(&minb,&maxb);
-	
+
 		// set the new edges
 		x0 = minb.I;
 		x1 = maxb.I+1;
 
 		// if we didn't find ANY non-transparent pixels, the char has no width.
 		if (x1 < x0) {
-			x1 = x0; 
+			x1 = x0;
 		}
 
 		// turn off all character after del
@@ -185,7 +185,7 @@ SurfaceClass *Font3DDataClass::Make_Proportional( SurfaceClass	*surface )
 		// update the U and width tables
 		UOffsetTable[ char_index ] = (float)x0 / width;
 		UWidthTable[ char_index ] = (float)( x1 - x0 ) / width;
-		CharWidthTable[ char_index ] = x1 - x0;
+		CharWidthTable[ char_index ] = static_cast<uint8_t>(x1 - x0);
 	}
 
 	// now shink the image given the minimum char sizes
@@ -211,18 +211,59 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 	SurfaceClass::SurfaceDescription sd;
 	surface->Get_Description(sd);
 
+	// Derive alpha from RGB luminance — font TGAs are white-on-black with zero alpha channel
+	if (sd.Format == WW3D_FORMAT_A8R8G8B8) {
+		int32_t pitch = 0;
+		uint8_t *bits = (uint8_t *)surface->Lock(&pitch);
+		for (uint32_t y = 0; y < sd.Height; y++) {
+			uint8_t *row = bits + y * static_cast<uint32_t>(pitch);
+			for (uint32_t x = 0; x < sd.Width; x++) {
+				uint8_t *p = row + x * 4; // BGRA
+				uint8_t m = p[0];
+				if (p[1] > m) m = p[1];
+				if (p[2] > m) m = p[2];
+				p[3] = m; // alpha = max(B,G,R)
+			}
+		}
+		surface->Unlock();
+
+		// Diagnostic: verify alpha derivation
+		{
+			int32_t dpitch = 0;
+			const uint8_t *dbits = (const uint8_t *)surface->Lock(&dpitch);
+			bool found_nonzero = false, found_zero = false;
+			for (uint32_t dy = 0; dy < sd.Height && (!found_nonzero || !found_zero); dy++) {
+				const uint8_t *drow = dbits + dy * static_cast<uint32_t>(dpitch);
+				for (uint32_t dx = 0; dx < sd.Width && (!found_nonzero || !found_zero); dx++) {
+					const uint8_t *dp = drow + dx * 4;
+					if (!found_nonzero && dp[3] > 0) {
+						fprintf(stderr, "[font3d] alpha sample nonzero: B=%u G=%u R=%u A=%u\n",
+						        dp[0], dp[1], dp[2], dp[3]);
+						found_nonzero = true;
+					}
+					if (!found_zero && dp[3] == 0) {
+						fprintf(stderr, "[font3d] alpha sample zero:    B=%u G=%u R=%u A=%u\n",
+						        dp[0], dp[1], dp[2], dp[3]);
+						found_zero = true;
+					}
+				}
+			}
+			surface->Unlock();
+		}
+	}
+
 	// If input is a font strike (strip) process it as such
 	if ( sd.Width > 8 * sd.Height ) {
 
  		// the height of the strike is the height of the characters
 		VHeight = 1;
-		CharHeight = sd.Height;
+		CharHeight = static_cast<uint8_t>(sd.Height);
 
-		int	column = 0;
-		int	width = sd.Width;
-		
+		uint32_t column = 0;
+		uint32_t width = sd.Width;
 
-		// for each char, find the uv start location and set the 
+
+		// for each char, find the uv start location and set the
 		// mono-spaced width and height in normalized screen units
 		for (int char_index = 0; char_index < 256; char_index++) {
 
@@ -237,21 +278,21 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 
 				// find the first non-transparent column...
 				while (( column < width ) && ( surface->Is_Transparent_Column(column) )) column++;
-				int start = column;
+				uint32_t start = column;
 
 				// find the first transparent column...
 				while (( column < width ) && ( !surface->Is_Transparent_Column(column) )) column++;
-				int end = column;
-				
+				uint32_t end = column;
+
 				if ( end <= start ) {
 				}
 
 //				assert( end > start );
 
-				UOffsetTable[ char_index ] = (float)start / width;
+				UOffsetTable[ char_index ] = (float)start / (float)width;
 				VOffsetTable[ char_index ] = 0;
-				UWidthTable[ char_index ] = (float)(end - start) / width;
-				CharWidthTable[ char_index ] = end - start;
+				UWidthTable[ char_index ] = (float)(end - start) / (float)width;
+				CharWidthTable[ char_index ] = static_cast<uint8_t>(end - start);
 			}
 
 		}
@@ -261,6 +302,20 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 		_surface = surface;
 		surface = NULL;
 		Minimize_Font_Image( _surface );
+		{
+			// Diagnostic: log new surface dimensions and non-zero-width char count
+			if (_surface) {
+				SurfaceClass::SurfaceDescription msd;
+				_surface->Get_Description(msd);
+				fprintf(stderr, "[font3d] after Minimize_Font_Image: surface %ux%u\n",
+				        msd.Width, msd.Height);
+			}
+			uint32_t nonzero_count = 0;
+			for (int ci = 0; ci < 256; ci++) {
+				if (CharWidthTable[ci] != 0) nonzero_count++;
+			}
+			fprintf(stderr, "[font3d] non-zero-width chars: %u\n", nonzero_count);
+		}
 
 	} else {
 
@@ -271,7 +326,7 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 		float	mono_pixel_width = (font_width / 16);
 		float	mono_pixel_height = (font_height / 16);
 
-		// for each char, find the uv start location and set the 
+		// for each char, find the uv start location and set the
 		// mono-spaced width and height in normalized screen units
 		for (int char_index = 0; char_index < 256; char_index++) {
 			UOffsetTable[ char_index ] = (float)((char_index % 16) * mono_pixel_width) / font_width;
@@ -287,6 +342,8 @@ bool	Font3DDataClass::Load_Font_Image( const char *filename )
 		_surface = surface;
 		surface = NULL;
 		Make_Proportional( _surface );
+		fprintf(stderr, "[font3d] after Make_Proportional: CharWidthTable[0x20]=%u [0x30]=%u [0x41]=%u\n",
+		        (uint32_t)CharWidthTable[0x20], (uint32_t)CharWidthTable[0x30], (uint32_t)CharWidthTable[0x41]);
 	}
 
 	// create the texture
@@ -339,7 +396,7 @@ void	Font3DInstanceClass::Build_Cached_Tables()
 {
 	// Rebuild the cached tables
 	for (int a=0;a<256;++a) {
-		float width = (float)FontData->Char_Width(a);
+		float width = (float)FontData->Char_Width(static_cast<char16_t>(a));
 		if ( a == ' ' ) {
 			width = SpaceSpacing;
 		}
@@ -375,7 +432,7 @@ float	Font3DInstanceClass::String_Width( const char *test_str )
 {
 	float width = 0.0;
 	for (; *test_str; test_str++) {
-		width += Char_Spacing(*test_str);
+		width += Char_Spacing(static_cast<char16_t>(*test_str));
 	}
 
 	return width;

@@ -453,7 +453,7 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
 		if (ktd >= 0) {
 			substring.Format(u"%-8.1f", ktd);
 		} else {
-			substring.Format(u"%-8s", "-");
+			substring.Format(u"%-8s", u"-");
 		}
       string += substring;
    }
@@ -472,7 +472,7 @@ void cPlayer::Get_Player_String(int rank, WideStringClass & string, bool force_v
 		if (show) {
 	      substring.Format(u"%-8d", (int) Get_Money());
 		} else {
-	      substring.Format(u"%-8s", "-");
+	      substring.Format(u"%-8s", u"-");
 		}
 
       string += substring;
