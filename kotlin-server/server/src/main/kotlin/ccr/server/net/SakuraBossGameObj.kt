@@ -3,6 +3,7 @@ package ccr.server.net
 import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.math.degToRadF
+import ccr.server.core.FreeRandom
 import ccr.server.defs.DefenseObjectDefClass
 import ccr.server.defs.SakuraBossGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
@@ -1502,7 +1503,7 @@ open class SakuraBossGameObj : VehicleGameObj() {
 
     // C++: WWMath::Random_Float(min, max)
     private fun randomFloat(min: Float, max: Float): Float =
-        min + FreeRandom.get() * (max - min)
+        FreeRandom.getFloat(min, max)
 }
 
 // ---------------------------------------------------------------------------

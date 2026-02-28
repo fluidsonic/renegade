@@ -6,6 +6,7 @@ import ccr.net.bitstream.*
 import ccr.physics.PhysController
 import ccr.physics.moveable.MoveablePhysClass
 import ccr.server.GameObjManager
+import ccr.server.core.FreeRandom
 import ccr.server.defs.SmartGameObjDef
 
 // C++: SmartGameObj (smartgameobj.cpp)
@@ -291,7 +292,7 @@ abstract class SmartGameObj : ArmedGameObj() {
 
         movingSoundTimer -= TimeManager.getFrameSeconds()
         if (movingSoundTimer < 0f) {
-            movingSoundTimer += (0.5f + Math.random().toFloat() * 0.5f)  // C++: FreeRandom.Get_Float(0.5, 1)
+            movingSoundTimer += FreeRandom.getFloat(0.5f, 1f)  // C++: FreeRandom.Get_Float(0.5, 1)
             if (isEnemySeenEnabled) {
                 for (obj in GameObjManager.getSmartGameObjs()) {
                     if (obj === this) continue

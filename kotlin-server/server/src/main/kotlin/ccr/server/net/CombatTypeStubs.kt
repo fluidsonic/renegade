@@ -581,14 +581,6 @@ object HUDInfo {
     fun getActionStatusValue(): Float = actionStatusValue
 }
 
-// C++: FreeRandom — global random number generator
-object FreeRandom {
-    fun get(): Float = kotlin.random.Random.nextFloat()
-    fun getInt(max: Int): Int = kotlin.random.Random.nextInt(max)
-    fun getFloat(): Float = kotlin.random.Random.nextFloat()
-    fun getFloat(min: Float, max: Float): Float = min + kotlin.random.Random.nextFloat() * (max - min)
-}
-
 // C++: GlobalSettingsDefClass instance returned by GlobalSettingsDef.getGlobalSettings()
 object GlobalSettingsInstance {
     fun getMpStealthDistanceVehicle(): Float = 300f
@@ -597,7 +589,6 @@ object GlobalSettingsInstance {
     fun getSoldierWalkSpeed(): Float = 0.5f
     fun getDeathSoundId(): Int = 0
 }
-
 // C++: GlobalSettingsDef
 object GlobalSettingsDef {
     val encounteredEnemyTimeout: Float = 5f
@@ -962,6 +953,80 @@ val ControlClass.Companion.ANALOG_TURN_LEFT: ControlClass.AnalogControl get() = 
 
 // MaterialEffectClass is a concrete subtype of TransitionEffectClass
 class MaterialEffectClass : TransitionEffectClass()
+
+fun CombatMaterialEffectManager.getHealthEffect(): TransitionEffectClass? = null
+fun CombatMaterialEffectManager.getElectrocutionEffect(): TransitionEffectClass? = null
+fun MoveablePhysClass.addEffectToMe(effect: TransitionEffectClass): Unit = Unit
+fun MoveablePhysClass.removeEffectFromMe(effect: TransitionEffectClass): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// WeaponClass — additional methods
+// ---------------------------------------------------------------------------
+
+fun WeaponClass.isModelUpdateNeeded(): Boolean = false
+fun WeaponClass.resetModelUpdate(): Unit = Unit
+fun WeaponClass.resetAnimUpdate(): Unit = Unit
+fun WeaponClass.getAnimState(): Int = 0
+fun WeaponClass.getModelName(): String? = null
+fun WeaponClass.setModel(model: RenderObjClass): Unit = Unit
+fun WeaponClass.getNextWeapon(): WeaponClass? = null
+fun WeaponClass.getBackModelName(): String? = null
+fun WeaponClass.getName(): String = ""
+fun WeaponClass.getConversation(): Int = 0
+fun WeaponClass.isReloading(): Boolean = false
+
+// ---------------------------------------------------------------------------
+// WeaponBagClass — getNextWeapon
+// ---------------------------------------------------------------------------
+
+fun WeaponBagClass.getNextWeapon(): WeaponClass? = null
+
+// ---------------------------------------------------------------------------
+// RenderObjClass — getContainer
+// ---------------------------------------------------------------------------
+
+fun RenderObjClass.getContainer(): RenderObjClass? = null
+
+// ---------------------------------------------------------------------------
+// WWMath — fastAsin, atan2, lerp, sqrt
+// ---------------------------------------------------------------------------
+
+fun WWMath.fastAsin(v: Float): Float = kotlin.math.asin(v.coerceIn(-1f, 1f))
+fun WWMath.atan2(y: Float, x: Float): Float = kotlin.math.atan2(y, x)
+fun WWMath.lerp(a: Float, b: Float, t: Float): Float = a + (b - a) * t
+fun WWMath.sqrt(v: Float): Float = kotlin.math.sqrt(v)
+
+const val DEG_TO_RADF_NEG_90 = -kotlin.math.PI.toFloat() / 2f
+const val DEG_20_RAD = kotlin.math.PI.toFloat() * 20f / 180f
+
+// ---------------------------------------------------------------------------
+// WeaponDefinitionClass (ccr.server.defs) — aGiveWeaponsWeapon, getName
+// ---------------------------------------------------------------------------
+
+val ccr.server.defs.WeaponDefinitionClass.aGiveWeaponsWeapon: Boolean get() = false
+fun ccr.server.defs.WeaponDefinitionClass.getName(): String = ""
+
+// ---------------------------------------------------------------------------
+// HumanPhysClass — getNormalizedSpeed, setNormalizedSpeed
+// ---------------------------------------------------------------------------
+
+fun HumanPhysClass.getNormalizedSpeed(): Float = 10.0f
+fun HumanPhysClass.setNormalizedSpeed(speed: Float): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// ActionParamsClass — moveLocation, moveArrivedDistance (now real var fields on ActionParamsStruct)
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// WWAudioClass — createContinuousSound, addToScene, removeFromScene, getDuration
+// ---------------------------------------------------------------------------
+
+fun WWAudioClass.createContinuousSound(soundDefId: Int): AudibleSoundClass? = null
+fun AudibleSoundClass.addToScene(): Unit = Unit
+fun AudibleSoundClass.removeFromScene(): Unit = Unit
+fun AudibleSoundClass.getDuration(): Float = 0f
+fun AudibleSoundClass.setTransform(tm: Matrix3D): Unit = Unit
+fun AudibleSoundClass.play(): Unit = Unit
 
 // ---------------------------------------------------------------------------
 // BackgroundMgrClass — overrideSkyTint, overrideClouds, overrideLightning, restoreAll

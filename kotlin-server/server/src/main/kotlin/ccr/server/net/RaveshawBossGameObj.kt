@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.math.Matrix3D
 import ccr.math.Vector3
+import ccr.server.core.FreeRandom
 import ccr.server.defs.RaveshawBossGameObjDefClass
 import kotlin.math.max
 
@@ -1527,7 +1528,7 @@ class RaveshawBossGameObj : SoldierGameObj() {
     // Utility — random float helper
     // =========================================================================
     private fun randomFloat(min: Float, max: Float): Float =
-        min + FreeRandom.get() * (max - min)
+        FreeRandom.getFloat(min, max)
 
     // =========================================================================
     // Vector3 extensions used locally

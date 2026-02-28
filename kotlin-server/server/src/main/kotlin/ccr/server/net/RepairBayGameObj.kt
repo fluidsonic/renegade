@@ -3,6 +3,7 @@ package ccr.server.net
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.physics.static.StaticPhysClass
+import ccr.server.core.FreeRandom
 import ccr.server.defs.OBBoxClass
 import ccr.server.defs.RepairBayGameObjDef
 import ccr.server.defs.ZoneType

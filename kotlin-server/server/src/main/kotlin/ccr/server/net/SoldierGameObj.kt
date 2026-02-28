@@ -7,6 +7,7 @@ import ccr.physics.moveable.HumanPhysClass
 import ccr.physics.scene.PhysicsScene
 import ccr.server.GameObjManager
 import ccr.server.combat.ArmorWarheadManager
+import ccr.server.core.FreeRandom
 import ccr.server.defs.SoldierGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 

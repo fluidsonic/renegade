@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.server.combat.ArmorWarheadManager
+import ccr.server.core.FreeRandom
 import ccr.server.defs.MendozaBossGameObjDefClass
 
 // C++: MendozaBossGameObjClass : public SoldierGameObj
@@ -302,7 +303,7 @@ open class MendozaBossGameObj : SoldierGameObj() {
         for (index in 0 until MAX_TAUNTS) {
             var listIndex: Int
             do {
-                listIndex = (Math.random() * MAX_TAUNTS).toInt()
+                listIndex = FreeRandom.getInt(MAX_TAUNTS)
             } while (tauntList[listIndex] != 0)
             tauntList[listIndex] = index + 1
         }
@@ -413,7 +414,7 @@ open class MendozaBossGameObj : SoldierGameObj() {
 
         if (sydneyState == SYDNEY_STATE_COWERING) {
             // C++: if (FreeRandom.Get_Int(4) == 1) → trigger death
-            if ((Math.random() * 4).toInt() == 1) {
+            if (FreeRandom.getInt(4) == 1) {
                 setOverallState(OVERALL_STATE_DEATH_SEQUENCE)
             }
         } else {
@@ -432,7 +433,7 @@ open class MendozaBossGameObj : SoldierGameObj() {
                     // C++: Vector3 relative_direction = Get_Transform().Inverse_Rotate_Vector(direction)
                     // C++: if (relative_direction.X < -0.7F && FreeRandom.Get_Int(5) == 1) → FALLING
                     // FIXME: transform inverse-rotate not wired; direction.x used directly as approximation
-                    if (direction.x < -0.7f && (Math.random() * 5).toInt() == 1) {
+                    if (direction.x < -0.7f && FreeRandom.getInt(5) == 1) {
                         setMendozaState(MENDOZA_STATE_FALLING)
                     }
                     nextKnockdownAvailableTime = FALLDOWN_TIMER
@@ -988,7 +989,7 @@ open class MendozaBossGameObj : SoldierGameObj() {
             // FIXME: DefenseObject not wired
             val currHealth = 1.0f // stub
             val probability = (currHealth * 20.0f).toInt().coerceAtLeast(1)
-            if ((Math.random() * probability).toInt() == 1) {
+            if (FreeRandom.getInt(probability) == 1) {
                 setOverallState(OVERALL_STATE_FIND_HEALTH)
             }
         } else {
@@ -1379,7 +1380,7 @@ open class MendozaBossGameObj : SoldierGameObj() {
         if (nextMeleeAttackTime <= 0f) {
             val dist2 = (mendozaPos - starPos).length2()
             if (dist2 < 4.0f) {
-                val attackId = (Math.random() * 3).toInt()
+                val attackId = FreeRandom.getInt(3)
                 when (attackId) {
                     0 -> setAttackState(ATTACK_STATE_MELEE_CRESENT_KICK)
                     1 -> setAttackState(ATTACK_STATE_MELEE_SIDE_KICK)
@@ -1678,7 +1679,7 @@ open class MendozaBossGameObj : SoldierGameObj() {
 
     // Simple random float helper mirroring WWMath::Random_Float
     private fun randomFloat(min: Float, max: Float): Float {
-        return min + (Math.random() * (max - min)).toFloat()
+        return FreeRandom.getFloat(min, max)
     }
 
     // Simple Vector3 length² helper
