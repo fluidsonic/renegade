@@ -157,6 +157,11 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - `TIMEGETTIME()` returns `unsigned long` — logically wraps at 32 bits on arm64; cast with `static_cast<uint32_t>(TIMEGETTIME())`
 - `fseek`/`ftell` return `long` on macOS — cast to `int32_t` at call sites; `fpos_t` is `long long`, also needs cast
 
+### Cross-thread GL resource cleanup — d3d8_gl.cpp
+- Background threads (e.g. audio delayed-release thread) can destroy `RefCountClass` objects whose destructor chain reaches `D3D8Texture_GL::~D3D8Texture_GL()` — calling `glDeleteTextures` without a GL context → SEGV
+- Fix: deferred deletion queue (`g_pendingTexDeletes` + `g_texDeleteMutex`) at file scope; destructor pushes `glTexId` onto the queue; `Present()` drains it on the render thread before `SDL2_Platform_SwapWindow()`
+- Only textures need this — vertex/index buffers are CPU-side `BYTE*` arrays
+
 ### GL rendering layer — d3d8_gl.cpp
 - `original/compat/d3d8_gl.cpp` — D3D8→OpenGL translation layer; texture stages ~line 920, lighting ~line 877, transforms ~line 840
 - **Texture coordinate generation**: `D3DTSS_TCI_CAMERASPACENORMAL` → `GL_TEXTURE_GEN_S/T` with `GL_NORMAL_MAP` (implemented); other TCI modes not yet implemented

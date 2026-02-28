@@ -7,8 +7,10 @@
 #include <SDL2/SDL.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#include <mutex>
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 
 #include "d3d8.h"
 #include "d3d8caps.h"
@@ -21,6 +23,14 @@
 static inline float ColorComponent(D3DCOLOR c, int shift) {
     return ((c >> shift) & 0xFF) / 255.0f;
 }
+
+// ---------------------------------------------------------------------------
+// Deferred GL texture deletion queue
+// Background threads (e.g. audio) may destroy textures without a GL context.
+// Queue deletions here and drain them on the render thread in Present().
+// ---------------------------------------------------------------------------
+static std::vector<GLuint> g_pendingTexDeletes;
+static std::mutex           g_texDeleteMutex;
 
 // ---------------------------------------------------------------------------
 // Stub resource objects (Phase A: just enough to not crash)
@@ -255,7 +265,10 @@ struct D3D8Texture_GL : public IDirect3DTexture8 {
     }
     ~D3D8Texture_GL() {
         for (int32_t i = 0; i < 16; i++) delete[] levelPixels[i];
-        if (glTexId) glDeleteTextures(1, &glTexId);
+        if (glTexId) {
+            std::lock_guard<std::mutex> lock(g_texDeleteMutex);
+            g_pendingTexDeletes.push_back(glTexId);
+        }
     }
 
     static void get_gl_format(D3DFORMAT f, GLenum& internal, GLenum& format, GLenum& type) {
@@ -304,6 +317,20 @@ struct D3D8Texture_GL : public IDirect3DTexture8 {
                 decompress_dxt(fmt, levelPixels[i], rgba, mw, mh);
                 glTexImage2D(GL_TEXTURE_2D, (GLint)i, GL_RGBA8, (GLsizei)mw, (GLsizei)mh,
                              0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+                delete[] rgba;
+            } else if (fmt == D3DFMT_A4R4G4B4) {
+                // macOS Metal backend may mishandle GL_RGBA4 — expand to RGBA8
+                uint8_t* rgba = new uint8_t[mw * mh * 4];
+                const uint16_t* src = reinterpret_cast<const uint16_t*>(levelPixels[i]);
+                for (uint32_t p = 0; p < mw * mh; p++) {
+                    uint16_t s = src[p];
+                    rgba[p * 4 + 0] = static_cast<uint8_t>(((s >>  0) & 0xF) * 17); // B
+                    rgba[p * 4 + 1] = static_cast<uint8_t>(((s >>  4) & 0xF) * 17); // G
+                    rgba[p * 4 + 2] = static_cast<uint8_t>(((s >>  8) & 0xF) * 17); // R
+                    rgba[p * 4 + 3] = static_cast<uint8_t>(((s >> 12) & 0xF) * 17); // A
+                }
+                glTexImage2D(GL_TEXTURE_2D, (GLint)i, GL_RGBA8, (GLsizei)mw, (GLsizei)mh,
+                             0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, rgba);
                 delete[] rgba;
             } else {
                 get_gl_format(fmt, gl_internal, gl_format, gl_type);
@@ -1291,6 +1318,16 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     }
 
     HRESULT Present(const RECT*, const RECT*, HWND, const void*) override {
+        {
+            std::vector<GLuint> toDelete;
+            {
+                std::lock_guard<std::mutex> lock(g_texDeleteMutex);
+                toDelete.swap(g_pendingTexDeletes);
+            }
+            if (!toDelete.empty()) {
+                glDeleteTextures(static_cast<GLsizei>(toDelete.size()), toDelete.data());
+            }
+        }
         SDL2_Platform_SwapWindow();
         return S_OK;
     }
