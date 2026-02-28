@@ -1727,30 +1727,10 @@ void DX8Wrapper::Apply_Render_State_Changes()
 
 	if (render_state_changed&WORLD_CHANGED) {
 		SNAPSHOT_SAY(("DX8 - apply world matrix\n"));
-		static int _world_n = 0;
-		if (++_world_n <= 10) {
-			// render_state.world is stored as M^T; rows of stored matrix = columns of the mathematical matrix
-			// The translation is in the 4th column: mathematical M[0][3], M[1][3], M[2][3]
-			// In the stored transposed form, 4th column of math matrix = 4th ROW of stored matrix
-			// render_state.world is a Matrix4 with Row[r][c]
-			// Transposed storage: stored.Row[r][c] = original.Row[c][r]
-			// So original translation original.Row[0][3]=stored.Row[3][0], original.Row[1][3]=stored.Row[3][1], original.Row[2][3]=stored.Row[3][2]
-			fprintf(stderr, "[DX8] world #%d tx=(%.2f,%.2f,%.2f) stored_row3=(%.3f,%.3f,%.3f,%.3f)\n",
-				_world_n,
-				render_state.world[3][0], render_state.world[3][1], render_state.world[3][2],
-				render_state.world[3][0], render_state.world[3][1], render_state.world[3][2], render_state.world[3][3]);
-		}
 		_Set_DX8_Transform(D3DTS_WORLD,render_state.world);
 	}
 	if (render_state_changed&VIEW_CHANGED) {
 		SNAPSHOT_SAY(("DX8 - apply view matrix\n"));
-		static int _view_n = 0;
-		if (++_view_n <= 3) {
-			// render_state.view stored transposed — translation in stored row3
-			fprintf(stderr, "[DX8] view #%d stored_row3=(%.3f,%.3f,%.3f,%.3f)\n",
-				_view_n,
-				render_state.view[3][0], render_state.view[3][1], render_state.view[3][2], render_state.view[3][3]);
-		}
 		_Set_DX8_Transform(D3DTS_VIEW,render_state.view);
 	}
 	if (render_state_changed&VERTEX_BUFFER_CHANGED) {

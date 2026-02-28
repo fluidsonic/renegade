@@ -167,8 +167,8 @@ Targa::~Targa(void)
 long Targa::Open(const char* name, long mode)
 {
 	TGA2Footer	footer;
-	long			size;
-	long			error = 0;
+	int32_t			size;
+	int32_t			error = 0;
 
 	/* File already open? */
 	if (Is_File_Open() && (mAccess == mode)) {
@@ -188,16 +188,21 @@ long Targa::Open(const char* name, long mode)
 			if (File_Open_Read(name)) {
 
 				/* Check for 2.0 targa file by loading the footer */
-				if (File_Seek(-26, SEEK_END) == -1) {
-					error = TGAERR_READ;
-				}
-
-				if (!error) {
-					if (File_Read(&footer, sizeof(TGA2Footer)) != sizeof(TGA2Footer)) {
+				{
+					int seek_end_ret = File_Seek(-26, SEEK_END);
+					if (seek_end_ret == -1) {
 						error = TGAERR_READ;
-					} else {
+					}
+					int read_footer_ret = 0;
+					if (!error) {
+						read_footer_ret = File_Read(&footer, sizeof(TGA2Footer));
+						if (read_footer_ret != sizeof(TGA2Footer)) {
+							error = TGAERR_READ;
+						}
+					}
+					if (!error) {
 						/* If this a 2.0 file with an extension? */
-						if (strncmp(footer.Signature, TGA2_SIGNATURE, 16) == 0) {
+						if (strncmp((const char*)footer.Signature, TGA2_SIGNATURE, 16) == 0) {
 							if (footer.Extension != 0) {
 								mFlags |= TGAF_TGA2;
 							}
@@ -220,12 +225,13 @@ long Targa::Open(const char* name, long mode)
 				}
 
 				/* Read in header. */
-				if (!error && (File_Seek(0, SEEK_SET) == -1)) {
-					error = TGAERR_READ;
-				} else {
-
-					size = File_Read(&Header, sizeof(TGAHeader));
-					if (size != sizeof(TGAHeader)) {
+				{
+					int seek0_ret = !error ? File_Seek(0, SEEK_SET) : -1;
+					if (!error && seek0_ret == -1) {
+						error = TGAERR_READ;
+					}
+					size = !error ? File_Read(&Header, sizeof(TGAHeader)) : 0;
+					if (!error && size != sizeof(TGAHeader)) {
 						error = TGAERR_READ;
 					}
 				}
@@ -348,9 +354,9 @@ void Targa::Close(void)
 
 long Targa::Load(const char* name, char* palette, char* image,bool invert_image)
 {
-	long size;
-	long depth;
-	long error = 0;
+	int32_t size;
+	int32_t depth;
+	int32_t error = 0;
 
 	/* Open the Targa */
 	if (Open(name, TGA_READMODE) == 0) {
@@ -482,8 +488,8 @@ long Targa::Load(const char* name, char* palette, char* image,bool invert_image)
 
 long Targa::Load(const char* name, long flags, bool invert_image)
 {
-	long size;
-	long error = 0;
+	int32_t size;
+	int32_t error = 0;
 
 	/* Open the file to get the header. */
 	if (Open(name, TGA_READMODE) == 0) {
@@ -580,14 +586,14 @@ long Targa::Load(const char* name, long flags, bool invert_image)
 
 long Targa::Save(const char* name, long flags, bool addextension)
 	{
-	long size;
-	long depth;
+	int32_t size;
+	int32_t depth;
 	char *palette;
 	char *temppal;
 	char *ptr;
 	//long i,n;
 	//char c;
-	long error = 0;
+	int32_t error = 0;
 	TGA2Footer footer;
 
 	/* Open the Targa for write. */
@@ -706,7 +712,7 @@ long Targa::Save(const char* name, long flags, bool addextension)
 			if (!error) {
 
 				mExtension.ExtSize = 495;
-				strncpy(mExtension.SoftID, "Denzil's Targa Code", 41);
+				strncpy((char*)mExtension.SoftID, "Denzil's Targa Code", 41);
 				mExtension.SoftVer.Number = (1 * 100);
 				mExtension.SoftVer.Letter = 0;
 
@@ -728,7 +734,7 @@ long Targa::Save(const char* name, long flags, bool addextension)
 		if (!error)
 			{
 			footer.Developer = 0;
-			strncpy(footer.Signature, TGA2_SIGNATURE, 16);
+			strncpy((char*)footer.Signature, TGA2_SIGNATURE, 16);
 			footer.RsvdChar = '.';
 			footer.BZST = 0;
 
@@ -770,7 +776,7 @@ long Targa::Save(const char* name, long flags, bool addextension)
 void Targa::XFlip(void)
 	{
 	char *ptr,*ptr1;
-	long  x,y,d;
+	int32_t  x,y,d;
 	char  v,v1;
 	char  depth;
 
@@ -823,7 +829,7 @@ void Targa::XFlip(void)
 void Targa::YFlip(void)
 	{
 	char *ptr,*ptr1;
-	long  x,y;
+	int32_t  x,y;
 	char  v,v1;
 	char  depth;
 
@@ -1006,10 +1012,10 @@ long Targa::DecodeImage()
 	char          *color;
 	unsigned char count;
 	unsigned char depth;
-	unsigned long pixel_count;
-	unsigned long size;
-	unsigned long c,i;
-	long          error = 0;
+	uint32_t pixel_count;
+	uint32_t size;
+	uint32_t c,i;
+	int32_t          error = 0;
 
 	/* Initialize */
 	image = mImage;
@@ -1095,15 +1101,15 @@ long Targa::DecodeImage()
 long Targa::EncodeImage()
 	{
 	char *packet;
-	long packet_index;
+	int32_t packet_index;
 	char *start;
 	char *end;
-	long depth;
-	long pixels;
-	long count;
-	long match;
-	long i;
-	long error = 0;
+	int32_t depth;
+	int32_t pixels;
+	int32_t count;
+	int32_t match;
+	int32_t i;
+	int32_t error = 0;
 
 	/* Initialize variables. */
 	depth = TGA_BytesPerPixel(Header.PixelDepth);
@@ -1238,9 +1244,9 @@ long Targa::EncodeImage()
 void Targa::InvertImage(void)
 	{
 	char *buffer;
-	long depth;
-	long pixel_count;
-	long i;
+	int32_t depth;
+	int32_t pixel_count;
+	int32_t i;
 	char c;
 
 	/* Initialize */

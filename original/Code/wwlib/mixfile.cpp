@@ -93,11 +93,6 @@ MixFileFactoryClass::MixFileFactoryClass( const char * mix_filename, FileFactory
 		}
 
 		factory->Return_File( file );
-
-		fprintf(stderr, "[mixfile] '%s' -> IsValid=%d FileCount=%d\n",
-			mix_filename, (int)IsValid, (int)FileCount);
-	} else {
-		fprintf(stderr, "[mixfile] '%s' -> file NULL or unavailable\n", mix_filename);
 	}
 }
 
@@ -159,7 +154,8 @@ bool	MixFileFactoryClass::Build_Filename_List (DynamicVectorClass<StringClass> &
 					}
 				}
 			}
-		}
+
+			}
 
 		//
 		//	Close the file
@@ -205,12 +201,6 @@ FileClass * MixFileFactoryClass::Get_File( char const *filename )
 		file = (RawFileClass *)Factory->Get_File( MixFilename );
 		if ( file ) {
 			file->Bias( BaseOffset + static_cast<int32_t>(info->Offset), static_cast<int32_t>(info->Size) );
-		}
-	} else {
-		static unsigned s_miss_count = 0;
-		if (++s_miss_count <= 50) {
-			fprintf(stderr, "[mixfile] MISS #%u in '%s': '%s' (crc=0x%08X)\n",
-				s_miss_count, (const char*)MixFilename, filename, (unsigned)crc);
 		}
 	}
 

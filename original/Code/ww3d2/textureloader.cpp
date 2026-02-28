@@ -376,17 +376,17 @@ IDirect3DTexture8* TextureLoader::Load_Thumbnail(const StringClass& filename)//,
 			width,
 			height,
 			(unsigned char*)locked_rects[level].pBits,
-			locked_rects[level].Pitch,
+			static_cast<uint32_t>(locked_rects[level].Pitch),
 			dest_format,
 			src_surface,
 			src_pitch,
 			src_format,
 			(unsigned char*)locked_rects[level+1].pBits,	// mipmap
-			locked_rects[level+1].Pitch);// mipmap
+			static_cast<uint32_t>(locked_rects[level+1].Pitch));// mipmap
 
 		src_format=dest_format;
 		src_surface=(unsigned char*)locked_rects[level].pBits;
-		src_pitch=locked_rects[level].Pitch;
+		src_pitch=static_cast<uint32_t>(locked_rects[level].Pitch);
 		width>>=1;
 		height>>=1;
 	}
@@ -449,10 +449,10 @@ IDirect3DSurface8* TextureLoader::Load_Surface_Immediate(
 
 	// Destination size will be the next power of two square from the larger width and height...
 	unsigned width, height;
-	width=targa.Header.Width;
-	height=targa.Header.Height;
-	unsigned src_width=targa.Header.Width;
-	unsigned src_height=targa.Header.Height;
+	width=static_cast<uint32_t>(targa.Header.Width);
+	height=static_cast<uint32_t>(targa.Header.Height);
+	unsigned src_width=static_cast<uint32_t>(targa.Header.Width);
+	unsigned src_height=static_cast<uint32_t>(targa.Header.Height);
 
 	// NOTE: We load the palette but we do not yet support paletted textures!
 	char palette[256*4];
@@ -502,7 +502,7 @@ IDirect3DSurface8* TextureLoader::Load_Surface_Immediate(
 		(unsigned char*)locked_rect.pBits,
 		width,
 		height,
-		locked_rect.Pitch,
+		static_cast<uint32_t>(locked_rect.Pitch),
 		dest_format,
 		src_surface,
 		src_width,
@@ -1006,8 +1006,6 @@ bool TextureLoadTaskClass::Begin_Load(void)
 
 	// if not loaded, abort.
 	if (!loaded) {
-		fprintf(stderr, "[texload] Begin_Load: no file found for '%s' (compressed_allowed=%d)\n",
-		        path, (int)Texture->Is_Compression_Allowed());
 		return false;
 	}
 
@@ -1079,8 +1077,6 @@ void TextureLoadTaskClass::Finish_Load(void)
 
 void TextureLoadTaskClass::Apply_Missing_Texture(void)
 {
-	const char* path = Texture ? (const char*)Texture->Get_Full_Path() : "(null)";
-	fprintf(stderr, "[texload] MISSING TEXTURE: '%s'\n", path);
 	D3DTexture = MissingTexture::_Get_Missing_Texture();
 	Apply(true);
 }
@@ -1117,7 +1113,9 @@ static bool	Get_Texture_Information(
 	if (!thumb) {
 		if (compressed) {
 			DDSFileClass dds_file(filename, reduction);
-			if (!dds_file.Is_Available()) return false;
+			if (!dds_file.Is_Available()) {
+				return false;
+			}
 
 			// Destination size will be the next power of two square from the larger width and height...
 			w = dds_file.Get_Width(0);
@@ -1137,8 +1135,8 @@ static bool	Get_Texture_Information(
 		Get_WW3D_Format(dest_format,format,bpp,targa);
 
 		// Destination size will be the next power of two square from the larger width and height...
-		w = targa.Header.Width  >> reduction;
-		h = targa.Header.Height >> reduction;
+		w = static_cast<uint32_t>(targa.Header.Width)  >> reduction;
+		h = static_cast<uint32_t>(targa.Header.Height) >> reduction;
 		mip_count = 0;
 		return true; 
 	}
@@ -1288,7 +1286,7 @@ void TextureLoadTaskClass::Lock_Surfaces(void)
 				NULL,
 				0)));
 		LockedSurfacePtr[i]		= (unsigned char *)locked_rect.pBits;
-		LockedSurfacePitch[i]	= locked_rect.Pitch;
+		LockedSurfacePitch[i]	= static_cast<uint32_t>(locked_rect.Pitch);
 	}
 }
 
@@ -1361,8 +1359,8 @@ bool TextureLoadTaskClass::Load_Uncompressed_Mipmap(void)
 	char palette[256*4];
 	targa.SetPalette(palette);
 
-	unsigned int src_width	= targa.Header.Width;
-	unsigned int src_height	= targa.Header.Height;
+	unsigned int src_width	= static_cast<uint32_t>(targa.Header.Width);
+	unsigned int src_height	= static_cast<uint32_t>(targa.Header.Height);
 	unsigned int width		= Get_Width();
 	unsigned int height		= Get_Height();
 

@@ -1,14 +1,12 @@
 #include "global.h"
 #include "texturethumbnail.h"
 #include "hashtemplate.h"
-#include "missingtexture.h"
 #include "targa.h"
 #include "ww3dformat.h"
 #include "ddsfile.h"
 #include "textureloader.h"
 #include "bitmaphandler.h"
 #include "ffactory.h"
-#include "rawfile.h"
 #include "mixfile.h"
 #include <windows.h>
 
@@ -145,11 +143,11 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 		}
 
 		// Destination size will be the next power of two square from the larger width and height...
-		OriginalTextureWidth=targa.Header.Width;
-		OriginalTextureHeight=targa.Header.Height;
+		OriginalTextureWidth=static_cast<uint32_t>(targa.Header.Width);
+		OriginalTextureHeight=static_cast<uint32_t>(targa.Header.Height);
 		OriginalTextureFormat=src_format;
-		Width=targa.Header.Width>>reduction_factor;
-		Height=targa.Header.Height>>reduction_factor;
+		Width=static_cast<uint32_t>(targa.Header.Width)>>reduction_factor;
+		Height=static_cast<uint32_t>(targa.Header.Height)>>reduction_factor;
 		OriginalTextureMipLevelCount=1;
 		unsigned iw=1;
 		unsigned ih=1;
@@ -178,8 +176,8 @@ ThumbnailClass::ThumbnailClass(ThumbnailManagerClass* manager, const StringClass
 		Width=poweroftwowidth;
 		Height=poweroftwoheight;
 
-		unsigned src_width=targa.Header.Width;
-		unsigned src_height=targa.Header.Height;
+		unsigned src_width=static_cast<uint32_t>(targa.Header.Width);
+		unsigned src_height=static_cast<uint32_t>(targa.Header.Height);
 
 		// NOTE: We load the palette but we do not yet support paletted textures!
 		char palette[256*4];
@@ -256,7 +254,6 @@ void ThumbnailManagerClass::Create_Thumbnails()
 
 void ThumbnailManagerClass::Load()
 {
-
 	// If the thumbnail hash table file is available, init hash table
 	DateTime=0;
 	file_auto_ptr thumb_file(_TheFileFactory, ThumbnailFileName);
@@ -280,7 +277,7 @@ void ThumbnailManagerClass::Load()
 			thumb_file->Read(&total_header_length,sizeof(int));
 			thumb_file->Read(&total_data_length,sizeof(int));
 			if (total_thumb_count) {
-				ThumbnailMemory=new unsigned char[total_data_length];
+				ThumbnailMemory=new unsigned char[static_cast<size_t>(total_data_length)];
 				// Load thumbs
 				for (int i=0;i<total_thumb_count;++i) {
 					char name[256];
@@ -327,11 +324,11 @@ void ThumbnailManagerClass::Load()
 							this,
 							name,
 							ThumbnailMemory+offset-total_header_length,
-							width,
-							height,
-							original_width,
-							original_height,
-							original_mip_level_count,
+							static_cast<uint32_t>(width),
+							static_cast<uint32_t>(height),
+							static_cast<uint32_t>(original_width),
+							static_cast<uint32_t>(original_height),
+							static_cast<uint32_t>(original_mip_level_count),
 							original_format,
 							false,
 							date_time);
@@ -396,11 +393,11 @@ void ThumbnailManagerClass::Save(bool force)
 		ThumbnailClass* thumb=ite.Peek_Value();
 		const char* name=thumb->Get_Name();
 		int32_t name_len=static_cast<int32_t>(strlen(name));
-		int width=thumb->Get_Width();
-		int height=thumb->Get_Height();
-		int original_width=thumb->Get_Original_Texture_Width();
-		int original_height=thumb->Get_Original_Texture_Height();
-		int original_mip_level_count=thumb->Get_Original_Texture_Mip_Level_Count();
+		int width=static_cast<int32_t>(thumb->Get_Width());
+		int height=static_cast<int32_t>(thumb->Get_Height());
+		int original_width=static_cast<int32_t>(thumb->Get_Original_Texture_Width());
+		int original_height=static_cast<int32_t>(thumb->Get_Original_Texture_Height());
+		int original_mip_level_count=static_cast<int32_t>(thumb->Get_Original_Texture_Mip_Level_Count());
 		WW3DFormat original_format=thumb->Get_Original_Texture_Format();
 		uint32_t date_time=thumb->Get_Date_Time();
 
@@ -421,8 +418,8 @@ void ThumbnailManagerClass::Save(bool force)
 	offset=total_header_length;
 	for (ite.First();!ite.Is_Done();ite.Next()) {
 		ThumbnailClass* thumb=ite.Peek_Value();
-		int width=thumb->Get_Width();
-		int height=thumb->Get_Height();
+		int width=static_cast<int32_t>(thumb->Get_Width());
+		int height=static_cast<int32_t>(thumb->Get_Height());
 		thumb_file->Write(thumb->Peek_Bitmap(),width*height*2);
 	}
 	if (DateTime) thumb_file->Set_Date_Time(DateTime);

@@ -16,8 +16,8 @@
 **	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _TARGA_H_
-#define _TARGA_H_
+#pragma once
+#include "global.h"
 /****************************************************************************
 *
 *         C O N F I D E N T I A L --- W E S T W O O D   S T U D I O S
@@ -67,18 +67,18 @@ long Targa_Error_Handler(long error_code,const char* filename);
  */
 typedef struct _TGAHeader
 	{
-	char  IDLength;
-	char  ColorMapType;
-	char  ImageType;
-	short CMapStart;
-	short CMapLength;
-	char  CMapDepth;
-	short XOffset;
-	short YOffset;
-	short Width;
-	short Height;
-	char  PixelDepth;
-	char  ImageDescriptor;
+	uint8_t  IDLength;
+	uint8_t  ColorMapType;
+	uint8_t  ImageType;
+	int16_t  CMapStart;
+	int16_t  CMapLength;
+	uint8_t  CMapDepth;
+	int16_t  XOffset;
+	int16_t  YOffset;
+	int16_t  Width;
+	int16_t  Height;
+	uint8_t  PixelDepth;
+	uint8_t  ImageDescriptor;
 	} TGAHeader;
 
 /* ImageType definiton */
@@ -133,11 +133,11 @@ typedef struct _TGAHeader
  */
 typedef struct _TGA2Footer
 	{
-	long Extension;
-	long Developer;
-	char Signature[16];
-	char RsvdChar;
-	char BZST;
+	int32_t  Extension;
+	int32_t  Developer;
+	uint8_t  Signature[16];
+	uint8_t  RsvdChar;
+	uint8_t  BZST;
 	_TGA2Footer() {}
 	} TGA2Footer;
 
@@ -150,9 +150,9 @@ typedef struct _TGA2Footer
  */
 typedef struct _TGA2DateStamp
 	{
-	short Month;
-	short Day;
-	short Year;
+	int16_t Month;
+	int16_t Day;
+	int16_t Year;
 	} TGA2DateStamp;
 
 /* TGA2TimeStamp - A series of 3 WORD values which define the integer value
@@ -164,9 +164,9 @@ typedef struct _TGA2DateStamp
  */
 typedef struct _TGA2TimeStamp
 	{
-	short Hour;
-	short Minute;
-	short Second;
+	int16_t Hour;
+	int16_t Minute;
+	int16_t Second;
 	} TGA2TimeStamp;
 
 /* TGA2SoftVer - Define the version of the software used to generate file.
@@ -176,8 +176,8 @@ typedef struct _TGA2TimeStamp
  */
 typedef struct _TGA2SoftVer
 	{
-	short Number;
-	char  Letter;
+	int16_t Number;
+	uint8_t Letter;
 	} TGA2SoftVer;
 
 /* TGA2Ratio - Numerator and denominator which when taken together specify
@@ -188,8 +188,8 @@ typedef struct _TGA2SoftVer
  */
 typedef struct _TGA2Ratio
 	{
-	short Numer;
-	short Denom;
+	int16_t Numer;
+	int16_t Denom;
 	} TGA2Ratio;
 
 /* TGA2Extension - Extension area, provided for additional file information.
@@ -215,22 +215,22 @@ typedef struct _TGA2Ratio
  */
 typedef struct _TGA2Extension
 	{
-	short         ExtSize;
-	char          AuthName[41];
-	char          AuthComment[324];
+	int16_t       ExtSize;
+	uint8_t       AuthName[41];
+	uint8_t       AuthComment[324];
 	TGA2DateStamp Date;
 	TGA2TimeStamp Time;
-	char          JobName[41];
+	uint8_t       JobName[41];
 	TGA2TimeStamp JobTime;
-	char          SoftID[41];
+	uint8_t       SoftID[41];
 	TGA2SoftVer   SoftVer;
-	long          KeyColor;
+	int32_t       KeyColor;
 	TGA2Ratio     Aspect;
 	TGA2Ratio     Gamma;
-	long          ColorCor;
-	long          PostStamp;
-	long          ScanLine;
-	char          Attributes;
+	int32_t       ColorCor;
+	int32_t       PostStamp;
+	int32_t       ScanLine;
+	uint8_t       Attributes;
 	} TGA2Extension;
 
 /* Alpha channel attributes (Extension Area) */
@@ -316,5 +316,4 @@ class Targa
 		int File_Write(void *buffer, int size);
 	};
 
-#endif /* _TARGA_H_ */
 
