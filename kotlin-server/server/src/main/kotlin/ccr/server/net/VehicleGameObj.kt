@@ -915,12 +915,12 @@ open class VehicleGameObj() : SmartGameObj() {
             VEHICLE_TYPE_TANK,
             VEHICLE_TYPE_CAR,
             VEHICLE_TYPE_FLYING -> {
-                val vehiclePhys = physObj as VehiclePhysClassStub
-                val pos = vehiclePhys.getPosition()
+                val vehiclePhys = physObj as VehiclePhysClass
+                val pos = vehiclePhys.position
                 val q = vehiclePhys.getOrientation()
-                val vel = vehiclePhys.getVelocity()
-                val angVel = vehiclePhys.getAngularVelocity()
-                val engineOn = vehiclePhys.isEngineEnabled()
+                val vel = vehiclePhys.velocity
+                val angVel = vehiclePhys.angularVelocity
+                val engineOn = vehiclePhys.isEngineOn
 
                 packet.addBool(engineOn)
                 packet.addFloat(pos.x, BITPACK_WORLD_POSITION_X)
