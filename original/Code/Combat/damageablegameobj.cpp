@@ -30,7 +30,7 @@ enum	{
 	MICROCHUNKID_DEF_ENCY_TYPE,
 	MICROCHUNKID_DEF_ENCY_ID,
 	MICROCHUNKID_DEF_NOT_TARGETABLE,
-	MICROCHUNKID_DEF_DEFAULT_PLAYER_TYPE, 
+	MICROCHUNKID_DEF_DEFAULT_PLAYER_TYPE,
 };
 
 bool	DamageableGameObjDef::Save( ChunkSaveClass & csave )
@@ -43,8 +43,8 @@ bool	DamageableGameObjDef::Save( ChunkSaveClass & csave )
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_TRANSLATED_NAME_ID, TranslatedNameID );
 		WRITE_MICRO_CHUNK_WWSTRING( csave, MICROCHUNKID_DEF_INFO_ICON_TEXTURE_FILENAME, InfoIconTextureFilename );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_ENCY_TYPE, EncyclopediaType );
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_ENCY_ID,	EncyclopediaID );		
-		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_NOT_TARGETABLE,	NotTargetable );		
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_ENCY_ID,	EncyclopediaID );
+		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_NOT_TARGETABLE,	NotTargetable );
 		WRITE_MICRO_CHUNK( csave, MICROCHUNKID_DEF_DEFAULT_PLAYER_TYPE, DefaultPlayerType );
 	csave.End_Chunk();
 
@@ -63,15 +63,15 @@ bool	DamageableGameObjDef::Load( ChunkLoadClass &cload )
 			case CHUNKID_DEF_PARENT:
 				ScriptableGameObjDef::Load( cload );
 				break;
-	
+
 			case CHUNKID_DEF_VARIABLES:
 				while (cload.Open_Micro_Chunk()) {
 					switch(cload.Cur_Micro_Chunk_ID()) {
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_TRANSLATED_NAME_ID, TranslatedNameID );
 						READ_MICRO_CHUNK_WWSTRING( cload, MICROCHUNKID_DEF_INFO_ICON_TEXTURE_FILENAME, InfoIconTextureFilename );
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_ENCY_TYPE,	EncyclopediaType );
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_ENCY_ID,		EncyclopediaID );		
-						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_NOT_TARGETABLE,	NotTargetable );		
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_ENCY_ID,		EncyclopediaID );
+						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_NOT_TARGETABLE,	NotTargetable );
 						READ_MICRO_CHUNK( cload, MICROCHUNKID_DEF_DEFAULT_PLAYER_TYPE, DefaultPlayerType );
 
 						default:
@@ -164,7 +164,7 @@ void	DamageableGameObj::Re_Init( const DamageableGameObjDef & definition )
 	return ;
 }
 
-const DamageableGameObjDef & DamageableGameObj::Get_Definition( void ) const 
+const DamageableGameObjDef & DamageableGameObj::Get_Definition( void ) const
 {
 	return (const DamageableGameObjDef &)BaseGameObj::Get_Definition();
 }
@@ -221,11 +221,11 @@ bool	DamageableGameObj::Load( ChunkLoadClass &cload )
 					cload.Close_Micro_Chunk();
 				}
 				break;
-								
+
 			case CHUNKID_DEFENSEOBJECT:
 				DefenseObject.Load( cload );
 				break;
-								
+
 			default:
 				Debug_Say(( "Unhandled Chunk:%d File:%s Line:%d\r\n",cload.Cur_Chunk_ID(),__FILE__,__LINE__));
 				break;
@@ -266,9 +266,9 @@ void	DamageableGameObj::Apply_Damage( const OffenseObjectClass & damager, float 
 		// notify the observers
 		for( int index = 0; index < observer_list.Count(); index++ ) {
 			observer_list[ index ]->Killed( this, damager.Get_Owner() );
-		}			
+		}
 
-		Completely_Damaged( damager ); 
+		Completely_Damaged( damager );
 	}
 }
 
@@ -302,13 +302,16 @@ void	DamageableGameObj::Export_Occasional( BitStreamClass &packet )
 */
 void	DamageableGameObj::Import_Occasional( BitStreamClass &packet )
 {
+	fprintf(stderr, "SDAM1_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	ScriptableGameObj::Import_Occasional( packet );
 
 	//
 	//	Update the defense object's state
 	//
 	float old_health = DefenseObject.Get_Health();
+	fprintf(stderr, "SDAM2_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	DefenseObject.Import (packet);
+	fprintf(stderr, "SDAM3_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	float new_health = DefenseObject.Get_Health();
 
 	/*
@@ -348,15 +351,15 @@ void	DamageableGameObj::Import_Occasional( BitStreamClass &packet )
 
 		for (int index = 0; index < count; ++index) {
 			observer_list[index]->Killed(this, NULL);
-		}			
+		}
 
 		OffenseObjectClass dummy_offense_obj;
-		Completely_Damaged( dummy_offense_obj ); 
+		Completely_Damaged( dummy_offense_obj );
 	}
 }
 
 //-----------------------------------------------------------------------------
-bool DamageableGameObj::Is_Team_Player(void) 
+bool DamageableGameObj::Is_Team_Player(void)
 {
 	return PlayerType == PLAYERTYPE_NOD || PlayerType == PLAYERTYPE_GDI;
 }
@@ -368,7 +371,7 @@ Vector3 DamageableGameObj::Get_Team_Color(void)
 }
 
 //-----------------------------------------------------------------------------
-void DamageableGameObj::Set_Player_Type(int id) 
+void DamageableGameObj::Set_Player_Type(int id)
 {
 	PlayerType = id;
 
@@ -379,7 +382,7 @@ void DamageableGameObj::Set_Player_Type(int id)
 bool DamageableGameObj::Is_Teammate(DamageableGameObj * p_obj)
 {
 
-   return ((p_obj == this) || 
+   return ((p_obj == this) ||
 			  (Is_Team_Player() && Get_Player_Type() == p_obj->Get_Player_Type()));
 }
 

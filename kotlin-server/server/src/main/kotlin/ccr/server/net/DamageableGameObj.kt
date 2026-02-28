@@ -182,8 +182,11 @@ abstract class DamageableGameObj : ScriptableGameObj() {
 
     // C++: DamageableGameObj::Export_Occasional → DefenseObjectClass::Export
     override fun exportOccasional(packet: BitStream) {
+        System.err.println("SDAM1_POS bitPos=${packet.bitWritePosition}")
         super.exportOccasional(packet)
+        System.err.println("SDAM2_POS bitPos=${packet.bitWritePosition}")
         defenseObject.export(packet)
+        System.err.println("SDAM3_POS bitPos=${packet.bitWritePosition}")
     }
 
     // C++: DamageableGameObj::Import_Occasional → DefenseObjectClass::Import

@@ -898,7 +898,9 @@ void	SoldierGameObj::Import_Rare( BitStreamClass &packet )
 	// The next line makes us get it back.
  	Get_Weapon_Bag()->Force_Changed();
 
+	fprintf(stderr, "SRARE1_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	SmartGameObj::Import_Rare( packet );
+	fprintf(stderr, "SRARE2_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 
 	//
 	//	Read the definition ID from the packet
@@ -930,6 +932,7 @@ void	SoldierGameObj::Import_Rare( BitStreamClass &packet )
 		}
 	}
 
+	fprintf(stderr, "SRARE3_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	return ;
 }
 
@@ -954,6 +957,7 @@ void	SoldierGameObj::Export_Occasional( BitStreamClass &packet )
 */
 void	SoldierGameObj::Import_Occasional( BitStreamClass &packet )
 {
+	fprintf(stderr, "SOCC_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 
 	SmartGameObj::Import_Occasional( packet );
 

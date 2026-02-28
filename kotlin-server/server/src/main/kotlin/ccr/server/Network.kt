@@ -1433,7 +1433,9 @@ class Network(internal val config: ServerConfig) {
         EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)   // damage.cpp
         // C++: DefenseObjectClass::Set_Precision → Set_Precision(BITPACK_SHIELD_TYPE, 0, Get_Num_Armor_Types())
         // Use actual loaded armor type count, falling back to config if armor.ini wasn't loaded.
-        val armorTypeCount = if (ArmorWarheadManager.numArmorTypes > 0) ArmorWarheadManager.numArmorTypes else config.armorTypeCount
+        val armorTypeCount = ArmorWarheadManager.numArmorTypes
+        check(armorTypeCount > 0)
+        System.err.println("ArmorWarheadManager.numArmorTypes=$armorTypeCount")
         EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE,     0.0, armorTypeCount.toDouble(), 1.0) // damage.cpp
         EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE,     0.0, 19.0,  1.0)    // humanstate.h: LOCKED_ANIMATION=19
         EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)    // humanstate.cpp: (1<<9)-1=511

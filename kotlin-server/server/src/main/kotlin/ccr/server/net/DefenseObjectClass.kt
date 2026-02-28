@@ -142,10 +142,15 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
 
     // C++: void Export(BitStreamClass& packet)
     fun export(packet: BitStream) {
+        System.err.println("DEFENSE1_POS bitPos=${packet.bitWritePosition}")
         packet.addBool(health == 0f)
+        System.err.println("DEFENSE2_POS bitPos=${packet.bitWritePosition}")
         packet.addInt(health.roundToInt(), BITPACK_HEALTH)
+        System.err.println("DEFENSE3_POS bitPos=${packet.bitWritePosition}")
         packet.addInt(shieldStrength.roundToInt(), BITPACK_SHIELD_STRENGTH)
+        System.err.println("DEFENSE4_POS bitPos=${packet.bitWritePosition}")
         packet.addInt(shieldType, BITPACK_SHIELD_TYPE)
+        System.err.println("DEFENSE5_POS bitPos=${packet.bitWritePosition}")
     }
 
     // C++: void Import(BitStreamClass& packet)

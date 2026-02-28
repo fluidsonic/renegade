@@ -179,13 +179,13 @@ void	ArmorWarheadManager::Init( void )
 				}
 			}
 
-			SpecialDamageProbability[warhead_num] = 
+			SpecialDamageProbability[warhead_num] =
 				armorINI->Get_Float(	SECTION_SPECIAL_DAMAGE_PROBABILITY, WarheadNames[warhead_num], 0.0f );
 
-			VisceroidProbability[warhead_num] = 
+			VisceroidProbability[warhead_num] =
 				armorINI->Get_Float(	SECTION_VISCEROID_PROBABILITY, WarheadNames[warhead_num], 0.0f );
 
-//			Debug_Say(( "Warhead %s %d %f\n", WarheadNames[warhead_num], 
+//			Debug_Say(( "Warhead %s %d %f\n", WarheadNames[warhead_num],
 //				SpecialDamageTypes[warhead_num], SpecialDamageProbability[warhead_num] ));
 		}
 
@@ -701,7 +701,7 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 	if (offense.Get_Owner() != NULL) {
 		damager_id = offense.Get_Owner()->Get_Network_ID();
 	}
-	
+
 	if (Get_Owner() != NULL) {
 		damagee_id = Get_Owner()->Get_Network_ID();
 	}
@@ -777,8 +777,8 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 
 	} else {
 
-		if (	smart && Get_Owner() && 
-				(smart != Get_Owner() )  && 
+		if (	smart && Get_Owner() &&
+				(smart != Get_Owner() )  &&
 				smart->Is_Teammate( Get_Owner() ) ) {
 			// This is friendly fire!!
 			if ( !CombatManager::Is_Friendly_Fire_Permitted() ) {
@@ -824,7 +824,7 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 		}
 
 		Health = (float)Health - damage;
-		
+
 		//
 		//	Don't allow this object to die (if necessary)
 		//
@@ -898,11 +898,11 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 		}
 	}
 
-	if (damage > 0 && 
+	if (damage > 0 &&
 		 (float) Health <= 0 &&
-		 smart != NULL && 
-		 smart->As_SoldierGameObj() != NULL && 
-		 Get_Owner() != NULL && 
+		 smart != NULL &&
+		 smart->As_SoldierGameObj() != NULL &&
+		 Get_Owner() != NULL &&
 		 Get_Owner()->As_SoldierGameObj() != NULL) {
 
 		CombatManager::On_Soldier_Kill(smart->As_SoldierGameObj(), Get_Owner()->As_SoldierGameObj());
@@ -934,7 +934,7 @@ float	DefenseObjectClass::Do_Damage( const OffenseObjectClass & offense, float s
 		}
 
 		if ( damage > 0 && (float)Health <= 0 ) {
-			
+
 			if (offense.Get_Owner() != Get_Owner()) {
 				smart->Get_Player_Data()->Apply_Death_Points( points_dir * (float)DeathPoints, Get_Owner() );
 			}
@@ -965,8 +965,8 @@ bool DefenseObjectClass::Would_Damage( const OffenseObjectClass	& offense, float
 	if ( offense.Get_Owner() != NULL ) {
 		smart = offense.Get_Owner()->As_SmartGameObj();
 	}
-	if (	smart && Get_Owner() && 
-			smart->Is_Teammate( Get_Owner() ) && 
+	if (	smart && Get_Owner() &&
+			smart->Is_Teammate( Get_Owner() ) &&
 			(smart != Get_Owner() ) ) {
 		// This is friendly fire!!
 		if ( !CombatManager::Is_Friendly_Fire_Permitted() ) {
@@ -987,10 +987,14 @@ bool DefenseObjectClass::Would_Damage( const OffenseObjectClass	& offense, float
 
 void DefenseObjectClass::Import(BitStreamClass & packet)
 {
+	fprintf(stderr, "DEFENSE1_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	bool is_health_zero = packet.Get(is_health_zero);
+	fprintf(stderr, "DEFENSE2_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 
 	int health				= packet.Get(health, BITPACK_HEALTH);
+	fprintf(stderr, "DEFENSE3_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	int shield_strength	= packet.Get(shield_strength, BITPACK_SHIELD_STRENGTH);
+	fprintf(stderr, "DEFENSE4_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	unsigned int shield_type;
 	packet.Get(shield_type, BITPACK_SHIELD_TYPE);
 
@@ -1004,6 +1008,7 @@ void DefenseObjectClass::Import(BitStreamClass & packet)
 		Health = WWMath::Max(Health, 0.01f);
 	}
 
+	fprintf(stderr, "DEFENSE5_POS bitPos=%u\n", packet.Get_Bit_Read_Position());
 	//assert(WWMath::Is_Valid_Float(ShieldStrength));
    //assert(packet.Is_Flushed());
 }
@@ -1205,12 +1210,13 @@ void DefenseObjectClass::Set_Precision(void)
 	cEncoderList::Set_Precision(BITPACK_SHIELD_TYPE, 0,
 		//ArmorWarheadManager::Get_Num_Armor_Types(), 1);
 		ArmorWarheadManager::Get_Num_Armor_Types());
+	fprintf(stderr, "ArmorWarheadManager::Get_Num_Armor_Types=%d\n", ArmorWarheadManager::Get_Num_Armor_Types());
 }
 
 /*
 **
 */
-void	DefenseObjectClass::Mark_Owner_Dirty( void ) 
+void	DefenseObjectClass::Mark_Owner_Dirty( void )
 {
 	if ( Get_Owner() != NULL ) {
 		Get_Owner()->Set_Object_Dirty_Bit( NetworkObjectClass::BIT_OCCASIONAL, true );
@@ -1220,9 +1226,9 @@ void	DefenseObjectClass::Mark_Owner_Dirty( void )
 /*
 **
 */
-void	DefenseObjectClass::Set_Shield_Type( ArmorType type )	
-{ 
-	ShieldType = type; 
+void	DefenseObjectClass::Set_Shield_Type( ArmorType type )
+{
+	ShieldType = type;
 	Mark_Owner_Dirty();
 }
 
@@ -1241,8 +1247,8 @@ void	DefenseObjectClass::Set_Shield_Type( ArmorType type )
 			*/
 			/*
 			if ( Get_Owner() != NULL &&
-				  Get_Owner()->As_DamageableGameObj() != NULL && 
-				  Get_Owner()->As_DamageableGameObj()->As_PhysicalGameObj() != NULL && 
+				  Get_Owner()->As_DamageableGameObj() != NULL &&
+				  Get_Owner()->As_DamageableGameObj()->As_PhysicalGameObj() != NULL &&
 				  Get_Owner()->As_DamageableGameObj()->As_PhysicalGameObj()->As_SoldierGameObj() != NULL &&
 				  Get_Owner()->As_SmartGameObj() != smart) {
 
@@ -1254,7 +1260,7 @@ void	DefenseObjectClass::Set_Shield_Type( ArmorType type )
 			*/
 			/*
 			if ( Get_Owner() != NULL &&
-				  Get_Owner()->As_SoldierGameObj != NULL && 
+				  Get_Owner()->As_SoldierGameObj != NULL &&
 				  Get_Owner()->As_SmartGameObj() != smart) {
 
 				int victim_id = Get_Owner()->As_SmartGameObj()->Get_Control_Owner();

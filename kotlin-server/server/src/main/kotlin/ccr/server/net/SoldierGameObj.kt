@@ -1330,9 +1330,12 @@ open class SoldierGameObj() : SmartGameObj() {
 
     // C++: virtual void Export_Rare(BitStreamClass&)
     override fun exportRare(packet: BitStream) {
+        System.err.println("SRARE1_POS bitPos=${packet.bitWritePosition}")
         super.exportRare(packet)
+        System.err.println("SRARE2_POS bitPos=${packet.bitWritePosition}")
         // C++: packet.Add(definition_id) — adds definition ID
         packet.addInt(checkNotNull(definition).id.toInt())
+        System.err.println("SRARE3_POS bitPos=${packet.bitWritePosition}")
     }
 
     // C++: virtual void Import_Rare(BitStreamClass&)
@@ -1359,6 +1362,7 @@ open class SoldierGameObj() : SmartGameObj() {
 
     // C++: virtual void Export_Occasional(BitStreamClass&)
     override fun exportOccasional(packet: BitStream) {
+        System.err.println("SOCC_POS bitPos=${packet.bitWritePosition}")
         super.exportOccasional(packet)
         // C++: WeaponBag->Export_Weapon_List(packet)
         System.err.println("SWBAG_POS bitPos=${packet.bitWritePosition}")
