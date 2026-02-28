@@ -16,16 +16,12 @@ open class HumanPhysClass : Phys3Class() {
 
     override fun asHumanPhysClass(): HumanPhysClass = this
 
-    // C++: HumanPhysClass::Get_Heading() / Set_Heading() — delegates to Phys3Class.heading
-    open fun getHeading(): Float = heading
-    open fun setHeading(h: Float) { heading = h }
-    // C++: HumanPhysClass::Get_Velocity() / Set_Velocity()
-    open fun getVelocity(): Vector3 = velocity.copy()
-    open fun setVelocity(v: Vector3) { velocity = v }
-    // C++: HumanPhysClass::Is_In_Contact() — soldier is on the ground
-    open fun isInContact(): Boolean = onGround
-    // C++: HumanPhysClass::Set_Immovable() — sets/clears the IMMOVABLE flag on the physics object
-    open fun setImmovable(immovable: Boolean) { isImmovable = immovable }
+    // C++: HumanPhysClass::Get_Heading() / Set_Heading() — inherited from Phys3Class
+    // C++: HumanPhysClass::Get_Velocity() / Set_Velocity() — inherited from MoveablePhysClass
+    // C++: HumanPhysClass::Is_In_Contact() — inherited from Phys3Class
+    // C++: HumanPhysClass::Set_Immovable() — inherited from PhysClass
+    // C++: HumanPhysClass::Get_Animation_Move() / Reset_Animation_Move() — inherited from Phys3Class
+
     // C++: HumanPhysClass::Get_Collision_Box() — returns the collision box
     open fun getCollisionBox(): AABox = collisionBox
     // C++: HumanPhysClass::Set_In_Contact() — override contact state
@@ -35,9 +31,6 @@ open class HumanPhysClass : Phys3Class() {
         result.x = pos.x; result.y = pos.y; result.z = pos.z
         return true
     }
-    // C++: HumanPhysClass::Get_Animation_Move() / Reset_Animation_Move() — stub
-    open fun getAnimationMove(out: Vector3) { out.x = 0f; out.y = 0f; out.z = 0f }
-    open fun resetAnimationMove() {}
     // C++: HumanPhysClass::Set_Anim_Speed_Scale() — stub
     open fun setAnimSpeedScale(scale: Float) {}
 

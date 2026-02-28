@@ -424,8 +424,8 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
         if (scene != null) {
             for (obj in scene.staticObjects) {
                 val staticPhys = obj.asStaticPhysClass() ?: continue
-                val model = staticPhys.model ?: continue
-                val objName = model.name
+                val model = staticPhys.model as? RenderObjClass ?: continue
+                val objName = model.getName()
 
                 if (staticPhys.isFromFactory(PHYSICS_CHUNKID_BUILDINGAGGREGATE)) {
                     // Aggregate
@@ -498,7 +498,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
         var minZ = position.z; var maxZ = position.z
 
         for (mesh in interiorMeshes) {
-            val box = mesh.model?.getBoundingBox() ?: continue
+            val box = (mesh.model as? RenderObjClass)?.getBoundingBox() ?: continue
             val c = box.center
             val e = box.extent
             minX = minOf(minX, c.x - e.x); maxX = maxOf(maxX, c.x + e.x)
@@ -533,7 +533,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: void Add_Mesh(StaticPhysClass* terrain)
     private fun addMesh(terrain: StaticPhysClass) {
-        val name = terrain.model?.getName() ?: return
+        val name = (terrain.model as? RenderObjClass)?.getName() ?: return
         when {
             isInteriorMeshName(name) -> {
                 check(terrain.observer == null)
@@ -550,7 +550,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: void Remove_Mesh(StaticPhysClass* terrain)
     fun removeMesh(terrain: StaticPhysClass) {
-        val name = terrain.model?.getName() ?: return
+        val name = (terrain.model as? RenderObjClass)?.getName() ?: return
         when {
             isInteriorMeshName(name) -> { terrain.observer = null; interiorMeshes.remove(terrain) }
             isExteriorMeshName(name) -> { terrain.observer = null; exteriorMeshes.remove(terrain) }
@@ -582,7 +582,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: void Enable_Alternate_Materials(RefMultiListClass<StaticPhysClass>& models, bool onoff)
     private fun enableAlternateMaterials(models: List<StaticPhysClass>, onoff: Boolean) {
-        for (mesh in models) enableAlternateMaterials(mesh.model, onoff)
+        for (mesh in models) enableAlternateMaterials(mesh.model as? RenderObjClass, onoff)
     }
 
     // C++: void Enable_Alternate_Materials(RenderObjClass* model, bool onoff)
@@ -592,15 +592,15 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
             enableAlternateMaterials(model.getSubObject(i), onoff)
         }
         if (model.classId == RenderObjClass.CLASSID_MESH) {
-            model.asMeshClass()?.getModel()?.enableAlternateMaterialDescription(onoff)
+            model.asMeshClass()?.enableAlternateMaterialDescription(onoff)
         }
     }
 
     // C++: void Find_Closest_Poly(const Vector3& pos, float* distance2)
     fun findClosestPoly(pos: Vector3): Float {
         var distance2 = 9999.0f
-        for (mesh in interiorMeshes) distance2 = findClosestPolyForModel(mesh.model, pos, distance2)
-        for (mesh in exteriorMeshes) distance2 = findClosestPolyForModel(mesh.model, pos, distance2)
+        for (mesh in interiorMeshes) distance2 = findClosestPolyForModel(mesh.model as? RenderObjClass, pos, distance2)
+        for (mesh in exteriorMeshes) distance2 = findClosestPolyForModel(mesh.model as? RenderObjClass, pos, distance2)
         return distance2
     }
 

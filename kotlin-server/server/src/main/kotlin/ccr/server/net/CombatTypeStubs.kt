@@ -232,6 +232,8 @@ object TransitionManager {
     fun add(trans: TransitionInstanceClass): Unit {}
     fun destroy(trans: TransitionInstanceClass): Unit {}
     fun destroyPending(): Unit {}
+    // C++: TransitionManager::Check(SoldierGameObj*, bool) — server-side action/transition check
+    fun check(soldier: SoldierGameObj, action: Boolean): Boolean = false
 }
 
 // C++: DialogueOptionClass — single option within a DialogueClass
@@ -568,6 +570,23 @@ object UnitCoordinationZoneMgr {
 // C++: WWMath utilities
 object WWMath {
     fun clamp(v: Float, min: Float, max: Float): Float = v.coerceIn(min, max)
+    // C++: WWMath::Fast_Asin — fast approximation of asin(x)
+    fun fastAsin(x: Float): Float = kotlin.math.asin(x.coerceIn(-1f, 1f))
+    // C++: WWMath::Atan2 — atan2(y, x)
+    fun atan2(y: Float, x: Float): Float = kotlin.math.atan2(y, x)
+    // C++: WWMath::Wrap — wraps 'val' into [min..max]
+    fun wrap(v: Float, min: Float, max: Float): Float {
+        val range = max - min
+        if (range <= 0f) return min
+        var r = v
+        while (r < min) r += range
+        while (r >= max) r -= range
+        return r
+    }
+    // C++: WWMath::Lerp — linear interpolation
+    fun lerp(a: Float, b: Float, t: Float): Float = a + (b - a) * t
+    // C++: WWMath::Lerp (Vector3 overload)
+    fun lerp(a: Vector3, b: Vector3, t: Float): Vector3 = a + (b - a) * t
 }
 
 // C++: SaveLoadSystemClass (wwsaveload/saveload.h)
@@ -592,6 +611,8 @@ object HUDInfo {
     var actionStatusValue: Float = 0f
 
     fun getInformation(obj: Any?): String = ""
+    // C++: HUDInfo::Get_Info_Object() — returns the object currently targeted by the player's crosshair
+    fun getInfoObject(): DamageableGameObj? = null
 
     // C++: static void Display_Action_Status_Bar(bool onoff) { DisplayActionBar = onoff; }
     fun displayActionStatusBar(onoff: Boolean) { displayActionBar = onoff }

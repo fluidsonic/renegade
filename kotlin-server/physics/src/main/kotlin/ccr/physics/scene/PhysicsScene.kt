@@ -104,6 +104,13 @@ class PhysicsScene {
         return null
     }
 
+    /**
+     * C++: PhysicsSceneClass::Get_Static_Light_Count() / iteration over the static light list.
+     * Server-side: lights are stored as staticObjects with a LightPhysClass type.
+     */
+    fun getStaticLights(): List<LightPhysClass> =
+        staticObjects.filterIsInstance<LightPhysClass>()
+
     fun collectObjects(box: AABox): List<PhysClass> {
         val result = mutableListOf<PhysClass>()
         result.addAll(staticTree.collectObjects(box))

@@ -11,12 +11,17 @@ import ccr.physics.PhysClass
  *  - static shadow management
  *  - rider management (objects that move with the animated geometry)
  *
- * Extends StaticPhysClass directly (does NOT go through DynamicPhysClass or MoveablePhysClass).
+ * Inheritance: StaticAnimPhysClass : StaticPhysClass : PhysClass
  *
  * Server-side simplifications:
  *  - No render model, no texture projectors, no shadow projector.
  *  - AnimCollisionManagerClass::timestep() advances frame state but performs no scene collision.
  *  - Rider tracking is maintained; physical pushing is not performed (no physics scene queries).
+ *
+ * C++ constructor notes:
+ *  - Calls Set_Collision_Group(0xF) — hard-coded to group 15.
+ *  - StaticPhysClass constructor also sets collision group 15, so this is consistent.
+ *  - ShadowProjector = NULL (always null server-side).
  */
 open class StaticAnimPhysClass : StaticPhysClass() {
 
@@ -26,35 +31,40 @@ open class StaticAnimPhysClass : StaticPhysClass() {
 
     /**
      * C++: AnimCollisionManagerClass AnimManager
-     * The AnimCollisionManagerClass is constructed with a reference to `this`.
-     * Manages animation frame state, collision mode, and attached riders.
      *
-     * Exposed as `animationManager` to match C++ Get_Animation_Manager() naming convention
-     * (Get_Foo() → Kotlin property foo).
+     * Constructed with a reference to `this` (matches C++ member init).
+     * Manages animation frame state, collision mode, and attached riders.
+     * Exposed as `animationManager` to match C++ Get_Animation_Manager() naming convention.
      */
     val animationManager: AnimCollisionManagerClass = AnimCollisionManagerClass(this)
 
     // -------------------------------------------------------------------------
     // Static shadow — mirrors C++ TexProjectClass * ShadowProjector
     //
+    // C++: ShadowProjector is non-null when a static shadow projector is attached.
     // On the server there is no renderer, so ShadowProjector is always null.
     // -------------------------------------------------------------------------
 
     /**
-     * C++: TexProjectClass * ShadowProjector — always null server-side.
-     * C++: bool Is_Casting_Shadow() returns (ShadowProjector != NULL).
+     * C++: virtual bool Is_Casting_Shadow() — returns (ShadowProjector != NULL).
+     * Server-side: always false (no ShadowProjector).
      */
     val isCastingShadow: Boolean get() = false
 
     // -------------------------------------------------------------------------
-    // Constructor — mirrors StaticAnimPhysClass::StaticAnimPhysClass()
+    // Constructor init block — mirrors StaticAnimPhysClass::StaticAnimPhysClass()
     //
-    // C++: Set_Collision_Group(0xF) — hard-coded to group 15.
-    // Note: StaticPhysClass ctor also sets collision group 15, so this is
-    // consistent with the base class initialisation.
+    // C++:
+    //   StaticAnimPhysClass::StaticAnimPhysClass(void) :
+    //       AnimManager(*this),
+    //       ShadowProjector(NULL)
+    //   {
+    //       Set_Collision_Group(0xF);
+    //   }
     // -------------------------------------------------------------------------
 
     init {
+        // C++: Set_Collision_Group(0xF) — hard-codes collision group to 15
         collisionGroup = 0xF
     }
 
@@ -63,31 +73,36 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     //
     // C++:
     //   void StaticAnimPhysClass::Init(const StaticAnimPhysDefClass & def) {
-    //       StaticPhysClass::Init(def);
-    //       ProjectorManager.Init(def.ProjectorManagerDef, Model);  // no-op server-side
+    //       StaticPhysClass::Init(def);                           // sets model, flags, etc.
+    //       ProjectorManager.Init(def.ProjectorManagerDef,Model); // no-op server-side
     //       AnimManager.Init(def.AnimManagerDef);
     //   }
-    //
-    // The three parameters correspond to AnimCollisionManagerDefClass fields:
-    //   CollisionMode, AnimationMode, AnimationName.
-    // Server-side there is no model and no W3D animation, so numFrames/frameRate are not passed.
     // -------------------------------------------------------------------------
 
     /**
      * C++: void StaticAnimPhysClass::Init(const StaticAnimPhysDefClass & def)
      *
      * Initialises the AnimCollisionManager from the definition.
-     * Called by StaticAnimPhysDefClass::create() after construction.
+     * Called by StaticAnimPhysDefClass::Create() after construction.
      *
      * [collisionModeValue] — AnimCollisionManagerDefClass::CollisionMode (0=NONE,1=STOP,2=PUSH,3=KILL)
      * [animationModeValue] — AnimCollisionManagerDefClass::AnimationMode (0=LOOP,1=TARGET,2=MANUAL)
      * [animationName]      — AnimCollisionManagerDefClass::AnimationName
+     * [modelName]          — parent model name (used to derive animation name when animationName is empty)
      */
-    fun init(collisionModeValue: Int, animationModeValue: Int, animationName: String) {
+    fun init(
+        collisionModeValue: Int,
+        animationModeValue: Int,
+        animationName: String,
+        modelName: String = "",
+    ) {
+        // C++: StaticPhysClass::Init(def) — sets model, etc; no server-side equivalent here
+        // C++: ProjectorManager.Init(def.ProjectorManagerDef, Model) — no-op server-side
         animationManager.init(
             collisionModeValue = collisionModeValue,
             animationModeValue = animationModeValue,
             animationNameFromDef = animationName,
+            modelName = modelName,
         )
     }
 
@@ -95,32 +110,62 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     // RTTI — mirrors virtual As_StaticAnimPhysClass()
     // -------------------------------------------------------------------------
 
+    /** C++: virtual StaticAnimPhysClass * As_StaticAnimPhysClass() { return this; } */
     override fun asStaticAnimPhysClass(): StaticAnimPhysClass? = this
 
     // -------------------------------------------------------------------------
     // Timestep — mirrors virtual Needs_Timestep() / Timestep(float dt)
+    //
+    // C++:
+    //   virtual bool StaticAnimPhysClass::Needs_Timestep() { return true; }
+    //
+    //   virtual void StaticAnimPhysClass::Timestep(float dt) {
+    //       AnimManager.Timestep(dt);
+    //       ProjectorManager.Update_From_Model(Model);  // no-op server-side
+    //   }
     // -------------------------------------------------------------------------
 
     /**
-     * C++: virtual bool StaticAnimPhysClass::Needs_Timestep() — returns true.
-     * StaticAnimPhysClass always needs per-frame processing to advance animation.
+     * C++: virtual bool StaticAnimPhysClass::Needs_Timestep() — always true.
      */
     override fun needsTimestep(): Boolean = true
 
     /**
      * C++: virtual void StaticAnimPhysClass::Timestep(float dt)
      *
-     * Delegates to AnimManager to advance animation and check for animated collisions.
-     * On the C++ side also updates texture projectors; those are not present server-side.
+     * Delegates to AnimManager.Timestep(dt) to advance animation and check for
+     * animated collisions. Also updates texture projectors (no-op server-side).
      */
     override fun timestep(dt: Float) {
-        // C++: AnimManager.Timestep(dt);
+        // C++: AnimManager.Timestep(dt)
         animationManager.timestep(dt)
-        // C++: ProjectorManager.Update_From_Model(Model); — no-op server-side (no projectors)
+        // C++: ProjectorManager.Update_From_Model(Model) — no-op server-side
     }
 
     // -------------------------------------------------------------------------
     // Dynamic state — mirrors Has_Dynamic_State() / Save_State() / Load_State()
+    //
+    // C++:
+    //   virtual bool Has_Dynamic_State() { return true; }
+    //
+    //   virtual void Save_State(ChunkSaveClass & csave) {
+    //       csave.Begin_Chunk(STATICANIMPHYS_CHUNK_ANIMMANAGER);
+    //       AnimManager.Save(csave);
+    //       csave.End_Chunk();
+    //   }
+    //
+    //   virtual void Load_State(ChunkLoadClass & cload) {
+    //       while (cload.Open_Chunk()) {
+    //           if (cload.Cur_Chunk_ID() == STATICANIMPHYS_CHUNK_ANIMMANAGER)
+    //               AnimManager.Load(cload);
+    //           cload.Close_Chunk();
+    //       }
+    //   }
+    //
+    // Server-side: the Kotlin server does not implement level save-game persistence.
+    // ChunkSaveClass/ChunkLoadClass live in the server module (CombatTypeStubs.kt) and
+    // the physics module does not depend on the server module. These methods are no-ops
+    // since no runtime save-state is needed.
     // -------------------------------------------------------------------------
 
     /**
@@ -133,25 +178,33 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     /**
      * C++: virtual void StaticAnimPhysClass::Save_State(ChunkSaveClass &)
      *
-     * Saves STATICANIMPHYS_CHUNK_ANIMMANAGER containing the AnimManager state.
-     * Chunk format mirrors animcollisionmanager.cpp Save().
+     * Saves AnimManager state wrapped in STATICANIMPHYS_CHUNK_ANIMMANAGER.
+     * Server-side no-op — no save-game support in Kotlin server.
      */
     override fun saveState(csave: Any) {
-        // Server-side: save is not wired to a real ChunkSaveClass.
-        // Subclasses (DoorPhysClass, ElevatorPhysClass) maintain their own state.
+        // Server-side: no-op — save-game persistence not implemented
     }
 
     /**
      * C++: virtual void StaticAnimPhysClass::Load_State(ChunkLoadClass &)
      *
-     * Reads STATICANIMPHYS_CHUNK_ANIMMANAGER and restores AnimManager state.
+     * Loads AnimManager state from STATICANIMPHYS_CHUNK_ANIMMANAGER.
+     * Server-side no-op — no save-game support in Kotlin server.
      */
     override fun loadState(cload: Any) {
-        // Server-side: load is not wired to a real ChunkLoadClass.
+        // Server-side: no-op — save-game persistence not implemented
     }
 
     // -------------------------------------------------------------------------
     // Rider support — mirrors Internal_Link_Rider / Internal_Unlink_Rider
+    //
+    // C++:
+    //   virtual bool Internal_Link_Rider(PhysClass * rider) {
+    //       AnimManager.Link_Rider(rider); return true;
+    //   }
+    //   virtual bool Internal_Unlink_Rider(PhysClass * rider) {
+    //       AnimManager.Unlink_Rider(rider); return true;
+    //   }
     // -------------------------------------------------------------------------
 
     /**
@@ -176,17 +229,40 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     }
 
     // -------------------------------------------------------------------------
+    // Update_Cached_Model_Parameters — mirrors C++ virtual method
+    //
+    // C++:
+    //   void StaticAnimPhysClass::Update_Cached_Model_Parameters() {
+    //       AnimManager.Update_Cached_Model_Parameters();
+    //   }
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: void StaticAnimPhysClass::Update_Cached_Model_Parameters()
+     *
+     * Rebuilds cached model-dependent parameters (collideable mesh list, etc.).
+     * Called by Set_Model() and On_Post_Load().
+     * Server-side: delegates to AnimManager which is a no-op.
+     */
+    fun updateCachedModelParameters() {
+        animationManager.updateCachedModelParameters()
+    }
+
+    // -------------------------------------------------------------------------
     // Chunk IDs — from staticanimphys.cpp
     // -------------------------------------------------------------------------
 
     companion object {
-        /** Wraps the parent StaticPhysClass save data. */
+        /** STATICANIMPHYS_CHUNK_STATICPHYS = 0x01170010
+         *  Wraps the parent StaticPhysClass save data. */
         const val STATICANIMPHYS_CHUNK_STATICPHYS: Int = 0x01170010
 
-        /** Own variables chunk (legacy: only COLLISIONMODE micro-chunk, now moved to AnimManager). */
+        /** STATICANIMPHYS_CHUNK_VARIABLES = 0x01170011
+         *  Own variables chunk (legacy: only COLLISIONMODE micro-chunk, now moved to AnimManager). */
         const val STATICANIMPHYS_CHUNK_VARIABLES: Int = 0x01170011
 
-        /** AnimCollisionManagerClass state. */
+        /** STATICANIMPHYS_CHUNK_ANIMMANAGER = 0x01170012
+         *  AnimCollisionManagerClass state. */
         const val STATICANIMPHYS_CHUNK_ANIMMANAGER: Int = 0x01170012
 
         /** Obsolete definition-id micro-chunk (ignored on load). */
