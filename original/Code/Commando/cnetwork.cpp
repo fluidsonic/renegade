@@ -138,8 +138,13 @@ void cNetwork::Init_Client(unsigned short my_port)
    BOOL is_flow_control_enabled = !IS_SOLOPLAY;
    PClientConnection->Enable_Flow_Control(is_flow_control_enabled);
 
+	uint32_t serverIp = static_cast<uint32_t>(The_Game()->Get_Ip_Address());
+	if (I_Am_Server()) {
+		serverIp = htonl(INADDR_LOOPBACK);
+	}
    PClientConnection->Init_As_Client(
-		The_Game()->Get_Ip_Address(), The_Game()->Get_Port(), my_port);
+		serverIp, The_Game()->Get_Port(), my_port);
+
 
 	//
 	// This packet resurfaces on the server in Application_Acceptance_Handler
@@ -523,7 +528,8 @@ void cNetwork::Init_Server(void)
 		The_Game()->Get_Port(),
 		The_Game()->Get_Max_Players(),
 		The_Game()->IsDedicated.Get(),
-		ntohl(The_Game()->Get_Ip_Address()));
+		0);  // INADDR_ANY — accept connections from all interfaces
+
 
    //
    // Create teams
@@ -1174,7 +1180,6 @@ REFUSAL_CODE cNetwork::Application_Acceptance_Handler(cPacket & packet)
 	if (cPlayerManager::Find_Player(player_name)) {
 		return REFUSAL_PLAYER_EXISTS;
 	}
-
 
 	return REFUSAL_CLIENT_ACCEPTED;
 }

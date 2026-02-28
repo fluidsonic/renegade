@@ -515,7 +515,6 @@ bool cConnection::Receive_Packet()
 			return(false);
 		}
 
-
 	}
 
 	// WOL NAT firewall probe packets removed
@@ -790,6 +789,7 @@ void cConnection::Process_Connection_Request(cPacket & packet)
 {
 	LPSOCKADDR_IN p_address = &packet.Get_From_Address_Wrapper()->FromAddress;
 
+
    int new_rhost_id = ID_UNKNOWN;
 
 	//
@@ -809,6 +809,7 @@ void cConnection::Process_Connection_Request(cPacket & packet)
 			new_rhost_id = player_id;
 		}
    }
+
 
 	if (new_rhost_id == ID_UNKNOWN) {
 
@@ -1936,7 +1937,9 @@ void cConnection::Service_Send(bool is_urgent)
 			}
 
 			// Keep track of how many packets in the queue are waiting on late acks.
-			p_rhost->Set_Total_Resent_Packets_In_Queue(resent_packets);
+			if (PRHost[rhost_id] != NULL) {
+				p_rhost->Set_Total_Resent_Packets_In_Queue(resent_packets);
+			}
 		}
 	}
 

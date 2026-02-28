@@ -453,7 +453,8 @@ GameInitMgrClass::Start_Client_Server (void)
 			if (TIMEGETTIME() - time > 20*1000) {
 				break;
 			}
-		} while (!cNetwork::PClientConnection->Is_Established ());
+		} while (cNetwork::PClientConnection != NULL && !cNetwork::PClientConnection->Is_Established ());
+
 	}
 
 	// Sample output every 2 seconds.

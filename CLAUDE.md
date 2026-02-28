@@ -52,6 +52,16 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - Use `<project root>/.worktrees/` for git worktrees (not `.claude/worktrees/`)
 - **Always provide copyable debugging instructions** — when the user needs to help debug, give ready-to-paste commands (e.g. how to run the C++ binary with output to a log file, LLDB commands to debug a crash with debugger attached, etc.)
 
+## C++ Port — Listen-Server (LAN Host) Architecture
+
+- **Server binds to INADDR_ANY** (`addr=0` in `Init_As_Server`) — accepts from all interfaces including loopback and LAN NIC
+- **Client always uses loopback** — `Init_Client()` sets `serverIp = htonl(INADDR_LOOPBACK)` when `I_Am_Server()` is true; unconditional, not fallback
+- **Port conflict hazard** — `Init_As_Server` silently retries port+1 up to 50 times on EADDRINUSE, but `The_Game()->Get_Port()` is NOT updated; `Init_Client` then connects to the original (wrong) port; **the Kotlin server must not be running on the same port when testing LAN hosting**
+- **`cSinglePlayerData::Is_Single_Player()` is false for LAN** — real UDP sockets are always used for listen-server; the in-memory loopback queue is only for actual single-player mode
+- **`Client_Think()` runs during the handshake loop** — `g_is_loading` is false at `Start_Client_Server()` time; `Client_Think()` can call `Cleanup_Client()` → nulls `PClientConnection`; the while-loop condition has a NULL guard: `while (PClientConnection != NULL && !PClientConnection->Is_Established())`
+- **`IsDestroy` = only set by REFUSAL_SC** — if `Client_Think()` destroys the connection, the server refused; check why (empty nickname, port conflict hitting wrong server, etc.)
+- **`PacketManager` is not involved in the handshake** — CONNECT_CS / ACCEPT_SC are connection-level packets handled entirely by `cConnection::Service_Send/Read`; `PacketManager` is a game-level layer on top
+
 ## C++ Port — Known Patterns & Pitfalls
 
 ### Primitive type rules (enforced by `ccr-primitive-type` clang-tidy plugin)

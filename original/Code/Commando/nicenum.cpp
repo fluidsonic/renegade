@@ -9,6 +9,8 @@
 #include "nicenum.h"
 
 #include <winsock.h>
+#include <ifaddrs.h>
+#include <net/if.h>
 
 #include "netutil.h"
 #include "useroptions.h"
@@ -160,7 +162,7 @@ cNicEnum::Init
 	{
 		if (NumNics > 0)
 		{
-			cUserOptions::PreferredLanNic.Set(NicList[0]);
+			cUserOptions::PreferredLanNic.Set(static_cast<int32_t>(NicList[0]));
 		}
 		else
 		{
@@ -179,30 +181,33 @@ cNicEnum::Enumerate_Nics
 	uint32_t		max_nics
 )
 {
+	struct ifaddrs *ifap = nullptr, *ifa = nullptr;
 
-	//
-	// Get the local hostname
-	//
-	char local_host_name[300];
-	int gethostname_rc = ::gethostname(local_host_name, sizeof(local_host_name));
-
-	//
-	// Resolve hostname for local adapter addresses.
-	// This does a DNS lookup (name resolution)
-	//
-	LPHOSTENT p_hostent = ::gethostbyname(local_host_name);
-	if (p_hostent == NULL)
+	if (::getifaddrs(&ifap) != 0)
 	{
+		return 0;
 	}
 
 	uint32_t num_addresses = 0;
-	while (num_addresses < max_nics && p_hostent->h_addr_list[num_addresses] != NULL)
+	for (ifa = ifap; ifa != nullptr && num_addresses < max_nics; ifa = ifa->ifa_next)
 	{
-		IN_ADDR in_addr;
-		::memcpy(&in_addr, p_hostent->h_addr_list[num_addresses], sizeof(in_addr));
-		addresses[num_addresses] = in_addr.s_addr;
+		if (ifa->ifa_addr == nullptr)
+			continue;
+
+		if (!(ifa->ifa_flags & IFF_UP) || !(ifa->ifa_flags & IFF_RUNNING))
+			continue;
+
+		if (ifa->ifa_flags & IFF_LOOPBACK)
+			continue;
+
+		if (ifa->ifa_addr->sa_family != AF_INET)
+			continue;
+
+		struct sockaddr_in *sin = reinterpret_cast<struct sockaddr_in *>(ifa->ifa_addr);
+		addresses[num_addresses] = sin->sin_addr.s_addr;
 		num_addresses++;
 	}
 
+	::freeifaddrs(ifap);
 	return num_addresses;
 }

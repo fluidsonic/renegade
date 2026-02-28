@@ -108,6 +108,7 @@ class cConnection
 		cRemoteHost * Get_Remote_Host(int rhost);
 		bool Is_Destroy() {return IsDestroy;}
       int Get_Local_Id() const {return LocalId;}
+		USHORT Get_Local_Port() const {return LocalPort;}
 		double Get_Max_Acceptable_Packetloss_Pc() const {return MaxAcceptablePacketlossPc;}
 		cNetStats & Get_Combined_Stats() {return CombinedStats;}
 		cNetStats & Get_Averaged_Stats() {return AveragedStats;}
