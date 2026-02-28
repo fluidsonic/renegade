@@ -1,7 +1,7 @@
 package ccr.server.level.ldd
 
-import ccr.server.defs.readMicroInt
-import ccr.server.defs.readMicroString
+import ccr.physics.defs.readMicroInt
+import ccr.physics.defs.readMicroString
 import ccr.server.defs.readMicroWideString
 import ccr.server.core.ChunkReader
 

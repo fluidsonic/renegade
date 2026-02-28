@@ -1,6 +1,6 @@
 package ccr.server.level.ldd
 
-import ccr.server.defs.readMicroInt
+import ccr.physics.defs.readMicroInt
 import ccr.server.level.ChunkIds
 import ccr.server.level.DefinitionRegistry
 import ccr.server.level.LevelDynamicData
