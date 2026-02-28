@@ -3,6 +3,7 @@ package ccr.server.net
 import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.physics.moveable.HumanPhysClass
+import ccr.server.core.FreeRandom
 
 // C++: HumanStateClass (humanstate.h / humanstate.cpp)
 // Faithful 1:1 port of the C++ class.
@@ -686,7 +687,7 @@ class HumanStateClass {
 
     // C++: void Reset_Loiter_Delay()
     fun resetLoiterDelay() {
-        loiterDelay = FreeRandom.get() * 6f - 3f
+        loiterDelay = FreeRandom.getFloat(6f) - 3f
     }
 
     // C++: void Set_Loiters_Allowed(bool allowed)

@@ -214,15 +214,15 @@ abstract class PhysClass {
      * C++: PersistClass::Peek_Factory()->Chunk_ID() — returns the persistent factory chunk ID.
      * Used by BuildingGameObj to detect whether a StaticPhysClass is a BuildingAggregateClass
      * (PHYSICS_CHUNKID_BUILDINGAGGREGATE = 0xDC2F95).
-     * Server-side: each subclass can override to return its own chunk ID constant.
+     * Server-side: each subclass overrides this property to return its own chunk ID constant.
      */
-    open fun getFactoryChunkId(): UInt = 0u
+    open val factoryChunkId: UInt get() = 0u
 
     /**
      * C++: obj->Peek_Factory()->Chunk_ID() == chunkId — checks factory chunk ID.
      * Convenience method used by BuildingGameObj.
      */
-    fun isFromFactory(chunkId: Int): Boolean = getFactoryChunkId() == chunkId.toUInt()
+    fun isFromFactory(chunkId: Int): Boolean = factoryChunkId == chunkId.toUInt()
 
     /** C++: Enable_Is_State_Dirty(bool) — sets/clears the IS_STATE_DIRTY flag. */
     fun enableIsStateDirty(onoff: Boolean) {

@@ -83,31 +83,36 @@ open class RenderObjClass {
     }
 
     // C++: uint32_t Bits
-    var bits: Int = DEFAULT_BITS
+    @JvmField var bits: Int = DEFAULT_BITS
 
     // C++: Matrix3D Transform
-    var transform: Matrix3D = Matrix3D()
+    // @JvmField suppresses the auto-generated getTransform()/setTransform() to avoid clashing
+    // with the explicit getTransform() / setTransform(Matrix3D) methods below.
+    @JvmField var transform: Matrix3D = Matrix3D()
 
     // C++: mutable SphereClass CachedBoundingSphere
-    protected var cachedBoundingSphere: Sphere = Sphere(Vector3(), 0f)
+    @JvmField protected var cachedBoundingSphere: Sphere = Sphere(Vector3(), 0f)
 
     // C++: mutable AABox CachedBoundingBox
-    protected var cachedBoundingBox: AABox = AABox(Vector3(), Vector3())
+    @JvmField protected var cachedBoundingBox: AABox = AABox(Vector3(), Vector3())
 
     // C++: float NativeScreenSize
-    var nativeScreenSize: Float = 0f
+    // @JvmField suppresses auto-generated getNativeScreenSize()/setNativeScreenSize() clash.
+    @JvmField var nativeScreenSize: Float = 0f
 
     // C++: mutable bool IsTransformIdentity
-    protected var isTransformIdentity: Boolean = true
+    @JvmField protected var isTransformIdentity: Boolean = true
 
     // C++: SceneClass* Scene
-    var scene: SceneClass? = null
+    @JvmField var scene: SceneClass? = null
 
     // C++: RenderObjClass* Container
-    var container: RenderObjClass? = null
+    // @JvmField suppresses auto-generated getContainer()/setContainer() clash.
+    @JvmField var container: RenderObjClass? = null
 
     // C++: void* User_Data
-    var userData: Any? = null
+    // @JvmField suppresses auto-generated getUserData()/setUserData() clash.
+    @JvmField var userData: Any? = null
 
     // -------------------------------------------------------------------------
     // Cloning and Identification

@@ -9,7 +9,9 @@ import ccr.server.level.Sphere
 open class CompositeRenderObjClass : RenderObjClass() {
 
     // C++: StringClass Name
-    protected var name: String = "UNNAMED"
+    // @JvmField suppresses auto-generated getName()/setName() to avoid clashing
+    // with the explicit override fun getName() / setName() below.
+    @JvmField protected var name: String = "UNNAMED"
 
     // C++: StringClass BaseModelName
     var baseModelName: String? = null

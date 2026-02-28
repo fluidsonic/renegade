@@ -7,6 +7,7 @@ import ccr.physics.PhysClass
 import ccr.physics.static.StaticPhysClass
 import ccr.physics.scene.PhysicsScene
 import ccr.server.defs.Dialogue
+import ccr.server.level.ChunkIds
 
 // Audio types — real implementations live in ccr.server.audio; import here for net-package usage.
 typealias AudibleSoundClass  = ccr.server.audio.AudibleSoundClass
@@ -695,7 +696,7 @@ class BitPackResolution(val bits: Int) {
 
 // C++: BuildingAggregateClass : public StaticPhysClass
 class BuildingAggregateClass : StaticPhysClass() {
-    override val factoryChunkId: UInt = PHYSICS_CHUNKID_BUILDINGAGGREGATE
+    override val factoryChunkId: UInt = ChunkIds.PHYSICS_CHUNKID_BUILDINGAGGREGATE
     fun isMct(): Boolean = TODO("stub")
     fun isRepair(): Boolean = TODO("stub")
     fun getGroupId(): Int = TODO("stub")

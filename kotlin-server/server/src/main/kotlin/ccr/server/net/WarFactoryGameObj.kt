@@ -98,7 +98,7 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
                 val model = animPhysObj.model as? RenderObjClass ?: continue
 
-                val name = model.name.uppercase()
+                val name = model.getName().uppercase()
                 if (name.contains("WEP#CONSTRUCT")) {
                     val animPos = animPhysObj.getPosition()
                     val diff = animPos - pos

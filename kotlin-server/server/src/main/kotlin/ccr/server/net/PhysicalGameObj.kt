@@ -193,6 +193,9 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // Works for all physObj types (stub or real ccr.physics.PhysClass) via safe cast.
     fun peekModel(): RenderObjClass? = physObj?.model as? RenderObjClass
 
+    // Convenience Kotlin property — equivalent to Peek_Model() (mirrors C++ Peek_Model() pattern).
+    val model: RenderObjClass? get() = peekModel()
+
     // C++: void Hide_Muzzle_Flashes(bool hide = true)
     fun hideMuzzleFlashes(hide: Boolean = true) {
         val model = peekModel() ?: return

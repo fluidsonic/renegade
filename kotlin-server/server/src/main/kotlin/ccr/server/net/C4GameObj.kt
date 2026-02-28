@@ -256,7 +256,7 @@ class C4GameObj(
                 stuckObject.set(other)
 
                 stuckBone = 0
-                val parentModel = other.model
+                val parentModel = other.peekModel()
                 if (parentModel != null) {
                     stuckBone = parentModel.getSubObjectBoneIndex(event.collidedRenderObj)
                 }
@@ -404,7 +404,7 @@ class C4GameObj(
                     val stuckSoldier = obj as? SoldierGameObj
                     if (stuckSoldier != null) {
                         val hide = stuckSoldier.vehicle != null
-                        model?.setHidden(hide)
+                        peekModel()?.setHidden(hide)
                     }
                 }
             } else if (stuckStaticAnimObj != null) {

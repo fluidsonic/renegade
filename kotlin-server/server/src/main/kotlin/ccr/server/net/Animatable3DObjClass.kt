@@ -20,7 +20,9 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
     protected var isTreeValid: Boolean = false
 
     // C++: HTreeClass* HTree
-    protected var hTree: HTreeClass? = null
+    // @JvmField suppresses auto-generated getHTree()/setHTree() to avoid clashing
+    // with the explicit override fun getHTree() and fun setHTree() below.
+    @JvmField protected var hTree: HTreeClass? = null
 
     // C++: int CurMotionMode — C++ constructor sets CurMotionMode(BASE_POSE)
     protected var curMotionMode: Int = MOTION_BASE_POSE

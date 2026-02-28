@@ -421,7 +421,7 @@ class BeaconGameObj() : SimpleGameObj() {
                 }
 
                 // C++: Hide our model
-                model?.setHidden(true)
+                peekModel()?.setHidden(true)
             }
         }
 
