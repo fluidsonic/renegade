@@ -1,18 +1,26 @@
 package ccr.physics.static
 
-import ccr.math.Vector3
+/**
+ * C++: AccessiblePhysClass (wwphys/accessiblephys.h/.cpp)
+ *
+ * A static animated physics object that supports lock-code based access control.
+ * Parent of DoorPhysClass and ElevatorPhysClass.
+ */
+open class AccessiblePhysClass : StaticAnimPhysClass() {
 
-abstract class AccessiblePhysClass : StaticAnimPhysClass() {
-    var isOpen: Boolean = false
-    var accessZoneRadius: Float = 1.0f
+    /** C++: int LockCode — 0 means unlocked, non-zero is a lock code requiring a matching key. */
+    var lockCode: Int = 0
 
-    fun isInAccessZone(point: Vector3): Boolean {
-        val pos = transform.translation
-        val dx = point.x - pos.x; val dy = point.y - pos.y; val dz = point.z - pos.z
-        val distSq = dx * dx + dy * dy + dz * dz
-        return distSq <= accessZoneRadius * accessZoneRadius
+    /** C++: bool Can_Unlock(int key_mask) — returns true if the key mask matches the lock code. */
+    fun canUnlock(keyMask: Int): Boolean = ((1 shl lockCode) and keyMask) != 0
+
+    override fun asAccessiblePhysClass(): AccessiblePhysClass? = this
+
+    companion object {
+        // Chunk IDs from accessiblephys.cpp
+        const val CHUNKID_PARENT: Int = 0x10311235
+        const val CHUNKID_VARIABLES: Int = 0x10311236  // CHUNKID_PARENT + 1
+
+        const val VARID_LOCKCODE: Int = 1
     }
-
-    abstract fun open()
-    abstract fun close()
 }

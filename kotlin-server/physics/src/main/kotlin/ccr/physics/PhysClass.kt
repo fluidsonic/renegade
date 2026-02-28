@@ -18,7 +18,9 @@ import ccr.physics.moveable.Phys3Class
 import ccr.physics.moveable.ProjectileClass
 import ccr.physics.rigidbody.RigidBodyClass
 import ccr.physics.static.AccessiblePhysClass
+import ccr.physics.static.DamageableStaticPhysClass
 import ccr.physics.static.DoorPhysClass
+import ccr.physics.static.ElevatorPhysClass
 import ccr.physics.static.StaticAnimPhysClass
 import ccr.physics.static.StaticPhysClass
 import ccr.physics.vehicle.MotorcycleClass
@@ -142,8 +144,8 @@ abstract class PhysClass {
     open fun asVTOLVehicleClass(): VTOLVehicleClass? = null
     open fun asStaticPhysClass(): StaticPhysClass? = null
     open fun asStaticAnimPhysClass(): StaticAnimPhysClass? = null
-    open fun asElevatorPhysClass(): Any? = null          // TODO: create ElevatorPhysClass
-    open fun asDamageableStaticPhysClass(): Any? = null  // TODO: create DamageableStaticPhysClass
+    open fun asElevatorPhysClass(): ElevatorPhysClass? = null
+    open fun asDamageableStaticPhysClass(): DamageableStaticPhysClass? = null
     open fun asDoorPhysClass(): DoorPhysClass? = null
     open fun asDecorationPhysClass(): DecorationPhysClass? = null
     open fun asTimedDecorationPhysClass(): TimedDecorationPhysClass? = null

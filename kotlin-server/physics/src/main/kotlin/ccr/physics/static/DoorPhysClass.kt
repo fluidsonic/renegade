@@ -5,17 +5,24 @@ import ccr.math.Vector3
 import ccr.math.transformOBBox
 import ccr.physics.collision.CollisionMath
 
-// C++: DoorPhysClass : AccessiblePhysClass (Combat/doors.cpp / doors.h)
-// Mirrors the C++ Update_State state machine exactly, with animation-frame checks
-// replaced by a time-based approximation (server doesn't run real animation frames).
+/**
+ * C++: DoorPhysClass : AccessiblePhysClass (Combat/doors.h/.cpp)
+ *
+ * Mirrors the C++ Update_State state machine exactly, with animation-frame checks
+ * replaced by a time-based approximation (server doesn't run real animation frames).
+ */
 class DoorPhysClass(
     val definitionId: Int,
     val closeDelay: Float,
     val triggerZone1: OBBox?,
     val triggerZone2: OBBox?,
-    val lockCode: Int,
+    defLockCode: Int,
     val doorOpensForVehicles: Boolean,
 ) : AccessiblePhysClass() {
+
+    init {
+        lockCode = defLockCode
+    }
 
     // C++: int State (initialized to STATE_CLOSED_DOOR)
     var state: Int = STATE_CLOSED_DOOR
@@ -27,6 +34,30 @@ class DoorPhysClass(
     // C++: float CheckTimer — used in STATE_CLOSED_DOOR / STATE_ACCESS_DENIED to rate-limit trigger zone checks
     var checkTimer: Float = 0f
 
+    // C++: bool OpenRequestPending — set by Request_Door_Open(), cleared each Timestep
+    var openRequestPending: Boolean = false
+
+    // C++: bool LockState — set by Lock_Door_Open(), checked in Update_State
+    var lockState: Boolean = false
+
+    override fun asDoorPhysClass(): DoorPhysClass? = this
+
+    /** C++: bool Is_Door_Open() — returns true if door is in OPENED state. */
+    fun isDoorOpen(): Boolean = state == STATE_OPENED_DOOR
+
+    /** C++: void Request_Door_Open() */
+    fun requestDoorOpen() {
+        openRequestPending = true
+    }
+
+    /** C++: void Lock_Door_Open(bool onoff) */
+    fun lockDoorOpen(onoff: Boolean) {
+        if (onoff) {
+            setState(STATE_OPENING_DOOR)
+        }
+        lockState = onoff
+    }
+
     companion object {
         // C++: door state enum (doors.h)
         const val STATE_CLOSED_DOOR   = 0
@@ -34,6 +65,7 @@ class DoorPhysClass(
         const val STATE_OPENING_DOOR  = 2
         const val STATE_CLOSING_DOOR  = 3
         const val STATE_ACCESS_DENIED = 4
+        const val STATE_MAX           = 5
 
         // Server-side approximation for animation open/close duration (no real anim frames on server).
         // C++: determined by the W3D animation frame count and playback speed; 1.5s is typical.
@@ -46,45 +78,36 @@ class DoorPhysClass(
         private const val DOOR_OPEN_OK     = 0
         private const val DOOR_OPEN_LOCKED = 1
         private const val DOOR_OPEN_NOONE  = 2
-    }
 
-    // C++: DoorPhysClass::open() — exposed for Lock_Door_Open
-    override fun open() {
-        setState(STATE_OPENING_DOOR)
-    }
+        // Chunk IDs from doors.cpp — DoorPhysClass Save/Load
+        const val CHUNKID_OLD_PARENT: Int = 320002202
+        const val CHUNKID_VARIABLES: Int = 320002203
+        const val CHUNKID_PARENT: Int = 320002204
 
-    // C++: DoorPhysClass::close() — exposed for external callers
-    override fun close() {
-        setState(STATE_CLOSING_DOOR)
+        const val MICROCHUNKID_STATE: Int = 2
+        const val MICROCHUNKID_TIMER: Int = 3
+        const val MICROCHUNKID_CHECK_TIMER: Int = 4
+        const val MICROCHUNKID_OPEN_REQUEST_PENDING: Int = 5
     }
 
     // C++: bool DoorPhysClass::Set_State(int new_state) — sets state, returns true if changed
-    // On STATE_OPENING_DOOR: set anim target to last frame (approximated by starting open timer)
-    // On STATE_CLOSING_DOOR: set anim target to frame 0 (approximated by starting close timer)
-    // On STATE_OPENED_DOOR: set Timer = CloseDelay, set anim target to last frame
-    // On STATE_CLOSED_DOOR: set anim target to frame 0
     private fun setState(newState: Int): Boolean {
         if (state == newState) return false
         when (newState) {
             STATE_OPENING_DOOR -> {
                 // C++: AnimManager.Set_Target_Frame(lastFrame) → door starts opening
-                // Server approximation: use a timer to mark when "animation" completes
                 timer = ANIM_OPEN_CLOSE_TIME
-                isOpen = false
             }
             STATE_CLOSING_DOOR -> {
                 // C++: AnimManager.Set_Target_Frame(0) → door starts closing
                 timer = ANIM_OPEN_CLOSE_TIME
-                isOpen = false
             }
             STATE_OPENED_DOOR -> {
                 // C++: Timer = Get_DoorPhysDef()->CloseDelay; anim stays at last frame
                 timer = closeDelay
-                isOpen = true
             }
             STATE_CLOSED_DOOR -> {
                 // C++: anim stays at frame 0
-                isOpen = false
             }
             STATE_ACCESS_DENIED -> {
                 // C++: plays access-denied sound (no-op on server)
@@ -105,34 +128,39 @@ class DoorPhysClass(
         when (state) {
             STATE_OPENING_DOOR -> {
                 // C++: if (AnimManager.Get_Current_Frame() == lastFrame) Set_State(STATE_OPENED_DOOR)
-                // Server approximation: transition when timer expires
                 timer -= dt
                 if (timer <= 0f) {
                     setState(STATE_OPENED_DOOR)
                 }
             }
             STATE_OPENED_DOOR -> {
-                // C++: Timer -= dt; if (Timer < 0 && !lockState && !openRequestPending && Can_Open_Door() != OK)
+                // C++: Timer -= dt; if (Timer < 0 && !LockState && !OpenRequestPending && Can_Open_Door() != OK)
                 //        Set_State(STATE_CLOSING_DOOR)
                 timer -= dt
-                if (timer < 0f && canOpenDoor(soldierPositions) != DOOR_OPEN_OK) {
+                if (timer < 0f
+                    && !lockState
+                    && !openRequestPending
+                    && canOpenDoor(soldierPositions) != DOOR_OPEN_OK
+                ) {
                     setState(STATE_CLOSING_DOOR)
                 }
             }
             STATE_CLOSING_DOOR -> {
                 // C++: if (AnimManager.Get_Current_Frame() == 0) Set_State(STATE_CLOSED_DOOR)
-                // Server approximation: transition when timer expires
                 timer -= dt
                 if (timer <= 0f) {
                     setState(STATE_CLOSED_DOOR)
                 }
-                // Note: fall-through to CLOSED_DOOR case intentional in C++ (switch fall-through) — handled below
+                // Note: fall-through to CLOSED_DOOR case intentional in C++ (switch fall-through)
                 checkForOpen(dt, soldierPositions)
             }
             STATE_CLOSED_DOOR, STATE_ACCESS_DENIED -> {
                 checkForOpen(dt, soldierPositions)
             }
         }
+
+        // C++: OpenRequestPending = false (reset each Timestep)
+        openRequestPending = false
     }
 
     // C++: STATE_CLOSED_DOOR and STATE_ACCESS_DENIED share a fall-through check block.
@@ -143,20 +171,27 @@ class DoorPhysClass(
         if (checkTimer <= 0f) {
             checkTimer = CHECK_INTERVAL
 
-            // C++: if (LockState == false) — LockCode as proxy; never externally locked here
-            val result = canOpenDoor(soldierPositions)
-            if (result == DOOR_OPEN_OK) {
-                setState(STATE_OPENING_DOOR)
-            } else if (result == DOOR_OPEN_LOCKED) {
-                setState(STATE_ACCESS_DENIED)
-            } else if (state == STATE_ACCESS_DENIED) {
-                setState(STATE_CLOSED_DOOR)
+            // C++: if (LockState == false) { ... }
+            if (!lockState) {
+                var updateClients = false
+                val result = canOpenDoor(soldierPositions)
+                if (openRequestPending || result == DOOR_OPEN_OK) {
+                    updateClients = setState(STATE_OPENING_DOOR)
+                } else if (result == DOOR_OPEN_LOCKED) {
+                    updateClients = setState(STATE_ACCESS_DENIED)
+                } else if (state == STATE_ACCESS_DENIED) {
+                    updateClients = setState(STATE_CLOSED_DOOR)
+                }
+
+                // C++: if (update_clients) Enable_Is_State_Dirty(true)
+                if (updateClients) {
+                    flags = flags or IS_STATE_DIRTY
+                }
             }
         }
     }
 
     // C++: int DoorPhysClass::Can_Open_Door()
-    // Transforms both trigger zones into world space, checks each.
     private fun canOpenDoor(soldierPositions: List<Vector3>): Int {
         val result1 = checkDoorTrigger(triggerZone1, soldierPositions)
         val result2 = if (result1 != DOOR_OPEN_OK) checkDoorTrigger(triggerZone2, soldierPositions) else DOOR_OPEN_NOONE
@@ -169,14 +204,11 @@ class DoorPhysClass(
     }
 
     // C++: int DoorPhysClass::Check_Door_Trigger(const OBBoxClass& trigger_zone)
-    // Checks if any human-controlled soldier is inside the (world-space) trigger zone.
-    // lockCode==0 means no lock (anyone can open); lockCode!=0 means door is locked.
     private fun checkDoorTrigger(zone: OBBox?, soldierPositions: List<Vector3>): Int {
         if (zone == null) return DOOR_OPEN_NOONE
         val worldZone = transformOBBox(zone, transform)
         for (pos in soldierPositions) {
             if (CollisionMath.pointInOBBox(pos, worldZone)) {
-                // C++: lockCode==0 → DOOR_OPEN_OK; lockCode!=0 → DOOR_OPEN_LOCKED (no key check on server)
                 return if (lockCode == 0) DOOR_OPEN_OK else DOOR_OPEN_LOCKED
             }
         }
