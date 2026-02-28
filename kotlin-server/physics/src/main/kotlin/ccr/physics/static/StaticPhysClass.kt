@@ -11,11 +11,25 @@ import ccr.physics.collision.OBBoxCollisionTest
 import ccr.physics.collision.RayCollisionTest
 
 open class StaticPhysClass : PhysClass() {
+
+    companion object {
+        // Chunk IDs from staticphys.cpp (see also PhysChunkIds.STATICPHYS_CHUNK_PHYS / _VARIABLES)
+        // Micro-chunk IDs within STATICPHYS_CHUNK_VARIABLES:
+        const val STATICPHYS_VARIABLE_VIS_OBJECT_ID: Int = 0x00  // uint32 visObjectId
+        const val STATICPHYS_VARIABLE_VIS_SECTOR_ID: Int = 0x01  // int32 visSectorId
+    }
+
     var triangles: List<Triangle> = emptyList()
+
+    /** Vis-sector ID for this static object (-1 / 0xFFFFFFFF if not a vis sector). Mirrors C++ VisSectorID. */
+    var visSectorId: Int = -1
+
     private var _transform: Matrix3D = Matrix3D.IDENTITY
     override var transform: Matrix3D
         get() = _transform
         set(v) { _transform = v }
+
+    override fun asStaticPhysClass(): StaticPhysClass? = this
 
     override fun needsTimestep(): Boolean = false
     override fun timestep(dt: Float) {} // no-op

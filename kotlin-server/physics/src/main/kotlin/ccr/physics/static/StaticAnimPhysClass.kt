@@ -1,19 +1,22 @@
 package ccr.physics.static
 
-abstract class StaticAnimPhysClass : StaticPhysClass() {
-    var animFrame: Float = 0f
-    var animSpeed: Float = 1f
-    var animLooping: Boolean = true
-    var animLength: Float = 1f // total animation length in seconds
+open class StaticAnimPhysClass : StaticPhysClass() {
 
-    override fun needsTimestep(): Boolean = true
+    companion object {
+        // Chunk IDs from staticanimphys.cpp
+        const val STATICANIMPHYS_CHUNK_STATICPHYS: Int = 0x01170010   // parent StaticPhysClass chunk
+        const val STATICANIMPHYS_CHUNK_VARIABLES: Int = 0x01170011    // own variables (legacy collision mode)
+        const val STATICANIMPHYS_CHUNK_ANIMMANAGER: Int = 0x01170012  // AnimCollisionManagerClass state
 
-    override fun timestep(dt: Float) {
-        super.timestep(dt)
-        animFrame += dt * animSpeed
-        if (animLooping && animLength > 0f) {
-            while (animFrame >= animLength) animFrame -= animLength
-            while (animFrame < 0f) animFrame += animLength
-        }
+        // Micro-chunk IDs within STATICANIMPHYS_CHUNK_VARIABLES:
+        const val STATICANIMPHYS_VARIABLE_DEFID_OBSOLETE: Int = 0x00  // obsolete, ignored on load
+        const val STATICANIMPHYS_VARIABLE_COLLISIONMODE: Int = 0x01   // legacy collision mode (int32)
     }
+
+    override fun asStaticAnimPhysClass(): StaticAnimPhysClass? = this
+
+    // C++ Needs_Timestep() returns true for StaticAnimPhysClass.
+    // Server-side we don't run animation/projector logic, so timestep is a no-op.
+    override fun needsTimestep(): Boolean = true
+    override fun timestep(dt: Float) {}
 }
