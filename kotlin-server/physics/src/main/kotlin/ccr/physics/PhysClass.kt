@@ -84,6 +84,8 @@ abstract class PhysClass {
             flags = (flags and COLLISION_MASK.inv()) or (v and COLLISION_MASK)
         }
 
+    @get:JvmName("isImmovableField")
+    @set:JvmName("setImmovableField")
     var isImmovable: Boolean
         get() = (flags and IMMOVABLE) != 0
         set(v) {
