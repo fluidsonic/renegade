@@ -1046,7 +1046,7 @@ class Network(internal val config: ServerConfig) {
                         closeDelay = def.closeDelay,
                         triggerZone1 = zone1,
                         triggerZone2 = zone2,
-                        lockCode = def.lockCode,
+                        defLockCode = def.lockCode,
                         doorOpensForVehicles = def.doorOpensForVehicles,
                     )
                     doorPhys.transform = obj.transform.let { tm ->
