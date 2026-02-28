@@ -9,7 +9,7 @@ class HumanPhysClassTest {
     @Test
     fun jumpSetsVelocityZ() {
         val human = HumanPhysClass()
-        human.groundState = GroundState(true, 0, 0f, Vector3(0f, 0f, 1f), false)
+        human.groundState = GroundState(true, 0, 0f, Vector3(0f, 0f, 1f), Vector3(1f, 0f, 0f))
         human.controller = PhysController().also { it.moveUp = 1f }
         val ctrl = human.controller!!
         if (ctrl.moveUp > 0f && human.groundState.onGround && !human.isJumping) {

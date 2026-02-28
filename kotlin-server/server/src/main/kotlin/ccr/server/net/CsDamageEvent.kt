@@ -39,9 +39,13 @@ class CsDamageEvent(
 
     override fun act(server: Network, rhostId: Int) {
         if (!server.gameState.isGameplayPermitted) { setDeletePending(); return }
-        println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damagee=$damageeGoid damage=$damage warhead=$warhead")
-        val target = server.gameObjManager.findObject(damageeGoid)
+        // C++: cCsDamageEvent::Act — both target and damager must be PhysicalGameObj;
+        // damager must also be an ArmedGameObj, otherwise damage is silently rejected.
+        val target = server.gameObjManager.findPhysicalGameObj(damageeGoid)
         if (target != null) {
+            val damager = server.gameObjManager.findPhysicalGameObj(damagerGoid)
+            if (damager !is ArmedGameObj) { setDeletePending(); return }
+            println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damager=$damagerGoid damagee=$damageeGoid damage=$damage warhead=$warhead")
             val scaledDamage = ArmorWarheadManager.scaleDamage(damage, warhead, target.shieldType)
             target.applyDamage(scaledDamage)
             println("[GAME] applied damage=$scaledDamage to netId=$damageeGoid health=${target.health}")
@@ -52,8 +56,6 @@ class CsDamageEvent(
                     server.god.deleteSoldier(victimRhostId)
                 }
             }
-        } else {
-            println("[GAME] CSDAMAGEEVENT: target netId=$damageeGoid not found in gameObjManager")
         }
         setDeletePending()
     }
