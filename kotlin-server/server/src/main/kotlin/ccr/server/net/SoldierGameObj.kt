@@ -4,6 +4,7 @@ import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.server.GameObjManager
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.defs.SoldierGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 
@@ -1206,13 +1207,13 @@ open class SoldierGameObj() : SmartGameObj() {
         }
 
         // C++: special damage check
-        val warhead = damager.getWarhead()
+        val warhead = damager.warhead
         val specialDamage = ArmorWarheadManager.getSpecialDamageType(warhead)
         if (specialDamage != 0) {
             var probability = ArmorWarheadManager.getSpecialDamageProbability(warhead)
             if (health <= 0f) probability = 1f
             if (FreeRandom.getFloat() < probability) {
-                val skin = defenseObject.getSkin()
+                val skin = defenseObject.skin
                 val sdType = ArmorWarheadManager.getSpecialDamageType(warhead)
                 if (!ArmorWarheadManager.isSkinImpervious(sdType, skin)) {
                     setSpecialDamageMode(sdType, damager.getOwner() as? ArmedGameObj)

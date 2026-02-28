@@ -1051,26 +1051,6 @@ fun createAnimationName(animBase: String, modelName: String): String {
 }
 
 // ---------------------------------------------------------------------------
-// ArmorWarheadManager — armor × warhead damage/special-damage type
-// ---------------------------------------------------------------------------
-
-// C++: ArmorWarheadManager (armorwarheadmanager.h)
-object ArmorWarheadManager {
-    // C++: enum SpecialDamageType
-    const val SPECIAL_DAMAGE_TYPE_NONE     = 0
-    const val SPECIAL_DAMAGE_TYPE_FIRE     = 1
-    const val SPECIAL_DAMAGE_TYPE_CHEM     = 2
-    const val SPECIAL_DAMAGE_TYPE_ELECTRIC = 3
-    const val SPECIAL_DAMAGE_TYPE_CNC_FIRE = 4
-    const val SPECIAL_DAMAGE_TYPE_CNC_CHEM = 5
-
-    fun scaleDamage(rawDamage: Float, warheadId: Int, armorId: Int): Float = rawDamage
-    fun getSpecialDamageDuration(type: Int): Float = 5f
-    fun getSpecialDamageWarhead(type: Int): Int = 0
-    fun getSpecialDamageDef(type: Int): Any? = null
-}
-
-// ---------------------------------------------------------------------------
 // HumanStateClass additional state constants
 // ---------------------------------------------------------------------------
 
@@ -1736,13 +1716,6 @@ fun PhysClass.setCollisionGroup(group: Int): Unit = Unit
 fun PhysClass.getObserver(): Any? = null
 
 // ---------------------------------------------------------------------------
-// ArmorWarheadManager — getSpecialDamageExplosion / getSpecialDamageScale
-// ---------------------------------------------------------------------------
-
-fun ArmorWarheadManager.getSpecialDamageExplosion(mode: Int): String = ""
-fun ArmorWarheadManager.getSpecialDamageScale(mode: Int): Float = 1f
-
-// ---------------------------------------------------------------------------
 // SoldierGameObj — additional methods
 // ---------------------------------------------------------------------------
 
@@ -1981,12 +1954,6 @@ fun HumanStateClass.resetLoiterDelay(): Unit = Unit
 fun HumanStateClass.setLoitersAllowed(allowed: Boolean): Unit = Unit
 
 // ---------------------------------------------------------------------------
-// ArmorWarheadManager — SPECIAL_DAMAGE_TYPE_SUPER_FIRE
-// ---------------------------------------------------------------------------
-
-val ArmorWarheadManager.SPECIAL_DAMAGE_TYPE_SUPER_FIRE: Int get() = 6
-
-// ---------------------------------------------------------------------------
 // MoveablePhysClass — asElevatorPhysClass
 // ---------------------------------------------------------------------------
 
@@ -2025,20 +1992,10 @@ fun HUDInfo.displayActionStatusBar(show: Boolean): Unit = Unit
 fun SmartGameObj.getPlayerData(): Any? = null
 
 // ---------------------------------------------------------------------------
-// DefenseObjectClass — isRepair, getSkin
+// DefenseObjectClass — isRepair
 // ---------------------------------------------------------------------------
 
 fun ccr.server.net.DefenseObjectClass.isRepair(offense: OffenseObjectClass): Boolean = false
-fun ccr.server.net.DefenseObjectClass.getSkin(): Int = 0
-
-// ---------------------------------------------------------------------------
-// OffenseObjectClass — getWarhead
-// ---------------------------------------------------------------------------
-
-fun OffenseObjectClass.getWarhead(): Int = 0
-fun ArmorWarheadManager.getSpecialDamageType(warhead: Int): Int = 0
-fun ArmorWarheadManager.getSpecialDamageProbability(warhead: Int): Float = 0f
-fun ArmorWarheadManager.isSkinImpervious(sdType: Int, skin: Int): Boolean = false
 
 // ---------------------------------------------------------------------------
 // PlayerDataClass — stats kill methods
