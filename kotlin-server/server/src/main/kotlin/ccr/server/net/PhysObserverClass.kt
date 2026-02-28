@@ -1,5 +1,7 @@
 package ccr.server.net
 
+import ccr.physics.PhysClass
+
 // C++: PhysObserverClass (wwphys/physobserver.h)
 // Observer interface for a physics object — notified on collision, expiration, removal, shatter.
 interface PhysObserverClass {

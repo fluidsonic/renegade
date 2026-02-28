@@ -3,6 +3,8 @@ package ccr.server.net
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.net.replication.NetworkObject
+import ccr.physics.dynamic.LightPhysClass
+import ccr.physics.static.StaticPhysClass
 import ccr.server.GameObjManager
 import ccr.server.defs.BuildingGameObjDef
 import ccr.server.level.Sphere
@@ -287,11 +289,11 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
             // C++: Lights — power-on lights disabled when powered off or destroyed (only if power-off lights exist)
             val disablePowerOnLights = (!isPowerOn || healthState == HEALTH_0) && powerOffLights.isNotEmpty()
             for (light in powerOnLights) {
-                light.setDisabled(disablePowerOnLights)
+                light.isDisabled = disablePowerOnLights
             }
             val disablePowerOffLights = !disablePowerOnLights
             for (light in powerOffLights) {
-                light.setDisabled(disablePowerOffLights)
+                light.isDisabled = disablePowerOffLights
             }
 
             // C++: PhysicsSceneClass::Get_Instance()->Invalidate_Lighting_Caches(light_bounds)
@@ -360,7 +362,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
 
         if (soundDefId > 0) {
             // C++: CurrentAnnouncement = WWAudioClass::Get_Instance()->Create_Sound(sound_def_id)
-            currentAnnouncement = WWAudioClass.getInstance().createSound(soundDefId)
+            currentAnnouncement = WWAudioClass.getInstance()?.createSound(soundDefId)
             currentAnnouncement?.let { snd ->
                 duration = snd.getDuration() / 1000.0f
 
@@ -496,7 +498,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
         var minZ = position.z; var maxZ = position.z
 
         for (mesh in interiorMeshes) {
-            val box = mesh.peekModel()?.getBoundingBox() ?: continue
+            val box = mesh.model?.getBoundingBox() ?: continue
             val c = box.center
             val e = box.extent
             minX = minOf(minX, c.x - e.x); maxX = maxOf(maxX, c.x + e.x)
@@ -519,9 +521,9 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
     // C++: void Reset_Components()
     // -------------------------------------------------------------------------
     private fun resetComponents() {
-        for (mesh in interiorMeshes) mesh.setObserver(null)
-        for (mesh in exteriorMeshes) mesh.setObserver(null)
-        for (agg in aggregates)       agg.setObserver(null)
+        for (mesh in interiorMeshes) mesh.observer = null
+        for (mesh in exteriorMeshes) mesh.observer = null
+        for (agg in aggregates) agg.observer = null
         interiorMeshes.clear()
         exteriorMeshes.clear()
         powerOnLights.clear()
@@ -531,34 +533,34 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: void Add_Mesh(StaticPhysClass* terrain)
     private fun addMesh(terrain: StaticPhysClass) {
-        val name = terrain.peekModel()?.getName() ?: return
+        val name = terrain.model?.getName() ?: return
         when {
             isInteriorMeshName(name) -> {
-                check(terrain.getObserver() == null)
+                check(terrain.observer == null)
                 interiorMeshes.add(terrain)
-                terrain.setObserver(this)
+                terrain.observer = this
             }
             isExteriorMeshName(name) -> {
-                check(terrain.getObserver() == null)
+                check(terrain.observer == null)
                 exteriorMeshes.add(terrain)
-                terrain.setObserver(this)
+                terrain.observer = this
             }
         }
     }
 
     // C++: void Remove_Mesh(StaticPhysClass* terrain)
     fun removeMesh(terrain: StaticPhysClass) {
-        val name = terrain.peekModel()?.getName() ?: return
+        val name = terrain.model?.getName() ?: return
         when {
-            isInteriorMeshName(name) -> { terrain.setObserver(null); interiorMeshes.remove(terrain) }
-            isExteriorMeshName(name) -> { terrain.setObserver(null); exteriorMeshes.remove(terrain) }
+            isInteriorMeshName(name) -> { terrain.observer = null; interiorMeshes.remove(terrain) }
+            isExteriorMeshName(name) -> { terrain.observer = null; exteriorMeshes.remove(terrain) }
         }
     }
 
     // C++: void Add_Aggregate(BuildingAggregateClass* aggregate)
     private fun addAggregate(aggregate: BuildingAggregateClass) {
         aggregates.add(aggregate)
-        check(aggregate.getObserver() == null)
+        check(aggregate.observer == null)
         aggregate.setObserver(this)
     }
 
@@ -571,7 +573,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
     // C++: void Add_Light(LightPhysClass* light)
     private fun addLight(light: LightPhysClass) {
         // C++: if (light->Get_Group_ID() == 0) PowerOnLights else PowerOffLights
-        if (light.getGroupId() == 0) {
+        if (light.groupId == 0) {
             powerOnLights.add(light)
         } else {
             powerOffLights.add(light)
@@ -580,7 +582,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: void Enable_Alternate_Materials(RefMultiListClass<StaticPhysClass>& models, bool onoff)
     private fun enableAlternateMaterials(models: List<StaticPhysClass>, onoff: Boolean) {
-        for (mesh in models) enableAlternateMaterials(mesh.peekModel(), onoff)
+        for (mesh in models) enableAlternateMaterials(mesh.model, onoff)
     }
 
     // C++: void Enable_Alternate_Materials(RenderObjClass* model, bool onoff)
@@ -597,8 +599,8 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
     // C++: void Find_Closest_Poly(const Vector3& pos, float* distance2)
     fun findClosestPoly(pos: Vector3): Float {
         var distance2 = 9999.0f
-        for (mesh in interiorMeshes) distance2 = findClosestPolyForModel(mesh.peekModel(), pos, distance2)
-        for (mesh in exteriorMeshes) distance2 = findClosestPolyForModel(mesh.peekModel(), pos, distance2)
+        for (mesh in interiorMeshes) distance2 = findClosestPolyForModel(mesh.model, pos, distance2)
+        for (mesh in exteriorMeshes) distance2 = findClosestPolyForModel(mesh.model, pos, distance2)
         return distance2
     }
 
@@ -610,7 +612,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
             distance2 = findClosestPolyForModel(model.getSubObject(i), pos, distance2)
         }
         if (model.classId == RenderObjClass.CLASSID_MESH) {
-            val meshModel = model.asMeshClass()?.peekModel()
+            val meshModel = model.asMeshClass()?.getModel()
             if (meshModel != null) {
                 val tris = meshModel.getPolygonArray()
                 val verts = meshModel.getVertexArray()

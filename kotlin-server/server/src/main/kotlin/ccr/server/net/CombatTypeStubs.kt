@@ -2,9 +2,14 @@ package ccr.server.net
 
 import ccr.math.Matrix3D
 import ccr.math.Vector3
+import ccr.physics.PhysClass
 import ccr.server.defs.DefinitionClass
-import ccr.physics.PhysClass as RealPhysClass
 import ccr.physics.scene.PhysicsScene
+
+// Audio types — real implementations live in ccr.server.audio; import here for net-package usage.
+typealias AudibleSoundClass  = ccr.server.audio.AudibleSoundClass
+typealias Sound3DClass       = ccr.server.audio.Sound3DClass
+typealias WWAudioClass       = ccr.server.audio.WWAudioClass
 
 // ---------------------------------------------------------------------------
 // Serialisation stubs — C++ wwsaveload chunk/micro-chunk I/O
@@ -152,143 +157,6 @@ class CastResultStruct {
     val startInside: Boolean = false
 }
 
-// C++: PhysClass server stub — extends the real ccr.physics.PhysClass so that server-stub
-// instances (HumanPhysClass bridge, PhysDefClass-created stubs) can be stored in physObj
-// (typed as ccr.physics.PhysClass) alongside real physics objects (VehiclePhysClass, etc.).
-//
-// Methods that are purely server-specific (peekModel, setObserver, getObserver, getFactory,
-// intersectionTest, addToScene, removeFromScene) remain here.  All other methods are
-// inherited from the real ccr.physics.PhysClass.
-open class PhysClass : RealPhysClass() {
-    // abstract var transform is satisfied by DynamicPhysClass in the real hierarchy; here we
-    // provide a concrete backing field so the server-stub instances are instantiable.
-    private var _transform: Matrix3D = Matrix3D.IDENTITY
-    override var transform: Matrix3D
-        get() = _transform
-        set(v) { _transform = v }
-
-    // Server-specific observer storage.  The real ccr.physics.PhysClass.observer is typed as
-    // ccr.physics.PhysObserver which is incompatible with the server's CombatPhysObserverClass
-    // interface (different method signatures / parameter types).  We keep a parallel field.
-    var combatObserver: CombatPhysObserverClass? = null
-
-    // Server-specific methods — not present in ccr.physics.PhysClass (would need server types).
-    override fun peekModel(): RenderObjClass? = model as? RenderObjClass
-    fun setObserver(observer: CombatPhysObserverClass?) { combatObserver = observer }
-    fun getObserver(): PhysObserverClass? = combatObserver
-    fun getFactory(): PhysFactoryClass? = null
-    fun intersectionTest(test: PhysAABoxIntersectionTestClass): Boolean = false
-    open fun addToScene(scene: Any): Unit = Unit
-    open fun removeFromScene(): Unit = Unit
-
-    // asVehiclePhysClass() is inherited from the real PhysClass with the same return type — no override needed.
-    // The stub-specific As_* methods that conflict in return type are intentionally omitted:
-    // callers should use the real As_*() returns (ccr.physics.*) or the peekHumanPhys()/etc helpers.
-    open fun asSound3DClass(): Sound3DClass? = null
-}
-
-// C++: MoveablePhysClass : public PhysClass
-open class MoveablePhysClass : PhysClass() {
-    open fun setVelocity(vel: Vector3): Unit = Unit
-    open fun getVelocity(): Vector3 = Vector3()
-    open fun getAngularVelocity(): Vector3 = Vector3()
-    open fun cinematicMoveTo(tm: Matrix3D): Unit = Unit
-    override fun addEffectToMe(effect: Any): Unit = Unit
-    open fun removeEffectFromMe(effect: Any): Unit = Unit
-    open fun computeApproximateRideHeight(): Float = 0f
-    open fun getSquishVelocity(): Float = 0f
-    open fun setGravityMultiplier(multiplier: Float): Unit = Unit
-    override fun enableUserControl(enable: Boolean): Unit = Unit
-}
-
-// C++: StaticPhysClass : public PhysClass
-open class StaticPhysClass : PhysClass() {
-    fun getStaticLights(): List<Any> = TODO("stub")
-    fun getStaticObjects(): List<Any> = TODO("stub")
-    fun enableIsStateDirty(enable: Boolean): Unit {}
-    // C++: Get_Factory() returns PhysFactoryClass; factory->Get_Chunk_ID() checked against known IDs
-    fun isFromFactory(chunkId: UInt): Boolean = TODO("stub")
-    fun isFromFactory(chunkId: Int): Boolean = isFromFactory(chunkId.toUInt())
-    open fun getName(): String = TODO("stub")
-}
-
-// C++: StaticAnimPhysClass : public StaticPhysClass
-open class StaticAnimPhysClass : StaticPhysClass() {
-    // asStaticAnimPhysClass() intentionally not overridden (return type clash with real hierarchy).
-    fun getAnimState(): Int = TODO("stub")
-    fun setCurrentState(state: Int): Unit = TODO("stub")
-    fun getStateFlag(flag: Int): Boolean = TODO("stub")
-    fun toggleStateFlag(flag: Int): Unit = TODO("stub")
-    fun getStateTimer(): Float = TODO("stub")
-    fun setStateTimer(timer: Float): Unit = TODO("stub")
-    fun isTriggered(): Boolean = TODO("stub")
-    fun getStateName(): String = TODO("stub")
-    fun peekAnimation(): Animatable3DObjClass? = TODO("stub")
-    fun getAnimationManager(): AnimCollisionManagerClass = TODO("stub")
-    fun getCollisionBox(): Any? = TODO("stub")
-    fun enableRemoveOnComplete(enable: Boolean): Unit = TODO("stub")
-    // C++: DefinitionClass* Get_Definition() / Get_ID() / Get_Position(Vector3&)
-    fun getDefinition(): DefinitionClass? = TODO("stub")
-    fun getId(): Int = TODO("stub")
-    fun getPosition(out: Vector3): Unit = TODO("stub")
-}
-
-// C++: HumanPhysClass : public MoveablePhysClass
-open class HumanPhysClass : MoveablePhysClass() {
-    // asHumanPhysClass() intentionally not overridden (return type clash with real hierarchy).
-    open fun getLegMode(): Boolean = false
-    open fun setLadderIndex(index: Int): Unit = Unit
-    open fun isSubStateAdjustable(): Boolean = false
-    open fun getHeading(): Float = 0f
-    open fun setHeading(heading: Float): Unit = Unit
-    fun setInContact(inContact: Boolean): Unit = Unit
-    fun setLoitersAllowed(allowed: Boolean): Unit = Unit
-    fun resetLoiterDelay(): Unit = Unit
-    fun canTeleport(pos: Vector3): Boolean = false
-    fun findTeleportLocation(pos: Vector3, radius: Float, out: Vector3): Boolean = false
-    fun setDisabled(disabled: Boolean): Unit = Unit
-    fun isEngineEnabled(): Boolean = false
-    fun enableEngine(enable: Boolean): Unit = Unit
-}
-
-// C++: ProjectileClass (physics stub)
-open class ProjectilePhysClass : MoveablePhysClass() {
-    // asProjectileClass() intentionally not overridden (return type clash with real hierarchy).
-}
-
-// C++: Sound3DClass physics stub
-open class Sound3DClass {
-    fun asSound3DClass(): Sound3DClass = this
-    fun setMaxVolRadius(radius: Float): Unit = TODO("stub")
-    fun isSoundCulled(): Boolean = TODO("stub")
-    fun isPlaying(): Boolean = TODO("stub")
-    fun play(): Unit = TODO("stub")
-    fun stop(): Unit = TODO("stub")
-}
-
-// C++: LightPhysClass : public StaticPhysClass
-open class LightPhysClass : StaticPhysClass() {
-    // asLightPhysClass() intentionally not overridden (return type clash with real hierarchy).
-    fun setDisabled(disabled: Boolean): Unit = Unit
-    fun getGroupId(): Int = TODO("stub")
-    override fun getName(): String = TODO("stub")
-    override fun getPosition(): Vector3 = TODO("stub")
-}
-
-// C++: PhysFactoryClass — factory with chunkId for type identification
-class PhysFactoryClass {
-    val chunkId: UInt = 0u
-}
-
-// ---------------------------------------------------------------------------
-// Physics def stubs
-// ---------------------------------------------------------------------------
-
-// C++: PhysDefClass base (server stub)
-abstract class PhysDefClass {
-    abstract fun create(): PhysClass
-}
-
 // ---------------------------------------------------------------------------
 // Animation controller stubs
 // ---------------------------------------------------------------------------
@@ -357,86 +225,6 @@ class AnimCollisionManagerClass {
 // ---------------------------------------------------------------------------
 // Human state / soldier animation stubs
 // ---------------------------------------------------------------------------
-
-<<<<<<< HEAD
-// C++: HumanStateClass (soldier.h)
-class HumanStateClass {
-    private var _state: Int = UPRIGHT
-    private var _subState: Int = 0
-    private var _stateTimer: Float = 0f
-
-    fun setAnimControl(animControl: HumanAnimControlClass?): Unit = Unit
-    fun getState(): Int = _state
-    // C++: void Set_State(StateType state, int sub_state = 0)
-    fun setState(state: Int, subState: Int = 0): Unit { _state = state; _subState = subState }
-    fun getSubState(): Int = _subState
-    fun getStateName(): String = ""
-    fun getLegFacing(): Float = 0f
-    fun isFiring(): Boolean = false
-    fun isReloading(): Boolean = false
-    fun getStateTimer(): Float = _stateTimer
-    fun setStateTimer(timer: Float): Unit { _stateTimer = timer }
-    fun reset(): Unit { _state = UPRIGHT; _subState = 0; _stateTimer = 0f }
-    fun postThink(): Unit = Unit
-    fun setTurnVelocity(velocity: Float): Unit = Unit
-    fun updateAiming(tilt: Float, roll: Float): Unit = Unit
-    fun updateWeapon(weapon: WeaponClass?, weaponChanged: Boolean): Unit = Unit
-    fun updateState(): Unit = Unit
-    fun startScriptedAnimation(animName: String, looping: Boolean, resetOnComplete: Boolean = false): Unit = Unit
-    fun forceAnimation(animName: String, looping: Boolean = false): Unit = Unit
-    fun save(csave: ChunkSaveClass): Unit = Unit
-    fun load(cload: ChunkLoadClass): Unit = Unit
-    fun getInformation(sb: StringBuilder): Unit = Unit
-    fun init(humanPhys: HumanPhysClass?): Unit = Unit
-    // C++: HumanStateClass::Set_Human_Anim_Override(int defId)
-    fun setHumanAnimOverride(defId: Int): Unit = Unit
-    // C++: HumanStateClass::Set_Human_Loiter_Collection(int defId)
-    fun setHumanLoiterCollection(defId: Int): Unit = Unit
-    // C++: HumanStateClass::Is_Sub_State_Adjustable()
-    fun isSubStateAdjustable(): Boolean = false
-    // C++: HumanStateClass::Get_State_Flag(int flag)
-    fun getStateFlag(flag: Int): Boolean = false
-    // C++: HumanStateClass::Toggle_State_Flag(int flag)
-    fun toggleStateFlag(flag: Int): Unit = Unit
-    // C++: HumanStateClass::Get_Can_Snipe()
-    fun getCanSnipe(): Boolean = false
-    // C++: HumanStateClass::Get_Normalized_Speed()
-    fun getNormalizedSpeed(): Float = 0f
-    // C++: HumanStateClass::Set_Normalized_Speed(float)
-    fun setNormalizedSpeed(speed: Float): Unit = Unit
-    // C++: HumanStateClass::Get_Leg_Mode()
-    fun getLegMode(): Boolean = false
-    // C++: HumanStateClass::Is_Locked()
-    fun isLocked(): Boolean = false
-    // C++: HumanStateClass::Reset_Loiter_Delay()
-    fun resetLoiterDelay(): Unit = Unit
-    // C++: HumanStateClass::Set_Loiters_Allowed(bool)
-    fun setLoitersAllowed(allowed: Boolean): Unit = Unit
-    // C++: HumanStateClass::Start_Transition_Animation(int dataId)
-    fun startTransitionAnimation(dataId: Int): Unit = Unit
-    // C++: HumanStateClass::Stop_Scripted_Animation()
-    fun stopScriptedAnimation(): Unit = Unit
-    // C++: HumanStateClass::Get_Collision_Box()
-    fun getCollisionBox(): AABoxClass? = null
-    // C++: HumanStateClass::Network_State_Update(AnimControlClass*)
-    fun networkStateUpdate(animControl: AnimControlClass?): Unit = Unit
-    // C++: HumanStateClass::Get_Information(StringClass&) — for getInformation() on HumanStateClass obj directly
-    // (already added above for the StringBuilder overload)
-    // C++: HumanStateClass::Stop_Conversation()
-    fun stopConversation(): Unit = Unit
-
-    companion object {
-        const val UPRIGHT   = 0
-        const val CROUCH    = 1
-        const val DEATH     = 2
-        const val IN_VEHICLE = 3
-        const val OUCH_FIRE = 4
-        const val LADDER    = 5
-    }
-}
-=======
-// NOTE: HumanStateClass is defined in HumanStateClass.kt — not a stub.
->>>>>>> f7bb8f8 (feat: port HumanStateClass from C++ — full 1:1 migration)
 
 // C++: TransitionDataClass — data for vehicle/object transition animations
 class TransitionDataClass {
@@ -521,23 +309,6 @@ class DynamicSpeechAnimClass(skeletonName: String = "") {
     fun generateIdleAnimation(param1: Int, param2: Float): Unit = Unit
 }
 
-// C++: AudibleSoundClass — playing sound instance
-class AudibleSoundClass {
-    fun stop(): Unit = Unit
-    fun play(): Unit = Unit
-    fun isPlaying(): Boolean = false
-    fun isSoundCulled(): Boolean = false
-    fun asSound3DClass(): Sound3DClass? = null
-    fun getDuration(): Float = 0f
-    fun setDropOffRadius(radius: Float): Unit = Unit
-    fun setTransform(center: Vector3): Unit = Unit
-    fun setTransform(tm: Matrix3D): Unit = Unit
-    fun addToScene(): Unit = Unit
-    fun addToScene(updateNow: Boolean): Unit = Unit
-    fun removeFromScene(): Unit = Unit
-    fun getString(): String? = null
-    fun getSoundId(): Int = 0
-}
 
 // C++: PersistantSurfaceEmitterClass — particle emitter that persists on a surface
 class PersistantSurfaceEmitterClass {
@@ -733,17 +504,6 @@ object UnitCoordinationZoneMgr {
     fun registerUnit(obj: Any?): Unit = Unit
     fun unregisterUnit(obj: Any?): Unit = Unit
     fun isUnitInZone(pos: Vector3): Boolean = false
-}
-
-// C++: WWAudioClass (wwaudio.h)
-object WWAudioClass {
-    fun getInstance(): WWAudioClass = this
-    fun playSound(soundId: Int, position: Vector3?): AudibleSoundClass? = null
-    fun createInstantSound(soundId: Int, tm: Matrix3D, owner: Any?): AudibleSoundClass? = null
-    fun createInstantSound(soundId: Int, tm: Matrix3D): AudibleSoundClass? = null
-    fun createSound(soundId: Int): AudibleSoundClass? = null
-    fun createSound(name: String): AudibleSoundClass? = null
-    fun createContinuousSound(soundId: Int): AudibleSoundClass? = null
 }
 
 // C++: WWMath utilities

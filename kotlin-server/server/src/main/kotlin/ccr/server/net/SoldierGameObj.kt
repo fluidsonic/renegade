@@ -1248,7 +1248,7 @@ open class SoldierGameObj() : SmartGameObj() {
                 // FIXME: EncyclopediaMgrClass::Reveal_Object — not yet ported
                 if (deathSoundId != 0) {
                     val tm = getTransform()
-                    WWAudioClass.getInstance().createInstantSound(deathSoundId, tm, this)
+                    WWAudioClass.getInstance()?.createInstantSound(deathSoundId, tm, this)
                 }
 
                 // C++: killed explosion
@@ -2308,7 +2308,7 @@ open class SoldierGameObj() : SmartGameObj() {
         val soundDefId = translateObj.getSoundId()
         speaker?.stopCurrentSpeech()
         if (soundDefId > 0) {
-            val speech = WWAudioClass.getInstance().createSound(soundDefId)
+            val speech = WWAudioClass.getInstance()?.createSound(soundDefId)
             if (speech != null) {
                 duration = speech.getDuration() / 1000.0f
                 if (speaker != null) {

@@ -1,5 +1,7 @@
 package ccr.server.net
 
+import ccr.physics.static.StaticAnimPhysClass
+
 // C++: class WarFactoryGameObj : public VehicleFactoryGameObj
 // Hierarchy: NetworkObject → BaseGameObj → DamageableGameObj → BuildingGameObj
 //            → VehicleFactoryGameObj → WarFactoryGameObj

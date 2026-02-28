@@ -6,6 +6,7 @@ import ccr.math.Vector3
 import ccr.math.degToRadF
 import ccr.net.bitstream.*
 import ccr.net.replication.NetworkObject
+import ccr.physics.PhysClass
 import ccr.physics.vehicle.VehiclePhysClass
 import ccr.server.GameObjManager
 import ccr.server.defs.VehicleGameObjDef
@@ -20,13 +21,13 @@ open class VehicleGameObj() : SmartGameObj() {
     // -------------------------------------------------------------------------
 
     // C++: Sound3DClass* Sound (initialized to NULL)
-    var sound: Any? = null  // Sound3DClass — FIXME: Sound3DClass not yet ported
+    var sound: Sound3DClass? = null
 
     // C++: int EngineSoundState (initialized to ENGINE_SOUND_STATE_OFF)
     var engineSoundState: Int = ENGINE_SOUND_STATE_OFF
 
     // C++: AudibleSoundClass* CachedEngineSound (initialized to NULL)
-    var cachedEngineSound: Any? = null  // AudibleSoundClass — FIXME: AudibleSoundClass not yet ported
+    var cachedEngineSound: AudibleSoundClass? = null
 
     // C++: int TurretBone (initialized to 0)
     var turretBone: Int = 0

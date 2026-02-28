@@ -25,6 +25,9 @@ class ActionClass {
     // C++: bool Is_Busy() — true when the current action code is busy
     fun isBusy(): Boolean = false
 
+    // C++: void Goto(ActionParamsStruct&) — start a movement action
+    fun `goto`(params: ActionParamsStruct): Unit = Unit
+
     // C++: void Reset(int priority) — clears current action code if priority sufficient
     fun reset(priority: Int) {
         // Server-side stub: action execution not needed; just clear the action code

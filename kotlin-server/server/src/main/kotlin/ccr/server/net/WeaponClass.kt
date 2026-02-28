@@ -253,6 +253,15 @@ class WeaponClass(val definition: WeaponDefinitionClass) {
     // C++: void Update()
     fun update() {}
 
+    // C++: void Reset_Anim_Update() — clears the "anim updated this frame" flag
+    fun resetAnimUpdate() {}
+
+    // C++: int Get_Anim_State() — returns current weapon fire animation state
+    fun getAnimState(): Int = WEAPON_ANIM_NOT_FIRING
+
+    // C++: const char* Get_Back_Model_Name() — returns the model name for the back-of-soldier slot
+    fun getBackModelName(): String = definition.backModel
+
     // C++: void Stop_Firing_Sound()
     // Server-side: FiringSound is client-only audio — no-op on the server.
     // The field firingSound is not tracked server-side (audio state is never replicated).

@@ -1068,6 +1068,7 @@ class Network(internal val config: ServerConfig) {
     }
 
     private fun unloadLevel() {
+        ccr.server.audio.WWAudioClass.shutdown()
         god.clearRoundState()   // clear tracking lists before objects are destroyed
         println("[SERVER] unloading level '$currentMapName'")
 
@@ -1226,6 +1227,9 @@ class Network(internal val config: ServerConfig) {
         // Extract soldier/weapon definition IDs from the loaded registry
         val defs = level.definitions
         println("[SERVER] loaded ${defs.size} definitions via LevelLoader")
+
+        // Initialize audio manager with the definition registry
+        ccr.server.audio.WWAudioClass.init(defs)
 
         defs.findByName("CnC_Nod_Minigunner_0")?.let {
             nodSoldierDefId = it.id.toInt()

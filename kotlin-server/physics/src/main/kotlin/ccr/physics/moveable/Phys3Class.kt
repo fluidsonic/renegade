@@ -5,6 +5,9 @@ import ccr.math.Vector3
 import ccr.physics.PhysController
 import ccr.physics.PhysicsConstants
 import ccr.physics.collision.AABoxCollisionTest
+import ccr.physics.collision.AABoxIntersectionTest
+import ccr.physics.collision.CollisionMath
+import ccr.physics.collision.OBBoxIntersectionTest
 import ccr.physics.scene.PhysicsScene
 
 abstract class Phys3Class : MoveablePhysClass() {
@@ -51,6 +54,34 @@ abstract class Phys3Class : MoveablePhysClass() {
     var groundState: GroundState = GroundState.NOT_ON_GROUND
 
     override fun asPhys3Class(): Phys3Class = this
+
+    /**
+     * C++: Phys3Class::Intersection_Test(PhysAABoxIntersectionTestClass&)
+     *
+     * Builds the world-space collision box and tests it against [test].box.
+     */
+    override fun intersectionTest(test: AABoxIntersectionTest): Boolean {
+        val wrldBox = computeWSCollisionBox()
+        if (CollisionMath.intersectionTest(wrldBox, test.box)) {
+            test.addIntersectedObject(this)
+            return true
+        }
+        return false
+    }
+
+    /**
+     * C++: Phys3Class::Intersection_Test(PhysOBBoxIntersectionTestClass&)
+     *
+     * Builds the world-space collision box (AABox) and tests it against [test].box (OBBox).
+     */
+    override fun intersectionTest(test: OBBoxIntersectionTest): Boolean {
+        val wrldBox = computeWSCollisionBox()
+        if (CollisionMath.intersectionTest(wrldBox, test.box)) {
+            test.addIntersectedObject(this)
+            return true
+        }
+        return false
+    }
 
     /** Compute the world-space collision box. Mirrors C++ Compute_WS_Collision_Box. */
     fun computeWSCollisionBox(): AABox = AABox(position + collisionBox.center, collisionBox.extent)

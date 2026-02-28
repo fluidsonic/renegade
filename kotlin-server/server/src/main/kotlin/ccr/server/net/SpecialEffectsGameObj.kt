@@ -75,7 +75,7 @@ open class SpecialEffectsGameObj() : PhysicalGameObj() {
 
         // C++: Should we play a sound?
         if (getSpecialEffectsDefinition().soundDefId > 0) {
-            WWAudioClass.getInstance().createInstantSound(
+            WWAudioClass.getInstance()?.createInstantSound(
                 getSpecialEffectsDefinition().soundDefId,
                 getTransform(),
             )

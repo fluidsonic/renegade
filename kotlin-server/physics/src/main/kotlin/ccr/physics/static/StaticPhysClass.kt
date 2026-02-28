@@ -6,8 +6,10 @@ import ccr.math.Triangle
 import ccr.math.Vector3
 import ccr.physics.PhysClass
 import ccr.physics.collision.AABoxCollisionTest
+import ccr.physics.collision.AABoxIntersectionTest
 import ccr.physics.collision.CollisionMath
 import ccr.physics.collision.OBBoxCollisionTest
+import ccr.physics.collision.OBBoxIntersectionTest
 import ccr.physics.collision.RayCollisionTest
 
 open class StaticPhysClass : PhysClass() {
@@ -66,4 +68,37 @@ open class StaticPhysClass : PhysClass() {
     }
 
     override fun castOBBox(test: OBBoxCollisionTest): Boolean = false
+
+    /**
+     * C++: StaticPhysClass::Intersection_Test(PhysAABoxIntersectionTestClass&)
+     *
+     * C++ calls Model->Intersect_AABox(test) which tests the W3D render geometry.
+     * In the Kotlin server we store triangles directly — test each one against [test].box.
+     * If any triangle intersects, the object is added and true is returned.
+     */
+    override fun intersectionTest(test: AABoxIntersectionTest): Boolean {
+        for (tri in triangles) {
+            if (CollisionMath.intersectionTest(test.box, tri)) {
+                test.addIntersectedObject(this)
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * C++: StaticPhysClass::Intersection_Test(PhysOBBoxIntersectionTestClass&)
+     *
+     * C++ calls Model->Intersect_OBBox(test) which tests the W3D render geometry.
+     * In the Kotlin server we store triangles — test each one against [test].box (OBBox).
+     */
+    override fun intersectionTest(test: OBBoxIntersectionTest): Boolean {
+        for (tri in triangles) {
+            if (CollisionMath.intersectionTest(test.box, tri)) {
+                test.addIntersectedObject(this)
+                return true
+            }
+        }
+        return false
+    }
 }

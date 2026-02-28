@@ -2,9 +2,13 @@ package ccr.physics.rigidbody
 
 import ccr.math.Matrix3
 import ccr.math.Matrix3D
+import ccr.math.OBBox
 import ccr.math.Quaternion
 import ccr.math.Vector3
 import ccr.physics.PhysicsConstants
+import ccr.physics.collision.AABoxIntersectionTest
+import ccr.physics.collision.CollisionMath
+import ccr.physics.collision.OBBoxIntersectionTest
 import ccr.physics.moveable.MoveablePhysClass
 import ccr.physics.ode.Integrator
 import ccr.physics.ode.OdeSystem
@@ -73,6 +77,38 @@ abstract class RigidBodyClass : MoveablePhysClass(), OdeSystem {
     private var accumulatedTorque: Vector3 = Vector3.ZERO
 
     override fun asRigidBodyClass(): RigidBodyClass = this
+
+    /**
+     * C++: RigidBodyClass::Intersection_Test(PhysAABoxIntersectionTestClass&)
+     *
+     * C++ tests ContactBox->Get_World_Inner_Box() (OBBox) against test.Box (AABox).
+     * In Kotlin, RigidBodyClass has no explicit contact OBBox, so we derive an OBBox from
+     * the current transform (rotation) and the world bounding-box extent.
+     */
+    override fun intersectionTest(test: AABoxIntersectionTest): Boolean {
+        val wb = worldBoundingBox()
+        val contactOBBox = OBBox(wb.center, wb.extent, transform)
+        if (CollisionMath.intersectionTest(contactOBBox, test.box)) {
+            test.addIntersectedObject(this)
+            return true
+        }
+        return false
+    }
+
+    /**
+     * C++: RigidBodyClass::Intersection_Test(PhysOBBoxIntersectionTestClass&)
+     *
+     * C++ tests ContactBox->Get_World_Inner_Box() (OBBox) against test.Box (OBBox).
+     */
+    override fun intersectionTest(test: OBBoxIntersectionTest): Boolean {
+        val wb = worldBoundingBox()
+        val contactOBBox = OBBox(wb.center, wb.extent, transform)
+        if (CollisionMath.intersectionTest(contactOBBox, test.box)) {
+            test.addIntersectedObject(this)
+            return true
+        }
+        return false
+    }
 
     fun updateAuxiliaryState() {
         rotation = Matrix3.fromQuaternion(state.orientation)

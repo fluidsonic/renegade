@@ -98,7 +98,7 @@ class PowerUpGameObj() : SimpleGameObj() {
         super.init(definition)
 
         // Only collide with terrain!
-        peekPhysicalObject()?.setCollisionGroup(TERRAIN_ONLY_COLLISION_GROUP)
+        peekPhysicalObject()?.collisionGroup = TERRAIN_ONLY_COLLISION_GROUP
     }
 
     // C++: const PowerUpGameObjDef& Get_Definition() const
@@ -161,7 +161,7 @@ class PowerUpGameObj() : SimpleGameObj() {
     // C++: virtual void On_Post_Load()
     override fun onPostLoad() {
         super.onPostLoad()
-        peekPhysicalObject()?.setCollisionGroup(UNCOLLIDEABLE_GROUP)  // MOVED
+        peekPhysicalObject()?.collisionGroup = UNCOLLIDEABLE_GROUP  // MOVED
         peekPhysicalObject()?.asMoveablePhysClass()?.setGravityMultiplier(0f)
 
         // This allows the idle sound and animation to start after loading
@@ -267,7 +267,7 @@ class PowerUpGameObj() : SimpleGameObj() {
 
         // If we have a weapon bag, move it
         powerupWeaponBag?.let { bag ->
-            val objBag = obj.getWeaponBag()
+            val objBag = obj.weaponBag
             check(objBag != null)
             if (objBag.moveContents(bag)) {
                 setState(STATE_GRANTING)
@@ -332,7 +332,7 @@ class PowerUpGameObj() : SimpleGameObj() {
         tm.setTranslation(provider.getBullseyePosition())
         backpack.setTransform(tm)
         backpack.powerupWeaponBag = WeaponBagClass(backpack)
-        backpack.powerupWeaponBag!!.moveContents(provider.getWeaponBag())
+        backpack.powerupWeaponBag!!.moveContents(provider.weaponBag)
         backpack.startObservers()
 
         return backpack

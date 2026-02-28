@@ -4,7 +4,9 @@ import ccr.math.AABox
 import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.physics.collision.AABoxCollisionTest
+import ccr.physics.collision.AABoxIntersectionTest
 import ccr.physics.collision.OBBoxCollisionTest
+import ccr.physics.collision.OBBoxIntersectionTest
 import ccr.physics.collision.RayCollisionTest
 import ccr.physics.dynamic.DecorationPhysClass
 import ccr.physics.dynamic.DynamicAnimPhysClass
@@ -125,6 +127,18 @@ abstract class PhysClass {
     open fun castRay(test: RayCollisionTest): Boolean = false
     open fun castAABox(test: AABoxCollisionTest): Boolean = false
     open fun castOBBox(test: OBBoxCollisionTest): Boolean = false
+
+    /**
+     * C++: PhysClass::Intersection_Test(PhysAABoxIntersectionTestClass&) — base returns false.
+     * Subclasses override to test their geometry against [test].box and append themselves
+     * to [test].intersectedObjects if they intersect.
+     */
+    open fun intersectionTest(test: AABoxIntersectionTest): Boolean = false
+
+    /**
+     * C++: PhysClass::Intersection_Test(PhysOBBoxIntersectionTestClass&) — base returns false.
+     */
+    open fun intersectionTest(test: OBBoxIntersectionTest): Boolean = false
 
     // C++ convenience methods mirrored from PhysClass interface.
     // These exist so the server module can call them on ccr.physics.PhysClass without casting.

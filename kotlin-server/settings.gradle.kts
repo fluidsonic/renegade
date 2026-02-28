@@ -4,4 +4,4 @@ plugins {
 
 rootProject.name = "kotlin-server"
 
-include(":math", ":net", ":physics", ":server")
+include(":core", ":math", ":net", ":physics", ":server")

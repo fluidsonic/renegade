@@ -231,7 +231,7 @@ class C4GameObj(
             var building: BuildingGameObj? = null
             val hitProjectile = event.otherObj?.asProjectileClass() != null
 
-            val observer = event.otherObj?.getObserver()
+            val observer = event.otherObj?.observer
             if (observer != null) {
                 other = (observer as? CombatPhysObserverClass)?.asPhysicalGameObj()
                 building = (observer as? CombatPhysObserverClass)?.asBuildingGameObj()
@@ -409,7 +409,7 @@ class C4GameObj(
                 }
             } else if (stuckStaticAnimObj != null) {
                 // C++: pos = StuckStaticAnimObj->Peek_Model()->Get_Bone_Transform(StuckBone) * StuckOffset
-                val staticModel = stuckStaticAnimObj!!.peekModel()
+                val staticModel = stuckStaticAnimObj!!.model
                 if (staticModel != null) {
                     val pos = staticModel.getBoneTransform(stuckBone) * stuckOffset
                     setPosition(pos)

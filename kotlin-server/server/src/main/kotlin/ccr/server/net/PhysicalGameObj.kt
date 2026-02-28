@@ -3,9 +3,10 @@ package ccr.server.net
 import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.physics.PhysClass
 import ccr.server.GameObjManager
 import ccr.server.defs.PhysicalGameObjDef
-import ccr.physics.PhysClass as RealPhysClass
+import ccr.physics.PhysDefClass
 
 // C++: PhysicalGameObj : public DamageableGameObj, public CombatPhysObserverClass
 abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
@@ -13,7 +14,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: PhysClass* PhysObj (initialized to NULL)
     // Typed as the real ccr.physics.PhysClass so both server-stub instances (HumanPhysClass
     // bridge) and real physics objects (VehiclePhysClass) can be stored without a proxy.
-    var physObj: RealPhysClass? = null
+    var physObj: PhysClass? = null
 
     // C++: AnimControlClass* AnimControl (initialized to NULL)
     // @JvmName avoids clash with explicit getAnimControl()/setAnimControl() methods below
@@ -96,7 +97,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         val newPhysObj = poDef.create()  // server-stub PhysClass (which extends real ccr.physics.PhysClass)
         check(newPhysObj != null)
         newPhysObj.collisionGroup = DEFAULT_COLLISION_GROUP
-        newPhysObj.setObserver(this)
+        newPhysObj.observer = this
         CombatManager.getScene()?.addDynamicObject(newPhysObj)
         physObj = newPhysObj
         if (definition.animation.isNotEmpty()) {
@@ -238,7 +239,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         }
         if (!animationName.isNullOrEmpty()) {
             val physStub = physObj as? PhysClass
-            val model = physStub?.peekModel()
+            val model = physStub?.model
             val animName = if ('.' in animationName) animationName
                            else createAnimationName(animationName, model?.getName() ?: "")
             animControl!!.setModel(model)
@@ -404,7 +405,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: virtual void On_Post_Load()
     override fun onPostLoad() {
         check(physObj != null)
-        (physObj as? PhysClass)?.setObserver(this)
+        physObj?.observer = this
         hideMuzzleFlashes()
         super.onPostLoad()
     }

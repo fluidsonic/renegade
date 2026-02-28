@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.math.Matrix3D
 import ccr.math.Vector3
+import ccr.physics.moveable.HumanPhysClass
 
 // C++: HumanStateClass (humanstate.h / humanstate.cpp)
 // Faithful 1:1 port of the C++ class.
@@ -102,7 +103,7 @@ class HumanStateClass {
     fun setAnimControl(animControl: AnimControlClass?) {
         this.animControl = animControl
         // C++: AnimControl->Set_Model(HumanPhys->Peek_Model()) — model setup
-        animControl?.setModel(humanPhys?.peekModel())
+        animControl?.setModel(humanPhys?.model)
     }
 
     // C++: void Set_Human_Anim_Override(int def_id)
@@ -219,13 +220,15 @@ class HumanStateClass {
             }
 
             if (state == IN_VEHICLE || state == TRANSITION || state == TRANSITION_COMPLETE) {
-                phys.setCollisionGroup(BULLET_ONLY_COLLISION_GROUP)
+                phys.collisionGroup = BULLET_ONLY_COLLISION_GROUP
                 phys.setImmovable(true)
-            } else if (state == DESTROY || state == DEATH) {
-                phys.setCollisionGroup(TERRAIN_ONLY_COLLISION_GROUP)
+            }
+            else if (state == DESTROY || state == DEATH) {
+                phys.collisionGroup = TERRAIN_ONLY_COLLISION_GROUP
                 phys.setImmovable(true)
-            } else {
-                phys.setCollisionGroup(SOLDIER_COLLISION_GROUP)
+            }
+            else {
+                phys.collisionGroup = SOLDIER_COLLISION_GROUP
                 phys.setImmovable(false)
             }
         }
@@ -671,7 +674,7 @@ class HumanStateClass {
         if (ouchType != GROIN) {
             val phys = humanPhys
             if (phys != null) {
-                val relativeDirection = phys.getTransform().inverseRotateVector(direction)
+                val relativeDirection = phys.transform.inverseRotateVector(direction)
                 if (relativeDirection.x < 0) {
                     ouchType += 1
                 }
@@ -721,7 +724,7 @@ class HumanStateClass {
     // C++: void Begin_Jump()
     private fun beginJump() {
         val phys = humanPhys ?: return
-        jumpTM = phys.getTransform()
+        jumpTM = phys.transform
 
         // C++: HumanPhys->Get_Velocity(&move_vector) — use the existing extension that returns Vector3
         val moveVector = phys.getVelocity()
@@ -1023,40 +1026,3 @@ class HumanStateClass {
         }
     }
 }
-
-// ---------------------------------------------------------------------------
-// Extension methods needed by HumanStateClass on existing stubs
-// ---------------------------------------------------------------------------
-
-// C++: HumanPhysClass::Set_Immovable(bool) — needed by HumanStateClass::Set_State
-fun HumanPhysClass.setImmovable(immovable: Boolean): Unit = Unit
-
-// C++: HumanPhysClass::Is_In_Contact() — needed by HumanStateClass::Update_State
-fun HumanPhysClass.isInContact(): Boolean = true
-
-// C++: HumanPhysClass::Get_Animation_Move(Vector3*) — needed by HumanStateClass::Post_Think
-fun HumanPhysClass.getAnimationMove(out: Vector3): Unit { out.x = 0f; out.y = 0f; out.z = 0f }
-
-// C++: HumanPhysClass::Reset_Animation_Move() — needed by HumanStateClass::Post_Think
-fun HumanPhysClass.resetAnimationMove(): Unit = Unit
-
-// C++: HumanPhysClass::Peek_Ground_Object() — needed by Complete_Jump
-fun HumanPhysClass.peekGroundObject(): PhysClass? = null
-
-// C++: AnimControlClass::Get_Skeleton() — returns skeleton type char
-fun AnimControlClass.getSkeleton(): Char = 'H'
-
-// C++: AnimControlClass::Get_Progress() — returns anim progress [0..1]
-fun AnimControlClass.getProgress(): Float = 0f
-
-// C++: AnimControlClass::Get_Frame() — returns current frame number
-fun AnimControlClass.getFrame(): Float = 0f
-
-// C++: AnimControlClass::Set_Anim_Speed_Scale(float) — scales animation speed
-fun AnimControlClass.setAnimSpeedScale(scale: Float): Unit = Unit
-
-// C++: AnimControlClass::Get_Information(StringClass&) — appends state info
-fun AnimControlClass.getInformation(sb: StringBuilder): Unit = Unit
-
-// C++: Matrix3D::Inverse_Rotate_Vector(Vector3) — needed by Get_Ouch_Type
-fun Matrix3D.inverseRotateVector(v: Vector3): Vector3 = v

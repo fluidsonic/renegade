@@ -49,7 +49,7 @@ class RefineryGameObj() : BuildingGameObj() {
 
     init {
         // C++: MoneyTrickleSound = WWAudioClass::Get_Instance()->Create_Sound("Money_Trickle")
-        moneyTrickleSound = WWAudioClass.getInstance().createSound("Money_Trickle")
+        moneyTrickleSound = WWAudioClass.getInstance()?.createSound("Money_Trickle")
     }
 
     // Secondary constructor for tests — bypasses Init() / definition pipeline.

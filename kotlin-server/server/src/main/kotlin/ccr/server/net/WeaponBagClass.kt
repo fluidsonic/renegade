@@ -128,6 +128,16 @@ class WeaponBagClass(val owner: PhysicalGameObj) {
         isChanged = true
     }
 
+    // C++: WeaponClass* Get_Next_Weapon() — find the next existing weapon after the current selection
+    fun getNextWeapon(): WeaponClass? {
+        for (i in 0 until weaponList.size) {
+            val index = (weaponIndex + i + 1) % weaponList.size
+            val w = weaponList[index]
+            if (w != null && w.doesWeaponExist()) return w
+        }
+        return null
+    }
+
     // C++: bool Is_Weapon_Owned(int weapon_id)
     fun isWeaponOwned(weaponId: Int): Boolean = weaponList.any { it != null && it.getId() == weaponId }
 

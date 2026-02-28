@@ -40,7 +40,7 @@ class SAMSiteGameObj() : SmartGameObj() {
 
     // C++: SAMSiteGameObj::Init(void) — delegates to Init(definition)
     override fun init() {
-        init(getDefinition() as SAMSiteGameObjDef)
+        init(definition as SAMSiteGameObjDef)
     }
 
     // C++: SAMSiteGameObj::Init(const SAMSiteGameObjDef&)
@@ -49,7 +49,7 @@ class SAMSiteGameObj() : SmartGameObj() {
     }
 
     // C++: const SAMSiteGameObjDef& SAMSiteGameObj::Get_Definition() const
-    fun getSamSiteDefinition(): SAMSiteGameObjDef = getDefinition() as SAMSiteGameObjDef
+    fun getSamSiteDefinition(): SAMSiteGameObjDef = definition as SAMSiteGameObjDef
 
     // C++: SAMSiteGameObj::~SAMSiteGameObj — releases captured bones
     override fun destruct() {
