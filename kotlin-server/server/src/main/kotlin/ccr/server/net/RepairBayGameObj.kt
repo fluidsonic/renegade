@@ -177,7 +177,7 @@ class RepairBayGameObj() : BuildingGameObj() {
         if (scene != null) {
             for (obj in scene.staticObjects) {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
-                val defId = (animPhysObj.definition as? ccr.physics.PhysDefClass)?.id
+                val defId = (animPhysObj.definition as? ccr.physics.defs.PhysDefClass)?.id
                 if (defId == getRepairBayDefinition().repairingStaticAnimDefId.toUInt()) {
                     val animPos = animPhysObj.getPosition()
                     val dist2 = (animPos - pos).lengthSquared()

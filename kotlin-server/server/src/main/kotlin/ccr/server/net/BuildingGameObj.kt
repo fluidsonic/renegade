@@ -368,7 +368,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
 
                 if (!broadcast) {
                     snd.setDropOffRadius(announcementSphere.radius)
-                    snd.asSound3DClass()?.setMaxVolRadius(announcementSphere.radius * 0.9f)
+                    snd.asSound3DClass()?.let { it.maxVolRadius = announcementSphere.radius * 0.9f }
                     snd.setTransform(announcementSphere.center)
                     displayText = !snd.isSoundCulled()
                 }

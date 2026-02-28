@@ -52,7 +52,7 @@ import ccr.server.defs.PowerUpGameObjDef
 import ccr.server.defs.RefineryGameObjDef
 import ccr.math.OBBox
 import ccr.math.Matrix3D as MathMatrix3D
-import ccr.physics.PhysDefClass
+import ccr.physics.defs.PhysDefClass
 import ccr.physics.static.DoorPhysClass
 import ccr.server.core.crcStringi
 import ccr.server.net.DoorNetworkObject

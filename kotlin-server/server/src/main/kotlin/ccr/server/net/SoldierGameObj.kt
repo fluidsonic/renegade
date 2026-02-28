@@ -703,7 +703,7 @@ open class SoldierGameObj() : SmartGameObj() {
 					val def = DefinitionMgrClass.findTypedDefinition(explosionName, CLASSID_DEF_EXPLOSION)
 					if (def != null) {
 						val pos = getBullseyePosition()
-						val defId = (def as? ccr.server.defs.DefinitionClass)?.id?.toInt() ?: 0
+						val defId = (def as? ccr.physics.defs.DefinitionClass)?.id?.toInt() ?: 0
 						ExplosionManager.createExplosionAt(defId, Matrix3D.translation(pos), null)
 					}
 				}

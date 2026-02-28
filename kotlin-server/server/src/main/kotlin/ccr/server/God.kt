@@ -3,11 +3,12 @@ package ccr.server
 import ccr.math.Vector3
 import ccr.net.replication.NetworkObject
 import ccr.net.replication.NetworkObjectManager
-import ccr.physics.PhysDefClass
+import ccr.physics.defs.PhysDefClass
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_REMOTE
 import ccr.server.defs.AmmoDefinitionClass.Companion.AMMO_TYPE_C4_TIMED
 import ccr.server.defs.SoldierGameObjDef
+import ccr.server.defs.toDefenseObjectDefClass
 import ccr.server.defs.VehicleGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.BeaconGameObjDef
