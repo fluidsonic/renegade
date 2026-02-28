@@ -189,8 +189,8 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     }
 
     // C++: WWINLINE RenderObjClass* Peek_Model() { return Peek_Physical_Object()->Peek_Model(); }
-    // Works for all physObj types — peekModel() is now on the real ccr.physics.PhysClass base.
-    fun peekModel(): RenderObjClass? = physObj?.peekModel() as? RenderObjClass
+    // Works for all physObj types (stub or real ccr.physics.PhysClass) via safe cast.
+    fun peekModel(): RenderObjClass? = physObj?.model as? RenderObjClass
 
     // C++: void Hide_Muzzle_Flashes(bool hide = true)
     fun hideMuzzleFlashes(hide: Boolean = true) {

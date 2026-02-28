@@ -58,6 +58,8 @@ abstract class PhysClass {
 
     var flags: Int = 0
     var observer: PhysObserver? = null
+    @get:JvmName("getModelField") @set:JvmName("setModelField")
+    var model: Any? = null
 
     /** Optional instance name (matches C++ Name field). */
     var name: String = ""
@@ -119,6 +121,14 @@ abstract class PhysClass {
         set(v) {
             flags = (flags and IGNORE_MASK.inv()) or ((v and 0xF) shl IGNORE_SHIFT)
         }
+
+    open fun setModel(model: Any?) { this.model = model }
+
+    // FIXME: server has no asset manager — cannot look up model by name
+    fun setModelByName(modelTypeName: String) {
+        System.err.println("WARNING: setModelByName(\"$modelTypeName\") called but server has no asset manager; setting model to null")
+        setModel(null)
+    }
 
     open fun timestep(dt: Float) {}
     open fun postTimestepProcess() {}

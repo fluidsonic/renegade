@@ -89,6 +89,20 @@ class PhysicsScene {
         return false
     }
 
+    /**
+     * C++: PhysicsSceneClass::Find_Static_Object(int) — finds a static object by instance ID.
+     * Returns null if no matching object is found.
+     */
+    fun findStaticObject(instanceId: Int): StaticPhysClass? {
+        for (obj in staticObjects) {
+            val staticObj = obj as? StaticPhysClass ?: continue
+            if (staticObj.instanceId.toInt() == instanceId) {
+                return staticObj
+            }
+        }
+        return null
+    }
+
     fun collectObjects(box: AABox): List<PhysClass> {
         val result = mutableListOf<PhysClass>()
         result.addAll(staticTree.collectObjects(box))
