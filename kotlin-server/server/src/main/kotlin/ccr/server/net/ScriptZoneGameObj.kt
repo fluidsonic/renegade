@@ -99,7 +99,7 @@ class ScriptZoneGameObj : ScriptableGameObj() {
             val aaBox = AABox(boundingBox.center, boundingBox.extent)
             val objsInZone: List<PhysClass> = scene?.collectObjects(aaBox).orEmpty()
             for (physObj in objsInZone) {
-                val observer = physObj.getObserver()
+                val observer = physObj.observer
                 val smartObj = if (observer is CombatPhysObserverClass) {
                     observer.asSmartGameObj()
                 } else {

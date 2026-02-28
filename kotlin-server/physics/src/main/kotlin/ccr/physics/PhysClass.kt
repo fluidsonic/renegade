@@ -136,6 +136,7 @@ abstract class PhysClass {
             flags = (flags and IGNORE_MASK.inv()) or ((v and 0xF) shl IGNORE_SHIFT)
         }
 
+    open fun remove() {}
     open fun timestep(dt: Float) {}
     open fun postTimestepProcess() {}
     open fun needsTimestep(): Boolean = false

@@ -573,7 +573,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         packet.addInt(playerType)
         packet.addBool(hudPokableIndicatorEnabled)
         if (this is VehicleGameObj) {
-            packet.addBool(peekModel()?.isHidden() ?: false)
+            packet.addBool(model?.isHidden() ?: false)
         }
     }
 
@@ -609,13 +609,13 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         hudPokableIndicatorEnabled = packet.getBool()
         if (this is VehicleGameObj) {
             val hidden = packet.getBool()
-            peekModel()?.setHidden(hidden)
+            model?.setHidden(hidden)
         }
     }
 
     // C++: PhysicalGameObj::Export_Frequent
     override fun exportFrequent(packet: BitStream) {
-        val onHostBone = (hostGameObj.get() as? PhysicalGameObj)?.peekModel() != null
+        val onHostBone = (hostGameObj.get() as? PhysicalGameObj)?.model != null
         packet.addBool(onHostBone)
     }
 

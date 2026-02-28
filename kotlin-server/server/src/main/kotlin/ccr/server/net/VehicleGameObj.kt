@@ -340,7 +340,7 @@ open class VehicleGameObj() : SmartGameObj() {
         // C++: if AnimControl != NULL && AnimControl->Peek_Model() == NULL → Set_Model(Peek_Model())
         val anim = getAnimControl()
         if (anim != null && anim.peekModel() == null) {
-            anim.setModel(peekModel())
+            anim.setModel(model)
         }
 
         // C++: if (type == VEHICLE_TYPE_TURRET) Set_App_Packet_Type(APPPACKETTYPE_TURRET)
@@ -381,7 +381,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: virtual void Post_Think()
     override fun postThink() {
-        val model = peekModel()
+        val model = this.model
         check(model != null)
 
         // C++: for each seat occupant, teleport to SEAT bone
@@ -525,7 +525,7 @@ open class VehicleGameObj() : SmartGameObj() {
         var relativeTilt = 0f
 
         if (turretBone != 0) {
-            val model = peekModel()!!
+            val model = this.model!!
             val turretBase = model.getBoneTransform(turretBone)
             val turretSpaceTarget = Vector3()
             turretBase.inverseTransformVector(pos, turretSpaceTarget)
@@ -558,7 +558,7 @@ open class VehicleGameObj() : SmartGameObj() {
         val maxMoveTilt = def.armed.weaponTiltRate * TimeManager.getFrameSeconds()
         if (doTilt) {
             if (turretBone != 0 && barrelBone != 0 && Math.abs(relativeTurn) < degToRadF(80f)) {
-                val model = peekModel()!!
+                val model = this.model!!
                 val barrelBase = model.getBoneTransform(barrelBone)
                 val barrelSpaceTarget = Vector3()
                 barrelBase.inverseTransformVector(pos, barrelSpaceTarget)
@@ -684,7 +684,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
         // C++: if OccupantsVisible == false → hide occupant model
         if (!def.occupantsVisible) {
-            occupant.peekModel()?.setHidden(true)
+            occupant.model?.setHidden(true)
         }
 
         // C++: Notify observers — CUSTOM_EVENT_VEHICLE_ENTERED
@@ -713,7 +713,7 @@ open class VehicleGameObj() : SmartGameObj() {
         val def = getDefinition()
         // C++: if OccupantsVisible == false → unhide occupant model
         if (!def.occupantsVisible) {
-            val model = seatOccupants[seatNum]?.peekModel()
+            val model = seatOccupants[seatNum]?.model
             model?.setHidden(false)
         }
 
@@ -1049,7 +1049,7 @@ open class VehicleGameObj() : SmartGameObj() {
     // C++: void Update_Damage_Meshes()
     fun updateDamageMeshes() {
         val healthMax = defenseObject.healthMax
-        val model = peekModel() ?: return
+        val model = this.model ?: return
         if (healthMax <= 0f) return
 
         val healthFrac = defenseObject.health / healthMax
@@ -1304,7 +1304,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: void Aquire_Turret_Bones()
     private fun acquireTurretBones() {
-        val model = peekModel() ?: return
+        val model = this.model ?: return
 
         if (turretBone == 0) {
             turretBone = model.getBoneIndex("turret")
@@ -1340,7 +1340,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
     // C++: void Release_Turret_Bones()
     private fun releaseTurretBones() {
-        val model = peekModel() ?: return
+        val model = this.model ?: return
 
         if (turretBone != 0 && model.isBoneCaptured(turretBone)) {
             model.releaseBone(turretBone)
@@ -1358,7 +1358,7 @@ open class VehicleGameObj() : SmartGameObj() {
     // C++: void Update_Turret(float weapon_turn, float weapon_tilt)
     private fun updateTurret(weaponTurn: Float, weaponTilt: Float) {
         if (turretBone != 0) {
-            val model = peekModel()!!
+            val model = this.model!!
             val facing = Matrix3D.identity()
             facing.rotateZ(weaponTurn)
             if (barrelBone == 0) {
@@ -1368,7 +1368,7 @@ open class VehicleGameObj() : SmartGameObj() {
         }
 
         if (barrelBone != 0) {
-            val model = peekModel()!!
+            val model = this.model!!
             val facing = Matrix3D.identity()
             facing.rotateY(-weaponTilt)
             model.controlBone(barrelBone, facing)

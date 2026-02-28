@@ -153,7 +153,7 @@ class AirStripGameObj() : VehicleFactoryGameObj() {
                     // C++: if (Vehicle != NULL) { Peek_Model()->Set_Hidden(false); Set_Object_Dirty_Bit(BIT_RARE, true) }
                     val vehicleObj = vehicle?.get()?.asPhysicalGameObj()
                     if (vehicleObj != null) {
-                        vehicleObj.peekModel()?.setHidden(false)
+                        vehicleObj.model?.setHidden(false)
                         vehicleObj.setObjectDirtyBit(NetworkObject.BIT_RARE, true)
                     }
                     displayVehicleTimer = UNINITIALIZED_TIMER
@@ -202,8 +202,8 @@ class AirStripGameObj() : VehicleFactoryGameObj() {
 
             // C++: Hide the vehicle until later
             // C++: if (vehicle->Peek_Model() != NULL) { vehicle->Peek_Model()->Set_Hidden(true); Set_Object_Dirty_Bit(BIT_RARE, true) }
-            if (vehicle.peekModel() != null) {
-                vehicle.peekModel()!!.setHidden(true)
+            if (vehicle.model != null) {
+                vehicle.model!!.setHidden(true)
                 vehicle.setObjectDirtyBit(NetworkObject.BIT_RARE, true)
             }
 

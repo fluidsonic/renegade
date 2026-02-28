@@ -58,7 +58,7 @@ open class SpecialEffectsGameObj() : PhysicalGameObj() {
     // C++: void Do_Effect()
     protected fun doEffect() {
         // C++: Make sure we have a render object
-        val model = peekModel() ?: return
+        val model = this.model ?: return
 
         // C++: Should we play an animation?
         val animName = getSpecialEffectsDefinition().animationName

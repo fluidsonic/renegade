@@ -2,10 +2,11 @@ package ccr.server.net
 
 import ccr.physics.PhysClass
 import ccr.physics.collision.CollisionEvent
+import ccr.physics.collision.CollisionReactionType as PhysicsCollisionReactionType
 
 // C++: PhysObserverClass (wwphys/physobserver.h)
 // Observer interface for a physics object — notified on collision, expiration, removal, shatter.
-interface PhysObserverClass {
+interface PhysObserverClass : ccr.physics.PhysObserver {
 
     // C++: virtual CollisionReactionType Collision_Occurred(...) { return COLLISION_REACTION_DEFAULT; }
     fun collisionOccurred(event: CollisionEventClass): CollisionReactionType = CollisionReactionType.DEFAULT
@@ -18,6 +19,11 @@ interface PhysObserverClass {
 
     // C++: virtual void Object_Shattered_Something(...) {}
     fun objectShatteredSomething(observedObj: PhysClass, shatteredObj: PhysClass, surfaceType: Int) {}
+
+    // Bridge: ccr.physics.PhysObserver implementation (different overloads — no conflict)
+    override fun collisionOccurred(event: CollisionEvent): PhysicsCollisionReactionType = PhysicsCollisionReactionType.DEFAULT
+    override fun objectExpired() {}
+    override fun objectRemovedFromScene() {}
 }
 
 // C++: enum _CollisionReactionType

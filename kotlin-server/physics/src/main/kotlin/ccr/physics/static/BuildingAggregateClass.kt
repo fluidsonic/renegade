@@ -8,6 +8,8 @@ package ccr.physics.static
  */
 open class BuildingAggregateClass : StaticAnimPhysClass() {
 
+    override val factoryChunkId: UInt = 0x00020A03u // PHYSICS_CHUNKID_BUILDINGAGGREGATE from wwphysids.h
+
     // C++: int CurrentState (initialized to BuildingStateClass::HEALTH100_POWERON = 0)
     var currentState: Int = HEALTH100_POWERON
 

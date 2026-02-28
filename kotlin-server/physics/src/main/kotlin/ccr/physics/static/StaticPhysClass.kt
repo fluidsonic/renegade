@@ -22,9 +22,11 @@ open class StaticPhysClass : PhysClass() {
     }
 
     var triangles: List<Triangle> = emptyList()
+    open val factoryChunkId: UInt = 0u
 
     /** Vis-sector ID for this static object (-1 / 0xFFFFFFFF if not a vis sector). Mirrors C++ VisSectorID. */
     var visSectorId: Int = -1
+
 
     private var _transform: Matrix3D = Matrix3D.IDENTITY
     override var transform: Matrix3D

@@ -295,7 +295,7 @@ class PowerUpGameObj() : SimpleGameObj() {
         // C++: client also destroys the powerup before being instructed to do so (lag avoidance)
         if (state != STATE_GRANTING) {
             // Check bounding box for collisions with SmartGameObjs
-            val box = peekModel()?.getBoundingBox()
+            val box = model?.getBoundingBox()
 
             for (obj in GameObjManager.getSmartGameObjs()) {
                 check(obj != null)

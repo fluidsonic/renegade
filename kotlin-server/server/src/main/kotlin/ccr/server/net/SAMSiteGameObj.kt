@@ -53,17 +53,17 @@ class SAMSiteGameObj() : SmartGameObj() {
 
     // C++: SAMSiteGameObj::~SAMSiteGameObj — releases captured bones
     override fun destruct() {
-        val model = peekModel()
-        if (model != null) {
+        val mdl = this.model
+        if (mdl != null) {
             if (turretBone != -1) {
-                if (model.isBoneCaptured(turretBone)) {
-                    model.releaseBone(turretBone)
+                if (mdl.isBoneCaptured(turretBone)) {
+                    mdl.releaseBone(turretBone)
                     turretBone = -1
                 }
             }
             if (barrelBone != -1) {
-                if (model.isBoneCaptured(barrelBone)) {
-                    model.releaseBone(barrelBone)
+                if (mdl.isBoneCaptured(barrelBone)) {
+                    mdl.releaseBone(barrelBone)
                     barrelBone = -1
                 }
             }
@@ -73,23 +73,23 @@ class SAMSiteGameObj() : SmartGameObj() {
 
     // C++: void SAMSiteGameObj::Update_Turret(float weapon_turn, float weapon_tilt)
     protected fun updateTurret(weaponTurn: Float, weaponTilt: Float) {
-        val model = peekModel()!!
+        val mdl = this.model!!
 
         if (turretBone == -1) {
-            turretBone = model.getBoneIndex("turret")
+            turretBone = mdl.getBoneIndex("turret")
             if (turretBone != -1) {
-                model.captureBone(turretBone)
-                if (!model.isBoneCaptured(turretBone)) {
+                mdl.captureBone(turretBone)
+                if (!mdl.isBoneCaptured(turretBone)) {
                     turretBone = -1
                 }
             }
         }
 
         if (barrelBone == -1) {
-            barrelBone = model.getBoneIndex("barrel")
+            barrelBone = mdl.getBoneIndex("barrel")
             if (barrelBone != -1) {
-                model.captureBone(barrelBone)
-                if (!model.isBoneCaptured(barrelBone)) {
+                mdl.captureBone(barrelBone)
+                if (!mdl.isBoneCaptured(barrelBone)) {
                     barrelBone = -1
                 }
             }
@@ -101,13 +101,13 @@ class SAMSiteGameObj() : SmartGameObj() {
             if (barrelBone == -1) {  // if no barrel bone, tilt on turret
                 facing.rotateY(-weaponTilt)  // neg rotate y tilts up
             }
-            model.controlBone(turretBone, facing)
+            mdl.controlBone(turretBone, facing)
         }
 
         if (barrelBone != -1) {
             val facing = Matrix3D()
             facing.rotateY(-weaponTilt)  // neg rotate y tilts up
-            model.controlBone(barrelBone, facing)
+            mdl.controlBone(barrelBone, facing)
         }
     }
 
@@ -116,8 +116,8 @@ class SAMSiteGameObj() : SmartGameObj() {
         // Should add slow turning
         super.setTargeting(pos, doTilt)
 
-        val model = peekModel()!!
-        val muzzlePos = model.getBoneTransform("muzzle").getTranslation()
+        val mdl = this.model!!
+        val muzzlePos = mdl.getBoneTransform("muzzle").getTranslation()
         val tm = Matrix3D.objLookAt(muzzlePos, pos, 0f)
 
         val weaponTilt = -tm.getYRotation()

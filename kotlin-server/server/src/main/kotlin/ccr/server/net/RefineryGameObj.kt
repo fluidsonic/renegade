@@ -158,7 +158,7 @@ class RefineryGameObj() : BuildingGameObj() {
         h.setRefinery(this)
         h.setDockLocation(dockLocation)
         h.setDockEntrance(dockEntrance)
-        h.setTiberiumRegion(tiberiumField)
+        h.tiberiumRegion = tiberiumField
         h.setHarvestAnim("V_NOD_HARVESTER.V_NOD_HARVESTER")
         vehicleGameObj.addObserver(h)
         h.initialize()

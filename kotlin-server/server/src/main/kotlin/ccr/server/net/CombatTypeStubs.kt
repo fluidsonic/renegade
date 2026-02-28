@@ -603,6 +603,7 @@ object GlobalSettingsDef {
 // C++: HarvesterClass — stub for refinery harvester vehicle
 class HarvesterClass : GameObjObserverClass() {
     var playerType: Int = 0
+    var tiberiumRegion: ccr.server.defs.OBBoxClass = ccr.server.defs.OBBoxClass()
     fun goHarvest(target: Any? = null): Unit = TODO("stub")
     fun setDropOffRadius(radius: Float): Unit = TODO("stub")
     fun addMoney(amount: Float): Unit = TODO("stub")
@@ -694,6 +695,7 @@ class BitPackResolution(val bits: Int) {
 
 // C++: BuildingAggregateClass : public StaticPhysClass
 class BuildingAggregateClass : StaticPhysClass() {
+    override val factoryChunkId: UInt = PHYSICS_CHUNKID_BUILDINGAGGREGATE
     fun isMct(): Boolean = TODO("stub")
     fun isRepair(): Boolean = TODO("stub")
     fun getGroupId(): Int = TODO("stub")

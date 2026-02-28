@@ -269,7 +269,7 @@ class RepairBayGameObj() : BuildingGameObj() {
             val gameObj: PhysicalGameObj?
             // C++: if (it.Peek_Obj()->Get_Observer() != NULL)
             //   gameobj = ((CombatPhysObserverClass*)it.Peek_Obj()->Get_Observer())->As_PhysicalGameObj()
-            val observer = physObj.getObserver()
+            val observer = physObj.observer
             gameObj = if (observer is CombatPhysObserverClass) {
                 observer.asPhysicalGameObj()
             } else {
