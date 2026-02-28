@@ -4,6 +4,7 @@ import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.physics.moveable.HumanPhysClass
+import ccr.physics.scene.PhysicsScene
 import ccr.server.GameObjManager
 import ccr.server.combat.ArmorWarheadManager
 import ccr.server.defs.SoldierGameObjDef
@@ -326,7 +327,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		adjustSkeleton(soldierDef.skeletonHeight, soldierDef.skeletonWidth)
 
 		// C++: model->Set_Sub_Objects_Match_LOD(true)
-		peekHumanPhys()?.peekModel()?.setSubObjectsMatchLod(true)
+		(peekHumanPhys()?.model as? RenderObjClass)?.setSubObjectsMatchLod(true)
 
 		// C++: if (InnateObserver == NULL && Get_Definition().UseInnateBehavior && !Is_Controlled_By_Me())
 		if (innateObserver == null && soldierDef.useInnateBehavior && !isControlledByMe()) {
@@ -2195,7 +2196,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		val boxPos = currPos + Vector3(0f, 0f, HUMAN_HALF_HEIGHT)
 		val box = AABoxClass(boxPos, PERSONAL_SPACE_BOX_SIZE)
 		val objList = NonRefPhysListClass()
-		PhysicsSceneClass.getInstance().collectObjects(box, false, true, objList)
+		PhysicsScene.getInstance().collectObjects(box, false, true, objList)
 
 		for (physObj in objList) {
 			val gameObj = physObj.asHumanPhysClass()?.getObserver()?.let {
@@ -2222,7 +2223,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		val boxPos = currPos + Vector3(0f, 0f, HUMAN_HALF_HEIGHT)
 		val box = AABoxClass(boxPos, PERSONAL_SPACE_BOX_SIZE)
 		val objList = NonRefPhysListClass()
-		PhysicsSceneClass.getInstance().collectObjects(box, false, true, objList)
+		PhysicsScene.getInstance().collectObjects(box, false, true, objList)
 
 		val myId = getId()
 		var smallestId = myId
