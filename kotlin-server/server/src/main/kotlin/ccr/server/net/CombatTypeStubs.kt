@@ -350,15 +350,67 @@ class AnimCollisionManagerClass {
 class HumanStateClass {
     private var _state: Int = UPRIGHT
     private var _subState: Int = 0
+    private var _stateTimer: Float = 0f
 
     fun setAnimControl(animControl: HumanAnimControlClass?): Unit = Unit
     fun getState(): Int = _state
-    fun setState(state: Int): Unit { _state = state }
+    // C++: void Set_State(StateType state, int sub_state = 0)
+    fun setState(state: Int, subState: Int = 0): Unit { _state = state; _subState = subState }
     fun getSubState(): Int = _subState
     fun getStateName(): String = ""
     fun getLegFacing(): Float = 0f
     fun isFiring(): Boolean = false
     fun isReloading(): Boolean = false
+    fun getStateTimer(): Float = _stateTimer
+    fun setStateTimer(timer: Float): Unit { _stateTimer = timer }
+    fun reset(): Unit { _state = UPRIGHT; _subState = 0; _stateTimer = 0f }
+    fun postThink(): Unit = Unit
+    fun setTurnVelocity(velocity: Float): Unit = Unit
+    fun updateAiming(tilt: Float, roll: Float): Unit = Unit
+    fun updateWeapon(weapon: WeaponClass?, weaponChanged: Boolean): Unit = Unit
+    fun updateState(): Unit = Unit
+    fun startScriptedAnimation(animName: String, looping: Boolean, resetOnComplete: Boolean = false): Unit = Unit
+    fun forceAnimation(animName: String, looping: Boolean = false): Unit = Unit
+    fun save(csave: ChunkSaveClass): Unit = Unit
+    fun load(cload: ChunkLoadClass): Unit = Unit
+    fun getInformation(sb: StringBuilder): Unit = Unit
+    fun init(humanPhys: HumanPhysClass?): Unit = Unit
+    // C++: HumanStateClass::Set_Human_Anim_Override(int defId)
+    fun setHumanAnimOverride(defId: Int): Unit = Unit
+    // C++: HumanStateClass::Set_Human_Loiter_Collection(int defId)
+    fun setHumanLoiterCollection(defId: Int): Unit = Unit
+    // C++: HumanStateClass::Is_Sub_State_Adjustable()
+    fun isSubStateAdjustable(): Boolean = false
+    // C++: HumanStateClass::Get_State_Flag(int flag)
+    fun getStateFlag(flag: Int): Boolean = false
+    // C++: HumanStateClass::Toggle_State_Flag(int flag)
+    fun toggleStateFlag(flag: Int): Unit = Unit
+    // C++: HumanStateClass::Get_Can_Snipe()
+    fun getCanSnipe(): Boolean = false
+    // C++: HumanStateClass::Get_Normalized_Speed()
+    fun getNormalizedSpeed(): Float = 0f
+    // C++: HumanStateClass::Set_Normalized_Speed(float)
+    fun setNormalizedSpeed(speed: Float): Unit = Unit
+    // C++: HumanStateClass::Get_Leg_Mode()
+    fun getLegMode(): Boolean = false
+    // C++: HumanStateClass::Is_Locked()
+    fun isLocked(): Boolean = false
+    // C++: HumanStateClass::Reset_Loiter_Delay()
+    fun resetLoiterDelay(): Unit = Unit
+    // C++: HumanStateClass::Set_Loiters_Allowed(bool)
+    fun setLoitersAllowed(allowed: Boolean): Unit = Unit
+    // C++: HumanStateClass::Start_Transition_Animation(int dataId)
+    fun startTransitionAnimation(dataId: Int): Unit = Unit
+    // C++: HumanStateClass::Stop_Scripted_Animation()
+    fun stopScriptedAnimation(): Unit = Unit
+    // C++: HumanStateClass::Get_Collision_Box()
+    fun getCollisionBox(): AABoxClass? = null
+    // C++: HumanStateClass::Network_State_Update(AnimControlClass*)
+    fun networkStateUpdate(animControl: AnimControlClass?): Unit = Unit
+    // C++: HumanStateClass::Get_Information(StringClass&) — for getInformation() on HumanStateClass obj directly
+    // (already added above for the StringBuilder overload)
+    // C++: HumanStateClass::Stop_Conversation()
+    fun stopConversation(): Unit = Unit
 
     companion object {
         const val UPRIGHT   = 0
@@ -728,12 +780,24 @@ object FreeRandom {
     fun getInt(max: Int): Int = kotlin.random.Random.nextInt(max)
 }
 
+// C++: GlobalSettingsDefClass instance returned by GlobalSettingsDef.getGlobalSettings()
+object GlobalSettingsInstance {
+    fun getMpStealthDistanceVehicle(): Float = 300f
+    fun getMpStealthDistanceHuman(): Float = 150f
+    fun getSoldierCrouchSpeed(): Float = 0.5f
+    fun getSoldierWalkSpeed(): Float = 0.5f
+    fun getDeathSoundId(): Int = 0
+}
+
 // C++: GlobalSettingsDef
 object GlobalSettingsDef {
     val encounteredEnemyTimeout: Float = 5f
     val stealthPowerupDuration: Float = 30f
     val repairMultiplier: Float = 1f
     val maxTimeSinceEnemySeen: Float = 30f
+
+    // C++: CNCModeSettingsDef::Get_Global_Settings() / GlobalSettingsDefClass::Get_Instance()
+    fun getGlobalSettings(): GlobalSettingsInstance = GlobalSettingsInstance
 }
 
 // C++: HarvesterClass — stub for refinery harvester vehicle
@@ -1020,12 +1084,92 @@ class RenderObjFactoryClass {
 }
 
 // ---------------------------------------------------------------------------
-// PhysClass — additional methods
+// PhysClass — additional methods (on server stub PhysClass which extends RealPhysClass)
 // ---------------------------------------------------------------------------
 
 fun PhysClass.setTransform(tm: Matrix3D): Unit = Unit
 fun PhysClass.addToScene(scene: PhysicsSceneClass): Unit = Unit
 fun PhysClass.removeFromScene(scene: PhysicsSceneClass? = null): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// RealPhysClass — extension methods needed by server combat code.
+// RealPhysClass = ccr.physics.PhysClass (aliased at top of this file).
+// These cover methods that exist in C++ PhysClass but are missing from the Kotlin physics module.
+// ---------------------------------------------------------------------------
+
+/** C++: PhysClass::Set_Collision_Group(int) — property setter bridge */
+fun RealPhysClass.setCollisionGroup(group: Int) { collisionGroup = group }
+
+/** C++: PhysClass::Peek_Model() — returns null on server (no render objects) */
+fun RealPhysClass.peekModel(): RenderObjClass? = null
+
+/** C++: PhysClass::Get_Observer() — returns the CombatPhysObserverClass-typed observer.
+ *  The real PhysClass.observer is typed as ccr.physics.PhysObserver; server code needs the
+ *  server-stub CombatPhysObserverClass which is stored in the combatObserver field of the
+ *  server-stub PhysClass subclass, or null for real physics objects. */
+fun RealPhysClass.getObserver(): CombatPhysObserverClass? =
+    (this as? PhysClass)?.combatObserver
+
+/** C++: PhysClass::Set_Observer(CombatPhysObserverClass*) */
+fun RealPhysClass.setObserver(obs: CombatPhysObserverClass?) {
+    (this as? PhysClass)?.combatObserver = obs
+}
+
+/** C++: PhysClass::Get_Factory() — returns null on server */
+fun RealPhysClass.getFactory(): PhysFactoryClass? =
+    (this as? PhysClass)?.getFactory()
+
+/** C++: PhysClass::Set_Tiberium_Region() — no-op on server */
+fun RealPhysClass.setTiberiumRegion(enable: Boolean) {}
+
+/** C++: StaticAnimPhysClass::Get_Definition() — returns the PhysDefClass definition.
+ *  The definition field is Any?; cast to DefinitionClass for server use. */
+fun ccr.physics.static.StaticAnimPhysClass.getDefinition(): ccr.server.defs.DefinitionClass? =
+    definition as? ccr.server.defs.DefinitionClass
+
+/** C++: StaticAnimPhysClass::Get_Animation_Manager() — server stub returns a no-op manager */
+fun ccr.physics.static.StaticAnimPhysClass.getAnimationManager(): AnimCollisionManagerClass =
+    AnimCollisionManagerClass()
+
+/** C++: StaticAnimPhysClass::Peek_Model() — server has no render objects; returns null */
+fun ccr.physics.static.StaticAnimPhysClass.peekModel(): RenderObjClass? = null
+
+/** C++: StaticPhysClass::Peek_Model() — server has no render objects; returns null */
+fun ccr.physics.static.StaticPhysClass.peekModel(): RenderObjClass? = null
+
+/** C++: StaticPhysClass::Get_Observer() — returns the server-side CombatPhysObserverClass observer */
+fun ccr.physics.static.StaticPhysClass.getObserver(): CombatPhysObserverClass? =
+    (this as? PhysClass)?.combatObserver
+
+/** C++: StaticPhysClass::Set_Observer() — sets server-side observer */
+fun ccr.physics.static.StaticPhysClass.setObserver(obs: CombatPhysObserverClass?) {
+    (this as? PhysClass)?.combatObserver = obs
+}
+
+/** C++: StaticPhysClass::Is_From_Factory(unsigned int) — check factory chunk ID */
+fun ccr.physics.static.StaticPhysClass.isFromFactory(chunkId: UInt): Boolean = false
+fun ccr.physics.static.StaticPhysClass.isFromFactory(chunkId: Int): Boolean = false
+
+/** C++: StaticPhysClass::Get_Name() — returns physics object name */
+fun ccr.physics.static.StaticPhysClass.getName(): String = this.name
+
+/** C++: LightPhysClass::Get_Group_ID() — server stub returns 0 */
+fun ccr.physics.dynamic.LightPhysClass.getGroupId(): Int = 0
+fun ccr.physics.dynamic.LightPhysClass.setDisabled(disabled: Boolean) {}
+fun ccr.physics.dynamic.LightPhysClass.getName(): String = this.name
+
+/** C++: PhysClass::Is_In_Scene() — already a method on real PhysClass */
+// isInScene() is already defined on ccr.physics.PhysClass
+
+/** C++: Remove — alias for removeFromScene (used on emotIconModel / render objs in SoldierGameObj)
+ *  Used as `someRenderPhysObj.remove()` — no-op on server */
+fun RealPhysClass.remove() {}
+
+/** C++: Get_Position() — already on real PhysClass */
+// getPosition() is already defined
+
+/** C++: Set_Position(Vector3) — bridged through real PhysClass.setPosition() which is open */
+// setPosition() is already defined
 
 // ---------------------------------------------------------------------------
 // Matrix3D — additional methods
@@ -1070,8 +1214,25 @@ class MessageWindowClass {
 
 // C++: CollisionMath namespace — stub for server-side collision queries
 object CollisionMath {
+    // C++: CollisionMath::OUTSIDE sentinel returned for non-overlapping boxes
+    val OUTSIDE: ccr.physics.collision.OverlapType = ccr.physics.collision.OverlapType.OUTSIDE
+
     fun overlapTest(box: ccr.server.defs.OBBoxClass, pos: Vector3): ccr.physics.collision.OverlapType =
         ccr.physics.collision.OverlapType.OUTSIDE
+
+    // C++: CollisionMath::Overlap_Test(AABoxClass, AABoxClass) — simple AABB overlap test
+    fun overlapTest(a: AABoxClass, b: AABoxClass): ccr.physics.collision.OverlapType {
+        val ax0 = a.center.x - a.extent.x; val ax1 = a.center.x + a.extent.x
+        val ay0 = a.center.y - a.extent.y; val ay1 = a.center.y + a.extent.y
+        val az0 = a.center.z - a.extent.z; val az1 = a.center.z + a.extent.z
+        val bx0 = b.center.x - b.extent.x; val bx1 = b.center.x + b.extent.x
+        val by0 = b.center.y - b.extent.y; val by1 = b.center.y + b.extent.y
+        val bz0 = b.center.z - b.extent.z; val bz1 = b.center.z + b.extent.z
+        return if (ax1 < bx0 || bx1 < ax0 || ay1 < by0 || by1 < ay0 || az1 < bz0 || bz1 < az0)
+            ccr.physics.collision.OverlapType.OUTSIDE
+        else
+            ccr.physics.collision.OverlapType.INSIDE
+    }
 }
 
 val ControlClass.Companion.BOOLEAN_JUMP: ControlClass.BooleanControl get() = ControlClass.BooleanControl.JUMP

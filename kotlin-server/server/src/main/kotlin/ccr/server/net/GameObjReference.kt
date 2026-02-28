@@ -103,4 +103,8 @@ class GameObjReference {
         target = null
         nextInTargetList = null
     }
+
+    // C++: ReferencerClass::Save / Load — save/load pointer for remapping
+    fun save(csave: ChunkSaveClass): Unit = Unit
+    fun load(cload: ChunkLoadClass): Unit = Unit
 }

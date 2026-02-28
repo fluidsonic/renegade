@@ -81,7 +81,9 @@ abstract class ArmedGameObj : PhysicalGameObj() {
 
     // C++: WeaponBagClass* Get_Weapon_Bag() — covered by val weaponBag
 
-    // C++: Vector3 Get_Targeting_Pos() — covered by var targeting
+    // C++: Vector3 Get_Targeting_Pos() — C++ method bridge for the targeting property
+    fun getTargetingPos(): Vector3 = targeting
+
     // C++: virtual bool Set_Targeting(const Vector3& pos, bool do_tilt = true)
     open fun setTargeting(pos: Vector3, doTilt: Boolean = true): Boolean {
         targeting = pos

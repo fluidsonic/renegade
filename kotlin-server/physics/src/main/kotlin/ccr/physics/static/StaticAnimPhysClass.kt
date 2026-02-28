@@ -1,5 +1,7 @@
 package ccr.physics.static
 
+import ccr.math.Vector3
+
 open class StaticAnimPhysClass : StaticPhysClass() {
 
     companion object {
@@ -19,4 +21,14 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     // Server-side we don't run animation/projector logic, so timestep is a no-op.
     override fun needsTimestep(): Boolean = true
     override fun timestep(dt: Float) {}
+
+    // C++: unsigned int Get_ID() — returns the instance ID (same as visObjectId on server).
+    fun getId(): Int = instanceId.toInt()
+
+    // C++: void Get_Position(Vector3 & pos) — writes world position into out parameter.
+    fun getPosition(out: Vector3) {
+        val p = transform.translation
+        out.x = p.x; out.y = p.y; out.z = p.z
+    }
+
 }

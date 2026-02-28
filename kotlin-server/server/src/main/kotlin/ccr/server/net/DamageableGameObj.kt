@@ -143,6 +143,9 @@ abstract class DamageableGameObj : ScriptableGameObj() {
     // C++: virtual bool Is_Targetable() const
     open fun isTargetable(): Boolean = !getDamageableDefinition().notTargetable
 
+    // C++: int Get_Player_Type() — C++ method bridge for the playerType property
+    fun getPlayerType(): Int = playerType
+
     // C++: bool Is_Team_Player()
     fun isTeamPlayer(): Boolean = playerType == PLAYERTYPE_NOD || playerType == PLAYERTYPE_GDI
 

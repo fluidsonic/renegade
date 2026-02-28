@@ -93,4 +93,43 @@ class WeaponClass(
     // FIXME: actual targeting logic not ported; server-side stub stores target for AI state tracking
     var targetPos: Vector3 = Vector3()
     fun setTarget(pos: Vector3) { targetPos = pos }
+
+    // C++: int Get_Style() — weapon hold style (C4, beacon, gun, etc.)
+    fun getStyle(): Int = WEAPON_HOLD_STYLE_DEFAULT
+
+    // C++: bool Is_Firing() — true when weapon fire animation is active
+    fun isFiring(): Boolean = isPrimaryTriggered || isSecondaryTriggered
+
+    // C++: int Get_Anim_State() — weapon animation state (not firing, firing barrel 0/1)
+    fun getAnimState(): Int = WEAPON_ANIM_NOT_FIRING
+
+    // C++: void Reset_Anim_Update() — clears the "needs anim update" flag
+    fun resetAnimUpdate(): Unit = Unit
+
+    // C++: bool Is_Model_Update_Needed() — true when weapon model changed
+    fun isModelUpdateNeeded(): Boolean = false
+
+    // C++: void Reset_Model_Update() — clears model update flag
+    fun resetModelUpdate(): Unit = Unit
+
+    // C++: const char* Get_Model_Name() — weapon render model filename
+    fun getModelName(): String = ""
+
+    // C++: const char* Get_Back_Model_Name() — back-gun render model filename
+    fun getBackModelName(): String = ""
+
+    // C++: float Get_Range() — weapon effective range
+    fun getRange(): Float = 0f
+
+    companion object {
+        // C++: WeaponClass::HoldStyleType enum (weapons.h)
+        const val WEAPON_HOLD_STYLE_DEFAULT = 0
+        const val WEAPON_HOLD_STYLE_C4      = 4
+        const val WEAPON_HOLD_STYLE_BEACON  = 5
+
+        // C++: WeaponClass::AnimStateType enum (weapons.h)
+        const val WEAPON_ANIM_NOT_FIRING = 0
+        const val WEAPON_ANIM_FIRING_0   = 1
+        const val WEAPON_ANIM_FIRING_1   = 2
+    }
 }

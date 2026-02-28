@@ -949,9 +949,9 @@ open class SoldierGameObj() : SmartGameObj() {
                 (subState and HumanStateClass.SUB_STATE_RIGHT)    != 0 -> Vector3(0f, -0.5f, 0f)
                 else                                                    -> forcedMove
             }
-            controller.setMoveForward(fm.x)
-            controller.setMoveLeft(fm.y)
-            controller.setMoveUp(fm.z)
+            controller.moveForward = fm.x
+            controller.moveLeft = fm.y
+            controller.moveUp = fm.z
             return
         }
 
@@ -1039,30 +1039,30 @@ open class SoldierGameObj() : SmartGameObj() {
         // C++: Jump handling (after Apply_Control, BOOLEAN_JUMP is cleared)
         if (control.getBoolean(ControlClass.BOOLEAN_JUMP)) {
             if (getState() != HumanStateClass.AIRBORNE) {
-                controller.setMoveUp(getSoldierDefinition().jumpVelocity)
+                controller.moveUp = getSoldierDefinition(.jumpVelocity)
             }
         }
 
         // C++: Sniper speed clamp
         if (isSniping()) {
-            controller.setMoveForward(controller.getMoveForward().coerceIn(-0.25f, 0.25f))
-            controller.setMoveLeft(controller.getMoveLeft().coerceIn(-0.25f, 0.25f))
+            controller.moveForward = controller.getMoveForward(.coerceIn(-0.25f, 0.25f))
+            controller.moveLeft = controller.getMoveLeft(.coerceIn(-0.25f, 0.25f))
         }
 
         // C++: Ladder speed
         if (getState() == HumanStateClass.LADDER) {
-            controller.setMoveForward(0f)
+            controller.moveForward = 0f
         }
 
         // C++: Crouch speed
         if (getState() == HumanStateClass.UPRIGHT && isCrouched()) {
             val crouchSpeed = GlobalSettingsDef.getGlobalSettings().getSoldierCrouchSpeed()
-            controller.setMoveForward(controller.getMoveForward() * crouchSpeed)
-            controller.setMoveLeft(controller.getMoveLeft() * crouchSpeed)
+            controller.moveForward = controller.getMoveForward( * crouchSpeed)
+            controller.moveLeft = controller.getMoveLeft( * crouchSpeed)
         } else if (control.getBoolean(ControlClass.BOOLEAN_WALK)) {
             val walkSpeed = GlobalSettingsDef.getGlobalSettings().getSoldierWalkSpeed()
-            controller.setMoveForward(controller.getMoveForward() * walkSpeed)
-            controller.setMoveLeft(controller.getMoveLeft() * walkSpeed)
+            controller.moveForward = controller.getMoveForward( * walkSpeed)
+            controller.moveLeft = controller.getMoveLeft( * walkSpeed)
         }
 
         // C++: Server action / transition check

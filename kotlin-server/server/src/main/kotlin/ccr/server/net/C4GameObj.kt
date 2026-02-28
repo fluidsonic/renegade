@@ -82,7 +82,7 @@ class C4GameObj(
     var stuckBone: Int = stuckBone
 
     // C++: StaticAnimPhysClass* StuckStaticAnimObj (NULL initially)
-    var stuckStaticAnimObj: StaticAnimPhysClass? = null
+    var stuckStaticAnimObj: ccr.physics.static.StaticAnimPhysClass? = null
 
     // C++: bool StuckMCT (false initially)
     var stuckMct: Boolean = stuckMct

@@ -11,6 +11,7 @@ class PhysController {
     val moveVector: Vector3 get() = Vector3(moveLeft, moveForward, moveUp)
     val isInactive: Boolean get() = moveForward == 0f && moveLeft == 0f && moveUp == 0f && turnLeft == 0f
 
+    // C++: PhysController::Reset()
     fun reset() {
         moveForward = 0f
         moveLeft = 0f

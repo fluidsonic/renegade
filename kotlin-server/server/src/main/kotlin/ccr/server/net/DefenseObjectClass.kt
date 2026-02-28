@@ -261,6 +261,12 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
         private const val MICROCHUNKID_CAN_OBJECT_DIE      = 9
     }
 
+    // C++: bool Is_Repair(const OffenseObjectClass& offense) — returns true when offense is a heal (negative damage)
+    fun isRepair(offense: OffenseObjectClass): Boolean {
+        val scaledDamage = ArmorWarheadManager.scaleDamage(offense.damage, offense.warhead, skin)
+        return scaledDamage < 0f
+    }
+
     // C++: void Export(BitStreamClass& packet)
     fun export(packet: BitStream) {
         packet.addBool(health == 0f)
