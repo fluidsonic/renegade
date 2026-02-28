@@ -197,7 +197,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     fun hideMuzzleFlashes(hide: Boolean = true) {
         val model = peekModel() ?: return
         for (i in 0 until model.getNumSubObjects()) {
-            val robj = model.getSubObject(i)
+            val robj = model.getSubObject(i) ?: continue
             if ("MUZZLEFLASH" in robj.getName() || "MZ" in robj.getName()) {
                 robj.setHidden(hide)
             }
@@ -220,8 +220,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
             setAnimControl(SimpleAnimControlClass())
         }
         if (!animationName.isNullOrEmpty()) {
-            val physStub = physObj as? PhysClass
-            val model = physStub?.peekModel()
+            val model = peekModel()
             val animName = if ('.' in animationName) animationName
                            else createAnimationName(animationName, model?.getName() ?: "")
             animControl!!.setModel(model)
@@ -238,8 +237,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
             setAnimControl(SimpleAnimControlClass())
         }
         if (!animationName.isNullOrEmpty()) {
-            val physStub = physObj as? PhysClass
-            val model = physStub?.model
+            val model = peekModel()
             val animName = if ('.' in animationName) animationName
                            else createAnimationName(animationName, model?.getName() ?: "")
             animControl!!.setModel(model)
@@ -258,7 +256,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
         }
         hostGameObj.set(host)
         if (host != null) {
-            hostGameObjBone = (host.physObj as? PhysClass)?.peekModel()!!.getBoneIndex(boneName)
+            hostGameObjBone = host.peekModel()?.getBoneIndex(boneName) ?: 0
             teleportToHostBone()
         }
         setObjectDirtyBit(BIT_RARE, true)

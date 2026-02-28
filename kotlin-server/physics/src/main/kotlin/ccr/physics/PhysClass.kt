@@ -90,6 +90,9 @@ abstract class PhysClass {
             flags = if (v) flags or IMMOVABLE else flags and IMMOVABLE.inv()
         }
 
+    /** C++: PhysClass::Set_Immovable(bool) — sets the IMMOVABLE flag. */
+    open fun setImmovable(immovable: Boolean) { isImmovable = immovable }
+
     var isAsleep: Boolean
         get() = (flags and ASLEEP) != 0
         set(v) {

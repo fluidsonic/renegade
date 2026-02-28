@@ -473,7 +473,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
             // C++: Iterate static lights
             for (light in scene.getStaticLights()) {
                 val lightPhys = light.asLightPhysClass() ?: continue
-                if (namePrefixMatchesThisBuilding(lightPhys.getName())) {
+                if (namePrefixMatchesThisBuilding(lightPhys.name)) {
                     val lightPos = lightPhys.getPosition()
                     val dist2 = (collectionSphere.center - lightPos).lengthSquared()
                     if (dist2 <= collectionSphere.radius * collectionSphere.radius) {
@@ -612,10 +612,10 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
             distance2 = findClosestPolyForModel(model.getSubObject(i), pos, distance2)
         }
         if (model.classId == RenderObjClass.CLASSID_MESH) {
-            val meshModel = model.asMeshClass()?.getModel()
-            if (meshModel != null) {
-                val tris = meshModel.getPolygonArray()
-                val verts = meshModel.getVertexArray()
+            val mesh = model.asMeshClass()
+            if (mesh != null) {
+                val tris = mesh.getPolygonArray()
+                val verts = mesh.getVertexArray()
                 for (i in tris.indices) {
                     val polyCenter = (verts[tris[i][0]] + verts[tris[i][1]] + verts[tris[i][2]]) * (1f / 3f)
                     val delta = polyCenter - pos
