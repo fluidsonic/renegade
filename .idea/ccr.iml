@@ -8,6 +8,7 @@
       <excludeFolder url="file://$MODULE_DIR$/original-untouched" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/original/build" />
+      <excludeFolder url="file://$MODULE_DIR$/.claude/worktrees" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,6 +1,8 @@
 package ccr.server.net
 
+import ccr.math.AABox
 import ccr.math.Vector3
+import ccr.physics.PhysClass
 import ccr.physics.collision.OverlapType
 import ccr.server.GameObjManager
 import ccr.server.defs.OBBoxClass
@@ -94,7 +96,8 @@ class ScriptZoneGameObj : ScriptableGameObj() {
         } else {
             // C++: Collect_Objects(BoundingBox, false, true, &objs_in_zone)
             val scene = CombatManager.getScene()
-            val objsInZone: List<PhysClass> = scene?.collectObjects(boundingBox, false, true).orEmpty()
+            val aaBox = AABox(boundingBox.center, boundingBox.extent)
+            val objsInZone: List<PhysClass> = scene?.collectObjects(aaBox).orEmpty()
             for (physObj in objsInZone) {
                 val observer = physObj.getObserver()
                 val smartObj = if (observer is CombatPhysObserverClass) {

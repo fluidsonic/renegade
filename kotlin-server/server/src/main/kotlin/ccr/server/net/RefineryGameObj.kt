@@ -286,7 +286,7 @@ class RefineryGameObj() : BuildingGameObj() {
         if (scene != null) {
             for (obj in scene.staticObjects) {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
-                val model = animPhysObj.peekModel() ?: continue
+                val model = animPhysObj.model as? RenderObjClass ?: continue
                 val name = model.getName().uppercase()
                 if ("REF_TIB_DUMP" in name) {
                     val animPos = animPhysObj.getPosition()
@@ -296,7 +296,7 @@ class RefineryGameObj() : BuildingGameObj() {
                     val dist2 = dx * dx + dy * dy + dz * dz
                     if (dist2 < closest2) {
                         closest2 = dist2
-                        unloadAnimationID = animPhysObj.getId()
+                        unloadAnimationID = animPhysObj.getId().toInt()
                     }
                 }
             }

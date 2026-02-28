@@ -76,18 +76,15 @@ open class Phys3Class : MoveablePhysClass() {
      */
     open fun resetAnimationMove() {}
 
+    /** C++: Phys3Class::Set_In_Contact(bool) — override ground-contact state */
+    open fun setInContact(contact: Boolean) { onGround = contact }
+
     /** C++: Phys3Class::Get_Heading() */
     open fun getHeading(): Float = heading
     /** C++: Phys3Class::Set_Heading(float) */
     open fun setHeading(h: Float) { heading = h }
-
     /** C++: Phys3Class::Get_Collision_Box() */
     open fun getCollisionBox(): AABox = collisionBox
-
-    /** C++: Phys3Class::Set_In_Contact(bool) — override ground-contact state */
-    open fun setInContact(contact: Boolean) { onGround = contact }
-
-    // C++: Get_Heading() / Set_Heading() — also exposed directly via `heading` property
 
     /**
      * C++: Phys3Class::Intersection_Test(PhysAABoxIntersectionTestClass&)

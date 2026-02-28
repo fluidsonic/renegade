@@ -63,4 +63,7 @@ class LogicalSoundClass : SoundSceneObjClass() {
 
     // C++: uint32 Get_Type_Mask()
     fun getTypeMask(): Int = typeMask
+
+    // C++: RefCountClass* Peek_User_Obj() { return m_UserObj; }
+    fun peekUserObj(): Any? = creatorObj
 }

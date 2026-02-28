@@ -397,7 +397,7 @@ abstract class SmartGameObj : ArmedGameObj() {
         val sound = CombatSound()
         sound.type = CombatSoundType.entries.find { it.value == soundObj.typeMask } ?: CombatSoundType.NONE
         sound.position = soundObj.getPosition()
-        sound.creator = soundObj.peekUserObj()
+        sound.creator = soundObj.peekUserObj() as? ScriptableGameObj
         for (observer in observers) observer.soundHeard(this, sound)
     }
 

@@ -28,6 +28,9 @@ class ActionClass {
     // C++: void Goto(ActionParamsStruct&) — start a movement action
     fun `goto`(params: ActionParamsStruct): Unit = Unit
 
+    // C++: void Attack(ActionParamsStruct&) — start an attack action
+    fun attack(params: ActionParamsStruct): Unit = Unit
+
     // C++: void Reset(int priority) — clears current action code if priority sufficient
     fun reset(priority: Int) {
         // Server-side stub: action execution not needed; just clear the action code

@@ -307,8 +307,11 @@ class PowerUpGameObj() : SimpleGameObj() {
                 }
 
                 if (soldier != null && soldier.wantsPowerups()) {
-                    val test = PhysAABoxIntersectionTestClass(box, DEFAULT_COLLISION_GROUP, COLLISION_TYPE_PHYSICAL)
-                    val result = obj.peekPhysicalObject()?.intersectionTest(test) ?: false
+                    // C++: PhysAABoxIntersectionTest — server-side stub; assume overlap if boxes close
+                    val powerupPos = getPosition()
+                    val soldierPos = obj.getPosition()
+                    val dist = (powerupPos - soldierPos).length()
+                    val result = dist < 2f
                     if (result) {
                         grant(soldier)
                         break

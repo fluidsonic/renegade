@@ -69,10 +69,10 @@ open class MeshClass : RenderObjClass() {
     // -------------------------------------------------------------------------
 
     // C++: MeshModelClass* Peek_Model()
-    fun peekModel(): Any? = meshModel
+    fun peekModel(): MeshClass? = this  // server stub: model IS the mesh
 
     // C++: MeshModelClass* Get_Model()
-    fun getModel(): Any? = meshModel
+    fun getModel(): MeshClass = this  // server stub: model IS the mesh
 
     // C++: void Set_Next_Visible_Skin(MeshClass* next_visible)
     fun setNextVisibleSkin(next: MeshClass?) {

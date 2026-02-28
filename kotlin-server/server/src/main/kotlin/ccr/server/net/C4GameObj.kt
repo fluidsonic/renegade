@@ -281,7 +281,7 @@ class C4GameObj(
                 stuckMct = false
 
                 // C++: Check for MCT collision
-                if (event.otherObj?.getFactory()?.chunkId == PHYSICS_CHUNKID_BUILDINGAGGREGATE) {
+                if (event.otherObj is BuildingAggregateClass) {
                     val aggregate = event.otherObj as? BuildingAggregateClass
                     if (aggregate?.isMct() == true) {
                         stuckMct = true
@@ -299,7 +299,7 @@ class C4GameObj(
                     stuckStaticAnimObj = staticAnim
 
                     stuckBone = 0
-                    val staticModel = staticAnim.model
+                    val staticModel = staticAnim.model as? RenderObjClass
                     if (staticModel != null) {
                         stuckBone = staticModel.getSubObjectBoneIndex(event.collidedRenderObj)
                         val myPos = getPosition()
@@ -409,7 +409,7 @@ class C4GameObj(
                 }
             } else if (stuckStaticAnimObj != null) {
                 // C++: pos = StuckStaticAnimObj->Peek_Model()->Get_Bone_Transform(StuckBone) * StuckOffset
-                val staticModel = stuckStaticAnimObj!!.model
+                val staticModel = stuckStaticAnimObj!!.model as? RenderObjClass
                 if (staticModel != null) {
                     val pos = staticModel.getBoneTransform(stuckBone) * stuckOffset
                     setPosition(pos)
@@ -568,7 +568,7 @@ class C4GameObj(
             val hasStuckStaticAnim = stuckStaticAnimObj != null || stuckStaticAnim
             packet.addBool(hasStuckStaticAnim)
             if (hasStuckStaticAnim) {
-                val staticAnimId = stuckStaticAnimObj?.getId() ?: stuckStaticAnimObjId
+                val staticAnimId = stuckStaticAnimObj?.getId()?.toInt() ?: stuckStaticAnimObjId
                 packet.addInt(staticAnimId)
             }
         }

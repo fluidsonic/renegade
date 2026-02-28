@@ -85,8 +85,8 @@ class HumanStateClass {
     // Public API — mirroring C++ public methods
     // -------------------------------------------------------------------------
 
-    // C++: void Init(HumanPhysClass* human_phys)
-    fun init(humanPhys: HumanPhysClass) {
+    // C++: void Init(HumanPhysClass* human_phys) — C++ accepts NULL pointer
+    fun init(humanPhys: HumanPhysClass?) {
         this.humanPhys = humanPhys
     }
 

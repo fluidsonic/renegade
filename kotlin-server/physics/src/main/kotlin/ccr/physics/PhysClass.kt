@@ -59,6 +59,7 @@ abstract class PhysClass {
     }
 
     var flags: Int = 0
+    @get:JvmName("observerField") @set:JvmName("setObserverField")
     var observer: PhysObserver? = null
 
     /** Optional instance name (matches C++ Name field). */
@@ -78,11 +79,17 @@ abstract class PhysClass {
 
     abstract var transform: Matrix3D
 
+    @get:JvmName("collisionGroupField") @set:JvmName("setCollisionGroupField")
     var collisionGroup: Int
         get() = flags and COLLISION_MASK
         set(v) {
             flags = (flags and COLLISION_MASK.inv()) or (v and COLLISION_MASK)
         }
+
+    /** C++: Get_Collision_Group() */
+    fun getCollisionGroup(): Int = collisionGroup
+    /** C++: Set_Collision_Group() */
+    fun setCollisionGroup(v: Int) { collisionGroup = v }
 
     @get:JvmName("isImmovableField")
     @set:JvmName("setImmovableField")
@@ -94,6 +101,9 @@ abstract class PhysClass {
 
     /** C++: PhysClass::Set_Immovable(bool) — sets the IMMOVABLE flag. */
     open fun setImmovable(immovable: Boolean) { isImmovable = immovable }
+
+    /** C++: PhysClass::Peek_Observer() — returns the physics observer attached to this object. */
+    fun getObserver(): PhysObserver? = observer
 
     var isAsleep: Boolean
         get() = (flags and ASLEEP) != 0

@@ -375,7 +375,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		// FIXME: wire HUDClass::Force_Weapon_Chart_Update() and WeaponViewClass::Reset() when ported
 
 		// C++: COMBAT_SCENE->Remove_Object(Peek_Physical_Object())
-		CombatManager.getScene()?.removeObject(peekPhysicalObject())
+		peekPhysicalObject()?.let { CombatManager.getScene()?.removeObject(it) }
 
 		// C++: Set_Weapon_Model(NULL)
 		setWeaponModel(null)
@@ -774,9 +774,7 @@ open class SoldierGameObj() : SmartGameObj() {
 			headModel?.let { hm ->
 				if (hm.peekAnimation() == null || hm.peekAnimation() === speechAnim) {
 					speechAnim?.generateIdleAnimation(20, 0.5f)
-					speechAnim?.let { sa ->
-						hm.setAnimation(sa, 0f, RenderObjClass.ANIM_MODE_LOOP)
-					}
+					// C++: hm->Set_Animation(SpeechAnim, ...) — DynamicSpeechAnimClass not HAnimClass; no-op server-side
 				}
 			}
 			generateIdleFacialAnimTimer = 100.0f
@@ -803,9 +801,8 @@ open class SoldierGameObj() : SmartGameObj() {
 
 			if (!inWater) {
 				SurfaceEffectsManager.updatePersistantEmitter(
-					waterWake, SURFACE_TYPE_DEFAULT,
-					SurfaceEffectsManager.HITTER_TYPE_FOOTSTEP_RUN,
-					Matrix3D.translation(p0)
+					waterWake, p0,
+					SurfaceEffectsManager.HITTER_TYPE_FOOTSTEP_RUN
 				)
 			}
 		}
@@ -1036,10 +1033,10 @@ open class SoldierGameObj() : SmartGameObj() {
 		// C++: Handle facing (turn rate)
 		val turnAmount = control.getAnalog(ControlClass.ANALOG_TURN_LEFT)
 		if (turnAmount != 0f) {
-			var heading = peekHumanPhys()!!.getHeading()
+			var heading = peekHumanPhys()!!.heading
 			heading += turnAmount * getTurnRate() * TimeManager.getFrameSeconds()
 			heading = WWMath.wrap(heading, DEG_TO_RADF_NEG_180, DEG_TO_RADF_POS_180)
-			peekHumanPhys()!!.setHeading(heading)
+			peekHumanPhys()!!.heading = heading
 			control.setAnalog(ControlClass.ANALOG_TURN_LEFT, 0f)
 			if (!isHumanControlled()) {
 				humanState.setTurnVelocity(turnAmount)
@@ -1198,7 +1195,8 @@ open class SoldierGameObj() : SmartGameObj() {
 		var dialogueId = -1
 		val damageOwner = damager.getOwner()
 		if (damageOwner != null) {
-			dialogueId = if (isEnemy(damageOwner as? DamageableGameObj)) DIALOG_ON_TAKE_DAMAGE_FROM_ENEMY
+			val damageOwnerDmg = damageOwner as? DamageableGameObj
+			dialogueId = if (damageOwnerDmg != null && isEnemy(damageOwnerDmg)) DIALOG_ON_TAKE_DAMAGE_FROM_ENEMY
 			else DIALOG_ON_TAKE_DAMAGE_FROM_FRIEND
 		}
 
@@ -1650,9 +1648,7 @@ open class SoldierGameObj() : SmartGameObj() {
 			// this bridge to physObj after setting realPhysObj, so realPhysObj will always be non-null.
 			override fun getPosition(): Vector3 = realPhysObj?.position ?: position
 			override fun getHeading(): Float = realPhysObj?.heading ?: 0f
-			override fun setHeading(heading: Float) {
-				realPhysObj?.heading = heading
-			}
+			override fun setHeading(h: Float) { realPhysObj?.heading = h }
 
 			override fun getVelocity(): Vector3 = realPhysObj?.velocity?.copy() ?: Vector3(0f, 0f, 0f)
 			// setInContact, setLoitersAllowed, resetLoiterDelay, setLadderIndex, getLegMode,
@@ -1745,7 +1741,7 @@ open class SoldierGameObj() : SmartGameObj() {
 
 		var isComplete = true
 
-		val curFacing = peekHumanPhys()!!.getHeading()
+		val curFacing = peekHumanPhys()!!.heading
 		val facing = WWMath.atan2(relTarget.y, relTarget.x)
 		var facingDif = facing - curFacing
 		if (kotlin.math.abs(facingDif) > 0.001f) {
@@ -1761,7 +1757,7 @@ open class SoldierGameObj() : SmartGameObj() {
 			}
 			isComplete = (change == facingDif)
 			val newFacing = WWMath.wrap(curFacing + change, DEG_TO_RADF_NEG_180, DEG_TO_RADF_POS_180)
-			peekHumanPhys()!!.setHeading(newFacing)
+			peekHumanPhys()!!.heading = newFacing
 		}
 
 		if (isHumanControlled() && getState() != HumanStateClass.IN_VEHICLE) {
@@ -1918,7 +1914,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		vehicle = null
 		humanState.setState(HumanStateClass.UPRIGHT)
 
-		val extent = peekHumanPhys()?.getCollisionBox()?.extent ?: Vector3(0.3f, 0.3f, 1f)
+		val extent = peekHumanPhys()?.collisionBox?.extent ?: Vector3(0.3f, 0.3f, 1f)
 		val width = maxOf(extent.x, extent.y) * 1.1f
 
 		val offsets = arrayOf(

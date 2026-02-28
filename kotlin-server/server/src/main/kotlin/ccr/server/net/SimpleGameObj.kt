@@ -88,12 +88,12 @@ open class SimpleGameObj() : PhysicalGameObj() {
             // C++: Peek_Physical_Object()->Set_Model_By_Name("NULL")
             physObj!!.setModelByName("NULL")
             // C++: if (Get_Anim_Control() != NULL) Get_Anim_Control()->Set_Model(Peek_Model())
-            animControl?.setModel(physObj!!.peekModel()!!)
+            animControl?.setModel(physObj!!.model as? RenderObjClass)
         }
 
         if (isHiddenObject()) {
             // C++: RenderObjClass * model = Peek_Physical_Object()->Peek_Model(); if (model) model->Set_Hidden(true)
-            physObj?.peekModel()?.setHidden(true)
+            (physObj?.model as? RenderObjClass)?.setHidden(true)
         }
     }
 

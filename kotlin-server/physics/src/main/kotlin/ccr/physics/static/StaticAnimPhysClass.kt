@@ -46,10 +46,33 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     // -------------------------------------------------------------------------
 
     /**
+     * C++: TexProjectClass * ShadowProjector — null server-side.
+     *
+     * Typed as Any? because TexProjectClass does not exist in the physics module.
+     * See Set_Shadow() / Is_Casting_Shadow().
+     */
+    private var shadowProjector: Any? = null
+
+    /**
      * C++: virtual bool Is_Casting_Shadow() — returns (ShadowProjector != NULL).
      * Server-side: always false (no ShadowProjector).
      */
-    val isCastingShadow: Boolean get() = false
+    val isCastingShadow: Boolean get() = shadowProjector != null
+
+    // -------------------------------------------------------------------------
+    // Projector manager — mirrors C++ ProjectorManagerClass ProjectorManager
+    //
+    // C++: ProjectorManagerClass ProjectorManager — manages animated texture projectors.
+    // Server-side: no-op placeholder typed as Any? (no ProjectorManagerClass in physics module).
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: ProjectorManagerClass ProjectorManager
+     *
+     * Typed as Any? because ProjectorManagerClass does not exist in the physics module.
+     * Initialized via Init() from the definition — no-op server-side.
+     */
+    private val projectorManager: Any? = null
 
     // -------------------------------------------------------------------------
     // Constructor init block — mirrors StaticAnimPhysClass::StaticAnimPhysClass()
@@ -105,6 +128,57 @@ open class StaticAnimPhysClass : StaticPhysClass() {
             modelName = modelName,
         )
     }
+
+    // -------------------------------------------------------------------------
+    // Set_Model — mirrors virtual void StaticAnimPhysClass::Set_Model(RenderObjClass * model)
+    //
+    // C++:
+    //   void StaticAnimPhysClass::Set_Model(RenderObjClass * model) {
+    //       StaticPhysClass::Set_Model(model);       // sets PhysClass::Model + cull box
+    //       Update_Cached_Model_Parameters();        // rebuilds AnimManager collideable mesh list
+    //   }
+    //
+    // Kotlin: PhysClass.model is `var model: Any?` — its JVM setter is already named
+    // `setModel`, which would clash with an explicit fun setModel(Any?) in this class.
+    // Since @JvmName is not applicable to open member functions and `model` is not declared
+    // `open` in PhysClass (so it cannot be overridden as a property), the C++ Set_Model
+    // behavior is instead documented here: callers that change the model must call
+    // updateCachedModelParameters() immediately after assigning `model`.
+    // -------------------------------------------------------------------------
+
+    // -------------------------------------------------------------------------
+    // Vis_Render — mirrors virtual void StaticAnimPhysClass::Vis_Render(SpecialRenderInfoClass &)
+    //
+    // C++: temporarily un-hides the BoundingBox sub-object, calls parent Vis_Render,
+    // then restores hidden state. Server-side: no render model — no-op.
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: virtual void StaticAnimPhysClass::Vis_Render(SpecialRenderInfoClass & rinfo)
+     *
+     * Temporarily reveals the "BoundingBox" sub-object so vis rendering captures it,
+     * then restores hidden state. Server-side: no-op (no render model, no vis system).
+     */
+    open fun visRender(rinfo: Any) {
+        // Server-side: no render model — no-op
+    }
+
+    // -------------------------------------------------------------------------
+    // Static properties — typed definition accessor
+    //
+    // C++: StaticAnimPhysDefClass * Get_StaticAnimPhysDef()
+    //      { return (StaticAnimPhysDefClass *)Definition; }
+    //
+    // Server-side: Definition is Any? (PhysClass.definition). Return as Any?.
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: StaticAnimPhysDefClass * Get_StaticAnimPhysDef()
+     *
+     * Returns the definition object cast to StaticAnimPhysDefClass. In the Kotlin server,
+     * PhysClass.definition is typed Any?; callers must cast at the use site.
+     */
+    fun getStaticAnimPhysDef(): Any? = definition
 
     // -------------------------------------------------------------------------
     // RTTI — mirrors virtual As_StaticAnimPhysClass()
@@ -229,24 +303,206 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     }
 
     // -------------------------------------------------------------------------
-    // Update_Cached_Model_Parameters — mirrors C++ virtual method
+    // Shadow management — mirrors Set_Shadow / Is_Casting_Shadow / Debug_Display_Shadow
+    //
+    // C++:
+    //   void Set_Shadow(TexProjectClass * shadow) {
+    //       if (ShadowProjector != NULL) {
+    //           PhysicsSceneClass::Get_Instance()->Remove_Static_Texture_Projector(ShadowProjector);
+    //           ShadowProjector->Release_Ref();
+    //           ShadowProjector = NULL;
+    //       }
+    //       ShadowProjector = shadow;
+    //       if (ShadowProjector != NULL) {
+    //           ShadowProjector->Add_Ref();
+    //           ShadowProjector->Enable_Affect_Static_Objects(false);
+    //           PhysicsSceneClass::Get_Instance()->Add_Static_Texture_Projector(ShadowProjector);
+    //       }
+    //   }
+    //
+    //   virtual bool Is_Casting_Shadow() { return (ShadowProjector != NULL); }
+    //
+    //   void Debug_Display_Shadow(const Vector2 & v0, const Vector2 & v1) { /* render-only */ }
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: void StaticAnimPhysClass::Set_Shadow(TexProjectClass * shadow)
+     *
+     * Attaches a static texture projector as a shadow for this object. In C++ this
+     * adds/removes the projector from the physics scene's static projector list and
+     * manages Add_Ref/Release_Ref. Server-side: no render scene or texture projectors
+     * — records the reference only so that isCastingShadow returns correctly.
+     */
+    fun setShadow(shadow: Any?) {
+        shadowProjector = shadow
+    }
+
+    /**
+     * C++: void StaticAnimPhysClass::Debug_Display_Shadow(const Vector2 & v0, const Vector2 & v1)
+     *
+     * Renders a debug visualization of the shadow projector texture in screen space.
+     * Server-side: no renderer — no-op.
+     */
+    fun debugDisplayShadow(v0: Any, v1: Any) {
+        // Server-side: no render system — no-op
+    }
+
+    // -------------------------------------------------------------------------
+    // Save / Load — mirrors virtual bool Save(ChunkSaveClass&) / Load(ChunkLoadClass&)
+    //
+    // C++ Save():
+    //   csave.Begin_Chunk(STATICANIMPHYS_CHUNK_STATICPHYS);
+    //   StaticPhysClass::Save(csave);
+    //   csave.End_Chunk();
+    //   csave.Begin_Chunk(STATICANIMPHYS_CHUNK_ANIMMANAGER);
+    //   AnimManager.Save(csave);
+    //   csave.End_Chunk();
+    //   return true;
+    //
+    // C++ Load():
+    //   int legacy_collision_mode = -1;
+    //   while (cload.Open_Chunk()) {
+    //       case STATICANIMPHYS_CHUNK_STATICPHYS:  StaticPhysClass::Load(cload);
+    //       case STATICANIMPHYS_CHUNK_VARIABLES:   legacy_collision_mode = micro-read
+    //       case STATICANIMPHYS_CHUNK_ANIMMANAGER: AnimManager.Load(cload);
+    //   }
+    //   if (legacy_collision_mode != -1) AnimManager.Set_Collision_Mode(legacy_collision_mode);
+    //   SaveLoadSystemClass::Register_Post_Load_Callback(this);
+    //   return true;
+    //
+    // Server-side: ChunkSaveClass/ChunkLoadClass live in the server module; the physics
+    // module has no dependency on them. Level loading is handled by the server's own
+    // LevelLoader / StaticPhysLoader which reads the same chunks directly. These methods
+    // are therefore no-ops in the physics module — they exist only to document the C++
+    // wire format and to complete the class interface.
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: virtual bool StaticAnimPhysClass::Save(ChunkSaveClass & csave)
+     *
+     * Writes STATICANIMPHYS_CHUNK_STATICPHYS (parent state) and
+     * STATICANIMPHYS_CHUNK_ANIMMANAGER (AnimManager state) to the save stream.
+     * Server-side: no-op — level persistence is handled by the server's LevelLoader.
+     */
+    open fun save(csave: Any): Boolean = true
+
+    /**
+     * C++: virtual bool StaticAnimPhysClass::Load(ChunkLoadClass & cload)
+     *
+     * Reads STATICANIMPHYS_CHUNK_STATICPHYS, STATICANIMPHYS_CHUNK_VARIABLES (legacy
+     * collision mode), and STATICANIMPHYS_CHUNK_ANIMMANAGER from the save stream.
+     * Also handles legacy STATICANIMPHYS_VARIABLE_COLLISIONMODE forwarding to
+     * animationManager.collisionMode. Registers an On_Post_Load callback.
+     * Server-side: no-op — level persistence is handled by the server's LevelLoader.
+     */
+    open fun load(cload: Any): Boolean = true
+
+    // -------------------------------------------------------------------------
+    // Update_Cached_Model_Parameters — mirrors C++ protected method
     //
     // C++:
     //   void StaticAnimPhysClass::Update_Cached_Model_Parameters() {
     //       AnimManager.Update_Cached_Model_Parameters();
     //   }
+    //
+    // Called by: Set_Model(), On_Post_Load()
     // -------------------------------------------------------------------------
 
     /**
      * C++: void StaticAnimPhysClass::Update_Cached_Model_Parameters()
      *
      * Rebuilds cached model-dependent parameters (collideable mesh list, etc.).
-     * Called by Set_Model() and On_Post_Load().
+     * Called by setModel() and onPostLoad().
      * Server-side: delegates to AnimManager which is a no-op.
      */
     fun updateCachedModelParameters() {
+        // C++: AnimManager.Update_Cached_Model_Parameters()
         animationManager.updateCachedModelParameters()
     }
+
+    // -------------------------------------------------------------------------
+    // On_Post_Load — mirrors virtual void StaticAnimPhysClass::On_Post_Load()
+    //
+    // C++:
+    //   void StaticAnimPhysClass::On_Post_Load() {
+    //       StaticPhysClass::On_Post_Load();
+    //       Update_Cached_Model_Parameters();
+    //       StaticAnimPhysDefClass * definition = Get_StaticAnimPhysDef();
+    //       if (definition != NULL) {
+    //           ProjectorManager.Init(definition->ProjectorManagerDef, Model);
+    //       }
+    //   }
+    //
+    // StaticPhysClass::On_Post_Load() calls PhysClass::On_Post_Load() and rebuilds the
+    // bounding box from the model. Neither the bounding box nor the projector manager
+    // applies server-side, but Update_Cached_Model_Parameters() is still called to
+    // keep AnimManager state consistent after a load.
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: virtual void StaticAnimPhysClass::On_Post_Load()
+     *
+     * Post-load callback: rebuilds model-dependent cached parameters and re-initialises
+     * the projector manager from the definition. Called by the save/load system after
+     * all objects have been loaded.
+     * Server-side: calls updateCachedModelParameters(); projector re-init is no-op.
+     */
+    open fun onPostLoad() {
+        // C++: StaticPhysClass::On_Post_Load() — rebuilds cull box from model; server no-op
+        // C++: Update_Cached_Model_Parameters()
+        updateCachedModelParameters()
+        // C++: ProjectorManager.Init(definition->ProjectorManagerDef, Model) — no-op server-side
+    }
+
+    // -------------------------------------------------------------------------
+    // Update_Sun_Status — mirrors virtual void StaticAnimPhysClass::Update_Sun_Status()
+    //
+    // C++:
+    //   void StaticAnimPhysClass::Update_Sun_Status() {
+    //       float MAX_XYSIZE2 = 15.0f * 15.0f;
+    //       // Leapfrog past StaticPhysClass to PhysClass::Update_Sun_Status()
+    //       // only for "small" animated objects (doors, elevators).
+    //       AABoxClass box;
+    //       Model->Get_Obj_Space_Bounding_Box(box);
+    //       float xysize2 = box.Extent.X * box.Extent.X + box.Extent.Y * box.Extent.Y;
+    //       if (xysize2 < MAX_XYSIZE2) {
+    //           PhysClass::Update_Sun_Status();   // perform actual sun occlusion check
+    //       } else {
+    //           Set_Flag(IS_IN_THE_SUN, true);    // large objects: assume always in sun
+    //       }
+    //   }
+    //
+    // C++ rationale: StaticPhysClass::Update_Sun_Status just force-sets IS_IN_THE_SUN=true
+    // for all static objects. StaticAnimPhysClass "leapfrogs" it to apply the real check
+    // only for small animated objects (xysize < 15m radius). Large animated objects also
+    // get IS_IN_THE_SUN=true.
+    // Server-side: no model, no sun occlusion system. Force IS_IN_THE_SUN=true as the
+    // conservative fallback (same as the "large object" branch in C++).
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: virtual void StaticAnimPhysClass::Update_Sun_Status()
+     *
+     * For small animated objects (XY extent < 15m), performs a real sun occlusion check
+     * by delegating to PhysClass::Update_Sun_Status(). For large objects forces
+     * IS_IN_THE_SUN = true. Server-side: no sun system — force IS_IN_THE_SUN = true.
+     */
+    protected open fun updateSunStatus() {
+        // C++: for large objects or when no model is present: Set_Flag(IS_IN_THE_SUN, true)
+        // Server-side: no model, no scene — use conservative "always in sun" path
+        flags = flags or IS_IN_THE_SUN
+    }
+
+    // -------------------------------------------------------------------------
+    // Animation manager accessor — mirrors C++ Get_Animation_Manager()
+    //
+    // C++: AnimCollisionManagerClass & Get_Animation_Manager() { return AnimManager; }
+    //
+    // Kotlin: animationManager is a public val — callers access it directly.
+    // The C++ accessor returns a mutable reference; Kotlin's val provides the same.
+    // No separate getAnimationManager() function needed since Kotlin property access
+    // is already the canonical idiom.
+    // -------------------------------------------------------------------------
 
     // -------------------------------------------------------------------------
     // Chunk IDs — from staticanimphys.cpp

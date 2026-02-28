@@ -200,6 +200,8 @@ class TransitionCompletionDataStruct {
     val type: Int = 0
     // C++: ReferencerClass Vehicle (weak reference to the vehicle)
     val vehicle: GameObjReference = GameObjReference()
+    fun save(csave: ChunkSaveClass): Unit = Unit
+    fun load(cload: ChunkLoadClass): Unit = Unit
 }
 
 // C++: TransitionEffectClass — visual effect during state transitions
@@ -540,6 +542,8 @@ object MapMgrClass {
 // C++: BonesManager
 object BonesManager {
     fun findBone(boneId: Int): Any? = null
+    // C++: BonesManager::Get_Bone_Damage_Scale(boneName) — returns damage multiplier for a bone zone
+    fun getBoneDamageScale(boneName: String): Float = 1f
 }
 
 // C++: CombatMaterialEffectManager
@@ -667,6 +671,7 @@ class HarvesterClass : GameObjObserverClass() {
     fun setDockLocation(pos: Vector3): Unit = TODO("stub")
     fun setDockEntrance(pos: Vector3): Unit = TODO("stub")
     fun setHarvestAnim(name: String): Unit = TODO("stub")
+    fun setTiberiumRegion(region: Any?): Unit = TODO("stub")
     fun initialize(): Unit = TODO("stub")
     fun think(): Unit = TODO("stub")
 }
@@ -925,9 +930,6 @@ object GlobalSettingsDefClass {
 // getTransform are now real methods on RenderObjClass in RenderObjClass.kt)
 // ---------------------------------------------------------------------------
 
-// C++: Set_Container linkage helper — not a C++ RenderObjClass method but used by callers
-fun RenderObjClass.setParentTransform(obj: Any?, boneIndex: Int = -1): Unit = Unit
-
 // ---------------------------------------------------------------------------
 // Matrix3D — additional methods
 // ---------------------------------------------------------------------------
@@ -1013,33 +1015,6 @@ val ControlClass.Companion.ANALOG_MOVE_LEFT: ControlClass.AnalogControl get() = 
 val ControlClass.Companion.ANALOG_MOVE_UP: ControlClass.AnalogControl get() = ControlClass.AnalogControl.MOVE_UP
 val ControlClass.Companion.ANALOG_TURN_LEFT: ControlClass.AnalogControl get() = ControlClass.AnalogControl.TURN_LEFT
 
-val HumanStateClass.Companion.LAND: Int get() = 18
-val HumanStateClass.Companion.LADDER_ENTER_TOP: Int get() = 0
-val HumanStateClass.Companion.LADDER_ENTER_BOTTOM: Int get() = 1
-val HumanStateClass.Companion.VEHICLE_ENTER: Int get() = 0
-
-// ---------------------------------------------------------------------------
-// HumanStateClass — body zone (hit zone) constants
-// ---------------------------------------------------------------------------
-
-val HumanStateClass.Companion.HEAD_FROM_BEHIND: Int       get() = 20
-val HumanStateClass.Companion.HEAD_FROM_FRONT: Int        get() = 21
-val HumanStateClass.Companion.TORSO_FROM_BEHIND: Int      get() = 22
-val HumanStateClass.Companion.TORSO_FROM_FRONT: Int       get() = 23
-val HumanStateClass.Companion.LEFT_ARM_FROM_BEHIND: Int   get() = 24
-val HumanStateClass.Companion.LEFT_ARM_FROM_FRONT: Int    get() = 25
-val HumanStateClass.Companion.RIGHT_ARM_FROM_BEHIND: Int  get() = 26
-val HumanStateClass.Companion.RIGHT_ARM_FROM_FRONT: Int   get() = 27
-val HumanStateClass.Companion.LEFT_LEG_FROM_BEHIND: Int   get() = 28
-val HumanStateClass.Companion.LEFT_LEG_FROM_FRONT: Int    get() = 29
-val HumanStateClass.Companion.RIGHT_LEG_FROM_BEHIND: Int  get() = 30
-val HumanStateClass.Companion.RIGHT_LEG_FROM_FRONT: Int   get() = 31
-val HumanStateClass.Companion.GROIN: Int                  get() = 32
-
-// C++: HumanStateClass::Get_Ouch_Type(direction, collisionBoxName)
-fun HumanStateClass.getOuchType(direction: Vector3, collisionBoxName: String?): Int =
-    HumanStateClass.TORSO_FROM_FRONT
-
 // ---------------------------------------------------------------------------
 // CombatMaterialEffectManager — getHealthEffect, getElectrocutionEffect
 // ---------------------------------------------------------------------------
@@ -1088,47 +1063,10 @@ class ExplosionDefinitionClass {
     val damageWarhead: Int = 0
 }
 
-// ---------------------------------------------------------------------------
-// RenderObjClass convenience property
-// ---------------------------------------------------------------------------
-
-// C++: RenderObjClass::Get_Name() accessed as a property in many places
-val RenderObjClass.name: String get() = getName()
-
-// ---------------------------------------------------------------------------
-// PhysicsScene extension methods — server-side scene operations not in the physics module
-// ---------------------------------------------------------------------------
-
-// C++: SceneClass::Add_Render_Object() — adds a render object to the scene
-fun PhysicsScene.addRenderObject(obj: RenderObjClass) {}
-
-// C++: VisTableClass* PhysicsSceneClass::Get_Vis_Table(const Vector3&)
-fun PhysicsScene.getVisTable(pos: Vector3): VisTableClass? = null
-
 // C++: VisTableClass — server-side vis table (stub)
 class VisTableClass {
     fun getBit(visObjectId: Int): Boolean = true
 }
-
-// C++: PhysicsSceneClass singleton wrapper — server uses CombatManager.getScene()
-// This stub provides a getInstance() pattern for code that calls PhysicsSceneClass.getInstance()
-object PhysicsSceneClass {
-    // C++: PhysicsSceneClass::Get_Instance() — returns the current active physics scene
-    fun getInstance(): PhysicsSceneProxy = PhysicsSceneProxy(CombatManager.getScene())
-}
-
-// Proxy object that wraps the real PhysicsScene and provides extra methods
-class PhysicsSceneProxy(private val scene: PhysicsScene?) {
-    // C++: PhysicsSceneClass::Collect_Objects(AABoxClass, bool, bool, NonRefPhysListClass)
-    fun collectObjects(box: AABoxClass, dynamic: Boolean, `static`: Boolean, result: NonRefPhysListClass) {
-        if (scene == null) return
-        val aaBox = ccr.math.AABox(box.center, box.extent)
-        result.addAll(scene.collectObjects(aaBox))
-    }
-}
-
-// C++: HumanPhysClass::Peek_Carrier_Object() — returns the object this is riding (e.g. elevator)
-fun ccr.physics.moveable.HumanPhysClass.peekCarrierObject(): ccr.physics.PhysClass? = null
 
 // ---------------------------------------------------------------------------
 // AnimCollisionManagerClass — networkStateUpdate
@@ -1218,4 +1156,15 @@ fun Any.getInformation(sb: StringBuilder): Unit = Unit
 
 // C++: ScriptableGameObj::Find_Observer(const char* name) — returns observer by name
 fun ScriptableGameObj.findObserver(name: String): GameObjObserverClass? =
-    observers.firstOrNull { it.getName() == name }
+    getObservers().firstOrNull { it.getName() == name }
+
+// ---------------------------------------------------------------------------
+// PhysClass helper extensions
+// ---------------------------------------------------------------------------
+
+// C++: PhysClass::Peek_Observer() — returns the physics observer attached to this object
+// Named getObserver() to match calling code style; actual field is `observer`.
+fun ccr.physics.PhysClass.getObserver(): ccr.physics.PhysObserver? = observer
+
+// C++: HumanPhysClass::Peek_Carrier_Object() — object this is riding on (e.g. elevator); stub
+fun ccr.physics.moveable.HumanPhysClass.peekCarrierObject(): ccr.physics.PhysClass? = null

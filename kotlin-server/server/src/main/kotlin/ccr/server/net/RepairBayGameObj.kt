@@ -164,8 +164,8 @@ class RepairBayGameObj() : BuildingGameObj() {
         //   look for model named "rep^NOD_fx" (case-insensitive)
         for (aggregate in aggregates) {
             val physObj = aggregate as? StaticPhysClass ?: continue
-            val model = physObj.model ?: continue
-            if (model.name.equals("rep^NOD_fx", ignoreCase = true)) {
+            val model = physObj.model as? RenderObjClass ?: continue
+            if (model.getName().equals("rep^NOD_fx", ignoreCase = true)) {
                 repairMesh = physObj
                 break
             }
@@ -177,13 +177,13 @@ class RepairBayGameObj() : BuildingGameObj() {
         if (scene != null) {
             for (obj in scene.staticObjects) {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
-                if (animPhysObj.definition?.id == getRepairBayDefinition().repairingStaticAnimDefId.toUInt()) {
-                    val animPos = Vector3(0f, 0f, 0f)
-                    animPhysObj.getPosition(animPos)
+                val defId = (animPhysObj.definition as? ccr.physics.PhysDefClass)?.id
+                if (defId == getRepairBayDefinition().repairingStaticAnimDefId.toUInt()) {
+                    val animPos = animPhysObj.getPosition()
                     val dist2 = (animPos - pos).lengthSquared()
                     if (dist2 < closest2) {
                         closest2 = dist2
-                        repairAnimationID = animPhysObj.getId()
+                        repairAnimationID = animPhysObj.getId().toInt()
                     }
                 }
             }
@@ -193,14 +193,12 @@ class RepairBayGameObj() : BuildingGameObj() {
         for (index in 0 until ARC_OBJ_COUNT) {
             arcObjects[index] = ObjectLibraryManager.createObject("Arc Effect") as? SimpleGameObj
             val physObj = arcObjects[index]?.peekPhysicalObject()
-            if (physObj != null && physObj.model != null) {
-                physObj.model!!.setHidden(true)
-            }
+            (physObj?.model as? RenderObjClass)?.setHidden(true)
             arcLifeRemaining[index] = 0f
         }
 
         // C++: Get information about the model (bone transforms)
-        val arcModel = arcObjects[0]?.peekPhysicalObject()?.model
+        val arcModel = arcObjects[0]?.peekPhysicalObject()?.model as? RenderObjClass
         if (arcModel != null) {
             // C++: Store the original transforms of each bone
             for (index in 0 until BONE_COUNT) {
@@ -243,7 +241,7 @@ class RepairBayGameObj() : BuildingGameObj() {
                 arcLifeRemaining[index] -= TimeManager.getFrameSeconds()
                 if (arcLifeRemaining[index] <= 0f) {
                     val physObj = arcObjects[index]?.peekPhysicalObject()
-                    physObj?.model?.setHidden(true)
+                    (physObj?.model as? RenderObjClass)?.setHidden(true)
                 }
             }
         }
@@ -262,7 +260,8 @@ class RepairBayGameObj() : BuildingGameObj() {
         // C++: Collect the dynamic physics objects in the repair zone
         //   PhysicsSceneClass::Get_Instance()->Collect_Objects(RepairZone, false, true, &objs_to_repair)
         val scene = CombatManager.getScene()
-        val objsToRepair: List<PhysClass> = scene?.collectObjects(repairZone, false, true) ?: emptyList()
+        val repairBox = ccr.math.AABox(repairZone.center, repairZone.extent)
+        val objsToRepair: List<ccr.physics.PhysClass> = scene?.collectObjects(repairBox) ?: emptyList()
 
         // C++: Loop over all the objects
         for (physObj in objsToRepair) {
@@ -368,7 +367,7 @@ class RepairBayGameObj() : BuildingGameObj() {
             val gameObj = vehicleList[index].get()
             if (gameObj != null) {
                 val physicalGameObj = gameObj as? PhysicalGameObj ?: continue
-                val model = physicalGameObj.model
+                val model = physicalGameObj.peekModel()
                 if (model != null) {
                     // C++: if (FreeRandom.Get_Int(4) == 1) Emit_Welding_Arc(model)
                     if (FreeRandom.getInt(4) == 1) {
@@ -387,7 +386,7 @@ class RepairBayGameObj() : BuildingGameObj() {
 
         // C++: Pick a random bone to emit from the repair mesh
         var startpoint = getPosition()
-        val aggregateModel = localRepairMesh.model
+        val aggregateModel = localRepairMesh.model as? RenderObjClass
         if (aggregateModel != null) {
             val count = 8  // C++: hardcoded 8
             val boneIndex = FreeRandom.getInt(count) + 1
@@ -401,20 +400,17 @@ class RepairBayGameObj() : BuildingGameObj() {
         // C++: Find a random mesh inside the vehicle's model
         val mesh = findRandomMesh(vehicleModel)
         if (mesh != null) {
-            val meshModel = mesh.getModel()
-            if (meshModel != null) {
-                val vertexCount = meshModel.getVertexCount()
-                if (vertexCount > 0) {
-                    val randomVertIndex = FreeRandom.getInt(vertexCount)
-                    endpoint = mesh.getTransform().transformPoint(meshModel.getVertexArray()[randomVertIndex])
-                }
+            val vertexCount = mesh.getVertexCount()
+            if (vertexCount > 0) {
+                val randomVertIndex = FreeRandom.getInt(vertexCount)
+                endpoint = mesh.getTransform().transformPoint(mesh.getVertexArray()[randomVertIndex])
             }
         }
 
         // C++: Try to find an available welding-arc
         for (index in 0 until ARC_OBJ_COUNT) {
             if (arcLifeRemaining[index] <= 0f && FreeRandom.getInt(4) == 1) {
-                val model = arcObjects[index]?.peekPhysicalObject()?.model ?: continue
+                val model = arcObjects[index]?.peekPhysicalObject()?.model as? RenderObjClass ?: continue
 
                 // C++: Make the object "look" at its endpoint
                 val startTm = ccr.math.Matrix3D.objLookAt(startpoint, endpoint, 0f)
