@@ -103,7 +103,7 @@ class HumanStateClass {
     fun setAnimControl(animControl: AnimControlClass?) {
         this.animControl = animControl
         // C++: AnimControl->Set_Model(HumanPhys->Peek_Model()) — model setup
-        animControl?.setModel(humanPhys?.model)
+        animControl?.setModel(humanPhys?.model as? RenderObjClass)
     }
 
     // C++: void Set_Human_Anim_Override(int def_id)
