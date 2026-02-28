@@ -194,6 +194,26 @@ abstract class PhysClass {
      */
     open fun internalUnlinkRider(rider: PhysClass): Boolean = false
 
+    /** C++: Set_Immovable(bool) — convenience wrapper for isImmovable property (mirrors C++ phys.h). */
+    fun setImmovable(onoff: Boolean) { isImmovable = onoff }
+
+    /**
+     * C++: PersistClass::Peek_Factory()->Chunk_ID() — returns the persistent factory chunk ID.
+     * Used by BuildingGameObj to detect whether a StaticPhysClass is a BuildingAggregateClass
+     * (PHYSICS_CHUNKID_BUILDINGAGGREGATE = 0xDC2F95).
+     * Server-side: each subclass can override to return its own chunk ID constant.
+     */
+    open fun getFactoryChunkId(): UInt = 0u
+
+    /**
+     * C++: obj->Peek_Factory()->Chunk_ID() == chunkId — checks factory chunk ID.
+     * Convenience method used by BuildingGameObj.
+     */
+    fun isFromFactory(chunkId: Int): Boolean = getFactoryChunkId() == chunkId.toUInt()
+
+    /** C++: Get_Observer() — returns the observer attached to this physics object. */
+    fun getObserver(): PhysObserver? = observer
+
     /** C++: Enable_Is_State_Dirty(bool) — sets/clears the IS_STATE_DIRTY flag. */
     fun enableIsStateDirty(onoff: Boolean) {
         flags = if (onoff) flags or IS_STATE_DIRTY else flags and IS_STATE_DIRTY.inv()

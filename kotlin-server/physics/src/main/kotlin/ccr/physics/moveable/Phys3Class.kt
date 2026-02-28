@@ -55,6 +55,34 @@ open class Phys3Class : MoveablePhysClass() {
 
     override fun asPhys3Class(): Phys3Class = this
 
+    // -------------------------------------------------------------------------
+    // C++ accessor methods used by HumanStateClass and other callers
+    // -------------------------------------------------------------------------
+
+    /** C++: virtual bool Phys3Class::Is_In_Contact() const { return OnGround; } */
+    open fun isInContact(): Boolean = onGround
+
+    /**
+     * C++: void Phys3Class::Get_Animation_Move(Vector3 * set_move) { *set_move = AnimationMove; }
+     * Server-side: AnimationMove is not tracked — returns zero vector.
+     */
+    open fun getAnimationMove(v: Vector3) { v.x = 0f; v.y = 0f; v.z = 0f }
+
+    /**
+     * C++: void Phys3Class::Reset_Animation_Move() { AnimationMove.Set(0,0,0); }
+     * Server-side: no-op (AnimationMove not tracked).
+     */
+    open fun resetAnimationMove() {}
+
+    /**
+     * C++: float Phys3Class::Get_Heading() const { return Heading; }
+     * The `heading` property getter/setter also exist but callers may use these methods.
+     */
+    open fun getHeading(): Float = heading
+
+    /** C++: void Phys3Class::Set_Heading(float h) { Heading = h; } */
+    open fun setHeading(h: Float) { heading = h }
+
     /**
      * C++: Phys3Class::Intersection_Test(PhysAABoxIntersectionTestClass&)
      *

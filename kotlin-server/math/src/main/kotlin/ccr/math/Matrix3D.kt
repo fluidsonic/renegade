@@ -27,6 +27,23 @@ data class Matrix3D(
         z = m20 * v.x + m21 * v.y + m22 * v.z,
     )
 
+    /**
+     * C++: Matrix3D::Inverse_Rotate_Vector(const Vector3& vect) const
+     *
+     * Rotates a vector by the TRANSPOSE of the 3×3 rotation sub-matrix.
+     * Equivalent to multiplying by the inverse of the rotation when the matrix is orthonormal.
+     *
+     * C++ implementation (matrix3d.cpp):
+     *   result.x = Row[0][0]*v.x + Row[1][0]*v.y + Row[2][0]*v.z
+     *   result.y = Row[0][1]*v.x + Row[1][1]*v.y + Row[2][1]*v.z
+     *   result.z = Row[0][2]*v.x + Row[1][2]*v.y + Row[2][2]*v.z
+     */
+    fun inverseRotateVector(v: Vector3) = Vector3(
+        x = m00 * v.x + m10 * v.y + m20 * v.z,
+        y = m01 * v.x + m11 * v.y + m21 * v.z,
+        z = m02 * v.x + m12 * v.y + m22 * v.z,
+    )
+
     operator fun times(v: Vector3): Vector3 = Vector3(
         m00 * v.x + m01 * v.y + m02 * v.z + m03,
         m10 * v.x + m11 * v.y + m12 * v.z + m13,

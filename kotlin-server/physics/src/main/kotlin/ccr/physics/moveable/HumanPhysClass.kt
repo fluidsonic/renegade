@@ -1,5 +1,6 @@
 package ccr.physics.moveable
 
+import ccr.math.AABox
 import ccr.math.Vector3
 import ccr.physics.PhysController
 import ccr.physics.scene.PhysicsScene
@@ -14,6 +15,31 @@ open class HumanPhysClass : Phys3Class() {
     var isAIControlledJump: Boolean = false       // C++ HumanPhysClass::IsAIControlledJump
 
     override fun asHumanPhysClass(): HumanPhysClass = this
+
+    // C++: HumanPhysClass::Get_Heading() / Set_Heading() — delegates to Phys3Class.heading
+    open fun getHeading(): Float = heading
+    open fun setHeading(h: Float) { heading = h }
+    // C++: HumanPhysClass::Get_Velocity() / Set_Velocity()
+    open fun getVelocity(): Vector3 = velocity.copy()
+    open fun setVelocity(v: Vector3) { velocity = v }
+    // C++: HumanPhysClass::Is_In_Contact() — soldier is on the ground
+    open fun isInContact(): Boolean = onGround
+    // C++: HumanPhysClass::Set_Immovable() — sets/clears the IMMOVABLE flag on the physics object
+    open fun setImmovable(immovable: Boolean) { isImmovable = immovable }
+    // C++: HumanPhysClass::Get_Collision_Box() — returns the collision box
+    open fun getCollisionBox(): AABox = collisionBox
+    // C++: HumanPhysClass::Set_In_Contact() — override contact state
+    open fun setInContact(contact: Boolean) { onGround = contact }
+    // C++: HumanPhysClass::Find_Teleport_Location() — stub; server does no geometry lookup
+    open fun findTeleportLocation(pos: Vector3, maxPerturb: Float, result: Vector3): Boolean {
+        result.x = pos.x; result.y = pos.y; result.z = pos.z
+        return true
+    }
+    // C++: HumanPhysClass::Get_Animation_Move() / Reset_Animation_Move() — stub
+    open fun getAnimationMove(out: Vector3) { out.x = 0f; out.y = 0f; out.z = 0f }
+    open fun resetAnimationMove() {}
+    // C++: HumanPhysClass::Set_Anim_Speed_Scale() — stub
+    open fun setAnimSpeedScale(scale: Float) {}
 
     override fun timestep(dt: Float) {
         val ctrl = controller

@@ -8,6 +8,7 @@ import ccr.physics.collision.CollisionGroupMatrix
 import ccr.physics.collision.RayCollisionTest
 import ccr.physics.spatial.PhysGrid
 import ccr.physics.spatial.StaticAABTree
+import ccr.physics.dynamic.LightPhysClass
 import ccr.physics.static.StaticPhysClass
 
 class PhysicsScene {

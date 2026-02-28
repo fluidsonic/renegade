@@ -117,6 +117,14 @@ open class AnimControlClass {
     fun peekAnimation(): Animatable3DObjClass? = null
     fun peekModel(): RenderObjClass? = null
     fun resetAnimUpdate(): Unit = Unit
+    /** C++: char AnimControlClass::Get_Skeleton() — returns skeleton type character ('V' = vehicle, etc). */
+    open fun getSkeleton(): Char = ' '
+    /** C++: virtual void AnimControlClass::Set_Anim_Speed_Scale(float speed) — multiplier on playback rate. */
+    open fun setAnimSpeedScale(speed: Float): Unit = Unit
+    /** C++: virtual float AnimControlClass::Get_Progress() — returns 0..1 playback completion. */
+    open fun getProgress(): Float = 0f
+    /** C++: void AnimControlClass::Get_Information(StringClass& string) — appends debug info. */
+    open fun getInformation(sb: StringBuilder): Unit = Unit
 }
 
 // C++: SimpleAnimControlClass : public AnimControlClass
