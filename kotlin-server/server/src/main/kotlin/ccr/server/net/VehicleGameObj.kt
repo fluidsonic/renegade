@@ -92,8 +92,7 @@ open class VehicleGameObj() : SmartGameObj() {
     }
 
     // -------------------------------------------------------------------------
-    // Server-port direct fields — used by secondary constructor and exportFrequent
-    // when there is no real physObj (e.g. in tests).
+    // Server-port direct fields — used by secondary constructor.
     // -------------------------------------------------------------------------
 
     // Vehicle type constant — read from definition in normal flow; set directly in secondary ctor.
@@ -915,12 +914,12 @@ open class VehicleGameObj() : SmartGameObj() {
             VEHICLE_TYPE_TANK,
             VEHICLE_TYPE_CAR,
             VEHICLE_TYPE_FLYING -> {
-                val vehiclePhys = physObj?.asVehiclePhysClass()
-                val pos = vehiclePhys?.position ?: position
-                val q = vehiclePhys?.state?.orientation ?: quaternion
-                val vel = vehiclePhys?.velocity ?: velocity
-                val angVel = vehiclePhys?.angularVelocity ?: this.angularVelocity
-                val engineOn = vehiclePhys?.isEngineOn ?: isEngineOn
+                val vehiclePhys = checkNotNull(physObj?.asVehiclePhysClass()) { "VehicleGameObj: physObj must be set" }
+                val pos = vehiclePhys.position
+                val q = vehiclePhys.state.orientation
+                val vel = vehiclePhys.velocity
+                val angVel = vehiclePhys.angularVelocity
+                val engineOn = vehiclePhys.isEngineOn
 
                 packet.addBool(engineOn)
                 packet.addFloat(pos.x, BITPACK_WORLD_POSITION_X)
@@ -958,33 +957,31 @@ open class VehicleGameObj() : SmartGameObj() {
             VEHICLE_TYPE_CAR,
             VEHICLE_TYPE_TANK,
             VEHICLE_TYPE_FLYING -> {
-                val vehiclePhys = physObj?.asVehiclePhysClass()
-                if (vehiclePhys != null) {
-                    val isEngineOn = packet.getBool()
-                    val posX = packet.getFloat(BITPACK_WORLD_POSITION_X)
-                    val posY = packet.getFloat(BITPACK_WORLD_POSITION_Y)
-                    val posZ = packet.getFloat(BITPACK_WORLD_POSITION_Z)
-                    val qX = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
-                    val qY = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
-                    val qZ = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
-                    val qW = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
-                    val velX = packet.getFloat(BITPACK_VEHICLE_VELOCITY)
-                    val velY = packet.getFloat(BITPACK_VEHICLE_VELOCITY)
-                    val velZ = packet.getFloat(BITPACK_VEHICLE_VELOCITY)
-                    val angVelX = packet.getFloat(BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                    val angVelY = packet.getFloat(BITPACK_VEHICLE_ANGULAR_VELOCITY)
-                    val angVelZ = packet.getFloat(BITPACK_VEHICLE_ANGULAR_VELOCITY)
+                val vehiclePhys = checkNotNull(physObj?.asVehiclePhysClass()) { "VehicleGameObj: physObj must be set" }
+                val isEngineOn = packet.getBool()
+                val posX = packet.getFloat(BITPACK_WORLD_POSITION_X)
+                val posY = packet.getFloat(BITPACK_WORLD_POSITION_Y)
+                val posZ = packet.getFloat(BITPACK_WORLD_POSITION_Z)
+                val qX = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
+                val qY = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
+                val qZ = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
+                val qW = packet.getFloat(BITPACK_VEHICLE_QUATERNION)
+                val velX = packet.getFloat(BITPACK_VEHICLE_VELOCITY)
+                val velY = packet.getFloat(BITPACK_VEHICLE_VELOCITY)
+                val velZ = packet.getFloat(BITPACK_VEHICLE_VELOCITY)
+                val angVelX = packet.getFloat(BITPACK_VEHICLE_ANGULAR_VELOCITY)
+                val angVelY = packet.getFloat(BITPACK_VEHICLE_ANGULAR_VELOCITY)
+                val angVelZ = packet.getFloat(BITPACK_VEHICLE_ANGULAR_VELOCITY)
 
-                    val pos = Vector3(posX, posY, posZ)
-                    val q = Quaternion(qX, qY, qZ, qW).normalized()
-                    val vel = Vector3(velX, velY, velZ)
-                    val angVel = Vector3(angVelX, angVelY, angVelZ)
+                val pos = Vector3(posX, posY, posZ)
+                val q = Quaternion(qX, qY, qZ, qW).normalized()
+                val vel = Vector3(velX, velY, velZ)
+                val angVel = Vector3(angVelX, angVelY, angVelZ)
 
-                    // C++: if (COMBAT_STAR && COMBAT_STAR->Get_Vehicle() == this) → latency update
-                    //       else → interpolate update
-                    vehiclePhys.networkInterpolateStateUpdate(pos, q, vel, angVel, 0.1f)
-                    vehiclePhys.isEngineOn = isEngineOn
-                }
+                // C++: if (COMBAT_STAR && COMBAT_STAR->Get_Vehicle() == this) → latency update
+                //       else → interpolate update
+                vehiclePhys.networkInterpolateStateUpdate(pos, q, vel, angVel, 0.1f)
+                vehiclePhys.isEngineOn = isEngineOn
             }
             VEHICLE_TYPE_TURRET -> {
                 // C++: nothing extra for turrets

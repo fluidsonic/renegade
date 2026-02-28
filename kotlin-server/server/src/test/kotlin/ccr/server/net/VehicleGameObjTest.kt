@@ -3,11 +3,57 @@ package ccr.server.net
 import ccr.math.Quaternion
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.math.Matrix3
+import ccr.physics.rigidbody.RigidBodyState
+import ccr.physics.vehicle.WVWheel
+import ccr.physics.vehicle.VehiclePhysClass
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+
+/** Minimal concrete VehiclePhysClass for tests. */
+private class TestVehiclePhysImpl(
+    pos: Vector3 = Vector3.ZERO,
+    q: Quaternion = Quaternion.IDENTITY,
+    vel: Vector3 = Vector3.ZERO,
+    angVel: Vector3 = Vector3.ZERO,
+    engineOn: Boolean = true,
+) : VehiclePhysClass() {
+    override fun allocSuspensionElement() = WVWheel()
+    init {
+        mass = 1000f
+        computeInertia(4f, 2f, 1.5f)
+        val qNorm = q.normalized()
+        // World-space angular momentum: I_world * omega, where I_world = R * iBody * R^T
+        val rot = Matrix3.fromQuaternion(qNorm)
+        val iWorld = rot * iBody * rot.transpose()
+        state = RigidBodyState(
+            position = pos,
+            orientation = qNorm,
+            linearMomentum = vel * mass,
+            angularMomentum = iWorld * angVel,
+        )
+        updateAuxiliaryState()
+        isEngineOn = engineOn
+    }
+}
+
+/**
+ * Bridge: a ccr.server.net.PhysClass (stub) that wraps a real VehiclePhysClass so that
+ * physObj can be set on a VehicleGameObj in tests.
+ */
+private class TestVehiclePhysStub(
+    pos: Vector3 = Vector3.ZERO,
+    q: Quaternion = Quaternion.IDENTITY,
+    vel: Vector3 = Vector3.ZERO,
+    angVel: Vector3 = Vector3.ZERO,
+    engineOn: Boolean = true,
+) : PhysClass() {
+    val impl = TestVehiclePhysImpl(pos, q, vel, angVel, engineOn)
+    override fun asVehiclePhysClass(): ccr.physics.vehicle.VehiclePhysClass = impl
+}
 
 /**
  * Tests for VehicleGameObj encoding.
@@ -98,28 +144,42 @@ class VehicleGameObjTest {
             totalRounds: Int = 0,
             driverIsGunner: Boolean = false,
             seatOccupantIds: List<Int> = emptyList(),
-        ) = VehicleGameObj(
-            definitionId      = 0x04e20000,
-            position          = Vector3(0f, 0f, 0f),
-            facing            = 0f,
-            modelName         = "rhino",
-            animName          = "",
-            health            = 100f,
-            controlOwner      = 0,
-            team              = 0,
-            vehicleType       = vehicleType,
-            seatCount         = seatCount,
-            lockOwnerId       = lockOwnerId,
-            lockTimer         = lockTimer,
-            vehicleDelivered  = vehicleDelivered,
-            isEngineOn        = isEngineOn,
-            quaternion        = quaternion,
-            velocity          = velocity,
-            angularVelocity   = angularVelocity,
-            totalRounds       = totalRounds,
-            driverIsGunner    = driverIsGunner,
-            seatOccupantIds   = seatOccupantIds,
-        )
+            position: Vector3 = Vector3(0f, 0f, 0f),
+        ): VehicleGameObj {
+            val v = VehicleGameObj(
+                definitionId      = 0x04e20000,
+                position          = position,
+                facing            = 0f,
+                modelName         = "rhino",
+                animName          = "",
+                health            = 100f,
+                controlOwner      = 0,
+                team              = 0,
+                vehicleType       = vehicleType,
+                seatCount         = seatCount,
+                lockOwnerId       = lockOwnerId,
+                lockTimer         = lockTimer,
+                vehicleDelivered  = vehicleDelivered,
+                isEngineOn        = isEngineOn,
+                quaternion        = quaternion,
+                velocity          = velocity,
+                angularVelocity   = angularVelocity,
+                totalRounds       = totalRounds,
+                driverIsGunner    = driverIsGunner,
+                seatOccupantIds   = seatOccupantIds,
+            )
+            // physObj is mandatory for all non-turret vehicles in exportFrequent
+            if (vehicleType != VehicleGameObj.VEHICLE_TYPE_TURRET) {
+                v.physObj = TestVehiclePhysStub(
+                    pos       = position,
+                    q         = quaternion,
+                    vel       = velocity,
+                    angVel    = angularVelocity,
+                    engineOn  = isEngineOn,
+                )
+            }
+            return v
+        }
     }
 
     // ---- 1: networkClassId ----
@@ -349,33 +409,13 @@ class VehicleGameObjTest {
         val vel    = Vector3(5.5f, -3.2f, 0f)
         val angVel = Vector3(0.5f, 0f, -0.5f)
 
-        val vehicle = defaultVehicle(
+        val v2 = defaultVehicle(
             vehicleType     = VehicleGameObj.VEHICLE_TYPE_CAR,
             isEngineOn      = true,
             quaternion      = q,
             velocity        = vel,
             angularVelocity = angVel,
-        ).apply {
-            // Override position via a new vehicle with the right position
-        }
-
-        // Use a vehicle that has the specified position
-        val v2 = VehicleGameObj(
-            definitionId      = 0x04e20000,
-            position          = pos,
-            facing            = 0f,
-            modelName         = "rhino",
-            animName          = "",
-            health            = 100f,
-            controlOwner      = 0,
-            team              = 0,
-            vehicleType       = VehicleGameObj.VEHICLE_TYPE_CAR,
-            seatCount         = 1,
-            lockOwnerId       = 0,
-            isEngineOn        = true,
-            quaternion        = q,
-            velocity          = vel,
-            angularVelocity   = angVel,
+            position        = pos,
         )
         val bs = BitStream()
         v2.exportFrequent(bs)
