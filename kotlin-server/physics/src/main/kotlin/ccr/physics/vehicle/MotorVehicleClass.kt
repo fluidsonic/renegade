@@ -7,11 +7,24 @@ import kotlin.math.min
 // C++: MotorVehicleClass in wwphys/motorvehicle.h
 abstract class MotorVehicleClass : VehiclePhysClass() {
 
+    companion object {
+        private const val GEAR_SHIFT_DELAY = 1.0f
+        private const val MIN_BRAKING_SPEED = 1.5f
+
+        // Chunk IDs sourced from motorvehicle.cpp Save()
+        const val MOTO_CHUNK_RIGIDBODY: Int = 0x01234500       // obsolete parent chunk (was RigidBody)
+        const val MOTO_CHUNK_VARIABLES: Int = 0x01234501       // own data
+        const val MOTO_CHUNK_VEHICLEPHYS: Int = 0x01234502     // current parent chunk (VehiclePhys)
+
+        // Micro-chunk IDs within MOTO_CHUNK_VARIABLES:
+        // 0x00 = OBSOLETE_MOTO_VARIABLE_CURENGINETORQUE
+        const val MOTO_VARIABLE_ENGINEANGULARVELOCITY: Int = 0x01
+        const val MOTO_VARIABLE_CURRENTGEAR: Int = 0x02
+        const val MOTO_VARIABLE_SHIFTIMER: Int = 0x03
+    }
+
+    // Definition-like fields (C++: in MotorVehicleDefClass)
     var maxEngineTorque: Float = 1000f
-    var engineRPM: Float = 800f
-    var idleRPM: Float = 800f
-    var maxRPM: Float = 6000f
-    var currentGear: Int = 1
     var gearCount: Int = 5
     var gearRatios: FloatArray = floatArrayOf(3.5f, 2.5f, 1.7f, 1.2f, 0.9f)
     var finalDriveGearRatio: Float = 3.7f
@@ -19,8 +32,18 @@ abstract class MotorVehicleClass : VehiclePhysClass() {
     var shiftDownRpm: Float = 2000f
     var driveTrainInertia: Float = 0.5f
 
-    private var throttle: Float = 0f
-    private var brake: Float = 0f
+    // Instance fields (C++: MotorVehicleClass)
+    var engineAngularVelocity: Float = 0f   // C++: EngineAngularVelocity (rad/s)
+    var currentGear: Int = 0                // C++: CurrentGear (0-indexed)
+    var shiftTimer: Float = 0f              // C++: ShiftTimer
+    var acceleratorFraction: Float = 0f     // C++: AcceleratorFraction
+    var isBraking: Boolean = false          // C++: IsBraking
+
+    // Non-C++ helpers for Kotlin logic
+    var idleRPM: Float = 800f
+    var maxRPM: Float = 6000f
+
+    override fun asMotorVehicleClass(): MotorVehicleClass = this
 
     override fun timestep(dt: Float) {
         if (isFake) return
@@ -28,35 +51,50 @@ abstract class MotorVehicleClass : VehiclePhysClass() {
         // Read controller input
         val ctrl = controller
         if (ctrl != null && isEngineOn) {
-            throttle = ctrl.moveForward.coerceIn(0f, 1f)
-            brake = (-ctrl.moveForward).coerceIn(0f, 1f)
+            acceleratorFraction = ctrl.moveForward.coerceIn(-1f, 1f)
+            isBraking = false
+
+            // Determine braking vs accelerating (matches C++ Timestep logic)
+            val objSpeed = velocity.length()
+            if (ctrl.moveForward < 0f && objSpeed > MIN_BRAKING_SPEED) {
+                isBraking = true
+                acceleratorFraction = 0f
+            } else if (ctrl.moveForward > 0f && objSpeed > MIN_BRAKING_SPEED) {
+                // Forward driving, not braking
+            }
         } else {
-            throttle = 0f
-            brake = 0f
+            acceleratorFraction = 0f
+            isBraking = false
         }
 
         // Update engine RPM based on vehicle speed
         val speed = velocity.length()
-        val gearRatio = if (currentGear in 1..gearRatios.size)
-            gearRatios[currentGear - 1] else 1f
+        val gearRatio = if (currentGear in gearRatios.indices)
+            gearRatios[currentGear] else 1f
         val totalRatio = gearRatio * finalDriveGearRatio
         // Find an engine-flagged wheel for radius
         val engineWheel = wheels.filterIsInstance<Wheel>().firstOrNull { it.hasFlag(SuspensionElement.ENGINE) }
         val wheelRadius = engineWheel?.radius ?: 0.3f
         if (wheelRadius > 0f && totalRatio > 0f) {
-            engineRPM = (speed / wheelRadius * totalRatio * 60f / (2f * kotlin.math.PI.toFloat()))
-                .coerceIn(idleRPM, maxRPM)
+            engineAngularVelocity = (speed / wheelRadius * totalRatio)
+                .coerceIn(0f, maxRPM)
         }
 
-        // Auto-shift
-        if (engineRPM >= shiftUpRpm && currentGear < gearCount) {
-            currentGear++
-        } else if (engineRPM <= shiftDownRpm && currentGear > 1) {
-            currentGear--
+        // Auto-shift (matches C++ logic with shift timer)
+        if (shiftTimer <= 0f) {
+            if (engineAngularVelocity > shiftUpRpm && currentGear < gearCount - 1) {
+                currentGear++
+                shiftTimer = GEAR_SHIFT_DELAY
+            } else if (engineAngularVelocity < shiftDownRpm && currentGear > 0) {
+                currentGear--
+                shiftTimer = GEAR_SHIFT_DELAY
+            }
+        } else {
+            shiftTimer -= dt
         }
 
         // Compute axle torque and distribute to engine wheels
-        val engineTorque = throttle * maxEngineTorque
+        val engineTorque = acceleratorFraction * maxEngineTorque
         val axleTorque = engineTorque * gearRatio * finalDriveGearRatio
         val engineWheels = wheels.filterIsInstance<Wheel>().filter { it.hasFlag(SuspensionElement.ENGINE) }
         val perWheel = if (engineWheels.isNotEmpty()) axleTorque / engineWheels.size else 0f
@@ -65,10 +103,9 @@ abstract class MotorVehicleClass : VehiclePhysClass() {
         }
 
         // Apply brakes
-        if (brake > 0f) {
+        if (isBraking) {
             for (w in wheels.filterIsInstance<Wheel>()) {
                 w.setFlag(SuspensionElement.BRAKING)
-                w.axleTorque = -brake * maxEngineTorque * 0.5f
             }
         } else {
             for (w in wheels.filterIsInstance<Wheel>()) {

@@ -62,9 +62,9 @@ class RigidBodyClassTest {
         body.mass = 12f
         body.computeInertia(1f, 1f, 1f)
         // I_x = 12 * (1+1) / 12 = 2
-        assertTrue(abs(body.inertiaBody.m00 - 2f) < 1e-5f, "Ix=${body.inertiaBody.m00}")
-        assertTrue(abs(body.inertiaBody.m11 - 2f) < 1e-5f, "Iy=${body.inertiaBody.m11}")
-        assertTrue(abs(body.inertiaBody.m22 - 2f) < 1e-5f, "Iz=${body.inertiaBody.m22}")
+        assertTrue(abs(body.iBody.m00 - 2f) < 1e-5f, "Ix=${body.iBody.m00}")
+        assertTrue(abs(body.iBody.m11 - 2f) < 1e-5f, "Iy=${body.iBody.m11}")
+        assertTrue(abs(body.iBody.m22 - 2f) < 1e-5f, "Iz=${body.iBody.m22}")
     }
 
     @Test

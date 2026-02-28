@@ -18,6 +18,23 @@ abstract class RigidBodyClass : MoveablePhysClass(), OdeSystem {
         private const val SLEEP_VEL_THRESHOLD = 0.1f
         private const val SLEEP_ANGVEL_THRESHOLD = 0.1f
         private const val MIN_CONTACT_COUNT_FOR_SLEEP = 3
+        const val MAX_CONTACT_POINTS = 10
+
+        // Chunk IDs sourced from rbody.cpp Save()
+        const val RBODY_CHUNK_MOVEABLE: Int = 0x00800900           // wraps parent MoveablePhysClass
+        const val RBODY_CHUNK_VARIABLES: Int = 0x00800901           // own data
+
+        // Micro-chunk IDs within RBODY_CHUNK_VARIABLES:
+        const val RBODY_VARIABLE_ODESYSTEM_PTR: Int = 0x00
+        const val RBODY_VARIABLE_IBODY: Int = 0x01
+        const val RBODY_VARIABLE_IBODYINV: Int = 0x02
+        const val RBODY_VARIABLE_STATE_POSITION: Int = 0x03
+        const val RBODY_VARIABLE_STATE_ORIENTATION: Int = 0x04
+        const val RBODY_VARIABLE_STATE_LMOMENTUM: Int = 0x05
+        const val RBODY_VARIABLE_STATE_AMOMENTUM: Int = 0x06
+        // 0x07 = OBSOLETE CONTACT_STIFFNESS
+        // 0x08 = OBSOLETE CONTACT_DAMPING
+        const val RBODY_VARIABLE_CONTACT_LENGTH: Int = 0x09
     }
 
     var state: RigidBodyState = RigidBodyState()
@@ -25,32 +42,40 @@ abstract class RigidBodyClass : MoveablePhysClass(), OdeSystem {
     // Derived quantities (recomputed after integration)
     var rotation: Matrix3 = Matrix3.IDENTITY
         private set
-    var inertiaInv: Matrix3 = Matrix3.IDENTITY
+    var iInv: Matrix3 = Matrix3.IDENTITY
         private set
     var angularVelocity: Vector3 = Vector3.ZERO
         private set
 
-    // Body-space inertia
-    var inertiaBody: Matrix3 = Matrix3.IDENTITY
-    var inertiaBodyInv: Matrix3 = Matrix3.IDENTITY
+    // Body-space inertia (C++: IBody, IBodyInv)
+    var iBody: Matrix3 = Matrix3.IDENTITY
+    var iBodyInv: Matrix3 = Matrix3.IDENTITY
 
-    // Contact state
-    val contactPoints = Array(10) { Vector3.ZERO }
+    // Contact state (C++: ContactThickness, IsInContact, ContactCount, ContactPoint[], ContactNormal, StickCount)
+    var contactThickness: Float = 0f
+    var isInContact: Boolean = false
+    val contactPoints = Array(MAX_CONTACT_POINTS) { Vector3.ZERO }
     var contactNormal: Vector3 = Vector3(0f, 0f, 1f)
     var contactCount: Int = 0
+    var stickCount: Int = 0
 
-    // Sleep
+    // Sleep (C++: GoToSleepTimer)
     var goToSleepTimer: Float = 0f
+
+    // Timestep tracking (C++: LastTimestep)
+    var lastTimestep: Float = 0f
 
     // Forces accumulated for current integration step
     private var accumulatedForce: Vector3 = Vector3.ZERO
     private var accumulatedTorque: Vector3 = Vector3.ZERO
 
+    override fun asRigidBodyClass(): RigidBodyClass = this
+
     fun updateAuxiliaryState() {
         rotation = Matrix3.fromQuaternion(state.orientation)
-        inertiaInv = rotation * inertiaBodyInv * rotation.transpose()
+        iInv = rotation * iBodyInv * rotation.transpose()
         velocity = state.linearMomentum * massInv
-        angularVelocity = inertiaInv * state.angularMomentum
+        angularVelocity = iInv * state.angularMomentum
         // Update transform
         val m = Matrix3D.fromQuaternion(state.orientation).withTranslation(state.position)
         transform = m
@@ -61,8 +86,8 @@ abstract class RigidBodyClass : MoveablePhysClass(), OdeSystem {
         val ix = m * (dy * dy + dz * dz) / 12f
         val iy = m * (dx * dx + dz * dz) / 12f
         val iz = m * (dx * dx + dy * dy) / 12f
-        inertiaBody = Matrix3(ix, 0f, 0f, 0f, iy, 0f, 0f, 0f, iz)
-        inertiaBodyInv = Matrix3(
+        iBody = Matrix3(ix, 0f, 0f, 0f, iy, 0f, 0f, 0f, iz)
+        iBodyInv = Matrix3(
             if (ix > 0f) 1f / ix else 0f, 0f, 0f,
             0f, if (iy > 0f) 1f / iy else 0f, 0f,
             0f, 0f, if (iz > 0f) 1f / iz else 0f,
@@ -152,6 +177,7 @@ abstract class RigidBodyClass : MoveablePhysClass(), OdeSystem {
         // Normalize orientation quaternion
         state = state.copy(orientation = state.orientation.normalized())
         updateAuxiliaryState()
+        lastTimestep = dt
     }
 
     // ======================== IMPULSES ========================
