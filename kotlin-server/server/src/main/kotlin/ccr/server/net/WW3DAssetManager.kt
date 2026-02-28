@@ -34,6 +34,10 @@ class HAnimClass(private val anim: W3dAnimation) {
 
     // C++: virtual const char* Get_Key()  [hanim.h ~line 41 — HashableClass key; same as Get_Name()]
     fun getKey(): String = anim.name
+
+    // C++: virtual bool Has_Embedded_Sounds() const { return HasEmbeddedSounds; }  [hanim.h ~line 68]
+    // Server-side: W3dAnimation does not parse sound channels; always false.
+    fun hasEmbeddedSounds(): Boolean = false
 }
 
 // ============================================================

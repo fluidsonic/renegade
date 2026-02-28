@@ -247,6 +247,9 @@ open class RenderObjClass {
     // Hierarchical Animation
     // -------------------------------------------------------------------------
 
+    // C++: virtual void Set_Animation(void) {}  [rendobj.h ~line 227]
+    open fun setAnimation() {}
+
     // C++: virtual void Set_Animation(HAnimClass* motion, float frame, int anim_mode = ANIM_MODE_MANUAL) {}
     open fun setAnimation(motion: HAnimClass?, frame: Float, mode: Int) {}
 

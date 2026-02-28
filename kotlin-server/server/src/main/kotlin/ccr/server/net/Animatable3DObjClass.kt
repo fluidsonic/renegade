@@ -16,20 +16,20 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
         const val MOTION_MULTIPLE_ANIM = 4
     }
 
-    // C++: mutable bool IsTreeValid
+    // C++: mutable bool IsTreeValid — starts false (C++: IsTreeValid(0) in constructor)
     protected var isTreeValid: Boolean = false
 
     // C++: HTreeClass* HTree
     protected var hTree: HTreeClass? = null
 
-    // C++: int CurMotionMode
-    protected var curMotionMode: Int = MOTION_NONE
+    // C++: int CurMotionMode — C++ constructor sets CurMotionMode(BASE_POSE)
+    protected var curMotionMode: Int = MOTION_BASE_POSE
 
     // Single-anim state (C++: ModeAnim union member)
     protected var motion: HAnimClass? = null
     protected var curFrame: Float = 0f
     protected var prevFrame: Float = 0f
-    protected var animMode: Int = 0
+    protected var animMode: Int = ANIM_MODE_MANUAL
     protected var lastSyncTime: Int = 0
 
     // Double-anim state (C++: ModeInterp union member)
@@ -43,6 +43,25 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
 
     // Multiple-anim state (C++: ModeCombo union member)
     protected var animCombo: HAnimComboClass? = null
+
+    // -------------------------------------------------------------------------
+    // Release — clears held animation references (mirrors C++ Release())
+    // C++ Release() releases Add_Ref'd HAnimClass pointers; server omits ref-counting.
+    // -------------------------------------------------------------------------
+
+    // C++: void Release() — protected, clears current motion refs based on CurMotionMode
+    protected open fun release() {
+        when (curMotionMode) {
+            MOTION_SINGLE_ANIM -> {
+                motion = null
+            }
+            MOTION_DOUBLE_ANIM -> {
+                motion0 = null
+                motion1 = null
+            }
+            // BASE_POSE, MULTIPLE_ANIM, NONE — nothing to release
+        }
+    }
 
     // -------------------------------------------------------------------------
     // Scene Graph — invalidate tree on transform change
@@ -64,12 +83,29 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
     // Animation
     // -------------------------------------------------------------------------
 
+    // C++: virtual void Set_Animation(void) — resets to base pose
+    override fun setAnimation() {
+        release()
+        curMotionMode = MOTION_BASE_POSE
+        isTreeValid = false
+    }
+
     // C++: virtual void Set_Animation(HAnimClass* motion, float frame, int anim_mode = ANIM_MODE_MANUAL)
+    // C++ logic: if motion != null: Add_Ref; Release; set SINGLE_ANIM state
+    //            else: set BASE_POSE; Release
     override fun setAnimation(motion: HAnimClass?, frame: Float, mode: Int) {
-        curMotionMode = MOTION_SINGLE_ANIM
-        this.motion = motion
-        this.curFrame = frame
-        this.animMode = mode
+        if (motion != null) {
+            // C++: motion->Add_Ref() before Release() in case it's the same one
+            release()
+            curMotionMode = MOTION_SINGLE_ANIM
+            this.motion = motion
+            prevFrame = curFrame
+            curFrame = frame
+            animMode = mode
+        } else {
+            curMotionMode = MOTION_BASE_POSE
+            release()
+        }
         isTreeValid = false
     }
 
@@ -80,10 +116,13 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
 
     // C++: virtual void Set_Animation(HAnimClass* motion0, float frame0, HAnimClass* motion1, float frame1, float percentage)
     override fun setAnimation(motion0: HAnimClass?, frame0: Float, motion1: HAnimClass?, frame1: Float, percentage: Float) {
+        release()
         curMotionMode = MOTION_DOUBLE_ANIM
         this.motion0 = motion0
-        this.frame0 = frame0
         this.motion1 = motion1
+        prevFrame0 = this.frame0
+        prevFrame1 = this.frame1
+        this.frame0 = frame0
         this.frame1 = frame1
         this.percentage = percentage
         isTreeValid = false
@@ -91,23 +130,31 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
 
     // C++: virtual void Set_Animation(HAnimComboClass* anim_combo)
     override fun setAnimation(combo: HAnimComboClass?) {
+        release()
         curMotionMode = MOTION_MULTIPLE_ANIM
         animCombo = combo
         isTreeValid = false
     }
 
     // C++: virtual HAnimClass* Peek_Animation()
-    // Returns the single-anim motion (matches C++ which returns ModeAnim.Motion)
-    override fun peekAnimation(): HAnimClass? = motion
+    // C++ returns ModeAnim.Motion only when CurMotionMode == SINGLE_ANIM, else NULL
+    override fun peekAnimation(): HAnimClass? =
+        if (curMotionMode == MOTION_SINGLE_ANIM) motion else null
 
     // C++: virtual bool Is_Animation_Complete() const
+    // C++ checks CurMotionMode == SINGLE_ANIM and AnimMode == ANIM_MODE_ONCE
     open fun isAnimationComplete(): Boolean {
-        val m = motion ?: return true
-        if (curMotionMode != MOTION_SINGLE_ANIM) return true
-        return curFrame >= m.numFrames - 1
+        if (curMotionMode == MOTION_SINGLE_ANIM) {
+            val m = motion ?: return false
+            if (animMode == ANIM_MODE_ONCE) {
+                return curFrame == m.numFrames.toFloat() - 1f
+            }
+        }
+        return false
     }
 
     // C++: float Compute_Current_Frame() const  (protected)
+    // Server-side: returns the stored frame (no time-based progression needed server-side)
     protected open fun computeCurrentFrame(): Float = curFrame
 
     // -------------------------------------------------------------------------
@@ -115,13 +162,15 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
     // -------------------------------------------------------------------------
 
     // C++: virtual int Get_Num_Bones()
-    override fun getNumBones(): Int = hTree?.getNumBones() ?: 0
+    // C++ returns HTree->Num_Pivots() if HTree != null, else 1 (one root bone)
+    override fun getNumBones(): Int = hTree?.getNumBones() ?: 1
 
     // C++: virtual int Get_Bone_Index(const char* bonename)
     override fun getBoneIndex(name: String): Int = hTree?.getBoneIndex(name) ?: 0
 
     // C++: virtual const char* Get_Bone_Name(int bone_index)
-    override fun getBoneName(boneIndex: Int): String? = hTree?.getBoneName(boneIndex)
+    // C++ returns "RootTransform" when HTree is null
+    override fun getBoneName(boneIndex: Int): String = hTree?.getBoneName(boneIndex) ?: "RootTransform"
 
     // C++: virtual const Matrix3D& Get_Bone_Transform(int boneindex)
     // Server-side: transform hierarchy is not computed — return identity
@@ -134,6 +183,35 @@ open class Animatable3DObjClass : CompositeRenderObjClass() {
     fun setHTree(tree: HTreeClass?) {
         hTree = tree
         isTreeValid = false
+    }
+
+    // -------------------------------------------------------------------------
+    // Bone capture / control — delegate to HTree (C++ delegates to HTree)
+    // -------------------------------------------------------------------------
+
+    // C++: virtual void Capture_Bone(int boneindex)
+    override fun captureBone(boneIndex: Int) {
+        // C++: if (HTree) HTree->Capture_Bone(boneindex)
+        // Server-side HTreeClass has no transform state; no-op
+    }
+
+    // C++: virtual void Release_Bone(int boneindex)
+    override fun releaseBone(boneIndex: Int) {
+        // C++: if (HTree) HTree->Release_Bone(boneindex)
+    }
+
+    // C++: virtual bool Is_Bone_Captured(int boneindex) const
+    override fun isBoneCaptured(boneIndex: Int): Boolean {
+        // C++: if (HTree) return HTree->Is_Bone_Captured(boneindex); else return false
+        return false
+    }
+
+    // C++: virtual void Control_Bone(int bindex, const Matrix3D& objtm, bool world_space_translation = false)
+    override fun controlBone(boneIndex: Int, objtm: Matrix3D, worldSpaceTranslation: Boolean) {
+        // C++: if (HTree) { HTree->Control_Bone(bindex, objtm, world_space_translation); Set_Hierarchy_Valid(false); }
+        if (hTree != null) {
+            isTreeValid = false
+        }
     }
 
     // -------------------------------------------------------------------------
