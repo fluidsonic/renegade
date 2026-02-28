@@ -15,7 +15,7 @@ abstract class MoveablePhysClass : DynamicPhysClass() {
     var elasticity: Float = 0.3f
     var controller: PhysController? = null
     var carrier: ccr.physics.PhysClass? = null
-    var velocity: Vector3 = Vector3.ZERO
+    var velocity: Vector3 = Vector3()
 
     var position: Vector3
         get() = transform.translation

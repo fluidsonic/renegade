@@ -271,6 +271,12 @@ open class SoldierGameObj() : SmartGameObj() {
             waterWake = null
         }
 
+        // Remove real physics object from scene (mirrors C++ COMBAT_SCENE->Remove_Object for the real phys obj)
+        realPhysObj?.let { rp ->
+            rp.scene?.removeObject(rp)
+            realPhysObj = null
+        }
+
         super.destruct()
     }
 
@@ -805,6 +811,9 @@ open class SoldierGameObj() : SmartGameObj() {
 
     // C++: virtual void Post_Think()
     override fun postThink() {
+        // Sync position/facing from real physics back to game-object fields before any export.
+        syncPositionFromPhys()
+
         // C++: if (Get_State() == IN_VEHICLE) { SmartGameObj::Post_Think(); return; }
         if (getState() == HumanStateClass.IN_VEHICLE) {
             super.postThink()
@@ -1596,8 +1605,41 @@ open class SoldierGameObj() : SmartGameObj() {
     // Physics
     // -------------------------------------------------------------------------
 
+    // Real physics object from ccr.physics.moveable — null until wired by God at spawn time.
+    // Alongside the stub physObj, this carries actual movement simulation.
+    var realPhysObj: ccr.physics.moveable.HumanPhysClass? = null
+
+    // Bridge: a stub HumanPhysClass whose member methods delegate to realPhysObj.
+    // Extension functions on HumanPhysClass (setVelocity, setPosition, networkStateUpdate,
+    // canTeleport(Matrix3D), getCollisionBox, getNormalizedSpeed, setNormalizedSpeed) are
+    // already no-ops in the stubs and do not need bridging here.
+    private val humanPhysBridge by lazy { object : HumanPhysClass() {
+        // The `?: 0f` null branch is unreachable in practice: peekHumanPhys() only returns
+        // this bridge when realPhysObj != null, so realPhysObj will always be non-null here.
+        override fun getHeading(): Float = realPhysObj?.heading ?: 0f
+        override fun setHeading(heading: Float) { realPhysObj?.heading = heading }
+        override fun getVelocity(): Vector3 = realPhysObj?.velocity?.copy() ?: Vector3(0f, 0f, 0f)
+        // setInContact, setLoitersAllowed, resetLoiterDelay, setLadderIndex, getLegMode,
+        // isSubStateAdjustable, setDisabled, isEngineEnabled, enableEngine, canTeleport(Vector3),
+        // findTeleportLocation — all remain as no-ops / TODO stubs in the base class for now
+    } }
+
+    // Syncs position and facing from the real physics object back to the game-object fields
+    // used by exportFrequent. Called at the start of postThink().
+    private fun syncPositionFromPhys() {
+        realPhysObj?.let { rp ->
+            position = rp.position
+            facing = rp.heading
+        }
+    }
+
     // C++: HumanPhysClass* Peek_Human_Phys() const
-    fun peekHumanPhys(): HumanPhysClass? = peekPhysicalObject()?.asHumanPhysClass()
+    // Returns the bridge when realPhysObj is wired; returns null otherwise (same as before).
+    // Not an `override`: CombatTypeStubs.kt defines peekHumanPhys() as an extension function on
+    // PhysicalGameObj. Kotlin extension functions cannot be overridden as members — this member
+    // declaration on SoldierGameObj simply shadows the extension when called on SoldierGameObj
+    // instances, which is the desired behaviour.
+    fun peekHumanPhys(): HumanPhysClass? = if (realPhysObj != null) humanPhysBridge else peekPhysicalObject()?.asHumanPhysClass()
 
     // -------------------------------------------------------------------------
     // Object Motion

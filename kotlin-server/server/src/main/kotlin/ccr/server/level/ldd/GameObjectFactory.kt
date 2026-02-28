@@ -249,6 +249,8 @@ class GameObjectFactory(private val definitions: DefinitionRegistry) {
     }
 
     private fun extractSimpleGameObj(reader: ChunkReader, defId: Int, networkId: Int): SimpleGameObj? {
+        val dmg = extractDamageableFields(reader)
+
         val physChunk = reader.findChunkRecursive(910991146u)
         val transform = physChunk?.readMicroMatrix3D(1) ?: Matrix3D.IDENTITY
         // Matrix3D.position returns ccr.server.level.Vector3; convert to ccr.math.Vector3
@@ -261,9 +263,19 @@ class GameObjectFactory(private val definitions: DefinitionRegistry) {
         val modelName = if (physDefId != 0) resolvePhysDefModelName(physDefId) else ""
 
         val obj = SimpleGameObj()
-        if (wrapper != null) obj.definition = wrapper
-        obj.modelName = modelName
-        obj.position  = pos
+        if (wrapper != null) {
+            obj.definition = wrapper
+            obj.defenseObject.init(wrapper.defenseObjectDef, obj)
+        }
+        obj.modelName  = modelName
+        obj.position   = pos
+        obj.playerType = dmg.playerType
+
+        // In C++, purchase terminal scripts enable this at runtime.
+        // Since scripts aren't ported, set it directly for terminal objects.
+        if (wrapper != null && wrapper.playerTerminalType != -1) {
+            obj.hudPokableIndicatorEnabled = true
+        }
 
         // Register with NetworkObjectManager at the LDD-assigned network ID (only if non-zero)
         if (networkId != 0) NetworkObjectManager.registerObject(obj, networkId)

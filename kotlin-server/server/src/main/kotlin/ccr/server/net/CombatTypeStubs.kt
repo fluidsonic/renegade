@@ -60,8 +60,8 @@ open class RenderObjClass {
     open fun getName(): String = TODO("stub")
     fun getNumSubObjects(): Int = TODO("stub")
     fun getSubObject(i: Int): RenderObjClass = TODO("stub")
-    fun setHidden(hidden: Boolean): Unit = TODO("stub")
-    fun isHidden(): Boolean = TODO("stub")
+    fun setHidden(hidden: Boolean): Unit = Unit
+    fun isHidden(): Boolean = false
     fun getBoneIndex(name: String): Int = TODO("stub")
     fun getBoneTransform(boneIndex: Int): Matrix3D = TODO("stub")
     fun getNumBones(): Int = TODO("stub")
@@ -143,21 +143,21 @@ class CastResultStruct {
 // These stubs are used by server net code that needs the C++ interface.
 // Note: ccr.physics.PhysClass (the real one) is imported explicitly where needed.
 open class PhysClass {
-    open fun getPosition(): Vector3 = TODO("stub")
-    fun setPosition(pos: Vector3): Unit = TODO("stub")
-    fun getFacing(): Float = TODO("stub")
-    open fun getTransform(): Matrix3D = TODO("stub")
-    fun setTransform(tm: Matrix3D): Unit = TODO("stub")
-    fun peekModel(): RenderObjClass? = TODO("stub")
-    fun setModelByName(name: String): Unit = TODO("stub")
-    fun setCollisionGroup(group: Int): Unit = TODO("stub")
-    fun setObserver(observer: CombatPhysObserverClass?): Unit = TODO("stub")
-    fun getVisObjectId(): Int = TODO("stub")
-    fun isInScene(): Boolean = TODO("stub")
-    fun getCollisionGroup(): Int = TODO("stub")
-    fun getContactSurfaceType(): Int = TODO("stub")
-    fun getObserver(): PhysObserverClass? = TODO("stub")
-    fun getFactory(): PhysFactoryClass? = TODO("stub")
+    open fun getPosition(): Vector3 = Vector3()
+    fun setPosition(pos: Vector3): Unit = Unit
+    fun getFacing(): Float = 0f
+    open fun getTransform(): Matrix3D = Matrix3D()
+    fun setTransform(tm: Matrix3D): Unit = Unit
+    fun peekModel(): RenderObjClass? = null
+    fun setModelByName(name: String): Unit = Unit
+    fun setCollisionGroup(group: Int): Unit = Unit
+    fun setObserver(observer: CombatPhysObserverClass?): Unit = Unit
+    fun getVisObjectId(): Int = -1
+    fun isInScene(): Boolean = false
+    fun getCollisionGroup(): Int = 0
+    fun getContactSurfaceType(): Int = 0
+    fun getObserver(): PhysObserverClass? = null
+    fun getFactory(): PhysFactoryClass? = null
     // As_* casts
     open fun asMoveablePhysClass(): MoveablePhysClass? = null
     open fun asProjectileClass(): ProjectilePhysClass? = null
@@ -167,30 +167,30 @@ open class PhysClass {
     open fun asVehiclePhysClass(): VehiclePhysClassStub? = null
     open fun asSound3DClass(): Sound3DClass? = null
     open fun asLightPhysClass(): LightPhysClass? = null
-    open fun incIgnoreCounter(): Unit = TODO("stub")
-    open fun decIgnoreCounter(): Unit = TODO("stub")
-    fun intersectionTest(test: PhysAABoxIntersectionTestClass): Boolean = TODO("stub")
+    open fun incIgnoreCounter(): Unit = Unit
+    open fun decIgnoreCounter(): Unit = Unit
+    fun intersectionTest(test: PhysAABoxIntersectionTestClass): Boolean = false
     open fun enableUserControl(enable: Boolean): Unit = Unit
-    open fun addEffectToMe(effect: Any): Unit = TODO("stub")
-    open fun addToScene(scene: Any): Unit = TODO("stub")
-    open fun removeFromScene(): Unit = TODO("stub")
-    open fun isEnabled(): Boolean = TODO("stub")
+    open fun addEffectToMe(effect: Any): Unit = Unit
+    open fun addToScene(scene: Any): Unit = Unit
+    open fun removeFromScene(): Unit = Unit
+    open fun isEnabled(): Boolean = false
     var scene: ccr.physics.scene.PhysicsScene? = null
 }
 
 // C++: MoveablePhysClass : public PhysClass
 open class MoveablePhysClass : PhysClass() {
     override fun asMoveablePhysClass(): MoveablePhysClass = this
-    fun setVelocity(vel: Vector3): Unit = TODO("stub")
-    fun getVelocity(): Vector3 = TODO("stub")
-    fun getAngularVelocity(): Vector3 = TODO("stub")
-    fun cinematicMoveTo(tm: Matrix3D): Unit = TODO("stub")
-    override fun addEffectToMe(effect: Any): Unit = TODO("stub")
-    fun removeEffectFromMe(effect: Any): Unit = TODO("stub")
-    fun computeApproximateRideHeight(): Float = TODO("stub")
-    fun getSquishVelocity(): Float = TODO("stub")
-    fun setGravityMultiplier(multiplier: Float): Unit = TODO("stub")
-    override fun enableUserControl(enable: Boolean): Unit = TODO("stub")
+    fun setVelocity(vel: Vector3): Unit = Unit
+    open fun getVelocity(): Vector3 = Vector3()
+    fun getAngularVelocity(): Vector3 = Vector3()
+    fun cinematicMoveTo(tm: Matrix3D): Unit = Unit
+    override fun addEffectToMe(effect: Any): Unit = Unit
+    fun removeEffectFromMe(effect: Any): Unit = Unit
+    fun computeApproximateRideHeight(): Float = 0f
+    fun getSquishVelocity(): Float = 0f
+    fun setGravityMultiplier(multiplier: Float): Unit = Unit
+    override fun enableUserControl(enable: Boolean): Unit = Unit
 }
 
 // C++: StaticPhysClass : public PhysClass
@@ -229,29 +229,29 @@ open class StaticAnimPhysClass : StaticPhysClass() {
 // C++: HumanPhysClass : public MoveablePhysClass
 open class HumanPhysClass : MoveablePhysClass() {
     override fun asHumanPhysClass(): HumanPhysClass = this
-    fun getLegMode(): Boolean = TODO("stub")
-    fun setLadderIndex(index: Int): Unit = TODO("stub")
-    fun isSubStateAdjustable(): Boolean = TODO("stub")
-    fun getHeading(): Float = TODO("stub")
-    fun setHeading(heading: Float): Unit = TODO("stub")
-    fun setInContact(inContact: Boolean): Unit = TODO("stub")
-    fun setLoitersAllowed(allowed: Boolean): Unit = TODO("stub")
-    fun resetLoiterDelay(): Unit = TODO("stub")
-    fun canTeleport(pos: Vector3): Boolean = TODO("stub")
-    fun findTeleportLocation(pos: Vector3, radius: Float, out: Vector3): Boolean = TODO("stub")
-    fun setDisabled(disabled: Boolean): Unit = TODO("stub")
-    fun isEngineEnabled(): Boolean = TODO("stub")
-    fun enableEngine(enable: Boolean): Unit = TODO("stub")
+    open fun getLegMode(): Boolean = false
+    open fun setLadderIndex(index: Int): Unit = Unit
+    open fun isSubStateAdjustable(): Boolean = false
+    open fun getHeading(): Float = 0f
+    open fun setHeading(heading: Float): Unit = Unit
+    fun setInContact(inContact: Boolean): Unit = Unit
+    fun setLoitersAllowed(allowed: Boolean): Unit = Unit
+    fun resetLoiterDelay(): Unit = Unit
+    fun canTeleport(pos: Vector3): Boolean = false
+    fun findTeleportLocation(pos: Vector3, radius: Float, out: Vector3): Boolean = false
+    fun setDisabled(disabled: Boolean): Unit = Unit
+    fun isEngineEnabled(): Boolean = false
+    fun enableEngine(enable: Boolean): Unit = Unit
 }
 
 // C++: VehiclePhysClass stub (different from ccr.physics.vehicle.VehiclePhysClass)
 open class VehiclePhysClassStub : MoveablePhysClass() {
     override fun asVehiclePhysClass(): VehiclePhysClassStub = this
-    fun getNormalizedSpeed(): Float = TODO("stub")
-    fun setNormalizedSpeed(speed: Float): Unit = TODO("stub")
-    fun setTurnVelocity(vel: Float): Unit = TODO("stub")
-    fun isEngineEnabled(): Boolean = TODO("stub")
-    fun enableEngine(enable: Boolean): Unit = TODO("stub")
+    fun getNormalizedSpeed(): Float = 10.0f
+    fun setNormalizedSpeed(speed: Float): Unit = Unit
+    fun setTurnVelocity(vel: Float): Unit = Unit
+    fun isEngineEnabled(): Boolean = false
+    fun enableEngine(enable: Boolean): Unit = Unit
     fun getPitchFactor(): Float = TODO("stub")
     fun setPitchFactor(f: Float): Unit = TODO("stub")
     fun getOrientation(): ccr.math.Quaternion = TODO("stub")
@@ -284,7 +284,7 @@ open class Sound3DClass {
 // C++: LightPhysClass : public StaticPhysClass
 open class LightPhysClass : StaticPhysClass() {
     override fun asLightPhysClass(): LightPhysClass = this
-    fun setDisabled(disabled: Boolean): Unit = TODO("stub")
+    fun setDisabled(disabled: Boolean): Unit = Unit
     fun getGroupId(): Int = TODO("stub")
     override fun getName(): String = TODO("stub")
     override fun getPosition(): Vector3 = TODO("stub")
@@ -311,21 +311,21 @@ abstract class PhysDefClass {
 // C++: AnimControlClass (ww3d2/animobj.h)
 open class AnimControlClass {
     fun setModel(model: RenderObjClass?): Unit = Unit
-    fun setAnimation(name: String, vararg args: Any): Unit = TODO("stub")
-    fun setMode(mode: Int, vararg args: Any): Unit = TODO("stub")
-    fun setTargetFrame(frame: Int): Unit = TODO("stub")
-    fun update(dt: Float): Unit = TODO("stub")
-    fun isComplete(): Boolean = TODO("stub")
-    fun getAnimationName(): String = TODO("stub")
-    fun getCurrentFrame(): Int = TODO("stub")
-    fun getTargetFrame(): Int = TODO("stub")
-    fun getMode(): Int = TODO("stub")
-    fun save(csave: ChunkSaveClass): Unit = TODO("stub")
-    fun load(cload: ChunkLoadClass): Unit = TODO("stub")
-    fun peekCarrierObject(): Any? = TODO("stub")
+    fun setAnimation(name: String, vararg args: Any): Unit = Unit
+    fun setMode(mode: Int, vararg args: Any): Unit = Unit
+    fun setTargetFrame(frame: Int): Unit = Unit
+    fun update(dt: Float): Unit = Unit
+    fun isComplete(): Boolean = false
+    fun getAnimationName(): String = ""
+    fun getCurrentFrame(): Int = 0
+    fun getTargetFrame(): Int = 0
+    fun getMode(): Int = 0
+    fun save(csave: ChunkSaveClass): Unit = Unit
+    fun load(cload: ChunkLoadClass): Unit = Unit
+    fun peekCarrierObject(): Any? = null
     fun peekAnimation(): Animatable3DObjClass? = null
     fun peekModel(): RenderObjClass? = null
-    fun resetAnimUpdate(): Unit = TODO("stub")
+    fun resetAnimUpdate(): Unit = Unit
 }
 
 // C++: SimpleAnimControlClass : public AnimControlClass
@@ -505,20 +505,20 @@ class DynamicSpeechAnimClass(skeletonName: String = "") {
 
 // C++: AudibleSoundClass — playing sound instance
 class AudibleSoundClass {
-    fun stop(): Unit = TODO("stub")
-    fun play(): Unit = TODO("stub")
-    fun isPlaying(): Boolean = TODO("stub")
-    fun isSoundCulled(): Boolean = TODO("stub")
+    fun stop(): Unit = Unit
+    fun play(): Unit = Unit
+    fun isPlaying(): Boolean = false
+    fun isSoundCulled(): Boolean = false
     fun asSound3DClass(): Sound3DClass? = null
-    fun getDuration(): Float = TODO("stub")
-    fun setDropOffRadius(radius: Float): Unit = TODO("stub")
-    fun setTransform(center: Vector3): Unit = TODO("stub")
-    fun setTransform(tm: Matrix3D): Unit = TODO("stub")
-    fun addToScene(): Unit = TODO("stub")
-    fun addToScene(updateNow: Boolean): Unit = TODO("stub")
-    fun removeFromScene(): Unit = TODO("stub")
-    fun getString(): String? = TODO("stub")
-    fun getSoundId(): Int = TODO("stub")
+    fun getDuration(): Float = 0f
+    fun setDropOffRadius(radius: Float): Unit = Unit
+    fun setTransform(center: Vector3): Unit = Unit
+    fun setTransform(tm: Matrix3D): Unit = Unit
+    fun addToScene(): Unit = Unit
+    fun addToScene(updateNow: Boolean): Unit = Unit
+    fun removeFromScene(): Unit = Unit
+    fun getString(): String? = null
+    fun getSoundId(): Int = 0
 }
 
 // C++: PersistantSurfaceEmitterClass — particle emitter that persists on a surface
@@ -1030,7 +1030,7 @@ fun Matrix3D.rotateZ(angle: Float): Unit {
 fun Matrix3D.rotateY(angle: Float): Unit {}
 
 // C++: Matrix3D::Get_Y_Rotation
-fun Matrix3D.getYRotation(): Float = TODO("stub")
+fun Matrix3D.getYRotation(): Float = 0f
 
 // C++: Matrix3D::identity() factory
 fun Matrix3D.Companion.identity(): Matrix3D = IDENTITY
@@ -1214,7 +1214,6 @@ fun PhysClass.removeFromScene(scene: PhysicsSceneClass? = null): Unit = Unit
 // ---------------------------------------------------------------------------
 
 fun Matrix3D.setTranslation(v: Vector3): Matrix3D = this.copy(m03 = v.x, m13 = v.y, m23 = v.z)
-fun Matrix3D.getZRotation(): Float = TODO("stub")
 fun Matrix3D.translated(dx: Float, dy: Float, dz: Float): Matrix3D = this.copy(m03 = m03 + dx, m13 = m13 + dy, m23 = m23 + dz)
 
 // ---------------------------------------------------------------------------
@@ -1470,7 +1469,6 @@ fun HumanPhysClass.getTranslation(): Vector3 = getPosition()
 fun HumanPhysClass.isInScene(): Boolean = false
 fun HumanPhysClass.remove(): Unit = Unit
 fun HumanPhysClass.addToScene(scene: PhysicsSceneClass): Unit = Unit
-fun HumanPhysClass.setLadderIndex(index: Int): Unit = Unit
 fun HumanPhysClass.setTranslation(pos: Vector3): Unit = Unit
 
 // ---------------------------------------------------------------------------
@@ -1718,12 +1716,6 @@ fun GlobalSettingsDefClass.getMpStealthDistanceVehicle(): Float = 30f
 fun TransitionManager.check(soldier: SoldierGameObj, actionTriggered: Boolean): Boolean = false
 fun TransitionManager.startTransition(soldier: SoldierGameObj, data: TransitionDataClass?, vehicleId: Int, seatIndex: Int): Unit = Unit
 
-// ---------------------------------------------------------------------------
-// HumanPhysClass — getHeading/setHeading
-// ---------------------------------------------------------------------------
-
-fun HumanPhysClass.getHeading(): Float = 0f
-fun HumanPhysClass.setHeading(heading: Float): Unit = Unit
 fun HumanPhysClass.getContactSurfaceType(): Int = 0
 fun HumanPhysClass.getVelocity(): Vector3 = Vector3()
 fun HumanPhysClass.setCollisionGroup(group: Int): Unit = Unit
@@ -2149,7 +2141,7 @@ fun ccr.server.defs.WeaponDefinitionClass.getName(): String = ""
 // HumanPhysClass — getNormalizedSpeed, setNormalizedSpeed
 // ---------------------------------------------------------------------------
 
-fun HumanPhysClass.getNormalizedSpeed(): Float = 1f
+fun HumanPhysClass.getNormalizedSpeed(): Float = 10.0f
 fun HumanPhysClass.setNormalizedSpeed(speed: Float): Unit = Unit
 
 // ---------------------------------------------------------------------------

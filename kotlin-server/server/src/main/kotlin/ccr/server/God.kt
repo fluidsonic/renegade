@@ -242,6 +242,8 @@ open class God(private val server: Network) {
         // C++: cGod::Create_Commando — Set_Player_Data links the soldier back to the player
         soldier.setPlayerData(playersByHost[rhostId])
 
+        wirePhysics(soldier, position, facing)
+
         // Give starting credits on first spawn if configured
         if (server.config.startingCredits > 0 && server.gameState.gameDurationSeconds < 5f) {
             playersByHost[rhostId]?.replaceMoney(server.config.startingCredits.toFloat())
@@ -304,9 +306,28 @@ open class God(private val server: Network) {
         // C++: cGod::Create_Commando — Set_Player_Data links the soldier back to the player
         soldier.setPlayerData(playersByHost[rhostId])
 
+        wirePhysics(soldier, position, facing)
+
         // No starting credits — purchase already costs money
 
         return soldier
+    }
+
+    // ---- Physics wiring ----
+
+    // Mirrors C++ PhysDef::Create() + COMBAT_SCENE->Add_Dynamic_Object().
+    private fun wirePhysics(soldier: SoldierGameObj, position: Vector3, facing: Float) {
+        val humanPhys = ccr.physics.moveable.HumanPhysClass()
+        humanPhys.position = position
+        humanPhys.heading = facing
+        humanPhys.controller = soldier.controller
+        val scene = server.physicsScene
+        if (scene != null) {
+            scene.addDynamicObject(humanPhys)
+            soldier.realPhysObj = humanPhys
+        } else {
+            println("[GOD] WARNING: physicsScene is null, soldier physics will not be simulated")
+        }
     }
 
     // ---- Weapon list builder ----
