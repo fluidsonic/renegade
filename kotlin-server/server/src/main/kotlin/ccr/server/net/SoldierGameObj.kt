@@ -1305,7 +1305,7 @@ open class SoldierGameObj() : SmartGameObj() {
 
                                 // C++: Stats_Add_Squish
                                 val playerData = vehicle.getDriver()?.playerData
-                                (playerData as? PlayerDataClass)?.statsAddSquish()
+                                playerData?.statsAddSquish()
                             }
                         }
                     }
@@ -1395,7 +1395,7 @@ open class SoldierGameObj() : SmartGameObj() {
         val hasWeapon = (p_weapon != null)
         packet.addBool(hasWeapon)
         if (hasWeapon) {
-            packet.addInt(p_weapon!!.definitionId)
+            packet.addInt(p_weapon.definitionId)
             packet.addInt(p_weapon.getTotalRounds())
         }
 
@@ -2226,7 +2226,7 @@ open class SoldierGameObj() : SmartGameObj() {
         CombatManager.getScene()?.castRay(raytest)
 
         if (raytest.collidedPhysObj != null) {
-            val observer = raytest.collidedPhysObj!!.getObserver()
+            val observer = raytest.collidedPhysObj.getObserver()
             val blocker = if (observer != null) {
                 (observer as? CombatPhysObserverClass)?.asPhysicalGameObj()?.asSmartGameObj()
             } else null
