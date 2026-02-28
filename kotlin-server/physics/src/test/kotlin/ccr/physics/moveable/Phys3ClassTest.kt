@@ -22,6 +22,7 @@ class Phys3ClassTest {
     private fun makeScene(): PhysicsScene {
         val scene = PhysicsScene()
         scene.addStaticObject(FloorObject())
+        scene.buildStaticTree()
         return scene
     }
 
