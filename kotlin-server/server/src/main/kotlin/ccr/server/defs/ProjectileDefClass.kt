@@ -1,6 +1,9 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.math.Vector3
+import ccr.physics.PhysClass
+import ccr.physics.moveable.ProjectileClass
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -31,6 +34,35 @@ class ProjectileDefClass(
     val lifetime: Float = 2f,
     val bounceCount: Int = 0,
 ) : MoveablePhysDefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
+
+    /**
+     * C++: ProjectileDefClass::Create()
+     * Creates a ProjectileClass and initialises it via Init(*this).
+     * C++ ProjectileClass::Init calls MoveablePhysClass::Init then sets projectile-specific fields.
+     * TumbleAxis is normalised in C++ Init.
+     */
+    override fun create(): PhysClass {
+        val obj = ProjectileClass()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        // ProjectileClass::Init
+        obj.collidesOnMove = collidesOnMove
+        obj.orientationMode = when (orientationMode) {
+            ORIENTATION_ALIGNED -> ProjectileClass.OrientationMode.ALIGNED
+            ORIENTATION_FIXED -> ProjectileClass.OrientationMode.FIXED
+            ORIENTATION_TUMBLING -> ProjectileClass.OrientationMode.TUMBLING
+            else -> ProjectileClass.OrientationMode.ALIGNED
+        }
+        val rawAxis = Vector3(tumbleAxisX, tumbleAxisY, tumbleAxisZ)
+        val axisLen = rawAxis.length()
+        obj.tumbleAxis = if (axisLen > 0f) rawAxis / axisLen else Vector3(1f, 0f, 0f)
+        obj.tumbleRate = tumbleRate
+        obj.lifetime = lifetime
+        obj.maxBounces = bounceCount
+        return obj
+    }
 
     companion object {
         const val CHUNK_ID: UInt = 0x00020506u  // PHYSICS_CHUNKID_PROJECTILEDEF

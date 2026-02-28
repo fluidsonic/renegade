@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.physics.PhysClass
+import ccr.physics.collision.CollisionEvent
 
 // C++: PhysObserverClass (wwphys/physobserver.h)
 // Observer interface for a physics object — notified on collision, expiration, removal, shatter.
@@ -33,5 +34,14 @@ enum class ExpirationReactionType {
 }
 
 // C++: CombatPhysObserverClass : public PhysObserverClass (combatphysobserver.h)
+// Also implements ccr.physics.PhysObserver so instances can be stored in PhysClass.observer.
 // As_* methods omitted — use Kotlin 'as' operator instead.
-interface CombatPhysObserverClass : PhysObserverClass
+interface CombatPhysObserverClass : PhysObserverClass, ccr.physics.PhysObserver {
+    // Bridge: ccr.physics.PhysObserver.objectExpired() → no-op default (expiration handled by objectExpired(PhysClass))
+    override fun objectExpired() {}
+    // Bridge: ccr.physics.PhysObserver.objectRemovedFromScene() → no-op default
+    override fun objectRemovedFromScene() {}
+    // Bridge: ccr.physics.PhysObserver.collisionOccurred(CollisionEvent) → default reaction
+    override fun collisionOccurred(event: CollisionEvent): ccr.physics.collision.CollisionReactionType =
+        ccr.physics.collision.CollisionReactionType.DEFAULT
+}

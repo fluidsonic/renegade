@@ -1,6 +1,5 @@
-package ccr.server.mix
+package ccr.server.core
 
-import ccr.server.crcStringi
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 

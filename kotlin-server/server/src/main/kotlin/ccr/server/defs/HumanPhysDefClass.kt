@@ -1,6 +1,10 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.moveable.HumanPhysClass
+import ccr.server.core.ChunkReader
+import kotlin.math.cos
+import kotlin.math.tan
 
 /**
  * Kotlin representation of HumanPhysDefClass (wwphys/humanphys.h).
@@ -29,6 +33,26 @@ class HumanPhysDefClass(
     slideAngle: Float = 0.7853982f, // DEG_TO_RADF(45)
     stepHeight: Float = 0.25f,
 ) : Phys3DefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode, normSpeed, slideAngle, stepHeight) {
+
+    /**
+     * C++: HumanPhysDefClass::Create()
+     * Creates a HumanPhysClass and initialises it via Init(*this).
+     * C++ HumanPhysClass::Init calls Phys3Class::Init (which calls MoveablePhysClass::Init).
+     */
+    override fun create(): PhysClass {
+        val obj = HumanPhysClass()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        // Phys3Class::Init
+        obj.normSpeed = normSpeed
+        obj.slideAngle = slideAngle
+        obj.slideNormalZ = cos(slideAngle)
+        obj.slideAngleTan = tan(slideAngle)
+        obj.stepHeight = stepHeight
+        return obj
+    }
 
     companion object {
         const val CHUNK_ID: UInt = 0x00020501u  // PHYSICS_CHUNKID_HUMANPHYSDEF

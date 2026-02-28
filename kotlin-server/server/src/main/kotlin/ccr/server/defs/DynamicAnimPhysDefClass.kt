@@ -1,6 +1,8 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.dynamic.DynamicAnimPhysClass
+import ccr.server.core.ChunkReader
 
 /**
  * DynamicAnimPhysDefClass definition.
@@ -26,6 +28,14 @@ class DynamicAnimPhysDefClass(
     val shadowNearZ: Float = -1.0f,
     val shadowFarZ: Float = -1.0f,
 ) : DecorationPhysDefClass(name, id, chunkId, modelName, isPreLit) {
+
+    /**
+     * C++: DynamicAnimPhysDefClass::Create()
+     * Creates a DynamicAnimPhysClass and initialises it via Init(*this).
+     * Init calls DecorationPhysClass::Init -> DynamicPhysClass::Init; no def fields copied.
+     * Server-side AnimCollisionManagerClass init is skipped.
+     */
+    override fun create(): PhysClass = DynamicAnimPhysClass()
 
     companion object {
         const val CHUNK_ID: UInt = 0x0002050Fu  // PHYSICS_CHUNKID_DYNAMICANIMPHYSDEF

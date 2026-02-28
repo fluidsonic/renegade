@@ -2,7 +2,7 @@ package ccr.server.level.pathfind
 
 import ccr.server.level.ChunkIds
 import ccr.server.level.Vector3
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.test.Test

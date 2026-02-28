@@ -1,6 +1,8 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.vehicle.VTOLVehicleClass
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -58,6 +60,37 @@ class VTOLVehicleDefClass(
     springConstant, dampingConstant, springLength, tractionMultiplier,
     lateralMomentArm, tractiveMomentArm, engineFlameLength, isFake,
 ) {
+
+    /**
+     * C++: VTOLVehicleDefClass::Create()
+     * Creates a VTOLVehicleClass and initialises it via Init(*this).
+     * Init calls VehiclePhysClass::Init which calls RigidBodyClass::Init -> MoveablePhysClass::Init.
+     */
+    override fun create(): PhysClass {
+        val obj = VTOLVehicleClass()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        // VehiclePhysClass fields
+        obj.springConstant = springConstant
+        obj.dampingConstant = dampingConstant
+        obj.springLength = springLength
+        obj.tractionMultiplier = tractionMultiplier
+        obj.isFake = isFake
+        // VTOLVehicleClass fields
+        obj.maxVerticalAcceleration = maxVerticalAcceleration
+        obj.maxHorizontalAcceleration = maxHorizontalAcceleration
+        obj.maxFuselagePitch = maxFuselagePitch
+        obj.maxFuselageRoll = maxFuselageRoll
+        obj.pitchControllerGain = pitchControllerGain
+        obj.pitchControllerDamping = pitchControllerDamping
+        obj.rollControllerGain = rollControllerGain
+        obj.rollControllerDamping = rollControllerDamping
+        obj.maxYawVelocity = maxYawVelocity
+        obj.yawControllerGain = yawControllerGain
+        return obj
+    }
 
     companion object {
         /** CLASSID_VTOLVEHICLEDEF = CLASSID_PHYSICS + 13 = 0x900D */

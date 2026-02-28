@@ -4,7 +4,7 @@ import ccr.net.bitstream.*
 import ccr.net.protocol.*
 import ccr.server.NetClassIds
 import ccr.server.level.FullDefinitionLoader
-import ccr.server.mix.MixReader
+import ccr.server.core.MixReader
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.io.File

@@ -309,7 +309,7 @@ open class PowerUpGameObjDef(
         const val MICROCHUNKID_DEF_GRANT_SHIELD_STRENGTH_MAX   = 20
         const val MICROCHUNKID_DEF_GRANT_HEALTH_MAX            = 21
 
-        fun load(objDataReader: ccr.server.mix.ChunkReader, name: String, id: UInt, chunkId: UInt): PowerUpGameObjDef {
+        fun load(objDataReader: ccr.server.core.ChunkReader, name: String, id: UInt, chunkId: UInt): PowerUpGameObjDef {
             val vars = objDataReader.findChunk(CHUNKID_DEF_VARIABLES.toUInt())
 
             // Navigate into PowerUp parent to load the full SimpleGameObjDef chain

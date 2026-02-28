@@ -181,6 +181,19 @@ abstract class PhysClass {
     /** C++: Set_Model_By_Name() — no-op stub (server has no render objects). */
     open fun setModelByName(name: String) {}
 
+    /**
+     * C++: virtual bool PhysClass::Internal_Link_Rider(PhysClass * rider)
+     * Attaches [rider] to this object so that it moves with it. Returns false by default;
+     * StaticAnimPhysClass and DynamicAnimPhysClass override to delegate to their AnimManager.
+     */
+    open fun internalLinkRider(rider: PhysClass): Boolean = false
+
+    /**
+     * C++: virtual bool PhysClass::Internal_Unlink_Rider(PhysClass * rider)
+     * Detaches [rider] from this object. Returns false by default.
+     */
+    open fun internalUnlinkRider(rider: PhysClass): Boolean = false
+
     /** C++: Enable_Is_State_Dirty(bool) — sets/clears the IS_STATE_DIRTY flag. */
     fun enableIsStateDirty(onoff: Boolean) {
         flags = if (onoff) flags or IS_STATE_DIRTY else flags and IS_STATE_DIRTY.inv()

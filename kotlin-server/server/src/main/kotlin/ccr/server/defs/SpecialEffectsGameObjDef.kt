@@ -1,6 +1,6 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 // C++: SpecialEffectsGameObjDef : public PhysicalGameObjDef (specialeffectsgameobj.h)
 open class SpecialEffectsGameObjDef(

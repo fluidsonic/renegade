@@ -5,7 +5,7 @@ import ccr.server.level.Matrix3D
 import ccr.server.level.toFloat32
 import ccr.server.level.toInt32
 import ccr.server.level.toMatrix3D
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 object SpawnerLoader {
 

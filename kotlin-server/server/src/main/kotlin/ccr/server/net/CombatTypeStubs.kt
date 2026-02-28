@@ -3,8 +3,19 @@ package ccr.server.net
 import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.physics.PhysClass
+import ccr.physics.static.StaticPhysClass
 import ccr.server.defs.DefinitionClass
 import ccr.physics.scene.PhysicsScene
+import ccr.server.defs.BeaconGameObjDef
+import ccr.server.defs.BuildingGameObjDef
+import ccr.server.defs.C4GameObjDef
+import ccr.server.defs.CinematicGameObjDef
+import ccr.server.defs.PhysicalGameObjDef
+import ccr.server.defs.PowerUpGameObjDef
+import ccr.server.defs.SimpleGameObjDef
+import ccr.server.defs.SoldierGameObjDef
+import ccr.server.defs.VehicleGameObjDef
+import ccr.server.level.DefinitionRegistry
 
 // Audio types — real implementations live in ccr.server.audio; import here for net-package usage.
 typealias AudibleSoundClass  = ccr.server.audio.AudibleSoundClass
@@ -58,85 +69,11 @@ class ChunkLoadClass {
 }
 
 // ---------------------------------------------------------------------------
-// Render object stubs — C++ ww3d2 render/model system
+// Render object stubs — RenderObjClass, MeshClass, Animatable3DObjClass, SceneClass
+// are now real implementations in their own files (RenderObjClass.kt, MeshClass.kt,
+// Animatable3DObjClass.kt, CompositeRenderObjClass.kt); HAnimComboClass is in
+// Animatable3DObjClass.kt.
 // ---------------------------------------------------------------------------
-
-// C++: RenderObjClass (ww3d2/rendobj.h)
-open class RenderObjClass {
-    open fun getName(): String = TODO("stub")
-    fun getNumSubObjects(): Int = TODO("stub")
-    fun getSubObject(i: Int): RenderObjClass = TODO("stub")
-    fun setHidden(hidden: Boolean): Unit = Unit
-    fun isHidden(): Boolean = false
-    fun getBoneIndex(name: String): Int = TODO("stub")
-    fun getBoneTransform(boneIndex: Int): Matrix3D = TODO("stub")
-    fun getNumBones(): Int = TODO("stub")
-    fun getBoneName(boneIndex: Int): String = TODO("stub")
-    fun getSubObjectBoneIndex(subObj: RenderObjClass?): Int = TODO("stub")
-    fun getNumSubObjectsOnBone(boneIndex: Int): Int = TODO("stub")
-    fun getSubObjectOnBone(boneIndex: Int, index: Int): RenderObjClass = TODO("stub")
-    fun addSubObjectToBone(subObj: RenderObjClass, boneIndex: Int): Unit = Unit
-    fun addSubObjectToBone(subObj: RenderObjClass, boneName: String): Unit = Unit
-    fun removeSubObject(subObj: RenderObjClass): Unit = TODO("stub")
-    fun captureBone(boneIndex: Int): Unit = TODO("stub")
-    fun releaseBone(boneIndex: Int): Unit = TODO("stub")
-    fun isBoneCaptured(boneIndex: Int): Boolean = TODO("stub")
-    fun setParentTransform(tm: Matrix3D): Unit = TODO("stub")
-    fun getOrientation(): ccr.math.Quaternion = TODO("stub")
-    fun getHTree(): HTreeClass? = null
-    // As_* casts
-    open fun asMeshClass(): MeshClass? = null
-    open fun asAnimatable3DObjClass(): Animatable3DObjClass? = null
-
-    open val classId: Int get() = 0
-
-    companion object {
-        const val ANIM_MODE_LOOP   = 0
-        const val ANIM_MODE_ONCE   = 1
-        const val ANIM_MODE_STOP   = 2
-        const val ANIM_MODE_TARGET = 3
-        const val ANIM_MODE_LOOP_ONCE = 4
-        const val ANIM_MODE_MANUAL = 5
-        const val CLASSID_MESH = 1
-    }
-}
-
-// C++: MeshClass : public RenderObjClass
-open class MeshClass : RenderObjClass() {
-    override val classId: Int get() = RenderObjClass.CLASSID_MESH
-    override fun asMeshClass(): MeshClass = this
-    fun getVertexCount(): Int = TODO("stub")
-    // Returns array of vertex positions — each element is a Vector3
-    fun getVertexArray(): Array<Vector3> = TODO("stub")
-    // Returns array of triangles — each element is an IntArray of 3 vertex indices
-    fun getPolygonArray(): Array<IntArray> = TODO("stub")
-    fun getModel(): MeshClass = TODO("stub")  // returns the underlying model
-    fun enableAlternateMaterialDescription(enable: Boolean): Unit = TODO("stub")
-    fun peekModel(): MeshClass? = TODO("stub")
-}
-
-// C++: Animatable3DObjClass : public RenderObjClass
-open class Animatable3DObjClass : RenderObjClass() {
-    override fun asAnimatable3DObjClass(): Animatable3DObjClass = this
-    fun setAnimation(animName: String, mode: Int = 0, frame: Float = 0f): Unit = TODO("stub")
-    fun setAnimation(anim: HAnimClass, frame: Float, mode: Int): Unit = Unit
-    fun getAnimationName(): String = TODO("stub")
-    fun getNumFrames(): Int = TODO("stub")
-    fun isLoaded(): Boolean = TODO("stub")
-    fun getTotalTime(): Float = TODO("stub")
-}
-
-// C++: void Get_Render_Obj_Name_From_Filename(StringClass&, const char*) — strips path and extension
-// Server stub: server has no asset manager; just strips extension and path from the filename
-fun getRenderObjNameFromFilename(filename: String): String {
-    val withoutPath = filename.substringAfterLast('/').substringAfterLast('\\')
-    val withoutExt = withoutPath.substringBeforeLast('.')
-    return withoutExt
-}
-
-// C++: RenderObjClass* Create_Render_Obj_From_Filename(const char*) — loads a render object from file
-// Server stub: server has no renderer; always returns null
-fun createRenderObjFromFilename(@Suppress("UNUSED_PARAMETER") filename: String): RenderObjClass? = null
 
 // ---------------------------------------------------------------------------
 // Physics class stubs — C++ wwphys
@@ -448,8 +385,11 @@ object ExplosionManager {
 
 // C++: DefinitionMgrClass (wwsaveload/definitionmgr.h) — server-side registry
 object DefinitionMgrClass {
-    fun findDefinition(id: Int): DefinitionClass? = null
-    fun findTypedDefinition(name: String, classId: Int): Any? = null
+    // C++: DefinitionMgrClass::Find_Definition(id) — delegates to the loaded level registry
+    var registry: DefinitionRegistry? = null
+
+    fun findDefinition(id: Int): DefinitionClass? = registry?.findById(id.toUInt())
+    fun findTypedDefinition(name: String, classId: Int): DefinitionClass? = registry?.findByName(name)
     fun findAmmoDefinition(id: Int): Any? = null
     fun findAmmoDefinitionByName(name: String): Any? = null
     fun getFirst(classId: Int): Any? = null
@@ -458,8 +398,33 @@ object DefinitionMgrClass {
 
 // C++: ObjectLibraryManager (objectlibrary.h)
 object ObjectLibraryManager {
-    fun findObject(name: String): Any? = null
-    fun createObject(defId: Int): ScriptableGameObj? = null
+    // C++: ObjectLibraryManager::Create_Object(int def_id)
+    fun createObject(defId: Int): PhysicalGameObj? {
+        val def = DefinitionMgrClass.findDefinition(defId) ?: return null
+        if (!isGameObjectDef(def)) return null
+        return createFromDefinition(def)
+    }
+
+    // C++: ObjectLibraryManager::Create_Object(const char* name)
+    fun createObject(name: String): PhysicalGameObj? {
+        val def = DefinitionMgrClass.findTypedDefinition(name, 0) ?: return null
+        if (!isGameObjectDef(def)) return null
+        return createFromDefinition(def)
+    }
+
+    private fun isGameObjectDef(def: DefinitionClass): Boolean =
+        def is PhysicalGameObjDef || def is BuildingGameObjDef
+
+    private fun createFromDefinition(def: DefinitionClass): PhysicalGameObj? = when (def) {
+        is SoldierGameObjDef   -> SoldierGameObj().apply { definition = def }
+        is VehicleGameObjDef   -> VehicleGameObj().apply { definition = def }
+        is PowerUpGameObjDef   -> PowerUpGameObj().apply { definition = def }
+        is C4GameObjDef        -> C4GameObj().apply { definition = def }
+        is BeaconGameObjDef    -> BeaconGameObj().apply { definition = def }
+        is SimpleGameObjDef    -> SimpleGameObj().apply { definition = def }
+        is CinematicGameObjDef -> CinematicGameObj().apply { definition = def }
+        else                   -> null
+    }
 }
 
 // C++: ConversationMgrClass (conversationmgr.h)
@@ -834,24 +799,13 @@ object GlobalSettingsDefClass {
 }
 
 // ---------------------------------------------------------------------------
-// RenderObjClass — additional methods
+// RenderObjClass — additional extension methods
+// (controlBone, getBoneTransform, setSubObjectsMatchLod, getFactory, getBoundingBox,
+// getTransform are now real methods on RenderObjClass in RenderObjClass.kt)
 // ---------------------------------------------------------------------------
 
-fun RenderObjClass.controlBone(boneIndex: Int, tm: Matrix3D): Unit = Unit
-fun RenderObjClass.controlBone(boneIndex: Int, tm: Matrix3D, relative: Boolean): Unit = Unit
-fun RenderObjClass.getBoneTransform(name: String): Matrix3D = Matrix3D.IDENTITY
-fun RenderObjClass.setSubObjectsMatchLod(match: Boolean): Unit = Unit
+// C++: Set_Container linkage helper — not a C++ RenderObjClass method but used by callers
 fun RenderObjClass.setParentTransform(obj: Any?, boneIndex: Int = -1): Unit = Unit
-fun RenderObjClass.getFactory(): RenderObjFactoryClass = RenderObjFactoryClass()
-fun RenderObjClass.getBoundingBox(): AABoxClass = AABoxClass()
-fun RenderObjClass.getTransform(): Matrix3D = Matrix3D.IDENTITY
-
-// C++: RenderObjClass factory stub
-class RenderObjFactoryClass {
-    val chunkId: UInt = 0u
-    fun save(csave: ChunkSaveClass, obj: RenderObjClass): Unit = Unit
-    fun load(cload: ChunkLoadClass): RenderObjClass? = null
-}
 
 // ---------------------------------------------------------------------------
 // Matrix3D — additional methods
@@ -1015,3 +969,7 @@ class ExplosionDefinitionClass {
 
 fun PhysAABoxIntersectionTestClass(box: AABoxClass?, collisionGroup: Int, collisionType: Int): PhysAABoxIntersectionTestClass =
     PhysAABoxIntersectionTestClass(box ?: AABoxClass(), collisionGroup, collisionType)
+
+// Overload accepting ccr.math.AABox (returned by RenderObjClass.getBoundingBox())
+fun PhysAABoxIntersectionTestClass(box: ccr.math.AABox?, collisionGroup: Int, collisionType: Int): PhysAABoxIntersectionTestClass =
+    PhysAABoxIntersectionTestClass(AABoxClass(box?.center ?: ccr.math.Vector3(), box?.extent ?: ccr.math.Vector3()), collisionGroup, collisionType)

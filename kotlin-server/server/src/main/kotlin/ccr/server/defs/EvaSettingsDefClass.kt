@@ -1,6 +1,6 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of EvaSettingsDefClass (Combat/evasettings.h).

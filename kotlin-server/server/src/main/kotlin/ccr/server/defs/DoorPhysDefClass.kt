@@ -1,9 +1,12 @@
 package ccr.server.defs
 
+import ccr.math.OBBox
+import ccr.physics.PhysClass
+import ccr.physics.static.DoorPhysClass
 import ccr.server.defs.phys.AnimCollisionManagerDef
 import ccr.server.defs.phys.ProjectorManagerDef
 import ccr.server.defs.phys.parseStaticAnimPhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -67,6 +70,23 @@ class DoorPhysDefClass(
     val accessDeniedSoundDefId: Int = 0,
     val doorOpensForVehicles: Boolean = false,
 ) : DefinitionClass(name, id, chunkId) {
+
+    /**
+     * C++: DoorPhysDefClass::Create()
+     * Creates a DoorPhysClass and initialises it via Init(*this).
+     * DoorPhysClass constructor takes definitionId, closeDelay, triggerZone1/2 (OBBox),
+     * defLockCode, and doorOpensForVehicles from the def.
+     * triggerZone1/2 are stored as FloatArray? (basis 9f + center 3f + extent 3f);
+     * converted to OBBox? via OBBox.fromFloatArray().
+     */
+    fun create(): PhysClass = DoorPhysClass(
+        definitionId = id.toInt(),
+        closeDelay = closeDelay,
+        triggerZone1 = triggerZone1?.let { OBBox.fromFloatArray(it) },
+        triggerZone2 = triggerZone2?.let { OBBox.fromFloatArray(it) },
+        defLockCode = lockCode,
+        doorOpensForVehicles = doorOpensForVehicles,
+    )
 
     companion object {
         /** CLASSID_DOORPHYSDEF = CLASSID_PHYSICS(0x9000) + 0x80 */

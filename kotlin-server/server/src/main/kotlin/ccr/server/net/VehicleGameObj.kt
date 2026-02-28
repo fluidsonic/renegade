@@ -1059,7 +1059,7 @@ open class VehicleGameObj() : SmartGameObj() {
 
         val boneCount = model.getNumBones()
         for (index in 0 until boneCount) {
-            val boneName = model.getBoneName(index)
+            val boneName = checkNotNull(model.getBoneName(index)))
             when {
                 boneName.startsWith("DAMAGE25", ignoreCase = true) ->
                     setSubobjectVisibility(model, index, showDamage25)

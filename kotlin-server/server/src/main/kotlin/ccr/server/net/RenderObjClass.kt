@@ -273,8 +273,9 @@ open class RenderObjClass {
     // C++: virtual int Get_Bone_Index(const char* bonename) { return 0; }
     open fun getBoneIndex(name: String): Int = 0
 
-    // C++: virtual const Matrix3D& Get_Bone_Transform(int boneindex)
-    open fun getBoneTransform(boneIndex: Int): Matrix3D = Matrix3D()
+    // C++: virtual const Matrix3D& Get_Bone_Transform(int boneindex) { return Get_Transform(); }
+    // Base class returns the object's own transform (not identity).
+    open fun getBoneTransform(boneIndex: Int): Matrix3D = transform
 
     // C++: virtual const Matrix3D& Get_Bone_Transform(const char* bonename)
     open fun getBoneTransform(name: String): Matrix3D = getBoneTransform(getBoneIndex(name))
@@ -475,3 +476,11 @@ open class RenderObjClass {
 
 // C++: SceneClass — the WW3D render scene; server has no actual rendering
 open class SceneClass
+
+// C++: PersistFactoryClass specialisation for RenderObjClass (ww3d2/rendobj.h)
+// Server: no actual save/load system — stub implementation.
+class RenderObjFactoryClass {
+    val chunkId: UInt = 0u
+    fun save(csave: ChunkSaveClass, obj: RenderObjClass): Unit = Unit
+    fun load(cload: ChunkLoadClass): RenderObjClass? = null
+}

@@ -1,6 +1,8 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.dynamic.DecorationPhysClass
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of DecorationPhysDefClass (wwphys/decophys.h).
@@ -22,6 +24,13 @@ open class DecorationPhysDefClass(
     modelName: String = "NULL",
     isPreLit: Boolean = false,
 ) : DynamicPhysDefClass(name, id, chunkId, modelName, isPreLit) {
+
+    /**
+     * C++: DecorationPhysDefClass::Create()
+     * Creates a DecorationPhysClass and initialises it via Init(*this).
+     * DecorationPhysClass::Init (via DynamicPhysClass::Init) does not copy def fields.
+     */
+    override fun create(): PhysClass = DecorationPhysClass()
 
     companion object {
         /** CLASSID_DECOPHYSDEF = CLASSID_PHYSICS + 0 = 0x9000 */

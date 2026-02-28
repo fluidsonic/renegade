@@ -1,9 +1,11 @@
 package ccr.server.defs
 
+import ccr.physics.PhysClass
+import ccr.physics.static.ShakeableStaticPhysClass
 import ccr.server.defs.phys.AnimCollisionManagerDef
 import ccr.server.defs.phys.ProjectorManagerDef
 import ccr.server.defs.phys.parseStaticAnimPhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of ShakeableStaticPhysDefClass (wwphys/shakeablestaticphys.cpp).
@@ -35,6 +37,13 @@ data class ShakeableStaticPhysDefClass(
     val animManagerDef: AnimCollisionManagerDef = AnimCollisionManagerDef(),
     val projectorManagerDef: ProjectorManagerDef = ProjectorManagerDef(),
 ) {
+    /**
+     * C++: ShakeableStaticPhysDefClass::Create()
+     * Creates a ShakeableStaticPhysClass and initialises it via Init(*this).
+     * No def fields are copied into the physics instance.
+     */
+    fun create(): PhysClass = ShakeableStaticPhysClass()
+
     companion object {
         /** CLASSID_SHAKEABLESTATICPHYSDEF (wwphysids.h enum offset 15 from CLASSID_PHYSICS=0x9000) */
         const val CHUNK_ID: UInt = 0x00020510u  // PHYSICS_CHUNKID_SHAKEABLESTATICPHYSDEF

@@ -4,7 +4,7 @@ import ccr.server.level.ChunkIds
 import ccr.server.level.Vector3
 import ccr.server.level.toFloat32
 import ccr.server.level.toVector3
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Parses the PSDSSC_CHUNKID_SCENE sub-chunks for sunlight and ambient light colors.

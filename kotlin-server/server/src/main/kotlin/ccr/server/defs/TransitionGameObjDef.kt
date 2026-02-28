@@ -2,7 +2,7 @@ package ccr.server.defs
 
 import ccr.math.Matrix3D
 import ccr.math.Vector3
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 

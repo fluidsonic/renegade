@@ -1,9 +1,11 @@
 package ccr.server.defs.phys
 
+import ccr.physics.PhysClass
+import ccr.physics.static.StaticPhysClass
 import ccr.server.defs.PhysDefClass
 import ccr.server.defs.readMicroBool
 import ccr.server.defs.readMicroString
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of StaticPhysDefClass (wwphys/staticphys.h).
@@ -26,6 +28,13 @@ open class StaticPhysDefClass(
     isPreLit: Boolean = false,
     val isNonOccluder: Boolean = true,
 ) : PhysDefClass(name, id, chunkId, modelName, isPreLit) {
+
+    /**
+     * C++: StaticPhysDefClass::Create()
+     * Creates a StaticPhysClass and initialises it via Init(*this).
+     * StaticPhysClass::Init (via PhysClass::Init) has no def fields to copy.
+     */
+    override fun create(): PhysClass = StaticPhysClass()
 
     companion object {
         /** CLASSID_STATICPHYSDEF = CLASSID_PHYSICS(0x9000) + 7 */

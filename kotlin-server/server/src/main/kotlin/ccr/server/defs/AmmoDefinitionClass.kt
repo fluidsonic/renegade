@@ -1,7 +1,7 @@
 package ccr.server.defs
 
 import ccr.server.combat.ArmorWarheadManager
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of AmmoDefinitionClass (Combat/weaponmanager.h).

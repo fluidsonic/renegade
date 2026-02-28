@@ -3,7 +3,7 @@ package ccr.server.level.lsd
 import ccr.server.level.ChunkIds
 import ccr.server.level.toInt32
 import ccr.server.level.toMatrix3D
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Parses the PHYSICS_CHUNKID_STATIC_OBJECTS_SUBSYSTEM chunk.

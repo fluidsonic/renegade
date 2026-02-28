@@ -10,7 +10,7 @@ import ccr.physics.collision.CollisionMath
 import ccr.physics.collision.OBBoxIntersectionTest
 import ccr.physics.scene.PhysicsScene
 
-abstract class Phys3Class : MoveablePhysClass() {
+open class Phys3Class : MoveablePhysClass() {
 
     companion object {
         // Mirrors C++ phys3.cpp constants (lines 325-326).

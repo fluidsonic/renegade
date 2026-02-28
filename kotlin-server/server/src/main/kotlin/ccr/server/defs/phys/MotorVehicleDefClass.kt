@@ -3,7 +3,7 @@ package ccr.server.defs.phys
 import ccr.server.defs.MoveablePhysDefClass
 import ccr.server.defs.PhysDefClass
 import ccr.server.defs.VehiclePhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of MotorVehicleDefClass (wwphys/motorvehicle.h).
@@ -19,7 +19,7 @@ import ccr.server.mix.ChunkReader
  *   [MOTORVEHICLEDEF_CHUNK_VARIABLES       = 0x00516001]  -> motor-vehicle-specific micro-chunks
  *   [MOTORVEHICLEDEF_CHUNK_VEHICLEPHYSDEF  = 0x00516002]  -> current parent VehiclePhysDefClass data
  */
-open class MotorVehicleDefClass(
+abstract class MotorVehicleDefClass(
     name: String,
     id: UInt,
     chunkId: UInt,

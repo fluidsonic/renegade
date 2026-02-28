@@ -3,7 +3,7 @@ package ccr.server
 import ccr.net.bitstream.*
 import ccr.net.protocol.*
 import ccr.server.level.FullDefinitionLoader
-import ccr.server.mix.MixReader
+import ccr.server.core.MixReader
 import ccr.server.net.PacketDecoder
 import java.io.File
 import java.io.PrintWriter

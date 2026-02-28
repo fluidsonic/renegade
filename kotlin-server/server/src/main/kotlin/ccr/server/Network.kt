@@ -12,7 +12,7 @@ import ccr.net.transport.UdpTransport
 import ccr.server.defs.readDefinitions
 import ccr.server.level.LevelLoader
 import ccr.server.level.LoadedLevel
-import ccr.server.mix.MixReader
+import ccr.server.core.MixReader
 import ccr.server.mix.WorldExtents
 import ccr.server.mix.extractLevelExtents
 import ccr.math.Vector3
@@ -46,18 +46,20 @@ import ccr.server.net.VehicleGameObj
 import ccr.physics.scene.PhysicsScene
 import ccr.server.level.PhysicsSceneBuilder
 import ccr.server.defs.AmmoDefinitionClass
-import ccr.server.defs.PhysDefClass
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.DoorPhysDefClass
 import ccr.server.defs.PowerUpGameObjDef
 import ccr.server.defs.RefineryGameObjDef
 import ccr.math.OBBox
 import ccr.math.Matrix3D as MathMatrix3D
+import ccr.physics.PhysDefClass
 import ccr.physics.static.DoorPhysClass
+import ccr.server.core.crcStringi
 import ccr.server.net.DoorNetworkObject
 import ccr.server.net.PowerUpGameObj
 import ccr.server.net.ScTextObj
 import ccr.server.net.SimpleGameObj
+import ccr.server.net.DefinitionMgrClass
 import ccr.server.net.TimeManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -1103,6 +1105,7 @@ class Network(internal val config: ServerConfig) {
         // Clear level-specific state
         spawnManager = null
         loadedLevel = null
+        DefinitionMgrClass.registry = null
 
         // Reset weapon/soldier def IDs (repopulated by loadLevel)
         nodSoldierDefId = config.nodSoldierDefId
@@ -1221,6 +1224,7 @@ class Network(internal val config: ServerConfig) {
 
         val level = LevelLoader(alwaysMix, mapMix, baseName).load()
         loadedLevel = level
+        DefinitionMgrClass.registry = level.definitions
 
         physicsScene = PhysicsSceneBuilder.build(level.staticData.staticObjects, mapMix, alwaysMixes)
 

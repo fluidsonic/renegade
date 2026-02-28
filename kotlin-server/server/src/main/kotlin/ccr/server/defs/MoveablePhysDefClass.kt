@@ -1,6 +1,6 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of MoveablePhysDefClass (wwphys/movephys.h).
@@ -9,7 +9,7 @@ import ccr.server.mix.ChunkReader
  * C++ defaults: Mass(1.0f), GravScale(1.0f), Elasticity(0.1f),
  *   CinematicCollisionMode(CINEMATIC_COLLISION_PUSH = 2)
  */
-open class MoveablePhysDefClass(
+abstract class MoveablePhysDefClass(
     name: String,
     id: UInt,
     chunkId: UInt,

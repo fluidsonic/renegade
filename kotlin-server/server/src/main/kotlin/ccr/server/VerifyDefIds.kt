@@ -1,8 +1,8 @@
 package ccr.server
 
 import ccr.server.defs.readDefinitions
-import ccr.server.mix.ChunkReader
-import ccr.server.mix.MixReader
+import ccr.server.core.ChunkReader
+import ccr.server.core.MixReader
 import java.io.File
 
 /**

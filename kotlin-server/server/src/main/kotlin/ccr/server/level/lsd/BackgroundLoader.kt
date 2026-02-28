@@ -2,7 +2,7 @@ package ccr.server.level.lsd
 
 import ccr.server.level.toFloat32
 import ccr.server.level.toInt32
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Parses BackgroundMgrClass data from a CHUNKID_BACKGROUND_MGR (0x00040126) chunk.

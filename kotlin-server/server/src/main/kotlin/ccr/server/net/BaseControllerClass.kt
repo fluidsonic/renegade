@@ -1,7 +1,10 @@
 package ccr.server.net
 
+import ccr.math.OBBox
+import ccr.math.Vector3
 import ccr.net.bitstream.BitStream
 import ccr.net.replication.NetworkObject
+import ccr.server.defs.CNCModeSettingsDef
 
 // C++: BaseControllerClass (Combat/basecontroller.h / basecontroller.cpp)
 // S->C object tracking base state for one team (NOD or GDI).
@@ -32,6 +35,10 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
     // Back-reference to the Network instance — set by Network.kt after cncInitialize.
     // Used by VehicleFactoryGameObj.createVehicle() to reach God.createHarvester/createVehicle.
     var network: ccr.server.Network? = null
+
+    // C++: OBBoxClass BeaconZone — bounding box of the closest beacon zone to this base's buildings.
+    // Set externally during level init (C++: ScriptZoneGameObj::Find_Closest_Zone → Get_Bounding_Box).
+    var beaconZone: OBBox = OBBox(Vector3(), Vector3())
 
     // All fields start at C++ Initialize() defaults
     var operationTimeFactor: Float = 1f; private set
@@ -170,6 +177,63 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
     }
 
     override fun importOccasional(packet: BitStream) {}
+
+    // C++: const OBBoxClass& Get_Beacon_Zone() const { return BeaconZone; }
+    fun getBeaconZone(): OBBox = beaconZone
+
+    // C++: BaseControllerClass::On_Beacon_Armed(BeaconGameObj* beacon)
+    fun onBeaconArmed(beacon: BeaconGameObj) {
+        val reportId = beaconReportId(beacon,
+            nodNuke = { it.nodNukeBeaconDeployedId }, gdiNuke = { it.gdiNukeBeaconDeployedId },
+            nodIon  = { it.nodIonBeaconDeployedId  }, gdiIon  = { it.gdiIonBeaconDeployedId  })
+        playAnnouncement(reportId)
+    }
+
+    // C++: BaseControllerClass::On_Beacon_Disarmed(BeaconGameObj* beacon)
+    fun onBeaconDisarmed(beacon: BeaconGameObj) {
+        val reportId = beaconReportId(beacon,
+            nodNuke = { it.nodNukeBeaconDisarmedId }, gdiNuke = { it.gdiNukeBeaconDisarmedId },
+            nodIon  = { it.nodIonBeaconDisarmedId  }, gdiIon  = { it.gdiIonBeaconDisarmedId  })
+        playAnnouncement(reportId)
+    }
+
+    // C++: BaseControllerClass::On_Beacon_Warning(BeaconGameObj* beacon)
+    fun onBeaconWarning(beacon: BeaconGameObj) {
+        val reportId = beaconReportId(beacon,
+            nodNuke = { it.nodNukeBeaconWarningId }, gdiNuke = { it.gdiNukeBeaconWarningId },
+            nodIon  = { it.nodIonBeaconWarningId  }, gdiIon  = { it.gdiIonBeaconWarningId  })
+        playAnnouncement(reportId)
+    }
+
+    // Selects the correct announcement ID from CNCModeSettingsDef based on beacon type and team.
+    private fun beaconReportId(
+        beacon: BeaconGameObj,
+        nodNuke: (CNCModeSettingsDef) -> Int,
+        gdiNuke: (CNCModeSettingsDef) -> Int,
+        nodIon:  (CNCModeSettingsDef) -> Int,
+        gdiIon:  (CNCModeSettingsDef) -> Int,
+    ): Int {
+        val cncDef = network?.loadedLevel?.definitions?.all()
+            ?.filterIsInstance<CNCModeSettingsDef>()?.firstOrNull() ?: return 0
+        val isNuke = beacon.getDefinition().isNuke()
+        val team = beacon.getPlayerType()
+        return if (isNuke) {
+            if (team == PLAYERTYPE_NOD) nodNuke(cncDef) else gdiNuke(cncDef)
+        } else {
+            if (team == PLAYERTYPE_NOD) nodIon(cncDef) else gdiIon(cncDef)
+        }
+    }
+
+    // C++: BaseControllerClass::Play_Announcement(int text_id) — broadcasts EVA announcement to all clients.
+    private fun playAnnouncement(reportId: Int) {
+        if (reportId == 0) return
+        val net = network ?: return
+        val announcement = ScAnnouncement(toId = 0, fromId = 0, announcementId = reportId, radioCmdId = 0, type = 0)
+        for (clientId in net.god.playerInGame) {
+            val host = net.connectionManager.getHost(clientId) ?: continue
+            net.serverSendPacket(host) { bs -> NetworkObjectPacketWriter.writeCreation(bs, announcement, announcement.networkId) }
+        }
+    }
 
     companion object {
         /** Sentinel buyerRhostId used to distinguish harvester requests from player purchases. */

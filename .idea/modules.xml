@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ccr.iml" filepath="$PROJECT_DIR$/.idea/ccr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/kotlin-server.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/kotlin-server.core.main.iml" />
     </modules>
   </component>
 </project>

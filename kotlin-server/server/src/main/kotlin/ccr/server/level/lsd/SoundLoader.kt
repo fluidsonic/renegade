@@ -4,7 +4,7 @@ import ccr.server.defs.readMicroFloat
 import ccr.server.defs.readMicroInt
 import ccr.server.defs.readMicroString
 import ccr.server.level.toMatrix3D
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Loads static sound emitters from the WWAudio subsystem chunk in the LSD file.

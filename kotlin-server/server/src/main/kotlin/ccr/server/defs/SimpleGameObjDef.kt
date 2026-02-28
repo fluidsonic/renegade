@@ -1,6 +1,6 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 // C++: SimpleGameObjDef : public PhysicalGameObjDef (simplegameobj.h)
 open class SimpleGameObjDef(

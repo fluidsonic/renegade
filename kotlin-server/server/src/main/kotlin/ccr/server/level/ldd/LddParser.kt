@@ -5,7 +5,7 @@ import ccr.server.level.ChunkIds
 import ccr.server.level.DefinitionRegistry
 import ccr.server.level.LevelDynamicData
 import ccr.server.level.Matrix3D
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import ccr.server.net.BaseGameObj
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

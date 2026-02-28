@@ -1,8 +1,11 @@
 package ccr.server.defs.phys
 
+import ccr.physics.PhysClass
+import ccr.physics.vehicle.WheeledVehicleClass
 import ccr.server.defs.MoveablePhysDefClass
 import ccr.server.defs.PhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
+import kotlin.math.toDegrees
 
 /**
  * Kotlin representation of WheeledVehicleDefClass (wwphys/wheelvehicle.h).
@@ -50,7 +53,7 @@ open class WheeledVehicleDefClass(
     driveTrainInertia: Float = 0.1f,
     shiftUpRpm: Float = 7000f,
     shiftDownRpm: Float = 2000f,
-    val maxSteeringAngle: Float = 0.7853982f, // PI/4
+    val maxSteeringAngle: Float = 0.7853982f, // PI/4 radians
 ) : MotorVehicleDefClass(
     name, id, chunkId, modelName, isPreLit,
     mass, gravScale, elasticity, cinematicCollisionMode,
@@ -61,6 +64,40 @@ open class WheeledVehicleDefClass(
     gearCount, gearRatio0, gearRatio1, gearRatio2, gearRatio3, gearRatio4, gearRatio5,
     finalDriveGearRatio, driveTrainInertia, shiftUpRpm, shiftDownRpm,
 ) {
+
+    /**
+     * C++: WheeledVehicleDefClass::Create()
+     * Creates a WheeledVehicleClass and initialises it via Init(*this).
+     * C++ WheeledVehicleClass::Init calls MotorVehicleClass::Init which calls VehiclePhysClass::Init
+     * which calls RigidBodyClass::Init which calls MoveablePhysClass::Init.
+     * Vehicle-specific fields are stored in the def in C++ and accessed at runtime via Get_*Def();
+     * in Kotlin they are copied to instance fields.
+     * maxSteeringAngle: def stores in radians; WheeledVehicleClass.maxSteeringAngle is in degrees.
+     */
+    override fun create(): PhysClass {
+        val obj = WheeledVehicleClass()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        // VehiclePhysClass fields (from def — accessed via Get_VehiclePhysDef() in C++)
+        obj.springConstant = springConstant
+        obj.dampingConstant = dampingConstant
+        obj.springLength = springLength
+        obj.tractionMultiplier = tractionMultiplier
+        obj.isFake = isFake
+        // MotorVehicleClass fields
+        obj.maxEngineTorque = maxEngineTorque
+        obj.gearCount = gearCount
+        obj.gearRatios = floatArrayOf(gearRatio0, gearRatio1, gearRatio2, gearRatio3, gearRatio4, gearRatio5)
+        obj.finalDriveGearRatio = finalDriveGearRatio
+        obj.driveTrainInertia = driveTrainInertia
+        obj.shiftUpRpm = shiftUpRpm
+        obj.shiftDownRpm = shiftDownRpm
+        // WheeledVehicleClass field: def is in radians, class is in degrees
+        obj.maxSteeringAngle = maxSteeringAngle.toDegrees()
+        return obj
+    }
 
     internal data class ParsedFields(
         // MotorVehicleDefClass parent fields

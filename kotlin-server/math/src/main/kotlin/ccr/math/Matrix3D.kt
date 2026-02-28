@@ -33,6 +33,23 @@ data class Matrix3D(
         m20 * v.x + m21 * v.y + m22 * v.z + m23,
     )
 
+    // C++: Matrix3D::Multiply(const Matrix3D& A, const Matrix3D& B, Matrix3D* AresMask)
+    // 3x4 row-major multiplication (implicit 4th row = [0,0,0,1]).
+    operator fun times(b: Matrix3D): Matrix3D = Matrix3D(
+        m00 = m00 * b.m00 + m01 * b.m10 + m02 * b.m20,
+        m01 = m00 * b.m01 + m01 * b.m11 + m02 * b.m21,
+        m02 = m00 * b.m02 + m01 * b.m12 + m02 * b.m22,
+        m03 = m00 * b.m03 + m01 * b.m13 + m02 * b.m23 + m03,
+        m10 = m10 * b.m00 + m11 * b.m10 + m12 * b.m20,
+        m11 = m10 * b.m01 + m11 * b.m11 + m12 * b.m21,
+        m12 = m10 * b.m02 + m11 * b.m12 + m12 * b.m22,
+        m13 = m10 * b.m03 + m11 * b.m13 + m12 * b.m23 + m13,
+        m20 = m20 * b.m00 + m21 * b.m10 + m22 * b.m20,
+        m21 = m20 * b.m01 + m21 * b.m11 + m22 * b.m21,
+        m22 = m20 * b.m02 + m21 * b.m12 + m22 * b.m22,
+        m23 = m20 * b.m03 + m21 * b.m13 + m22 * b.m23 + m23,
+    )
+
     fun withTranslation(t: Vector3) = copy(m03 = t.x, m13 = t.y, m23 = t.z)
 
     fun getZRotation(): Float = kotlin.math.atan2(m10, m00)

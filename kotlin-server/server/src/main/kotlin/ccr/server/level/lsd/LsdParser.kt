@@ -3,7 +3,7 @@ package ccr.server.level.lsd
 import ccr.server.level.ChunkIds
 import ccr.server.level.LevelStaticData
 import ccr.server.level.Vector3
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import ccr.server.mix.extractLevelExtents
 
 /**

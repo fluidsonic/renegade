@@ -1,6 +1,8 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.static.BuildingAggregateClass
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -34,6 +36,18 @@ data class BuildingAggregateDefClass(
     // Per-state animation data (10 states from BuildingStateClass)
     val stateAnimations: List<BuildingStateAnimData>,
 ) {
+    /**
+     * C++: BuildingAggregateDefClass::Create()
+     * Creates a BuildingAggregateClass and initialises it via Init(*this).
+     * Init calls StaticAnimPhysClass::Init -> StaticPhysClass::Init -> PhysClass::Init,
+     * then sets isMCT from the def.
+     */
+    fun create(): PhysClass {
+        val obj = BuildingAggregateClass()
+        obj.isMCT = isMCT
+        return obj
+    }
+
     companion object {
         // BuildingStateClass::STATE_COUNT
         private const val STATE_COUNT = 10

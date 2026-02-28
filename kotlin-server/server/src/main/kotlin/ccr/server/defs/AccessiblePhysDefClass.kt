@@ -1,9 +1,11 @@
 package ccr.server.defs
 
+import ccr.physics.PhysClass
+import ccr.physics.static.AccessiblePhysClass
 import ccr.server.defs.phys.AnimCollisionManagerDef
 import ccr.server.defs.phys.ProjectorManagerDef
 import ccr.server.defs.phys.parseStaticAnimPhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -47,6 +49,18 @@ class AccessiblePhysDefClass(
     // AccessiblePhysDef own field
     val lockCode: Int = 0,
 ) : DefinitionClass(name, id, chunkId) {
+
+    /**
+     * C++: AccessiblePhysDefClass::Create()
+     * Creates an AccessiblePhysClass and initialises it via Init(*this).
+     * Init calls StaticAnimPhysClass::Init -> StaticPhysClass::Init -> PhysClass::Init.
+     * Own field: lockCode.
+     */
+    fun create(): PhysClass {
+        val obj = AccessiblePhysClass()
+        obj.lockCode = lockCode
+        return obj
+    }
 
     companion object {
         // Chunk IDs from accessiblephys.cpp

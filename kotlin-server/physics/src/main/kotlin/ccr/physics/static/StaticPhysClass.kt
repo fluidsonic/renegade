@@ -36,6 +36,25 @@ open class StaticPhysClass : PhysClass() {
     override fun needsTimestep(): Boolean = false
     override fun timestep(dt: Float) {} // no-op
 
+    /**
+     * C++: virtual bool StaticPhysClass::Has_Dynamic_State() — returns false.
+     * If true, the object has runtime state that can be saved/loaded separately
+     * from the full object save. StaticAnimPhysClass overrides this to return true.
+     */
+    open fun hasDynamicState(): Boolean = false
+
+    /**
+     * C++: virtual void StaticPhysClass::Save_State(ChunkSaveClass &) — no-op.
+     * Override in subclasses to write runtime state (e.g. animation frame).
+     */
+    open fun saveState(csave: Any) {}
+
+    /**
+     * C++: virtual void StaticPhysClass::Load_State(ChunkLoadClass &) — no-op.
+     * Override in subclasses to read runtime state (e.g. animation frame).
+     */
+    open fun loadState(cload: Any) {}
+
     /** Compute world-space bounding box from actual triangle geometry. */
     override fun worldBoundingBox(): AABox {
         if (triangles.isEmpty()) return super.worldBoundingBox()

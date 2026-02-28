@@ -1,6 +1,6 @@
 package ccr.server.level.lsd
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

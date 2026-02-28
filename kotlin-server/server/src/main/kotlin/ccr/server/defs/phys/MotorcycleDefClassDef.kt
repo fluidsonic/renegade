@@ -1,8 +1,11 @@
 package ccr.server.defs.phys
 
+import ccr.physics.PhysClass
+import ccr.physics.vehicle.MotorcycleClass
 import ccr.server.defs.MoveablePhysDefClass
 import ccr.server.defs.PhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
+import kotlin.math.toDegrees
 
 /**
  * Kotlin representation of MotorcycleDefClass (wwphys/motorcycle.h).
@@ -64,6 +67,40 @@ class MotorcycleDefClass(
     finalDriveGearRatio, driveTrainInertia, shiftUpRpm, shiftDownRpm,
     maxSteeringAngle,
 ) {
+
+    /**
+     * C++: MotorcycleDefClass::Create()
+     * Creates a MotorcycleClass and initialises it via Init(*this).
+     * Init calls WheeledVehicleClass::Init -> MotorVehicleClass::Init -> VehiclePhysClass::Init
+     * -> RigidBodyClass::Init -> MoveablePhysClass::Init.
+     */
+    override fun create(): PhysClass {
+        val obj = MotorcycleClass()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        // VehiclePhysClass fields
+        obj.springConstant = springConstant
+        obj.dampingConstant = dampingConstant
+        obj.springLength = springLength
+        obj.tractionMultiplier = tractionMultiplier
+        obj.isFake = isFake
+        // MotorVehicleClass fields
+        obj.maxEngineTorque = maxEngineTorque
+        obj.gearCount = gearCount
+        obj.gearRatios = floatArrayOf(gearRatio0, gearRatio1, gearRatio2, gearRatio3, gearRatio4, gearRatio5)
+        obj.finalDriveGearRatio = finalDriveGearRatio
+        obj.driveTrainInertia = driveTrainInertia
+        obj.shiftUpRpm = shiftUpRpm
+        obj.shiftDownRpm = shiftDownRpm
+        // WheeledVehicleClass field: def is in radians, class is in degrees
+        obj.maxSteeringAngle = maxSteeringAngle.toDegrees()
+        // MotorcycleClass fields
+        obj.leanK0 = leanK0
+        obj.leanK1 = leanK1
+        return obj
+    }
 
     companion object {
         /** CLASSID_MOTORCYCLEDEF = CLASSID_PHYSICS(0x9000) + 2 */

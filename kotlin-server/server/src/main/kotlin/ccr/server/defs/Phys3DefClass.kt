@@ -1,6 +1,10 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.moveable.Phys3Class
+import ccr.server.core.ChunkReader
+import kotlin.math.cos
+import kotlin.math.tan
 
 /**
  * Kotlin representation of Phys3DefClass (wwphys/phys3.h).
@@ -23,6 +27,26 @@ open class Phys3DefClass(
     val slideAngle: Float = 0.7853982f, // DEG_TO_RADF(45)
     val stepHeight: Float = 0.25f,
 ) : MoveablePhysDefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
+
+    /**
+     * C++: Phys3DefClass::Create()
+     * Creates a Phys3Class and initialises it via Init(*this).
+     * C++ Phys3Class::Init calls MoveablePhysClass::Init then sets per-Phys3 fields.
+     */
+    override fun create(): PhysClass {
+        val obj = Phys3Class()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        // Phys3Class::Init
+        obj.normSpeed = normSpeed
+        obj.slideAngle = slideAngle
+        obj.slideNormalZ = cos(slideAngle)
+        obj.slideAngleTan = tan(slideAngle)
+        obj.stepHeight = stepHeight
+        return obj
+    }
 
     internal data class ParsedFields(
         val modelName: String,

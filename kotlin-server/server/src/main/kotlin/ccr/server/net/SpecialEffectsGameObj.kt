@@ -47,7 +47,7 @@ open class SpecialEffectsGameObj() : PhysicalGameObj() {
         // C++: Make sure collisions are turned off on this effect
         val physObj = peekPhysicalObject()
         if (physObj != null) {
-            physObj.setCollisionGroup(UNCOLLIDEABLE_GROUP)
+            physObj.collisionGroup = UNCOLLIDEABLE_GROUP
         }
     }
 

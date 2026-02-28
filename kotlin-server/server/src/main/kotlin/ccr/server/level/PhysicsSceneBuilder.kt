@@ -8,7 +8,7 @@ import ccr.physics.static.StaticPhysClass
 import ccr.server.level.lsd.StaticPhysObject
 import ccr.server.level.w3d.W3dChunkIds
 import ccr.server.level.w3d.W3dFileParser
-import ccr.server.mix.MixReader
+import ccr.server.core.MixReader
 
 object PhysicsSceneBuilder {
 

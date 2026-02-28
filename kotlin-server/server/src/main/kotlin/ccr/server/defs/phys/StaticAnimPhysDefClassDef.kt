@@ -1,11 +1,13 @@
 package ccr.server.defs.phys
 
+import ccr.physics.PhysClass
+import ccr.physics.static.StaticAnimPhysClass
 import ccr.server.defs.PhysDefClass
 import ccr.server.defs.readMicroBool
 import ccr.server.defs.readMicroFloat
 import ccr.server.defs.readMicroInt
 import ccr.server.defs.readMicroString
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of AnimCollisionManagerDefClass (wwphys/animcollisionmanager.cpp).
@@ -76,6 +78,14 @@ class StaticAnimPhysDefClass(
     val animManagerDef: AnimCollisionManagerDef = AnimCollisionManagerDef(),
     val projectorManagerDef: ProjectorManagerDef = ProjectorManagerDef(),
 ) : StaticPhysDefClass(name, id, chunkId, modelName, isPreLit, isNonOccluder) {
+
+    /**
+     * C++: StaticAnimPhysDefClass::Create()
+     * Creates a StaticAnimPhysClass and initialises it via Init(*this).
+     * Init calls StaticPhysClass::Init -> PhysClass::Init; no def fields to copy.
+     * AnimCollisionManagerClass and ProjectorManagerClass init are skipped server-side.
+     */
+    override fun create(): PhysClass = StaticAnimPhysClass()
 
     companion object {
         /** CLASSID_STATICANIMPHYSDEF = CLASSID_PHYSICS(0x9000) + 8 */

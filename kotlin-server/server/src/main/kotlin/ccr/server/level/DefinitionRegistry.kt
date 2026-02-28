@@ -1,6 +1,7 @@
 package ccr.server.level
 
 import ccr.server.defs.DefinitionClass
+import java.util.TreeMap
 
 /**
  * Registry mapping definition IDs and names to typed DefinitionClass instances.
@@ -8,7 +9,7 @@ import ccr.server.defs.DefinitionClass
  */
 class DefinitionRegistry {
     private val byId   = mutableMapOf<UInt, DefinitionClass>()
-    private val byName = mutableMapOf<String, DefinitionClass>()
+    private val byName: MutableMap<String, DefinitionClass> = TreeMap(String.CASE_INSENSITIVE_ORDER)
 
     fun register(def: DefinitionClass) {
         byId[def.id] = def

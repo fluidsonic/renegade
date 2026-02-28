@@ -1,6 +1,8 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.rigidbody.RigidBodyClass
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of RigidBodyDefClass (wwphys/rbody.h).
@@ -21,6 +23,21 @@ open class RigidBodyDefClass(
     val aerodynamicDragCoefficient: Float = 0f,
     val collisionDisabled: Boolean = false,
 ) : MoveablePhysDefClass(name, id, chunkId, modelName, isPreLit, mass, gravScale, elasticity, cinematicCollisionMode) {
+
+    /**
+     * C++: RigidBodyDefClass::Create()
+     * Creates a RigidBodyClass and initialises it via Init(*this).
+     * C++ RigidBodyClass::Init calls MoveablePhysClass::Init, then resets rigid-body state to zero.
+     * State fields (position, orientation, momentum) are already zero-initialised by default in Kotlin.
+     */
+    override fun create(): PhysClass {
+        val obj = RigidBodyClass()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        return obj
+    }
 
     internal data class ParsedFields(
         val modelName: String,

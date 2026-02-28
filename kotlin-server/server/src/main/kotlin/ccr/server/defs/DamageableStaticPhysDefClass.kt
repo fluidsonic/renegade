@@ -1,9 +1,11 @@
 package ccr.server.defs
 
+import ccr.physics.PhysClass
+import ccr.physics.static.DamageableStaticPhysClass
 import ccr.server.defs.phys.AnimCollisionManagerDef
 import ccr.server.defs.phys.ProjectorManagerDef
 import ccr.server.defs.phys.parseStaticAnimPhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -61,6 +63,14 @@ class DamageableStaticPhysDefClass(
     // Embedded DefenseObjectDef
     val defenseObjectDef: DefenseObjectDef = DefenseObjectDef(),
 ) : DefinitionClass(name, id, chunkId) {
+
+    /**
+     * C++: DamageableStaticPhysDefClass::Create()
+     * Creates a DamageableStaticPhysClass and initialises it via Init(*this).
+     * Init calls StaticAnimPhysClass::Init -> StaticPhysClass::Init -> PhysClass::Init.
+     * No def fields are copied into the physics instance (state is initialised to STATE_LIVE_LOOP).
+     */
+    fun create(): PhysClass = DamageableStaticPhysClass()
 
     companion object {
         /** Persist factory chunk ID for DamageableStaticPhysDefClass in the DDB. */

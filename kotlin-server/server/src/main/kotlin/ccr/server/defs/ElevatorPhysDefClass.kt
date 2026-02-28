@@ -1,9 +1,11 @@
 package ccr.server.defs
 
+import ccr.physics.PhysClass
+import ccr.physics.static.ElevatorPhysClass
 import ccr.server.defs.phys.AnimCollisionManagerDef
 import ccr.server.defs.phys.ProjectorManagerDef
 import ccr.server.defs.phys.parseStaticAnimPhysDefClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -68,6 +70,18 @@ class ElevatorPhysDefClass(
     val doorAccessDeniedSoundDefId: Int = 0,
     val elevatorMovingSoundDefId: Int = 0,
 ) : DefinitionClass(name, id, chunkId) {
+
+    /**
+     * C++: ElevatorPhysDefClass::Create()
+     * Creates an ElevatorPhysClass and initialises it via Init(*this).
+     * ElevatorPhysClass extends AccessiblePhysClass; Init copies lockCode.
+     * ElevatorPhysClass has no constructor-level def fields beyond lockCode.
+     */
+    fun create(): PhysClass {
+        val obj = ElevatorPhysClass()
+        obj.lockCode = lockCode
+        return obj
+    }
 
     companion object {
         /** CLASSID_ELEVATORPHYSDEF = CLASSID_PHYSICS + 0x81 = 0x9081 */

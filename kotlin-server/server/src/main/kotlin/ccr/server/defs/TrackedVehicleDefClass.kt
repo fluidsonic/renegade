@@ -1,6 +1,8 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.vehicle.TrackedVehicleClass
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of TrackedVehicleDefClass (wwphys/trackedvehicle.h).
@@ -45,6 +47,29 @@ class TrackedVehicleDefClass(
     springConstant, dampingConstant, springLength, tractionMultiplier,
     lateralMomentArm, tractiveMomentArm, engineFlameLength, isFake,
 ) {
+
+    /**
+     * C++: TrackedVehicleDefClass::Create()
+     * Creates a TrackedVehicleClass and initialises it via Init(*this).
+     * Init calls VehiclePhysClass::Init which calls RigidBodyClass::Init -> MoveablePhysClass::Init.
+     */
+    override fun create(): PhysClass {
+        val obj = TrackedVehicleClass()
+        // MoveablePhysClass::Init
+        obj.mass = mass
+        obj.gravScale = gravScale
+        obj.elasticity = elasticity
+        // VehiclePhysClass fields
+        obj.springConstant = springConstant
+        obj.dampingConstant = dampingConstant
+        obj.springLength = springLength
+        obj.tractionMultiplier = tractionMultiplier
+        obj.isFake = isFake
+        // TrackedVehicleClass fields
+        obj.maxEngineTorque = maxEngineTorque
+        obj.turnTorqueScaleFactor = turnTorqueScaleFactor
+        return obj
+    }
 
     companion object {
         /** CLASSID_TRACKEDVEHICLEDEF = CLASSID_PHYSICS + 12 = 0x900C */

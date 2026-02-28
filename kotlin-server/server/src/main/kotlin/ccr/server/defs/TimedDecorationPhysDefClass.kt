@@ -1,6 +1,8 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.physics.PhysClass
+import ccr.physics.dynamic.TimedDecorationPhysClass
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of TimedDecorationPhysDefClass (wwphys/timeddecophys.cpp).
@@ -25,6 +27,14 @@ data class TimedDecorationPhysDefClass(
     // Own fields
     val lifetime: Float = 2.0f,
 ) {
+    /**
+     * C++: TimedDecorationPhysDefClass::Create()
+     * Creates a TimedDecorationPhysClass and initialises it via Init(*this).
+     * Init calls DecorationPhysClass::Init -> DynamicPhysClass::Init -> PhysClass::Init,
+     * then sets the lifetime from the def.
+     */
+    fun create(): PhysClass = TimedDecorationPhysClass(lifetime = lifetime)
+
     companion object {
         /** CLASSID_TIMEDDECOPHYSDEF (wwphysids.h enum offset 10 from CLASSID_PHYSICS=0x9000) */
         const val CHUNK_ID: UInt = 0x0002050Bu  // PHYSICS_CHUNKID_TIMEDDECOPHYSDEF

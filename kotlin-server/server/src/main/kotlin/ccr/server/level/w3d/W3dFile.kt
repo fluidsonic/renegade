@@ -1,6 +1,6 @@
 package ccr.server.level.w3d
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 data class W3dFile(
     val meshes: List<W3dMesh> = emptyList(),

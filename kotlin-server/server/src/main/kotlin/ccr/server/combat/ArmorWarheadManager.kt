@@ -1,7 +1,7 @@
 package ccr.server.combat
 
-import ccr.server.mix.IniFile
-import ccr.server.mix.MixReader
+import ccr.server.core.IniFile
+import ccr.server.core.MixReader
 
 // C++: ArmorWarheadManager (damage.h / damage.cpp) — manages the warhead-vs-armor damage multiplier matrix,
 // shield absorption, soft armor classification, special damage types, and impervious skins.

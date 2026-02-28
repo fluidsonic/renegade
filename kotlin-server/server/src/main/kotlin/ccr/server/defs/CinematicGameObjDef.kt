@@ -1,6 +1,6 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 // C++: CinematicGameObjDef : public ArmedGameObjDef (cinematicgameobj.cpp)
 // C++ defaults: SoundDefID(0), AutoFireWeapon(false), DestroyAfterAnimation(true), CameraRelative(false)

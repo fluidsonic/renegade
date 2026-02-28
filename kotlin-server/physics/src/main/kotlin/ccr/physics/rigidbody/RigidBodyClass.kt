@@ -15,7 +15,7 @@ import ccr.physics.ode.OdeSystem
 import ccr.physics.ode.StateVector
 
 // C++: RigidBodyClass in wwphys/rbody.h
-abstract class RigidBodyClass : MoveablePhysClass(), OdeSystem {
+open class RigidBodyClass : MoveablePhysClass(), OdeSystem {
 
     companion object {
         const val SLEEP_DELAY = 0.5f

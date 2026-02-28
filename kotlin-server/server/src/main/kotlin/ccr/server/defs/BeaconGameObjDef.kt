@@ -1,6 +1,6 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 // C++: BeaconGameObjDef : public SimpleGameObjDef (beacongameobj.h)
 open class BeaconGameObjDef(

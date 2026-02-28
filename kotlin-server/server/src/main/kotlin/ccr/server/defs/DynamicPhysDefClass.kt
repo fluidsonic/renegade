@@ -6,7 +6,7 @@ package ccr.server.defs
  *
  * C++ chunk layout: wraps PhysDefClass::Save in DYNAMICPHYSDEF_CHUNK_PHYSDEF.
  */
-open class DynamicPhysDefClass(
+abstract class DynamicPhysDefClass(
     name: String,
     id: UInt,
     chunkId: UInt,

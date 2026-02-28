@@ -1,7 +1,7 @@
 package ccr.server.level
 
 import ccr.server.defs.DefinitionClass
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.test.Test

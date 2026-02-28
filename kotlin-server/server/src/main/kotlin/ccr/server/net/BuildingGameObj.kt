@@ -561,12 +561,12 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
     private fun addAggregate(aggregate: BuildingAggregateClass) {
         aggregates.add(aggregate)
         check(aggregate.observer == null)
-        aggregate.setObserver(this)
+        aggregate.observer = this
     }
 
     // C++: void Remove_Aggregate(BuildingAggregateClass* aggregate)
     fun removeAggregate(aggregate: BuildingAggregateClass) {
-        aggregate.setObserver(null)
+        aggregate.observer = null
         aggregates.remove(aggregate)
     }
 

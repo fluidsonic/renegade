@@ -1,6 +1,6 @@
 package ccr.server.defs
 
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Kotlin representation of VehiclePhysDefClass (wwphys/vehiclephys.h).
@@ -10,7 +10,7 @@ import ccr.server.mix.ChunkReader
  *   TractionMultiplier(2.0f), LateralMomentArm(0.0f), TractiveMomentArm(0.0f),
  *   EngineFlameLength(1.0f), IsFake(false)
  */
-open class VehiclePhysDefClass(
+abstract class VehiclePhysDefClass(
     name: String,
     id: UInt,
     chunkId: UInt,
@@ -110,33 +110,7 @@ open class VehiclePhysDefClass(
             )
         }
 
-        /**
-         * Loads a VehiclePhysDefClass from the OBJDATA chunk.
-         */
-        fun load(objDataChunk: ChunkReader, name: String, id: UInt, chunkId: UInt): VehiclePhysDefClass {
-            val fields = parseFields(objDataChunk)
-
-            return VehiclePhysDefClass(
-                name = name,
-                id = id,
-                chunkId = chunkId,
-                modelName = fields.modelName,
-                isPreLit = fields.isPreLit,
-                mass = fields.mass,
-                gravScale = fields.gravScale,
-                elasticity = fields.elasticity,
-                cinematicCollisionMode = fields.cinematicCollisionMode,
-                aerodynamicDragCoefficient = fields.aerodynamicDragCoefficient,
-                collisionDisabled = fields.collisionDisabled,
-                springConstant = fields.springConstant,
-                dampingConstant = fields.dampingConstant,
-                springLength = fields.springLength,
-                tractionMultiplier = fields.tractionMultiplier,
-                lateralMomentArm = fields.lateralMomentArm,
-                tractiveMomentArm = fields.tractiveMomentArm,
-                engineFlameLength = fields.engineFlameLength,
-                isFake = fields.isFake,
-            )
-        }
+        // VehiclePhysDefClass is abstract — no load() that directly instantiates it.
+        // Concrete subclasses (TrackedVehicleDefClass, VTOLVehicleDefClass) use parseFields().
     }
 }

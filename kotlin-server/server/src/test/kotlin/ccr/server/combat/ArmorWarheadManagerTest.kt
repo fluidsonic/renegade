@@ -1,7 +1,7 @@
 package ccr.server.combat
 
 import ccr.server.crcStringi
-import ccr.server.mix.MixReader
+import ccr.server.core.MixReader
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

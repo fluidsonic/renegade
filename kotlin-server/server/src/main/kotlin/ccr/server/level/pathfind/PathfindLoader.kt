@@ -4,7 +4,7 @@ import ccr.server.level.ChunkIds
 import ccr.server.level.Vector3
 import ccr.server.level.toInt32
 import ccr.server.level.toVector3
-import ccr.server.mix.ChunkReader
+import ccr.server.core.ChunkReader
 
 /**
  * Loads pathfinding data from the PSDSSC_CHUNKID_PATHFIND chunk in an LSD file.

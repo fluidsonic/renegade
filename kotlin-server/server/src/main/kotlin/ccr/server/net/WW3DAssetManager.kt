@@ -3,7 +3,7 @@ package ccr.server.net
 import ccr.server.level.w3d.W3dAnimation
 import ccr.server.level.w3d.W3dFileParser
 import ccr.server.level.w3d.W3dHierarchy
-import ccr.server.mix.MixReader
+import ccr.server.core.MixReader
 
 // ============================================================
 // HAnimClass
