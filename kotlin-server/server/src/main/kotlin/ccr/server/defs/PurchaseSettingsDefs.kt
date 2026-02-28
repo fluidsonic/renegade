@@ -1,5 +1,7 @@
 package ccr.server.defs
 
+import ccr.physics.defs.DefinitionClass
+
 import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

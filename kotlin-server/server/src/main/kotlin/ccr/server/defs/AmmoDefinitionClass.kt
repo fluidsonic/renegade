@@ -1,5 +1,7 @@
 package ccr.server.defs
 
+import ccr.physics.defs.DefinitionClass
+
 import ccr.server.combat.ArmorWarheadManager
 import ccr.server.core.ChunkReader
 

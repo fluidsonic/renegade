@@ -1,15 +1,15 @@
 package ccr.server.level.ldd
 
 import ccr.math.Vector3
-import ccr.server.defs.readMicroBool
-import ccr.server.defs.readMicroFloat
-import ccr.server.defs.readMicroInt
+import ccr.physics.defs.readMicroBool
+import ccr.physics.defs.readMicroFloat
+import ccr.physics.defs.readMicroInt
 import ccr.server.defs.readMicroMatrix3D
 import ccr.server.defs.readMicroSphere
-import ccr.server.defs.readMicroVector3
+import ccr.physics.defs.readMicroVector3
 import ccr.net.replication.NetworkObjectManager
 import ccr.server.defs.BuildingGameObjDef
-import ccr.server.defs.PhysDefClass
+import ccr.physics.defs.PhysDefClass
 import ccr.server.defs.SimpleGameObjDef
 import ccr.server.defs.VehicleGameObjDef
 import ccr.server.level.ChunkIds

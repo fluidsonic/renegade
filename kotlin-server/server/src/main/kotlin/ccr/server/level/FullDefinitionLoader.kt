@@ -2,6 +2,7 @@ package ccr.server.level
 
 import ccr.physics.defs.*
 import ccr.physics.defs.phys.*
+import ccr.physics.defs.DefinitionClass
 import ccr.server.defs.*
 import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer

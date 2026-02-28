@@ -4,7 +4,7 @@ import ccr.server.defs.BeaconGameObjDef
 import ccr.server.defs.BuildingGameObjDef
 import ccr.server.defs.C4GameObjDef
 import ccr.server.defs.CinematicGameObjDef
-import ccr.server.defs.DefinitionClass
+import ccr.physics.defs.DefinitionClass
 import ccr.server.defs.PhysicalGameObjDef
 import ccr.server.defs.PowerUpGameObjDef
 import ccr.server.defs.SimpleGameObjDef

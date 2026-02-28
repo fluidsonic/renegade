@@ -1,11 +1,24 @@
 package ccr.server.defs
 
+import ccr.physics.defs.readMicroBool as physReadMicroBool
+import ccr.physics.defs.readMicroFloat as physReadMicroFloat
+import ccr.physics.defs.readMicroFloatAt as physReadMicroFloatAt
+import ccr.physics.defs.readMicroInt as physReadMicroInt
+import ccr.physics.defs.readMicroString as physReadMicroString
+import ccr.physics.defs.readMicroVector3 as physReadMicroVector3
 import ccr.server.core.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-// Basic micro-chunk readers are in ccr.physics.defs (readMicroInt, readMicroFloat,
-// readMicroBool, readMicroString, readMicroFloatAt, readMicroVector3).
+// Re-export the basic micro-chunk readers so server defs files in this package
+// don't need explicit imports from ccr.physics.defs.
+fun ChunkReader.readMicroInt(id: Int): Int? = physReadMicroInt(id)
+fun ChunkReader.readMicroFloat(id: Int): Float? = physReadMicroFloat(id)
+fun ChunkReader.readMicroBool(id: Int): Boolean? = physReadMicroBool(id)
+fun ChunkReader.readMicroString(id: Int): String? = physReadMicroString(id)
+fun ChunkReader.readMicroFloatAt(id: Int, byteOffset: Int): Float? = physReadMicroFloatAt(id, byteOffset)
+fun ChunkReader.readMicroVector3(id: Int): ccr.math.Vector3? = physReadMicroVector3(id)
+
 // The functions below require server.level types and remain in the server module.
 
 fun ChunkReader.readMicroMatrix3D(id: Int): ccr.server.level.Matrix3D? {

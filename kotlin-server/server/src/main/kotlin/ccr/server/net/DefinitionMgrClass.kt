@@ -1,6 +1,6 @@
 package ccr.server.net
 
-import ccr.server.defs.DefinitionClass
+import ccr.physics.defs.DefinitionClass
 import ccr.server.level.DefinitionRegistry
 
 // C++: DefinitionMgrClass (wwsaveload/definitionmgr.h) — server-side registry

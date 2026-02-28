@@ -47,7 +47,7 @@ import ccr.physics.scene.PhysicsScene
 import ccr.server.level.PhysicsSceneBuilder
 import ccr.server.defs.AmmoDefinitionClass
 import ccr.server.defs.WeaponDefinitionClass
-import ccr.server.defs.DoorPhysDefClass
+import ccr.physics.defs.DoorPhysDefClass
 import ccr.server.defs.PowerUpGameObjDef
 import ccr.server.defs.RefineryGameObjDef
 import ccr.math.OBBox
