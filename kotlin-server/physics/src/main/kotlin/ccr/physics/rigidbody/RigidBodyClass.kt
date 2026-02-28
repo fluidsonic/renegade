@@ -39,6 +39,9 @@ abstract class RigidBodyClass : MoveablePhysClass(), OdeSystem {
 
     var state: RigidBodyState = RigidBodyState()
 
+    // C++: RigidBodyClass::Get_Orientation() — returns State.Orientation
+    val orientation: Quaternion get() = state.orientation
+
     // Derived quantities (recomputed after integration)
     var rotation: Matrix3 = Matrix3.IDENTITY
         private set
