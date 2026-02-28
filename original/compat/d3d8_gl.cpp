@@ -491,46 +491,6 @@ struct D3D8IndexBuffer_GL : public IDirect3DIndexBuffer8 {
     HRESULT GetDesc(void* d) override { return S_OK; }
 };
 
-// ---------------------------------------------------------------------------
-// Per-frame render stats — printed once per second
-// ---------------------------------------------------------------------------
-struct FrameStats {
-    unsigned drawCalls      = 0;  // DrawIndexedPrimitive + DrawPrimitive
-    unsigned drawUPCalls    = 0;  // DrawIndexedPrimitiveUP + DrawPrimitiveUP
-    unsigned setTexture     = 0;  // SetTexture
-    unsigned setTransform   = 0;  // SetTransform
-    unsigned setRenderState = 0;  // SetRenderState
-    unsigned createTexture  = 0;  // CreateTexture (lifetime, not per-frame)
-    unsigned frames         = 0;
-    unsigned setMaterial    = 0;  // SetMaterial calls arriving from DX8Wrapper
-    unsigned matSkipped     = 0;  // SetMaterial calls skipped by content dedup
-    unsigned applyGLFull    = 0;  // Apply_GL_State calls where dirty != 0
-    unsigned applyGLSkip    = 0;  // Apply_GL_State calls where dirty == 0 (fully skipped)
-};
-static FrameStats s_stats;
-static FrameStats s_reported;       // stats as of last report
-static unsigned   s_report_frame = 0;
-
-static void report_frame_stats(void)
-{
-    s_stats.frames++;
-    s_report_frame++;
-    // Print once per 300 frames (~5s) — but only if something changed
-    if (s_report_frame % 300 == 0) {
-        fprintf(stderr,
-            "[d3d8] frame %u: draw=%u drawUP=%u setTex=%u setXform=%u setRS=%u setMat=%u(skip=%u) applyGL=%u(skip=%u) (createTex=%u total)\n",
-            s_stats.frames,
-            s_stats.drawCalls, s_stats.drawUPCalls,
-            s_stats.setTexture, s_stats.setTransform, s_stats.setRenderState,
-            s_stats.setMaterial, s_stats.matSkipped,
-            s_stats.applyGLFull, s_stats.applyGLSkip,
-            s_stats.createTexture);
-        // Reset per-frame counters; keep createTexture (lifetime)
-        unsigned saved_create = s_stats.createTexture;
-        s_stats = FrameStats{};
-        s_stats.createTexture = saved_create;
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Helpers: D3D → GL conversions
@@ -768,10 +728,8 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         // Skip if no flags this function can actually handle are set.
         // DIRTY_TRANSFORMS and DIRTY_LIGHTS are handled by Apply_GL_Transforms(), not here.
         if (!(dirty & ~(uint32_t)(DIRTY_TRANSFORMS | DIRTY_LIGHTS))) {
-            s_stats.applyGLSkip++;
             return;
         }
-        s_stats.applyGLFull++;
 
         // -- Alpha blending + blend op --
         if (dirty & DIRTY_BLEND) {
@@ -1333,7 +1291,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     }
 
     HRESULT BeginScene() override { return S_OK; }
-    HRESULT EndScene()   override { report_frame_stats(); return S_OK; }
+    HRESULT EndScene()   override { return S_OK; }
 
     HRESULT Clear(DWORD count, const D3DRECT* pRects, DWORD flags, D3DCOLOR color, float z, DWORD stencil) override {
         float r = ColorComponent(color, 16);
@@ -1385,15 +1343,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     // State store — track for Apply_GL_State()
     HRESULT SetRenderState(D3DRENDERSTATETYPE state, DWORD value) override {
-        s_stats.setRenderState++;
         if ((uint32_t)state < 256) {
-            // Log alpha-blend state changes (before dedup, so we see all calls)
-            if (state == 27 /*D3DRS_ALPHABLENDENABLE*/) {
-                static unsigned s_ab_count = 0;
-                if (++s_ab_count <= 12)
-                    fprintf(stderr, "[RS] #%u ALPHABLENDENABLE=%u (was %u)\n",
-                            s_ab_count, (unsigned)value, (unsigned)rs[27]);
-            }
             if (rs[state] == value) return S_OK;  // content dedup
             rs[state] = value;
             dirty |= rs_dirty_flag((uint32_t)state);
@@ -1405,7 +1355,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         return S_OK;
     }
     HRESULT SetTransform(D3DTRANSFORMSTATETYPE type, const D3DMATRIX* m) override {
-        s_stats.setTransform++;
         if (!m) return S_OK;
         if (type >= D3DTS_TEXTURE0 && type <= D3DTS_TEXTURE7) {
             texMatrix[type - D3DTS_TEXTURE0] = *m;
@@ -1433,25 +1382,12 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     }
     HRESULT MultiplyTransform(D3DTRANSFORMSTATETYPE, const D3DMATRIX*) override { return S_OK; }
     HRESULT SetMaterial(const D3DMATERIAL8* mat) override {
-        s_stats.setMaterial++;
         if (mat) {
             if (memcmp(&material, mat, sizeof(D3DMATERIAL8)) == 0) {
-                s_stats.matSkipped++;
                 return S_OK;
             }
             material = *mat;
             dirty |= DIRTY_LIGHTING;
-            // Log only first few distinct materials
-            static unsigned s_mat_count = 0;
-            if (s_mat_count < 20) {
-                fprintf(stderr, "[tex] SetMaterial #%u: diff=(%.2f,%.2f,%.2f,%.2f) amb=(%.2f,%.2f,%.2f,%.2f) emis=(%.2f,%.2f,%.2f,%.2f)\n",
-                        ++s_mat_count,
-                        (double)mat->Diffuse.r,  (double)mat->Diffuse.g,  (double)mat->Diffuse.b,  (double)mat->Diffuse.a,
-                        (double)mat->Ambient.r,  (double)mat->Ambient.g,  (double)mat->Ambient.b,  (double)mat->Ambient.a,
-                        (double)mat->Emissive.r, (double)mat->Emissive.g, (double)mat->Emissive.b, (double)mat->Emissive.a);
-            } else {
-                ++s_mat_count;
-            }
         }
         return S_OK;
     }
@@ -1484,17 +1420,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     HRESULT SetClipPlane(DWORD, const float*) override { return S_OK; }
     HRESULT GetClipPlane(DWORD, float* p)     override { if(p) memset(p,0,16); return S_OK; }
     HRESULT SetTexture(DWORD stage, IDirect3DBaseTexture8* tex) override {
-        s_stats.setTexture++;
         D3D8Texture_GL* t = static_cast<D3D8Texture_GL*>(tex);
-        if (stage == 0) {
-            static unsigned s_st_count = 0;
-            if (++s_st_count <= 20) {
-                fprintf(stderr, "[ST0] #%u ptr=%p glId=%u %ux%u fmt=%u\n",
-                        s_st_count, (void*)t,
-                        t ? t->glTexId : 0, t ? t->width : 0, t ? t->height : 0,
-                        t ? (unsigned)t->fmt : 0);
-            }
-        }
         if (stage < 8) {
             if (currentTextures[stage] == t) return S_OK;  // content dedup
             currentTextures[stage] = t;
@@ -1593,9 +1519,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         if (!pp) return E_POINTER;
         auto* newtex = new D3D8Texture_GL(w, h, fmt, levels);
         *pp = newtex;
-        s_stats.createTexture++;
-        fprintf(stderr, "[tex] CreateTexture #%u: %ux%u fmt=%u levels=%u pool=%u ptr=%p\n",
-                s_stats.createTexture, w, h, (unsigned)fmt, levels, (unsigned)pool, (void*)newtex);
         return S_OK;
     }
     HRESULT CreateVolumeTexture(UINT,UINT,UINT,UINT,DWORD,D3DFORMAT,D3DPOOL,IDirect3DVolumeTexture8** pp) override {
@@ -1826,7 +1749,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     }
 
     HRESULT DrawPrimitive(D3DPRIMITIVETYPE type, UINT startVertex, UINT primCount) override {
-        s_stats.drawCalls++;
         if (!currentVB || !currentVB->data) return S_OK;
         UINT vertCount = prim_vertex_count(type, primCount);
         FVFLayout L = Compute_FVF_Layout(currentFVF);
@@ -1844,7 +1766,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     HRESULT DrawIndexedPrimitive(D3DPRIMITIVETYPE type, UINT minVtxIdx, UINT vtxCount,
                                   UINT startIdx, UINT primCount) override {
-        s_stats.drawCalls++;
         if (!currentVB || !currentVB->data || !currentIB || !currentIB->data) return S_OK;
         const unsigned short* indices = (const unsigned short*)currentIB->data + startIdx;
         GL_Draw_Prim_Indexed(type, currentVB->data, currentVBStride,
@@ -1854,7 +1775,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     HRESULT DrawPrimitiveUP(D3DPRIMITIVETYPE type, UINT primCount,
                              const void* pVtx, UINT stride) override {
-        s_stats.drawUPCalls++;
         if (!pVtx) return S_OK;
         UINT vertCount = prim_vertex_count(type, primCount);
         FVFLayout L = Compute_FVF_Layout(currentFVF);
@@ -1872,7 +1792,6 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     HRESULT DrawIndexedPrimitiveUP(D3DPRIMITIVETYPE type, UINT minVtxIdx, UINT vtxCount,
                                     UINT primCount, const void* pIdxData, D3DFORMAT idxFmt,
                                     const void* pVtxData, UINT stride) override {
-        s_stats.drawUPCalls++;
         if (!pIdxData || !pVtxData) return S_OK;
         const unsigned short* indices = (const unsigned short*)pIdxData;
         // minVtxIdx is the minimum index value (a range hint), not a vertex offset.

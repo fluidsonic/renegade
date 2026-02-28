@@ -104,7 +104,8 @@ void ConsoleGameModeClass::Load_Registry_Keys(void)
 	RegistryClass * registry = new RegistryClass( APPLICATION_SUB_KEY_NAME_OPTIONS );
 	if ( registry->Is_Valid() ) {
 
-      WW3D::Set_Screen_UV_Bias( registry->Get_Int( "ScreenUVBias", 1 ) != 0 );
+      // GL rendering doesn't need the D3D8 half-texel center correction
+      WW3D::Set_Screen_UV_Bias( registry->Get_Int( "ScreenUVBias", 0 ) != 0 );
 
       Get_Console()->Set_FPS_Active( registry->Get_Int( "FPS", 1 ) != 0 );
 	}
