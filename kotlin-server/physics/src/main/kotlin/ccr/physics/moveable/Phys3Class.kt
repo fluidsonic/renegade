@@ -103,7 +103,6 @@ abstract class Phys3Class : MoveablePhysClass() {
             moveMode = MoveMode.NORMAL_MOVE
             normalMove(dt, sc)
         }
-        println("[PHYS] timestep END   pos=$position vel=$velocity onGround=${groundState.onGround}")
     }
 
     /**
@@ -139,7 +138,6 @@ abstract class Phys3Class : MoveablePhysClass() {
             if (snapDown > GROUND_EPSILON) {
                 position = Vector3(position.x, position.y, position.z - (snapDown - GROUND_EPSILON))
             }
-            println("[PHYS] snapToGround snapped down ${snapDown - GROUND_EPSILON}")
         }
         // Case 2: non-walkable slope — don't snap (slide mode handles it)
     }
