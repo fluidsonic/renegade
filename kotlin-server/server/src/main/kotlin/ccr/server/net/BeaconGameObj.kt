@@ -365,7 +365,7 @@ class BeaconGameObj() : SimpleGameObj() {
                     }
 
                     // C++: Notify base controllers the beacon is armed
-                    val base = BaseControllerClass.findBase(getPlayerType())
+                    val base = BaseControllerClass.findBase(playerType)
                     base?.onBeaconArmed(this)
 
                     preDetonateTimer = maxOf(getDefinition().preDetonateCinematicDelay, 0.001f)
@@ -390,7 +390,7 @@ class BeaconGameObj() : SimpleGameObj() {
                 }
 
                 // C++: Notify base that the beacon is disarmed
-                val base = BaseControllerClass.findBase(getPlayerType())
+                val base = BaseControllerClass.findBase(playerType)
                 base?.onBeaconDisarmed(this)
 
                 // C++: Stop cinematic
@@ -463,7 +463,7 @@ class BeaconGameObj() : SimpleGameObj() {
             STATE_ARMING -> {
                 // C++: Update the action bar in the HUD
                 val percent = 1.0f - stateTimer / getDefinition().armTime
-                HUDInfo.setActionStatusValue(percent)
+                HUDInfo.actionStatusValue = percent
 
                 // C++: Did the player successfully arm the beacon?
                 if (stateTimer <= 0f) {
@@ -478,7 +478,7 @@ class BeaconGameObj() : SimpleGameObj() {
                         warningTimer = 0f
 
                         // C++: Notify base controller beacon warning
-                        val base = BaseControllerClass.findBase(getPlayerType())
+                        val base = BaseControllerClass.findBase(playerType)
                         base?.onBeaconWarning(this)
                     }
                 }
@@ -518,7 +518,7 @@ class BeaconGameObj() : SimpleGameObj() {
 
     // C++: BaseControllerClass* Get_Enemy_Base() — private
     private fun getEnemyBase(): BaseControllerClass? {
-        val enemyType = if (getPlayerType() == PLAYERTYPE_GDI) PLAYERTYPE_NOD else PLAYERTYPE_GDI
+        val enemyType = if (playerType == PLAYERTYPE_GDI) PLAYERTYPE_NOD else PLAYERTYPE_GDI
         return BaseControllerClass.findBase(enemyType)
     }
 

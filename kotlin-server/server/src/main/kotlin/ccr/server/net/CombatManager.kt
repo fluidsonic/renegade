@@ -10,7 +10,6 @@ object CombatManager {
     var beaconPlacementEndsGame: Boolean = false
     var areObserversActive: Boolean = true
     var networkHandler: CombatNetworkHandlerClass? = null
-    @get:JvmName("difficultyLevelField")
     var difficultyLevel: Int = 1
     var isGameplayPermittedFlag: Boolean = false
 

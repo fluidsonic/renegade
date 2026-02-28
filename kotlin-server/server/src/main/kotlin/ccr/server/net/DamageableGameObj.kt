@@ -44,15 +44,9 @@ abstract class DamageableGameObj : ScriptableGameObj() {
     var shieldType: Int       get() = defenseObject.shieldType;     set(v) { defenseObject.shieldType = v }
 
     // C++: int PlayerType — Set_Player_Type also sets BIT_RARE dirty
-    // Private backing field + @Suppress("INAPPLICABLE_JVM_NAME") allows @get:JvmName on open var,
-    // renaming the auto-generated property getter so it no longer clashes with fun getPlayerType().
-    private var _playerType: Int = PLAYERTYPE_NEUTRAL
-    @Suppress("INAPPLICABLE_JVM_NAME")
-    @get:JvmName("playerTypeField")
-    open var playerType: Int
-        get() = _playerType
+    open var playerType: Int = PLAYERTYPE_NEUTRAL
         set(value) {
-            _playerType = value
+            field = value
             setObjectDirtyBit(BIT_RARE, true)
         }
 

@@ -566,8 +566,6 @@ object HUDInfo {
     // C++: static bool DisplayActionBar = false
     var displayActionBar: Boolean = false
     // C++: static float ActionStatusValue = 0
-    // @get/@set JvmName avoid clash with explicit getActionStatusValue()/setActionStatusValue() below.
-    @get:JvmName("actionStatusValueField") @set:JvmName("setActionStatusValueField")
     var actionStatusValue: Float = 0f
 
     fun getInformation(obj: Any?): String = ""
@@ -578,10 +576,7 @@ object HUDInfo {
     fun displayActionStatusBar(onoff: Boolean) { displayActionBar = onoff }
     // C++: static bool Display_Action_Status_Bar() { return DisplayActionBar; }
     fun displayActionStatusBar(): Boolean = displayActionBar
-    // C++: static void Set_Action_Status_Value(float value) { ActionStatusValue = value; }
-    fun setActionStatusValue(value: Float) { actionStatusValue = value }
-    // C++: static float Get_Action_Status_Value() { return ActionStatusValue; }
-    fun getActionStatusValue(): Float = actionStatusValue
+    // C++: Get_Action_Status_Value / Set_Action_Status_Value — use .actionStatusValue property directly
 }
 
 // C++: GlobalSettingsDefClass instance returned by GlobalSettingsDef.getGlobalSettings()

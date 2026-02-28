@@ -893,7 +893,7 @@ open class VehicleGameObj() : SmartGameObj() {
         vehicleDelivered = packet.getBool()
 
         if (!wasDelivered && vehicleDelivered) {
-            val base = BaseControllerClass.findBase(getPlayerType())
+            val base = BaseControllerClass.findBase(playerType)
             base?.onVehicleDelivered(this)
         }
     }
@@ -1212,7 +1212,7 @@ open class VehicleGameObj() : SmartGameObj() {
         val sb = StringBuilder()
         sb.append("ID:    ${networkId}\n")
         sb.append("NAME:  ${definition?.name ?: ""}\n")
-        sb.append("TEAM:  ${getPlayerType()}\n")
+        sb.append("TEAM:  ${playerType}\n")
         sb.append("CONTR: $controlOwner\n")
         val pos = getPosition()
         sb.append("POS:   ${pos.x}, ${pos.y}, ${pos.z}\n")
