@@ -16,16 +16,23 @@ open class HumanPhysClass : Phys3Class() {
 
     override fun asHumanPhysClass(): HumanPhysClass = this
 
-    // C++: HumanPhysClass::Get_Heading() / Set_Heading() — inherited from Phys3Class
-    // C++: HumanPhysClass::Get_Velocity() / Set_Velocity() — inherited from MoveablePhysClass
-    // C++: HumanPhysClass::Is_In_Contact() — inherited from Phys3Class
-    // C++: HumanPhysClass::Set_Immovable() — inherited from PhysClass
-    // C++: HumanPhysClass::Get_Animation_Move() / Reset_Animation_Move() — inherited from Phys3Class
+    // C++: HumanPhysClass::Get_Heading() / Set_Heading()
+    open fun getHeading(): Float = heading
+    open fun setHeading(h: Float) { heading = h }
+    // C++: HumanPhysClass::Get_Velocity() / Set_Velocity()
+    open fun getVelocity(): Vector3 = velocity.copy()
+    open fun setVelocity(v: Vector3) { velocity = v }
+    // C++: HumanPhysClass::Is_In_Contact() — soldier is on the ground
+    open fun isInContact(): Boolean = onGround
+    // C++: HumanPhysClass::Set_Immovable()
+    open fun setImmovable(immovable: Boolean) { isImmovable = immovable }
+    // C++: HumanPhysClass::Get_Animation_Move() — animation-driven movement delta; stub
+    open fun getAnimationMove(out: Vector3) { out.x = 0f; out.y = 0f; out.z = 0f }
+    // C++: HumanPhysClass::Reset_Animation_Move() — clears accumulated animation delta; stub
+    open fun resetAnimationMove() {}
 
     // C++: HumanPhysClass::Get_Collision_Box() — returns the collision box
     open fun getCollisionBox(): AABox = collisionBox
-    // C++: HumanPhysClass::Set_In_Contact() — override contact state
-    open fun setInContact(contact: Boolean) { onGround = contact }
     // C++: HumanPhysClass::Find_Teleport_Location() — stub; server does no geometry lookup
     open fun findTeleportLocation(pos: Vector3, maxPerturb: Float, result: Vector3): Boolean {
         result.x = pos.x; result.y = pos.y; result.z = pos.z
