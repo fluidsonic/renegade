@@ -195,12 +195,6 @@ open class AudibleSoundClass : SoundSceneObjClass() {
     // C++: const char* Get_String() — returns display text from definition
     fun getString(): String? = definition?.displayText
 
-    // C++: void Set_Pitch_Factor(float pitch)
-    fun setPitchFactor(pitch: Float) { pitchFactor = pitch }
-
-    // C++: float Get_Pitch_Factor()
-    fun getPitchFactor(): Float = pitchFactor
-
     // Overload: setTransform accepting a Vector3 (position only) — matches C++ usage in BeaconGameObj etc.
     fun setTransform(center: Vector3) {
         _transform = _transform.withTranslation(center)

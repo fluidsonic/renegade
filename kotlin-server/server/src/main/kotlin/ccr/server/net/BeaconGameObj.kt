@@ -436,7 +436,7 @@ class BeaconGameObj() : SimpleGameObj() {
             // C++: Tweak the pitch of the armed sound
             armedSound?.let { sound ->
                 val percent = 1.0f - detonateTimer / getDefinition().detonateTime
-                sound.setPitchFactor(1.0f + percent * 5.0f)
+                sound.pitchFactor = 1.0f + percent * 5.0f
             }
 
             // C++: Check to see if we've exploded

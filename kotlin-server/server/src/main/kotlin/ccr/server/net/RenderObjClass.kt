@@ -91,7 +91,7 @@ open class RenderObjClass {
     // C++: mutable SphereClass CachedBoundingSphere
     protected var cachedBoundingSphere: Sphere = Sphere(Vector3(), 0f)
 
-    // C++: mutable AABoxClass CachedBoundingBox
+    // C++: mutable AABox CachedBoundingBox
     protected var cachedBoundingBox: AABox = AABox(Vector3(), Vector3())
 
     // C++: float NativeScreenSize
@@ -317,7 +317,7 @@ open class RenderObjClass {
         return cachedBoundingSphere
     }
 
-    // C++: virtual const AABoxClass& Get_Bounding_Box() const  (lazy cache)
+    // C++: virtual const AABox& Get_Bounding_Box() const  (lazy cache)
     fun getBoundingBox(): AABox {
         if ((bits and BOUNDING_VOLUMES_VALID) == 0) {
             updateCachedBoundingVolumes()
@@ -328,7 +328,7 @@ open class RenderObjClass {
     // C++: virtual void Get_Obj_Space_Bounding_Sphere(SphereClass& sphere) const
     open fun getObjSpaceBoundingSphere(): Sphere = Sphere(Vector3(), 0f)
 
-    // C++: virtual void Get_Obj_Space_Bounding_Box(AABoxClass& box) const
+    // C++: virtual void Get_Obj_Space_Bounding_Box(AABox& box) const
     open fun getObjSpaceBoundingBox(): AABox = AABox(Vector3(), Vector3())
 
     // C++: virtual void Update_Obj_Space_Bounding_Volumes() {}

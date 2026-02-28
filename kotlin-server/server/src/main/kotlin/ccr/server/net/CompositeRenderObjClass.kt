@@ -17,7 +17,7 @@ open class CompositeRenderObjClass : RenderObjClass() {
     // C++: SphereClass ObjSphere
     protected var objSphere: Sphere = Sphere(Vector3(), 0f)
 
-    // C++: AABoxClass ObjBox
+    // C++: AABox ObjBox
     protected var objBox: AABox = AABox(Vector3(), Vector3())
 
     // -------------------------------------------------------------------------
@@ -39,7 +39,7 @@ open class CompositeRenderObjClass : RenderObjClass() {
     // C++: virtual void Get_Obj_Space_Bounding_Sphere(SphereClass& sphere) const { sphere = ObjSphere; }
     override fun getObjSpaceBoundingSphere(): Sphere = objSphere
 
-    // C++: virtual void Get_Obj_Space_Bounding_Box(AABoxClass& box) const { box = ObjBox; }
+    // C++: virtual void Get_Obj_Space_Bounding_Box(AABox& box) const { box = ObjBox; }
     override fun getObjSpaceBoundingBox(): AABox = objBox
 
     // C++: virtual void Update_Obj_Space_Bounding_Volumes()

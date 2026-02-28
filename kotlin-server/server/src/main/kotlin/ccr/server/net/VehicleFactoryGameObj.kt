@@ -307,8 +307,8 @@ open class VehicleFactoryGameObj() : BuildingGameObj() {
         // C++: PathfindClass* pathfind = PathfindClass::Get_Instance()
         val pathfind = PathfindClass.getInstance() ?: return
 
-        // C++: AABoxClass box; box.Center = GeneratingRegion.Center; box.Extent = GeneratingRegion.Extent
-        val box = generatingRegion.toAABox()
+        // C++: AABox box; box.Center = GeneratingRegion.Center; box.Extent = GeneratingRegion.Extent
+        val box = AABox(generatingRegion.center, generatingRegion.extent)
 
         // C++: WaypathClass* path = pathfind->Get_Waypath_Starting_In_Box(box, LastDeliveryPath)
         val path = pathfind.getWaypathStartingInBox(box, lastDeliveryPath) ?: return

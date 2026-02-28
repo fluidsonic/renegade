@@ -37,7 +37,7 @@ class AABoxIntersectionTest(
         return false
     }
 
-    /** C++: AABoxIntersectionTestClass::Cull(const AABoxClass& box) */
+    /** C++: AABoxIntersectionTestClass::Cull(const AABox& box) */
     fun cull(cullBox: AABox): Boolean {
         val dc = cullBox.center - box.center
         val r = cullBox.extent + box.extent

@@ -21,9 +21,6 @@ open class Sound3DClass : AudibleSoundClass() {
     // C++: bool m_IsStatic
     var isStatic: Boolean = false
 
-    // C++: void Set_Max_Vol_Radius(float)
-    fun setMaxVolRadius(radius: Float) { maxVolRadius = radius }
-
     // C++: virtual void Set_Velocity(const Vector3&)
     open fun setVelocity(vel: Vector3) { currentVelocity = vel }
 

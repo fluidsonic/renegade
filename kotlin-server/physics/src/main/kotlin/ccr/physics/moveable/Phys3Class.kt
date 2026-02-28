@@ -39,7 +39,7 @@ open class Phys3Class : MoveablePhysClass() {
     // Matches C++ Phys3Class::MoveModeType enum (phys3.h:184-191)
     enum class MoveMode { USER_OVERRIDE, BALLISTIC_MOVE, SLIDE_MOVE, NORMAL_MOVE, COLLIDE_MOVE }
 
-    // Object-space collision box (mirrors C++ Phys3Class::CollisionBox, AABoxClass with Center+Extent).
+    // Object-space collision box (mirrors C++ Phys3Class::CollisionBox, AABox with Center+Extent).
     // Kotlin: extent=(0.3,0.3,0.9), center=(0,0,0.9) -- box bottom at feet, top 1.8 units up.
     @get:JvmName("collisionBoxField") @set:JvmName("setCollisionBoxField")
     var collisionBox: AABox = AABox(Vector3(0f, 0f, 0.9f), Vector3(0.3f, 0.3f, 0.9f))
@@ -209,7 +209,7 @@ open class Phys3Class : MoveablePhysClass() {
      *
      * Pure ground-state-gathering function. NO mode transitions, NO velocity changes.
      *
-     * C++ signature: Check_Ground(const AABoxClass & box, GroundStateStruct * gs, float check_dist)
+     * C++ signature: Check_Ground(const AABox & box, GroundStateStruct * gs, float check_dist)
      * Called with: Compute_WS_Collision_Box(State, &box); Check_Ground(box, &GroundState, GROUND_DISTANCE);
      *
      * 1. Cast wsBox downward by GROUND_DISTANCE (0.1f)

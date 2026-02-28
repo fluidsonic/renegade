@@ -1,6 +1,6 @@
 package ccr.server.level
 
-import ccr.server.defs.DefinitionClass
+import ccr.physics.defs.DefinitionClass
 import java.util.TreeMap
 
 /**

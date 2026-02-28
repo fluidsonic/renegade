@@ -1625,7 +1625,7 @@ open class MendozaBossGameObj : SoldierGameObj() {
     // Moves Mendoza through the air with AABox collision check against the star's model.
     // Returns true if contact was made.
     private fun flyMove(vector: Vector3): Boolean {
-        // C++: AABoxClass collision_box + move vector → Cast_AABox against COMBAT_STAR model
+        // C++: AABox collision_box + move vector → Cast_AABox against COMBAT_STAR model
         // FIXME: physics collision query not wired in server
         // val newPos = mendozaPos + vector
         // setPosition(newPos)

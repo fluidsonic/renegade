@@ -2194,9 +2194,9 @@ open class SoldierGameObj() : SmartGameObj() {
 	// C++: bool Is_Safe_To_Disable_Ghost_Collision(const Vector3&)
 	fun isSafeToDisableGhostCollision(currPos: Vector3): Boolean {
 		val boxPos = currPos + Vector3(0f, 0f, HUMAN_HALF_HEIGHT)
-		val box = AABoxClass(boxPos, PERSONAL_SPACE_BOX_SIZE)
+		val box = AABox(boxPos, PERSONAL_SPACE_BOX_SIZE)
 		val objList = NonRefPhysListClass()
-		PhysicsScene.getInstance().collectObjects(box, false, true, objList)
+		PhysicsSceneClass.getInstance()?.let { scene -> objList.addAll(scene.collectObjects(box.toMathAABox())) }
 
 		for (physObj in objList) {
 			val gameObj = physObj.asHumanPhysClass()?.getObserver()?.let {
@@ -2206,7 +2206,7 @@ open class SoldierGameObj() : SmartGameObj() {
 				val soldierObj = gameObj.asSoldierGameObj()
 				if (soldierObj != null && !soldierObj.isDestroyed()) {
 					val blockPos = gameObj.getPosition()
-					val blockBox = AABoxClass(blockPos + Vector3(0f, 0f, 1f), Vector3(0.3f, 0.3f, 1f))
+					val blockBox = AABox(blockPos + Vector3(0f, 0f, 1f), Vector3(0.3f, 0.3f, 1f))
 					if (CollisionMath.overlapTest(box, blockBox) != CollisionMath.OUTSIDE) {
 						return false
 					}
@@ -2221,9 +2221,9 @@ open class SoldierGameObj() : SmartGameObj() {
 		if ((getAction() != null && getAction()!!.isBusy()) || isDestroyed()) return false
 
 		val boxPos = currPos + Vector3(0f, 0f, HUMAN_HALF_HEIGHT)
-		val box = AABoxClass(boxPos, PERSONAL_SPACE_BOX_SIZE)
+		val box = AABox(boxPos, PERSONAL_SPACE_BOX_SIZE)
 		val objList = NonRefPhysListClass()
-		PhysicsScene.getInstance().collectObjects(box, false, true, objList)
+		PhysicsSceneClass.getInstance()?.let { scene -> objList.addAll(scene.collectObjects(box.toMathAABox())) }
 
 		val myId = getId()
 		var smallestId = myId
@@ -2236,7 +2236,7 @@ open class SoldierGameObj() : SmartGameObj() {
 				val soldierObj = gameObj.asSoldierGameObj()
 				if (soldierObj != null && !soldierObj.isDestroyed()) {
 					val blockPos = gameObj.getPosition()
-					val blockBox = AABoxClass(blockPos + Vector3(0f, 0f, 1f), Vector3(0.3f, 0.3f, 1f))
+					val blockBox = AABox(blockPos + Vector3(0f, 0f, 1f), Vector3(0.3f, 0.3f, 1f))
 					if (CollisionMath.overlapTest(box, blockBox) != CollisionMath.OUTSIDE) {
 						val smartObj = gameObj.asSmartGameObj()
 						if (smartObj != null && !smartObj.isHumanControlled()) {

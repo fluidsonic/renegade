@@ -131,7 +131,7 @@ object PathfindLoader {
 
         variablesChunk.forEachMicroChunk { id, data ->
             when (id) {
-                1 -> { // VARID_BOUNDING_BOX — AABoxClass: center(3f) + extent(3f) = 24 bytes
+                1 -> { // VARID_BOUNDING_BOX — AABox: center(3f) + extent(3f) = 24 bytes
                     if (data.size >= 24) {
                         center = data.toVector3(0)
                         extent = data.toVector3(12)
@@ -174,7 +174,7 @@ object PathfindLoader {
 
         variablesChunk.forEachMicroChunk { microId, data ->
             when (microId) {
-                1 -> { // VARID_BOUNDING_BOX — AABoxClass (24 bytes)
+                1 -> { // VARID_BOUNDING_BOX — AABox (24 bytes)
                     if (data.size >= 24) {
                         center = data.toVector3(0)
                         extent = data.toVector3(12)

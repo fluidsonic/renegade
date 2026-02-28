@@ -104,7 +104,7 @@ open class AnimControlClass {
     fun save(csave: ChunkSaveClass): Unit = Unit
     fun load(cload: ChunkLoadClass): Unit = Unit
     fun peekCarrierObject(): Any? = null
-    fun peekAnimation(): Animatable3DObjClass? = null
+    fun peekAnimation(): HAnimClass? = null
     fun peekModel(): RenderObjClass? = null
     fun resetAnimUpdate(): Unit = Unit
     /** C++: char AnimControlClass::Get_Skeleton() — returns skeleton type character ('V' = vehicle, etc). */
@@ -632,8 +632,8 @@ class PathfindClass {
     fun attackObject(target: Any?, range: Float): Unit = TODO("stub")
     fun stop(): Unit = TODO("stub")
     fun reset(): Unit = TODO("stub")
-    fun getWaypathStartingInBox(box: AABoxClass, lastIndex: Int): WaypathClass? = null
-    fun countWaypathsStartingInBox(box: AABoxClass): Int = 1
+    fun getWaypathStartingInBox(box: AABox, lastIndex: Int): WaypathClass? = null
+    fun countWaypathsStartingInBox(box: AABox): Int = 1
 
     companion object {
         fun getInstance(): PathfindClass? = null
@@ -643,18 +643,10 @@ class PathfindClass {
 // C++: NonRefPhysListClass — unowned list of physics objects (iterable via delegation)
 class NonRefPhysListClass : MutableList<PhysClass> by mutableListOf()
 
-// C++: AABoxClass — axis-aligned bounding box
-class AABoxClass(val center: Vector3 = Vector3(), val extent: Vector3 = Vector3()) {
-    fun toAABox(): AABoxClass = this
-}
-
 // C++: WaypathClass — waypath for vehicle delivery routing
 class WaypathClass {
     fun getId(): Int = 0
 }
-
-// C++: OBBoxClass::toAABox — convert oriented box to axis-aligned box
-fun ccr.server.defs.OBBoxClass.toAABox(): AABoxClass = AABoxClass(center, extent)
 
 // C++: LineSegClass — line segment
 class LineSegClass(val start: Vector3 = Vector3(), val end: Vector3 = Vector3())
@@ -675,7 +667,7 @@ class PhysRayCollisionTestClass(
 
 // C++: PhysAABoxIntersectionTestClass — AABB vs physics scene test
 class PhysAABoxIntersectionTestClass(
-    val box: AABoxClass = AABoxClass(),
+    val box: AABox = AABox(),
     val collisionGroup: Int = 0,
     val collisionType: Int = 0,
 )
@@ -928,8 +920,8 @@ object CollisionMath {
     fun overlapTest(box: ccr.server.defs.OBBoxClass, pos: Vector3): ccr.physics.collision.OverlapType =
         ccr.physics.collision.OverlapType.OUTSIDE
 
-    // C++: CollisionMath::Overlap_Test(AABoxClass, AABoxClass) — simple AABB overlap test
-    fun overlapTest(a: AABoxClass, b: AABoxClass): ccr.physics.collision.OverlapType {
+    // C++: CollisionMath::Overlap_Test(AABox, AABox) — simple AABB overlap test
+    fun overlapTest(a: AABox, b: AABox): ccr.physics.collision.OverlapType {
         val ax0 = a.center.x - a.extent.x; val ax1 = a.center.x + a.extent.x
         val ay0 = a.center.y - a.extent.y; val ay1 = a.center.y + a.extent.y
         val az0 = a.center.z - a.extent.z; val az1 = a.center.z + a.extent.z

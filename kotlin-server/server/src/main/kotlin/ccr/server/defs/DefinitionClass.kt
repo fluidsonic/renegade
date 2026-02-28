@@ -1,14 +1,6 @@
 package ccr.server.defs
 
-/**
- * Base class mirroring the C++ DefinitionClass (wwsaveload/definition.h).
- *
- * Fields [name] and [id] correspond to m_Name and m_ID parsed from
- * DefinitionClass::Save_Variables micro-chunks (VARID 0x01 and 0x03).
- * [chunkId] is the persist factory chunk ID from the outer chunk wrapper.
- */
-open class DefinitionClass(
-    val name: String,
-    val id: UInt,
-    val chunkId: UInt,
-)
+// DefinitionClass has moved to ccr.physics.defs.
+// This typealias preserves backward compatibility for server module code that
+// imports ccr.server.defs.DefinitionClass.
+typealias DefinitionClass = ccr.physics.defs.DefinitionClass

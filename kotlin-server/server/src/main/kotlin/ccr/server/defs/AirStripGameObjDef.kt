@@ -1,5 +1,7 @@
 package ccr.server.defs
 
+import ccr.physics.defs.readMicroFloat
+import ccr.physics.defs.readMicroInt
 import ccr.server.core.ChunkReader
 
 /**

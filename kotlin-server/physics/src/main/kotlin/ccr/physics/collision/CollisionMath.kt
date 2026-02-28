@@ -54,14 +54,14 @@ object CollisionMath {
     fun intersectionTest(a: AABox, b: AABox): Boolean = a.overlaps(b)
 
     /**
-     * C++: CollisionMath::Intersection_Test(const AABoxClass& box0, const OBBoxClass& box1)
+     * C++: CollisionMath::Intersection_Test(const AABox& box0, const OBBoxClass& box1)
      * Wraps [a] as an OBBox with identity basis and delegates to the OBB-OBB SAT test.
      */
     fun intersectionTest(a: AABox, b: OBBox): Boolean =
         intersectionTest(OBBox(a.center, a.extent), b)
 
     /**
-     * C++: CollisionMath::Intersection_Test(const OBBoxClass& box0, const AABoxClass& box1)
+     * C++: CollisionMath::Intersection_Test(const OBBoxClass& box0, const AABox& box1)
      * Wraps [b] as an OBBox with identity basis and delegates to the OBB-OBB SAT test.
      */
     fun intersectionTest(a: OBBox, b: AABox): Boolean =

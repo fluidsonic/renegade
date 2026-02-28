@@ -462,7 +462,7 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     //       float MAX_XYSIZE2 = 15.0f * 15.0f;
     //       // Leapfrog past StaticPhysClass to PhysClass::Update_Sun_Status()
     //       // only for "small" animated objects (doors, elevators).
-    //       AABoxClass box;
+    //       AABox box;
     //       Model->Get_Obj_Space_Bounding_Box(box);
     //       float xysize2 = box.Extent.X * box.Extent.X + box.Extent.Y * box.Extent.Y;
     //       if (xysize2 < MAX_XYSIZE2) {

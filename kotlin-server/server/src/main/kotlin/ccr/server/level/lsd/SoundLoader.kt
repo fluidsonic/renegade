@@ -1,8 +1,8 @@
 package ccr.server.level.lsd
 
-import ccr.server.defs.readMicroFloat
-import ccr.server.defs.readMicroInt
-import ccr.server.defs.readMicroString
+import ccr.physics.defs.readMicroFloat
+import ccr.physics.defs.readMicroInt
+import ccr.physics.defs.readMicroString
 import ccr.server.level.toMatrix3D
 import ccr.server.core.ChunkReader
 

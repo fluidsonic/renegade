@@ -46,7 +46,7 @@ class OBBoxIntersectionTest(
         return false
     }
 
-    /** C++: OBBoxIntersectionTestClass::Cull(const AABoxClass& box) */
+    /** C++: OBBoxIntersectionTestClass::Cull(const AABox& box) */
     fun cull(cullBox: AABox): Boolean {
         val dc = cullBox.center - boundingBox.center
         val r = cullBox.extent + boundingBox.extent

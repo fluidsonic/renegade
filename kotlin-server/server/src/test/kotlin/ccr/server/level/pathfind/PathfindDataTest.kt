@@ -85,7 +85,7 @@ class PathfindDataTest {
         // Build a minimal pathfind database with one portal.
         // Portal micro-chunks: BOUNDING_BOX(1), DEST_SECTOR1(3), DEST_SECTOR2(4), ID(5)
         val portalVariables = buildMicroChunks {
-            // VARID_BOUNDING_BOX = 1, AABoxClass: center(10,20,30) + extent(5,5,5)
+            // VARID_BOUNDING_BOX = 1, AABox: center(10,20,30) + extent(5,5,5)
             microChunk(1, floats(10f, 20f, 30f, 5f, 5f, 5f))
             // VARID_DEST_SECTOR1 = 3, uint16 = 0
             microChunk(3, uint16(0))
@@ -120,7 +120,7 @@ class PathfindDataTest {
     fun `PathfindLoader parses sector from synthetic chunk`() {
         // Build sector micro-chunks: BOUNDING_BOX + two PORTAL_IDs
         val sectorVariables = buildMicroChunks {
-            microChunk(1, floats(1f, 2f, 3f, 4f, 5f, 6f)) // AABoxClass
+            microChunk(1, floats(1f, 2f, 3f, 4f, 5f, 6f)) // AABox
             microChunk(2, int32(10)) // portal ID 10
             microChunk(2, int32(20)) // portal ID 20
         }
