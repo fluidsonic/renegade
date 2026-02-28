@@ -121,6 +121,18 @@ open class Animatable3DObjClass : RenderObjClass() {
     fun getTotalTime(): Float = TODO("stub")
 }
 
+// C++: void Get_Render_Obj_Name_From_Filename(StringClass&, const char*) — strips path and extension
+// Server stub: server has no asset manager; just strips extension and path from the filename
+fun getRenderObjNameFromFilename(filename: String): String {
+    val withoutPath = filename.substringAfterLast('/').substringAfterLast('\\')
+    val withoutExt = withoutPath.substringBeforeLast('.')
+    return withoutExt
+}
+
+// C++: RenderObjClass* Create_Render_Obj_From_Filename(const char*) — loads a render object from file
+// Server stub: server has no renderer; always returns null
+fun createRenderObjFromFilename(@Suppress("UNUSED_PARAMETER") filename: String): RenderObjClass? = null
+
 // ---------------------------------------------------------------------------
 // Physics class stubs — C++ wwphys
 // ---------------------------------------------------------------------------

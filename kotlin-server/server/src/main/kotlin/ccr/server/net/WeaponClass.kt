@@ -95,7 +95,7 @@ class WeaponClass(
     fun setTarget(pos: Vector3) { targetPos = pos }
 
     // C++: int Get_Style() — returns the weapon hold style (WeaponHoldStyleType)
-    fun getStyle(): Int = HumanStateClass.WEAPON_HOLD_STYLE_EMPTY_HANDS
+    fun getStyle(): Int = WEAPON_HOLD_STYLE_EMPTY_HANDS
 
     // C++: bool Is_Firing() — true when weapon fire animation is active
     fun isFiring(): Boolean = isPrimaryTriggered || isSecondaryTriggered
@@ -142,5 +142,18 @@ class WeaponClass(
         const val WEAPON_ANIM_NOT_FIRING = 0
         const val WEAPON_ANIM_FIRING_0   = 1
         const val WEAPON_ANIM_FIRING_1   = 2
+
+        // C++: WeaponHoldStyleType enum (weapons.h) — weapon carry/hold pose
+        const val WEAPON_HOLD_STYLE_C4             = 0
+        const val WEAPON_HOLD_STYLE_NOT_USED       = 1
+        const val WEAPON_HOLD_STYLE_AT_SHOULDER    = 2
+        const val WEAPON_HOLD_STYLE_AT_HIP         = 3
+        const val WEAPON_HOLD_STYLE_LAUNCHER       = 4
+        const val WEAPON_HOLD_STYLE_HANDGUN        = 5
+        const val WEAPON_HOLD_STYLE_BEACON         = 6
+        const val WEAPON_HOLD_STYLE_EMPTY_HANDS    = 7
+        const val WEAPON_HOLD_STYLE_AT_CHEST       = 8
+        const val WEAPON_HOLD_STYLE_HANDS_DOWN     = 9
+        const val NUM_WEAPON_HOLD_STYLES           = 10
     }
 }

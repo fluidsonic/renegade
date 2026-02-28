@@ -6,7 +6,7 @@ package ccr.server.net
 class WarFactoryGameObj() : VehicleFactoryGameObj() {
 
     // C++: int CreationAnimationID (initialized to 0 in constructor initializer list)
-    protected var creationAnimationID: UInt = 0u
+    protected var creationAnimationID: Int = 0
 
     // C++: float CreationFinishedTimer (initialized to UNITIALIZED_TIMER in constructor initializer list)
     protected var creationFinishedTimer: Float = UNINITIALIZED_TIMER
@@ -93,7 +93,7 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
         if (scene != null) {
             for (obj in scene.staticObjects) {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
-                val model = animPhysObj.model ?: continue
+                val model = animPhysObj.model as? RenderObjClass ?: continue
 
                 val name = model.getName().uppercase()
                 if (name.contains("WEP#CONSTRUCT")) {
@@ -102,7 +102,7 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
                     val dist2 = diff.lengthSquared()
                     if (dist2 < closest2) {
                         closest2 = dist2
-                        creationAnimationID = animPhysObj.getId()
+                        creationAnimationID = animPhysObj.getId().toInt()
                     }
                 }
             }

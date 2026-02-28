@@ -1,5 +1,6 @@
 package ccr.server.defs
 
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.mix.ChunkReader
 
 /**
@@ -162,7 +163,7 @@ fun parseAmmoDefinitionClass(
         id = id,
         chunkId = chunkId,
         modelFilename = vars.readMicroString(MC_MODEL) ?: "",
-        warhead = vars.readMicroInt(MC_WARHEAD) ?: 0,
+        warhead = ArmorWarheadManager.findWarheadSaveID(vars.readMicroInt(MC_WARHEAD) ?: 0),
         damage = vars.readMicroFloat(MC_DAMAGE) ?: 1f,
         range = vars.readMicroFloat(MC_RANGE) ?: 10f,
         effectiveRange = vars.readMicroFloat(MC_EFFECTIVE_RANGE) ?: 10f,

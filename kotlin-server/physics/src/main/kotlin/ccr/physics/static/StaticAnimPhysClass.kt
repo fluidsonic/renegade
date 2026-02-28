@@ -22,9 +22,6 @@ open class StaticAnimPhysClass : StaticPhysClass() {
     override fun needsTimestep(): Boolean = true
     override fun timestep(dt: Float) {}
 
-    // C++: unsigned int Get_ID() — returns the instance ID (same as visObjectId on server).
-    fun getId(): Int = instanceId.toInt()
-
     // C++: void Get_Position(Vector3 & pos) — writes world position into out parameter.
     fun getPosition(out: Vector3) {
         val p = transform.translation

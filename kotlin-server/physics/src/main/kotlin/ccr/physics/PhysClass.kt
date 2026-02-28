@@ -58,8 +58,6 @@ abstract class PhysClass {
 
     var flags: Int = 0
     var observer: PhysObserver? = null
-    @get:JvmName("getModelField") @set:JvmName("setModelField")
-    var model: Any? = null
 
     /** Optional instance name (matches C++ Name field). */
     var name: String = ""
@@ -122,14 +120,6 @@ abstract class PhysClass {
             flags = (flags and IGNORE_MASK.inv()) or ((v and 0xF) shl IGNORE_SHIFT)
         }
 
-    open fun setModel(model: Any?) { this.model = model }
-
-    // FIXME: server has no asset manager — cannot look up model by name
-    fun setModelByName(modelTypeName: String) {
-        System.err.println("WARNING: setModelByName(\"$modelTypeName\") called but server has no asset manager; setting model to null")
-        setModel(null)
-    }
-
     open fun timestep(dt: Float) {}
     open fun postTimestepProcess() {}
     open fun needsTimestep(): Boolean = false
@@ -183,6 +173,14 @@ abstract class PhysClass {
 
     /** C++: Set_Model_By_Name() — no-op stub (server has no render objects). */
     open fun setModelByName(name: String) {}
+
+    /** C++: Enable_Is_State_Dirty(bool) — sets/clears the IS_STATE_DIRTY flag. */
+    fun enableIsStateDirty(onoff: Boolean) {
+        flags = if (onoff) flags or IS_STATE_DIRTY else flags and IS_STATE_DIRTY.inv()
+    }
+
+    /** C++: Is_State_Dirty() — returns the IS_STATE_DIRTY flag. */
+    fun isStateDirty(): Boolean = (flags and IS_STATE_DIRTY) != 0
 
     /** C++: Inc_Ignore_Counter() / Dec_Ignore_Counter(). */
     open fun incIgnoreCounter() { ignoreCount = (ignoreCount + 1).coerceAtMost(0xF) }

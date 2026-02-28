@@ -81,6 +81,9 @@ abstract class BaseGameObj : NetworkObject() {
         super.destruct()
     }
 
+    // C++: int Get_ID() { return Get_Network_ID(); }
+    fun getId(): Int = networkId
+
     // C++: virtual void Think() { IsPostThinkAllowed = true; }
     open fun think() {
         isPostThinkAllowed = true

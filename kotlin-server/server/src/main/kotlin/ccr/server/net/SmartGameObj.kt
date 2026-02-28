@@ -331,7 +331,8 @@ abstract class SmartGameObj : ArmedGameObj() {
     // C++: bool Is_Control_Data_Dirty(cPacket&) { return true; }
     fun isControlDataDirty(): Boolean = true
 
-    // C++: ActionClass* Get_Action() — covered by val action
+    // C++: ActionClass* Get_Action()
+    fun getAction(): ActionClass = action
 
     // C++: void Set_Enemy_Seen_Enabled(bool) — covered by var isEnemySeenEnabled
     // C++: bool Is_Enemy_Seen_Enabled() — covered by var isEnemySeenEnabled

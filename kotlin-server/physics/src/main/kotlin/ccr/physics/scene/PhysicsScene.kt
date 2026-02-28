@@ -131,16 +131,4 @@ class PhysicsScene {
         collisionMatrix.disableCollision(CollisionGroup.SOLDIER_GHOST, CollisionGroup.BULLET)
     }
 
-    /**
-     * C++: PhysicsSceneClass::Find_Static_Object(int id) — searches static objects by instanceId.
-     * Returns the matching StaticPhysClass or null if not found.
-     */
-    fun findStaticObject(instanceId: Int): StaticPhysClass? {
-        for (obj in staticObjects) {
-            if (obj.instanceId.toInt() == instanceId) {
-                return obj as? StaticPhysClass
-            }
-        }
-        return null
-    }
 }
