@@ -607,6 +607,7 @@ enum DirtyFlags : uint32_t {
     DIRTY_TEXTURES    = 1u << 8,   // tss[][], currentTextures[], rs[60]
     DIRTY_TRANSFORMS  = 1u << 9,   // worldMatrix, viewMatrix, projMatrix
     DIRTY_LIGHTS      = 1u << 10,  // lights[], lightEnabled[]
+    DIRTY_CULL        = 1u << 11,  // rs[22]
     DIRTY_ALL         = 0xFFFFFFFFu
 };
 
@@ -624,6 +625,7 @@ static uint32_t rs_dirty_flag(uint32_t state) {
     case 37: case 38: case 140:                             return DIRTY_FOG;
     case 137: case 139: case 145:                           return DIRTY_LIGHTING;
     case 60:                                                return DIRTY_TEXTURES;
+    case 22:                                                return DIRTY_CULL;
     default:                                                return 0;
     }
 }
@@ -758,8 +760,18 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             glDepthMask(rs[14] ? GL_TRUE : GL_FALSE);  // D3DRS_ZWRITEENABLE
         }
 
-        // -- Cull mode -- DIAGNOSTIC: disable all culling to test geometry
-        glDisable(GL_CULL_FACE);
+        // -- Cull mode --
+        if (dirty & DIRTY_CULL) {
+            auto cm = rs[22]; // D3DRS_CULLMODE
+            if (cm == D3DCULL_NONE) {
+                glDisable(GL_CULL_FACE);
+            } else {
+                glEnable(GL_CULL_FACE);
+                // D3DCULL_CW = cull CW-wound tris = GL backface cull with CCW front (GL default)
+                // D3DCULL_CCW = cull CCW-wound tris = GL front-face cull
+                glCullFace(cm == D3DCULL_CW ? GL_BACK : GL_FRONT);
+            }
+        }
 
         // -- Alpha test --
         if (dirty & DIRTY_ALPHA_TEST) {
