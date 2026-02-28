@@ -398,6 +398,8 @@ class BuildingMonitorClass(private val building: Any?) : GameObjObserverClass() 
 class ActiveConversationClass {
     fun stop(): Unit = TODO("stub")
     fun isActive(): Boolean = TODO("stub")
+    // C++: bool Is_Interruptable() — true if conversation can be interrupted by state changes
+    fun isInterruptable(): Boolean = false
 }
 
 // C++: GameObjObserverTimerClass — countdown timer for an observer
@@ -474,7 +476,8 @@ object ExplosionManager {
 // C++: ConversationMgrClass (conversationmgr.h)
 object ConversationMgrClass {
     fun findConversation(name: String): Any? = null
-    fun startConversation(convId: Int, obj1: Any?, obj2: Any?): ActiveConversationClass? = null
+    // C++: Start_Conversation(SmartGameObj* obj, int conversation_id, bool is_interruptable)
+    fun startConversation(obj: Any?, conversationId: Int, isInterruptable: Boolean = true): ActiveConversationClass? = null
 }
 
 // C++: MapMgrClass (mapmgr.h)
@@ -582,6 +585,7 @@ object HUDInfo {
 object FreeRandom {
     fun get(): Float = kotlin.random.Random.nextFloat()
     fun getInt(max: Int): Int = kotlin.random.Random.nextInt(max)
+    fun getFloat(): Float = kotlin.random.Random.nextFloat()
     fun getFloat(min: Float, max: Float): Float = min + kotlin.random.Random.nextFloat() * (max - min)
 }
 
@@ -1024,14 +1028,8 @@ fun SoldierGameObj.networkStateUpdate(): Unit = Unit
 // ActiveConversationClass.stopConversation — alias
 // ---------------------------------------------------------------------------
 
-// C++: ActiveConversationClass::Stop()
-fun ActiveConversationClass.stopConversation(): Unit = stop()
-
-// C++: Dialogue.getConversation() — returns the conversation ID
-// Note: ConversationMgrClass.startConversation(obj, conversationId, ...) takes an int;
-// Dialogue.getConversation() was previously Int but code calls dlg.getConversation() returning Int.
-// The error at SoldierGameObj.kt:2354 says arg type is SoldierGameObj but Int expected — this
-// means ConversationMgrClass.startConversation has a different signature now.
+// C++: ActiveConversationClass::Stop(int reason = 0)
+fun ActiveConversationClass.stopConversation(reason: Int = 0): Unit = stop()
 
 // ---------------------------------------------------------------------------
 // PhysicalGameObj.setModel() — sets the render model by name
@@ -1107,9 +1105,24 @@ fun ScriptableGameObj.findObserver(name: String): GameObjObserverClass? =
 // PhysClass helper extensions
 // ---------------------------------------------------------------------------
 
-// C++: PhysClass::Peek_Observer() — returns the physics observer attached to this object
-// Named getObserver() to match calling code style; actual field is `observer`.
-fun ccr.physics.PhysClass.getObserver(): ccr.physics.PhysObserver? = observer
-
 // C++: HumanPhysClass::Peek_Carrier_Object() — object this is riding on (e.g. elevator); stub
 fun ccr.physics.moveable.HumanPhysClass.peekCarrierObject(): ccr.physics.PhysClass? = null
+
+// ---------------------------------------------------------------------------
+// PhysicsScene render/vis extensions (server stubs for client-only operations)
+// ---------------------------------------------------------------------------
+
+// C++: SceneClass::Add_Render_Object() — adds a render object to the scene; server no-op
+fun PhysicsScene.addRenderObject(obj: RenderObjClass): Unit = Unit
+
+// C++: VisTableClass* PhysicsSceneClass::Get_Vis_Table(Vector3&) — vis-table for PVS; server stub
+fun PhysicsScene.getVisTable(position: ccr.math.Vector3): VisTableClass = VisTableClass()
+
+// ---------------------------------------------------------------------------
+// PhysicsSceneClass — singleton accessor shim
+// C++: PhysicsSceneClass::Get_Instance() — global physics scene singleton
+// Server: accessed via CombatManager.getScene(); provide a type alias + companion for C++-style calls.
+// ---------------------------------------------------------------------------
+object PhysicsSceneClass {
+    fun getInstance(): PhysicsScene? = CombatManager.getScene()
+}

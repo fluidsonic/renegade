@@ -1,6 +1,7 @@
 package ccr.physics.moveable
 
 import ccr.math.AABox
+import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.physics.PhysController
 import ccr.physics.scene.PhysicsScene
@@ -33,6 +34,10 @@ open class HumanPhysClass : Phys3Class() {
         result.x = pos.x; result.y = pos.y; result.z = pos.z
         return true
     }
+    // C++: HumanPhysClass::Can_Teleport(Matrix3D& tm) — stub; server always allows teleport
+    open fun canTeleport(tm: Matrix3D): Boolean = true
+    // C++: HumanPhysClass::Network_State_Update(Vector3& pos, Vector3& vel) — client position sync stub
+    open fun networkStateUpdate(pos: Vector3, vel: Vector3) {}
     // C++: HumanPhysClass::Set_Anim_Speed_Scale() — stub
     open fun setAnimSpeedScale(scale: Float) {}
 

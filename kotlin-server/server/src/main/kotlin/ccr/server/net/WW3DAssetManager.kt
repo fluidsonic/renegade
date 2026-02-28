@@ -22,6 +22,7 @@ class HAnimClass(private val anim: W3dAnimation) {
 
     // C++: virtual int Get_Num_Frames() = 0  [hanim.h ~line 43]
     val numFrames: Int get() = anim.numFrames
+    fun getNumFrames(): Int = numFrames
 
     // C++: virtual float Get_Frame_Rate() = 0  [hanim.h ~line 44]
     val frameRate: Int get() = anim.frameRate

@@ -271,6 +271,10 @@ class WeaponClass(val definition: WeaponDefinitionClass) {
     // C++: const char* Get_Model_Name() — returns the render model name for this weapon
     fun getModelName(): String = definition.model
 
+    // C++: void Set_Model(RenderObjClass* model) — associates a render object with this weapon
+    // Server-side: render objects are not used server-side; no-op stub.
+    fun setModel(model: RenderObjClass?) {}
+
     // C++: void Stop_Firing_Sound()
     // Server-side: FiringSound is client-only audio — no-op on the server.
     // The field firingSound is not tracked server-side (audio state is never replicated).
