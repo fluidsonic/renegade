@@ -9,7 +9,6 @@
 #include <OpenGL/glu.h>
 #include <stdio.h>
 #include <string.h>
-#include <new>
 
 #include "d3d8.h"
 #include "d3d8caps.h"
@@ -38,6 +37,7 @@ struct D3D8Surface_GL : public IDirect3DSurface8 {
     BYTE*           pixels        = NULL;
     bool            ownsPixels    = true;
     D3D8Texture_GL* parentTexture = nullptr;  // non-null if this is a texture surface level
+    UINT            mipLevel      = 0;
 
     static UINT bytes_per_pixel(D3DFORMAT f) {
         switch (f) {
@@ -111,15 +111,18 @@ struct D3D8Surface_GL : public IDirect3DSurface8 {
         }
         return S_OK;
     }
-    HRESULT LockRect(D3DLOCKED_RECT* lr, const RECT*, DWORD flags) override {
-        static unsigned s_lock_count = 0;
-        unsigned n = ++s_lock_count;
+    HRESULT LockRect(D3DLOCKED_RECT* lr, const RECT* pRect, DWORD) override {
         if (lr) {
             lr->Pitch = (int)lock_pitch(width, fmt);
-            lr->pBits = pixels;
+            if (pRect) {
+                uint32_t bpp = (uint32_t)bytes_per_pixel(fmt);
+                lr->pBits = (uint8_t*)pixels
+                          + (uint32_t)pRect->top  * (uint32_t)lr->Pitch
+                          + (uint32_t)pRect->left * bpp;
+            } else {
+                lr->pBits = pixels;
+            }
         }
-        fprintf(stderr, "[tex] SurfLock #%u surf=%p(%ux%u fmt=%u parent=%p) pixels=%p flags=0x%x\n",
-                n, (void*)this, width, height, (unsigned)fmt, (void*)parentTexture, (void*)pixels, (unsigned)flags);
         return S_OK;
     }
     HRESULT UnlockRect() override;  // defined after D3D8Texture_GL (needs parentTexture->Upload_To_GL)
@@ -220,8 +223,8 @@ struct D3D8Texture_GL : public IDirect3DTexture8 {
     UINT      height    = 1;
     D3DFORMAT fmt       = D3DFMT_A8R8G8B8;
     UINT      numLevels = 1;
-    BYTE*     pixels    = NULL;        // CPU-side pixel store for level 0
-    BYTE*     scratchBufs[16];         // scratch pixel stores for levels 1+
+    BYTE*     levelPixels[16];     // CPU-side pixel store per mip level
+    bool      levelHasData[16];    // true when level has been written
     GLuint    glTexId   = 0;           // GL texture object (0 = not yet uploaded)
     bool      dirty     = false;       // pixels changed since last upload
 
@@ -242,89 +245,82 @@ struct D3D8Texture_GL : public IDirect3DTexture8 {
         : width(w ? w : 1), height(h ? h : 1), fmt(f)
     {
         numLevels = (levels == 0) ? compute_mip_levels(width, height) : levels;
-        memset(scratchBufs, 0, sizeof(scratchBufs));
-        pixels = new BYTE[D3D8Surface_GL::total_surface_bytes(width, height, f)]();
+        memset(levelPixels, 0, sizeof(levelPixels));
+        memset(levelHasData, 0, sizeof(levelHasData));
+        for (UINT i = 0; i < numLevels && i < 16; i++) {
+            UINT mw = mip_dim(width, i);
+            UINT mh = mip_dim(height, i);
+            levelPixels[i] = new BYTE[D3D8Surface_GL::total_surface_bytes(mw, mh, f)]();
+        }
     }
     ~D3D8Texture_GL() {
-        delete[] pixels;
-        for (int i = 0; i < 16; i++) delete[] scratchBufs[i];
+        for (int32_t i = 0; i < 16; i++) delete[] levelPixels[i];
         if (glTexId) glDeleteTextures(1, &glTexId);
     }
 
-    // Upload CPU pixels to GL. Must be called with GL context current.
-    //
-    // D3D convention: UV V=0 = texture top; row 0 of the pixel buffer = top row.
-    // We pass D3D UV coordinates directly (no V-flip in draw calls), so GL must
-    // sample V=0 from the same data that D3D row 0 points at.  glTexImage2D treats
-    // its first row as the bottom of the texture (GL V=0), which coincidentally
-    // is also what we want: D3D row 0 (the top of the image) lives at GL V=0,
-    // and the top-of-quad vertex carries D3D UV V≈0, so it samples D3D row 0.
-    // No row reversal is needed.
+    static void get_gl_format(D3DFORMAT f, GLenum& internal, GLenum& format, GLenum& type) {
+        switch (f) {
+        case D3DFMT_A8R8G8B8:
+            internal = GL_RGBA8;   format = GL_BGRA_EXT; type = GL_UNSIGNED_BYTE; break;
+        case D3DFMT_X8R8G8B8:
+            internal = GL_RGB8;    format = GL_BGRA_EXT; type = GL_UNSIGNED_BYTE; break;
+        case D3DFMT_A4R4G4B4:
+            internal = GL_RGBA4;   format = GL_BGRA_EXT; type = GL_UNSIGNED_SHORT_4_4_4_4_REV; break;
+        case D3DFMT_A1R5G5B5:
+            internal = GL_RGB5_A1; format = GL_BGRA_EXT; type = GL_UNSIGNED_SHORT_1_5_5_5_REV; break;
+        case D3DFMT_R5G6B5:
+            internal = GL_RGB;     format = GL_RGB;       type = GL_UNSIGNED_SHORT_5_6_5_REV; break;
+        case D3DFMT_A8:
+        case D3DFMT_L8:
+            internal = GL_ALPHA8;  format = GL_ALPHA;     type = GL_UNSIGNED_BYTE; break;
+        default:
+            internal = GL_RGBA8;   format = GL_BGRA_EXT;  type = GL_UNSIGNED_BYTE; break;
+        }
+    }
+
     void Upload_To_GL() {
-        if (!pixels) return;
         if (!glTexId) glGenTextures(1, &glTexId);
         glBindTexture(GL_TEXTURE_2D, glTexId);
 
-        if (D3D8Surface_GL::is_dxt(fmt)) {
-            // Apple Silicon OpenGL lacks GL_EXT_texture_compression_s3tc;
-            // decompress DXT to RGBA8 on the CPU before uploading.
-            uint8_t* rgba = new uint8_t[width * height * 4]();
-            decompress_dxt(fmt, pixels, rgba, width, height);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (GLsizei)width, (GLsizei)height,
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
-            delete[] rgba;
-        } else {
-            // Map D3D format → GL internal format, external format, data type
-            GLenum gl_internal = GL_RGBA8;
-            GLenum gl_format   = GL_BGRA_EXT;
-            GLenum gl_type     = GL_UNSIGNED_BYTE;
-
-            switch (fmt) {
-            case D3DFMT_A8R8G8B8:
-                gl_internal = GL_RGBA8;  gl_format = GL_BGRA_EXT; gl_type = GL_UNSIGNED_BYTE; break;
-            case D3DFMT_X8R8G8B8:
-                gl_internal = GL_RGB8;   gl_format = GL_BGRA_EXT; gl_type = GL_UNSIGNED_BYTE; break;
-            case D3DFMT_A4R4G4B4:
-                // Memory layout (little-endian 16-bit): bits[15:12]=A,[11:8]=R,[7:4]=G,[3:0]=B
-                // GL_BGRA + GL_UNSIGNED_SHORT_4_4_4_4_REV: reads bits[15:12]=A,[11:8]=R,[7:4]=G,[3:0]=B ✓
-                gl_internal = GL_RGBA4;  gl_format = GL_BGRA_EXT; gl_type = GL_UNSIGNED_SHORT_4_4_4_4_REV; break;
-            case D3DFMT_A1R5G5B5:
-                gl_internal = GL_RGB5_A1; gl_format = GL_BGRA_EXT; gl_type = GL_UNSIGNED_SHORT_1_5_5_5_REV; break;
-            case D3DFMT_R5G6B5:
-                gl_internal = GL_RGB;    gl_format = GL_RGB;       gl_type = GL_UNSIGNED_SHORT_5_6_5_REV; break;
-            case D3DFMT_A8:
-            case D3DFMT_L8:
-                gl_internal = GL_ALPHA8; gl_format = GL_ALPHA;     gl_type = GL_UNSIGNED_BYTE; break;
-            default:
-                gl_internal = GL_RGBA8;  gl_format = GL_BGRA_EXT;  gl_type = GL_UNSIGNED_BYTE; break;
-            }
-
-            // Upload pixels in D3D row order (row 0 = top of texture).
-            glTexImage2D(GL_TEXTURE_2D, 0, gl_internal, (GLsizei)width, (GLsizei)height,
-                         0, gl_format, gl_type, pixels);
+        UINT uploadLevels = 0;
+        for (UINT i = 0; i < numLevels && i < 16; i++) {
+            if (!levelHasData[i]) break;
+            uploadLevels++;
         }
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        if (uploadLevels == 0) {
+            dirty = false;
+            return;
+        }
+
+        GLenum gl_internal = GL_RGBA8, gl_format = GL_BGRA_EXT, gl_type = GL_UNSIGNED_BYTE;
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        for (UINT i = 0; i < uploadLevels; i++) {
+            UINT mw = mip_dim(width, i);
+            UINT mh = mip_dim(height, i);
+            if (D3D8Surface_GL::is_dxt(fmt)) {
+                uint8_t* rgba = new uint8_t[mw * mh * 4]();
+                decompress_dxt(fmt, levelPixels[i], rgba, mw, mh);
+                glTexImage2D(GL_TEXTURE_2D, (GLint)i, GL_RGBA8, (GLsizei)mw, (GLsizei)mh,
+                             0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
+                delete[] rgba;
+            } else {
+                get_gl_format(fmt, gl_internal, gl_format, gl_type);
+                glTexImage2D(GL_TEXTURE_2D, (GLint)i, static_cast<GLint>(gl_internal), (GLsizei)mw, (GLsizei)mh,
+                             0, gl_format, gl_type, levelPixels[i]);
+            }
+        }
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, (GLint)(uploadLevels - 1));
+        GLenum minFilter = (uploadLevels > 1) ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(minFilter));
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         GLenum err = glGetError();
         if (err) fprintf(stderr, "[d3d8] Upload_To_GL(%ux%u fmt=%u): GL error 0x%x\n",
                          width, height, (unsigned)fmt, err);
-        // Log every upload with pixel preview
-        {
-            static unsigned s_upload_count = 0;
-            unsigned n = ++s_upload_count;
-            const uint8_t* p = pixels ? (const uint8_t*)pixels : nullptr;
-            if (p) {
-                fprintf(stderr, "[tex] #%u Upload %ux%u fmt=%u glId=%u px[0..7]=(%02x %02x %02x %02x  %02x %02x %02x %02x)\n",
-                        n, width, height, (unsigned)fmt, glTexId,
-                        p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
-            } else {
-                fprintf(stderr, "[tex] #%u Upload %ux%u fmt=%u glId=%u pixels=NULL\n",
-                        n, width, height, (unsigned)fmt, glTexId);
-            }
-        }
         dirty = false;
     }
 
@@ -360,39 +356,33 @@ struct D3D8Texture_GL : public IDirect3DTexture8 {
     }
     HRESULT GetSurfaceLevel(UINT level, IDirect3DSurface8** pp) override {
         if (pp) {
-            if (level == 0) {
-                // Share level-0 pixel buffer; uploading on unlock
-                auto* surf = new D3D8Surface_GL(width, height, fmt, pixels);
+            UINT mw = mip_dim(width, level);
+            UINT mh = mip_dim(height, level);
+            if (level < numLevels && level < 16 && levelPixels[level]) {
+                auto* surf = new D3D8Surface_GL(mw, mh, fmt, levelPixels[level]);
                 surf->parentTexture = this;
+                surf->mipLevel      = level;
                 *pp = surf;
-                fprintf(stderr, "[tex] GetSurfaceLevel tex=%p(%ux%u fmt=%u) lvl=%u -> surf=%p (shared pixels=%p)\n",
-                        (void*)this, width, height, (unsigned)fmt, level, (void*)surf, (void*)pixels);
             } else {
-                // Scratch surface for mip level > 0: owned, not linked to parent
-                UINT mw = mip_dim(width,  level);
-                UINT mh = mip_dim(height, level);
                 auto* surf = new D3D8Surface_GL(mw, mh, fmt);
                 *pp = surf;
-                fprintf(stderr, "[tex] GetSurfaceLevel tex=%p lvl=%u -> scratch surf=%p (%ux%u fmt=%u)\n",
-                        (void*)this, level, (void*)surf, mw, mh, (unsigned)fmt);
             }
         }
         return S_OK;
     }
-    HRESULT LockRect(UINT level, D3DLOCKED_RECT* lr, const RECT*, DWORD) override {
+    HRESULT LockRect(UINT level, D3DLOCKED_RECT* lr, const RECT* pRect, DWORD) override {
         if (lr) {
-            if (level == 0) {
-                lr->Pitch = (int)D3D8Surface_GL::lock_pitch(width, fmt);
-                lr->pBits = pixels;
-            } else if (level < 16) {
-                // Allocate scratch for this mip level
-                UINT mw = mip_dim(width,  level);
-                UINT mh = mip_dim(height, level);
-                UINT sz = D3D8Surface_GL::total_surface_bytes(mw, mh, fmt);
-                delete[] scratchBufs[level];
-                scratchBufs[level] = new BYTE[sz]();
+            if (level < numLevels && level < 16 && levelPixels[level]) {
+                UINT mw = mip_dim(width, level);
                 lr->Pitch = (int)D3D8Surface_GL::lock_pitch(mw, fmt);
-                lr->pBits = scratchBufs[level];
+                if (pRect) {
+                    uint32_t bpp = (uint32_t)D3D8Surface_GL::bytes_per_pixel(fmt);
+                    lr->pBits = (uint8_t*)levelPixels[level]
+                              + (uint32_t)pRect->top  * (uint32_t)lr->Pitch
+                              + (uint32_t)pRect->left * bpp;
+                } else {
+                    lr->pBits = levelPixels[level];
+                }
             } else {
                 lr->Pitch = 0;
                 lr->pBits = nullptr;
@@ -401,34 +391,19 @@ struct D3D8Texture_GL : public IDirect3DTexture8 {
         return S_OK;
     }
     HRESULT UnlockRect(UINT level) override {
-        if (level == 0) {
+        if (level < numLevels && level < 16) {
+            levelHasData[level] = true;
             dirty = true;
-            Upload_To_GL();
         }
-        // Levels > 0: scratch data discarded (we only need level 0 for GL)
         return S_OK;
     }
     HRESULT AddDirtyRect(const RECT*) override { dirty = true; return S_OK; }
 };
 
-// Out-of-line definition: notify parent texture to upload when a surface level is unlocked
 HRESULT D3D8Surface_GL::UnlockRect() {
-    static unsigned s_unlock_count = 0;
-    unsigned n = ++s_unlock_count;
     if (parentTexture) {
-        fprintf(stderr, "[tex] SurfUnlock #%u surf=%p -> notifying parent tex=%p (pixels=%p)\n",
-                n, (void*)this, (void*)parentTexture, (void*)pixels);
-        // Peek at first 8 bytes of the pixel data to verify content
-        if (pixels) {
-            const uint8_t* p = (const uint8_t*)pixels;
-            fprintf(stderr, "[tex] SurfUnlock #%u pixels[0..7]=(%02x %02x %02x %02x  %02x %02x %02x %02x)\n",
-                    n, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
-        }
+        parentTexture->levelHasData[mipLevel] = true;
         parentTexture->dirty = true;
-        parentTexture->Upload_To_GL();
-    } else {
-        fprintf(stderr, "[tex] SurfUnlock #%u surf=%p (no parent, pixels=%p)\n",
-                n, (void*)this, (void*)pixels);
     }
     return S_OK;
 }
@@ -751,6 +726,18 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     // Apply current render states and texture to GL before a draw call
     void Apply_GL_State() {
+        // Always upload dirty texture content, even when no other state flags
+        // require processing.  This catches the case where Lock/Unlock updated
+        // texture pixels without changing the texture binding (e.g. Bink video).
+        for (int32_t stage = 0; stage < 8; stage++) {
+            D3D8Texture_GL* tex = currentTextures[stage];
+            if (tex && tex->dirty) {
+                glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + stage));
+                tex->Upload_To_GL();
+            }
+        }
+        glActiveTexture(GL_TEXTURE0);
+
         // Skip if no flags this function can actually handle are set.
         // DIRTY_TRANSFORMS and DIRTY_LIGHTS are handled by Apply_GL_Transforms(), not here.
         if (!(dirty & ~(uint32_t)(DIRTY_TRANSFORMS | DIRTY_LIGHTS))) {
@@ -909,7 +896,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         // D3DTA:  0=DIFFUSE,1=CURRENT,2=TEXTURE,3=TFACTOR,4=SPECULAR; 0x10=COMPL,0x20=ALPHAREP
 
         for (int stage = 0; stage < 8; stage++) {
-            glActiveTexture(GL_TEXTURE0 + stage);
+            glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + stage));
             DWORD colorOp = tss[stage][1];
 
             // Stop pipeline at DISABLE or unset stage
@@ -936,20 +923,20 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                 glEnable(GL_TEXTURE_2D);
                 glBindTexture(GL_TEXTURE_2D, tex->glTexId);
                 DWORD addrU = tss[stage][13], addrV = tss[stage][14];
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, d3dtaddress_to_gl(addrU ? addrU : 1));
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, d3dtaddress_to_gl(addrV ? addrV : 1));
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(d3dtaddress_to_gl(addrU ? addrU : 1)));
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(d3dtaddress_to_gl(addrV ? addrV : 1)));
                 DWORD magF = tss[stage][16], minF = tss[stage][17], mipF = tss[stage][18];
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (magF==1) ? GL_NEAREST : GL_LINEAR);
                 GLenum minFilter;
                 if      (mipF <= 1)  minFilter = (minF==1) ? GL_NEAREST              : GL_LINEAR;
                 else if (mipF == 2)  minFilter = (minF==1) ? GL_NEAREST_MIPMAP_NEAREST : GL_LINEAR_MIPMAP_NEAREST;
                 else                 minFilter = (minF==1) ? GL_NEAREST_MIPMAP_LINEAR  : GL_LINEAR_MIPMAP_LINEAR;
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(minFilter));
             } else {
                 glDisable(GL_TEXTURE_2D);
             }
 
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, static_cast<GLint>(GL_COMBINE));
 
             // Set env color for D3DTA_TFACTOR (D3DRS_TEXTUREFACTOR=60)
             DWORD ca1=tss[stage][2], ca2=tss[stage][3], aa1=tss[stage][5], aa2=tss[stage][6];
@@ -983,56 +970,56 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             GLfloat rgbScale = 1.0f;
             switch (colorOp) {
             case 2:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, dta_src(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, dta_op_rgb(ca1));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, static_cast<GLint>(GL_REPLACE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, static_cast<GLint>(dta_src(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, static_cast<GLint>(dta_op_rgb(ca1)));
                 break;
             case 3:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, dta_src(ca2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, dta_op_rgb(ca2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, static_cast<GLint>(GL_REPLACE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, static_cast<GLint>(dta_src(ca2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, static_cast<GLint>(dta_op_rgb(ca2)));
                 break;
             case 5: case 6:
                 rgbScale = (colorOp == 5) ? 2.0f : 4.0f;
                 // fall through
             case 4: default:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, dta_src(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, dta_op_rgb(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, dta_src(ca2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, dta_op_rgb(ca2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, static_cast<GLint>(GL_MODULATE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, static_cast<GLint>(dta_src(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, static_cast<GLint>(dta_op_rgb(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, static_cast<GLint>(dta_src(ca2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, static_cast<GLint>(dta_op_rgb(ca2)));
                 break;
             case 7:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, dta_src(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, dta_op_rgb(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, dta_src(ca2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, dta_op_rgb(ca2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, static_cast<GLint>(GL_ADD));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, static_cast<GLint>(dta_src(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, static_cast<GLint>(dta_op_rgb(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, static_cast<GLint>(dta_src(ca2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, static_cast<GLint>(dta_op_rgb(ca2)));
                 break;
             case 8:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD_SIGNED);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, dta_src(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, dta_op_rgb(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, dta_src(ca2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, dta_op_rgb(ca2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, static_cast<GLint>(GL_ADD_SIGNED));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, static_cast<GLint>(dta_src(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, static_cast<GLint>(dta_op_rgb(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, static_cast<GLint>(dta_src(ca2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, static_cast<GLint>(dta_op_rgb(ca2)));
                 break;
             case 10:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_SUBTRACT);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, dta_src(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, dta_op_rgb(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, dta_src(ca2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, dta_op_rgb(ca2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, static_cast<GLint>(GL_SUBTRACT));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, static_cast<GLint>(dta_src(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, static_cast<GLint>(dta_op_rgb(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, static_cast<GLint>(dta_src(ca2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, static_cast<GLint>(dta_op_rgb(ca2)));
                 break;
             case 12: case 13: case 14: {  // BLEND*ALPHA: lerp(arg2, arg1, blendSrc.a)
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, dta_src(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, dta_op_rgb(ca1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, dta_src(ca2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, dta_op_rgb(ca2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, static_cast<GLint>(GL_INTERPOLATE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, static_cast<GLint>(dta_src(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, static_cast<GLint>(dta_op_rgb(ca1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, static_cast<GLint>(dta_src(ca2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, static_cast<GLint>(dta_op_rgb(ca2)));
                 GLenum blendSrc = (colorOp==12) ? GL_PRIMARY_COLOR
                                 : (colorOp==13) ? GL_TEXTURE : GL_CONSTANT;
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE2_RGB, blendSrc);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE2_RGB, static_cast<GLint>(blendSrc));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, static_cast<GLint>(GL_SRC_ALPHA));
                 break;
             }
             }
@@ -1043,50 +1030,50 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             GLfloat aScale = 1.0f;
             switch (alphaOp) {
             case 2:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, dta_src(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, dta_op_a(aa1));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, static_cast<GLint>(GL_REPLACE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, static_cast<GLint>(dta_src(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, static_cast<GLint>(dta_op_a(aa1)));
                 break;
             case 3:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, dta_src(aa2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, dta_op_a(aa2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, static_cast<GLint>(GL_REPLACE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, static_cast<GLint>(dta_src(aa2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, static_cast<GLint>(dta_op_a(aa2)));
                 break;
             case 5: case 6:
                 aScale = (alphaOp == 5) ? 2.0f : 4.0f;
                 // fall through
             case 4: default:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, dta_src(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, dta_op_a(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, dta_src(aa2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, dta_op_a(aa2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, static_cast<GLint>(GL_MODULATE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, static_cast<GLint>(dta_src(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, static_cast<GLint>(dta_op_a(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, static_cast<GLint>(dta_src(aa2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, static_cast<GLint>(dta_op_a(aa2)));
                 break;
             case 7:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_ADD);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, dta_src(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, dta_op_a(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, dta_src(aa2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, dta_op_a(aa2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, static_cast<GLint>(GL_ADD));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, static_cast<GLint>(dta_src(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, static_cast<GLint>(dta_op_a(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, static_cast<GLint>(dta_src(aa2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, static_cast<GLint>(dta_op_a(aa2)));
                 break;
             case 8:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_ADD_SIGNED);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, dta_src(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, dta_op_a(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, dta_src(aa2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, dta_op_a(aa2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, static_cast<GLint>(GL_ADD_SIGNED));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, static_cast<GLint>(dta_src(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, static_cast<GLint>(dta_op_a(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, static_cast<GLint>(dta_src(aa2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, static_cast<GLint>(dta_op_a(aa2)));
                 break;
             case 10:
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_SUBTRACT);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, dta_src(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, dta_op_a(aa1));
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, dta_src(aa2));
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, dta_op_a(aa2));
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, static_cast<GLint>(GL_SUBTRACT));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, static_cast<GLint>(dta_src(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, static_cast<GLint>(dta_op_a(aa1)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, static_cast<GLint>(dta_src(aa2)));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, static_cast<GLint>(dta_op_a(aa2)));
                 break;
             case 1:  // DISABLE — pass through previous alpha
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, static_cast<GLint>(GL_REPLACE));
+                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, static_cast<GLint>(GL_PREVIOUS));
+                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, static_cast<GLint>(GL_SRC_ALPHA));
                 break;
             }
             glTexEnvf(GL_TEXTURE_ENV, GL_ALPHA_SCALE, aScale);
@@ -1169,35 +1156,36 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                     GLfloat ldiff[4] = { L.Diffuse.r,  L.Diffuse.g,  L.Diffuse.b,  L.Diffuse.a  };
                     GLfloat lspec[4] = { L.Specular.r, L.Specular.g, L.Specular.b, L.Specular.a };
                     GLfloat lambi[4] = { L.Ambient.r,  L.Ambient.g,  L.Ambient.b,  L.Ambient.a  };
-                    glLightfv(GL_LIGHT0+li, GL_DIFFUSE,  ldiff);
-                    glLightfv(GL_LIGHT0+li, GL_SPECULAR, lspec);
-                    glLightfv(GL_LIGHT0+li, GL_AMBIENT,  lambi);
+                    GLenum glLight = static_cast<GLenum>(GL_LIGHT0 + li);
+                    glLightfv(glLight, GL_DIFFUSE,  ldiff);
+                    glLightfv(glLight, GL_SPECULAR, lspec);
+                    glLightfv(glLight, GL_AMBIENT,  lambi);
 
                     if (L.Type == 1 /* D3DLIGHT_POINT */ || L.Type == 2 /* D3DLIGHT_SPOT */) {
                         GLfloat pos[4] = { L.Position.x, L.Position.y, L.Position.z, 1.0f };
-                        glLightfv(GL_LIGHT0+li, GL_POSITION, pos);
-                        glLightf (GL_LIGHT0+li, GL_CONSTANT_ATTENUATION,  L.Attenuation0);
-                        glLightf (GL_LIGHT0+li, GL_LINEAR_ATTENUATION,    L.Attenuation1);
-                        glLightf (GL_LIGHT0+li, GL_QUADRATIC_ATTENUATION, L.Attenuation2);
+                        glLightfv(glLight, GL_POSITION, pos);
+                        glLightf (glLight, GL_CONSTANT_ATTENUATION,  L.Attenuation0);
+                        glLightf (glLight, GL_LINEAR_ATTENUATION,    L.Attenuation1);
+                        glLightf (glLight, GL_QUADRATIC_ATTENUATION, L.Attenuation2);
                     } else {
                         // Directional (D3DLIGHT_DIRECTIONAL=3): D3D Direction points scene→source,
                         // GL position w=0 points source→origin; negate to convert.
                         GLfloat pos[4] = { -L.Direction.x, -L.Direction.y, -L.Direction.z, 0.0f };
-                        glLightfv(GL_LIGHT0+li, GL_POSITION, pos);
+                        glLightfv(glLight, GL_POSITION, pos);
                     }
 
                     if (L.Type == 2 /* D3DLIGHT_SPOT */) {
                         GLfloat spotDir[3] = { L.Direction.x, L.Direction.y, L.Direction.z };
-                        glLightfv(GL_LIGHT0+li, GL_SPOT_DIRECTION, spotDir);
+                        glLightfv(glLight, GL_SPOT_DIRECTION, spotDir);
                         // D3D Phi = outer cone full angle (radians) → GL half-angle in degrees
-                        glLightf (GL_LIGHT0+li, GL_SPOT_CUTOFF,   L.Phi * 57.29578f * 0.5f);
-                        glLightf (GL_LIGHT0+li, GL_SPOT_EXPONENT, L.Falloff);
+                        glLightf (glLight, GL_SPOT_CUTOFF,   L.Phi * 57.29578f * 0.5f);
+                        glLightf (glLight, GL_SPOT_EXPONENT, L.Falloff);
                     } else {
-                        glLightf(GL_LIGHT0+li, GL_SPOT_CUTOFF, 180.0f);
+                        glLightf(glLight, GL_SPOT_CUTOFF, 180.0f);
                     }
-                    glEnable(GL_LIGHT0+li);
+                    glEnable(glLight);
                 } else {
-                    glDisable(GL_LIGHT0+li);
+                    glDisable(static_cast<GLenum>(GL_LIGHT0 + li));
                 }
             }
         }
@@ -1282,9 +1270,9 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         if (!pMode) return E_POINTER;
         SDL_DisplayMode mode;
         SDL_GetCurrentDisplayMode(0, &mode);
-        pMode->Width       = mode.w;
-        pMode->Height      = mode.h;
-        pMode->RefreshRate = mode.refresh_rate;
+        pMode->Width       = static_cast<UINT>(mode.w);
+        pMode->Height      = static_cast<UINT>(mode.h);
+        pMode->RefreshRate = static_cast<UINT>(mode.refresh_rate);
         pMode->Format      = D3DFMT_X8R8G8B8;
         return S_OK;
     }
@@ -1293,8 +1281,8 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     HRESULT Reset(D3DPRESENT_PARAMETERS* pp) override {
         if (pp) {
-            if (pp->BackBufferWidth > 0)  width  = pp->BackBufferWidth;
-            if (pp->BackBufferHeight > 0) height = pp->BackBufferHeight;
+            if (pp->BackBufferWidth > 0)  width  = static_cast<int>(pp->BackBufferWidth);
+            if (pp->BackBufferHeight > 0) height = static_cast<int>(pp->BackBufferHeight);
             SDL_Window* win = (SDL_Window*)SDL2_Platform_GetWindow();
             if (win) SDL_SetWindowSize(win, width, height);
             glViewport(0, 0, width, height);
@@ -1316,8 +1304,8 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
         float b = ColorComponent(color,  0);
         float a = ColorComponent(color, 24);
         glClearColor(r, g, b, a);
-        glClearDepth(z);
-        glClearStencil(stencil);
+        glClearDepth(static_cast<GLclampd>(z));
+        glClearStencil(static_cast<GLint>(stencil));
         GLbitfield mask = 0;
         if (flags & D3DCLEAR_TARGET)  mask |= GL_COLOR_BUFFER_BIT;
         if (flags & D3DCLEAR_ZBUFFER) mask |= GL_DEPTH_BUFFER_BIT;
@@ -1345,15 +1333,15 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
     HRESULT SetViewport(const D3DVIEWPORT8* vp) override {
         if (!vp) return E_POINTER;
         // D3D viewport Y is top-down; GL is bottom-up — flip Y
-        int glY = height - (vp->Y + vp->Height);
-        glViewport(vp->X, glY, vp->Width, vp->Height);
-        glDepthRange(vp->MinZ, vp->MaxZ);
+        int glY = height - static_cast<int>(vp->Y + vp->Height);
+        glViewport(static_cast<GLint>(vp->X), glY, static_cast<GLsizei>(vp->Width), static_cast<GLsizei>(vp->Height));
+        glDepthRange(static_cast<GLclampd>(vp->MinZ), static_cast<GLclampd>(vp->MaxZ));
         return S_OK;
     }
     HRESULT GetViewport(D3DVIEWPORT8* vp) override {
         if (!vp) return E_POINTER;
         vp->X = 0; vp->Y = 0;
-        vp->Width = width; vp->Height = height;
+        vp->Width = static_cast<DWORD>(width); vp->Height = static_cast<DWORD>(height);
         vp->MinZ = 0.0f; vp->MaxZ = 1.0f;
         return S_OK;
     }
@@ -1421,9 +1409,9 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
             if (s_mat_count < 20) {
                 fprintf(stderr, "[tex] SetMaterial #%u: diff=(%.2f,%.2f,%.2f,%.2f) amb=(%.2f,%.2f,%.2f,%.2f) emis=(%.2f,%.2f,%.2f,%.2f)\n",
                         ++s_mat_count,
-                        mat->Diffuse.r,  mat->Diffuse.g,  mat->Diffuse.b,  mat->Diffuse.a,
-                        mat->Ambient.r,  mat->Ambient.g,  mat->Ambient.b,  mat->Ambient.a,
-                        mat->Emissive.r, mat->Emissive.g, mat->Emissive.b, mat->Emissive.a);
+                        (double)mat->Diffuse.r,  (double)mat->Diffuse.g,  (double)mat->Diffuse.b,  (double)mat->Diffuse.a,
+                        (double)mat->Ambient.r,  (double)mat->Ambient.g,  (double)mat->Ambient.b,  (double)mat->Ambient.a,
+                        (double)mat->Emissive.r, (double)mat->Emissive.g, (double)mat->Emissive.b, (double)mat->Emissive.a);
             } else {
                 ++s_mat_count;
             }
@@ -1607,28 +1595,16 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
 
     HRESULT CopyRects(IDirect3DSurface8* src, const RECT* srcRects, UINT numRects,
                       IDirect3DSurface8* dst, const POINT* dstPoints) override {
-        // Copy pixel data from src surface to dst surface
         auto* s = static_cast<D3D8Surface_GL*>(src);
         auto* d = static_cast<D3D8Surface_GL*>(dst);
-        static unsigned s_copy_count = 0;
-        unsigned cn = ++s_copy_count;
-        fprintf(stderr, "[tex] CopyRects #%u: src=%p(%ux%u fmt=%u pixels=%p) dst=%p(%ux%u fmt=%u pixels=%p parent=%p) rects=%u\n",
-            cn,
-            (void*)s, s ? s->width : 0, s ? s->height : 0, s ? (unsigned)s->fmt : 0, s ? (void*)s->pixels : nullptr,
-            (void*)d, d ? d->width : 0, d ? d->height : 0, d ? (unsigned)d->fmt : 0, d ? (void*)d->pixels : nullptr,
-            d ? (void*)d->parentTexture : nullptr,
-            numRects);
         if (s && d && s->pixels && d->pixels && s->fmt == d->fmt) {
             if (numRects == 0) {
-                // Full copy — use total_surface_bytes so DXT compressed sizes are handled correctly
                 UINT src_bytes = D3D8Surface_GL::total_surface_bytes(s->width, s->height, s->fmt);
                 UINT dst_bytes = D3D8Surface_GL::total_surface_bytes(d->width, d->height, d->fmt);
                 UINT bytes = src_bytes < dst_bytes ? src_bytes : dst_bytes;
                 if (s->pixels != d->pixels)
                     memmove(d->pixels, s->pixels, bytes);
             } else {
-                // Rect-based sub-copy — only valid for uncompressed formats
-                // (DXT is block-based; sub-rect copies of DXT aren't supported here)
                 UINT bpp = D3D8Surface_GL::bytes_per_pixel(s->fmt);
                 for (UINT i = 0; i < numRects; i++) {
                     int sx = srcRects ? static_cast<int32_t>(srcRects[i].left) : 0;
@@ -1644,54 +1620,29 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                     }
                 }
             }
-            // If dst is a texture surface level, notify parent
             if (d->parentTexture) {
-                fprintf(stderr, "[tex] CopyRects #%u: copy done, triggering Upload_To_GL on parent tex=%p\n",
-                        cn, (void*)d->parentTexture);
+                d->parentTexture->levelHasData[d->mipLevel] = true;
                 d->parentTexture->dirty = true;
-                d->parentTexture->Upload_To_GL();
-            } else {
-                fprintf(stderr, "[tex] CopyRects #%u: copy done, dst has no parent texture\n", cn);
             }
-        } else {
-            // Log why the copy was skipped
-            fprintf(stderr, "[tex] CopyRects #%u: SKIPPED because:", cn);
-            if (!s)             fprintf(stderr, " src=NULL");
-            else if (!d)        fprintf(stderr, " dst=NULL");
-            else {
-                if (!s->pixels) fprintf(stderr, " src->pixels=NULL");
-                if (!d->pixels) fprintf(stderr, " dst->pixels=NULL");
-                if (s->fmt != d->fmt) fprintf(stderr, " fmt_mismatch(src=%u dst=%u)", (unsigned)s->fmt, (unsigned)d->fmt);
-            }
-            fprintf(stderr, "\n");
         }
         return S_OK;
     }
     HRESULT UpdateTexture(IDirect3DBaseTexture8* src, IDirect3DBaseTexture8* dst) override {
         auto* s = static_cast<D3D8Texture_GL*>(src);
         auto* d = static_cast<D3D8Texture_GL*>(dst);
-        static unsigned s_upd_count = 0;
-        unsigned un = ++s_upd_count;
-        {
-            fprintf(stderr, "[tex] UpdateTexture #%u: src=%p(%ux%u fmt=%u pixels=%p) dst=%p(%ux%u fmt=%u pixels=%p)\n",
-                un,
-                (void*)s, s ? s->width : 0, s ? s->height : 0, s ? (unsigned)s->fmt : 0, s ? (void*)s->pixels : nullptr,
-                (void*)d, d ? d->width : 0, d ? d->height : 0, d ? (unsigned)d->fmt : 0, d ? (void*)d->pixels : nullptr);
-        }
-        if (s && d && s->pixels && d->pixels) {
-            UINT bytes = D3D8Surface_GL::total_surface_bytes(s->width, s->height, s->fmt);
-            if (d->width == s->width && d->height == s->height && d->fmt == s->fmt) {
-                if (s->pixels != d->pixels)
-                    memmove(d->pixels, s->pixels, bytes);  // memmove: src/dst pixel buffers may overlap
-                d->dirty = true;
-                d->Upload_To_GL();
-                fprintf(stderr, "[tex] UpdateTexture #%u: copy done, Upload_To_GL triggered\n", un);
-            } else {
-                fprintf(stderr, "[tex] UpdateTexture #%u: SKIPPED - dim/fmt mismatch\n", un);
+        if (s && d) {
+            UINT levels = s->numLevels < d->numLevels ? s->numLevels : d->numLevels;
+            for (UINT i = 0; i < levels && i < 16; i++) {
+                if (s->levelPixels[i] && d->levelPixels[i]) {
+                    UINT mw = D3D8Texture_GL::mip_dim(s->width, i);
+                    UINT mh = D3D8Texture_GL::mip_dim(s->height, i);
+                    UINT bytes = D3D8Surface_GL::total_surface_bytes(mw, mh, s->fmt);
+                    memmove(d->levelPixels[i], s->levelPixels[i], bytes);
+                    d->levelHasData[i] = s->levelHasData[i];
+                }
             }
-        } else {
-            fprintf(stderr, "[tex] UpdateTexture #%u: SKIPPED - null pointer (s=%p d=%p s->px=%p d->px=%p)\n",
-                    un, (void*)s, (void*)d, s ? (void*)s->pixels : nullptr, d ? (void*)d->pixels : nullptr);
+            d->dirty = true;
+            d->Upload_To_GL();
         }
         return S_OK;
     }
@@ -1812,7 +1763,7 @@ struct IDirect3DDevice8_GL : public IDirect3DDevice8 {
                 if (L.off_uv[t] >= 0) {
                     float tu = *(const float*)(vp + L.off_uv[t] + 0);
                     float tv = *(const float*)(vp + L.off_uv[t] + 4);
-                    glMultiTexCoord2f(GL_TEXTURE0 + t, tu, tv);
+                    glMultiTexCoord2f(static_cast<GLenum>(GL_TEXTURE0 + t), tu, tv);
                 }
             }
         }
@@ -1937,9 +1888,9 @@ struct IDirect3D8_GL : public IDirect3D8 {
         if (!pMode) return E_POINTER;
         SDL_DisplayMode sdlMode;
         if (SDL_GetDisplayMode((int)adapter, (int)mode, &sdlMode) != 0) return D3DERR_INVALIDCALL;
-        pMode->Width       = sdlMode.w;
-        pMode->Height      = sdlMode.h;
-        pMode->RefreshRate = sdlMode.refresh_rate;
+        pMode->Width       = static_cast<UINT>(sdlMode.w);
+        pMode->Height      = static_cast<UINT>(sdlMode.h);
+        pMode->RefreshRate = static_cast<UINT>(sdlMode.refresh_rate);
         pMode->Format      = D3DFMT_X8R8G8B8;
         return S_OK;
     }
@@ -1948,9 +1899,9 @@ struct IDirect3D8_GL : public IDirect3D8 {
         if (!pMode) return E_POINTER;
         SDL_DisplayMode sdlMode;
         if (SDL_GetCurrentDisplayMode((int)adapter, &sdlMode) != 0) return D3DERR_INVALIDCALL;
-        pMode->Width       = sdlMode.w;
-        pMode->Height      = sdlMode.h;
-        pMode->RefreshRate = sdlMode.refresh_rate;
+        pMode->Width       = static_cast<UINT>(sdlMode.w);
+        pMode->Height      = static_cast<UINT>(sdlMode.h);
+        pMode->RefreshRate = static_cast<UINT>(sdlMode.refresh_rate);
         pMode->Format      = D3DFMT_X8R8G8B8;
         return S_OK;
     }
@@ -1977,8 +1928,8 @@ struct IDirect3D8_GL : public IDirect3D8 {
         // SDL2 window + GL context were already created by CreateWindowEx.
         // If somehow not yet (e.g. dedicated server path), init now.
         if (!SDL2_Platform_GetWindow()) {
-            int w = pPP ? pPP->BackBufferWidth  : 800;
-            int h = pPP ? pPP->BackBufferHeight : 600;
+            int w = pPP ? static_cast<int>(pPP->BackBufferWidth)  : 800;
+            int h = pPP ? static_cast<int>(pPP->BackBufferHeight) : 600;
             if (w <= 0) w = 800;
             if (h <= 0) h = 600;
             if (SDL2_Platform_Init("Renegade", w, h) != 0) return D3DERR_INVALIDCALL;
@@ -1986,8 +1937,8 @@ struct IDirect3D8_GL : public IDirect3D8 {
 
         IDirect3DDevice8_GL* dev = new IDirect3DDevice8_GL();
         if (pPP) {
-            if (pPP->BackBufferWidth  > 0) dev->width  = pPP->BackBufferWidth;
-            if (pPP->BackBufferHeight > 0) dev->height = pPP->BackBufferHeight;
+            if (pPP->BackBufferWidth  > 0) dev->width  = static_cast<int>(pPP->BackBufferWidth);
+            if (pPP->BackBufferHeight > 0) dev->height = static_cast<int>(pPP->BackBufferHeight);
         }
         glViewport(0, 0, dev->width, dev->height);
         *ppDevice = dev;
