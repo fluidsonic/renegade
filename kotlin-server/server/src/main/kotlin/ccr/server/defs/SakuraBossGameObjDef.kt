@@ -1,5 +1,6 @@
 package ccr.server.defs
 
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.mix.ChunkReader
 
 /**
@@ -125,10 +126,10 @@ class SakuraBossGameObjDef internal constructor(
             return DefenseObjectDefClass(
                 health              = vars.readMicroFloat(MCID_DEF_HEALTH) ?: 100f,
                 healthMax           = vars.readMicroFloat(MCID_DEF_HEALTH_MAX) ?: 100f,
-                skin                = vars.readMicroInt(MCID_DEF_SKIN) ?: 0,
+                skin                = ArmorWarheadManager.findArmorSaveID(vars.readMicroInt(MCID_DEF_SKIN) ?: 0),
                 shieldStrength      = vars.readMicroFloat(MCID_DEF_SHIELD_STRENGTH) ?: 0f,
                 shieldStrengthMax   = vars.readMicroFloat(MCID_DEF_SHIELD_STRENGTH_MAX) ?: 0f,
-                shieldType          = vars.readMicroInt(MCID_DEF_SHIELD_TYPE) ?: 0,
+                shieldType          = ArmorWarheadManager.findArmorSaveID(vars.readMicroInt(MCID_DEF_SHIELD_TYPE) ?: 0),
                 damagePoints        = vars.readMicroFloat(MCID_DEF_DAMAGE_POINTS) ?: 0f,
                 deathPoints         = vars.readMicroFloat(MCID_DEF_DEATH_POINTS) ?: 0f,
             )

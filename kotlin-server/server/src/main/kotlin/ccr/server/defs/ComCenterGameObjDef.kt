@@ -1,5 +1,6 @@
 package ccr.server.defs
 
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.mix.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -147,7 +148,8 @@ class ComCenterGameObjDef(
             // --- BuildingGameObjDef ---
             val bldgVars = objDataChunk.findChunkRecursive(CHUNKID_BUILDING_DEF_VARIABLES)
             val meshPrefix = bldgVars?.mcString(MCID_MESHPREFIX) ?: ""
-            val mctSkin = bldgVars?.mcInt(MCID_MCTSKIN) ?: 0
+            // C++: MCTSkin is used directly as an ArmorType index (like DefenseObject.Skin)
+            val mctSkin = ArmorWarheadManager.findArmorSaveID(bldgVars?.mcInt(MCID_MCTSKIN) ?: 0)
             val buildingType = bldgVars?.mcInt(MCID_BUILDING_TYPE) ?: BuildingGameObjDef.BUILDING_TYPE_COM_CENTER
             val gdiDamageReportId = bldgVars?.mcInt(MCID_GDI_DAMAGE_REPORT_ID) ?: 0
             val nodDamageReportId = bldgVars?.mcInt(MCID_NOD_DAMAGE_REPORT_ID) ?: 0
@@ -191,10 +193,10 @@ class ComCenterGameObjDef(
             return DefenseObjectDefClass(
                 health            = vars.mcFloat(MCID_DEF_HEALTH) ?: 100f,
                 healthMax         = vars.mcFloat(MCID_DEF_HEALTH_MAX) ?: 100f,
-                skin              = vars.mcInt(MCID_DEF_SKIN) ?: 0,
+                skin              = ArmorWarheadManager.findArmorSaveID(vars.mcInt(MCID_DEF_SKIN) ?: 0),
                 shieldStrength    = vars.mcFloat(MCID_DEF_SHIELD_STRENGTH) ?: 0f,
                 shieldStrengthMax = vars.mcFloat(MCID_DEF_SHIELD_STRENGTH_MAX) ?: 0f,
-                shieldType        = vars.mcInt(MCID_DEF_SHIELD_TYPE) ?: 0,
+                shieldType        = ArmorWarheadManager.findArmorSaveID(vars.mcInt(MCID_DEF_SHIELD_TYPE) ?: 0),
                 damagePoints      = vars.mcFloat(MCID_DEF_DAMAGE_POINTS) ?: 0f,
                 deathPoints       = vars.mcFloat(MCID_DEF_DEATH_POINTS) ?: 0f,
             )

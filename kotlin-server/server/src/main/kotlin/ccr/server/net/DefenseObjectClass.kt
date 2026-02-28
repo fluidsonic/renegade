@@ -89,11 +89,11 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
 
     // C++: bool Is_Repair(const OffenseObjectClass& offense, float scale)
     // Returns true if this offense+scale combination would repair (negative damage) rather than damage.
-    // skin and offense.warhead are armor/warhead type indices (converted from save IDs at def load time).
     fun isRepair(offense: OffenseObjectClass, scale: Float = 1.0f): Boolean {
         val damage = offense.damage * scale
-        val damageScale = ArmorWarheadManager.getDamageMultiplier(skin, offense.warhead)
-        val shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, offense.warhead)
+        val wh = ArmorWarheadManager.findWarheadSaveID(offense.warhead)
+        val damageScale = ArmorWarheadManager.getDamageMultiplier(skin, wh)
+        val shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, wh)
         return (damage * damageScale < 0) || (damage * shieldDamageScale < 0)
     }
 
@@ -101,8 +101,9 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
     // Returns true if this offense+scale combination would actually reduce health or shield.
     fun wouldDamage(offense: OffenseObjectClass, scale: Float = 1.0f): Boolean {
         val damage = offense.damage * scale
-        val damageScale = ArmorWarheadManager.getDamageMultiplier(skin, offense.warhead)
-        val shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, offense.warhead)
+        val wh = ArmorWarheadManager.findWarheadSaveID(offense.warhead)
+        val damageScale = ArmorWarheadManager.getDamageMultiplier(skin, wh)
+        val shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, wh)
         // TODO (CombatManager): friendly fire check — if teammate && !isFriendlyFirePermitted() return false
         if (damage * damageScale > 0 && health > 0) return true
         if (damage * shieldDamageScale > 0 && shieldStrength > 0) return true
@@ -113,24 +114,26 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
     // On the server we always call Do_Damage directly (no client-side damage path).
     // C++: damage.cpp:684 — Do_Damage
     //
-    // NOTE: skin, shieldType, and offense.warhead are armor/warhead type INDICES
-    // (not save IDs). The C++ converts save IDs → indices in DefenseObjectDefClass::Load
-    // and AmmoDefinitionClass; the Kotlin defs must do the same via
-    // ArmorWarheadManager.findArmorSaveID / findWarheadSaveID at def-load time.
+    // skin, shieldType, and alternateSkin are armor type INDICES (converted from save IDs at
+    // def load time by DefenseObjectDef.toDefenseObjectDefClass() and building-def loaders).
+    // offense.warhead is treated as a warhead save ID and converted here via findWarheadSaveID.
     fun applyDamage(offense: OffenseObjectClass, scale: Float = 1.0f, alternateSkin: Int = -1): Float {
 
         var damage = offense.damage * scale
+
+        // Convert warhead save ID → warhead type index
+        val wh = ArmorWarheadManager.findWarheadSaveID(offense.warhead)
 
         // Determine armor multipliers — C++: damage.cpp:730-738
         val damageScale: Float
         var shieldDamageScale: Float
         if (alternateSkin != -1) {
-            // MCT hit: use alternate skin for health, bypass shields entirely
-            damageScale = ArmorWarheadManager.getDamageMultiplier(alternateSkin, offense.warhead)
+            // MCT hit: alternate_skin is already an armor type index; bypass shields entirely
+            damageScale = ArmorWarheadManager.getDamageMultiplier(alternateSkin, wh)
             shieldDamageScale = 0f
         } else {
-            damageScale = ArmorWarheadManager.getDamageMultiplier(skin, offense.warhead)
-            shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, offense.warhead)
+            damageScale = ArmorWarheadManager.getDamageMultiplier(skin, wh)
+            shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, wh)
         }
 
         // Repair branch: negative damage = healing — C++: damage.cpp:751-776
@@ -166,7 +169,7 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
             // If we have a shield, redirect a fraction of damage to it — C++: damage.cpp:795-816
             // If alternate skin (MCT), ignore shield entirely (shieldDamageScale == 0)
             if (shieldStrength > 0f && alternateSkin == -1) {
-                var shieldDamage = damage * ArmorWarheadManager.getShieldAbsorption(shieldType, offense.warhead)
+                var shieldDamage = damage * ArmorWarheadManager.getShieldAbsorption(shieldType, wh)
                 damage -= shieldDamage
 
                 shieldDamage *= shieldDamageScale

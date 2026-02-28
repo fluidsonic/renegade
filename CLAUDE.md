@@ -318,8 +318,9 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 
 ### ArmorWarheadManager — armor × warhead damage table
 - `ArmorWarheadManager` is no longer a stub — loaded from `armor.ini` inside `always.dbs` during `loadLevel()` / `loadDefinitions()`
-- Call: `ArmorWarheadManager.scaleDamage(rawDamage, warheadSaveId, armorSaveId)` — returns 1.0× if table not yet loaded
-- `AmmoDefinitionClass.warhead` is the warhead save ID; `BuildingGameObj.shieldType` is the normal armor save ID; `BuildingGameObj.mctSkinSaveId` is the MCT alternate armor save ID (from `BuildingGameObjDef.mctSkin`)
+- Key methods: `getDamageMultiplier(armorIdx, warheadIdx)`, `getShieldAbsorption(armorIdx, warheadIdx)`, `isArmorSoft(armorIdx)`; also `findArmorSaveID(saveId)` and `findWarheadSaveID(saveId)` to convert save IDs → type indices
+- **Save ID vs type index**: Armor/warhead types are stored as sequential indices internally; `.ddb` files persist save IDs. All def loaders (`BuildingGameObjDef`, `SoldierGameObjDef`, etc.) call `findArmorSaveID()` at load time to convert `skin`, `shieldType`, and `mctSkin` to type indices. `offense.warhead` is a warhead save ID (from network packets / `AmmoDefinitionClass.warhead`) and is converted inside `DefenseObjectClass.applyDamage()` via `findWarheadSaveID()`.
+- `BuildingGameObjDef.mctSkin` is stored as an **armor type index** (already converted at def load time) — pass directly as `alternateSkin` to `DefenseObjectClass.applyDamage()`
 - `IniFile` (ccr.server.mix) — simple section-based INI parser: `getString/getInt/getFloat/entryCount/getEntry`, case-insensitive, `;` comments
 
 ### Network Object Factory Pipeline

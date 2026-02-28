@@ -1,5 +1,6 @@
 package ccr.server.defs
 
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.mix.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -118,13 +119,15 @@ data class DefenseObjectDef(
     val damagePoints: Float = 0f,
     val deathPoints: Float = 0f,
 ) {
+    // C++: DefenseObjectDefClass::Load converts skin/shieldType save IDs → armor type indices
+    // via ArmorWarheadManager::Find_Armor_Save_ID. We do the same here.
     fun toDefenseObjectDefClass() = DefenseObjectDefClass(
         health = health,
         healthMax = healthMax,
-        skin = skinSaveId,
+        skin = ArmorWarheadManager.findArmorSaveID(skinSaveId),
         shieldStrength = shieldStrength,
         shieldStrengthMax = shieldStrengthMax,
-        shieldType = shieldTypeSaveId,
+        shieldType = ArmorWarheadManager.findArmorSaveID(shieldTypeSaveId),
         damagePoints = damagePoints,
         deathPoints = deathPoints,
     )

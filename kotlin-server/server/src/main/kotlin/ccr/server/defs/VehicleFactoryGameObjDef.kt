@@ -1,5 +1,6 @@
 package ccr.server.defs
 
+import ccr.server.combat.ArmorWarheadManager
 import ccr.server.mix.ChunkReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -208,10 +209,10 @@ open class VehicleFactoryGameObjDef(
             return DefenseObjectDefClass(
                 health            = vars.mcFloat(MCID_DEF_HEALTH) ?: 100f,
                 healthMax         = vars.mcFloat(MCID_DEF_HEALTH_MAX) ?: 100f,
-                skin              = vars.mcInt(MCID_DEF_SKIN) ?: 0,
+                skin              = ArmorWarheadManager.findArmorSaveID(vars.mcInt(MCID_DEF_SKIN) ?: 0),
                 shieldStrength    = vars.mcFloat(MCID_DEF_SHIELD_STRENGTH) ?: 0f,
                 shieldStrengthMax = vars.mcFloat(MCID_DEF_SHIELD_STRENGTH_MAX) ?: 0f,
-                shieldType        = vars.mcInt(MCID_DEF_SHIELD_TYPE) ?: 0,
+                shieldType        = ArmorWarheadManager.findArmorSaveID(vars.mcInt(MCID_DEF_SHIELD_TYPE) ?: 0),
                 damagePoints      = vars.mcFloat(MCID_DEF_DAMAGE_POINTS) ?: 0f,
                 deathPoints       = vars.mcFloat(MCID_DEF_DEATH_POINTS) ?: 0f,
             )
