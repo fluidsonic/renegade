@@ -5,7 +5,6 @@ import ccr.physics.vehicle.WheeledVehicleClass
 import ccr.server.defs.MoveablePhysDefClass
 import ccr.server.defs.PhysDefClass
 import ccr.server.core.ChunkReader
-import kotlin.math.toDegrees
 
 /**
  * Kotlin representation of WheeledVehicleDefClass (wwphys/wheelvehicle.h).
@@ -95,7 +94,7 @@ open class WheeledVehicleDefClass(
         obj.shiftUpRpm = shiftUpRpm
         obj.shiftDownRpm = shiftDownRpm
         // WheeledVehicleClass field: def is in radians, class is in degrees
-        obj.maxSteeringAngle = maxSteeringAngle.toDegrees()
+        obj.maxSteeringAngle = maxSteeringAngle * (180f / Math.PI.toFloat())
         return obj
     }
 

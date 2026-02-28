@@ -2,6 +2,7 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.physics.static.StaticPhysClass
 import ccr.server.defs.OBBoxClass
 import ccr.server.defs.RepairBayGameObjDef
 import ccr.server.defs.ZoneType
@@ -164,7 +165,7 @@ class RepairBayGameObj() : BuildingGameObj() {
         for (aggregate in aggregates) {
             val physObj = aggregate as? StaticPhysClass ?: continue
             val model = physObj.model ?: continue
-            if (model.getName().equals("rep^NOD_fx", ignoreCase = true)) {
+            if (model.name.equals("rep^NOD_fx", ignoreCase = true)) {
                 repairMesh = physObj
                 break
             }
@@ -349,13 +350,13 @@ class RepairBayGameObj() : BuildingGameObj() {
 
         // C++: Configure the animation
         val animMgr = animPhysObj.getAnimationManager()
-        animMgr.setAnimationMode(AnimCollisionManagerClass.ANIMATE_TARGET)
+        animMgr.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
 
         // C++: Either play the animation forward or backward
-        if (onoff && animMgr.getTargetFrame() == 0f) {
+        if (onoff && animMgr.targetFrame == 0f) {
             animMgr.setTargetFrameEnd()
-        } else if (!onoff && animMgr.getTargetFrame() != 0f) {
-            animMgr.setTargetFrame(0f)
+        } else if (!onoff && animMgr.targetFrame != 0f) {
+            animMgr.targetFrame = 0f
         }
     }
 

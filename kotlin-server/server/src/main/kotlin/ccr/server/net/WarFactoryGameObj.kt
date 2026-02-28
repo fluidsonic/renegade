@@ -1,5 +1,6 @@
 package ccr.server.net
 
+import ccr.physics.static.AnimCollisionManagerClass
 import ccr.physics.static.StaticAnimPhysClass
 
 // C++: class WarFactoryGameObj : public VehicleFactoryGameObj
@@ -173,13 +174,15 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
 
         // C++: Configure the animation
         val animMgr = animPhysObj.getAnimationManager()
-        animMgr.setAnimationMode(AnimCollisionManagerClass.ANIMATE_TARGET)
+        // C++: animMgr.Set_Animation_Mode(AnimCollisionManagerClass::ANIMATE_TARGET)
+        animMgr.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
 
         // C++: Either play the animation forward or backward
         if (onoff) {
             animMgr.setTargetFrameEnd()
         } else {
-            animMgr.setTargetFrame(0)
+            // C++: animMgr.Set_Target_Frame(0)
+            animMgr.targetFrame = 0f
         }
 
         staticPhysObj.enableIsStateDirty(true)
@@ -200,9 +203,12 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
         if (staticPhysObj != null) {
             val animPhysObj = staticPhysObj as? StaticAnimPhysClass
             if (animPhysObj != null) {
-                // C++: Calculate how long to wait before we start playing the end animations
+                // C++: creationFinishedTimer = animMgr.Peek_Animation()->Get_Total_Time() + 2.0f
+                // Get_Total_Time() = numFrames / frameRate. On the server we have no live
+                // HAnimClass, so compute it from the AnimCollisionManagerClass fields directly.
                 val animMgr = animPhysObj.getAnimationManager()
-                creationFinishedTimer = (animMgr.peekAnimation()?.getTotalTime() ?: 0f) + 2.0f
+                val totalTime = if (animMgr.frameRate > 0f) animMgr.numFrames / animMgr.frameRate else 0f
+                creationFinishedTimer = totalTime + 2.0f
             }
         }
     }

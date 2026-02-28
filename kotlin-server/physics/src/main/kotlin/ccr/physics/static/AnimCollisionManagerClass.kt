@@ -117,6 +117,11 @@ class AnimCollisionManagerClass(private val parent: PhysClass) {
         const val DEF_VARIABLE_COLLISIONMODE: Int = 0x00
         const val DEF_VARIABLE_ANIMATIONMODE: Int = 0x01
         const val DEF_VARIABLE_ANIMATIONNAME: Int = 0x02
+
+        // Convenience aliases for callers — match C++ ANIMATE_* constants
+        val ANIMATE_LOOP   = AnimMode.LOOP
+        val ANIMATE_TARGET = AnimMode.TARGET
+        val ANIMATE_MANUAL = AnimMode.MANUAL
     }
 
     // -------------------------------------------------------------------------
@@ -171,8 +176,19 @@ class AnimCollisionManagerClass(private val parent: PhysClass) {
         targetFrame = loopEnd
     }
 
-    /** C++: HAnimClass * Peek_Animation() — returns null on server (no HAnimClass). */
-    fun peekAnimation(): Any? = null
+    /**
+     * Server-side proxy for HAnimClass — only exposes what the server needs.
+     * C++: HAnimClass provides Get_Total_Time() = num_frames / frame_rate.
+     */
+    inner class AnimInfo {
+        fun getTotalTime(): Float = if (frameRate > 0f) numFrames / frameRate else 0f
+    }
+
+    /** C++: HAnimClass * Peek_Animation() — returns non-null when an animation is loaded. */
+    fun peekAnimation(): AnimInfo? = if (animationName.isNotEmpty()) AnimInfo() else null
+
+    /** C++: void Set_Target_Frame(int frame) — integer overload used by callers. */
+    fun setTargetFrame(frame: Int) { targetFrame = frame.toFloat() }
 
     /**
      * C++: void Set_Target_Frame_End()
@@ -180,7 +196,7 @@ class AnimCollisionManagerClass(private val parent: PhysClass) {
      */
     fun setTargetFrameEnd() {
         if (numFrames > 0f) {
-            setTargetFrame(numFrames - 1f)
+            targetFrame = numFrames - 1f
         }
     }
 
@@ -196,24 +212,6 @@ class AnimCollisionManagerClass(private val parent: PhysClass) {
      */
     fun setCurrentFrame(frame: Float) {
         curFrame = frame
-        parent.enableIsStateDirty(true)
-    }
-
-    /**
-     * C++: void Set_Loop_Start(float frame0)
-     * Also marks the parent's state dirty.
-     */
-    fun setLoopStart(frame0: Float) {
-        loopStart = frame0
-        parent.enableIsStateDirty(true)
-    }
-
-    /**
-     * C++: void Set_Loop_End(float frame1)
-     * Also marks the parent's state dirty.
-     */
-    fun setLoopEnd(frame1: Float) {
-        loopEnd = frame1
         parent.enableIsStateDirty(true)
     }
 

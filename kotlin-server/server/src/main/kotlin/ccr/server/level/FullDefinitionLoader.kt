@@ -186,7 +186,8 @@ object FullDefinitionLoader {
                 ProjectileDefClass.load(objDataChunk, name, id, chunkId)
 
             VehiclePhysDefClass.CHUNK_ID ->
-                VehiclePhysDefClass.load(objDataChunk, name, id, chunkId)
+                // VehiclePhysDefClass is abstract — only concrete subclasses appear in DDB files
+                fallback
 
             TrackedVehicleDefClass.CHUNK_ID ->
                 TrackedVehicleDefClass.load(objDataChunk, name, id, chunkId)

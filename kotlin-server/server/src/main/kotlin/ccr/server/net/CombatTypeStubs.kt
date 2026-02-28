@@ -966,10 +966,3 @@ class ExplosionDefinitionClass {
     val damageStrength: Float = 0f
     val damageWarhead: Int = 0
 }
-
-fun PhysAABoxIntersectionTestClass(box: AABoxClass?, collisionGroup: Int, collisionType: Int): PhysAABoxIntersectionTestClass =
-    PhysAABoxIntersectionTestClass(box ?: AABoxClass(), collisionGroup, collisionType)
-
-// Overload accepting ccr.math.AABox (returned by RenderObjClass.getBoundingBox())
-fun PhysAABoxIntersectionTestClass(box: ccr.math.AABox?, collisionGroup: Int, collisionType: Int): PhysAABoxIntersectionTestClass =
-    PhysAABoxIntersectionTestClass(AABoxClass(box?.center ?: ccr.math.Vector3(), box?.extent ?: ccr.math.Vector3()), collisionGroup, collisionType)
