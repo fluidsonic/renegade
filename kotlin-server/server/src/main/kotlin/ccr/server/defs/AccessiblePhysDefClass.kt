@@ -59,6 +59,11 @@ class AccessiblePhysDefClass(
     fun create(): PhysClass {
         val obj = AccessiblePhysClass()
         obj.lockCode = lockCode
+        obj.init(
+            collisionModeValue = animManagerDef.collisionMode,
+            animationModeValue = animManagerDef.animationMode,
+            animationName = animManagerDef.animationName,
+        )
         return obj
     }
 

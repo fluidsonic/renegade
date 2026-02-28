@@ -68,9 +68,16 @@ class DamageableStaticPhysDefClass(
      * C++: DamageableStaticPhysDefClass::Create()
      * Creates a DamageableStaticPhysClass and initialises it via Init(*this).
      * Init calls StaticAnimPhysClass::Init -> StaticPhysClass::Init -> PhysClass::Init.
-     * No def fields are copied into the physics instance (state is initialised to STATE_LIVE_LOOP).
      */
-    fun create(): PhysClass = DamageableStaticPhysClass()
+    fun create(): PhysClass {
+        val obj = DamageableStaticPhysClass()
+        obj.init(
+            collisionModeValue = animManagerDef.collisionMode,
+            animationModeValue = animManagerDef.animationMode,
+            animationName = animManagerDef.animationName,
+        )
+        return obj
+    }
 
     companion object {
         /** Persist factory chunk ID for DamageableStaticPhysDefClass in the DDB. */

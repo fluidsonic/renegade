@@ -79,14 +79,22 @@ class DoorPhysDefClass(
      * triggerZone1/2 are stored as FloatArray? (basis 9f + center 3f + extent 3f);
      * converted to OBBox? via OBBox.fromFloatArray().
      */
-    fun create(): PhysClass = DoorPhysClass(
-        definitionId = id.toInt(),
-        closeDelay = closeDelay,
-        triggerZone1 = triggerZone1?.let { OBBox.fromFloatArray(it) },
-        triggerZone2 = triggerZone2?.let { OBBox.fromFloatArray(it) },
-        defLockCode = lockCode,
-        doorOpensForVehicles = doorOpensForVehicles,
-    )
+    fun create(): PhysClass {
+        val obj = DoorPhysClass(
+            definitionId = id.toInt(),
+            closeDelay = closeDelay,
+            triggerZone1 = triggerZone1?.let { OBBox.fromFloatArray(it) },
+            triggerZone2 = triggerZone2?.let { OBBox.fromFloatArray(it) },
+            defLockCode = lockCode,
+            doorOpensForVehicles = doorOpensForVehicles,
+        )
+        obj.init(
+            collisionModeValue = animManagerDef.collisionMode,
+            animationModeValue = animManagerDef.animationMode,
+            animationName = animManagerDef.animationName,
+        )
+        return obj
+    }
 
     companion object {
         /** CLASSID_DOORPHYSDEF = CLASSID_PHYSICS(0x9000) + 0x80 */

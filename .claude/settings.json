@@ -42,21 +42,12 @@
 		"autoAllowBashIfSandboxed": true,
 		"enabled": true,
 		"excludedCommands": [
+			"* git *",
 			"*/gradlew *",
-			"*git * merge *",
-			"*git * merge",
-			"*git * worktree*",
-			"*git worktree*",
-			"*git*checkout*",
-			"*git*commit*",
-			"*git*rebase*",
-			"*git*remote*",
-			"*git*reset*",
-			"*git*stash*",
-			"git merge:*",
-			"*launch-server.sh*",
 			"*RenegadeServer.exe*",
-			"cxbottle:*"
+			"*launch-server.sh*",
+			"cxbottle:*",
+			"git:*"
 		],
 		"network": {
 			"allowLocalBinding": true,

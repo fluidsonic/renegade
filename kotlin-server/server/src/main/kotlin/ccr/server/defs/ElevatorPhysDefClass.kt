@@ -80,6 +80,11 @@ class ElevatorPhysDefClass(
     fun create(): PhysClass {
         val obj = ElevatorPhysClass()
         obj.lockCode = lockCode
+        obj.init(
+            collisionModeValue = animManagerDef.collisionMode,
+            animationModeValue = animManagerDef.animationMode,
+            animationName = animManagerDef.animationName,
+        )
         return obj
     }
 

@@ -40,9 +40,16 @@ data class ShakeableStaticPhysDefClass(
     /**
      * C++: ShakeableStaticPhysDefClass::Create()
      * Creates a ShakeableStaticPhysClass and initialises it via Init(*this).
-     * No def fields are copied into the physics instance.
      */
-    fun create(): PhysClass = ShakeableStaticPhysClass()
+    fun create(): PhysClass {
+        val obj = ShakeableStaticPhysClass()
+        obj.init(
+            collisionModeValue = animManagerDef.collisionMode,
+            animationModeValue = animManagerDef.animationMode,
+            animationName = animManagerDef.animationName,
+        )
+        return obj
+    }
 
     companion object {
         /** CLASSID_SHAKEABLESTATICPHYSDEF (wwphysids.h enum offset 15 from CLASSID_PHYSICS=0x9000) */
