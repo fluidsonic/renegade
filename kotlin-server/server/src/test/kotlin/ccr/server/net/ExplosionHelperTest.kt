@@ -150,6 +150,7 @@ private fun buildSceneWithWallAt(x: Float): PhysicsScene {
         ),
     )
     scene.addStaticObject(wall)
+    scene.buildStaticTree()
     return scene
 }
 

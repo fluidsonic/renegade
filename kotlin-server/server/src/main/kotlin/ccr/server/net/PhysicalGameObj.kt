@@ -550,8 +550,8 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: PhysicalGameObj::Export_Rare
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)
-        packet.addTerminatedString(physObj?.peekModel()?.getName() ?: modelName, permitEmpty = false)
-        packet.addTerminatedString(animName, permitEmpty = this !is SoldierGameObj)
+        packet.addTerminatedString(physObj?.peekModel()?.getName() ?: modelName, permitEmpty = true)
+        packet.addTerminatedString(animName, permitEmpty = true)
         // C++: when AnimControl == NULL, curr_frame=0, target_frame=0, anim_mode=ANIM_MODE_TARGET(3).
         // The server has no real animation system — always send the C++ NULL-AnimControl defaults.
         packet.addInt(0)              // currFrame
