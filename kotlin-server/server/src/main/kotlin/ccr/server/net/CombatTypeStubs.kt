@@ -6,12 +6,6 @@ import ccr.math.Vector3
 import ccr.physics.PhysClass
 import ccr.physics.static.StaticPhysClass
 import ccr.physics.scene.PhysicsScene
-import ccr.physics.Animatable3DObjClass
-import ccr.physics.HAnimClass
-import ccr.physics.HAnimComboClass
-import ccr.physics.HTreeClass
-import ccr.physics.MeshClass
-import ccr.physics.RenderObjClass
 import ccr.server.defs.Dialogue
 import ccr.server.level.ChunkIds
 

@@ -74,8 +74,8 @@ abstract class PhysClass {
     /** Definition object containing constants shared between instances (matches C++ Definition). */
     var definition: Any? = null  // TODO: replace with PhysDefClass when added to physics module
 
-    // C++: RenderObjClass* Model (phys.h:586); accessed via Peek_Model()
-    var model: RenderObjClass? = null
+    /** C++: RenderObjClass* Model — the render object attached to this physics object. */
+    var model: Any? = null  // typed as Any? because RenderObjClass lives in the server module; cast at use site
 
     abstract var transform: Matrix3D
 

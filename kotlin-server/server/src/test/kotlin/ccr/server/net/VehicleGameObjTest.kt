@@ -4,6 +4,7 @@ import ccr.math.Quaternion
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.math.Matrix3
+import ccr.physics.PhysClass
 import ccr.physics.rigidbody.RigidBodyState
 import ccr.physics.vehicle.WVWheel
 import ccr.physics.vehicle.VehiclePhysClass
