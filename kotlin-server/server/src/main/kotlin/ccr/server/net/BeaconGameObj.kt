@@ -153,7 +153,7 @@ class BeaconGameObj() : SimpleGameObj() {
         if (owner.get() != null) {
             val smart = owner.get()?.asSmartGameObj()
             if (smart != null) {
-                playerType = smart.getPlayerType()
+                playerType = smart.playerType
             }
         }
     }

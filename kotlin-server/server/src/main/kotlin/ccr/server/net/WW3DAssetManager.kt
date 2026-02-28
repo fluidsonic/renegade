@@ -21,6 +21,7 @@ class HAnimClass(private val anim: W3dAnimation) {
     val hName: String get() = anim.hierarchyName
 
     // C++: virtual int Get_Num_Frames() = 0  [hanim.h ~line 43]
+    @get:JvmName("numFramesField")
     val numFrames: Int get() = anim.numFrames
     fun getNumFrames(): Int = numFrames
 

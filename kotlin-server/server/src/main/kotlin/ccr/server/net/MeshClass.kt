@@ -15,10 +15,12 @@ open class MeshClass : RenderObjClass() {
     var lightEnvironment: Any? = null
 
     // C++: int BaseVertexOffset
-    var baseVertexOffset: Int = 0
+    // @JvmField suppresses auto-generated getter/setter to avoid clash with explicit methods below.
+    @JvmField var baseVertexOffset: Int = 0
 
     // C++: MeshClass* NextVisibleSkin
-    var nextVisibleSkin: MeshClass? = null
+    // @JvmField suppresses auto-generated getter/setter to avoid clash with explicit methods below.
+    @JvmField var nextVisibleSkin: MeshClass? = null
 
     // C++: unsigned MeshDebugId
     var meshDebugId: Int = 0

@@ -65,7 +65,7 @@ class GameCombatNetworkHandlerClass(private val network: Network) : CombatNetwor
 
             // C++: if (p_soldier->Is_Team_Player()) → Find_Team → Increment_Kills()
             if (killer.isTeamPlayer()) {
-                findTeam(killer.getPlayerType())?.incrementKills()
+                findTeam(killer.playerType)?.incrementKills()
             }
         }
     }
@@ -80,7 +80,7 @@ class GameCombatNetworkHandlerClass(private val network: Network) : CombatNetwor
 
         // C++: if (p_soldier->Is_Team_Player()) → Find_Team → Increment_Deaths()
         if (soldier.isTeamPlayer()) {
-            findTeam(soldier.getPlayerType())?.incrementDeaths()
+            findTeam(soldier.playerType)?.incrementDeaths()
         }
     }
 

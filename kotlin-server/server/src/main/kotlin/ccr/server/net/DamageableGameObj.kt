@@ -44,9 +44,15 @@ abstract class DamageableGameObj : ScriptableGameObj() {
     var shieldType: Int       get() = defenseObject.shieldType;     set(v) { defenseObject.shieldType = v }
 
     // C++: int PlayerType — Set_Player_Type also sets BIT_RARE dirty
-    open var playerType: Int = PLAYERTYPE_NEUTRAL
+    // Private backing field + @Suppress("INAPPLICABLE_JVM_NAME") allows @get:JvmName on open var,
+    // renaming the auto-generated property getter so it no longer clashes with fun getPlayerType().
+    private var _playerType: Int = PLAYERTYPE_NEUTRAL
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @get:JvmName("playerTypeField")
+    open var playerType: Int
+        get() = _playerType
         set(value) {
-            field = value
+            _playerType = value
             setObjectDirtyBit(BIT_RARE, true)
         }
 
@@ -143,8 +149,7 @@ abstract class DamageableGameObj : ScriptableGameObj() {
     // C++: virtual bool Is_Targetable() const
     open fun isTargetable(): Boolean = !getDamageableDefinition().notTargetable
 
-    // C++: int Get_Player_Type() — C++ method bridge for the playerType property
-    fun getPlayerType(): Int = playerType
+    // C++: int Get_Player_Type() — use .playerType property directly in Kotlin
 
     // C++: bool Is_Team_Player()
     fun isTeamPlayer(): Boolean = playerType == PLAYERTYPE_NOD || playerType == PLAYERTYPE_GDI

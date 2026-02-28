@@ -38,7 +38,8 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
 
     // C++: OBBoxClass BeaconZone — bounding box of the closest beacon zone to this base's buildings.
     // Set externally during level init (C++: ScriptZoneGameObj::Find_Closest_Zone → Get_Bounding_Box).
-    var beaconZone: OBBox = OBBox(Vector3(), Vector3())
+    // @JvmField suppresses auto-generated getBeaconZone()/setBeaconZone() clash with explicit fun below.
+    @JvmField var beaconZone: OBBox = OBBox(Vector3(), Vector3())
 
     // All fields start at C++ Initialize() defaults
     var operationTimeFactor: Float = 1f; private set
@@ -216,7 +217,7 @@ class BaseControllerClass(val playerType: Int = 0) : NetworkObject() {
         val cncDef = network?.loadedLevel?.definitions?.all()
             ?.filterIsInstance<CNCModeSettingsDef>()?.firstOrNull() ?: return 0
         val isNuke = beacon.getDefinition().isNuke()
-        val team = beacon.getPlayerType()
+        val team = beacon.playerType
         return if (isNuke) {
             if (team == PLAYERTYPE_NOD) nodNuke(cncDef) else gdiNuke(cncDef)
         } else {

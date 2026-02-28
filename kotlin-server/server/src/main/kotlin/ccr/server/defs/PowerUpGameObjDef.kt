@@ -145,7 +145,7 @@ open class PowerUpGameObjDef(
             val baseDef = obj.definition as? DamageableGameObjDef
             var add = grantShieldStrengthMax * (baseDef?.defenseObjectDef?.shieldStrengthMax ?: 0f)
 
-            when (CombatManager.getDifficultyLevel()) {
+            when (CombatManager.difficultyLevel) {
                 0 -> add *= 2.0f
                 2 -> add *= 0.75f
             }
@@ -183,7 +183,7 @@ open class PowerUpGameObjDef(
             val baseDef = obj.definition as? DamageableGameObjDef
             var add = grantHealthMax * (baseDef?.defenseObjectDef?.healthMax ?: 0f)
 
-            when (CombatManager.getDifficultyLevel()) {
+            when (CombatManager.difficultyLevel) {
                 0 -> add *= 2.0f
                 2 -> add *= 0.75f
             }

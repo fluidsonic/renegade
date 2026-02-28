@@ -8,7 +8,8 @@ import ccr.math.Vector3
 class LogicalSoundClass : SoundSceneObjClass() {
 
     // C++: uint32 m_TypeMask
-    var typeMask: Int = 0
+    // @JvmField suppresses auto-generated getTypeMask()/setTypeMask() to avoid clash with explicit fun.
+    @JvmField var typeMask: Int = 0
 
     // C++: float m_DropOffRadius (backing for abstract method)
     private var _dropOffRadius: Float = 0f

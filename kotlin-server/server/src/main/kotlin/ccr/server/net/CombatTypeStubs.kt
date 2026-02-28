@@ -566,6 +566,8 @@ object HUDInfo {
     // C++: static bool DisplayActionBar = false
     var displayActionBar: Boolean = false
     // C++: static float ActionStatusValue = 0
+    // @get/@set JvmName avoid clash with explicit getActionStatusValue()/setActionStatusValue() below.
+    @get:JvmName("actionStatusValueField") @set:JvmName("setActionStatusValueField")
     var actionStatusValue: Float = 0f
 
     fun getInformation(obj: Any?): String = ""
@@ -704,7 +706,7 @@ class BuildingAggregateClass : StaticPhysClass() {
     fun getDamageStrength(): Float = TODO("stub")
     fun getDamageWarhead(): Int = TODO("stub")
     fun isDestroyed(): Boolean = TODO("stub")
-    fun setDisabled(disabled: Boolean): Unit = TODO("stub")
+    // setDisabled(Boolean) is provided by PhysClass.isDisabled setter — no stub needed here
     fun setCurrentState(state: Int, forceUpdate: Boolean): Unit = TODO("stub")
 }
 

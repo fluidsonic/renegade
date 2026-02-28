@@ -35,7 +35,9 @@ abstract class SmartGameObj : ArmedGameObj() {
     var stealthEffect: StealthEffectClass? = null
 
     // C++: ActionClass Action
-    val action: ActionClass = ActionClass()
+    // @JvmField suppresses auto-generated getAction()/setAction() to avoid clashing
+    // with the explicit fun getAction() below.
+    @JvmField val action: ActionClass = ActionClass()
 
     // C++: int ControlOwner
     open var controlOwner: Int = SERVER_CONTROL_OWNER

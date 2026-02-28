@@ -779,10 +779,10 @@ open class VehicleGameObj() : SmartGameObj() {
     open fun isEntryPermitted(soldier: SoldierGameObj): Boolean {
         if (!CombatManager.isGameplayPermitted()) return false
 
-        val playerType = soldier.getPlayerType()
+        val playerType = soldier.playerType
         for (occupant in seatOccupants) {
             if (occupant != null) {
-                val seatedPt = occupant.getPlayerType()
+                val seatedPt = occupant.playerType
                 if (seatedPt != playerType ||
                     (seatedPt != PLAYERTYPE_NOD && seatedPt != PLAYERTYPE_GDI)) {
                     return false
