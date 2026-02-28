@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.math.Matrix3D
+import ccr.math.OBBox as MathOBBox
 import ccr.math.Vector3
 import ccr.physics.PhysClass
 import ccr.physics.static.StaticPhysClass
@@ -545,6 +546,10 @@ object BonesManager {
 object CombatMaterialEffectManager {
     fun getSpawnEffect(): MaterialEffectClass? = null
     fun getDeathEffect(): MaterialEffectClass = MaterialEffectClass()
+    // C++: CombatMaterialEffectManager::Get_Electrocution_Effect()
+    fun getElectrocutionEffect(): MaterialEffectClass = MaterialEffectClass()
+    // C++: CombatMaterialEffectManager::Get_Health_Effect()
+    fun getHealthEffect(): MaterialEffectClass = MaterialEffectClass()
 }
 
 // C++: TDBObjClass — translate DB object returned by TranslateDBClass::Find_Object
@@ -1082,3 +1087,135 @@ class ExplosionDefinitionClass {
     val damageStrength: Float = 0f
     val damageWarhead: Int = 0
 }
+
+// ---------------------------------------------------------------------------
+// RenderObjClass convenience property
+// ---------------------------------------------------------------------------
+
+// C++: RenderObjClass::Get_Name() accessed as a property in many places
+val RenderObjClass.name: String get() = getName()
+
+// ---------------------------------------------------------------------------
+// PhysicsScene extension methods — server-side scene operations not in the physics module
+// ---------------------------------------------------------------------------
+
+// C++: SceneClass::Add_Render_Object() — adds a render object to the scene
+fun PhysicsScene.addRenderObject(obj: RenderObjClass) {}
+
+// C++: VisTableClass* PhysicsSceneClass::Get_Vis_Table(const Vector3&)
+fun PhysicsScene.getVisTable(pos: Vector3): VisTableClass? = null
+
+// C++: VisTableClass — server-side vis table (stub)
+class VisTableClass {
+    fun getBit(visObjectId: Int): Boolean = true
+}
+
+// C++: PhysicsSceneClass singleton wrapper — server uses CombatManager.getScene()
+// This stub provides a getInstance() pattern for code that calls PhysicsSceneClass.getInstance()
+object PhysicsSceneClass {
+    // C++: PhysicsSceneClass::Get_Instance() — returns the current active physics scene
+    fun getInstance(): PhysicsSceneProxy = PhysicsSceneProxy(CombatManager.getScene())
+}
+
+// Proxy object that wraps the real PhysicsScene and provides extra methods
+class PhysicsSceneProxy(private val scene: PhysicsScene?) {
+    // C++: PhysicsSceneClass::Collect_Objects(AABoxClass, bool, bool, NonRefPhysListClass)
+    fun collectObjects(box: AABoxClass, dynamic: Boolean, `static`: Boolean, result: NonRefPhysListClass) {
+        if (scene == null) return
+        val aaBox = ccr.math.AABox(box.center, box.extent)
+        result.addAll(scene.collectObjects(aaBox))
+    }
+}
+
+// C++: HumanPhysClass::Peek_Carrier_Object() — returns the object this is riding (e.g. elevator)
+fun ccr.physics.moveable.HumanPhysClass.peekCarrierObject(): ccr.physics.PhysClass? = null
+
+// ---------------------------------------------------------------------------
+// AnimCollisionManagerClass — networkStateUpdate
+// ---------------------------------------------------------------------------
+
+// C++: AnimCollisionManagerClass::Network_State_Update() used on SoldierGameObj
+fun SoldierGameObj.networkStateUpdate(): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// ActiveConversationClass.stopConversation — alias
+// ---------------------------------------------------------------------------
+
+// C++: ActiveConversationClass::Stop()
+fun ActiveConversationClass.stopConversation(): Unit = stop()
+
+// C++: Dialogue.getConversation() — returns the conversation ID
+// Note: ConversationMgrClass.startConversation(obj, conversationId, ...) takes an int;
+// Dialogue.getConversation() was previously Int but code calls dlg.getConversation() returning Int.
+// The error at SoldierGameObj.kt:2354 says arg type is SoldierGameObj but Int expected — this
+// means ConversationMgrClass.startConversation has a different signature now.
+
+// ---------------------------------------------------------------------------
+// PhysicalGameObj.setModel() — sets the render model by name
+// ---------------------------------------------------------------------------
+
+// C++: PhysicalGameObj::Set_Model(const char*) — loads and attaches a render object
+fun PhysicalGameObj.setModel(modelName: String?) {
+    if (modelName != null) physObj?.setModelByName(modelName)
+}
+
+// ---------------------------------------------------------------------------
+// PhysicalGameObjDef.getSquishVelocity() — minimum impact speed to squish a soldier
+// ---------------------------------------------------------------------------
+
+// C++: PhysicalGameObjDef::SquishVelocity — minimum impact speed to squish a soldier
+val ccr.server.defs.PhysicalGameObjDef.squishVelocity: Float get() = 10f
+
+// C++: PhysicalGameObj::Get_Squish_Velocity() — stub
+fun PhysicalGameObj.getSquishVelocity(): Float = getPhysicalDefinition().squishVelocity
+
+// ---------------------------------------------------------------------------
+// SoldierGameObj.getBoneDamageScale() — damage multiplier for the hit bone
+// ---------------------------------------------------------------------------
+
+// C++: SoldierGameObj::Get_Bone_Damage_Scale() — returns damage scale for the given ouch type
+fun SoldierGameObj.getBoneDamageScale(ouchType: Int): Float = 1f
+
+// ---------------------------------------------------------------------------
+// CollisionMath — overload for ccr.math.OBBox
+// ---------------------------------------------------------------------------
+
+// C++: CollisionMath::Overlap_Test(OBBoxClass&, Vector3&) — point-in-OBBox test
+fun CollisionMath.overlapTest(box: MathOBBox, pos: Vector3): ccr.physics.collision.OverlapType {
+    // Simple AABB test using center+extent (ignores basis rotation — server-side approximation)
+    val ax0 = box.center.x - box.extent.x; val ax1 = box.center.x + box.extent.x
+    val ay0 = box.center.y - box.extent.y; val ay1 = box.center.y + box.extent.y
+    val az0 = box.center.z - box.extent.z; val az1 = box.center.z + box.extent.z
+    return if (pos.x in ax0..ax1 && pos.y in ay0..ay1 && pos.z in az0..az1)
+        ccr.physics.collision.OverlapType.INSIDE
+    else
+        ccr.physics.collision.OverlapType.OUTSIDE
+}
+
+// ---------------------------------------------------------------------------
+// PhysRayCollisionTestClass — cast-result bridge
+// ---------------------------------------------------------------------------
+
+// C++: Physics cast-ray test used in SoldierGameObj::Can_See()
+// The server PhysRayCollisionTestClass wraps a ccr.physics RayCollisionTest-compatible object.
+// CombatManager.getScene()?.castRay() expects ccr.physics.collision.RayCollisionTest, but
+// the code passes a PhysRayCollisionTestClass which is a different stub type.
+// Add an extension to allow the scene to accept PhysRayCollisionTestClass.
+fun PhysicsScene.castRay(test: PhysRayCollisionTestClass) {
+    // no-op stub: real ray cast not implemented server-side for now
+}
+
+// ---------------------------------------------------------------------------
+// InnateControllerClass.getInformation() — stub
+// ---------------------------------------------------------------------------
+
+// C++: InnateControllerClass::Get_Information() — appends debug info to StringBuilder
+fun Any.getInformation(sb: StringBuilder): Unit = Unit
+
+// ---------------------------------------------------------------------------
+// ScriptableGameObj.getObserver() — typed helper for observer by index/type
+// ---------------------------------------------------------------------------
+
+// C++: ScriptableGameObj::Find_Observer(const char* name) — returns observer by name
+fun ScriptableGameObj.findObserver(name: String): GameObjObserverClass? =
+    observers.firstOrNull { it.getName() == name }

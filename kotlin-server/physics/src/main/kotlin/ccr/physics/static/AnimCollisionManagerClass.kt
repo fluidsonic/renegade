@@ -253,19 +253,16 @@ class AnimCollisionManagerClass(private val parent: PhysClass) {
     }
 
     /**
-     * C++: void Set_Target_Frame(float frame)
-     * Sets the target animation frame and marks parent state dirty.
+     * C++: void Set_Target_Frame(float frame) — use property targetFrame directly.
+     * The property setter marks parent state dirty automatically.
      */
-    fun setTargetFrame(frame: Float) {
-        targetFrame = frame
-    }
 
     /**
      * Convenience overload for callers passing an integer frame index.
      * C++: Set_Target_Frame(float) is float-typed; this bridges integer callers.
      */
     fun setTargetFrame(frame: Int) {
-        setTargetFrame(frame.toFloat())
+        targetFrame = frame.toFloat()
     }
 
     /**
@@ -274,7 +271,7 @@ class AnimCollisionManagerClass(private val parent: PhysClass) {
      */
     fun setTargetFrameEnd() {
         if (numFrames > 0f) {
-            setTargetFrame(numFrames - 1f)
+            targetFrame = numFrames - 1f
         }
     }
 
@@ -299,57 +296,40 @@ class AnimCollisionManagerClass(private val parent: PhysClass) {
     fun getCurrentFrame(): Float = curFrame
 
     /**
-     * C++: float Get_Target_Frame()
+     * C++: float Get_Target_Frame() — use property targetFrame directly
      */
-    fun getTargetFrame(): Float = targetFrame
 
     /**
-     * C++: void Set_Loop_Start(float frame0)
+     * C++: void Set_Loop_Start(float frame0) — use property loopStart directly
      */
-    fun setLoopStart(frame0: Float) {
-        loopStart = frame0
-    }
 
     /**
-     * C++: void Set_Loop_End(float frame1)
+     * C++: void Set_Loop_End(float frame1) — use property loopEnd directly
      */
-    fun setLoopEnd(frame1: Float) {
-        loopEnd = frame1
-    }
 
     /**
-     * C++: float Get_Loop_Start()
+     * C++: float Get_Loop_Start() — use property loopStart directly
      */
-    fun getLoopStart(): Float = loopStart
 
     /**
-     * C++: float Get_Loop_End()
+     * C++: float Get_Loop_End() — use property loopEnd directly
      */
-    fun getLoopEnd(): Float = loopEnd
 
     /**
-     * C++: void Set_Animation_Mode(AnimModeType mode)
+     * C++: void Set_Animation_Mode(AnimModeType mode) — use property animationMode directly
      */
-    fun setAnimationMode(mode: AnimMode) {
-        animationMode = mode
-    }
 
     /**
-     * C++: AnimModeType Get_Animation_Mode()
+     * C++: AnimModeType Get_Animation_Mode() — use property animationMode directly
      */
-    fun getAnimationMode(): AnimMode = animationMode
 
     /**
-     * C++: void Set_Collision_Mode(CollisionModeType mode)
+     * C++: void Set_Collision_Mode(CollisionModeType mode) — use property collisionMode directly
      */
-    fun setCollisionMode(mode: CollisionMode) {
-        collisionMode = mode
-    }
 
     /**
-     * C++: CollisionModeType Get_Collision_Mode()
+     * C++: CollisionModeType Get_Collision_Mode() — use property collisionMode directly
      */
-    fun getCollisionMode(): CollisionMode = collisionMode
 
     // -------------------------------------------------------------------------
     // Rider management — mirrors C++ Link_Rider / Unlink_Rider delegations
