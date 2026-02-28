@@ -4,6 +4,7 @@ import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.server.GameObjManager
 import ccr.server.defs.BeaconGameObjDef
+import kotlin.math.sqrt
 
 // C++: BeaconGameObj : public SimpleGameObj (beacongameobj.h)
 // Hierarchy: NetworkObject → BaseGameObj → ScriptableGameObj → DamageableGameObj
@@ -125,7 +126,7 @@ class BeaconGameObj() : SimpleGameObj() {
     fun init(definition: BeaconGameObjDef) {
         super.init(definition)
         // C++: Peek_Physical_Object()->Set_Collision_Group(TERRAIN_AND_BULLET_COLLISION_GROUP)
-        physObj?.setCollisionGroup(TERRAIN_AND_BULLET_COLLISION_GROUP)
+        physObj?.collisionGroup = TERRAIN_AND_BULLET_COLLISION_GROUP
     }
 
     // C++: BeaconGameObj* As_BeaconGameObj() { return this; }
@@ -145,14 +146,14 @@ class BeaconGameObj() : SimpleGameObj() {
         setPosition(position)
 
         if (ownerSoldier != null) {
-            ownerBackup = ownerSoldier.getPlayerData()
+            ownerBackup = ownerSoldier.playerData
         }
 
         // C++: Become part of same team as player dropping the beacon
         if (owner.get() != null) {
             val smart = owner.get()?.asSmartGameObj()
             if (smart != null) {
-                setPlayerType(smart.getPlayerType())
+                playerType = smart.getPlayerType()
             }
         }
     }
@@ -210,7 +211,7 @@ class BeaconGameObj() : SimpleGameObj() {
                 // C++: Return ammo that created the beacon to owner
                 val soldier = getOwner()
                 if (soldier != null) {
-                    val weaponBag = soldier.getWeaponBag()
+                    val weaponBag = soldier.weaponBag
                     val weaponDef = weaponDefinition
                     if (weaponDef != null && weaponBag != null) {
                         weaponBag.addWeapon(weaponDef.id.toInt(), 1, false)
@@ -606,7 +607,7 @@ class BeaconGameObj() : SimpleGameObj() {
         // C++: owner is interrupted if dead
         if (soldier == null || soldier.isDead) return true
 
-        val control = soldier.getControl()
+        val control = soldier.control
         // C++: Check each movement control (up to ANALOG_MOVE_LEFT inclusive)
         for (index in 0..ControlClass.AnalogControl.MOVE_LEFT.ordinal) {
             if (control.getAnalog(ControlClass.AnalogControl.entries[index]) != 0f) {
@@ -657,10 +658,9 @@ class BeaconGameObj() : SimpleGameObj() {
             val outerRadius2 = outerRadius * outerRadius
 
             for (building in GameObjManager.getBuildingGameObjList()) {
-                val dist2 = floatArrayOf(0f)
-                building.findClosestPoly(position, dist2)
-                if (dist2[0] <= outerRadius2) {
-                    val percent = 1.0f - WWMath.clamp(WWMath.sqrt(dist2[0]) / outerRadius, 0.0f, 1.0f)
+                val dist2 = building.findClosestPoly(position)
+                if (dist2 <= outerRadius2) {
+                    val percent = 1.0f - WWMath.clamp(sqrt(dist2) / outerRadius, 0.0f, 1.0f)
                     val strength = percent * explosionDef.damageStrength
                     val offense = OffenseObjectClass(strength, explosionDef.damageWarhead, ownerSoldier)
                     building.applyDamageBuilding(offense, true)
@@ -674,7 +674,7 @@ class BeaconGameObj() : SimpleGameObj() {
         if (getOwner() == null && ownerBackup != null) {
             // C++: Try to find a SmartGameObj with the same playerData
             for (obj in GameObjManager.getSmartGameObjList()) {
-                if (obj.getPlayerData() === ownerBackup) {
+                if (obj.playerData === ownerBackup) {
                     owner.set(obj)
                     break
                 }

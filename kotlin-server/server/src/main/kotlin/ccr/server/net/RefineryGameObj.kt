@@ -285,7 +285,7 @@ class RefineryGameObj() : BuildingGameObj() {
         var closest2 = 99999.0f
         val scene = CombatManager.getScene()
         if (scene != null) {
-            for (obj in scene.getStaticObjects()) {
+            for (obj in scene.staticObjects) {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
                 val model = animPhysObj.peekModel() ?: continue
                 val name = model.getName().uppercase()

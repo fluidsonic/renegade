@@ -420,10 +420,10 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
         // C++: Iterate all static objects in the scene
         val scene = CombatManager.getScene()
         if (scene != null) {
-            for (obj in scene.getStaticObjects()) {
+            for (obj in scene.staticObjects) {
                 val staticPhys = obj.asStaticPhysClass() ?: continue
-                val model = staticPhys.peekModel() ?: continue
-                val objName = model.getName()
+                val model = staticPhys.model ?: continue
+                val objName = model.name
 
                 if (staticPhys.isFromFactory(PHYSICS_CHUNKID_BUILDINGAGGREGATE)) {
                     // Aggregate
@@ -433,7 +433,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
                         val radius2 = collectionSphere.radius * collectionSphere.radius
 
                         if (dist2 <= radius2) {
-                            val existingBuilding = (obj.getObserver() as? CombatPhysObserverClass) as? BuildingGameObj
+                            val existingBuilding = (obj.observer as? CombatPhysObserverClass) as? BuildingGameObj
                             if (existingBuilding != null) {
                                 val existingDist2 = (existingBuilding.collectionSphere.center - objPos).lengthSquared()
                                 if (dist2 < existingDist2) {
@@ -453,7 +453,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
                         val radius2 = collectionSphere.radius * collectionSphere.radius
 
                         if (dist2 <= radius2) {
-                            val existingBuilding = (obj.getObserver() as? CombatPhysObserverClass) as? BuildingGameObj
+                            val existingBuilding = (obj.observer as? CombatPhysObserverClass) as? BuildingGameObj
                             if (existingBuilding != null) {
                                 val existingDist2 = (existingBuilding.collectionSphere.center - objPos).lengthSquared()
                                 if (dist2 < existingDist2) {

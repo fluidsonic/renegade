@@ -765,9 +765,23 @@ object WeaponManager {
     fun findAmmoDefinitionByName(name: String): ccr.server.defs.AmmoDefinitionClass? = null
 }
 
-// C++: HUDInfo (hudinfo.h) — HUD display stub
+// C++: HUDInfo (hudinfo.h)
 object HUDInfo {
+    // C++: static bool DisplayActionBar = false
+    var displayActionBar: Boolean = false
+    // C++: static float ActionStatusValue = 0
+    var actionStatusValue: Float = 0f
+
     fun getInformation(obj: Any?): String = ""
+
+    // C++: static void Display_Action_Status_Bar(bool onoff) { DisplayActionBar = onoff; }
+    fun displayActionStatusBar(onoff: Boolean) { displayActionBar = onoff }
+    // C++: static bool Display_Action_Status_Bar() { return DisplayActionBar; }
+    fun displayActionStatusBar(): Boolean = displayActionBar
+    // C++: static void Set_Action_Status_Value(float value) { ActionStatusValue = value; }
+    fun setActionStatusValue(value: Float) { actionStatusValue = value }
+    // C++: static float Get_Action_Status_Value() { return ActionStatusValue; }
+    fun getActionStatusValue(): Float = actionStatusValue
 }
 
 // C++: FreeRandom — global random number generator
@@ -1078,94 +1092,6 @@ class RenderObjFactoryClass {
     fun save(csave: ChunkSaveClass, obj: RenderObjClass): Unit = Unit
     fun load(cload: ChunkLoadClass): RenderObjClass? = null
 }
-
-// ---------------------------------------------------------------------------
-// PhysClass — additional methods (on server stub PhysClass which extends RealPhysClass)
-// ---------------------------------------------------------------------------
-
-fun PhysClass.setTransform(tm: Matrix3D): Unit = Unit
-fun PhysClass.addToScene(scene: PhysicsSceneClass): Unit = Unit
-fun PhysClass.removeFromScene(scene: PhysicsSceneClass? = null): Unit = Unit
-
-// ---------------------------------------------------------------------------
-// RealPhysClass — extension methods needed by server combat code.
-// RealPhysClass = ccr.physics.PhysClass (aliased at top of this file).
-// These cover methods that exist in C++ PhysClass but are missing from the Kotlin physics module.
-// ---------------------------------------------------------------------------
-
-/** C++: PhysClass::Set_Collision_Group(int) — property setter bridge */
-fun RealPhysClass.setCollisionGroup(group: Int) { collisionGroup = group }
-
-/** C++: PhysClass::Peek_Model() — returns null on server (no render objects) */
-fun RealPhysClass.peekModel(): RenderObjClass? = null
-
-/** C++: PhysClass::Get_Observer() — returns the CombatPhysObserverClass-typed observer.
- *  The real PhysClass.observer is typed as ccr.physics.PhysObserver; server code needs the
- *  server-stub CombatPhysObserverClass which is stored in the combatObserver field of the
- *  server-stub PhysClass subclass, or null for real physics objects. */
-fun RealPhysClass.getObserver(): CombatPhysObserverClass? =
-    (this as? PhysClass)?.combatObserver
-
-/** C++: PhysClass::Set_Observer(CombatPhysObserverClass*) */
-fun RealPhysClass.setObserver(obs: CombatPhysObserverClass?) {
-    (this as? PhysClass)?.combatObserver = obs
-}
-
-/** C++: PhysClass::Get_Factory() — returns null on server */
-fun RealPhysClass.getFactory(): PhysFactoryClass? =
-    (this as? PhysClass)?.getFactory()
-
-/** C++: PhysClass::Set_Tiberium_Region() — no-op on server */
-fun RealPhysClass.setTiberiumRegion(enable: Boolean) {}
-
-/** C++: StaticAnimPhysClass::Get_Definition() — returns the PhysDefClass definition.
- *  The definition field is Any?; cast to DefinitionClass for server use. */
-fun ccr.physics.static.StaticAnimPhysClass.getDefinition(): ccr.server.defs.DefinitionClass? =
-    definition as? ccr.server.defs.DefinitionClass
-
-/** C++: StaticAnimPhysClass::Get_Animation_Manager() — server stub returns a no-op manager */
-fun ccr.physics.static.StaticAnimPhysClass.getAnimationManager(): AnimCollisionManagerClass =
-    AnimCollisionManagerClass()
-
-/** C++: StaticAnimPhysClass::Peek_Model() — server has no render objects; returns null */
-fun ccr.physics.static.StaticAnimPhysClass.peekModel(): RenderObjClass? = null
-
-/** C++: StaticPhysClass::Peek_Model() — server has no render objects; returns null */
-fun ccr.physics.static.StaticPhysClass.peekModel(): RenderObjClass? = null
-
-/** C++: StaticPhysClass::Get_Observer() — returns the server-side CombatPhysObserverClass observer */
-fun ccr.physics.static.StaticPhysClass.getObserver(): CombatPhysObserverClass? =
-    (this as? PhysClass)?.combatObserver
-
-/** C++: StaticPhysClass::Set_Observer() — sets server-side observer */
-fun ccr.physics.static.StaticPhysClass.setObserver(obs: CombatPhysObserverClass?) {
-    (this as? PhysClass)?.combatObserver = obs
-}
-
-/** C++: StaticPhysClass::Is_From_Factory(unsigned int) — check factory chunk ID */
-fun ccr.physics.static.StaticPhysClass.isFromFactory(chunkId: UInt): Boolean = false
-fun ccr.physics.static.StaticPhysClass.isFromFactory(chunkId: Int): Boolean = false
-
-/** C++: StaticPhysClass::Get_Name() — returns physics object name */
-fun ccr.physics.static.StaticPhysClass.getName(): String = this.name
-
-/** C++: LightPhysClass::Get_Group_ID() — server stub returns 0 */
-fun ccr.physics.dynamic.LightPhysClass.getGroupId(): Int = 0
-fun ccr.physics.dynamic.LightPhysClass.setDisabled(disabled: Boolean) {}
-fun ccr.physics.dynamic.LightPhysClass.getName(): String = this.name
-
-/** C++: PhysClass::Is_In_Scene() — already a method on real PhysClass */
-// isInScene() is already defined on ccr.physics.PhysClass
-
-/** C++: Remove — alias for removeFromScene (used on emotIconModel / render objs in SoldierGameObj)
- *  Used as `someRenderPhysObj.remove()` — no-op on server */
-fun RealPhysClass.remove() {}
-
-/** C++: Get_Position() — already on real PhysClass */
-// getPosition() is already defined
-
-/** C++: Set_Position(Vector3) — bridged through real PhysClass.setPosition() which is open */
-// setPosition() is already defined
 
 // ---------------------------------------------------------------------------
 // Matrix3D — additional methods

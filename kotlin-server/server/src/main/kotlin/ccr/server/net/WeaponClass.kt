@@ -147,9 +147,6 @@ class WeaponClass(val definition: WeaponDefinitionClass) {
         }
     }
 
-    fun isLoaded() =
-        clipRounds > 0
-
     // C++: void Add_Rounds(int num)
     fun addRounds(num: Int) {
         if (num < 0) {
@@ -255,55 +252,14 @@ class WeaponClass(val definition: WeaponDefinitionClass) {
 
     // C++: void Update()
     fun update() {}
-<<<<<<< HEAD
 
-    // C++: void Set_Target(const Vector3& pos) — sets world-space target position for projectile aim
-    // FIXME: actual targeting logic not ported; server-side stub stores target for AI state tracking
-    var targetPos: Vector3 = Vector3()
-    fun setTarget(pos: Vector3) { targetPos = pos }
-
-    // C++: int Get_Style() — returns the weapon hold style (WeaponHoldStyleType)
-    fun getStyle(): Int = WEAPON_HOLD_STYLE_EMPTY_HANDS
-
-    // C++: bool Is_Firing() — true when weapon fire animation is active
-    fun isFiring(): Boolean = isPrimaryTriggered || isSecondaryTriggered
-
-    // C++: int Get_Anim_State() — weapon animation state (not firing, firing barrel 0/1)
-    fun getAnimState(): Int = WEAPON_ANIM_NOT_FIRING
-
-    // C++: void Reset_Anim_Update() — clears the "needs anim update" flag
-    fun resetAnimUpdate(): Unit = Unit
-
-    // C++: bool Is_Model_Update_Needed() — true when weapon model changed
-    fun isModelUpdateNeeded(): Boolean = false
-
-    // C++: void Reset_Model_Update() — clears model update flag
-    fun resetModelUpdate(): Unit = Unit
-
-    // C++: const char* Get_Model_Name() — weapon render model filename
-    fun getModelName(): String = ""
-
-    // C++: const char* Get_Back_Model_Name() — back-gun render model filename
-    fun getBackModelName(): String = ""
-
-    // C++: float Get_Range() — weapon effective range
-    fun getRange(): Float = 0f
-
-    // C++: float Get_Recoil_Time() — duration of recoil animation
-    fun getRecoilTime(): Float = 0f
-
-    // C++: float Get_Recoil_Scale() — scale factor on recoil motion
-    fun getRecoilScale(): Float = 1f
-
-    // C++: void Set_Safety(bool on) — enable/disable weapon safety
-    private var safetyOn: Boolean = false
-    fun setSafety(on: Boolean) { safetyOn = on }
-
-    // C++: bool Is_Safety_Set() — true if safety is engaged
-    fun isSafetySet(): Boolean = safetyOn
-
-    // C++: PhysicalGameObj* Get_Owner() — returns the weapon's owning game object
-    // Note: accessed via `weapon.owner` property directly (Kotlin generates getOwner() JVM getter)
+    // C++: void Stop_Firing_Sound()
+    // Server-side: FiringSound is client-only audio — no-op on the server.
+    // The field firingSound is not tracked server-side (audio state is never replicated).
+    // TODO: if server-side muzzle/fire effects are ever needed, mirror C++ weapons.cpp:1572–1583
+    fun stopFiringSound() {
+        // no-op: FiringSound / FiringSoundDefID are client-side audio state
+    }
 
     companion object {
         // C++: WeaponClass::AnimStateType enum (weapons.h)
@@ -324,6 +280,4 @@ class WeaponClass(val definition: WeaponDefinitionClass) {
         const val WEAPON_HOLD_STYLE_HANDS_DOWN     = 9
         const val NUM_WEAPON_HOLD_STYLES           = 10
     }
-=======
->>>>>>> ac7c5bd (refactor: WeaponClass takes WeaponDefinitionClass instead of definitionId)
 }

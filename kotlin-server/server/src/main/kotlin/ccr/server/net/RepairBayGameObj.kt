@@ -174,7 +174,7 @@ class RepairBayGameObj() : BuildingGameObj() {
         var closest2 = 99999.0f
         val scene = CombatManager.getScene()
         if (scene != null) {
-            for (obj in scene.getStaticObjects()) {
+            for (obj in scene.staticObjects) {
                 val animPhysObj = obj.asStaticAnimPhysClass() ?: continue
                 if (animPhysObj.getDefinition()?.id == getRepairBayDefinition().repairingStaticAnimDefId.toUInt()) {
                     val animPos = Vector3(0f, 0f, 0f)

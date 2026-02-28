@@ -72,8 +72,7 @@ abstract class PhysClass {
     var definition: Any? = null  // TODO: replace with PhysDefClass when added to physics module
 
     /** C++: RenderObjClass* Model — the render object attached to this physics object. */
-    @get:JvmName("modelField") @set:JvmName("setModelField")
-    var model: Any? = null  // TODO: replace with RenderObjClass when added to physics module
+    var model: Any? = null  // typed as Any? because RenderObjClass lives in the server module; cast at use site
 
     abstract var transform: Matrix3D
 
@@ -164,12 +163,6 @@ abstract class PhysClass {
 
     fun getId() =
         instanceId
-
-    /** C++: Peek_Model() — returns the attached render object without ref-counting. */
-    open fun peekModel(): Any? = model
-
-    /** C++: Set_Model() — virtual; attaches a render object to this physics object. */
-    open fun setModel(model: Any?) { this.model = model }
 
     /** C++: Set_Model_By_Name() — no-op stub (server has no render objects). */
     open fun setModelByName(name: String) {}

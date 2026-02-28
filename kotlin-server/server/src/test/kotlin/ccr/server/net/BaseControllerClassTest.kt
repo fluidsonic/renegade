@@ -1,6 +1,8 @@
 package ccr.server.net
 
 import ccr.net.bitstream.BitStream
+import ccr.server.defs.BeaconGameObjDef
+import ccr.server.defs.CNCModeSettingsDef
 import org.junit.jupiter.api.Test
 import kotlin.math.abs
 import kotlin.test.assertEquals
@@ -8,6 +10,82 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class BaseControllerClassTest {
+
+    /** Captures playAnnouncement calls without needing a real Network. */
+    private class CapturingBaseController(playerType: Int = 0) : BaseControllerClass(playerType) {
+        val broadcastedIds = mutableListOf<Int>()
+        override fun playAnnouncement(textId: Int) {
+            broadcastedIds.add(textId)
+        }
+    }
+
+    /** Creates a BeaconGameObj with a real BeaconGameObjDef so getDefinition() works. */
+    private fun makeBeacon(isNuke: Boolean, playerType: Int): BeaconGameObj {
+        val def = BeaconGameObjDef(
+            name = "test_beacon", id = 1u, chunkId = BeaconGameObjDef.CHUNK_ID,
+            isNuke = if (isNuke) 1 else 0,
+        )
+        val beacon = BeaconGameObj()
+        beacon.definition = def
+        beacon.playerType = playerType
+        return beacon
+    }
+
+    /** A CNCModeSettingsDef with distinct non-zero IDs for every beacon field. */
+    private val testCncDef = CNCModeSettingsDef(
+        name = "test", id = 1u, chunkId = CNCModeSettingsDef.CHUNK_ID,
+        nodNukeBeaconDeployedId  = 101,
+        gdiNukeBeaconDeployedId  = 102,
+        nodIonBeaconDeployedId   = 103,
+        gdiIonBeaconDeployedId   = 104,
+        nodNukeBeaconDisarmedId  = 201,
+        gdiNukeBeaconDisarmedId  = 202,
+        nodIonBeaconDisarmedId   = 203,
+        gdiIonBeaconDisarmedId   = 204,
+        nodNukeBeaconWarningId   = 301,
+        gdiNukeBeaconWarningId   = 302,
+        nodIonBeaconWarningId    = 303,
+        gdiIonBeaconWarningId    = 304,
+    )
+
+    @Test fun `onBeaconArmed - nuke beacon NOD team broadcasts nodNukeBeaconDeployedId`() {
+        val ctrl = CapturingBaseController()
+        val beacon = makeBeacon(isNuke = true, playerType = 0 /* NOD */)
+        ctrl.onBeaconArmed(beacon, testCncDef)
+        assertEquals(listOf(101), ctrl.broadcastedIds)
+    }
+
+    @Test fun `onBeaconArmed - ion beacon GDI team broadcasts gdiIonBeaconDeployedId`() {
+        val ctrl = CapturingBaseController()
+        val beacon = makeBeacon(isNuke = false, playerType = 1 /* GDI */)
+        ctrl.onBeaconArmed(beacon, testCncDef)
+        assertEquals(listOf(104), ctrl.broadcastedIds)
+    }
+
+    @Test fun `onBeaconDisarmed - nuke beacon GDI team broadcasts gdiNukeBeaconDisarmedId`() {
+        val ctrl = CapturingBaseController()
+        val beacon = makeBeacon(isNuke = true, playerType = 1 /* GDI */)
+        ctrl.onBeaconDisarmed(beacon, testCncDef)
+        assertEquals(listOf(202), ctrl.broadcastedIds)
+    }
+
+    @Test fun `onBeaconWarning - ion beacon NOD team broadcasts nodIonBeaconWarningId`() {
+        val ctrl = CapturingBaseController()
+        val beacon = makeBeacon(isNuke = false, playerType = 0 /* NOD */)
+        ctrl.onBeaconWarning(beacon, testCncDef)
+        assertEquals(listOf(303), ctrl.broadcastedIds)
+    }
+
+    @Test fun `onBeaconArmed - zero ID is not broadcast`() {
+        val cncDef = CNCModeSettingsDef(
+            name = "empty", id = 2u, chunkId = CNCModeSettingsDef.CHUNK_ID,
+            nodNukeBeaconDeployedId = 0,
+        )
+        val ctrl = CapturingBaseController()
+        val beacon = makeBeacon(isNuke = true, playerType = 0)
+        ctrl.onBeaconArmed(beacon, cncDef)
+        assertTrue(ctrl.broadcastedIds.isEmpty())
+    }
     private fun defaultCtrl(
         playerType: Int = 0,
         operationTimeFactor: Float = 1.0f,
