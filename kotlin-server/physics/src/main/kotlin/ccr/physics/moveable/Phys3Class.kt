@@ -41,9 +41,11 @@ open class Phys3Class : MoveablePhysClass() {
 
     // Object-space collision box (mirrors C++ Phys3Class::CollisionBox, AABoxClass with Center+Extent).
     // Kotlin: extent=(0.3,0.3,0.9), center=(0,0,0.9) -- box bottom at feet, top 1.8 units up.
+    @get:JvmName("collisionBoxField") @set:JvmName("setCollisionBoxField")
     var collisionBox: AABox = AABox(Vector3(0f, 0f, 0.9f), Vector3(0.3f, 0.3f, 0.9f))
     var onGround: Boolean = false           // C++ Phys3Class::OnGround — Is_In_Contact() flag
     var inCollision: Boolean = false        // C++ Phys3Class::InCollision
+    @get:JvmName("headingField") @set:JvmName("setHeadingField")
     var heading: Float = 0f                 // C++ Phys3Class::Heading — yaw in radians
     var normSpeed: Float = 3.0f             // C++ Phys3Class::NormSpeed
     var slideAngle: Float = 0.7854f         // C++ Phys3Class::SlideAngle — radians (default ~45 deg)
