@@ -1,6 +1,7 @@
 package ccr.server.combat
 
 import ccr.server.mix.IniFile
+import ccr.server.mix.MixReader
 
 // C++: ArmorWarheadManager (damage.h / damage.cpp) — manages the warhead-vs-armor damage multiplier matrix,
 // shield absorption, soft armor classification, special damage types, and impervious skins.
@@ -53,9 +54,12 @@ object ArmorWarheadManager {
     // C++: Get_Num_Warhead_Types()
     val numWarheadTypes: Int get() = warheadNames.size
 
-    // C++: ArmorWarheadManager::Init (damage.cpp:68-254)
-    fun init(bytes: ByteArray) {
+    // C++: ArmorWarheadManager::Init (damage.cpp:68-254) — loads armor.ini from the provided always archives
+    fun init(alwaysMixes: List<MixReader>) {
         shutdown()
+
+        val bytes = alwaysMixes.firstNotNullOfOrNull { it.readFile("armor.ini") }
+            ?: error("armor.ini not found in any always archive — required")
 
         val ini = IniFile(bytes)
 

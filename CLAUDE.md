@@ -40,6 +40,7 @@ C&C Renegade (2002 FPS) server reimplementation and macOS port.
 - When the user writes **"remember X"**, immediately update `CLAUDE.md` with X — no need to ask for confirmation
 - **Minimize work for the user** — always run build commands, tests, and verifications yourself rather than giving the user commands to paste; only hand off commands that require interactive UI (e.g. running the game for visual confirmation)
 - **Never use hacks or workarounds** — always find and fix the root cause; never add iteration limits, fallback stubs, or band-aids over real bugs
+- **Never use random fallback values for unexpected null/failure** — if something is unexpectedly null or failing, implement it properly; when in doubt, use `checkNotNull`/`error()` to crash loudly, or ask the user rather than silently substituting a default
 - **Git merges must use `--ff-only`** — always rebase the feature branch onto the base branch first, then FF-merge
 - **Always create worktrees from the latest local `main`** — run `git pull` (or at least `git fetch`) on main before branching; stale branch points cause unnecessary rebase conflicts
 - **Worktree merge sequence**: (1) check for uncommitted changes in both the worktree AND main repo (`git status` in both), (2) commit all changes in the worktree, (3) rebase the worktree branch onto local `main`, (4) `git checkout main && git merge --ff-only <branch>`, (5) `git worktree remove` the worktree, (6) delete the branch — in that order; you cannot delete a branch while its worktree still exists

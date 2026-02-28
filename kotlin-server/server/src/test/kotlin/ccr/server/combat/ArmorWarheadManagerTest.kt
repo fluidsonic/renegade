@@ -1,5 +1,7 @@
 package ccr.server.combat
 
+import ccr.server.crcStringi
+import ccr.server.mix.MixReader
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -110,11 +112,58 @@ Explosion=
 
 [Impervious_Fire]
 Impervious00=Metal
-""".trimIndent().toByteArray(Charsets.UTF_8)
+""".trimIndent()
+
+    // Helpers for building a minimal MIX1 in memory (copied from MixReaderTest)
+    private fun leInt(v: Int): ByteArray = byteArrayOf(
+        (v and 0xFF).toByte(),
+        ((v shr 8) and 0xFF).toByte(),
+        ((v shr 16) and 0xFF).toByte(),
+        ((v shr 24) and 0xFF).toByte(),
+    )
+
+    private fun leUInt(v: Long): ByteArray = leInt(v.toInt())
+
+    private fun buildMix(vararg files: Pair<String, ByteArray>): ByteArray {
+        val sorted = files.map { (name, content) ->
+            Triple(name, content, crcStringi(name).toLong() and 0xFFFFFFFFL)
+        }.sortedBy { it.third }
+
+        val parts = mutableListOf<ByteArray>()
+        parts += "MIX1".toByteArray(Charsets.US_ASCII)
+        parts += leInt(0)
+        parts += leInt(0)
+        parts += leInt(0)
+
+        data class EntryInfo(val crc: Long, val offset: Int, val size: Int)
+        val entries = mutableListOf<EntryInfo>()
+        var cursor = 16
+        for ((name, content, crc) in sorted) {
+            entries += EntryInfo(crc, cursor, content.size)
+            parts += content
+            cursor += content.size
+        }
+
+        val headerOffset = cursor
+        parts += leInt(sorted.size)
+        for (e in entries) {
+            parts += leUInt(e.crc)
+            parts += leInt(e.offset)
+            parts += leInt(e.size)
+        }
+
+        val namesOffset = headerOffset + 4 + sorted.size * 12
+        val raw = parts.fold(ByteArray(0)) { acc, b -> acc + b }
+        val result = raw.copyOf()
+        leInt(headerOffset).copyInto(result, 4)
+        leInt(namesOffset).copyInto(result, 8)
+        return result
+    }
 
     @BeforeTest
     fun setup() {
-        ArmorWarheadManager.init(testIni)
+        val mix = buildMix("armor.ini" to testIni.toByteArray(Charsets.UTF_8))
+        ArmorWarheadManager.init(listOf(MixReader(mix)))
     }
 
     @AfterTest

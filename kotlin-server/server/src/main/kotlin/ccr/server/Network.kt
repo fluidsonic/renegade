@@ -1216,7 +1216,7 @@ class Network(internal val config: ServerConfig) {
         val mapMix = MixReader(mixFile.readBytes())
         println("[SERVER] opened $baseName.mix (${mapMix.fileCount()} files in archive)")
 
-        alwaysMix?.readFile("armor.ini")?.also { ArmorWarheadManager.init(it) }
+        ArmorWarheadManager.init(alwaysMixes)
 
         val level = LevelLoader(alwaysMix, mapMix, baseName).load()
         loadedLevel = level
@@ -1304,11 +1304,11 @@ class Network(internal val config: ServerConfig) {
         println("[SERVER] loaded ${definitions.size} definitions from always.dat/objects.ddb")
 
         // Also load armor multiplier table if not already loaded via loadLevel()
-        candidates.firstNotNullOfOrNull { fileName ->
+        ArmorWarheadManager.init(candidates.mapNotNull { fileName ->
             val file = File(dataDir, fileName)
-            if (!file.exists()) return@firstNotNullOfOrNull null
-            try { MixReader(file.readBytes()).readFile("armor.ini") } catch (e: Exception) { null }
-        }?.also { ArmorWarheadManager.init(it) }
+            if (!file.exists()) return@mapNotNull null
+            try { MixReader(file.readBytes()) } catch (e: Exception) { null }
+        })
 
         val nodDef = definitions.find { it.name.equals("CnC_Nod_Minigunner_0", ignoreCase = true) }
         val gdiDef = definitions.find { it.name.equals("CnC_GDI_MiniGunner_0", ignoreCase = true) }
@@ -1432,10 +1432,7 @@ class Network(internal val config: ServerConfig) {
         EncoderRegistry.setPrecision(BITPACK_HEALTH,          0.0, 2000.0, 1.0)   // damage.cpp
         EncoderRegistry.setPrecision(BITPACK_SHIELD_STRENGTH, 0.0, 2000.0, 1.0)   // damage.cpp
         // C++: DefenseObjectClass::Set_Precision → Set_Precision(BITPACK_SHIELD_TYPE, 0, Get_Num_Armor_Types())
-        // Use actual loaded armor type count, falling back to config if armor.ini wasn't loaded.
-        val armorTypeCount = ArmorWarheadManager.numArmorTypes
-        System.err.println("ArmorWarheadManager.numArmorTypes=$armorTypeCount")
-        EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE,     0.0, 31.toDouble(), 1.0) // damage.cpp // FIXME use armorTypeCount
+        EncoderRegistry.setPrecision(BITPACK_SHIELD_TYPE,     0.0, ArmorWarheadManager.numArmorTypes.toDouble(), 1.0) // damage.cpp
         EncoderRegistry.setPrecision(BITPACK_HUMAN_STATE,     0.0, 19.0,  1.0)    // humanstate.h: LOCKED_ANIMATION=19
         EncoderRegistry.setPrecision(BITPACK_HUMAN_SUB_STATE, 0.0, 511.0, 1.0)    // humanstate.cpp: (1<<9)-1=511
         EncoderRegistry.setPrecision(BITPACK_CONTROL_MOVES_CS, 8)                 // control.cpp: CONTROL_TURN_RIGHT+1=8
