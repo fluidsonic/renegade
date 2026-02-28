@@ -7,6 +7,7 @@ import ccr.math.degToRadF
 import ccr.net.bitstream.*
 import ccr.net.replication.NetworkObject
 import ccr.physics.PhysClass
+import ccr.physics.RenderObjClass
 import ccr.physics.vehicle.VehiclePhysClass
 import ccr.server.GameObjManager
 import ccr.server.defs.VehicleGameObjDef

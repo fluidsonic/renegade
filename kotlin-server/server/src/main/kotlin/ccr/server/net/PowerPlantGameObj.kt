@@ -19,7 +19,7 @@ class PowerPlantGameObj() : BuildingGameObj() {
             name = "powerplant_$definitionId", id = definitionId.toUInt(), chunkId = 0u
         )
         this.position = position
-        this.collectionSphere = ccr.server.level.Sphere(sphereCenter, sphereRadius)
+        this.collectionSphere = ccr.math.Sphere(sphereCenter, sphereRadius)
         this.isDestroyed = isDestroyed
         this.isPowerOn = isPowerOn
         defenseObject.health = health

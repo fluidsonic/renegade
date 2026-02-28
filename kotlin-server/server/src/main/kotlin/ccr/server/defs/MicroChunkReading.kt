@@ -39,13 +39,13 @@ fun ChunkReader.readMicroOBBox(id: Int): ccr.server.level.OBBox? {
     return ccr.server.level.OBBox(basis, ccr.math.Vector3(cx, cy, cz), ccr.math.Vector3(ex, ey, ez))
 }
 
-fun ChunkReader.readMicroSphere(id: Int): ccr.server.level.Sphere? {
+fun ChunkReader.readMicroSphere(id: Int): ccr.math.Sphere? {
     val bytes = findMicroChunk(id) ?: return null
     if (bytes.size < 16) return null
     val bb = ByteBuffer.wrap(bytes, 0, 16).order(ByteOrder.LITTLE_ENDIAN)
     val cx = bb.float; val cy = bb.float; val cz = bb.float
     val radius = bb.float
-    return ccr.server.level.Sphere(ccr.math.Vector3(cx, cy, cz), radius)
+    return ccr.math.Sphere(ccr.math.Vector3(cx, cy, cz), radius)
 }
 
 fun ChunkReader.readMicroWideString(id: Int): String? {

@@ -1,6 +1,7 @@
 package ccr.server.net
 
 import ccr.math.Vector3
+import ccr.physics.RenderObjClass
 import ccr.server.combat.ArmorWarheadManager
 import ccr.server.core.FreeRandom
 import ccr.server.defs.MendozaBossGameObjDefClass

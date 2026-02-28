@@ -25,14 +25,3 @@ data class OBBox(
     }
 }
 
-/**
- * Sphere — center + radius, used for BuildingGameObj collection spheres.
- */
-data class Sphere(
-    val center: Vector3,
-    val radius: Float,
-) {
-    companion object {
-        val EMPTY = Sphere(Vector3(0f, 0f, 0f), 0f)
-    }
-}

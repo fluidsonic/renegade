@@ -15,8 +15,8 @@ import ccr.server.defs.VehicleGameObjDef
 import ccr.server.level.ChunkIds
 import ccr.server.level.DefinitionRegistry
 import ccr.server.level.Matrix3D
-import ccr.server.level.Sphere
-import ccr.server.core.ChunkReader
+import ccr.math.Sphere
+import ccr.server.mix.ChunkReader
 import ccr.server.net.BaseGameObj
 import ccr.server.net.BuildingGameObj
 import ccr.server.net.ComCenterGameObj
@@ -186,7 +186,7 @@ class GameObjectFactory(private val definitions: DefinitionRegistry) {
         // readMicroVector3 returns ccr.math.Vector3
         val pos = buildingVars?.readMicroVector3(MICRO_BUILDING_POSITION) ?: Vector3(0f, 0f, 0f)
         val isPowerOn = buildingVars?.readMicroBool(MICRO_BUILDING_ISPOWERON) ?: true
-        // readMicroSphere returns ccr.server.level.Sphere(ccr.math.Vector3 center, radius)
+        // readMicroSphere returns ccr.math.Sphere(ccr.math.Vector3 center, radius)
         var sphere = buildingVars?.readMicroSphere(MICRO_BUILDING_COLLECTION_SPHERE)
             ?: Sphere(Vector3(0f, 0f, 0f), 50f)
 

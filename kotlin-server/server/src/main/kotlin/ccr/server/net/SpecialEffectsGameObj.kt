@@ -1,5 +1,7 @@
 package ccr.server.net
 
+import ccr.physics.Animatable3DObjClass
+import ccr.physics.RenderObjClass
 import ccr.server.defs.SpecialEffectsGameObjDef
 
 // C++: SpecialEffectsGameObj : public PhysicalGameObj (specialeffectsgameobj.cpp)

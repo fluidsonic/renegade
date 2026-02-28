@@ -6,6 +6,12 @@ import ccr.math.Vector3
 import ccr.physics.PhysClass
 import ccr.physics.static.StaticPhysClass
 import ccr.physics.scene.PhysicsScene
+import ccr.physics.Animatable3DObjClass
+import ccr.physics.HAnimClass
+import ccr.physics.HAnimComboClass
+import ccr.physics.HTreeClass
+import ccr.physics.MeshClass
+import ccr.physics.RenderObjClass
 import ccr.server.defs.Dialogue
 import ccr.server.level.ChunkIds
 
@@ -53,7 +59,7 @@ class ChunkLoadClass {
     fun readPtr(): Any = TODO("stub")
     fun readVector3(): Vector3 = TODO("stub")
     fun readMatrix3D(): Matrix3D = TODO("stub")
-    fun readSphere(): ccr.server.level.Sphere = TODO("stub")
+    fun readSphere(): ccr.math.Sphere = TODO("stub")
     fun readOBBox(): ccr.server.defs.OBBoxClass = TODO("stub")
     fun skip(): Unit = TODO("stub")
     fun skipChunk(): Unit = TODO("stub")
@@ -61,10 +67,8 @@ class ChunkLoadClass {
 }
 
 // ---------------------------------------------------------------------------
-// Render object stubs — RenderObjClass, MeshClass, Animatable3DObjClass, SceneClass
-// are now real implementations in their own files (RenderObjClass.kt, MeshClass.kt,
-// Animatable3DObjClass.kt, CompositeRenderObjClass.kt); HAnimComboClass is in
-// Animatable3DObjClass.kt.
+// RenderObjClass, MeshClass, Animatable3DObjClass, CompositeRenderObjClass
+// are defined in ccr.physics (imported above).
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
@@ -486,6 +490,15 @@ object MapMgrClass {
     fun findBase(playerType: Int): Any? = null
     fun getBeaconZone(playerType: Int): Any? = null
     fun areVtolVehiclesEnabled(): Boolean = true
+}
+
+// C++: WW3DAssetManager (ww3d2/assetmgr.h)
+object WW3DAssetManager {
+    fun getInstance(): WW3DAssetManager = this
+    fun createRenderObjFromFilename(filename: String): RenderObjClass? = null
+    fun getRenderObjNameFromFilename(filename: String): String = ""
+    // C++: Get_HAnim(name) — returns animation object; getTotalTime() called on it
+    fun getHAnim(name: String): HAnimClass? = null
 }
 
 // C++: BonesManager

@@ -7,7 +7,9 @@ import ccr.physics.dynamic.LightPhysClass
 import ccr.physics.static.StaticPhysClass
 import ccr.server.GameObjManager
 import ccr.server.defs.BuildingGameObjDef
-import ccr.server.level.Sphere
+import ccr.math.Sphere
+import ccr.physics.MeshClass
+import ccr.physics.RenderObjClass
 
 // C++: BuildingGameObj : public DamageableGameObj, public CombatPhysObserverClass
 // C++ hierarchy: NetworkObject → BaseGameObj → ScriptableGameObj → DamageableGameObj → BuildingGameObj
@@ -94,7 +96,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
             name = "building_$definitionId", id = definitionId.toUInt(), chunkId = 0u
         )
         this.position = position
-        this.collectionSphere = ccr.server.level.Sphere(sphereCenter, sphereRadius)
+        this.collectionSphere = Sphere(sphereCenter, sphereRadius)
         this.isDestroyed = isDestroyed
         this.isPowerOn = isPowerOn
         this.currentState = currentState

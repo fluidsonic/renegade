@@ -4,6 +4,7 @@ import ccr.math.Matrix3D
 import ccr.math.Vector3
 import ccr.net.bitstream.*
 import ccr.physics.PhysClass
+import ccr.physics.RenderObjClass
 import ccr.server.GameObjManager
 import ccr.server.defs.PhysicalGameObjDef
 import ccr.physics.defs.PhysDefClass

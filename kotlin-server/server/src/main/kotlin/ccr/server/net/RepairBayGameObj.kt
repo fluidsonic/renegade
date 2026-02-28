@@ -2,6 +2,9 @@ package ccr.server.net
 
 import ccr.math.Vector3
 import ccr.net.bitstream.*
+import ccr.physics.Animatable3DObjClass
+import ccr.physics.MeshClass
+import ccr.physics.RenderObjClass
 import ccr.physics.static.StaticPhysClass
 import ccr.server.core.FreeRandom
 import ccr.server.defs.OBBoxClass
@@ -66,7 +69,7 @@ class RepairBayGameObj() : BuildingGameObj() {
             name = "repairbay_$definitionId", id = definitionId.toUInt(), chunkId = 0u
         )
         this.position = position
-        this.collectionSphere = ccr.server.level.Sphere(sphereCenter, sphereRadius)
+        this.collectionSphere = ccr.math.Sphere(sphereCenter, sphereRadius)
         this.isDestroyed = isDestroyed
         this.isPowerOn = isPowerOn
         defenseObject.health = health
