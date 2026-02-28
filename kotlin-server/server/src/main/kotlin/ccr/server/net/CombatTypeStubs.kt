@@ -13,6 +13,7 @@ import ccr.server.defs.CinematicGameObjDef
 import ccr.server.defs.PhysicalGameObjDef
 import ccr.server.defs.PowerUpGameObjDef
 import ccr.server.defs.SimpleGameObjDef
+import ccr.server.defs.Dialogue
 import ccr.server.defs.SoldierGameObjDef
 import ccr.server.defs.VehicleGameObjDef
 import ccr.server.level.DefinitionRegistry
@@ -225,17 +226,117 @@ object TransitionManager {
     fun destroyPending(): Unit {}
 }
 
-// C++: DialogueClass — single dialogue entry for NPC speech
-class DialogueClass {
-    var soundId: Int = 0
-    var delay: Float = 0f
-    var loop: Boolean = false
+// C++: DialogueOptionClass — single option within a DialogueClass
+class DialogueOptionClass(
+    var weight: Float = 1f,
+    var conversationId: Int = 0,
+) {
+    fun save(csave: ChunkSaveClass) {
+        csave.beginChunk(CHUNKID_OPTION_VARIABLES)
+        csave.writeMicroChunk(VARID_WEIGHT, weight)
+        csave.writeMicroChunk(VARID_CONVERSATION_ID, conversationId)
+        csave.endChunk()
+    }
 
-    fun save(csave: ChunkSaveClass): Unit = TODO("stub")
-    fun load(cload: ChunkLoadClass): Unit = TODO("stub")
+    fun load(cload: ChunkLoadClass) {
+        while (cload.openChunk()) {
+            when (cload.curChunkId) {
+                CHUNKID_OPTION_VARIABLES.toInt() -> {
+                    while (cload.openMicroChunk()) {
+                        when (cload.curMicroChunkId) {
+                            VARID_WEIGHT -> weight = cload.readFloat()
+                            VARID_CONVERSATION_ID -> conversationId = cload.readInt()
+                        }
+                        cload.closeMicroChunk()
+                    }
+                }
+            }
+            cload.closeChunk()
+        }
+    }
 
     companion object {
-        fun fromData(data: Any?): DialogueClass = DialogueClass()
+        private const val CHUNKID_OPTION_VARIABLES = 0x08040528u
+        private const val VARID_WEIGHT = 0
+        private const val VARID_CONVERSATION_ID = 2
+    }
+}
+
+// C++: DialogueClass — NPC dialogue entry with weighted conversation options
+class DialogueClass {
+    val optionList: MutableList<DialogueOptionClass> = mutableListOf()
+    var silenceWeight: Float = 1f
+
+    fun copyFrom(src: DialogueClass) {
+        silenceWeight = src.silenceWeight
+        optionList.clear()
+        for (option in src.optionList) {
+            optionList.add(DialogueOptionClass(option.weight, option.conversationId))
+        }
+    }
+
+    fun getConversation(): Int {
+        var convId = 0
+        var total = silenceWeight
+        for (option in optionList) {
+            total += option.weight
+        }
+        var value = kotlin.random.Random.nextFloat() * total
+        var count = silenceWeight
+        for (option in optionList) {
+            if (value <= count) break
+            convId = option.conversationId
+            count += option.weight
+        }
+        return convId
+    }
+
+    fun save(csave: ChunkSaveClass) {
+        csave.beginChunk(CHUNKID_DIALOGUE_VARIABLES)
+        csave.writeMicroChunk(VARID_DIALOGUE_SILENCE, silenceWeight)
+        csave.endChunk()
+        for (option in optionList) {
+            csave.beginChunk(CHUNKID_DIALOGUE_OPTION)
+            option.save(csave)
+            csave.endChunk()
+        }
+    }
+
+    fun load(cload: ChunkLoadClass) {
+        optionList.clear()
+        while (cload.openChunk()) {
+            when (cload.curChunkId) {
+                CHUNKID_DIALOGUE_VARIABLES.toInt() -> {
+                    while (cload.openMicroChunk()) {
+                        when (cload.curMicroChunkId) {
+                            VARID_DIALOGUE_SILENCE -> silenceWeight = cload.readFloat()
+                        }
+                        cload.closeMicroChunk()
+                    }
+                }
+                CHUNKID_DIALOGUE_OPTION.toInt() -> {
+                    val option = DialogueOptionClass()
+                    option.load(cload)
+                    optionList.add(option)
+                }
+            }
+            cload.closeChunk()
+        }
+    }
+
+    companion object {
+        private const val CHUNKID_DIALOGUE_VARIABLES = 0x08040529u
+        private const val CHUNKID_DIALOGUE_OPTION = 0x0804052Au
+        private const val VARID_DIALOGUE_SILENCE = 0
+
+        fun fromData(data: Dialogue): DialogueClass {
+            val dlg = DialogueClass()
+            dlg.silenceWeight = data.silenceWeight
+            for (opt in data.options) {
+                dlg.optionList.add(DialogueOptionClass(opt.weight, opt.conversationId))
+            }
+            return dlg
+        }
     }
 }
 

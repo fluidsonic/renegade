@@ -2868,11 +2868,27 @@ open class SoldierGameObj() : SmartGameObj() {
 		const val AI_STATE_SECONDARY_IDLE = 1
 		const val AI_STATE_SEARCH = 2
 
-		// Dialogue IDs — C++: DialogueIDs from dialogue.h
-		const val DIALOG_ON_TAKE_DAMAGE_FROM_ENEMY = 0
-		const val DIALOG_ON_TAKE_DAMAGE_FROM_FRIEND = 1
-		const val DIALOG_ON_KILLED_ENEMY = 2
-		const val DIALOG_ON_KILLED_FRIEND = 3
+		// DialogEvents — C++: dialogue.h enum
+		const val DIALOG_ON_TAKE_DAMAGE_FROM_FRIEND = 0
+		const val DIALOG_ON_TAKE_DAMAGE_FROM_ENEMY = 1
+		const val DIALOG_ON_DAMAGE_FRIEND = 2
+		const val DIALOG_ON_DAMAGE_ENEMY = 3
+		const val DIALOG_ON_KILLED_FRIEND = 4
+		const val DIALOG_ON_KILLED_ENEMY = 5
+		const val DIALOG_ON_SAW_FRIEND = 6
+		const val DIALOG_ON_SAW_ENEMY = 7
+		const val DIALOG_ON_OBSOLETE_01 = 8
+		const val DIALOG_ON_OBSOLETE_02 = 9
+		const val DIALOG_ON_DIE = 10
+		const val DIALOG_ON_POKE_IDLE = 11
+		const val DIALOG_ON_POKE_SEARCH = 12
+		const val DIALOG_ON_POKE_COMBAT = 13
+		const val DIALOG_STATE_FROM_IDLE_TO_COMBAT = 14
+		const val DIALOG_STATE_FROM_IDLE_TO_SEARCH = 15
+		const val DIALOG_STATE_FROM_SEARCH_TO_COMBAT = 16
+		const val DIALOG_STATE_FROM_SEARCH_TO_IDLE = 17
+		const val DIALOG_STATE_FROM_COMBAT_TO_SEARCH = 18
+		const val DIALOG_STATE_FROM_COMBAT_TO_IDLE = 19
 
 		// Class ID constant
 		const val CLASSID_GAME_OBJECT_DEF_SOLDIER = 0x3001
