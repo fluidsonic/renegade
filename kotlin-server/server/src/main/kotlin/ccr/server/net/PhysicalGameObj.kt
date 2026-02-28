@@ -280,7 +280,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
 
     // C++: virtual void Apply_Damage(const OffenseObjectClass & damager, float scale, int alternate_skin)
     override open fun applyDamage(damager: OffenseObjectClass, scale: Float, alternateSkin: Int) {
-        if (!CombatManager.canDamage(damager.getOwner(), this)) return
+        if (!CombatManager.canDamage(damager.getOwner() as? ArmedGameObj, this)) return
         super.applyDamage(damager, scale, alternateSkin)
     }
 

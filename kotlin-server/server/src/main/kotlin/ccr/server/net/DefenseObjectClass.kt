@@ -102,7 +102,12 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
         val damage = offense.damage * scale
         val damageScale = ArmorWarheadManager.getDamageMultiplier(skin, offense.warhead)
         val shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, offense.warhead)
-        // TODO (CombatManager): friendly fire check — if teammate && !isFriendlyFirePermitted() return false
+        // Friendly fire check — C++: damage.cpp:964-975
+        val smart = offense.owner?.asSmartGameObj()
+        if (smart != null && owner != null &&
+            smart.isTeammate(owner!!) && smart !== owner) {
+            if (!CombatManager.isFriendlyFirePermitted()) return false
+        }
         if (damage * damageScale > 0 && health > 0) return true
         if (damage * shieldDamageScale > 0 && shieldStrength > 0) return true
         return false
@@ -118,9 +123,11 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
     fun applyDamage(offense: OffenseObjectClass, scale: Float = 1.0f, alternateSkin: Int = -1): Float {
 
         var damage = offense.damage * scale
+        var shieldDamage = 0f
+        val smart = offense.owner?.asSmartGameObj()
 
         // Determine armor multipliers — C++: damage.cpp:730-738
-        val damageScale: Float
+        var damageScale: Float
         var shieldDamageScale: Float
         if (alternateSkin != -1) {
             // MCT hit: alternate_skin is already an armor type index; bypass shields entirely
@@ -131,10 +138,21 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
             shieldDamageScale = ArmorWarheadManager.getDamageMultiplier(shieldType, offense.warhead)
         }
 
+        // Punish timer check — C++: damage.cpp:740-748
+        if (smart?.playerData != null && smart.playerData!!.getPunishTimer() > PUNISH_DELAY) {
+            damageScale = 0f
+            shieldDamageScale = 0f
+            smart.playerData!!.replaceMoney(0f)
+            smart.playerData!!.replaceScore(0f)
+        }
+
+        var isRepair = false
+
         // Repair branch: negative damage = healing — C++: damage.cpp:751-776
         // check for repair on either health or shield
         if ((damage * damageScale < 0) || (damage * shieldDamageScale < 0)) {
 
+            isRepair = true
             markOwnerDirty()
 
             // Apply first to health, then to shield — C++: damage.cpp:762-775
@@ -145,7 +163,7 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
                 health -= damage
             } else {
                 damage *= shieldDamageScale
-                var shieldDamage = damage
+                shieldDamage = damage
                 damage = 0f
                 val minShieldDamage = shieldStrength - shieldStrengthMax  // negative
                 shieldDamage = shieldDamage.coerceIn(minShieldDamage, 0f)
@@ -156,7 +174,10 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
 
             // Damage branch — C++: damage.cpp:778-833
 
-            // TODO (CombatManager): friendly fire check — C++ returns Health if teammate && !IsFriendlyFirePermitted()
+            // Friendly fire check — C++: damage.cpp:780-787
+            if (smart != null && owner != null && smart !== owner && smart.isTeammate(owner!!)) {
+                if (!CombatManager.isFriendlyFirePermitted()) return health
+            }
 
             if (damage != 0f) {
                 markOwnerDirty()
@@ -165,7 +186,7 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
             // If we have a shield, redirect a fraction of damage to it — C++: damage.cpp:795-816
             // If alternate skin (MCT), ignore shield entirely (shieldDamageScale == 0)
             if (shieldStrength > 0f && alternateSkin == -1) {
-                var shieldDamage = damage * ArmorWarheadManager.getShieldAbsorption(shieldType, offense.warhead)
+                shieldDamage = damage * ArmorWarheadManager.getShieldAbsorption(shieldType, offense.warhead)
                 damage -= shieldDamage
 
                 shieldDamage *= shieldDamageScale
@@ -206,7 +227,41 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
         // Clamp health to max — C++: damage.cpp:876
         health = health.coerceIn(0f, healthMax)
 
-        // TODO (PlayerData): Apply_Damage_Points / Apply_Death_Points on smart->Get_Player_Data()
+        // On soldier kill callback — C++: damage.cpp:901-908
+        if (damage > 0 && health <= 0f &&
+            smart?.asSoldierGameObj() != null &&
+            owner?.asSoldierGameObj() != null) {
+            CombatManager.onSoldierKill(smart.asSoldierGameObj()!!, owner!!.asSoldierGameObj()!!)
+        }
+
+        // Apply damage/death points — C++: damage.cpp:911-942
+        if (smart?.playerData != null) {
+            var pointsDir = 1f
+
+            // If same team, make the points negative — C++: damage.cpp:918-924
+            if (owner != null) {
+                if (smart.isTeammate(owner!!)) {
+                    pointsDir = -1f
+                } else if (!smart.isEnemy(owner!!)) {
+                    // No points for neutrals
+                    pointsDir = 0f
+                }
+            }
+
+            if (offense.owner !== owner) {
+                var points = damagePoints
+                if (isRepair) { // half points for repair — C++: damage.cpp:929-931
+                    points *= 0.5f
+                }
+                smart.playerData!!.applyDamagePoints(pointsDir * (damage + shieldDamage) * points, owner)
+            }
+
+            if (damage > 0 && health <= 0f) {
+                if (offense.owner !== owner) {
+                    smart.playerData!!.applyDeathPoints(pointsDir * deathPoints, owner)
+                }
+            }
+        }
 
         return health
     }
@@ -246,6 +301,9 @@ class DefenseObjectClass(health: Float = 100f, var skin: Int = 0) {
     }
 
     companion object {
+        // C++: #define PUNISH_DELAY 60 (damage.cpp:742)
+        private const val PUNISH_DELAY = 60f
+
         private const val MICROCHUNKID_HEALTH              = 1
         private const val MICROCHUNKID_HEALTH_MAX          = 2
         private const val MICROCHUNKID_SKIN                = 3

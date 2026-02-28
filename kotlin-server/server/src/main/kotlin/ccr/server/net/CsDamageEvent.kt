@@ -2,7 +2,6 @@ package ccr.server.net
 
 import ccr.net.bitstream.BitStream
 import ccr.server.Network
-import ccr.server.combat.ArmorWarheadManager
 
 // C++: cCsDamageEvent — networkClassId = NETCLASSID_CSDAMAGEEVENT = 1033
 // Client→Server event reporting damage dealt by this client.
@@ -46,21 +45,12 @@ class CsDamageEvent(
         val target = network.gameObjManager.findPhysicalGameObj(damageeGoid)
         if (target != null) {
             val damager = network.gameObjManager.findPhysicalGameObj(damagerGoid)
-	        if (damager !is ArmedGameObj) { setDeletePending(); return }
-	        println("[GAME] CSDAMAGEEVENT from rhostId=$rhostId damager=$damagerGoid damagee=$damageeGoid damage=$damage warhead=$warhead")
-	        val scaledDamage = ArmorWarheadManager.scaleDamage(damage, warhead, target.shieldType)
-	        target.applyDamage(scaledDamage)
-            val offense = OffenseObjectClass(scaledDamage, warhead, damager)
+            if (damager !is ArmedGameObj) { setDeletePending(); return }
+            // C++: OffenseObjectClass offense(Damage, Warhead, damager->As_ArmedGameObj())
+            // Raw damage — scaling happens inside Apply_Damage_Extended via DefenseObjectClass.
+            val offense = OffenseObjectClass(damage, warhead, damager)
             offense.forceServerDamage = true
             target.applyDamageExtended(offense)
-            println("[GAME] applied damage=$scaledDamage to netId=$damageeGoid health=${target.health}")
-            if (target.isDead) {
-                val victimRhostId = network.god.soldiersByHost.entries.find { it.value.networkId == damageeGoid }?.key
-                if (victimRhostId != null) {
-                    network.broadcastPlayerKill(senderId, victimRhostId)
-                    network.god.deleteSoldier(victimRhostId)
-                }
-            }
         }
         setDeletePending()
     }

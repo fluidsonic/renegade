@@ -33,7 +33,7 @@ class GameData(config: ServerConfig, localIp: Int) {
     val radarMode: Int = config.radarMode
     val intermissionTimeSeconds: Int = config.intermissionTimeSeconds
     val minQualifyingTimeMinutes: Int = config.minQualifyingTimeMinutes
-    val isFriendlyFirePermitted: Boolean = false
+    val isFriendlyFirePermitted: Boolean = config.friendlyFire
     val isFreeWeapons: Boolean = false
     val isClientTrusted: Boolean = config.isClientTrusted
     val remixTeams: Boolean = config.remixTeams

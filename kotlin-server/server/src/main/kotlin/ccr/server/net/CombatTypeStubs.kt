@@ -425,21 +425,6 @@ class GameObjCustomTimerClass(
 // Singleton managers
 // ---------------------------------------------------------------------------
 
-// C++: CombatManager (combatmanager.h)
-object CombatManager {
-    fun areObserversActive(): Boolean = true
-    fun getScene(): PhysicsScene? = null
-    fun canDamage(attacker: Any?, target: Any?): Boolean = true
-    fun getTheStar(): DamageableGameObj? = null
-    fun getCombatStar(): SoldierGameObj? = null
-    fun getDifficultyLevel(): Int = 1
-    fun onSoldierDeath(soldier: SoldierGameObj): Unit = Unit
-    fun isGameplayPermitted(): Boolean = true
-    fun getGlobalSettings(): GlobalSettingsDefClass = GlobalSettingsDefClass
-    fun isSkeletonSliderDemoEnabled(): Boolean = false
-    fun getMessageWindow(): MessageWindowClass = MessageWindowClass()
-}
-
 // C++: ScriptManager (scriptmanager.h)
 object ScriptManager {
     fun createScript(name: String): GameObjObserverClass? = null

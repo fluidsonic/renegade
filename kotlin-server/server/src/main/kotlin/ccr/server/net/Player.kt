@@ -140,13 +140,29 @@ class Player(
         setDeaths(deaths + 1)
     }
 
+    // C++: PlayerDataClass::Apply_Damage_Points → Increment_Score(points)
+    override fun applyDamagePoints(points: Float, victim: DamageableGameObj?) {
+        incrementScore(points)
+    }
+
+    // C++: PlayerDataClass::Apply_Death_Points → Increment_Score(points)
+    override fun applyDeathPoints(points: Float, victim: DamageableGameObj?) {
+        incrementScore(points)
+    }
+
     override fun addMoney(amount: Float) {
         money += amount
         setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
     }
 
-    fun replaceMoney(amount: Float) {
+    override fun replaceMoney(amount: Float) {
         money = amount
+        setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
+    }
+
+    // C++: PlayerDataClass::Set_Score — sets score to exact amount
+    override fun replaceScore(amount: Float) {
+        score = amount
         setObjectDirtyBit(NetworkObject.BIT_OCCASIONAL, true)
     }
 

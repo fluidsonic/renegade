@@ -38,4 +38,16 @@ interface PlayerDataClass {
     fun statsSetFinalHealth(health: Float) {}
     fun getPunishTimer(): Float = 0f
     fun incPunishTimer(seconds: Float) {}
+
+    // C++: PlayerDataClass::Set_Money — sets money to exact amount (used by punish timer)
+    fun replaceMoney(amount: Float) {}
+
+    // C++: PlayerDataClass::Set_Score — sets score to exact amount (used by punish timer)
+    fun replaceScore(amount: Float) {}
+
+    // C++: PlayerDataClass::Apply_Damage_Points — awards score for dealing damage
+    fun applyDamagePoints(points: Float, victim: DamageableGameObj?) {}
+
+    // C++: PlayerDataClass::Apply_Death_Points — awards score for killing
+    fun applyDeathPoints(points: Float, victim: DamageableGameObj?) {}
 }

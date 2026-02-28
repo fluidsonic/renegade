@@ -55,6 +55,7 @@ data class ServerConfig(
     val minQualifyingTimeMinutes: Int = 2,
     val isClientTrusted: Boolean = true,
     val remixTeams: Boolean = true,
+    val friendlyFire: Boolean = false,
     val driverIsAlwaysGunner: Boolean = true,
     val mapList: List<String> = emptyList(),
     val mapCycleLoops: Boolean = false,   // C++: cGameData::DoMapsLoop
@@ -108,6 +109,7 @@ data class ServerConfig(
             minQualifyingTimeMinutes = ini.getInt(SECTION, "MinQualifyingTimeMinutes", 2),
             isClientTrusted        = ini.getBool(SECTION, "IsClientTrusted", true),
             remixTeams             = ini.getBool(SECTION, "RemixTeams", true),
+            friendlyFire           = ini.getBool(SECTION, "FriendlyFire"),
             driverIsAlwaysGunner   = ini.getBool(SECTION, "DriverIsAlwaysGunner", true),
             mapCycleLoops = ini.getBool(SECTION, "MapCycleLoops"),
             mapList = buildList {

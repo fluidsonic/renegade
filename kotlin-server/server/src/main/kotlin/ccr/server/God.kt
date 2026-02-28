@@ -903,6 +903,34 @@ open class God(private val server: Network) {
     }
 
     /**
+     * Detaches a dead soldier from its owning player without deleting the soldier object.
+     * The soldier persists as a corpse (cleaned up later by DESTROY state + corpse timer
+     * in SoldierGameObj.think()). God.think() will respawn a new soldier for the player.
+     *
+     * Does everything deleteSoldier() does EXCEPT calling setDeletePending() on the soldier.
+     */
+    fun detachDeadSoldier(soldier: SoldierGameObj) {
+        val rhostId = soldiersByHost.entries.find { it.value === soldier }?.key ?: return
+        // Exit vehicle before detaching the soldier to clear seat occupant state
+        if (rhostId in playerVehicles) {
+            exitVehicle(rhostId)
+        }
+        // Defuse all remote C4 owned by this player (timed C4 continues to tick after death)
+        c4Objects.filter { !it.isDeletePending && it.getOwner()?.controlOwner == rhostId && it.ammoDefinition?.ammoType == AMMO_TYPE_C4_REMOTE }
+            .forEach { it.defuse() }
+        // Cancel all beacons owned by this player.
+        beaconObjects.filter {
+            !it.isDeletePending &&
+            (it.getOwner()?.controlOwner == rhostId ||
+             (it.getOwner() == null && it.ownerRhostId == rhostId))
+        }.forEach { it.setDeletePending() }
+        soldiersByHost.remove(rhostId)
+        server.gameObjManager.removeStar(soldier)
+        // DO NOT call soldier.setDeletePending() — soldier persists as corpse
+        println("[GOD] detached dead soldier for host $rhostId netId=${soldier.networkId}")
+    }
+
+    /**
      * Clears round-specific tracking state in God after all soldiers have been deleted.
      * Called by handleCoreRestart() and unloadLevel() to prevent stale references
      * from carrying over into the next round / next map.

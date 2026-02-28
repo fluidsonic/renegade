@@ -160,7 +160,7 @@ open class BuildingGameObj() : DamageableGameObj(), CombatPhysObserverClass {
         if (defenseObject.health <= 0f) return
 
         // C++: if (!CombatManager::Is_Gameplay_Permitted()) return;
-        // (always permitted on server — omit guard per guide)
+        if (!CombatManager.isGameplayPermitted()) return
 
         // C++: if (!CanRepairBuildings && DefenseObject.Is_Repair(damager)) return;
         if (!canRepairBuildings && defenseObject.isRepair(damager)) return

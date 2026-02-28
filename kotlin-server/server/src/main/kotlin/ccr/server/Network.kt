@@ -61,6 +61,8 @@ import ccr.server.net.ScTextObj
 import ccr.server.net.SimpleGameObj
 import ccr.server.net.DefinitionMgrClass
 import ccr.server.net.TimeManager
+import ccr.server.net.CombatManager
+import ccr.server.net.GameCombatNetworkHandlerClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -209,6 +211,13 @@ class Network(internal val config: ServerConfig) {
         NetworkObjectFactories.register()
         loadLevel()        // Load level data (definitions, world extents, spawners) from MIX files
         initializeLevel()  // Set up encoders, SpawnManager, buildings and base controllers
+
+        // C++: cNetwork::Onetime_Init → CombatManager::Set_Combat_Network_Handler(&NetHandler)
+        // C++: cGameData::On_Game_Begin → Set_Friendly_Fire_Permitted / Set_Beacon_Placement_Ends_Game
+        CombatManager.init()
+        CombatManager.networkHandler = GameCombatNetworkHandlerClass(this@Network)
+        CombatManager.friendlyFirePermitted = gameData.isFriendlyFirePermitted
+        CombatManager.beaconPlacementEndsGame = config.beaconPlacementEndsGame
 
         // Register WeatherMgr and BackgroundMgr singletons with well-known static IDs.
         val weatherMgr = WeatherMgr()
@@ -1070,6 +1079,10 @@ class Network(internal val config: ServerConfig) {
     }
 
     private fun unloadLevel() {
+        // C++: CombatManager::Shutdown() — clear network handler before tearing down objects
+        CombatManager.networkHandler = null
+        CombatManager.shutdown()
+
         ccr.server.audio.WWAudioClass.shutdown()
         god.clearRoundState()   // clear tracking lists before objects are destroyed
         println("[SERVER] unloading level '$currentMapName'")
@@ -1145,6 +1158,12 @@ class Network(internal val config: ServerConfig) {
         // Load and initialize the new level
         loadLevel(nextMapName)
         initializeLevel()
+
+        // Re-init CombatManager for the new round (C++: cGameData::On_Game_Begin)
+        CombatManager.init()
+        CombatManager.networkHandler = GameCombatNetworkHandlerClass(this)
+        CombatManager.friendlyFirePermitted = gameData.isFriendlyFirePermitted
+        CombatManager.beaconPlacementEndsGame = config.beaconPlacementEndsGame
 
         // Re-sync all still-connected in-game clients for new level objects
         for (rhostId in god.playerInGame) {
