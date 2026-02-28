@@ -6,7 +6,7 @@ import ccr.net.bitstream.*
 import ccr.physics.PhysClass
 import ccr.server.GameObjManager
 import ccr.server.defs.PhysicalGameObjDef
-import ccr.physics.PhysDefClass
+import ccr.server.defs.PhysDefClass
 
 // C++: PhysicalGameObj : public DamageableGameObj, public CombatPhysObserverClass
 abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {

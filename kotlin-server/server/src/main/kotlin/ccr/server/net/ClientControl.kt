@@ -97,7 +97,7 @@ class ClientControl(
             // C4 detonation: bit 1 = BOOLEAN_WEAPON_FIRE_SECONDARY (alt-fire / remote trigger)
             val weaponFirePrimary   = (contBits and 1) != 0
             val weaponFireSecondary = (contBits and 2) != 0
-            val currentWeaponDefId  = soldier.getWeapon()?.definitionId ?: 0
+            val currentWeaponDefId  = soldier.getWeapon()?.getId() ?: 0
             soldier.detonateC4 = weaponFireSecondary && network.isC4Weapon(currentWeaponDefId)
             if (weaponFirePrimary && network.isC4Weapon(currentWeaponDefId)) {
                 network.god.createC4(clientId, soldier, System.currentTimeMillis())

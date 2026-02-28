@@ -1052,14 +1052,14 @@ open class SoldierGameObj() : SmartGameObj() {
 		// C++: Jump handling (after Apply_Control, BOOLEAN_JUMP is cleared)
 		if (control.getBoolean(ControlClass.BOOLEAN_JUMP)) {
 			if (getState() != HumanStateClass.AIRBORNE) {
-				controller.moveUp = getSoldierDefinition(. jumpVelocity)
+				controller.moveUp = getSoldierDefinition().jumpVelocity
 			}
 		}
 
 		// C++: Sniper speed clamp
 		if (isSniping()) {
-			controller.moveForward = controller.getMoveForward(. coerceIn (-0.25f, 0.25f))
-			controller.moveLeft = controller.getMoveLeft(. coerceIn (-0.25f, 0.25f))
+			controller.moveForward = controller.moveForward.coerceIn(-0.25f, 0.25f)
+			controller.moveLeft = controller.moveLeft.coerceIn(-0.25f, 0.25f)
 		}
 
 		// C++: Ladder speed
@@ -1070,13 +1070,13 @@ open class SoldierGameObj() : SmartGameObj() {
 		// C++: Crouch speed
 		if (getState() == HumanStateClass.UPRIGHT && isCrouched()) {
 			val crouchSpeed = GlobalSettingsDef.getGlobalSettings().getSoldierCrouchSpeed()
-			controller.moveForward = controller.getMoveForward(*crouchSpeed)
-			controller.moveLeft = controller.getMoveLeft(*crouchSpeed)
+			controller.moveForward = controller.moveForward * crouchSpeed
+			controller.moveLeft = controller.moveLeft * crouchSpeed
 		}
 		else if (control.getBoolean(ControlClass.BOOLEAN_WALK)) {
 			val walkSpeed = GlobalSettingsDef.getGlobalSettings().getSoldierWalkSpeed()
-			controller.moveForward = controller.getMoveForward(*walkSpeed)
-			controller.moveLeft = controller.getMoveLeft(*walkSpeed)
+			controller.moveForward = controller.moveForward * walkSpeed
+			controller.moveLeft = controller.moveLeft * walkSpeed
 		}
 
 		// C++: Server action / transition check
@@ -1417,11 +1417,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		val hasWeapon = (p_weapon != null)
 		packet.addBool(hasWeapon)
 		if (hasWeapon) {
-			<<<<<<< HEAD
-			packet.addInt(p_weapon.definitionId)
-			====== =
 			packet.addInt(p_weapon!!.getId())
-			>>>>>>> ac7c5bd (refactor: WeaponClass takes WeaponDefinitionClass instead of definitionId)
 			packet.addInt(p_weapon.getTotalRounds())
 		}
 
