@@ -320,8 +320,7 @@ class RefineryGameObj() : BuildingGameObj() {
                 // C++: Set_Is_Harvester_Docked(false)
                 setIsHarvesterDocked(false)
                 // C++: BaseController->Request_Harvester(Get_Definition().HarvesterDefID)
-                // FIXME enable
-//                baseController?.requestHarvester(getRefineryDefinition().harvesterDefId)
+                baseController?.requestHarvester(getRefineryDefinition().harvesterDefId)
 
             } else if (isHarvesterDocked) {
 
