@@ -31,7 +31,7 @@ class StaticNetworkObjectTest {
             closeDelay = 2f,
             triggerZone1 = null,
             triggerZone2 = null,
-            lockCode = 0,
+            defLockCode = 0,
             doorOpensForVehicles = false,
         )
     }
@@ -44,7 +44,7 @@ class StaticNetworkObjectTest {
 
     @Test fun `door rare - opening state`() {
         val door = makeDoor()
-        door.open() // transitions CLOSED -> OPENING
+        door.lockDoorOpen(true) // transitions CLOSED -> OPENING
         val bs = BitStream()
         DoorNetworkObject(door).exportRare(bs)
         assertEquals(DoorPhysClass.STATE_OPENING_DOOR, bs.getInt(BITPACK_DOOR_STATE))

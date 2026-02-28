@@ -1,8 +1,10 @@
 package ccr.physics.vehicle
 
 import ccr.math.Matrix3D
+import ccr.math.Quaternion
 import ccr.math.Vector3
 import ccr.physics.rigidbody.RigidBodyClass
+import ccr.physics.rigidbody.RigidBodyState
 
 // C++: VehiclePhysClass in wwphys/vehiclephys.h
 abstract class VehiclePhysClass : RigidBodyClass() {
@@ -35,6 +37,31 @@ abstract class VehiclePhysClass : RigidBodyClass() {
     var expireTimer: Float = EXPIRE_SECONDS
 
     override fun asVehiclePhysClass(): VehiclePhysClass = this
+
+    /**
+     * C++: VehiclePhysClass::Compute_Approximate_Ride_Height — estimates the clearance between
+     * the vehicle's center of mass and the ground, based on suspension spring length.
+     * Used when spawning vehicles to avoid embedding them in terrain.
+     */
+    fun computeApproximateRideHeight(): Float = springLength
+
+    /**
+     * C++: VehiclePhysClass::Network_Interpolate_State_Update — updates physics state from a
+     * network packet (position, orientation, velocity, angular velocity).
+     * [dt] is the interpolation delta (not used for direct state set; kept for API parity).
+     */
+    fun networkInterpolateStateUpdate(
+        pos: Vector3, orientation: Quaternion, vel: Vector3, angVel: Vector3, dt: Float
+    ) {
+        state = RigidBodyState(
+            position = pos,
+            orientation = orientation.normalized(),
+            linearMomentum = vel * mass,
+            angularMomentum = (iBody * angVel),
+        )
+        updateAuxiliaryState()
+        isAsleep = false
+    }
 
     abstract fun allocSuspensionElement(): SuspensionElement
 

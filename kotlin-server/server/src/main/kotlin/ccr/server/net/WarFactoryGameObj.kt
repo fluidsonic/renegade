@@ -129,7 +129,7 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
                         var newTm = creationTm
 
                         // C++: Adjust vehicle's transform to ensure it's not embedded in the ground
-                        val vehiclePhys = vehicle.peekVehiclePhys() as? VehiclePhysClassStub
+                        val vehiclePhys = vehicle.peekVehiclePhys() as? ccr.physics.vehicle.VehiclePhysClass
                         if (vehiclePhys != null) {
                             val height = vehiclePhys.computeApproximateRideHeight()
                             newTm = newTm.translated(0.0f, 0.0f, height)

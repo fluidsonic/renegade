@@ -12,9 +12,10 @@ import ccr.server.defs.VehicleGameObjDef
 import ccr.server.defs.WeaponDefinitionClass
 import ccr.server.defs.BeaconGameObjDef
 import ccr.server.defs.PowerUpGameObjDef
+import ccr.physics.vehicle.WheeledVehicleClass
 import ccr.server.net.BeaconGameObj
-import ccr.server.net.VehiclePhysClassStub
 import ccr.server.net.C4GameObj
+import ccr.server.net.VehiclePhysProxy
 import ccr.server.net.PhysicalGameObj
 import ccr.server.net.Player
 import ccr.server.net.SoldierGameObj
@@ -528,10 +529,12 @@ open class God(private val server: Network) {
         // C++: DamageableGameObj::Copy_Settings → DefenseObject.Init(def.DefenseObjectDef, this)
         wrapper?.let { vehicle.defenseObject.init(it.damageable.defenseObjectDef.toDefenseObjectDefClass(), vehicle) }
 
-        // Wire a stub VehiclePhysClass so exportFrequent can read position/orientation.
-        val vehiclePhys = VehiclePhysClassStub()
-        vehiclePhys.setStoredPosition(spawnPosition)
-        vehicle.physObj = vehiclePhys
+        // C++: Copy_Settings creates PhysObj from PhysDefID; we use a simple wheeled vehicle
+        // with isFake=true so the physics timestep is a no-op.
+        val vehiclePhys = WheeledVehicleClass()
+        vehiclePhys.isFake = true
+        vehiclePhys.position = spawnPosition
+        vehicle.physObj = VehiclePhysProxy(vehiclePhys)
 
         // Resize seat list to match definition
         vehicle.seatOccupants.clear()
@@ -570,11 +573,12 @@ open class God(private val server: Network) {
         // C++: DamageableGameObj::Copy_Settings → DefenseObject.Init(def.DefenseObjectDef, this)
         wrapper?.let { vehicle.defenseObject.init(it.damageable.defenseObjectDef.toDefenseObjectDefClass(), vehicle) }
 
-        // Wire a stub VehiclePhysClass so exportFrequent can read position/orientation.
-        // C++: Copy_Settings creates PhysObj from PhysDefID; we use a stub with spawn position.
-        val vehiclePhys = VehiclePhysClassStub()
-        vehiclePhys.setStoredPosition(spawnPosition)
-        vehicle.physObj = vehiclePhys
+        // C++: Copy_Settings creates PhysObj from PhysDefID; we use a simple wheeled vehicle
+        // with isFake=true so the physics timestep is a no-op.
+        val vehiclePhys = WheeledVehicleClass()
+        vehiclePhys.isFake = true
+        vehiclePhys.position = spawnPosition
+        vehicle.physObj = VehiclePhysProxy(vehiclePhys)
 
         vehicle.seatOccupants.clear()
         repeat(seatCount) { vehicle.seatOccupants.add(null) }

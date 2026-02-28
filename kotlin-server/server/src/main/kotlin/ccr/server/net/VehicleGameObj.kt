@@ -436,7 +436,7 @@ open class VehicleGameObj() : SmartGameObj() {
         if (!CombatManager.isGameplayPermitted()) {
             clearControl()
             controller.reset()
-            (physObj?.asVehiclePhysClass())?.setVelocity(Vector3(0f, 0f, 0f))
+            physObj?.asVehiclePhysClass()?.let { it.velocity = Vector3(0f, 0f, 0f) }
             return
         }
 
@@ -915,12 +915,12 @@ open class VehicleGameObj() : SmartGameObj() {
             VEHICLE_TYPE_TANK,
             VEHICLE_TYPE_CAR,
             VEHICLE_TYPE_FLYING -> {
-                val vehiclePhys = physObj as VehiclePhysClass
-                val pos = vehiclePhys.position
-                val q = vehiclePhys.getOrientation()
-                val vel = vehiclePhys.velocity
-                val angVel = vehiclePhys.angularVelocity
-                val engineOn = vehiclePhys.isEngineOn
+                val vehiclePhys = physObj?.asVehiclePhysClass()
+                val pos = vehiclePhys?.position ?: position
+                val q = vehiclePhys?.state?.orientation ?: quaternion
+                val vel = vehiclePhys?.velocity ?: velocity
+                val angVel = vehiclePhys?.angularVelocity ?: this.angularVelocity
+                val engineOn = vehiclePhys?.isEngineOn ?: isEngineOn
 
                 packet.addBool(engineOn)
                 packet.addFloat(pos.x, BITPACK_WORLD_POSITION_X)
@@ -983,7 +983,7 @@ open class VehicleGameObj() : SmartGameObj() {
                     // C++: if (COMBAT_STAR && COMBAT_STAR->Get_Vehicle() == this) → latency update
                     //       else → interpolate update
                     vehiclePhys.networkInterpolateStateUpdate(pos, q, vel, angVel, 0.1f)
-                    vehiclePhys.enableEngine(isEngineOn)
+                    vehiclePhys.isEngineOn = isEngineOn
                 }
             }
             VEHICLE_TYPE_TURRET -> {
@@ -1020,12 +1020,12 @@ open class VehicleGameObj() : SmartGameObj() {
     // C++: void Get_Velocity(Vector3 & vel)
     override fun getVelocity(): Vector3 {
         val vp = physObj?.asVehiclePhysClass()
-        return if (vp != null) vp.getVelocity() else Vector3(0f, 0f, 0f)
+        return vp?.velocity ?: Vector3(0f, 0f, 0f)
     }
 
     // C++: void Set_Velocity(Vector3 & vel)
     fun setVelocity(vel: Vector3) {
-        physObj?.asVehiclePhysClass()?.setVelocity(vel)
+        physObj?.asVehiclePhysClass()?.let { it.velocity = vel }
     }
 
     // -------------------------------------------------------------------------
@@ -1100,11 +1100,11 @@ open class VehicleGameObj() : SmartGameObj() {
     // -------------------------------------------------------------------------
 
     // C++: bool Is_Engine_Enabled() const
-    fun isEngineEnabled(): Boolean = physObj?.asVehiclePhysClass()?.isEngineEnabled() ?: false
+    fun isEngineEnabled(): Boolean = physObj?.asVehiclePhysClass()?.isEngineOn ?: false
 
     // C++: void Enable_Engine(bool onoff)
     fun enableEngine(onoff: Boolean) {
-        physObj?.asVehiclePhysClass()?.enableEngine(onoff)
+        physObj?.asVehiclePhysClass()?.isEngineOn = onoff
     }
 
     // -------------------------------------------------------------------------

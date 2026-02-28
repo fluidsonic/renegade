@@ -164,7 +164,7 @@ open class PhysClass {
     open fun asStaticPhysClass(): StaticPhysClass? = null
     open fun asStaticAnimPhysClass(): StaticAnimPhysClass? = null
     open fun asHumanPhysClass(): HumanPhysClass? = null
-    open fun asVehiclePhysClass(): VehiclePhysClassStub? = null
+    open fun asVehiclePhysClass(): ccr.physics.vehicle.VehiclePhysClass? = null
     open fun asSound3DClass(): Sound3DClass? = null
     open fun asLightPhysClass(): LightPhysClass? = null
     open fun incIgnoreCounter(): Unit = Unit
@@ -244,35 +244,24 @@ open class HumanPhysClass : MoveablePhysClass() {
     fun enableEngine(enable: Boolean): Unit = Unit
 }
 
-// C++: VehiclePhysClass stub (different from ccr.physics.vehicle.VehiclePhysClass)
-open class VehiclePhysClassStub : MoveablePhysClass() {
-    // Stored position/velocity for vehicles without real physics
-    private var storedPosition: Vector3 = Vector3()
-    private var storedVelocity: Vector3 = Vector3()
-    private var storedAngularVelocity: Vector3 = Vector3()
-    private var engineEnabled: Boolean = false
-    fun setStoredPosition(pos: Vector3) { storedPosition = pos }
-    override fun getPosition(): Vector3 = storedPosition
-    override fun getVelocity(): Vector3 = storedVelocity
-    override fun getAngularVelocity(): Vector3 = storedAngularVelocity
-    override fun asVehiclePhysClass(): VehiclePhysClassStub = this
-    fun getNormalizedSpeed(): Float = 10.0f
-    fun setNormalizedSpeed(speed: Float): Unit = Unit
-    fun setTurnVelocity(vel: Float): Unit = Unit
-    fun isEngineEnabled(): Boolean = engineEnabled
-    fun enableEngine(enable: Boolean) { engineEnabled = enable }
-    fun getPitchFactor(): Float = 0f
-    fun setPitchFactor(f: Float): Unit = Unit
-    fun getOrientation(): ccr.math.Quaternion = ccr.math.Quaternion.IDENTITY
-    fun networkInterpolateStateUpdate(
-        pos: Vector3, q: ccr.math.Quaternion, vel: Vector3, angVel: Vector3, dt: Float
-    ): Unit = Unit
-    open fun asVTOLVehicleClass(): VTOLVehicleClass? = null
-}
+// ---------------------------------------------------------------------------
+// VehiclePhysProxy — thin server-side wrapper around a real VehiclePhysClass.
+// Extends stub PhysClass so it can be stored in PhysicalGameObj.physObj.
+// ---------------------------------------------------------------------------
 
-// C++: VTOLVehicleClass : public VehiclePhysClass
-open class VTOLVehicleClass : VehiclePhysClassStub() {
-    override fun asVTOLVehicleClass(): VTOLVehicleClass? = this
+/**
+ * Wraps a real [ccr.physics.vehicle.VehiclePhysClass] instance so it can be stored in
+ * [PhysicalGameObj.physObj] (which is typed as the server stub [PhysClass]).
+ *
+ * All vehicle-physics access goes through [asVehiclePhysClass] which returns the real class.
+ * Other stub-PhysClass methods (setCollisionGroup, getPosition, etc.) delegate to the real object
+ * where supported, or are no-ops for server-only functionality not in the physics module.
+ */
+class VehiclePhysProxy(
+    val realPhys: ccr.physics.vehicle.VehiclePhysClass
+) : PhysClass() {
+    override fun asVehiclePhysClass(): ccr.physics.vehicle.VehiclePhysClass = realPhys
+    override fun getPosition(): Vector3 = realPhys.position
 }
 
 // C++: ProjectileClass (physics stub)
