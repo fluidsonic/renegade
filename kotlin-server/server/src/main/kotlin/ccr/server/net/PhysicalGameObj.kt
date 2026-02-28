@@ -265,7 +265,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: void Teleport_To_Host_Bone()
     fun teleportToHostBone() {
         val host = hostGameObj.get() as? PhysicalGameObj ?: return
-        val model = (host.physObj as? PhysClass)?.peekModel() ?: return
+        val model = host.peekModel() ?: return
         val newTransform = model.getBoneTransform(hostGameObjBone)
         physObj?.let { phys ->
             phys.asMoveablePhysClass()?.let { moveable ->
@@ -561,7 +561,7 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     // C++: PhysicalGameObj::Export_Rare
     override fun exportRare(packet: BitStream) {
         super.exportRare(packet)
-        packet.addTerminatedString(physObj?.model?.getName() ?: modelName, permitEmpty = true)
+        packet.addTerminatedString(peekModel()?.getName() ?: modelName, permitEmpty = true)
         packet.addTerminatedString(animName, permitEmpty = true)
         // C++: when AnimControl == NULL, curr_frame=0, target_frame=0, anim_mode=ANIM_MODE_TARGET(3).
         // The server has no real animation system — always send the C++ NULL-AnimControl defaults.
@@ -581,9 +581,8 @@ abstract class PhysicalGameObj : DamageableGameObj(), CombatPhysObserverClass {
     override fun importRare(packet: BitStream) {
         super.importRare(packet)
         val modelName = packet.getTerminatedString(true)
-        val physStub = physObj as? PhysClass
-        if (physStub?.peekModel()?.getName()?.equals(modelName, ignoreCase = true) != true) {
-            physStub?.setModelByName(modelName)
+        if (peekModel()?.getName()?.equals(modelName, ignoreCase = true) != true) {
+            physObj?.setModelByName(modelName)
         }
         val animationName = packet.getTerminatedString(true)
         val currFrame  = packet.getInt()
