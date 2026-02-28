@@ -178,6 +178,157 @@ static uint32_t sdl_keycode_to_vk(SDL_Keycode sym)
     }
 }
 
+// Map a Windows VK_ virtual-key code to an SDL_Scancode.
+// Returns SDL_SCANCODE_UNKNOWN for unmapped keys.
+static SDL_Scancode vk_to_sdl_scancode(int32_t vk)
+{
+    switch (vk) {
+        case 0x08: return SDL_SCANCODE_BACKSPACE;
+        case 0x09: return SDL_SCANCODE_TAB;
+        case 0x0D: return SDL_SCANCODE_RETURN;
+        case 0x10: return SDL_SCANCODE_LSHIFT;    // VK_SHIFT — generic → left variant
+        case 0x11: return SDL_SCANCODE_LCTRL;     // VK_CONTROL
+        case 0x12: return SDL_SCANCODE_LALT;      // VK_MENU
+        case 0x13: return SDL_SCANCODE_PAUSE;
+        case 0x14: return SDL_SCANCODE_CAPSLOCK;
+        case 0x1B: return SDL_SCANCODE_ESCAPE;
+        case 0x20: return SDL_SCANCODE_SPACE;
+        case 0x21: return SDL_SCANCODE_PAGEUP;    // VK_PRIOR
+        case 0x22: return SDL_SCANCODE_PAGEDOWN;  // VK_NEXT
+        case 0x23: return SDL_SCANCODE_END;
+        case 0x24: return SDL_SCANCODE_HOME;
+        case 0x25: return SDL_SCANCODE_LEFT;
+        case 0x26: return SDL_SCANCODE_UP;
+        case 0x27: return SDL_SCANCODE_RIGHT;
+        case 0x28: return SDL_SCANCODE_DOWN;
+        case 0x2D: return SDL_SCANCODE_INSERT;
+        case 0x2E: return SDL_SCANCODE_DELETE;
+        // '0'-'9'
+        case 0x30: return SDL_SCANCODE_0;
+        case 0x31: return SDL_SCANCODE_1;
+        case 0x32: return SDL_SCANCODE_2;
+        case 0x33: return SDL_SCANCODE_3;
+        case 0x34: return SDL_SCANCODE_4;
+        case 0x35: return SDL_SCANCODE_5;
+        case 0x36: return SDL_SCANCODE_6;
+        case 0x37: return SDL_SCANCODE_7;
+        case 0x38: return SDL_SCANCODE_8;
+        case 0x39: return SDL_SCANCODE_9;
+        // 'A'-'Z'
+        case 0x41: return SDL_SCANCODE_A;
+        case 0x42: return SDL_SCANCODE_B;
+        case 0x43: return SDL_SCANCODE_C;
+        case 0x44: return SDL_SCANCODE_D;
+        case 0x45: return SDL_SCANCODE_E;
+        case 0x46: return SDL_SCANCODE_F;
+        case 0x47: return SDL_SCANCODE_G;
+        case 0x48: return SDL_SCANCODE_H;
+        case 0x49: return SDL_SCANCODE_I;
+        case 0x4A: return SDL_SCANCODE_J;
+        case 0x4B: return SDL_SCANCODE_K;
+        case 0x4C: return SDL_SCANCODE_L;
+        case 0x4D: return SDL_SCANCODE_M;
+        case 0x4E: return SDL_SCANCODE_N;
+        case 0x4F: return SDL_SCANCODE_O;
+        case 0x50: return SDL_SCANCODE_P;
+        case 0x51: return SDL_SCANCODE_Q;
+        case 0x52: return SDL_SCANCODE_R;
+        case 0x53: return SDL_SCANCODE_S;
+        case 0x54: return SDL_SCANCODE_T;
+        case 0x55: return SDL_SCANCODE_U;
+        case 0x56: return SDL_SCANCODE_V;
+        case 0x57: return SDL_SCANCODE_W;
+        case 0x58: return SDL_SCANCODE_X;
+        case 0x59: return SDL_SCANCODE_Y;
+        case 0x5A: return SDL_SCANCODE_Z;
+        // VK_NUMPAD0-9
+        case 0x60: return SDL_SCANCODE_KP_0;
+        case 0x61: return SDL_SCANCODE_KP_1;
+        case 0x62: return SDL_SCANCODE_KP_2;
+        case 0x63: return SDL_SCANCODE_KP_3;
+        case 0x64: return SDL_SCANCODE_KP_4;
+        case 0x65: return SDL_SCANCODE_KP_5;
+        case 0x66: return SDL_SCANCODE_KP_6;
+        case 0x67: return SDL_SCANCODE_KP_7;
+        case 0x68: return SDL_SCANCODE_KP_8;
+        case 0x69: return SDL_SCANCODE_KP_9;
+        case 0x6A: return SDL_SCANCODE_KP_MULTIPLY;
+        case 0x6B: return SDL_SCANCODE_KP_PLUS;
+        case 0x6D: return SDL_SCANCODE_KP_MINUS;
+        case 0x6E: return SDL_SCANCODE_KP_PERIOD;
+        case 0x6F: return SDL_SCANCODE_KP_DIVIDE;
+        // VK_F1-F12
+        case 0x70: return SDL_SCANCODE_F1;
+        case 0x71: return SDL_SCANCODE_F2;
+        case 0x72: return SDL_SCANCODE_F3;
+        case 0x73: return SDL_SCANCODE_F4;
+        case 0x74: return SDL_SCANCODE_F5;
+        case 0x75: return SDL_SCANCODE_F6;
+        case 0x76: return SDL_SCANCODE_F7;
+        case 0x77: return SDL_SCANCODE_F8;
+        case 0x78: return SDL_SCANCODE_F9;
+        case 0x79: return SDL_SCANCODE_F10;
+        case 0x7A: return SDL_SCANCODE_F11;
+        case 0x7B: return SDL_SCANCODE_F12;
+        case 0x90: return SDL_SCANCODE_NUMLOCKCLEAR; // VK_NUMLOCK
+        case 0x91: return SDL_SCANCODE_SCROLLLOCK;   // VK_SCROLL
+        case 0xA0: return SDL_SCANCODE_LSHIFT;       // VK_LSHIFT
+        case 0xA1: return SDL_SCANCODE_RSHIFT;       // VK_RSHIFT
+        case 0xA2: return SDL_SCANCODE_LCTRL;        // VK_LCONTROL
+        case 0xA3: return SDL_SCANCODE_RCTRL;        // VK_RCONTROL
+        case 0xA4: return SDL_SCANCODE_LALT;         // VK_LMENU
+        case 0xA5: return SDL_SCANCODE_RALT;         // VK_RMENU
+        default:   return SDL_SCANCODE_UNKNOWN;
+    }
+}
+
+SHORT GetAsyncKeyState(int vKey)
+{
+    const Uint8* state = SDL_GetKeyboardState(NULL);
+    bool pressed = false;
+    if (vKey == 0x10 /*VK_SHIFT*/) {
+        pressed = state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT];
+    } else if (vKey == 0x11 /*VK_CONTROL*/) {
+        pressed = state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL];
+    } else if (vKey == 0x12 /*VK_MENU*/) {
+        pressed = state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT];
+    } else {
+        SDL_Scancode sc = vk_to_sdl_scancode(vKey);
+        pressed = (sc != SDL_SCANCODE_UNKNOWN) && (state[sc] != 0);
+    }
+    return pressed ? (SHORT)0x8000 : 0;
+}
+
+SHORT GetKeyState(int nVirtKey)
+{
+    SHORT result = GetAsyncKeyState(nVirtKey);
+    SDL_Keymod mod = SDL_GetModState();
+    if (nVirtKey == 0x14 /*VK_CAPITAL*/ && (mod & KMOD_CAPS)) result |= 0x0001;
+    if (nVirtKey == 0x90 /*VK_NUMLOCK*/ && (mod & KMOD_NUM))  result |= 0x0001;
+    return result;
+}
+
+BOOL GetKeyboardState(PBYTE lpKeyState)
+{
+    const Uint8* state = SDL_GetKeyboardState(NULL);
+    SDL_Keymod   mod   = SDL_GetModState();
+    memset(lpKeyState, 0, 256);
+    for (int32_t vk = 0; vk < 256; vk++) {
+        SDL_Scancode sc = vk_to_sdl_scancode(vk);
+        if (sc != SDL_SCANCODE_UNKNOWN && state[sc]) {
+            lpKeyState[vk] |= 0x80;
+        }
+    }
+    // Generic modifier keys: OR both L+R variants
+    if (state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT])   lpKeyState[0x10] |= 0x80; // VK_SHIFT
+    if (state[SDL_SCANCODE_LCTRL]  || state[SDL_SCANCODE_RCTRL])    lpKeyState[0x11] |= 0x80; // VK_CONTROL
+    if (state[SDL_SCANCODE_LALT]   || state[SDL_SCANCODE_RALT])     lpKeyState[0x12] |= 0x80; // VK_MENU
+    // Toggle bits
+    if (mod & KMOD_CAPS) lpKeyState[0x14] |= 0x01; // VK_CAPITAL
+    if (mod & KMOD_NUM)  lpKeyState[0x90] |= 0x01; // VK_NUMLOCK
+    return TRUE;
+}
+
 // Decode the first UTF-8 codepoint in s to a UTF-16 BMP value.
 // Returns 0 on failure or if the codepoint is outside the BMP.
 static uint32_t utf8_first_codepoint(const char* s)
@@ -250,6 +401,7 @@ void SDL2_Platform_PollEvents(void)
             uint32_t vk = sdl_keycode_to_vk(event.key.keysym.sym);
             if (vk != 0) {
                 On_Key_Down(vk);
+                SDL_PumpEvents();  // refresh keyboard state after potentially long KEYDOWN handlers
             }
             break;
         }

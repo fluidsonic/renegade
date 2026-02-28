@@ -376,9 +376,12 @@ DialogMgrClass::On_Frame_Update (void)
 	//
 	//	Return from "dialog" mode if the ESC key has been let up...
 	//
-	if (IsInMenuMode && DialogList.Count () == 0 && ((KeyboardState[VK_ESCAPE] & 0x80) == 0)) {
-		IsInMenuMode = false;
-		Input->Exit_Menu_Mode ();
+	if (IsInMenuMode && DialogList.Count () == 0) {
+		::GetKeyboardState (KeyboardState);
+		if ((KeyboardState[VK_ESCAPE] & 0x80) == 0) {
+			IsInMenuMode = false;
+			Input->Exit_Menu_Mode ();
+		}
 	}
 
 	return ;
@@ -651,7 +654,6 @@ DialogMgrClass::On_Key_Down (uint32_t key_id, uint32_t key_data)
 	if (ActiveDialog != NULL) {
 		return ActiveDialog->On_Key_Down (key_id, key_data);
 	}
-
 	return false;
 }
 
