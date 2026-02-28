@@ -222,15 +222,15 @@ class HumanStateClass {
 
             if (state == IN_VEHICLE || state == TRANSITION || state == TRANSITION_COMPLETE) {
                 phys.collisionGroup = BULLET_ONLY_COLLISION_GROUP
-                phys.setImmovable(true)
+                phys.isImmovable = true
             }
             else if (state == DESTROY || state == DEATH) {
                 phys.collisionGroup = TERRAIN_ONLY_COLLISION_GROUP
-                phys.setImmovable(true)
+                phys.isImmovable = true
             }
             else {
                 phys.collisionGroup = SOLDIER_COLLISION_GROUP
-                phys.setImmovable(false)
+                phys.isImmovable = false
             }
         }
 
