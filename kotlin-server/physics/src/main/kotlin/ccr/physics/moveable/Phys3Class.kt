@@ -74,14 +74,8 @@ open class Phys3Class : MoveablePhysClass() {
      */
     open fun resetAnimationMove() {}
 
-    /**
-     * C++: float Phys3Class::Get_Heading() const { return Heading; }
-     * The `heading` property getter/setter also exist but callers may use these methods.
-     */
-    open fun getHeading(): Float = heading
-
-    /** C++: void Phys3Class::Set_Heading(float h) { Heading = h; } */
-    open fun setHeading(h: Float) { heading = h }
+    // C++: Get_Heading() / Set_Heading() — exposed directly via `heading` property
+    // (Kotlin property `heading` generates getHeading()/setHeading() JVM methods automatically).
 
     /**
      * C++: Phys3Class::Intersection_Test(PhysAABoxIntersectionTestClass&)

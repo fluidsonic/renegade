@@ -20,16 +20,16 @@ open class HumanPhysClass : Phys3Class() {
     open fun getHeading(): Float = heading
     open fun setHeading(h: Float) { heading = h }
     // C++: HumanPhysClass::Get_Velocity() / Set_Velocity()
-    open fun getVelocity(): Vector3 = velocity.copy()
-    open fun setVelocity(v: Vector3) { velocity = v }
+    override fun getVelocity(): Vector3 = velocity.copy()
+    override fun setVelocity(v: Vector3) { velocity = v }
     // C++: HumanPhysClass::Is_In_Contact() — soldier is on the ground
-    open fun isInContact(): Boolean = onGround
+    override fun isInContact(): Boolean = onGround
     // C++: HumanPhysClass::Set_Immovable()
     open fun setImmovable(immovable: Boolean) { isImmovable = immovable }
     // C++: HumanPhysClass::Get_Animation_Move() — animation-driven movement delta; stub
-    open fun getAnimationMove(out: Vector3) { out.x = 0f; out.y = 0f; out.z = 0f }
+    override fun getAnimationMove(out: Vector3) { out.x = 0f; out.y = 0f; out.z = 0f }
     // C++: HumanPhysClass::Reset_Animation_Move() — clears accumulated animation delta; stub
-    open fun resetAnimationMove() {}
+    override fun resetAnimationMove() {}
 
     // C++: HumanPhysClass::Get_Collision_Box() — returns the collision box
     open fun getCollisionBox(): AABox = collisionBox
