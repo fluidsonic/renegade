@@ -1,6 +1,7 @@
 package ccr.physics.collision
 
 import ccr.math.AABox
+import ccr.math.Triangle
 
 /**
  * C++: PhysAABoxIntersectionTestClass (physinttest.h)
@@ -45,4 +46,7 @@ class AABoxIntersectionTest(
         if (kotlin.math.abs(dc.z) > r.z) return true
         return false
     }
+
+    /** C++: AABoxIntersectionTestClass::Intersect_Triangle(const TriClass& tri) */
+    fun intersectTriangle(tri: Triangle): Boolean = CollisionMath.intersectionTest(box, tri)
 }

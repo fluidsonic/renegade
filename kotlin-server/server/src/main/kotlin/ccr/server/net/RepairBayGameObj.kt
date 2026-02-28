@@ -349,14 +349,13 @@ class RepairBayGameObj() : BuildingGameObj() {
         val animPhysObj = staticPhysObj.asStaticAnimPhysClass() ?: return
 
         // C++: Configure the animation
-        val animMgr = animPhysObj.getAnimationManager()
-        animMgr.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
+        animPhysObj.animationManager.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
 
         // C++: Either play the animation forward or backward
-        if (onoff && animMgr.targetFrame == 0f) {
-            animMgr.setTargetFrameEnd()
-        } else if (!onoff && animMgr.targetFrame != 0f) {
-            animMgr.targetFrame = 0f
+        if (onoff && animPhysObj.animationManager.targetFrame == 0f) {
+            animPhysObj.animationManager.setTargetFrameEnd()
+        } else if (!onoff && animPhysObj.animationManager.targetFrame != 0f) {
+            animPhysObj.animationManager.targetFrame = 0f
         }
     }
 

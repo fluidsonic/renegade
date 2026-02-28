@@ -513,6 +513,7 @@ object HUDInfo {
 object FreeRandom {
     fun get(): Float = kotlin.random.Random.nextFloat()
     fun getInt(max: Int): Int = kotlin.random.Random.nextInt(max)
+    fun getFloat(min: Float, max: Float): Float = min + kotlin.random.Random.nextFloat() * (max - min)
 }
 
 // C++: GlobalSettingsDefClass instance returned by GlobalSettingsDef.getGlobalSettings()

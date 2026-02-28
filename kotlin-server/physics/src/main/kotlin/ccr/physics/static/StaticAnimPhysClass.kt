@@ -28,21 +28,23 @@ open class StaticAnimPhysClass : StaticPhysClass() {
      * C++: AnimCollisionManagerClass AnimManager
      * The AnimCollisionManagerClass is constructed with a reference to `this`.
      * Manages animation frame state, collision mode, and attached riders.
+     *
+     * Exposed as `animationManager` to match C++ Get_Animation_Manager() naming convention
+     * (Get_Foo() → Kotlin property foo).
      */
-    val animManager: AnimCollisionManagerClass = AnimCollisionManagerClass(this)
+    val animationManager: AnimCollisionManagerClass = AnimCollisionManagerClass(this)
 
     // -------------------------------------------------------------------------
     // Static shadow — mirrors C++ TexProjectClass * ShadowProjector
     //
     // On the server there is no renderer, so ShadowProjector is always null.
-    // The accessor is kept to mirror the C++ API faithfully.
     // -------------------------------------------------------------------------
 
-    /** C++: TexProjectClass * ShadowProjector — always null server-side. */
-    val shadowProjector: Any? = null
-
-    /** C++: bool Is_Casting_Shadow() — returns (ShadowProjector != NULL) */
-    open fun isCastingShadow(): Boolean = shadowProjector != null
+    /**
+     * C++: TexProjectClass * ShadowProjector — always null server-side.
+     * C++: bool Is_Casting_Shadow() returns (ShadowProjector != NULL).
+     */
+    val isCastingShadow: Boolean get() = false
 
     // -------------------------------------------------------------------------
     // Constructor — mirrors StaticAnimPhysClass::StaticAnimPhysClass()
@@ -54,6 +56,39 @@ open class StaticAnimPhysClass : StaticPhysClass() {
 
     init {
         collisionGroup = 0xF
+    }
+
+    // -------------------------------------------------------------------------
+    // Initialisation — mirrors StaticAnimPhysClass::Init(const StaticAnimPhysDefClass &)
+    //
+    // C++:
+    //   void StaticAnimPhysClass::Init(const StaticAnimPhysDefClass & def) {
+    //       StaticPhysClass::Init(def);
+    //       ProjectorManager.Init(def.ProjectorManagerDef, Model);  // no-op server-side
+    //       AnimManager.Init(def.AnimManagerDef);
+    //   }
+    //
+    // The three parameters correspond to AnimCollisionManagerDefClass fields:
+    //   CollisionMode, AnimationMode, AnimationName.
+    // Server-side there is no model and no W3D animation, so numFrames/frameRate are not passed.
+    // -------------------------------------------------------------------------
+
+    /**
+     * C++: void StaticAnimPhysClass::Init(const StaticAnimPhysDefClass & def)
+     *
+     * Initialises the AnimCollisionManager from the definition.
+     * Called by StaticAnimPhysDefClass::create() after construction.
+     *
+     * [collisionModeValue] — AnimCollisionManagerDefClass::CollisionMode (0=NONE,1=STOP,2=PUSH,3=KILL)
+     * [animationModeValue] — AnimCollisionManagerDefClass::AnimationMode (0=LOOP,1=TARGET,2=MANUAL)
+     * [animationName]      — AnimCollisionManagerDefClass::AnimationName
+     */
+    fun init(collisionModeValue: Int, animationModeValue: Int, animationName: String) {
+        animationManager.init(
+            collisionModeValue = collisionModeValue,
+            animationModeValue = animationModeValue,
+            animationNameFromDef = animationName,
+        )
     }
 
     // -------------------------------------------------------------------------
@@ -80,7 +115,7 @@ open class StaticAnimPhysClass : StaticPhysClass() {
      */
     override fun timestep(dt: Float) {
         // C++: AnimManager.Timestep(dt);
-        animManager.timestep(dt)
+        animationManager.timestep(dt)
         // C++: ProjectorManager.Update_From_Model(Model); — no-op server-side (no projectors)
     }
 
@@ -126,7 +161,7 @@ open class StaticAnimPhysClass : StaticPhysClass() {
      * when the animated geometry moves.
      */
     override fun internalLinkRider(rider: PhysClass): Boolean {
-        animManager.linkRider(rider)
+        animationManager.linkRider(rider)
         return true
     }
 
@@ -136,19 +171,9 @@ open class StaticAnimPhysClass : StaticPhysClass() {
      * Detaches [rider] from the AnimManager's rider list.
      */
     override fun internalUnlinkRider(rider: PhysClass): Boolean {
-        animManager.unlinkRider(rider)
+        animationManager.unlinkRider(rider)
         return true
     }
-
-    // -------------------------------------------------------------------------
-    // Animation manager accessor — mirrors Get_Animation_Manager()
-    // -------------------------------------------------------------------------
-
-    /**
-     * C++: AnimCollisionManagerClass & Get_Animation_Manager()
-     * Returns the animation+collision manager for this object.
-     */
-    fun getAnimationManager(): AnimCollisionManagerClass = animManager
 
     // -------------------------------------------------------------------------
     // Chunk IDs — from staticanimphys.cpp
@@ -167,7 +192,7 @@ open class StaticAnimPhysClass : StaticPhysClass() {
         /** Obsolete definition-id micro-chunk (ignored on load). */
         const val STATICANIMPHYS_VARIABLE_DEFID_OBSOLETE: Int = 0x00
 
-        /** Legacy collision-mode micro-chunk; on load, forwarded to AnimManager.setCollisionMode(). */
+        /** Legacy collision-mode micro-chunk; on load, forwarded to animationManager.collisionMode. */
         const val STATICANIMPHYS_VARIABLE_COLLISIONMODE: Int = 0x01
     }
 }

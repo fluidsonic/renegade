@@ -2285,7 +2285,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		CombatManager.getScene()?.castRay(raytest)
 
 		if (raytest.collidedPhysObj != null) {
-			val observer = raytest.collidedPhysObj.getObserver()
+			val observer = raytest.collidedPhysObj.observer
 			val blocker = if (observer != null) {
 				(observer as? CombatPhysObserverClass)?.asPhysicalGameObj()?.asSmartGameObj()
 			}
@@ -2306,7 +2306,7 @@ open class SoldierGameObj() : SmartGameObj() {
 		// C++: only adjust male skeletons (HTree name[2] == 'A')
 		val robj = peekModel() as? Animatable3DObjClass ?: return
 		val htree = robj.getHTree() ?: return
-		if (htree.getName().getOrElse(2) { ' ' } != 'A') return
+		if (htree.name.getOrElse(2) { ' ' } != 'A') return
 		// FIXME: WW3DAssetManager::Get_HTree interpolation — requires full asset manager
 	}
 

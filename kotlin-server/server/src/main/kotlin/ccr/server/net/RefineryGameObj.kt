@@ -206,14 +206,13 @@ class RefineryGameObj() : BuildingGameObj() {
 
         // C++: AnimCollisionManagerClass& anim_mgr = anim_phys_obj->Get_Animation_Manager()
         // C++: anim_mgr.Set_Animation_Mode(AnimCollisionManagerClass::ANIMATE_TARGET)
-        val animMgr = animPhysObj.getAnimationManager()
-        animMgr.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
+        animPhysObj.animationManager.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
 
         // C++: if (onoff) anim_mgr.Set_Target_Frame_End() else anim_mgr.Set_Target_Frame(0)
         if (onoff) {
-            animMgr.setTargetFrameEnd()
+            animPhysObj.animationManager.setTargetFrameEnd()
         } else {
-            animMgr.targetFrame = 0f
+            animPhysObj.animationManager.targetFrame = 0f
         }
     }
 

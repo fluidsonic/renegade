@@ -82,10 +82,18 @@ class StaticAnimPhysDefClass(
     /**
      * C++: StaticAnimPhysDefClass::Create()
      * Creates a StaticAnimPhysClass and initialises it via Init(*this).
-     * Init calls StaticPhysClass::Init -> PhysClass::Init; no def fields to copy.
-     * AnimCollisionManagerClass and ProjectorManagerClass init are skipped server-side.
+     * C++ Init() calls StaticPhysClass::Init, ProjectorManager.Init (no-op server-side),
+     * and AnimManager.Init(def.AnimManagerDef) which is wired here.
      */
-    override fun create(): PhysClass = StaticAnimPhysClass()
+    override fun create(): PhysClass {
+        val obj = StaticAnimPhysClass()
+        obj.init(
+            collisionModeValue = animManagerDef.collisionMode,
+            animationModeValue = animManagerDef.animationMode,
+            animationName = animManagerDef.animationName,
+        )
+        return obj
+    }
 
     companion object {
         /** CLASSID_STATICANIMPHYSDEF = CLASSID_PHYSICS(0x9000) + 8 */

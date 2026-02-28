@@ -173,16 +173,15 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
         val animPhysObj = staticPhysObj.asStaticAnimPhysClass() ?: return
 
         // C++: Configure the animation
-        val animMgr = animPhysObj.getAnimationManager()
         // C++: animMgr.Set_Animation_Mode(AnimCollisionManagerClass::ANIMATE_TARGET)
-        animMgr.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
+        animPhysObj.animationManager.animationMode = ccr.physics.static.AnimCollisionManagerClass.ANIMATE_TARGET
 
         // C++: Either play the animation forward or backward
         if (onoff) {
-            animMgr.setTargetFrameEnd()
+            animPhysObj.animationManager.setTargetFrameEnd()
         } else {
             // C++: animMgr.Set_Target_Frame(0)
-            animMgr.targetFrame = 0f
+            animPhysObj.animationManager.targetFrame = 0f
         }
 
         staticPhysObj.enableIsStateDirty(true)
@@ -206,8 +205,7 @@ class WarFactoryGameObj() : VehicleFactoryGameObj() {
                 // C++: creationFinishedTimer = animMgr.Peek_Animation()->Get_Total_Time() + 2.0f
                 // Get_Total_Time() = numFrames / frameRate. On the server we have no live
                 // HAnimClass, so compute it from the AnimCollisionManagerClass fields directly.
-                val animMgr = animPhysObj.getAnimationManager()
-                val totalTime = if (animMgr.frameRate > 0f) animMgr.numFrames / animMgr.frameRate else 0f
+                val totalTime = if (animPhysObj.animationManager.frameRate > 0f) animPhysObj.animationManager.numFrames / animPhysObj.animationManager.frameRate else 0f
                 creationFinishedTimer = totalTime + 2.0f
             }
         }
