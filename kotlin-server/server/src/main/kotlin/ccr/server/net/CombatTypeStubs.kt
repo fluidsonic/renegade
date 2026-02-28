@@ -5,19 +5,8 @@ import ccr.math.OBBox as MathOBBox
 import ccr.math.Vector3
 import ccr.physics.PhysClass
 import ccr.physics.static.StaticPhysClass
-import ccr.server.defs.DefinitionClass
 import ccr.physics.scene.PhysicsScene
-import ccr.server.defs.BeaconGameObjDef
-import ccr.server.defs.BuildingGameObjDef
-import ccr.server.defs.C4GameObjDef
-import ccr.server.defs.CinematicGameObjDef
-import ccr.server.defs.PhysicalGameObjDef
-import ccr.server.defs.PowerUpGameObjDef
-import ccr.server.defs.SimpleGameObjDef
 import ccr.server.defs.Dialogue
-import ccr.server.defs.SoldierGameObjDef
-import ccr.server.defs.VehicleGameObjDef
-import ccr.server.level.DefinitionRegistry
 
 // Audio types — real implementations live in ccr.server.audio; import here for net-package usage.
 typealias AudibleSoundClass  = ccr.server.audio.AudibleSoundClass
@@ -480,50 +469,6 @@ object ExplosionManager {
     fun serverExplode(defId: Int, pos: Vector3, owner: Any?): Unit = Unit
     // C++: Explosion_Damage_Building
     fun explosionDamageBuilding(defId: Int, building: BuildingGameObj, mctDamage: Boolean, owner: SoldierGameObj?): Unit = Unit
-}
-
-// C++: DefinitionMgrClass (wwsaveload/definitionmgr.h) — server-side registry
-object DefinitionMgrClass {
-    // C++: DefinitionMgrClass::Find_Definition(id) — delegates to the loaded level registry
-    var registry: DefinitionRegistry? = null
-
-    fun findDefinition(id: Int): DefinitionClass? = registry?.findById(id.toUInt())
-    fun findTypedDefinition(name: String, classId: Int): DefinitionClass? = registry?.findByName(name)
-    fun findAmmoDefinition(id: Int): Any? = null
-    fun findAmmoDefinitionByName(name: String): Any? = null
-    fun getFirst(classId: Int): Any? = null
-    fun getNext(def: Any?, classId: Int): Any? = null
-}
-
-// C++: ObjectLibraryManager (objectlibrary.h)
-object ObjectLibraryManager {
-    // C++: ObjectLibraryManager::Create_Object(int def_id)
-    fun createObject(defId: Int): PhysicalGameObj? {
-        val def = DefinitionMgrClass.findDefinition(defId) ?: return null
-        if (!isGameObjectDef(def)) return null
-        return createFromDefinition(def)
-    }
-
-    // C++: ObjectLibraryManager::Create_Object(const char* name)
-    fun createObject(name: String): PhysicalGameObj? {
-        val def = DefinitionMgrClass.findTypedDefinition(name, 0) ?: return null
-        if (!isGameObjectDef(def)) return null
-        return createFromDefinition(def)
-    }
-
-    private fun isGameObjectDef(def: DefinitionClass): Boolean =
-        def is PhysicalGameObjDef || def is BuildingGameObjDef
-
-    private fun createFromDefinition(def: DefinitionClass): PhysicalGameObj? = when (def) {
-        is SoldierGameObjDef   -> SoldierGameObj().apply { definition = def }
-        is VehicleGameObjDef   -> VehicleGameObj().apply { definition = def }
-        is PowerUpGameObjDef   -> PowerUpGameObj().apply { definition = def }
-        is C4GameObjDef        -> C4GameObj().apply { definition = def }
-        is BeaconGameObjDef    -> BeaconGameObj().apply { definition = def }
-        is SimpleGameObjDef    -> SimpleGameObj().apply { definition = def }
-        is CinematicGameObjDef -> CinematicGameObj().apply { definition = def }
-        else                   -> null
-    }
 }
 
 // C++: ConversationMgrClass (conversationmgr.h)
